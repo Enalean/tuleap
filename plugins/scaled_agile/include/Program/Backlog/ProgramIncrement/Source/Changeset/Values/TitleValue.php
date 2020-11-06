@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\V
 /**
  * @psalm-immutable
  */
-final class EndPeriodValueData
+final class TitleValue
 {
     /**
      * @var string

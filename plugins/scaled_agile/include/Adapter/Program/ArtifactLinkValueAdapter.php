@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class ArtifactLinkValueAdapter
 {
-    public function build(ReplicationData $replication_data): ArtifactLinkValueData
+    public function build(ReplicationData $replication_data): ArtifactLinkValue
     {
-        return new ArtifactLinkValueData((int) $replication_data->getArtifactData()->getID());
+        return new ArtifactLinkValue((int) $replication_data->getArtifactData()->getID());
     }
 }

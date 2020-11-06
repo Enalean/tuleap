@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Adapter\Program;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -127,7 +127,7 @@ final class TitleValueAdapterTest extends TestCase
 
         $adapter = new TitleValueAdapter();
 
-        $expected_data = new TitleValueData("My title");
+        $expected_data = new TitleValue("My title");
 
         $data = $adapter->build($this->field_title_data, $replication_data);
 

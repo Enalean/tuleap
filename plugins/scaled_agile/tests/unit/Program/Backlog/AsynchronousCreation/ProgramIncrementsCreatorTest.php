@@ -29,16 +29,16 @@ use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreatorAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ArtifactData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ScaledAgile\TrackerData;
@@ -132,12 +132,12 @@ final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
     {
         $planned_value          = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Planned', 'Irrelevant', 1, false);
 
-        $title_value         = new TitleValueData('Program Release');
-        $description_value   = new DescriptionValueData('Description', 'text');
-        $status_value        = new StatusValueData([$planned_value]);
-        $start_date_value    = new StartDateValueData("2020-10-01");
-        $end_period_value    = new EndPeriodValueData("2020-10-31");
-        $artifact_link_value = new ArtifactLinkValueData(112);
+        $title_value = new TitleValue('Program Release');
+        $description_value = new DescriptionValue('Description', 'text');
+        $status_value        = new StatusValue([$planned_value]);
+        $start_date_value    = new StartDateValue("2020-10-01");
+        $end_period_value    = new EndPeriodValue("2020-10-31");
+        $artifact_link_value = new ArtifactLinkValue(112);
         $submission_date     = new SubmissionDate(123456789);
 
         return new SourceChangesetValuesCollection(
@@ -182,7 +182,7 @@ final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
         int $status_id,
         int $start_date_id,
         int $end_date_id
-    ): SynchronizedFieldsData {
+    ): SynchronizedFields {
         $artifact_link_field_data = new FieldData(new \Tracker_FormElement_Field_ArtifactLink($artifact_link_id, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1));
 
         $title_field_data = new FieldData(new \Tracker_FormElement_Field_String($title_id, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2));
@@ -195,7 +195,7 @@ final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
 
         $end_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date($end_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6));
 
-        return new SynchronizedFieldsData(
+        return new SynchronizedFields(
             $artifact_link_field_data,
             $title_field_data,
             $description_field_data,

@@ -37,7 +37,7 @@ class SourceChangesetValuesCollectionAdapter
     /**
      * @var TitleValueAdapter
      */
-    private $title_value_data_adapter;
+    private $title_value_adapter;
     /**
      * @var DescriptionValueAdapter
      */
@@ -49,11 +49,11 @@ class SourceChangesetValuesCollectionAdapter
     /**
      * @var StartDateValueAdapter
      */
-    private $start_date_adapter;
+    private $start_date_value_adapter;
     /**
      * @var EndPeriodValueAdapter
      */
-    private $end_period_adapter;
+    private $end_period_value_adapter;
     /**
      * @var ArtifactLinkValueAdapter
      */
@@ -61,19 +61,19 @@ class SourceChangesetValuesCollectionAdapter
 
     public function __construct(
         SynchronizedFieldsAdapter $fields_gatherer,
-        TitleValueAdapter $title_value_data_adapter,
+        TitleValueAdapter $title_value_adapter,
         DescriptionValueAdapter $description_value_adapter,
         StatusValueAdapter $status_value_adapter,
-        StartDateValueAdapter $start_date_adapter,
-        EndPeriodValueAdapter $end_period_adapter,
+        StartDateValueAdapter $start_date_value_adapter,
+        EndPeriodValueAdapter $end_period_value_adapter,
         ArtifactLinkValueAdapter $artifact_link_value_adapter
     ) {
         $this->fields_gatherer             = $fields_gatherer;
-        $this->title_value_data_adapter    = $title_value_data_adapter;
+        $this->title_value_adapter         = $title_value_adapter;
         $this->description_value_adapter   = $description_value_adapter;
         $this->status_value_adapter        = $status_value_adapter;
-        $this->start_date_adapter          = $start_date_adapter;
-        $this->end_period_adapter          = $end_period_adapter;
+        $this->start_date_value_adapter    = $start_date_value_adapter;
+        $this->end_period_value_adapter    = $end_period_value_adapter;
         $this->artifact_link_value_adapter = $artifact_link_value_adapter;
     }
 
@@ -84,11 +84,11 @@ class SourceChangesetValuesCollectionAdapter
     public function buildCollection(ReplicationData $replication_data): SourceChangesetValuesCollection
     {
         $fields              = $this->fields_gatherer->build($replication_data->getTrackerData());
-        $title_value         = $this->title_value_data_adapter->build($fields->getFieldTitleData(), $replication_data);
-        $description_value   = $this->description_value_adapter->build($fields->getFieldDescriptionData(), $replication_data);
-        $status_value        = $this->status_value_adapter->build($fields->getFieldStatusData(), $replication_data);
-        $start_date_value    = $this->start_date_adapter->build($fields->getFieldStartDateData(), $replication_data);
-        $end_period_value    = $this->end_period_adapter->build($fields->getFieldEndPeriodData(), $replication_data);
+        $title_value         = $this->title_value_adapter->build($fields->getTitleField(), $replication_data);
+        $description_value   = $this->description_value_adapter->build($fields->getDescriptionField(), $replication_data);
+        $status_value        = $this->status_value_adapter->build($fields->getStatusField(), $replication_data);
+        $start_date_value    = $this->start_date_value_adapter->build($fields->getStartDateField(), $replication_data);
+        $end_period_value    = $this->end_period_value_adapter->build($fields->getEndPeriodField(), $replication_data);
         $artifact_link_value = $this->artifact_link_value_adapter->build($replication_data);
 
         return new SourceChangesetValuesCollection(

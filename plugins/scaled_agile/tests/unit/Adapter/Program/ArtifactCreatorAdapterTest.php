@@ -25,12 +25,12 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 use Mockery as M;
 use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreationException;
 use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreatorAdapter;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValueData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -98,17 +98,17 @@ final class ArtifactCreatorAdapterTest extends \PHPUnit\Framework\TestCase
     {
         return new ProgramIncrementFieldsData(
             1000,
-            new ArtifactLinkValueData(200),
+            new ArtifactLinkValue(200),
             1001,
-            new TitleValueData('Program Increment'),
+            new TitleValue('Program Increment'),
             1002,
-            new DescriptionValueData('Super important', 'text'),
+            new DescriptionValue('Super important', 'text'),
             1003,
             new MappedStatusValue([10001]),
             1004,
-            new StartDateValueData('2020-11-02'),
+            new StartDateValue('2020-11-02'),
             1005,
-            new EndPeriodValueData('2020-11-06')
+            new EndPeriodValue('2020-11-06')
         );
     }
 }

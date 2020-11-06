@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Adapter\Program\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -93,7 +93,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
         int $status_id,
         int $start_date_id,
         int $end_period_id
-    ): SynchronizedFieldsData {
+    ): SynchronizedFields {
         $artifact_link_field_data = new FieldData(
             new \Tracker_FormElement_Field_ArtifactLink(
                 $artlink_id,
@@ -190,7 +190,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
             )
         );
 
-        return new SynchronizedFieldsData(
+        return new SynchronizedFields(
             $artifact_link_field_data,
             $title_field_data,
             $description_field_data,

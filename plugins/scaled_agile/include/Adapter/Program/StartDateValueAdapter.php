@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
@@ -32,7 +32,7 @@ final class StartDateValueAdapter
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public function build(FieldData $field_start_date_data, ReplicationData $replication_data): StartDateValueData
+    public function build(FieldData $field_start_date_data, ReplicationData $replication_data): StartDateValue
     {
         $start_date_value = $replication_data->getFullChangeset()->getValue($field_start_date_data->getFullField());
 
@@ -44,6 +44,6 @@ final class StartDateValueAdapter
             );
         }
         assert($start_date_value instanceof \Tracker_Artifact_ChangesetValue_Date);
-        return new StartDateValueData($start_date_value->getValue());
+        return new StartDateValue($start_date_value->getValue());
     }
 }

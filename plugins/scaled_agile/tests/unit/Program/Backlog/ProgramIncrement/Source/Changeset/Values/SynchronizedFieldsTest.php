@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Data\SynchronizedFields;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 
-final class SynchronizedFieldsDataTest extends \PHPUnit\Framework\TestCase
+final class SynchronizedFieldsTest extends \PHPUnit\Framework\TestCase
 {
     public function testItReturnsAnArrayOfFields(): void
     {
@@ -41,7 +41,7 @@ final class SynchronizedFieldsDataTest extends \PHPUnit\Framework\TestCase
 
         $end_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date(6, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6));
 
-        $fields = new SynchronizedFieldsData(
+        $fields = new SynchronizedFields(
             $artifact_link_field_data,
             $title_field_data,
             $description_field_data,

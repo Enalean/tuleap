@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Adapter\Program;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -108,7 +108,7 @@ final class DescriptionValueAdapterTest extends TestCase
 
         $adapter = new DescriptionValueAdapter();
 
-        $expected_data = new DescriptionValueData("My description", "text");
+        $expected_data = new DescriptionValue("My description", "text");
 
         $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
         $data = $adapter->build($this->field_description_data, $replication_data);

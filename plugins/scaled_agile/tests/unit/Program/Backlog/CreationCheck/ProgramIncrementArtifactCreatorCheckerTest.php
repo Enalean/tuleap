@@ -39,7 +39,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollect
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
@@ -353,7 +353,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $this->mockField($field_end_date, 5, true, true);
         $end_date_field_data = new FieldData($field_end_date);
 
-        $synchronized_field_data = new SynchronizedFieldsData(
+        $synchronized_fields = new SynchronizedFields(
             $artifact_link_field_data,
             $title_field_data,
             $description_field_data,
@@ -361,7 +361,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
             $start_date_field_data,
             $end_date_field_data
         );
-        $this->fields_adapter->shouldReceive('build')->andReturn($synchronized_field_data);
+        $this->fields_adapter->shouldReceive('build')->andReturn($synchronized_fields);
     }
 
     private function mockField(MockInterface $field, int $id, bool $submitable, bool $updatable): void

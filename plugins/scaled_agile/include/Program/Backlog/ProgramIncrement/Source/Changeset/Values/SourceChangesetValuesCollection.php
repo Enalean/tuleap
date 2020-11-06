@@ -30,11 +30,11 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 final class SourceChangesetValuesCollection
 {
     /**
-     * @var EndPeriodValueData
+     * @var EndPeriodValue
      */
     private $end_period_value;
     /**
-     * @var StartDateValueData
+     * @var StartDateValue
      */
     private $start_date_value;
     /**
@@ -46,31 +46,31 @@ final class SourceChangesetValuesCollection
      */
     private $submitted_on;
     /**
-     * @var StatusValueData
+     * @var StatusValue
      */
     private $status_value;
     /**
-     * @var DescriptionValueData
+     * @var DescriptionValue
      */
     private $description_value;
     /**
-     * @var TitleValueData
+     * @var TitleValue
      */
     private $title_value;
     /**
-     * @var ArtifactLinkValueData
+     * @var ArtifactLinkValue
      */
     private $artifact_link_value_data;
 
     public function __construct(
         int $source_artifact_id,
-        TitleValueData $title_value,
-        DescriptionValueData $description_value,
-        StatusValueData $status_value,
+        TitleValue $title_value,
+        DescriptionValue $description_value,
+        StatusValue $status_value,
         SubmissionDate $submitted_on,
-        StartDateValueData $start_date_value,
-        EndPeriodValueData $end_period_value,
-        ArtifactLinkValueData $artifact_link_value_data
+        StartDateValue $start_date_value,
+        EndPeriodValue $end_period_value,
+        ArtifactLinkValue $artifact_link_value_data
     ) {
         $this->title_value        = $title_value;
         $this->description_value  = $description_value;
@@ -82,17 +82,17 @@ final class SourceChangesetValuesCollection
         $this->artifact_link_value_data = $artifact_link_value_data;
     }
 
-    public function getTitleValue(): TitleValueData
+    public function getTitleValue(): TitleValue
     {
         return $this->title_value;
     }
 
-    public function getDescriptionValue(): DescriptionValueData
+    public function getDescriptionValue(): DescriptionValue
     {
         return $this->description_value;
     }
 
-    public function getStatusValue(): StatusValueData
+    public function getStatusValue(): StatusValue
     {
         return $this->status_value;
     }
@@ -107,16 +107,16 @@ final class SourceChangesetValuesCollection
         return $this->source_artifact_id;
     }
 
-    public function getStartDateValue(): StartDateValueData
+    public function getStartDateValue(): StartDateValue
     {
         return $this->start_date_value;
     }
-    public function getEndPeriodValue(): EndPeriodValueData
+    public function getEndPeriodValue(): EndPeriodValue
     {
         return $this->end_period_value;
     }
 
-    public function getArtifactLinkValue(): ArtifactLinkValueData
+    public function getArtifactLinkValue(): ArtifactLinkValue
     {
         return $this->artifact_link_value_data;
     }
