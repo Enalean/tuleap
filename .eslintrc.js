@@ -7,6 +7,7 @@ module.exports = {
         "@typescript-eslint",
         "import",
         "no-unsanitized",
+        "no-only-tests",
     ],
     extends: [
         "eslint:recommended",
@@ -221,6 +222,7 @@ module.exports = {
                 "cypress/no-assigning-return-values": "error",
                 "cypress/assertion-before-screenshot": "error",
                 "cypress/no-force": "warn",
+                "no-only-tests/no-only-tests": "error",
             },
         },
     ],
