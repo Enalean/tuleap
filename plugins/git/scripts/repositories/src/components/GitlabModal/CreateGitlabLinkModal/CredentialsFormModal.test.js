@@ -131,4 +131,68 @@ describe("CredentialsFormModal", () => {
             "No repository is available with your GitLab account"
         );
     });
+
+    it("When user submit but credentials are not goods, Then error message is displayed", async () => {
+        const wrapper = instantiateComponent();
+        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([{ id: 10 }]));
+
+        wrapper.setData({
+            is_loading: false,
+            gitlab_server: "https://example.com",
+            gitlab_token_user: "",
+            gitlab_repositories: null,
+        });
+
+        await wrapper.vm.$nextTick();
+
+        wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toEqual(
+            "You must provide a valid GitLab server and user API token"
+        );
+    });
+
+    it("When user submit but server_url is not valid, Then error message is displayed", async () => {
+        const wrapper = instantiateComponent();
+        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([{ id: 10 }]));
+
+        wrapper.setData({
+            is_loading: false,
+            gitlab_server: "htt://example.com",
+            gitlab_token_user: "Azer789",
+            gitlab_repositories: null,
+        });
+
+        await wrapper.vm.$nextTick();
+
+        wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toEqual(
+            "Server url is invalid"
+        );
+    });
+
+    it("When api returns empty array, Then error message is displayed", async () => {
+        const wrapper = instantiateComponent();
+        jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([]));
+
+        wrapper.setData({
+            is_loading: false,
+            gitlab_server: "https://example.com",
+            gitlab_token_user: "AFREZF546",
+            gitlab_repositories: null,
+            empty_message: "",
+        });
+
+        await wrapper.vm.$nextTick();
+
+        wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.empty_message).toEqual(
+            "No repository is available with your GitLab account"
+        );
+    });
 });

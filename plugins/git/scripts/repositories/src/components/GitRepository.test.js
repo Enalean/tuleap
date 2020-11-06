@@ -74,7 +74,7 @@ describe("GitRepository", () => {
         ).toBeTruthy();
     });
 
-    it("When repository comes from Gitlab and there is a description, Then Gitlab icon an description are displayed", () => {
+    it("When repository comes from Gitlab and there is a description, Then Gitlab icon and description are displayed", () => {
         propsData = {
             repository: {
                 id: 1,
@@ -209,5 +209,47 @@ describe("GitRepository", () => {
         expect(wrapper.find("[data-test=git-repository-path]").attributes("href")).toEqual(
             "plugins/git/MyPath/MyRepo"
         );
+    });
+
+    it("When repositories are not sorted by path, Then path is displayed behind label", () => {
+        store_options.getters.isFolderDisplayMode = false;
+
+        propsData = {
+            repository: {
+                id: 1,
+                normalized_path: "MyPath/MyRepo",
+                description: "This is my description.",
+                path_without_project: "MyPath",
+                label: "MyRepo",
+                last_update_date: "2020-10-28T15:13:13+01:00",
+                additional_information: {
+                    opened_pull_requests: 2,
+                },
+            },
+        };
+        const wrapper = instantiateComponent();
+
+        expect(wrapper.find("[data-test=repository_name]").text()).toContain("MyPath/");
+        expect(wrapper.find("[data-test=repository_name]").text()).toContain("MyRepo");
+    });
+
+    it("When repositories are sorted by path, Then path is not displayed behind label", () => {
+        propsData = {
+            repository: {
+                id: 1,
+                normalized_path: "MyPath/MyRepo",
+                description: "This is my description.",
+                path_without_project: "MyPath",
+                label: "MyRepo",
+                last_update_date: "2020-10-28T15:13:13+01:00",
+                additional_information: {
+                    opened_pull_requests: 2,
+                },
+            },
+        };
+        const wrapper = instantiateComponent();
+
+        expect(wrapper.find("[data-test=repository_name]").text()).not.toContain("MyPath/");
+        expect(wrapper.find("[data-test=repository_name]").text()).toContain("MyRepo");
     });
 });
