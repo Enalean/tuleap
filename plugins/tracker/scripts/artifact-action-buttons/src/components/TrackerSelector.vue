@@ -18,19 +18,18 @@
   -->
 
 <template>
-    <label for="move-artifact-tracker-selector" v-bind:title="selector_title">
-        <translate>Destination tracker</translate>
-        <span class="highlight">*</span>
+    <div class="move-artifact-tracker-selector-section">
+        <label for="move-artifact-tracker-selector" v-bind:title="selector_title">
+            <translate>Destination tracker</translate>
+            <span class="highlight">*</span>
+        </label>
         <select
             id="move-artifact-tracker-selector"
             name="move-artifact-tracker-selector"
             data-test="move-artifact-tracker-selector"
-            v-bind:disabled="is_tracker_list_empty"
             v-model="selected_tracker"
+            ref="move_artifact_tracker_selector"
         >
-            <option disabled selected="selected" v-bind:value="{ tracker_id: null }">
-                <translate>Choose tracker...</translate>
-            </option>
             <option
                 v-for="tracker of tracker_list_with_disabled_from"
                 v-bind:key="tracker.id"
@@ -45,14 +44,21 @@
                 {{ tracker.label }}
             </option>
         </select>
-    </label>
+    </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+import { isListPickerEnabled } from "../from-tracker-presenter.js";
 
 export default {
     name: "TrackerSelector",
+    data() {
+        return {
+            list_picker: null,
+        };
+    },
     computed: {
         ...mapGetters(["tracker_list_with_disabled_from"]),
         is_tracker_list_empty() {
@@ -74,6 +80,19 @@ export default {
                 ? this.$gettext("An artifact cannot be moved in the same tracker")
                 : "";
         },
+    },
+    async mounted() {
+        if (isListPickerEnabled()) {
+            this.list_picker = await createListPicker(this.$refs.move_artifact_tracker_selector, {
+                is_filterable: true,
+                placeholder: this.$gettext("Choose tracker..."),
+            });
+        }
+    },
+    beforeDestroy() {
+        if (this.list_picker) {
+            this.list_picker.destroy();
+        }
     },
 };
 </script>

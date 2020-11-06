@@ -18,19 +18,19 @@
   -->
 
 <template>
-    <label for="move-artifact-project-selector">
-        <translate>Destination project</translate>
-        <span class="highlight">*</span>
+    <div class="move-artifact-project-selector-section">
+        <label for="move-artifact-project-selector">
+            <translate>Destination project</translate>
+            <span class="highlight">*</span>
+        </label>
 
         <select
             id="move-artifact-project-selector"
             name="move-artifact-project-selector"
             data-test="move-artifact-project-selector"
             v-model="selected_project_id"
+            ref="move_artifact_project_selector"
         >
-            <option disabled="disabled" value="null" selected>
-                <translate>Choose project...</translate>
-            </option>
             <option
                 v-for="project in sorted_projects"
                 v-bind:key="project.id"
@@ -39,14 +39,20 @@
                 {{ project.label }}
             </option>
         </select>
-    </label>
+    </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
-import { getProjectId } from "../from-tracker-presenter.js";
+import { getProjectId, isListPickerEnabled } from "../from-tracker-presenter.js";
+import { createListPicker } from "@tuleap/list-picker/src/list-picker";
 
 export default {
     name: "ProjectSelector",
+    data() {
+        return {
+            list_picker: null,
+        };
+    },
     computed: {
         ...mapGetters(["sorted_projects"]),
         selected_project_id: {
@@ -58,8 +64,21 @@ export default {
             },
         },
     },
-    mounted() {
-        this.$store.dispatch("loadTrackerList", getProjectId());
+    async created() {
+        await this.$store.dispatch("loadTrackerList", getProjectId());
+    },
+    async mounted() {
+        if (isListPickerEnabled()) {
+            this.list_picker = await createListPicker(this.$refs.move_artifact_project_selector, {
+                is_filterable: true,
+                placeholder: this.$gettext("Choose project..."),
+            });
+        }
+    },
+    beforeDestroy() {
+        if (this.list_picker) {
+            this.list_picker.destroy();
+        }
     },
 };
 </script>
