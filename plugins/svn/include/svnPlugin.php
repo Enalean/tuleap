@@ -66,6 +66,7 @@ use Tuleap\SVN\Admin\MailHeaderDao;
 use Tuleap\SVN\Admin\MailHeaderManager;
 use Tuleap\SVN\Admin\MailNotificationDao;
 use Tuleap\SVN\Admin\MailNotificationManager;
+use Tuleap\SVN\Admin\DisplayMigrateFromCoreController;
 use Tuleap\SVN\Admin\RestoreController;
 use Tuleap\Svn\ApacheConfGenerator;
 use Tuleap\SVN\Commit\Svnlook;
@@ -84,7 +85,9 @@ use Tuleap\SVN\Explorer\RepositoryDisplayController;
 use Tuleap\SVN\GetAllRepositories;
 use Tuleap\SVN\Logs\DBWriter;
 use Tuleap\SVN\Logs\QueryBuilder;
+use Tuleap\SVN\Migration\BareRepositoryCreator;
 use Tuleap\SVN\Migration\RepositoryCopier;
+use Tuleap\SVN\Migration\SettingsRetriever;
 use Tuleap\SVN\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\SVN\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\SVN\Notifications\NotificationListBuilder;
@@ -117,6 +120,7 @@ use Tuleap\SVN\SvnCoreAccess;
 use Tuleap\SVN\SvnCoreUsage;
 use Tuleap\SVN\SvnPermissionManager;
 use Tuleap\SVN\SvnRouter;
+use Tuleap\SVN\Admin\UpdateMigrateFromCoreController;
 use Tuleap\SVN\ViewVC\AccessHistoryDao;
 use Tuleap\SVN\ViewVC\AccessHistorySaver;
 use Tuleap\SVN\ViewVC\ViewVCProxy;
@@ -674,10 +678,38 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
+    public function routeDisplayMigrateFromCore(): DispatchableWithRequest
+    {
+        return new DisplayMigrateFromCoreController(
+            ProjectManager::instance(),
+            $this->getPermissionsManager(),
+            $this->getRepositoryManager()
+        );
+    }
+
+    public function routeUpdateMigrateFromCore(): DispatchableWithRequest
+    {
+        return new UpdateMigrateFromCoreController(
+            ProjectManager::instance(),
+            $this->getPermissionsManager(),
+            $this->getRepositoryManager(),
+            new BareRepositoryCreator(
+                $this->getRepositoryCreator(),
+                new SettingsRetriever(
+                    new SVN_Immutable_Tags_DAO(),
+                    new SvnNotificationDao(),
+                    new SVN_AccessFile_DAO()
+                )
+            )
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->get('/{project_name}/admin', $this->getRouteHandler('routeSvnAdmin'));
+            $r->get('/{project_name}/admin-migrate', $this->getRouteHandler('routeDisplayMigrateFromCore'));
+            $r->post('/{project_name}/admin-migrate', $this->getRouteHandler('routeUpdateMigrateFromCore'));
             $r->get('/index.php{path:.*}', $this->getRouteHandler('redirectOldViewVcRoutes'));
             $r->addRoute(['GET', 'POST'], '[/{path:.*}]', $this->getRouteHandler('routeSvnPlugin'));
         });
@@ -986,10 +1018,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $event->setPluginActivated();
     }
 
-    /**
-     * @return RepositoryCreator
-     */
-    private function getRepositoryCreator()
+    private function getRepositoryCreator(): RepositoryCreator
     {
         return new RepositoryCreator(
             new Dao(),

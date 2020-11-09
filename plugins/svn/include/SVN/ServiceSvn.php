@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2020. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,7 +32,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\SVN\AccessControl\AccessControlPresenter;
-use Tuleap\SVN\Admin\AdminGroupsPresenter;
+use Tuleap\SVN\Admin\BaseGlobalAdminPresenter;
 use Tuleap\SVN\Admin\GlobalAdministratorsController;
 use Tuleap\SVN\Admin\HooksConfigurationPresenter;
 use Tuleap\SVN\Admin\ImmutableTagPresenter;
@@ -69,7 +69,7 @@ class ServiceSvn extends Service
     }
 
     /**
-     * @param AdminGroupsPresenter|ExplorerPresenter $presenter
+     * @param BaseGlobalAdminPresenter|ExplorerPresenter $presenter
      */
     public function renderInPage(HTTPRequest $request, string $title, string $template, $presenter)
     {
@@ -136,7 +136,7 @@ class ServiceSvn extends Service
     }
 
     /**
-     * @param AdminGroupsPresenter|ExplorerPresenter|AccessControlPresenter|MailNotificationPresenter|HooksConfigurationPresenter|RepositoryDeletePresenter|ImmutableTagPresenter|RepositoryDisplayPresenter $presenter
+     * @param BaseGlobalAdminPresenter|ExplorerPresenter|AccessControlPresenter|MailNotificationPresenter|HooksConfigurationPresenter|RepositoryDeletePresenter|ImmutableTagPresenter|RepositoryDisplayPresenter $presenter
      */
     private function renderInPageWithBodyClass(
         HTTPRequest $request,

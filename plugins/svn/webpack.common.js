@@ -32,6 +32,7 @@ const webpack_config_for_vue_and_themes = {
         "style-fp": "./themes/FlamingParrot/css/style.scss",
         "style-bp": "./themes/BurningParrot/css/style.scss",
         "style-bp-condensed": "./themes/BurningParrot/css/style-condensed.scss",
+        "global-admin-migrate": "./scripts/global-admin-migrate.ts",
     },
     context,
     output,

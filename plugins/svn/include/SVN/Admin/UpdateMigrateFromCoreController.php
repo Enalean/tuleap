@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
@@ -24,45 +25,47 @@ namespace Tuleap\SVN\Admin;
 
 use HTTPRequest;
 use Project;
-use ProjectUGroup;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\SVN\Migration\BareRepositoryCreator;
+use Tuleap\SVN\Repository\CoreRepository;
+use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
+use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\ServiceSvn;
 use Tuleap\SVN\SvnPermissionManager;
-use User_ForgeUserGroupFactory;
 
-class GlobalAdministratorsController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
+final class UpdateMigrateFromCoreController implements DispatchableWithRequest, DispatchableWithProject
 {
     /**
      * @var \ProjectManager
      */
     private $project_manager;
     /**
-     * @var User_ForgeUserGroupFactory
-     */
-    private $ugroup_factory;
-    /**
      * @var SvnPermissionManager
      */
     private $permissions_manager;
+    /**
+     * @var RepositoryManager
+     */
+    private $repository_manager;
+    /**
+     * @var BareRepositoryCreator
+     */
+    private $repository_creator;
 
     public function __construct(
         \ProjectManager $project_manager,
-        User_ForgeUserGroupFactory $ugroup_factory,
-        SvnPermissionManager $permissions_manager
+        SvnPermissionManager $permissions_manager,
+        RepositoryManager $repository_manager,
+        BareRepositoryCreator $repository_creator
     ) {
         $this->project_manager     = $project_manager;
-        $this->ugroup_factory      = $ugroup_factory;
         $this->permissions_manager = $permissions_manager;
-    }
-
-    public static function getURL(Project $project): string
-    {
-        return SVN_BASE_URL . "/" . urlencode((string) $project->getUnixNameMixedCase()) . "/admin";
+        $this->repository_manager = $repository_manager;
+        $this->repository_creator = $repository_creator;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -77,20 +80,28 @@ class GlobalAdministratorsController implements DispatchableWithRequest, Dispatc
             throw new ForbiddenException();
         }
 
-        $request->set('group_id', $project->getID());
-        $token = GlobalAdministratorsUpdater::generateToken($project);
+        DisplayMigrateFromCoreController::generateToken($project)->check();
 
-        $service->renderInPage(
-            $request,
-            _('Administration'),
-            'global-admin/admin_groups',
-            new AdminGroupsPresenter(
-                $project,
-                $token,
-                $this->getOptions($project),
-                $project->usesSVN(),
-            )
-        );
+        try {
+            $repository = $this->repository_manager->getCoreRepository($project);
+            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-svn', 'Repository already migrated'));
+            $layout->redirect(DisplayMigrateFromCoreController::getURL($project));
+        } catch (CannotFindRepositoryException $exception) {
+            $repository = CoreRepository::buildToBeCreatedRepository($project);
+        }
+
+        try {
+            $this->repository_creator->create($repository, $request->getCurrentUser());
+            $layout->addFeedback(\Feedback::INFO, dgettext('tuleap-svn', 'Repository migrated, please wait a few minutes so the hooks are rewritten'));
+        } catch (\Exception $exception) {
+            $layout->addFeedback(\Feedback::ERROR, $exception->getMessage());
+        }
+        $layout->redirect(DisplayMigrateFromCoreController::getURL($project));
+    }
+
+    public static function getURL(Project $project): string
+    {
+        return SVN_BASE_URL . "/" . urlencode((string) $project->getUnixNameMixedCase()) . "/admin-migrate";
     }
 
     public function getProject(array $variables): Project
@@ -110,29 +121,5 @@ class GlobalAdministratorsController implements DispatchableWithRequest, Dispatc
         }
 
         return $project;
-    }
-
-    /**
-     * @psalm-return list<array{id: int, name: string, selected: bool}>
-     */
-    private function getOptions(Project $project): array
-    {
-        $options         = [];
-        $project_ugroups = $this->ugroup_factory->getAllForProject($project);
-        $svn_ugroups     = $this->permissions_manager->getAdminUgroupIds($project);
-
-        foreach ($project_ugroups as $project_ugroup) {
-            if ($project_ugroup->getId() == ProjectUGroup::ANONYMOUS) {
-                continue;
-            }
-
-            $options[] = [
-                'id'       => (int) $project_ugroup->getId(),
-                'name'     => $project_ugroup->getName(),
-                'selected' => in_array($project_ugroup->getId(), $svn_ugroups),
-            ];
-        }
-
-        return $options;
     }
 }
