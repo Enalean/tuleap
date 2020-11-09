@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/core": "file:../../src",
-    "javascript-time-ago": "^1.0.31",
+    "javascript-time-ago": "^2.3.2",
     "node-gettext": "^3.0.0",
     "prismjs": "^1.22.0",
     "sprintf-js": "^1.1.2",
