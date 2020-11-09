@@ -1713,6 +1713,9 @@ msgstr ""
 msgid "Invalid tracker template."
 msgstr "Le modèle d'outil de suivi selectionné est invalide"
 
+msgid "Is available in \"+ New\" dropdown across the project"
+msgstr "Est disponible dans le menu déroulant \"+ Nouveau\" dans le projet"
+
 msgid "It encountered the following error:"
 msgstr "L'erreur suivante a été remontée :"
 
@@ -2057,6 +2060,9 @@ msgstr "Impossible de supprimer un groupe de champs utilisé dans le workflow."
 
 msgid "Not allowed to delete non-empty field set."
 msgstr "Impossible de supprimer un groupe de champs non vide."
+
+msgid "Notification settings"
+msgstr "Options de notification"
 
 msgid "Notification successfully deleted."
 msgstr "La notification a été supprimée"
