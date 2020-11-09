@@ -7,6 +7,8 @@ DB_HOST="mysql57"
 setup_lhs() {
     touch /etc/aliases.codendi
 
+    cat /etc/passwd
+
     mkdir -p /etc/tuleap/conf \
         /etc/tuleap/plugins \
         /var/tmp/tuleap_cache/lang \
@@ -54,7 +56,7 @@ setup_database() {
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
 
-    MYSQLROOT="mysql -h$DB_HOST -uroot -pwelcome0"
+    MYSQLROOT="/opt/rh/rh-mysql57/root/bin/mysql -h$DB_HOST -uroot -pwelcome0"
 
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init \
         --host="$DB_HOST" \
@@ -138,7 +140,10 @@ seed_data
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set sys_project_approval 0
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set project_admin_can_choose_visibility 1
 
-service php73-php-fpm start
-service nginx start
+sed -i 's/inet_interfaces = localhost/inet_interfaces = 127.0.0.1/' /etc/postfix/main.cf
+/usr/sbin/postfix -c /etc/postfix start
+
+/opt/remi/php73/root/usr/sbin/php-fpm --daemonize
+nginx
 
 exec tail -f /var/log/nginx/error.log
