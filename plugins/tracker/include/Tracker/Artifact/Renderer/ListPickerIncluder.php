@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Renderer;
 
+use HTTPRequest;
+use Tuleap\BrowserDetection\DetectedBrowser;
+
 final class ListPickerIncluder
 {
     /**
@@ -33,12 +36,17 @@ final class ListPickerIncluder
 
     public static function includeListPickerAssets(): void
     {
-        if (\ForgeConfig::get(self::FORGE_CONFIG_KEY)) {
+        if (self::isListPickerEnabledAndBrowserNotIE11()) {
             $include_assets = new \Tuleap\Layout\IncludeAssets(
                 __DIR__ . '/../../../../../../src/www/assets/trackers',
                 '/assets/trackers'
             );
             $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('list-fields.js'));
         }
+    }
+
+    public static function isListPickerEnabledAndBrowserNotIE11(): bool
+    {
+        return DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())->isIE11() ? false : (bool) \ForgeConfig::get(self::FORGE_CONFIG_KEY);
     }
 }
