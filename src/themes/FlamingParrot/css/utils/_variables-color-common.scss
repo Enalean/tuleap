@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$white: #ffffff;
+@import '../../../tlp/src/scss/variables/colors/common-colors';
+
+$white: $tlp-ui-white;
 $light-grey: #ebebeb;
 $grey: #a9a9a9;
 $medium-grey: #686868;

@@ -162,20 +162,6 @@ abstract class BaseLayout extends Response
         return $return;
     }
 
-    protected function getMOTD()
-    {
-        $motd      = '';
-        $motd_file = $GLOBALS['Language']->getContent('others/motd');
-        if (! strpos($motd_file, "empty.txt")) {
-            // empty.txt returned when no motd file found
-            ob_start();
-            include($motd_file);
-            $motd = ob_get_clean();
-        }
-
-        return $motd;
-    }
-
     public function getImagePath($src)
     {
         return $this->imgroot . $src;
@@ -368,6 +354,19 @@ abstract class BaseLayout extends Response
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL($script_name));
 
         return $project_banner;
+    }
+
+    final protected function getPlatformBanner(PFUser $current_user, string $script_name): ?\Tuleap\Platform\Banner\BannerDisplay
+    {
+        $banner_retriever = new \Tuleap\Platform\Banner\BannerRetriever(new \Tuleap\Platform\Banner\BannerDao());
+        $banner = $banner_retriever->getBannerForDisplayPurpose($current_user);
+        if ($banner === null) {
+            return null;
+        }
+
+        $this->includeFooterJavascriptFile($this->include_asset->getFileURL($script_name));
+
+        return $banner;
     }
 
     protected function getFooterSiteJs()

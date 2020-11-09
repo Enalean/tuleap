@@ -1,0 +1,107 @@
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$illustration-width: 59px;
+$illustration-left: 9px;
+
+.platform-banner {
+    display: flex;
+    position: fixed;
+    z-index: 2004;
+    top: 0;
+    left: 0;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-medium-spacing ($illustration-width + $illustration-left + $tlp-medium-spacing);
+    overflow: hidden;
+}
+
+@mixin megaphone($color) {
+    background: url('data:image/svg+xml;base64,PHN2ZyBjbGFzcz0icGxhdGZvcm0tYmFubmVyLWlsbHVzdHJhdGlvbiIgd2lkdGg9IjU5IiBoZWlnaHQ9IjUxIiB2aWV3Qm94PSIwIDAgNTkgNTEiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggb3BhY2l0eT0iMC4zIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTM2LjA5NzEgNC43MjQ0MkwzOS44NDE4IDEzLjE5MUM0MS41MTkzIDEyLjM4NzQgNDMuNDIxOSAxMi45OTkgNDQuMTE0MyAxNC41NjQ1QzQ0LjgwNjYgMTYuMTI5OSA0NC4wMTU3IDE4LjAzMTggNDIuMzM4MiAxOC44MzU0TDQ2LjA4MjkgMjcuMzAyQzQ2Ljc2NTUgMjguODQ1NCA0NS45NjA3IDMwLjc4MDYgNDQuMzA2OCAzMS41NzI5QzM4LjY1NzkgMzAuMzI0MyAyOS44OTczIDI5LjA5NjggMjEuNDE1OSAzMi4zODQ4QzE4Ljk5NDMgMzQuNjEzNSAxOS4zODExIDM4LjE0MjMgMjIuMDA0MSAzOS4wMjM0QzIxLjczMjEgNDAuNzIzOSAyMi43MDU0IDQyLjAwMjYgMjMuNzcyNiA0My40MDQ4QzI0Ljc5NCA0NC43NDY3IDI1LjkwMTQgNDYuMjAxNiAyNi4wODU3IDQ4LjI0NzNDMjUuODMwMiA1MS4zOTY4IDIxLjk2NTkgNTAuMjk4NSAxOS4wMTExIDQ5LjQ1ODhDMTguNzg0IDQ5LjM5NDIgMTguNTYyMiA0OS4zMzEyIDE4LjM0NzggNDkuMjcxN0MxNy45MTM3IDQ4LjgxNSAxNy40NjY3IDQ4LjM2NDUgMTcuMDE3NCA0Ny45MTE2TDE3LjAxNzMgNDcuOTExNUMxNC4yNTE1IDQ1LjEyMzkgMTEuMzk4NCA0Mi4yNDgzIDEwLjkzMzYgMzcuMjk5MUw4LjA1MTEyIDM4LjY3OTlDNS45NzE5MyAzOS42NzU5IDMuNTY4NjQgMzguOTAzNCAyLjcxMDQ4IDM2Ljk2MzFMMC44MzgxNDMgMzIuNzI5OEMtMC4wMjAwMTIyIDMwLjc4OTYgMC45NzkwMTkgMjguMzg3MiAzLjA1ODIxIDI3LjM5MTJMMTQuMzk5MyAyMS45NTg1QzIzLjQ3MjEgMTcuNjEyNCAyOC44NDg0IDkuMDUxNzUgMzEuODI0NiAzLjM1MDkzQzMzLjQ3ODUgMi41NTg2NyAzNS40MTQ1IDMuMTgxMDMgMzYuMDk3MSA0LjcyNDQyWk0yMS4yMzY1IDI5LjEzMDdDMjcuNTEwOSAyNi44NzMzIDM0LjU5MDUgMjYuNTAxMyA0Mi43MDc1IDI3Ljk1NjlMMzMuNDA0NCA2LjkyMjc3QzI5LjE4OCAxNC4yODY1IDI0LjMzMTggMTkuNjg1NSAxOC42MDM1IDIzLjE3NzZMMjEuMjM2NSAyOS4xMzA3Wk00OS42OTczIDExLjYzNDNDNDkuMjAwNiAxMS44NjYgNDguOTgyIDEyLjQ1ODQgNDkuMjA5MSAxMi45NTc0QzQ5LjQzNjEgMTMuNDU2NCA1MC4wMjI4IDEzLjY3MzEgNTAuNTE5NSAxMy40NDE0TDU2LjcyNTIgMTAuNTQ2NEM1Ny4yMjE4IDEwLjMxNDcgNTcuNDQwNCA5LjcyMjM1IDU3LjIxMzQgOS4yMjMzMkM1Ni45ODYzIDguNzI0MjkgNTYuMzk5NiA4LjUwNzU4IDU1LjkwMjkgOC43MzkzTDQ5LjY5NzMgMTEuNjM0M1pNNDQuMTE5NiA2LjgyNDg0QzQzLjczNDUgNi40NjgxNSA0My43NDAzIDUuODM5NjIgNDQuMTMyNSA1LjQyMUw0OC41Mjc4IDAuNzMwNDYxQzQ4LjkyMDEgMC4zMTE4MzcgNDkuNTUwMyAwLjI2MTYzMSA0OS45MzU0IDAuNjE4MzI1QzUwLjMyMDYgMC45NzUwMTYgNTAuMzE0OCAxLjYwMzU0IDQ5LjkyMjUgMi4wMjIxNkw0NS41MjczIDYuNzEyN0M0NS4xMzUgNy4xMzEzMiA0NC41MDQ4IDcuMTgxNTMgNDQuMTE5NiA2LjgyNDg0Wk01MC45MTc4IDIxLjcwMzZDNTAuMzkzMyAyMS43MjUyIDQ5Ljk1NDUgMjEuMjc3MSA0OS45Mzc2IDIwLjcwMjZDNDkuOTIwNyAyMC4xMjgxIDUwLjMzMjIgMTkuNjQ0OCA1MC44NTY2IDE5LjYyMzFMNTcuNDU1NyAxOS4zNTA4QzU3Ljk4MDIgMTkuMzI5MiA1OC40MTkgMTkuNzc3MyA1OC40MzU5IDIwLjM1MThDNTguNDUyOCAyMC45MjYzIDU4LjA0MTMgMjEuNDA5NiA1Ny41MTY5IDIxLjQzMTNMNTAuOTE3OCAyMS43MDM2WiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=')
+        left $illustration-left bottom -4px no-repeat,
+        linear-gradient($color, $color);
+}
+
+.platform-banner-importance-standard {
+    @include megaphone($tlp-ui-info);
+}
+
+.platform-banner-importance-warning {
+    @include megaphone($tlp-ui-warning);
+}
+
+.platform-banner-importance-critical {
+    @include megaphone($tlp-ui-danger);
+}
+
+.platform-banner-illustration {
+    position: absolute;
+    bottom: -10px;
+    left: $illustration-left;
+    opacity: .67;
+}
+
+.platform-banner-message-container {
+    display: table-cell;
+    width: 100%;
+    padding: 0 ($illustration-width + $illustration-left) 0 0;
+}
+
+.platform-banner-message-container > p {
+    margin: 0;
+    color: $tlp-ui-white;
+    font-size: .875rem;
+    font-weight: 500;
+    line-height: 1.375rem;
+    text-align: center;
+
+    a {
+        color: $tlp-ui-white;
+        text-decoration: underline;
+    }
+}
+
+#platform-banner-close {
+    display: table-cell;
+    color: $tlp-ui-white;
+    cursor: pointer;
+
+    &:hover {
+        opacity: .5;
+    }
+}
+
+.platform-banner.platform-banner-hidden {
+    display: none;
+}
+
+.platform-banner-navbar-button {
+    flex: 0 0 auto;
+    margin: 0 $tlp-small-spacing;
+    transition: opacity ease-in-out 100ms;
+
+    &:hover {
+        opacity: .8;
+    }
+
+    &.platform-banner-hidden {
+        display: none;
+    }
+}

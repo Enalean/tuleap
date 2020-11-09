@@ -75,12 +75,6 @@ class HeaderPresenter
     /** @var bool */
     public $has_toolbar;
 
-    /** @var bool */
-    public $has_motd;
-
-    /** @var string */
-    public $motd;
-
     /** @var array */
     public $breadcrumbs;
 
@@ -175,6 +169,26 @@ class HeaderPresenter
      * @psalm-readonly
      */
     public $invite_buddies_presenter;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_platform_banner;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $platform_banner_is_visible;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $purified_platform_banner;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $platform_banner_importance;
 
     public function __construct(
         PFUser $user,
@@ -189,14 +203,14 @@ class HeaderPresenter
         $sidebar,
         array $toolbar,
         array $breadcrumbs,
-        $motd,
         OpenGraphPresenter $open_graph,
         HelpDropdownPresenter $help_dropdown_presenter,
         ?ProjectContextPresenter $project_context,
         ?SwitchToPresenter $switch_to,
         bool $is_legacy_logo_customized,
         bool $is_svg_logo_customized,
-        InviteBuddiesPresenter $invite_buddies_presenter
+        InviteBuddiesPresenter $invite_buddies_presenter,
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
     ) {
         $this->date_time_format            = $GLOBALS['Language']->getText('system', 'datefmt');
         $this->user_timezone               = TimezoneRetriever::getUserTimezone($user);
@@ -212,8 +226,6 @@ class HeaderPresenter
         $this->main_classes                = $main_classes;
         $this->sidebar                     = $sidebar;
         $this->toolbar                     = $toolbar;
-        $this->motd                        = $motd;
-        $this->has_motd                    = ! empty($motd);
         $this->breadcrumbs                 = $breadcrumbs;
         $this->open_graph                  = $open_graph;
         $this->help_dropdown               = $help_dropdown_presenter;
@@ -230,6 +242,17 @@ class HeaderPresenter
         $this->has_breadcrumbs          = count($this->breadcrumbs) > 0;
         $this->has_only_one_breadcrumb  = count($this->breadcrumbs) === 1;
         $this->invite_buddies_presenter = $invite_buddies_presenter;
+
+        $this->has_platform_banner        = $platform_banner !== null;
+        $this->platform_banner_is_visible = $platform_banner && $platform_banner->isVisible();
+        $this->platform_banner_importance = $platform_banner ? $platform_banner->getImportance() : '';
+        $this->purified_platform_banner   = "";
+        if ($platform_banner) {
+            $this->purified_platform_banner = \Codendi_HTMLPurifier::instance()->purify(
+                $platform_banner->getMessage(),
+                Codendi_HTMLPurifier::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE,
+            );
+        }
     }
 
     private function buildFeedbacks($feedback_logs)

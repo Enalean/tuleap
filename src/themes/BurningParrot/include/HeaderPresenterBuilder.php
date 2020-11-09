@@ -81,7 +81,6 @@ class HeaderPresenterBuilder
         URLRedirect $url_redirect,
         array $toolbar,
         array $breadcrumbs,
-        $motd,
         CssAssetCollection $css_assets,
         OpenGraphPresenter $open_graph,
         HelpDropdownPresenter $help_dropdown_presenter,
@@ -89,7 +88,8 @@ class HeaderPresenterBuilder
         $is_in_siteadmin,
         ?ProjectContextPresenter $project_context,
         ?SwitchToPresenter $switch_to,
-        IDetectIfLogoIsCustomized $customized_logo_detector
+        IDetectIfLogoIsCustomized $customized_logo_detector,
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
         $this->current_user                          = $current_user;
@@ -119,6 +119,7 @@ class HeaderPresenterBuilder
                 $this->shouldLogoBeDisplayed(),
                 $is_legacy_logo_customized,
                 $is_svg_logo_customized,
+                $platform_banner,
             ),
             $color,
             $this->getStylesheets($theme_variation),
@@ -128,14 +129,14 @@ class HeaderPresenterBuilder
             $this->sidebar,
             $toolbar,
             $breadcrumbs,
-            $motd,
             $open_graph,
             $help_dropdown_presenter,
             $this->project_context,
             $switch_to,
             $is_legacy_logo_customized,
             $is_svg_logo_customized,
-            InviteBuddiesPresenter::build($current_user)
+            InviteBuddiesPresenter::build($current_user),
+            $platform_banner,
         );
     }
 

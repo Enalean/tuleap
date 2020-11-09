@@ -46,13 +46,34 @@ class FlamingParrot_BodyPresenter
      * @psalm-readonly
      */
     public $invite_buddies_presenter;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_platform_banner;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $platform_banner_is_visible;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $purified_platform_banner;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $platform_banner_importance;
 
     public function __construct(
         PFUser $user,
         $notifications_placeholder,
         HelpDropdownPresenter $help_dropdown_presenter,
         $body_class,
-        InviteBuddiesPresenter $invite_buddies_presenter
+        InviteBuddiesPresenter $invite_buddies_presenter,
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
     ) {
         $this->user_locale               = $user->getLocale();
         $this->user_id                   = $user->getId();
@@ -60,5 +81,16 @@ class FlamingParrot_BodyPresenter
         $this->body_class                = $body_class;
         $this->help_dropdown             = $help_dropdown_presenter;
         $this->invite_buddies_presenter  = $invite_buddies_presenter;
+
+        $this->has_platform_banner        = $platform_banner !== null;
+        $this->platform_banner_is_visible = $platform_banner && $platform_banner->isVisible();
+        $this->platform_banner_importance = $platform_banner ? $platform_banner->getImportance() : '';
+        $this->purified_platform_banner   = "";
+        if ($platform_banner) {
+            $this->purified_platform_banner = \Codendi_HTMLPurifier::instance()->purify(
+                $platform_banner->getMessage(),
+                Codendi_HTMLPurifier::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE,
+            );
+        }
     }
 }

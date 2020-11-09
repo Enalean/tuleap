@@ -204,7 +204,6 @@ class BurningParrotTheme extends BaseLayout
             $url_redirect,
             $this->toolbar,
             $breadcrumbs,
-            $this->getMOTD(),
             $this->css_assets,
             $open_graph,
             $help_dropdown_presenter,
@@ -216,6 +215,7 @@ class BurningParrotTheme extends BaseLayout
                 new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
                 \BackendLogger::getDefaultLogger(),
             ),
+            $this->getPlatformBanner($this->user, 'platform/platform-banner-bp.js')
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

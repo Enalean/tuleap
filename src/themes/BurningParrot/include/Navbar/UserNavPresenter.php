@@ -22,6 +22,7 @@ namespace Tuleap\Theme\BurningParrot\Navbar;
 
 use CSRFSynchronizerToken;
 use PFUser;
+use Tuleap\Platform\Banner\Banner;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\LogoutPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
 use URLRedirect;
@@ -49,16 +50,48 @@ class UserNavPresenter
      * @var bool
      */
     public $has_no_dashboards;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_platform_banner;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $platform_banner_is_visible;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $platform_banner_is_standard;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $platform_banner_is_warning;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $platform_banner_is_critical;
 
     public function __construct(
         PFUser $current_user,
         $display_new_user_menu_item,
         URLRedirect $url_redirect,
-        array $dashboards
+        array $dashboards,
+        ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
     ) {
         $this->current_user               = $current_user;
         $this->display_new_user_menu_item = $display_new_user_menu_item;
         $this->url_redirect               = $url_redirect;
+        $this->has_platform_banner        = $platform_banner !== null;
+        $this->platform_banner_is_visible = $platform_banner && $platform_banner->isVisible();
+
+        $this->platform_banner_is_standard = $platform_banner && $platform_banner->getImportance() === Banner::IMPORTANCE_STANDARD;
+        $this->platform_banner_is_warning  = $platform_banner && $platform_banner->getImportance() === Banner::IMPORTANCE_WARNING;
+        $this->platform_banner_is_critical = $platform_banner && $platform_banner->getImportance() === Banner::IMPORTANCE_CRITICAL;
 
         $this->dashboards          = $dashboards;
         $this->has_no_dashboards   = count($dashboards) === 0;

@@ -7,7 +7,7 @@
   "version": "0.0.0",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.14.0",
-    "@types/d3-shape": "^2.0.0",
+    "@juggle/resize-observer": "^3.2.0",
     "@webcomponents/custom-elements": "^1.4.1",
     "ckeditor4": "^4.14.1",
     "core-js": "^3.6.5",
@@ -43,14 +43,17 @@
     "whatwg-fetch": "^3.4.0"
   },
   "devDependencies": {
+    "@shopify/jest-dom-mocks": "^2.9.3",
     "@types/bootstrap": "^4.5.0",
     "@types/ckeditor": "^4.9.10",
     "@types/d3-scale": "^3.0.0",
     "@types/d3-selection": "^2.0.0",
+    "@types/d3-shape": "^2.0.0",
     "@types/dompurify": "^2.0.4",
     "@types/jquery": "^3.5.1",
     "@types/mustache": "^4.0.1",
     "@types/node-gettext": "^3.0.1",
+    "@types/resize-observer-browser": "^0.1.4",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.1.1",
     "jquery": "^3.5.1",

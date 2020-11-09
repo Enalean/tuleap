@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { allowUnclampingProjectBannerMessage } from "./project-banner-clamp";
-import { allowToHideAndShowProjectBanner } from "./project-banner-show-hide";
-import { patch } from "tlp";
+import { ResizeObserver } from "@juggle/resize-observer";
 
-document.addEventListener("DOMContentLoaded", () => {
-    allowUnclampingProjectBannerMessage(document);
-    allowToHideAndShowProjectBanner(document, patch);
-});
+export function observeProjectBanner(project_banner: HTMLElement, callback: () => void): void {
+    const mutation_observer = new MutationObserver(callback);
+    mutation_observer.observe(project_banner, { attributes: true, attributeFilter: ["class"] });
+
+    const resize_observer = new ResizeObserver(callback);
+    resize_observer.observe(project_banner, {
+        box: "border-box",
+    });
+}

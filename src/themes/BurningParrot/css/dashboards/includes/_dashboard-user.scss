@@ -1,9 +1,9 @@
 $dashboard-header-background: lighten($tlp-theme-sidebar-background-color, 2%);
 
 .body-user-dashboard {
-    background: linear-gradient(to bottom, $dashboard-header-background 0, $dashboard-header-background 100px, $tlp-theme-background-color 100px);
-
     header:not(.pinned) {
+        background: $dashboard-header-background;
+
         #logo {
             background-color: transparent;
             background-position: left center;

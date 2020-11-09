@@ -18,6 +18,7 @@
  */
 
 @import './variables-color-common';
+@import '../../../tlp/src/scss/variables/colors/purple-colors';
 
 $color-name: 'purple';
 $main: #79558a;
@@ -32,10 +33,10 @@ $ui-border-light: #f3f3f3;
 $ui-border-normal: #e3e5ed;
 $ui-border-dark: #d4d7e1;
 
-$ui-color-info   : #4db3d0;
-$ui-color-success: #58b359;
-$ui-color-warning: #f3b13a;
-$ui-color-danger : #da5353;
+$ui-color-info   : $tlp-ui-info;
+$ui-color-success: $tlp-ui-success;
+$ui-color-warning: $tlp-ui-warning;
+$ui-color-danger : $tlp-ui-danger;
 
 $ui-color-info-light   : #eef8fa;
 $ui-color-success-light: #eff8ef;

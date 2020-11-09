@@ -285,7 +285,7 @@ $definitions: (
     $sidebar-expanded-width,
     $sidebar-collapsed-width
 ) {
-    $motd-minimum-height: 58px;
+    $motd-minimum-height: 56px;
     $project-banner-minimum-height: 56px;
     $opacifier-color: opacifier-color($sidebar-background);
 
@@ -299,7 +299,7 @@ $definitions: (
         background-size: calc(var(--project-background-size) - #{$sidebar-expanded-width});
     }
 
-    .motd ~ #main-container .project-with-background #{$element} {
+    .platform-banner:not(.platform-banner-hidden) ~ #main-container .project-with-background #{$element} {
         background-position: $sidebar-expanded-width $motd-minimum-height;
     }
 
@@ -309,7 +309,7 @@ $definitions: (
             background-size: calc(var(--project-background-size) - #{$sidebar-collapsed-width});
         }
 
-        .motd ~ #main-container .project-with-background #{$element} {
+        .platform-banner:not(.platform-banner-hidden) ~ #main-container .project-with-background #{$element} {
             background-position: $sidebar-collapsed-width $motd-minimum-height;
             background-size: calc(var(--project-background-size) - #{$sidebar-collapsed-width});
         }

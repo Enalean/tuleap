@@ -1,0 +1,18 @@
+{{# has_platform_banner }}
+    <div class="platform-banner
+        {{^ platform_banner_is_visible }}platform-banner-hidden{{/ platform_banner_is_visible }}
+        platform-banner-importance-{{ platform_banner_importance }}"
+    >
+        <div class="platform-banner-message-container">
+            <p id="platform-banner-message" class="platform-banner-clamped">{{{ purified_platform_banner }}}</p>
+        </div>
+        {{# user_id }}
+            <i
+                id="platform-banner-close"
+                class="fas fa-times"
+                aria-label="{{# gettext }}Close{{/ gettext }}"
+                data-user-id="{{ user_id }}"
+            ></i>
+        {{/ user_id }}
+    </div>
+{{/ has_platform_banner }}
