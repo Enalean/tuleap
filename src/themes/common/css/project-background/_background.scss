@@ -314,28 +314,6 @@ $definitions: (
             background-size: calc(var(--project-background-size) - #{$sidebar-collapsed-width});
         }
     }
-
-    &.has-visible-project-banner {
-        .project-with-background #{$element} {
-            background-position: $sidebar-expanded-width $project-banner-minimum-height;
-        }
-
-        .motd ~ #main-container .project-with-background #{$element} {
-            background-position: $sidebar-expanded-width ($project-banner-minimum-height + $motd-minimum-height);
-        }
-
-        &.sidebar-collapsed {
-            .project-with-background #{$element} {
-                background-position: $sidebar-collapsed-width $project-banner-minimum-height;
-                background-size: calc(var(--project-background-size) - #{$sidebar-collapsed-width});
-            }
-
-            .motd ~ #main-container .project-with-background #{$element} {
-                background-position: $sidebar-collapsed-width ($project-banner-minimum-height + $motd-minimum-height);
-                background-size: calc(var(--project-background-size) - #{$sidebar-collapsed-width});
-            }
-        }
-    }
 }
 
 @mixin project-background-title-header-typography($white) {
