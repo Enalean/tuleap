@@ -56,12 +56,6 @@ function svn_header(Project $project, $params)
                            'url'   => '/svn/viewvc.php/?roottype=svn&root=' . $project->getUnixName(false)];
     }
 
-    if (user_isloggedin()) {
-        $toolbar[] = ['title' => $Language->getText('svn_utils', 'my_ci'),
-                           'url'   => '/svn/?func=browse&group_id=' . $group_id . '&set=my'];
-        $toolbar[] = ['title' => $Language->getText('svn_utils', 'svn_query'),
-                           'url'   => '/svn/?func=browse&group_id=' . $group_id];
-    }
     if (user_ismember($group_id, 'A') || user_ismember($group_id, 'SVN_ADMIN')) {
         $toolbar[] = ['title' => $Language->getText('svn_utils', 'svn_admin'),
                            'url'   => '/svn/admin/?group_id=' . $group_id];
@@ -71,11 +65,6 @@ function svn_header(Project $project, $params)
                                'url'   => '/svn/admin/?group_id=' . $group_id . '&func=notification&path=' . $params['path']];
         }
     }
-    if (! isset($params['help']) || ! $params['help']) {
-        $params['help'] = "svn.html";
-    }
-    $toolbar[] = ['title' => $Language->getText('global', 'help'),
-                       'url'   => 'javascript:help_window(\'/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/code-versioning/' . $params['help'] . '\');'];
 
     $service->displayHeader(
         $params['title'],
@@ -88,6 +77,16 @@ function svn_header(Project $project, $params)
         $toolbar,
         $additional_params
     );
+
+    echo svn_deprecation_notice($project);
+}
+
+function svn_deprecation_notice(\Project $project): string
+{
+    if ($project->usesService('plugin_svn')) {
+        return "<p><div class='alert alert-danger'> " . sprintf(_('Subversion Core is deprecated, please install and activate `SVN` plugin and <a href="/plugins/svn/%s/admin-migrate">migrate your repository.</a>'), urlencode($project->getUnixNameLowerCase())) .  "</div></p>";
+    }
+    return "<p><div class='alert alert-danger'> " . sprintf(_('Subversion Core is deprecated, please <a href="/project/%d/admin/services">install and activate `SVN` plugin.</a>'), urlencode((string) $project->getID())) .  "</div></p>";
 }
 
 function svn_header_admin($params)
@@ -117,13 +116,9 @@ function svn_header_admin($params)
     $toolbar[] = ['title' => $Language->getText('svn_utils', 'notif'),
                        'url'   => '/svn/admin/?func=notification&group_id=' . $group_id];
 
-    if (! $params['help']) {
-        $params['help'] = "svn.html#subversion-administration-interface";
-    }
-    $toolbar[] = ['title' => $Language->getText('global', 'help'),
-                       'url' => 'javascript:help_window(\'/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/code-versioning/' . $params['help'] . '\');'];
-
     $service->displayHeader($params['title'], [['title' => $params['title'], 'url' => '/svn/?group_id=' . $group_id]], $toolbar);
+
+    echo svn_deprecation_notice($project);
 }
 
 

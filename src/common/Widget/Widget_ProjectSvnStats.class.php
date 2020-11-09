@@ -45,6 +45,8 @@ class Widget_ProjectSvnStats extends Widget
 
     public function getContent()
     {
+        return _('This widget is deprecated, you should remove it.');
+
         $request = HTTPRequest::instance();
 
         return '<div style="text-align:center">
