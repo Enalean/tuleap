@@ -23,6 +23,7 @@ namespace Tuleap\Gitlab\Repository;
 
 use DateTimeImmutable;
 use Project;
+use Tuleap\Gitlab\API\GitlabProject;
 
 class GitlabRepositoryFactory
 {
@@ -66,6 +67,21 @@ class GitlabRepositoryFactory
         }
 
         return $this->getInstanceFromRow($row);
+    }
+
+    public function getGitlabRepositoryByGitlabProjectAndIntegrationId(
+        GitlabProject $gitlab_project,
+        int $integration_id
+    ): GitlabRepository {
+        return new GitlabRepository(
+            $integration_id,
+            $gitlab_project->getId(),
+            $gitlab_project->getName(),
+            $gitlab_project->getPathWithNamespace(),
+            $gitlab_project->getDescription(),
+            $gitlab_project->getWebUrl(),
+            $gitlab_project->getLastActivityAt(),
+        );
     }
 
     /**

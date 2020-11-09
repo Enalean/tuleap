@@ -44,4 +44,15 @@ class SecretDao extends DataAccessObject
             ['id' => $repository_id]
         );
     }
+
+    public function storeGitlabRepositoryWebhookSecret(int $repository_id, string $encrypted_secret): void
+    {
+        $this->getDB()->insert(
+            'plugin_gitlab_repository_webhook_secret',
+            [
+                'id'             => $repository_id,
+                'webhook_secret' => $encrypted_secret
+            ]
+        );
+    }
 }

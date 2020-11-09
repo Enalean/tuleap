@@ -28,12 +28,20 @@ use GitPermissionsManager;
 use GitRepositoryFactory;
 use GitUserNotAdminException;
 use Luracast\Restler\RestException;
+use Project;
 use ProjectManager;
 use SystemEventManager;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Gitlab\API\ClientWrapper;
+use Tuleap\Gitlab\API\Credentials;
+use Tuleap\Gitlab\API\GitlabRequestException;
+use Tuleap\Gitlab\API\GitlabProjectBuilder;
+use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDeletor;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
@@ -41,17 +49,121 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryNotInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotIntegratedInAnyProjectException;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
+use Tuleap\Gitlab\Repository\Webhook\Secret\SecretGenerator;
+use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\REST\Header;
 use UserManager;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Gitlab\API\GitlabResponseAPIException;
+use Tuleap\Gitlab\Repository\GitlabRepositoryAlreadyIntegratedInProjectException;
 
 final class GitlabRepositoryResource
 {
+    /**
+     * @url OPTIONS
+     */
+    public function options(): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * Integrate a GitLab repository into a project.
+     *
+     * /!\ This route is under construction.
+     * <br>
+     * Integrate the given GitLab repository into project.
+     *
+     * <br>
+     * <br>
+     * A GitLab repository can be integrated into a project like:
+     * <br>
+     * <pre>
+     * {<br>
+     *   &nbsp;"project_id": 122,<br>
+     *   &nbsp;"gitlab_server_url" : "https://example.com",<br>
+     *   &nbsp;"gitlab_user_api_token" : "my_token",<br>
+     *   &nbsp;"gitlab_internal_id" : 145896<br>
+     *  }<br>
+     * </pre>
+     *
+     * @url POST
+     * @access protected
+     *
+     * @param GitlabRepositoryPOSTRepresentation $gitlab_repository {@from body}
+     *
+     * @status 201
+     * @return GitlabRepositoryRepresentation {@type GitlabRepositoryRepresentation}
+     *
+     * @throws RestException 400
+     * @throws RestException 401
+     *
+     */
+    public function createGitlabRepository(GitlabRepositoryPOSTRepresentation $gitlab_repository): GitlabRepositoryRepresentation
+    {
+        $this->options();
+
+        $gitlab_server_url  = $gitlab_repository->gitlab_server_url;
+        $user_api_token     = new ConcealedString($gitlab_repository->gitlab_user_api_token);
+        $project_id         = $gitlab_repository->project_id;
+        $gitlab_internal_id = $gitlab_repository->gitlab_internal_id;
+
+        $project     = $this->getProjectById($project_id);
+        $credentials = new Credentials($gitlab_server_url, $user_api_token);
+
+        $request_factory = HTTPFactoryBuilder::requestFactory();
+        $stream_factory  = HTTPFactoryBuilder::streamFactory();
+        $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
+        $gitlab_api_client = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
+        try {
+            $gitlab_api_project = (new GitlabProjectBuilder($gitlab_api_client))->getProjectFromGitlabAPI(
+                $credentials,
+                $gitlab_internal_id
+            );
+
+            $gitlab_repository_creator = new GitlabRepositoryCreator(
+                new DBTransactionExecutorWithConnection(
+                    DBFactory::getMainTuleapDBConnection()
+                ),
+                new GitlabRepositoryFactory(
+                    new GitlabRepositoryDao()
+                ),
+                new GitlabRepositoryDao(),
+                new GitlabRepositoryProjectDao(),
+                new WebhookCreator(
+                    new SecretGenerator(
+                        new KeyFactory(),
+                        new SecretDao()
+                    ),
+                    $gitlab_api_client
+                )
+            );
+
+            $integrated_gitlab_repository = $gitlab_repository_creator->integrateGitlabRepositoryInProject(
+                $credentials,
+                $gitlab_api_project,
+                $project
+            );
+
+            return GitlabRepositoryRepresentation::buildFromGitlabRepository($integrated_gitlab_repository);
+        } catch (GitlabResponseAPIException | GitlabRepositoryAlreadyIntegratedInProjectException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (GitlabRequestException $exception) {
+            throw new RestException(
+                $exception->getErrorCode(),
+                $exception->getMessage()
+            );
+        }
+    }
+
     /**
      * @url OPTIONS {id}
      *
      * @param int $id Id of the GitLab repository integration
      */
-    public function optionsGitlabRepositories(int $id): void
+    public function optionsId(int $id): void
     {
         Header::allowOptionsDelete();
     }
@@ -61,7 +173,7 @@ final class GitlabRepositoryResource
      *
      * /!\ This route is under construction.
      * <br>
-     * Delete the given Gitlab integration.
+     * Delete the given GitLab integration.
      *
      * @url    DELETE {id}
      * @access protected
@@ -77,7 +189,7 @@ final class GitlabRepositoryResource
      */
     protected function deleteGitlabRepository(int $id, int $project_id): void
     {
-        $this->optionsGitlabRepositories($id);
+        $this->optionsId($id);
 
         $repository_factory = new GitlabRepositoryFactory(
             new GitlabRepositoryDao()
@@ -89,10 +201,7 @@ final class GitlabRepositoryResource
             throw new RestException(404, "Repository #$id not found.");
         }
 
-        $project = ProjectManager::instance()->getProject($project_id);
-        if (! $project || $project->isError()) {
-            throw new RestException(404, "Project #$project_id not found.");
-        }
+        $project = $this->getProjectById($project_id);
 
         $current_user = UserManager::instance()->getCurrentUser();
 
@@ -138,5 +247,18 @@ final class GitlabRepositoryResource
             $fine_grained_dao,
             $fine_grained_retriever
         );
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function getProjectById(int $project_id): Project
+    {
+        $project = ProjectManager::instance()->getProject($project_id);
+        if (! $project || $project->isError()) {
+            throw new RestException(404, "Project #$project_id not found.");
+        }
+
+        return $project;
     }
 }
