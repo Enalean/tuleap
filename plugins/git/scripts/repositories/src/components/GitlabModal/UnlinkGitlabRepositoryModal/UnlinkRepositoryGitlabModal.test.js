@@ -22,6 +22,11 @@ import { createLocalVue, shallowMount } from "@vue/test-utils";
 import UnlinkRepositoryGitlabModal from "./UnlinkRepositoryGitlabModal.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
+import * as api from "../../../api/rest-querier";
+import {
+    mockFetchError,
+    mockFetchSuccess,
+} from "../../../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
 
 describe("UnlinkRepositoryGitlabModal", () => {
     let store_options, store, propsData, localVue;
@@ -69,5 +74,77 @@ describe("UnlinkRepositoryGitlabModal", () => {
         expect(wrapper.find("[data-test=confirm-unlink-gitlab-message]").text()).toEqual(
             "Wow, wait a minute. You are about to unlink the GitLab repository My project. Please confirm your action."
         );
+    });
+
+    it("When user confirm unlink, Then repository is removed and success message is displayed", async () => {
+        const wrapper = instantiateComponent();
+        mockFetchSuccess(jest.spyOn(api, "deleteIntegrationGitlab"));
+
+        wrapper.setData({
+            repository: {
+                id: 10,
+                label: "My project",
+            },
+        });
+
+        const success_message =
+            "GitLab repository <strong>My project</strong> has been successfully unlinked!";
+
+        await wrapper.vm.$nextTick();
+
+        wrapper.find("[data-test=button-delete-gitlab-repository]").trigger("click");
+
+        await wrapper.vm.$nextTick();
+
+        expect(store.commit).toHaveBeenCalledWith("removeRepository", {
+            id: 10,
+            label: "My project",
+        });
+        expect(store.commit).toHaveBeenCalledWith("setSuccessMessage", success_message);
+    });
+
+    it("When error is returned from API, Then error is set to data and button is disabled", async () => {
+        const wrapper = instantiateComponent();
+        mockFetchError(jest.spyOn(api, "deleteIntegrationGitlab"), {
+            status: 404,
+            error_json: { error: { code: 404, message: "Error during delete" } },
+        });
+
+        wrapper.setData({
+            repository: {
+                id: 10,
+                label: "My project",
+            },
+        });
+
+        wrapper.find("[data-test=button-delete-gitlab-repository]").trigger("click");
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=gitlab-fail-delete-repository]").text()).toEqual(
+            "404 Error during delete"
+        );
+
+        expect(
+            wrapper.find("[data-test=button-delete-gitlab-repository]").attributes("disabled")
+        ).toBeTruthy();
+    });
+
+    it("When there is a rest error and we click on submit, Then API is not queried", async () => {
+        const wrapper = instantiateComponent();
+        const api_delete = jest.spyOn(api, "deleteIntegrationGitlab");
+
+        wrapper.setData({
+            repository: {
+                id: 10,
+                label: "My project",
+            },
+            message_error_rest: "Error during delete",
+        });
+
+        wrapper.find("[data-test=button-delete-gitlab-repository]").trigger("click");
+        await wrapper.vm.$nextTick();
+
+        expect(api_delete).not.toHaveBeenCalled();
     });
 });

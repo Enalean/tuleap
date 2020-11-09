@@ -49,6 +49,9 @@ export default {
     setErrorMessageType(state, error_message_type) {
         state.error_message_type = error_message_type;
     },
+    setSuccessMessage(state, success_message) {
+        state.success_message = success_message;
+    },
     setIsLoadingInitial(state, is_loading_initial) {
         state.is_loading_initial = is_loading_initial;
     },
@@ -79,6 +82,12 @@ export default {
     },
     setServicesNameUsed(state, services_name_used) {
         state.services_name_used = services_name_used;
+    },
+    removeRepository(state, repository) {
+        const index_of_repository = state.repositories_for_owner[state.selected_owner_id].indexOf(
+            repository
+        );
+        state.repositories_for_owner[state.selected_owner_id].splice(index_of_repository, 1);
     },
 };
 

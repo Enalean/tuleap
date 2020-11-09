@@ -36,6 +36,7 @@ describe("gitlabRepositoryFormatter", () => {
 
             expect(repo_formatted).toEqual({
                 id: "gitlab_1",
+                integration_id: 1,
                 normalized_path: "MyPath/MyRepo",
                 description: "This is my description.",
                 path_without_project: "MyPath",

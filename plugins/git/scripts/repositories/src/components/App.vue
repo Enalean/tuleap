@@ -27,6 +27,7 @@
         <action-bar />
         <div class="tlp-framed">
             <error-message />
+            <success-message />
             <git-repository-create />
             <gitlab-repository-modal />
             <unlink-repository-gitlab-modal />
@@ -55,11 +56,13 @@ import { getExternalPlugins } from "../repository-list-presenter";
 import JenkinsServers from "./ActionBar/JenkinsServers.vue";
 import GitlabRepositoryModal from "./GitlabModal/CreateGitlabLinkModal/GitlabRepositoryModal.vue";
 import UnlinkRepositoryGitlabModal from "./GitlabModal/UnlinkGitlabRepositoryModal/UnlinkRepositoryGitlabModal.vue";
+import SuccessMessage from "./SuccessMessage";
 
 export default {
     name: "App",
     store,
     components: {
+        SuccessMessage,
         GitlabRepositoryModal,
         UnlinkRepositoryGitlabModal,
         ErrorMessage,

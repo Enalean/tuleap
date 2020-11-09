@@ -27,6 +27,7 @@ const state = {
     filter: "",
     selected_owner_id: PROJECT_KEY,
     error_message_type: ERROR_TYPE_NO_ERROR,
+    success_message: "",
     is_loading_initial: true,
     is_loading_next: true,
     add_repository_modal: null,

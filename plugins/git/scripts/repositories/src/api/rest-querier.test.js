@@ -20,7 +20,7 @@
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
 import { getRepositoryList, getForkedRepositoryList, postRepository } from "./rest-querier.js";
-import { getGitlabRepositoryList } from "./rest-querier";
+import { deleteIntegrationGitlab, getGitlabRepositoryList } from "./rest-querier";
 
 jest.mock("tlp");
 
@@ -131,6 +131,22 @@ describe("API querier", () => {
 
                 getGitlabRepositoryList(project_id, "push_date", displayCallback);
             });
+        });
+    });
+
+    describe("deleteIntegrationGitlab", () => {
+        it("Given project id and repository id, Then api is queried to delete", async () => {
+            const project_id = 101;
+            const repository_id = 1;
+
+            const tlpDelete = jest.spyOn(tlp, "del");
+            mockFetchSuccess(tlpDelete);
+
+            await deleteIntegrationGitlab({ project_id, repository_id });
+
+            expect(tlpDelete).toHaveBeenCalledWith(
+                "/api/v1/gitlab_repositories/" + repository_id + "?project_id=" + project_id
+            );
         });
     });
 });
