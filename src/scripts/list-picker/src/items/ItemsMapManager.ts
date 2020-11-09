@@ -17,15 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ListPickerItem } from "../type";
-import { generateItemMapBasedOnSourceSelectOptions } from "../helpers/static-list-helper";
+import { ListPickerItem, ListPickerItemMap } from "../type";
+import { ListItemMapBuilder } from "./ListItemMapBuilder";
 
 export class ItemsMapManager {
-    private items_map: Map<string, ListPickerItem>;
+    private items_map!: ListPickerItemMap;
 
-    constructor(private readonly source_select_box: HTMLSelectElement) {
-        this.items_map = generateItemMapBasedOnSourceSelectOptions(source_select_box);
-    }
+    constructor(private readonly list_item_builder: ListItemMapBuilder) {}
 
     public getListPickerItems(): Array<ListPickerItem> {
         return Array.from(this.items_map.values());
@@ -39,8 +37,8 @@ export class ItemsMapManager {
         return list_item;
     }
 
-    public rebuildItemsMap(): void {
-        this.items_map = generateItemMapBasedOnSourceSelectOptions(this.source_select_box);
+    public async refreshItemsMap(): Promise<void> {
+        this.items_map = await this.list_item_builder.buildListPickerItemsMap();
     }
 
     public getItemWithValue(value: string): ListPickerItem | null {

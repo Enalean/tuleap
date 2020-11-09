@@ -25,6 +25,7 @@ import { MultipleSelectionManager } from "./MultipleSelectionManager";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
 import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
 import { ItemsMapManager } from "../items/ItemsMapManager";
+import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 
 describe("MultipleSelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -45,7 +46,7 @@ describe("MultipleSelectionManager", () => {
         );
     }
 
-    beforeEach(() => {
+    beforeEach(async () => {
         source_select_box = document.createElement("select");
         source_select_box.setAttribute("multiple", "multiple");
         appendSimpleOptionsToSourceSelectBox(source_select_box);
@@ -64,7 +65,7 @@ describe("MultipleSelectionManager", () => {
         selection_container = selection_element;
         openListPicker = jest.fn();
 
-        item_map_manager = new ItemsMapManager(source_select_box);
+        item_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
         manager = new MultipleSelectionManager(
             source_select_box,
             selection_element,
@@ -75,6 +76,7 @@ describe("MultipleSelectionManager", () => {
             gettext_provider
         );
 
+        await item_map_manager.refreshItemsMap();
         item_1 = item_map_manager.findListPickerItemInItemMap("list-picker-item-value_1");
         item_2 = item_map_manager.findListPickerItemInItemMap("list-picker-item-value_2");
         jest.spyOn(source_select_box, "dispatchEvent");
@@ -239,7 +241,7 @@ describe("MultipleSelectionManager", () => {
             manager.handleBackspaceKey(backspace_down_event);
 
             expect(isItemSelected(item_1)).toBe(false);
-            expect(search_input.value).toEqual(item_1.template);
+            expect(search_input.value).toEqual(item_1.label);
             expect(backspace_down_event.cancelBubble).toBe(true);
             expect(
                 selection_container.querySelector(".list-picker-selected-value-remove-button")
@@ -249,7 +251,7 @@ describe("MultipleSelectionManager", () => {
 
         it("should let the user delete the content of the search input", () => {
             const backspace_down_event = new KeyboardEvent("keydown");
-            search_input.value = item_1.template;
+            search_input.value = item_1.label;
 
             manager.handleBackspaceKey(backspace_down_event);
 
@@ -270,12 +272,12 @@ describe("MultipleSelectionManager", () => {
     });
 
     describe("resetAfterDependenciesUpdate", () => {
-        it("should remove the values from the previous selection that do not appear in the new options", () => {
+        it("should remove the values from the previous selection that do not appear in the new options", async () => {
             manager.processSelection(item_1.element);
             manager.processSelection(item_2.element);
 
             source_select_box.options[2].value = "a_brand_new_value";
-            item_map_manager.rebuildItemsMap();
+            await item_map_manager.refreshItemsMap();
             manager.resetAfterDependenciesUpdate();
 
             const new_item_with_item_1_value = item_map_manager.getItemWithValue(item_1.value);
@@ -291,13 +293,13 @@ describe("MultipleSelectionManager", () => {
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
         });
 
-        it("should put back the placeholder and remove the [remove all values] button when no item are selected", () => {
+        it("should put back the placeholder and remove the [remove all values] button when no item are selected", async () => {
             manager.processSelection(item_1.element);
             manager.processSelection(item_2.element);
 
             source_select_box.options[1].value = "a_brand_new_value";
             source_select_box.options[2].value = "another_brand_new_value";
-            item_map_manager.rebuildItemsMap();
+            await item_map_manager.refreshItemsMap();
             manager.resetAfterDependenciesUpdate();
 
             expect(

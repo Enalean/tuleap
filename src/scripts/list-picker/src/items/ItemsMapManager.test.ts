@@ -19,14 +19,16 @@
 
 import { ItemsMapManager } from "./ItemsMapManager";
 import { appendGroupedOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
+import { ListItemMapBuilder } from "./ListItemMapBuilder";
 
 describe("ItemsMapManager", () => {
     let items_manager: ItemsMapManager, source_select_box: HTMLSelectElement;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         source_select_box = document.createElement("select");
         appendGroupedOptionsToSourceSelectBox(source_select_box);
-        items_manager = new ItemsMapManager(source_select_box);
+        items_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
+        await items_manager.refreshItemsMap();
     });
 
     describe("findListPickerItemInItemMap", () => {
@@ -55,6 +57,7 @@ describe("ItemsMapManager", () => {
                 is_selected: false,
                 target_option: expect.any(HTMLOptionElement),
                 template: "Value 5",
+                label: "Value 5",
                 value: "value_5",
             });
         });

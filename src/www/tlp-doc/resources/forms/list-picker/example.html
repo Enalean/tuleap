@@ -7,7 +7,7 @@
         <option value="3">3</option>
     </select>
     <script type="text/javascript">
-        import { createListPicker } from "@tuleap/list-picker";
+        import { createListPicker } from "@tuleap/list-picker/src/list-picker";
 
         createListPicker(document.querySelector('#list-picker-sb'), {
             placeholder: "Choose a value in the list",
@@ -34,7 +34,7 @@
         </optgroup>
     </select>
     <script type="text/javascript">
-        import { createListPicker } from "@tuleap/list-picker";
+        import { createListPicker } from "@tuleap/list-picker/src/list-picker";
 
         createListPicker(document.querySelector('#list-picker-sb-with-optgroups'), {
             placeholder: "Choose a value in the list",
@@ -55,7 +55,7 @@
         <option value="3">3</option>
     </select>
     <script type="text/javascript">
-        import { createListPicker } from "@tuleap/list-picker";
+        import { createListPicker } from "@tuleap/list-picker/src/list-picker";
 
         createListPicker(document.querySelector('#list-picker-sb-disabled'), {
             placeholder: "You can't choose any value yet"
@@ -75,10 +75,43 @@
     </select>
     <p class="tlp-text-danger">This field is mandatory, please choose a value in the list.</p>
     <script type="text/javascript">
-        import { createListPicker } from "@tuleap/list-picker";
+        import { createListPicker } from "@tuleap/list-picker/src/list-picker";
 
         createListPicker(document.querySelector('#list-picker-sb-error'), {
             placeholder: "Choose a value in the list"
+        });
+    </script>
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="list-picker-sb-avatars">ListPicker with custom items templates</label>
+    <select id="list-picker-sb-avatars" name="list-value">
+        <option value=""></option>
+        <optgroup label="Lannisters">
+            <option value="101" selected>Tyrion</option>
+            <option value="102">Jaime</option>
+            <option value="103" disabled>Tywin</option>
+            <option value="104">Cersei</option>
+        </optgroup>
+        <optgroup label="Stark">
+            <option value="105">Sansa</option>
+            <option value="106">Arya</option>
+            <option value="107">Bran</option>
+            <option value="108" disabled>Eddard</option>
+        </optgroup>
+    </select>
+    <script type="text/javascript">
+        import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+
+        createListPicker(document.querySelector('#list-picker-sb-avatars'), {
+            placeholder: "Choose a GoT character",
+            is_filterable: true,
+            items_template_formatter: (value_id, option_label) => {
+                if (value_id === "103" || value_id === "108") {
+                    return `<i class="fas fa-fw fa-user-slash"></i> ${option_label}`;
+                }
+                return `<i class="fas fa-fw fa-user"></i> ${option_label}`;
+            },
         });
     </script>
 </div>

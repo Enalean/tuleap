@@ -239,3 +239,16 @@ fieldset {
         max-width: 100%;
     }
 }
+
+.tuleap-artifact-modal-list-field-avatar {
+    margin: 0 $tlp-small-spacing 0 0;
+    vertical-align: text-bottom;
+}
+
+.tuleap-artifact-modal-list-field-avatar-badge {
+    margin: 0 5px 0 0;
+}
+
+.list-picker-with-custom-items-templates > .list-picker-badge {
+    padding: 2px 8px;
+}

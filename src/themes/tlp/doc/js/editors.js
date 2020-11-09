@@ -177,6 +177,17 @@ import { createListPicker } from "../../../../scripts/list-picker/src/list-picke
                 createListPicker(document.querySelector("#list-picker-sb-error"), {
                     placeholder: "Choose a value",
                 });
+
+                createListPicker(document.querySelector("#list-picker-sb-avatars"), {
+                    placeholder: "Choose a GoT character",
+                    is_filterable: true,
+                    items_template_formatter: (value_id, option_label) => {
+                        if (value_id === "103" || value_id === "108") {
+                            return `<i class="fas fa-fw fa-user-slash"></i> ${option_label}`;
+                        }
+                        return `<i class="fas fa-fw fa-user"></i> ${option_label}`;
+                    },
+                });
             }
 
             if (example.id === "example-multi-list-picker-") {
@@ -194,6 +205,17 @@ import { createListPicker } from "../../../../scripts/list-picker/src/list-picke
 
                 createListPicker(document.querySelector("#list-picker-msb-error"), {
                     placeholder: "Choose some values in the list",
+                });
+
+                createListPicker(document.querySelector("#list-picker-msb-avatars"), {
+                    placeholder: "Choose GoT characters",
+                    is_filterable: true,
+                    items_template_formatter: (value_id, option_label) => {
+                        if (value_id === "103" || value_id === "108") {
+                            return `<i class="fas fa-fw fa-user-slash"></i> ${option_label}`;
+                        }
+                        return `<i class="fas fa-fw fa-user"></i> ${option_label}`;
+                    },
                 });
             }
 

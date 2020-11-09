@@ -104,6 +104,10 @@ export class BaseComponentRenderer {
         const selection_element = document.createElement("span");
         selection_element.classList.add("list-picker-selection");
 
+        if (this.hasCustomItemsTemplates()) {
+            selection_element.classList.add("list-picker-with-custom-items-templates");
+        }
+
         if (this.source_select_box.multiple) {
             selection_element.classList.add("list-picker-multiple");
             selection_element.setAttribute("aria-haspopup", "true");
@@ -165,5 +169,9 @@ export class BaseComponentRenderer {
         search_field_element.setAttribute("aria-controls", "list-picker-dropdown-values-list");
 
         return search_field_element;
+    }
+
+    private hasCustomItemsTemplates(): boolean {
+        return this.options !== undefined && this.options.items_template_formatter !== undefined;
     }
 }

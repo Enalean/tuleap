@@ -18,6 +18,8 @@
  */
 
 import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+import { get } from "../../../../src/themes/tlp/src/js/fetch-wrapper";
+import { ListPickerOptions } from "@tuleap/list-picker/src/type";
 
 document.addEventListener("DOMContentLoaded", () => {
     listenToggleEditionEvents(document);
@@ -28,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 export function listenToggleEditionEvents(doc: HTMLDocument): void {
     const initialized_list_pickers_ids: Array<string> = [];
+
     doc.querySelectorAll(
         ".tracker_artifact_field-sb > .tracker_formelement_edit, .tracker_artifact_field-msb > .tracker_formelement_edit"
     ).forEach((edit_button) => {
@@ -41,9 +44,7 @@ export function listenToggleEditionEvents(doc: HTMLDocument): void {
         }
 
         edit_button.addEventListener("click", async () => {
-            await createListPicker(select, {
-                is_filterable: true,
-            });
+            await createListPickerForSelect(select);
 
             initialized_list_pickers_ids.push(select.id);
             initTargetFieldsIfAny(doc, select, initialized_list_pickers_ids);
@@ -67,9 +68,7 @@ function initTargetFieldsIfAny(
                 return;
             }
             initTargetFieldsIfAny(doc, field, initialized_list_pickers_ids);
-            await createListPicker(field, {
-                is_filterable: true,
-            });
+            await createListPickerForSelect(field);
             initialized_list_pickers_ids.push(field.id);
         });
     }
@@ -93,12 +92,34 @@ export function initListPickersPostUpdateErrorView(doc: HTMLDocument): void {
 
 function initListPickers(selects: NodeListOf<HTMLSelectElement>): void {
     selects.forEach(async (select) => {
-        await createListPicker(select, {
-            is_filterable: true,
-        });
+        await createListPickerForSelect(select);
     });
 }
 
 function initTrackerSelector(document: HTMLDocument): void {
     initListPickers(document.querySelectorAll("#tracker_select_tracker"));
+}
+
+async function createListPickerForSelect(select: HTMLSelectElement): Promise<void> {
+    const options: ListPickerOptions = {
+        is_filterable: true,
+    };
+
+    if (select.dataset.bindType === "users") {
+        options.items_template_formatter = async (
+            value_id: string,
+            item_label: string
+        ): Promise<string> => {
+            if (value_id === "100") {
+                return item_label;
+            }
+            const response = await get(`/api/users/${encodeURIComponent(value_id)}`);
+            const user_representation = await response.json();
+            const avatar_url = user_representation.avatar_url;
+
+            return `<img class="tracker-list-picker-avatar" src="${avatar_url}"/>${item_label}`;
+        };
+    }
+
+    await createListPicker(select, options);
 }

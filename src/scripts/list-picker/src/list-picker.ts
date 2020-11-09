@@ -30,6 +30,7 @@ import { KeyboardNavigationManager } from "./navigation/KeyboardNavigationManage
 import { ListItemHighlighter } from "./navigation/ListItemHighlighter";
 import { ItemsMapManager } from "./items/ItemsMapManager";
 import { ListOptionsChangesObserver } from "./events/ListOptionsChangesObserver";
+import { ListItemMapBuilder } from "./items/ListItemMapBuilder";
 
 export async function createListPicker(
     source_select_box: HTMLSelectElement,
@@ -49,7 +50,10 @@ export async function createListPicker(
             import(/* webpackChunkName: "list-picker-po-" */ "../po/" + getPOFileFromLocale(locale))
     );
 
-    const items_map_manager = new ItemsMapManager(source_select_box);
+    const items_map_manager = new ItemsMapManager(
+        new ListItemMapBuilder(source_select_box, options)
+    );
+    await items_map_manager.refreshItemsMap();
     const base_renderer = new BaseComponentRenderer(source_select_box, options);
     const {
         wrapper_element,

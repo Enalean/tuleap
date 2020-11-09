@@ -24,6 +24,7 @@ import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box
 import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { ListPickerItem } from "../type";
+import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 
 describe("SingleSelectionManager", () => {
     let source_select_box: HTMLSelectElement,
@@ -35,7 +36,7 @@ describe("SingleSelectionManager", () => {
         item_1: ListPickerItem,
         item_2: ListPickerItem;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         source_select_box = document.createElement("select");
         appendSimpleOptionsToSourceSelectBox(source_select_box);
 
@@ -60,7 +61,7 @@ describe("SingleSelectionManager", () => {
             search_field_element,
             selection_element
         );
-        items_map_manager = new ItemsMapManager(source_select_box);
+        items_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
         manager = new SingleSelectionManager(
             source_select_box,
             dropdown_element,
@@ -70,6 +71,7 @@ describe("SingleSelectionManager", () => {
             items_map_manager
         );
         jest.spyOn(source_select_box, "dispatchEvent");
+        await items_map_manager.refreshItemsMap();
         item_1 = items_map_manager.findListPickerItemInItemMap("list-picker-item-value_1");
         item_2 = items_map_manager.findListPickerItemInItemMap("list-picker-item-value_2");
     });
@@ -178,10 +180,10 @@ describe("SingleSelectionManager", () => {
     });
 
     describe("resetAfterDependenciesUpdate", () => {
-        it("when an item is selected but there is no options in the source <select> anymore, then it should display the placeholder", () => {
+        it("when an item is selected but there is no options in the source <select> anymore, then it should display the placeholder", async () => {
             manager.processSelection(item_1.element);
             source_select_box.innerHTML = "";
-            items_map_manager.rebuildItemsMap();
+            await items_map_manager.refreshItemsMap();
             manager.resetAfterDependenciesUpdate();
 
             expect(item_1.is_selected).toBe(false);
@@ -190,14 +192,14 @@ describe("SingleSelectionManager", () => {
             expect(selection_container.contains(placeholder)).toBe(true);
         });
 
-        it("when no item has been selected and there is no options in the source <select> anymore, then it should do nothing", () => {
+        it("when no item has been selected and there is no options in the source <select> anymore, then it should do nothing", async () => {
             source_select_box.innerHTML = "";
-            items_map_manager.rebuildItemsMap();
+            await items_map_manager.refreshItemsMap();
             manager.resetAfterDependenciesUpdate();
             expect(selection_container.contains(placeholder)).toBe(true);
         });
 
-        it("when no item has been selected, then it should select the first available option", () => {
+        it("when no item has been selected, then it should select the first available option", async () => {
             source_select_box.innerHTML = "";
             const new_option_0 = document.createElement("option");
             new_option_0.value = "new option 0";
@@ -206,7 +208,7 @@ describe("SingleSelectionManager", () => {
             source_select_box.appendChild(new_option_0);
             source_select_box.appendChild(new_option_1);
 
-            items_map_manager.rebuildItemsMap();
+            await items_map_manager.refreshItemsMap();
             manager.resetAfterDependenciesUpdate();
 
             const first_item = items_map_manager.findListPickerItemInItemMap(
@@ -218,7 +220,7 @@ describe("SingleSelectionManager", () => {
             expect(selection_container.contains(placeholder)).toBe(false);
         });
 
-        it("when an item has been selected, and is still available in the new options, then it should keep it selected", () => {
+        it("when an item has been selected, and is still available in the new options, then it should keep it selected", async () => {
             manager.processSelection(item_1.element);
 
             source_select_box.innerHTML = "";
@@ -229,7 +231,7 @@ describe("SingleSelectionManager", () => {
             source_select_box.appendChild(new_option_0);
             source_select_box.appendChild(new_option_1);
 
-            items_map_manager.rebuildItemsMap();
+            await items_map_manager.refreshItemsMap();
             manager.resetAfterDependenciesUpdate();
 
             const new_item_1 = items_map_manager.findListPickerItemInItemMap(item_1.id);
@@ -239,7 +241,7 @@ describe("SingleSelectionManager", () => {
             expect(selection_container.contains(placeholder)).toBe(false);
         });
 
-        it("when an item has been selected, but is not available in the new options, then the first available item should be selected", () => {
+        it("when an item has been selected, but is not available in the new options, then the first available item should be selected", async () => {
             manager.processSelection(item_1.element);
 
             source_select_box.innerHTML = "";
@@ -250,7 +252,7 @@ describe("SingleSelectionManager", () => {
             source_select_box.appendChild(new_option_0);
             source_select_box.appendChild(new_option_1);
 
-            items_map_manager.rebuildItemsMap();
+            await items_map_manager.refreshItemsMap();
             manager.resetAfterDependenciesUpdate();
 
             const item_0 = items_map_manager.findListPickerItemInItemMap(
