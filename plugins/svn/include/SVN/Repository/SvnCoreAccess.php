@@ -56,6 +56,9 @@ final class SvnCoreAccess
 
     private function getMatchingUri(\Tuleap\SVN\SvnCoreAccess $svn_core_access, int $repo_id): ?string
     {
+        if ($svn_core_access->requested_uri === \SVN_SOAPServer::FAKE_URL) {
+            return 'access forbidden';
+        }
         $url = parse_url($svn_core_access->requested_uri);
         if (isset($url['path'], $url['query']) && $url['path'] === '/svn/admin/') {
             parse_str($url['query'], $query);
