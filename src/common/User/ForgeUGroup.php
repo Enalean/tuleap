@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 use Tuleap\User\UserGroup\NameTranslator;
 
-class User_ForgeUGroup implements User_UGroup
+class User_ForgeUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     private $id;
@@ -52,8 +52,8 @@ class User_ForgeUGroup implements User_UGroup
     /**
      * @psalm-mutation-free
      */
-    public function getName()
+    public function getName(): string
     {
-        return $this->name;
+        return (string) $this->name;
     }
 }

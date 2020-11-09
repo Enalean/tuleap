@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,19 +23,34 @@ namespace Tuleap\SVN\Admin;
 use Project;
 use CSRFSynchronizerToken;
 
+/**
+ * @psalm-immutable
+ */
 class AdminGroupsPresenter extends BaseGlobalAdminPresenter
 {
+    /**
+     * @var bool
+     */
     public $admin_groups_active;
+    /**
+     * @var string
+     */
     public $admin_groups_description;
+    /**
+     * @var string
+     */
     public $admin_groups_label;
+    /**
+     * @var list<array{id: int, name: string, selected: bool}>
+     */
     public $ugroups;
 
     /**
-     * @param $ugroups array(array('name' => ..., 'id' => ..., 'admin' => ...), ...)
+     * @psalm-param $ugroups list<array{id: int, name: string, selected: bool}>
      */
-    public function __construct(Project $project, CSRFSynchronizerToken $token, array $ugroups)
+    public function __construct(Project $project, CSRFSynchronizerToken $token, array $ugroups, bool $has_migrate_from_core)
     {
-        parent::__construct($project, $token);
+        parent::__construct($project, $token, $has_migrate_from_core);
 
         $this->admin_groups_active      = true;
         $this->admin_groups_description = dgettext('tuleap-svn', 'Select the groups which are allowed to access the SVN administration in addition to the project administrators.');

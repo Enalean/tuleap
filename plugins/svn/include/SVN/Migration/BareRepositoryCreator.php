@@ -44,6 +44,11 @@ class BareRepositoryCreator
         $this->settings_retriever          = $settings_retriever;
     }
 
+    /**
+     * @throws SvnMigratorException
+     * @throws \Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException
+     * @throws \Tuleap\SVN\Repository\Exception\UserIsNotSVNAdministratorException
+     */
     public function create(Repository $repository, PFUser $user): void
     {
         try {
@@ -55,7 +60,7 @@ class BareRepositoryCreator
                 $settings
             );
         } catch (RepositoryNameIsInvalidException $e) {
-            throw new SvnMigratorException("Repository name is already used in this project.");
+            throw new SvnMigratorException(sprintf(dgettext('tuleap-svn', 'Repository name `%s` is already used in this project'), $repository->getName()));
         }
     }
 }

@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-04-03 14:12+0200\n"
-"PO-Revision-Date: 2020-11-03 17:19+0100\n"
+"PO-Revision-Date: 2020-11-09 15:43+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
@@ -37,6 +37,9 @@ msgstr "Ajouter la notification"
 
 msgid "Admin Groups"
 msgstr "Groupes Administrateurs"
+
+msgid "Administrators"
+msgstr "Administrateurs SVN"
 
 msgid "Allow commit message changes (svn propset --revprop -r X svn:log)"
 msgstr ""
@@ -151,6 +154,9 @@ msgstr "L'entête n'a pas été mise à jour."
 msgid "Header updated successfully"
 msgstr "Entête mise à jour avec succès"
 
+msgid "However you will notice that:"
+msgstr "En revanche, vous constaterez que :"
+
 msgid "Immutable tags"
 msgstr "Tags non modifiables"
 
@@ -171,6 +177,9 @@ msgid "Mail to specific recipients or mailing lists (comma separated)"
 msgstr ""
 "Envoyer à certains destinataires ou listes de diffusion (séparés par des "
 "virgules)"
+
+msgid "Migrate from core"
+msgstr "Migrer Subversion \"Core\""
 
 msgid "Monitored path"
 msgstr "Chemins surveillés"
@@ -208,6 +217,18 @@ msgstr "La notification à mettre à jour n’existe pas."
 msgid "Notifications"
 msgstr "Notifications"
 
+msgid ""
+"Once you switch the repository is immediately visible in the plugin "
+"interface with a <span class=\"tlp-badge-secondary tlp-badge-outline\">Core</"
+"span> label. The hooks are replaced by a background job so the email format "
+"as well as new settings might take a few minutes to be applied."
+msgstr ""
+"Dès la migration du dépôt, celui-ci est visible dans la liste des dépôts du "
+"plugin avec un badge <span class=\"tlp-badge-secondary tlp-badge-outline"
+"\">Core</span>. Les <i>hooks</i> sont remplacés par un événement en arrière "
+"plan donc le changement de format des emails ou la nouvelle configuration "
+"peut prendre quelques minutes à être visibles."
+
 msgid "Path"
 msgstr "Chemin"
 
@@ -231,11 +252,24 @@ msgstr "Le dépôt %s a été créé avec succès"
 msgid "Repository '%1$s' will be removed in a few seconds"
 msgstr "Le dépôt '%1$s' va être supprimé dans quelques secondes"
 
+msgid "Repository already migrated"
+msgstr "Dépôt déjà migré"
+
 msgid "Repository list"
 msgstr "Liste des dépôts"
 
+msgid ""
+"Repository migrated, please wait a few minutes so the hooks are rewritten"
+msgstr ""
+"Le dépôt a été migré, merci d'attendre quelques minutes que les hooks soient "
+"ré-écrits."
+
 msgid "Repository name"
 msgstr "Nom du dépôt"
+
+#, php-format
+msgid "Repository name `%s` is already used in this project"
+msgstr "Le nom du dépôt `%s` existe déjà dans le projet"
 
 msgid "Repository name is already used in this project."
 msgstr "Le nom du dépôt existe déjà dans le projet."
@@ -384,8 +418,24 @@ msgstr ""
 "dépôt."
 
 msgid ""
+"This form allows to transfer the management of subversion repository from "
+"the `Subversion` service to this plugin."
+msgstr ""
+"Ce formulaire permet le transfert de la gestion du dépôt subversion du "
+"service \"Subversion\" à ce plugin."
+
+msgid ""
 "This is the historical repository provided by legacy 'Subversion' service."
 msgstr "Correspond au dépôt historique du service \"Subversion\"."
+
+msgid ""
+"This migration is done in place. All settings are transferred and, more "
+"important <strong>the subversion url</strong> ({{ svn_url }}) <strong>will "
+"not change</strong>."
+msgstr ""
+"La migration est réalisée en place. Toute la configuration est transférée "
+"and, plus important <strong>l'url subversion</strong> ({{ svn_url }}) "
+"<strong>est conservée</strong>."
 
 msgid "Top project"
 msgstr "Top projet"
@@ -508,11 +558,19 @@ msgstr "Vous ne pouvez pas supprimer."
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas les droits de voir les groupes utilisateurs"
 
+msgid "`SVN Query`, `My SVN commits` as well as SVN widgets are gone."
+msgstr ""
+"`Mes commits SVN`, `Recherche SVN` ainsi que les widgets subversion sont "
+"discontinués"
+
 msgid "my-new-repository"
 msgstr "mon-depot"
 
 msgid "saved on"
 msgstr "sauvegardée le"
+
+msgid "the commit email format is different."
+msgstr "le format des emails de notification sur commit est différent."
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"

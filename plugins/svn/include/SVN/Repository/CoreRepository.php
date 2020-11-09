@@ -29,7 +29,7 @@ use Project;
 
 final class CoreRepository implements Repository
 {
-    private const TO_BE_CREATED_REPOSITORY_ID = -1;
+    public const TO_BE_CREATED_REPOSITORY_ID = -1;
 
     /**
      * @var \Project
