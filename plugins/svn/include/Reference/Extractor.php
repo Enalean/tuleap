@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,10 +40,22 @@ class Extractor
         $this->repository_manager = $repository_manager;
     }
 
-    public function getReference(Project $project, $keyword, $value)
+    /**
+     * @return false|Reference
+     */
+    public function getReference(Project $project, string $keyword, string $value)
     {
         if (! $project->usesService(SvnPlugin::SERVICE_SHORTNAME)) {
             return false;
+        }
+
+        if (ctype_digit($value)) {
+            try {
+                $repository = $this->repository_manager->getCoreRepository($project);
+                return new Reference($project, $repository, $keyword, (int) $value);
+            } catch (CannotFindRepositoryException $exception) {
+                return false;
+            }
         }
 
         $matches = [];

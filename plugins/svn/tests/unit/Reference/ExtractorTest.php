@@ -24,6 +24,7 @@ namespace Tuleap\SVN\Reference;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Tuleap\SVN\Repository\CoreRepository;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
 
@@ -48,11 +49,10 @@ class ExtractorTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->project = Mockery::spy(\Project::class);
         $this->project->shouldReceive('getID')->andReturn(101);
-        $this->repository_manager = Mockery::spy(\Tuleap\SVN\Repository\RepositoryManager::class);
+        $this->project->shouldReceive('getUnixNameMixedCase')->andReturn('FooBar');
+        $this->repository_manager = Mockery::mock(\Tuleap\SVN\Repository\RepositoryManager::class);
         $this->extractor          = new Extractor($this->repository_manager);
     }
 
@@ -62,8 +62,21 @@ class ExtractorTest extends TestCase
         $value   = '1';
 
         $this->project->shouldReceive('usesService')->withArgs(['plugin_svn'])->andReturn(true);
+        $this->repository_manager->shouldReceive('getCoreRepository')->andThrow(new CannotFindRepositoryException());
 
         $this->assertFalse($this->extractor->getReference($this->project, $keyword, $value));
+    }
+
+    public function testItReturnsTrueIfReferenceCorrespondsToACoreRepositoryManagedByPlugin(): void
+    {
+        $keyword = 'svn';
+        $value   = '1';
+
+        $this->project->shouldReceive('usesService')->withArgs(['plugin_svn'])->andReturn(true);
+        $this->repository_manager->shouldReceive('getCoreRepository')->with($this->project)->andReturn(CoreRepository::buildActiveRepository($this->project, 93));
+
+        $reference = $this->extractor->getReference($this->project, $keyword, $value);
+        self::assertInstanceOf(Reference::class, $reference);
     }
 
     public function testItReturnsFalseIfTheProjectDoesNotUseTheSubversionPlugin(): void
@@ -103,9 +116,9 @@ class ExtractorTest extends TestCase
 
         $reference = $this->extractor->getReference($this->project, $keyword, $value);
 
-        assert($reference instanceof Reference);
+        self::assertInstanceOf(Reference::class, $reference);
 
-        $this->assertEquals($reference->getGroupId(), 101);
-        $this->assertEquals($reference->getKeyword(), 'svn');
+        $this->assertEquals(101, $reference->getGroupId());
+        $this->assertEquals('svn', $reference->getKeyword());
     }
 }

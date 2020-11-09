@@ -126,7 +126,7 @@ use Tuleap\SVN\XMLSvnExporter;
 class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const SERVICE_SHORTNAME  = 'plugin_svn';
-    public const SYSTEM_NATURE_NAME = 'svn_revision';
+    public const SYSTEM_NATURE_NAME = ReferenceManager::REFERENCE_NATURE_SVNREVISION;
 
     /** @var Tuleap\SVN\Repository\RepositoryManager */
     private $repository_manager;
@@ -685,9 +685,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getBackendSVN(): BackendSVN
     {
-        $backend_svn = Backend::instance(Backend::SVN);
-        assert($backend_svn instanceof BackendSVN);
-        return $backend_svn;
+        return Backend::instanceSVN();
     }
 
     public function get_reference($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
@@ -712,7 +710,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return new Extractor($this->getRepositoryManager());
     }
 
-    private function isReferenceASubversionReference($keyword)
+    private function isReferenceASubversionReference($keyword): bool
     {
         $dao    = new ReferenceDao();
         $result = $dao->searchSystemReferenceByNatureAndKeyword($keyword, self::SYSTEM_NATURE_NAME);
