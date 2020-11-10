@@ -28,10 +28,13 @@ export function adjustHeaderPositionAccordingToBanners(
     }
 
     if (project_banner === null || project_banner.classList.contains("project-banner-hidden")) {
-        if (
-            platform_banner !== null &&
-            !platform_banner.classList.contains("platform-banner-hidden")
-        ) {
+        if (platform_banner === null) {
+            return;
+        }
+
+        if (platform_banner.classList.contains("platform-banner-hidden")) {
+            header.style.top = "0px";
+        } else {
             header.style.top = platform_banner.offsetHeight + "px";
         }
         return;

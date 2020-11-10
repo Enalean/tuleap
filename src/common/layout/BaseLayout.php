@@ -344,9 +344,9 @@ abstract class BaseLayout extends Response
         return $builder->getSidebar($this->getUser(), $params['toptab'], $project);
     }
 
-    final protected function getProjectBanner(Project $project, PFUser $current_user, string $script_name): ?BannerDisplay
+    final protected function getProjectBannerWithScript(Project $project, PFUser $current_user, string $script_name): ?BannerDisplay
     {
-        $project_banner = $this->getBanner($project, $current_user);
+        $project_banner = $this->getProjectBanner($project, $current_user);
         if ($project_banner === null) {
             return null;
         }
@@ -356,15 +356,23 @@ abstract class BaseLayout extends Response
         return $project_banner;
     }
 
-    final protected function getPlatformBanner(PFUser $current_user, string $script_name): ?\Tuleap\Platform\Banner\BannerDisplay
+    final protected function getPlatformBannerWithScript(PFUser $current_user, string $script_name): ?\Tuleap\Platform\Banner\BannerDisplay
+    {
+        $banner = $this->getPlatformBanner($current_user);
+        if ($banner) {
+            $this->includeFooterJavascriptFile($this->include_asset->getFileURL($script_name));
+        }
+
+        return $banner;
+    }
+
+    final protected function getPlatformBanner(PFUser $current_user): ?\Tuleap\Platform\Banner\BannerDisplay
     {
         $banner_retriever = new \Tuleap\Platform\Banner\BannerRetriever(new \Tuleap\Platform\Banner\BannerDao());
         $banner = $banner_retriever->getBannerForDisplayPurpose($current_user);
         if ($banner === null) {
             return null;
         }
-
-        $this->includeFooterJavascriptFile($this->include_asset->getFileURL($script_name));
 
         return $banner;
     }
@@ -377,7 +385,7 @@ abstract class BaseLayout extends Response
         return ob_get_clean();
     }
 
-    final protected function getBanner(Project $project, PFUser $current_user): ?BannerDisplay
+    final protected function getProjectBanner(Project $project, PFUser $current_user): ?BannerDisplay
     {
         return (new BannerRetriever(new BannerDao()))->getBannerForDisplayPurpose($project, $current_user);
     }

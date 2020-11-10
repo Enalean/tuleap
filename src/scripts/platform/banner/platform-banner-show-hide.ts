@@ -19,6 +19,7 @@
 
 export const PLATFORM_BANNER_NAVBAR_ID = "platform-banner-bullhorn";
 export const PLATFORM_BANNER_MESSAGE_CLOSE_BUTTON_ID = "platform-banner-close";
+export const PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS = "has-visible-platform-banner";
 export const PLATFORM_BANNER_HIDDEN_CLASS = "platform-banner-hidden";
 
 export function allowToHideAndShowPlatformBanner(
@@ -77,6 +78,7 @@ function togglePlatformBannerMessage(
 ): void {
     event.preventDefault();
     window.scrollTo(0, 0);
+    document_body.classList.add(PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS);
     platform_banner_navbar.classList.add(PLATFORM_BANNER_HIDDEN_CLASS);
     full_platform_banner.classList.remove(PLATFORM_BANNER_HIDDEN_CLASS);
 }
@@ -88,6 +90,7 @@ async function hidePlatformBannerMessage(
     full_platform_banner: HTMLElement,
     user_id: number
 ): Promise<void> {
+    document_body.classList.remove(PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS);
     platform_banner_navbar.classList.remove(PLATFORM_BANNER_HIDDEN_CLASS);
     full_platform_banner.classList.add(PLATFORM_BANNER_HIDDEN_CLASS);
 

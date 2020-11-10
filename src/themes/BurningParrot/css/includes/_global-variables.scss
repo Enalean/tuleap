@@ -18,9 +18,11 @@
  */
 
 $navbar-height: 45px;
-$top-floating-buttons-space: 56px;
+$top-floating-buttons-space: 54px;
 $breadcrumb-height: 40px;
 $breadcrumb-height-with-collapsed-sidebar: 44px;
 $sidebar-expanded-width: 250px;
 $sidebar-collapsed-width: 50px;
 $project-banner-base-height: 24px + $tlp-medium-spacing * 2;
+$platform-banner-base-height: 22px + $tlp-medium-spacing * 2;
+$extra-platform-banner-white-space-height: $top-floating-buttons-space - $tlp-medium-spacing;

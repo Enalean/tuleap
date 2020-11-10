@@ -206,7 +206,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $project = null;
         if (! empty($params['group'])) {
             $project = $project_manager->getProject($params['group']);
-            $banner  = $this->getProjectBanner($project, $current_user, 'project/project-banner-fp.js');
+            $banner  = $this->getProjectBannerWithScript($project, $current_user, 'project/project-banner-fp.js');
 
             if ($banner && $banner->isVisible()) {
                 $body_class[] = 'has-visible-project-banner';
@@ -234,7 +234,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->tuleap_version->version_number
         );
 
-        $platform_banner = $this->getPlatformBanner($current_user, 'platform/platform-banner-fp.js');
+        $platform_banner = $this->getPlatformBannerWithScript($current_user, 'platform/platform-banner-fp.js');
         $this->render('body', new FlamingParrot_BodyPresenter(
             $current_user,
             $this->getNotificationPlaceholder(),

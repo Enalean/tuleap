@@ -237,6 +237,10 @@
     margin: 0 0 0 $tlp-medium-spacing;
 }
 
+.has-visible-platform-banner .document-folder-right-container {
+    top: calc(#{$navbar-height} + #{$tlp-medium-spacing} + #{$platform-banner-base-height});
+}
+
 .document-folder-content-quick-look-and-item-uploading {
     display: flex;
     justify-content: space-between;
