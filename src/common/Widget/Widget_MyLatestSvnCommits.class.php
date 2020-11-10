@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../www/svn/svn_utils.php';
 /**
 * Widget_MyLatestSvnCommits
 */
-class Widget_MyLatestSvnCommits extends Widget
+class Widget_MyLatestSvnCommits extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     /**
@@ -37,7 +37,7 @@ class Widget_MyLatestSvnCommits extends Widget
      *
      * @var int|false
      */
-    private $_nb_svn_commits;
+    private $_nb_svn_commits; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     public function __construct()
     {
@@ -53,17 +53,18 @@ class Widget_MyLatestSvnCommits extends Widget
     {
         return $GLOBALS['Language']->getText('my_index', 'my_latest_svn_commit');
     }
-    public function _getLinkToCommit($group_id, $commit_id)
+    public function _getLinkToCommit($group_id, $commit_id)  // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return '/svn/?func=detailrevision&amp;group_id=' . $group_id . '&amp;rev_id=' . $commit_id;
     }
-    public function _getLinkToMore($group_id, $commiter)
+    public function _getLinkToMore($group_id, $commiter)  // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return '/svn/?func=browse&group_id=' . $group_id . '&_commiter=' . $commiter;
     }
 
     public function getContent()
     {
+        return _('This widget is deprecated, you should remove it.');
         $html        = '';
         $uh          = UserHelper::instance();
         $request     = HTTPRequest::instance();
@@ -132,7 +133,7 @@ class Widget_MyLatestSvnCommits extends Widget
 
     public function hasPreferences($widget_id)
     {
-        return true;
+        return false;
     }
 
     public function getPreferences($widget_id)

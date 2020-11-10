@@ -49,11 +49,6 @@ class SVN_IntroPresenter
         $this->uses_ldap_info         = $uses_ldap_info;
     }
 
-    public function help_link()
-    {
-        return "javascript:help_window('/doc/" . $this->user->getShortLocale() . "/user-guide/code-versioning/svn.html')";
-    }
-
     public function svn_intro_title()
     {
         return $GLOBALS['Language']->getText('svn_intro', 'title');
