@@ -33,12 +33,7 @@
             <option
                 v-for="tracker of tracker_list_with_disabled_from"
                 v-bind:key="tracker.id"
-                v-bind:value="{
-                    tracker_id: tracker.id,
-                    label: tracker.label,
-                    project: tracker.project,
-                    color_name: tracker.color_name,
-                }"
+                v-bind:value="tracker.id"
                 v-bind:disabled="tracker.disabled"
             >
                 {{ tracker.label }}
@@ -71,8 +66,8 @@ export default {
             get() {
                 return this.$store.state.selected_tracker;
             },
-            set(tracker) {
-                this.$store.commit("saveSelectedTracker", tracker);
+            set(tracker_id) {
+                this.$store.commit("saveSelectedTracker", { tracker_id });
             },
         },
         selector_title() {
