@@ -119,7 +119,7 @@ enable_plugins() {
 seed_data() {
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
 
-    for project in $(find /usr/share/tuleap/tests/e2e/_fixtures/ -maxdepth 1 -mindepth 1 -type d) ; do
+    for project in $(find /usr/share/tuleap/tests/e2e/full/_fixtures/ -maxdepth 1 -mindepth 1 -type d) ; do
         load_project "$project"
     done
 

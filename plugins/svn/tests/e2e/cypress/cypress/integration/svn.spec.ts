@@ -75,7 +75,7 @@ describe("SVN", function () {
                         {
                             path: "/trunk",
                             emails: ["foo@example.com", "bar@example.com"],
-                            users: [101, 102],
+                            users: [101],
                             user_groups: [],
                         },
                         {
@@ -105,7 +105,7 @@ describe("SVN", function () {
                     .should("contain", "@admins = rw")
                     .should("contain", "/trunk")
                     .should("contain", "foo@example.com, bar@example.com")
-                    .should("contain", "admin, ProjectAdministrator")
+                    .should("contain", "admin")
                     .should("contain", "project_members");
             });
         });
