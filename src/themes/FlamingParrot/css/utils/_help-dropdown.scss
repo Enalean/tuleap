@@ -124,7 +124,7 @@
         }
 
         &.help-dropdown-link-highlight {
-            color: $ui-color-warning;
+            color: $tlp-ui-warning;
         }
     }
 
@@ -180,8 +180,8 @@
 
     &.new-release-note-available {
         animation: pulse 300ms ease-in-out 1s 3 both;
-        border-color: $ui-color-warning;
-        background: $ui-color-warning;
+        border-color: $tlp-ui-warning;
+        background: $tlp-ui-warning;
         color: $white;
 
         > .fa-star {

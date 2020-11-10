@@ -15,21 +15,21 @@
 }
 
 .feedback_error {
-    border-left-color: $ui-color-danger;
-    background: desaturate(lighten(mix($white, $ui-color-danger, 25%), 23%), 15%);
-    color: darken($ui-color-danger, 15%);
+    border-left-color: $tlp-ui-danger;
+    background: desaturate(lighten(mix($white, $tlp-ui-danger, 25%), 23%), 15%);
+    color: darken($tlp-ui-danger, 15%);
 }
 
 .feedback_warning {
-    border-left-color: $ui-color-warning;
-    background: desaturate(lighten(mix($white, $ui-color-warning, 20%), 23%), 15%);
-    color: saturate(darken($ui-color-warning, 30%), 10%);
+    border-left-color: $tlp-ui-warning;
+    background: desaturate(lighten(mix($white, $tlp-ui-warning, 20%), 23%), 15%);
+    color: saturate(darken($tlp-ui-warning, 30%), 10%);
 }
 
 .feedback_info {
-    border-left-color: $ui-color-info;
-    background: desaturate(lighten(mix($white, $ui-color-info, 25%), 23%), 15%);
-    color: darken($ui-color-info, 30%);
+    border-left-color: $tlp-ui-info;
+    background: desaturate(lighten(mix($white, $tlp-ui-info, 25%), 23%), 15%);
+    color: darken($tlp-ui-info, 30%);
 }
 
 .feedback_debug {
