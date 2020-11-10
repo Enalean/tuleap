@@ -19,7 +19,9 @@
 
 import { allowToHideAndShowPlatformBanner } from "./platform-banner-show-hide";
 import { patch } from "../../../themes/tlp/src/js/fetch-wrapper";
+import { allowUnclampingPlatformBannerMessage } from "./platform-banner-clamp";
 
 document.addEventListener("DOMContentLoaded", () => {
+    allowUnclampingPlatformBannerMessage(document);
     allowToHideAndShowPlatformBanner(document, patch);
 });
