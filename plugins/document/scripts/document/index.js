@@ -18,25 +18,23 @@
  */
 
 import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 
-import french_translations from "./po/fr.po";
 import App from "./components/App.vue";
 import { createStore } from "./store/index.js";
 import { createRouter } from "./router/index.js";
 import moment from "moment";
 import "moment-timezone";
+
+import {
+    getPOFileFromLocale,
+    initVueGettext,
+} from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
+
 import { setupDocumentShortcuts } from "./keyboard-navigation/keyboard-navigation";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
 
     let user_locale = document.body.dataset.userLocale;
     Vue.config.language = user_locale;
@@ -79,6 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
     moment.tz(user_timezone);
     moment.locale(user_locale);
 
+    await initVueGettext(Vue, (locale) =>
+        import(/* webpackChunkName: "document-po-" */ "./po/" + getPOFileFromLocale(locale))
+    );
+
     const AppComponent = Vue.extend(App);
     const store = createStore(user_id, project_id);
     const router = createRouter(store, project_name);
@@ -113,5 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
         },
     }).$mount(vue_mount_point);
 
-    setupDocumentShortcuts();
+    const gettext_provider = {
+        $gettext: Vue.prototype.$gettext,
+    };
+    setupDocumentShortcuts(gettext_provider);
 });

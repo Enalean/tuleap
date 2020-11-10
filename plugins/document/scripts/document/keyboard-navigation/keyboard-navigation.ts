@@ -20,15 +20,16 @@
 import {
     Shortcut,
     ShortcutsGroup,
-    addShortcutsGroupToPlugin,
-} from "@tuleap/core/scripts/keyboard-navigation/plugin-shortcuts";
+    addShortcutsGroup,
+} from "@tuleap/core/scripts/keyboard-navigation/add-shortcuts-group";
 
-import { Direction } from "../type";
+import { Direction, GettextProvider } from "../type";
 import { callNavigationShortcut } from "./handle-navigation-shortcut";
 
-export function setupDocumentShortcuts(): void {
+export function setupDocumentShortcuts(gettext_provider: GettextProvider): void {
     const move_to_bottom_file: Shortcut = {
         keyboard_inputs: "ctrl+down",
+        description: gettext_provider.$gettext("Select bottom item"),
         handle: () => {
             callNavigationShortcut(document, Direction.bottom);
         },
@@ -36,6 +37,7 @@ export function setupDocumentShortcuts(): void {
 
     const move_to_top_file: Shortcut = {
         keyboard_inputs: "ctrl+up",
+        description: gettext_provider.$gettext("Select top item"),
         handle: () => {
             callNavigationShortcut(document, Direction.top);
         },
@@ -43,6 +45,7 @@ export function setupDocumentShortcuts(): void {
 
     const move_to_previous_file: Shortcut = {
         keyboard_inputs: "j,up",
+        description: gettext_provider.$gettext("Select previous item"),
         handle: () => {
             callNavigationShortcut(document, Direction.previous);
         },
@@ -50,12 +53,15 @@ export function setupDocumentShortcuts(): void {
 
     const move_to_next_file: Shortcut = {
         keyboard_inputs: "k,down",
+        description: gettext_provider.$gettext("Select next item"),
         handle: () => {
             callNavigationShortcut(document, Direction.next);
         },
     };
 
     const document_navigation_shortcuts_group: ShortcutsGroup = {
+        title: gettext_provider.$gettext("Documents service"),
+        cells_id: "document-service",
         shortcuts: [
             move_to_top_file,
             move_to_bottom_file,
@@ -64,5 +70,5 @@ export function setupDocumentShortcuts(): void {
         ],
     };
 
-    addShortcutsGroupToPlugin(document, document_navigation_shortcuts_group);
+    addShortcutsGroup(document, document_navigation_shortcuts_group);
 }

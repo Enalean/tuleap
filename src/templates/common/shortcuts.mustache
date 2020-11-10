@@ -5,22 +5,27 @@
             <th class="help-modal-shortcuts-action">{{# gettext }}Action{{/ gettext }}</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody data-modal-shortcuts>
         <tr>
-            <td class="help-modal-shortcuts-kbds"><kbd>?</kbd></td>
-            <td>{{# gettext }}Open this window{{/ gettext }}</td>
+            <th id="global" class="help-modal-shortcuts-group-title" colspan="2" scope="colgroup">
+                {{# gettext }}Global shortcuts{{/ gettext }}
+            </th>
         </tr>
         <tr>
-            <td class="help-modal-shortcuts-kbds"><kbd>c</kbd></td>
-            <td>{{# gettext }}Open "+ New" dropdown{{/ gettext }}</td>
+            <td class="help-modal-shortcuts-kbds" headers="shortcut global"><kbd>?</kbd></td>
+            <td headers="action global">{{# gettext }}Open this window{{/ gettext }}</td>
         </tr>
         <tr>
-            <td class="help-modal-shortcuts-kbds"><kbd>d</kbd></td>
-            <td>{{# gettext }}Go to personal dashboard{{/ gettext }}</td>
+            <td class="help-modal-shortcuts-kbds" headers="shortcut global"><kbd>c</kbd></td>
+            <td headers="action global">{{# gettext }}Open "+ New" dropdown{{/ gettext }}</td>
         </tr>
         <tr>
-            <td class="help-modal-shortcuts-kbds"><kbd>/</kbd> or <kbd>s</kbd></td>
-            <td>{{# gettext }}Switch to...{{/gettext}}</td>
+            <td class="help-modal-shortcuts-kbds" headers="shortcut global"><kbd>d</kbd></td>
+            <td headers="action global">{{# gettext }}Go to personal dashboard{{/ gettext }}</td>
+        </tr>
+        <tr>
+            <td class="help-modal-shortcuts-kbds" headers="shortcut global"><kbd>/</kbd> {{# gettext }}or{{/gettext}} <kbd>s</kbd></td>
+            <td headers="action global">{{# gettext }}Switch to...{{/gettext}}</td>
         </tr>
     </tbody>
 </table>

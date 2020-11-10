@@ -23,3 +23,7 @@ export enum Direction {
     next = "NEXT",
     previous = "PREVIOUS",
 }
+
+export interface GettextProvider {
+    $gettext: (msgid: string) => string;
+}

@@ -184,6 +184,9 @@ msgstr "Document verrouillé par %s."
 msgid "Documents"
 msgstr "Documents"
 
+msgid "Documents service"
+msgstr "Service Documents"
+
 msgid "Download"
 msgstr "Télécharger"
 
@@ -453,6 +456,18 @@ msgstr "Recharger la page"
 
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
+
+msgid "Select bottom item"
+msgstr "Sélectionner le dernier élément"
+
+msgid "Select next item"
+msgstr "Sélectionner l'élément suivant"
+
+msgid "Select previous item"
+msgstr "Sélectionner l'élément précédent"
+
+msgid "Select top item"
+msgstr "Sélectionner le premier élément"
 
 msgid "Send mail"
 msgstr "Envoyer un Email"
