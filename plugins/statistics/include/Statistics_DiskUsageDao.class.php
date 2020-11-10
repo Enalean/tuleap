@@ -22,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Statistics_DiskUsageDao extends DataAccessObject
+class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     // A day spreads From 00:00:00 ---> 23:59:59
@@ -149,7 +149,7 @@ class Statistics_DiskUsageDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    protected function _getGroupByFromDateMethod($dateMethod, &$select, &$groupBy)
+    protected function _getGroupByFromDateMethod($dateMethod, &$select, &$groupBy) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         switch ($dateMethod) {
             case 'DAY':
@@ -418,6 +418,16 @@ class Statistics_DiskUsageDao extends DataAccessObject
                 ' USING (user_id)';
 
         return $this->retrieve($sql);
+    }
+
+    public function updateGroup(Project $project, DateTimeImmutable $time, string $service, string $size): void
+    {
+        $sql = 'UPDATE plugin_statistics_diskusage_group
+                SET size = ' . $this->da->quoteSmart($size) . '
+                WHERE group_id = ' . $this->da->escapeInt($project->getID()) . '
+                    AND service = ' . $this->da->quoteSmart($service) . '
+                    AND date = FROM_UNIXTIME(' . $this->da->escapeInt($time->getTimestamp()) . ')';
+        $this->update($sql);
     }
 
     public function addGroup($groupId, $service, $size, $time)

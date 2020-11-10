@@ -59,6 +59,38 @@ class DiskUsageCollectorTest extends TestCase
                 156,
                 $collect_date->getTimestamp()
             );
+        $retriever->shouldReceive('hasCoreStatistics')->andReturnFalse();
+
+        $collector->collectDiskUsageForProject($project, $collect_date);
+    }
+
+    public function testItOverrideSvnCoreComputedStat()
+    {
+        $retriever = Mockery::mock(DiskUsageRetriever::class);
+        $dao       = Mockery::mock(Statistics_DiskUsageDao::class);
+
+        $collector = new DiskUsageCollector($retriever, $dao);
+
+        $project      = Mockery::mock(Project::class);
+        $collect_date = new DateTimeImmutable();
+
+        $project->shouldReceive('getID')->once()->andReturn(102);
+
+        $retriever->shouldReceive('getDiskUsageForProject')
+            ->once()
+            ->with($project)
+            ->andReturn(156);
+
+        $dao->shouldReceive('addGroup')
+            ->once()
+            ->with(
+                102,
+                SvnPlugin::SERVICE_SHORTNAME,
+                156,
+                $collect_date->getTimestamp()
+            );
+        $dao->shouldReceive('updateGroup')->once()->with($project, $collect_date, 'svn', '0');
+        $retriever->shouldReceive('hasCoreStatistics')->andReturnTrue();
 
         $collector->collectDiskUsageForProject($project, $collect_date);
     }

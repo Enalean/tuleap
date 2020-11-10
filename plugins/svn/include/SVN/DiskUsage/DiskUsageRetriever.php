@@ -25,6 +25,7 @@ use Psr\Log\LoggerInterface;
 use Project;
 use Statistics_DiskUsageManager;
 use SvnPlugin;
+use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
 
@@ -67,8 +68,17 @@ class DiskUsageRetriever
         $this->logger             = $logger;
     }
 
+    public function hasCoreStatistics(Project $project): bool
+    {
+        try {
+            $this->repository_manager->getCoreRepository($project);
+            return true;
+        } catch (CannotFindRepositoryException $exception) {
+            return false;
+        }
+    }
+
     /**
-     *
      * @return int
      */
     public function getDiskUsageForProject(Project $project)
