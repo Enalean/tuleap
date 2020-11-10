@@ -401,31 +401,29 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return ApacheConfGenerator::build();
     }
 
-    /** @return Tuleap\SVN\Repository\RepositoryManager */
-    private function getRepositoryManager()
+    private function getRepositoryManager(): RepositoryManager
     {
         if (empty($this->repository_manager)) {
             $this->repository_manager = new RepositoryManager(
                 new Dao(),
                 ProjectManager::instance(),
-                new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instance(Backend::SVN)),
-                \SvnPlugin::getLogger(),
+                new SvnAdmin(new System_Command(), self::getLogger(), Backend::instanceSVN()),
+                self::getLogger(),
                 new System_Command(),
                 new Destructor(
                     new Dao(),
-                    \SvnPlugin::getLogger()
+                    self::getLogger()
                 ),
                 EventManager::instance(),
-                Backend::instance(Backend::SVN),
-                new AccessFileHistoryFactory(new AccessFileHistoryDao())
+                Backend::instanceSVN(),
+                $this->getAccessFileHistoryFactory()
             );
         }
 
         return $this->repository_manager;
     }
 
-    /** @return Tuleap\SVN\AccessControl\AccessFileHistoryDao */
-    private function getAccessFileHistoryDao()
+    private function getAccessFileHistoryDao(): AccessFileHistoryDao
     {
         if (empty($this->accessfile_dao)) {
             $this->accessfile_dao = new AccessFileHistoryDao();
@@ -433,8 +431,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $this->accessfile_dao;
     }
 
-    /** @return Tuleap\SVN\AccessControl\AccessFileHistoryFactory */
-    private function getAccessFileHistoryFactory()
+    private function getAccessFileHistoryFactory(): AccessFileHistoryFactory
     {
         if (empty($this->accessfile_factory)) {
             $this->accessfile_factory = new AccessFileHistoryFactory($this->getAccessFileHistoryDao());
@@ -442,8 +439,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $this->accessfile_factory;
     }
 
-    /** @return Tuleap\SVN\AccessControl\AccessFileHistoryCreator */
-    private function getAccessFileHistoryCreator()
+    private function getAccessFileHistoryCreator(): AccessFileHistoryCreator
     {
         if (empty($this->accessfile_history_manager)) {
             $this->accessfile_history_creator = new AccessFileHistoryCreator(
@@ -458,8 +454,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $this->accessfile_history_creator;
     }
 
-    /** @return Tuleap\SVN\Admin\MailNotificationManager */
-    private function getMailNotificationManager()
+    private function getMailNotificationManager(): MailNotificationManager
     {
         if (empty($this->mail_notification_manager)) {
             $this->mail_notification_manager = new MailNotificationManager(
@@ -474,18 +469,12 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $this->mail_notification_manager;
     }
 
-    /**
-     * @return MailNotificationDao
-     */
-    private function getMailNotificationDao()
+    private function getMailNotificationDao(): MailNotificationDao
     {
         return new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder());
     }
 
-    /**
-     * @return UGroupManager
-     */
-    private function getUGroupManager()
+    private function getUGroupManager(): UGroupManager
     {
         if (empty($this->ugroup_manager)) {
             $this->ugroup_manager = new UGroupManager();
@@ -493,10 +482,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $this->ugroup_manager;
     }
 
-    /**
-     * @return SvnPermissionManager
-     */
-    private function getPermissionsManager()
+    private function getPermissionsManager(): SvnPermissionManager
     {
         if (empty($this->permissions_manager)) {
             $this->permissions_manager = new SvnPermissionManager(PermissionsManager::instance());
@@ -504,15 +490,12 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $this->permissions_manager;
     }
 
-    private function getForgeUserGroupFactory()
+    private function getForgeUserGroupFactory(): User_ForgeUserGroupFactory
     {
         return new User_ForgeUserGroupFactory(new UserGroupDao());
     }
 
-    /**
-     * @return ProjectManager
-     */
-    private function getProjectManager()
+    private function getProjectManager(): ProjectManager
     {
         return ProjectManager::instance();
     }
@@ -864,10 +847,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $updater->updateSiteAccess($params['old_value']);
     }
 
-    /**
-     * @return UgroupsToNotifyUpdater
-     */
-    private function getUgroupToNotifyUpdater()
+    private function getUgroupToNotifyUpdater(): UgroupsToNotifyUpdater
     {
         return new UgroupsToNotifyUpdater($this->getUGroupNotifyDao());
     }
@@ -897,9 +877,6 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->getMailNotificationDao()->deleteEmptyNotificationsInProject($project_id);
     }
 
-    /**
-     * @param array $params
-     */
     public function plugin_statistics_disk_usage_collect_project(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $start   = microtime(true);
@@ -939,10 +916,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         }
     }
 
-    /**
-     * @return DiskUsageRetriever
-     */
-    private function getRetriever()
+    private function getRetriever(): DiskUsageRetriever
     {
         $disk_usage_dao  = new Statistics_DiskUsageDao();
         $svn_log_dao     = new SVN_LogDao();
@@ -963,15 +937,12 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $this->getRepositoryManager(),
             $disk_usage_manager,
             new DiskUsageDao(),
-            new Statistics_DiskUsageDao(),
-            \SvnPlugin::getLogger()
+            $disk_usage_dao,
+            self::getLogger()
         );
     }
 
-    /**
-     * @return DiskUsageCollector
-     */
-    private function getCollector()
+    private function getCollector(): DiskUsageCollector
     {
         return new DiskUsageCollector($this->getRetriever(), new Statistics_DiskUsageDao());
     }
@@ -1039,26 +1010,17 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    /**
-     * @return HookConfigSanitizer
-     */
-    private function getHookConfigSanitizer()
+    private function getHookConfigSanitizer(): HookConfigSanitizer
     {
         return new HookConfigSanitizer();
     }
 
-    /**
-     * @return HookConfigRetriever
-     */
-    private function getHookConfigRetriever()
+    private function getHookConfigRetriever(): HookConfigRetriever
     {
         return new HookConfigRetriever(new HookDao(), $this->getHookConfigSanitizer());
     }
 
-    /**
-     * @return \Tuleap\SVN\Repository\RepositoryDeleter
-     */
-    private function getRepositoryDeleter()
+    private function getRepositoryDeleter(): \Tuleap\SVN\Repository\RepositoryDeleter
     {
         return new \Tuleap\SVN\Repository\RepositoryDeleter(
             new System_Command(),
@@ -1074,18 +1036,12 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->getServiceActivator()->forceUsageOfService($event->getProject(), $event->getTemplate(), $event->getLegacy());
     }
 
-    /**
-     * @return ServiceActivator
-     */
-    private function getServiceActivator()
+    private function getServiceActivator(): ServiceActivator
     {
         return new ServiceActivator(ServiceManager::instance(), new ServiceCreator(new ServiceDao()));
     }
 
-    /**
-     * @return ImmutableTagCreator
-     */
-    private function getImmutableTagCreator()
+    private function getImmutableTagCreator(): ImmutableTagCreator
     {
         return new ImmutableTagCreator(
             new ImmutableTagDao(),
@@ -1102,58 +1058,37 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $backend;
     }
 
-    /**
-     * @return ProjectHistoryDao
-     */
-    private function getProjectHistoryDao()
+    private function getProjectHistoryDao(): ProjectHistoryDao
     {
         return new ProjectHistoryDao();
     }
 
-    /**
-     * @return ProjectHistoryFormatter
-     */
-    private function getProjectHistoryFormatter()
+    private function getProjectHistoryFormatter(): ProjectHistoryFormatter
     {
         return new ProjectHistoryFormatter();
     }
 
-    /**
-     * @return ImmutableTagFactory
-     */
-    private function getImmutableTagFactory()
+    private function getImmutableTagFactory(): ImmutableTagFactory
     {
         return new ImmutableTagFactory(new ImmutableTagDao());
     }
 
-    /**
-     * @return NotificationsEmailsBuilder
-     */
-    private function getNotificationEmailsBuilder()
+    private function getNotificationEmailsBuilder(): NotificationsEmailsBuilder
     {
         return new NotificationsEmailsBuilder();
     }
 
-    /**
-     * @return UserManager
-     */
-    private function getUserManager()
+    private function getUserManager(): UserManager
     {
         return UserManager::instance();
     }
 
-    /**
-     * @return UsersToNotifyDao
-     */
-    private function getUserNotifyDao()
+    private function getUserNotifyDao(): UsersToNotifyDao
     {
         return new UsersToNotifyDao();
     }
 
-    /**
-     * @return UgroupsToNotifyDao
-     */
-    private function getUGroupNotifyDao()
+    private function getUGroupNotifyDao(): UgroupsToNotifyDao
     {
         return new UgroupsToNotifyDao();
     }
@@ -1174,18 +1109,12 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    /**
-     * @return System_Command
-     */
-    private function getSystemCommand()
+    private function getSystemCommand(): System_Command
     {
         return new System_Command();
     }
 
-    /**
-     * @return RepositoryCopier
-     */
-    private function getCopier()
+    private function getCopier(): RepositoryCopier
     {
         return new RepositoryCopier($this->getSystemCommand());
     }
@@ -1247,8 +1176,6 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
         return array_keys($output) === ['group_id'];
     }
-
-
 
     public function permissionPerGroupDisplayEvent(PermissionPerGroupDisplayEvent $event)
     {
