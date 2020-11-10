@@ -191,6 +191,11 @@ export class MultipleSelectionManager implements SelectionManager {
 
         const badge = document.createElement("span");
         badge.classList.add("list-picker-badge");
+
+        if (list_item.template !== list_item.label) {
+            badge.classList.add("list-picker-badge-custom");
+        }
+
         badge.appendChild(remove_badge_button);
         badge.insertAdjacentHTML("beforeend", sanitize(list_item.template));
         badge.setAttribute("title", list_item.label);
