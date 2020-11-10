@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Workflow;
 
-use ForgeConfig;
 use Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder;
 
 class WorkflowMenuTabPresenter
@@ -37,6 +36,6 @@ class WorkflowMenuTabPresenter
         $this->tabs_menu              = $tabs_menu;
         $this->tracker_id             = $tracker_id;
         $this->used_services_names    = json_encode($used_services_names);
-        $this->is_list_picker_enabled = json_encode((bool) ForgeConfig::get(ListPickerIncluder::FORGE_CONFIG_KEY));
+        $this->is_list_picker_enabled = json_encode((bool) ListPickerIncluder::isListPickerEnabledAndBrowserNotIE11());
     }
 }

@@ -120,16 +120,18 @@ class KanbanPresenter
         $this->language                          = $language;
         $this->project_id                        = $project_id;
         $this->user_id                           = $user->getId();
-        $this->view_mode                         = (string) $user->getPreference('agiledashboard_kanban_item_view_mode_' . $kanban->getId());
+        $this->view_mode                         = (string) $user->getPreference(
+            'agiledashboard_kanban_item_view_mode_' . $kanban->getId()
+        );
         $this->nodejs_server                     = ForgeConfig::get('nodejs_server');
         $this->kanban_url                        = AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
             [
-                'group_id' => $this->project_id,
-                'action'   => 'showKanban',
-                'id'       => $kanban->getId()
-            ]
+                    'group_id' => $this->project_id,
+                    'action'   => 'showKanban',
+                    'id'       => $kanban->getId()
+                ]
         );
-        $this->user_accessibility_mode = json_encode((bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE));
-        $this->is_list_picker_enabled  = json_encode((bool) ForgeConfig::get(ListPickerIncluder::FORGE_CONFIG_KEY));
+        $this->user_accessibility_mode           = json_encode((bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE));
+        $this->is_list_picker_enabled            = json_encode((bool) ListPickerIncluder::isListPickerEnabledAndBrowserNotIE11());
     }
 }
