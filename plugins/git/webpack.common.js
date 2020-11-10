@@ -29,7 +29,7 @@ const output = webpack_configurator.configureOutput(
 
 const webpack_config_for_vue = {
     entry: {
-        "permission-per-group": "./scripts/permissions-per-group/src/index.js",
+        "permission-per-group": "./scripts/permissions-per-group/index.ts",
         "repositories-list": "./scripts/repositories/src/index.js",
         repository: "./scripts/repository/src/index.js",
         "repository-blob": [

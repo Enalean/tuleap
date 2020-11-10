@@ -46,56 +46,54 @@
     </section>
 </template>
 
-<script>
-import GitPermissionsTable from "./GitPermissionsTable.vue";
+<script lang="ts">
+import { getGitPermissions } from "./rest-querier";
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 import GitInlineFilter from "./GitInlineFilter.vue";
-import { getGitPermissions } from "./rest-querier.js";
+import GitPermissionsTable from "./GitPermissionsTable.vue";
+import { Repository } from "./type";
 
-export default {
-    name: "GitPermissions",
-    components: {
-        GitInlineFilter,
-        GitPermissionsTable,
-    },
-    props: {
-        selectedUgroupId: String,
-        selectedProjectId: String,
-        selectedUgroupName: String,
-    },
-    data() {
-        return {
-            is_loaded: false,
-            is_loading: false,
-            repositories: [],
-            error: null,
-            filter: "",
-        };
-    },
-    computed: {
-        hasError() {
-            return this.error !== null;
-        },
-        displayButtonLoadAll() {
-            return !this.is_loaded && !this.is_loading;
-        },
-    },
-    methods: {
-        async loadAll() {
-            try {
-                this.is_loading = true;
-                const { repositories } = await getGitPermissions(
-                    this.selectedProjectId,
-                    this.selectedUgroupId
-                );
-                this.is_loaded = true;
-                this.repositories = repositories;
-            } catch (e) {
-                const { error } = await e.response.json();
-                this.error = error;
-            } finally {
-                this.is_loading = false;
-            }
-        },
-    },
-};
+@Component({
+    components: { GitInlineFilter, GitPermissionsTable },
+})
+export default class GitPermissions extends Vue {
+    @Prop()
+    readonly selectedUgroupId!: string;
+    @Prop()
+    readonly selectedProjectId!: string;
+    @Prop()
+    readonly selectedUgroupName!: string;
+
+    is_loaded = false;
+    is_loading = false;
+    repositories: Repository[] = [];
+    error = null;
+    filter = "";
+
+    get hasError(): boolean {
+        return this.error !== null;
+    }
+
+    get displayButtonLoadAll(): boolean {
+        return !this.is_loaded && !this.is_loading;
+    }
+
+    async loadAll(): Promise<void> {
+        try {
+            this.is_loading = true;
+            const { repositories } = await getGitPermissions(
+                this.selectedProjectId,
+                this.selectedUgroupId
+            );
+            this.is_loaded = true;
+            this.repositories = repositories;
+        } catch (e) {
+            const { error } = await e.response.json();
+            this.error = error;
+        } finally {
+            this.is_loading = false;
+        }
+    }
+}
 </script>

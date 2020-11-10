@@ -48,69 +48,67 @@
     </table>
 </template>
 
-<script>
+<script lang="ts">
 import GitPermissionsTableRepository from "./GitPermissionsTableRepository.vue";
 import { sprintf } from "sprintf-js";
+import Vue from "vue";
+import { Component, Prop, Watch } from "vue-property-decorator";
+import { Repository } from "./type";
 
-export default {
-    name: "GitPermissionsTable",
-    components: {
-        GitPermissionsTableRepository,
-    },
-    props: {
-        repositories: Array,
-        selectedUgroupName: String,
-        filter: String,
-    },
-    data() {
-        return {
-            nb_repo_hidden: 0,
-        };
-    },
-    computed: {
-        no_repo_empty_state() {
-            return this.$gettext("No repository found for project");
-        },
-        filter_empty_state() {
-            return this.$gettext("There isn't any matching repository");
-        },
-        ugroup_empty_state() {
-            return sprintf(
-                this.$gettext("%s has no permission for any repository in this project"),
-                this.selectedUgroupName
-            );
-        },
-        is_empty() {
-            return this.repositories.length === 0;
-        },
-        has_a_selected_ugroup() {
-            return this.selectedUgroupName !== "";
-        },
-        are_all_repositories_hidden() {
-            return !this.is_empty && this.nb_repo_hidden === this.repositories.length;
-        },
-        is_empty_state_shown() {
-            return this.is_empty || this.are_all_repositories_hidden;
-        },
-        empty_state() {
-            return this.are_all_repositories_hidden
-                ? this.filter_empty_state
-                : this.has_a_selected_ugroup
-                ? this.ugroup_empty_state
-                : this.no_repo_empty_state;
-        },
-    },
-    watch: {
-        filter() {
-            this.nb_repo_hidden = 0;
-        },
-    },
-    methods: {
-        togglePermission(event) {
-            if (event.hidden) {
-                this.nb_repo_hidden++;
-            }
-        },
-    },
-};
+@Component({
+    components: { GitPermissionsTableRepository },
+})
+export default class GitPermissionsTable extends Vue {
+    @Prop()
+    readonly repositories!: Repository[];
+    @Prop()
+    readonly selectedUgroupName!: string;
+    @Prop()
+    readonly filter!: string;
+
+    nb_repo_hidden = 0;
+
+    get no_repo_empty_state(): string {
+        return this.$gettext("No repository found for project");
+    }
+    get filter_empty_state(): string {
+        return this.$gettext("There isn't any matching repository");
+    }
+    get ugroup_empty_state(): string {
+        return sprintf(
+            this.$gettext("%s has no permission for any repository in this project"),
+            this.selectedUgroupName
+        );
+    }
+    get is_empty(): boolean {
+        return this.repositories.length === 0;
+    }
+    get has_a_selected_ugroup(): boolean {
+        return this.selectedUgroupName !== "";
+    }
+    get are_all_repositories_hidden(): boolean {
+        return !this.is_empty && this.nb_repo_hidden === this.repositories.length;
+    }
+    get is_empty_state_shown(): boolean {
+        return this.is_empty || this.are_all_repositories_hidden;
+    }
+    get empty_state(): string {
+        return this.are_all_repositories_hidden
+            ? this.filter_empty_state
+            : this.has_a_selected_ugroup
+            ? this.ugroup_empty_state
+            : this.no_repo_empty_state;
+    }
+
+    @Watch("filter")
+    reset_hidden_repo() {
+        this.nb_repo_hidden = 0;
+    }
+
+    togglePermission(event: { hidden: boolean }) {
+        if (event.hidden) {
+            this.nb_repo_hidden++;
+        }
+    }
+}
 </script>

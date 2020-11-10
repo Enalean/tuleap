@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,30 +14,31 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 import Vue from "vue";
-import GettextPlugin from "vue-gettext";
-import french_translations from "../po/fr.po";
-import GitPermissions from "./GitPermissions.vue";
+import GitPermissions from "./src/GitPermissions.vue";
+import {
+    initVueGettext,
+    getPOFileFromLocale,
+} from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("git-permission-per-group");
 
     if (!vue_mount_point) {
         return;
     }
 
-    Vue.use(GettextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
-
-    const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
+    await initVueGettext(
+        Vue,
+        (locale: string) =>
+            import(
+                /* webpackChunkName: "permission-per-group-po-" */ "./po/" +
+                    getPOFileFromLocale(locale)
+            )
+    );
 
     const RootComponent = Vue.extend(GitPermissions);
     new RootComponent({
