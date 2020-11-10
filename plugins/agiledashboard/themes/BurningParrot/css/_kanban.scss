@@ -68,6 +68,24 @@ $kanban-column-footer-height: 50px;
     height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height});
 }
 
+.has-visible-platform-banner {
+    .kanban {
+        height: calc(100vh - #{$breadcrumb-height + $platform-banner-base-height});
+    }
+
+    &.sidebar-collapsed .kanban {
+        height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar + $platform-banner-base-height});
+    }
+
+    &.has-visible-project-banner .kanban {
+        height: calc(100vh - #{$breadcrumb-height + $project-banner-base-height + $platform-banner-base-height + $extra-platform-banner-white-space-height});
+    }
+
+    &.has-visible-project-banner.sidebar-collapsed .kanban {
+        height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar + $project-banner-base-height + $platform-banner-base-height + $extra-platform-banner-white-space-height});
+    }
+}
+
 .kanban-header {
     display: flex;
     flex: 0 0 auto;

@@ -21,6 +21,7 @@ import {
     PLATFORM_BANNER_NAVBAR_ID,
     PLATFORM_BANNER_MESSAGE_CLOSE_BUTTON_ID,
     PLATFORM_BANNER_HIDDEN_CLASS,
+    PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS,
     allowToHideAndShowPlatformBanner,
 } from "./platform-banner-show-hide";
 
@@ -41,6 +42,8 @@ describe("Show and hide platform banner", () => {
         platform_banner_navbar_information: HTMLElement;
     } {
         const local_document = document.implementation.createHTMLDocument();
+
+        local_document.body.classList.add(PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS);
 
         const navbar = local_document.createElement("nav");
         const navbar_platform_banner_info = local_document.createElement("div");
@@ -88,6 +91,9 @@ describe("Show and hide platform banner", () => {
         allowToHideAndShowPlatformBanner(local_document.document, tlpPatchSpy);
 
         local_document.close_button.click();
+        expect(local_document.document.body.classList).not.toContain(
+            PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS
+        );
         expect(local_document.platform_banner.classList).toContain(PLATFORM_BANNER_HIDDEN_CLASS);
         expect(local_document.platform_banner_navbar_information.classList).not.toContain(
             PLATFORM_BANNER_HIDDEN_CLASS
@@ -111,6 +117,9 @@ describe("Show and hide platform banner", () => {
         );
 
         local_document.platform_banner_navbar_information.click();
+        expect(local_document.document.body.classList).toContain(
+            PLATFORM_BANNER_VISIBLE_GLOBAL_CLASS
+        );
         expect(local_document.platform_banner.classList).not.toContain(
             PLATFORM_BANNER_HIDDEN_CLASS
         );

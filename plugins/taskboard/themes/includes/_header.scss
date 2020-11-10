@@ -23,7 +23,11 @@ $taskboard-header-height: 50px;
     display: flex;
     position: sticky;
     z-index: 10;
-    top: 45px;
+    top: $navbar-height;
+}
+
+.has-visible-platform-banner .taskboard-head {
+    top: $navbar-height + $platform-banner-base-height;
 }
 
 .taskboard-header {

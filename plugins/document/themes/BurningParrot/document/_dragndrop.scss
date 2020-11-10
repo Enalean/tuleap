@@ -57,6 +57,16 @@
     height: calc(100vh - #{$project-banner-base-height});
 }
 
+.has-visible-platform-banner .document-upload-to-current-folder {
+    top: $platform-banner-base-height;
+    height: calc(100vh - #{$platform-banner-base-height});
+}
+
+.has-visible-platform-banner.has-visible-project-banner .document-upload-to-current-folder {
+    top: $project-banner-base-height + $platform-banner-base-height + $extra-platform-banner-white-space-height;
+    height: calc(100vh - #{$project-banner-base-height + $platform-banner-base-height + $extra-platform-banner-white-space-height});
+}
+
 .document-upload-to-current-folder-message {
     position: absolute;
     bottom: 0;

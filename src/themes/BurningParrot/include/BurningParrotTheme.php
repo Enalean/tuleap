@@ -136,7 +136,7 @@ class BurningParrotTheme extends BaseLayout
                 $project,
                 ProjectPrivacyPresenter::fromProject($project),
                 $this->project_flags_builder->buildProjectFlags($project),
-                $this->getProjectBanner($project, $this->user, 'project/project-banner-bp.js'),
+                $this->getProjectBannerWithScript($project, $this->user, 'project/project-banner-bp.js'),
             );
 
             if (! isset($params['without-project-in-breadcrumbs']) || $params['without-project-in-breadcrumbs'] === false) {
@@ -215,7 +215,7 @@ class BurningParrotTheme extends BaseLayout
                 new CustomizedLogoDetector(new \LogoRetriever(), new FileContentComparator()),
                 \BackendLogger::getDefaultLogger(),
             ),
-            $this->getPlatformBanner($this->user, 'platform/platform-banner-bp.js')
+            $this->getPlatformBannerWithScript($this->user, 'platform/platform-banner-bp.js')
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
@@ -258,10 +258,15 @@ class BurningParrotTheme extends BaseLayout
         }
 
         if ($project) {
-            $banner = $this->getBanner($project, $this->user);
+            $banner = $this->getProjectBanner($project, $this->user);
             if ($banner && $banner->isVisible()) {
                 $body_classes[] = 'has-visible-project-banner';
             }
+        }
+
+        $platform_banner = $this->getPlatformBanner($this->user);
+        if ($platform_banner && $platform_banner->isVisible()) {
+                $body_classes[] = 'has-visible-platform-banner';
         }
 
         if (! $sidebar) {
@@ -363,7 +368,7 @@ class BurningParrotTheme extends BaseLayout
             $this->getProjectSidebar($params, $project),
             ProjectPrivacyPresenter::fromProject($project),
             $this->version,
-            $this->getBanner($project, $this->user),
+            $this->getProjectBanner($project, $this->user),
             $this->project_flags_builder->buildProjectFlags($project),
         );
 

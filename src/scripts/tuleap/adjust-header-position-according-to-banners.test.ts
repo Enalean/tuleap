@@ -108,19 +108,19 @@ describe("adjustHeaderPositionAccordingToBanners", () => {
         });
 
         it(`And project banner is not defined
-            Then header position is left untouched`, () => {
+            Then header position is at the top of the viewport`, () => {
             adjustHeaderPositionAccordingToBanners(header, platform_banner, null, 10);
 
-            expect(header.style.top).toBe("");
+            expect(header.style.top).toBe("0px");
         });
 
         it(`And project banner is defined but is hidden
-            Then header position is left untouched`, () => {
+            Then header position is at the top of the viewport`, () => {
             project_banner.classList.add("project-banner-hidden");
 
             adjustHeaderPositionAccordingToBanners(header, platform_banner, project_banner, 10);
 
-            expect(header.style.top).toBe("");
+            expect(header.style.top).toBe("0px");
         });
 
         it(`And project banner is defined and displayed,

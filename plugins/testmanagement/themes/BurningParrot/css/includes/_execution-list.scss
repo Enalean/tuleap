@@ -22,6 +22,24 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
     height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height} - #{$height-testmanagement-header});
 }
 
+.has-visible-platform-banner {
+    .test-campaign {
+        height: calc(100vh - #{$breadcrumb-height} - #{$height-testmanagement-header} - #{$platform-banner-base-height});
+    }
+
+    &.sidebar-collapsed .test-campaign {
+        height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$height-testmanagement-header} - #{$platform-banner-base-height});
+    }
+
+    &.has-visible-project-banner .test-campaign {
+        height: calc(100vh - #{$breadcrumb-height} - #{$project-banner-base-height} - #{$platform-banner-base-height} - #{$height-testmanagement-header} - #{$extra-platform-banner-white-space-height});
+    }
+
+    &.has-visible-project-banner.sidebar-collapsed .test-campaign {
+        height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height} - #{$platform-banner-base-height} - #{$height-testmanagement-header} - #{$extra-platform-banner-white-space-height});
+    }
+}
+
 .test-campaign-header {
     display: flex;
     flex: 0 0 auto;

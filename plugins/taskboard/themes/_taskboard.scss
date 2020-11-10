@@ -65,6 +65,24 @@
     height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height} - #{$tlp-medium-spacing});
 }
 
+.has-visible-platform-banner {
+    .taskboard-root {
+        height: calc(100vh - #{$breadcrumb-height} - #{$tlp-medium-spacing} - #{$platform-banner-base-height});
+    }
+
+    &.sidebar-collapsed .taskboard-root {
+        height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$tlp-medium-spacing} - #{$platform-banner-base-height});
+    }
+
+    &.has-visible-project-banner .taskboard-root {
+        height: calc(100vh - #{$breadcrumb-height} - #{$project-banner-base-height} - #{$tlp-medium-spacing} - #{$platform-banner-base-height});
+    }
+
+    &.has-visible-project-banner.sidebar-collapsed .taskboard-root {
+        height: calc(100vh - #{$breadcrumb-height-with-collapsed-sidebar} - #{$project-banner-base-height} - #{$tlp-medium-spacing} - #{$platform-banner-base-height});
+    }
+}
+
 .taskboard-root-title {
     margin: 0;
     padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
