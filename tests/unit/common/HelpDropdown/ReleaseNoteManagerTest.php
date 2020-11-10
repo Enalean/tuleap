@@ -31,6 +31,8 @@ class ReleaseNoteManagerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private const BASE_URL = "https://www.tuleap.org/resources/release-notes/tuleap-11-17/?utm_source=tuleap&utm_medium=forge&utm_campaign=tuleap-forge-icon-help-RN-link";
+
     /**
      * @var ReleaseNoteManager
      */
@@ -58,8 +60,6 @@ class ReleaseNoteManagerTest extends TestCase
 
     public function testGetReleaseNoteLink(): void
     {
-        $expected_result = "https://www.tuleap.org/resources/release-notes/tuleap-11-17";
-
         $dao_links = [
             "actual_link" => "",
             "tuleap_version" => "11-17"
@@ -68,7 +68,7 @@ class ReleaseNoteManagerTest extends TestCase
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_links);
         $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->never();
 
-        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
+        $this->assertEquals(self::BASE_URL, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
     }
 
     public function testGetReleaseNoteLinkWithCustomLink(): void
@@ -88,8 +88,6 @@ class ReleaseNoteManagerTest extends TestCase
 
     public function testGetReleaseNoteLinkWithNullLink(): void
     {
-        $expected_result = "https://www.tuleap.org/resources/release-notes/tuleap-11-17";
-
         $dao_links = [
             "actual_link" => null,
             "tuleap_version" => "11-17"
@@ -98,13 +96,11 @@ class ReleaseNoteManagerTest extends TestCase
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn($dao_links);
         $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->never();
 
-        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
+        $this->assertEquals(self::BASE_URL, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
     }
 
     public function testGetReleaseNoteLinkShouldChangeIfVersionIsUpgraded(): void
     {
-        $expected_result = "https://www.tuleap.org/resources/release-notes/tuleap-11-17";
-
         $dao_old_links = [
             "actual_link" => "https://whatever.com",
             "tuleap_version" => "11-16"
@@ -114,17 +110,15 @@ class ReleaseNoteManagerTest extends TestCase
         $this->release_note_dao->shouldReceive("updateReleaseNoteLink");
         $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->once();
 
-        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
+        $this->assertEquals(self::BASE_URL, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
     }
 
     public function testGetReleaseNoteLinkIfNotLinkInDatabase(): void
     {
-        $expected_result = "https://www.tuleap.org/resources/release-notes/tuleap-11-17";
-
         $this->release_note_dao->shouldReceive("getReleaseLink")->andReturn(null)->once();
         $this->release_note_dao->shouldReceive("createReleaseNoteLink");
         $this->user_preferences_dao->shouldReceive("deletePreferenceForAllUsers")->once();
 
-        $this->assertEquals($expected_result, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
+        $this->assertEquals(self::BASE_URL, $this->release_note_manager->getReleaseNoteLink("11.17.99.666"));
     }
 }
