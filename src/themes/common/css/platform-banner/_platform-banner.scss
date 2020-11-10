@@ -39,6 +39,16 @@ $illustration-left: 9px;
         linear-gradient($color, $color);
 }
 
+.platform-banner-clamped {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.platform-banner-can-be-unclamped {
+    cursor: pointer;
+}
+
 .platform-banner-importance-standard {
     @include megaphone($tlp-ui-info);
 }
