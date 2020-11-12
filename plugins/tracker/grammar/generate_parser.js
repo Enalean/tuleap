@@ -1,16 +1,16 @@
 /* eslint-env node */
 
-var fs = require("fs");
-var pegjs = require("pegjs");
-var phppegjs = require("php-pegjs");
+const fs = require("fs");
+const pegjs = require("pegjs");
+const phpegjs = require("phpegjs");
 
 fs.readFile("tql.pegjs", function (err, data) {
     if (err) {
         throw err;
     }
-    var parser = pegjs.buildParser(data.toString(), {
+    const parser = pegjs.generate(data.toString(), {
         cache: true,
-        plugins: [phppegjs],
+        plugins: [phpegjs],
         phppegjs: {
             parserNamespace: "Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar",
             parserClassName: "Parser",
