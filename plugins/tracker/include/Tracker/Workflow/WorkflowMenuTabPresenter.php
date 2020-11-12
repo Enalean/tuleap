@@ -36,6 +36,6 @@ class WorkflowMenuTabPresenter
         $this->tabs_menu              = $tabs_menu;
         $this->tracker_id             = $tracker_id;
         $this->used_services_names    = json_encode($used_services_names);
-        $this->is_list_picker_enabled = json_encode((bool) ListPickerIncluder::isListPickerEnabledAndBrowserNotIE11());
+        $this->is_list_picker_enabled = json_encode((bool) ListPickerIncluder::isListPickerEnabledAndBrowserCompatible());
     }
 }
