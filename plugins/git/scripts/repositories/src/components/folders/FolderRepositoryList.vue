@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -20,7 +20,7 @@
 <template>
     <collapsible-folder
         v-bind:is-root-folder="true"
-        v-bind:children="filteredRepositoriesGroupedByPath.children"
+        v-bind:children="getFilteredRepositoriesGroupedByPath.children"
     />
 </template>
 <script>
@@ -31,7 +31,7 @@ export default {
     name: "FolderRepositoryList",
     components: { CollapsibleFolder },
     computed: {
-        ...mapGetters(["filteredRepositoriesGroupedByPath"]),
+        ...mapGetters(["getFilteredRepositoriesGroupedByPath"]),
     },
 };
 </script>
