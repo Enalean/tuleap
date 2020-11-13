@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,19 +14,21 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import initAlreadyForkedModal from "./already-forked-modal.js";
-import initCopyButton from "./copy-button.js";
-import initCloneBarPopover from "./clone-bar-popover.ts";
-import initBranchTagSelector from "./branch-tag-selector.js";
-import initShortlog from "./shortlog.js";
+import { createModal } from "tlp";
 
-document.addEventListener("DOMContentLoaded", () => {
-    initAlreadyForkedModal();
-    initCopyButton();
-    initCloneBarPopover();
-    initBranchTagSelector();
-    initShortlog();
-});
+export default function initAlreadyForkedModal(): void {
+    const button = document.getElementById("git-repository-already-forked-button");
+    const modal_container = document.getElementById("git-repository-already-forked-modal");
+
+    if (!button || !modal_container) {
+        return;
+    }
+
+    const modal = createModal(modal_container);
+    button.addEventListener("click", () => {
+        modal.toggle();
+    });
+}

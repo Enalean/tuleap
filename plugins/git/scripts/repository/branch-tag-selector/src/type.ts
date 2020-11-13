@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,21 +14,25 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { createModal } from "tlp";
+export interface URLParameter {
+    a: string;
+    f: string;
+    s: string;
+    st: string;
+    m: string;
+}
 
-export default function initAlreadyForkedModal() {
-    const button = document.getElementById("git-repository-already-forked-button");
-    const modal_container = document.getElementById("git-repository-already-forked-modal");
+export interface Branch {
+    name: string;
+}
 
-    if (!button || !modal_container) {
-        return;
-    }
+export interface Tag {
+    name: string;
+}
 
-    const modal = createModal(modal_container);
-    button.addEventListener("click", () => {
-        modal.toggle();
-    });
+export interface EncodeDataParameters extends URLParameter {
+    hb: string;
 }

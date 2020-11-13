@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -57,36 +57,37 @@
         />
     </div>
 </template>
-<script>
+<script lang="ts">
 import { createDropdown } from "tlp";
 import BranchesSection from "./BranchesSection.vue";
 import TagsSection from "./TagsSection.vue";
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { URLParameter } from "../type";
 
-export default {
-    name: "App",
-    components: {
-        BranchesSection,
-        TagsSection,
-    },
-    props: {
-        button: HTMLButtonElement,
-        repository_id: Number,
-        repository_url: String,
-        is_tag: Boolean,
-        current_ref_name: String,
-        url_parameters: Object,
-    },
-    data() {
-        return {
-            is_displaying_branches: true,
-        };
-    },
-    mounted() {
+@Component({ components: { BranchesSection, TagsSection } })
+export default class App extends Vue {
+    @Prop()
+    readonly button!: HTMLButtonElement;
+    @Prop()
+    readonly repository_id!: number;
+    @Prop()
+    readonly repository_url!: string;
+    @Prop()
+    readonly is_tag!: boolean;
+    @Prop()
+    readonly current_ref_name!: string;
+    @Prop()
+    readonly url_parameters!: URLParameter;
+
+    is_displaying_branches = true;
+
+    mounted(): void {
         const dropdown = createDropdown(this.button, {
             dropdown_menu: this.$el,
         });
 
         dropdown.show();
-    },
-};
+    }
+}
 </script>
