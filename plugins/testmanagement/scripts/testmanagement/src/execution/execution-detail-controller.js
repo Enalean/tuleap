@@ -189,8 +189,8 @@ function ExecutionDetailCtrl(
             SharedPropertiesService.getIssueTrackerId(),
             null,
             callback,
-            prefill_values,
-            SharedPropertiesService.isListPickerEnabled()
+            SharedPropertiesService.isListPickerEnabled(),
+            prefill_values
         );
     }
 
