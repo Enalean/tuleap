@@ -85,7 +85,6 @@ pipeline {
                     }
                     post { always { junit "results/soap/*/soap_tests.xml" } }
                 }
-                stage('Build and run CentOS 6') { steps { script { actions.runBuildAndRun('centos6') } } }
                 stage('Build and run CentOS 7') { steps { script { actions.runBuildAndRun('centos7') } } }
                 stage('Translations') {
                     stages {
