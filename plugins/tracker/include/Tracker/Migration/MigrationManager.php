@@ -252,7 +252,7 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
         $this->logger->info('<-- TV3 data exported ' . PHP_EOL);
 
         $xsl = new DOMDocument();
-        $xsl->load(__DIR__ . '/../../../../../src/utils/xml/indent.xsl');
+        $xsl->loadXML(file_get_contents(__DIR__ . '/../../../../../src/utils/xml/indent.xsl'));
 
         $proc = new XSLTProcessor();
         $proc->importStyleSheet($xsl);
