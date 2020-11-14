@@ -136,6 +136,7 @@ class Tracker_Action_CopyArtifact
         PFUser $current_user,
         array $submitted_values
     ) {
+        $current_time  = (new DateTimeImmutable())->setTimestamp($_SERVER['REQUEST_TIME']);
         $xml_artifacts = $this->getXMLRootNode();
 
         $xml_artifacts = $this->xml_exporter->exportSnapshotWithoutComments(
@@ -150,7 +151,7 @@ class Tracker_Action_CopyArtifact
             $xml_artifacts->artifact,
             $submitted_values,
             $current_user,
-            $_SERVER['REQUEST_TIME']
+            $current_time->getTimestamp()
         );
 
         $this->children_xml_exporter->exportChildren($xml_artifacts);
@@ -169,7 +170,7 @@ class Tracker_Action_CopyArtifact
             $this->removeArtLinksValueNodeFromXML($xml_artifacts);
         }
 
-        $new_artifacts = $this->importBareArtifacts($xml_artifacts);
+        $new_artifacts = $this->importBareArtifacts($current_user, $current_time, $xml_artifacts);
 
         if ($new_artifacts == null) {
             $this->logsErrorAndRedirectToTracker(
@@ -186,13 +187,20 @@ class Tracker_Action_CopyArtifact
     /**
      * @return Artifact[] or null in case of error
      */
-    private function importBareArtifacts(SimpleXMLElement $xml_artifacts)
-    {
+    private function importBareArtifacts(
+        PFUser $current_user,
+        DateTimeImmutable $imported_at,
+        SimpleXMLElement $xml_artifacts
+    ) {
         $new_artifacts = [];
         foreach ($xml_artifacts->children() as $xml_artifact) {
             $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
             $config = new \Tuleap\Project\XML\Import\ImportConfig();
-            $artifact = $this->xml_importer->importBareArtifact($tracker, $xml_artifact, $config);
+            $tracker_xml_config = new \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig(
+                $current_user,
+                $imported_at
+            );
+            $artifact = $this->xml_importer->importBareArtifact($tracker, $xml_artifact, $config, $tracker_xml_config);
             if (! $artifact) {
                 return null;
             } else {

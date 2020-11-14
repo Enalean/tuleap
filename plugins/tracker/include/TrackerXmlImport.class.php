@@ -299,7 +299,7 @@ class TrackerXmlImport
             __DIR__ . '/../resources/trackers.rng'
         );
 
-        $tracker_import_config = new TrackerXmlImportConfig($project, $user, new \DateTimeImmutable());
+        $tracker_import_config = new TrackerXmlImportConfig($user, new \DateTimeImmutable());
 
         $this->activateArtlinkV2($project, $xml_input->trackers);
 
@@ -330,7 +330,8 @@ class TrackerXmlImport
             $extraction_path,
             $xml_mapping,
             $artifacts_id_mapping,
-            $configuration
+            $configuration,
+            $tracker_import_config
         );
 
         $this->importChangesets(
@@ -510,7 +511,8 @@ class TrackerXmlImport
         $extraction_path,
         TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping,
-        ImportConfig $configuration
+        ImportConfig $configuration,
+        TrackerXmlImportConfig $tracker_import_config
     ) {
         $created_artifacts = [];
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
@@ -521,7 +523,8 @@ class TrackerXmlImport
                     $extraction_path,
                     $xml_mapping,
                     $artifacts_id_mapping,
-                    $configuration
+                    $configuration,
+                    $tracker_import_config
                 );
             }
         }

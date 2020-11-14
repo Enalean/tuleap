@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact\XMLImport;
 
 use DateTimeImmutable;
 use PFUser;
-use Project;
 
 class TrackerXmlImportConfig implements TrackerImportConfig
 {
@@ -38,10 +37,16 @@ class TrackerXmlImportConfig implements TrackerImportConfig
      */
     private $import_timestamp;
 
-    public function __construct(Project $project, PFUser $user, DateTimeImmutable $import_time)
+    /**
+     * @var bool
+     */
+    private $with_all_data;
+
+    public function __construct(PFUser $user, DateTimeImmutable $import_time, bool $with_all_data = false)
     {
         $this->user_id          = (int) $user->getId();
         $this->import_timestamp = $import_time->getTimestamp();
+        $this->with_all_data    = $with_all_data;
     }
 
     public function getUserId(): int
@@ -57,5 +62,10 @@ class TrackerXmlImportConfig implements TrackerImportConfig
     public function isFromXml(): bool
     {
         return true;
+    }
+
+    public function isWithAllData(): bool
+    {
+        return $this->with_all_data;
     }
 }

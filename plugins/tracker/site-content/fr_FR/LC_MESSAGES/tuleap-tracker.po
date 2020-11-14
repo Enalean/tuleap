@@ -1905,8 +1905,11 @@ msgstr ""
 msgid "Message Body:"
 msgstr "Message&nbsp;:"
 
-msgid "Migrate a Tracker v3 content"
-msgstr "Migrer le contenu d'un outil de suivi v3"
+msgid "Migrate a Tracker v3 content for test"
+msgstr "Tester la migration de contenu d'un outil de suivi v3"
+
+msgid "Migrate a Tracker v3 content keeping original ids"
+msgstr "Migrer le contenu d'un outil de suivi v3 en conservant les ids d'origine"
 
 msgid "Minimum"
 msgstr "Minimum"

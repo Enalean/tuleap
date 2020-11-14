@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -33,8 +33,15 @@ class Tracker_SystemEventManager extends SystemEventManager
         $this->system_event_manager = $system_event_manager;
     }
 
-    public function queueTV3Migration(PFUser $user, Project $project, $tracker_id, $name, $description, $short_name)
-    {
+    public function queueTV3Migration(
+        PFUser $user,
+        Project $project,
+        $tracker_id,
+        $name,
+        $description,
+        $short_name,
+        bool $keep_original_ids
+    ) {
         $this->system_event_manager->createEvent(
             SystemEvent_TRACKER_V3_MIGRATION::NAME,
             $short_name . SystemEvent::PARAMETER_SEPARATOR .
@@ -42,7 +49,8 @@ class Tracker_SystemEventManager extends SystemEventManager
             $description . SystemEvent::PARAMETER_SEPARATOR .
             $user->getUnixName() . SystemEvent::PARAMETER_SEPARATOR .
             $project->getGroupId() . SystemEvent::PARAMETER_SEPARATOR .
-            $tracker_id,
+            $tracker_id . SystemEvent::PARAMETER_SEPARATOR .
+            (int) $keep_original_ids,
             SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
         );

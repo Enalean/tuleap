@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014, present. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -425,6 +425,11 @@ XML;
                     function ($element) {
                         return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
                     }
+                ),
+                Mockery::on(
+                    function ($element) {
+                        return is_a($element, \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
+                    }
                 )
             )
             ->andReturn($artifact123)->once();
@@ -440,6 +445,11 @@ XML;
                     function ($element) {
                         return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
                     }
+                ),
+                Mockery::on(
+                    function ($element) {
+                        return is_a($element, \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
+                    }
                 )
             )
             ->andReturn($artifact456)->once();
@@ -454,6 +464,11 @@ XML;
                 Mockery::on(
                     function ($element) {
                         return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
+                    }
+                ),
+                Mockery::on(
+                    function ($element) {
+                        return is_a($element, \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
                     }
                 )
             )

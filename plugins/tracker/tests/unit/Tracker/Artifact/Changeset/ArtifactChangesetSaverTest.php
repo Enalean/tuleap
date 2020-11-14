@@ -102,9 +102,7 @@ final class ArtifactChangesetSaverTest extends TestCase
     public function testItStoreChangesetCreatedFromXML(): void
     {
         $time    = new \DateTimeImmutable();
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(110);
-        $import_config = new TrackerXmlImportConfig($project, $this->user, $time);
+        $import_config = new TrackerXmlImportConfig($this->user, $time);
 
         $this->changeset_dao->shouldReceive('create')->once()->andReturn(1234);
         $this->tracker_artifact_dao->shouldReceive('updateLastChangsetId')->once();
