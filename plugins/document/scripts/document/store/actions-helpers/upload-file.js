@@ -90,7 +90,7 @@ export function uploadVersion(context, dropped_file, updated_file, new_version) 
         onSuccess: async () => {
             updated_file.progress = null;
             updated_file.is_uploading_new_version = false;
-            updated_file.last_update_date = Date.now();
+            updated_file.last_update_date = new Date();
             context.commit("removeFileFromUploadsList", updated_file);
 
             const new_item_version = await getItem(updated_file.id);
