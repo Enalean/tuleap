@@ -76,6 +76,7 @@ class HookController
         $this->checkCSRFToken($repository);
 
         $jenkins_server = trim($this->request->getValidated('url', 'string', ''));
+        $is_commit_reference_needed = (bool) $this->request->get('is_commit_reference_needed');
 
         if (! $this->valid_HTTPURI->validate($jenkins_server)) {
             $GLOBALS['Response']->addFeedback(
@@ -86,7 +87,7 @@ class HookController
             $GLOBALS['Response']->redirect($this->getRedirectUrl($repository));
         }
 
-        if ($this->dao->save($repository->getId(), $jenkins_server)) {
+        if ($this->dao->save($repository->getId(), $jenkins_server, $is_commit_reference_needed)) {
             $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-hudson_git', 'Jenkins webhook successfully saved'));
         } else {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-hudson_git', 'Unable to save Jenkins webhook'));

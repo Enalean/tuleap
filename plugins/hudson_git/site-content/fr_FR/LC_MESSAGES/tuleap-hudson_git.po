@@ -1,10 +1,16 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid "%1$s jobs triggered"
@@ -62,6 +68,9 @@ msgstr "Intégration Continue pour le plugin Git"
 
 msgid "Continuous Integration with Hudson/Jenkins for Git plugin"
 msgstr "Intégration continue avec Hudson/Jenkins pour le plugin Git"
+
+msgid "Do not send commit's SHA-1 to Jenkins"
+msgstr "Ne pas envoyer le SHA-1 du commit à Jenkins"
 
 msgid "Edit the Jenkins webhook"
 msgstr "Éditer le webhook Jenkins"
@@ -175,6 +184,13 @@ msgstr "Le serveur Jenkins a été ajouté."
 
 msgid "The Jenkins server is already defined in project."
 msgstr "Le serveur Jenkins est déjà défini pour ce projet."
+
+msgid ""
+"To work around the fact Jenkins doesn't poll the repositories when sha1 "
+"parameter is given."
+msgstr ""
+"Afin de contourner le fait que Jenkins ne tire pas les dépôts quand le "
+"paramètre sha1 est renseigné."
 
 msgid "Unable to save Jenkins webhook"
 msgstr "Impossible d'enregistrer le webhook Jenkins"
