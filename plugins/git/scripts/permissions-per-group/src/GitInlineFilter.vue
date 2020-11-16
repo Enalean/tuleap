@@ -33,21 +33,23 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "GitInlineFilter",
-    props: {
-        value: String,
-    },
-    computed: {
-        placeholder() {
-            return this.$gettext("Repository name");
-        },
-    },
-    methods: {
-        search(event) {
+<script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
+
+@Component
+export default class GitInlineFilter extends Vue {
+    @Prop()
+    readonly value!: string;
+
+    get placeholder(): string {
+        return this.$gettext("Repository name");
+    }
+
+    search(event: Event): void {
+        if (event.target instanceof HTMLInputElement) {
             this.$emit("input", event.target.value);
-        },
-    },
-};
+        }
+    }
+}
 </script>

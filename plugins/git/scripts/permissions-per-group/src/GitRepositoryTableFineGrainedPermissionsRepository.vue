@@ -37,14 +37,15 @@
         <td></td>
     </tr>
 </template>
-<script>
+<script lang="ts">
 import GitPermissionsBadge from "../../../../../src/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { Repository } from "./type";
 
-export default {
-    name: "GitRepositoryTableFineGrainedPermissionsRepository",
-    components: { GitPermissionsBadge },
-    props: {
-        repositoryPermission: Object,
-    },
-};
+@Component({ components: { GitPermissionsBadge } })
+export default class GitRepositoryTableFineGrainedPermissionsRepository extends Vue {
+    @Prop()
+    readonly repositoryPermission!: Repository;
+}
 </script>

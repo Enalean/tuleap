@@ -45,14 +45,15 @@
         </td>
     </tr>
 </template>
-<script>
+<script lang="ts">
 import GitPermissionsBadge from "../../../../../src/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { FineGrainedPermission } from "./type";
 
-export default {
-    name: "GitRepositoryTableFineGrainedPermission",
-    components: { GitPermissionsBadge },
-    props: {
-        fineGrainedPermissions: Object,
-    },
-};
+@Component({ components: { GitPermissionsBadge } })
+export default class GitRepositoryTableFineGrainedPermission extends Vue {
+    @Prop()
+    readonly fineGrainedPermissions!: FineGrainedPermission;
+}
 </script>

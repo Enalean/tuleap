@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,14 @@
  */
 
 import { get } from "tlp";
+import { Repository } from "./type";
 
 export { getGitPermissions };
 
-async function getGitPermissions(project_id, selected_ugroup_id) {
+async function getGitPermissions(
+    project_id: string,
+    selected_ugroup_id: string
+): Promise<{ repositories: Repository[] }> {
     const response = await get("/plugins/git/", {
         params: {
             group_id: project_id,
