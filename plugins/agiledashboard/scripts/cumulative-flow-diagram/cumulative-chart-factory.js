@@ -357,7 +357,7 @@ export default (options = {}) => {
 
     chart.initLegendEvents = () => {
         selectAll(".legend-value")
-            .on("click", (event, d) => {
+            .on("click", function (event, d) {
                 updateLegend(d, select(this));
                 chart.redraw();
             })
