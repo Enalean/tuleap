@@ -675,8 +675,8 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(404, 'The file does not exist');
         }
 
-        $object_src  = $git_project->GetObject($object_reference_src, $object_type_src) ?: null;
-        $object_dest = $git_project->GetObject($object_reference_dest, $object_type_dest) ?: null;
+        $object_src  = $git_project->GetObject($object_reference_src, $object_type_src) ?: "";
+        $object_dest = $git_project->GetObject($object_reference_dest, $object_type_dest) ?: "";
 
         $mime_type = 'text/plain';
         $charset   = 'utf-8';
