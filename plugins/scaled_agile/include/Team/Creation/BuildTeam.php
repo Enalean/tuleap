@@ -20,17 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\Team\Creation;
 
-use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Adapter\Team\AtLeastOneTeamShouldBeDefinedException;
+use Tuleap\ScaledAgile\Adapter\Team\ProjectIsAProgramException;
+use Tuleap\ScaledAgile\Adapter\Team\TeamAccessException;
 use Tuleap\ScaledAgile\Program\Program;
 
-interface BuildProgram
+interface BuildTeam
 {
     /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
+     * @throws AtLeastOneTeamShouldBeDefinedException
+     * @throws ProjectIsAProgramException
+     * @throws TeamAccessException
      */
-    public function buildProgramProject(int $id, \PFUser $user): Program;
+    public function buildTeamProject(array $team_ids, Program $program, \PFUser $user): TeamCollection;
 }

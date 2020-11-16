@@ -20,17 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\Adapter\Team;
 
-use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
-use Tuleap\ScaledAgile\Program\Program;
-
-interface BuildProgram
+interface TeamException extends \Throwable
 {
-    /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
-     */
-    public function buildProgramProject(int $id, \PFUser $user): Program;
 }

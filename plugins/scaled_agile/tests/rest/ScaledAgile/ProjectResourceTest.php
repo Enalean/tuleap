@@ -55,8 +55,28 @@ class ProjectResourceTest extends \RestBase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function testPUTTeam(): void
+    {
+        $program_id = $this->getProgramProjectId();
+        $team_id = $this->getTeamProjectId();
+
+        $team_definition  = json_encode(["team_ids" => [$team_id]]);
+
+        $response = $this->getResponse(
+            $this->client->put('projects/' . $program_id . '/scaled_agile_teams', null, $team_definition),
+            REST_TestDataBuilder::TEST_USER_1_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
     private function getProgramProjectId(): int
     {
         return $this->getProjectId('program');
+    }
+
+    private function getTeamProjectId(): int
+    {
+        return $this->getProjectId('team');
     }
 }

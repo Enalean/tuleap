@@ -20,17 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\Program;
 
-use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
-use Tuleap\ScaledAgile\Program\Program;
-
-interface BuildProgram
+/**
+ * @psalm-immutable
+ */
+final class Program
 {
     /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
+     * @var int
      */
-    public function buildProgramProject(int $id, \PFUser $user): Program;
+    private $id;
+
+    public function __construct(int $id)
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

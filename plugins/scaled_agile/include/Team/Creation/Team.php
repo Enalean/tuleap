@@ -20,25 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\Team\Creation;
 
 /**
  * @psalm-immutable
  */
-final class Program
+final class Team
 {
     /**
      * @var int
      */
-    private $id;
+    private $team_id;
 
-    public function __construct(int $id)
+    public function __construct(int $team_id)
     {
-        $this->id = $id;
+        $this->team_id = $team_id;
     }
 
-    public function getId(): int
+    public function getTeamId(): int
     {
-        return $this->id;
+        return $this->team_id;
     }
 }

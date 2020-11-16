@@ -20,25 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\REST\v1;
+namespace Tuleap\ScaledAgile\Adapter\Team;
 
-/**
- * @psalm-immutable
- */
-final class ProjectResourcePutRepresentation
+final class ProjectIsAProgramException extends \Exception implements TeamException
 {
-    /**
-     * @var int {@required true}
-     */
-    public $program_increment_tracker_id;
-    /**
-     * @var array {@type int}
-     */
-    public $plannable_tracker_ids;
-
-    public function __construct(int $program_increment_tracker_id, array $plannable_tracker_ids)
+    public function __construct(int $id)
     {
-        $this->program_increment_tracker_id = $program_increment_tracker_id;
-        $this->plannable_tracker_ids        = $plannable_tracker_ids;
+        parent::__construct("Project #$id is defined as a program project. It can not be used as team.");
     }
 }

@@ -20,17 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\REST\v1;
 
-use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
-use Tuleap\ScaledAgile\Program\Program;
-
-interface BuildProgram
+/**
+ * @psalm-immutable
+ */
+final class ProjectResourcePutTeamsRepresentation
 {
     /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
+     * @var array {@type int}
      */
-    public function buildProgramProject(int $id, \PFUser $user): Program;
+    public $team_ids;
+
+    public function __construct(array $team_ids)
+    {
+        $this->team_ids = $team_ids;
+    }
 }

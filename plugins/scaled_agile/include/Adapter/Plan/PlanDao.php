@@ -26,27 +26,28 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\ScaledAgile\Program\Plan\Plan;
 use Tuleap\ScaledAgile\Program\Plan\PlanStore;
 
-class PlanDao extends DataAccessObject implements PlanStore
+final class PlanDao extends DataAccessObject implements PlanStore
 {
     /**
      * @throw DBException
      */
     public function save(Plan $plan): void
     {
-        $this->getDB()->beginTransaction();
+        $this->getDB()->tryFlatTransaction(function () use ($plan): void {
+            $sql = 'DELETE FROM plugin_scaled_agile_plan WHERE program_increment_tracker_id = ?';
 
-        $sql = 'DELETE FROM plugin_scaled_agile_plan WHERE program_increment_tracker_id = ?';
+            $program_increment_tracker_id = $plan->getProgramIncrementTracker()->getId();
+            $this->getDB()->run($sql, $program_increment_tracker_id);
 
-        $program_increment_tracker_id = $plan->getProgramIncrementTracker()->getId();
-        $this->getDB()->run($sql, $program_increment_tracker_id);
+            $insert = [];
+            foreach ($plan->getPlannableTrackerIds() as $plannable_tracker_id) {
+                $insert[] = [
+                    'program_increment_tracker_id' => $program_increment_tracker_id,
+                    'plannable_tracker_id'         => $plannable_tracker_id
+                ];
+            }
 
-        $insert = [];
-        foreach ($plan->getPlannableTrackerIds() as $plannable_tracker_id) {
-            $insert[] = ['program_increment_tracker_id' => $program_increment_tracker_id, 'plannable_tracker_id' => $plannable_tracker_id];
-        }
-
-        $this->getDB()->insertMany('plugin_scaled_agile_plan', $insert);
-
-        $this->getDB()->commit();
+            $this->getDB()->insertMany('plugin_scaled_agile_plan', $insert);
+        });
     }
 }
