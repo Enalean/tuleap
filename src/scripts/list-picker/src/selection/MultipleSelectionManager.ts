@@ -170,7 +170,7 @@ export class MultipleSelectionManager implements SelectionManager {
             this.gettext_provider.gettext("Remove all values")
         );
 
-        remove_value_button.addEventListener("click", (event: Event) => {
+        remove_value_button.addEventListener("pointerdown", (event: Event) => {
             event.preventDefault();
             event.cancelBubble = true;
 
@@ -204,7 +204,7 @@ export class MultipleSelectionManager implements SelectionManager {
             return badge;
         }
 
-        remove_badge_button.addEventListener("click", (event: Event) => {
+        remove_badge_button.addEventListener("pointerup", (event: Event) => {
             event.preventDefault();
             event.cancelBubble = true;
 

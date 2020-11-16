@@ -96,6 +96,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    cursor: default;
 
     > .list-picker-search-field {
         width: 100%;

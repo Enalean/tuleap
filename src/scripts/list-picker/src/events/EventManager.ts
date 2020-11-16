@@ -39,6 +39,7 @@ export class EventManager {
     constructor(
         private readonly doc: HTMLDocument,
         private readonly wrapper_element: Element,
+        private readonly list_picker_element: Element,
         private readonly dropdown_element: Element,
         private readonly search_field_element: HTMLInputElement | null,
         private readonly source_select_box: HTMLSelectElement,
@@ -69,7 +70,7 @@ export class EventManager {
 
     public removeEventsListenersOnDocument(): void {
         this.doc.removeEventListener("keyup", this.escape_key_handler);
-        this.doc.removeEventListener("click", this.click_outside_handler);
+        this.doc.removeEventListener("pointerdown", this.click_outside_handler);
         this.doc.removeEventListener("keydown", this.keyboard_events_handler);
         this.doc.removeEventListener("keypress", this.prevent_form_submit_on_enter_handler);
     }
@@ -88,13 +89,14 @@ export class EventManager {
         const handler = (event: Event): void => {
             this.handleClicksOutsideListPicker(event);
         };
-        this.doc.addEventListener("click", handler);
+        this.doc.addEventListener("pointerdown", handler);
 
         return handler;
     }
 
     private attachOpenCloseEvent(): void {
-        this.wrapper_element.addEventListener("click", (event: Event) => {
+        this.list_picker_element.addEventListener("pointerdown", (event: Event) => {
+            event.preventDefault();
             if (
                 event.target instanceof Element &&
                 this.isElementOnWhichClickShouldNotCloseListPicker(event.target)
@@ -134,11 +136,13 @@ export class EventManager {
         let mouse_target_id: string | null = null;
 
         items.forEach((item) => {
-            item.addEventListener("click", () => {
+            item.addEventListener("pointerup", () => {
                 this.selection_manager.processSelection(item);
+                this.resetSearchField();
+                this.dropdown_toggler.closeListPicker();
             });
 
-            item.addEventListener("mouseenter", () => {
+            item.addEventListener("pointerenter", () => {
                 if (!(item instanceof HTMLElement) || !item.dataset.itemId) {
                     throw new Error("item is not an highlightable item");
                 }
@@ -181,7 +185,7 @@ export class EventManager {
                 "list-picker-multiple-search-section"
             )
         ) {
-            search_field_element.addEventListener("focus", () => {
+            search_field_element.addEventListener("pointerdown", () => {
                 this.list_item_highlighter.resetHighlight();
                 this.dropdown_toggler.openListPicker();
             });

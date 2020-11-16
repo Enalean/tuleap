@@ -175,7 +175,7 @@ export class SingleSelectionManager implements SelectionManager {
         remove_value_button.classList.add("list-picker-selected-value-remove-button");
         remove_value_button.innerHTML = sanitize("&times");
 
-        remove_value_button.addEventListener("click", (event: Event) => {
+        remove_value_button.addEventListener("pointerdown", (event: Event) => {
             event.preventDefault();
             event.cancelBubble = true;
 

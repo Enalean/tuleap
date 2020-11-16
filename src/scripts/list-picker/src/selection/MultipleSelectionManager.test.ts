@@ -178,7 +178,7 @@ describe("MultipleSelectionManager", () => {
                 throw new Error("x button not found");
             }
 
-            x_button.dispatchEvent(new Event("click"));
+            x_button.dispatchEvent(new Event("pointerup"));
 
             expect(isItemSelected(item_1)).toBe(false);
             expect(openListPicker).toHaveBeenCalled();
@@ -220,7 +220,7 @@ describe("MultipleSelectionManager", () => {
                 throw new Error("'remove all values' button not found in selection container");
             }
 
-            clear_values_button.dispatchEvent(new Event("click"));
+            clear_values_button.dispatchEvent(new Event("pointerdown"));
 
             expect(isItemSelected(item_1)).toBe(false);
             expect(isItemSelected(item_2)).toBe(false);
