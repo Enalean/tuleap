@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Administration;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
+use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 
 class ReadOnlyProgramAdminURLBuilder

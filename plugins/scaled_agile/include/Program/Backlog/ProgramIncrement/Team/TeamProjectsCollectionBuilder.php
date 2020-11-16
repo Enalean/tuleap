@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
+use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\ScaledAgile\ProjectData;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 

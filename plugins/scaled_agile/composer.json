@@ -7,7 +7,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\ScaledAgile\\": "tests/unit/"
+      "Tuleap\\ScaledAgile\\": "tests/unit/",
+      "Tuleap\\ScaledAgile\\Test\\REST\\": ["./tests/rest/"]
     }
   }
 }

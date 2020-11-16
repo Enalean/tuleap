@@ -34,7 +34,7 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
 use Tuleap\ScaledAgile\Adapter\Program\SynchronizedFieldsAdapter;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
+use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;

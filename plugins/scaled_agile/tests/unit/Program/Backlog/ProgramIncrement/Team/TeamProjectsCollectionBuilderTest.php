@@ -27,7 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramDao;
+use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 
 final class TeamProjectsCollectionBuilderTest extends TestCase

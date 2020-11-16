@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -15,8 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-DROP TABLE IF EXISTS plugin_scaled_agile_team_projects;
-DROP TABLE IF EXISTS plugin_scaled_agile_pending_mirrors;
-DROP TABLE IF EXISTS plugin_scaled_agile_plan;
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use Tuleap\ScaledAgile\Test\REST\ScaledAgileDataBuilder;
+
+(new ScaledAgileDataBuilder())->setUp();
