@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="switch-to-modal-body">
+    <div tabindex="-1" class="switch-to-modal-body">
         <global-loading-state v-if="should_global_loading_state_be_displayed" />
         <global-empty-state v-else-if="should_global_empty_state_be_displayed" />
         <template v-else>
