@@ -8,7 +8,6 @@
   "private": true,
   "dependencies": {
     "@formatjs/intl-getcanonicallocales": "^1.5.1",
-    "@formatjs/intl-numberformat": "^5.7.5",
     "@formatjs/intl-pluralrules": "^3.5.5",
     "@formatjs/intl-relativetimeformat": "^7.3.5",
     "@webcomponents/custom-elements": "^1.4.2",
