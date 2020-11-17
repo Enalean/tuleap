@@ -23,14 +23,12 @@ import { appendGroupedOptionsToSourceSelectBox } from "../test-helpers/select-bo
 import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
 import { ListItemHighlighter } from "./ListItemHighlighter";
-import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 
 describe("KeyboardNavigationManager", () => {
     let manager: KeyboardNavigationManager,
         highlighter: ListItemHighlighter,
-        toggler: DropdownToggler,
         dropdown_list: Element,
         item_map_manager: ItemsMapManager;
 
@@ -42,13 +40,10 @@ describe("KeyboardNavigationManager", () => {
         const source_select_box = document.createElement("select");
         appendGroupedOptionsToSourceSelectBox(source_select_box);
 
-        const {
-            list_picker_element,
-            dropdown_element,
-            dropdown_list_element,
-            search_field_element,
-            selection_element,
-        } = new BaseComponentRenderer(source_select_box).renderBaseComponent();
+        const { dropdown_list_element } = new BaseComponentRenderer(
+            document.implementation.createHTMLDocument(),
+            source_select_box
+        ).renderBaseComponent();
 
         item_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
         await item_map_manager.refreshItemsMap();
@@ -65,14 +60,7 @@ describe("KeyboardNavigationManager", () => {
 
         content_renderer.renderListPickerDropdownContent();
         highlighter = new ListItemHighlighter(dropdown_list_element);
-        toggler = new DropdownToggler(
-            list_picker_element,
-            dropdown_element,
-            dropdown_list_element,
-            search_field_element,
-            selection_element
-        );
-        manager = new KeyboardNavigationManager(dropdown_list_element, toggler, highlighter);
+        manager = new KeyboardNavigationManager(dropdown_list_element, highlighter);
 
         highlighter.resetHighlight();
     });

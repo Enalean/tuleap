@@ -18,7 +18,7 @@
  */
 
 import { SingleSelectionManager } from "./SingleSelectionManager";
-import { DropdownToggler } from "../dropdown/DropdownToggler";
+import { DropdownManager } from "../dropdown/DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
@@ -31,8 +31,8 @@ describe("SingleSelectionManager", () => {
         selection_container: Element,
         placeholder: Element,
         manager: SingleSelectionManager,
-        toggler: DropdownToggler,
         items_map_manager: ItemsMapManager,
+        dropdown_manager: DropdownManager,
         item_1: ListPickerItem,
         item_2: ListPickerItem;
 
@@ -41,33 +41,28 @@ describe("SingleSelectionManager", () => {
         appendSimpleOptionsToSourceSelectBox(source_select_box);
 
         const {
-            list_picker_element,
             dropdown_element,
             selection_element,
             placeholder_element,
-            dropdown_list_element,
-            search_field_element,
-        } = new BaseComponentRenderer(source_select_box, {
-            placeholder: "Please select a value",
-        }).renderBaseComponent();
+        } = new BaseComponentRenderer(
+            document.implementation.createHTMLDocument(),
+            source_select_box,
+            {
+                placeholder: "Please select a value",
+            }
+        ).renderBaseComponent();
 
         selection_container = selection_element;
         placeholder = placeholder_element;
 
-        toggler = new DropdownToggler(
-            list_picker_element,
-            dropdown_element,
-            dropdown_list_element,
-            search_field_element,
-            selection_element
-        );
         items_map_manager = new ItemsMapManager(new ListItemMapBuilder(source_select_box));
+        dropdown_manager = ({ openListPicker: jest.fn() } as unknown) as DropdownManager;
         manager = new SingleSelectionManager(
             source_select_box,
             dropdown_element,
             selection_container,
             placeholder,
-            toggler,
+            dropdown_manager,
             items_map_manager
         );
         jest.spyOn(source_select_box, "dispatchEvent");
@@ -149,7 +144,6 @@ describe("SingleSelectionManager", () => {
 
     describe("unselects the option and item when the user clicks on the cross in the selection container", () => {
         it("should replace the currently selected value with the placeholder and remove the selected attribute on the source <option>", () => {
-            const openListPicker = jest.spyOn(toggler, "openListPicker");
             selection_container.appendChild(placeholder);
 
             // First select the item
@@ -173,7 +167,7 @@ describe("SingleSelectionManager", () => {
             expect(item_1.element.getAttribute("aria-selected")).toEqual("false");
             expect(item_1.target_option.hasAttribute("selected")).toBe(false);
             expect(selection_container.contains(placeholder)).toBe(true);
-            expect(openListPicker).toHaveBeenCalled();
+            expect(dropdown_manager.openListPicker).toHaveBeenCalled();
 
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
         });

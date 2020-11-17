@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DropdownToggler } from "../dropdown/DropdownToggler";
 import { ListItemHighlighter } from "./ListItemHighlighter";
 import { getNextItem, getPreviousItem } from "../helpers/list-item-finder";
 import { isArrowDown, isArrowUp } from "../helpers/keys-helper";
@@ -25,7 +24,6 @@ import { isArrowDown, isArrowUp } from "../helpers/keys-helper";
 export class KeyboardNavigationManager {
     constructor(
         private readonly dropdown_list_element: Element,
-        private readonly dropdown_toggler: DropdownToggler,
         private readonly list_item_highlighter: ListItemHighlighter
     ) {}
 

@@ -17,9 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { ListPickerComponent, ListPickerOptions } from "../type";
+import { isListPickerInAModal } from "../helpers/list-picker-in-modals-helper";
 
 export class BaseComponentRenderer {
     constructor(
+        private readonly doc: HTMLDocument,
         private readonly source_select_box: HTMLSelectElement,
         private readonly options?: ListPickerOptions
     ) {}
@@ -53,9 +55,13 @@ export class BaseComponentRenderer {
         list_picker_element.appendChild(selection_element);
         dropdown_element.appendChild(dropdown_list_element);
         wrapper_element.appendChild(list_picker_element);
-        wrapper_element.appendChild(dropdown_element);
+        this.doc.body.insertAdjacentElement("beforeend", dropdown_element);
 
         this.source_select_box.insertAdjacentElement("afterend", wrapper_element);
+
+        if (isListPickerInAModal(wrapper_element)) {
+            dropdown_element.classList.add("list-picker-dropdown-over-modal");
+        }
 
         return {
             wrapper_element,

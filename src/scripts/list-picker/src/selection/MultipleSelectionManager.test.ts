@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DropdownToggler } from "../dropdown/DropdownToggler";
+import { DropdownManager } from "../dropdown/DropdownManager";
 import { ListPickerItem } from "../type";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
@@ -52,6 +52,7 @@ describe("MultipleSelectionManager", () => {
         appendSimpleOptionsToSourceSelectBox(source_select_box);
 
         const { selection_element, search_field_element } = new BaseComponentRenderer(
+            document.implementation.createHTMLDocument(),
             source_select_box,
             {
                 placeholder: "Please select some values",
@@ -71,7 +72,7 @@ describe("MultipleSelectionManager", () => {
             selection_element,
             search_field_element,
             "Please select some values",
-            { openListPicker } as DropdownToggler,
+            { openListPicker } as DropdownManager,
             item_map_manager,
             gettext_provider
         );

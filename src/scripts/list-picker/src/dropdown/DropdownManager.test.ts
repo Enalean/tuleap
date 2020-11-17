@@ -17,16 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DropdownToggler } from "./DropdownToggler";
+import { DropdownManager } from "./DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
+import { ScrollingManager } from "../events/ScrollingManager";
 
-describe("dropdown-toggler", () => {
+describe("dropdown-manager", () => {
     let list_picker: Element,
-        dropdown: Element,
+        dropdown: HTMLElement,
         list: Element,
         search_field: HTMLInputElement,
         selection_container: Element,
-        toggler: DropdownToggler;
+        dropdown_manager: DropdownManager,
+        scroll_manager: ScrollingManager,
+        ResizeObserverSpy: jest.SpyInstance,
+        disconnect: jest.SpyInstance;
 
     function getSearchField(search_field_element: HTMLInputElement | null): HTMLInputElement {
         if (search_field_element === null) {
@@ -36,76 +40,116 @@ describe("dropdown-toggler", () => {
     }
 
     beforeEach(() => {
+        disconnect = jest.fn();
+        window.ResizeObserver = ResizeObserverSpy = jest.fn().mockImplementation(() => {
+            return {
+                observe: jest.fn(),
+                disconnect,
+            };
+        });
+    });
+
+    beforeEach(() => {
         const {
+            wrapper_element,
             list_picker_element,
             dropdown_element,
             dropdown_list_element,
             search_field_element,
             selection_element,
-        } = new BaseComponentRenderer(document.createElement("select"), {
-            is_filterable: true,
-        }).renderBaseComponent();
+        } = new BaseComponentRenderer(
+            document.implementation.createHTMLDocument(),
+            document.createElement("select"),
+            {
+                is_filterable: true,
+            }
+        ).renderBaseComponent();
+
+        scroll_manager = ({
+            lockScrolling: jest.fn(),
+            unlockScrolling: jest.fn(),
+        } as unknown) as ScrollingManager;
 
         list_picker = list_picker_element;
         dropdown = dropdown_element;
         list = dropdown_list_element;
         selection_container = selection_element;
         search_field = getSearchField(search_field_element);
-        toggler = new DropdownToggler(
+        dropdown_manager = new DropdownManager(
+            wrapper_element,
             list_picker,
             dropdown,
             list,
             search_field_element,
-            selection_element
+            selection_element,
+            scroll_manager
         );
     });
 
-    it("opens the dropdown by appending a 'shown' class to the dropdown element and focuses the search input", () => {
+    afterEach(() => {
+        dropdown_manager.destroy();
+    });
+
+    it("opens the dropdown by appending a 'shown' class to the dropdown element, focuses the search input and moves it under the list-picker", () => {
+        expect(ResizeObserverSpy).toHaveBeenCalled();
         jest.spyOn(search_field, "focus");
-        toggler.openListPicker();
+        dropdown_manager.openListPicker();
 
         expect(list_picker.classList).toContain("list-picker-with-open-dropdown");
         expect(dropdown.classList).toContain("list-picker-dropdown-shown");
         expect(list.getAttribute("aria-expanded")).toBe("true");
         expect(search_field.focus).toHaveBeenCalled();
+        expect(scroll_manager.lockScrolling).toHaveBeenCalled();
+        expect(dropdown.style).toContain("top");
+        expect(dropdown.style).toContain("left");
+        expect(dropdown.style).toContain("width");
     });
 
     it("closes the dropdown by removing the 'shown' class to the dropdown element", () => {
-        toggler.closeListPicker();
+        expect(ResizeObserverSpy).toHaveBeenCalled();
+        dropdown_manager.openListPicker();
+        dropdown_manager.closeListPicker();
 
         expect(list_picker.classList).not.toContain("list-picker-with-open-dropdown");
         expect(dropdown.classList).not.toContain("list-picker-dropdown-shown");
         expect(list.getAttribute("aria-expanded")).toBe("false");
-    });
-
-    it("should reset the filter when the input contains a query", () => {
-        toggler.openListPicker();
-        search_field.value = "filter query";
-        jest.spyOn(search_field, "dispatchEvent");
-        toggler.closeListPicker();
+        expect(scroll_manager.unlockScrolling).toHaveBeenCalled();
     });
 
     it("should not open the list picker if it's already open", () => {
+        expect(ResizeObserverSpy).toHaveBeenCalled();
         dropdown.classList.add("list-picker-dropdown-shown");
 
         jest.spyOn(dropdown.classList, "add");
-        toggler.openListPicker();
+        dropdown_manager.openListPicker();
 
         expect(dropdown.classList.add).not.toHaveBeenCalled();
+        expect(scroll_manager.lockScrolling).not.toHaveBeenCalled();
     });
 
     it("should not close the list picker if it's already closed", () => {
+        expect(ResizeObserverSpy).toHaveBeenCalled();
         jest.spyOn(dropdown.classList, "remove");
-        toggler.openListPicker();
+        dropdown_manager.closeListPicker();
 
         expect(dropdown.classList.remove).not.toHaveBeenCalled();
+        expect(scroll_manager.unlockScrolling).not.toHaveBeenCalled();
     });
 
     it("sets the aria-expanded attribute on the selection element when needed", () => {
+        expect(ResizeObserverSpy).toHaveBeenCalled();
         selection_container.setAttribute("aria-expanded", "false");
-        toggler.openListPicker();
+        dropdown_manager.openListPicker();
         expect(selection_container.getAttribute("aria-expanded")).toEqual("true");
-        toggler.closeListPicker();
+        dropdown_manager.closeListPicker();
         expect(selection_container.getAttribute("aria-expanded")).toEqual("false");
+    });
+
+    it("should unlock scrolling and stop observing items resize", () => {
+        expect(ResizeObserverSpy).toHaveBeenCalled();
+        dropdown_manager.destroy();
+
+        expect(disconnect).toHaveBeenCalled();
+        expect(scroll_manager.unlockScrolling).toHaveBeenCalled();
     });
 });

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { DropdownToggler } from "../dropdown/DropdownToggler";
+import { DropdownManager } from "../dropdown/DropdownManager";
 import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import { SelectionManager } from "../type";
 import { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
@@ -44,7 +44,7 @@ export class EventManager {
         private readonly search_field_element: HTMLInputElement | null,
         private readonly source_select_box: HTMLSelectElement,
         private readonly selection_manager: SelectionManager,
-        private readonly dropdown_toggler: DropdownToggler,
+        private readonly dropdown_manager: DropdownManager,
         private readonly dropdown_content_renderer: DropdownContentRenderer,
         private readonly keyboard_navigation_manager: KeyboardNavigationManager,
         private readonly list_item_highlighter: ListItemHighlighter
@@ -108,16 +108,16 @@ export class EventManager {
                 event.target instanceof Element &&
                 event.target.classList.contains("list-picker-search-field")
             ) {
-                this.dropdown_toggler.openListPicker();
+                this.dropdown_manager.openListPicker();
                 return;
             }
 
-            if (this.isDropdownOpen()) {
+            if (this.dropdown_manager.isDropdownOpen()) {
                 this.resetSearchField();
-                this.dropdown_toggler.closeListPicker();
+                this.dropdown_manager.closeListPicker();
             } else {
                 this.list_item_highlighter.resetHighlight();
-                this.dropdown_toggler.openListPicker();
+                this.dropdown_manager.openListPicker();
             }
         });
     }
@@ -126,8 +126,7 @@ export class EventManager {
         return (
             element.classList.contains("list-picker-dropdown-option-value-disabled") ||
             element.classList.contains("list-picker-group-label") ||
-            element.classList.contains("list-picker-item-group") ||
-            element.classList.contains("list-picker-dropdown-search-section")
+            element.classList.contains("list-picker-item-group")
         );
     }
 
@@ -139,7 +138,7 @@ export class EventManager {
             item.addEventListener("pointerup", () => {
                 this.selection_manager.processSelection(item);
                 this.resetSearchField();
-                this.dropdown_toggler.closeListPicker();
+                this.dropdown_manager.closeListPicker();
             });
 
             item.addEventListener("pointerenter", () => {
@@ -167,7 +166,7 @@ export class EventManager {
                 if (this.has_keyboard_selection_occurred) {
                     this.has_keyboard_selection_occurred = false;
                 } else {
-                    this.dropdown_toggler.openListPicker();
+                    this.dropdown_manager.openListPicker();
                 }
                 return;
             }
@@ -176,7 +175,7 @@ export class EventManager {
 
             this.dropdown_content_renderer.renderFilteredListPickerDropdownContent(filter_query);
             this.list_item_highlighter.resetHighlight();
-            this.dropdown_toggler.openListPicker();
+            this.dropdown_manager.openListPicker();
         });
 
         if (
@@ -187,7 +186,7 @@ export class EventManager {
         ) {
             search_field_element.addEventListener("pointerdown", () => {
                 this.list_item_highlighter.resetHighlight();
-                this.dropdown_toggler.openListPicker();
+                this.dropdown_manager.openListPicker();
             });
         }
 
@@ -205,21 +204,23 @@ export class EventManager {
         if (!(target_element instanceof Element)) {
             this.resetSearchField();
             this.has_keyboard_selection_occurred = false;
-            return this.dropdown_toggler.closeListPicker();
+            return this.dropdown_manager.closeListPicker();
         }
 
-        if (!this.wrapper_element.contains(target_element)) {
+        if (
+            !this.wrapper_element.contains(target_element) &&
+            !this.dropdown_element.contains(target_element)
+        ) {
             this.resetSearchField();
             this.has_keyboard_selection_occurred = false;
-            return this.dropdown_toggler.closeListPicker();
+            return this.dropdown_manager.closeListPicker();
         }
     }
 
     private resetSearchField(): void {
-        if (!this.isDropdownOpen()) {
+        if (!this.dropdown_manager.isDropdownOpen()) {
             return;
         }
-
         if (!this.search_field_element) {
             return;
         }
@@ -232,7 +233,7 @@ export class EventManager {
     private handleEscapeKey(event: Event): void {
         if (isEscapeKey(event)) {
             this.resetSearchField();
-            this.dropdown_toggler.closeListPicker();
+            this.dropdown_manager.closeListPicker();
             this.has_keyboard_selection_occurred = false;
             event.stopPropagation();
         }
@@ -252,15 +253,12 @@ export class EventManager {
     private attachKeyboardNavigationEvents(): (event: Event) => void {
         const handler = (event: Event): void => {
             if (this.shouldOpenDropdownForClosedSingleListPicker(event)) {
-                this.dropdown_toggler.openListPicker();
+                this.dropdown_manager.openListPicker();
                 this.has_keyboard_selection_occurred = false;
                 return;
             }
 
-            if (
-                !(event instanceof KeyboardEvent) ||
-                !this.dropdown_element.classList.contains("list-picker-dropdown-shown")
-            ) {
+            if (!(event instanceof KeyboardEvent) || !this.dropdown_manager.isDropdownOpen()) {
                 return;
             }
 
@@ -268,7 +266,7 @@ export class EventManager {
             if (isEnterKey(event) && highlighted_item) {
                 this.selection_manager.processSelection(highlighted_item);
                 this.resetSearchField();
-                this.dropdown_toggler.closeListPicker();
+                this.dropdown_manager.closeListPicker();
                 this.has_keyboard_selection_occurred = true;
             } else {
                 this.keyboard_navigation_manager.navigate(event);
@@ -284,10 +282,6 @@ export class EventManager {
             isEnterKey(event) &&
             this.has_keyboard_selection_occurred
         );
-    }
-
-    private isDropdownOpen(): boolean {
-        return this.dropdown_element.classList.contains("list-picker-dropdown-shown");
     }
 
     private preventEnterKeyInSearchFieldToSubmitForm(): (event: Event) => void {

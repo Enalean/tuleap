@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { sanitize } from "dompurify";
-import { DropdownToggler } from "../dropdown/DropdownToggler";
+import { DropdownManager } from "../dropdown/DropdownManager";
 import { ListPickerItem, ListPickerSelectionStateSingle, SelectionManager } from "../type";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 
@@ -29,7 +29,7 @@ export class SingleSelectionManager implements SelectionManager {
         private readonly dropdown_element: Element,
         private readonly selection_element: Element,
         private readonly placeholder_element: Element,
-        private readonly dropdown_toggler: DropdownToggler,
+        private readonly dropdown_manager: DropdownManager,
         private readonly items_map_manager: ItemsMapManager
     ) {
         this.selection_state = null;
@@ -180,7 +180,7 @@ export class SingleSelectionManager implements SelectionManager {
             event.cancelBubble = true;
 
             this.replaceCurrentValueWithPlaceholder(item);
-            this.dropdown_toggler.openListPicker();
+            this.dropdown_manager.openListPicker();
             this.source_select_box.dispatchEvent(new Event("change"));
         });
 

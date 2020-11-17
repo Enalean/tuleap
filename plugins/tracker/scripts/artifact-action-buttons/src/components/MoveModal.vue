@@ -21,7 +21,6 @@
     <div
         class="modal fade hide"
         id="move-artifact-modal"
-        tabindex="-1"
         role="dialog"
         aria-labelledby="modal-move-artifact-choose-trackers"
         aria-hidden="true"
