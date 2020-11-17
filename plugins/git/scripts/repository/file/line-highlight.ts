@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Enalean. All rights reserved
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     autoScrollToCurrent();
     window.addEventListener("hashchange", autoScrollToCurrent);
 
-    function autoScrollToCurrent() {
+    function autoScrollToCurrent(): void {
         const element = getTargetElementForCurrentHash();
         if (!element) {
             return;
@@ -35,10 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollToElementWithOffset(element);
     }
 
-    function getTargetElementForCurrentHash() {
+    function getTargetElementForCurrentHash(): null | HTMLElement {
         const hash = window.location.hash;
         if (!doesHashLooksLikeALineNumber(hash)) {
-            return;
+            return null;
         }
 
         const id = hash.slice(1);
@@ -46,11 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return document.getElementById(id);
     }
 
-    function doesHashLooksLikeALineNumber(hash) {
+    function doesHashLooksLikeALineNumber(hash: string): boolean {
         return /^#L\d+$/.test(hash);
     }
 
-    function scrollToElementWithOffset(element) {
+    function scrollToElementWithOffset(element: HTMLElement): void {
         const { top } = element.getBoundingClientRect();
         const visible_top = top - (NAVBAR_HEIGHT_PX + NB_LINES_ABOVE_TARGET * LINE_HEIGHT_PX);
         const offset = window.pageYOffset + visible_top;
@@ -58,8 +58,13 @@ document.addEventListener("DOMContentLoaded", () => {
         window.scrollTo(window.pageXOffset, offset);
     }
 
-    function moveCodeLineHighlight(element) {
-        const top = element.offsetTop - element.parentNode.offsetTop;
+    function moveCodeLineHighlight(element: HTMLElement): void {
+        const parent_node = element.parentNode;
+        if (!(parent_node instanceof HTMLElement)) {
+            return;
+        }
+
+        const top = element.offsetTop - parent_node.offsetTop;
         const { height } = element.getBoundingClientRect();
         const line = document.getElementById("git-repository-highlight-line");
         if (!line) {

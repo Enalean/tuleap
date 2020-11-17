@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
 
 import { createDropdown } from "tlp";
 
-export default function initShortlog() {
+export default function initShortlog(): void {
     const shortlog = document.getElementById("git-repository-shortlog");
     if (!shortlog) {
         return;
@@ -36,44 +36,61 @@ export default function initShortlog() {
         redirectUserIfClickOnACard(event, shortlog, nb_shown_dropdown);
     });
 
-    function incrementNbShownDropdown() {
+    function incrementNbShownDropdown(): void {
         nb_shown_dropdown++;
     }
 
-    function decrementNbShownDropdown() {
+    function decrementNbShownDropdown(): void {
         nb_shown_dropdown--;
     }
 }
 
-function redirectUserIfClickOnACard(event, shortlog, nb_shown_dropdown) {
+function redirectUserIfClickOnACard(
+    event: Event,
+    shortlog: HTMLElement,
+    nb_shown_dropdown: number
+): void {
     const card_element = getCommitCardTheUserHasClickedOn(event, shortlog, nb_shown_dropdown);
-    if (card_element) {
-        window.location.href = card_element.dataset.href;
+    if (!card_element) {
+        return;
     }
+    if (!card_element.dataset.href) {
+        return;
+    }
+
+    window.location.href = card_element.dataset.href;
 }
 
-function getCommitCardTheUserHasClickedOn(event, shortlog, nb_shown_dropdown) {
+function getCommitCardTheUserHasClickedOn(
+    event: Event,
+    shortlog: HTMLElement,
+    nb_shown_dropdown: number
+): null | HTMLElement {
+    if (!(event.target instanceof HTMLElement)) {
+        return null;
+    }
+
     const element = event.target.closest(
         "#git-repository-shortlog, .git-repository-commit-card, a, button"
     );
-    if (!element) {
-        return;
+    if (!(element instanceof HTMLElement)) {
+        return null;
     }
 
     if (element === shortlog) {
-        return;
+        return null;
     }
 
     if (["a", "button"].indexOf(element.tagName.toLowerCase()) >= 0) {
-        return;
+        return null;
     }
 
     if (nb_shown_dropdown > 0) {
-        return;
+        return null;
     }
 
     if (!element.dataset.href) {
-        return;
+        return null;
     }
 
     return element;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default function (parameters) {
-    return Object.keys(parameters)
-        .map((key) => {
-            return [key, parameters[key]].map(encodeURIComponent).join("=");
-        })
-        .join("&");
-}
+import initAlreadyForkedModal from "./already-forked-modal";
+import initCopyButton from "./copy-button";
+import initCloneBarPopover from "./clone-bar-popover";
+import initBranchTagSelector from "./branch-tag-selector";
+import initShortlog from "./shortlog";
+
+document.addEventListener("DOMContentLoaded", () => {
+    initAlreadyForkedModal();
+    initCopyButton();
+    initCloneBarPopover();
+    initBranchTagSelector();
+    initShortlog();
+});

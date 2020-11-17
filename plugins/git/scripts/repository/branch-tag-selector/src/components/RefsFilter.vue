@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -28,14 +28,20 @@
     />
 </template>
 
-<script>
-export default {
-    props: {
-        value: String,
-        placeholder: String,
-    },
-    mounted() {
-        this.$refs.filter.focus();
-    },
-};
+<script lang="ts">
+import Vue from "vue";
+import { Prop } from "vue-property-decorator";
+
+export default class RefsFilter extends Vue {
+    @Prop()
+    readonly value!: string;
+    @Prop()
+    readonly placeholder!: string;
+
+    mounted(): void {
+        if (this.$refs.filter instanceof HTMLInputElement) {
+            this.$refs.filter.focus();
+        }
+    }
+}
 </script>

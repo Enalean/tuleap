@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -58,68 +58,69 @@
         </div>
     </section>
 </template>
-<script>
+<script lang="ts">
 import { recursiveGet } from "tlp";
-import encodeData from "../helpers/encode-data.js";
+import encodeData from "../helpers/encode-data";
 import RefsFilter from "./RefsFilter.vue";
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { Branch, URLParameter } from "../type";
 
-export default {
-    name: "BranchesSection",
-    components: { RefsFilter },
-    props: {
-        repository_id: Number,
-        repository_url: String,
-        is_displaying_branches: Boolean,
-        is_tag: Boolean,
-        current_ref_name: String,
-        url_parameters: Object,
-    },
-    data() {
-        return {
-            is_loading_branches: true,
-            are_branches_loaded: false,
-            has_error_while_loading_branches: false,
-            branches: [],
-            filter_text: "",
-        };
-    },
-    computed: {
-        filtered_branches() {
-            return this.branches.filter(
-                (branch) => branch.name.toLowerCase().indexOf(this.filter) !== -1
-            );
-        },
-        filter() {
-            return this.filter_text.toLowerCase();
-        },
-        placeholder() {
-            return this.$gettext("Branch name");
-        },
-    },
-    mounted() {
+@Component({ components: { RefsFilter } })
+export default class BranchesSection extends Vue {
+    @Prop()
+    readonly repository_id!: number;
+    @Prop()
+    readonly repository_url!: string;
+    @Prop()
+    readonly is_displaying_branches!: boolean;
+    @Prop()
+    readonly is_tag!: boolean;
+    @Prop()
+    readonly current_ref_name!: string;
+    @Prop()
+    readonly url_parameters!: URLParameter;
+
+    is_loading_branches = true;
+    are_branches_loaded = false;
+    has_error_while_loading_branches = false;
+    branches: Branch[] = [];
+    filter_text = "";
+
+    get filtered_branches(): Branch[] {
+        return this.branches.filter(
+            (branch) => branch.name.toLowerCase().indexOf(this.filter) !== -1
+        );
+    }
+    get filter(): string {
+        return this.filter_text.toLowerCase();
+    }
+    get placeholder(): string {
+        return this.$gettext("Branch name");
+    }
+
+    mounted(): void {
         this.loadBranches();
-    },
-    methods: {
-        async loadBranches() {
-            try {
-                this.branches = await recursiveGet(`/api/git/${this.repository_id}/branches`, {
-                    params: {
-                        limit: 50,
-                    },
-                });
-                this.branches.sort((branch_a, branch_b) =>
-                    branch_a.name.localeCompare(branch_b.name)
-                );
-            } catch (e) {
-                this.has_error_while_loading_branches = true;
-            } finally {
-                this.is_loading_branches = false;
-                this.are_branches_loaded = true;
-            }
-        },
-        url(ref) {
-            return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb: ref });
-        },
-    },
-};
+    }
+
+    async loadBranches(): Promise<void> {
+        try {
+            this.branches = await recursiveGet(`/api/git/${this.repository_id}/branches`, {
+                params: {
+                    limit: 50,
+                },
+            });
+            this.branches.sort((branch_a, branch_b) => branch_a.name.localeCompare(branch_b.name));
+        } catch (e) {
+            this.has_error_while_loading_branches = true;
+        } finally {
+            this.is_loading_branches = false;
+            this.are_branches_loaded = true;
+        }
+    }
+
+    url(ref: string): string {
+        return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb: ref });
+    }
+}
 </script>

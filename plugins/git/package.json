@@ -16,6 +16,8 @@
     "vuex": "^3.5.1"
   },
   "devDependencies": {
+    "@types/javascript-time-ago": "^2.0.1",
+    "@types/prismjs": "^1.16.2",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.1.1",
     "vue-class-component": "^7.2.6",

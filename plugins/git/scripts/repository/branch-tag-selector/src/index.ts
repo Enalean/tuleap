@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,23 +19,36 @@
 
 import Vue from "vue";
 import App from "./components/App.vue";
-import GetTextPlugin from "vue-gettext";
-import french_translations from "../po/fr.po";
+import {
+    initVueGettext,
+    getPOFileFromLocale,
+} from "@tuleap/core/scripts/tuleap/gettext/vue-gettext-init";
 
-export function init(mount_point, button) {
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages,
-        },
-        silent: true,
-    });
-
-    Vue.config.language = document.body.dataset.userLocale;
+export async function init(mount_point: HTMLDivElement, button: HTMLElement): Promise<void> {
+    await initVueGettext(
+        Vue,
+        (locale: string) =>
+            import(
+                /* webpackChunkName: "branch-tag-selector-po-" */ "../po/" +
+                    getPOFileFromLocale(locale)
+            )
+    );
 
     const repository_id = Number(button.dataset.repositoryId);
     const repository_url = button.dataset.repositoryUrl;
+    if (!repository_url) {
+        throw new Error("No URL Repository");
+    }
     const is_tag = Boolean(button.dataset.isTag);
     const current_ref_name = button.dataset.currentRefName;
+    if (!current_ref_name) {
+        throw new Error("No Current Ref name");
+    }
+
+    if (!button.dataset.urlParameters) {
+        throw new Error("No URL parameters");
+    }
+
     const url_parameters = JSON.parse(button.dataset.urlParameters);
 
     const RootComponent = Vue.extend(App);
