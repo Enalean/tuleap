@@ -20,23 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\Team\Creation;
 
-use Tuleap\ScaledAgile\Adapter\Plan\PlannableTrackerCannotBeEmptyException;
-use Tuleap\ScaledAgile\Adapter\Plan\PlanTrackerDoesNotBelongToProjectException;
-use Tuleap\ScaledAgile\Adapter\Plan\PlanTrackerNotFoundException;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
 use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Adapter\Team\AtLeastOneTeamShouldBeDefinedException;
+use Tuleap\ScaledAgile\Adapter\Team\ProjectIsAProgramException;
+use Tuleap\ScaledAgile\Adapter\Team\TeamAccessException;
 
-interface CreatePlan
+interface CreateTeam
 {
     /**
-     * @throws PlanTrackerDoesNotBelongToProjectException
-     * @throws PlanTrackerNotFoundException
-     * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
-     * @throws PlannableTrackerCannotBeEmptyException
-     * @throws CannotPlanIntoItselfException
+     * @throws ProjectIsNotAProgramException
+     * @throws AtLeastOneTeamShouldBeDefinedException
+     * @throws ProjectIsAProgramException
+     * @throws TeamAccessException
      */
-    public function create(\PFUser $user, int $project_id, int $program_increment_id, array $trackers_id): void;
+    public function create(\PFUser $user, int $project_id, array $team_ids): void;
 }

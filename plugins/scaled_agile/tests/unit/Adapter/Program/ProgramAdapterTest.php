@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Plan;
+namespace Tuleap\ScaledAgile\Adapter\Program;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\ScaledAgile\Program\Plan\Program;
+use Tuleap\ScaledAgile\Program\Program;
 use Tuleap\ScaledAgile\Program\ProgramDao;
 
 final class ProgramAdapterTest extends TestCase

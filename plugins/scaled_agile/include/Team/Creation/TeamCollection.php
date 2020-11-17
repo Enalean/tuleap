@@ -20,17 +20,48 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\Team\Creation;
 
-use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Program\Program;
 
-interface BuildProgram
+/**
+ * @psalm-immutable
+ */
+final class TeamCollection
 {
     /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
+     * @var Team[]
      */
-    public function buildProgramProject(int $id, \PFUser $user): Program;
+    private $teams;
+    /**
+     * @var Program
+     */
+    private $program;
+
+    /**
+     * @param Team[] $teams
+     */
+    public function __construct(array $teams, Program $program)
+    {
+        $this->teams = $teams;
+        $this->program = $program;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getTeamIds(): array
+    {
+        return array_map(
+            static function (Team $team) {
+                return $team->getTeamId();
+            },
+            $this->teams
+        );
+    }
+
+    public function getProgram(): Program
+    {
+        return $this->program;
+    }
 }

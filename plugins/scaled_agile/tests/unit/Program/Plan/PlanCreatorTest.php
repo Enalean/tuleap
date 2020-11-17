@@ -24,7 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Plan;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ScaledAgile\Adapter\Plan\PlanDao;
+use Tuleap\ScaledAgile\Program\Program;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class PlanCreatorTest extends TestCase
@@ -52,7 +52,7 @@ final class PlanCreatorTest extends TestCase
             ->with([$plannable_tracker_id], $project_id)->once()
             ->andReturn([$plannable_tracker_id => new ProgramIncrementTracker($plannable_tracker_id)]);
 
-        $plan_dao = \Mockery::mock(PlanDao::class);
+        $plan_dao = \Mockery::mock(PlanStore::class);
         $plan_dao->shouldReceive('save')->with(\Mockery::type(Plan::class))->once();
 
         $plan_adapter = new PlanCreator($program_adapter, $tracker_adapter, $plan_dao);
@@ -63,7 +63,7 @@ final class PlanCreatorTest extends TestCase
     {
         $program_adapter = \Mockery::mock(BuildProgram::class);
         $tracker_adapter = \Mockery::mock(BuildTracker::class);
-        $plan_dao = \Mockery::mock(PlanDao::class);
+        $plan_dao        = \Mockery::mock(PlanStore::class);
 
         $user = UserTestBuilder::aUser()->build();
 

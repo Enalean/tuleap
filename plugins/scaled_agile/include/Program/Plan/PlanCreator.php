@@ -25,8 +25,8 @@ namespace Tuleap\ScaledAgile\Program\Plan;
 use Tuleap\ScaledAgile\Adapter\Plan\PlannableTrackerCannotBeEmptyException;
 use Tuleap\ScaledAgile\Adapter\Plan\PlanTrackerDoesNotBelongToProjectException;
 use Tuleap\ScaledAgile\Adapter\Plan\PlanTrackerNotFoundException;
-use Tuleap\ScaledAgile\Adapter\Plan\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Plan\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
+use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
 
 final class PlanCreator implements CreatePlan
 {

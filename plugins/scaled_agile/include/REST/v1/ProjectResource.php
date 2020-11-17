@@ -29,17 +29,26 @@ use Tuleap\ScaledAgile\Adapter\Plan\PlanDao;
 use Tuleap\ScaledAgile\Adapter\Plan\PlannableTrackerCannotBeEmptyException;
 use Tuleap\ScaledAgile\Adapter\Plan\PlanTrackerDoesNotBelongToProjectException;
 use Tuleap\ScaledAgile\Adapter\Plan\PlanTrackerNotFoundException;
-use Tuleap\ScaledAgile\Adapter\Plan\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Plan\ProgramAdapter;
 use Tuleap\ScaledAgile\Adapter\Plan\ProgramTrackerAdapter;
-use Tuleap\ScaledAgile\Adapter\Plan\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
+use Tuleap\ScaledAgile\Adapter\Program\ProgramAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Adapter\Team\ProjectIsAProgramException;
+use Tuleap\ScaledAgile\Adapter\Team\TeamAccessException;
+use Tuleap\ScaledAgile\Adapter\Team\TeamAdapter;
+use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
 use Tuleap\ScaledAgile\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ScaledAgile\Program\Plan\CreatePlan;
 use Tuleap\ScaledAgile\Program\Plan\PlanCreator;
 use Tuleap\ScaledAgile\Program\ProgramDao;
+use Tuleap\ScaledAgile\Team\Creation\TeamCreator;
 
 final class ProjectResource extends AuthenticatedResource
 {
+    /**
+     * @var TeamCreator
+     */
+    private $team_creator;
     /**
      * @var CreatePlan
      */
@@ -54,8 +63,14 @@ final class ProjectResource extends AuthenticatedResource
         $this->user_manager = \UserManager::instance();
         $plan_dao           = new PlanDao();
         $tracker_adapter    = new ProgramTrackerAdapter(\TrackerFactory::instance());
-        $project_adapter    = new ProgramAdapter(\ProjectManager::instance(), new ProgramDao());
+        $project_manager    = \ProjectManager::instance();
+        $program_dao        = new ProgramDao();
+        $project_adapter    = new ProgramAdapter($project_manager, $program_dao);
         $this->plan_creator = new PlanCreator($project_adapter, $tracker_adapter, $plan_dao);
+
+        $team_adapter       = new TeamAdapter($project_manager, $program_dao);
+        $team_dao           = new TeamDao();
+        $this->team_creator = new TeamCreator($project_adapter, $team_adapter, $team_dao);
     }
 
     /**
@@ -74,21 +89,17 @@ final class ProjectResource extends AuthenticatedResource
      * Define the program increment and the tracker plannable inside
      *
      * @url    PUT {id}/scaled_agile_plan
-     * @access hybrid
      *
-     * @param int $id Id of the project
-     * @param ProjectResourcePutRepresentation $representation {@from body}
+     * @param int                                  $id Id of the program project
+     * @param ProjectResourcePutPlanRepresentation $representation {@from body}
      *
      *
      * @throws RestException 404
      * @throws RestException 400
      */
-    public function putPlan(int $id, ProjectResourcePutRepresentation $representation): void
+    protected function putPlan(int $id, ProjectResourcePutPlanRepresentation $representation): void
     {
         $user = $this->user_manager->getCurrentUser();
-        if (! $user) {
-            throw new RestException(404, "User not found.");
-        }
         try {
             $this->plan_creator->create(
                 $user,
@@ -97,6 +108,36 @@ final class ProjectResource extends AuthenticatedResource
                 $representation->plannable_tracker_ids
             );
         } catch (PlanTrackerDoesNotBelongToProjectException | ProjectIsNotAProgramException | PlannableTrackerCannotBeEmptyException | PlanTrackerNotFoundException | CannotPlanIntoItselfException $e) {
+            throw new RestException(400, $e->getMessage());
+        } catch (ProgramAccessException $e) {
+            throw new RestException(404, $e->getMessage());
+        }
+    }
+
+    /**
+     * Define Scaled agile team projects
+     *
+     * Define the team project of a program
+     *
+     * @url    PUT {id}/scaled_agile_teams
+     *
+     * @param int                                   $id Id of the program project
+     * @param ProjectResourcePutTeamsRepresentation $representation {@from body}
+     *
+     *
+     * @throws RestException 404
+     * @throws RestException 400
+     */
+    protected function putTeam(int $id, ProjectResourcePutTeamsRepresentation $representation): void
+    {
+        $user = $this->user_manager->getCurrentUser();
+        try {
+            $this->team_creator->create(
+                $user,
+                $id,
+                $representation->team_ids
+            );
+        } catch (ProjectIsNotAProgramException | TeamAccessException | ProjectIsAProgramException | ProjectIsNotAProgramException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());

@@ -20,17 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\Adapter\Program;
 
-use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
-use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\ScaledAgile\Adapter\Plan\PlanTrackerException;
 
-interface BuildProgram
+final class ProjectIsNotAProgramException extends \Exception implements PlanTrackerException
 {
-    /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
-     */
-    public function buildProgramProject(int $id, \PFUser $user): Program;
+    public function __construct(int $id)
+    {
+        parent::__construct("You can only define plan from program projet, project #$id is not a program project.");
+    }
 }

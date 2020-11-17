@@ -20,8 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Plan;
+namespace Tuleap\ScaledAgile\Adapter\Team;
 
-class ProgramAccessException extends \Exception implements PlanTrackerException
+final class AtLeastOneTeamShouldBeDefinedException extends \Exception implements TeamException
 {
+    public function __construct()
+    {
+        parent::__construct("You should define at least one team project.");
+    }
 }

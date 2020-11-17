@@ -20,15 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Plan;
+namespace Tuleap\ScaledAgile\Adapter\Team;
 
 use Luracast\Restler\RestException;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
-use Tuleap\ScaledAgile\Program\Plan\Program;
+use Tuleap\ScaledAgile\Program\Program;
 use Tuleap\ScaledAgile\Program\ProgramDao;
+use Tuleap\ScaledAgile\Team\Creation\BuildTeam;
+use Tuleap\ScaledAgile\Team\Creation\Team;
+use Tuleap\ScaledAgile\Team\Creation\TeamCollection;
 
-final class ProgramAdapter implements BuildProgram
+final class TeamAdapter implements BuildTeam
 {
     /**
      * @var \ProjectManager
@@ -46,22 +48,32 @@ final class ProgramAdapter implements BuildProgram
     }
 
     /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
+     * @throws AtLeastOneTeamShouldBeDefinedException
+     * @throws ProjectIsAProgramException
+     * @throws TeamAccessException
      */
-    public function buildProgramProject(int $id, \PFUser $user): Program
+    public function buildTeamProject(array $team_ids, Program $program, \PFUser $user): TeamCollection
     {
-        $project = $this->project_manager->getProject($id);
-        try {
-            ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
-        } catch (RestException $exception) {
-            throw new ProgramAccessException();
+        $team_list = [];
+        foreach ($team_ids as $team_id) {
+            $project = $this->project_manager->getProject($team_id);
+            try {
+                ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
+            } catch (RestException $exception) {
+                throw new TeamAccessException($team_id);
+            }
+
+            if ($this->program_dao->isProjectAProgramProject((int) $project->getId())) {
+                throw new ProjectIsAProgramException((int) $project->getId());
+            }
+
+            $team_list[] = new Team((int) $project->getID());
         }
 
-        if (! $this->program_dao->isProjectAProgramProject((int) $project->getId())) {
-            throw new ProjectIsNotAProgramException((int) $project->getId());
+        if (empty($team_list)) {
+            throw new AtLeastOneTeamShouldBeDefinedException();
         }
 
-        return new Program((int) $project->getID());
+        return new TeamCollection($team_list, $program);
     }
 }

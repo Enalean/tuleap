@@ -20,17 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\REST\v1;
 
-use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
-use Tuleap\ScaledAgile\Program\Program;
-
-interface BuildProgram
+/**
+ * @psalm-immutable
+ */
+final class ProjectResourcePutPlanRepresentation
 {
     /**
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
+     * @var int {@required true}
      */
-    public function buildProgramProject(int $id, \PFUser $user): Program;
+    public $program_increment_tracker_id;
+    /**
+     * @var array {@type int}
+     */
+    public $plannable_tracker_ids;
+
+    public function __construct(int $program_increment_tracker_id, array $plannable_tracker_ids)
+    {
+        $this->program_increment_tracker_id = $program_increment_tracker_id;
+        $this->plannable_tracker_ids        = $plannable_tracker_ids;
+    }
 }
