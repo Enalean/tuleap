@@ -45,4 +45,27 @@ class GitlabRepositoryProjectDao extends DataAccessObject
             ]
         );
     }
+
+    public function isGitlabRepositoryIntegratedInProject(int $repository_id, int $project_id): bool
+    {
+        $sql = "SELECT NULL
+                FROM plugin_gitlab_repository_project
+                WHERE id = ?
+                    AND project_id = ?";
+
+        $rows = $this->getDB()->run($sql, $repository_id, $project_id);
+
+        return count($rows) > 0;
+    }
+
+    public function addGitlabRepositoryIntegrationInProject(int $repository_id, int $project_id): void
+    {
+        $this->getDB()->insert(
+            'plugin_gitlab_repository_project',
+            [
+                'id'         => $repository_id,
+                'project_id' => $project_id
+            ]
+        );
+    }
 }

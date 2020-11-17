@@ -80,4 +80,25 @@ class GitlabRepositoryDao extends DataAccessObject
             ['id' => $repository_id]
         );
     }
+
+    public function createGitlabRepository(
+        int $gitlab_id,
+        string $name,
+        string $path,
+        string $description,
+        string $full_url,
+        int $last_push_date
+    ): int {
+        return (int) $this->getDB()->insertReturnId(
+            'plugin_gitlab_repository',
+            [
+                'gitlab_id'      => $gitlab_id,
+                'name'           => $name,
+                'path'           => $path,
+                'description'    => $description,
+                'full_url'       => $full_url,
+                'last_push_date' => $last_push_date,
+            ]
+        );
+    }
 }
