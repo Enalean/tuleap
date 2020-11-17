@@ -30,7 +30,7 @@
             </tr>
         </thead>
 
-        <tbody v-if="is_empty_state_shown">
+        <tbody v-if="is_empty_state_shown" data-test="git-permission-table-empty-state">
             <tr>
                 <td colspan="6" class="tlp-table-cell-empty">
                     {{ empty_state }}
@@ -53,14 +53,14 @@ import GitPermissionsTableRepository from "./GitPermissionsTableRepository.vue";
 import { sprintf } from "sprintf-js";
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { Repository } from "./type";
+import { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
 
 @Component({
     components: { GitPermissionsTableRepository },
 })
 export default class GitPermissionsTable extends Vue {
     @Prop()
-    readonly repositories!: Repository[];
+    readonly repositories!: (RepositoryFineGrainedPermissions | RepositorySimplePermissions)[];
     @Prop()
     readonly selectedUgroupName!: string;
     @Prop()
