@@ -27,7 +27,7 @@ use Tuleap\Configuration\Nginx;
 use Tuleap\Configuration\Apache;
 use TuleapCfg\Command\SiteDeploy\SiteDeployFPM;
 
-class PHP73CentOS6
+class PHP73CentOS
 {
     private $logger;
 

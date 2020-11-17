@@ -22,5 +22,5 @@
 require_once __DIR__ . '/../../Configuration/vendor/autoload.php';
 require_once __DIR__ . '/../../../src/vendor/autoload.php';
 
-$php73centos6 = new \Tuleap\Configuration\Setup\PHP73CentOS6(new Tuleap\Configuration\Logger\Console());
-$php73centos6->main();
+$php73centos = new \Tuleap\Configuration\Setup\PHP73CentOS(new Tuleap\Configuration\Logger\Console());
+$php73centos->main();

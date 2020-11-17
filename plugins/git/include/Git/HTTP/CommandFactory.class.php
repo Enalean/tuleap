@@ -49,10 +49,7 @@ class Git_HTTP_CommandFactory
             return new \Tuleap\Git\HTTP\CommandSCL218GitHttpBackend();
         }
 
-        if (Git_Exec::isGit212Installed()) {
-            return new \Tuleap\Git\HTTP\CommandSCL212GitHttpBackend();
-        }
-        return new Git_HTTP_CommandCentos6GitHttpBackend();
+        throw new RuntimeException('Cannot find a Git HTTP backend command');
     }
 
     private function getGitoliteCommand(PFO_User $user, Git_HTTP_Command $command)

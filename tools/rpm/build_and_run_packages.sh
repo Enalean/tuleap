@@ -29,7 +29,7 @@ if [ -z "$SRC_DIR" ]; then
 fi
 
 if [ -z "$OS" ]; then
-    >&2 echo "OS environment variable must be defined (centos7|centos6)"
+    >&2 echo "OS environment variable must be defined (centos7)"
     exit 1
 fi
 
@@ -69,5 +69,6 @@ if [ "$OS" == "centos7" ]; then
     docker logs -f rpm-installer | tee >( grep -q 'Started Install and run Tuleap.' ) || true
     docker exec -ti rpm-installer bash
 else
-    docker run --rm -ti --name rpm-installer -e DB=mysql57 --volumes-from rpm-builder enalean/tuleap-installrpms:centos6
+    >&2 echo "OS environment variable does not have a valid value"
+    exit 1
 fi

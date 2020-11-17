@@ -24,7 +24,6 @@
  */
 class Git_Exec
 {
-    public const GIT212_PATH = '/opt/rh/sclo-git212/root';
     public const GIT218_PATH = '/opt/rh/rh-git218/root';
 
     public const TRANSPORT_EXT  = 'ext';
@@ -70,11 +69,6 @@ class Git_Exec
     public static function buildFromRepository(GitRepository $repository)
     {
         return new static($repository->getFullPath(), $repository->getFullPath());
-    }
-
-    public static function isGit212Installed()
-    {
-        return is_file(self::GIT212_PATH . '/usr/bin/git');
     }
 
     public static function isGit218Installed(): bool
@@ -381,9 +375,6 @@ class Git_Exec
             return self::GIT218_PATH . '/usr/bin/git';
         }
 
-        if (self::isGit212Installed()) {
-            return self::GIT212_PATH . '/usr/bin/git';
-        }
         return 'git';
     }
 

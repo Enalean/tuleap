@@ -20,7 +20,7 @@ $> export RPM_TMP=/path/to/rpm/build/directory
 Build only tuleap RPM
 ---------------------
 
-* For RHEL6: make OS=rhel6 clean rpmprep rpm
+* For RHEL7: make OS=rhel7 clean rpmprep rpm
 
 Build the packages
 ------------------

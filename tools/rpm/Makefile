@@ -28,12 +28,6 @@ ifeq ($(strip $(EXPERIMENTAL_BUILD)),1)
 	RPMBUILD += --with experimental
 endif
 
-ifeq ($(strip $(OS)),rhel6)
-DIST=
-SPEC_FILE=tuleap.rhel6.spec
-SRPMS=$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm \
-	$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm
-else
 ifeq ($(strip $(OS)),rhel7)
 SPEC_FILE=tuleap.rhel7.spec
 DIST=.el7
@@ -42,9 +36,8 @@ RPMBUILD += --define "%dist $(DIST)"
 else
 $(error OS version not supported)
 endif
-endif
 
-.PHONY: all clean rpmprep rpm tuleap-all tarball node composer srpms dist
+.PHONY: all clean rpmprep rpm tarball node composer srpms dist
 
 .PRECIOUS: $(RPM_TMP) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
@@ -108,9 +101,8 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo gener
 ## Build RPM
 ##
 
-rpm: $(RPM_TMP)/SPECS/$(SPEC_FILE) $(RPM_TMP)/SPECS/tuleap-all.spec
+rpm: $(RPM_TMP)/SPECS/$(SPEC_FILE)
 	$(RPMBUILD) -bb $(RPM_TMP)/SPECS/$(SPEC_FILE)
-	$(RPMBUILD) -bb $(RPM_TMP)/SPECS/tuleap-all.spec
 
 srpms: $(SRPMS)
 
@@ -128,24 +120,6 @@ $(RPM_TMP)/SPECS/$(SPEC_FILE): $(SPEC_FILE)
 		sed -e 's/@@RELEASE@@/$(RELEASE)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/$(SPEC_FILE)
-
-$(RPM_TMP)/SPECS/tuleap-all.spec: tuleap-all.spec
-	cat tuleap-all.spec |\
-		sed -e 's/@@VERSION@@/$(version)/g' |\
-		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
-		> $(RPM_TMP)/SPECS/tuleap-all.spec
-
-tuleap-all: $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).noarch.rpm
-
-$(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).noarch.rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm
-	rpmbuild --rebuild $<
-
-$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm:	tuleap-all.spec
-	cat $< |\
-		sed -e 's/@@VERSION@@/$(version)/g' |\
-		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
-		> $(RPM_TMP)/SPECS/$<
-	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/$<
 
 clean:
 	-rm -Rf $(RPM_TMP)/*

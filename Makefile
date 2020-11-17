@@ -319,11 +319,6 @@ start-php73-centos7 start: ## Start Tuleap web with php73 & nginx on CentOS7
 	@$(DOCKER_COMPOSE) up --build -d reverse-proxy
 	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"
 
-start-php73-centos6: ## Start Tuleap web with php73 & nginx on CentOS6
-	@echo "Start Tuleap in PHP 7.3"
-	@$(DOCKER_COMPOSE) -f docker-compose-centos6.yml up --build -d reverse-proxy
-	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"
-
 start-distlp:
 	@echo "Start Tuleap with reverse-proxy, backend web and backend svn"
 	-@$(DOCKER_COMPOSE) stop
