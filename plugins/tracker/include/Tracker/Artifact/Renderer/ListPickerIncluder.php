@@ -36,7 +36,7 @@ final class ListPickerIncluder
 
     public static function includeListPickerAssets(): void
     {
-        if (self::isListPickerEnabledAndBrowserNotIE11()) {
+        if (self::isListPickerEnabledAndBrowserCompatible()) {
             $include_assets = new \Tuleap\Layout\IncludeAssets(
                 __DIR__ . '/../../../../../../src/www/assets/trackers',
                 '/assets/trackers'
@@ -45,8 +45,9 @@ final class ListPickerIncluder
         }
     }
 
-    public static function isListPickerEnabledAndBrowserNotIE11(): bool
+    public static function isListPickerEnabledAndBrowserCompatible(): bool
     {
-        return DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())->isIE11() ? false : (bool) \ForgeConfig::get(self::FORGE_CONFIG_KEY);
+        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
+        return $detected_browser->isIE11() || $detected_browser->isEdgeLegacy() || $detected_browser->isIEBefore11() ? false : (bool) \ForgeConfig::get(self::FORGE_CONFIG_KEY);
     }
 }

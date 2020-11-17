@@ -168,7 +168,7 @@ class IndexPresenter
         $this->project_flags              = $project_flags;
         $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
         $this->has_project_flags          = count($project_flags) > 0;
-        $this->is_list_picker_enabled     = json_encode((bool) ListPickerIncluder::isListPickerEnabledAndBrowserNotIE11());
+        $this->is_list_picker_enabled     = json_encode((bool) ListPickerIncluder::isListPickerEnabledAndBrowserCompatible());
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string
