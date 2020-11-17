@@ -55,6 +55,10 @@ header {
         }
     }
 }
+
+.theme-condensed header.full-width + #main-container {
+    margin-top: 57px;
+}
 /* stylelint-enable */
 
 .header-container {
