@@ -40,7 +40,7 @@ class Common
         $this->nginx_base_dir  = $nginx_base_dir;
     }
 
-    public function generateSSLCertificate($server_name, $cert_filepath, $key_filepath)
+    public function generateSSLCertificate($server_name, $cert_filepath, $key_filepath): void
     {
         if (! file_exists($cert_filepath)) {
             $this->logger->info("Generate self-signed certificate in $cert_filepath");
@@ -49,14 +49,21 @@ class Common
         }
     }
 
-    public function deployConfigurationChunks()
+    public function deployConfigurationChunks(): void
     {
         $this->logger->info("Deploy configuration chunks in {$this->nginx_base_dir}");
+        $this->copyTuleapGeneralSettings();
         $this->copyTuleapDotD();
         $this->copyTuleapPlugins();
     }
 
-    private function copyTuleapDotD()
+    private function copyTuleapGeneralSettings(): void
+    {
+        $this->logger->info("Deploy global settings chunk in {$this->nginx_base_dir}");
+        copy($this->tuleap_base_dir . '/src/etc/nginx/tuleap-managed-global-settings.conf', $this->nginx_base_dir . '/conf.d/tuleap-managed-global-settings.conf');
+    }
+
+    private function copyTuleapDotD(): void
     {
         $this->logger->info("Deploy configuration chunks in {$this->nginx_base_dir}/conf.d/tuleap.d");
         $tuleap_d_dir       = $this->nginx_base_dir . '/conf.d/tuleap.d';
@@ -70,7 +77,7 @@ class Common
         }
     }
 
-    private function copyTuleapPlugins()
+    private function copyTuleapPlugins(): void
     {
         $this->logger->info("Deploy configuration chunks in {$this->nginx_base_dir}/conf.d/tuleap-plugins");
         $tuleap_plugins_dir = $this->nginx_base_dir . '/conf.d/tuleap-plugins';
@@ -105,7 +112,7 @@ class Common
         );
     }
 
-    public function deployMainNginxConf()
+    public function deployMainNginxConf(): void
     {
         if (! $this->hasTuleapMarker()) {
             $this->backupOriginalFile($this->nginx_base_dir . '/nginx.conf');
@@ -113,12 +120,12 @@ class Common
         }
     }
 
-    private function hasTuleapMarker()
+    private function hasTuleapMarker(): bool
     {
         return strpos(file_get_contents($this->nginx_base_dir . '/nginx.conf'), '# Replaced for Tuleap usage') !== false;
     }
 
-    public function replacePlaceHolderInto($template_path, $target_path, array $variables, array $values)
+    public function replacePlaceHolderInto($template_path, $target_path, array $variables, array $values): void
     {
         file_put_contents(
             $target_path,
@@ -130,14 +137,14 @@ class Common
         );
     }
 
-    private function backupOriginalFile($file)
+    private function backupOriginalFile(string $file): void
     {
         if (! file_exists($file . '.orig')) {
             copy($file, $file . '.orig');
         }
     }
 
-    private function createDirectoryIfNotExists($directory)
+    private function createDirectoryIfNotExists(string $directory): void
     {
         if (! is_dir($directory)) {
             mkdir($directory, 0755);
