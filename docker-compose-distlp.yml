@@ -12,15 +12,14 @@ services:
       - backend-svn
 
   backend-web:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-aio-dev:c6-php73-nginx
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-aio-dev:c7-php73-nginx
     environment:
       RUN_COMMAND: "/opt/remi/php73/root/usr/bin/php /usr/share/tuleap/tools/distlp/backend-web/run.php"
     volumes:
       - .:/usr/share/tuleap
       - ../tuleap-plugins:/usr/share/tuleap-plugins
       - tuleap-data:/data
-    env_file:
-      - .env
+      - .env:/root/.tuleap_env:ro
     depends_on:
       - ldap
       - db

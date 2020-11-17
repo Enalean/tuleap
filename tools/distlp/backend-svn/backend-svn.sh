@@ -12,6 +12,11 @@ while [ ! -f "/data/etc/tuleap/conf/redis.inc" ]; do
     sleep 1
 done
 
+while [ ! -f "/data/etc/tuleap/svn_plugin_installed" ]; do
+    echo "Waiting for SVN plugin to be installed"
+    sleep 1
+done
+
 export TULEAP_FPM_SESSION_MODE=redis
 export REDIS_SERVER=redis
 
