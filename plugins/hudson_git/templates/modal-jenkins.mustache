@@ -11,8 +11,25 @@
 
         <p>{{ jenkins_notification_desc }} <a href="https://github.com/jenkinsci/git-plugin/blob/git-4.2.0/README.adoc#push-notification-from-repository">{{ jenkins_documentation_link_label }}</a>.</p>
         <p>
-            <label for="repo_jenkins">{{ jenkins_notification_label }} <i class="fa fa-asterisk"></i></label>
+            <label for="repo_jenkins">{{ jenkins_notification_label }} <i class="fas fa-asterisk" aria-hidden="true"></i></label>
             <input type="url" id="repo_jenkins" name="url" value="{{ jenkins_server_url }}" class="input-xxlarge" placeholder="https://example.com/jenkins" required pattern="https?://.+" />
+        </p>
+
+        <label class="checkbox">
+            <input type="hidden" name="is_commit_reference_needed" value="1">
+            <input
+                type="checkbox"
+                name="is_commit_reference_needed"
+                value="0"
+                autocomplete="off"
+                {{^ is_commit_reference_needed }}checked{{/ is_commit_reference_needed }}
+            >
+            {{# dgettext }}tuleap-hudson_git | Do not send commit's SHA-1 to Jenkins{{/ dgettext }}
+        </label>
+        <p class="text-info">
+            {{# dgettext }}tuleap-hudson_git |
+                To work around the fact Jenkins doesn't poll the repositories when sha1 parameter is given.
+            {{/ dgettext }}
         </p>
     </div>
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Presenter. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,13 +36,22 @@ class ModalsPresenter
     public $csrf_token;
     public $btn_cancel;
 
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_commit_reference_needed;
+
     public function __construct(
         GitRepository $repository,
         $jenkins_server_url,
+        bool $is_commit_reference_needed,
         CSRFSynchronizerToken $csrf
     ) {
         $this->jenkins_server_url = $jenkins_server_url;
         $this->csrf_token         = $csrf->getToken();
+
+        $this->is_commit_reference_needed = $is_commit_reference_needed;
 
         $this->project_id    = $repository->getProjectId();
         $this->repository_id = $repository->getId();

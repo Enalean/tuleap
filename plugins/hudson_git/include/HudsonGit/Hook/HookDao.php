@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,13 +34,14 @@ class HookDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function save($id, $jenkins_server)
+    public function save($id, $jenkins_server, bool $is_commit_reference_needed)
     {
         $id             = $this->da->escapeInt($id);
         $jenkins_server = $this->da->quoteSmart($jenkins_server);
+        $is_commit_reference_needed = $this->da->escapeInt($is_commit_reference_needed ? 1 : 0);
 
-        $sql = "REPLACE INTO plugin_hudson_git_server(repository_id, jenkins_server_url)
-                VALUES($id, $jenkins_server)";
+        $sql = "REPLACE INTO plugin_hudson_git_server(repository_id, jenkins_server_url, is_commit_reference_needed)
+                VALUES($id, $jenkins_server, $is_commit_reference_needed)";
 
         return $this->update($sql);
     }
@@ -49,7 +50,7 @@ class HookDao extends DataAccessObject
     {
         $id  = $this->da->escapeInt($id);
 
-        $sql = "SELECT jenkins_server_url
+        $sql = "SELECT jenkins_server_url, is_commit_reference_needed
                 FROM plugin_hudson_git_server
                 WHERE repository_id = $id";
         return $this->retrieve($sql);

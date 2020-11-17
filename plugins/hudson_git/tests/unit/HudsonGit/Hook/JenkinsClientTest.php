@@ -25,6 +25,8 @@ namespace Tuleap\HudsonGit\Hook;
 use Http\Mock\Client;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPluginHookPayload;
@@ -39,13 +41,24 @@ final class JenkinsClientTest extends TestCase
         $http_client          = new Client();
         $csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);
 
-        $jenkins_client = new JenkinsClient(
+        $request_factory = Mockery::mock(RequestFactoryInterface::class);
+        $jenkins_client  = new JenkinsClient(
             $http_client,
-            HTTPFactoryBuilder::requestFactory(),
+            $request_factory,
             $csrf_crumb_retriever,
             Mockery::mock(JenkinsTuleapPluginHookPayload::class),
             Mockery::mock(StreamFactoryInterface::class)
         );
+
+        $expected_parameters = [
+            'url' => 'https://myinstance.example.com/plugins/git/project/myrepo.git',
+            'sha1' => '8b2f3943e997d2faf4a55ed78e695bda64fad421',
+        ];
+        $expected_url = 'https://jenkins.example.com/git/notifyCommit?' . http_build_query($expected_parameters);
+        $request_factory
+            ->shouldReceive('createRequest')
+            ->with('POST', $expected_url)
+            ->andReturn(Mockery::mock(RequestInterface::class));
 
         $csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
         $http_response_factory = HTTPFactoryBuilder::responseFactory();
@@ -55,14 +68,59 @@ final class JenkinsClientTest extends TestCase
 
         $http_client->addResponse(
             $http_response_factory->createResponse()
-                                  ->withHeader('Triggered', $triggered_jobs)
-                                  ->withBody(HTTPFactoryBuilder::streamFactory()->createStream($body_content))
+                ->withHeader('Triggered', $triggered_jobs)
+                ->withBody(HTTPFactoryBuilder::streamFactory()->createStream($body_content))
         );
 
         $polling_response = $jenkins_client->pushGitNotifications(
             'https://jenkins.example.com',
             'https://myinstance.example.com/plugins/git/project/myrepo.git',
             '8b2f3943e997d2faf4a55ed78e695bda64fad421'
+        );
+
+        $this->assertEqualsCanonicalizing($triggered_jobs, $polling_response->getJobPaths());
+        $this->assertEquals($body_content, $polling_response->getBody());
+    }
+
+    public function testJenkinsIsNotifiedWithoutSha1(): void
+    {
+        $http_client          = new Client();
+        $csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);
+
+        $request_factory = Mockery::mock(RequestFactoryInterface::class);
+        $jenkins_client  = new JenkinsClient(
+            $http_client,
+            $request_factory,
+            $csrf_crumb_retriever,
+            Mockery::mock(JenkinsTuleapPluginHookPayload::class),
+            Mockery::mock(StreamFactoryInterface::class)
+        );
+
+        $expected_parameters = [
+            'url' => 'https://myinstance.example.com/plugins/git/project/myrepo.git',
+        ];
+        $expected_url = 'https://jenkins.example.com/git/notifyCommit?' . http_build_query($expected_parameters);
+        $request_factory
+            ->shouldReceive('createRequest')
+            ->with('POST', $expected_url)
+            ->andReturn(Mockery::mock(RequestInterface::class));
+
+        $csrf_crumb_retriever->shouldReceive('getCSRFCrumbHeader')->andReturn('');
+        $http_response_factory = HTTPFactoryBuilder::responseFactory();
+
+        $triggered_jobs = ['https://jenkins.example.com/job1', 'https://jenkins.example.com/job2'];
+        $body_content   = 'Body test content';
+
+        $http_client->addResponse(
+            $http_response_factory->createResponse()
+                ->withHeader('Triggered', $triggered_jobs)
+                ->withBody(HTTPFactoryBuilder::streamFactory()->createStream($body_content))
+        );
+
+        $polling_response = $jenkins_client->pushGitNotifications(
+            'https://jenkins.example.com',
+            'https://myinstance.example.com/plugins/git/project/myrepo.git',
+            null
         );
 
         $this->assertEqualsCanonicalizing($triggered_jobs, $polling_response->getJobPaths());

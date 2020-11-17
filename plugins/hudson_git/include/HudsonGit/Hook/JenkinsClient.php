@@ -78,14 +78,20 @@ class JenkinsClient
     /**
      * @throws UnableToLaunchBuildException
      */
-    public function pushGitNotifications($server_url, $repository_url, string $commit_reference): PollingResponse
+    public function pushGitNotifications($server_url, $repository_url, ?string $commit_reference): PollingResponse
     {
         $csrf_crumb_header = $this->csrf_crumb_retriever->getCSRFCrumbHeader($server_url);
 
         if (mb_substr($server_url, -1) === '/') {
             $server_url = mb_substr($server_url, 0, -1);
         }
-        $push_url = $server_url . self::NOTIFY_URL . '?url=' . urlencode($repository_url) . '&sha1=' . urlencode($commit_reference);
+        $parameters      = [
+            'url' => $repository_url,
+        ];
+        if ($commit_reference) {
+            $parameters['sha1'] = $commit_reference;
+        }
+        $push_url = $server_url . self::NOTIFY_URL . '?' . http_build_query($parameters);
 
         $request = $this->request_factory->createRequest('POST', $push_url);
 

@@ -73,40 +73,34 @@ class HookTriggerController
 
     public function trigger(GitRepository $repository, string $commit_reference, DateTimeImmutable $date_time): void
     {
-        $this->triggerRepositoryJenkinsServer($repository, $commit_reference, $date_time);
-        $this->triggerProjectJenkinsServers($repository, $commit_reference, $date_time);
+        $called_jenkins_server_urls = [];
+        $this->triggerRepositoryJenkinsServer($repository, $commit_reference, $date_time, $called_jenkins_server_urls);
+        $this->triggerProjectJenkinsServers($repository, $commit_reference, $date_time, $called_jenkins_server_urls);
     }
 
-    private function triggerRepositoryJenkinsServer(GitRepository $repository, string $commit_reference, DateTimeImmutable $date_time): void
-    {
+    /**
+     * @param string[] $already_called_jenkins_server_urls
+     */
+    private function triggerRepositoryJenkinsServer(
+        GitRepository $repository,
+        string $commit_reference,
+        DateTimeImmutable $date_time,
+        array &$already_called_jenkins_server_urls
+    ): void {
         $date_job = $date_time->getTimestamp();
         $dar = $this->dao->searchById($repository->getId());
         foreach ($dar as $row) {
-            $this->logger->debug('Trigger repository jenkins server: ' . $row['jenkins_server_url']);
-            $transports = $repository->getAccessURL();
+            $jenkins_server_url = $row['jenkins_server_url'];
+            $this->logger->debug('Trigger repository jenkins server: ' . $jenkins_server_url);
+            $commit_reference_to_send = $row['is_commit_reference_needed'] ? $commit_reference : null;
             $polling_urls = [];
-            foreach ($transports as $protocol => $url) {
-                try {
-                    $response = $this->jenkins_client->pushGitNotifications($row['jenkins_server_url'], $url, $commit_reference);
-
-                    $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
-                    if (count($response->getJobPaths()) > 0) {
-                        $this->logger->debug('Triggered ' . implode(',', $response->getJobPaths()));
-                        $polling_urls = array_merge($polling_urls, $response->getJobPaths());
-                    }
-                } catch (Exception $exception) {
-                    $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
-                }
-            }
-
-            $status_code = null;
-            try {
-                $response = $this->jenkins_client->pushJenkinsTuleapPluginNotification($row['jenkins_server_url']);
-                $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
-                $status_code = $response->getStatusCode();
-            } catch (UnableToLaunchBuildException $exception) {
-                $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
-            }
+            $status_code = $this->pushGitNotifications(
+                $repository,
+                $jenkins_server_url,
+                $commit_reference_to_send,
+                $polling_urls
+            );
+            $already_called_jenkins_server_urls[] = $jenkins_server_url;
 
             $this->addHudsonGitLog(
                 $repository,
@@ -127,36 +121,32 @@ class HookTriggerController
         }
     }
 
-    private function triggerProjectJenkinsServers(GitRepository $repository, string $commit_reference, DateTimeImmutable $date_time): void
-    {
+    /**
+     * @param string[] $already_called_jenkins_server_urls
+     */
+    private function triggerProjectJenkinsServers(
+        GitRepository $repository,
+        string $commit_reference,
+        DateTimeImmutable $date_time,
+        array $already_called_jenkins_server_urls
+    ): void {
         $date_job = $date_time->getTimestamp();
         $project  = $repository->getProject();
         foreach ($this->jenkins_server_factory->getJenkinsServerOfProject($project) as $jenkins_server) {
-            $this->logger->debug('Trigger project jenkins server:' . $jenkins_server->getServerURL());
-            $transports = $repository->getAccessURL();
+            $jenkins_server_url = $jenkins_server->getServerURL();
+            if (in_array($jenkins_server_url, $already_called_jenkins_server_urls, true)) {
+                continue;
+            }
+
+            $this->logger->debug('Trigger project jenkins server:' . $jenkins_server_url);
+            $commit_reference_to_send = $commit_reference;
             $polling_urls = [];
-            foreach ($transports as $protocol => $url) {
-                try {
-                    $response = $this->jenkins_client->pushGitNotifications($jenkins_server->getServerURL(), $url, $commit_reference);
-
-                    $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
-                    if (count($response->getJobPaths()) > 0) {
-                        $this->logger->debug('Triggered ' . implode(',', $response->getJobPaths()));
-                        $polling_urls = array_merge($polling_urls, $response->getJobPaths());
-                    }
-                } catch (Exception $exception) {
-                    $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
-                }
-            }
-
-            $status_code = null;
-            try {
-                $response = $this->jenkins_client->pushJenkinsTuleapPluginNotification($jenkins_server->getServerURL());
-                $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
-                $status_code = $response->getStatusCode();
-            } catch (UnableToLaunchBuildException $exception) {
-                $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
-            }
+            $status_code = $this->pushGitNotifications(
+                $repository,
+                $jenkins_server_url,
+                $commit_reference_to_send,
+                $polling_urls
+            );
 
             $this->addProjectJenkinsJobLog(
                 $jenkins_server,
@@ -181,5 +171,38 @@ class HookTriggerController
         } catch (CannotCreateLogException $exception) {
             $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
         }
+    }
+
+    private function pushGitNotifications(
+        GitRepository $repository,
+        string $jenkins_server_url,
+        ?string $commit_reference,
+        array &$polling_urls
+    ): ?int {
+        $transports = $repository->getAccessURL();
+        foreach ($transports as $protocol => $url) {
+            try {
+                $response = $this->jenkins_client->pushGitNotifications($jenkins_server_url, $url, $commit_reference);
+
+                $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
+                if (count($response->getJobPaths()) > 0) {
+                    $this->logger->debug('Triggered ' . implode(',', $response->getJobPaths()));
+                    $polling_urls = array_merge($polling_urls, $response->getJobPaths());
+                }
+            } catch (Exception $exception) {
+                $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
+            }
+        }
+
+        $status_code = null;
+        try {
+            $response = $this->jenkins_client->pushJenkinsTuleapPluginNotification($jenkins_server_url);
+            $this->logger->debug('repository #' . $repository->getId() . ' : ' . $response->getBody());
+            $status_code = $response->getStatusCode();
+        } catch (UnableToLaunchBuildException $exception) {
+            $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
+        }
+
+        return $status_code;
     }
 }
