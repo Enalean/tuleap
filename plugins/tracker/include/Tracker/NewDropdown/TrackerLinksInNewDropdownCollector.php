@@ -32,10 +32,17 @@ class TrackerLinksInNewDropdownCollector
      * @var TrackerInNewDropdownRetriever
      */
     private $retriever;
+    /**
+     * @var TrackerNewDropdownLinkPresenterBuilder
+     */
+    private $link_presenter_builder;
 
-    public function __construct(TrackerInNewDropdownRetriever $retriever)
-    {
-        $this->retriever = $retriever;
+    public function __construct(
+        TrackerInNewDropdownRetriever $retriever,
+        TrackerNewDropdownLinkPresenterBuilder $link_presenter_builder
+    ) {
+        $this->retriever              = $retriever;
+        $this->link_presenter_builder = $link_presenter_builder;
     }
 
     public function collect(NewDropdownProjectLinksCollector $collector): void
@@ -53,16 +60,7 @@ class TrackerLinksInNewDropdownCollector
                 continue;
             }
 
-            $collector->addCurrentProjectLink(
-                new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter(
-                    $tracker->getSubmitUrl(),
-                    sprintf(
-                        dgettext('tuleap-tracker', 'New %s'),
-                        $tracker->getItemName()
-                    ),
-                    'fa-plus'
-                )
-            );
+            $collector->addCurrentProjectLink($this->link_presenter_builder->build($tracker));
         }
     }
 

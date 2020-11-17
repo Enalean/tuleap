@@ -14,7 +14,7 @@
                         <hr class="nav-dropdown-item-divider">
                         <div class="nav-dropdown-item-title">{{ label }}</div>
                         {{# links }}
-                            <a href="{{ url }}" class="nav-dropdown-item" data-shortcut-create-option>
+                            <a href="{{ url }}" class="nav-dropdown-item" data-shortcut-create-option {{# data_attributes }}data-{{ name }}="{{ value }}"{{/ data_attributes }}>
                                 <i class="fa fa-fw {{ icon }} nav-dropdown-item-icon" aria-hidden="true"></i>
                                 {{ label }}
                             </a>

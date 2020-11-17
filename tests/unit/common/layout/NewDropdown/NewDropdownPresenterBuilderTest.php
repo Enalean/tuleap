@@ -115,7 +115,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
             ->andReturn(false);
 
         $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
-        $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon'));
+        $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon', []));
 
         $this->event_dispatcher
             ->shouldReceive('dispatch')
@@ -136,7 +136,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
             ->andReturn(true);
 
         $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
-        $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon'));
+        $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon', []));
 
         $this->event_dispatcher
             ->shouldReceive('dispatch')
@@ -159,14 +159,14 @@ class NewDropdownPresenterBuilderTest extends TestCase
             ->andReturn(true);
 
         $collector = new NewDropdownProjectLinksCollector($this->user, $this->project, null);
-        $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon'));
+        $collector->addCurrentProjectLink(new NewDropdownLinkPresenter('/url', 'label', 'icon', []));
 
         $this->event_dispatcher
             ->shouldReceive('dispatch')
             ->andReturn($collector);
 
         $current_context_section = new NewDropdownLinkSectionPresenter("Current context", [
-            new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus')
+            new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus', [])
         ]);
         $presenter = $this->builder->getPresenter($this->user, $this->project, $current_context_section);
 

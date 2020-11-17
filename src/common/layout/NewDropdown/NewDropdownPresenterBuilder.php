@@ -87,7 +87,7 @@ class NewDropdownPresenterBuilder
         $sections[] = new NewDropdownLinkSectionPresenter(
             \ForgeConfig::get('sys_name'),
             [
-                new NewDropdownLinkPresenter('/project/new', _('Start a new project'), 'fa-archive'),
+                new NewDropdownLinkPresenter('/project/new', _('Start a new project'), 'fa-archive', []),
             ],
         );
     }

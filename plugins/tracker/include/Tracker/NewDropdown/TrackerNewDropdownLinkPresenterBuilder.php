@@ -20,38 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\layout\NewDropdown;
+namespace Tuleap\Tracker\NewDropdown;
 
-/**
- * @psalm-immutable
- */
-class NewDropdownLinkPresenter
+use Tuleap\layout\NewDropdown\DataAttributePresenter;
+
+final class TrackerNewDropdownLinkPresenterBuilder
 {
-    /**
-     * @var string
-     */
-    public $url;
-    /**
-     * @var string
-     */
-    public $label;
-    /**
-     * @var string
-     */
-    public $icon;
-    /**
-     * @var DataAttributePresenter[]
-     */
-    public $data_attributes;
-
-    /**
-     * @param DataAttributePresenter[] $data_attributes
-     */
-    public function __construct(string $url, string $label, string $icon, array $data_attributes)
+    public function build(\Tracker $tracker): \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter
     {
-        $this->url             = $url;
-        $this->label           = $label;
-        $this->icon            = $icon;
-        $this->data_attributes = $data_attributes;
+        return new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter(
+            $tracker->getSubmitUrl(),
+            sprintf(
+                dgettext('tuleap-tracker', 'New %s'),
+                $tracker->getItemName()
+            ),
+            'fa-plus',
+            [new DataAttributePresenter('tracker-id', (string) $tracker->getId())]
+        );
     }
 }
