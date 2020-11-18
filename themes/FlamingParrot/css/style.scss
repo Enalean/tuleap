@@ -19,7 +19,7 @@
 
 @import '../../default/css/style';
 
-@mixin definitions($main, $main-background, $ui-color-success, $ui-color-danger) {
+@mixin definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger) {
     .contact-support-modal {
         > .modal-body {
             background: $main-background;
@@ -36,12 +36,12 @@
     }
 
     .contact-support-modal-submit.thank-you {
-        border-color: $ui-color-success;
-        background: $ui-color-success;
+        border-color: $tlp-ui-success;
+        background: $tlp-ui-success;
     }
 
     .contact-support-modal-form .fa-asterisk {
-        color: $ui-color-danger;
+        color: $tlp-ui-danger;
     }
 }
 
@@ -49,36 +49,36 @@ body {
     &.FlamingParrot_Orange { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-orange';
 
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
     }
 
     &.FlamingParrot_Blue { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-blue';
 
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
     }
 
     &.FlamingParrot_Green { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-green';
 
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
     }
 
     &.FlamingParrot_BlueGrey { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
 
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
     }
 
     &.FlamingParrot_Purple { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-purple';
 
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
     }
 
     &.FlamingParrot_Red { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
         @import '../../src/themes/FlamingParrot/css/utils/variables-red';
 
-        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+        @include definitions($main, $main-background, $tlp-ui-success, $tlp-ui-danger);
     }
 }
