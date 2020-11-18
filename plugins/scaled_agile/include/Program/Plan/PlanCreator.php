@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Plan;
 
-use Tuleap\ScaledAgile\Adapter\Plan\PlannableTrackerCannotBeEmptyException;
-use Tuleap\ScaledAgile\Adapter\Plan\PlanTrackerDoesNotBelongToProjectException;
-use Tuleap\ScaledAgile\Adapter\Plan\PlanTrackerNotFoundException;
-use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerDoesNotBelongToProjectException;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerNotFoundException;
 
 final class PlanCreator implements CreatePlan
 {

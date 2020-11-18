@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreationException;
-use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreatorAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreationException;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFieldsData;

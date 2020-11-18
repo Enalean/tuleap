@@ -24,9 +24,9 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreationException;
-use Tuleap\ScaledAgile\Adapter\Program\ArtifactCreatorAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreationException;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ArtifactData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;

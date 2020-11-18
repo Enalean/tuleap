@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
-use Tuleap\ScaledAgile\Adapter\Program\ReplicationDataAdapter;
-use Tuleap\ScaledAgile\Program\ProgramDao;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 class ArtifactCreatedHandler
