@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog;
 
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ScaledAgile\ProjectData;
 use Tuleap\ScaledAgile\TrackerData;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 class TrackerCollectionFactory
 {

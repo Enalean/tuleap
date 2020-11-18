@@ -39,10 +39,10 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter\PlannableItemsPerTeamPresenterCollection;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter\PlannableItemsPerTeamPresenterCollectionBuilder;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class ReadOnlyProgramAdminViewControllerTest extends TestCase

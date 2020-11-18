@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Plan;
 
-use Tuleap\ScaledAgile\Adapter\Program\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Program\Program;
 
 interface BuildProgram
