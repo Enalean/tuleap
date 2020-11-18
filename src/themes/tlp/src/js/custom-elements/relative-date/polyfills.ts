@@ -39,64 +39,43 @@ export async function loadIntlRelativeTimePolyfillWhenNeeded(): Promise<void> {
     // complain about missing types.
     polyfill_promises.push(
         import(
-            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-getcanonicallocales/polyfill"
+            /* webpackChunkName: "polyfill-intl-getcanonicallocales" */ "@formatjs/intl-getcanonicallocales/polyfill"
         )
     );
     polyfill_promises.push(
         import(
-            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-pluralrules/polyfill"
-        )
-    );
-    polyfill_promises.push(
-        attemptPromiseResolutionWithFallback(
-            () =>
-                import(
-                    /* webpackChunkName: "polyfill-intl-relativetimeformat-pluralrules-locale" */ "@formatjs/intl-pluralrules/locale-data/" +
-                        locale
-                ),
-            () =>
-                import(
-                    /* webpackChunkName: "polyfill-intl-relativetimeformat-pluralrules-locale" */ "@formatjs/intl-pluralrules/locale-data/en" +
-                        ""
-                )
-        )
-    );
-    polyfill_promises.push(
-        import(
-            /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-numberformat/polyfill"
-        )
-    );
-    polyfill_promises.push(
-        attemptPromiseResolutionWithFallback(
-            () =>
-                import(
-                    /* webpackChunkName: "polyfill-intl-relativetimeformat-numberformat-locale" */ "@formatjs/intl-numberformat/locale-data/" +
-                        locale
-                ),
-            () =>
-                import(
-                    /* webpackChunkName: "polyfill-intl-relativetimeformat-numberformat-locale" */ "@formatjs/intl-numberformat/locale-data/en" +
-                        ""
-                )
+            /* webpackChunkName: "polyfill-intl-pluralrules" */ "@formatjs/intl-pluralrules/polyfill"
+        ).then(() =>
+            attemptPromiseResolutionWithFallback(
+                () =>
+                    import(
+                        /* webpackChunkName: "polyfill-intl-pluralrules-locale" */ "@formatjs/intl-pluralrules/locale-data/" +
+                            locale
+                    ),
+                () =>
+                    import(
+                        /* webpackChunkName: "polyfill-intl-pluralrules-locale" */ "@formatjs/intl-pluralrules/locale-data/en" +
+                            ""
+                    )
+            )
         )
     );
     polyfill_promises.push(
         import(
             /* webpackChunkName: "polyfill-intl-relativetimeformat" */ "@formatjs/intl-relativetimeformat/polyfill"
-        )
-    );
-    polyfill_promises.push(
-        attemptPromiseResolutionWithFallback(
-            () =>
-                import(
-                    /* webpackChunkName: "polyfill-intl-relativetimeformat-locale" */ "@formatjs/intl-relativetimeformat/locale-data/" +
-                        locale
-                ),
-            () =>
-                import(
-                    /* webpackChunkName: "polyfill-intl-relativetimeformat-locale" */ "@formatjs/intl-relativetimeformat/locale-data/en" +
-                        ""
-                )
+        ).then(() =>
+            attemptPromiseResolutionWithFallback(
+                () =>
+                    import(
+                        /* webpackChunkName: "polyfill-intl-relativetimeformat-locale" */ "@formatjs/intl-relativetimeformat/locale-data/" +
+                            locale
+                    ),
+                () =>
+                    import(
+                        /* webpackChunkName: "polyfill-intl-relativetimeformat-locale" */ "@formatjs/intl-relativetimeformat/locale-data/en" +
+                            ""
+                    )
+            )
         )
     );
 
