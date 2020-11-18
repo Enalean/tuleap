@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b96ba06c9f88350ed0dc15150937c06c",
+    "content-hash": "7a3cbc0fb1d12d847880af0eaf2c3c23",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -1844,12 +1844,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/Restler.git",
-                "reference": "20200805"
+                "reference": "20201118"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/Restler/zipball/20200805",
-                "reference": "20200805",
+                "url": "https://api.github.com/repos/Enalean/Restler/zipball/20201118",
+                "reference": "20201118",
                 "shasum": ""
             },
             "require": {
@@ -1875,6 +1875,7 @@
                 "twig/twig": "If you want to use twig templates with Html format",
                 "zendframework/zendamf": "If you need AMF format"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1904,9 +1905,9 @@
                 "server"
             ],
             "support": {
-                "source": "https://github.com/Enalean/Restler/tree/20200805"
+                "source": "https://github.com/Enalean/Restler/tree/20201118"
             },
-            "time": "2020-08-05T07:38:28+00:00"
+            "time": "2020-11-18T09:27:20+00:00"
         },
         {
             "name": "meyfa/php-svg",
