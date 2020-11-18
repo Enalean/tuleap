@@ -20,11 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\Creation;
+namespace Tuleap\ScaledAgile\Adapter\Program\Tracker;
 
-interface TeamStore
+final class PlanTrackerDoesNotBelongToProjectException extends \Exception implements ProgramTrackerException
 {
-    public function save(TeamCollection $team_collection): void;
-
-    public function isATeam(int $team_project_id): bool;
+    public function __construct(int $tracker_id, int $project_id)
+    {
+        parent::__construct("tracker #$tracker_id does not belong to project #$project_id ");
+    }
 }

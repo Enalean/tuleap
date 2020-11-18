@@ -24,8 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Plan;
 
 interface PlanStore
 {
-    /**
-     * @throws \DataAccessException
-     */
     public function save(Plan $plan): void;
+
+    public function isPlannable(int $plannable_tracker_id): bool;
 }

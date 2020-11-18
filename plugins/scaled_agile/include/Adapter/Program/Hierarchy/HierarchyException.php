@@ -20,12 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\Plan;
+namespace Tuleap\ScaledAgile\Adapter\Program\Hierarchy;
 
-final class PlanTrackerDoesNotBelongToProjectException extends \Exception implements PlanTrackerException
+interface HierarchyException extends \Throwable
 {
-    public function __construct(int $tracker_id, int $project_id)
-    {
-        parent::__construct("tracker #$tracker_id does not belong to project #$project_id ");
-    }
 }

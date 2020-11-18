@@ -20,11 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\Creation;
+namespace Tuleap\ScaledAgile\Adapter\Program\Hierarchy;
 
-interface TeamStore
+final class TeamTrackerNotFoundException extends \Exception implements HierarchyException
 {
-    public function save(TeamCollection $team_collection): void;
-
-    public function isATeam(int $team_project_id): bool;
+    public function __construct(int $tracker_id)
+    {
+        parent::__construct("Tracker #$tracker_id has not be found");
+    }
 }

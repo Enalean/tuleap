@@ -23,23 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Plan;
 
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerDoesNotBelongToProjectException;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerNotFoundException;
+use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
 
 interface BuildTracker
 {
     /**
-     * @throws PlanTrackerDoesNotBelongToProjectException
-     * @throws PlanTrackerNotFoundException
+     * @throws ProgramTrackerException
      */
     public function buildProgramIncrementTracker(int $tracker_id, int $project_id): ProgramIncrementTracker;
 
     /**
-     * @throws PlanTrackerDoesNotBelongToProjectException
-     * @throws PlanTrackerNotFoundException
-     * @throws PlannableTrackerCannotBeEmptyException
-     *
      * @return array<ProgramPlannableTracker>
+     * @throws ProgramTrackerException
+     * @throws PlannableTrackerCannotBeEmptyException
      */
-    public function buildPlannableTrackers(array $plannable_trackers_id, int $project_id): array;
+    public function buildPlannableTrackerList(array $plannable_trackers_id, int $project_id): array;
 }

@@ -20,11 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\Creation;
+namespace Tuleap\ScaledAgile\Adapter\Program\Hierarchy;
 
-interface TeamStore
+use Tuleap\ScaledAgile\Program\Hierarchy\Hierarchy;
+use Tuleap\ScaledAgile\Program\Hierarchy\HierarchyStore;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+
+final class HierarchySaver implements HierarchyStore
 {
-    public function save(TeamCollection $team_collection): void;
+    /**
+     * @var HierarchyDAO
+     */
+    private $dao;
 
-    public function isATeam(int $team_project_id): bool;
+    public function __construct(HierarchyDAO $dao)
+    {
+        $this->dao = $dao;
+    }
+
+    public function save(Hierarchy $hierarchy): void
+    {
+        $this->dao->updateChildren($hierarchy->getProgramTrackerId(), [$hierarchy->getTeamTrackerId()]);
+    }
 }

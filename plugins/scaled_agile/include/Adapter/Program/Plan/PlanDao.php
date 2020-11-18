@@ -29,7 +29,7 @@ use Tuleap\ScaledAgile\Program\Plan\PlanStore;
 final class PlanDao extends DataAccessObject implements PlanStore
 {
     /**
-     * @throw DBException
+     * @throws \Throwable
      */
     public function save(Plan $plan): void
     {
@@ -49,5 +49,12 @@ final class PlanDao extends DataAccessObject implements PlanStore
 
             $this->getDB()->insertMany('plugin_scaled_agile_plan', $insert);
         });
+    }
+
+    public function isPlannable(int $plannable_tracker_id): bool
+    {
+        $sql = 'SELECT count(*) FROM plugin_scaled_agile_plan WHERE plannable_tracker_id = ?';
+
+        return $this->getDB()->exists($sql, $plannable_tracker_id);
     }
 }
