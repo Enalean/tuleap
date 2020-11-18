@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Events;
 
@@ -41,40 +42,28 @@ class PullRequestDiffRepresentationBuild implements Dispatchable
      */
     private $object_src;
 
-    public function __construct($object_dest, $object_src)
+    public function __construct(string $object_dest, string $object_src)
     {
         $this->object_dest = $object_dest;
         $this->object_src = $object_src;
     }
 
-    /**
-     * @param string $special_format
-     */
-    public function setSpecialFormat($special_format)
+    public function setSpecialFormat(string $special_format): void
     {
         $this->special_format = $special_format;
     }
 
-    /**
-     * @return string
-     */
-    public function getSpecialFormat()
+    public function getSpecialFormat(): string
     {
         return $this->special_format;
     }
 
-    /**
-     * @return string
-     */
-    public function getObjectDest()
+    public function getObjectDest(): string
     {
         return $this->object_dest;
     }
 
-    /**
-     * @return string
-     */
-    public function getObjectSrc()
+    public function getObjectSrc(): string
     {
         return $this->object_src;
     }

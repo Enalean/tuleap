@@ -461,10 +461,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     {
         $detector = new Detector();
 
-        if (
-            ($event->getObjectSrc() !== null && $detector->isFileALFSFile($event->getObjectSrc())) ||
-            $detector->isFileALFSFile($event->getObjectDest())
-        ) {
+        if ($detector->isFileALFSFile($event->getObjectSrc()) || $detector->isFileALFSFile($event->getObjectDest())) {
             $event->setSpecialFormat('git-lfs');
             return;
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -99,7 +99,7 @@ class MimeDetector
         'yaml'          => 'text/x-yaml'
     ];
 
-    public static function getMimeInfo($file_path, $dest_content, $src_content)
+    public static function getMimeInfo(string $file_path, string $dest_content, string $src_content): array
     {
         $finfo = finfo_open(FILEINFO_MIME);
         $file_content = $src_content === "" ? $dest_content : $src_content;
