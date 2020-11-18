@@ -29,6 +29,13 @@
 
 */
 
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+
 require_once __DIR__ . '/../news/news_utils.php';
 
 function forum_header($params)
@@ -108,7 +115,30 @@ function forum_header($params)
             echo '</TD></TR></TABLE>';
         }
     } else {
-     //this is just a regular forum, not a news item
+        //this is just a regular forum, not a news item
+        $project = ProjectManager::instance()->getProject($group_id);
+        if (! $project->isError()) {
+            $service_forum = $project->getService(Service::FORUM);
+            if ($service_forum !== null) {
+                $breadcrumb = new BreadCrumb(
+                    new BreadCrumbLink($service_forum->getInternationalizedName(), $service_forum->getUrl())
+                );
+                if (user_ismember($group_id, 'F2')) {
+                    $admin_link = new BreadCrumbLink(
+                        _('Administration'),
+                        '/forum/admin/?group_id=' . urlencode($group_id),
+                    );
+
+                    $sub_items = new BreadCrumbSubItems();
+                    $sub_items->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection([$admin_link])));
+
+                    $breadcrumb->setSubItems($sub_items);
+                }
+                $breadcrumb_collection = new BreadCrumbCollection();
+                $breadcrumb_collection->addBreadCrumb($breadcrumb);
+                $GLOBALS['HTML']->addBreadcrumbs($breadcrumb_collection);
+            }
+        }
         site_project_header($params);
     }
 
@@ -120,10 +150,9 @@ function forum_header($params)
     }
 
     if (! isset($params['pv']) || (isset($params['pv']) && ! $params['pv'])) {
-        echo '<P><B>';
-
         $request = HTTPRequest::instance();
         if ($forum_id && user_isloggedin() && ! $request->exist('delete')) {
+            echo '<P><B>';
             if (user_monitor_forum($forum_id, UserManager::instance()->getCurrentUser()->getId())) {
                 $msg = $Language->getText('forum_forum_utils', 'stop_monitor');
             } else {
@@ -139,24 +168,12 @@ function forum_header($params)
             print ' <a href="forum.php?forum_id=' . $forum_id . '#start_new_thread">';
             echo html_image("ic/thread.png", []) . ' ' . $Language->getText('forum_forum_utils', 'start_thread') . '</A> | ';
             if (isset($msg_id) && $msg_id) {
-                echo "<A HREF='?msg_id=$msg_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> | ";
+                echo "<A HREF='?msg_id=$msg_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A>";
             } else {
-                echo "<A HREF='?forum_id=$forum_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> | ";
+                echo "<A HREF='?forum_id=$forum_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A>";
             }
+            echo '</B><P>';
         }
-
-        // The forum admin link is only displayed for the forum moderators
-        if (user_ismember($group_id, 'F2')) {
-            echo '  <A HREF="/forum/admin/?group_id=' . $group_id . '">' . $Language->getText('forum_forum_utils', 'admin') . '</A></B>';
-            if (isset($params['help']) && $params['help']) {
-                echo ' | ';
-            }
-        }
-
-        if (isset($params['help']) && $params['help']) {
-            echo help_button($params['help'], false, $Language->getText('global', 'help'));
-        }
-        echo '</B><P>';
     }
 }
 
