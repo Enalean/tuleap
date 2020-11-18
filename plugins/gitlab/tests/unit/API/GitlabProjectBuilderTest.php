@@ -123,24 +123,6 @@ final class GitlabProjectBuilderTest extends TestCase
         $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
     }
 
-    public function testItThrowsAnExceptionIfRequestBodyDoesNotHaveNameKey(): void
-    {
-        $this->gitlab_api_client->shouldReceive("getUrl")
-            ->once()
-            ->with($this->credentials, "/projects/1")
-            ->andReturn([
-                'id' => 1,
-                'description' => 'My GitLab project',
-                'web_url' => 'https://example.com/root/project01',
-                'path_with_namespace' => 'root/project01',
-                'last_activity_at' => '2020-11-12',
-            ]);
-
-        $this->expectException(GitlabResponseAPIException::class);
-
-        $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
-    }
-
     public function testItThrowsAnExceptionIfRequestBodyDoesNotHavePathKey(): void
     {
         $this->gitlab_api_client->shouldReceive("getUrl")
@@ -194,7 +176,6 @@ final class GitlabProjectBuilderTest extends TestCase
         $gitlab_project = $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
 
         $this->assertSame(1, $gitlab_project->getId());
-        $this->assertSame("Project 01", $gitlab_project->getName());
         $this->assertSame("My GitLab project", $gitlab_project->getDescription());
         $this->assertSame("root/project01", $gitlab_project->getPathWithNamespace());
         $this->assertSame("https://example.com/root/project01", $gitlab_project->getWebUrl());
@@ -218,7 +199,6 @@ final class GitlabProjectBuilderTest extends TestCase
         $gitlab_project = $this->project_builder->getProjectFromGitlabAPI($this->credentials, 1);
 
         $this->assertSame(1, $gitlab_project->getId());
-        $this->assertSame("Project 01", $gitlab_project->getName());
         $this->assertSame("", $gitlab_project->getDescription());
         $this->assertSame("root/project01", $gitlab_project->getPathWithNamespace());
         $this->assertSame("https://example.com/root/project01", $gitlab_project->getWebUrl());

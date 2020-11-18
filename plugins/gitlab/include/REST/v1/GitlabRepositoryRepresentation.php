@@ -49,11 +49,6 @@ class GitlabRepositoryRepresentation
     /**
      * @var string
      */
-    public $path;
-
-    /**
-     * @var string
-     */
     public $description;
 
     /**
@@ -70,7 +65,6 @@ class GitlabRepositoryRepresentation
         int $id,
         int $gitlab_id,
         string $name,
-        string $path,
         string $description,
         string $full_url,
         int $last_push_date_timestamp
@@ -78,7 +72,6 @@ class GitlabRepositoryRepresentation
         $this->id             = JsonCast::toInt($id);
         $this->gitlab_id      = JsonCast::toInt($gitlab_id);
         $this->name           = $name;
-        $this->path           = $path;
         $this->description    = $description;
         $this->full_url       = $full_url;
         $this->last_push_date = JsonCast::toDate($last_push_date_timestamp);
@@ -90,7 +83,6 @@ class GitlabRepositoryRepresentation
             $gitlab_repository->getId(),
             $gitlab_repository->getGitlabId(),
             $gitlab_repository->getName(),
-            $gitlab_repository->getPath(),
             $gitlab_repository->getDescription(),
             $gitlab_repository->getFullUrl(),
             $gitlab_repository->getLastPushDate()->getTimestamp(),

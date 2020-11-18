@@ -76,7 +76,6 @@ class GitlabRepositoryFactory
         return new GitlabRepository(
             $integration_id,
             $gitlab_project->getId(),
-            $gitlab_project->getName(),
             $gitlab_project->getPathWithNamespace(),
             $gitlab_project->getDescription(),
             $gitlab_project->getWebUrl(),
@@ -85,7 +84,7 @@ class GitlabRepositoryFactory
     }
 
     /**
-     * @param array{id:int, gitlab_id:int, name:string, path:string, description:string, full_url:string, last_push_date:int} $row
+     * @param array{id:int, gitlab_id:int, name:string, description:string, full_url:string, last_push_date:int} $row
      */
     private function getInstanceFromRow(array $row): GitlabRepository
     {
@@ -93,7 +92,6 @@ class GitlabRepositoryFactory
             $row['id'],
             $row['gitlab_id'],
             $row['name'],
-            $row['path'],
             (string) $row['description'],
             $row['full_url'],
             (new DateTimeImmutable())->setTimestamp($row['last_push_date'])

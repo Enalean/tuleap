@@ -63,7 +63,6 @@ class GitlabProjectBuilder
             ! array_key_exists('id', $gitlab_project_data) ||
             ! array_key_exists('description', $gitlab_project_data) ||
             ! array_key_exists('web_url', $gitlab_project_data) ||
-            ! array_key_exists('name', $gitlab_project_data) ||
             ! array_key_exists('path_with_namespace', $gitlab_project_data) ||
             ! array_key_exists('last_activity_at', $gitlab_project_data)
         ) {
@@ -74,7 +73,6 @@ class GitlabProjectBuilder
             ! is_int($gitlab_project_data['id']) ||
             ! (is_string($gitlab_project_data['description']) || $gitlab_project_data['description'] === null) ||
             ! is_string($gitlab_project_data['web_url']) ||
-            ! is_string($gitlab_project_data['name']) ||
             ! is_string($gitlab_project_data['path_with_namespace']) ||
             ! is_string($gitlab_project_data['last_activity_at'])
         ) {
@@ -85,7 +83,6 @@ class GitlabProjectBuilder
             $gitlab_project_data['id'],
             (string) $gitlab_project_data['description'],
             $gitlab_project_data['web_url'],
-            $gitlab_project_data['name'],
             $gitlab_project_data['path_with_namespace'],
             new DateTimeImmutable($gitlab_project_data['last_activity_at'])
         );

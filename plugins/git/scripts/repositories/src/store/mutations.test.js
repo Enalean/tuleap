@@ -163,8 +163,7 @@ describe("Store mutations", () => {
                 {
                     id: 1,
                     gitlab_id: 1,
-                    name: "MyRepo",
-                    path: "MyPath/MyRepo",
+                    name: "MyPath/MyRepo",
                     description: "This is my description.",
                     full_url: "https://example.com/MyPath/MyRepo",
                     last_push_date: "2020-10-28T15:13:13+01:00",
@@ -199,8 +198,7 @@ describe("Store mutations", () => {
                 {
                     id: 1,
                     gitlab_id: 1,
-                    name: "MyRepo",
-                    path: "MyPath/MyRepo",
+                    name: "MyPath/MyRepo",
                     description: "This is my description.",
                     full_url: "https://example.com/MyPath/MyRepo",
                     last_push_date: "2020-10-28T15:13:13+01:00",

@@ -140,7 +140,6 @@ class GitlabRepositoryCreator
 
         $gitlab_repository_id = $this->gitlab_repository_dao->createGitlabRepository(
             $internal_gitlab_id,
-            $gitlab_project->getName(),
             $gitlab_project->getPathWithNamespace(),
             $gitlab_project->getDescription(),
             $gitlab_project->getWebUrl(),

@@ -98,7 +98,6 @@ class GitlabRepositoryCreatorTest extends TestCase
             12569,
             'Desc',
             'https://example.com/root/project01',
-            'Project 01',
             'root/project01',
             new DateTimeImmutable(),
         );
@@ -206,7 +205,6 @@ class GitlabRepositoryCreatorTest extends TestCase
         return new GitlabRepository(
             1,
             12569,
-            'Project 01',
             'root/project01',
             'Desc',
             'https://example.com/root/project01',

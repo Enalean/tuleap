@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,36 @@
 export function formatRepository(repository) {
     let repository_formatted = {};
 
+    const label = extractLabelFromName(repository.name);
+
     repository_formatted.id = "gitlab_" + repository.id;
     repository_formatted.integration_id = repository.id;
     repository_formatted.description = repository.description;
-    repository_formatted.label = repository.name;
+    repository_formatted.label = label;
     repository_formatted.last_update_date = repository.last_push_date;
-    repository_formatted.normalized_path = repository.path;
+    repository_formatted.normalized_path = repository.name;
     repository_formatted.additional_information = [];
-    repository_formatted.path_without_project = repository.path.replace("/" + repository.name, "");
+    repository_formatted.path_without_project = extractPathWithoutProject(repository.name, label);
     repository_formatted.gitlab_data = {
         full_url: repository.full_url,
         gitlab_id: repository.gitlab_id,
     };
 
     return repository_formatted;
+}
+
+function extractLabelFromName(repository_name) {
+    if (repository_name.lastIndexOf("/") === -1) {
+        return repository_name;
+    }
+
+    return repository_name.substr(repository_name.lastIndexOf("/") + 1);
+}
+
+function extractPathWithoutProject(repository_name, label) {
+    if (repository_name === label) {
+        return "";
+    }
+
+    return repository_name.replace("/" + label, "");
 }
