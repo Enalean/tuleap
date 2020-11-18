@@ -17,18 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import hotkeys from "hotkeys-js";
-import { closeExistingModal } from "./close-existing-modal";
-import { Shortcut, ShortcutsGroup } from "./type";
+export interface Shortcut {
+    readonly keyboard_inputs: string;
+    readonly handle: (event: KeyboardEvent) => void;
+}
 
-export { Shortcut, ShortcutsGroup };
-
-export function addShortcutsGroupToPlugin(doc: Document, shortcut_group: ShortcutsGroup): void {
-    shortcut_group.shortcuts.forEach((shortcut) => {
-        hotkeys(shortcut.keyboard_inputs, (event) => {
-            event.preventDefault();
-            closeExistingModal(doc);
-            shortcut.handle(event);
-        });
-    });
+export interface ShortcutsGroup {
+    readonly shortcuts: Array<Shortcut>;
 }
