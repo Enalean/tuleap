@@ -99,9 +99,10 @@ final class GitlabRepositoryResource
      *
      * @throws RestException 400
      * @throws RestException 401
+     * @throws RestException 404
      *
      */
-    public function createGitlabRepository(GitlabRepositoryPOSTRepresentation $gitlab_repository): GitlabRepositoryRepresentation
+    protected function createGitlabRepository(GitlabRepositoryPOSTRepresentation $gitlab_repository): GitlabRepositoryRepresentation
     {
         $this->options();
 
@@ -117,6 +118,12 @@ final class GitlabRepositoryResource
         $stream_factory  = HTTPFactoryBuilder::streamFactory();
         $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
         $gitlab_api_client = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
+
+        $current_user = UserManager::instance()->getCurrentUser();
+        if (! $this->getGitPermissionsManager()->userIsGitAdmin($current_user, $project)) {
+            throw new RestException(401, "User must be Git administrator.");
+        }
+
         try {
             $gitlab_api_project = (new GitlabProjectBuilder($gitlab_api_client))->getProjectFromGitlabAPI(
                 $credentials,
