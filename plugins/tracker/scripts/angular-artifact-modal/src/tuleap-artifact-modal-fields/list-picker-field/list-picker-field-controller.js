@@ -49,23 +49,22 @@ function ListPickerController($element) {
     }
 
     function getOptions() {
+        let options = { is_filterable: true };
         if (self.field.bindings.type === "users") {
-            return {
-                items_template_formatter: async (value_id, label) => {
-                    const value = value_id.split(":")[1];
-                    if (value === "100") {
-                        return label;
-                    }
+            options.items_template_formatter = async (value_id, label) => {
+                const value = value_id.split(":")[1];
+                if (value === "100") {
+                    return label;
+                }
 
-                    const response = await get(`/api/users/${encodeURIComponent(value)}`);
-                    const user_representation = await response.json();
-                    const avatar_url = user_representation.avatar_url;
+                const response = await get(`/api/users/${encodeURIComponent(value)}`);
+                const user_representation = await response.json();
+                const avatar_url = user_representation.avatar_url;
 
-                    return `<img class="tlp-avatar tlp-avatar-mini tuleap-artifact-modal-list-field-avatar" src="${avatar_url}"/>${label}`;
-                },
+                return `<img class="tlp-avatar tlp-avatar-mini tuleap-artifact-modal-list-field-avatar" src="${avatar_url}"/>${label}`;
             };
         }
 
-        return {};
+        return options;
     }
 }
