@@ -20,7 +20,7 @@
 @import '../../default/css/style';
 @import './tracker-creation';
 
-@mixin definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info) {
+@mixin definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info) {
     /* stylelint-disable-next-line selector-class-pattern,selector-id-pattern */
     .widget_content #tracker_report_table > thead > tr > th {
         border-bottom-color: #b2b2b2;
@@ -137,15 +137,15 @@
     }
 
     .move-artifact-display-more-field-not-migrated {
-        color: $ui-color-danger;
+        color: $tlp-ui-danger;
     }
 
     .move-artifact-display-more-field-partially-migrated {
-        color: darken($ui-color-warning, 10%);
+        color: darken($tlp-ui-warning, 10%);
     }
 
     .move-artifact-display-more-field-fully-migrated {
-        color: darken($ui-color-info, 30%);
+        color: darken($tlp-ui-info, 30%);
     }
 
     .tracker-form-element-artifactlink-section-loading {
@@ -188,31 +188,31 @@
 body {
     &.FlamingParrot_Orange { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
-        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
     }
 
     &.FlamingParrot_Blue { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
-        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
     }
 
     &.FlamingParrot_Green { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
-        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
     }
 
     &.FlamingParrot_BlueGrey { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
     }
 
     &.FlamingParrot_Purple { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
-        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
     }
 
     &.FlamingParrot_Red { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
-        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
     }
 }

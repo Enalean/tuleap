@@ -72,10 +72,10 @@ kbd {
     margin: 10px 0;
     padding: 20px;
     border: 0;
-    border-left: 5px solid $ui-color-warning;
+    border-left: 5px solid $tlp-ui-warning;
     border-radius: 3px;
-    background: transparentize($ui-color-warning, .9);
-    color: darken($ui-color-warning, 10%);
+    background: transparentize($tlp-ui-warning, .9);
+    color: darken($tlp-ui-warning, 10%);
     list-style: none;
     text-shadow: none;
 
@@ -83,40 +83,24 @@ kbd {
         margin: 0 0 20px;
         color: inherit;
     }
-
-    &.alert-absolute {
-        background: $ui-color-warning-light;
-    }
 }
 
 .alert-success {
-    border-left-color: $ui-color-success;
-    background: transparentize($ui-color-success, .9);
-    color: $ui-color-success;
-
-    &.alert-absolute {
-        background: $ui-color-success-light;
-    }
+    border-left-color: $tlp-ui-success;
+    background: transparentize($tlp-ui-success, .9);
+    color: $tlp-ui-success;
 }
 
 .alert-info {
-    border-left-color: $ui-color-info;
-    background: transparentize($ui-color-info, .9);
-    color: darken($ui-color-info, 30%);
-
-    &.alert-absolute {
-        background: $ui-color-info-light;
-    }
+    border-left-color: $tlp-ui-info;
+    background: transparentize($tlp-ui-info, .9);
+    color: darken($tlp-ui-info, 30%);
 }
 
 .alert-error {
-    border-left-color: $ui-color-danger;
-    background: transparentize($ui-color-danger, .9);
-    color: $ui-color-danger;
-
-    &.alert-absolute {
-        background: $ui-color-danger-light;
-    }
+    border-left-color: $tlp-ui-danger;
+    background: transparentize($tlp-ui-danger, .9);
+    color: $tlp-ui-danger;
 }
 
 @each $color-name, $colors in $swatch-color-map {
@@ -450,19 +434,19 @@ legend {
     }
 
     &.btn-danger {
-        @include btn($ui-color-danger, $white);
+        @include btn($tlp-ui-danger, $white);
     }
 
     &.btn-success {
-        @include btn($ui-color-success, $white);
+        @include btn($tlp-ui-success, $white);
     }
 
     &.btn-warning {
-        @include btn($ui-color-warning, $white);
+        @include btn($tlp-ui-warning, $white);
     }
 
     &.btn-info {
-        @include btn($ui-color-info, $white);
+        @include btn($tlp-ui-info, $white);
     }
 
     &:hover:not(:disabled):not(.disabled):not(.active) {
@@ -473,19 +457,19 @@ legend {
         }
 
         &.btn-danger {
-            @include btn-hover($ui-color-danger);
+            @include btn-hover($tlp-ui-danger);
         }
 
         &.btn-success {
-            @include btn-hover($ui-color-success);
+            @include btn-hover($tlp-ui-success);
         }
 
         &.btn-warning {
-            @include btn-hover($ui-color-warning);
+            @include btn-hover($tlp-ui-warning);
         }
 
         &.btn-info {
-            @include btn-hover($ui-color-info);
+            @include btn-hover($tlp-ui-info);
         }
     }
 }
@@ -537,7 +521,7 @@ legend {
     color: $white;
 
     &.modal-header-error {
-        background: $ui-color-danger;
+        background: $tlp-ui-danger;
     }
 
     i {

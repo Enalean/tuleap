@@ -43,14 +43,14 @@
     border-radius: 50%;
 
     &.btn-danger {
-        @include override-navbar-important-definitions($ui-color-danger);
+        @include override-navbar-important-definitions($tlp-ui-danger);
     }
 
     &.btn-warning {
-        @include override-navbar-important-definitions($ui-color-warning);
+        @include override-navbar-important-definitions($tlp-ui-warning);
     }
 
     &.btn-info {
-        @include override-navbar-important-definitions($ui-color-info);
+        @include override-navbar-important-definitions($tlp-ui-info);
     }
 }
