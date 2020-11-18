@@ -24,6 +24,7 @@
         type="button"
         v-on:click="showNewDocumentModal()"
         data-test="docman-new-item-button"
+        data-shortcut-create-document
     >
         <i class="fa fa-plus tlp-button-icon"></i>
         <translate>New document</translate>

@@ -25,6 +25,7 @@ import {
 
 import { Direction, GettextProvider } from "../type";
 import { callNavigationShortcut } from "./handle-navigation-shortcut";
+import { clickOnDatashortcutElement } from "./click-on-datashortcut-element";
 
 export function setupDocumentShortcuts(gettext_provider: GettextProvider): void {
     const move_to_bottom_file: Shortcut = {
@@ -59,16 +60,176 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
         },
     };
 
+    const toggle_folder: Shortcut = {
+        keyboard_inputs: "right",
+        description: gettext_provider.$gettext("Toggle selected folder open and closed"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-folder-toggle]");
+        },
+    };
+
+    const search_document: Shortcut = {
+        keyboard_inputs: "f",
+        description: gettext_provider.$gettext("Focus the document search bar"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-search-document]");
+        },
+    };
+
+    const create_new_document: Shortcut = {
+        keyboard_inputs: "n",
+        description: gettext_provider.$gettext("Create new document in current or selected folder"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-create-document]");
+        },
+    };
+
+    const create_new_folder: Shortcut = {
+        keyboard_inputs: "b",
+        description: gettext_provider.$gettext("Create new folder in current or selected folder"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-create-folder]");
+        },
+    };
+
+    const create_document_new_version: Shortcut = {
+        keyboard_inputs: "u",
+        description: gettext_provider.$gettext("Create new version of selected document"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-new-version]");
+        },
+    };
+
+    const lock_unlock_document: Shortcut = {
+        keyboard_inputs: "l",
+        description: gettext_provider.$gettext("Lock and unlock selected document"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-lock-document]");
+        },
+    };
+
+    const update_document_properties: Shortcut = {
+        keyboard_inputs: "e",
+        description: gettext_provider.$gettext(
+            "Update current folder's or selected item's properties"
+        ),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-update-properties]");
+        },
+    };
+
+    const delete_document: Shortcut = {
+        keyboard_inputs: "delete",
+        description: gettext_provider.$gettext("Delete current folder or selected item"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-delete]");
+        },
+    };
+
+    const cut_document: Shortcut = {
+        keyboard_inputs: "ctrl+x",
+        description: gettext_provider.$gettext("Cut current folder or selected item"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-cut]");
+        },
+    };
+
+    const copy_document: Shortcut = {
+        keyboard_inputs: "ctrl+c",
+        description: gettext_provider.$gettext("Copy current folder or selected item"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-copy]");
+        },
+    };
+
+    const paste_document: Shortcut = {
+        keyboard_inputs: "ctrl+v",
+        description: gettext_provider.$gettext("Paste in current or selected folder"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-paste]");
+        },
+    };
+
+    const download_folder: Shortcut = {
+        keyboard_inputs: "z",
+        description: gettext_provider.$gettext("Download current or selected folder as zip"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-download-zip]");
+        },
+    };
+
+    const open_document_notifications: Shortcut = {
+        keyboard_inputs: "m",
+        description: gettext_provider.$gettext(
+            "Open current folder's or selected item's notifications settings"
+        ),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-notifications]");
+        },
+    };
+
+    const open_document_history: Shortcut = {
+        keyboard_inputs: "h",
+        description: gettext_provider.$gettext("Open current folder's or selected item's history"),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-history]");
+        },
+    };
+
+    const open_document_permissions: Shortcut = {
+        keyboard_inputs: "p",
+        description: gettext_provider.$gettext(
+            "Open current folder's or selected item's permissions settings"
+        ),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-permissions]");
+        },
+    };
+
+    const open_document_approval_tables: Shortcut = {
+        keyboard_inputs: "v",
+        description: gettext_provider.$gettext(
+            "Open current folder's or selected item's approval tables"
+        ),
+        handle: () => {
+            clickOnDatashortcutElement(document, "[data-shortcut-approval-tables]");
+        },
+    };
+
     const document_navigation_shortcuts_group: ShortcutsGroup = {
-        title: gettext_provider.$gettext("Documents service"),
-        cells_id: "document-service",
+        title: gettext_provider.$gettext("Navigation in Documents service"),
+        cells_id: "documents-service-navigation",
         shortcuts: [
             move_to_top_file,
             move_to_bottom_file,
             move_to_previous_file,
             move_to_next_file,
+            toggle_folder,
+            search_document,
+        ],
+    };
+
+    const document_dropdown_shortcuts_group: ShortcutsGroup = {
+        title: gettext_provider.$gettext("Actions in Documents service"),
+        cells_id: "documents-service-actions",
+        shortcuts: [
+            create_new_document,
+            create_new_folder,
+            create_document_new_version,
+            lock_unlock_document,
+            update_document_properties,
+            delete_document,
+            cut_document,
+            copy_document,
+            paste_document,
+            download_folder,
+            open_document_notifications,
+            open_document_history,
+            open_document_permissions,
+            open_document_approval_tables,
         ],
     };
 
     addShortcutsGroup(document, document_navigation_shortcuts_group);
+    addShortcutsGroup(document, document_dropdown_shortcuts_group);
 }

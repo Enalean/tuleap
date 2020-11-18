@@ -25,6 +25,7 @@
         v-on:click="copyItem(item)"
         v-bind:class="{ 'tlp-dropdown-menu-item-disabled': pasting_in_progress }"
         v-bind:disabled="pasting_in_progress"
+        data-shortcut-copy
     >
         <i class="fa fa-fw fa-copy tlp-dropdown-menu-item-icon"></i>
         <translate>Copy</translate>

@@ -43,6 +43,7 @@
             v-bind:href="getUrlForPane(NOTIFS_PANE_NAME)"
             class="tlp-dropdown-menu-item"
             role="menuitem"
+            data-shortcut-notifications
         >
             <i class="far fa-fw fa-bell tlp-dropdown-menu-item-icon"></i>
             <span v-translate>Notifications</span>
@@ -51,6 +52,7 @@
             v-bind:href="getUrlForPane(HISTORY_PANE_NAME)"
             class="tlp-dropdown-menu-item"
             role="menuitem"
+            data-shortcut-history
         >
             <i class="fa fa-fw fa-history tlp-dropdown-menu-item-icon"></i>
             <span v-translate>History</span>
@@ -62,6 +64,7 @@
             class="tlp-dropdown-menu-item"
             role="menuitem"
             data-test="document-dropdown-approval-tables"
+            data-shortcut-approval-tables
         >
             <i class="far fa-fw fa-check-square tlp-dropdown-menu-item-icon"></i>
             <span v-translate>Approval tables</span>

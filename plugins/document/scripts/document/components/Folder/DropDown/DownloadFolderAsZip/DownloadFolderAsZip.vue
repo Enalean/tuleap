@@ -24,6 +24,7 @@
         role="menuitem"
         data-test="download-as-zip-button"
         v-on:click="checkFolderSize"
+        data-shortcut-download-zip
     >
         <i
             class="fa fa-fw tlp-dropdown-menu-item-icon"

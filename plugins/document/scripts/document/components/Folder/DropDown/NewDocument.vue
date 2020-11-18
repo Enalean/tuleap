@@ -25,6 +25,7 @@
         role="menuitem"
         v-on:click.prevent="showNewDocumentModal"
         data-test="document-new-item"
+        data-shortcut-create-document
     >
         <i class="fa fa-fw fa-plus tlp-dropdown-menu-item-icon"></i>
         <translate>New document</translate>

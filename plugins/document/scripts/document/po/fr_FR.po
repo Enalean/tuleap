@@ -66,6 +66,9 @@ msgstr ""
 msgid "A folder already exists with the same title."
 msgstr "Un dossier existe déjà avec le même titre."
 
+msgid "Actions in Documents service"
+msgstr "Actions dans le service Documents"
+
 msgid "Administration"
 msgstr "Administration"
 
@@ -132,6 +135,9 @@ msgstr "Contenu"
 msgid "Copy"
 msgstr "Copier"
 
+msgid "Copy current folder or selected item"
+msgstr "Copier le dossier courant ou l'élément sélectionné"
+
 msgid "Copy the previous approval table."
 msgstr "Copier la table d'approbation précédente."
 
@@ -147,8 +153,17 @@ msgstr "Créer le document"
 msgid "Create folder"
 msgstr "Créer le dossier"
 
+msgid "Create new document in current or selected folder"
+msgstr "Créer un nouveau document dans le dossier courant ou sélectionné"
+
+msgid "Create new folder in current or selected folder"
+msgstr "Créer un nouveau dossier dans le dossier courant ou sélectionné"
+
 msgid "Create new version"
 msgstr "Créer une nouvelle version"
+
+msgid "Create new version of selected document"
+msgstr "Créer une nouvelle version du document sélectionné"
 
 msgid "Creation"
 msgstr "Création"
@@ -159,11 +174,17 @@ msgstr "État de la table d’approbation actuel: %{ table_state }."
 msgid "Cut"
 msgstr "Couper"
 
+msgid "Cut current folder or selected item"
+msgstr "Couper le dossier courant ou l'élément sélectionné"
+
 msgid "Default properties"
 msgstr "Propriétés par défaut"
 
 msgid "Delete"
 msgstr "Supprimer"
+
+msgid "Delete current folder or selected item"
+msgstr "Supprimer le dossier courant ou l'élément sélectionné"
 
 msgid ""
 "Depending on the speed of your network, it can take some time to complete.\n"
@@ -184,9 +205,6 @@ msgstr "Document verrouillé par %s."
 msgid "Documents"
 msgstr "Documents"
 
-msgid "Documents service"
-msgstr "Service Documents"
-
 msgid "Download"
 msgstr "Télécharger"
 
@@ -195,6 +213,9 @@ msgstr "Télécharger quand même"
 
 msgid "Download as zip"
 msgstr "Télécharger au format zip"
+
+msgid "Download current or selected folder as zip"
+msgstr "Télécharger le dossier courant ou sélectionné au format zip"
 
 msgid "Draft"
 msgstr "Brouillon"
@@ -245,6 +266,9 @@ msgstr "Taille du fichier"
 
 msgid "Fixed date"
 msgstr "Date fixe"
+
+msgid "Focus the document search bar"
+msgstr "Se placer dans la barre de recherche"
 
 msgid "Go to Document manager home page"
 msgstr "Aller à la page d'accueil du service Gestion de documents"
@@ -298,6 +322,9 @@ msgstr "Lien"
 msgid "Lock"
 msgstr "Verrouiller"
 
+msgid "Lock and unlock selected document"
+msgstr "Verrouiller et déverrouiller le document sélectionné"
+
 msgid "Lock new version"
 msgstr "Verrouiller la nouvelle version"
 
@@ -336,6 +363,9 @@ msgstr "Nom, description..."
 
 msgid "Narrow view"
 msgstr "Vue étroite"
+
+msgid "Navigation in Documents service"
+msgstr "Navigation dans le service Documents"
 
 msgid "New document"
 msgstr "Nouveau document"
@@ -380,6 +410,24 @@ msgid_plural "Oops… Unable to upload files"
 msgstr[0] "Oups… Impossible de téléverser un fichier"
 msgstr[1] "Oups… Impossible de téléverser des fichiers"
 
+msgid "Open current folder's or selected item's approval tables"
+msgstr ""
+"Ouvrir les tables d'approbation du dossier courant ou de l'élément "
+"sélectionné"
+
+msgid "Open current folder's or selected item's history"
+msgstr "Ouvrir l'historique du dossier courant ou de l'élément sélectionné"
+
+msgid "Open current folder's or selected item's notifications settings"
+msgstr ""
+"Ouvrir les paramètres de notification du dossier courant ou de l'élément "
+"sélectionné"
+
+msgid "Open current folder's or selected item's permissions settings"
+msgstr ""
+"Ouvrir les paramètres de permissions du dossier courant ou de l'élément "
+"sélectionné"
+
 msgid "Open dropdown menu"
 msgstr "Ouvrir le menu déroulant"
 
@@ -398,6 +446,9 @@ msgstr ""
 
 msgid "Paste"
 msgstr "Coller"
+
+msgid "Paste in current or selected folder"
+msgstr "Coller dans le dossier courant ou sélectionné"
 
 msgid "Permanent"
 msgstr "Permanent"
@@ -573,11 +624,18 @@ msgstr "Titre"
 msgid "Today"
 msgstr "Aujourd'hui"
 
+msgid "Toggle selected folder open and closed"
+msgstr "Ouvrir ou fermer le dossier sélectionné"
+
 msgid "URL"
 msgstr "URL"
 
 msgid "Unlock"
 msgstr "Déverrouiller"
+
+msgid "Update current folder's or selected item's properties"
+msgstr ""
+"Mettre à jour les propriétés du dossier courant ou de l'élément sélectionné"
 
 msgid "Update permissions"
 msgstr "Mettre à jour les permissions"

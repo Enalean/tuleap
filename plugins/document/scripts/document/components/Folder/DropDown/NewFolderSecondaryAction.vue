@@ -25,6 +25,7 @@
         role="menuitem"
         v-if="is_item_a_folder(item) && item.user_can_write"
         data-test="document-new-folder-creation-button"
+        data-shortcut-create-folder
     >
         <i class="far fa-fw fa-folder-open tlp-dropdown-menu-item-icon"></i>
         <translate>New folder</translate>
