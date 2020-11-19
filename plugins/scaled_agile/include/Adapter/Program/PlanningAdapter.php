@@ -25,7 +25,6 @@ namespace Tuleap\ScaledAgile\Adapter\Program;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningFotFoundException;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ScaledAgile\TrackerData;
 
@@ -56,21 +55,6 @@ final class PlanningAdapter
         }
 
         return $this->buildFromPlanning($root_planning);
-    }
-
-    /**
-     * @throws PlanningFotFoundException
-     * @throws TopPlanningNotFoundInProjectException
-     */
-    public function buildPlanningById(int $id): PlanningData
-    {
-        $planning = $this->planning_factory->getPlanning($id);
-
-        if (! $planning) {
-            throw new PlanningFotFoundException($id);
-        }
-
-        return $this->buildFromPlanning($planning);
     }
 
     public static function buildFromPlanning(\Planning $planning): PlanningData

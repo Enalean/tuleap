@@ -27,12 +27,11 @@ class Planning_PlanningOutOfHierarchyAdminPresenter extends Planning_PlanningAdm
     private $root_planning_name;
 
     public function __construct(
-        EventManager $event_manager,
         Planning $planning,
         ?Planning $root_planning,
         bool $is_planning_removal_dangerous
     ) {
-        parent::__construct($event_manager, $planning, $root_planning, $is_planning_removal_dangerous);
+        parent::__construct($planning, $is_planning_removal_dangerous);
 
         if ($root_planning) {
             $this->root_planning_name = $root_planning->getName();

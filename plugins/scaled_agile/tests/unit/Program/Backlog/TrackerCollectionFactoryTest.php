@@ -29,7 +29,6 @@ use Planning;
 use Project;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
-use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -86,8 +85,6 @@ final class TrackerCollectionFactoryTest extends TestCase
         $project            = new \Project(
             ['group_id' => 101, 'unix_group_name' => "project_name", 'group_name' => 'Public Name']
         );
-        $tracker            = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $this->tracker_data = TrackerDataAdapter::build($tracker);
         $this->project_data = ProjectDataAdapter::build($project);
     }
 

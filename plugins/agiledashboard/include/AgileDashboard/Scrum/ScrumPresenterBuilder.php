@@ -167,16 +167,13 @@ class ScrumPresenterBuilder
 
             if (isset($planning_out_of_hierarchy[$planning->getId()])) {
                 $plannings[] = new Planning_PlanningOutOfHierarchyAdminPresenter(
-                    $this->event_manager,
                     $planning,
                     $root_planning,
                     $is_planning_removal_dangerous
                 );
             } else {
                 $plannings[] = new Planning_PlanningAdminPresenter(
-                    $this->event_manager,
                     $planning,
-                    $root_planning,
                     $is_planning_removal_dangerous
                 );
             }

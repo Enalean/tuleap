@@ -27,7 +27,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
-use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ArtifactData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
@@ -172,7 +171,7 @@ final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
             false
         );
         $tracker->setProject($project);
-        return TrackerDataAdapter::build($tracker);
+        return new TrackerData($tracker);
     }
 
     private function buildSynchronizedFields(

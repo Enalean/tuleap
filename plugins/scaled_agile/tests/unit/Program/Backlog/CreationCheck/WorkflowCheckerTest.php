@@ -30,7 +30,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Synchroniz
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
-use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
+use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class WorkflowCheckerTest extends TestCase
@@ -98,7 +98,7 @@ final class WorkflowCheckerTest extends TestCase
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                new ProgramIncrementsTrackerCollection([TrackerDataAdapter::build($tracker)]),
+                new ProgramIncrementsTrackerCollection([new TrackerData($tracker)]),
                 new SynchronizedFieldDataFromProgramAndTeamTrackersCollection()
             )
         );
@@ -116,7 +116,7 @@ final class WorkflowCheckerTest extends TestCase
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                new ProgramIncrementsTrackerCollection([TrackerDataAdapter::build($tracker)]),
+                new ProgramIncrementsTrackerCollection([new TrackerData($tracker)]),
                 new SynchronizedFieldDataFromProgramAndTeamTrackersCollection()
             )
         );
@@ -135,7 +135,7 @@ final class WorkflowCheckerTest extends TestCase
 
         $this->assertFalse(
             $this->checker->areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
-                new ProgramIncrementsTrackerCollection([TrackerDataAdapter::build($tracker)]),
+                new ProgramIncrementsTrackerCollection([new TrackerData($tracker)]),
                 new SynchronizedFieldDataFromProgramAndTeamTrackersCollection()
             )
         );

@@ -29,7 +29,6 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerColl
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\ScaledAgile\ProjectData;
 use Tuleap\ScaledAgile\TrackerData;
-use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
@@ -77,7 +76,7 @@ final class SemanticCheckerTest extends TestCase
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
         $program_milestone    = new PlanningData(
-            TrackerDataAdapter::build($top_planning_tracker),
+            new TrackerData($top_planning_tracker),
             1,
             'Release Planning',
             [],
@@ -117,7 +116,7 @@ final class SemanticCheckerTest extends TestCase
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
         $program_milestone    = new PlanningData(
-            TrackerDataAdapter::build($top_planning_tracker),
+            new TrackerData($top_planning_tracker),
             1,
             'Release Planning',
             [],
@@ -140,7 +139,7 @@ final class SemanticCheckerTest extends TestCase
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
         $program_milestone    = new PlanningData(
-            TrackerDataAdapter::build($top_planning_tracker),
+            new TrackerData($top_planning_tracker),
             1,
             'Release Planning',
             [],
@@ -165,7 +164,7 @@ final class SemanticCheckerTest extends TestCase
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
         $program_milestone    = new PlanningData(
-            TrackerDataAdapter::build($top_planning_tracker),
+            new TrackerData($top_planning_tracker),
             1,
             'Release Planning',
             [],
@@ -194,7 +193,7 @@ final class SemanticCheckerTest extends TestCase
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
         $program_milestone    = new PlanningData(
-            TrackerDataAdapter::build($top_planning_tracker),
+            new TrackerData($top_planning_tracker),
             1,
             'Release Planning',
             [],
@@ -225,7 +224,7 @@ final class SemanticCheckerTest extends TestCase
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
         $program_milestone    = new PlanningData(
-            TrackerDataAdapter::build($top_planning_tracker),
+            new TrackerData($top_planning_tracker),
             1,
             'Release Planning',
             [],
@@ -255,7 +254,7 @@ final class SemanticCheckerTest extends TestCase
 
     private function buildTestTracker(int $tracker_id): TrackerData
     {
-        return TrackerDataAdapter::build(
+        return new TrackerData(
             new \Tracker(
                 $tracker_id,
                 null,

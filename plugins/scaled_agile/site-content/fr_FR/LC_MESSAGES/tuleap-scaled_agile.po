@@ -12,12 +12,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.3.1\n"
 
-msgid "AgileDashboard service not used in project."
-msgstr "Le service AgileDashboard n'est pas utilisé dans le projet."
-
-msgid "Edit"
-msgstr "Éditer"
-
 msgid ""
 "Extension of the Agile Dashboard plugin to allow planning of Backlog items "
 "across projects"
@@ -38,51 +32,5 @@ msgstr ""
 "La modification de l'outil de suivi de jalons de cette planification est "
 "interdite parce que ce projet fait partie d'un backlog d'agilité à l'échelle."
 
-msgid "One of the planning tracker can not be found"
-msgstr "Un des outils de suivi du planning n'a pas été trouvé"
-
-msgid "Plannable Items"
-msgstr "Élements plannifiables"
-
-msgid "Planning Configuration"
-msgstr "Configuration du planning"
-
-msgid "Project not found."
-msgstr "Le projet n'a pas été trouvé."
-
 msgid "Scaled Agile Backlog"
 msgstr "Backlog d'agilité à l'échelle"
-
-msgid "Team Project"
-msgstr "Projet Contributeur"
-
-msgid "Team Projects"
-msgstr "Projets Contributeurs"
-
-msgid ""
-"The following projects contribute to <b>%s</b> by feeding the backlog with "
-"their plannable items. You can edit these by configuring the top planning of "
-"each of the following projects."
-msgstr ""
-"Les projets suivants contribuent à <b>%s</b> en fournissant dans le backlog "
-"leurs élements planifiables. Vous pouvez les éditer en configurant leur "
-"planification de plus haut niveau dans chacun des projets suivants."
-
-msgid "There are no plannable items in any team projects."
-msgstr ""
-"Il n'y a pas d'éléments planifiables dans aucun des projets contributeurs."
-
-msgid "There is no root planning in the project."
-msgstr "Il n'y a pas de planning de plus haut niveau dans le projet."
-
-msgid "This planning does not belong to the project."
-msgstr "Ce planning n'appartient pas au projet."
-
-msgid "This planning does not exist."
-msgstr "Ce planning n'existe pas."
-
-msgid "This planning is not the root planning of the project."
-msgstr "Ce planning n'est pas le planning de plus haut niveau du projet."
-
-msgid "You are not AgileDashboard admin."
-msgstr "Vous n'êtes pas administrateur du service AgileDashboard."

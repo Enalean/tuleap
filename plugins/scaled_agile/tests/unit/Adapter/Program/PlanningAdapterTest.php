@@ -26,8 +26,8 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Planning;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
-use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -61,7 +61,7 @@ final class PlanningAdapterTest extends TestCase
 
         $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturn($planning);
 
-        $tracker_data            = TrackerDataAdapter::build($tracker);
+        $tracker_data            = new TrackerData($tracker);
         $project_data            = ProjectDataAdapter::build($project);
         $expected_built_planning = new PlanningData($tracker_data, 1, "test", [], $project_data);
 
@@ -69,23 +69,5 @@ final class PlanningAdapterTest extends TestCase
         $project_id = 101;
 
         $this->assertEquals($expected_built_planning, $this->adapter->buildRootPlanning($user, $project_id));
-    }
-
-    public function testItBuildAPlanningFromItsId(): void
-    {
-        $planning = new Planning(1, "test", 101, "backlog title", "plan title", []);
-        $project  = new \Project(
-            ['group_id' => 101, 'unix_group_name' => "project_name", 'group_name' => 'Public Name']
-        );
-        $tracker  = TrackerTestBuilder::aTracker()->withId(1)->withProject($project)->build();
-        $planning->setPlanningTracker($tracker);
-
-        $this->planning_factory->shouldReceive('getPlanning')->once()->andReturn($planning);
-
-        $tracker_data            = TrackerDataAdapter::build($tracker);
-        $project_data            = ProjectDataAdapter::build($project);
-        $expected_built_planning = new PlanningData($tracker_data, 1, "test", [], $project_data);
-
-        $this->assertEquals($expected_built_planning, $this->adapter->buildPlanningById(1));
     }
 }
