@@ -1,0 +1,96 @@
+<h1 class="tlp-framed-horizontally tracker-administration-title">
+    {{# dgettext }} tuleap-tracker | Tracker global administration{{/ dgettext }}
+</h1>
+<div class="main-project-tabs">
+    <nav class="tlp-tabs">
+        <a href="{{ trackers_url }}" class="tlp-tab tlp-tab-active">
+            {{# dgettext }}
+                tuleap-tracker |
+                Trackers
+            {{/ dgettext }}
+        </a>
+        <a href="{{ artifact_links_url }}" class="tlp-tab">
+            {{# dgettext }}
+                tuleap-tracker |
+                Artifact links
+            {{/ dgettext }}
+        </a>
+    </nav>
+</div>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon fas fa-list" aria-hidden="true"></i>
+                    {{# dgettext }}
+                        tuleap-tracker |
+                        Trackers
+                    {{/ dgettext }}
+                </h1>
+            </div>
+            <div class="tlp-pane-section">
+                <table class="tlp-table">
+                    <thead>
+                        <tr>
+                            <th>{{# dgettext }} tuleap-tracker | Tracker{{/ dgettext }}</th>
+                            <th>{{# dgettext }} tuleap-tracker | Short name{{/ dgettext }}</th>
+                            <th>{{# dgettext }} tuleap-tracker | Description{{/ dgettext }}</th>
+                            <th>{{# dgettext }} tuleap-tracker | Is promoted{{/ dgettext }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{^ trackers }}
+                            <td colspan="5" class="tlp-table-cell-empty">
+                                {{# dgettext }} tuleap-tracker | There isn't any trackers yet{{/ dgettext }}
+                            </td>
+                        {{/ trackers }}
+                        {{# trackers }}
+                            <tr>
+                                <td>
+                                    <a href="/plugins/tracker/?tracker={{ id }}">{{ label }}</a>
+                                </td>
+                                <td>
+                                    {{ item_name }}
+                                </td>
+                                <td>
+                                    {{ description }}
+                                </td>
+                                <td>
+                                    <form
+                                        method="POST"
+                                        action="{{ promoted_post_url }}"
+                                        class="tlp-switch tlp-switch-mini"
+                                        title="{{# is_promoted }}{{# dgettext }}
+                                            tuleap-tracker | Remove %s from +New dropdown | {{ label }}{{/ dgettext }}{{/ is_promoted }}{{^ is_promoted }}{{# dgettext }}
+                                            tuleap-tracker | Promote %s in the +New dropdown across the project | {{ label }}{{/ dgettext }}{{/ is_promoted }}"
+                                    >
+                                        {{# csrf_token }}
+                                            {{> csrf_token_input }}
+                                        {{/ csrf_token }}
+                                        <input type="hidden" name="tracker_id" value="{{ id }}">
+                                        <input
+                                            type="checkbox"
+                                            id="toggle-promoted-{{ id }}"
+                                            name="is_promoted"
+                                            class="tlp-switch-checkbox toggle-promoted-switch"
+                                            {{# is_promoted }}checked{{/ is_promoted }}
+                                        >
+                                        <label for="toggle-promoted-{{ id }}" class="tlp-switch-button" aria-hidden="true"></label>
+                                    </form>
+                                </td>
+                                <td class="tlp-table-cell-actions">
+                                    <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline" href="{{ admin_url }}">
+                                        <i class="tlp-button-icon fas fa-cogs" aria-hidden="true"></i>
+                                        {{# gettext }}Administration{{/ gettext }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {{/ trackers }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.tracker-administration-title {
-    margin: $tlp-medium-spacing 0 $tlp-title-spacing;
-}
+document.addEventListener("DOMContentLoaded", function () {
+    for (const switch_button of document.querySelectorAll(".toggle-promoted-switch")) {
+        if (!(switch_button instanceof HTMLInputElement)) {
+            continue;
+        }
 
-.tracker-administration-tabs {
-    padding: $tlp-medium-spacing 0 0;
-}
+        const form = switch_button.form;
+        if (!(form instanceof HTMLFormElement)) {
+            continue;
+        }
 
-.trackers-admin-tracker-name {
-    width: 100%;
-}
+        switch_button.addEventListener("change", () => {
+            form.submit();
+        });
+    }
+});

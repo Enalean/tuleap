@@ -42,10 +42,6 @@ class Tracker_GeneralSettings_Presenter // phpcs:ignore PSR1.Classes.ClassDeclar
     /**
      * @var bool
      */
-    public $is_in_new_dropdown;
-    /**
-     * @var bool
-     */
     public $is_semantic_configured_for_insecure_emailgateway;
     /**
      * @var bool
@@ -178,8 +174,7 @@ class Tracker_GeneralSettings_Presenter // phpcs:ignore PSR1.Classes.ClassDeclar
         Tracker_ColorPresenterCollection $color_presenter_collection,
         MailGatewayConfig $config,
         Tracker_ArtifactByEmailStatus $artifactbyemail_status,
-        $cannot_configure_instantiate_for_new_projects,
-        bool $is_in_new_dropdown
+        $cannot_configure_instantiate_for_new_projects
     ) {
         $this->action_url                                    = $action_url;
         $this->cannot_configure_instantiate_for_new_projects = $cannot_configure_instantiate_for_new_projects;
@@ -187,8 +182,6 @@ class Tracker_GeneralSettings_Presenter // phpcs:ignore PSR1.Classes.ClassDeclar
             $tracker->getItemName()
         ) > Tracker::MAX_TRACKER_SHORTNAME_LENGTH;
         $this->max_tracker_length                            = Tracker::MAX_TRACKER_SHORTNAME_LENGTH;
-
-        $this->is_in_new_dropdown = $is_in_new_dropdown;
 
         $this->is_semantic_configured_for_insecure_emailgateway         = $artifactbyemail_status->isSemanticConfigured(
             $tracker

@@ -1713,8 +1713,8 @@ msgstr ""
 msgid "Invalid tracker template."
 msgstr "Le modèle d'outil de suivi selectionné est invalide"
 
-msgid "Is available in \"+ New\" dropdown across the project"
-msgstr "Est disponible dans le menu déroulant \"+ Nouveau\" dans le projet"
+msgid "Is promoted"
+msgstr "Est promu"
 
 msgid "It encountered the following error:"
 msgstr "L'erreur suivante a été remontée :"
@@ -2272,6 +2272,9 @@ msgstr ""
 "Les administrateurs de projet peuvent aussi <a href=\"/project/admin/ugroup."
 "php?group_id=%s\">créer ou modifier</a> des groupes d'utilisateurs."
 
+msgid "Promote %s in the +New dropdown across the project"
+msgstr "Promouvoir %s dans le menu déroulant \"+ Nouveau\" dans tout le projet"
+
 msgid "Provides a textbox containing a list of values, with autocompletion"
 msgstr "Un champ texte contenant une liste de valeurs, avec auto-complétion"
 
@@ -2316,6 +2319,9 @@ msgstr "Rappel: '%1$s' %2$s pour '%3$s'"
 
 msgid "Remove"
 msgstr "Enlever"
+
+msgid "Remove %s from +New dropdown"
+msgstr "Enlève %s du menu déroulant +Nouveau"
 
 msgid "Remove the field from the tooltip"
 msgstr "Enlever le champ du tooltip"
@@ -3402,6 +3408,9 @@ msgstr "Aucun champ avec l'ID:%1$s"
 msgid "There isn't any fields in the tooltip yet."
 msgstr "Il n'y pas encore de champs dans le tooltip."
 
+msgid "There isn't any trackers yet"
+msgstr "Il n'y pas encore d'outil de suivi"
+
 msgid "There isn't anymore fields left to add to the tooltip"
 msgstr "Il n'y a plus aucun champ disponible à ajouter au tooltip"
 
@@ -3567,6 +3576,21 @@ msgid "Tracker %1$s not duplicated"
 msgstr "L'outil de suivi %1$s n'a pas été copié"
 
 #, php-format
+msgid ""
+"Tracker %s will now appear in the +New dropdown on every pages of the project"
+msgstr ""
+"L'outil de suivi %s apparaîtra dans le menu déroulant +Nouveau sur toutes "
+"les pages du projet"
+
+#, php-format
+msgid ""
+"Tracker %s won't appear anymore in the +New dropdown on every pages of the "
+"project"
+msgstr ""
+"L'outil de suivi %s n'apparaîtra plus dans le menu déroulant +Nouveau sur "
+"toutes les pages du projet"
+
+#, php-format
 msgid "Tracker '%1$s' - Deletion Failed -"
 msgstr "Outil de suivi '%1$s' - La destruction a échoué -"
 
@@ -3586,7 +3610,7 @@ msgstr ""
 msgid "Tracker does not exist"
 msgstr "L'outil de suivi n'existe pas."
 
-msgid "Tracker global admininistration"
+msgid "Tracker global administration"
 msgstr "Administration globale des outils de suivi"
 
 msgid "Tracker hierarchy"

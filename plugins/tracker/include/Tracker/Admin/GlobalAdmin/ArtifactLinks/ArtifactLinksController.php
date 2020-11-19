@@ -109,12 +109,12 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         switch ($request->get('func')) {
             case 'edit-artifact-links':
                 $this->updateGlobalAdministration($layout, $project);
-                $layout->redirect(self::getTrackerGlobalAdministrationURL($project));
+                $layout->redirect(self::getURL($project));
                 break;
             case 'use-artifact-link-type':
                 $type_shortname = (string) $request->get('type-shortname');
                 $this->updateArtifactLinkUsage($project, $type_shortname);
-                $GLOBALS['Response']->redirect(self::getTrackerGlobalAdministrationURL($project));
+                $GLOBALS['Response']->redirect(self::getURL($project));
                 break;
             case 'artifact-links':
             default:
@@ -222,7 +222,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         );
     }
 
-    public static function getTrackerGlobalAdministrationURL(Project $project): string
+    public static function getURL(Project $project): string
     {
         return \Tracker::getTrackerGlobalAdministrationURL($project) . '/' . self::URL;
     }
@@ -286,7 +286,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
 
     private function getCSRF(Project $project): CSRFSynchronizerToken
     {
-        return new CSRFSynchronizerToken(self::getTrackerGlobalAdministrationURL($project));
+        return new CSRFSynchronizerToken(self::getURL($project));
     }
 
     public function getProject(array $variables): Project

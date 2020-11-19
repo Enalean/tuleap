@@ -76,6 +76,9 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks\ArtifactLinksController;
+use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\CSRFSynchronizerTokenProvider;
+use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\PromoteTrackersController;
+use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\TrackersDisplayController;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArchiveAndDeleteArtifactTaskBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletor;
@@ -1996,7 +1999,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $r->get('/attachments/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
             $r->get('/attachments/{preview:preview}/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
 
-            $r->addRoute(['GET', 'POST'], '/' . Tracker::GLOBAL_ADMIN_URL . '/{id:\d+}', $this->getRouteHandler('routeGlobalAdminArtifactLinks'));
+            $r->get('/' . Tracker::GLOBAL_ADMIN_URL . '/{id:\d+}', $this->getRouteHandler('routeGlobalAdminTrackers'));
+            $r->post('/' . Tracker::GLOBAL_ADMIN_URL . '/{id:\d+}/' . PromoteTrackersController::URL, $this->getRouteHandler('routeGlobalAdminPromoteTrackers'));
             $r->addRoute(['GET', 'POST'], '/' . Tracker::GLOBAL_ADMIN_URL . '/{id:\d+}/' . ArtifactLinksController::URL, $this->getRouteHandler('routeGlobalAdminArtifactLinks'));
 
             $r->post('/{project_name:[A-z0-9-]+}/jira/project_list', $this->getRouteHandler('routeJiraProjectListController'));
@@ -2012,6 +2016,30 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             ['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'],
             '/uploads/tracker/file/{id:\d+}',
             $this->getRouteHandler('routeUploads')
+        );
+    }
+
+    public function routeGlobalAdminPromoteTrackers(): PromoteTrackersController
+    {
+        return new PromoteTrackersController(
+            ProjectManager::instance(),
+            new TrackerManager(),
+            TrackerFactory::instance(),
+            new TrackerInNewDropdownDao(),
+            new CSRFSynchronizerTokenProvider(),
+            new ProjectHistoryDao()
+        );
+    }
+
+    public function routeGlobalAdminTrackers(): TrackersDisplayController
+    {
+        return new TrackersDisplayController(
+            ProjectManager::instance(),
+            new TrackerManager(),
+            TrackerFactory::instance(),
+            TemplateRendererFactory::build(),
+            new TrackerInNewDropdownDao(),
+            new CSRFSynchronizerTokenProvider(),
         );
     }
 

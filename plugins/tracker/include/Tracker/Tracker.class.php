@@ -1531,7 +1531,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $this->getMailGatewayConfig(),
                 $this->getArtifactByMailStatus(),
                 $cannot_configure_instantiate_for_new_projects,
-                (new \Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao())->isContaining((int) $this->id),
             )
         );
 
@@ -1747,13 +1746,6 @@ class Tracker implements Tracker_Dispatchable_Interface
 
             $artifact_link_value_dao = new ArtifactLinkFieldValueDao();
             $artifact_link_value_dao->updateItemName($this->group_id, $previous_shortname, $this->item_name);
-
-            $in_new_dropdown_dao = new \Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao();
-            if ($request->get('is_in_new_dropdown')) {
-                $in_new_dropdown_dao->insert((int) $this->id);
-            } else {
-                $in_new_dropdown_dao->delete((int) $this->id);
-            }
 
             $dao = new TrackerDao();
             if ($dao->save($this)) {
