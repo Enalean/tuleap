@@ -20,11 +20,8 @@
 
 declare(strict_types=1);
 
-use Tuleap\AgileDashboard\Planning\Admin\PlanningUpdatedEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
@@ -34,8 +31,6 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsA
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
-use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsTrackersDao;
-use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsTrackersUpdater;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
@@ -112,24 +107,6 @@ final class scaled_agilePlugin extends Plugin
     {
         $handler = new RootPlanningEditionHandler(new TeamDao());
         $handler->handle($event);
-    }
-
-    public function planningUpdatedEvent(PlanningUpdatedEvent $event): void
-    {
-        $planning_adapter = $this->getPlanningAdapter();
-
-        $scaled_planning = $planning_adapter->buildFromPlanning($event->getPlanning());
-        (new PlannableItemsTrackersUpdater(
-            new TeamDao(),
-            new PlannableItemsTrackersDao(),
-            new DBTransactionExecutorWithConnection(
-                DBFactory::getMainTuleapDBConnection()
-            ),
-            $planning_adapter
-        ))->updatePlannableItemsTrackersFromPlanning(
-            $scaled_planning,
-            $event->getUser()
-        );
     }
 
     public function displayTopPlanningAppEvent(DisplayTopPlanningAppEvent $event): void

@@ -26,7 +26,6 @@ use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarningsRetriever;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
-use Tuleap\AgileDashboard\Planning\Admin\PlanningUpdatedEvent;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
@@ -701,13 +700,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             try {
                 $this->root_planning_update_checker->checkUpdateIsAllowed($original_planning, $validated_parameters, $user);
                 $this->planning_updater->update($user, $this->project, $updated_planning_id, $validated_parameters);
-
-                //refresh the planning
-                $planning = $this->planning_factory->getPlanning($updated_planning_id);
-                if ($planning !== null) {
-                    $event = new PlanningUpdatedEvent($planning, $user);
-                    $this->event_manager->dispatch($event);
-                }
 
                 $this->addFeedback(
                     Feedback::INFO,
