@@ -23,6 +23,7 @@ import {
     setRepositoriesSortedByPathUserPreference,
     deleteRepositoriesSortedByPathUserPreference,
     getGitlabRepositoryList as getGitlabRepository,
+    postGitlabRepository,
 } from "../api/rest-querier.js";
 import { getProjectId, getUserId } from "../repository-list-presenter.js";
 import {
@@ -191,6 +192,12 @@ async function queryAPIGitlab(credentials, server_url_without_pagination, pagina
     if (response.status !== 200) {
         throw Error();
     }
+
+    return response.json();
+}
+
+export async function postIntegrationGitlab(context, data) {
+    const response = await postGitlabRepository(data);
 
     return response.json();
 }

@@ -27,7 +27,14 @@
         data-test="select-gitlab-repository-modal-form"
     >
         <div class="tlp-modal-body git-repository-create-modal-body">
-            <table class="tlp-table">
+            <div
+                class="tlp-alert-danger"
+                data-test="gitlab-fail-post-repositories"
+                v-if="have_any_rest_error"
+            >
+                {{ message_error_rest }}
+            </div>
+            <table v-else class="tlp-table">
                 <thead>
                     <tr>
                         <th></th>
@@ -39,15 +46,20 @@
                         v-for="repository of repositories"
                         v-bind:key="repository.id"
                         v-bind:data-test="`gitlab-repositories-displayed-${repository.id}`"
+                        v-bind:class="{
+                            'gitlab-disabled-repository-modal': is_repository_disabled(repository),
+                        }"
                     >
                         <td class="gitlab-select-radio-button-container">
                             <label class="tlp-radio">
                                 <input
+                                    v-bind:disabled="is_repository_disabled(repository)"
                                     type="radio"
                                     v-bind:id="repository.id"
                                     v-bind:value="repository"
                                     v-model="selected_repository"
                                     class="gitlab-select-radio-button"
+                                    v-bind:data-test="`gitlab-repository-disabled-${repository.id}`"
                                 />
                             </label>
                         </td>
@@ -55,12 +67,12 @@
                             <img
                                 v-if="repository.avatar_url !== null"
                                 v-bind:src="repository.avatar_url"
-                                v-bind:alt="repository.name_with_namespace"
+                                v-bind:alt="repository.path_with_namespace"
                                 class="gitlab-avatar"
                             />
                         </td>
                         <td>
-                            {{ repository.name_with_namespace }}
+                            {{ label_path(repository) }}
                         </td>
                     </tr>
                 </tbody>
@@ -90,6 +102,10 @@
 </template>
 
 <script>
+import { PROJECT_KEY } from "../../../constants";
+import { mapActions, mapGetters } from "vuex";
+import { getProjectId } from "../../../repository-list-presenter";
+
 export default {
     name: "ListRepositoriesModal",
     props: {
@@ -97,25 +113,80 @@ export default {
             type: Array,
             default: () => [],
         },
+        user_token: {
+            type: String,
+            default: () => "",
+        },
+        server_url: {
+            type: String,
+            default: () => "",
+        },
     },
     data() {
         return {
             selected_repository: null,
             is_loading: false,
+            message_error_rest: "",
         };
     },
     computed: {
+        ...mapGetters(["getGitlabRepositoriesIntegrated"]),
         disabled_button() {
-            return this.selected_repository === null || this.is_loading;
+            return this.selected_repository === null || this.is_loading || this.have_any_rest_error;
+        },
+        have_any_rest_error() {
+            return this.message_error_rest.length > 0;
         },
     },
     methods: {
-        fetchRepositories(event) {
+        ...mapActions(["postIntegrationGitlab"]),
+        async fetchRepositories(event) {
             event.preventDefault();
+            this.is_loading = true;
+            try {
+                await this.postIntegrationGitlab({
+                    gitlab_internal_id: this.selected_repository.id,
+                    gitlab_user_api_token: this.user_token,
+                    gitlab_server_url: this.server_url,
+                    project_id: getProjectId(),
+                });
+
+                this.$store.commit("resetRepositories");
+                this.$store.dispatch("changeRepositories", PROJECT_KEY);
+                this.$emit("on-success-close-modal", { repository: this.selected_repository });
+            } catch (rest_error) {
+                this.has_rest_error = true;
+                await this.handle_error(rest_error);
+            } finally {
+                this.is_loading = false;
+            }
         },
         reset() {
             this.selected_repository = null;
             this.is_loading = false;
+            this.message_error_rest = "";
+        },
+
+        async handle_error(rest_error) {
+            try {
+                const { error } = await rest_error.response.json();
+                this.message_error_rest = error.code + ": " + error.message;
+            } catch (error) {
+                this.message_error_rest = this.$gettext("Oops, an error occurred!");
+            } finally {
+                this.is_loading = false;
+            }
+        },
+        is_repository_disabled(repository) {
+            return this.getGitlabRepositoriesIntegrated.find((repository_integrated) => {
+                return (
+                    repository_integrated.gitlab_data.gitlab_id === repository.id &&
+                    repository_integrated.gitlab_data.full_url === repository.web_url
+                );
+            });
+        },
+        label_path(repository) {
+            return repository.name_with_namespace + " (" + repository.path_with_namespace + ")";
         },
     },
 };

@@ -310,4 +310,37 @@ describe("Store getters", () => {
             expect(result).toEqual(true);
         });
     });
+
+    describe("getGitlabRepositoriesIntegrated", () => {
+        it("will return all Gitlab Repository", () => {
+            state.selected_owner_id = PROJECT_KEY;
+            const git_repository = {
+                label: "vuex",
+                name: "vuex",
+                path: "myproject/vuex.git",
+                path_without_project: "",
+                normalized_path: "vuex",
+            };
+
+            const gitlab_repository = {
+                id: "gitlab_1",
+                integration_id: 1,
+                normalized_path: "MyPath/MyRepo",
+                description: "This is my description.",
+                path_without_project: "MyPath",
+                label: "MyRepo",
+                last_update_date: "2020-10-28T15:13:13+01:00",
+                gitlab_data: {
+                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_id: 1,
+                },
+                additional_information: [],
+            };
+
+            mock_getters.currentRepositoryList = [git_repository, gitlab_repository];
+
+            const result = getters.getGitlabRepositoriesIntegrated(state, mock_getters);
+            expect(result).toEqual([gitlab_repository]);
+        });
+    });
 });

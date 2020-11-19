@@ -19,8 +19,14 @@
 
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
-import { getRepositoryList, getForkedRepositoryList, postRepository } from "./rest-querier.js";
-import { deleteIntegrationGitlab, getGitlabRepositoryList } from "./rest-querier";
+import {
+    getRepositoryList,
+    getForkedRepositoryList,
+    postRepository,
+    deleteIntegrationGitlab,
+    getGitlabRepositoryList,
+    postGitlabRepository,
+} from "./rest-querier.js";
 
 jest.mock("tlp");
 
@@ -147,6 +153,41 @@ describe("API querier", () => {
             expect(tlpDelete).toHaveBeenCalledWith(
                 "/api/v1/gitlab_repositories/" + repository_id + "?project_id=" + project_id
             );
+        });
+    });
+
+    describe("postGitlabRepository", () => {
+        it("Given project id and repository, token and server url, Then api is queried to create new integration", async () => {
+            const project_id = 101;
+            const gitlab_internal_id = 10;
+            const gitlab_user_api_token = "AzRT785";
+            const gitlab_server_url = "https://example.com";
+
+            const headers = {
+                "content-type": "application/json",
+            };
+
+            const body = JSON.stringify({
+                project_id,
+                gitlab_internal_id,
+                gitlab_server_url,
+                gitlab_user_api_token,
+            });
+
+            const tlpPost = jest.spyOn(tlp, "post");
+            mockFetchSuccess(tlpPost);
+
+            await postGitlabRepository({
+                project_id,
+                gitlab_internal_id,
+                gitlab_server_url,
+                gitlab_user_api_token,
+            });
+
+            expect(tlpPost).toHaveBeenCalledWith("/api/gitlab_repositories", {
+                headers,
+                body,
+            });
         });
     });
 });

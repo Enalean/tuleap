@@ -113,9 +113,11 @@ describe("GitlabRepositoryModal", () => {
         expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeFalsy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeTruthy();
 
-        wrapper
-            .findComponent(CredentialsFormModal)
-            .vm.$emit("on-get-gitlab-repositories", [{ id: 10 }]);
+        wrapper.findComponent(CredentialsFormModal).vm.$emit("on-get-gitlab-repositories", {
+            repositories: [{ id: 10 }],
+            token: "Azer7897",
+            server_url: "https://example.com",
+        });
         await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeTruthy();
@@ -123,5 +125,55 @@ describe("GitlabRepositoryModal", () => {
             { id: 10 },
         ]);
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
+    });
+
+    it("When ListRepositoriesModal emits on-success-close-modal, Then success message is displayed", async () => {
+        const wrapper = instantiateComponent();
+
+        wrapper.setData({
+            gitlab_repositories: [
+                { id: 10, label: "My Project", path_with_namespace: "my-path/my-project" },
+            ],
+            back_button_clicked: false,
+        });
+
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        // eslint-disable-next-line jest/prefer-spy-on
+        wrapper.vm.$refs.listRepositoriesModal.reset = jest.fn();
+
+        expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeTruthy();
+        expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
+
+        wrapper.findComponent(ListRepositoriesModal).vm.$emit("on-success-close-modal", {
+            repository: {
+                id: 10,
+                path_with_namespace: "my-path/my-project",
+            },
+        });
+        await wrapper.vm.$nextTick();
+
+        const success_message =
+            "GitLab repository <strong>my-path/my-project</strong> has been successfully integrated!";
+        expect(store.commit).toHaveBeenCalledWith("setSuccessMessage", success_message);
+    });
+
+    it("When CredentialsFormModal emits on-close-modal, Then form is reset", async () => {
+        const wrapper = instantiateComponent();
+
+        wrapper.setData({
+            gitlab_repositories: null,
+        });
+
+        await wrapper.vm.$nextTick();
+
+        // eslint-disable-next-line jest/prefer-spy-on
+        wrapper.vm.$refs.credentialsForm.reset = jest.fn();
+
+        wrapper.findComponent(CredentialsFormModal).vm.$emit("on-close-modal");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$refs.credentialsForm.reset).toHaveBeenCalled();
     });
 });

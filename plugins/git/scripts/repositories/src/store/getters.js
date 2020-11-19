@@ -22,6 +22,12 @@ import { ERROR_TYPE_NO_ERROR, REPOSITORIES_SORTED_BY_PATH } from "../constants.j
 export const currentRepositoryList = (state) =>
     state.repositories_for_owner[state.selected_owner_id];
 
+export const getGitlabRepositoriesIntegrated = (state, getters) => {
+    return getters.currentRepositoryList.filter((repository) => {
+        return repository.gitlab_data !== undefined && repository.gitlab_data !== null;
+    });
+};
+
 export const isCurrentRepositoryListEmpty = (state, getters) =>
     getters.areRepositoriesAlreadyLoadedForCurrentOwner &&
     getters.currentRepositoryList.length === 0;
