@@ -154,6 +154,12 @@ function KanbanCtrl(
             .catch(() => {
                 // ignore the fact that there is no nodejs server
             });
+
+        if (kanban.user_can_add_artifact) {
+            angular
+                .element(`[data-shortcut-create-option][data-tracker-id=${kanban.tracker_id}]`)
+                .on("click", openAddArtifactModal);
+        }
     }
 
     function initViewMode() {

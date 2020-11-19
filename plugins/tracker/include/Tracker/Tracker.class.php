@@ -60,6 +60,7 @@ use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
+use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
@@ -1327,17 +1328,11 @@ class Tracker implements Tracker_Dispatchable_Interface
             );
 
             if ($this->userCanSubmitArtifact($this->getUserManager()->getCurrentUser())) {
+                $link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
                 $params['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
                     sprintf(dgettext("tuleap-tracker", "%s tracker"), $this->getItemName()),
                     [
-                        new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter(
-                            $this->getSubmitUrl(),
-                            sprintf(
-                                dgettext('tuleap-tracker', 'New %s'),
-                                $this->getItemName()
-                            ),
-                            'fa-plus'
-                        )
+                        $link_presenter_builder->build($this)
                     ],
                 );
             }

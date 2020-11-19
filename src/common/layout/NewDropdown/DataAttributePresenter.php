@@ -25,33 +25,20 @@ namespace Tuleap\layout\NewDropdown;
 /**
  * @psalm-immutable
  */
-class NewDropdownLinkPresenter
+class DataAttributePresenter
 {
     /**
      * @var string
      */
-    public $url;
+    public $name;
     /**
      * @var string
      */
-    public $label;
-    /**
-     * @var string
-     */
-    public $icon;
-    /**
-     * @var DataAttributePresenter[]
-     */
-    public $data_attributes;
+    public $value;
 
-    /**
-     * @param DataAttributePresenter[] $data_attributes
-     */
-    public function __construct(string $url, string $label, string $icon, array $data_attributes)
+    public function __construct(string $name, string $value)
     {
-        $this->url             = $url;
-        $this->label           = $label;
-        $this->icon            = $icon;
-        $this->data_attributes = $data_attributes;
+        $this->name = $name;
+        $this->value = $value;
     }
 }

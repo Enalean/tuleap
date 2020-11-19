@@ -36,12 +36,14 @@ class TrackerLinksInNewDropdownCollectorTest extends TestCase
     {
         $bug_tracker = Mockery::mock(\Tracker::class)
             ->shouldReceive([
+                'getId' => 102,
                 'getItemName' => 'bug',
                 'getSubmitUrl' => '/path/to/submit/bugs'
             ])
             ->getMock();
         $story_tracker = Mockery::mock(\Tracker::class)
             ->shouldReceive([
+                'getId' => 103,
                 'getItemName' => 'story',
                 'getSubmitUrl' => '/path/to/submit/story'
             ])
@@ -57,7 +59,7 @@ class TrackerLinksInNewDropdownCollectorTest extends TestCase
             ->shouldReceive('addCurrentProjectLink')
             ->twice();
 
-        $collector = new TrackerLinksInNewDropdownCollector($retriever);
+        $collector = new TrackerLinksInNewDropdownCollector($retriever, new TrackerNewDropdownLinkPresenterBuilder());
         $collector->collect($links_collector);
     }
 
@@ -65,12 +67,14 @@ class TrackerLinksInNewDropdownCollectorTest extends TestCase
     {
         $bug_tracker = Mockery::mock(\Tracker::class)
             ->shouldReceive([
+                'getId' => 102,
                 'getItemName' => 'bug',
                 'getSubmitUrl' => '/path/to/submit/bugs'
             ])
             ->getMock();
         $story_tracker = Mockery::mock(\Tracker::class)
             ->shouldReceive([
+                'getId' => 103,
                 'getItemName' => 'story',
                 'getSubmitUrl' => '/path/to/submit/story'
             ])
@@ -87,7 +91,7 @@ class TrackerLinksInNewDropdownCollectorTest extends TestCase
             ->once();
 
         $current_context_section = new NewDropdownLinkSectionPresenter("section label", [
-            new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus')
+            new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus', [])
         ]);
 
         $links_collector
@@ -95,7 +99,7 @@ class TrackerLinksInNewDropdownCollectorTest extends TestCase
             ->once()
             ->andReturn($current_context_section);
 
-        $collector = new TrackerLinksInNewDropdownCollector($retriever);
+        $collector = new TrackerLinksInNewDropdownCollector($retriever, new TrackerNewDropdownLinkPresenterBuilder());
         $collector->collect($links_collector);
     }
 }
