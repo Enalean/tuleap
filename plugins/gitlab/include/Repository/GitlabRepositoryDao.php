@@ -26,7 +26,7 @@ use Tuleap\DB\DataAccessObject;
 class GitlabRepositoryDao extends DataAccessObject
 {
     /**
-     * @psalm-return list<array{id:int, gitlab_id:int, name:string, path:string, description:string, full_url:string, last_push_date:int}>
+     * @psalm-return list<array{id:int, gitlab_id:int, name:string, description:string, full_url:string, last_push_date:int}>
      */
     public function getGitlabRepositoriesForProject(int $project_id): array
     {
@@ -40,7 +40,7 @@ class GitlabRepositoryDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array{id:int, gitlab_id:int, name:string, path:string, description:string, full_url:string, last_push_date:int}
+     * @psalm-return array{id:int, gitlab_id:int, name:string, description:string, full_url:string, last_push_date:int}
      */
     public function getGitlabRepositoryByIntegrationId(int $id): ?array
     {
@@ -52,7 +52,7 @@ class GitlabRepositoryDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array{id:int, gitlab_id:int, name:string, path:string, description:string, full_url:string, last_push_date:int}
+     * @psalm-return array{id:int, gitlab_id:int, name:string, description:string, full_url:string, last_push_date:int}
      */
     public function getGitlabRepositorByInternalIdAndPath(int $gitlab_id, string $http_path): ?array
     {
@@ -84,7 +84,6 @@ class GitlabRepositoryDao extends DataAccessObject
     public function createGitlabRepository(
         int $gitlab_id,
         string $name,
-        string $path,
         string $description,
         string $full_url,
         int $last_push_date
@@ -94,7 +93,6 @@ class GitlabRepositoryDao extends DataAccessObject
             [
                 'gitlab_id'      => $gitlab_id,
                 'name'           => $name,
-                'path'           => $path,
                 'description'    => $description,
                 'full_url'       => $full_url,
                 'last_push_date' => $last_push_date,

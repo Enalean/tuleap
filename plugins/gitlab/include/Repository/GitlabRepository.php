@@ -46,11 +46,6 @@ class GitlabRepository
     /**
      * @var string
      */
-    private $path;
-
-    /**
-     * @var string
-     */
     private $description;
 
     /**
@@ -67,7 +62,6 @@ class GitlabRepository
         int $id,
         int $gitlab_id,
         string $name,
-        string $path,
         string $description,
         string $full_url,
         DateTimeImmutable $last_push_date
@@ -75,7 +69,6 @@ class GitlabRepository
         $this->id             = $id;
         $this->gitlab_id      = $gitlab_id;
         $this->name           = $name;
-        $this->path           = $path;
         $this->description    = $description;
         $this->full_url       = $full_url;
         $this->last_push_date = $last_push_date;
@@ -94,11 +87,6 @@ class GitlabRepository
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function getPath(): string
-    {
-        return $this->path;
     }
 
     public function getDescription(): string

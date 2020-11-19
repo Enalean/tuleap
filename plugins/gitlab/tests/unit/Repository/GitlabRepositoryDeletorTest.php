@@ -103,7 +103,6 @@ class GitlabRepositoryDeletorTest extends TestCase
         $this->gitlab_repository = new GitlabRepository(
             1,
             156981,
-            'Repo01',
             'root/repo01',
             '',
             'https://example.com/gitlab/root/repo01',

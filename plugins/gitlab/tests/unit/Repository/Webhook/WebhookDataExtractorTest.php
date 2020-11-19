@@ -69,7 +69,6 @@ class WebhookDataExtractorTest extends TestCase
         $this->gitlab_repository = new GitlabRepository(
             1,
             123456,
-            'repo01',
             'path/repo01',
             'description',
             'https://example.com/path/repo01',

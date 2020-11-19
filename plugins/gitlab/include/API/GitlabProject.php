@@ -48,11 +48,6 @@ class GitlabProject
     /**
      * @var string
      */
-    private $name;
-
-    /**
-     * @var string
-     */
     private $path_with_namespace;
 
     /**
@@ -64,14 +59,12 @@ class GitlabProject
         int $id,
         string $description,
         string $web_url,
-        string $name,
         string $path_with_namespace,
         DateTimeImmutable $last_activity_at
     ) {
         $this->id                  = $id;
         $this->description         = $description;
         $this->web_url             = $web_url;
-        $this->name                = $name;
         $this->path_with_namespace = $path_with_namespace;
         $this->last_activity_at    = $last_activity_at;
     }
@@ -89,11 +82,6 @@ class GitlabProject
     public function getWebUrl(): string
     {
         return $this->web_url;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
     }
 
     public function getPathWithNamespace(): string
