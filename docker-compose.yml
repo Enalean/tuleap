@@ -77,6 +77,10 @@ services:
     volumes:
       - gitlab-config:/etc/gitlab
       - gitlab-data:/var/opt/gitlab
+    networks:
+      default:
+        aliases:
+          - gitlab.local
 
   db55:
     image: mysql:5.5

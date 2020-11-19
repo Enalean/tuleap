@@ -351,6 +351,12 @@ deploy-mailhog-conf:
 stop-distlp:
 	@$(SUDO) docker-compose -f docker-compose-distlp.yml stop
 
+start-gitlab:
+	@echo "Start gitlab instance for your Tuleap dev"
+	$(DOCKER_COMPOSE) up -d gitlab
+	@echo "You should update your own /etc/hosts with: "
+	@echo "$(call get_ip_addr,gitlab) gitlab.local"
+
 start-gerrit:
 	@$(DOCKER_COMPOSE) up -d gerrit
 	@echo "You should update /etc/hosts with: "
