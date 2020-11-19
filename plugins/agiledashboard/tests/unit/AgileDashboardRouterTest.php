@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\Kanban\NewDropdownCurrentContextSectionForKanbanProvider;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
@@ -88,7 +89,8 @@ final class AgileDashboardRouterTest extends \PHPUnit\Framework\TestCase //phpcs
                 Mockery::mock(AgileDashboard_XMLExporter::class),
                 Mockery::mock(\Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker::class),
                 Mockery::mock(\Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder::class),
-                new \Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator()
+                new \Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator(),
+                Mockery::mock(NewDropdownCurrentContextSectionForKanbanProvider::class)
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 

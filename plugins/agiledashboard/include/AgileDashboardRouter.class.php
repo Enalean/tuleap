@@ -31,6 +31,7 @@ use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
+use Tuleap\AgileDashboard\Kanban\NewDropdownCurrentContextSectionForKanbanProvider;
 use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\AgileDashboard\Kanban\ShowKanbanController;
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
@@ -177,6 +178,10 @@ class AgileDashboardRouter
      * @var UpdateRequestValidator
      */
     private $update_request_validator;
+    /**
+     * @var NewDropdownCurrentContextSectionForKanbanProvider
+     */
+    private $current_context_section_for_kanban_provider;
 
     public function __construct(
         Plugin $plugin,
@@ -205,7 +210,8 @@ class AgileDashboardRouter
         AgileDashboard_XMLExporter $agile_dashboard_exporter,
         UpdateIsAllowedChecker $root_planning_update_checker,
         PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
-        UpdateRequestValidator $update_request_validator
+        UpdateRequestValidator $update_request_validator,
+        NewDropdownCurrentContextSectionForKanbanProvider $current_context_section_for_kanban_provider
     ) {
         $this->plugin                             = $plugin;
         $this->milestone_factory                  = $milestone_factory;
@@ -234,6 +240,8 @@ class AgileDashboardRouter
         $this->root_planning_update_checker       = $root_planning_update_checker;
         $this->planning_edition_presenter_builder = $planning_edition_presenter_builder;
         $this->update_request_validator           = $update_request_validator;
+
+        $this->current_context_section_for_kanban_provider = $current_context_section_for_kanban_provider;
     }
 
     /**
@@ -345,6 +353,13 @@ class AgileDashboardRouter
                     'body_class'                 => ['agiledashboard_kanban', 'agiledashboard-body'],
                     Layout::INCLUDE_FAT_COMBINED => false,
                 ];
+                $current_section = $this->current_context_section_for_kanban_provider->getSectionByKanbanId(
+                    (int) $request->get('id'),
+                    $request->getCurrentUser()
+                );
+                if ($current_section) {
+                    $header_options['new_dropdown_current_context_section'] = $current_section;
+                }
 
                 $tracker_factory = TrackerFactory::instance();
                 $controller = new ShowKanbanController(
