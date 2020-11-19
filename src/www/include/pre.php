@@ -155,6 +155,7 @@ if (! IS_SCRIPT) {
     $csp_rules                .= "connect-src *; ";
     $csp_rules                .= "child-src *; ";
     $csp_rules                .= "upgrade-insecure-requests; ";
+    $csp_rules                .= "report-uri /csp-violation; ";
 
     header("Content-Security-Policy: default-src 'none'; base-uri 'self'; $csp_rules");
 }

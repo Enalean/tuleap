@@ -53,6 +53,7 @@ use Tuleap\Admin\ProjectWidgetsConfigurationDisplayController;
 use Tuleap\Admin\ProjectWidgetsConfigurationPOSTDisableController;
 use Tuleap\Admin\ProjectWidgetsConfigurationPOSTEnableController;
 use Tuleap\admin\SiteContentCustomisationController;
+use Tuleap\ContentSecurityPolicy\CSPViolationReportToController;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
@@ -719,6 +720,15 @@ class RouteCollector
         return InviteBuddyAdminUpdateController::buildSelf();
     }
 
+    public function getCSPViolationReportToController(): CSPViolationReportToController
+    {
+        return new CSPViolationReportToController(
+            new SapiEmitter(),
+            HTTPFactoryBuilder::responseFactory(),
+            \BackendLogger::getDefaultLogger('csp_violation'),
+        );
+    }
+
 
     private function getLegacyControllerHandler(string $path): array
     {
@@ -865,6 +875,8 @@ class RouteCollector
         $r->get('/project/new', [self::class, 'getProjectRegistrationController']);
         $r->get('/project/new-information', [self::class, 'getProjectRegistrationController']);
         $r->get('/project/approval', [self::class, 'getProjectRegistrationController']);
+
+        $r->post('/csp-violation', [self::class, 'getCSPViolationReportToController']);
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);

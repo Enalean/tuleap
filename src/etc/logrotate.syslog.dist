@@ -40,3 +40,11 @@
     dateext
     create 640 %APP_USER% %APP_USER%
 }
+
+/var/log/%PROJECT_NAME%/csp_violation {
+    missingok
+    weekly
+    rotate 4
+    dateext
+    create 640 %APP_USER% %APP_USER%
+}
