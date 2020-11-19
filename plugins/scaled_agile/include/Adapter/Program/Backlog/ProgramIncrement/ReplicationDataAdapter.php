@@ -25,13 +25,13 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
-use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactChangesetNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactUserNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ArtifactData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+use Tuleap\ScaledAgile\TrackerData;
 use UserManager;
 
 final class ReplicationDataAdapter
@@ -112,7 +112,7 @@ final class ReplicationDataAdapter
         \Tracker_Artifact_Changeset $source_changeset
     ): ReplicationData {
         $artifact_data = new ArtifactData((int) $source_artifact->getId(), (int) $source_artifact->getSubmittedOn());
-        $tracker_data = TrackerDataAdapter::build($source_artifact->getTracker());
+        $tracker_data = new TrackerData($source_artifact->getTracker());
         $project_data = ProjectDataAdapter::build($source_artifact->getTracker()->getProject());
 
         return new ReplicationData($tracker_data, $source_changeset, $user, $artifact_data, $project_data);

@@ -26,11 +26,11 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
-use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
+use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SynchronizedFieldCollectionBuilderTest extends TestCase
@@ -57,8 +57,8 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
 
     public function testBuildFromMilestoneTrackersReturnsACollection(): void
     {
-        $first_tracker = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(102)->build());
-        $second_tracker = TrackerDataAdapter::build(TrackerTestBuilder::aTracker()->withId(104)->build());
+        $first_tracker = new TrackerData(TrackerTestBuilder::aTracker()->withId(102)->build());
+        $second_tracker = new TrackerData(TrackerTestBuilder::aTracker()->withId(104)->build());
         $milestones = new SourceTrackerCollection([$first_tracker, $second_tracker]);
 
         $first_synchronized_fields = $this->buildSynchronizedFieldsWithIds(1, 2, 3, 4, 5, 6);

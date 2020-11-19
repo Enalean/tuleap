@@ -36,7 +36,6 @@ use Tracker_FormElement_Field_Text;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
-use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
@@ -45,6 +44,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollect
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\ScaledAgile\Program\ProgramDao;
+use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -324,7 +324,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
 
-        return new PlanningData(TrackerDataAdapter::build($tracker), 1, 'Release Planning', [], $this->project_data);
+        return new PlanningData(new TrackerData($tracker), 1, 'Release Planning', [], $this->project_data);
     }
 
     private function buildSynchronizedFields(bool $submitable): void

@@ -124,9 +124,7 @@ class ScrumPresenterBuilderTest extends TestCase
 
         $expected_presenter = new AdminScrumPresenter(
             [new Planning_PlanningAdminPresenter(
-                $this->event_manager,
                 $planning,
-                $root_planning,
                 false
             )],
             101,
@@ -186,8 +184,6 @@ class ScrumPresenterBuilderTest extends TestCase
 
         $expected_presenter = new AdminScrumPresenter(
             [new Planning_PlanningAdminPresenter(
-                $this->event_manager,
-                $planning,
                 $planning,
                 false
             )],
@@ -250,8 +246,6 @@ class ScrumPresenterBuilderTest extends TestCase
 
         $expected_presenter = new AdminScrumPresenter(
             [new Planning_PlanningAdminPresenter(
-                $this->event_manager,
-                $planning,
                 $planning,
                 false
             )],
@@ -311,8 +305,6 @@ class ScrumPresenterBuilderTest extends TestCase
 
         $expected_presenter = new AdminScrumPresenter(
             [new Planning_PlanningAdminPresenter(
-                $this->event_manager,
-                $planning,
                 $planning,
                 true
             )],

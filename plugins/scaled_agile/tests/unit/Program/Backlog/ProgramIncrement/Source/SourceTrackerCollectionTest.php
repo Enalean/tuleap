@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
+use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SourceTrackerCollectionTest extends TestCase
@@ -34,10 +34,10 @@ final class SourceTrackerCollectionTest extends TestCase
 
     public function testGetTrackerIdsReturnsTrackerIds(): void
     {
-        $first_tracker = TrackerDataAdapter::build(
+        $first_tracker = new TrackerData(
             TrackerTestBuilder::aTracker()->withId(78)->withProject(new Project(['group_id' => 103]))->build()
         );
-        $second_tracker = TrackerDataAdapter::build(
+        $second_tracker = new TrackerData(
             TrackerTestBuilder::aTracker()->withId(57)->withProject(new Project(['group_id' => 104]))->build()
         );
 

@@ -20,17 +20,12 @@
 
 declare(strict_types=1);
 
-use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
-use Tuleap\AgileDashboard\Planning\Admin\PlanningEditURLEvent;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningUpdatedEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Queue\WorkerEvent;
-use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
@@ -39,13 +34,8 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsA
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
-use Tuleap\ScaledAgile\Adapter\TrackerDataAdapter;
-use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsTrackersDao;
 use Tuleap\ScaledAgile\Program\Administration\PlannableItems\PlannableItemsTrackersUpdater;
-use Tuleap\ScaledAgile\Program\Administration\PlannableItems\Presenter\PlannableItemsPerTeamPresenterCollectionBuilder;
-use Tuleap\ScaledAgile\Program\Administration\ReadOnlyProgramAdminURLBuilder;
-use Tuleap\ScaledAgile\Program\Administration\ReadOnlyProgramAdminViewController;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
@@ -63,6 +53,7 @@ use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\ScaledAgile\REST\ResourcesInjector;
 use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ScaledAgile\Team\TeamDao;
+use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -83,10 +74,7 @@ final class scaled_agilePlugin extends Plugin
 
     public function getHooksAndCallbacks(): Collection
     {
-        $this->addHook(CollectRoutesEvent::NAME);
-        $this->addHook(PlanningEditURLEvent::NAME);
         $this->addHook(RootPlanningEditionEvent::NAME);
-        $this->addHook(PlanningUpdatedEvent::NAME);
         $this->addHook(DisplayTopPlanningAppEvent::NAME);
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES, 'getArtifactLinkNatures');
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER, 'getNaturePresenter');
@@ -120,68 +108,6 @@ final class scaled_agilePlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event): void
-    {
-        $event->getRouteCollector()->addRoute(
-            ['GET'],
-            '/project/{project_name:[A-z0-9-]+}/backlog/admin/{id:\d+}',
-            $this->getRouteHandler('routeGETProgramReadOnlyAdminTopPlanning')
-        );
-    }
-
-    public function routeGETProgramReadOnlyAdminTopPlanning(): ReadOnlyProgramAdminViewController
-    {
-        $agiledashboard_plugin = PluginManager::instance()->getPluginByName(AgileDashboardPlugin::PLUGIN_NAME);
-        assert($agiledashboard_plugin instanceof AgileDashboardPlugin);
-
-        $planning_adapter = $this->getPlanningAdapter();
-
-        return new ReadOnlyProgramAdminViewController(
-            ProjectManager::instance(),
-            $planning_adapter,
-            new AgileDashboardCrumbBuilder(
-                $agiledashboard_plugin->getPluginPath()
-            ),
-            new AdministrationCrumbBuilder(),
-            $this->buildTemplateRenderer(),
-            new PlannableItemsCollectionBuilder(
-                new PlannableItemsTrackersDao(),
-                new TrackerDataAdapter(TrackerFactory::instance()),
-                $this->getProjectDataAdapter()
-            ),
-            new PlannableItemsPerTeamPresenterCollectionBuilder(
-                $planning_adapter
-            ),
-            new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/scaled_agile',
-                '/assets/scaled_agile'
-            ),
-            $agiledashboard_plugin->getIncludeAssets()
-        );
-    }
-
-    public function planningEditURLEvent(PlanningEditURLEvent $event): void
-    {
-        $adapter       = $this->getPlanningAdapter();
-        $planning      = $adapter->buildFromPlanning($event->getPlanning());
-        $root_planning = null;
-
-        if ($event->getRootPlanning()) {
-            $root_planning = $adapter->buildFromPlanning($event->getRootPlanning());
-        }
-
-        $url_builder = new ReadOnlyProgramAdminURLBuilder(new ProgramDao());
-
-        $url = $url_builder->buildURL(
-            $planning,
-            $root_planning
-        );
-
-        if ($url !== null) {
-            $event->setEditUrl($url);
-        }
-    }
-
     public function rootPlanningEditionEvent(RootPlanningEditionEvent $event): void
     {
         $handler = new RootPlanningEditionHandler(new TeamDao());
@@ -204,11 +130,6 @@ final class scaled_agilePlugin extends Plugin
             $scaled_planning,
             $event->getUser()
         );
-    }
-
-    private function buildTemplateRenderer(): TemplateRenderer
-    {
-        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
     }
 
     public function displayTopPlanningAppEvent(DisplayTopPlanningAppEvent $event): void
@@ -277,7 +198,7 @@ final class scaled_agilePlugin extends Plugin
             $this->getProjectIncrementCreatorChecker()
         );
 
-        $tracker_data = TrackerDataAdapter::build($can_submit_new_artifact->getTracker());
+        $tracker_data = new TrackerData($can_submit_new_artifact->getTracker());
         $project_data = ProjectDataAdapter::build($can_submit_new_artifact->getTracker()->getProject());
         if (
             ! $artifact_creator_checker->canCreateAnArtifact(
