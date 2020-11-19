@@ -140,6 +140,8 @@ final class User_SSHKeyDumperTest extends \PHPUnit\Framework\TestCase
         $this->sshkey_dumper->shouldReceive('changeProcessUidGidToUser')->twice();
         $this->sshkey_dumper->shouldReceive('restoreRootUidGid')->times(3);
 
+        $this->backend->shouldReceive('log');
+
         // First call will fail (see previous test) ...
         $this->sshkey_dumper->writeSSHKeys($this->user);
 
