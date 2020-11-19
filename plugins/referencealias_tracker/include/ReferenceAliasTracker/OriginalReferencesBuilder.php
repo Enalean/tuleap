@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,10 +40,8 @@ class OriginalReferencesBuilder
 
     /**
      * Get a reference given a project, keyword and value (number after '#')
-     *
-     * @return Reference or null
      */
-    public function getReference($keyword, $value)
+    public function getReference($keyword, $value): ?Reference
     {
         return $this->findReference($keyword, $keyword . $value);
     }
@@ -96,12 +94,10 @@ class OriginalReferencesBuilder
     /**
      * Find a reference given a keyword and the original complete reference
      *
-     * @param $project Project
      * @param $keyword string reference keyword (pkg)
      * @param $reference string full reference (pkg1232)
-     * @return Reference or null
      */
-    private function findReference($keyword, $reference)
+    private function findReference($keyword, $reference): ?Reference
     {
         $row = $this->dao->getRef($reference)->getRow();
         if (empty($row)) {

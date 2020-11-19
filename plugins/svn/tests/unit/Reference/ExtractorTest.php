@@ -56,7 +56,7 @@ class ExtractorTest extends TestCase
         $this->extractor          = new Extractor($this->repository_manager);
     }
 
-    public function testItReturnsFalseIfReferenceDoesNotProvideRepositoryName(): void
+    public function testItReturnsNullIfReferenceDoesNotProvideRepositoryName(): void
     {
         $keyword = 'svn';
         $value   = '1';
@@ -64,7 +64,7 @@ class ExtractorTest extends TestCase
         $this->project->shouldReceive('usesService')->withArgs(['plugin_svn'])->andReturn(true);
         $this->repository_manager->shouldReceive('getCoreRepository')->andThrow(new CannotFindRepositoryException());
 
-        $this->assertFalse($this->extractor->getReference($this->project, $keyword, $value));
+        $this->assertNull($this->extractor->getReference($this->project, $keyword, $value));
     }
 
     public function testItReturnsTrueIfReferenceCorrespondsToACoreRepositoryManagedByPlugin(): void
@@ -79,17 +79,17 @@ class ExtractorTest extends TestCase
         self::assertInstanceOf(Reference::class, $reference);
     }
 
-    public function testItReturnsFalseIfTheProjectDoesNotUseTheSubversionPlugin(): void
+    public function testItReturnsNullIfTheProjectDoesNotUseTheSubversionPlugin(): void
     {
         $keyword = 'svn';
         $value   = 'repo01/1';
 
         $this->project->shouldReceive('usesService')->withArgs(['plugin_svn'])->andReturn(false);
 
-        $this->assertFalse($this->extractor->getReference($this->project, $keyword, $value));
+        $this->assertNull($this->extractor->getReference($this->project, $keyword, $value));
     }
 
-    public function testItReturnsFalseIfTheProvidedRepositoryIsNotInTheCurrentProject(): void
+    public function testItReturnsNullIfTheProvidedRepositoryIsNotInTheCurrentProject(): void
     {
         $keyword = 'svn';
         $value   = 'repo02/1';
@@ -99,7 +99,7 @@ class ExtractorTest extends TestCase
             ->withArgs([$this->project, 'repo02'])
             ->andThrow(CannotFindRepositoryException::class);
 
-        $this->assertFalse($this->extractor->getReference($this->project, $keyword, $value));
+        $this->assertNull($this->extractor->getReference($this->project, $keyword, $value));
     }
 
     public function testItBuildsASubversionPluginReference(): void

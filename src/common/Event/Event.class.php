@@ -199,21 +199,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const GET_AVAILABLE_REFERENCE_NATURE = 'get_available_reference_natures';
 
      /**
-      * Allow to override default behaviour when managing reference
-      *
-      * Parameters:
-      *  'reference_manager' => ReferenceManager
-      *  'project'           => Project
-      *  'keyword'           => String
-      *  'value'             => String
-      *  'group_id'          => Integer
-      *
-      * Expected results:
-      *  'reference'         => Reference | false
-      */
-    public const GET_REFERENCE = 'get_reference';
-
-     /**
       * Allow to define the group_id of an artifact reference
       *
       * Parameters

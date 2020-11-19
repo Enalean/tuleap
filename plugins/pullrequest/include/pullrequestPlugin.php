@@ -94,6 +94,7 @@ use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\PullRequest\Tooltip\Presenter;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -113,7 +114,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(GetReferenceEvent::NAME);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
         $this->addHook('codendi_daily_start', 'dailyExecution');
@@ -400,16 +401,20 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return new TimelineEventCreator(new TimelineDao());
     }
 
-    public function get_reference($params) // phpcs:ignore
+    public function getReference(GetReferenceEvent $event): void
     {
-        $keyword         = $params['keyword'];
-        $pull_request_id = $params['value'];
+        $keyword         = $event->getKeyword();
+        $pull_request_id = $event->getValue();
 
         if ($this->isReferenceAPullRequestReference($keyword)) {
-            $params['reference'] = $this->getReferenceFactory()->getReferenceByPullRequestId(
+            $reference = $this->getReferenceFactory()->getReferenceByPullRequestId(
                 $keyword,
                 $pull_request_id
             );
+
+            if ($reference !== null) {
+                $event->setReference($reference);
+            }
         }
     }
 

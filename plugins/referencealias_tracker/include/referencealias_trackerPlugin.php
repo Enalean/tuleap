@@ -22,6 +22,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\ReferenceAliasTracker\Dao;
 use Tuleap\ReferenceAliasTracker\ReferencesImporter;
 use Tuleap\ReferenceAliasTracker\OriginalReferencesBuilder;
@@ -46,7 +47,7 @@ class referencealias_trackerPlugin extends Plugin //phpcs:ignore
         $this->original_references_builder = new OriginalReferencesBuilder($this->dao);
         $this->setScope(self::SCOPE_SYSTEM);
         $this->addHook(Event::IMPORT_COMPAT_REF_XML, 'importCompatRefXML');
-        $this->addHook(Event::GET_REFERENCE, 'getReference');
+        $this->addHook(GetReferenceEvent::NAME);
         $this->addHook(Event::GET_PLUGINS_EXTRA_REFERENCES, 'registerExtraReferences');
     }
 
@@ -83,14 +84,14 @@ class referencealias_trackerPlugin extends Plugin //phpcs:ignore
         }
     }
 
-    public function getReference($params)
+    public function getReference(GetReferenceEvent $event): void
     {
-        $keyword   = $params['keyword'];
-        $value     = $params['value'];
+        $keyword   = $event->getKeyword();
+        $value     = $event->getValue();
         $reference = $this->original_references_builder->getReference($keyword, $value);
 
-        if (! empty($reference)) {
-            $params['reference'] = $reference;
+        if ($reference !== null) {
+            $event->setReference($reference);
         }
     }
 

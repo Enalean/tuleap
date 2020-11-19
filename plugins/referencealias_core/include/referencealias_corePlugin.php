@@ -21,6 +21,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\ReferenceAliasCore\Dao;
 use Tuleap\ReferenceAliasCore\ReferencesImporter;
 use Tuleap\ReferenceAliasCore\ReferencesBuilder;
@@ -46,7 +47,7 @@ class referencealias_corePlugin extends Plugin
         $this->references_builder = new ReferencesBuilder($this->dao, ProjectManager::instance());
         $this->setScope(self::SCOPE_SYSTEM);
         $this->addHook(Event::IMPORT_COMPAT_REF_XML, 'importCompatRefXML');
-        $this->addHook(Event::GET_REFERENCE, 'getReference');
+        $this->addHook(GetReferenceEvent::NAME);
         $this->addHook(Event::GET_PLUGINS_EXTRA_REFERENCES, 'registerExtraReferences');
     }
 
@@ -79,15 +80,16 @@ class referencealias_corePlugin extends Plugin
         }
     }
 
-    public function getReference($params)
+    public function getReference(GetReferenceEvent $event): void
     {
-        $keyword   = $params['keyword'];
-        $value     = $params['value'];
-        $project   = $params['project'];
+        $keyword   = $event->getKeyword();
+        $value     = $event->getValue();
+        $project   = $event->getProject();
+
         $reference = $this->references_builder->getReference($project, $keyword, $value);
 
-        if (! empty($reference)) {
-            $params['reference'] = $reference;
+        if ($reference !== null) {
+            $event->setReference($reference);
         }
     }
 

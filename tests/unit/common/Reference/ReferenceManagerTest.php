@@ -43,10 +43,17 @@ final class ReferenceManagerTest extends TestCase
      */
     private $user_manager;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
+     */
+    private $project_manager;
+
     protected function setUp(): void
     {
+        $this->project_manager = \Mockery::mock(ProjectManager::class);
+
         EventManager::setInstance(\Mockery::spy(\EventManager::class));
-        ProjectManager::setInstance(\Mockery::spy(ProjectManager::class));
+        ProjectManager::setInstance($this->project_manager);
         $this->user_manager = \Mockery::spy(UserManager::class);
         UserManager::setInstance($this->user_manager);
 
@@ -112,6 +119,8 @@ final class ReferenceManagerTest extends TestCase
         //The Reference manager
         $this->rm->shouldReceive('_getReferenceDao')->andReturn($dao);
         $this->rm->shouldReceive('getGroupIdFromArtifactIdForCallbackFunction')->andReturn('100', '1', '100');
+
+        $this->project_manager->shouldReceive('getProject')->andReturn(\Mockery::mock(\Project::class));
 
         $this->assertCount(1, $this->rm->extractReferences('art #123', 0), 'Art is a shared keyword for all projects');
         $this->assertCount(0, $this->rm->extractReferences('arto #123', 0), 'Should not extract a reference on unknown keyword');
@@ -237,6 +246,8 @@ final class ReferenceManagerTest extends TestCase
         $reference_dao->shouldReceive('searchActiveByGroupID')->andReturns($data_access_result_reference);
         $reference_dao->shouldReceive('getSystemReferenceNatureByKeyword')->andReturnFalse();
         $this->rm->shouldReceive('_getReferenceDao')->andReturn($reference_dao);
+
+        $this->project_manager->shouldReceive('getProject')->andReturn(\Mockery::mock(\Project::class));
 
         $html = 'myref #123';
         $this->rm->insertReferences($html, 102);

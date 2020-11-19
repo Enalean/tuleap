@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\ReferenceDescriptionTranslation;
 use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
@@ -1105,23 +1106,20 @@ class ReferenceManager
 
     private function getReference($key, $value, $ref_gid)
     {
-        $reference       = null;
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($ref_gid);
 
-        $this->eventManager->processEvent(
-            Event::GET_REFERENCE,
-            [
-                'reference_manager' => $this,
-                'project'           => $project,
-                'keyword'           => $key,
-                'value'             => $value,
-                'group_id'          => $ref_gid,
-                'reference'         => &$reference,
-            ]
+        $event = new GetReferenceEvent(
+            $this,
+            $project,
+            $key,
+            $value
         );
 
-        if (! $reference) {
+        $this->eventManager->dispatch($event);
+
+        $reference = $event->getReference();
+        if ($reference === null) {
             $num_args  = substr_count($value, '/') + 1;
             $reference = $this->_getReferenceFromKeywordAndNumArgs($key, $ref_gid, $num_args);
         }

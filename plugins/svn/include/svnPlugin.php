@@ -39,6 +39,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\Event\ProjectGetSvn;
@@ -180,7 +181,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook('plugin_statistics_color');
         $this->addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
         $this->addHook(SystemEvent_PROJECT_IS_PRIVATE::class, 'changeProjectRepositoriesAccess');
-        $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(GetReferenceEvent::NAME);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
         $this->addHook(ExportXmlProject::NAME);
@@ -703,19 +704,19 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return Backend::instanceSVN();
     }
 
-    public function get_reference($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function getReference(GetReferenceEvent $event): void
     {
-        $keyword = $params['keyword'];
+        $keyword = $event->getKeyword();
 
         if ($this->isReferenceASubversionReference($keyword)) {
-            $project = $params['project'];
-            $value   = $params['value'];
+            $project = $event->getProject();
+            $value   = $event->getValue();
 
             $extractor = $this->getReferenceExtractor();
             $reference = $extractor->getReference($project, $keyword, $value);
 
-            if ($reference) {
-                $params['reference'] = $reference;
+            if ($reference !== null) {
+                $event->setReference($reference);
             }
         }
     }
