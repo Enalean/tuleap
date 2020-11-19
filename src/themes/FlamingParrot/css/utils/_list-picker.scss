@@ -193,3 +193,7 @@ $form-element-small-font-size: .8125rem;
         color: $tlp-ui-danger;
     }
 }
+
+.list-picker-dropdown-option-value-disabled {
+    color: $tlp-ui-dimmed;
+}
