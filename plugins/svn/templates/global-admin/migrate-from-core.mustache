@@ -1,21 +1,24 @@
 <h1 class="project-administration-title">{{ title }}</h1>
 
 {{# has_migrate_from_core }}
-    <nav class="tlp-tabs">
-        <a href="{{ admin_groups_url }}" class="tlp-tab">{{# dgettext }} tuleap-svn | Administrators {{/ dgettext }}</a>
-        <a href="{{ migrate_from_core_url }}" class="tlp-tab tlp-tab-active">{{# dgettext }} tuleap-svn | Migrate from core {{/ dgettext }}</a>
-    </nav>
+    <div class="main-project-tabs">
+        <nav class="tlp-tabs">
+            <a href="{{ admin_groups_url }}" class="tlp-tab">{{# dgettext }} tuleap-svn | Administrators {{/ dgettext }}</a>
+            <a href="{{ migrate_from_core_url }}" class="tlp-tab tlp-tab-active">{{# dgettext }} tuleap-svn | Migrate from core {{/ dgettext }}</a>
+        </nav>
+    </div>
 {{/ has_migrate_from_core }}
 
 <div class="tlp-framed">
     <section class="tlp-pane">
         <form class="tlp-pane-container" action="{{ update_url }}" method="POST" id="migrate-from-core-form">
-        {{{ csrf_input }}}
-        <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">
-                <i class="fas fa-gears tlp-pane-title-icon" aria-hidden="true"></i>
-                {{# dgettext }} tuleap-svn | Migrate from core {{/ dgettext }}
-            </h1>
+            {{{ csrf_input }}}
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fas fa-file-import tlp-pane-title-icon" aria-hidden="true"></i>
+                    {{# dgettext }} tuleap-svn | Migrate from core {{/ dgettext }}
+                </h1>
+            </div>
             <section class="tlp-pane-section">
                 <p>{{# dgettext }} tuleap-svn | This form allows to transfer the management of subversion repository from the `Subversion` service to this plugin. {{/ dgettext }}</p>
                 <p>{{# dgettext }} tuleap-svn | This migration is done in place. All settings are transferred and, more important <strong>the subversion url</strong> ({{ svn_url }}) <strong>will not change</strong>.{{/ dgettext }}</p>
@@ -33,7 +36,6 @@
                     </div>
                 </div>
             </section>
-        </div>
         </form>
     </section>
 </div>

@@ -1,10 +1,12 @@
 <h1 class="project-administration-title">{{ title }}</h1>
 
 {{# has_migrate_from_core }}
-<nav class="tlp-tabs">
-    <a href="{{ admin_groups_url }}" class="tlp-tab tlp-tab-active">Administrors</a>
-    <a href="{{ migrate_from_core_url }}" class="tlp-tab">Migrate from Core</a>
-</nav>
+    <div class="main-project-tabs">
+        <nav class="tlp-tabs">
+            <a href="{{ admin_groups_url }}" class="tlp-tab tlp-tab-active">{{# dgettext }} tuleap-svn | Administrators {{/ dgettext }}</a>
+            <a href="{{ migrate_from_core_url }}" class="tlp-tab">{{# dgettext }} tuleap-svn | Migrate from core {{/ dgettext }}</a>
+        </nav>
+    </div>
 {{/ has_migrate_from_core }}
 
 <div class="tlp-framed">
