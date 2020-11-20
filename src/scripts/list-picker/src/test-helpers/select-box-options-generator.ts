@@ -22,6 +22,12 @@
  */
 
 export function appendSimpleOptionsToSourceSelectBox(select: HTMLSelectElement): void {
+    const option_none = document.createElement("option");
+    option_none.value = "100";
+    option_none.innerText = "None";
+    option_none.setAttribute("data-item-id", "list-picker-item-value-100");
+    select.appendChild(option_none);
+
     let i;
     for (i = 0; i < 3; i++) {
         const option = document.createElement("option");

@@ -95,6 +95,10 @@ export class ListItemMapBuilder {
         let base_id = "list-picker-item-";
         let option_value = option.value.toLowerCase().trim();
 
+        if (option_value === "100" || option_value === "number:100") {
+            return base_id + "100";
+        }
+
         if (group_id !== "") {
             base_id += group_id + "-";
         }

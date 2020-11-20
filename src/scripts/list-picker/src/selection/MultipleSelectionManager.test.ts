@@ -232,6 +232,39 @@ describe("MultipleSelectionManager", () => {
             expect(openListPicker).toHaveBeenCalled();
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
         });
+
+        it(`should unselect "None" value if an other value is selected`, () => {
+            const item_none = item_map_manager.findListPickerItemInItemMap("list-picker-item-100");
+
+            manager.processSelection(item_none.element);
+
+            expect(isItemSelected(item_none)).toBe(true);
+            expect(isItemSelected(item_1)).toBe(false);
+            expect(isItemSelected(item_2)).toBe(false);
+
+            manager.processSelection(item_2.element);
+
+            expect(isItemSelected(item_none)).toBe(false);
+            expect(isItemSelected(item_1)).toBe(false);
+            expect(isItemSelected(item_2)).toBe(true);
+        });
+
+        it(`should unselect previously selected values value if "None" value is selected`, () => {
+            const item_none = item_map_manager.findListPickerItemInItemMap("list-picker-item-100");
+
+            manager.processSelection(item_1.element);
+            manager.processSelection(item_2.element);
+
+            expect(isItemSelected(item_none)).toBe(false);
+            expect(isItemSelected(item_1)).toBe(true);
+            expect(isItemSelected(item_2)).toBe(true);
+
+            manager.processSelection(item_none.element);
+
+            expect(isItemSelected(item_none)).toBe(true);
+            expect(isItemSelected(item_1)).toBe(false);
+            expect(isItemSelected(item_2)).toBe(false);
+        });
     });
 
     describe("handleBackSpaceKey", () => {
@@ -276,7 +309,7 @@ describe("MultipleSelectionManager", () => {
             manager.processSelection(item_1.element);
             manager.processSelection(item_2.element);
 
-            source_select_box.options[2].value = "a_brand_new_value";
+            source_select_box.options[3].value = "a_brand_new_value";
             await item_map_manager.refreshItemsMap();
             manager.resetAfterDependenciesUpdate();
 
@@ -297,8 +330,8 @@ describe("MultipleSelectionManager", () => {
             manager.processSelection(item_1.element);
             manager.processSelection(item_2.element);
 
-            source_select_box.options[1].value = "a_brand_new_value";
-            source_select_box.options[2].value = "another_brand_new_value";
+            source_select_box.options[2].value = "a_brand_new_value";
+            source_select_box.options[3].value = "another_brand_new_value";
             await item_map_manager.refreshItemsMap();
             manager.resetAfterDependenciesUpdate();
 
