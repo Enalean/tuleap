@@ -89,7 +89,6 @@ const webpack_config_for_charts = {
     output,
     externals: {
         tuleap: "tuleap",
-        jquery: "jQuery",
     },
     resolve: {
         alias: {
