@@ -102,7 +102,7 @@ final class HierarchyAdapterTest extends TestCase
         $root_planning->setPlanningTracker($milestone_tracker);
         $this->planning_factory->shouldReceive('getRootPlanning')->with($user, $team->getGroupId())->once()->andReturn($root_planning);
 
-        $this->expectException(TeamTrackerMustBeATopBacklogOneException::class);
+        $this->expectException(TeamTrackerMustBeInPlannableTopBacklogException::class);
 
         $this->hierarchy_adapter->buildHierarchy($user, $program, $program_tracker_id, $team_backlog_id);
     }
@@ -121,14 +121,20 @@ final class HierarchyAdapterTest extends TestCase
         $this->team_store->shouldReceive('isATeam')->with($team->getGroupId())->once()->andReturnTrue();
 
         $milestone_tracker = TrackerTestBuilder::aTracker()
+            ->withId(300)
+            ->withProject($project)
+            ->build();
+
+        $user_story_tracker = TrackerTestBuilder::aTracker()
             ->withId($team_backlog_id)
             ->withProject($project)
             ->build();
-        $root_planning     = new Planning(7, 'Root Planning', $project->getID(), '', []);
+        $root_planning      = new Planning(7, 'Root Planning', $project->getID(), '', [$user_story_tracker]);
         $root_planning->setPlanningTracker($milestone_tracker);
         $this->planning_factory->shouldReceive('getRootPlanning')->with($user, $team->getGroupId())->once()->andReturn(
             $root_planning
         );
+        $root_planning->setBacklogTrackers([$user_story_tracker]);
 
         $expected = new Hierarchy($program_tracker_id, $team_backlog_id);
 

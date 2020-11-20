@@ -20,12 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\Hierarchy;
+namespace Tuleap\ScaledAgile\Team;
 
-final class TeamTrackerMustBeATopBacklogOneException extends \Exception implements HierarchyException
+final class TeamTracker
 {
-    public function __construct(int $tracker_id)
+    /**
+     * @var int
+     */
+    private $team_tracker_id;
+    /**
+     * @var int
+     */
+    private $project_id;
+
+    public function __construct(int $team_tracker_id, int $project_id)
     {
-        parent::__construct("Tracker #$tracker_id is not a tracker defined as top level planning");
+        $this->team_tracker_id = $team_tracker_id;
+        $this->project_id      = $project_id;
+    }
+
+    public function getTeamTrackerId(): int
+    {
+        return $this->team_tracker_id;
+    }
+
+    public function getProjectId(): int
+    {
+        return $this->project_id;
     }
 }

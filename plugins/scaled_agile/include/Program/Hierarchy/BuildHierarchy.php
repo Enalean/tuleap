@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Hierarchy;
 
 use PFUser;
-use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerMustBeATopBacklogOneException;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerMustBeInPlannableTopBacklogException;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerNotFoundException;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TrackerDoesNotBelongToTeamException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
@@ -32,7 +32,7 @@ use Tuleap\ScaledAgile\Program\Program;
 interface BuildHierarchy
 {
     /**
-     * @throws TeamTrackerMustBeATopBacklogOneException
+     * @throws TeamTrackerMustBeInPlannableTopBacklogException
      * @throws TeamTrackerNotFoundException
      * @throws TrackerDoesNotBelongToTeamException
      * @throws PlanTrackerException
