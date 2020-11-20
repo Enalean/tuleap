@@ -25,11 +25,13 @@ namespace Tuleap\ScaledAgile\REST;
 use Luracast\Restler\Restler;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\ScaledAgile\REST\v1\ProjectResource;
+use Tuleap\ScaledAgile\REST\v1\ScaledAgileResource;
 
 class ResourcesInjector
 {
     public function populate(Restler $restler): void
     {
         $restler->addAPIClass(ProjectResource::class, ProjectRepresentation::ROUTE);
+        $restler->addAPIClass(ScaledAgileResource::class, ScaledAgileResource::ROUTE);
     }
 }

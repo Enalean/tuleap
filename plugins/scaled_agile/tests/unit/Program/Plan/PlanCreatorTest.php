@@ -48,7 +48,7 @@ final class PlanCreatorTest extends TestCase
         $tracker_adapter->shouldReceive('buildProgramIncrementTracker')
             ->with($program_increment_tracker_id, $project_id)->once()
             ->andReturn(new ProgramIncrementTracker($program_increment_tracker_id));
-        $tracker_adapter->shouldReceive('buildPlannableTrackers')
+        $tracker_adapter->shouldReceive('buildPlannableTrackerList')
             ->with([$plannable_tracker_id], $project_id)->once()
             ->andReturn([$plannable_tracker_id => new ProgramIncrementTracker($plannable_tracker_id)]);
 

@@ -20,11 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\Creation;
+namespace Tuleap\ScaledAgile\Program\Hierarchy;
 
-interface TeamStore
+/**
+ * @psalm-immutable
+ */
+final class Hierarchy
 {
-    public function save(TeamCollection $team_collection): void;
+    /**
+     * @var int
+     */
+    private $program_tracker_id;
+    /**
+     * @var int
+     */
+    private $team_tracker_id;
 
-    public function isATeam(int $team_project_id): bool;
+    public function __construct(int $program_tracker_id, int $team_tracker_id)
+    {
+        $this->program_tracker_id = $program_tracker_id;
+        $this->team_tracker_id = $team_tracker_id;
+    }
+
+    public function getProgramTrackerId(): int
+    {
+        return $this->program_tracker_id;
+    }
+
+    public function getTeamTrackerId(): int
+    {
+        return $this->team_tracker_id;
+    }
 }

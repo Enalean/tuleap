@@ -20,9 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\Plan;
+namespace Tuleap\ScaledAgile\Adapter\Program\Tracker;
 
-final class PlanTrackerNotFoundException extends \Exception implements PlanTrackerException
+final class PlanTrackerNotFoundException extends \Exception implements ProgramTrackerException
 {
     public function __construct(int $tracker_id)
     {

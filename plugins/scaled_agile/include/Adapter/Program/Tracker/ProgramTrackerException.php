@@ -20,11 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\Creation;
+namespace Tuleap\ScaledAgile\Adapter\Program\Tracker;
 
-interface TeamStore
+interface ProgramTrackerException extends \Throwable
 {
-    public function save(TeamCollection $team_collection): void;
-
-    public function isATeam(int $team_project_id): bool;
 }

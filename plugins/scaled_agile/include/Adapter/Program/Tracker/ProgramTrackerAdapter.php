@@ -20,10 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\Plan;
+namespace Tuleap\ScaledAgile\Adapter\Program\Tracker;
 
 use TrackerFactory;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException;
 use Tuleap\ScaledAgile\Program\Plan\BuildTracker;
+use Tuleap\ScaledAgile\Program\Plan\PlanStore;
 use Tuleap\ScaledAgile\Program\Plan\ProgramIncrementTracker;
 use Tuleap\ScaledAgile\Program\Plan\ProgramPlannableTracker;
 
@@ -33,15 +35,19 @@ final class ProgramTrackerAdapter implements BuildTracker
      * @var TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var PlanStore
+     */
+    private $plan_store;
 
-    public function __construct(TrackerFactory $tracker_factory)
+    public function __construct(TrackerFactory $tracker_factory, PlanStore $plan_store)
     {
         $this->tracker_factory = $tracker_factory;
+        $this->plan_store = $plan_store;
     }
 
     /**
-     * @throws PlanTrackerDoesNotBelongToProjectException
-     * @throws PlanTrackerNotFoundException
+     * @throws ProgramTrackerException
      */
     public function buildProgramIncrementTracker(int $tracker_id, int $project_id): ProgramIncrementTracker
     {
@@ -51,13 +57,26 @@ final class ProgramTrackerAdapter implements BuildTracker
     }
 
     /**
-     * @throws PlanTrackerDoesNotBelongToProjectException
-     * @throws PlanTrackerNotFoundException
-     * @throws PlannableTrackerCannotBeEmptyException
-     *
-     * @return array<ProgramPlannableTracker>
+     * @throws ProgramTrackerException
      */
-    public function buildPlannableTrackers(array $plannable_trackers_id, int $project_id): array
+    public function buildPlannableProgramTracker(int $tracker_id, int $project_id): ProgramPlannableTracker
+    {
+        $tracker = $this->getValidTracker($tracker_id, $project_id);
+
+        if (! $this->plan_store->isPlannable($tracker_id)) {
+            throw new ProgramTrackerMustBeDefinedAsPlannableTrackerException($tracker_id);
+        }
+
+        return new ProgramPlannableTracker($tracker->getId());
+    }
+
+
+    /**
+     * @return array<ProgramPlannableTracker>
+     * @throws ProgramTrackerException
+     * @throws PlannableTrackerCannotBeEmptyException
+     */
+    public function buildPlannableTrackerList(array $plannable_trackers_id, int $project_id): array
     {
         $plannable_trackers_ids = [];
         foreach ($plannable_trackers_id as $tracker_id) {
@@ -75,8 +94,7 @@ final class ProgramTrackerAdapter implements BuildTracker
     }
 
     /**
-     * @throws PlanTrackerDoesNotBelongToProjectException
-     * @throws PlanTrackerNotFoundException
+     * @throws ProgramTrackerException
      */
     private function getValidTracker(int $tracker_id, int $project_id): \Tracker
     {

@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Plan;
 
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerDoesNotBelongToProjectException;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerNotFoundException;
+use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
 
 final class PlanCreator implements CreatePlan
 {
@@ -51,12 +50,11 @@ final class PlanCreator implements CreatePlan
     }
 
     /**
-     * @throws PlanTrackerDoesNotBelongToProjectException
-     * @throws PlanTrackerNotFoundException
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramAccessException
-     * @throws PlannableTrackerCannotBeEmptyException
      * @throws CannotPlanIntoItselfException
+     * @throws PlanTrackerException
+     * @throws ProgramAccessException
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramTrackerException
      */
     public function create(\PFUser $user, int $project_id, int $program_increment_id, array $trackers_id): void
     {
@@ -68,7 +66,7 @@ final class PlanCreator implements CreatePlan
             $program_increment_id,
             $program_project->getId()
         );
-        $plannable_tracker_ids = $this->build_tracker->buildPlannableTrackers(
+        $plannable_tracker_ids = $this->build_tracker->buildPlannableTrackerList(
             $trackers_id,
             $program_project->getId()
         );

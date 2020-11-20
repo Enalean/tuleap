@@ -20,21 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\Program\Hierarchy;
 
+use PFUser;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerMustBeATopBacklogOneException;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerNotFoundException;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TrackerDoesNotBelongToTeamException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
+use Tuleap\ScaledAgile\Program\Program;
 
-interface CreatePlan
+interface BuildHierarchy
 {
     /**
-     * @throws CannotPlanIntoItselfException
+     * @throws TeamTrackerMustBeATopBacklogOneException
+     * @throws TeamTrackerNotFoundException
+     * @throws TrackerDoesNotBelongToTeamException
      * @throws PlanTrackerException
-     * @throws ProgramAccessException
-     * @throws ProjectIsNotAProgramException
-     * @throws ProgramTrackerException
+     * @throws \Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException
+     * @throws \Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException
      */
-    public function create(\PFUser $user, int $project_id, int $program_increment_id, array $trackers_id): void;
+    public function buildHierarchy(
+        PFUser $user,
+        Program $program,
+        int $program_tracker_id,
+        int $team_backlog_id
+    ): Hierarchy;
 }

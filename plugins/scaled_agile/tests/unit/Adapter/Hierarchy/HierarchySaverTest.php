@@ -20,11 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\Creation;
+namespace Tuleap\ScaledAgile\Adapter\Program\Hierarchy;
 
-interface TeamStore
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tuleap\ScaledAgile\Program\Hierarchy\Hierarchy;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+
+final class HierarchySaverTest extends TestCase
 {
-    public function save(TeamCollection $team_collection): void;
+    use MockeryPHPUnitIntegration;
 
-    public function isATeam(int $team_project_id): bool;
+    public function testItSavesHierarchy(): void
+    {
+        $dao = \Mockery::mock(HierarchyDAO::class);
+        $saver = new HierarchySaver($dao);
+
+        $hierarchy = new Hierarchy(1, 20);
+
+        $dao->shouldReceive('updateChildren')->with(1, [20])->once();
+        $saver->save($hierarchy);
+    }
 }

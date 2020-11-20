@@ -25,14 +25,14 @@ namespace Tuleap\ScaledAgile\REST\v1;
 use Luracast\Restler\RestException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\PlannableTrackerCannotBeEmptyException;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerDoesNotBelongToProjectException;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerNotFoundException;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramTrackerAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
+use Tuleap\ScaledAgile\Adapter\Team\AtLeastOneTeamShouldBeDefinedException;
 use Tuleap\ScaledAgile\Adapter\Team\ProjectIsAProgramException;
 use Tuleap\ScaledAgile\Adapter\Team\TeamAccessException;
 use Tuleap\ScaledAgile\Adapter\Team\TeamAdapter;
@@ -62,7 +62,7 @@ final class ProjectResource extends AuthenticatedResource
     {
         $this->user_manager = \UserManager::instance();
         $plan_dao           = new PlanDao();
-        $tracker_adapter    = new ProgramTrackerAdapter(\TrackerFactory::instance());
+        $tracker_adapter    = new ProgramTrackerAdapter(\TrackerFactory::instance(), new PlanDao());
         $project_manager    = \ProjectManager::instance();
         $program_dao        = new ProgramDao();
         $project_adapter    = new ProgramAdapter($project_manager, $program_dao);
@@ -107,7 +107,7 @@ final class ProjectResource extends AuthenticatedResource
                 $representation->program_increment_tracker_id,
                 $representation->plannable_tracker_ids
             );
-        } catch (PlanTrackerDoesNotBelongToProjectException | ProjectIsNotAProgramException | PlannableTrackerCannotBeEmptyException | PlanTrackerNotFoundException | CannotPlanIntoItselfException $e) {
+        } catch (ProjectIsNotAProgramException | CannotPlanIntoItselfException | PlanTrackerException | ProgramTrackerException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());
@@ -137,7 +137,7 @@ final class ProjectResource extends AuthenticatedResource
                 $id,
                 $representation->team_ids
             );
-        } catch (ProjectIsNotAProgramException | TeamAccessException | ProjectIsAProgramException | ProjectIsNotAProgramException $e) {
+        } catch (TeamAccessException | ProjectIsAProgramException | ProjectIsNotAProgramException | AtLeastOneTeamShouldBeDefinedException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());

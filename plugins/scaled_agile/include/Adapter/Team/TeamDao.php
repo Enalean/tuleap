@@ -29,7 +29,7 @@ use Tuleap\ScaledAgile\Team\Creation\TeamStore;
 final class TeamDao extends DataAccessObject implements TeamStore
 {
     /**
-     * @throw DBException
+     * @throws \Throwable
      */
     public function save(TeamCollection $team_collection): void
     {
@@ -46,5 +46,12 @@ final class TeamDao extends DataAccessObject implements TeamStore
 
             $this->getDB()->insertMany('plugin_scaled_agile_team_projects', $insert);
         });
+    }
+
+    public function isATeam(int $team_project_id): bool
+    {
+        $sql = 'SELECT * FROM plugin_scaled_agile_team_projects WHERE team_project_id = ?';
+
+        return $this->getDB()->exists($sql, $team_project_id);
     }
 }

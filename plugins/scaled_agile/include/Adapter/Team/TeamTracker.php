@@ -20,11 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Team\Creation;
+namespace Tuleap\ScaledAgile\Adapter\Team;
 
-interface TeamStore
+final class TeamTracker
 {
-    public function save(TeamCollection $team_collection): void;
+    /**
+     * @var int
+     */
+    private $team_tracker_id;
+    /**
+     * @var int
+     */
+    private $project_id;
 
-    public function isATeam(int $team_project_id): bool;
+    public function __construct(int $team_tracker_id, int $project_id)
+    {
+        $this->team_tracker_id = $team_tracker_id;
+        $this->project_id      = $project_id;
+    }
+
+    public function getTeamTrackerId(): int
+    {
+        return $this->team_tracker_id;
+    }
+
+    public function getProjectId(): int
+    {
+        return $this->project_id;
+    }
 }
