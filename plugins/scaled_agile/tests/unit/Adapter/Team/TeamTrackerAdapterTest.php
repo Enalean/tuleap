@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerNotFoundException;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TrackerDoesNotBelongToTeamException;
 use Tuleap\ScaledAgile\Team\Creation\TeamStore;
+use Tuleap\ScaledAgile\Team\TeamTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TeamTrackerAdapterTest extends TestCase

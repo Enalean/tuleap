@@ -57,7 +57,7 @@ final class HierarchyAdapter implements BuildHierarchy
     }
 
     /**
-     * @throws TeamTrackerMustBeATopBacklogOneException
+     * @throws TeamTrackerMustBeInPlannableTopBacklogException
      * @throws TeamTrackerNotFoundException
      * @throws TrackerDoesNotBelongToTeamException
      * @throws PlanTrackerException
@@ -77,8 +77,9 @@ final class HierarchyAdapter implements BuildHierarchy
             $user,
             (int) $team_tracker->getProjectId()
         );
-        if ($planning_configuration->getPlanningTrackerData()->getTrackerId() !== $team_tracker->getTeamTrackerId()) {
-            throw new TeamTrackerMustBeATopBacklogOneException($team_tracker->getTeamTrackerId());
+
+        if (! in_array($team_tracker->getTeamTrackerId(), $planning_configuration->getPlannableTrackerIds())) {
+            throw new TeamTrackerMustBeInPlannableTopBacklogException($team_tracker->getTeamTrackerId());
         }
 
         return new Hierarchy($program_tracker_id, $team_backlog_id);
