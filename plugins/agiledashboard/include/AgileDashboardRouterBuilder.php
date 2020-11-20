@@ -43,6 +43,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -185,7 +186,17 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $planning_permissions_manager,
                 $form_element_factory
             ),
-            new \Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator()
+            new \Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator(),
+            new \Tuleap\AgileDashboard\Kanban\NewDropdownCurrentContextSectionForKanbanProvider(
+                $this->getKanbanFactory(),
+                TrackerFactory::instance(),
+                new TrackerNewDropdownLinkPresenterBuilder(),
+                new AgileDashboard_KanbanActionsChecker(
+                    TrackerFactory::instance(),
+                    new AgileDashboard_PermissionsManager(),
+                    Tracker_FormElementFactory::instance()
+                )
+            )
         );
     }
 
