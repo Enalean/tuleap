@@ -104,7 +104,6 @@ class FileDownloaderController implements DispatchableWithRequest
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment');
         header('Content-Length: ' . $lfs_object->getSize());
-        header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'; form-action 'none';");
         header('X-DNS-Prefetch-Control: off');
 
         ob_end_flush();

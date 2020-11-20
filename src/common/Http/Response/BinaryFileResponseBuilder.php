@@ -74,7 +74,6 @@ final class BinaryFileResponseBuilder
         $response = $this->response_factory->createResponse()
             ->withHeader('Content-Type', $content_type)
             ->withHeader('Content-Disposition', 'attachment; filename="' . $this->getNameForContentDispositionHeader($name) . '"')
-            ->withHeader('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none'; form-action 'none';")
             ->withHeader('X-DNS-Prefetch-Control', 'off')
             ->withHeader('Cache-Control', 'private')
             ->withHeader('Pragma', 'no-cache')
