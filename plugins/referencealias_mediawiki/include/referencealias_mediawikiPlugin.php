@@ -22,6 +22,7 @@ require_once __DIR__ . '/../../mediawiki/include/mediawikiPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\ReferenceAliasMediawiki\ReferencesBuilder;
 use Tuleap\ReferenceAliasMediawiki\CompatibilityDao;
 use Tuleap\ReferenceAliasMediawiki\ReferencesImporter;
@@ -35,7 +36,7 @@ class referencealias_mediawikiPlugin extends Plugin //phpcs:ignore
 
         $this->setScope(self::SCOPE_SYSTEM);
         $this->addHook(Event::IMPORT_COMPAT_REF_XML);
-        $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(GetReferenceEvent::NAME);
         $this->addHook(Event::GET_PLUGINS_EXTRA_REFERENCES);
 
         $this->dao = new CompatibilityDao();
@@ -81,11 +82,16 @@ class referencealias_mediawikiPlugin extends Plugin //phpcs:ignore
         }
     }
 
-    public function get_reference($params) //phpcs:ignore
+    public function getReference(GetReferenceEvent $event): void
     {
-        $reference = $this->getReferencesBuilder()->getReference($params['project'], $params['keyword'], $params['value']);
-        if (! empty($reference)) {
-            $params['reference'] = $reference;
+        $reference = $this->getReferencesBuilder()->getReference(
+            $event->getProject(),
+            $event->getKeyword(),
+            $event->getValue()
+        );
+
+        if ($reference !== null) {
+            $event->setReference($reference);
         }
     }
 

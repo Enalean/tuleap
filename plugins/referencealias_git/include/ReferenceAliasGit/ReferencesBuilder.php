@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2016. All Rights Reserved.
+ * Copyright (c) Enalean SAS, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,10 +46,8 @@ class ReferencesBuilder
 
     /**
      * Get a reference given a project, keyword and value (number after '#')
-     *
-     * @return Reference or null
      */
-    public function getReference($keyword, $value)
+    public function getReference($keyword, $value): ?\Reference
     {
         return $this->findReference($keyword, $keyword . $value);
     }
@@ -100,9 +98,8 @@ class ReferencesBuilder
 
     /**
      * Find a reference given a keyword and the original complete reference
-     * @return Reference or null
      */
-    private function findReference($keyword, $reference)
+    private function findReference($keyword, $reference): ?\Reference
     {
         if ($keyword !== ReferencesImporter::XREF_CMMT) {
             return null;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,10 +47,8 @@ class ReferencesBuilder
 
     /**
      * Get a reference given a project, keyword and value (number after '#')
-     *
-     * @return Reference or null
      */
-    public function getReference(Project $project, $keyword, $value)
+    public function getReference(Project $project, $keyword, $value): ?Reference
     {
         return $this->findReference($project, $keyword, $keyword . $value);
     }
@@ -105,9 +103,8 @@ class ReferencesBuilder
      * @param $project Project
      * @param $keyword string reference keyword (wiki)
      * @param $reference string full reference (wiki76532)
-     * @return Reference or null
      */
-    private function findReference(Project $project, $keyword, $reference)
+    private function findReference(Project $project, $keyword, $reference): ?Reference
     {
         $row = $this->dao->getRef($reference)->getRow();
         if (empty($row)) {

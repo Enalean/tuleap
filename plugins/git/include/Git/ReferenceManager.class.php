@@ -48,11 +48,10 @@ class Git_ReferenceManager
      * Return a reference that match keyword and value
      * @param String $keyword
      * @param String $value
-     * @return Reference|false
      */
-    public function getReference(Project $project, $keyword, $value)
+    public function getReference(Project $project, $keyword, $value): ?Reference
     {
-        $reference = false;
+        $reference = null;
         list($repository_name, $sha1) = $this->splitRepositoryAndSha1($value);
         $repository = $this->repository_factory->getRepositoryByPath($project->getId(), $project->getUnixName() . '/' . $repository_name . '.git');
         if ($repository) {

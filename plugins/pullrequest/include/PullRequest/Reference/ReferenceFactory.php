@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -58,7 +58,7 @@ class ReferenceFactory
         $this->html_url_builder     = $html_url_builder;
     }
 
-    public function getReferenceByPullRequestId($keyword, $pull_request_id)
+    public function getReferenceByPullRequestId($keyword, $pull_request_id): ?\Reference
     {
         try {
             $pull_request  = $this->pull_request_factory->getPullRequestById($pull_request_id);
@@ -66,20 +66,20 @@ class ReferenceFactory
             $repository    = $this->repository_factory->getRepositoryById($repository_id);
 
             if (! $repository) {
-                return;
+                return null;
             }
 
             $project_id = $repository->getProjectId();
 
             if ($this->reference_retriever->doesProjectReferenceWithKeywordExists($keyword, $project_id)) {
-                return;
+                return null;
             }
 
             $html_url = $this->html_url_builder->getPullRequestOverviewUrl($pull_request);
 
             return new Reference($keyword, $html_url, $project_id);
         } catch (PullRequestNotFoundException $ex) {
-            return;
+            return null;
         }
     }
 }

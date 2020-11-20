@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean SAS, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ require_once __DIR__ . '/../../git/include/gitPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\ReferenceAliasGit\Dao;
 use Tuleap\ReferenceAliasGit\ReferencesImporter;
 use Tuleap\ReferenceAliasGit\ReferencesBuilder;
@@ -33,7 +34,7 @@ class referencealias_gitPlugin extends Plugin //phpcs:ignore
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
         $this->addHook(Event::IMPORT_COMPAT_REF_XML);
-        $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(GetReferenceEvent::NAME);
         $this->addHook(Event::GET_PLUGINS_EXTRA_REFERENCES);
     }
 
@@ -68,13 +69,15 @@ class referencealias_gitPlugin extends Plugin //phpcs:ignore
         }
     }
 
-    /** @see Event::GET_REFERENCE */
-    public function get_reference($params) //phpcs:ignore
+    public function getReference(GetReferenceEvent $event): void
     {
-        $reference = $this->getReferencesBuilder()->getReference($params['keyword'], $params['value']);
+        $reference = $this->getReferencesBuilder()->getReference(
+            $event->getKeyword(),
+            $event->getValue()
+        );
 
-        if (! empty($reference)) {
-            $params['reference'] = $reference;
+        if ($reference !== null) {
+            $event->setReference($reference);
         }
     }
 

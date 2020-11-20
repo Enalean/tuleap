@@ -101,6 +101,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
@@ -197,7 +198,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
 
-        $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(GetReferenceEvent::NAME);
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
@@ -1151,13 +1152,13 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         );
     }
 
-    public function get_reference($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function getReference(GetReferenceEvent $event): void
     {
-        $keyword       = $params['keyword'];
+        $keyword       = $event->getKeyword();
         $reference_row = $this->getSystemDocmanReferenceByKeyword($keyword);
 
         if ($reference_row) {
-            $docman_element_id   = $params['value'];
+            $docman_element_id   = $event->getValue();
             $docman_item_factory = new Docman_ItemFactory();
             $reference_factory   = new Docman_ReferenceFactory();
 
@@ -1169,7 +1170,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                     $docman_item->getGroupId()
                 );
 
-                $params['reference'] = $reference;
+                $event->setReference($reference);
             }
         }
     }

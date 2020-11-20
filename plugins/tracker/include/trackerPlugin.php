@@ -61,6 +61,7 @@ use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\BasicAuthentication;
@@ -275,7 +276,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook(Event::BACKEND_ALIAS_GET_ALIASES);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
         $this->addHook(ExportXmlProject::NAME);
-        $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(GetReferenceEvent::NAME);
         $this->addHook(Event::CAN_USER_ACCESS_UGROUP_INFO);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
         $this->addHook(SiteAdministrationAddOption::NAME);
@@ -1394,12 +1395,12 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             ->exportSingleTrackerToXml($into_xml, $tracker_id, $user, $archive);
     }
 
-    public function get_reference($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function getReference(GetReferenceEvent $event): void
     {
-        if ($this->isArtifactReferenceInMultipleTrackerServicesContext($params['keyword'])) {
-            $artifact_id       = $params['value'];
-            $keyword           = $params['keyword'];
-            $reference_manager = $params['reference_manager'];
+        $keyword = $event->getKeyword();
+        if ($this->isArtifactReferenceInMultipleTrackerServicesContext($keyword)) {
+            $artifact_id       = $event->getValue();
+            $reference_manager = $event->getReferenceManager();
 
             $tracker_reference_manager = $this->getTrackerReferenceManager($reference_manager);
 
@@ -1408,8 +1409,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $artifact_id
             );
 
-            if ($reference) {
-                $params['reference'] = $reference;
+            if ($reference !== null) {
+                $event->setReference($reference);
             }
         }
     }

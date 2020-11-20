@@ -29,7 +29,6 @@ use Tuleap\SVN\Repository\RuleName;
 
 class Extractor
 {
-
     /**
      * @var RepositoryManager
      */
@@ -41,12 +40,12 @@ class Extractor
     }
 
     /**
-     * @return false|Reference
+     * @return null|Reference
      */
-    public function getReference(Project $project, string $keyword, string $value)
+    public function getReference(Project $project, string $keyword, string $value): ?\Reference
     {
         if (! $project->usesService(SvnPlugin::SERVICE_SHORTNAME)) {
-            return false;
+            return null;
         }
 
         if (ctype_digit($value)) {
@@ -54,13 +53,13 @@ class Extractor
                 $repository = $this->repository_manager->getCoreRepository($project);
                 return new Reference($project, $repository, $keyword, (int) $value);
             } catch (CannotFindRepositoryException $exception) {
-                return false;
+                return null;
             }
         }
 
         $matches = [];
         if (! preg_match($this->getRegExp(), $value, $matches)) {
-            return false;
+            return null;
         }
 
         $repository_name = $matches[1];
@@ -69,7 +68,7 @@ class Extractor
         try {
             $repository = $this->repository_manager->getRepositoryByName($project, $repository_name);
         } catch (CannotFindRepositoryException $exception) {
-            return false;
+            return null;
         }
 
         return new Reference($project, $repository, $keyword, $revision_id);

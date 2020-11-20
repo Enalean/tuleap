@@ -160,6 +160,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\User\AccessKey\AccessKeyDAO;
@@ -216,7 +217,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass', false);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, 'getReferenceKeywords', false);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'getReferenceNatures', false);
-        $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(GetReferenceEvent::NAME);
         $this->addHook('SystemEvent_PROJECT_IS_PRIVATE', 'changeProjectRepositoriesAccess', false);
         $this->addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename', false);
         $this->addHook('project_is_deleted');
@@ -692,22 +693,25 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    public function get_reference($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function getReference(GetReferenceEvent $event): void
     {
-        if ($params['keyword'] == Git::REFERENCE_KEYWORD) {
-            $reference = false;
-            if ($params['project']) {
+        if ($event->getKeyword() == Git::REFERENCE_KEYWORD) {
+            $reference = null;
+            if ($event->getProject()) {
                 $git_reference_manager = new Git_ReferenceManager(
                     $this->getRepositoryFactory(),
-                    $params['reference_manager']
+                    $event->getReferenceManager()
                 );
                 $reference = $git_reference_manager->getReference(
-                    $params['project'],
-                    $params['keyword'],
-                    $params['value']
+                    $event->getProject(),
+                    $event->getKeyword(),
+                    $event->getValue()
                 );
             }
-            $params['reference'] = $reference;
+
+            if ($reference !== null) {
+                $event->setReference($reference);
+            }
         }
     }
 

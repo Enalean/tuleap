@@ -25,6 +25,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Project\Event\GetUriFromCrossReference;
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\ReferenceGetTooltipChainJson;
 use Tuleap\Reference\ReferenceGetTooltipChainLegacy;
 use Tuleap\Reference\ReferenceGetTooltipChainOpenGraph;
@@ -72,20 +73,17 @@ if ($keyword === 'wiki') {
 $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
 
-$ref = null;
-
 $event_manager = EventManager::instance();
-$event_manager->processEvent(
-    Event::GET_REFERENCE,
-    [
-        'reference_manager' => $reference_manager,
-        'project'           => $project,
-        'keyword'           => $keyword,
-        'value'             => $value,
-        'group_id'          => $group_id,
-        'reference'         => &$ref,
-    ]
+$event = new GetReferenceEvent(
+    $reference_manager,
+    $project,
+    $keyword,
+    $value
 );
+
+$event_manager->dispatch($event);
+
+$ref = $event->getReference();
 if ($ref === null) {
     if ($keyword == ReferenceManager::KEYWORD_ARTIFACT_LONG || $keyword == ReferenceManager::KEYWORD_ARTIFACT_SHORT) {
         $ref = $reference_manager->loadReferenceFromKeyword($keyword, $value);

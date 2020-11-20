@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011 - 2015. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -91,10 +91,7 @@ class Tracker_ReferenceManager
         );
     }
 
-    /**
-     * @return mixed Tracker_Reference || null
-     */
-    public function getReference($keyword, $artifact_id)
+    public function getReference($keyword, $artifact_id): ?Tracker_Reference
     {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
@@ -105,10 +102,7 @@ class Tracker_ReferenceManager
         return $this->getTrackerReference($artifact, $keyword);
     }
 
-    /**
-     * @return Tracker_Reference
-     */
-    private function getTrackerReference(Artifact $artifact, $keyword)
+    private function getTrackerReference(Artifact $artifact, $keyword): Tracker_Reference
     {
         $reference = new Tracker_Reference(
             $artifact->getTracker(),
