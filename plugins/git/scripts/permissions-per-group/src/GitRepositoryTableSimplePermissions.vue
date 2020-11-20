@@ -33,6 +33,7 @@
                 v-bind:is-static="group.is_static"
                 v-bind:is-custom="group.is_custom"
                 v-bind:group-name="group.ugroup_name"
+                v-bind:data-test="`git-permission-badge-${group.ugroup_name}`"
             />
         </td>
 
@@ -44,6 +45,7 @@
                 v-bind:is-static="group.is_static"
                 v-bind:is-custom="group.is_custom"
                 v-bind:group-name="group.ugroup_name"
+                v-bind:data-test="`git-permission-badge-${group.ugroup_name}`"
             />
         </td>
         <td>
@@ -54,6 +56,7 @@
                 v-bind:is-static="group.is_static"
                 v-bind:is-custom="group.is_custom"
                 v-bind:group-name="group.ugroup_name"
+                v-bind:data-test="`git-permission-badge-${group.ugroup_name}`"
             />
         </td>
     </tr>
@@ -62,11 +65,11 @@
 import GitPermissionsBadge from "../../../../../src/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Repository } from "./type";
+import { RepositorySimplePermissions } from "./type";
 
 @Component({ components: { GitPermissionsBadge } })
 export default class GitRepositoryTableSimplePermissions extends Vue {
     @Prop()
-    readonly repositoryPermission!: Repository;
+    readonly repositoryPermission!: RepositorySimplePermissions;
 }
 </script>

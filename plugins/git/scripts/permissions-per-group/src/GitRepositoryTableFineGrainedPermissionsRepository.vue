@@ -20,7 +20,9 @@
 <template>
     <tr>
         <td>
-            <a v-bind:href="repositoryPermission.url">{{ repositoryPermission.name }}</a>
+            <a data-test="git-permissions-repository-link" v-bind:href="repositoryPermission.url">
+                {{ repositoryPermission.name }}
+            </a>
         </td>
         <td colspan="2"></td>
         <td>
@@ -31,6 +33,7 @@
                 v-bind:is-static="group.is_static"
                 v-bind:is-custom="group.is_custom"
                 v-bind:group-name="group.ugroup_name"
+                v-bind:data-test="`git-permission-badge-${group.ugroup_name}`"
             />
         </td>
         <td></td>
@@ -41,11 +44,11 @@
 import GitPermissionsBadge from "../../../../../src/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Repository } from "./type";
+import { RepositoryFineGrainedPermissions } from "./type";
 
 @Component({ components: { GitPermissionsBadge } })
 export default class GitRepositoryTableFineGrainedPermissionsRepository extends Vue {
     @Prop()
-    readonly repositoryPermission!: Repository;
+    readonly repositoryPermission!: RepositoryFineGrainedPermissions;
 }
 </script>

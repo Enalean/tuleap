@@ -19,12 +19,13 @@
 
 <template>
     <section class="tlp-pane-section">
-        <div class="tlp-alert-danger" v-if="hasError">
+        <div class="tlp-alert-danger" v-if="hasError" data-test="git-permission-error">
             {{ error }}
         </div>
 
         <div class="permission-per-group-load-button" v-if="displayButtonLoadAll">
             <button
+                data-test="git-permission-button-load"
                 class="tlp-button-primary tlp-button-outline"
                 v-on:click="loadAll()"
                 v-translate
@@ -33,7 +34,11 @@
             </button>
         </div>
 
-        <div class="permission-per-group-loader" v-if="is_loading"></div>
+        <div
+            data-test="git-permission-loading"
+            class="permission-per-group-loader"
+            v-if="is_loading"
+        ></div>
 
         <h2 class="tlp-pane-subtitle" v-if="is_loaded" v-translate>Repository permissions</h2>
         <git-inline-filter v-if="is_loaded" v-model="filter" />
@@ -52,7 +57,7 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import GitInlineFilter from "./GitInlineFilter.vue";
 import GitPermissionsTable from "./GitPermissionsTable.vue";
-import { Repository } from "./type";
+import { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
 
 @Component({
     components: { GitInlineFilter, GitPermissionsTable },
@@ -61,13 +66,13 @@ export default class GitPermissions extends Vue {
     @Prop()
     readonly selectedUgroupId!: string;
     @Prop()
-    readonly selectedProjectId!: string;
+    readonly selectedProjectId!: number;
     @Prop()
     readonly selectedUgroupName!: string;
 
     is_loaded = false;
     is_loading = false;
-    repositories: Repository[] = [];
+    repositories: (RepositoryFineGrainedPermissions | RepositorySimplePermissions)[] = [];
     error = null;
     filter = "";
 

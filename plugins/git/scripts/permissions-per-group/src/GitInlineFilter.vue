@@ -28,6 +28,7 @@
                 v-bind:placeholder="placeholder"
                 v-bind:value="value"
                 v-on:keyup="search"
+                data-test="git-inline-filter-input"
             />
         </div>
     </div>

@@ -33,6 +33,7 @@
                 v-for="fined_grained_permission in repository.fine_grained_permission"
                 v-bind:key="fined_grained_permission.id"
                 v-bind:fine-grained-permissions="fined_grained_permission"
+                v-bind:data-test="`git-repository-fine-grained-permission-${fined_grained_permission.id}`"
             />
         </template>
     </tbody>
@@ -44,7 +45,7 @@ import GitRepositoryTableFineGrainedPermissionsRepository from "./GitRepositoryT
 import GitRepositoryTableFineGrainedPermission from "./GitRepositoryTableFineGrainedPermission.vue";
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { Repository } from "./type";
+import { RepositoryFineGrainedPermissions, RepositorySimplePermissions } from "./type";
 
 @Component({
     components: {
@@ -55,7 +56,7 @@ import { Repository } from "./type";
 })
 export default class GitPermissionsTableRepository extends Vue {
     @Prop()
-    readonly repository!: Repository;
+    readonly repository!: RepositoryFineGrainedPermissions | RepositorySimplePermissions;
     @Prop()
     readonly filter!: string;
 

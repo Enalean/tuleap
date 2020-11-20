@@ -17,23 +17,34 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-export interface Repository {
+export interface RepositoryFineGrainedPermissions {
     name: string;
     has_fined_grained_permissions: boolean;
     fine_grained_permission: FineGrainedPermission[];
     url: string;
     repository_id: number;
+    readers: PermissionGroup[];
+}
+
+export interface RepositorySimplePermissions {
+    name: string;
+    has_fined_grained_permissions: boolean;
+    url: string;
+    repository_id: number;
+    readers: PermissionGroup[];
+    rewinders: PermissionGroup[];
+    writers: PermissionGroup[];
 }
 
 export interface FineGrainedPermission {
     id: number;
     branch: string;
     tag: string;
-    writers: FineGrainedPermissionGroup[];
-    rewinders: FineGrainedPermissionGroup[];
+    writers: PermissionGroup[];
+    rewinders: PermissionGroup[];
 }
 
-export interface FineGrainedPermissionGroup {
+export interface PermissionGroup {
     is_project_admin: boolean;
     is_static: boolean;
     is_custom: boolean;

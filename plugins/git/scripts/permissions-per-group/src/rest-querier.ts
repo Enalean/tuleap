@@ -18,14 +18,14 @@
  */
 
 import { get } from "tlp";
-import { Repository } from "./type";
+import { RepositoryFineGrainedPermissions } from "./type";
 
 export { getGitPermissions };
 
 async function getGitPermissions(
-    project_id: string,
+    project_id: number,
     selected_ugroup_id: string
-): Promise<{ repositories: Repository[] }> {
+): Promise<{ repositories: RepositoryFineGrainedPermissions[] }> {
     const response = await get("/plugins/git/", {
         params: {
             group_id: project_id,
