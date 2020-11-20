@@ -4,7 +4,7 @@
         <button type="button"
                 id="button-modal-add-mirror"
                 class="tlp-button-primary tlp-button-large"
-                data-modal-id="modal-add-mirror"
+                data-target-modal-id="modal-add-mirror"
         >
             <i class="fa fa-plus tlp-button-icon"></i> {{ add_mirror }}
         </button>
@@ -17,14 +17,14 @@
             <button type="button"
                     id="button-modal-add-mirror"
                     class="tlp-button-primary tlp-table-actions-element"
-                    data-modal-id="modal-add-mirror"
+                    data-target-modal-id="modal-add-mirror"
             >
                 <i class="tlp-button-icon fa fa-plus"></i> {{ add_mirror }}
             </button>
             <button type="button"
                     id="button-modal-mirror-configuration"
                     class="tlp-button-warning tlp-table-actions-element"
-                    data-modal-id="modal-mirror-configuration"
+                    data-target-modal-id="modal-mirror-configuration"
             >
                 <i class="tlp-button-icon fas fa-redo"></i> {{ dump_mirrored_repositories_label }}
             </button>
@@ -74,7 +74,7 @@
                                 {{# has_repositories }}
                                     <a href="javascript:;"
                                        class="mirror-show-repositories"
-                                       data-modal-id="modal-show-repositories-{{ id }}"
+                                       data-target-modal-id="modal-show-repositories-{{ id }}"
                                     >
                                         {{ number_of_repositories }}
                                     </a>
@@ -116,7 +116,7 @@
                     <section class="tlp-pane-section mirror-action">
                         <button type="button"
                                 class="tlp-button-primary tlp-button-outline mirror-action-edit-button"
-                                data-modal-id="edit-modal-{{ id }}"
+                                data-target-modal-id="edit-modal-{{ id }}"
                         >
                             <i class="fas fa-pencil-alt tlp-button-icon"></i>
                             {{ btn_edit }}
@@ -135,8 +135,11 @@
                                     tlp-button-outline
                                     mirror-action-delete-button
                                     {{# has_repositories }} tlp-tooltip tlp-tooltip-left {{/ has_repositories }}"
-                                data-modal-id="delete-modal-{{ id }}"
-                                {{# has_repositories }}
+                            {{^ has_repositories }}
+                                data-delete-mirror-button=""
+                                data-target-modal-id="delete-modal-{{ id }}"
+                            {{/ has_repositories }}
+                            {{# has_repositories }}
                                     disabled
                                     data-tlp-tooltip="{{ already_used }}"
                                 {{/ has_repositories }}

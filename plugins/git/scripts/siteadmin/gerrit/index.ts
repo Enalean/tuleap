@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createModal } from "tlp";
+import {
+    openAllTargetModalsOnClick,
+    openTargetModalIdOnClick,
+} from "@tuleap/core/scripts/tuleap/modals/modal-opener";
 
-export function initAddModal() {
-    const modal_gerrit_add_server = document.getElementById("modal-add-gerrit-server");
-    const modal_gerrit_add_server_content = createModal(modal_gerrit_add_server, {});
+document.addEventListener("DOMContentLoaded", () => {
+    initAddModal();
+    initEditModal();
+    initDeleteModal();
+});
 
-    document
-        .getElementById("button-modal-add-gerrit-server")
-        .addEventListener("click", function () {
-            modal_gerrit_add_server_content.toggle();
-        });
+function initAddModal(): void {
+    openTargetModalIdOnClick(document, "button-modal-add-gerrit-server");
+}
+
+function initDeleteModal(): void {
+    openAllTargetModalsOnClick(document, ".gerrit-action-delete-button");
+}
+
+function initEditModal(): void {
+    openAllTargetModalsOnClick(document, ".gerrit-action-edit-button");
 }
