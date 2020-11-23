@@ -35,6 +35,7 @@ use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
@@ -43,7 +44,6 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Synchroniz
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
-use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;

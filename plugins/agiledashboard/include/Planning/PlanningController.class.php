@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarnings
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
+use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
@@ -475,6 +476,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     public function importForm()
     {
         $this->redirectNonAdmin();
+        $project = $this->getProjectFromRequest();
+        $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($project);
 
         $template_file = new Valid_File('template_file');
         $template_file->required();
@@ -514,10 +517,12 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     /**
      * Exports the agile dashboard configuration as an XML file
      */
-    public function exportToFile()
+    public function exportToFile(): void
     {
+        $this->checkUserIsAdmin();
         try {
             $project = $this->getProjectFromRequest();
+            $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($project);
             $xml = $this->getFullConfigurationAsXML($project);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'Unable to export the configuration'));
@@ -834,5 +839,15 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->addOtherWarnings($warning_list, $planning->getPlanningTracker());
 
         return $warning_list;
+    }
+
+    public function redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin(Project $project): void
+    {
+        $planning_administration_delegation = new PlanningAdministrationDelegation($project);
+        $this->event_manager->dispatch($planning_administration_delegation);
+
+        if ($planning_administration_delegation->isPlanningAdministrationDelegated()) {
+            $this->redirect(['group_id' => $project->getID(), 'action' => 'admin']);
+        }
     }
 }

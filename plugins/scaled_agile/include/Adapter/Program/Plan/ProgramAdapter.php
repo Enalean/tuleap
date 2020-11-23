@@ -24,9 +24,9 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Plan;
 
 use Luracast\Restler\RestException;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
 use Tuleap\ScaledAgile\Program\Program;
-use Tuleap\ScaledAgile\Program\ProgramDao;
 
 final class ProgramAdapter implements BuildProgram
 {

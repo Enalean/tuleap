@@ -48,13 +48,13 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsA
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleValueAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;

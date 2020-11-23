@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Test\REST;
+namespace Tuleap\ScaledAgile\Program;
 
-use REST_TestDataBuilder;
-use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
-
-class ScaledAgileDataBuilder extends REST_TestDataBuilder
+interface ProgramStore
 {
-    public function setUp(): void
-    {
-        $this->defineProjectAsProgram();
-    }
-
-    private function defineProjectAsProgram(): void
-    {
-        $dao             = new ProgramDao();
-        $program_project = $this->project_manager->getProjectByUnixName('program');
-        $team_project    = $this->project_manager->getProjectByUnixName('team');
-        $dao->saveProgram((int) $program_project->getID(), (int) $team_project->getID());
-    }
+    public function isProjectAProgramProject(int $project_id): bool;
 }

@@ -30,6 +30,7 @@ use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ScaledAgile\Adapter\Team\AtLeastOneTeamShouldBeDefinedException;
@@ -40,7 +41,6 @@ use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
 use Tuleap\ScaledAgile\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ScaledAgile\Program\Plan\CreatePlan;
 use Tuleap\ScaledAgile\Program\Plan\PlanCreator;
-use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\ScaledAgile\Team\Creation\TeamCreator;
 
 final class ProjectResource extends AuthenticatedResource

@@ -26,8 +26,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Program\Program;
-use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\ScaledAgile\Team\Creation\Team;
 use Tuleap\ScaledAgile\Team\Creation\TeamCollection;
 

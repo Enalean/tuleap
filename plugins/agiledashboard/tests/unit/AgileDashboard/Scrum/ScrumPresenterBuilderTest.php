@@ -119,6 +119,7 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->scrum_mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->atLeast(1)->andReturnFalse();
 
         $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->shouldReceive('dispatch')->once();
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnFalse();
 
@@ -140,7 +141,8 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             false,
             true,
-            []
+            [],
+            false
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -174,6 +176,7 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->planning_factory->shouldReceive('getPlannings')->once()->andReturn([$planning]);
 
         $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->shouldReceive('dispatch')->once();
 
         $this->scrum_mono_milestone_checker->shouldReceive('isScrumMonoMilestoneAvailable')->once()->andReturnTrue();
         $this->scrum_mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturnFalse();
@@ -200,7 +203,8 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             false,
             true,
-            []
+            [],
+            false
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -233,6 +237,7 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->planning_factory->shouldReceive('getPlannings')->once()->andReturn([$planning]);
 
         $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->shouldReceive('dispatch')->once();
 
         $this->scrum_mono_milestone_checker->shouldReceive('isScrumMonoMilestoneAvailable')->once()->andReturnTrue();
         $this->scrum_mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturnTrue();
@@ -262,7 +267,8 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             false,
             true,
-            []
+            [],
+            false
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
@@ -295,6 +301,7 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->planning_factory->shouldReceive('getPlannings')->once()->andReturn([$planning]);
 
         $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->shouldReceive('dispatch')->once();
 
         $this->scrum_mono_milestone_checker->shouldReceive('isScrumMonoMilestoneAvailable')->once()->andReturnFalse();
         $this->scrum_mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->atLeast(1)->andReturnFalse();
@@ -321,7 +328,8 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             true,
             true,
-            []
+            [],
+            false
         );
 
         $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));

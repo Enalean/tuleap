@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
+use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 
 /**
@@ -60,6 +62,10 @@ class AgileDashboard_XMLController extends MVC2_PluginController
      * @var ExternalFieldsExtractor
      */
     private $external_field_extractor;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     public function __construct(
         Codendi_Request $request,
@@ -69,7 +75,8 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         AgileDashboard_XMLImporter $agiledashboard_xml_importer,
         Planning_RequestValidator $planning_request_validator,
         XMLImporter $explicit_backlog_xml_import,
-        ExternalFieldsExtractor $external_field_extractor
+        ExternalFieldsExtractor $external_field_extractor,
+        EventDispatcherInterface $event_dispatcher
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -81,6 +88,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         $this->planning_request_validator  = $planning_request_validator;
         $this->explicit_backlog_xml_import = $explicit_backlog_xml_import;
         $this->external_field_extractor    = $external_field_extractor;
+        $this->event_dispatcher            = $event_dispatcher;
     }
 
     /**
@@ -104,6 +112,8 @@ class AgileDashboard_XMLController extends MVC2_PluginController
     public function importOnlyAgileDashboard()
     {
         $this->checkUserIsAdmin();
+        $project = $this->request->getProject();
+        $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($project);
 
         $xml           = $this->request->get('xml_content')->agiledashboard;
         $rng_path      = realpath(__DIR__ . '/../../resources/xml_project_agiledashboard.rng');
@@ -112,7 +122,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
 
         $this->importPlannings($xml);
 
-        $this->explicit_backlog_xml_import->importConfiguration($xml, $this->request->getProject());
+        $this->explicit_backlog_xml_import->importConfiguration($xml, $project);
     }
 
     /**
@@ -123,6 +133,8 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->checkUserIsAdmin();
+        $project = $this->request->getProject();
+        $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($project);
 
         $xml       = $this->request->get('xml_content');
         $rng_path  = realpath(ForgeConfig::get('tuleap_dir') . '/src/common/xml/resources/project/project.rng');
@@ -135,10 +147,10 @@ class AgileDashboard_XMLController extends MVC2_PluginController
 
         $this->importPlannings($xml);
 
-        $this->explicit_backlog_xml_import->importConfiguration($xml, $this->request->getProject());
+        $this->explicit_backlog_xml_import->importConfiguration($xml, $project);
         $this->explicit_backlog_xml_import->importContent(
             $xml,
-            $this->request->getProject(),
+            $project,
             $this->request->getCurrentUser(),
             $artifact_id_mapping,
             $logger
@@ -169,6 +181,16 @@ class AgileDashboard_XMLController extends MVC2_PluginController
             } else {
                 throw new Exception('Planning is not valid: ' . print_r($planning, true));
             }
+        }
+    }
+
+    public function redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin(Project $project): void
+    {
+        $planning_administration_delegation = new PlanningAdministrationDelegation($project);
+        $this->event_dispatcher->dispatch($planning_administration_delegation);
+
+        if ($planning_administration_delegation->isPlanningAdministrationDelegated()) {
+            $this->redirect(['group_id' => $project->getID(), 'action' => 'admin']);
         }
     }
 }

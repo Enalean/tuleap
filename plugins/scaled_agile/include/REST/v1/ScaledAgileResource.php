@@ -33,13 +33,13 @@ use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
 use Tuleap\ScaledAgile\Adapter\Team\TeamTrackerAdapter;
 use Tuleap\ScaledAgile\Program\Hierarchy\HierarchyCreator;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 final class ScaledAgileResource extends AuthenticatedResource

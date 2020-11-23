@@ -72,6 +72,21 @@ class AdminScrumPresenter
      * @var IScrumAdminSectionControllers[]
      */
     public $additional_scrum_sections_controllers;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $cannot_create_planning_in_scrum_v2;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_planning_administration_delegated;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $has_side_panes;
 
     public function __construct(
         array $plannings,
@@ -88,7 +103,8 @@ class AdminScrumPresenter
         $additional_content,
         bool $explicit_top_backlog_enabled,
         bool $has_workflow_action_add_to_top_backlog_defined,
-        array $additional_scrum_sections_controllers
+        array $additional_scrum_sections_controllers,
+        bool $is_planning_administration_delegated
     ) {
         $this->plannings                                   = $plannings;
         $this->group_id                                    = $group_id;
@@ -111,6 +127,8 @@ class AdminScrumPresenter
         $this->explicit_top_backlog_enabled                   = $explicit_top_backlog_enabled;
         $this->has_workflow_action_add_to_top_backlog_defined = $has_workflow_action_add_to_top_backlog_defined;
         $this->additional_scrum_sections_controllers          = $additional_scrum_sections_controllers;
+        $this->is_planning_administration_delegated           = $is_planning_administration_delegated;
+        $this->has_side_panes                                 = ! $is_planning_administration_delegated || $additional_content !== '';
     }
 
     public function has_plannings()
