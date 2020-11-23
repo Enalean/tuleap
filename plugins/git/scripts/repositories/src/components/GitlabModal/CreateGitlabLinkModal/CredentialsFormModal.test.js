@@ -41,7 +41,9 @@ describe("CredentialsFormModal", () => {
 
     it("When the user clicked on the button, Then the submit button is disabled and icon changed and api is called", async () => {
         const wrapper = instantiateComponent();
-        expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-arrow-right");
+        expect(wrapper.find("[data-test=icon-spin]").classes()).toContain(
+            "fa-long-arrow-alt-right"
+        );
 
         wrapper.setData({
             is_loading: false,
@@ -57,7 +59,7 @@ describe("CredentialsFormModal", () => {
         expect(
             wrapper.find("[data-test=button-add-gitlab-repository]").attributes().disabled
         ).toBeTruthy();
-        expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-sync-alt");
+        expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-circle-notch");
 
         expect(store.dispatch).toHaveBeenCalledWith("getGitlabRepositoryList", {
             server_url: "https://example.com",

@@ -65,7 +65,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
         wrapper.setData({
             repository: {
                 id: 10,
-                label: "My project",
+                normalized_path: "My project",
             },
         });
 
@@ -83,7 +83,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
         wrapper.setData({
             repository: {
                 id: 10,
-                label: "My project",
+                normalized_path: "My project",
             },
         });
 
@@ -98,7 +98,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
 
         expect(store.commit).toHaveBeenCalledWith("removeRepository", {
             id: 10,
-            label: "My project",
+            normalized_path: "My project",
         });
         expect(store.commit).toHaveBeenCalledWith("setSuccessMessage", success_message);
     });
@@ -113,7 +113,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
         wrapper.setData({
             repository: {
                 id: 10,
-                label: "My project",
+                normalized_path: "My project",
             },
         });
 
@@ -137,7 +137,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
         wrapper.setData({
             repository: {
                 id: 10,
-                label: "My project",
+                normalized_path: "My project",
             },
             message_error_rest: "Error during delete",
         });

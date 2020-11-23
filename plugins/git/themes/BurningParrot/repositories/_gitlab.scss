@@ -1,0 +1,129 @@
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ */
+
+.gitlab-description {
+    margin: 0;
+}
+
+.git-repository-card-admin-link .unlink-repository-gitlab {
+    color: $tlp-ui-danger;
+}
+
+.git-gitlab-icon-align-to-date {
+    margin: 0 $tlp-medium-spacing 0 0;
+}
+
+.gitlab-avatar {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+}
+
+.default-gitlab-avatar {
+    background-color: $tlp-theme-background-color;
+    color: $tlp-ui-dimmed;
+    text-align: center;
+}
+
+.gitlab-select-radio-button-container {
+    width: 0;
+}
+
+.tlp-radio > .gitlab-select-radio-button {
+    vertical-align: middle;
+}
+
+/* stylelint-disable-next-line selector-no-qualifying-type */
+.tlp-table > tbody > tr > td.gitlab-select-avatar {
+    width: 1.2rem;
+    height: 1.2rem;
+    padding: 0;
+    line-height: 1.2rem;
+    vertical-align: middle;
+}
+
+.fetch-gitlab-repositories-modal {
+    width: max-content;
+    min-width: 600px;
+    max-width: 900px;
+}
+
+.gitlab-select-repository {
+    cursor: pointer;
+
+    .tlp-radio,
+    .tlp-radio > input {
+        cursor: pointer;
+    }
+
+    &.gitlab-select-repository-disabled {
+        cursor: not-allowed;
+
+        &.gitlab-select-radio-button-container,
+        .gitlab-repository-name-namespace,
+        .gitlab-avatar {
+            opacity: .5;
+        }
+
+        .tlp-radio,
+        .tlp-radio > input {
+            cursor: not-allowed;
+        }
+
+        &.tlp-tooltip::before {
+            opacity: 1;
+        }
+    }
+}
+
+/* stylelint-disable-next-line selector-no-qualifying-type */
+.tlp-table > tbody > tr > td.gitlab-repository-namespace {
+    line-height: 1.2rem;
+}
+
+.gitlab-repository-path-namespace {
+    display: block;
+    color: $tlp-ui-dimmed;
+    font-size: .75rem;
+}
+
+.gitlab-tooltip-button-radio {
+    &::before {
+        top: -10px;
+        left: 155px;
+    }
+
+    &::after {
+        top: -10px;
+        left: 155px;
+    }
+}
+
+.gitlab-tooltip-avatar {
+    &::before {
+        top: 5px;
+        left: 130px;
+    }
+
+    &::after {
+        top: 5px;
+        left: 130px;
+    }
+}

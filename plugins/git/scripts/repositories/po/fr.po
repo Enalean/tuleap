@@ -90,8 +90,8 @@ msgstr ""
 msgid ""
 "GitLab repository <strong>%{ label }</strong> has been successfully unlinked!"
 msgstr ""
-"L'intégration du dépot GitLab <strong>%{ label }</strong> a été supprimée avec "
-"succés !"
+"L'intégration du dépot GitLab <strong>%{ label }</strong> a été supprimée "
+"avec succés !"
 
 msgid "GitLab server URL"
 msgstr "URL du serveur GitLab"
@@ -99,11 +99,15 @@ msgstr "URL du serveur GitLab"
 msgid "GitLab user token"
 msgstr "Jeton de l'utilisateur GitLab"
 
+msgid "GitLab user token scope must contain at least: api."
+msgstr ""
+"La portée du jeton de l'utilisateur GitLab doit contenir au moins : api."
+
 msgid "Go to repository administration"
 msgstr "Aller à l'administration du dépôt"
 
-msgid "Integrate the repository"
-msgstr "Intégrer le dépôt"
+msgid "Integrate selected repository"
+msgstr "Intégrer le dépôt sélectionné"
 
 msgid "Jenkins servers"
 msgstr "Serveurs Jenkins"
@@ -162,6 +166,9 @@ msgid ""
 msgstr ""
 "Ces serveurs seront appelés lors de chaque push fait dans les dépôts du "
 "projet :"
+
+msgid "This repository is already integrated."
+msgstr "Ce dépôt est déjà intégré."
 
 msgid "Unlink GitLab repository?"
 msgstr "Voulez-vous supprimer l'intégration du dépôt GitLab ?"
