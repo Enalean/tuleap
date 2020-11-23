@@ -66,7 +66,6 @@ class SinglePageExporter
         $file_name .= '_' . $tracker->getProject()->getUnixName() . '.html';
         header('Content-Disposition: attachment; filename="' . $this->purifyFileName($file_name) . '"');
         header('Content-type: text/html');
-        header('Content-Security-Policy: default-src \'none\'; frame-ancestors \'none\'; form-action \'none\'');
         header('X-DNS-Prefetch-Control: off');
     }
 
