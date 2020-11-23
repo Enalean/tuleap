@@ -37,9 +37,23 @@ describe("ListItemBuilder", () => {
 
         const map = await builder.buildListPickerItemsMap();
 
-        expect(map.size).toEqual(4);
+        expect(map.size).toEqual(5);
 
         const iterator = map.entries();
+        expect(iterator.next().value).toEqual([
+            "list-picker-item-100",
+            {
+                id: "list-picker-item-100",
+                template: "None",
+                label: "None",
+                value: "100",
+                is_disabled: false,
+                group_id: "",
+                is_selected: false,
+                element: expect.any(Element),
+                target_option: expect.any(Element),
+            },
+        ]);
         expect(iterator.next().value).toEqual([
             "list-picker-item-value_0",
             {
@@ -230,14 +244,15 @@ describe("ListItemBuilder", () => {
             appendSimpleOptionsToSourceSelectBox(select);
             await builder.buildListPickerItemsMap();
 
-            expect(itemsTemplateFormatter).toHaveBeenCalledTimes(4);
-            expect(itemsTemplateFormatter.mock.calls[0]).toEqual(["value_0", "Value 0"]);
-            expect(itemsTemplateFormatter.mock.calls[1]).toEqual(["value_1", "Value 1"]);
-            expect(itemsTemplateFormatter.mock.calls[2]).toEqual(["value_2", "Value 2"]);
-            expect(itemsTemplateFormatter.mock.calls[3]).toEqual(["value_3", "Value 3"]);
+            expect(itemsTemplateFormatter).toHaveBeenCalledTimes(5);
+            expect(itemsTemplateFormatter.mock.calls[0]).toEqual(["100", "None"]);
+            expect(itemsTemplateFormatter.mock.calls[1]).toEqual(["value_0", "Value 0"]);
+            expect(itemsTemplateFormatter.mock.calls[2]).toEqual(["value_1", "Value 1"]);
+            expect(itemsTemplateFormatter.mock.calls[3]).toEqual(["value_2", "Value 2"]);
+            expect(itemsTemplateFormatter.mock.calls[4]).toEqual(["value_3", "Value 3"]);
 
             await builder.buildListPickerItemsMap();
-            expect(itemsTemplateFormatter).toHaveBeenCalledTimes(4);
+            expect(itemsTemplateFormatter).toHaveBeenCalledTimes(5);
         });
     });
 });
