@@ -716,8 +716,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
      */
     private function addXMLFileIntoArchive(SimpleXMLElement $xml_content, Project $project, ArchiveInterface $archive): void
     {
-        $temporaray_file = 'export_ttm_' . $project->getID() . time() . '.xml';
-        $temporary_path  = $this->getTmpDir() . "/$temporaray_file";
+        $temporary_file  = self::getTemporaryFileNameForProjectExport($project);
+        $temporary_path  = $this->getTmpDir() . "/$temporary_file";
 
         $dom = dom_import_simplexml($xml_content);
         if (! $dom) {
@@ -733,6 +733,11 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
         file_put_contents($temporary_path, $dom_document->saveXML());
         $archive->addFile('testmanagement.xml', $temporary_path);
+    }
+
+    private static function getTemporaryFileNameForProjectExport(Project $project): string
+    {
+        return 'export_ttm_' . (int) $project->getID() . time() . '.xml';
     }
 
     private function isTrackerURL(): bool

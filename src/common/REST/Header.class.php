@@ -220,7 +220,7 @@ class Header
     /**
      * @psalm-pure
      *
-     * @psalm-taint-escape text
+     * @psalm-taint-escape header
      */
     private static function getValidValueForPaginationHeader(int $value): int
     {

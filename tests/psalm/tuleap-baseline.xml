@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.1.0@8929bde5354595dc61947b7e27cfe59db45e3bb0">
+<files psalm-version="4.2.1@ea9cb72143b77e7520c52fa37290bd8d8bc88fd9">
   <file src="plugins/admindelegation/include/AdminDelegationBuilder.php">
     <MissingReturnType occurrences="4">
       <code>buildServices</code>
@@ -3210,12 +3210,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/Planning/PlanningAdminPresenter.class.php">
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="7">
       <code>delete_icon_path</code>
       <code>delete_url</code>
       <code>edit_action_label</code>
       <code>edit_icon_path</code>
-      <code>edit_url</code>
       <code>extra_message</code>
       <code>li_class</code>
       <code>name</code>
@@ -4509,10 +4508,8 @@
       <code>$from_renderer</code>
       <code>$matching_ids</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="4">
+    <MissingPropertyType occurrences="2">
       <code>$criterion-&gt;field</code>
-      <code>$this-&gt;report-&gt;id</code>
-      <code>$this-&gt;report-&gt;id</code>
       <code>$this-&gt;report-&gt;is_in_expert_mode</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="12">
@@ -4533,9 +4530,8 @@
       <code>$formsMapping</code>
       <code>$from_renderer</code>
     </ParamNameMismatch>
-    <UndefinedDocblockClass occurrences="2">
+    <UndefinedDocblockClass occurrences="1">
       <code>Report</code>
-      <code>Request</code>
     </UndefinedDocblockClass>
     <UndefinedMethod occurrences="2">
       <code>getField</code>
@@ -5491,9 +5487,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/cardwall/include/UserPreferences/Autostack/AutostackRenderer.class.php">
-    <MissingPropertyType occurrences="1">
-      <code>$this-&gt;report-&gt;id</code>
-    </MissingPropertyType>
     <MissingReturnType occurrences="1">
       <code>getName</code>
     </MissingReturnType>
@@ -9170,12 +9163,10 @@
     <InvalidNullableReturnType occurrences="1">
       <code>DataAccessResult</code>
     </InvalidNullableReturnType>
-    <InvalidReturnStatement occurrences="2">
+    <InvalidReturnStatement occurrences="1">
       <code>$deleted</code>
-      <code>$inserted</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>true</code>
+    <InvalidReturnType occurrences="1">
       <code>true</code>
     </InvalidReturnType>
     <InvalidStaticInvocation occurrences="2">
@@ -10580,7 +10571,8 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_PermissionsExport.class.php">
-    <DeprecatedFunction occurrences="3">
+    <DeprecatedFunction occurrences="4">
+      <code>db_ei($this-&gt;group-&gt;getId())</code>
       <code>db_fetch_array($result)</code>
       <code>db_fetch_array($result)</code>
       <code>db_query($sql)</code>
@@ -11595,8 +11587,23 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_Widget_Embedded.class.php">
-    <DeprecatedFunction occurrences="13">
+    <DeprecatedFunction occurrences="28">
+      <code>db_ei($id)</code>
+      <code>db_ei($id)</code>
+      <code>db_ei($owner_id)</code>
       <code>db_ei($plugin_docman_widget_embedded['item_id'])</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei((int) $request-&gt;get('content_id'))</code>
+      <code>db_es($owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
       <code>db_escape_string($plugin_docman_widget_embedded['item_id'])</code>
       <code>db_escape_string($plugin_docman_widget_embedded['title'])</code>
       <code>db_escape_string($plugin_docman_widget_embedded['title'])</code>
@@ -12359,7 +12366,7 @@
       <code>public function project_export($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps</code>
       <code>public function project_export_entry($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps</code>
     </InvalidDocblock>
-    <MissingParamType occurrences="49">
+    <MissingParamType occurrences="48">
       <code>$arams</code>
       <code>$controller</code>
       <code>$groupId</code>
@@ -12400,7 +12407,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
       <code>$project_id</code>
       <code>$request</code>
       <code>$request</code>
@@ -12413,7 +12419,7 @@
     <MissingPropertyType occurrences="1">
       <code>$_cached_permission_user_allowed_to_change</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="66">
+    <MissingReturnType occurrences="65">
       <code>cleanUnusedResources</code>
       <code>codendiDaily</code>
       <code>collectProjectAdminNavigationPermissionDropdownQuickLinks</code>
@@ -12442,7 +12448,6 @@
       <code>getUsersUpdater</code>
       <code>getWhitelistedKeys</code>
       <code>getWikiController</code>
-      <code>get_reference</code>
       <code>installNewDocman</code>
       <code>isWikiPageEditable</code>
       <code>isWikiPageReferenced</code>
@@ -16891,11 +16896,6 @@
       <code>setQueryString</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/Git/HTTP/CommandCentos6GitHttpBackend.class.php">
-    <MissingReturnType occurrences="1">
-      <code>getCommand</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/git/include/Git/HTTP/CommandFactory.class.php">
     <MissingReturnType occurrences="3">
       <code>getCommandForUser</code>
@@ -16916,11 +16916,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/HTTP/CommandGitolite3.class.php">
-    <MissingReturnType occurrences="1">
-      <code>getCommand</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/git/include/Git/HTTP/CommandSCL212GitHttpBackend.class.php">
     <MissingReturnType occurrences="1">
       <code>getCommand</code>
     </MissingReturnType>
@@ -20809,7 +20804,7 @@
       <code>$git_dir</code>
       <code>$work_tree</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="19">
+    <MissingReturnType occurrences="18">
       <code>allowUsageOfExtProtocol</code>
       <code>allowUsageOfFileProtocol</code>
       <code>buildFromRepository</code>
@@ -20822,7 +20817,6 @@
       <code>getOtherBranches</code>
       <code>gitCmd</code>
       <code>init</code>
-      <code>isGit212Installed</code>
       <code>pullBranch</code>
       <code>recursiveRm</code>
       <code>remoteAdd</code>
@@ -21282,9 +21276,6 @@
       <code>verbalizeRemoteServerId</code>
       <code>verbalizeRepoId</code>
     </MissingReturnType>
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
     <UndefinedInterfaceMethod occurrences="1">
       <code>updateRepoConf</code>
     </UndefinedInterfaceMethod>
@@ -21482,11 +21473,10 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/git/include/gitPlugin.php">
-    <MissingParamType occurrences="39">
+    <MissingParamType occurrences="38">
       <code>$error</code>
       <code>$id</code>
       <code>$newName</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -21527,7 +21517,7 @@
       <code>$FREQUENCIES_GIT_READ</code>
       <code>$_cached_permission_user_allowed_to_change</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="129">
+    <MissingReturnType occurrences="128">
       <code>changeProjectRepositoriesAccess</code>
       <code>codendi_daily_start</code>
       <code>collectGlyphLocations</code>
@@ -21598,7 +21588,6 @@
       <code>getUserFromParams</code>
       <code>getUserWidgetList</code>
       <code>getWebhookRouter</code>
-      <code>get_reference</code>
       <code>get_services_allowed_for_restricted</code>
       <code>importXmlProject</code>
       <code>isNameAvailable</code>
@@ -22263,12 +22252,10 @@
       <code>$request</code>
       <code>$store_in_session</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="5">
+    <MissingPropertyType occurrences="3">
       <code>$chart_to_edit</code>
       <code>$charts</code>
       <code>$plugin</code>
-      <code>$this-&gt;report-&gt;id</code>
-      <code>$this-&gt;report-&gt;id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="16">
       <code>afterProcessRequest</code>
@@ -22296,10 +22283,6 @@
     <TooManyArguments occurrences="1">
       <code>fetchAdditionalButton</code>
     </TooManyArguments>
-    <UndefinedDocblockClass occurrences="2">
-      <code>Request</code>
-      <code>Request</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>getCharts</code>
     </UndefinedMethod>
@@ -22314,7 +22297,21 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackersv5/include/GraphOnTrackersV5_Widget_Chart.class.php">
-    <DeprecatedFunction occurrences="13">
+    <DeprecatedFunction occurrences="27">
+      <code>db_ei($id)</code>
+      <code>db_ei($id)</code>
+      <code>db_ei($owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_es($owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
       <code>db_escape_int($chart['chart_id'])</code>
       <code>db_escape_int($chart['chart_id'])</code>
       <code>db_escape_string($chart['title'])</code>
@@ -22478,7 +22475,7 @@
       <code>$width</code>
       <code>$width</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="20">
+    <MissingPropertyType occurrences="15">
       <code>$description</code>
       <code>$engine</code>
       <code>$engine-&gt;graph</code>
@@ -22487,15 +22484,10 @@
       <code>$mustache_renderer</code>
       <code>$rank</code>
       <code>$renderer-&gt;id</code>
-      <code>$renderer-&gt;report-&gt;id</code>
       <code>$this-&gt;renderer-&gt;id</code>
       <code>$this-&gt;renderer-&gt;id</code>
       <code>$this-&gt;renderer-&gt;id</code>
       <code>$this-&gt;renderer-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
       <code>$this-&gt;renderer-&gt;report-&gt;tracker_id</code>
       <code>$title</code>
       <code>$width</code>
@@ -22629,13 +22621,11 @@
       <code>$wanted_position</code>
       <code>$xml</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="6">
+    <MissingPropertyType occurrences="4">
       <code>$chart_factories</code>
       <code>$charts</code>
       <code>$renderer-&gt;id</code>
       <code>$renderer-&gt;id</code>
-      <code>$renderer-&gt;report-&gt;id</code>
-      <code>$renderer-&gt;report-&gt;id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="14">
       <code>createChart</code>
@@ -22692,13 +22682,11 @@
       <code>$title</code>
       <code>$width</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="6">
+    <MissingPropertyType occurrences="4">
       <code>$field_base</code>
       <code>$field_group</code>
       <code>$this-&gt;renderer-&gt;id</code>
       <code>$this-&gt;renderer-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="15">
       <code>accept</code>
@@ -22760,14 +22748,12 @@
       <code>$title</code>
       <code>$width</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="7">
+    <MissingPropertyType occurrences="5">
       <code>$duration</code>
       <code>$field_id</code>
       <code>$start_date</code>
       <code>$this-&gt;renderer-&gt;id</code>
       <code>$this-&gt;renderer-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="17">
       <code>accept</code>
@@ -22833,15 +22819,13 @@
       <code>$title</code>
       <code>$width</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="8">
+    <MissingPropertyType occurrences="6">
       <code>$field_id</code>
       <code>$scale</code>
       <code>$start_date</code>
       <code>$stop_date</code>
       <code>$this-&gt;renderer-&gt;id</code>
       <code>$this-&gt;renderer-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="19">
       <code>accept</code>
@@ -22919,7 +22903,7 @@
       <code>$width</code>
       <code>$width</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="12">
+    <MissingPropertyType occurrences="10">
       <code>$as_of_date</code>
       <code>$field_due</code>
       <code>$field_finish</code>
@@ -22930,8 +22914,6 @@
       <code>$summary</code>
       <code>$this-&gt;renderer-&gt;id</code>
       <code>$this-&gt;renderer-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="30">
       <code>accept</code>
@@ -23012,12 +22994,10 @@
       <code>$title</code>
       <code>$width</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="5">
+    <MissingPropertyType occurrences="3">
       <code>$field_base</code>
       <code>$this-&gt;renderer-&gt;id</code>
       <code>$this-&gt;renderer-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
-      <code>$this-&gt;renderer-&gt;report-&gt;id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="14">
       <code>accept</code>
@@ -25429,7 +25409,7 @@
       <code>$database_name</code>
       <code>$table_prefix</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="47">
+    <MissingReturnType occurrences="46">
       <code>addDatabase</code>
       <code>addMediawikiUserGroupMapping</code>
       <code>clearPageCacheForProject</code>
@@ -25459,7 +25439,6 @@
       <code>getSQLMediawikiGroupsThatMatchProjectMembers</code>
       <code>getSQLMediawikiGroupsThatMatchRegisteredUsers</code>
       <code>getSQLMediawikiGroupsThatMatchStaticGroups</code>
-      <code>getTableName</code>
       <code>getTableNamePrefixInCentralDb</code>
       <code>getTablePrefixForCreation</code>
       <code>hasDatabase</code>
@@ -25543,8 +25522,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/mediawiki/include/MediawikiInstantiater.class.php">
-    <DeprecatedFunction occurrences="4">
+    <DeprecatedFunction occurrences="7">
+      <code>db_ei($group_id)</code>
+      <code>db_ei($ugroup_id)</code>
       <code>db_error()</code>
+      <code>db_es($group_name)</code>
       <code>db_query($this-&gt;seedProjectUGroupMappings($this-&gt;project-&gt;getID(), $new_mapping))</code>
       <code>db_query($this-&gt;seedProjectUGroupMappings($this-&gt;project-&gt;getID(), MediawikiUserGroupsMapper::$DEFAULT_MAPPING_PRIVATE_PROJECT))</code>
       <code>db_query($this-&gt;seedProjectUGroupMappings($this-&gt;project-&gt;getID(), MediawikiUserGroupsMapper::$DEFAULT_MAPPING_PUBLIC_PROJECT))</code>
@@ -27628,7 +27610,8 @@
     </UndefinedConstant>
   </file>
   <file src="plugins/projectlinks/include/projectlinksPlugin.php">
-    <DeprecatedFunction occurrences="94">
+    <DeprecatedFunction occurrences="98">
+      <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
@@ -27645,12 +27628,15 @@
       <code>db_ei($group_id)</code>
       <code>db_ei($link_id)</code>
       <code>db_ei($link_id)</code>
+      <code>db_ei($link_id)</code>
+      <code>db_ei($link_type_id)</code>
       <code>db_ei($link_type_id)</code>
       <code>db_ei($link_type_id)</code>
       <code>db_ei($link_type_id)</code>
       <code>db_ei($link_type_id)</code>
       <code>db_ei($link_type_id)</code>
       <code>db_ei($row_templLinks['target_group_id'])</code>
+      <code>db_ei($target_group_id)</code>
       <code>db_ei($target_group_id)</code>
       <code>db_ei($target_group_id)</code>
       <code>db_ei($template_id)</code>
@@ -27976,15 +27962,6 @@
     <MissingParamType occurrences="1">
       <code>$is_active</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/Events/PullRequestDiffRepresentationBuild.php">
-    <MissingParamType occurrences="2">
-      <code>$object_dest</code>
-      <code>$object_src</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>setSpecialFormat</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Exception/UnknownBranchNameException.php">
     <MissingParamType occurrences="2">
@@ -28510,17 +28487,9 @@
     <DuplicateArrayKey occurrences="1">
       <code>'sql'           =&gt; 'text/x-sql'</code>
     </DuplicateArrayKey>
-    <MissingParamType occurrences="3">
-      <code>$dest_content</code>
-      <code>$file_path</code>
-      <code>$src_content</code>
-    </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$EXTENSION_TO_MIME_TYPES</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>getMimeInfo</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PaginatedCommentsRepresentations.php">
     <MissingParamType occurrences="1">
@@ -28794,9 +28763,6 @@
       <code>$keyword</code>
       <code>$pull_request_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>getReferenceByPullRequestId</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/RepoManagement/RepoManagementController.php">
     <InvalidClass occurrences="1">
@@ -28953,7 +28919,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/pullrequestPlugin.php">
-    <MissingParamType occurrences="14">
+    <MissingParamType occurrences="13">
       <code>$branch_name</code>
       <code>$dest_branch_name</code>
       <code>$id</code>
@@ -28966,13 +28932,12 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
       <code>$refname</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$git_rest_route_additional_informations</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="41">
+    <MissingReturnType occurrences="40">
       <code>abandonFromSourceBranch</code>
       <code>additionalInformationRepresentationCache</code>
       <code>additionalInformationRepresentationRetriever</code>
@@ -28997,7 +28962,6 @@
       <code>getTimelineEventCreator</code>
       <code>get_available_reference_natures</code>
       <code>get_plugins_available_keywords_references</code>
-      <code>get_reference</code>
       <code>gitAdditionalAction</code>
       <code>gitRepositoryDeletion</code>
       <code>git_additional_body_classes</code>
@@ -29028,8 +28992,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_core/include/ReferenceAliasCore/ReferencesBuilder.php">
-    <InvalidNullableReturnType occurrences="2">
-      <code>Reference</code>
+    <InvalidNullableReturnType occurrences="1">
       <code>ReferenceInstance</code>
     </InvalidNullableReturnType>
     <MissingParamType occurrences="6">
@@ -29040,9 +29003,7 @@
       <code>$reference</code>
       <code>$value</code>
     </MissingParamType>
-    <NullableReturnStatement occurrences="3">
-      <code>null</code>
-      <code>null</code>
+    <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
   </file>
@@ -29059,14 +29020,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_core/include/referencealias_corePlugin.php">
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="3">
       <code>$id</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>getReference</code>
+    <MissingReturnType occurrences="2">
       <code>importCompatRefXML</code>
       <code>registerExtraReferences</code>
     </MissingReturnType>
@@ -29090,8 +29049,7 @@
     </MissingParamType>
   </file>
   <file src="plugins/referencealias_git/include/ReferenceAliasGit/ReferencesBuilder.php">
-    <InvalidNullableReturnType occurrences="2">
-      <code>Reference</code>
+    <InvalidNullableReturnType occurrences="1">
       <code>ReferenceInstance</code>
     </InvalidNullableReturnType>
     <MissingParamType occurrences="6">
@@ -29102,10 +29060,7 @@
       <code>$reference</code>
       <code>$value</code>
     </MissingParamType>
-    <NullableReturnStatement occurrences="4">
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
+    <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
   </file>
@@ -29119,18 +29074,16 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_git/include/referencealias_gitPlugin.php">
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="3">
       <code>$id</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="6">
+    <MissingReturnType occurrences="5">
       <code>getCompatDao</code>
       <code>getGitDao</code>
       <code>getReferencesBuilder</code>
       <code>get_plugins_extra_references</code>
-      <code>get_reference</code>
       <code>import_compat_ref_xml</code>
     </MissingReturnType>
   </file>
@@ -29146,8 +29099,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_mediawiki/include/ReferencesBuilder.php">
-    <InvalidNullableReturnType occurrences="2">
-      <code>Reference</code>
+    <InvalidNullableReturnType occurrences="1">
       <code>ReferenceInstance</code>
     </InvalidNullableReturnType>
     <MissingParamType occurrences="6">
@@ -29158,9 +29110,7 @@
       <code>$reference</code>
       <code>$value</code>
     </MissingParamType>
-    <NullableReturnStatement occurrences="3">
-      <code>null</code>
-      <code>null</code>
+    <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
   </file>
@@ -29174,16 +29124,14 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_mediawiki/include/referencealias_mediawikiPlugin.php">
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="3">
       <code>$id</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="3">
       <code>getReferencesBuilder</code>
       <code>get_plugins_extra_references</code>
-      <code>get_reference</code>
       <code>import_compat_ref_xml</code>
     </MissingReturnType>
     <UndefinedThisPropertyAssignment occurrences="1">
@@ -29207,9 +29155,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_svn/include/ReferenceAliasSVN/ReferencesBuilder.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$repository_manager</code>
-    </InvalidPropertyAssignmentValue>
     <MissingParamType occurrences="6">
       <code>$keyword</code>
       <code>$keyword</code>
@@ -29218,10 +29163,6 @@
       <code>$reference</code>
       <code>$value</code>
     </MissingParamType>
-    <UndefinedDocblockClass occurrences="2">
-      <code>$this-&gt;repository_manager</code>
-      <code>Tuleap\SVN\Repository\RepositoryManager</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/referencealias_svn/include/ReferenceAliasSVN/ReferencesImporter.php">
     <MissingParamType occurrences="1">
@@ -29236,13 +29177,12 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>Backend::instance(Backend::SVN)</code>
     </ArgumentTypeCoercion>
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="3">
       <code>$id</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="11">
+    <MissingReturnType occurrences="10">
       <code>getAccessFileHistoryFactory</code>
       <code>getCompatDao</code>
       <code>getDestructor</code>
@@ -29252,7 +29192,6 @@
       <code>getSvnAdmin</code>
       <code>getSystemCommand</code>
       <code>get_plugins_extra_references</code>
-      <code>get_reference</code>
       <code>import_compat_ref_xml</code>
     </MissingReturnType>
   </file>
@@ -29268,8 +29207,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_tracker/include/ReferenceAliasTracker/OriginalReferencesBuilder.php">
-    <InvalidNullableReturnType occurrences="2">
-      <code>Reference</code>
+    <InvalidNullableReturnType occurrences="1">
       <code>ReferenceInstance</code>
     </InvalidNullableReturnType>
     <MissingParamType occurrences="6">
@@ -29280,9 +29218,7 @@
       <code>$reference</code>
       <code>$value</code>
     </MissingParamType>
-    <NullableReturnStatement occurrences="3">
-      <code>$reference</code>
-      <code>null</code>
+    <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
   </file>
@@ -29310,14 +29246,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/referencealias_tracker/include/referencealias_trackerPlugin.php">
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="3">
       <code>$id</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>getReference</code>
+    <MissingReturnType occurrences="2">
       <code>importCompatRefXML</code>
       <code>registerExtraReferences</code>
     </MissingReturnType>
@@ -32416,7 +32350,7 @@
       <code>EVENT</code>
       <code>EVENT</code>
     </InvalidClass>
-    <MissingParamType occurrences="14">
+    <MissingParamType occurrences="13">
       <code>$id</code>
       <code>$keyword</code>
       <code>$new_ugroup_name</code>
@@ -32430,9 +32364,8 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
     </MissingParamType>
-    <MissingReturnType occurrences="41">
+    <MissingReturnType occurrences="40">
       <code>burningParrotGetStylesheets</code>
       <code>changeProjectRepositoriesAccess</code>
       <code>codendi_daily_start</code>
@@ -32443,7 +32376,6 @@
       <code>getPluginInfo</code>
       <code>getReferenceExtractor</code>
       <code>getTypes</code>
-      <code>get_reference</code>
       <code>get_system_event_class</code>
       <code>httpdPostRotate</code>
       <code>import_xml_project</code>
@@ -32999,11 +32931,10 @@
     <PossiblyFalseOperand occurrences="1">
       <code>$sys_user</code>
     </PossiblyFalseOperand>
-    <TypeDoesNotContainType occurrences="4">
+    <TypeDoesNotContainType occurrences="3">
       <code>! $tv3</code>
       <code>! $tv3 || ! is_object($tv3)</code>
       <code>! is_object($tv3)</code>
-      <code>is_object($tv3)</code>
     </TypeDoesNotContainType>
   </file>
   <file src="plugins/tracker/bin/import_artifacts_xml.php">
@@ -33441,8 +33372,7 @@
     </MissingClosureParamType>
   </file>
   <file src="plugins/tracker/include/REST/ReportRepresentation.class.php">
-    <ImpureMethodCall occurrences="2">
-      <code>getId</code>
+    <ImpureMethodCall occurrences="1">
       <code>getName</code>
     </ImpureMethodCall>
   </file>
@@ -38879,11 +38809,9 @@
       <code>$value</code>
       <code>$value</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="4">
+    <MissingPropertyType occurrences="2">
       <code>$artifact_links_by_changeset</code>
       <code>$pattern</code>
-      <code>$report-&gt;id</code>
-      <code>$report-&gt;id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="31">
       <code>accept</code>
@@ -40289,7 +40217,9 @@
     </ParamNameMismatch>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_PermissionsOnArtifact.class.php">
-    <DeprecatedFunction occurrences="6">
+    <DeprecatedFunction occurrences="8">
+      <code>db_ei($row['ugroup_id'])</code>
+      <code>db_ei($this-&gt;getTracker()-&gt;getGroupId())</code>
       <code>db_fetch_array($db_res)</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
@@ -42567,9 +42497,8 @@
     </PossiblyFalseReference>
   </file>
   <file src="plugins/tracker/include/Tracker/PermissionsFunctionsWrapper.php">
-    <MissingReturnType occurrences="2">
+    <MissingReturnType occurrences="1">
       <code>getFieldUGroupsPermissions</code>
-      <code>getTrackerUGroupsPermissions</code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/ProjectDeletionEvent.php">
@@ -44943,7 +44872,7 @@
       <code>$where</code>
       <code>$xmlMapping</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="37">
+    <MissingPropertyType occurrences="35">
       <code>$criteria</code>
       <code>$criteria-&gt;field</code>
       <code>$criteria-&gt;field</code>
@@ -44956,13 +44885,11 @@
       <code>$description</code>
       <code>$expert_query</code>
       <code>$group_id</code>
-      <code>$id</code>
       <code>$is_default</code>
       <code>$is_in_expert_mode</code>
       <code>$is_query_displayed</code>
       <code>$matching_ids</code>
       <code>$name</code>
-      <code>$new_report-&gt;id</code>
       <code>$new_report-&gt;name</code>
       <code>$new_report-&gt;report_session</code>
       <code>$parent_report_id</code>
@@ -45079,14 +45006,12 @@
       <code>$trackerId</code>
       <code>$user_id</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="15">
+    <MissingPropertyType occurrences="12">
       <code>$_instance</code>
       <code>$dao</code>
-      <code>$from_report-&gt;id</code>
       <code>$report-&gt;current_renderer_id</code>
       <code>$report-&gt;description</code>
       <code>$report-&gt;expert_query</code>
-      <code>$report-&gt;id</code>
       <code>$report-&gt;is_default</code>
       <code>$report-&gt;is_in_expert_mode</code>
       <code>$report-&gt;is_query_displayed</code>
@@ -45094,7 +45019,6 @@
       <code>$report-&gt;parent_report_id</code>
       <code>$report-&gt;tracker_id</code>
       <code>$report-&gt;user_id</code>
-      <code>$reportDB-&gt;id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="4">
       <code>duplicate</code>
@@ -45197,9 +45121,7 @@
       <code>$report_can_be_modified</code>
       <code>$report_can_be_modified</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="10">
-      <code>$report-&gt;id</code>
-      <code>$report-&gt;id</code>
+    <MissingPropertyType occurrences="8">
       <code>$report-&gt;is_default</code>
       <code>$report-&gt;name</code>
       <code>$report-&gt;report_session</code>
@@ -45269,14 +45191,11 @@
       <code>$request</code>
       <code>$user</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="7">
+    <MissingPropertyType occurrences="4">
       <code>$description</code>
       <code>$id</code>
       <code>$name</code>
       <code>$rank</code>
-      <code>$this-&gt;report-&gt;id</code>
-      <code>$this-&gt;report-&gt;id</code>
-      <code>$this-&gt;report-&gt;id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="14">
       <code>afterProcessRequest</code>
@@ -45294,10 +45213,6 @@
       <code>processRequest</code>
       <code>setId</code>
     </MissingReturnType>
-    <UndefinedDocblockClass occurrences="2">
-      <code>Request</code>
-      <code>Request</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_RendererFactory.class.php">
     <InvalidReturnType occurrences="1">
@@ -45315,19 +45230,13 @@
       <code>$to_report</code>
       <code>$type</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="14">
+    <MissingPropertyType occurrences="8">
       <code>$dao</code>
       <code>$renderer-&gt;description</code>
       <code>$renderer-&gt;id</code>
       <code>$renderer-&gt;name</code>
       <code>$renderer-&gt;rank</code>
       <code>$renderers</code>
-      <code>$report-&gt;id</code>
-      <code>$report-&gt;id</code>
-      <code>$report-&gt;id</code>
-      <code>$report-&gt;id</code>
-      <code>$report-&gt;id</code>
-      <code>$report-&gt;id</code>
       <code>$report-&gt;report_session</code>
       <code>$table_dao</code>
     </MissingPropertyType>
@@ -45445,20 +45354,12 @@
       <code>$xmlMapping</code>
       <code>$xmlMapping</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="13">
+    <MissingPropertyType occurrences="5">
       <code>$_aggregates</code>
       <code>$_columns</code>
       <code>$_sort</code>
       <code>$chunksz</code>
       <code>$multisort</code>
-      <code>$this-&gt;report-&gt;id</code>
-      <code>$this-&gt;report-&gt;id</code>
-      <code>$this-&gt;report-&gt;id</code>
-      <code>$this-&gt;report-&gt;id</code>
-      <code>$this-&gt;report-&gt;id</code>
-      <code>$this-&gt;report-&gt;id</code>
-      <code>$this-&gt;report-&gt;id</code>
-      <code>$this-&gt;report-&gt;id</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="63">
       <code>addBOMToCSVContent</code>
@@ -45535,21 +45436,11 @@
       <code>buildOrderedQuery</code>
       <code>fetchAdditionnalButton</code>
     </TooManyArguments>
-    <UndefinedDocblockClass occurrences="1">
-      <code>Request</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="3">
       <code>getAggregates</code>
       <code>getSort</code>
       <code>injectUnsavedColumnsInRendererDB</code>
     </UndefinedMethod>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;report_session</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;report_session</code>
-      <code>$this-&gt;report_session</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_Session.class.php">
     <MissingParamType occurrences="11">
@@ -46827,7 +46718,7 @@
       <code>$type</code>
       <code>$user</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="24">
+    <MissingPropertyType occurrences="23">
       <code>$allow_copy</code>
       <code>$cache_permissions</code>
       <code>$cannedResponses</code>
@@ -46845,7 +46736,6 @@
       <code>$notifications_level</code>
       <code>$parent</code>
       <code>$project</code>
-      <code>$report-&gt;id</code>
       <code>$reports</code>
       <code>$sharedFormElementFactory</code>
       <code>$status</code>
@@ -47370,7 +47260,22 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Widget/Tracker_Widget_Renderer.class.php">
-    <DeprecatedFunction occurrences="13">
+    <DeprecatedFunction occurrences="28">
+      <code>db_ei($id)</code>
+      <code>db_ei($id)</code>
+      <code>db_ei($owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei((int) $request-&gt;get('content_id'))</code>
+      <code>db_es($owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
       <code>db_escape_int($renderer['renderer_id'])</code>
       <code>db_escape_int($renderer['renderer_id'])</code>
       <code>db_escape_string($renderer['title'])</code>
@@ -49403,13 +49308,12 @@
     <InvalidArgument occurrences="1">
       <code>$project_with_tracker_administration</code>
     </InvalidArgument>
-    <MissingParamType occurrences="40">
+    <MissingParamType occurrences="39">
       <code>$can_bypass_threshold</code>
       <code>$can_bypass_threshold</code>
       <code>$id</code>
       <code>$keyword</code>
       <code>$legacy</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
@@ -49450,7 +49354,7 @@
       <code>$t-&gt;id</code>
       <code>$t-&gt;name</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="87">
+    <MissingReturnType occurrences="86">
       <code>addCustomNatures</code>
       <code>agiledashboard_event_rest_get_burndown</code>
       <code>agiledashboard_event_rest_get_milestone</code>
@@ -49496,7 +49400,6 @@
       <code>get_available_reference_natures</code>
       <code>get_permission_delegation</code>
       <code>get_projectid_from_url</code>
-      <code>get_reference</code>
       <code>import_xml_project</code>
       <code>isArtifactReferenceInMultipleTrackerServicesContext</code>
       <code>isDefaultReferenceUrl</code>
@@ -55722,7 +55625,8 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/Project.class.php">
-    <DeprecatedFunction occurrences="5">
+    <DeprecatedFunction occurrences="6">
+      <code>db_ei($this-&gt;getGroupId())</code>
       <code>db_ei($this-&gt;getGroupId())</code>
       <code>db_fetch_array($res)</code>
       <code>db_fetch_array($res)</code>
@@ -55847,7 +55751,7 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Project/ProjectCreator.class.php">
-    <DeprecatedFunction occurrences="53">
+    <DeprecatedFunction occurrences="65">
       <code>db_ei($arr['cvs_tracker'])</code>
       <code>db_ei($arr['cvs_watch_mode'])</code>
       <code>db_ei($arr['svn_commit_to_tag_denied'])</code>
@@ -55856,15 +55760,26 @@
       <code>db_ei($data-&gt;getBuiltFromTemplateProject()-&gt;getProject()-&gt;getID())</code>
       <code>db_ei($group_id)</code>
       <code>db_ei($group_id)</code>
+      <code>db_ei($group_id)</code>
+      <code>db_ei($group_id)</code>
+      <code>db_ei($group_id)</code>
+      <code>db_ei($group_id)</code>
+      <code>db_ei($group_id)</code>
       <code>db_ei($p_data['approve_license'])</code>
       <code>db_ei($p_data['rank'])</code>
       <code>db_ei($p_data['status_id'])</code>
       <code>db_ei($project-&gt;getId())</code>
       <code>db_ei($root)</code>
       <code>db_ei($template_id)</code>
+      <code>db_ei($template_id)</code>
+      <code>db_ei($template_id)</code>
+      <code>db_ei($template_id)</code>
+      <code>db_ei($template_package_id)</code>
       <code>db_ei($template_project-&gt;getID())</code>
       <code>db_ei($type)</code>
+      <code>db_ei($user-&gt;getId())</code>
       <code>db_ei($value)</code>
+      <code>db_ei(db_insertid($rid))</code>
       <code>db_error()</code>
       <code>db_error()</code>
       <code>db_error()</code>
@@ -55872,6 +55787,7 @@
       <code>db_es($data-&gt;getShortDescription())</code>
       <code>db_es($data-&gt;getUnixName())</code>
       <code>db_es($http_domain)</code>
+      <code>db_es($this-&gt;project_manager-&gt;getProject($group_id)-&gt;getUnixName())</code>
       <code>db_es(bin2hex(random_bytes(16)))</code>
       <code>db_escape_int($_SERVER['REQUEST_TIME'])</code>
       <code>db_escape_int($arr['cvs_is_private'])</code>
@@ -55887,7 +55803,7 @@
       <code>db_fetch_array($result)</code>
       <code>db_insertid($result)</code>
       <code>db_insertid($rid)</code>
-      <code>db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','" . $this-&gt;project_manager-&gt;getProject($group_id)-&gt;getUnixName() . "')")</code>
+      <code>db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('" . db_ei($group_id) . "','" . db_es($this-&gt;project_manager-&gt;getProject($group_id)-&gt;getUnixName()) . "')")</code>
       <code>db_query($query)</code>
       <code>db_query($query)</code>
       <code>db_query($sql)</code>
@@ -59894,7 +59810,22 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/Widget/Widget_Rss.class.php">
-    <DeprecatedFunction occurrences="13">
+    <DeprecatedFunction occurrences="28">
+      <code>db_ei($id)</code>
+      <code>db_ei($owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei($this-&gt;owner_id)</code>
+      <code>db_ei((int) $request-&gt;get('content_id'))</code>
+      <code>db_es($id)</code>
+      <code>db_es($owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
+      <code>db_es($this-&gt;owner_type)</code>
       <code>db_escape_string($rss['title'])</code>
       <code>db_escape_string($rss['title'])</code>
       <code>db_escape_string($rss['url'])</code>
@@ -60762,26 +60693,12 @@
     <ForbiddenCode occurrences="1">
       <code>shell_exec("/usr/bin/find " . ForgeConfig::get('cvs_hook_tmp_dir') . ' -name "*.files.*" -amin +120;')</code>
     </ForbiddenCode>
-    <InvalidArgument occurrences="17">
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
-      <code>$filename</code>
+    <InvalidArgument occurrences="1">
       <code>$perms</code>
     </InvalidArgument>
-    <MissingParamType occurrences="3">
+    <MissingParamType occurrences="5">
+      <code>$output</code>
+      <code>$output</code>
       <code>$repo_path</code>
       <code>$root</code>
       <code>$unix_group_name</code>
@@ -60790,7 +60707,9 @@
       <code>$CVSRootListNeedUpdate</code>
       <code>$UseCVSNT</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="2">
+    <MissingReturnType occurrences="4">
+      <code>_RcsCheckout</code>
+      <code>_RcsCommit</code>
       <code>changeRepoOwnership</code>
       <code>recursiveSgidOnDirectories</code>
     </MissingReturnType>
@@ -60802,10 +60721,6 @@
       <code>$cvsnt_marker</code>
       <code>$cvsnt_marker</code>
     </PossiblyUndefinedVariable>
-    <UndefinedDocblockClass occurrences="2">
-      <code>File</code>
-      <code>File</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/backend/BackendCommandException.class.php">
     <MissingParamType occurrences="3">
@@ -62362,14 +62277,12 @@
     <InvalidNullableReturnType occurrences="1">
       <code>DataAccessResult</code>
     </InvalidNullableReturnType>
-    <InvalidReturnStatement occurrences="3">
+    <InvalidReturnStatement occurrences="2">
       <code>$this-&gt;update($sql)</code>
       <code>$this-&gt;updateAndGetLastId($sql)</code>
-      <code>$updated</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="3">
+    <InvalidReturnType occurrences="2">
       <code>DataAccessResult</code>
-      <code>true</code>
       <code>true</code>
     </InvalidReturnType>
     <MissingParamType occurrences="20">
@@ -66456,10 +66369,9 @@
       <code>getTrackersv3ForProject</code>
       <code>search</code>
     </MissingReturnType>
-    <TypeDoesNotContainType occurrences="3">
+    <TypeDoesNotContainType occurrences="2">
       <code>! $ath</code>
       <code>! is_object($ath)</code>
-      <code>is_object($ath)</code>
     </TypeDoesNotContainType>
   </file>
   <file src="src/common/search/SearchWiki.class.php">
@@ -68924,10 +68836,9 @@
       <code>getArtifactsFromReport</code>
       <code>setError</code>
     </MissingReturnType>
-    <TypeDoesNotContainType occurrences="3">
+    <TypeDoesNotContainType occurrences="2">
       <code>! $report</code>
       <code>! is_object($report)</code>
-      <code>is_object($report)</code>
     </TypeDoesNotContainType>
     <UndefinedDocblockClass occurrences="1">
       <code>OUT</code>
@@ -69876,13 +69787,11 @@
       <code>$vfl</code>
       <code>$vfl</code>
     </PossiblyUndefinedVariable>
-    <TypeDoesNotContainType occurrences="6">
+    <TypeDoesNotContainType occurrences="4">
       <code>! $ah</code>
       <code>! $ah</code>
       <code>! is_object($ah)</code>
       <code>! is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
     </TypeDoesNotContainType>
   </file>
   <file src="src/common/tracker/ArtifactIntegerFieldXMLExporter.class.php">
@@ -70952,10 +70861,9 @@
       <code>cutExportQuery</code>
       <code>db_error($res)</code>
     </TooManyArguments>
-    <TypeDoesNotContainType occurrences="3">
+    <TypeDoesNotContainType occurrences="2">
       <code>! $afh</code>
       <code>! is_object($afh)</code>
-      <code>is_object($afh)</code>
     </TypeDoesNotContainType>
     <UndefinedDocblockClass occurrences="3">
       <code>database</code>
@@ -72008,11 +71916,9 @@
       <code>retrieveFathers</code>
       <code>retrieveFullHierarchy</code>
     </MissingReturnType>
-    <TypeDoesNotContainType occurrences="5">
+    <TypeDoesNotContainType occurrences="3">
       <code>! is_array($last_parent)</code>
       <code>! is_array($last_parent)</code>
-      <code>is_array($last_parent)</code>
-      <code>is_array($last_parent)</code>
       <code>is_array($last_parent)</code>
     </TypeDoesNotContainType>
   </file>
@@ -74166,11 +74072,6 @@
       <code>db_result($result, 0, 'group_forum_id')</code>
       <code>db_result($result, 0, 'group_id')</code>
     </DeprecatedFunction>
-    <UndefinedGlobalVariable occurrences="3">
-      <code>$msg_id</code>
-      <code>$msg_id</code>
-      <code>$msg_id</code>
-    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/forum/forum.php">
     <DeprecatedFunction occurrences="48">
@@ -74614,9 +74515,8 @@
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/include/account.php">
-    <MissingParamType occurrences="15">
+    <MissingParamType occurrences="14">
       <code>$confirm_hash</code>
-      <code>$email</code>
       <code>$email</code>
       <code>$expiry_date</code>
       <code>$group_id</code>
@@ -74631,10 +74531,9 @@
       <code>$unix_status</code>
       <code>$user_unix_name</code>
     </MissingParamType>
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="2">
       <code>account_add_user_to_group</code>
       <code>account_create</code>
-      <code>account_make_login_from_email</code>
     </MissingReturnType>
   </file>
   <file src="src/www/include/bookmarks.php">
@@ -75277,6 +75176,11 @@
     <PossiblyFalsePropertyAssignmentValue occurrences="1">
       <code>false</code>
     </PossiblyFalsePropertyAssignmentValue>
+    <PossiblyInvalidArgument occurrences="3">
+      <code>$attrs</code>
+      <code>$attrs</code>
+      <code>$digestRequest</code>
+    </PossiblyInvalidArgument>
     <PossiblyInvalidArrayOffset occurrences="10">
       <code>$this-&gt;message[$child_pos]</code>
       <code>$this-&gt;message[$child_pos]</code>
@@ -76639,10 +76543,9 @@
     <ParadoxicalCondition occurrences="1">
       <code>! $group || ! is_object($group) || $group-&gt;isError()</code>
     </ParadoxicalCondition>
-    <TypeDoesNotContainType occurrences="3">
+    <TypeDoesNotContainType occurrences="2">
       <code>! $at</code>
       <code>! is_object($at)</code>
-      <code>is_object($at)</code>
     </TypeDoesNotContainType>
     <UndefinedGlobalVariable occurrences="1">
       <code>$group_id</code>
@@ -76661,13 +76564,11 @@
     <ParadoxicalCondition occurrences="1">
       <code>! $group || ! is_object($group) || $group-&gt;isError()</code>
     </ParadoxicalCondition>
-    <TypeDoesNotContainType occurrences="6">
+    <TypeDoesNotContainType occurrences="4">
       <code>! $at</code>
       <code>! $ath</code>
       <code>! is_object($at)</code>
       <code>! is_object($ath)</code>
-      <code>is_object($at)</code>
-      <code>is_object($ath)</code>
     </TypeDoesNotContainType>
     <UndefinedGlobalVariable occurrences="1">
       <code>$group_id</code>
@@ -76689,10 +76590,9 @@
     <ParadoxicalCondition occurrences="1">
       <code>! $group || ! is_object($group) || $group-&gt;isError()</code>
     </ParadoxicalCondition>
-    <TypeDoesNotContainType occurrences="3">
+    <TypeDoesNotContainType occurrences="2">
       <code>! $at</code>
       <code>! is_object($at)</code>
-      <code>is_object($at)</code>
     </TypeDoesNotContainType>
     <UndefinedGlobalVariable occurrences="1">
       <code>$group_id</code>
@@ -77689,7 +77589,7 @@
     <TooManyArguments occurrences="1">
       <code>updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extrafields_with_id, $artifact_id_dependent, $canned_response)</code>
     </TooManyArguments>
-    <TypeDoesNotContainType occurrences="241">
+    <TypeDoesNotContainType occurrences="161">
       <code>! $a</code>
       <code>! $a</code>
       <code>! $a</code>
@@ -77850,86 +77750,6 @@
       <code>! is_object($ath)</code>
       <code>! is_object($report_fact)</code>
       <code>! is_object($report_fact)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($a)</code>
-      <code>is_object($af)</code>
-      <code>is_object($af)</code>
-      <code>is_object($af)</code>
-      <code>is_object($af)</code>
-      <code>is_object($ar)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_field_fact)</code>
-      <code>is_object($art_fieldset_fact)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($at)</code>
-      <code>is_object($atf)</code>
-      <code>is_object($atf)</code>
-      <code>is_object($ath)</code>
-      <code>is_object($ath)</code>
-      <code>is_object($ath)</code>
-      <code>is_object($ath)</code>
-      <code>is_object($ath)</code>
-      <code>is_object($ath)</code>
-      <code>is_object($report_fact)</code>
-      <code>is_object($report_fact)</code>
       <code>isset($uri)</code>
     </TypeDoesNotContainType>
     <UndefinedConstant occurrences="2">
@@ -78094,27 +77914,11 @@
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/svn/admin/general_settings.php">
-    <UndefinedGlobalVariable occurrences="20">
+    <UndefinedGlobalVariable occurrences="4">
       <code>$Language</code>
       <code>$Language</code>
       <code>$Language</code>
       <code>$Language</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/svn/admin/immutable_tags.php">
@@ -78217,18 +78021,10 @@
       <code>db_numrows($result)</code>
       <code>db_result($result, 0, 'revision')</code>
     </DeprecatedFunction>
-    <UndefinedGlobalVariable occurrences="11">
+    <UndefinedGlobalVariable occurrences="3">
       <code>$Language</code>
       <code>$Language</code>
       <code>$Language</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/svn/svn_data.php">
@@ -78599,7 +78395,7 @@
     <TooManyArguments occurrences="1">
       <code>getText</code>
     </TooManyArguments>
-    <TypeDoesNotContainType occurrences="10">
+    <TypeDoesNotContainType occurrences="7">
       <code>! $ach</code>
       <code>! $ath</code>
       <code>! $ath</code>
@@ -78607,9 +78403,6 @@
       <code>! is_object($ath)</code>
       <code>! is_object($ath)</code>
       <code>$arh</code>
-      <code>is_object($ach)</code>
-      <code>is_object($ath)</code>
-      <code>is_object($ath)</code>
     </TypeDoesNotContainType>
   </file>
   <file src="src/www/tracker/admin/restore.php">
@@ -78924,7 +78717,7 @@
       <code>$data</code>
       <code>$params</code>
     </PossiblyUndefinedGlobalVariable>
-    <TypeDoesNotContainType occurrences="57">
+    <TypeDoesNotContainType occurrences="38">
       <code>! $afh</code>
       <code>! $afh</code>
       <code>! $afh</code>
@@ -78963,25 +78756,6 @@
       <code>! is_object($ah)</code>
       <code>! is_object($ah)</code>
       <code>! is_object($ath)</code>
-      <code>is_object($afh)</code>
-      <code>is_object($afh)</code>
-      <code>is_object($afh)</code>
-      <code>is_object($afh)</code>
-      <code>is_object($afh)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($ath)</code>
     </TypeDoesNotContainType>
   </file>
   <file src="src/www/tracker/invert_comments_order.php">

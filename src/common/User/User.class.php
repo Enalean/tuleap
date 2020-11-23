@@ -619,6 +619,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     }
     /**
      * @return string the name of the user (aka login)
+     *
+     * @psalm-taint-escape file
      */
     public function getUserName()
     {

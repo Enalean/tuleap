@@ -28,7 +28,7 @@
 require_once('lib/Theme.php');
 require_once('lib/WikiPlugin.php');
 
-class Theme_Sidebar extends Theme
+class Theme_Sidebar extends PHPWikiTheme
 {
 
     public function __construct($theme_name = 'Sidebar')

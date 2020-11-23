@@ -172,9 +172,9 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         $owner_type
     ) {
         $sql = "INSERT INTO plugin_docman_widget_embedded (owner_id, owner_type, title, item_id) 
-                SELECT  " . $owner_id . ", '" . $owner_type . "', title, item_id
+                SELECT  " . db_ei($owner_id) . ", '" . db_es($owner_type) . "', title, item_id
                 FROM plugin_docman_widget_embedded
-                WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' ";
+                WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' ";
         $res = db_query($sql);
         return db_insertid($res);
     }
@@ -185,7 +185,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      */
     public function loadContent($id)
     {
-        $sql = "SELECT * FROM plugin_docman_widget_embedded WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . $id;
+        $sql = "SELECT * FROM plugin_docman_widget_embedded WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
@@ -214,7 +214,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
                     $plugin_docman_widget_embedded['title'] = $item->getTitle();
                 }
             }
-            $sql = 'INSERT INTO plugin_docman_widget_embedded (owner_id, owner_type, title, item_id) VALUES (' . $this->owner_id . ", '" . $this->owner_type . "', '" . db_escape_string($plugin_docman_widget_embedded['title']) . "', '" . db_escape_string($plugin_docman_widget_embedded['item_id']) . "')";
+            $sql = 'INSERT INTO plugin_docman_widget_embedded (owner_id, owner_type, title, item_id) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($plugin_docman_widget_embedded['title']) . "', '" . db_escape_string($plugin_docman_widget_embedded['item_id']) . "')";
             $res = db_query($sql);
             $content_id = db_insertid($res);
         }
@@ -247,9 +247,9 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
 
             $sql = "UPDATE plugin_docman_widget_embedded 
                     SET " . $title . ", " . $item_id . " 
-                    WHERE owner_id   = " . $this->owner_id . " 
-                      AND owner_type = '" . $this->owner_type . "' 
-                      AND id         = " . (int) $request->get('content_id');
+                    WHERE owner_id   = " . db_ei($this->owner_id) . "
+                      AND owner_type = '" . db_es($this->owner_type) . "'
+                      AND id         = " . db_ei((int) $request->get('content_id'));
             $res = db_query($sql);
             $done = true;
         }
@@ -263,7 +263,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      */
     public function destroy($id)
     {
-        $sql = 'DELETE FROM plugin_docman_widget_embedded WHERE id = ' . $id . ' AND owner_id = ' . $this->owner_id . " AND owner_type = '" . $this->owner_type . "'";
+        $sql = 'DELETE FROM plugin_docman_widget_embedded WHERE id = ' . db_ei($id) . ' AND owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "'";
         db_query($sql);
     }
 

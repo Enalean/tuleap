@@ -441,7 +441,7 @@ class Docman_ItemDao extends DataAccessObject
     /**
      * Update a row in the table plugin_docman_item
      *
-     * @return true if there is no error
+     * @return bool true if there is no error
      */
     public function updateById(
         $item_id,

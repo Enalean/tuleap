@@ -1266,6 +1266,9 @@ class Project
         }
 
         // first check if it's unpacked
+        /**
+         * @psalm-taint-escape file
+         */
         $path = $this->GetPath() . '/objects/' . substr($hash, 0, 2) . '/' . substr($hash, 2);
         if (file_exists($path)) {
             list($header, $data) = explode("\0", gzuncompress(file_get_contents($path)), 2);
@@ -1453,7 +1456,7 @@ class Project
             $args[] = '--skip=' . escapeshellarg($skip);
         }
 
-        $args[] = $hash;
+        $args[] = escapeshellarg($hash);
 
         $revlist = explode("\n", $exe->Execute(GitExe::REV_LIST, $args));
 

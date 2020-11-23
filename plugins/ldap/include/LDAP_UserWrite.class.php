@@ -169,7 +169,7 @@ class LDAP_UserWrite
 
     private function getUserRDN(PFUser $user)
     {
-        return 'uid=' . $this->getUserLdapId($user);
+        return 'uid=' . ldap_escape($this->getUserLdapId($user));
     }
 
     private function updateUserLdapId(PFUser $user)

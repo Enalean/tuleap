@@ -48,7 +48,7 @@ class CustomizableContentLoader
     }
 
     /**
-     * @psalm-taint-escape text
+     * @psalm-taint-escape file
      */
     private function getValidatedLocation(string $location): ?string
     {

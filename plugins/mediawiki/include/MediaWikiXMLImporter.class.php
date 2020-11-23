@@ -108,7 +108,7 @@ class MediaWikiXMLImporter
 
         $this->importRights($project, $xml_mediawiki);
 
-        $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . "/" . $project->getID();
+        $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . "/" . (int) $project->getID();
         $owner = ForgeConfig::get('sys_http_user');
         if ($owner) {
             $no_filter_file_extension = [];

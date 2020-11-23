@@ -58,7 +58,7 @@ class SystemEventDao extends DataAccessObject
      /**
      * Close SystemEvent: update status, log and end_date.
      * @param $sysevent : SystemEvent object
-     * @return true if there is no error
+     * @return bool true if there is no error
      */
     public function close($sysevent)
     {

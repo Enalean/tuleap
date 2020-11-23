@@ -45,18 +45,6 @@ function account_add_user_to_group($group_id, &$user_unix_name)
     }
 }
 
-// Generate a valid Unix login name from the email address.
-function account_make_login_from_email($email)
-{
-    $pattern = "/^(.*)@.*$/";
-    $replacement = "$1";
-    $name = preg_replace($pattern, $replacement, $email);
-    $name = substr($name, 0, 32);
-    $name = strtr($name, ".:;,?%^*(){}[]<>+=$", "___________________");
-    $name = strtr($name, "�a��e�u�", "aaeeeuuc");
-    return strtolower($name);
-}
-
 // Set user password (Unix, Web)
 function account_create(string $loginname, ?ConcealedString $pw, $ldap_id = '', $realname = '', $register_purpose = '', $email = '', $status = 'P', $confirm_hash = '', $mail_site = 0, $mail_va = 0, $timezone = 'GMT', $lang_id = 'en_US', $unix_status = 'N', $expiry_date = 0)
 {

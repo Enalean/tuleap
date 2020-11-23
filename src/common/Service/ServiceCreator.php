@@ -51,6 +51,7 @@ class ServiceCreator
             $link = str_replace('$sys_default_protocol', $sys_default_protocol, $link);
         } else {
             //for non-system templates
+            require_once __DIR__ . '/../../www/include/service.php';
             $link = service_replace_template_name_in_link($link, $template, $pm->getProject($group_id));
         }
 

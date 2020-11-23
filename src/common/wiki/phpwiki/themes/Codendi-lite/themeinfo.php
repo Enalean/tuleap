@@ -24,7 +24,7 @@
 
 require_once('lib/Theme.php');
 
-$WikiTheme = new Theme('Codendi-lite');
+$WikiTheme = new PHPWikiTheme('Codendi-lite');
 
 // CSS file defines fonts, colors and background images for this
 // style.  The companion '*-heavy.css' file isn't defined, it's just

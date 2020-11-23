@@ -14,6 +14,8 @@ if ($sys_lists_domain == 'lists.%sys_default_domain%') {
     $sys_lists_domain = ForgeConfig::get('sys_lists_host');
 }
 
+$purifier = Codendi_HTMLPurifier::instance();
+
 $pm = ProjectManager::instance();
 if ($group_id && user_ismember($group_id, 'A')) {
     $list_server = get_list_server_url();
@@ -136,16 +138,16 @@ if ($group_id && user_ismember($group_id, 'A')) {
             <FORM METHOD="POST" ACTION="?">
             <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
             <INPUT TYPE="HIDDEN" NAME="add_list" VALUE="y">
-            <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
+            <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
             <B>' . $Language->getText('mail_admin_index', 'mail_list_name') . ':</B><BR>';
 
         // if the user is super user then he has the right to choose the
         // full mailing list name
         if (user_is_super_user()) {
             echo '<INPUT TYPE="TEXT" NAME="list_name"
-            VALUE="' . ForgeConfig::get('sys_lists_prefix') . $pm->getProject($group_id)->getUnixName() . '-xxxxx" SIZE="15" MAXLENGTH="20" CLASS="textfield_small">@' . $sys_lists_domain . '</B><BR>';
+            VALUE="' . ForgeConfig::get('sys_lists_prefix') . $purifier->purify($pm->getProject($group_id)->getUnixName()) . '-xxxxx" SIZE="15" MAXLENGTH="20" CLASS="textfield_small">@' . $purifier->purify($sys_lists_domain) . '</B><BR>';
         } else {
-            echo '<B>' . ForgeConfig::get('sys_lists_prefix') . $pm->getProject($group_id)->getUnixName() . '-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" SIZE="15" MAXLENGTH="20" CLASS="textfield_small">@' . $sys_lists_domain . '</B><BR>';
+            echo '<B>' . ForgeConfig::get('sys_lists_prefix') . $purifier->purify($pm->getProject($group_id)->getUnixName()) . '-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" SIZE="15" MAXLENGTH="20" CLASS="textfield_small">@' . $purifier->purify($sys_lists_domain) . '</B><BR>';
         }
         echo '    <P>
             <B>' . $Language->getText('mail_admin_index', 'is_public') . ' </B>' . $Language->getText('mail_admin_index', 'public_explain') . '<BR>

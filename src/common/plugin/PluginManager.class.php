@@ -136,6 +136,7 @@ class PluginManager
     {
         $plugin = false;
         if ($this->isNameValid($name)) {
+            $name = $this->getValidatedName($name);
             if (! $this->plugin_factory->isPluginInstalled($name)) {
                 $this->executeSqlStatements('install', $name);
                 $plugin = $this->plugin_factory->createPlugin($name);
@@ -297,7 +298,7 @@ class PluginManager
     }
 
     /**
-     * @psalm-taint-escape text
+     * @psalm-taint-escape file
      */
     private function getValidatedName(string $name): string
     {

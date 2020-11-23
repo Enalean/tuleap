@@ -83,7 +83,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     /**
      * Fetch content of the renderer
      * @param array $matching_ids
-     * @param Request $request
+     * @param HTTPRequest $request
      * @return string
      */
     public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user)
@@ -221,7 +221,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 
     /**
      * Process the request
-     * @param Request $request
+     * @param HTTPRequest $request
      */
     public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user)
     {

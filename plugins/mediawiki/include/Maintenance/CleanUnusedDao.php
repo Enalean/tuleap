@@ -146,7 +146,7 @@ class CleanUnusedDao extends DataAccessObject
         $this->logger->info("Attempt to purge database " . $database);
         if (strpos($database, MediawikiDao::DEDICATED_DATABASE_PREFIX) !== false) {
             if ($this->doesDatabaseExist($database)) {
-                $sql = 'DROP DATABASE ' . $database;
+                $sql = 'DROP DATABASE ' . $this->da->quoteSmartSchema($database);
                 $this->logger->info($sql);
                 if (! $dry_run) {
                     $this->update($sql);

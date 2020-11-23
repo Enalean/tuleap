@@ -333,6 +333,8 @@ class Backend
      * @param int $rval command return value
      * @return mixed Returns the last line of the command output on success, and false
      * on failure.
+     *
+     * @psalm-taint-specialize
      */
     protected function system($cmd, &$rval = 0)
     {

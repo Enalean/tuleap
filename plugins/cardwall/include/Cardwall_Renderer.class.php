@@ -97,7 +97,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      * Fetch content of the renderer
      *
      * @param array $matching_ids
-     * @param Request $request
+     * @param HTTPRequest $request
      *
      * @return string
      */

@@ -137,11 +137,19 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
                 $headers[] = "Content-type: text/plain; charset=UTF-8";
             }
 
-            $headers[] = "Content-disposition: attachment; filename=\"" . $saveas . "\"";
+            $headers[] = "Content-disposition: attachment; filename=\"" . self::removeNonASCIICharFromFilenameToBeUsedAsAttachmentHeaderFilename($saveas) . "\"";
             $headers[] = "X-Content-Type-Options: nosniff";
 
             $this->headers = $headers;
         }
+    }
+
+    /**
+     * @psalm-taint-escape header
+     */
+    private static function removeNonASCIICharFromFilenameToBeUsedAsAttachmentHeaderFilename(string $save_as): string
+    {
+        return str_replace('"', '\"', preg_replace('/[^(\x20-\x7F)]*/', '', $save_as));
     }
 
     /**

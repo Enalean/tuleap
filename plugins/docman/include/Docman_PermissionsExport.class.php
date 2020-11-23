@@ -46,7 +46,7 @@ class Docman_PermissionsExport
         ' FROM plugin_docman_item i' .
         '   JOIN permissions p ON (p.object_id = CAST(i.item_id as CHAR CHARACTER SET utf8) AND p.permission_type IN (\'PLUGIN_DOCMAN_READ\', \'PLUGIN_DOCMAN_WRITE\', \'PLUGIN_DOCMAN_MANAGE\'))' .
         '   JOIN ugroup ug ON (ug.ugroup_id = p.ugroup_id)' .
-        ' WHERE i.group_id = ' . $this->group->getId() .
+        ' WHERE i.group_id = ' . db_ei($this->group->getId()) .
         '   AND i.parent_id IN (' . implode(',', $parentIds) . ') ' .
         '   AND i.delete_date IS NULL' .
         ' ORDER BY i.rank ASC, permission_type';
@@ -104,7 +104,7 @@ class Docman_PermissionsExport
         header('Content-Disposition: filename=' . $filename);
         header('Content-Type: text/csv');
         // Context
-        echo dgettext('tuleap-docman', 'Project') . $sep . tocsv($this->group->getPublicName(), $sep) . $sep . tocsv($this->group->getUnixName(), $sep) . $sep . $this->group->getId() . PHP_EOL;
+        echo dgettext('tuleap-docman', 'Project') . $sep . tocsv($this->group->getPublicName(), $sep) . $sep . tocsv($this->group->getUnixName(), $sep) . $sep . (int) $this->group->getId() . PHP_EOL;
         echo dgettext('tuleap-docman', 'Export date') . $sep . format_date(util_get_user_preferences_export_datefmt(), $_SERVER['REQUEST_TIME']) . PHP_EOL;
         echo PHP_EOL;
 

@@ -102,6 +102,7 @@ final class SvnRepository implements Repository
 
     /**
      * @psalm-taint-escape shell
+     * @psalm-taint-escape file
      */
     public function getName(): string
     {
@@ -128,7 +129,7 @@ final class SvnRepository implements Repository
 
     public function getSystemPath(): string
     {
-        return ForgeConfig::get('sys_data_dir') . '/svn_plugin/' . $this->getProject()->getId() . '/' . $this->getName();
+        return ForgeConfig::get('sys_data_dir') . '/svn_plugin/' . (int) $this->getProject()->getId() . '/' . $this->getName();
     }
 
     public function isRepositoryCreated(): bool

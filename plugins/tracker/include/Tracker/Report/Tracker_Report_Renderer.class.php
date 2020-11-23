@@ -98,7 +98,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      * Fetch content of the renderer
      *
      * @param array   $matching_ids
-     * @param Request $request
+     * @param HTTPRequest $request
      * @param bool    $report_can_be_modified
      *
      * @return string
@@ -107,7 +107,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
 
     /**
      * Process the request
-     * @param Request $request
+     * @param HTTPRequest $request
      */
     abstract public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user);
 

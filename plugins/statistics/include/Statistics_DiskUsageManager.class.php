@@ -474,7 +474,7 @@ class Statistics_DiskUsageManager
     {
         if (is_dir($dir)) {
             $output = [];
-            exec("nice -n 19 du -s --block-size=1 $dir", $output, $returnValue);
+            exec("nice -n 19 du -s --block-size=1 " . escapeshellarg($dir), $output, $returnValue);
             if ($returnValue === 0) {
                 $size = explode("\t", $output[0]);
                 return $size[0];

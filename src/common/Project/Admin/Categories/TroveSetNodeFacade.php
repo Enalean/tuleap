@@ -27,6 +27,7 @@ class TroveSetNodeFacade
 {
     public function setNode(\Project $project, int $submitted_category_id, int $root_id): void
     {
+        require_once __DIR__ . '/../../../../www/include/trove.php';
         \trove_setnode((int) $project->getID(), $submitted_category_id, $root_id);
     }
 }

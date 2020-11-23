@@ -20,6 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once __DIR__ . '/../svn_data.php';
+
+$request = HTTPRequest::instance();
+$group_id = $request->get('group_id');
 
 // CAUTION!!
 // Make the changes before calling svn_header_admin because

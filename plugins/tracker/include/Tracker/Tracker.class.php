@@ -1002,7 +1002,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if ($request->get('select_report')) {
             //Is the report id valid
             if ($report = $this->getReportFactory()->getReportById($request->get('select_report'), $current_user->getid())) {
-                $current_user->setPreference('tracker_' . $this->id . '_last_report', $report->id);
+                $current_user->setPreference('tracker_' . $this->id . '_last_report', (string) $report->id);
             }
         }
 

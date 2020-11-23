@@ -17,7 +17,10 @@
       "www/include/help.php",
       "www/include/utils.php",
       "www/include/user.php",
-      "www/project/admin/permissions.php"
+      "www/project/admin/permissions.php",
+      "www/svn/svn_utils.php",
+      "www/include/nusoap.php",
+      "embedded_vendor/jpgraph/jpgraph_utils_func.php"
     ]
   },
   "autoload-dev": {

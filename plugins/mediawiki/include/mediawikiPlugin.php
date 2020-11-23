@@ -326,7 +326,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         if (is_dir('/var/lib/tuleap/mediawiki/projects/' . $project->getUnixName())) {
             $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getUnixName() . '/images';
         } elseif (is_dir('/var/lib/tuleap/mediawiki/projects/' . $project->getId())) {
-            $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getId() . '/images';
+            $folder_location = '/var/lib/tuleap/mediawiki/projects/' . (int) $project->getId() . '/images';
         } else {
             exit;
         }
@@ -629,7 +629,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
         $project_name_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $project->getUnixName();
         if (is_dir($project_name_dir)) {
-            exec("mv $project_name_dir $project_id_dir");
+            exec("mv " . escapeshellarg($project_name_dir) . " " . escapeshellarg($project_id_dir));
             return true;
         }
 

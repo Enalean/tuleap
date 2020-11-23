@@ -209,7 +209,7 @@ abstract class BaseLayout extends Response
     public function redirect(string $url): void
     {
         /**
-         * @psalm-taint-escape text
+         * @psalm-taint-escape header
          */
         $url = $this->url_verification->isInternal($url) ? $url : '/';
 
