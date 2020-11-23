@@ -1,4 +1,4 @@
-/var/log/%PROJECT_NAME%/gitlab_syslog {
+/var/log/tuleap/gitlab_syslog {
     missingok
     weekly
     rotate 4
