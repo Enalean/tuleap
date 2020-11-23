@@ -21,6 +21,9 @@ export TULEAP_FPM_SESSION_MODE=redis
 export REDIS_SERVER=redis
 
 ln -s /data/etc/tuleap /etc/tuleap
+/usr/sbin/groupadd -r codendiadm
+/usr/sbin/useradd -c 'Tuleap user' -m -d '/var/lib/tuleap' -r -g "codendiadm" -s '/bin/bash' codendiadm
+mkdir /var/log/tuleap
 
 /usr/share/tuleap/src/utils/tuleap wait-for-redis
 
