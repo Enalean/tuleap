@@ -73,16 +73,6 @@
         {{/ is_insecure_emailgateway_properly_configured }}
     {{/ enable_insecure_emailgateway }}
 
-    <label class="checkbox">
-        <input
-            type="checkbox"
-            name="is_in_new_dropdown"
-            value="1"
-            {{# is_in_new_dropdown }} checked {{/ is_in_new_dropdown }}
-        />
-        {{# dgettext }} tuleap-tracker | Is available in "+ New" dropdown across the project{{/ dgettext }}
-    </label>
-
     <label for="tracker-submit-instructions">{{ submit_instructions_label }}</label>
     <textarea id="tracker-submit-instructions" name="submit_instructions" rows="3" cols="50">{{ submit_instructions }}</textarea>
     <div class="help">{{ html_tags }}</div>

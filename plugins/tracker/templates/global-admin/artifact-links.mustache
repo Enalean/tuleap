@@ -1,7 +1,13 @@
 <h1 class="tlp-framed-horizontally tracker-administration-title">{{ title }}</h1>
 <div class="main-project-tabs">
     <nav class="tlp-tabs">
-        <a href="{{ global_admin_url }}" class="tlp-tab tlp-tab-active">
+        <a href="{{ trackers_url }}" class="tlp-tab">
+            {{# dgettext }}
+                tuleap-tracker |
+                Trackers
+            {{/ dgettext }}
+        </a>
+        <a href="{{ artifact_links_url }}" class="tlp-tab tlp-tab-active">
             {{# dgettext }}
                 tuleap-tracker |
                 Artifact links

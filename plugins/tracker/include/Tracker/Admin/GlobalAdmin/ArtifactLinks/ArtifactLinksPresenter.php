@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks;
 
 use CSRFSynchronizerToken;
 use Project;
+use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\TrackersDisplayController;
 
 class ArtifactLinksPresenter
 {
@@ -82,7 +83,7 @@ class ArtifactLinksPresenter
     /**
      * @var string
      */
-    public $global_admin_url;
+    public $artifact_links_url;
     /**
      * @var string
      */
@@ -99,6 +100,10 @@ class ArtifactLinksPresenter
      * @var string
      */
     public $reverse_label_label;
+    /**
+     * @var string
+     */
+    public $trackers_url;
 
     public function __construct(
         Project $project,
@@ -107,12 +112,14 @@ class ArtifactLinksPresenter
         array $artifact_link_types,
         bool $has_at_least_one_disabled_type
     ) {
-        $this->title        = dgettext('tuleap-tracker', 'Tracker global admininistration');
+        $this->title        = dgettext('tuleap-tracker', 'Tracker global administration');
         $this->table_title  = dgettext('tuleap-tracker', 'Artifact links types');
         $this->switch_label = dgettext('tuleap-tracker', 'Activate artifact links types for all the trackers of this project?');
 
-        $base_url = ArtifactLinksController::getTrackerGlobalAdministrationURL($project);
-        $this->global_admin_url = $base_url;
+        $this->trackers_url = TrackersDisplayController::getURL($project);
+        $base_url = ArtifactLinksController::getURL($project);
+        $this->artifact_links_url = $base_url;
+
         $this->form_url = $base_url . '?' . http_build_query(
             [
                 'func' => 'edit-artifact-links'

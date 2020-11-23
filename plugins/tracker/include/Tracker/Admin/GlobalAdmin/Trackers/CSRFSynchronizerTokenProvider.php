@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.tracker-administration-title {
-    margin: $tlp-medium-spacing 0 $tlp-title-spacing;
-}
+declare(strict_types=1);
 
-.tracker-administration-tabs {
-    padding: $tlp-medium-spacing 0 0;
-}
+namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 
-.trackers-admin-tracker-name {
-    width: 100%;
+use CSRFSynchronizerToken;
+use Project;
+
+class CSRFSynchronizerTokenProvider
+{
+    public function getCSRF(Project $project): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(TrackersDisplayController::getURL($project));
+    }
 }

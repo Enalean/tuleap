@@ -28,3 +28,4 @@ project_admin_utils	user_notification_update	User $1($2) has updated the configu
 project_admin_utils	global_notification_update_with_force	Update global notifications and force tracker notification usage for users for tracker $1.
 project_admin_utils	tracker_formelement_update	Update field
 project_admin_utils	tracker_artifact_delete	Artifact deleted
+project_admin_utils	tracker_promotion	Promotion of tracker $1
