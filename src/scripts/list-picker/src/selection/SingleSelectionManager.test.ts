@@ -168,7 +168,7 @@ describe("SingleSelectionManager", () => {
             }
 
             // Now unselect the item
-            remove_item_button.dispatchEvent(new MouseEvent("click"));
+            remove_item_button.dispatchEvent(new MouseEvent("pointerdown"));
             expect(item_1.is_selected).toBe(false);
             expect(item_1.element.getAttribute("aria-selected")).toEqual("false");
             expect(item_1.target_option.hasAttribute("selected")).toBe(false);

@@ -113,6 +113,7 @@ export async function createListPicker(
     const event_manager = new EventManager(
         document,
         wrapper_element,
+        list_picker_element,
         dropdown_element,
         search_field_element,
         source_select_box,

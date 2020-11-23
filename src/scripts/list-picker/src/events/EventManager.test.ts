@@ -30,6 +30,7 @@ describe("event manager", () => {
     let doc: HTMLDocument,
         source_select_box: HTMLSelectElement,
         component_wrapper: Element,
+        list_picker_input: Element,
         dropdown: Element,
         manager: EventManager,
         toggler: DropdownToggler,
@@ -53,6 +54,7 @@ describe("event manager", () => {
 
         const {
             wrapper_element,
+            list_picker_element,
             dropdown_element,
             dropdown_list_element,
             search_field_element,
@@ -62,6 +64,7 @@ describe("event manager", () => {
         }).renderBaseComponent();
 
         component_wrapper = wrapper_element;
+        list_picker_input = list_picker_element;
         clickable_item = document.createElement("li");
 
         doc = document.implementation.createHTMLDocument();
@@ -100,6 +103,7 @@ describe("event manager", () => {
         manager = new EventManager(
             doc,
             component_wrapper,
+            list_picker_input,
             dropdown_element,
             search_field_element,
             source_select_box,
@@ -134,11 +138,11 @@ describe("event manager", () => {
 
             manager.attachEvents();
 
-            component_wrapper.dispatchEvent(new MouseEvent("click"));
+            list_picker_input.dispatchEvent(new MouseEvent("pointerdown"));
             expect(openListPicker).toHaveBeenCalled();
             expect(item_highlighter.resetHighlight).toHaveBeenCalledTimes(1);
 
-            component_wrapper.dispatchEvent(new MouseEvent("click"));
+            list_picker_input.dispatchEvent(new MouseEvent("pointerdown"));
             expect(closeListPicker).toHaveBeenCalled();
         });
 
@@ -157,6 +161,7 @@ describe("event manager", () => {
             const manager = new EventManager(
                 doc,
                 component_wrapper,
+                list_picker_input,
                 dropdown,
                 null,
                 single_select,
@@ -183,7 +188,7 @@ describe("event manager", () => {
 
             // Now user closes the dropdown without selecting any item
             doc.dispatchEvent(new Event("click"));
-            expect(toggler.closeListPicker).toHaveBeenCalledTimes(2);
+            expect(toggler.closeListPicker).toHaveBeenCalledTimes(1);
 
             // And finally, he hits enter once again
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
@@ -205,11 +210,11 @@ describe("event manager", () => {
             );
         });
 
-        it("should close the dropdown when the user clicks outside the list-picker", () => {
+        it("should close the dropdown when the user mouse downs outside the list-picker", () => {
             const closeListPicker = jest.spyOn(toggler, "closeListPicker");
             manager.attachEvents();
 
-            doc.dispatchEvent(new MouseEvent("click"));
+            doc.dispatchEvent(new MouseEvent("pointerdown"));
 
             expect(closeListPicker).toHaveBeenCalled();
         });
@@ -218,7 +223,7 @@ describe("event manager", () => {
     describe("Item selection", () => {
         it("processes the selection when an item is clicked in the dropdown list", () => {
             manager.attachEvents();
-            clickable_item.dispatchEvent(new MouseEvent("click"));
+            clickable_item.dispatchEvent(new MouseEvent("pointerup"));
             expect(selection_manager.processSelection).toHaveBeenCalled();
         });
     });
@@ -239,7 +244,7 @@ describe("event manager", () => {
             const openListPicker = jest.spyOn(toggler, "openListPicker");
 
             manager.attachEvents();
-            search_field.dispatchEvent(new Event("focus"));
+            search_field.dispatchEvent(new Event("pointerdown"));
 
             expect(openListPicker).toHaveBeenCalled();
         });
