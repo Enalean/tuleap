@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard\Milestone;
 
 use AgileDashboard_PaneInfoIdentifier;
 use Layout;
+use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 
 class HeaderOptionsProvider
 {
@@ -31,13 +32,20 @@ class HeaderOptionsProvider
      * @var AgileDashboard_PaneInfoIdentifier
      */
     private $pane_info_identifier;
+    /**
+     * @var HeaderOptionsForPlanningProvider
+     */
+    private $header_options_for_planning_provider;
 
-    public function __construct(AgileDashboard_PaneInfoIdentifier $pane_info_identifier)
-    {
-        $this->pane_info_identifier = $pane_info_identifier;
+    public function __construct(
+        AgileDashboard_PaneInfoIdentifier $pane_info_identifier,
+        HeaderOptionsForPlanningProvider $header_options_for_planning_provider
+    ) {
+        $this->pane_info_identifier                 = $pane_info_identifier;
+        $this->header_options_for_planning_provider = $header_options_for_planning_provider;
     }
 
-    public function getHeaderOptions(string $identifier): array
+    public function getHeaderOptions(\PFUser $user, \Planning_Milestone $milestone, string $identifier): array
     {
         $is_pane_a_planning_v2 = $this->pane_info_identifier->isPaneAPlanningV2($identifier);
 
@@ -47,7 +55,7 @@ class HeaderOptionsProvider
         ];
 
         if ($is_pane_a_planning_v2) {
-            $header_options['body_class'][] = 'has-sidebar-with-pinned-header';
+            $this->header_options_for_planning_provider->addPlanningOptions($user, $milestone, $header_options);
         }
 
         return $header_options;

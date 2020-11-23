@@ -117,7 +117,7 @@ abstract class MVC2_Controller
         return $this->request->getCurrentUser();
     }
 
-    public function getHeaderOptions()
+    public function getHeaderOptions(\PFUser $user): array
     {
         return [];
     }

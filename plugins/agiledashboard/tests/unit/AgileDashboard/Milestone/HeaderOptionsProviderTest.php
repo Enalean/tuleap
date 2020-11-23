@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone;
 
 use AgileDashboard_PaneInfoIdentifier;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 
 class HeaderOptionsProviderTest extends TestCase
 {
@@ -34,39 +36,55 @@ class HeaderOptionsProviderTest extends TestCase
      * @var HeaderOptionsProvider
      */
     private $provider;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|HeaderOptionsForPlanningProvider
+     */
+    private $header_options_for_planning_provider;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
+     */
+    private $user;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Planning_Milestone
+     */
+    private $milestone;
 
     protected function setUp(): void
     {
+        $this->header_options_for_planning_provider = Mockery::mock(HeaderOptionsForPlanningProvider::class);
+
         $this->provider = new HeaderOptionsProvider(
             new AgileDashboard_PaneInfoIdentifier(),
+            $this->header_options_for_planning_provider,
         );
+
+        $this->user      = Mockery::mock(\PFUser::class);
+        $this->milestone = Mockery::mock(\Planning_Milestone::class);
     }
 
     public function testGetHeaderOptionsForPV2(): void
     {
+        $this->header_options_for_planning_provider->shouldReceive('addPlanningOptions')->once();
+
         self::assertEquals(
             [
                 'include_fat_combined' => false,
-                'body_class'           => [
-                    'agiledashboard-body',
-                    'has-sidebar-with-pinned-header',
-                ]
+                'body_class'           => ['agiledashboard-body'],
             ],
-            $this->provider->getHeaderOptions('planning-v2'),
+            $this->provider->getHeaderOptions($this->user, $this->milestone, 'planning-v2'),
         );
     }
 
     public function testGetHeaderOptionsForTopPV2(): void
     {
+        $this->header_options_for_planning_provider->shouldReceive('addPlanningOptions')->once();
+
         self::assertEquals(
             [
                 'include_fat_combined' => false,
-                'body_class'           => [
-                    'agiledashboard-body',
-                    'has-sidebar-with-pinned-header',
-                ]
+                'body_class'           => ['agiledashboard-body'],
             ],
-            $this->provider->getHeaderOptions('topplanning-v2'),
+            $this->provider->getHeaderOptions($this->user, $this->milestone, 'topplanning-v2'),
         );
     }
 
@@ -75,11 +93,9 @@ class HeaderOptionsProviderTest extends TestCase
         self::assertEquals(
             [
                 'include_fat_combined' => true,
-                'body_class'           => [
-                    'agiledashboard-body',
-                ]
+                'body_class'           => ['agiledashboard-body'],
             ],
-            $this->provider->getHeaderOptions('details'),
+            $this->provider->getHeaderOptions($this->user, $this->milestone, 'details'),
         );
     }
 }

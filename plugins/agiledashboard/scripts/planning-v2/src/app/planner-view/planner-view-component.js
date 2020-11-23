@@ -39,6 +39,7 @@ controller.$inject = [
     "$filter",
     "$q",
     "$scope",
+    "$document",
     "SharedPropertiesService",
     "BacklogService",
     "BacklogItemService",
@@ -58,6 +59,7 @@ function controller(
     $filter,
     $q,
     $scope,
+    $document,
     SharedPropertiesService,
     BacklogService,
     BacklogItemService,
@@ -116,6 +118,16 @@ function controller(
 
         initViewModes(SharedPropertiesService.getViewMode());
         self.loadInitialMilestones();
+
+        $document.find(`[data-shortcut-create-option]`).on("click", ($event) => {
+            if (
+                parseInt($event.target.dataset.trackerId, 10) === self.backlog.submilestone_type.id
+            ) {
+                if (self.canUserCreateMilestone()) {
+                    showAddSubmilestoneModal($event, self.backlog.submilestone_type);
+                }
+            }
+        });
     }
 
     function initViewModes(view_mode) {

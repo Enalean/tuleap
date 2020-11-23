@@ -107,13 +107,13 @@ class Planning_VirtualTopMilestoneController extends BaseController
         return $this->top_milestone_pane_factory->getActivePane($this->milestone)->getIdentifier();
     }
 
-    public function getHeaderOptions()
+    public function getHeaderOptions(PFUser $user): array
     {
         try {
             $this->generateVirtualTopMilestone();
             $identifier = $this->getActivePaneIdentifier();
 
-            return $this->header_options_provider->getHeaderOptions($identifier);
+            return $this->header_options_provider->getHeaderOptions($user, $this->milestone, $identifier);
         } catch (Planning_NoPlanningsException $e) {
             return [];
         }
