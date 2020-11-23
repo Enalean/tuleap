@@ -29,6 +29,7 @@
         class="document-quick-look-embedded"
         v-else-if="is_an_embedded_file"
         data-test="document-quick-look-embedded"
+        v-bind:key="currently_previewed_item.id"
     ></div>
 
     <div
