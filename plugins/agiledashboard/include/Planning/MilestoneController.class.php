@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
+use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
@@ -54,6 +55,10 @@ class Planning_MilestoneController extends BaseController
      * @var AllBreadCrumbsForMilestoneBuilder
      */
     private $bread_crumbs_for_milestone_builder;
+    /**
+     * @var HeaderOptionsProvider
+     */
+    private $header_options_provider;
 
     public function __construct(
         Codendi_Request $request,
@@ -61,7 +66,8 @@ class Planning_MilestoneController extends BaseController
         ProjectManager $project_manager,
         Planning_MilestonePaneFactory $pane_factory,
         VisitRecorder $visit_recorder,
-        AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder
+        AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder,
+        HeaderOptionsProvider $header_options_provider
     ) {
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory                  = $milestone_factory;
@@ -69,6 +75,7 @@ class Planning_MilestoneController extends BaseController
         $this->project                            = $project_manager->getProject($request->get('group_id'));
         $this->visit_recorder                     = $visit_recorder;
         $this->bread_crumbs_for_milestone_builder = $bread_crumbs_for_milestone_builder;
+        $this->header_options_provider            = $header_options_provider;
     }
 
     public function show()
@@ -103,22 +110,9 @@ class Planning_MilestoneController extends BaseController
     public function getHeaderOptions()
     {
         $this->generateBareMilestone();
-        $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
+        $identifier = $this->getActivePaneIdentifier();
 
-        $is_pane_a_planning_v2 = $pane_info_identifier->isPaneAPlanningV2(
-            $this->getActivePaneIdentifier()
-        );
-
-        $header_options = [
-            Layout::INCLUDE_FAT_COMBINED => ! $is_pane_a_planning_v2,
-            'body_class'                 => ['agiledashboard-body']
-        ];
-
-        if ($is_pane_a_planning_v2) {
-            $header_options['body_class'][] = 'has-sidebar-with-pinned-header';
-        }
-
-        return $header_options;
+        return $this->header_options_provider->getHeaderOptions($identifier);
     }
 
     private function getMilestonePresenter(PanePresenterData $presenter_data)

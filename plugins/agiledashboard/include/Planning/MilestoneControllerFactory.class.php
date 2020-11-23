@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2013 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,6 +25,7 @@
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
+use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 /**
@@ -57,6 +58,10 @@ class Planning_MilestoneControllerFactory
      * @var AllBreadCrumbsForMilestoneBuilder
      */
     private $bread_crumbs_for_milestone_builder;
+    /**
+     * @var HeaderOptionsProvider
+     */
+    private $header_options_provider;
 
     public function __construct(
         ProjectManager $project_manager,
@@ -66,7 +71,8 @@ class Planning_MilestoneControllerFactory
         AgileDashboardCrumbBuilder $service_crumb_builder,
         VirtualTopMilestoneCrumbBuilder $top_milestone_crumb_builder,
         VisitRecorder $visit_recorder,
-        AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder
+        AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder,
+        HeaderOptionsProvider $header_options_provider
     ) {
         $this->project_manager                    = $project_manager;
         $this->milestone_factory                  = $milestone_factory;
@@ -76,6 +82,7 @@ class Planning_MilestoneControllerFactory
         $this->top_milestone_crumb_builder        = $top_milestone_crumb_builder;
         $this->visit_recorder                     = $visit_recorder;
         $this->bread_crumbs_for_milestone_builder = $bread_crumbs_for_milestone_builder;
+        $this->header_options_provider            = $header_options_provider;
     }
 
     public function getMilestoneController(Codendi_Request $request)
@@ -86,7 +93,8 @@ class Planning_MilestoneControllerFactory
             $this->project_manager,
             $this->pane_factory,
             $this->visit_recorder,
-            $this->bread_crumbs_for_milestone_builder
+            $this->bread_crumbs_for_milestone_builder,
+            $this->header_options_provider
         );
     }
 
@@ -98,7 +106,8 @@ class Planning_MilestoneControllerFactory
             $this->project_manager,
             $this->top_milestone_pane_factory,
             $this->service_crumb_builder,
-            $this->top_milestone_crumb_builder
+            $this->top_milestone_crumb_builder,
+            $this->header_options_provider
         );
     }
 }

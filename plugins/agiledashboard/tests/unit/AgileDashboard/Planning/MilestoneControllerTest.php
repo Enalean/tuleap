@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
+use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -150,7 +151,8 @@ class MilestoneControllerTest extends TestCase
             $this->project_manager,
             $this->pane_factory,
             $this->visit_recorder,
-            $this->crumb_builder
+            $this->crumb_builder,
+            Mockery::mock(HeaderOptionsProvider::class),
         );
     }
 
