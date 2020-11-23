@@ -23,23 +23,23 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Team\RootPlanning;
 
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
+use Tuleap\ScaledAgile\Team\Creation\TeamStore;
 
 final class RootPlanningEditionHandler
 {
     /**
-     * @var TeamDao
+     * @var TeamStore
      */
-    private $team_dao;
+    private $team_store;
 
-    public function __construct(TeamDao $team_dao)
+    public function __construct(TeamStore $team_store)
     {
-        $this->team_dao = $team_dao;
+        $this->team_store = $team_store;
     }
 
     public function handle(RootPlanningEditionEvent $event): void
     {
-        if ($this->team_dao->isProjectATeamProject((int) $event->getProject()->getID())) {
+        if ($this->team_store->isATeam((int) $event->getProject()->getID())) {
             $event->prohibitMilestoneTrackerModification(new MilestoneTrackerUpdateProhibited());
         }
     }

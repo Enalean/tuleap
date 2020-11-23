@@ -26,7 +26,7 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
-use Tuleap\ScaledAgile\Team\TeamDao;
+use Tuleap\ScaledAgile\Team\Creation\TeamStore;
 
 final class RootPlanningEditionHandlerTest extends TestCase
 {
@@ -37,19 +37,19 @@ final class RootPlanningEditionHandlerTest extends TestCase
      */
     private $handler;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|TeamDao
+     * @var M\LegacyMockInterface|M\MockInterface|TeamStore
      */
     private $team_dao;
 
     protected function setUp(): void
     {
-        $this->team_dao = M::mock(TeamDao::class);
+        $this->team_dao = M::mock(TeamStore::class);
         $this->handler         = new RootPlanningEditionHandler($this->team_dao);
     }
 
     public function testHandleProhibitsMilestoneTrackerUpdateForTeamProjects(): void
     {
-        $this->team_dao->shouldReceive('isProjectATeamProject')
+        $this->team_dao->shouldReceive('isATeam')
             ->with(110)
             ->andReturnTrue();
 
@@ -64,7 +64,7 @@ final class RootPlanningEditionHandlerTest extends TestCase
 
     public function testHandleAllowsMilestoneTrackerUpdateForAllOtherProjects(): void
     {
-        $this->team_dao->shouldReceive('isProjectATeamProject')
+        $this->team_dao->shouldReceive('isATeam')
             ->with(112)
             ->andReturnFalse();
 

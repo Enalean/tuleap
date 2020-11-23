@@ -47,7 +47,6 @@ use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\ScaledAgile\REST\ResourcesInjector;
 use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
-use Tuleap\ScaledAgile\Team\TeamDao;
 use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -105,7 +104,7 @@ final class scaled_agilePlugin extends Plugin
 
     public function rootPlanningEditionEvent(RootPlanningEditionEvent $event): void
     {
-        $handler = new RootPlanningEditionHandler(new TeamDao());
+        $handler = new RootPlanningEditionHandler(new \Tuleap\ScaledAgile\Adapter\Team\TeamDao());
         $handler->handle($event);
     }
 
