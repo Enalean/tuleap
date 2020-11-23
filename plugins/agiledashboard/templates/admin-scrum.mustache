@@ -224,35 +224,39 @@
         </section>
     </div>
 
-    <div class="agiledashboard-administration-scrum-side-panes">
-        <section class="tlp-pane">
-            <div class="tlp-pane-container">
-                <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title">
-                        <i class="fas fa-exchange-alt tlp-pane-title-icon"></i> {{ import_export_section }}
-                    </h1>
-                </div>
-                <section class="tlp-pane-section">
-                    <ul>
-                        <li>
-                            <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=import-form" id="template_import">
-                                {{ import_template }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=export-to-file" id="template_export">
-                                {{ export_template }}
-                            </a>
-                        </li>
-                    </ul>
+    {{# has_side_panes }}
+        <div class="agiledashboard-administration-scrum-side-panes">
+            {{^ is_planning_administration_delegated }}
+                <section class="tlp-pane">
+                    <div class="tlp-pane-container">
+                        <div class="tlp-pane-header">
+                            <h1 class="tlp-pane-title">
+                                <i class="fas fa-exchange-alt tlp-pane-title-icon"></i> {{ import_export_section }}
+                            </h1>
+                        </div>
+                        <section class="tlp-pane-section">
+                            <ul>
+                                <li>
+                                    <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=import-form" id="template_import">
+                                        {{ import_template }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=export-to-file" id="template_export">
+                                        {{ export_template }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
                 </section>
-            </div>
-        </section>
+            {{/ is_planning_administration_delegated }}
 
-        {{# additional_content }}
-            <section>
-                {{{ additional_content }}}
-            </section>
-        {{/ additional_content }}
-    </div>
+            {{# additional_content }}
+                <section>
+                    {{{ additional_content }}}
+                </section>
+            {{/ additional_content }}
+        </div>
+    {{/ has_side_panes }}
 </div>

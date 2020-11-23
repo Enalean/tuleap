@@ -276,7 +276,8 @@ class AgileDashboardRouter
                     new PlannedArtifactDao()
                 )
             ),
-            $external_field_extractor
+            $external_field_extractor,
+            $this->event_manager
         );
 
         switch ($request->get('action')) {

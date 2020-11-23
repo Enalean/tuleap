@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\Queue\WorkerEvent;
@@ -30,6 +31,7 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFiel
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
@@ -44,10 +46,10 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementArtifact
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\ScaledAgile\Program\ProgramDao;
 use Tuleap\ScaledAgile\REST\ResourcesInjector;
 use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\Workspace\ComponentInvolvedVerifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -77,6 +79,7 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook(ArtifactCreated::NAME);
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(PlanningAdministrationDelegation::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -224,6 +227,15 @@ final class scaled_agilePlugin extends Plugin
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function planningAdministrationDelegation(PlanningAdministrationDelegation $planning_administration_delegation): void
+    {
+        $component_involved_verifier = new ComponentInvolvedVerifier(new \Tuleap\ScaledAgile\Adapter\Team\TeamDao(), new ProgramDao());
+        $project_data                = ProjectDataAdapter::build($planning_administration_delegation->getProject());
+        if ($component_involved_verifier->isInvolvedInAScaledAgileWorkspace($project_data)) {
+            $planning_administration_delegation->enablePlanningAdministrationDelegation();
+        }
     }
 
     private function getProjectIncrementCreatorChecker(): ProgramIncrementArtifactCreatorChecker
