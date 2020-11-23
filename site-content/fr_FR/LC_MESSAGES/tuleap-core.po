@@ -907,6 +907,9 @@ msgstr "Accès global"
 msgid "Global permissions"
 msgstr "Permissions globales"
 
+msgid "Global shortcuts"
+msgstr "Raccourcis globaux"
+
 msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
 
@@ -3144,6 +3147,9 @@ msgstr "login"
 
 msgid "login (Real Name)"
 msgstr "login (Nom Complet)"
+
+msgid "or"
+msgstr "ou"
 
 #, php-format
 msgid "parameter \"query\" syntax error: \"%s\" property not found"

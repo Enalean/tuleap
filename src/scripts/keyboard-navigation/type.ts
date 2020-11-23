@@ -19,9 +19,12 @@
 
 export interface Shortcut {
     readonly keyboard_inputs: string;
+    readonly description: string;
     readonly handle: (event: KeyboardEvent) => void;
 }
 
 export interface ShortcutsGroup {
+    readonly title: string;
+    readonly cells_id: string;
     readonly shortcuts: Array<Shortcut>;
 }

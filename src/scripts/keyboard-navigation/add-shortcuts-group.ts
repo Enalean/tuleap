@@ -19,16 +19,19 @@
 
 import hotkeys from "hotkeys-js";
 import { closeExistingModal } from "./close-existing-modal";
+import { addToShortcutsModalTable, addHelpModalHeader } from "./add-to-help-modal";
 import { Shortcut, ShortcutsGroup } from "./type";
 
 export { Shortcut, ShortcutsGroup };
 
-export function addShortcutsGroupToPlugin(doc: Document, shortcut_group: ShortcutsGroup): void {
+export function addShortcutsGroup(doc: Document, shortcut_group: ShortcutsGroup): void {
+    addHelpModalHeader(doc, shortcut_group.title, shortcut_group.cells_id);
     shortcut_group.shortcuts.forEach((shortcut) => {
         hotkeys(shortcut.keyboard_inputs, (event) => {
             event.preventDefault();
             closeExistingModal(doc);
             shortcut.handle(event);
         });
+        addToShortcutsModalTable(doc, shortcut_group.cells_id, shortcut);
     });
 }

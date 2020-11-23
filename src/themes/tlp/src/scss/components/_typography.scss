@@ -203,6 +203,11 @@ kbd {
     font-size: .875rem;
     line-height: 1.25rem;
     vertical-align: 1px;
+
+    kbd {
+        padding: 0;
+        vertical-align: 0;
+    }
 }
 
 code {
