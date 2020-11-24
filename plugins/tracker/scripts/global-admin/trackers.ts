@@ -17,7 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { openAllTargetModalsOnClick } from "../../../../src/scripts/tuleap/modals/modal-opener";
+
 document.addEventListener("DOMContentLoaded", function () {
+    handlePromotedSwitches();
+    handleDeletionButtons();
+});
+
+function handlePromotedSwitches(): void {
     for (const switch_button of document.querySelectorAll(".toggle-promoted-switch")) {
         if (!(switch_button instanceof HTMLInputElement)) {
             continue;
@@ -32,4 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
             form.submit();
         });
     }
-});
+}
+
+function handleDeletionButtons(): void {
+    openAllTargetModalsOnClick(document, ".tracker-global-admin-delete-tracker-button");
+}

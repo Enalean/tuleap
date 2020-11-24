@@ -51,6 +51,18 @@ class TrackerPresenter
      * @var string
      */
     public $description;
+    /**
+     * @var string
+     */
+    public $deletion_url;
+    /**
+     * @var bool
+     */
+    public $can_be_deleted;
+    /**
+     * @var string
+     */
+    public $cannot_delete_message;
 
     public function __construct(
         int $id,
@@ -58,13 +70,19 @@ class TrackerPresenter
         string $label,
         string $description,
         bool $is_promoted,
-        string $admin_url
+        string $admin_url,
+        string $deletion_url,
+        bool $can_be_deleted,
+        string $cannot_delete_message
     ) {
-        $this->id          = $id;
-        $this->item_name   = $item_name;
-        $this->label       = $label;
-        $this->description = $description;
-        $this->is_promoted = $is_promoted;
-        $this->admin_url   = $admin_url;
+        $this->id                    = $id;
+        $this->item_name             = $item_name;
+        $this->label                 = $label;
+        $this->description           = $description;
+        $this->is_promoted           = $is_promoted;
+        $this->admin_url             = $admin_url;
+        $this->deletion_url          = $deletion_url;
+        $this->can_be_deleted        = $can_be_deleted;
+        $this->cannot_delete_message = $cannot_delete_message;
     }
 }

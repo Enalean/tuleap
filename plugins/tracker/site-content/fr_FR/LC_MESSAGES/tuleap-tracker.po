@@ -539,6 +539,10 @@ msgstr "Une erreur est survenue empechant la copie de l'artefact #%1$s"
 msgid "An error occured while creating the tracker."
 msgstr "Une erreur est survenue lors de la création de l'outil de suivi."
 
+#, php-format
+msgid "An error occurred while trying to delete the tracker %s"
+msgstr "Une erreur est survenue lors de la suppression de l'outil de suivi %s"
+
 msgid "An error occurred while updating the timeframe semantic"
 msgstr ""
 "Une erreur est survenue lors de la mise à jour de la sémantique plage de "
@@ -3576,6 +3580,10 @@ msgid "Tracker %1$s not duplicated"
 msgstr "L'outil de suivi %1$s n'a pas été copié"
 
 #, php-format
+msgid "Tracker %s has been successfully deleted"
+msgstr "L'outil de suivi %s a été supprimé"
+
+#, php-format
 msgid ""
 "Tracker %s will now appear in the +New dropdown on every pages of the project"
 msgstr ""
@@ -3941,6 +3949,11 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer une nature. Cette action est "
 "irréversible. Confirmez-vous la suppression ?"
+
+msgid "You are about to delete the tracker %s. Please, confirm your action."
+msgstr ""
+"Vous êtes sur le point de supprimer l'outil de suivi %s. Veuillez confirmer "
+"la suppression."
 
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
