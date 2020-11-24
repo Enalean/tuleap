@@ -28,6 +28,9 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
     init();
 
     function init() {
+        if (!$element[0].querySelector(".planning-init-data")) {
+            return;
+        }
         const planning_init_data = $element[0].querySelector(".planning-init-data").dataset;
 
         const user_id = planning_init_data.userId;

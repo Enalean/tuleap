@@ -67,6 +67,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
      * @var string
      */
     public $is_list_picker_enabled;
+    /**
+     * @var bool
+     */
+    public $is_planning_available;
 
     /**
      * @param string[] $allowed_additional_panes_to_display
@@ -78,7 +82,8 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         bool $is_in_explicit_top_backlog,
         array $allowed_additional_panes_to_display,
         bool $create_milestone_allowed,
-        bool $backlog_add_item_allowed
+        bool $backlog_add_item_allowed,
+        bool $is_planning_available
     ) {
         $this->user_id                             = $current_user->getId();
         $this->lang                                = $this->getLanguageAbbreviation($current_user);
@@ -91,9 +96,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $this->create_milestone_allowed            = json_encode($create_milestone_allowed);
         $this->backlog_add_item_allowed            = json_encode($backlog_add_item_allowed);
         $this->is_list_picker_enabled              = json_encode((bool) ListPickerIncluder::isListPickerEnabledAndBrowserCompatible());
+        $this->is_planning_available               = $is_planning_available;
     }
 
-    private function getLanguageAbbreviation(PFUser $current_user)
+    private function getLanguageAbbreviation(PFUser $current_user): string
     {
         [$lang, $country] = explode('_', $current_user->getLocale());
 

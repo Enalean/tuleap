@@ -20,17 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\Program\Backlog\PlanningCheck;
 
-use Tuleap\ScaledAgile\TrackerData;
-
-interface PlanStore
+interface PlanningCheckException extends \Throwable
 {
-    public function save(Plan $plan): void;
-
-    public function isPlannable(int $plannable_tracker_id): bool;
-
-    public function isPartOfAPlan(TrackerData $tracker_data): bool;
-
-    public function getProgramIncrementTrackerId(int $project_id): ?int;
 }

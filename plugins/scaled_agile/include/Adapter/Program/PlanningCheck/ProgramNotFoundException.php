@@ -20,17 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Plan;
+namespace Tuleap\ScaledAgile\Adapter\Program\PlanningCheck;
 
-use Tuleap\ScaledAgile\TrackerData;
-
-interface PlanStore
+final class ProgramNotFoundException extends \Exception implements PlanningCheckException
 {
-    public function save(Plan $plan): void;
-
-    public function isPlannable(int $plannable_tracker_id): bool;
-
-    public function isPartOfAPlan(TrackerData $tracker_data): bool;
-
-    public function getProgramIncrementTrackerId(int $project_id): ?int;
+    public function __construct(int $id)
+    {
+        parent::__construct("Program tracker #$id is not found");
+    }
 }
