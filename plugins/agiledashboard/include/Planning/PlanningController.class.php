@@ -546,9 +546,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         return $this->xml_exporter->export($project);
     }
 
-    public function create()
+    public function create(): void
     {
         $this->checkUserIsAdmin();
+        $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($this->project);
+
         if ($this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation($this->getCurrentUser(), $this->group_id) === false) {
             $this->addFeedback(
                 Feedback::ERROR,
@@ -581,8 +583,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         }
     }
 
-    public function edit()
+    public function edit(): string
     {
+        $this->checkUserIsAdmin();
+        $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($this->project);
+
         $planning_id = $this->request->get('planning_id');
         $planning    = $this->planning_factory->getPlanning($planning_id);
         if ($planning === null) {
@@ -667,9 +672,10 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         return $view;
     }
 
-    public function update()
+    public function update(): void
     {
         $this->checkUserIsAdmin();
+        $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($this->project);
 
         $updated_planning_id = (int) $this->request->get('planning_id');
         $original_planning   = $this->planning_factory->getPlanning($updated_planning_id);
@@ -751,9 +757,10 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * @throws Exception
      * @throws Throwable
      */
-    public function delete()
+    public function delete(): void
     {
         $this->checkUserIsAdmin();
+        $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($this->project);
 
         $planning_id = $this->request->get('planning_id');
         $user    = $this->request->getCurrentUser();
