@@ -568,7 +568,7 @@ class AgileDashboardRouter
         array $header_options = []
     ) {
         $content = $this->executeAction($controller, $action_name, $args);
-        $header_options = array_merge_recursive($header_options, $controller->getHeaderOptions());
+        $header_options = array_merge_recursive($header_options, $controller->getHeaderOptions($request->getCurrentUser()));
 
         $this->displayHeader($controller, $request, $this->getHeaderTitle($request, $action_name), $header_options);
         echo $content;
@@ -639,7 +639,7 @@ class AgileDashboardRouter
         $controller     = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
         $header_options = array_merge(
             ['body_class' => ['agiledashboard_planning']],
-            $controller->getHeaderOptions()
+            $controller->getHeaderOptions($user)
         );
         $breadcrumbs = $controller->getBreadcrumbs();
 

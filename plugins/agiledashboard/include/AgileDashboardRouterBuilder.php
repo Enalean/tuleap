@@ -32,6 +32,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\PermissionsPerGroup\PlanningPermissionsRepresentationBuilder;
+use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
@@ -102,6 +103,10 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             $event_manager
         );
 
+        $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
+
+        $tracker_new_dropdown_link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
+
         $service_crumb_builder        = new AgileDashboardCrumbBuilder($plugin->getPluginPath());
         $admin_crumb_builder          = new AdministrationCrumbBuilder();
         $milestone_controller_factory = new Planning_MilestoneControllerFactory(
@@ -113,10 +118,19 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             new VirtualTopMilestoneCrumbBuilder($plugin->getPluginPath()),
             $this->visit_recorder,
             $this->all_bread_crumbs_for_milestone_builder,
-            new HeaderOptionsProvider(new AgileDashboard_PaneInfoIdentifier()),
+            new HeaderOptionsProvider(
+                new AgileDashboard_PaneInfoIdentifier(),
+                new HeaderOptionsForPlanningProvider(
+                    new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+                        \Tracker_HierarchyFactory::instance(),
+                        $planning_factory,
+                        $mono_milestone_checker,
+                    ),
+                    $tracker_new_dropdown_link_presenter_builder,
+                    $event_manager,
+                ),
+            ),
         );
-
-        $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
 
         $ugroup_manager = new UGroupManager();
 
@@ -192,7 +206,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             new \Tuleap\AgileDashboard\Kanban\NewDropdownCurrentContextSectionForKanbanProvider(
                 $this->getKanbanFactory(),
                 TrackerFactory::instance(),
-                new TrackerNewDropdownLinkPresenterBuilder(),
+                $tracker_new_dropdown_link_presenter_builder,
                 new AgileDashboard_KanbanActionsChecker(
                     TrackerFactory::instance(),
                     new AgileDashboard_PermissionsManager(),
