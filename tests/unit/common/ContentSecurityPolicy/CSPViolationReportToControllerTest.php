@@ -63,7 +63,7 @@ final class CSPViolationReportToControllerTest extends TestCase
         $response = $this->controller->handle($request);
 
         self::assertEquals(204, $response->getStatusCode());
-        self::assertTrue($this->logger->hasDebugRecords());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testRejectsIncorrectlyFormattedCSPViolationReport(): void
@@ -73,7 +73,7 @@ final class CSPViolationReportToControllerTest extends TestCase
         $response = $this->controller->handle($request);
 
         self::assertEquals(400, $response->getStatusCode());
-        self::assertFalse($this->logger->hasDebugRecords());
+        self::assertFalse($this->logger->hasInfoRecords());
     }
 
     public function testRejectsInvalidCSPViolationReport(): void
@@ -83,6 +83,6 @@ final class CSPViolationReportToControllerTest extends TestCase
         $response = $this->controller->handle($request);
 
         self::assertEquals(400, $response->getStatusCode());
-        self::assertFalse($this->logger->hasDebugRecords());
+        self::assertFalse($this->logger->hasInfoRecords());
     }
 }
