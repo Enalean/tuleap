@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,10 +50,7 @@ XML;
         $xml = new \SimpleXMLElement($xml);
         $created_references = ['package' => ['1' => '1337', '2' => '42']];
 
-        $dar = \Mockery::spy(DataAccessResult::class);
-        $dar->shouldReceive('getRow')->andReturns([]);
-
-        $this->dao->shouldReceive('getRef')->andReturn($dar);
+        $this->dao->shouldReceive('getRef')->andReturn([]);
         $this->dao->shouldReceive('insertRef')->times(2);
         $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $xml, $created_references);
     }
@@ -69,10 +66,7 @@ XML;
         $xml = new \SimpleXMLElement($xml);
         $created_references = ['release' => ['3' => '6778', '4' => '6779']];
 
-        $dar = \Mockery::spy(DataAccessResult::class);
-        $dar->shouldReceive('getRow')->andReturns([]);
-
-        $this->dao->shouldReceive('getRef')->andReturn($dar);
+        $this->dao->shouldReceive('getRef')->andReturn([]);
         $this->dao->shouldReceive('insertRef')->times(2);
         $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $xml, $created_references);
     }

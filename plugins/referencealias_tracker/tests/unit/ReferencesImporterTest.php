@@ -71,7 +71,7 @@ XML;
         $simple_xml         = new \SimpleXMLElement($xml);
         $created_references = ['tracker' => ['T2' => '12'], 'artifact' => ['1' => '2', '5' => '6']];
 
-        $this->dao->shouldReceive('getRef')->andReturns(\TestHelper::arrayToDar([]));
+        $this->dao->shouldReceive('getRef')->andReturns([]);
 
         $this->dao->shouldReceive('insertRef')->times(3);
 
@@ -89,7 +89,7 @@ XML;
         $simple_xml         = new \SimpleXMLElement($xml);
         $created_references = [];
 
-        $this->dao->shouldReceive('getRef')->andReturns(\TestHelper::arrayToDar([]));
+        $this->dao->shouldReceive('getRef')->andReturns([]);
 
         $this->dao->shouldReceive('insertRef')->never();
 
@@ -106,7 +106,7 @@ XML;
         $simple_xml         = new \SimpleXMLElement($xml);
         $created_references = ['package' => ['1' => '1337']];
 
-        $this->dao->shouldReceive('getRef')->andReturns(\TestHelper::arrayToDar([]));
+        $this->dao->shouldReceive('getRef')->andReturns([]);
 
         $this->dao->shouldReceive('insertRef')->never();
 

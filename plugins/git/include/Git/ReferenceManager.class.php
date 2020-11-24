@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013-2018. All rights reserved.
+ * Copyright Enalean (c) 2013-Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -54,7 +54,7 @@ class Git_ReferenceManager
         $reference = null;
         list($repository_name, $sha1) = $this->splitRepositoryAndSha1($value);
         $repository = $this->repository_factory->getRepositoryByPath($project->getId(), $project->getUnixName() . '/' . $repository_name . '.git');
-        if ($repository) {
+        if ($repository !== null) {
             $args = [$repository->getId(), $sha1];
             $reference = $this->reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $project->getID(), count($args), $value);
             if ($reference) {

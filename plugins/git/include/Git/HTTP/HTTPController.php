@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,7 +47,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
     private $project_manager;
 
     /**
-     * @var \GitRepository
+     * @var \GitRepository|null
      */
     private $repository;
     /**

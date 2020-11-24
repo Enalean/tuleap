@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -169,11 +169,8 @@ class GitRepositoryFactory
 
     /**
      * Get a project repository by its id
-     *
-     *
-     * @return GitRepository the repository or null if not found
      */
-    public function getRepositoryByPath($project_id, $path)
+    public function getRepositoryByPath($project_id, $path): ?GitRepository
     {
         $row = $this->dao->searchProjectRepositoryByPath($project_id, $path);
         return $this->getRepositoryFromRow($row);
@@ -282,10 +279,8 @@ class GitRepositoryFactory
      *
      * @param String $projectName
      * @param String $path
-     *
-     * @return GitRepository
      */
-    public function getByProjectNameAndPath($projectName, $path)
+    public function getByProjectNameAndPath($projectName, $path): ?GitRepository
     {
         $project = $this->projectManager->getProjectByUnixName($projectName);
         if ($project) {

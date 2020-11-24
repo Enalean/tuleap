@@ -105,7 +105,7 @@ class ReferencesBuilder
             return null;
         }
 
-        $row = $this->dao->getRef($reference)->getRow();
+        $row = $this->dao->getRef($reference);
         if (empty($row)) {
             return null;
         }

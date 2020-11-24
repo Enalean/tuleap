@@ -107,7 +107,7 @@ class ReferencesBuilder
      */
     private function findReference(Project $project, $keyword, $reference): ?Reference
     {
-        $row = $this->dao->getRef($reference)->getRow();
+        $row = $this->dao->getRef($reference);
         if (empty($row)) {
             return null;
         }

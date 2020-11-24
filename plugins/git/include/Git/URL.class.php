@@ -72,7 +72,7 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
     /** @var array */
     private $matches;
 
-    /** @var GitRepository */
+    /** @var GitRepository|null */
     private $repository;
 
     /** @var string */

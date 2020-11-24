@@ -25,6 +25,7 @@ namespace Tuleap\ReferenceAliasMediawiki;
 use Logger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project;
 use SimpleXMLElement;
 use Tuleap\Project\XML\Import\ImportConfig;
 
@@ -66,11 +67,11 @@ class ReferencesImporterTest extends TestCase
 XML;
         $simple_xml = new SimpleXMLElement($xml);
 
-        $this->dao->shouldReceive('getRef')->andReturns(\TestHelper::arrayToDar([]));
+        $this->dao->shouldReceive('getRef')->andReturns([]);
 
-        $project = \Mockery::spy(\Project::class);
+        $project = Project::buildForTest();
 
-        $this->dao->shouldReceive('insertRef')->with($project, "wiki76532", "HomePage")->once();
+        $this->dao->shouldReceive('insertRef')->with(101, "wiki76532", "HomePage")->once();
 
         $this->importer->importCompatRefXML(new ImportConfig(), $project, $simple_xml, []);
     }
