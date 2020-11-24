@@ -99,7 +99,7 @@ describe("Project banner clamp", () => {
     });
 
     it("Checks if an hint needs to be displayed to the user when classes on the message parent element changes", () => {
-        return new Promise((done) => {
+        return new Promise<void>((done) => {
             const local_document_with_banner = getLocalDocumentWithProjectBannerMessage();
             const banner_message = local_document_with_banner.message;
             allowUnclampingProjectBannerMessage(local_document_with_banner.document);

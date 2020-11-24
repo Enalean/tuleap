@@ -61,7 +61,7 @@ describe("ListOptionsChangesObserver", () => {
     });
 
     it("should refresh the list-picker when options are added in the source <select>", async () => {
-        await new Promise((done) => {
+        await new Promise<void>((done) => {
             list_options_changes_observer.startWatchingChangesInSelectOptions();
 
             appendGroupedOptionsToSourceSelectBox(source_select_box);
@@ -75,7 +75,7 @@ describe("ListOptionsChangesObserver", () => {
     });
 
     it("should refresh the list-picker when options are removed in the source <select>", async () => {
-        await new Promise((done) => {
+        await new Promise<void>((done) => {
             appendSimpleOptionsToSourceSelectBox(source_select_box);
             list_options_changes_observer.startWatchingChangesInSelectOptions();
 
@@ -90,7 +90,7 @@ describe("ListOptionsChangesObserver", () => {
     });
 
     it("should not react otherwise", async () => {
-        await new Promise((done) => {
+        await new Promise<void>((done) => {
             appendSimpleOptionsToSourceSelectBox(source_select_box);
             list_options_changes_observer.startWatchingChangesInSelectOptions();
 
