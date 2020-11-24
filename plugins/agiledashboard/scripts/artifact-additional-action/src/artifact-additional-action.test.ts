@@ -127,7 +127,7 @@ describe("Artifact additional action", () => {
     }
 
     it("Adds the artifact into top backlog", () => {
-        return new Promise((done) => {
+        return new Promise<void>((done) => {
             const local_action = getLocalAddAction();
             const spyPatch = jest.spyOn(fetch_wrapper, "patch");
             mockFetchSuccess(spyPatch, {});
@@ -160,7 +160,7 @@ describe("Artifact additional action", () => {
     });
 
     it("Removes the artifact from the top backlog", () => {
-        return new Promise((done) => {
+        return new Promise<void>((done) => {
             const local_action = getLocalRemoveAction();
             const spyPatch = jest.spyOn(fetch_wrapper, "patch");
             mockFetchSuccess(spyPatch, {});
@@ -193,13 +193,13 @@ describe("Artifact additional action", () => {
     });
 
     it("Deals with error when trying to add the artifact into the top backlog", () => {
-        return new Promise((done) => {
+        return new Promise<void>((done) => {
             testActionErrorManagement(getLocalAddAction(), done);
         });
     });
 
     it("Deals with error when trying to remove the artifact from the top backlog", () => {
-        return new Promise((done) => {
+        return new Promise<void>((done) => {
             testActionErrorManagement(getLocalRemoveAction(), done);
         });
     });
