@@ -46,21 +46,22 @@ describe("NewTuleapArtifactModalService", () => {
 
     beforeEach(() => {
         angular.mock.module(artifact_modal_module, function ($provide) {
-            $provide.decorator("TuleapArtifactModalTrackerTransformerService", function (
-                $delegate
-            ) {
-                jest.spyOn($delegate, "addFieldValuesToTracker").mockImplementation(function (
-                    artifact_values,
-                    tracker
-                ) {
-                    return tracker;
-                });
-                jest.spyOn($delegate, "transform").mockImplementation(function (tracker) {
-                    return tracker;
-                });
+            $provide.decorator(
+                "TuleapArtifactModalTrackerTransformerService",
+                function ($delegate) {
+                    jest.spyOn($delegate, "addFieldValuesToTracker").mockImplementation(function (
+                        artifact_values,
+                        tracker
+                    ) {
+                        return tracker;
+                    });
+                    jest.spyOn($delegate, "transform").mockImplementation(function (tracker) {
+                        return tracker;
+                    });
 
-                return $delegate;
-            });
+                    return $delegate;
+                }
+            );
 
             $provide.decorator("TuleapArtifactFieldValuesService", function ($delegate) {
                 jest.spyOn($delegate, "getSelectedValues").mockImplementation(function () {

@@ -17,11 +17,13 @@ fs.readFile("tql.pegjs", function (err, data) {
         },
     });
 
-    fs.writeFile("../include/Tracker/Report/Query/Advanced/Grammar/Parser.php", parser, function (
-        err
-    ) {
-        if (err) {
-            throw err;
+    fs.writeFile(
+        "../include/Tracker/Report/Query/Advanced/Grammar/Parser.php",
+        parser,
+        function (err) {
+            if (err) {
+                throw err;
+            }
         }
-    });
+    );
 });
