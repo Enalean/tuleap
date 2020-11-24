@@ -35,6 +35,7 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 
 class TrackersDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
@@ -63,10 +64,15 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
      * @var CSRFSynchronizerTokenProvider
      */
     private $token_provider;
+    /**
+     * @var GlobalAdminPermissionsChecker
+     */
+    private $permissions_checker;
 
     public function __construct(
         ProjectManager $project_manager,
         TrackerManager $tracker_manager,
+        GlobalAdminPermissionsChecker $permissions_checker,
         TrackerFactory $tracker_factory,
         TemplateRendererFactory $renderer_factory,
         TrackerInNewDropdownDao $in_new_dropdown_dao,
@@ -78,15 +84,13 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
         $this->renderer_factory    = $renderer_factory;
         $this->in_new_dropdown_dao = $in_new_dropdown_dao;
         $this->token_provider      = $token_provider;
+        $this->permissions_checker = $permissions_checker;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
-        if (
-            ! $this->tracker_manager->userCanCreateTracker($project->getID())
-            && ! $this->tracker_manager->userCanAdminAllProjectTrackers()
-        ) {
+        if (! $this->permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $request->getCurrentUser())) {
             throw new ForbiddenException();
         }
 

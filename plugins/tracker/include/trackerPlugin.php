@@ -2023,7 +2023,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return new PromoteTrackersController(
             ProjectManager::instance(),
-            new TrackerManager(),
+            new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
+                new User_ForgeUserGroupPermissionsManager(
+                    new User_ForgeUserGroupPermissionsDao()
+                )
+            ),
             TrackerFactory::instance(),
             new TrackerInNewDropdownDao(),
             new CSRFSynchronizerTokenProvider(),
@@ -2036,6 +2040,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return new TrackersDisplayController(
             ProjectManager::instance(),
             new TrackerManager(),
+            new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
+                new User_ForgeUserGroupPermissionsManager(
+                    new User_ForgeUserGroupPermissionsDao()
+                )
+            ),
             TrackerFactory::instance(),
             TemplateRendererFactory::build(),
             new TrackerInNewDropdownDao(),
@@ -2054,6 +2063,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return new ArtifactLinksController(
             ProjectManager::instance(),
             new TrackerManager(),
+            new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
+                new User_ForgeUserGroupPermissionsManager(
+                    new User_ForgeUserGroupPermissionsDao()
+                )
+            ),
             $dao,
             $updater,
             $types_presenter_factory,
@@ -2198,7 +2212,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function getProjectWithTrackerAdministrationPermission(GetProjectWithTrackerAdministrationPermission $event)
     {
         $user = $event->getUser();
-        $dao  = new \Tuleap\Tracker\dao\ProjectDao(new TrackerManager());
+        $dao  = new \Tuleap\Tracker\dao\ProjectDao(
+            new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
+                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao())
+            )
+        );
 
         $matching_projects_rows = $dao->searchProjectsForREST($user, $event->getLimit(), $event->getOffset());
         $total_size             = $dao->foundRows();
@@ -2287,7 +2305,13 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function getTrackerCreationPermissionChecker(): TrackerCreationPermissionChecker
     {
-        return new TrackerCreationPermissionChecker(new TrackerManager());
+        return new TrackerCreationPermissionChecker(
+            new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
+                new User_ForgeUserGroupPermissionsManager(
+                    new User_ForgeUserGroupPermissionsDao()
+                )
+            ),
+        );
     }
 
     public function getWhitelistedKeys(GetWhitelistedKeys $event): void

@@ -25,22 +25,22 @@ namespace Tuleap\Tracker\Creation;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use TrackerManager;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 
 final class TrackerCreationPermissionCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var TrackerManager | m\MockInterface
+     * @var m\LegacyMockInterface|m\MockInterface|GlobalAdminPermissionsChecker
      */
-    private $tracker_manager;
+    private $permissions_checker;
 
     protected function setUp(): void
     {
-        $this->tracker_manager = m::mock(\TrackerManager::class);
+        $this->permissions_checker = m::mock(GlobalAdminPermissionsChecker::class);
     }
 
     public function testItThrowsANotFoundExceptionWhenTrackerServiceIsNotActivatedInGivenProject(): void
@@ -53,7 +53,7 @@ final class TrackerCreationPermissionCheckerTest extends TestCase
 
         $this->expectException(NotFoundException::class);
 
-        $checker = new TrackerCreationPermissionChecker($this->tracker_manager);
+        $checker = new TrackerCreationPermissionChecker($this->permissions_checker);
         $checker->checkANewTrackerCanBeCreated($project, m::mock(\PFUser::class));
     }
 
@@ -65,19 +65,17 @@ final class TrackerCreationPermissionCheckerTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $project->shouldReceive('getID')->andReturn(104)->once();
-
         $user = m::mock(\PFUser::class);
 
-        $this->tracker_manager
-            ->shouldReceive('userCanCreateTracker')
-            ->with(104, $user)
+        $this->permissions_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->with($project, $user)
             ->andReturn(false)
             ->once();
 
         $this->expectException(ForbiddenException::class);
 
-        $checker = new TrackerCreationPermissionChecker($this->tracker_manager);
+        $checker = new TrackerCreationPermissionChecker($this->permissions_checker);
         $checker->checkANewTrackerCanBeCreated($project, $user);
     }
 }

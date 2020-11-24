@@ -34,8 +34,13 @@ class ServiceTracker extends Service
     {
         $GLOBALS['HTML']->includeCalendarScripts();
 
-        $tracker_manager         = new TrackerManager();
-        $user_has_special_access = $tracker_manager->userCanAdminAllProjectTrackers();
+        $global_admin_permissions_checker = new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
+            new User_ForgeUserGroupPermissionsManager(
+                new User_ForgeUserGroupPermissionsDao()
+            )
+        );
+        $user_has_special_access = $global_admin_permissions_checker
+            ->doesUserHaveTrackerGlobalAdminRightsOnProject($this->getProject(), UserManager::instance()->getCurrentUser());
 
         $params = $params + ['user_has_special_access' => $user_has_special_access];
         $params['service_name'] = self::NAME;

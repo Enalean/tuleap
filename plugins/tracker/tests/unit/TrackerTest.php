@@ -63,13 +63,6 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
         $this->tracker  = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $tracker1       = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $tracker2 = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $tracker_manager = \Mockery::spy(\TrackerManager::class);
-
-        $this->tracker->shouldReceive('getTrackerManager')->andReturns($tracker_manager);
-        $tracker1->shouldReceive('getTrackerManager')->andReturns($tracker_manager);
-        $tracker2->shouldReceive('getTrackerManager')->andReturns($tracker_manager);
-
-        $tracker_manager->shouldReceive('userCanAdminAllProjectTrackers')->andReturns(false);
 
         $tf = \Mockery::spy(\TrackerFactory::class);
         $this->tracker->shouldReceive('getTrackerFactory')->andReturns($tf);

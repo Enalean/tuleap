@@ -24,23 +24,20 @@ namespace Tuleap\Tracker\Admin\GlobalAdmin\Trackers;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use TrackerFactory;
-use TrackerManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 
 class PromoteTrackersControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerManager
-     */
-    private $tracker_manager;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
      */
@@ -65,11 +62,19 @@ class PromoteTrackersControllerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectHistoryDao
      */
     private $history_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GlobalAdminPermissionsChecker
+     */
+    private $perms_checker;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
+     */
+    private $user;
 
     protected function setUp(): void
     {
         $project_manager           = Mockery::mock(ProjectManager::class);
-        $this->tracker_manager     = Mockery::mock(TrackerManager::class);
+        $this->perms_checker       = Mockery::mock(GlobalAdminPermissionsChecker::class);
         $this->tracker_factory     = Mockery::mock(TrackerFactory::class);
         $this->in_new_dropdown_dao = Mockery::mock(TrackerInNewDropdownDao::class);
         $this->token_provider      = Mockery::mock(CSRFSynchronizerTokenProvider::class);
@@ -77,12 +82,14 @@ class PromoteTrackersControllerTest extends TestCase
 
         $this->controller = new PromoteTrackersController(
             $project_manager,
-            $this->tracker_manager,
+            $this->perms_checker,
             $this->tracker_factory,
             $this->in_new_dropdown_dao,
             $this->token_provider,
             $this->history_dao,
         );
+
+        $this->user = Mockery::mock(PFUser::class);
 
         $project = Mockery::mock(\Project::class)
             ->shouldReceive(['getID' => 102])
@@ -94,22 +101,17 @@ class PromoteTrackersControllerTest extends TestCase
         $this->token_provider->shouldReceive('getCSRF')->andReturn($this->csrf);
     }
 
-    public function testItRaisesExceptionIfUserIsNotProjectAdminAndCannotAdministrateAllTrackers(): void
+    public function testItRaisesExceptionIfUserHasNoRights(): void
     {
-        $this->tracker_manager
-            ->shouldReceive('userCanCreateTracker')
-            ->with(102)
-            ->once()
-            ->andReturn(false);
-        $this->tracker_manager
-            ->shouldReceive('userCanAdminAllProjectTrackers')
+        $this->perms_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->once()
             ->andReturn(false);
 
         $this->expectException(ForbiddenException::class);
 
         $this->controller->process(
-            HTTPRequestBuilder::get()->build(),
+            HTTPRequestBuilder::get()->withUser($this->user)->build(),
             Mockery::mock(BaseLayout::class),
             ['id' => '102']
         );
@@ -117,9 +119,8 @@ class PromoteTrackersControllerTest extends TestCase
 
     public function testItRaisesExceptionIfTrackerDoesNotExists(): void
     {
-        $this->tracker_manager
-            ->shouldReceive('userCanCreateTracker')
-            ->with(102)
+        $this->perms_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->once()
             ->andReturn(true);
 
@@ -136,7 +137,10 @@ class PromoteTrackersControllerTest extends TestCase
         $this->expectException(ForbiddenException::class);
 
         $this->controller->process(
-            HTTPRequestBuilder::get()->withParam('tracker_id', '13')->build(),
+            HTTPRequestBuilder::get()
+                ->withParam('tracker_id', '13')
+                ->withUser($this->user)
+                ->build(),
             Mockery::mock(BaseLayout::class),
             ['id' => '102']
         );
@@ -144,9 +148,8 @@ class PromoteTrackersControllerTest extends TestCase
 
     public function testItRaisesExceptionIfTrackerIsDeleted(): void
     {
-        $this->tracker_manager
-            ->shouldReceive('userCanCreateTracker')
-            ->with(102)
+        $this->perms_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->once()
             ->andReturn(true);
 
@@ -166,7 +169,10 @@ class PromoteTrackersControllerTest extends TestCase
         $this->expectException(ForbiddenException::class);
 
         $this->controller->process(
-            HTTPRequestBuilder::get()->withParam('tracker_id', '13')->build(),
+            HTTPRequestBuilder::get()
+                ->withParam('tracker_id', '13')
+                ->withUser($this->user)
+                ->build(),
             Mockery::mock(BaseLayout::class),
             ['id' => '102']
         );
@@ -174,9 +180,8 @@ class PromoteTrackersControllerTest extends TestCase
 
     public function testItRaisesExceptionIfTrackerBelongsToAnotherProject(): void
     {
-        $this->tracker_manager
-            ->shouldReceive('userCanCreateTracker')
-            ->with(102)
+        $this->perms_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->once()
             ->andReturn(true);
 
@@ -196,7 +201,10 @@ class PromoteTrackersControllerTest extends TestCase
         $this->expectException(ForbiddenException::class);
 
         $this->controller->process(
-            HTTPRequestBuilder::get()->withParam('tracker_id', '13')->build(),
+            HTTPRequestBuilder::get()
+                ->withParam('tracker_id', '13')
+                ->withUser($this->user)
+                ->build(),
             Mockery::mock(BaseLayout::class),
             ['id' => '102']
         );
@@ -204,9 +212,8 @@ class PromoteTrackersControllerTest extends TestCase
 
     public function testItPromotesTheTracker(): void
     {
-        $this->tracker_manager
-            ->shouldReceive('userCanCreateTracker')
-            ->with(102)
+        $this->perms_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->once()
             ->andReturn(true);
 
@@ -240,6 +247,7 @@ class PromoteTrackersControllerTest extends TestCase
             HTTPRequestBuilder::get()
                 ->withParam('tracker_id', '13')
                 ->withParam('is_promoted', 'on')
+                ->withUser($this->user)
                 ->build(),
             $layout,
             ['id' => '102']
@@ -248,9 +256,8 @@ class PromoteTrackersControllerTest extends TestCase
 
     public function testItRemovesPromotion(): void
     {
-        $this->tracker_manager
-            ->shouldReceive('userCanCreateTracker')
-            ->with(102)
+        $this->perms_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
             ->once()
             ->andReturn(true);
 
@@ -283,6 +290,7 @@ class PromoteTrackersControllerTest extends TestCase
         $this->controller->process(
             HTTPRequestBuilder::get()
                 ->withParam('tracker_id', '13')
+                ->withUser($this->user)
                 ->build(),
             $layout,
             ['id' => '102']
