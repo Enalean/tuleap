@@ -29,6 +29,8 @@ use PFUser;
 use Planning_MilestoneFactory;
 use Planning_NoPlanningsException;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBTransactionExecutor;
 
@@ -73,6 +75,10 @@ class ConfigurationUpdater
      * @var AddToTopBacklogPostActionDao
      */
     private $add_to_top_backlog_post_action_dao;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
@@ -82,7 +88,8 @@ class ConfigurationUpdater
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         UnplannedArtifactsAdder $unplanned_artifacts_adder,
         AddToTopBacklogPostActionDao $add_to_top_backlog_post_action_dao,
-        DBTransactionExecutor $db_transaction_executor
+        DBTransactionExecutor $db_transaction_executor,
+        EventDispatcherInterface $event_dispatcher
     ) {
         $this->explicit_backlog_dao               = $explicit_backlog_dao;
         $this->milestone_report_criterion_dao     = $milestone_report_criterion_dao;
@@ -92,6 +99,7 @@ class ConfigurationUpdater
         $this->artifacts_in_explicit_backlog_dao  = $artifacts_in_explicit_backlog_dao;
         $this->unplanned_artifacts_adder          = $unplanned_artifacts_adder;
         $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
+        $this->event_dispatcher                   = $event_dispatcher;
     }
 
     public function updateScrumConfiguration(Codendi_Request $request): void
@@ -103,12 +111,24 @@ class ConfigurationUpdater
         $user                     = $request->getCurrentUser();
         $project                  = $request->getProject();
         $project_id               = (int) $project->getID();
-        $use_explicit_top_backlog = (bool) $request->get('use-explicit-top-backlog');
+        $use_explicit_top_backlog = $this->shouldUseExplicitBacklog($request);
         if ($this->mustBeDeactivated($use_explicit_top_backlog, $project_id)) {
             $this->deactivateExplicitBacklogManagement($project_id);
         } elseif ($this->mustBeActivated($use_explicit_top_backlog, $project_id)) {
             $this->activateExplicitBacklogManagement($project, $user);
         }
+    }
+
+    private function shouldUseExplicitBacklog(Codendi_Request $request): bool
+    {
+        $use_explicit_backlog = (bool) $request->get('use-explicit-top-backlog');
+        if ($use_explicit_backlog) {
+            return true;
+        }
+
+        $planning_administration_delegation = new PlanningAdministrationDelegation($request->getProject());
+        $this->event_dispatcher->dispatch($planning_administration_delegation);
+        return $planning_administration_delegation->isPlanningAdministrationDelegated();
     }
 
     public function activateExplicitBacklogManagement(Project $project, PFUser $user): void

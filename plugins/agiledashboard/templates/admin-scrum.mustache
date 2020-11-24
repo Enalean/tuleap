@@ -96,10 +96,11 @@
                             <div class="tlp-switch">
                                 <input type="checkbox"
                                        id="use-explicit-top-backlog"
-                                       class="tlp-switch-checkbox"
+                                       class="tlp-switch-checkbox {{# is_planning_administration_delegated }}tlp-form-element-disabled{{/ is_planning_administration_delegated }}"
                                        name="use-explicit-top-backlog"
                                        value="1"
                                     {{# explicit_top_backlog_enabled }} checked {{/ explicit_top_backlog_enabled }}
+                                    {{# is_planning_administration_delegated }} disabled {{/ is_planning_administration_delegated }}
                                 >
                                 <label for="use-explicit-top-backlog" class="tlp-switch-button" aria-hidden="true"></label>
                             </div>
