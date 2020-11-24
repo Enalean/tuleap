@@ -45,6 +45,50 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         return $html;
     }
 
+    /**
+     * Fetch the html code to display the field value in artifact in read only mode
+     *
+     * @param Artifact                        $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     *
+     * @return string
+     */
+    public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    {
+        $selected_values_ids  = ($value && $value instanceof Tracker_Artifact_ChangesetValue_List)
+            ? array_keys($value->getListValues())
+            : [];
+        $visible_values = $this->getBind()->getAllVisibleValues();
+
+        if (empty($visible_values)) {
+            return $this->getNoValueLabel();
+        }
+
+        if (count($visible_values) === 1 && isset($visible_values[Tracker_FormElement_Field_List_Bind::NONE_VALUE])) {
+            return $this->getNoValueLabel();
+        }
+
+        $html = '<ul class="read_only_checkbox">';
+
+        foreach ($this->getBind()->getAllVisibleValues() as $bind_id => $bind_value) {
+            $bind_value_id = $bind_value->getId();
+
+            if ($bind_value_id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                continue;
+            }
+
+            $checked = in_array($bind_value_id, $selected_values_ids) ? 'fa-check-square' : 'fa-square';
+
+            $html .= '<li>';
+            $html .= '<i class="read_only_checkbox_item far fa-fw ' . $checked . '"></i>' . $this->getBind()->formatChangesetValueWithoutLink($bind_value);
+            $html .= '</li>';
+        }
+
+        $html .= '</ul>';
+
+        return $html;
+    }
+
     protected function fetchFieldContainerEnd()
     {
         return '';

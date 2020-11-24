@@ -1408,6 +1408,18 @@ div.tracker-admin-field-controls {
         }
     }
 
+    &.tracker_artifact_field-cb {
+        .read_only_checkbox {
+            margin-left: 0;
+            list-style: none;
+        }
+
+        .read_only_checkbox_item {
+            margin-right: 3px;
+        }
+    }
+
+
     &.tracker_artifact_field-art_link {
         .tracker_hidden_edition_field {
             display: none;
