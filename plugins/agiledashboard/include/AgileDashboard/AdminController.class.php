@@ -288,7 +288,8 @@ class AdminController extends BaseController
                         new PlannedArtifactDao()
                     ),
                     new AddToTopBacklogPostActionDao(),
-                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                    $this->event_manager
                 )
             );
         }

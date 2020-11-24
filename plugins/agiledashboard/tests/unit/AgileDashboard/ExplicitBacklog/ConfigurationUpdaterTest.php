@@ -33,6 +33,8 @@ use Planning;
 use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -91,6 +93,7 @@ class ConfigurationUpdaterTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AddToTopBacklogPostActionDao
      */
     private $add_to_top_backlog_post_action_dao;
+    private $event_dispatcher;
 
     protected function setUp(): void
     {
@@ -104,6 +107,20 @@ class ConfigurationUpdaterTest extends TestCase
         $this->unplanned_artifacts_adder          = Mockery::mock(UnplannedArtifactsAdder::class);
         $this->add_to_top_backlog_post_action_dao = Mockery::mock(AddToTopBacklogPostActionDao::class);
         $this->db_transaction_executor            = new DBTransactionExecutorPassthrough();
+        $this->event_dispatcher                   = new class implements EventDispatcherInterface {
+            /**
+             * @var bool
+             */
+            public $is_planning_administration_delegated = false;
+
+            public function dispatch(object $event)
+            {
+                if ($event instanceof PlanningAdministrationDelegation && $this->is_planning_administration_delegated) {
+                    $event->enablePlanningAdministrationDelegation();
+                }
+                return $event;
+            }
+        };
 
         $this->updater = new ConfigurationUpdater(
             $this->explicit_backlog_dao,
@@ -113,7 +130,8 @@ class ConfigurationUpdaterTest extends TestCase
             $this->artifacts_in_explicit_backlog_dao,
             $this->unplanned_artifacts_adder,
             $this->add_to_top_backlog_post_action_dao,
-            $this->db_transaction_executor
+            $this->db_transaction_executor,
+            $this->event_dispatcher
         );
 
         $project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('101')->getMock();
@@ -226,6 +244,31 @@ class ConfigurationUpdaterTest extends TestCase
             ->once()
             ->with(101)
             ->andReturnTrue();
+
+        $this->updater->updateScrumConfiguration($this->request);
+    }
+
+    public function testItAlwaysActivatesExplicitBacklogManagementWhenPlanningAdministrationIsDelegatedToAnotherPlugin(): void
+    {
+        $this->request->shouldReceive('get')->with('use-explicit-top-backlog')->andReturn('0');
+        $this->event_dispatcher->is_planning_administration_delegated = true;
+
+        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('removeExplicitBacklogOfProject');
+        $this->explicit_backlog_dao->shouldReceive('setProjectIsUsingExplicitBacklog')->once();
+        $this->milestone_report_criterion_dao->shouldNotReceive('updateAllUnplannedValueToAnyInProject');
+        $this->add_to_top_backlog_post_action_dao->shouldNotReceive('deleteAllPostActionsInProject');
+        $this->backlog_item_dao->shouldReceive('getOpenUnplannedTopBacklogArtifacts')->andReturn(
+            \TestHelper::arrayToDar(
+                ['id' => '201'],
+                ['id' => '202']
+            )
+        );
+        $this->unplanned_artifacts_adder->shouldReceive('addArtifactToTopBacklogFromIds')->times(2);
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+            ->once()
+            ->with(101)
+            ->andReturnFalse();
 
         $this->updater->updateScrumConfiguration($this->request);
     }

@@ -2183,7 +2183,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 new PlannedArtifactDao()
             ),
             new AddToTopBacklogPostActionDao(),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            EventManager::instance()
         );
     }
 }
