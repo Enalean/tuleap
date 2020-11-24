@@ -28,6 +28,7 @@ use Planning_Milestone;
 use Planning_VirtualTopMilestone;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
+use Tuleap\layout\NewDropdown\NewDropdownLinkPresenter;
 use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
@@ -85,11 +86,10 @@ class HeaderOptionsForPlanningProvider
             return;
         }
 
-        $header_options['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
+        $this->addLinkToCurrentContextSection(
             (string) $milestone->getArtifactTitle(),
-            [
-                $this->presenter_builder->build($tracker)
-            ],
+            $this->presenter_builder->build($tracker),
+            $header_options,
         );
     }
 
@@ -104,11 +104,48 @@ class HeaderOptionsForPlanningProvider
             return;
         }
 
-        $header_options['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
+        $this->addLinkToCurrentContextSection(
             dgettext('tuleap-agiledashboard', 'Top backlog'),
-            [
-                $this->presenter_builder->build($top_milestone->getPlanning()->getPlanningTracker())
-            ],
+            $this->presenter_builder->build($top_milestone->getPlanning()->getPlanningTracker()),
+            $header_options,
+        );
+    }
+
+    private function addLinkToCurrentContextSection(
+        string $section_label,
+        NewDropdownLinkPresenter $link,
+        array &$header_options
+    ): void {
+        if (isset($header_options['new_dropdown_current_context_section'])) {
+            $this->addLinkToExistingCurrentContextSection($link, $header_options);
+        } else {
+            $this->createNewCurrentContextSection($section_label, [$link], $header_options);
+        }
+    }
+
+    /**
+     * @param NewDropdownLinkPresenter[] $links
+     */
+    private function createNewCurrentContextSection(
+        string $section_label,
+        array $links,
+        array &$header_options
+    ): void {
+        $header_options['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
+            $section_label,
+            $links,
+        );
+    }
+
+    private function addLinkToExistingCurrentContextSection(NewDropdownLinkPresenter $link, array &$header_options): void
+    {
+        $this->createNewCurrentContextSection(
+            $header_options['new_dropdown_current_context_section']->label,
+            array_merge(
+                $header_options['new_dropdown_current_context_section']->links,
+                [$link],
+            ),
+            $header_options
         );
     }
 }

@@ -26,6 +26,7 @@ use AgileDashboardPlugin;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
+use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
@@ -69,6 +70,10 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
      * @var IncludeAssets
      */
     private $testplan_assets;
+    /**
+     * @var HeaderOptionsProvider
+     */
+    private $header_options_provider;
 
     public function __construct(
         TemplateRenderer $renderer,
@@ -78,7 +83,8 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         TestPlanPaneDisplayable $testplan_pane_displayable,
         VisitRecorder $visit_recorder,
         \Planning_MilestoneFactory $milestone_factory,
-        TestPlanPresenterBuilder $presenter_builder
+        TestPlanPresenterBuilder $presenter_builder,
+        HeaderOptionsProvider $header_options_provider
     ) {
         $this->renderer                  = $renderer;
         $this->bread_crumbs_builder      = $bread_crumbs_builder;
@@ -88,6 +94,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         $this->visit_recorder            = $visit_recorder;
         $this->milestone_factory         = $milestone_factory;
         $this->presenter_builder         = $presenter_builder;
+        $this->header_options_provider   = $header_options_provider;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -130,10 +137,10 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
             dgettext('tuleap-testmanagement', "Tests") . ' - ' . $milestone->getArtifactTitle(),
             $this->bread_crumbs_builder->getBreadcrumbs($user, $project, $milestone),
             [],
-            ['main_classes' => ['fluid-main']]
+            $this->getHeaderOptions($user, $milestone)
         );
 
-        $expand_backlog_item_id = (int) ($variables['backlog_item_id'] ?? 0);
+        $expand_backlog_item_id       = (int) ($variables['backlog_item_id'] ?? 0);
         $highlight_test_definition_id = (int) ($variables['test_definition_id'] ?? 0);
 
         $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
@@ -152,5 +159,18 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
             $this->renderer->renderToPage('test-plan', $presenter);
         }
         $service->displayFooter();
+    }
+
+    private function getHeaderOptions(\PFUser $user, \Planning_Milestone $milestone): array
+    {
+        $header_options = $this->header_options_provider->getHeaderOptions($user, $milestone, 'taskboard');
+        if (! isset($header_options['main_classes'])) {
+            $header_options['main_classes'] = [];
+        }
+        if (! in_array('fluid-main', $header_options['main_classes'], true)) {
+            $header_options['main_classes'][] = 'fluid-main';
+        }
+
+        return $header_options;
     }
 }

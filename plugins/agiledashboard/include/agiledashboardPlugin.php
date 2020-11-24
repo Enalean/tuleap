@@ -1743,7 +1743,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 PluginFactory::instance(),
                 $this->getMilestonePaneFactory(),
                 new VisitRecorder(new RecentlyVisitedDao()),
-                $this->getAllBreadCrumbsForMilestoneBuilder()
+                $this->getAllBreadCrumbsForMilestoneBuilder(),
+                $this->getBacklogFactory(),
             )
         );
     }

@@ -21,9 +21,16 @@
 declare(strict_types=1);
 
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
+use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
+use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
+use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
 use Tuleap\BrowserDetection\DetectedBrowser;
@@ -46,6 +53,7 @@ use Tuleap\Taskboard\Routing\MilestoneExtractor;
 use Tuleap\Taskboard\Tracker\TrackerPresenterCollectionBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -109,6 +117,20 @@ class taskboardPlugin extends Plugin
             throw new RuntimeException('Cannot instantiate Agiledashboard plugin');
         }
 
+        $tracker_new_dropdown_link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
+        $event_manager = EventManager::instance();
+
+        $tracker_dao                  = new TrackerDao();
+        $planning_dao                 = new PlanningDao($tracker_dao);
+        $planning_permissions_manager = new PlanningPermissionsManager();
+        $planning_factory             = new PlanningFactory(
+            $planning_dao,
+            TrackerFactory::instance(),
+            $planning_permissions_manager
+        );
+
+        $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
+
         return new \Tuleap\Taskboard\Routing\TaskboardController(
             new MilestoneExtractor(
                 $agiledashboard_plugin->getMilestoneFactory(),
@@ -127,7 +149,31 @@ class taskboardPlugin extends Plugin
                 __DIR__ . '/../../../src/www/assets/taskboard',
                 '/assets/taskboard'
             ),
-            new VisitRecorder(new RecentlyVisitedDao())
+            new VisitRecorder(new RecentlyVisitedDao()),
+            new HeaderOptionsProvider(
+                new AgileDashboard_Milestone_Backlog_BacklogFactory(
+                    new AgileDashboard_BacklogItemDao(),
+                    Tracker_ArtifactFactory::instance(),
+                    $planning_factory,
+                    $mono_milestone_checker,
+                    new MonoMilestoneItemsFinder(
+                        new MonoMilestoneBacklogItemDao(),
+                        Tracker_ArtifactFactory::instance()
+                    )
+                ),
+                new AgileDashboard_PaneInfoIdentifier(),
+                $tracker_new_dropdown_link_presenter_builder,
+                new HeaderOptionsForPlanningProvider(
+                    new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+                        \Tracker_HierarchyFactory::instance(),
+                        $planning_factory,
+                        $mono_milestone_checker,
+                    ),
+                    $tracker_new_dropdown_link_presenter_builder,
+                    $event_manager,
+                ),
+                $event_manager,
+            ),
         );
     }
 

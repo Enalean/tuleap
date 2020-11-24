@@ -34,6 +34,7 @@ use Planning_VirtualTopMilestone;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
+use Tuleap\layout\NewDropdown\NewDropdownLinkPresenter;
 use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
@@ -122,6 +123,42 @@ class HeaderOptionsForPlanningProviderTest extends TestCase
         self::assertEquals('Milestone title', $new_dropdown_current_context_section->label);
         self::assertCount(1, $new_dropdown_current_context_section->links);
         self::assertEquals('New sprint', $new_dropdown_current_context_section->links[0]->label);
+    }
+
+    public function testItAddsSubmilestoneTrackerForMilestoneInNewDropdownCurrentSectionWithoutOverridingExistingOne(): void
+    {
+        $user           = Mockery::mock(PFUser::class);
+        $sprint_tracker = Mockery::mock(Tracker::class)
+            ->shouldReceive(
+                [
+                    'getId'                 => 102,
+                    'getSubmitUrl'          => '/path/to/102',
+                    'getItemName'           => 'sprint',
+                    'userCanSubmitArtifact' => true,
+                ]
+            )
+            ->getMock();
+        $this->submilestone_finder
+            ->shouldReceive('findFirstSubmilestoneTracker')
+            ->andReturn($sprint_tracker);
+
+        $options = [
+            'new_dropdown_current_context_section' => new NewDropdownLinkSectionPresenter(
+                "Current section",
+                [
+                    new NewDropdownLinkPresenter("url", "Already existing link", "icon", []),
+                ],
+            )
+        ];
+        $this->provider->addPlanningOptions($user, $this->aMilestone(), $options);
+
+        $new_dropdown_current_context_section = $options['new_dropdown_current_context_section'];
+        assert($new_dropdown_current_context_section instanceof NewDropdownLinkSectionPresenter);
+
+        self::assertEquals('Current section', $new_dropdown_current_context_section->label);
+        self::assertCount(2, $new_dropdown_current_context_section->links);
+        self::assertEquals('Already existing link', $new_dropdown_current_context_section->links[0]->label);
+        self::assertEquals('New sprint', $new_dropdown_current_context_section->links[1]->label);
     }
 
     public function testItDoesNotAddSubmilestoneTrackerForMilestoneInNewDropdownCurrentSectionIfUserCannotSubmitArtifacts(): void
