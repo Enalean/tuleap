@@ -125,8 +125,8 @@ export class VelocityChartDrawer {
     addTooltips() {
         this.svg_velocity
             .selectAll(".velocity-bar")
-            .on("mouseenter", (data, index, bars_list) => {
-                const target_bar = select(bars_list[index]);
+            .on("mouseenter", (data) => {
+                const target_bar = select(data.target);
 
                 this.tooltip_factory
                     .addTooltip(target_bar)
