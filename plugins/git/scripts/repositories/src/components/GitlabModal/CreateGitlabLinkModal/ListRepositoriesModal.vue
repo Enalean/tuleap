@@ -47,32 +47,73 @@
                         v-bind:key="repository.id"
                         v-bind:data-test="`gitlab-repositories-displayed-${repository.id}`"
                         v-bind:class="{
-                            'gitlab-disabled-repository-modal': is_repository_disabled(repository),
+                            'gitlab-select-repository-disabled': isRepositoryDisabled(repository),
                         }"
+                        class="gitlab-select-repository"
+                        v-on:click="selectRepository(repository)"
                     >
                         <td class="gitlab-select-radio-button-container">
-                            <label class="tlp-radio">
-                                <input
-                                    v-bind:disabled="is_repository_disabled(repository)"
-                                    type="radio"
-                                    v-bind:id="repository.id"
-                                    v-bind:value="repository"
-                                    v-model="selected_repository"
-                                    class="gitlab-select-radio-button"
-                                    v-bind:data-test="`gitlab-repository-disabled-${repository.id}`"
+                            <span
+                                v-bind:class="{
+                                    'gitlab-tooltip-button-radio tlp-tooltip tlp-tooltip-top': isRepositoryDisabled(
+                                        repository
+                                    ),
+                                }"
+                                v-bind:data-tlp-tooltip="message_tooltip_repository_disabled"
+                            >
+                                <label class="tlp-radio">
+                                    <input
+                                        v-bind:disabled="isRepositoryDisabled(repository)"
+                                        type="radio"
+                                        v-bind:id="repository.id"
+                                        v-bind:value="repository"
+                                        v-model="selected_repository"
+                                        class="gitlab-select-radio-button"
+                                        v-bind:data-test="`gitlab-repository-disabled-${repository.id}`"
+                                    />
+                                </label>
+                            </span>
+                        </td>
+                        <td
+                            class="gitlab-select-avatar"
+                            v-bind:data-test="`gitlab-avatar-${repository.id}`"
+                        >
+                            <span
+                                v-bind:class="{
+                                    'gitlab-tooltip-avatar tlp-tooltip tlp-tooltip-top': isRepositoryDisabled(
+                                        repository
+                                    ),
+                                }"
+                                v-bind:data-tlp-tooltip="message_tooltip_repository_disabled"
+                            >
+                                <img
+                                    v-if="repository.avatar_url !== null"
+                                    v-bind:src="repository.avatar_url"
+                                    v-bind:alt="repository.path_with_namespace"
+                                    class="gitlab-avatar"
                                 />
-                            </label>
+                                <div v-else class="default-gitlab-avatar gitlab-avatar">
+                                    {{ repository.name[0] }}
+                                </div>
+                            </span>
                         </td>
-                        <td class="gitlab-select-avatar">
-                            <img
-                                v-if="repository.avatar_url !== null"
-                                v-bind:src="repository.avatar_url"
-                                v-bind:alt="repository.path_with_namespace"
-                                class="gitlab-avatar"
-                            />
-                        </td>
-                        <td>
-                            {{ label_path(repository) }}
+                        <td
+                            class="gitlab-repository-namespace"
+                            v-bind:data-test="`gitlab-label-path-${repository.id}`"
+                        >
+                            <span
+                                v-bind:class="{
+                                    'tlp-tooltip tlp-tooltip-top': isRepositoryDisabled(repository),
+                                }"
+                                v-bind:data-tlp-tooltip="message_tooltip_repository_disabled"
+                            >
+                                <span class="gitlab-repository-name-namespace">
+                                    {{ repository.name_with_namespace }}
+                                    <span class="gitlab-repository-path-namespace">
+                                        ({{ repository.path_with_namespace }})
+                                    </span>
+                                </span>
+                            </span>
                         </td>
                     </tr>
                 </tbody>
@@ -85,7 +126,10 @@
                 data-test="gitlab-button-back"
                 v-on:click="$emit('to-back-button')"
             >
-                <i class="fa fa-arrow-left tlp-button-icon" data-test="icon-spin"></i>
+                <i
+                    class="fas fa-long-arrow-alt-left tlp-button-icon"
+                    data-test="icon-back-button"
+                ></i>
                 <translate>Back</translate>
             </button>
             <button
@@ -94,8 +138,15 @@
                 v-bind:disabled="disabled_button"
                 data-test="button-integrate-gitlab-repository"
             >
-                <i class="fa fa-arrow-right tlp-button-icon" data-test="icon-spin"></i>
-                <translate>Integrate the repository</translate>
+                <i
+                    class="fas tlp-button-icon"
+                    data-test="icon-spin"
+                    v-bind:class="{
+                        'fa-spin fa-circle-notch': is_loading,
+                        'fa-long-arrow-alt-right': !is_loading,
+                    }"
+                ></i>
+                <translate>Integrate selected repository</translate>
             </button>
         </div>
     </form>
@@ -137,6 +188,9 @@ export default {
         have_any_rest_error() {
             return this.message_error_rest.length > 0;
         },
+        message_tooltip_repository_disabled() {
+            return this.$gettext("This repository is already integrated.");
+        },
     },
     methods: {
         ...mapActions(["postIntegrationGitlab"]),
@@ -177,7 +231,7 @@ export default {
                 this.is_loading = false;
             }
         },
-        is_repository_disabled(repository) {
+        isRepositoryDisabled(repository) {
             return this.getGitlabRepositoriesIntegrated.find((repository_integrated) => {
                 return (
                     repository_integrated.gitlab_data.gitlab_id === repository.id &&
@@ -185,8 +239,10 @@ export default {
                 );
             });
         },
-        label_path(repository) {
-            return repository.name_with_namespace + " (" + repository.path_with_namespace + ")";
+        selectRepository(repository) {
+            if (!this.isRepositoryDisabled(repository)) {
+                this.selected_repository = repository;
+            }
         },
     },
 };

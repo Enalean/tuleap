@@ -62,7 +62,7 @@
                         class="git-repository-card-admin-link"
                         data-test="git-repository-card-admin-link"
                     >
-                        <i class="fa fa-cog" v-bind:title="administration_link_title"></i>
+                        <i class="fas fa-fw fa-cog" v-bind:title="administration_link_title"></i>
                     </a>
                     <div
                         v-if="is_admin && isGitlabRepository"
@@ -70,7 +70,7 @@
                         data-test="git-repository-card-admin-unlink-gitlab"
                     >
                         <i
-                            class="far fa-trash-alt unlink-repository-gitlab"
+                            class="far fa-fw fa-trash-alt unlink-repository-gitlab"
                             v-bind:title="unlink_repository_title"
                             v-bind:id="`unlink-gitlab-repository-${repository.id}`"
                             v-bind:data-test="`unlink-gitlab-repository-${repository.id}`"
@@ -84,6 +84,7 @@
                     <p
                         v-if="hasRepositoryDescription"
                         class="git-repository-card-description"
+                        v-bind:class="{ 'gitlab-description': isGitlabRepository }"
                         data-test="git-repository-card-description"
                     >
                         {{ repository.description }}
@@ -91,7 +92,8 @@
                     <div v-if="isGitlabRepository" class="git-repository-links-spacer"></div>
                     <i
                         v-if="isGitlabRepository"
-                        class="fa fa-gitlab git-gitlab-icon"
+                        class="fab fa-gitlab"
+                        v-bind:class="{ 'git-gitlab-icon-align-to-date': !is_admin }"
                         data-test="git-repository-card-gitlab-icon"
                     ></i>
                 </section>

@@ -37,7 +37,7 @@
             <div class="tlp-form-element">
                 <label class="tlp-label" for="gitlab_server">
                     <translate>GitLab server URL</translate>
-                    <i class="fa fa-asterisk"></i>
+                    <i class="fas fa-asterisk"></i>
                 </label>
                 <input
                     type="text"
@@ -55,7 +55,7 @@
             <div class="tlp-form-element">
                 <label class="tlp-label" for="gitlab_token_user">
                     <translate>GitLab user token</translate>
-                    <i class="fa fa-asterisk"></i>
+                    <i class="fas fa-asterisk"></i>
                 </label>
                 <input
                     type="text"
@@ -66,6 +66,10 @@
                     maxlength="255"
                     data-test="add_gitlab_token_user"
                 />
+                <p class="tlp-text-info">
+                    <i class="fas fa-info-circle"></i>
+                    <translate>GitLab user token scope must contain at least: api.</translate>
+                </p>
             </div>
         </div>
         <div class="tlp-modal-footer">
@@ -84,8 +88,11 @@
                 data-test="button-add-gitlab-repository"
             >
                 <i
-                    class="fa fa-arrow-right tlp-button-icon"
-                    v-bind:class="{ 'fa-spin fa-sync-alt': is_loading }"
+                    class="fas tlp-button-icon"
+                    v-bind:class="{
+                        'fa-spin fa-circle-notch': is_loading,
+                        'fa-long-arrow-alt-right': !is_loading,
+                    }"
                     data-test="icon-spin"
                 ></i>
                 <translate>Fetch GitLab repositories</translate>
@@ -100,10 +107,20 @@ import { credentialsAreEmpty, serverUrlIsValid } from "../../../gitlab/gitlab-cr
 
 export default {
     name: "CredentialsFormModal",
+    props: {
+        user_token: {
+            type: String,
+            default: () => "",
+        },
+        server_url: {
+            type: String,
+            default: () => "",
+        },
+    },
     data() {
         return {
-            gitlab_server: "",
-            gitlab_token_user: "",
+            gitlab_server: this.server_url,
+            gitlab_token_user: this.user_token,
             is_loading: false,
             error_message: "",
             empty_message: "",

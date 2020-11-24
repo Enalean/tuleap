@@ -22,13 +22,13 @@
         role="dialog"
         aria-labelledby="unlink-gitlab-repository-modal-title"
         id="unlink-gitlab-repository-modal"
-        class="tlp-modal"
+        class="tlp-modal tlp-modal-danger"
         ref="unlink_gitlab_repository_modal"
         data-test="unlink-gitlab-repository-modal-form"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
-                <i class="fa fa-gitlab tlp-modal-title-icon"></i>
+                <i class="fab fa-gitlab tlp-modal-title-icon"></i>
                 <translate>Unlink GitLab repository?</translate>
             </h1>
             <div
@@ -76,8 +76,11 @@
                 v-bind:disabled="disabled_button"
             >
                 <i
-                    class="fa fa-arrow-right tlp-button-icon"
-                    v-bind:class="{ 'fa-spin fa-sync-alt': is_loading }"
+                    class="fas tlp-button-icon"
+                    v-bind:class="{
+                        'fa-spin fa-circle-notch': is_loading,
+                        'fa-long-arrow-alt-right': !is_loading,
+                    }"
                     data-test="icon-spin"
                 ></i>
                 <translate>Unlink the repository</translate>
@@ -111,7 +114,7 @@ export default {
                     "Wow, wait a minute. You are about to unlink the GitLab repository <strong>%{ label }</strong>. Please confirm your action."
                 ),
                 {
-                    label: this.repository.label,
+                    label: this.repository.normalized_path,
                 }
             );
         },
@@ -127,7 +130,7 @@ export default {
                     "GitLab repository <strong>%{ label }</strong> has been successfully unlinked!"
                 ),
                 {
-                    label: this.repository.label,
+                    label: this.repository.normalized_path,
                 }
             );
         },

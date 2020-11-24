@@ -119,10 +119,14 @@ describe("ListRepositoriesModal", () => {
         expect(wrapper.emitted("to-back-button")).toBeTruthy();
     });
 
-    it("When user submit repository, Then api is queried, repositories are recovered and success message is displayed", async () => {
+    it("When user submit repository, Then api is queried, repositories are recovered, submit button is disabled, icon changed and success message is displayed", async () => {
         const wrapper = instantiateComponent();
         jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve());
         jest.spyOn(repository_list_presenter, "getProjectId").mockReturnValue(101);
+
+        expect(wrapper.find("[data-test=icon-spin]").classes()).toContain(
+            "fa-long-arrow-alt-right"
+        );
 
         wrapper.setData({
             selected_repository: { id: 1 },
@@ -134,6 +138,10 @@ describe("ListRepositoriesModal", () => {
         wrapper.find("[data-test=select-gitlab-repository-modal-form]").trigger("submit.prevent");
         await wrapper.vm.$nextTick();
 
+        expect(
+            wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled
+        ).toBeTruthy();
+        expect(wrapper.find("[data-test=icon-spin]").classes()).toContain("fa-circle-notch");
         expect(store.commit).toHaveBeenCalledWith("resetRepositories");
         expect(store.dispatch).toHaveBeenCalledWith("changeRepositories", PROJECT_KEY);
         expect(wrapper.vm.$emit("on-success-close-modal", { repository: { id: 1 } })).toBeTruthy();
@@ -204,11 +212,46 @@ describe("ListRepositoriesModal", () => {
         const wrapper = instantiateComponent();
 
         expect(wrapper.find("[data-test=gitlab-repositories-displayed-1]").classes()).toEqual([
-            "gitlab-disabled-repository-modal",
+            "gitlab-select-repository",
+            "gitlab-select-repository-disabled",
         ]);
         expect(
             wrapper.find("[data-test=gitlab-repository-disabled-1]").attributes().disabled
         ).toBeTruthy();
-        expect(wrapper.find("[data-test=gitlab-repositories-displayed-2]").classes()).toEqual([]);
+        expect(wrapper.find("[data-test=gitlab-repositories-displayed-2]").classes()).toEqual([
+            "gitlab-select-repository",
+        ]);
+    });
+
+    it("When user clicks on avatar or path, Then repository is selected", async () => {
+        propsData = {
+            repositories: [
+                {
+                    id: 1,
+                    name_with_namespace: "My Path / Repository",
+                    path_with_namespace: "my-path/repository",
+                    web_url: "https://example.com/MyPath/1",
+                },
+                {
+                    id: 2,
+                    name_with_namespace: "My Second / Repository",
+                    path_with_namespace: "my-second/repository",
+                    avatar_url: "example.com",
+                    web_url: "https://example.com/MySecond/2",
+                },
+            ],
+        };
+
+        const wrapper = instantiateComponent();
+
+        wrapper.find("[data-test=gitlab-avatar-1]").trigger("click");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.selected_repository.id).toEqual(1);
+
+        wrapper.find("[data-test=gitlab-label-path-2]").trigger("click");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.selected_repository.id).toEqual(2);
     });
 });

@@ -18,6 +18,7 @@
  */
 
 @import './repository-card';
+@import './gitlab';
 
 .git-repository-list-empty-image {
     stroke: transparentize($tlp-theme-color, .7);
@@ -164,41 +165,4 @@
 
 .git-add-action-button {
     margin: 0 0 0 $tlp-small-spacing;
-}
-
-.gitlab-avatar {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border-radius: 2px;
-}
-
-.gitlab-select-radio-button-container {
-    width: 0;
-}
-
-.tlp-radio > .gitlab-select-radio-button {
-    vertical-align: middle;
-}
-
-/* stylelint-disable-next-line selector-no-qualifying-type */
-.tlp-table > tbody > tr > td.gitlab-select-avatar {
-    width: $tlp-large-spacing;
-    height: $tlp-large-spacing;
-    padding: 0;
-}
-
-.fetch-gitlab-repositories-modal {
-    width: max-content;
-    min-width: 600px;
-    max-width: 900px;
-}
-
-.gitlab-disabled-repository-modal {
-    opacity: .5;
-
-    .tlp-radio,
-    .tlp-radio > input {
-        cursor: not-allowed;
-    }
 }

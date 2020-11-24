@@ -27,7 +27,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
-                <i class="fa fa-gitlab tlp-modal-title-icon"></i>
+                <i class="fab fa-gitlab tlp-modal-title-icon"></i>
                 <translate>Add GitLab repository</translate>
             </h1>
             <div
@@ -45,6 +45,8 @@
             v-on:on-get-gitlab-repositories="getGitlabRepositories"
             v-on:on-close-modal="onCloseModal"
             ref="credentialsForm"
+            v-bind:user_token="user_token"
+            v-bind:server_url="server_url"
         />
         <list-repositories-modal
             v-else
@@ -71,8 +73,8 @@ export default {
             gitlab_repositories: null,
             back_button_clicked: false,
             modal: null,
-            user_token: null,
-            server_url: null,
+            user_token: "",
+            server_url: "",
         };
     },
     computed: {
@@ -123,6 +125,8 @@ export default {
             }
             this.gitlab_repositories = null;
             this.back_button_clicked = false;
+            this.user_token = "";
+            this.server_url = "";
         },
     },
 };
