@@ -21,8 +21,6 @@
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
-use Tuleap\Git\Permissions\FineGrainedDao;
-use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
@@ -81,32 +79,11 @@ class gitlabPlugin extends Plugin
         $project = $event->getProject();
         $is_gitlab_used  = $this->isAllowed((int) $project->getGroupId());
 
-        if (! $is_gitlab_used || ! $this->getGitPermissionsManager()->userIsGitAdmin($event->getUser(), $project)) {
+        if (! $is_gitlab_used) {
             return;
         }
 
         $event->addUsedServiceName(self::SERVICE_NAME);
-    }
-
-    private function getGitPermissionsManager(): GitPermissionsManager
-    {
-        $git_system_event_manager = new Git_SystemEventManager(
-            SystemEventManager::instance(),
-            new GitRepositoryFactory(
-                new GitDao(),
-                ProjectManager::instance()
-            )
-        );
-
-        $fine_grained_dao       = new FineGrainedDao();
-        $fine_grained_retriever = new FineGrainedRetriever($fine_grained_dao);
-
-        return new GitPermissionsManager(
-            new Git_PermissionsDao(),
-            $git_system_event_manager,
-            $fine_grained_dao,
-            $fine_grained_retriever
-        );
     }
 
     /**
