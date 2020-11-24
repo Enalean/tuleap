@@ -138,7 +138,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
                     'tuleap-cardwall',
                     '<b>%s</b> field will determine background color.'
                 ),
-                $this->getBackgroundColorField()->getLabel()
+                $this->html_purifier->purify($this->getBackgroundColorField()->getLabel())
             );
         } catch (BackgroundColorSemanticFieldNotFoundException $exception) {
             $html .= "</p><p>" . dgettext('tuleap-cardwall', 'No field is chosen to determine the background color');

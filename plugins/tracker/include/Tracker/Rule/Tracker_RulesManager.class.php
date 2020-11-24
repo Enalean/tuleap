@@ -516,7 +516,7 @@ class Tracker_RulesManager
         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
         $source_field_label = $source_field === null ? '' : $source_field->getLabel();
         $target_field_label = $target_field === null ? '' : $target_field->getLabel();
-        echo '<p>' . sprintf(dgettext('tuleap-tracker', 'Define dependencies between <b>%1$s</b> as source and <b>%2$s</b> as target:'), $source_field_label, $target_field_label) . '</p>';
+        echo '<p>' . sprintf(dgettext('tuleap-tracker', 'Define dependencies between <b>%1$s</b> as source and <b>%2$s</b> as target:'), $hp->purify($source_field_label), $hp->purify($target_field_label)) . '</p>';
 
         $this->displayDependenciesMatrix($source_field, $target_field);
     }
