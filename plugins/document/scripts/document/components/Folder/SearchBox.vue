@@ -27,6 +27,7 @@
             v-bind:placeholder="placeholder_text"
             v-model="search_query"
             v-on:keyup.enter="searchUrl"
+            data-shortcut-search-document
         />
         <a v-bind:title="advanced_title" class="document-advanced-link" v-bind:href="advanced_url">
             {{ advanced_title }}

@@ -24,6 +24,7 @@
         type="button"
         role="menuitem"
         data-test="document-dropdown-update-properties"
+        data-shortcut-update-properties
     >
         <i class="fa fa-fw fa-list tlp-dropdown-menu-item-icon"></i>
         <translate>Update properties</translate>

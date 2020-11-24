@@ -25,6 +25,7 @@
             class="document-badge-avatar-username"
             v-if="!props.user.is_anonymous"
             data-test="document-user-profile-link"
+            data-shortcut-author
         >
             {{ props.user.display_name }}
         </a>

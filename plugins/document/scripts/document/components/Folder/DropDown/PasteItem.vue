@@ -26,6 +26,7 @@
         v-on:click="pasteItem"
         v-bind:class="{ 'tlp-dropdown-menu-item-disabled': pasting_in_progress }"
         v-bind:disabled="pasting_in_progress"
+        data-shortcut-paste
     >
         <i
             class="fa tlp-dropdown-menu-item-icon document-clipboard-paste-icon-status"

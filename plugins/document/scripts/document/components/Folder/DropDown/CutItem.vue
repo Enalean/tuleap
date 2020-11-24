@@ -26,6 +26,7 @@
         v-bind:class="{ 'tlp-dropdown-menu-item-disabled': pasting_in_progress }"
         v-bind:disabled="pasting_in_progress"
         v-if="can_cut_item"
+        data-shortcut-cut
     >
         <i class="fa fa-fw fa-cut tlp-dropdown-menu-item-icon"></i>
         <translate>Cut</translate>

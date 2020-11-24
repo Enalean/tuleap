@@ -24,6 +24,7 @@
         v-on:click="processDeletion"
         v-if="item.user_can_write && is_deletion_allowed"
         data-test="document-delete-item"
+        data-shortcut-delete
     >
         <i class="far fa-trash-alt fa-fw tlp-dropdown-menu-item-icon"></i>
         <translate>Delete</translate>

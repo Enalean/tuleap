@@ -25,6 +25,7 @@
         role="menuitem"
         data-test="document-dropdown-menu-lock-item"
         v-on:click.prevent="lockDocument"
+        data-shortcut-lock-document
     >
         <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
         <translate>Lock</translate>

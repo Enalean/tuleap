@@ -26,6 +26,7 @@
         v-bind:data-tlp-tooltip="cannot_create_new_wiki_version_because_approval_table"
         v-on:click="goToUpdate"
         data-test="document-new-item-version-button"
+        data-shortcut-new-version
     >
         <i
             v-if="is_loading_item"

@@ -28,6 +28,7 @@
             v-on:keyup.enter="toggle"
             data-test="toggle"
             tabindex="0"
+            data-shortcut-folder-toggle
         ></i>
         <i
             class="document-folder-icon-color fa fa-fw document-folder-content-icon"

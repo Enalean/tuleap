@@ -24,6 +24,7 @@
         class="tlp-dropdown-menu-item"
         type="button"
         role="menuitem"
+        data-shortcut-permissions
     >
         <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
         <translate>Permissions</translate>
