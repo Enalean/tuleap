@@ -49,6 +49,10 @@ final class TrackersDisplayPresenter
      * @var \CSRFSynchronizerToken
      */
     public $csrf_token;
+    /**
+     * @var string
+     */
+    public $creation_url;
 
     /**
      * @param TrackerPresenter[] $trackers
@@ -58,6 +62,7 @@ final class TrackersDisplayPresenter
         $this->trackers_url       = TrackersDisplayController::getURL($project);
         $this->artifact_links_url = ArtifactLinksController::getURL($project);
         $this->promoted_post_url  = PromoteTrackersController::getURL($project);
+        $this->creation_url       = TRACKER_BASE_URL . '/' . urlencode($project->getUnixNameLowerCase()) . '/new';
 
         $this->trackers = $trackers;
         usort($this->trackers, static function (TrackerPresenter $a, TrackerPresenter $b): int {

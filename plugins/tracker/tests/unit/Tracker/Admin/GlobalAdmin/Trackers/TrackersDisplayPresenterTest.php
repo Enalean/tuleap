@@ -34,11 +34,11 @@ final class TrackersDisplayPresenterTest extends TestCase
 
     public function testItSortsAlphabeticallyTheTrackers(): void
     {
-        $story = new TrackerPresenter(1001, "story", "User Story", "", false, "/path/to/story");
-        $bug   = new TrackerPresenter(1002, "bug", "Bugs", "", false, "/path/to/bug");
+        $story = new TrackerPresenter(1001, "story", "User Story", "", false, "/path/to/story", '/path/to/del', true, "");
+        $bug   = new TrackerPresenter(1002, "bug", "Bugs", "", false, "/path/to/bug", '/path/to/del', true, "");
 
         $presenter = new TrackersDisplayPresenter(
-            Mockery::mock(Project::class)->shouldReceive(['getID' => 123])->getMock(),
+            Mockery::mock(Project::class)->shouldReceive(['getID' => 123, 'getUnixNameLowerCase' => 'acme-project'])->getMock(),
             [$story, $bug],
             Mockery::mock(CSRFSynchronizerToken::class),
         );

@@ -92,6 +92,15 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
 
         $trackers = [];
         foreach ($this->tracker_factory->getTrackersByGroupId($project->getID()) as $tracker) {
+            $used_in_other_services_infos = $tracker->getInformationsFromOtherServicesAboutUsage();
+
+            $cannot_delete_message = $used_in_other_services_infos['can_be_deleted']
+                ? ""
+                : sprintf(
+                    dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'),
+                    $used_in_other_services_infos['message']
+                );
+
             $trackers[] = new TrackerPresenter(
                 $tracker->getId(),
                 $tracker->getItemName(),
@@ -99,6 +108,9 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
                 $tracker->getDescription(),
                 $this->in_new_dropdown_dao->isContaining($tracker->getId()),
                 $tracker->getAdministrationUrl(),
+                MarkTrackerAsDeletedController::getURL($tracker),
+                (bool) $used_in_other_services_infos['can_be_deleted'],
+                $cannot_delete_message,
             );
         }
 

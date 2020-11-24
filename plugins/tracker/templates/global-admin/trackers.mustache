@@ -30,6 +30,12 @@
                 </h1>
             </div>
             <div class="tlp-pane-section">
+                <div class="tlp-table-actions">
+                    <a class="tlp-button-primary tlp-table-actions-element" href="{{ creation_url }}">
+                        <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-tracker | New tracker{{/dgettext}}
+                    </a>
+                </div>
                 <table class="tlp-table">
                     <thead>
                         <tr>
@@ -85,6 +91,24 @@
                                         <i class="tlp-button-icon fas fa-cogs" aria-hidden="true"></i>
                                         {{# gettext }}Administration{{/ gettext }}
                                     </a>
+                                    <button
+                                        type="button"
+                                        class="tlp-table-cell-actions-button
+                                            tlp-button-small tlp-button-danger tlp-button-outline
+                                            {{# can_be_deleted }}tracker-global-admin-delete-tracker-button{{/ can_be_deleted }}
+                                            {{^ can_be_deleted }}tlp-tooltip tlp-tooltip-left{{/ can_be_deleted }}
+                                        "
+                                        {{# can_be_deleted }}
+                                            data-target-modal-id="tracker-global-admin-delete-tracker-{{ id }}"
+                                        {{/ can_be_deleted }}
+                                        {{^ can_be_deleted }}
+                                            disabled
+                                            data-tlp-tooltip="{{ cannot_delete_message }}"
+                                        {{/ can_be_deleted }}
+                                    >
+                                        <i class="tlp-button-icon fas fa-trash-alt" aria-hidden="true"></i>
+                                        {{# gettext }}Delete{{/ gettext }}
+                                    </button>
                                 </td>
                             </tr>
                         {{/ trackers }}
@@ -94,3 +118,48 @@
         </div>
     </section>
 </div>
+
+{{# trackers }}
+    {{# can_be_deleted }}
+        <form
+            id="tracker-global-admin-delete-tracker-{{ id }}"
+            class="tlp-modal tlp-modal-danger"
+            role="dialog"
+            aria-labelledby="tracker-global-admin-delete-tracker-label-{{ id }}"
+            action="{{ deletion_url }}"
+            method="POST"
+        >
+            <div class="tlp-modal-header">
+                <h1 class="tlp-modal-title">
+                    <span id="tracker-global-admin-delete-tracker-label-{{ id }}">
+                        <i class="far fa-trash-alt tlp-modal-title-icon"></i>
+                        {{# dgettext }}tuleap-tracker | Delete this tracker{{/ dgettext }}
+                    </span>
+                </h1>
+                <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{# dgettext }}tuleap-tracker | Cancel{{/dgettext}}">
+                    ×
+                </div>
+            </div>
+            <div class="tlp-modal-body">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+                <p>
+                    {{# dgettext }}tuleap-tracker
+                        | You are about to delete the tracker %s. Please, confirm your action.
+                        | {{ label }}
+                    {{/ dgettext }}
+                </p>
+            </div>
+            <div class="tlp-modal-footer">
+                <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                    {{# dgettext }}tuleap-tracker | Cancel {{/ dgettext }}
+                </button>
+                <button type="submit" class="tlp-button-danger tlp-modal-action">
+                    <i class="far fa-trash-alt tlp-button-icon"></i>
+                    {{# dgettext }}tuleap-tracker | Delete tracker{{/ dgettext }}
+                </button>
+            </div>
+        </form>
+    {{/ can_be_deleted }}
+{{/ trackers }}

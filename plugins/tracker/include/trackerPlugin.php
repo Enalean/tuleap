@@ -77,6 +77,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks\ArtifactLinksController;
 use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\CSRFSynchronizerTokenProvider;
+use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\MarkTrackerAsDeletedController;
 use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\PromoteTrackersController;
 use Tuleap\Tracker\Admin\GlobalAdmin\Trackers\TrackersDisplayController;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -2001,6 +2002,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
             $r->get('/' . Tracker::GLOBAL_ADMIN_URL . '/{id:\d+}', $this->getRouteHandler('routeGlobalAdminTrackers'));
             $r->post('/' . Tracker::GLOBAL_ADMIN_URL . '/{id:\d+}/' . PromoteTrackersController::URL, $this->getRouteHandler('routeGlobalAdminPromoteTrackers'));
+            $r->post('/' . MarkTrackerAsDeletedController::DELETION_URL . '/{id:\d+}', $this->getRouteHandler('routeMarkTrackerAsDeleted'));
             $r->addRoute(['GET', 'POST'], '/' . Tracker::GLOBAL_ADMIN_URL . '/{id:\d+}/' . ArtifactLinksController::URL, $this->getRouteHandler('routeGlobalAdminArtifactLinks'));
 
             $r->post('/{project_name:[A-z0-9-]+}/jira/project_list', $this->getRouteHandler('routeJiraProjectListController'));
@@ -2016,6 +2018,16 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             ['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'],
             '/uploads/tracker/file/{id:\d+}',
             $this->getRouteHandler('routeUploads')
+        );
+    }
+
+    public function routeMarkTrackerAsDeleted(): MarkTrackerAsDeletedController
+    {
+        return new MarkTrackerAsDeletedController(
+            TrackerFactory::instance(),
+            new CSRFSynchronizerTokenProvider(),
+            EventManager::instance(),
+            ReferenceManager::instance()
         );
     }
 
