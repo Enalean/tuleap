@@ -253,9 +253,9 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         $html = '';
 
         if ($list_fields = Tracker_FormElementFactory::instance()->getUsedListFields($this->tracker)) {
-            $html .= '<form method="POST" action="' . $this->getUrl() . '">';
+            $html .= '<form method="POST" action="' . $hp->purify($this->getUrl()) . '">';
             $html .= $this->getCSRFToken()->fetchHTMLInput();
-            $html .= '<input type="hidden" name="field_id" value="' . (int) $this->getFieldId() . '">';
+            $html .= '<input type="hidden" name="field_id" value="' . $hp->purify((int) $this->getFieldId()) . '">';
 
             // field selectbox
             $field = null;
@@ -273,14 +273,14 @@ class Tracker_Semantic_Status extends Tracker_Semantic
                     $field = $list_field;
                     $selected = ' selected="selected" ';
                 }
-                $select .= '<option value="' . $list_field->getId() . '" ' . $selected . '>' . $hp->purify($list_field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+                $select .= '<option value="' . $hp->purify($list_field->getId()) . '" ' . $selected . '>' . $hp->purify($list_field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
             }
             $select .= '</select>';
 
             // open values selectbox
             $params = '';
             if ($field) {
-                $params = 'name="open_values[' . $this->getFieldId() . '][]" multiple="multiple" size="7" style="vertical-align:top;"';
+                $params = 'name="open_values[' . $hp->purify($this->getFieldId()) . '][]" multiple="multiple" size="7" style="vertical-align:top;"';
             }
             $values = '<select ' . $params . '>';
             if ($field) {
@@ -315,7 +315,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
 
                 if (! ($event->fieldCanBeUpdated())) {
                     $GLOBALS['Response']->addFeedback(Feedback::INFO, $event->getReason());
-                    $select = $this->getField()->getLabel();
+                    $select = $hp->purify($this->getField()->getLabel());
                 }
 
                 $html .= sprintf(dgettext('tuleap-tracker', '<p>An artifact is considered to be <strong>open</strong> when its field <strong>%1$s</strong> will have one of the following values:</p>'), $select) . $values . ' ' . $submit;
@@ -324,7 +324,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         } else {
             $html .= dgettext('tuleap-tracker', 'You cannot define the <em>status</em> semantic since there isn\'t any list field in the tracker');
         }
-        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . dgettext('tuleap-tracker', 'go back to semantic overview') . '</a></p>';
+        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $hp->purify($this->tracker->getId()) . '&amp;func=admin-semantic">&laquo; ' . dgettext('tuleap-tracker', 'go back to semantic overview') . '</a></p>';
 
         $semantic_manager->displaySemanticHeader($this, $tracker_manager);
         echo $html;

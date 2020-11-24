@@ -410,7 +410,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         echo '<h2>' . dgettext('tuleap-tracker', 'Create a new tracker') . '</h2>';
 
         echo '<form name="form_create" method="post" enctype="multipart/form-data" id="tracker_create_new">
-          <input type="hidden" name="group_id" value="' . $project->getId() . '">
+          <input type="hidden" name="group_id" value="' . $hp->purify($project->getId()) . '">
           <input type="hidden" name="func" value="docreate">
 
           <table>

@@ -94,18 +94,19 @@ class SemanticTimeframe extends Tracker_Semantic
         if (! $this->isDefined()) {
             echo dgettext('tuleap-tracker', 'This semantic is not defined yet.');
         } else {
+            $purifier = \Codendi_HTMLPurifier::instance();
             if ($this->duration_field !== null) {
-                echo sprintf(
+                echo $purifier->purify(sprintf(
                     dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and duration field "%s".'),
                     $this->start_date_field->getLabel(),
                     $this->duration_field->getLabel()
-                );
+                ));
             } elseif ($this->end_date_field !== null) {
-                echo sprintf(
+                echo $purifier->purify(sprintf(
                     dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and end date field "%s".'),
                     $this->start_date_field->getLabel(),
                     $this->end_date_field->getLabel()
-                );
+                ));
             }
         }
     }
