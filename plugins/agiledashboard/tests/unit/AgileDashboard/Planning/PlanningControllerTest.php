@@ -169,6 +169,7 @@ final class PlanningControllerTest extends TestCase
         $user->shouldReceive('isAdmin')->once()->andReturnTrue();
         $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
         $this->request->shouldReceive('get')->once()->withArgs(['planning_id'])->andReturn(42);
+        $this->event_manager->shouldReceive('dispatch')->once();
 
         $root_planning = Mockery::mock(\Planning_Milestone::class);
         $root_planning->shouldReceive('getId')->andReturn(109);
@@ -189,6 +190,7 @@ final class PlanningControllerTest extends TestCase
         $user->shouldReceive('isAdmin')->once()->andReturnTrue();
         $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
         $this->request->shouldReceive('get')->once()->withArgs(['planning_id'])->andReturn(42);
+        $this->event_manager->shouldReceive('dispatch')->once();
 
         $root_planning = Mockery::mock(\Planning_Milestone::class);
         $root_planning->shouldReceive('getId')->andReturn(42);
@@ -226,7 +228,7 @@ final class PlanningControllerTest extends TestCase
         $GLOBALS['Response']->shouldReceive('addFeedback')->once();
 
         $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->once();
+        $this->event_manager->shouldReceive('dispatch')->twice();
 
         $planning = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getPlanningTracker')->once();
@@ -249,6 +251,7 @@ final class PlanningControllerTest extends TestCase
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+        $this->event_manager->shouldReceive('dispatch')->once();
 
         $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
         $this->request->shouldReceive('get')->withArgs(['planning_id'])->andReturn(1);
@@ -294,7 +297,7 @@ final class PlanningControllerTest extends TestCase
         $GLOBALS['Response']->shouldReceive('addFeedback')->once();
 
         $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->once();
+        $this->event_manager->shouldReceive('dispatch')->twice();
 
         $planning = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getPlanningTracker')->once();
@@ -317,6 +320,8 @@ final class PlanningControllerTest extends TestCase
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+
+        $this->event_manager->shouldReceive('dispatch')->once();
 
         $this->request->shouldReceive('getCurrentUser')->andReturn($user);
         $project = Mockery::mock(Project::class);
@@ -342,6 +347,8 @@ final class PlanningControllerTest extends TestCase
     {
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+
+        $this->event_manager->shouldReceive('dispatch')->once();
 
         $planning_parameters = [
             PlanningParameters::NAME                         => 'Release Planning',
