@@ -24,10 +24,14 @@ import {
 } from "../tuleap/ckeditor/get-upload-image-options.js";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
+import TurndownService from "turndown";
+import marked from "marked";
 
 /* global Prototype:readonly Class:readonly $:readonly */
 
 var codendi = window.codendi || {};
+
+const turndown_service = new TurndownService();
 
 codendi.RTE = Class.create({
     initialize: function (element, options) {
@@ -222,10 +226,14 @@ codendi.RTE = Class.create({
     },
     toggle: function (evt, option) {
         if (option == "html" && !this.rte) {
+            const text = this.element.value;
             this.init_rte();
+            this.rte.setData(marked(text));
         } else {
+            const text = turndown_service.turndown(this.getContent());
             this.rte.destroy();
             this.rte = null;
+            this.element.value = text;
         }
         Event.stop(evt);
         return false;
