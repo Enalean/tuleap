@@ -51,7 +51,7 @@
     "ng-cache-loader": "0.0.26",
     "po-gettext-loader": "^1.0.0",
     "pofile": "^1.1.0",
-    "prettier": "^2.1.2",
+    "prettier": "^2.2.0",
     "raw-loader": "^4.0.2",
     "read-pkg": "^5.2.0",
     "sass": "^1.26.11",

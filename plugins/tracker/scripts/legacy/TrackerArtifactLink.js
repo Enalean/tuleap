@@ -254,19 +254,21 @@ codendi.tracker.artifact.artifactLink = {
                                     const rows_edition_section = tbody.querySelectorAll(
                                         ".tracker_formelement_read_and_edit_edition_section"
                                     );
-                                    [].forEach.call(rows_edition_section, function (
-                                        row_edition_section
-                                    ) {
-                                        row_edition_section.style.display = "block";
-                                    });
+                                    [].forEach.call(
+                                        rows_edition_section,
+                                        function (row_edition_section) {
+                                            row_edition_section.style.display = "block";
+                                        }
+                                    );
                                     const rows_read_only_section = tbody.querySelectorAll(
                                         ".tracker_formelement_read_and_edit_read_section"
                                     );
-                                    [].forEach.call(rows_read_only_section, function (
-                                        row_read_only_section
-                                    ) {
-                                        row_read_only_section.style.display = "none";
-                                    });
+                                    [].forEach.call(
+                                        rows_read_only_section,
+                                        function (row_read_only_section) {
+                                            row_read_only_section.style.display = "none";
+                                        }
+                                    );
 
                                     codendi.tracker.artifact.artifactLink.set_checkbox_style_as_cross(
                                         renderer_table.select("td.tracker_report_table_unlink")
