@@ -6,12 +6,6 @@
             "po": "scripts/burndown-chart/po"
         }
     },
-    "gettext-ts": {
-        "tracker-homepage": {
-            "src": "scripts/tracker-homepage/src",
-            "po": "scripts/tracker-homepage/po"
-        }
-    },
     "gettext-vue": {
         "colorpicker": {
             "src": "scripts/colorpicker",

@@ -68,16 +68,6 @@
     flex: 1 1 auto;
 }
 
-.trackers-homepage-tracker-trash {
-    color: $tlp-ui-danger;
-    cursor: pointer;
-
-    &.disabled {
-        color: transparentize($tlp-ui-dimmed, .5);
-        cursor: default;
-    }
-}
-
 .trackers-homepage-tracker-description {
     display: block;
     color: $tlp-ui-dimmed;

@@ -1195,10 +1195,6 @@ msgstr "Supprimer cet outil de suivi"
 msgid "Delete tracker"
 msgstr "Supprimer l'outil de suivi"
 
-#, php-format
-msgid "Delete tracker %1$s"
-msgstr "Supprimer l'outil de suivi %1$s"
-
 msgid "Delete type"
 msgstr "Supprimer une nature"
 
@@ -3597,14 +3593,6 @@ msgid ""
 msgstr ""
 "L'outil de suivi %s n'apparaîtra plus dans le menu déroulant +Nouveau sur "
 "toutes les pages du projet"
-
-#, php-format
-msgid "Tracker '%1$s' - Deletion Failed -"
-msgstr "Outil de suivi '%1$s' - La destruction a échoué -"
-
-#, php-format
-msgid "Tracker '%1$s' - Successfully Deleted"
-msgstr "Outil de suivi '%1$s' - Destruction réussie"
 
 msgid "Tracker (read only)"
 msgstr "Tracker (lecture seule)"

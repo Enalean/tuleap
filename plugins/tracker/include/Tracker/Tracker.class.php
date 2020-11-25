@@ -602,51 +602,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                 }
                 break;
-            case 'delete':
-                if (
-                    $request->isPost() &&
-                    $this->getGlobalAdminPermissionsChecker()
-                        ->doesUserHaveTrackerGlobalAdminRightsOnProject($this->getProject(), $current_user)
-                ) {
-                    $csrf_token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?group_id=' . urlencode((string) $this->getGroupId()));
-                    $csrf_token->check();
-                    $service_usage_for_tracker = $this->getInformationsFromOtherServicesAboutUsage();
-                    if ($service_usage_for_tracker['can_be_deleted'] === false) {
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::ERROR,
-                            sprintf(dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'), $service_usage_for_tracker['message'])
-                        );
-                    } elseif ($this->getTrackerFactory()->markAsDeleted($this->id)) {
-                        $event_manager = EventManager::instance();
-                        $event_manager->processEvent(TRACKER_EVENT_DELETE_TRACKER, [
-                                          'tracker_id' => $this->getId()]);
-                        $GLOBALS['Response']->addFeedback(
-                            'info',
-                            sprintf(dgettext('tuleap-tracker', 'Tracker \'%1$s\' - Successfully Deleted'), $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML))
-                        );
-                        $GLOBALS['Response']->addFeedback(
-                            'info',
-                            sprintf(dgettext('tuleap-tracker', 'In case you have inadvertently deleted this tracker and want it to be restored, please contact the <a href="mailto:%1$s">Site Administrator</a> within the next 10 days.'), ForgeConfig::get('sys_email_admin')),
-                            CODENDI_PURIFIER_FULL
-                        );
-                        $reference_manager =  ReferenceManager::instance();
-                        $ref =  $reference_manager->loadReferenceFromKeywordAndNumArgs(strtolower($this->getItemName()), $this->getGroupId(), 1);
-                        if ($ref) {
-                            if ($reference_manager->deleteReference($ref)) {
-                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_reference', 't_r_deleted'));
-                            }
-                        }
-                    } else {
-                        $GLOBALS['Response']->addFeedback(
-                            'error',
-                            sprintf(dgettext('tuleap-tracker', 'Tracker \'%1$s\' - Deletion Failed -'), $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML))
-                        );
-                    }
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                }
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?group_id=' . $this->group_id);
-                break;
             case 'admin-editoptions':
                 if ($this->userIsAdmin($current_user)) {
                     if ($request->get('update')) {
