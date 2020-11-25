@@ -7,10 +7,10 @@
     {{# is_user_admin }}
         <p class="description">{{{ nothing_set_up_admin_description }}}</p>
         <p class="actions">
-            {{^ is_mono_milestone_enabled }}
+            {{# is_start_scrum_possible }}
                 <a href="{{ create_scrum_url }}" class="btn btn-large" data-test="start-scrum">{{ start_scrum }}</a>
                 <span>or</span>
-            {{/is_mono_milestone_enabled}}
+            {{/ is_start_scrum_possible }}
             <a href="{{ create_kanban_url }}" class="btn btn-large" data-test="start-kanban">{{ start_kanban }}</a>
         </p>
     {{/ is_user_admin }}

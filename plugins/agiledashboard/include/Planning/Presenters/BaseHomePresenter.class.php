@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,16 +30,17 @@ class Planning_Presenter_BaseHomePresenter
     /**
      * @var bool
      */
-    public $is_mono_milestone_enabled;
+    public $is_start_scrum_possible;
 
     public function __construct(
         $group_id,
         $is_user_admin,
-        $is_mono_milestone_enabled
+        $is_mono_milestone_enabled,
+        bool $is_planning_management_delegated
     ) {
         $this->group_id                  = $group_id;
         $this->is_user_admin             = $is_user_admin;
-        $this->is_mono_milestone_enabled = $is_mono_milestone_enabled;
+        $this->is_start_scrum_possible   = ! $is_mono_milestone_enabled && ! $is_planning_management_delegated;
     }
 
     public function nothing_set_up()
