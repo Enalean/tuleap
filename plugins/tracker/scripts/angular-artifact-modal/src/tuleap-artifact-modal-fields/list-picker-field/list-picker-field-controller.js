@@ -31,11 +31,12 @@ function ListPickerController($element) {
     Object.assign(self, {
         $onInit: init,
         $onDestroy: destroy,
+        isFieldValid,
     });
+    const select = $element[0].querySelector("[data-select=list-picker]");
 
     async function init() {
         if (self.is_list_picker_enabled) {
-            const select = $element[0].querySelector("[data-select=list-picker]");
             self.destroy = await createListPicker(select, getOptions()).then((list_picker) => {
                 return list_picker.destroy;
             });
@@ -66,5 +67,9 @@ function ListPickerController($element) {
         }
 
         return options;
+    }
+
+    function isFieldValid() {
+        return select.checkValidity();
     }
 }

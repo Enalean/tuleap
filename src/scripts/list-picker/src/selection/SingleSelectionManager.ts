@@ -193,6 +193,7 @@ export class SingleSelectionManager implements SelectionManager {
     ): void {
         this.selection_element.innerHTML = "";
         this.selection_element.appendChild(this.placeholder_element);
+        this.source_select_box.selectedIndex = -1;
         item_to_unselect.element.setAttribute("aria-selected", "false");
         item_to_unselect.target_option.removeAttribute("selected");
         item_to_unselect.target_option.selected = false;
