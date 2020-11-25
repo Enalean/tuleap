@@ -56,6 +56,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -80,6 +81,7 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(PlanningAdministrationDelegation::NAME);
+        $this->addHook('tracker_usage', 'trackerUsage');
 
         return parent::getHooksAndCallbacks();
     }
@@ -235,6 +237,16 @@ final class scaled_agilePlugin extends Plugin
         $project_data                = ProjectDataAdapter::build($planning_administration_delegation->getProject());
         if ($component_involved_verifier->isInvolvedInAScaledAgileWorkspace($project_data)) {
             $planning_administration_delegation->enablePlanningAdministrationDelegation();
+        }
+    }
+
+    public function trackerUsage(array $params): void
+    {
+        if ((new \Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao())->isPartOfAPlan(new TrackerData($params['tracker']))) {
+            $params['result'] = [
+                'can_be_deleted' => false,
+                'message'        => $this->getPluginInfo()->getPluginDescriptor()->getFullName()
+            ];
         }
     }
 

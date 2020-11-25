@@ -25,6 +25,7 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Plan;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ScaledAgile\Program\Plan\Plan;
 use Tuleap\ScaledAgile\Program\Plan\PlanStore;
+use Tuleap\ScaledAgile\TrackerData;
 
 final class PlanDao extends DataAccessObject implements PlanStore
 {
@@ -56,5 +57,12 @@ final class PlanDao extends DataAccessObject implements PlanStore
         $sql = 'SELECT count(*) FROM plugin_scaled_agile_plan WHERE plannable_tracker_id = ?';
 
         return $this->getDB()->exists($sql, $plannable_tracker_id);
+    }
+
+    public function isPartOfAPlan(TrackerData $tracker_data): bool
+    {
+        $sql = 'SELECT COUNT(*) FROM plugin_scaled_agile_plan WHERE plannable_tracker_id = ? OR program_increment_tracker_id = ?';
+
+        return $this->getDB()->exists($sql, $tracker_data->getTrackerId(), $tracker_data->getTrackerId());
     }
 }
