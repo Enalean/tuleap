@@ -1,12 +1,28 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
+ * This file is a part of Tuleap.
  *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * Cross Reference Factory class
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
+
+use Tuleap\reference\Presenters\CrossReferenceFieldPresenter;
+use Tuleap\reference\Presenters\CrossReferenceByNaturePresenterBuilder;
+use Tuleap\reference\Presenters\CrossReferenceLinkListPresenterBuilder;
+use Tuleap\reference\Presenters\CrossReferenceLinkPresenterCollectionBuilder;
+use Tuleap\reference\CrossReferenceByNatureCollection;
 
 class CrossReferenceFactory
 {
@@ -110,19 +126,6 @@ class CrossReferenceFactory
         echo $this->getHTMLDisplayCrossRefs();
     }
 
-    public function getParams($currRef)
-    {
-        $params = "?target_id=" . $currRef->getRefTargetId();
-        $params .= "&target_gid=" . $currRef->getRefTargetGid();
-        $params .= "&target_type=" . $currRef->getRefTargetType();
-        $params .= "&target_key=" . $currRef->getRefTargetKey();
-        $params .= "&source_id=" . $currRef->getRefSourceId();
-        $params .= "&source_gid=" . $currRef->getRefSourceGid();
-        $params .= "&source_type=" . $currRef->getRefSourceType();
-        $params .= "&source_key=" . $currRef->getRefSourceKey();
-        return $params;
-    }
-
     /**
      * Returns the cross references grouped by 'source', 'target' and
      * 'both' types with their URLs and tags.
@@ -151,170 +154,40 @@ class CrossReferenceFactory
         return $refs;
     }
 
-    public function getHTMLDisplayCrossRefs($with_links = true, $condensed = false, $isBrowser = true)
+    public function getHTMLDisplayCrossRefs($with_links = true, $condensed = false, $isBrowser = true): string
     {
-        global $Language;
+        $cross_ref_array   = $this->getCrossReferences();
+        $user              = UserManager::instance()->getCurrentUser();
+        $can_delete        = $isBrowser && ($user->isSuperUser() || $user->isMember($this->entity_gid, 'A'));
+        $renderer          = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/common');
+        $available_natures = ReferenceManager::instance()->getAvailableNatures();
+        $display_params    = $with_links && $can_delete && ! $condensed;
 
-        /**
-         * Array of cross references grouped by nature (to easy cross reference display)
-         * Array has the form:
-         * ['nature1'] => array (
-         *                  ['both'] => array (
-         *                                  CrossReference1,
-         *                                  CrossReference2,
-         *                                  ...)
-         *                  ['source'] => array (
-         *                                  CrossReference3,
-         *                                  CrossReference4,
-         *                                  ...)
-         *                  ['target'] => array (
-         *                                  CrossReference3,
-         *                                  CrossReference4,
-         *                                  ...)
-         *  ['nature2'] => array (
-         *                  ['both'] => array (
-         *                                  CrossReference5,
-         *                                  CrossReference6,
-         *                                  ...)
-         *                  ['source'] => array (
-         *                                  CrossReference7,
-         *                                  CrossReference8,
-         *                                  ...)
-         *                  ['target'] => array (
-         *                                  CrossReference9,
-         *                                  CrossReference10,
-         *                                  ...)
-         *  ...
-         */
+        $cross_ref_by_nature_presenter_builder = new CrossReferenceByNaturePresenterBuilder(
+            new CrossReferenceLinkListPresenterBuilder(),
+            new CrossReferenceLinkPresenterCollectionBuilder()
+        );
 
-        $crossRefArray = $this->getCrossReferences();
+        $cross_ref_by_nature_collection = new CrossReferenceByNatureCollection($cross_ref_array, $available_natures);
 
-        $reference_manager = ReferenceManager::instance();
-        $available_natures = $reference_manager->getAvailableNatures();
-        $user = UserManager::instance()->getCurrentUser();
+        $cross_refs_by_nature_presenter_collection = [];
 
-        $itemIsReferenced = false;
-        if ($isBrowser && ($user->isSuperUser() || $user->isMember($this->entity_gid, 'A'))) {
-                $can_delete = true;
-        } else {
-                $can_delete = false;
+        foreach ($cross_ref_by_nature_collection->getAll() as $cross_reference_collection) {
+            $cross_ref_by_nature_presenter = $cross_ref_by_nature_presenter_builder->build(
+                $cross_reference_collection,
+                $display_params
+            );
+            if ($cross_ref_by_nature_presenter) {
+                $cross_refs_by_nature_presenter_collection[] = $cross_ref_by_nature_presenter;
+            }
         }
 
-        $classes = [
-            'both'   => 'cross_reference',
-            'source' => 'referenced_by',
-            'target' => 'reference_to',
-        ];
-        $message = addslashes($GLOBALS['Language']->getText('cross_ref_fact_include', 'confirm_delete'));
-
-         // HTML part (stored in $display)
-        $display = '';
-        if (! $condensed) {
-            $display .= '<p id="cross_references_legend">' . $Language->getText('cross_ref_fact_include', 'legend') . '</p>';
-        }
-        // loop through natures
-        foreach ($crossRefArray as $nature => $refArraySourceTarget) {
-            $div_classes = "nature";
-
-            if (! $condensed) {
-                $div_classes .= " not-condensed";
-            }
-
-            $display .= '<div class="' . $div_classes . '">';
-            if (! $condensed) {
-                $display .= "<p><b>" . $available_natures[$nature]['label'] . "</b>";
-            }
-
-            // loop through each type of target
-            $display .= '<ul class="cross_reference_list">';
-            foreach (['both', 'target', 'source'] as $key) {
-                if (array_key_exists($key, $refArraySourceTarget)) {
-                    // one li for one type of ref (both, target, source)
-                    $display .= '<li class="' . $classes[$key] . '">';
-                    switch ($key) {
-                        case 'both':
-                            $display .= $GLOBALS['HTML']->getImage(
-                                'ic/both_arrows.png',
-                                [
-                                    'alt'    => $Language->getText('cross_ref_fact_include', 'cross_referenced'),
-                                    'align'  => 'top-left',
-                                    'hspace' => '5',
-                                    'title'  => $Language->getText('cross_ref_fact_include', 'cross_referenced')
-                                ]
-                            );
-                            break;
-                        case 'target':
-                            $display .= $GLOBALS['HTML']->getImage(
-                                'ic/right_arrow.png',
-                                [
-                                    'alt'    => $Language->getText('cross_ref_fact_include', 'reference_to'),
-                                    'align'  => 'top-left',
-                                    'hspace' => '5',
-                                    'title'  => $Language->getText('cross_ref_fact_include', 'reference_to')
-                                ]
-                            );
-                            break;
-                        default:
-                            $display .= $GLOBALS['HTML']->getImage(
-                                'ic/left_arrow.png',
-                                [
-                                    'alt'    => $Language->getText('cross_ref_fact_include', 'referenced_in'),
-                                    'align'  => 'top-left',
-                                    'hspace' => '5',
-                                    'title'  => $Language->getText('cross_ref_fact_include', 'referenced_in')
-                                ]
-                            );
-                            break;
-                    }
-
-                    // the refs
-                    $spans = [];
-                    foreach ($refArraySourceTarget[$key] as $currRef) {
-                        $span = '';
-                        if ($key === 'source') {
-                            $id  = $currRef->getRefSourceKey() . "_" .  $currRef->getRefSourceId();
-                            $ref = $currRef->getRefSourceKey() . " #" . $currRef->getRefSourceId();
-                            $url = $currRef->getRefSourceUrl();
-                        } else {
-                            $id  = $currRef->getRefTargetKey() . "_" .  $currRef->getRefTargetId();
-                            $ref = $currRef->getRefTargetKey() . " #" . $currRef->getRefTargetId();
-                            $url = $currRef->getRefTargetUrl();
-                        }
-                        $span .= '<span id="' . $id . '" class="link_to_ref">';
-                        if ($with_links) {
-                            $span .= '<a class="cross-reference"
-                                            title="' . $available_natures[$nature]['label'] . '"
-                                            href="' . $url . '">';
-                            $span .= $ref . '</a>';
-                        } else {
-                            $span .= $ref;
-                        }
-                        if ($with_links && $can_delete && ! $condensed) {
-                            $params = $this->getParams($currRef);
-                            $span .= '<a class="delete_ref"
-                                           href="/reference/rmreference.php' . $params . '"
-                                           onClick="return delete_ref(\'' . $id . '\', \'' . $message . '\');">';
-                            $span .= $GLOBALS['HTML']->getImage(
-                                'ic/cross.png',
-                                [
-                                   'alt'   => $Language->getText('cross_ref_fact_include', 'delete'),
-                                   'title' => $Language->getText('cross_ref_fact_include', 'delete')
-                                ]
-                            );
-                            $span .= '</a>';
-                        }
-                        $spans[] = $span;
-                    }
-                    $display .= implode(', </span>', $spans) . '</span>';
-                    $display .= '</li>';
-                }
-            }
-            $display .= "</ul>";
-            $display .= "</p>";
-            $display .= "</div>";
-        }
-
-        return $display;
+        return $renderer->renderToString('cross_reference', new CrossReferenceFieldPresenter(
+            $condensed,
+            $with_links,
+            $display_params,
+            $cross_refs_by_nature_presenter_collection
+        ));
     }
 
     public function getHTMLCrossRefsForMail()
