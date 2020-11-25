@@ -290,7 +290,8 @@ class AdminController extends BaseController
                     new AddToTopBacklogPostActionDao(),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                     $this->event_manager
-                )
+                ),
+                $this->event_manager
             );
         }
 

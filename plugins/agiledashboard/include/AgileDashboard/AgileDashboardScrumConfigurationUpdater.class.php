@@ -22,6 +22,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ConfigurationUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
+use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 
 class AgileDashboardScrumConfigurationUpdater
 {
@@ -57,6 +58,10 @@ class AgileDashboardScrumConfigurationUpdater
      * @var ConfigurationUpdater
      */
     private $configuration_updater;
+    /**
+     * @var \Psr\EventDispatcher\EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     public function __construct(
         Codendi_Request $request,
@@ -66,7 +71,8 @@ class AgileDashboardScrumConfigurationUpdater
         ScrumForMonoMilestoneEnabler $scrum_mono_milestone_enabler,
         ScrumForMonoMilestoneDisabler $scrum_mono_milestone_disabler,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        ConfigurationUpdater $configuration_updater
+        ConfigurationUpdater $configuration_updater,
+        \Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher
     ) {
         $this->request                       = $request;
         $this->project_id                    = (int) $this->request->get('group_id');
@@ -77,9 +83,10 @@ class AgileDashboardScrumConfigurationUpdater
         $this->scrum_mono_milestone_disabler = $scrum_mono_milestone_disabler;
         $this->scrum_mono_milestone_checker  = $scrum_mono_milestone_checker;
         $this->configuration_updater         = $configuration_updater;
+        $this->event_dispatcher = $event_dispatcher;
     }
 
-    public function updateConfiguration()
+    public function updateConfiguration(): void
     {
         if (! $this->request->exist('scrum-title-admin')) {
             $this->response->missingScrumTitle();
@@ -111,7 +118,13 @@ class AgileDashboardScrumConfigurationUpdater
         }
 
         if ($scrum_is_activated) {
-            if ($this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === false) {
+            $planning_administration_delegation = new PlanningAdministrationDelegation($this->request->getProject());
+            $this->event_dispatcher->dispatch($planning_administration_delegation);
+
+            if (
+                $this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === false &&
+                ! $planning_administration_delegation->isPlanningAdministrationDelegated()
+            ) {
                 $this->first_scrum_creator->createFirstScrum();
             }
         }

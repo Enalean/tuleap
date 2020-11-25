@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -70,9 +70,10 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         $scrum_title,
         $kanban_title,
         $is_user_admin,
-        $is_mono_milestone_enabled
+        $is_mono_milestone_enabled,
+        bool $is_planning_management_delegated
     ) {
-        parent::__construct($group_id, $is_user_admin, $is_mono_milestone_enabled);
+        parent::__construct($group_id, $is_user_admin, $is_mono_milestone_enabled, $is_planning_management_delegated);
         $this->milestone_presenters            = $milestone_access_presenters;
         $this->last_level_milestone_presenters = $last_level_milestone_presenters;
         $this->period                          = $period;
@@ -84,6 +85,7 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
         $this->scrum_is_configured             = $scrum_is_configured;
         $this->scrum_title                     = $scrum_title;
         $this->kanban_title                    = $kanban_title;
+        $this->is_mono_milestone_enabled       = $is_mono_milestone_enabled;
     }
 
     public function kanban_empty_message_must_be_displayed()

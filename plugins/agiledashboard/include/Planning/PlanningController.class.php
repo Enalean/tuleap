@@ -236,7 +236,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $this->config_manager->getScrumTitle($this->group_id),
             $this->config_manager->getKanbanTitle($this->group_id),
             $this->isUserAdmin(),
-            $this->isScrumMonoMilestoneEnabled()
+            $this->isScrumMonoMilestoneEnabled(),
+            $this->isPlanningManagementDelegated()
         );
         return $this->renderToString('home', $presenter);
     }
@@ -251,6 +252,13 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     private function isScrumMonoMilestoneEnabled()
     {
         return $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($this->group_id) === true;
+    }
+
+    private function isPlanningManagementDelegated(): bool
+    {
+        $planning_administration_delegation = new PlanningAdministrationDelegation($this->request->getProject());
+        $this->event_manager->dispatch($planning_administration_delegation);
+        return $planning_administration_delegation->isPlanningAdministrationDelegated();
     }
 
     private function getKanbanSummaryPresenters()
@@ -282,7 +290,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $presenter = new Planning_Presenter_BaseHomePresenter(
             $this->group_id,
             $this->isUserAdmin(),
-            $this->isScrumMonoMilestoneEnabled()
+            $this->isScrumMonoMilestoneEnabled(),
+            $this->isPlanningManagementDelegated()
         );
         return $this->renderToString('empty-home', $presenter);
     }
