@@ -75,10 +75,6 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
      */
     private $project;
     /**
-     * @var \Mockery\MockInterface|TrackerManager
-     */
-    private $tracker_manager;
-    /**
      * @var \Mockery\MockInterface|PFUser
      */
     private $anonymous;
@@ -122,6 +118,10 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
      * @var \Mockery\MockInterface|Project
      */
     private $project_private;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker
+     */
+    private $permissions_checker;
 
     protected function setUp(): void
     {
@@ -203,8 +203,8 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->tracker->shouldReceive('getGroupId')->andReturns(222);
         $this->tracker->shouldReceive('getProject')->andReturns($this->project);
 
-        $this->tracker_manager = \Mockery::spy(\TrackerManager::class);
-        $this->tracker_manager->shouldReceive('userCanAdminAllProjectTrackers')->andReturns(false);
+        $this->permissions_checker = \Mockery::spy(\Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker::class);
+        $this->permissions_checker->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')->andReturns(false);
 
         $this->anonymous = \Mockery::spy(\PFUser::class);
         $this->anonymous->shouldReceive('isSuperUser')->andReturns(false);
@@ -345,7 +345,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
             1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
         ];
         $t_access_anonymous->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
-        $t_access_anonymous->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_anonymous->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($this->permissions_checker);
         $t_access_anonymous->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
@@ -367,7 +367,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $t_access_registered->shouldReceive('getId')->andReturns(2);
         $t_access_registered->shouldReceive('getGroupId')->andReturns(101);
         $t_access_registered->shouldReceive('getProject')->andReturns($this->project);
-        $t_access_registered->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_registered->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($this->permissions_checker);
         $t_access_registered->shouldReceive('getUserManager')->andReturns($this->user_manager);
         $perms = [
             2 => [ 101 => 'PLUGIN_TRACKER_ACCESS_FULL'],
@@ -399,7 +399,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
             1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
         ];
         $t_access_members->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
-        $t_access_members->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_members->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($this->permissions_checker);
         $t_access_members->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
@@ -427,13 +427,16 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         ];
         $t_access_members->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
 
-        $tracker_manager = \Mockery::spy(\TrackerManager::class);
-        $t_access_members->shouldReceive('getTrackerManager')->andReturns($tracker_manager);
+        $permissions_checker = \Mockery::spy(\Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker::class);
+        $t_access_members->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($permissions_checker);
         $t_access_members->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
 
-        $tracker_manager->shouldReceive('userCanAdminAllProjectTrackers')->with($this->all_trackers_forge_admin_user)->andReturns(true);
+        $permissions_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->with($this->project, $this->all_trackers_forge_admin_user)
+            ->andReturns(true);
 
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->all_trackers_forge_admin_user, $t_access_members));
     }
@@ -449,7 +452,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
             1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
         ];
         $t_access_admin->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
-        $t_access_admin->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_admin->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($this->permissions_checker);
         $t_access_admin->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
@@ -477,7 +480,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
             1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
         ];
         $t_access_submitter->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
-        $t_access_submitter->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_submitter->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($this->permissions_checker);
         $t_access_submitter->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
@@ -505,7 +508,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
             1001 => [ 101 => 'PLUGIN_TRACKER_ADMIN'],
         ];
         $t_access_assignee->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
-        $t_access_assignee->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_assignee->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($this->permissions_checker);
         $t_access_assignee->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
@@ -527,7 +530,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $t_access_submitterassignee->shouldReceive('getId')->andReturns(7);
         $t_access_submitterassignee->shouldReceive('getGroupId')->andReturns(101);
         $t_access_submitterassignee->shouldReceive('getProject')->andReturns($this->project);
-        $t_access_submitterassignee->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_submitterassignee->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($this->permissions_checker);
         $t_access_submitterassignee->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $perms = [
@@ -564,7 +567,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         ];
 
         $t_access_registered->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
-        $t_access_registered->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_registered->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($this->permissions_checker);
         $t_access_registered->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->with($this->anonymous, $this->project_private)->andThrow(Mockery::mock(Project_AccessException::class));

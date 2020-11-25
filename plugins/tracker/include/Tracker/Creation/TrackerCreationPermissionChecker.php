@@ -27,17 +27,18 @@ use Project;
 use trackerPlugin;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 
 class TrackerCreationPermissionChecker
 {
     /**
-     * @var \TrackerManager
+     * @var GlobalAdminPermissionsChecker
      */
-    private $tracker_manager;
+    private $permissions_checker;
 
-    public function __construct(\TrackerManager $tracker_manager)
+    public function __construct(GlobalAdminPermissionsChecker $permissions_checker)
     {
-        $this->tracker_manager = $tracker_manager;
+        $this->permissions_checker = $permissions_checker;
     }
 
     /**
@@ -50,7 +51,7 @@ class TrackerCreationPermissionChecker
             throw new NotFoundException(dgettext('tuleap-tracker', 'Tracker service is disabled.'));
         }
 
-        if (! $this->tracker_manager->userCanCreateTracker($project->getID(), $user)) {
+        if (! $this->permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
             throw new ForbiddenException();
         }
     }

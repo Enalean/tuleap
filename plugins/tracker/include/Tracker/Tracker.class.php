@@ -33,6 +33,7 @@ use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Admin\HeaderPresenter;
 use Tuleap\Tracker\Admin\TrackerGeneralSettingsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -602,7 +603,11 @@ class Tracker implements Tracker_Dispatchable_Interface
                 }
                 break;
             case 'delete':
-                if ($request->isPost() && $this->userCanDeleteTracker($current_user)) {
+                if (
+                    $request->isPost() &&
+                    $this->getGlobalAdminPermissionsChecker()
+                        ->doesUserHaveTrackerGlobalAdminRightsOnProject($this->getProject(), $current_user)
+                ) {
                     $csrf_token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?group_id=' . urlencode((string) $this->getGroupId()));
                     $csrf_token->check();
                     $service_usage_for_tracker = $this->getInformationsFromOtherServicesAboutUsage();
@@ -2074,12 +2079,10 @@ class Tracker implements Tracker_Dispatchable_Interface
             return $cache_is_admin[$this->getId()][$user->getId()];
         }
 
-        if ($user->isSuperUser() || $user->isMember($this->getGroupId(), 'A')) {
-            $cache_is_admin[$this->getId()][$user->getId()] = true;
-            return true;
-        }
-
-        if ($this->getTrackerManager()->userCanAdminAllProjectTrackers($user)) {
+        if (
+            $this->getGlobalAdminPermissionsChecker()
+            ->doesUserHaveTrackerGlobalAdminRightsOnProject($this->getProject(), $user)
+        ) {
             $cache_is_admin[$this->getId()][$user->getId()] = true;
             return true;
         }
@@ -2100,14 +2103,12 @@ class Tracker implements Tracker_Dispatchable_Interface
         return false;
     }
 
-    /**
-     * @return TrackerManager
-     */
-    protected function getTrackerManager()
+    protected function getGlobalAdminPermissionsChecker(): GlobalAdminPermissionsChecker
     {
-        return new TrackerManager();
+        return new GlobalAdminPermissionsChecker(
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao())
+        );
     }
-
 
     /**
      * Check if user has permission to submit artifact or not
@@ -2139,22 +2140,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
 
         return false;
-    }
-
-    /**
-     * Check if user has permission to delete a tracker or not
-     *
-     * @param PFUser $user The user to test (current user if not defined)
-     *
-     * @return bool true if user has persission to delete trackers, false otherwise
-     */
-    public function userCanDeleteTracker($user = false)
-    {
-        if (! ($user instanceof PFUser)) {
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
-        }
-        return $user->isSuperUser() || $user->isMember($this->getGroupId(), 'A');
     }
 
     public function getInformationsFromOtherServicesAboutUsage()

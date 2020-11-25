@@ -24,11 +24,11 @@ use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
-use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
@@ -169,6 +169,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 $GLOBALS['Response']->send401UnauthorizedHeader();
             }
         } catch (Tracker_NoMachingResourceException $e) {
+            $global_admin_permissions_checker = new GlobalAdminPermissionsChecker(
+                new User_ForgeUserGroupPermissionsManager(
+                    new User_ForgeUserGroupPermissionsDao()
+                )
+            );
             //show, admin all trackers
             if ((int) $request->get('group_id')) {
                 $group_id = (int) $request->get('group_id');
@@ -176,14 +181,14 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                     if ($this->checkServiceEnabled($project, $request)) {
                         switch ($request->get('func')) {
                             case 'docreate':
-                                if ($this->userCanCreateTracker($group_id)) {
+                                if ($global_admin_permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
                                       $this->doCreateTracker($project, $request);
                                 } else {
                                     $this->redirectToTrackerHomepage($group_id);
                                 }
                                 break;
                             case 'create':
-                                if ($this->userCanCreateTracker($group_id)) {
+                                if ($global_admin_permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
                                     $this->displayCreateTracker($project, $request);
                                 } else {
                                     $this->redirectToTrackerHomepage($group_id);
@@ -193,7 +198,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                                 $this->displayCSVImportOverview($project, $group_id, $user);
                                 break;
                             case 'restore-tracker':
-                                if ($this->userIsTrackerAdmin($project, $user)) {
+                                if ($global_admin_permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
                                     $tracker_id   = $request->get('tracker_id');
                                     $group_id     = $request->get('group_id');
                                     $token      = new CSRFSynchronizerToken('/tracker/admin/restore.php');
@@ -523,14 +528,20 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         $params = [];
 
-        if ($this->userIsTrackerAdmin($project, $user)) {
+        $permissions_checker = new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
+            new User_ForgeUserGroupPermissionsManager(
+                new User_ForgeUserGroupPermissionsDao()
+            )
+        );
+        $is_tracker_admin = $permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user);
+        if ($is_tracker_admin) {
             $this->informUserOfOngoingMigrations($project);
         }
 
         $this->displayHeader($project, dgettext('tuleap-tracker', 'Trackers'), $breadcrumbs, $toolbar, $params);
         $html .= '<h1 class="trackers-homepage-title">' . dgettext('tuleap-tracker', 'Trackers');
 
-        if ($this->userCanCreateTracker($project->group_id, $user)) {
+        if ($is_tracker_admin) {
             $html .= '<a id="tracker_createnewlink" class="tlp-button-primary" data-test="new-tracker-creation" href="' . TRACKER_BASE_URL . '/' .
                 urlencode($project->getUnixNameLowerCase()) . '/new">';
             $html .= '<i class="fa fa-plus tlp-button-icon"></i>';
@@ -581,7 +592,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
                 $used_in_other_services_infos = $tracker->getInformationsFromOtherServicesAboutUsage();
 
-                if ($tracker->userCanDeleteTracker()) {
+                if ($is_tracker_admin) {
                     if ($used_in_other_services_infos['can_be_deleted']) {
                         $html .= '<span class="trackers-homepage-tracker-spacer"></span>
                                   <span
@@ -676,11 +687,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     private function trackerCanBeDisplayed(Tracker $tracker, PFUser $user)
     {
         return $tracker->userCanView($user) && ! $this->getTV3MigrationManager()->isTrackerUnderMigration($tracker);
-    }
-
-    private function userIsTrackerAdmin(Project $project, PFUser $user)
-    {
-        return $this->userCanCreateTracker($project->getGroupId(), $user) || $this->userCanAdminAllProjectTrackers($user);
     }
 
     private function informUserOfOngoingMigrations(Project $project)
@@ -875,38 +881,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     protected function getReferenceManager()
     {
         return ReferenceManager::instance();
-    }
-
-    /**
-     * Check if user has permission to create a tracker or not
-     *
-     * @param int  $group_id The Id of the project where the user wants to create a tracker
-     * @param PFUser $user     The user to test (current user if not defined)
-     *
-     * @return bool true if user has persission to create trackers, false otherwise
-     */
-    public function userCanCreateTracker($group_id, $user = false)
-    {
-        if (! ($user instanceof PFUser)) {
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
-        }
-        return $user->isMember($group_id, 'A');
-    }
-
-    public function userCanAdminAllProjectTrackers($user = null)
-    {
-        if (! $user instanceof PFUser) {
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
-        }
-
-        $permission = new TrackerAdminAllProjects();
-        $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
-            new User_ForgeUserGroupPermissionsDao()
-        );
-
-        return $forge_ugroup_permissions_manager->doesUserHavePermission($user, $permission);
     }
 
     public function search($request, $current_user)

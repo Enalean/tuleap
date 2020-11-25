@@ -39,8 +39,10 @@ class Tracker_URLVerification extends URLVerification
      */
     public function userCanAccessProject(PFUser $user, Project $project)
     {
-        $tracker_manager = new TrackerManager();
-        if ($tracker_manager->userCanAdminAllProjectTrackers($user)) {
+        $permissions_checker = new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao())
+        );
+        if ($permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
             return true;
         }
 

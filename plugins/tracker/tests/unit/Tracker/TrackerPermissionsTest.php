@@ -44,6 +44,8 @@ use TrackerFactory;
 use TrackerManager;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
+use User_ForgeUserGroupPermissionsManager;
 use UserManager;
 use Workflow;
 use WorkflowFactory;
@@ -167,7 +169,6 @@ class TrackerPermissionsTest extends TestCase
     public function setUp(): void
     {
         $this->project = Mockery::mock(Project::class);
-        $this->user    = Mockery::mock(PFUser::class);
 
         $this->project->shouldReceive('getID')->andReturns(101);
         $this->project->shouldReceive('isPublic')->andReturns(true);
@@ -183,11 +184,18 @@ class TrackerPermissionsTest extends TestCase
         $this->tracker2        = Mockery::mock(Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->tracker_manager = Mockery::mock(TrackerManager::class);
 
-        $this->tracker->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
-        $this->tracker1->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
-        $this->tracker2->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $forge_user_group_permissions_manager = Mockery::mock(User_ForgeUserGroupPermissionsManager::class);
+        $permissions_checker                  = new GlobalAdminPermissionsChecker($forge_user_group_permissions_manager);
 
-        $this->tracker_manager->shouldReceive('userCanAdminAllProjectTrackers')->andReturns(false);
+        $this->tracker->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($permissions_checker);
+        $this->tracker1->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($permissions_checker);
+        $this->tracker2->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($permissions_checker);
+
+        $forge_user_group_permissions_manager->shouldReceive('doesUserHavePermission')->andReturn(false);
+
+        $this->tracker->setProject($this->project);
+        $this->tracker1->setProject($this->project);
+        $this->tracker2->setProject($this->project);
 
         $this->tf = Mockery::mock(TrackerFactory::class);
         $this->tracker->shouldReceive('getTrackerFactory')->andReturns($this->tf);
@@ -213,7 +221,7 @@ class TrackerPermissionsTest extends TestCase
         $this->tracker->shouldReceive('getWorkflowManager')->andReturns($this->wm);
         $this->tracker1->shouldReceive('getWorkflowManager')->andReturns($this->wm);
         $this->tracker2->shouldReceive('getWorkflowManager')->andReturns($this->wm);
-        $group_id = 999;
+        $group_id = 101;
         $this->tracker->shouldReceive('getGroupId')->andReturns($group_id);
         $this->tracker->shouldReceive('getId')->andReturns(110);
         $this->tracker->shouldReceive('getColor')->andReturns(TrackerColor::default());
@@ -244,6 +252,7 @@ class TrackerPermissionsTest extends TestCase
         $this->site_admin_user = Mockery::mock(PFUser::class);
         $this->site_admin_user->shouldReceive('getId')->andReturns(1);
         $this->site_admin_user->shouldReceive('isMember')->andReturns(false);
+        $this->site_admin_user->shouldReceive('isAdmin')->andReturns(false);
         $this->site_admin_user->shouldReceive('isAnonymous')->andReturns(false);
         $this->site_admin_user->shouldReceive('isSuperUser')->andReturns(true);
         $this->site_admin_user->shouldReceive('isMemberOfUGroup')->withArgs([1001, Mockery::any()])->andReturns(false);
@@ -252,7 +261,7 @@ class TrackerPermissionsTest extends TestCase
 
         $this->project_admin_user = Mockery::mock(PFUser::class);
         $this->project_admin_user->shouldReceive('getId')->andReturns(123);
-        $this->project_admin_user->shouldReceive('isMember')->withArgs([$group_id, 'A'])->andReturns(true);
+        $this->project_admin_user->shouldReceive('isAdmin')->with($group_id)->andReturns(true);
         $this->project_admin_user->shouldReceive('isMember')->withArgs([102])->andReturns(false);
         $this->project_admin_user->shouldReceive('isAnonymous')->andReturns(false);
         $this->project_admin_user->shouldReceive('isSuperUser')->andReturns(false);
@@ -266,7 +275,7 @@ class TrackerPermissionsTest extends TestCase
 
         $this->all_trackers_admin_user = Mockery::mock(PFUser::class);
         $this->all_trackers_admin_user->shouldReceive('getId')->andReturns(222);
-        $this->all_trackers_admin_user->shouldReceive('isMember')->withArgs([$group_id, 'A'])->andReturns(false);
+        $this->all_trackers_admin_user->shouldReceive('isAdmin')->with($group_id)->andReturns(false);
         $this->all_trackers_admin_user->shouldReceive('isAnonymous')->andReturns(false);
         $this->all_trackers_admin_user->shouldReceive('isMember')->withArgs([102])->andReturns(false);
         $this->all_trackers_admin_user->shouldReceive('isSuperUser')->andReturns(false);
@@ -281,7 +290,7 @@ class TrackerPermissionsTest extends TestCase
 
         $this->tracker1_admin_user = Mockery::mock(PFUser::class);
         $this->tracker1_admin_user->shouldReceive('getId')->andReturns(333);
-        $this->tracker1_admin_user->shouldReceive('isMember')->withArgs([$group_id, 'A'])->andReturns(false);
+        $this->tracker1_admin_user->shouldReceive('isAdmin')->with($group_id)->andReturns(false);
         $this->tracker1_admin_user->shouldReceive('isMember')->withArgs([102])->andReturns(false);
         $this->tracker1_admin_user->shouldReceive('isAnonymous')->andReturns(false);
         $this->tracker1_admin_user->shouldReceive('isSuperUser')->andReturns(false);
@@ -296,7 +305,7 @@ class TrackerPermissionsTest extends TestCase
 
         $this->tracker2_admin_user = Mockery::mock(PFUser::class);
         $this->tracker2_admin_user->shouldReceive('getId')->andReturns(444);
-        $this->tracker2_admin_user->shouldReceive('isMember')->withArgs([$group_id, 'A'])->andReturns(false);
+        $this->tracker2_admin_user->shouldReceive('isAdmin')->with($group_id)->andReturns(false);
         $this->tracker2_admin_user->shouldReceive('isMember')->withArgs([102])->andReturns(false);
         $this->tracker2_admin_user->shouldReceive('isAnonymous')->andReturns(false);
         $this->tracker2_admin_user->shouldReceive('isSuperUser')->andReturns(false);
@@ -311,7 +320,7 @@ class TrackerPermissionsTest extends TestCase
 
         $this->project_member_user = Mockery::mock(PFUser::class);
         $this->project_member_user->shouldReceive('getId')->andReturns(555);
-        $this->project_member_user->shouldReceive('isMember')->withArgs([$group_id, 'A'])->andReturns(false);
+        $this->project_member_user->shouldReceive('isAdmin')->with($group_id)->andReturns(false);
         $this->project_member_user->shouldReceive('isMember')->withArgs([102])->andReturns(false);
         $this->project_member_user->shouldReceive('isAnonymous')->andReturns(false);
         $this->project_member_user->shouldReceive('isSuperUser')->andReturns(false);
@@ -327,6 +336,7 @@ class TrackerPermissionsTest extends TestCase
 
         $this->registered_user = Mockery::mock(PFUser::class);
         $this->registered_user->shouldReceive('getId')->andReturns(777);
+        $this->registered_user->shouldReceive('isAdmin')->andReturns(false);
         $this->registered_user->shouldReceive('isMember')->andReturns(false);
         $this->registered_user->shouldReceive('isAnonymous')->andReturns(false);
         $this->registered_user->shouldReceive('isSuperUser')->andReturns(false);
@@ -710,7 +720,7 @@ class TrackerPermissionsTest extends TestCase
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
         $user->shouldReceive('isSuperUser')->once();
-        $user->shouldReceive('isMember')->once();
+        $user->shouldReceive('isAdmin')->once()->andReturn(false);
 
         $this->tracker->userIsAdmin($user);
         $this->tracker->userIsAdmin($user);

@@ -37,6 +37,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -78,10 +79,15 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
      * @var TrackerManager
      */
     private $tracker_manager;
+    /**
+     * @var GlobalAdminPermissionsChecker
+     */
+    private $permissions_checker;
 
     public function __construct(
         ProjectManager $project_manager,
         TrackerManager $tracker_manager,
+        GlobalAdminPermissionsChecker $permissions_checker,
         ArtifactLinksUsageDao $dao,
         ArtifactLinksUsageUpdater $updater,
         NaturePresenterFactory $types_presenter_factory,
@@ -95,15 +101,13 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         $this->event_manager           = $event_manager;
         $this->project_manager         = $project_manager;
         $this->tracker_manager         = $tracker_manager;
+        $this->permissions_checker     = $permissions_checker;
     }
 
     public function process(\HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
-        if (
-            ! $this->tracker_manager->userCanCreateTracker($project->getID())
-            && ! $this->tracker_manager->userCanAdminAllProjectTrackers()
-        ) {
+        if (! $this->permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $request->getCurrentUser())) {
             throw new ForbiddenException();
         }
         switch ($request->get('func')) {

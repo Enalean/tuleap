@@ -27,11 +27,11 @@ use Project;
 use ProjectHistoryDao;
 use ProjectManager;
 use TrackerFactory;
-use TrackerManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 
 class PromoteTrackersController implements DispatchableWithRequest, DispatchableWithProject
@@ -44,10 +44,6 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
      * @var ProjectManager
      */
     private $project_manager;
-    /**
-     * @var TrackerManager
-     */
-    private $tracker_manager;
     /**
      * @var TrackerFactory
      */
@@ -64,30 +60,31 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
      * @var ProjectHistoryDao
      */
     private $history_dao;
+    /**
+     * @var GlobalAdminPermissionsChecker
+     */
+    private $permissions_checker;
 
     public function __construct(
         ProjectManager $project_manager,
-        TrackerManager $tracker_manager,
+        GlobalAdminPermissionsChecker $permissions_checker,
         TrackerFactory $tracker_factory,
         TrackerInNewDropdownDao $in_new_dropdown_dao,
         CSRFSynchronizerTokenProvider $token_provider,
         ProjectHistoryDao $history_dao
     ) {
         $this->project_manager     = $project_manager;
-        $this->tracker_manager     = $tracker_manager;
         $this->tracker_factory     = $tracker_factory;
         $this->in_new_dropdown_dao = $in_new_dropdown_dao;
         $this->token_provider      = $token_provider;
         $this->history_dao         = $history_dao;
+        $this->permissions_checker = $permissions_checker;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
-        if (
-            ! $this->tracker_manager->userCanCreateTracker($project->getID())
-            && ! $this->tracker_manager->userCanAdminAllProjectTrackers()
-        ) {
+        if (! $this->permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $request->getCurrentUser())) {
             throw new ForbiddenException();
         }
 
