@@ -22,12 +22,8 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotFoundException;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotMatchingException;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretNotDefinedException;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 
 class WebhookDataExtractor
 {
@@ -38,54 +34,39 @@ class WebhookDataExtractor
     private const PUSH_EVENT = 'push';
 
     /**
-     * @var GitlabRepositoryFactory
+     * @var PostPushCommitWebhookDataExtractor
      */
-    private $gitlab_repository_factory;
+    private $post_push_commit_webhook_data_extractor;
 
-    /**
-     * @var SecretChecker
-     */
-    private $secret_checker;
-
-    public function __construct(
-        GitlabRepositoryFactory $gitlab_repository_factory,
-        SecretChecker $secret_checker
-    ) {
-        $this->gitlab_repository_factory = $gitlab_repository_factory;
-        $this->secret_checker            = $secret_checker;
+    public function __construct(PostPushCommitWebhookDataExtractor $post_push_commit_webhook_data_extractor)
+    {
+        $this->post_push_commit_webhook_data_extractor = $post_push_commit_webhook_data_extractor;
     }
 
     /**
      * @throws MissingKeyException
      * @throws EventNotAllowedException
-     * @throws RepositoryNotFoundException
-     * @throws SecretHeaderNotFoundException
-     * @throws SecretNotDefinedException
-     * @throws SecretHeaderNotMatchingException
      */
-    public function retrieveRepositoryFromWebhookContent(ServerRequestInterface $request): GitlabRepository
+    public function retrieveWebhookData(ServerRequestInterface $request): WebhookData
     {
         $webhook_content = json_decode($request->getBody()->getContents(), true);
-        $this->checkExpectedJsonKeysAreSet($webhook_content);
+        $this->checkCommonJsonKeysAreSet($webhook_content);
 
-        $gitlab_repository = $this->getRepositoryObject($webhook_content);
-        if ($gitlab_repository === null) {
-            throw new RepositoryNotFoundException();
-        }
-
-        $this->secret_checker->checkSecret(
-            $gitlab_repository,
-            $request
+        return new PostPushWebhookData(
+            $webhook_content[self::EVENT_NAME_KEY],
+            $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
+            $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
+            $this->post_push_commit_webhook_data_extractor->retrieveWebhookCommitsData(
+                $webhook_content
+            )
         );
-
-        return $gitlab_repository;
     }
 
     /**
      * @throws MissingKeyException
      * @throws EventNotAllowedException
      */
-    private function checkExpectedJsonKeysAreSet(array $webhook_content): void
+    private function checkCommonJsonKeysAreSet(array $webhook_content): void
     {
         if (! isset($webhook_content[self::EVENT_NAME_KEY])) {
             throw new MissingKeyException(self::EVENT_NAME_KEY);
@@ -106,13 +87,5 @@ class WebhookDataExtractor
         if (! isset($webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY])) {
             throw new MissingKeyException(self::PROJECT_KEY . " > " . self::PROJECT_URL_KEY);
         }
-    }
-
-    private function getRepositoryObject(array $webhook_content): ?GitlabRepository
-    {
-        return $this->gitlab_repository_factory->getGitlabRepositoryByInternalIdAndPath(
-            (int) $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
-            (string) $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY]
-        );
     }
 }
