@@ -63,7 +63,7 @@ final class CSPViolationReportToController extends DispatchablePSR15Compatible i
             return $this->response_factory->createResponse(400);
         }
 
-        $this->logger->debug(
+        $this->logger->info(
             json_encode($csp_report['csp-report'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
         );
 
