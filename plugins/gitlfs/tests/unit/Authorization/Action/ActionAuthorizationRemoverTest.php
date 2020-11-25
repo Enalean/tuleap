@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,10 @@
 
 namespace Tuleap\GitLFS\Authorization\Action;
 
-use League\Flysystem\FilesystemInterface;
+use ArrayObject;
+use League\Flysystem\DirectoryListing;
+use League\Flysystem\FileAttributes;
+use League\Flysystem\FilesystemOperator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
@@ -29,10 +32,10 @@ class ActionAuthorizationRemoverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testDeletionOfActionsOldWorkingFiles()
+    public function testDeletionOfActionsOldWorkingFiles(): void
     {
         $dao            = \Mockery::mock(ActionAuthorizationDAO::class);
-        $filesystem     = \Mockery::mock(FilesystemInterface::class);
+        $filesystem     = \Mockery::mock(FilesystemOperator::class);
         $path_allocator = \Mockery::mock(LFSObjectPathAllocator::class);
 
         $remover = new ActionAuthorizationRemover($dao, $filesystem, $path_allocator);
@@ -42,20 +45,32 @@ class ActionAuthorizationRemoverTest extends TestCase
         $path_allocator->shouldReceive('getBasePathForSaveInProgressObject')->andReturns('in-progress/');
         $path_allocator->shouldReceive('getBasePathForReadyToBeAvailableObject')->andReturns('ready/');
 
-        $filesystem->shouldReceive('listContents')->with('in-progress/')->andReturns([
-            ['path' => 'in-progress/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
-            ['path' => 'in-progress/cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc']
-        ]);
-        $filesystem->shouldReceive('listContents')->with('ready/')->andReturns([
-            ['path' => 'ready/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'],
-            ['path' => 'ready/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb']
-        ]);
+        $filesystem->shouldReceive('listContents')->with('in-progress/')->andReturns(
+            new DirectoryListing(
+                new ArrayObject(
+                    [
+                        new FileAttributes('in-progress/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+                        new FileAttributes('in-progress/cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'),
+                    ]
+                )
+            )
+        );
+        $filesystem->shouldReceive('listContents')->with('ready/')->andReturns(
+            new DirectoryListing(
+                new ArrayObject(
+                    [
+                        new FileAttributes('ready/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+                        new FileAttributes('ready/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'),
+                    ]
+                )
+            )
+        );
         $dao->shouldReceive('searchExistingOIDsForAuthorizedActionByExpirationAndOIDs')->andReturns([
             'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
         ]);
 
         $dao->shouldReceive('deleteByExpirationDate')->once();
-        $filesystem->shouldReceive('deleteDir')->andReturns(true)->times(3);
+        $filesystem->shouldReceive('deleteDirectory')->andReturns(true)->times(3);
 
         $remover->deleteExpired($current_time);
     }

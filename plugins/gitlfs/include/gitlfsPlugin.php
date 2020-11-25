@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemOperator;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
@@ -339,12 +340,9 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         );
     }
 
-    /**
-     * @return League\Flysystem\FilesystemInterface
-     */
-    private function getFilesystem()
+    private function getFilesystem(): FilesystemOperator
     {
-        return new Filesystem(new Local(ForgeConfig::get('sys_data_dir') . '/git-lfs/'));
+        return new Filesystem(new LocalFilesystemAdapter(ForgeConfig::get('sys_data_dir') . '/git-lfs/'));
     }
 
     public function postInitGitRepositoryWithDataEvent(PostInitGitRepositoryWithDataEvent $event)

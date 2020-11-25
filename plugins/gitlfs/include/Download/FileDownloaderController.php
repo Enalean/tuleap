@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ namespace Tuleap\GitLFS\Download;
 
 use GitRepositoryFactory;
 use HTTPRequest;
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemReader;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
@@ -51,7 +51,7 @@ class FileDownloaderController implements DispatchableWithRequest
     private $path_allocator;
 
     /**
-     * @var FilesystemInterface
+     * @var FilesystemReader
      */
     private $filesystem;
     /**
@@ -63,7 +63,7 @@ class FileDownloaderController implements DispatchableWithRequest
         GitRepositoryFactory $git_repository_factory,
         LFSObjectRetriever $lfs_object_retriever,
         LFSObjectPathAllocator $path_allocator,
-        FilesystemInterface $filesystem,
+        FilesystemReader $filesystem,
         Prometheus $prometheus
     ) {
         $this->git_repository_factory = $git_repository_factory;

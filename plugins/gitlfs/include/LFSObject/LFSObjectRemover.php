@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,7 @@
 
 namespace Tuleap\GitLFS\LFSObject;
 
-use League\Flysystem\FileNotFoundException;
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemWriter;
 use Tuleap\DB\DBTransactionExecutor;
 
 class LFSObjectRemover
@@ -35,7 +34,7 @@ class LFSObjectRemover
      */
     private $transaction_executor;
     /**
-     * @var FilesystemInterface
+     * @var FilesystemWriter
      */
     private $filesystem;
     /**
@@ -46,7 +45,7 @@ class LFSObjectRemover
     public function __construct(
         LFSObjectDAO $dao,
         DBTransactionExecutor $transaction_executor,
-        FilesystemInterface $filesystem,
+        FilesystemWriter $filesystem,
         LFSObjectPathAllocator $path_allocator
     ) {
         $this->dao                  = $dao;
@@ -55,7 +54,7 @@ class LFSObjectRemover
         $this->path_allocator       = $path_allocator;
     }
 
-    public function removeDanglingObjects(int $deletion_delay)
+    public function removeDanglingObjects(int $deletion_delay): void
     {
         $this->dao->deleteUnusableReferences($deletion_delay);
         $this->transaction_executor->execute(function () {
@@ -66,14 +65,8 @@ class LFSObjectRemover
                     $unused_object_row['object_size']
                 );
                 $expected_path = $this->path_allocator->getPathForAvailableObject($lfs_object);
-                try {
-                    $is_object_deletion_successful = $this->filesystem->delete($expected_path);
-                } catch (FileNotFoundException $ex) {
-                    $is_object_deletion_successful = true;
-                }
-                if ($is_object_deletion_successful) {
-                    $this->dao->deleteObjectByID($unused_object_row['id']);
-                }
+                $this->filesystem->delete($expected_path);
+                $this->dao->deleteObjectByID($unused_object_row['id']);
             }
         });
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,7 @@
 namespace Tuleap\GitLFS\Transfer\Basic;
 
 use HTTPRequest;
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemReader;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeDownload;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
@@ -38,7 +38,7 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
      */
     private $user_access_request_checker;
     /**
-     * @var FilesystemInterface
+     * @var FilesystemReader
      */
     private $filesystem;
     /**
@@ -52,7 +52,7 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
 
     public function __construct(
         LFSActionUserAccessHTTPRequestChecker $user_access_request_checker,
-        FilesystemInterface $filesystem,
+        FilesystemReader $filesystem,
         LFSObjectPathAllocator $path_allocator,
         Prometheus $prometheus
     ) {
@@ -62,7 +62,7 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
         $this->prometheus                  = $prometheus;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
         $authorized_action = $this->user_access_request_checker->userCanAccess(

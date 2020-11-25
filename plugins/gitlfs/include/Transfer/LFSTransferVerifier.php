@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,8 @@
 
 namespace Tuleap\GitLFS\Transfer;
 
-use League\Flysystem\FileNotFoundException;
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemOperator;
+use League\Flysystem\UnableToMoveFile;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
@@ -31,7 +31,7 @@ use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 class LFSTransferVerifier
 {
     /**
-     * @var FilesystemInterface
+     * @var FilesystemOperator
      */
     private $filesystem;
     /**
@@ -52,7 +52,7 @@ class LFSTransferVerifier
     private $transaction_executor;
 
     public function __construct(
-        FilesystemInterface $filesystem,
+        FilesystemOperator $filesystem,
         LFSObjectRetriever $lfs_object_retriever,
         LFSObjectPathAllocator $path_allocator,
         LFSObjectDAO $lfs_object_dao,
@@ -65,7 +65,7 @@ class LFSTransferVerifier
         $this->transaction_executor = $transaction_executor;
     }
 
-    public function verifyAndMarkLFSObjectAsAvailable(LFSObject $lfs_object, \GitRepository $repository)
+    public function verifyAndMarkLFSObjectAsAvailable(LFSObject $lfs_object, \GitRepository $repository): void
     {
         $object_path_ready_to_be_available = $this->path_allocator->getPathForReadyToBeAvailableObject(
             $repository,
@@ -73,42 +73,33 @@ class LFSTransferVerifier
         );
 
         if ($this->lfs_object_retriever->doesLFSObjectExistsForRepository($repository, $lfs_object)) {
-            try {
-                $this->filesystem->delete($object_path_ready_to_be_available);
-            } catch (FileNotFoundException $exception) {
-            }
+            $this->filesystem->delete($object_path_ready_to_be_available);
             return;
         }
 
         if (
-            $this->filesystem->has($object_path_ready_to_be_available) &&
+            $this->filesystem->fileExists($object_path_ready_to_be_available) &&
             $this->lfs_object_retriever->doesLFSObjectExists($lfs_object)
         ) {
             $this->lfs_object_dao->saveObjectReferenceByOIDValue(
                 $lfs_object->getOID()->getValue(),
                 $repository->getId()
             );
-            try {
-                $this->filesystem->delete($object_path_ready_to_be_available);
-            } catch (FileNotFoundException $exception) {
-            }
+            $this->filesystem->delete($object_path_ready_to_be_available);
             return;
         }
 
-        $this->transaction_executor->execute(function () use ($lfs_object, $repository) {
+        $this->transaction_executor->execute(function () use ($object_path_ready_to_be_available, $lfs_object, $repository): void {
             $object_id = $this->lfs_object_dao->saveObject($lfs_object->getOID()->getValue(), $lfs_object->getSize());
             $this->lfs_object_dao->saveObjectReference($object_id, $repository->getId());
             try {
-                $is_rename_success = $this->filesystem->rename(
-                    $this->path_allocator->getPathForReadyToBeAvailableObject($repository, $lfs_object),
+                $this->filesystem->move(
+                    $object_path_ready_to_be_available,
                     $this->path_allocator->getPathForAvailableObject($lfs_object)
                 );
-                if (! $is_rename_success) {
-                    $oid_value = $lfs_object->getOID()->getValue();
-                    throw new \RuntimeException("Cannot move LFS object $oid_value to the available objects");
-                }
-            } catch (FileNotFoundException $exception) {
-                throw new LFSTransferVerificationNotUploadedObjectException($lfs_object);
+            } catch (UnableToMoveFile $exception) {
+                $oid_value = $lfs_object->getOID()->getValue();
+                throw new \RuntimeException("Cannot move LFS object $oid_value to the available objects", 0, $exception);
             }
         });
     }

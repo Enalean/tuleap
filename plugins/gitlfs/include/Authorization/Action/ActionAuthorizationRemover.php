@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\GitLFS\Authorization\Action;
 
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemOperator;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 
 class ActionAuthorizationRemover
@@ -30,7 +30,7 @@ class ActionAuthorizationRemover
      */
     private $dao;
     /**
-     * @var FilesystemInterface
+     * @var FilesystemOperator
      */
     private $filesystem;
     /**
@@ -40,7 +40,7 @@ class ActionAuthorizationRemover
 
     public function __construct(
         ActionAuthorizationDAO $dao,
-        FilesystemInterface $filesystem,
+        FilesystemOperator $filesystem,
         LFSObjectPathAllocator $path_allocator
     ) {
         $this->dao            = $dao;
@@ -48,26 +48,26 @@ class ActionAuthorizationRemover
         $this->path_allocator = $path_allocator;
     }
 
-    public function deleteExpired(\DateTimeImmutable $current_time)
+    public function deleteExpired(\DateTimeImmutable $current_time): void
     {
         $this->cleanDB($current_time);
         $this->cleanWorkFiles($current_time);
     }
 
-    private function cleanDB(\DateTimeImmutable $current_time)
+    private function cleanDB(\DateTimeImmutable $current_time): void
     {
         $this->dao->deleteByExpirationDate($current_time->getTimestamp());
     }
 
-    private function cleanWorkFiles(\DateTimeImmutable $current_time)
+    private function cleanWorkFiles(\DateTimeImmutable $current_time): void
     {
         $current_work_objects = [];
         foreach ($this->filesystem->listContents($this->path_allocator->getBasePathForSaveInProgressObject()) as $save_in_progress_object) {
-            $path = $save_in_progress_object['path'];
+            $path = $save_in_progress_object->path();
             $current_work_objects[basename($path)] = [$path];
         }
         foreach ($this->filesystem->listContents($this->path_allocator->getBasePathForReadyToBeAvailableObject()) as $ready_object) {
-            $path = $ready_object['path'];
+            $path = $ready_object->path();
             if (isset($current_work_objects[basename($path)])) {
                 $current_work_objects[basename($path)][] = $path;
             } else {
@@ -86,7 +86,7 @@ class ActionAuthorizationRemover
                 continue;
             }
             foreach ($current_work_object_paths as $path_to_remove) {
-                $this->filesystem->deleteDir($path_to_remove);
+                $this->filesystem->deleteDirectory($path_to_remove);
             }
         }
     }
