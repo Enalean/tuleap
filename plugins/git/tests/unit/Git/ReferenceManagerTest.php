@@ -81,4 +81,13 @@ class Git_ReferenceManagerTest extends TestCase
         $ref = $this->git_reference_manager->getReference($this->project, Git::REFERENCE_KEYWORD, 'rantanplan/469eaa9');
         $this->assertEquals($reference, $ref);
     }
+
+    public function testItReturnsNullIfTheRepositoryDoesNotExist(): void
+    {
+        $this->repository_factory->shouldReceive('getRepositoryByPath')->andReturnNull();
+
+        $this->assertNull(
+            $this->git_reference_manager->getReference($this->project, Git::REFERENCE_KEYWORD, 'rantanplan/469eaa9')
+        );
+    }
 }

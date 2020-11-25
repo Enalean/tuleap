@@ -99,7 +99,7 @@ class OriginalReferencesBuilder
      */
     private function findReference($keyword, $reference): ?Reference
     {
-        $row = $this->dao->getRef($reference)->getRow();
+        $row = $this->dao->getRef($reference);
         if (empty($row)) {
             return null;
         }

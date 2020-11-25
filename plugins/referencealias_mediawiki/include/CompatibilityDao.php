@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,32 +19,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ReferenceAliasMediawiki;
 
-use DataAccessObject;
-use Project;
+use Tuleap\DB\DataAccessObject;
 
 class CompatibilityDao extends DataAccessObject
 {
-    public function insertRef(Project $project, $source, $target)
+    public function insertRef(int $project_id, string $source, string $target): bool
     {
-        $project_id = $this->da->escapeInt($project->getID());
-        $source     = $this->da->quoteSmart($source);
-        $target     = $this->da->quoteSmart($target);
-
         $sql = "REPLACE INTO plugin_referencealias_mediawiki_table(source, project_id, target)
-                VALUES($source, $project_id, $target)";
+                VALUES(?, ?, ?)";
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $source, $project_id, $target);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
-    public function getRef($source)
+    /**
+     * @psalm-return array{project_id:int, target:string}
+     */
+    public function getRef(string $source): ?array
     {
-        $source = $this->da->quoteSmart($source);
         $sql = "SELECT project_id, target
                 FROM plugin_referencealias_mediawiki_table
-                WHERE source=$source";
+                WHERE source=?";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->row($sql, $source);
     }
 }

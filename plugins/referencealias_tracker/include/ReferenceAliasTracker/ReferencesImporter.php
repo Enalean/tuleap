@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -75,14 +75,14 @@ class ReferencesImporter
             }
 
             if (! $configuration->isForce('references')) {
-                $row = $this->dao->getRef($source)->getRow();
+                $row = $this->dao->getRef($source);
                 if (! empty($row)) {
                     $this->logger->warning("The source $source already exists in the database. It will not be imported.");
                     continue;
                 }
             }
 
-            if (! $this->dao->insertRef($project, $source, $target_on_system)) {
+            if (! $this->dao->insertRef((int) $project->getID(), $source, $target_on_system)) {
                 $this->logger->error("Could not insert object for $source");
             } else {
                 $this->logger->info("Imported original ref '$source' -> $object_type $target_on_system");

@@ -61,14 +61,14 @@ class ReferencesImporter
             }
 
             if (! $configuration->isForce('references')) {
-                $row = $this->dao->getRef($source)->getRow();
+                $row = $this->dao->getRef($source);
                 if (! empty($row)) {
                     $this->logger->warning("The source $source already exists in the database. It will not be imported.");
                     continue;
                 }
             }
 
-            if (! $this->dao->insertRef($project, $source, $target)) {
+            if (! $this->dao->insertRef((int) $project->getID(), $source, $target)) {
                 $this->logger->error("Could not insert object for $source");
             } else {
                 $this->logger->info("Imported original ref '$source' -> $object_type $target");

@@ -60,7 +60,7 @@ class ReferencesImporter
             }
 
             if (! $configuration->isForce('references')) {
-                $row = $this->dao->getRef($source)->getRow();
+                $row = $this->dao->getRef($source);
                 if (! empty($row)) {
                     $this->logger->warning("The source $source already exists in the database. It will not be imported.");
                     continue;
@@ -69,7 +69,7 @@ class ReferencesImporter
 
             $repository_id = $repository->getId();
 
-            if (! $this->dao->insertRef($source, $repository_id, $sha1)) {
+            if (! $this->dao->insertRef($source, (int) $repository_id, $sha1)) {
                 $this->logger->error("Could not insert object for $source");
             } else {
                 $this->logger->info("Imported original ref '$source' -> git repo $repository_id, sha1 $sha1.");

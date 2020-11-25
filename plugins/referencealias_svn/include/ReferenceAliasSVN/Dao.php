@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2016. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,35 +19,39 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ReferenceAliasSVN;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-    public function insertRef($source, $repository_id, $revision_id)
+    public function insertRef(string $source, int $repository_id, int $revision_id): bool
     {
-        $source        = $this->da->quoteSmart($source);
-        $repository_id = $this->da->escapeInt($repository_id);
-        $revision_id   = $this->da->escapeInt($revision_id);
-
         $sql = "REPLACE INTO plugin_referencealias_svn(source, repository_id, revision_id)
-                VALUES ($source, $repository_id, $revision_id)";
+                VALUES (?, ?, ?)";
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $source, $repository_id, $revision_id);
+        } catch (\PDOException $ex) {
+            return false;
+        }
+        return true;
     }
 
-    public function getRef($source)
+    /**
+     * @psalm-return array{project_id:int, source:string, repository_id:int, revision_id:int}
+     */
+    public function getRef(string $source): ?array
     {
-        $source = $this->da->quoteSmart($source);
-
         $sql = "SELECT repo.project_id, compat.*
                 FROM plugin_referencealias_svn AS compat
                     INNER JOIN plugin_svn_repositories AS repo ON (
                         repo.id = compat.repository_id
                     )
-                WHERE source = $source";
+                WHERE source = ?";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->row($sql, $source);
     }
 }

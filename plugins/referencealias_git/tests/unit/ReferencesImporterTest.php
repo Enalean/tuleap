@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2016. All Rights Reserved.
+ * Copyright (c) Enalean SAS, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -73,7 +73,7 @@ class ReferencesImporterTest extends TestCase
 XML;
         $simple_xml = new \SimpleXMLElement($xml);
 
-        $this->dao->shouldReceive('getRef')->andReturns(\TestHelper::arrayToDar([]));
+        $this->dao->shouldReceive('getRef')->andReturns([]);
 
         $this->dao->shouldReceive('insertRef')->with('cmmt12', 123, 'le_sha1')->once();
 
