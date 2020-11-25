@@ -67,17 +67,23 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
      * @var AllBreadCrumbsForMilestoneBuilder
      */
     private $all_bread_crumbs_for_milestone_builder;
+    /**
+     * @var AgileDashboard_Milestone_Backlog_BacklogFactory
+     */
+    private $backlog_factory;
 
     public function __construct(
         PluginFactory $plugin_factory,
         Planning_MilestonePaneFactory $pane_factory,
         VisitRecorder $visit_recorder,
-        AllBreadCrumbsForMilestoneBuilder $all_bread_crumbs_for_milestone_builder
+        AllBreadCrumbsForMilestoneBuilder $all_bread_crumbs_for_milestone_builder,
+        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory
     ) {
         $this->plugin_factory                         = $plugin_factory;
         $this->pane_factory                           = $pane_factory;
         $this->visit_recorder                         = $visit_recorder;
         $this->all_bread_crumbs_for_milestone_builder = $all_bread_crumbs_for_milestone_builder;
+        $this->backlog_factory                        = $backlog_factory;
     }
 
     public function build(Codendi_Request $request): AgileDashboardRouter
@@ -119,7 +125,9 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->visit_recorder,
             $this->all_bread_crumbs_for_milestone_builder,
             new HeaderOptionsProvider(
+                $this->backlog_factory,
                 new AgileDashboard_PaneInfoIdentifier(),
+                $tracker_new_dropdown_link_presenter_builder,
                 new HeaderOptionsForPlanningProvider(
                     new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
                         \Tracker_HierarchyFactory::instance(),
@@ -129,6 +137,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                     $tracker_new_dropdown_link_presenter_builder,
                     $event_manager,
                 ),
+                $event_manager,
             ),
         );
 
@@ -137,6 +146,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         $db_connection         = DBFactory::getMainTuleapDBConnection();
         $scrum_planning_filter = new ScrumPlanningFilter($mono_milestone_checker, $planning_factory);
         $form_element_factory  = Tracker_FormElementFactory::instance();
+
         return new AgileDashboardRouter(
             $plugin,
             $milestone_factory,

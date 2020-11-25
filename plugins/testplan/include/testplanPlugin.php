@@ -21,8 +21,15 @@
 declare(strict_types=1);
 
 use FastRoute\RouteCollector;
+use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
+use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
+use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\TestManagement\GetURIForMilestoneFromTTM;
@@ -40,6 +47,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
+use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -147,6 +155,20 @@ final class testplanPlugin extends Plugin
         $tracker_factory       = TrackerFactory::instance();
         $testmanagement_config = new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), $tracker_factory);
 
+        $tracker_new_dropdown_link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
+        $event_manager = EventManager::instance();
+
+        $tracker_dao                  = new TrackerDao();
+        $planning_dao                 = new PlanningDao($tracker_dao);
+        $planning_permissions_manager = new PlanningPermissionsManager();
+        $planning_factory             = new PlanningFactory(
+            $planning_dao,
+            TrackerFactory::instance(),
+            $planning_permissions_manager
+        );
+
+        $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
+
         return new TestPlanController(
             $this->buildTemplateRenderer(),
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
@@ -167,6 +189,30 @@ final class testplanPlugin extends Plugin
                 $tracker_factory,
                 new TestPlanTestDefinitionTrackerRetriever($testmanagement_config, $tracker_factory),
                 UserHelper::instance()
+            ),
+            new HeaderOptionsProvider(
+                new AgileDashboard_Milestone_Backlog_BacklogFactory(
+                    new AgileDashboard_BacklogItemDao(),
+                    Tracker_ArtifactFactory::instance(),
+                    $planning_factory,
+                    $mono_milestone_checker,
+                    new MonoMilestoneItemsFinder(
+                        new MonoMilestoneBacklogItemDao(),
+                        Tracker_ArtifactFactory::instance()
+                    )
+                ),
+                new AgileDashboard_PaneInfoIdentifier(),
+                $tracker_new_dropdown_link_presenter_builder,
+                new HeaderOptionsForPlanningProvider(
+                    new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+                        \Tracker_HierarchyFactory::instance(),
+                        $planning_factory,
+                        $mono_milestone_checker,
+                    ),
+                    $tracker_new_dropdown_link_presenter_builder,
+                    $event_manager,
+                ),
+                $event_manager,
             ),
         );
     }

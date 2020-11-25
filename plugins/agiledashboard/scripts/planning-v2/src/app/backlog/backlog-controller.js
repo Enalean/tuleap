@@ -96,6 +96,23 @@ function BacklogController(
         initDragular();
         self.loadBacklog();
         self.loadInitialBacklogItems();
+
+        $document.find(`[data-shortcut-create-option]`).on("click", ($event) => {
+            if (!("content" in self.details.accepted_types)) {
+                return;
+            }
+            if (self.details.accepted_types.content.length === 0) {
+                return;
+            }
+
+            const clicked_tracker_id = parseInt($event.target.dataset.trackerId, 10);
+            const backlog_item_tracker = self.details.accepted_types.content.find(
+                (tracker) => tracker.id === clicked_tracker_id
+            );
+            if (backlog_item_tracker) {
+                showAddBacklogItemModal($event, backlog_item_tracker);
+            }
+        });
     }
 
     function initDragular() {

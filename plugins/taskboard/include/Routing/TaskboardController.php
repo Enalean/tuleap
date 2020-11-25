@@ -25,6 +25,7 @@ namespace Tuleap\Taskboard\Routing;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
+use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Layout\BaseLayout;
@@ -66,6 +67,10 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
      * @var VisitRecorder
      */
     private $visit_recorder;
+    /**
+     * @var HeaderOptionsProvider
+     */
+    private $header_options_provider;
 
     public function __construct(
         MilestoneExtractor $milestone_extractor,
@@ -74,15 +79,17 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         BoardPresenterBuilder $presenter_builder,
         IncludeAssets $agiledashboard_assets,
         IncludeAssets $taskboard_assets,
-        VisitRecorder $visit_recorder
+        VisitRecorder $visit_recorder,
+        HeaderOptionsProvider $header_options_provider
     ) {
-        $this->milestone_extractor   = $milestone_extractor;
-        $this->renderer              = $renderer;
-        $this->bread_crumbs_builder  = $bread_crumbs_builder;
-        $this->presenter_builder     = $presenter_builder;
-        $this->agiledashboard_assets = $agiledashboard_assets;
-        $this->taskboard_assets      = $taskboard_assets;
-        $this->visit_recorder        = $visit_recorder;
+        $this->milestone_extractor     = $milestone_extractor;
+        $this->renderer                = $renderer;
+        $this->bread_crumbs_builder    = $bread_crumbs_builder;
+        $this->presenter_builder       = $presenter_builder;
+        $this->agiledashboard_assets   = $agiledashboard_assets;
+        $this->taskboard_assets        = $taskboard_assets;
+        $this->visit_recorder          = $visit_recorder;
+        $this->header_options_provider = $header_options_provider;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -115,6 +122,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
                     ]
                 )
             );
+
             return;
         }
 
@@ -129,9 +137,22 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
             $milestone->getArtifactTitle() . ' - ' . dgettext('tuleap-taskboard', "Taskboard"),
             $this->bread_crumbs_builder->getBreadcrumbs($user, $project, $milestone),
             [],
-            ['main_classes' => ['fluid-main']]
+            $this->getHeaderOptions($user, $milestone)
         );
         $this->renderer->renderToPage('taskboard', $this->presenter_builder->getPresenter($milestone, $user));
         $service->displayFooter();
+    }
+
+    private function getHeaderOptions(\PFUser $user, \Planning_Milestone $milestone): array
+    {
+        $header_options = $this->header_options_provider->getHeaderOptions($user, $milestone, 'taskboard');
+        if (! isset($header_options['main_classes'])) {
+            $header_options['main_classes'] = [];
+        }
+        if (! in_array('fluid-main', $header_options['main_classes'], true)) {
+            $header_options['main_classes'][] = 'fluid-main';
+        }
+
+        return $header_options;
     }
 }
