@@ -82,6 +82,7 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(PlanningAdministrationDelegation::NAME);
         $this->addHook('tracker_usage', 'trackerUsage');
+        $this->addHook('project_is_deleted', 'projectIsDeleted');
 
         return parent::getHooksAndCallbacks();
     }
@@ -248,6 +249,11 @@ final class scaled_agilePlugin extends Plugin
                 'message'        => $this->getPluginInfo()->getPluginDescriptor()->getFullName()
             ];
         }
+    }
+
+    public function projectIsDeleted(): void
+    {
+        (new \Tuleap\ScaledAgile\Adapter\Workspace\WorkspaceDAO())->dropUnusedComponents();
     }
 
     private function getProjectIncrementCreatorChecker(): ProgramIncrementArtifactCreatorChecker
