@@ -29,7 +29,6 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
-use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\BrowserDetection\DetectedBrowserTest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
@@ -80,7 +79,7 @@ class TestPlanControllerTest extends TestCase
         $this->request = Mockery::mock(HTTPRequest::class);
         $this->request->shouldReceive(['getCurrentUser' => $this->user]);
 
-        $header_options_provider = Mockery::mock(HeaderOptionsProvider::class);
+        $header_options_provider = Mockery::mock(TestPlanHeaderOptionsProvider::class);
         $header_options_provider->shouldReceive(['getHeaderOptions' => []]);
 
         $this->controller = new TestPlanController(

@@ -31,12 +31,14 @@ use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\TestManagement\GetURIForMilestoneFromTTM;
 use Tuleap\TestPlan\REST\ResourcesInjector;
 use Tuleap\TestPlan\TestDefinition\EventRedirectAfterArtifactCreationOrUpdateProcessor;
 use Tuleap\TestPlan\TestDefinition\RedirectParameterInjector;
 use Tuleap\TestPlan\TestPlanController;
+use Tuleap\TestPlan\TestPlanHeaderOptionsProvider;
 use Tuleap\TestPlan\TestPlanPane;
 use Tuleap\TestPlan\TestPlanPaneDisplayable;
 use Tuleap\TestPlan\TestPlanPaneInfo;
@@ -169,6 +171,8 @@ final class testplanPlugin extends Plugin
 
         $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
 
+        $header_options_inserter = new CurrentContextSectionToHeaderOptionsInserter();
+
         return new TestPlanController(
             $this->buildTemplateRenderer(),
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
@@ -190,32 +194,40 @@ final class testplanPlugin extends Plugin
                 new TestPlanTestDefinitionTrackerRetriever($testmanagement_config, $tracker_factory),
                 UserHelper::instance()
             ),
-            new HeaderOptionsProvider(
-                new AgileDashboard_Milestone_Backlog_BacklogFactory(
-                    new AgileDashboard_BacklogItemDao(),
-                    Tracker_ArtifactFactory::instance(),
-                    $planning_factory,
-                    $mono_milestone_checker,
-                    new MonoMilestoneItemsFinder(
-                        new MonoMilestoneBacklogItemDao(),
-                        Tracker_ArtifactFactory::instance()
-                    )
-                ),
-                new AgileDashboard_PaneInfoIdentifier(),
-                $tracker_new_dropdown_link_presenter_builder,
-                new HeaderOptionsForPlanningProvider(
-                    new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
-                        \Tracker_HierarchyFactory::instance(),
+            new TestPlanHeaderOptionsProvider(
+                new HeaderOptionsProvider(
+                    new AgileDashboard_Milestone_Backlog_BacklogFactory(
+                        new AgileDashboard_BacklogItemDao(),
+                        Tracker_ArtifactFactory::instance(),
                         $planning_factory,
                         $mono_milestone_checker,
+                        new MonoMilestoneItemsFinder(
+                            new MonoMilestoneBacklogItemDao(),
+                            Tracker_ArtifactFactory::instance()
+                        )
                     ),
+                    new AgileDashboard_PaneInfoIdentifier(),
                     $tracker_new_dropdown_link_presenter_builder,
+                    new HeaderOptionsForPlanningProvider(
+                        new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+                            \Tracker_HierarchyFactory::instance(),
+                            $planning_factory,
+                            $mono_milestone_checker,
+                        ),
+                        $tracker_new_dropdown_link_presenter_builder,
+                        $event_manager,
+                        $header_options_inserter,
+                    ),
                     $event_manager,
+                    new \Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever(
+                        $planning_factory,
+                    ),
+                    $header_options_inserter,
                 ),
-                $event_manager,
-                new \Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever(
-                    $planning_factory,
-                ),
+                $testmanagement_config,
+                $tracker_factory,
+                $tracker_new_dropdown_link_presenter_builder,
+                $header_options_inserter,
             ),
         );
     }

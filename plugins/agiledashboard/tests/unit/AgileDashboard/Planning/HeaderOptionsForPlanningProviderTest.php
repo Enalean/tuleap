@@ -34,6 +34,7 @@ use Planning_VirtualTopMilestone;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
+use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\layout\NewDropdown\NewDropdownLinkPresenter;
 use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
@@ -64,6 +65,7 @@ class HeaderOptionsForPlanningProviderTest extends TestCase
             $this->submilestone_finder,
             new TrackerNewDropdownLinkPresenterBuilder(),
             $this->event_dispatcher,
+            new CurrentContextSectionToHeaderOptionsInserter(),
         );
     }
 
