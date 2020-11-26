@@ -45,7 +45,10 @@ class WebhookRepositoryRetriever
     ): GitlabRepository {
         $gitlab_repository = $this->getRepositoryObject($webhook_data);
         if ($gitlab_repository === null) {
-            throw new RepositoryNotFoundException();
+            throw new RepositoryNotFoundException(
+                $webhook_data->getGitlabProjectId(),
+                $webhook_data->getGitlabWebUrl()
+            );
         }
 
         return $gitlab_repository;
