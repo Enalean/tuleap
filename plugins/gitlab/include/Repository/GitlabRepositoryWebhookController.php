@@ -35,6 +35,7 @@ use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotFoundException;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotMatchingException;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretNotDefinedException;
+use Tuleap\Gitlab\Repository\Webhook\WebhookActions;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Request\DispatchablePSR15Compatible;
@@ -46,11 +47,6 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
      * @var WebhookDataExtractor
      */
     private $webhook_data_extractor;
-
-    /**
-     * @var GitlabRepositoryDao
-     */
-    private $gitlab_repository_dao;
 
     /**
      * @var ResponseFactoryInterface
@@ -72,13 +68,18 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
      */
     private $secret_checker;
 
+    /**
+     * @var WebhookActions
+     */
+    private $webhook_actions;
+
     public function __construct(
         WebhookDataExtractor $webhook_data_extractor,
         WebhookRepositoryRetriever $webhook_repository_retriever,
         SecretChecker $secret_checker,
-        GitlabRepositoryDao $gitlab_repository_dao,
-        ResponseFactoryInterface $response_factory,
+        WebhookActions $webhook_actions,
         LoggerInterface $logger,
+        ResponseFactoryInterface $response_factory,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
@@ -87,9 +88,9 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
         $this->webhook_data_extractor       = $webhook_data_extractor;
         $this->webhook_repository_retriever = $webhook_repository_retriever;
         $this->secret_checker               = $secret_checker;
-        $this->gitlab_repository_dao        = $gitlab_repository_dao;
         $this->response_factory             = $response_factory;
         $this->logger                       = $logger;
+        $this->webhook_actions              = $webhook_actions;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -111,11 +112,11 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
                 $request
             );
 
-            $this->gitlab_repository_dao->updateLastPushDateForRepository(
-                $gitlab_repository->getId(),
-                $current_time->getTimestamp()
+            $this->webhook_actions->performActions(
+                $gitlab_repository,
+                $webhook_data,
+                $current_time
             );
-            $this->logger->info("Last update date successfully updated for GitLab repository #" . $gitlab_repository->getId());
 
             return $this->response_factory->createResponse(200);
         } catch (RepositoryNotFoundException $exception) {
