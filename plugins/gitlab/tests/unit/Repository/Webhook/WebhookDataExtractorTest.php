@@ -21,67 +21,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-use DateTimeImmutable;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotFoundException;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretHeaderNotMatchingException;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
+use Psr\Log\NullLogger;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 
 class WebhookDataExtractorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var GitlabRepository
-     */
-    private $gitlab_repository;
-
     /**
      * @var WebhookDataExtractor
      */
-    private $data_extractor;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryFactory
-     */
-    private $gitlab_repository_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SecretRetriever
-     */
-    private $secret_retriever;
-
-    /**
-     * @var SecretChecker
-     */
-    private $secret_checker;
+    private $extractor;
 
     protected function setUp(): void
     {
-        $this->gitlab_repository = new GitlabRepository(
-            1,
-            123456,
-            'path/repo01',
-            'description',
-            'https://example.com/path/repo01',
-            new DateTimeImmutable()
+        parent::setUp();
+
+        $this->post_push_commit_webhook_data_extractor = new PostPushCommitWebhookDataExtractor(
+            new NullLogger()
         );
 
-        $this->gitlab_repository_factory = Mockery::mock(GitlabRepositoryFactory::class);
-        $this->secret_retriever          = Mockery::mock(SecretRetriever::class);
-        $this->secret_checker            = new SecretChecker($this->secret_retriever);
-
-        $this->data_extractor = new WebhookDataExtractor(
-            $this->gitlab_repository_factory,
-            $this->secret_checker
+        $this->extractor = new WebhookDataExtractor(
+            $this->post_push_commit_webhook_data_extractor
         );
     }
 
@@ -93,7 +55,7 @@ class WebhookDataExtractorTest extends TestCase
 
         $this->expectException(MissingKeyException::class);
 
-        $this->data_extractor->retrieveRepositoryFromWebhookContent(
+        $this->extractor->retrieveWebhookData(
             $request
         );
     }
@@ -108,7 +70,7 @@ class WebhookDataExtractorTest extends TestCase
 
         $this->expectException(EventNotAllowedException::class);
 
-        $this->data_extractor->retrieveRepositoryFromWebhookContent(
+        $this->extractor->retrieveWebhookData(
             $request
         );
     }
@@ -123,7 +85,7 @@ class WebhookDataExtractorTest extends TestCase
 
         $this->expectException(MissingKeyException::class);
 
-        $this->data_extractor->retrieveRepositoryFromWebhookContent(
+        $this->extractor->retrieveWebhookData(
             $request
         );
     }
@@ -138,7 +100,7 @@ class WebhookDataExtractorTest extends TestCase
 
         $this->expectException(MissingKeyException::class);
 
-        $this->data_extractor->retrieveRepositoryFromWebhookContent(
+        $this->extractor->retrieveWebhookData(
             $request
         );
     }
@@ -147,117 +109,44 @@ class WebhookDataExtractorTest extends TestCase
     {
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_name": "push", "project":{"id": 123456}}'
+                '{"event_name": "push", "project":{"id": 123456}, "commits": []}'
             )
         );
 
         $this->expectException(MissingKeyException::class);
 
-        $this->data_extractor->retrieveRepositoryFromWebhookContent(
+        $this->extractor->retrieveWebhookData(
             $request
         );
     }
 
-    public function testItThrowsAnExceptionIfRepositoryNotFound(): void
+    public function testItRetrievesPostPushWebhookData(): void
     {
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_name": "push", "project":{"id": 123456, "web_url": "https://example.com/path/repo01"}}'
+                '{"event_name": "push",
+                  "project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
+                  "commits": [
+                      {
+                          "id": "feff4ced04b237abb8b4a50b4160099313152c3c",
+                          "message": "commit 01"
+                      },
+                      {
+                          "id": "08596fb6360bcc951a06471c616f8bc77800d4f4",
+                          "message": "commit 02"
+                      }
+                  ]
+                }'
             )
         );
 
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdandPath')
-            ->once()
-            ->with(123456, 'https://example.com/path/repo01')
-            ->andReturnNull();
-
-        $this->expectException(RepositoryNotFoundException::class);
-
-        $this->data_extractor->retrieveRepositoryFromWebhookContent(
-            $request
-        );
-    }
-
-    public function testItThrowsAnExceptionIfSecretHeaderNotFound(): void
-    {
-        $request = (new NullServerRequest())->withBody(
-            HTTPFactoryBuilder::streamFactory()->createStream(
-                '{"event_name": "push", "project":{"id": 123456, "web_url": "https://example.com/path/repo01"}}'
-            )
-        );
-
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdandPath')
-            ->once()
-            ->with(123456, 'https://example.com/path/repo01')
-            ->andReturn($this->gitlab_repository);
-
-        $this->expectException(SecretHeaderNotFoundException::class);
-
-        $this->data_extractor->retrieveRepositoryFromWebhookContent(
-            $request
-        );
-    }
-
-    public function testItThrowsAnExceptionIfSecretHeaderNotMatching(): void
-    {
-        $request = (new NullServerRequest())
-            ->withBody(
-                HTTPFactoryBuilder::streamFactory()->createStream(
-                    '{"event_name": "push", "project":{"id": 123456, "web_url": "https://example.com/path/repo01"}}'
-                )
-            )
-            ->withHeader(
-                'X-Gitlab-Token',
-                'secret'
-            );
-
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdandPath')
-            ->once()
-            ->with(123456, 'https://example.com/path/repo01')
-            ->andReturn($this->gitlab_repository);
-
-        $this->secret_retriever->shouldReceive('getWebhookSecretForRepository')
-            ->once()
-            ->with($this->gitlab_repository)
-            ->andReturn(new ConcealedString('anotherSecret'));
-
-        $this->expectException(SecretHeaderNotMatchingException::class);
-
-        $this->data_extractor->retrieveRepositoryFromWebhookContent(
-            $request
-        );
-    }
-
-    public function testItReturnsTheGitlabRepository(): void
-    {
-        $request = (new NullServerRequest())
-            ->withBody(
-                HTTPFactoryBuilder::streamFactory()->createStream(
-                    '{"event_name": "push", "project":{"id": 123456, "web_url": "https://example.com/path/repo01"}}'
-                )
-            )
-            ->withHeader(
-                'X-Gitlab-Token',
-                'secret'
-            );
-
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdandPath')
-            ->once()
-            ->with(123456, 'https://example.com/path/repo01')
-            ->andReturn($this->gitlab_repository);
-
-        $this->secret_retriever->shouldReceive('getWebhookSecretForRepository')
-            ->once()
-            ->with($this->gitlab_repository)
-            ->andReturn(new ConcealedString('secret'));
-
-        $repository = $this->data_extractor->retrieveRepositoryFromWebhookContent(
+        $webhook_data = $this->extractor->retrieveWebhookData(
             $request
         );
 
-        $this->assertSame(
-            $this->gitlab_repository,
-            $repository
-        );
+        $this->assertSame("push", $webhook_data->getEventName());
+        $this->assertSame(123456, $webhook_data->getGitlabProjectId());
+        $this->assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
+        $this->assertCount(2, $webhook_data->getCommits());
     }
 }

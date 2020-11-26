@@ -24,10 +24,12 @@ use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
+use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Request\CollectRoutesEvent;
@@ -47,7 +49,6 @@ class gitlabPlugin extends Plugin
         $this->setScope(self::SCOPE_PROJECT);
         bindtextdomain('tuleap-gitlab', __DIR__ . '/../site-content');
     }
-
 
     public function getPluginInfo(): PluginInfo
     {
@@ -113,21 +114,28 @@ class gitlabPlugin extends Plugin
 
     public function routePostGitlabRepositoryWebhook(): GitlabRepositoryWebhookController
     {
+        $logger = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
+
         return new GitlabRepositoryWebhookController(
             new WebhookDataExtractor(
+                new PostPushCommitWebhookDataExtractor(
+                    $logger
+                )
+            ),
+            new WebhookRepositoryRetriever(
                 new GitlabRepositoryFactory(
                     new GitlabRepositoryDao()
-                ),
-                new SecretChecker(
-                    new SecretRetriever(
-                        new SecretDao(),
-                        new KeyFactory()
-                    )
-                ),
+                )
+            ),
+            new SecretChecker(
+                new SecretRetriever(
+                    new SecretDao(),
+                    new KeyFactory()
+                )
             ),
             new GitlabRepositoryDao(),
             HTTPFactoryBuilder::responseFactory(),
-            BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER),
+            $logger,
             new SapiEmitter()
         );
     }
