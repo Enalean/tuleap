@@ -138,6 +138,9 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                     $event_manager,
                 ),
                 $event_manager,
+                new \Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever(
+                    $planning_factory,
+                ),
             ),
         );
 

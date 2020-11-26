@@ -62,11 +62,16 @@ class HeaderOptionsProviderTest extends TestCase
      * @var AgileDashboard_Milestone_Backlog_Backlog|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $backlog;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ParentTrackerRetriever
+     */
+    private $parent_retriever;
 
     protected function setUp(): void
     {
         $backlog_factory        = Mockery::mock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
         $this->event_dispatcher = Mockery::mock(EventDispatcherInterface::class);
+        $this->parent_retriever = Mockery::mock(ParentTrackerRetriever::class);
 
         $this->header_options_for_planning_provider = Mockery::mock(HeaderOptionsForPlanningProvider::class);
 
@@ -76,6 +81,7 @@ class HeaderOptionsProviderTest extends TestCase
             new TrackerNewDropdownLinkPresenterBuilder(),
             $this->header_options_for_planning_provider,
             $this->event_dispatcher,
+            $this->parent_retriever,
         );
 
         $this->user      = Mockery::mock(\PFUser::class);
@@ -94,6 +100,7 @@ class HeaderOptionsProviderTest extends TestCase
     {
         $this->header_options_for_planning_provider->shouldReceive('addPlanningOptions')->once();
         $this->backlog->shouldReceive(['getDescendantTrackers' => []]);
+        $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => []]);
 
         self::assertEquals(
             [
@@ -108,6 +115,7 @@ class HeaderOptionsProviderTest extends TestCase
     {
         $this->header_options_for_planning_provider->shouldReceive('addPlanningOptions')->once();
         $this->backlog->shouldReceive(['getDescendantTrackers' => []]);
+        $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => []]);
 
         self::assertEquals(
             [
@@ -121,6 +129,7 @@ class HeaderOptionsProviderTest extends TestCase
     public function testGetHeaderOptionsForOverview(): void
     {
         $this->backlog->shouldReceive(['getDescendantTrackers' => []]);
+        $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => []]);
 
         self::assertEquals(
             [
@@ -133,6 +142,17 @@ class HeaderOptionsProviderTest extends TestCase
 
     public function testCurrentContextSectionForMilestone(): void
     {
+        $epic = Mockery::mock(Tracker::class)
+            ->shouldReceive(
+                [
+                    'getId'                 => 101,
+                    'getSubmitUrl'          => '/path/to/101',
+                    'getItemName'           => 'epic',
+                    'userCanSubmitArtifact' => true
+                ]
+            )
+            ->getMock();
+
         $story = Mockery::mock(Tracker::class)
             ->shouldReceive(
                 [
@@ -162,21 +182,45 @@ class HeaderOptionsProviderTest extends TestCase
                     'getSubmitUrl'          => '/path/to/104',
                     'getItemName'           => 'task',
                     'userCanSubmitArtifact' => true
+                ]
+            )
+            ->getMock();
+
+        $top_requirement = Mockery::mock(Tracker::class)
+            ->shouldReceive(
+                [
+                    'getId'                 => 105,
+                    'getSubmitUrl'          => '/path/to/105',
+                    'getItemName'           => 'top',
+                    'userCanSubmitArtifact' => false
                 ]
             )
             ->getMock();
 
         $this->backlog->shouldReceive(['getDescendantTrackers' => [$story, $requirement, $task]]);
+        $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => [$epic, $top_requirement]]);
 
         $header_options = $this->provider->getHeaderOptions($this->user, $this->milestone, 'details');
         self::assertEquals('Milestone title', $header_options['new_dropdown_current_context_section']->label);
-        self::assertCount(2, $header_options['new_dropdown_current_context_section']->links);
+        self::assertCount(3, $header_options['new_dropdown_current_context_section']->links);
         self::assertEquals('New story', $header_options['new_dropdown_current_context_section']->links[0]->label);
         self::assertEquals('New task', $header_options['new_dropdown_current_context_section']->links[1]->label);
+        self::assertEquals('New epic', $header_options['new_dropdown_current_context_section']->links[2]->label);
     }
 
     public function testCurrentContextSectionForTopBacklog(): void
     {
+        $epic = Mockery::mock(Tracker::class)
+            ->shouldReceive(
+                [
+                    'getId'                 => 101,
+                    'getSubmitUrl'          => '/path/to/101',
+                    'getItemName'           => 'epic',
+                    'userCanSubmitArtifact' => true
+                ]
+            )
+            ->getMock();
+
         $story = Mockery::mock(Tracker::class)
             ->shouldReceive(
                 [
@@ -206,6 +250,17 @@ class HeaderOptionsProviderTest extends TestCase
                     'getSubmitUrl'          => '/path/to/104',
                     'getItemName'           => 'task',
                     'userCanSubmitArtifact' => true
+                ]
+            )
+            ->getMock();
+
+        $top_requirement = Mockery::mock(Tracker::class)
+            ->shouldReceive(
+                [
+                    'getId'                 => 105,
+                    'getSubmitUrl'          => '/path/to/105',
+                    'getItemName'           => 'top',
+                    'userCanSubmitArtifact' => false
                 ]
             )
             ->getMock();
@@ -224,6 +279,7 @@ class HeaderOptionsProviderTest extends TestCase
                         )->getMock(),
                 ]
             )->getMock();
+        $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => [$epic, $top_requirement]]);
 
         $event = Mockery::mock(DisplayTopPlanningAppEvent::class)
             ->shouldReceive(['canBacklogItemsBeAdded' => true])
@@ -236,8 +292,9 @@ class HeaderOptionsProviderTest extends TestCase
 
         $header_options = $this->provider->getHeaderOptions($this->user, $top_milestone, 'details');
         self::assertEquals('Top backlog', $header_options['new_dropdown_current_context_section']->label);
-        self::assertCount(2, $header_options['new_dropdown_current_context_section']->links);
+        self::assertCount(3, $header_options['new_dropdown_current_context_section']->links);
         self::assertEquals('New story', $header_options['new_dropdown_current_context_section']->links[0]->label);
         self::assertEquals('New task', $header_options['new_dropdown_current_context_section']->links[1]->label);
+        self::assertEquals('New epic', $header_options['new_dropdown_current_context_section']->links[2]->label);
     }
 }

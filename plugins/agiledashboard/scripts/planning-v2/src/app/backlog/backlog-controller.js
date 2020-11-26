@@ -111,6 +111,17 @@ function BacklogController(
             );
             if (backlog_item_tracker) {
                 showAddBacklogItemModal($event, backlog_item_tracker);
+                return;
+            }
+
+            if (self.details.accepted_types.parent_trackers.length === 0) {
+                return;
+            }
+            const parent_tracker = self.details.accepted_types.parent_trackers.find(
+                (tracker) => tracker.id === clicked_tracker_id
+            );
+            if (parent_tracker) {
+                showAddBacklogItemModal($event, parent_tracker);
             }
         });
     }

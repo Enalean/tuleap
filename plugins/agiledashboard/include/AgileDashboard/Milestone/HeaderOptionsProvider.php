@@ -56,19 +56,25 @@ class HeaderOptionsProvider
      * @var EventDispatcherInterface
      */
     private $event_dispatcher;
+    /**
+     * @var ParentTrackerRetriever
+     */
+    private $parent_tracker_retriever;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         AgileDashboard_PaneInfoIdentifier $pane_info_identifier,
         TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
         HeaderOptionsForPlanningProvider $header_options_for_planning_provider,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
+        ParentTrackerRetriever $parent_tracker_retriever
     ) {
         $this->backlog_factory                      = $backlog_factory;
         $this->pane_info_identifier                 = $pane_info_identifier;
         $this->presenter_builder                    = $presenter_builder;
         $this->header_options_for_planning_provider = $header_options_for_planning_provider;
         $this->event_dispatcher                     = $event_dispatcher;
+        $this->parent_tracker_retriever             = $parent_tracker_retriever;
     }
 
     public function getHeaderOptions(PFUser $user, Planning_Milestone $milestone, string $identifier): array
@@ -98,6 +104,7 @@ class HeaderOptionsProvider
             $this->createCurrentContextSectionForTopBacklog($milestone, $user, $header_options);
         } else {
             $this->createCurrentContextSectionFromTrackers(
+                $milestone,
                 $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers(),
                 $user,
                 (string) $milestone->getArtifactTitle(),
@@ -107,13 +114,15 @@ class HeaderOptionsProvider
     }
 
     private function createCurrentContextSectionFromTrackers(
+        Planning_Milestone $milestone,
         array $trackers,
         PFUser $user,
         string $section_label,
         array &$header_options
     ): void {
+        $parent_trackers = $this->parent_tracker_retriever->getCreatableParentTrackers($milestone, $user, $trackers);
         $links = [];
-        foreach ($trackers as $tracker) {
+        foreach (array_merge($trackers, $parent_trackers) as $tracker) {
             if ($tracker->userCanSubmitArtifact($user)) {
                 $links[] = $this->presenter_builder->build($tracker);
             }
@@ -137,6 +146,7 @@ class HeaderOptionsProvider
             return;
         }
         $this->createCurrentContextSectionFromTrackers(
+            $milestone,
             $milestone->getPlanning()->getBacklogTrackers(),
             $user,
             dgettext('tuleap-agiledashboard', 'Top backlog'),
