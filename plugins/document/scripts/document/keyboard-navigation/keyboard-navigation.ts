@@ -29,7 +29,8 @@ import { clickOnDatashortcutElement } from "./click-on-datashortcut-element";
 
 export function setupDocumentShortcuts(gettext_provider: GettextProvider): void {
     const move_to_bottom_file: Shortcut = {
-        keyboard_inputs: "ctrl+down",
+        keyboard_inputs: "ctrl+k,ctrl+down",
+        displayed_inputs: "Ctrl+k,Ctrl+↓",
         description: gettext_provider.$gettext("Select bottom item"),
         handle: () => {
             callNavigationShortcut(document, Direction.bottom);
@@ -37,7 +38,8 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
     };
 
     const move_to_top_file: Shortcut = {
-        keyboard_inputs: "ctrl+up",
+        keyboard_inputs: "ctrl+j,ctrl+up",
+        displayed_inputs: "Ctrl+j,Ctrl+↑",
         description: gettext_provider.$gettext("Select top item"),
         handle: () => {
             callNavigationShortcut(document, Direction.top);
@@ -46,6 +48,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const move_to_previous_file: Shortcut = {
         keyboard_inputs: "j,up",
+        displayed_inputs: "j,↑",
         description: gettext_provider.$gettext("Select previous item"),
         handle: () => {
             callNavigationShortcut(document, Direction.previous);
@@ -54,6 +57,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const move_to_next_file: Shortcut = {
         keyboard_inputs: "k,down",
+        displayed_inputs: "k,↓",
         description: gettext_provider.$gettext("Select next item"),
         handle: () => {
             callNavigationShortcut(document, Direction.next);
@@ -61,7 +65,8 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
     };
 
     const toggle_folder: Shortcut = {
-        keyboard_inputs: "right",
+        keyboard_inputs: "l,right",
+        displayed_inputs: "l,→",
         description: gettext_provider.$gettext("Toggle selected folder open and closed"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-folder-toggle]");
@@ -120,6 +125,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const delete_document: Shortcut = {
         keyboard_inputs: "delete",
+        displayed_inputs: gettext_provider.$pgettext("keyboard key", "Delete"),
         description: gettext_provider.$gettext("Delete current folder or selected item"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-delete]");
@@ -128,6 +134,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const cut_document: Shortcut = {
         keyboard_inputs: "ctrl+x",
+        displayed_inputs: "Ctrl+x",
         description: gettext_provider.$gettext("Cut current folder or selected item"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-cut]");
@@ -136,6 +143,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const copy_document: Shortcut = {
         keyboard_inputs: "ctrl+c",
+        displayed_inputs: "Ctrl+c",
         description: gettext_provider.$gettext("Copy current folder or selected item"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-copy]");
@@ -144,6 +152,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const paste_document: Shortcut = {
         keyboard_inputs: "ctrl+v",
+        displayed_inputs: "Ctrl+v",
         description: gettext_provider.$gettext("Paste in current or selected folder"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-paste]");

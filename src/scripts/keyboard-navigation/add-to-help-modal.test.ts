@@ -35,6 +35,7 @@ describe("add-to-help-modal.ts", () => {
 
     const shortcut_simple = {
         keyboard_inputs: "a",
+        displayed_inputs: "c",
         description: "description",
     } as Shortcut;
 
@@ -68,6 +69,20 @@ describe("add-to-help-modal.ts", () => {
 
             expect(keyboard_inputs_cell?.childNodes.length).toBe(1);
             expect(keyboard_input_element?.hasChildNodes()).toBe(false);
+        });
+
+        it("displays a different keyboard input if there is one provided", () => {
+            addToShortcutsModalTable(doc, cell_id, shortcut_simple);
+
+            shortcut_row = shortcuts_table.firstChild;
+            keyboard_inputs_cell = shortcut_row?.firstChild;
+            keyboard_input_element = keyboard_inputs_cell?.firstChild;
+
+            if (!(keyboard_input_element instanceof HTMLElement)) {
+                keyboard_input_element = null;
+            }
+
+            expect(keyboard_input_element?.innerText).toBe("c");
         });
 
         it("inserts two kbd elements separated by ' / ' if there are two shortcuts options", () => {

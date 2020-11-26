@@ -26,4 +26,5 @@ export enum Direction {
 
 export interface GettextProvider {
     $gettext: (msgid: string) => string;
+    $pgettext: (context: string, msgid: string) => string;
 }

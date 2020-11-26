@@ -117,6 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const gettext_provider = {
         $gettext: Vue.prototype.$gettext,
+        $pgettext: Vue.prototype.$pgettext,
     };
     setupDocumentShortcuts(gettext_provider);
 });

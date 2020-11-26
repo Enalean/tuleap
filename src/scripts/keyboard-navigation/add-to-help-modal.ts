@@ -50,13 +50,16 @@ function createKeyboardInputsCell(
     keyboard_inputs_cell.classList.add("help-modal-shortcuts-kbds");
     keyboard_inputs_cell.headers = `shortcut ${cells_id}`;
 
-    const keyboard_inputs_array = shortcut.keyboard_inputs.split(",");
+    const keyboard_inputs = shortcut.displayed_inputs
+        ? shortcut.displayed_inputs
+        : shortcut.keyboard_inputs;
 
-    keyboard_inputs_array.forEach((keyboard_input, i = 0) => {
+    const keyboard_inputs_parts = keyboard_inputs.split(",");
+    keyboard_inputs_parts.forEach((keyboard_input, i = 0) => {
         const keyboard_input_element = createKeyboardInputElement(doc, keyboard_input);
         keyboard_inputs_cell.append(keyboard_input_element);
 
-        if (i < keyboard_inputs_array.length - 1) {
+        if (i < keyboard_inputs_parts.length - 1) {
             keyboard_inputs_cell.append(" / ");
         }
         i++;

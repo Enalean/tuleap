@@ -183,6 +183,10 @@ msgstr "Propriétés par défaut"
 msgid "Delete"
 msgstr "Supprimer"
 
+msgctxt "keyboard key"
+msgid "Delete"
+msgstr "Suppr"
+
 msgid "Delete current folder or selected item"
 msgstr "Supprimer le dossier courant ou l'élément sélectionné"
 
