@@ -94,6 +94,14 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
 
     abstract public function getLabel();
 
+    /**
+     * Get the data to bind on select <option> through a data- attribute
+     */
+    public function getDataset(): array
+    {
+        return [];
+    }
+
     public function fetchFormatted()
     {
         return Codendi_HTMLPurifier::instance()->purify(html_entity_decode($this->getLabel()));

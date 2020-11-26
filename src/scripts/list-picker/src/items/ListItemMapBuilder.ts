@@ -77,7 +77,6 @@ export class ListItemMapBuilder {
         is_disabled: boolean
     ): HTMLElement {
         const list_item = document.createElement("li");
-        list_item.appendChild(document.createTextNode(template));
         list_item.innerHTML = sanitize(template);
         list_item.setAttribute("role", "option");
         list_item.setAttribute("aria-selected", "false");
@@ -117,6 +116,15 @@ export class ListItemMapBuilder {
         }
 
         const option_label = this.getOptionsLabel(option);
+        const avatar_url = option.dataset.avatarUrl;
+        if (avatar_url && avatar_url !== "") {
+            return `
+                <span class="list-picker-avatar">
+                    <img src="${avatar_url}" loading="lazy"/>
+                </span>
+                ${option_label}
+            `;
+        }
         if (this.options && this.options.items_template_formatter) {
             const custom_template = await this.options.items_template_formatter(
                 option.value,

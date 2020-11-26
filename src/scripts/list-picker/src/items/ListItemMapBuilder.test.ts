@@ -255,4 +255,33 @@ describe("ListItemBuilder", () => {
             expect(itemsTemplateFormatter).toHaveBeenCalledTimes(5);
         });
     });
+
+    describe("When options have a data-avatar-url attribute", () => {
+        it("should create an image with the url found on the option", async () => {
+            const option_with_image = document.createElement("option");
+            option_with_image.appendChild(document.createTextNode("John Doe (jdoe)"));
+            option_with_image.setAttribute("data-avatar-url", "/url/to/jdoe/avatar.png");
+            option_with_image.setAttribute("value", "101");
+
+            select.appendChild(option_with_image);
+
+            const map = await builder.buildListPickerItemsMap();
+            const items = map.entries();
+
+            expect(items.next().value).toEqual([
+                "list-picker-item-101",
+                {
+                    id: "list-picker-item-101",
+                    template: expect.stringContaining('<img src="/url/to/jdoe/avatar.png"'),
+                    label: "John Doe (jdoe)",
+                    value: "101",
+                    is_disabled: false,
+                    group_id: "",
+                    is_selected: false,
+                    element: expect.any(Element),
+                    target_option: expect.any(Element),
+                },
+            ]);
+        });
+    });
 });
