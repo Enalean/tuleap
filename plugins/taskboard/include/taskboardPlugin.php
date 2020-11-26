@@ -173,6 +173,9 @@ class taskboardPlugin extends Plugin
                     $event_manager,
                 ),
                 $event_manager,
+                new \Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever(
+                    $planning_factory,
+                ),
             ),
         );
     }
