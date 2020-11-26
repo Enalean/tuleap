@@ -33,6 +33,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 
 class MarkTrackerAsDeletedController implements DispatchableWithRequest
 {
@@ -53,17 +54,23 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
      * @var ReferenceManager
      */
     private $reference_manager;
+    /**
+     * @var GlobalAdminPermissionsChecker
+     */
+    private $permissions_checker;
 
     public function __construct(
         TrackerFactory $tracker_factory,
+        GlobalAdminPermissionsChecker $permissions_checker,
         CSRFSynchronizerTokenProvider $token_provider,
         EventManager $event_manager,
         ReferenceManager $reference_manager
     ) {
-        $this->tracker_factory   = $tracker_factory;
-        $this->token_provider    = $token_provider;
-        $this->event_manager     = $event_manager;
-        $this->reference_manager = $reference_manager;
+        $this->tracker_factory     = $tracker_factory;
+        $this->token_provider      = $token_provider;
+        $this->event_manager       = $event_manager;
+        $this->reference_manager   = $reference_manager;
+        $this->permissions_checker = $permissions_checker;
     }
 
     public static function getURL(Tracker $tracker): string
@@ -74,7 +81,12 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $tracker = $this->getTracker($variables);
-        if (! $tracker->userCanDeleteTracker($request->getCurrentUser())) {
+        if (
+            ! $this->permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject(
+                $tracker->getProject(),
+                $request->getCurrentUser()
+            )
+        ) {
             throw new ForbiddenException();
         }
 

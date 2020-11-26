@@ -38,6 +38,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 
 class MarkTrackerAsDeletedControllerTest extends TestCase
 {
@@ -72,16 +73,22 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
      * @var \CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $csrf;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GlobalAdminPermissionsChecker
+     */
+    private $permissions_checker;
 
     protected function setUp(): void
     {
-        $token_provider          = Mockery::mock(CSRFSynchronizerTokenProvider::class);
-        $this->tracker_factory   = Mockery::mock(TrackerFactory::class);
-        $this->event_manager     = Mockery::mock(EventManager::class);
-        $this->reference_manager = Mockery::mock(ReferenceManager::class);
+        $token_provider            = Mockery::mock(CSRFSynchronizerTokenProvider::class);
+        $this->tracker_factory     = Mockery::mock(TrackerFactory::class);
+        $this->event_manager       = Mockery::mock(EventManager::class);
+        $this->reference_manager   = Mockery::mock(ReferenceManager::class);
+        $this->permissions_checker = Mockery::mock(GlobalAdminPermissionsChecker::class);
 
         $this->controller = new MarkTrackerAsDeletedController(
             $this->tracker_factory,
+            $this->permissions_checker,
             $token_provider,
             $this->event_manager,
             $this->reference_manager,
@@ -135,10 +142,16 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
         $tracker = Mockery::mock(Tracker::class)
             ->shouldReceive(
                 [
-                    'isDeleted'            => false,
-                    'userCanDeleteTracker' => false,
+                    'isDeleted'  => false,
+                    'getProject' => $this->project,
                 ]
             )->getMock();
+
+        $this->permissions_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->with($this->project, $this->user)
+            ->once()
+            ->andReturnFalse();
 
         $this->tracker_factory
             ->shouldReceive('getTrackerById')
@@ -160,7 +173,6 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
             ->shouldReceive(
                 [
                     'isDeleted'                                  => false,
-                    'userCanDeleteTracker'                       => true,
                     'getProject'                                 => $this->project,
                     'getInformationsFromOtherServicesAboutUsage' => [
                         'can_be_deleted' => false,
@@ -168,6 +180,12 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
                     ]
                 ]
             )->getMock();
+
+        $this->permissions_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->with($this->project, $this->user)
+            ->once()
+            ->andReturnTrue();
 
         $this->tracker_factory
             ->shouldReceive('getTrackerById')
@@ -195,13 +213,18 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
                     'getId'                                      => 102,
                     'getName'                                    => 'User story',
                     'isDeleted'                                  => false,
-                    'userCanDeleteTracker'                       => true,
                     'getProject'                                 => $this->project,
                     'getInformationsFromOtherServicesAboutUsage' => [
                         'can_be_deleted' => true,
                     ]
                 ]
             )->getMock();
+
+        $this->permissions_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->with($this->project, $this->user)
+            ->once()
+            ->andReturnTrue();
 
         $this->tracker_factory
             ->shouldReceive('getTrackerById')
@@ -240,13 +263,18 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
                     'getName'                                    => 'User story',
                     'getItemName'                                => 'Story',
                     'isDeleted'                                  => false,
-                    'userCanDeleteTracker'                       => true,
                     'getProject'                                 => $this->project,
                     'getInformationsFromOtherServicesAboutUsage' => [
                         'can_be_deleted' => true,
                     ]
                 ]
             )->getMock();
+
+        $this->permissions_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->with($this->project, $this->user)
+            ->once()
+            ->andReturnTrue();
 
         $this->tracker_factory
             ->shouldReceive('getTrackerById')

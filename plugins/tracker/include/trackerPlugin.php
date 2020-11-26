@@ -2025,6 +2025,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return new MarkTrackerAsDeletedController(
             TrackerFactory::instance(),
+            new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
+                new User_ForgeUserGroupPermissionsManager(
+                    new User_ForgeUserGroupPermissionsDao()
+                )
+            ),
             new CSRFSynchronizerTokenProvider(),
             EventManager::instance(),
             ReferenceManager::instance()

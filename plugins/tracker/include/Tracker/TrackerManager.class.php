@@ -581,35 +581,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 }
 
                 if ($stats !== null) {
-                    $html .= ' <span class="trackers-homepage-tracker-badge tlp-badge-' . $hp->purify($tracker->getColor()->getName()) . ' tlp-badge-outline">';
+                    $html .= '<span class="trackers-homepage-tracker-spacer"></span>';
+                    $html .= '<span class="trackers-homepage-tracker-badge tlp-badge-' . $hp->purify($tracker->getColor()->getName()) . ' tlp-badge-outline">';
                     if ($tracker->hasSemanticsStatus() && $stats->getNbOpenArtifacts() > 0) {
                         $html .= $stats->getNbOpenArtifacts() . ' ' . dgettext('tuleap-tracker', 'open') . ' / ';
                     }
                     $html .= $stats->getNbTotalArtifacts() . ' ' . dgettext('tuleap-tracker', 'total');
                     $html .= '</span>';
-                }
-
-
-                $used_in_other_services_infos = $tracker->getInformationsFromOtherServicesAboutUsage();
-
-                if ($is_tracker_admin) {
-                    if ($used_in_other_services_infos['can_be_deleted']) {
-                        $html .= '<span class="trackers-homepage-tracker-spacer"></span>
-                                  <span
-                                    class="trackers-homepage-tracker-trash tlp-tooltip tlp-tooltip-left"
-                                    data-tlp-tooltip="' . sprintf(dgettext('tuleap-tracker', 'Delete tracker %1$s'), $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML)) . '"
-                                    data-tracker-id="' . $hp->purify($tracker->getId()) . '"
-                                    data-tracker-name="' . $hp->purify($tracker->getName()) . '"
-                                  >
-                                    <i class="far fa-trash-alt"></i>
-                                  </span>';
-                    } else {
-                        $cannot_delete_message = sprintf(dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'), $used_in_other_services_infos['message']);
-                        $html .= '<span class="trackers-homepage-tracker-spacer"></span>
-                                <span class="trackers-homepage-tracker-trash disabled tlp-tooltip tlp-tooltip-left" data-tlp-tooltip="' . $cannot_delete_message . '">';
-                        $html .= '<i class="far fa-trash-alt"></i>';
-                        $html .= '</span>';
-                    }
                 }
 
                 $html .= '</span>';
@@ -620,12 +598,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 $html .= $tracker->fetchStatsTooltip($user);
             }
         }
-
-        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/tracker-homepage/');
-        $html    .= $renderer->renderToString(
-            'tracker-delete-modal',
-            ['csrf_token' => new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?group_id=' . urlencode((string) $project->getID()))]
-        );
 
         $html .= '</div>';
 
