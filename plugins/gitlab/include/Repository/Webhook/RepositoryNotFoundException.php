@@ -23,4 +23,10 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 
 class RepositoryNotFoundException extends \RuntimeException
 {
+    public function __construct(int $gitlab_repository_id, string $gitlab_repository_web_url)
+    {
+        parent::__construct(
+            "GitLab repository with ID #$gitlab_repository_id and with web URL $gitlab_repository_web_url not found."
+        );
+    }
 }
