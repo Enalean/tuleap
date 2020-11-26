@@ -27,4 +27,6 @@ interface TeamStore
     public function save(TeamCollection $team_collection): void;
 
     public function isATeam(int $team_project_id): bool;
+
+    public function getProgramIncrementOfTeam(int $team_project_id): int;
 }

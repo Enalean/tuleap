@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
@@ -30,9 +31,16 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapt
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\ConfigurationUserCanNotSeeProgramException;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\PlanningProgramAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\ProgramNotFoundException;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\UserCanNotAccessToProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
@@ -42,6 +50,7 @@ use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\RequiredFieldChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\SemanticChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\StatusSemanticChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\WorkflowChecker;
+use Tuleap\ScaledAgile\Program\Backlog\PlanningCheck\ConfigurationChecker;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
@@ -83,6 +92,7 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook(PlanningAdministrationDelegation::NAME);
         $this->addHook('tracker_usage', 'trackerUsage');
         $this->addHook('project_is_deleted', 'projectIsDeleted');
+        $this->addHook(ConfigurationCheckDelegation::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -232,9 +242,13 @@ final class scaled_agilePlugin extends Plugin
         $injector->populate($params['restler']);
     }
 
-    public function planningAdministrationDelegation(PlanningAdministrationDelegation $planning_administration_delegation): void
-    {
-        $component_involved_verifier = new ComponentInvolvedVerifier(new \Tuleap\ScaledAgile\Adapter\Team\TeamDao(), new ProgramDao());
+    public function planningAdministrationDelegation(
+        PlanningAdministrationDelegation $planning_administration_delegation
+    ): void {
+        $component_involved_verifier = new ComponentInvolvedVerifier(
+            new \Tuleap\ScaledAgile\Adapter\Team\TeamDao(),
+            new ProgramDao()
+        );
         $project_data                = ProjectDataAdapter::build($planning_administration_delegation->getProject());
         if ($component_involved_verifier->isInvolvedInAScaledAgileWorkspace($project_data)) {
             $planning_administration_delegation->enablePlanningAdministrationDelegation();
@@ -254,6 +268,28 @@ final class scaled_agilePlugin extends Plugin
     public function projectIsDeleted(): void
     {
         (new \Tuleap\ScaledAgile\Adapter\Workspace\WorkspaceDAO())->dropUnusedComponents();
+    }
+
+    public function configurationCheckDelegation(ConfigurationCheckDelegation $configuration_check_delegation): void
+    {
+        $planning_program_adapter = new PlanningProgramAdapter(
+            TrackerFactory::instance(),
+            ProjectManager::instance(),
+            new URLVerification(),
+            new PlanDao(),
+            new ProgramDao(),
+            new TeamDao()
+        );
+        $configuration_checker    = new ConfigurationChecker($planning_program_adapter);
+        try {
+            $configuration_checker->getProgramIncrementTracker(
+                $configuration_check_delegation->getUser(),
+                $configuration_check_delegation->getProject()
+            );
+        } catch (ConfigurationUserCanNotSeeProgramException | ProgramNotFoundException | UserCanNotAccessToProgramException | ProjectIsNotAProgramException $e) {
+            $configuration_check_delegation->disablePlanning();
+            $this->getLogger()->debug($e->getMessage());
+        }
     }
 
     private function getProjectIncrementCreatorChecker(): ProgramIncrementArtifactCreatorChecker

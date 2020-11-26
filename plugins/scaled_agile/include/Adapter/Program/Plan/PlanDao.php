@@ -65,4 +65,13 @@ final class PlanDao extends DataAccessObject implements PlanStore
 
         return $this->getDB()->exists($sql, $tracker_data->getTrackerId(), $tracker_data->getTrackerId());
     }
+
+    public function getProgramIncrementTrackerId(int $project_id): ?int
+    {
+        $sql = 'SELECT program_increment_tracker_id FROM plugin_scaled_agile_plan
+                INNER JOIN tracker ON tracker.id = plugin_scaled_agile_plan.program_increment_tracker_id
+                    WHERE tracker.group_id = ?';
+
+        return $this->getDB()->single($sql, [$project_id]);
+    }
 }
