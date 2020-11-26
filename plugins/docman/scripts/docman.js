@@ -170,7 +170,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 scrolling: "no",
                 marginwidth: 0,
                 marginheight: 0,
-                src: "/plugins/docman/blank.htm",
             });
             // Without "dom:loaded" IE may crash when attempt to append
             // the iframe to the document. See:
