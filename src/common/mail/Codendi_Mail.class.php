@@ -516,6 +516,9 @@ class Codendi_Mail implements Codendi_Mail_Interface
             $mime_message->addPart($attachment);
         }
         $this->message->setBody($mime_message);
+        if (count($this->message->getTo()) === 0) {
+            $this->setTo(ForgeConfig::get('sys_noreply'), true);
+        }
         \Tuleap\Mail\MailInstrumentation::increment();
         try {
             $this->transport->send($this->message);
@@ -535,7 +538,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
                 $addresses = implode(',', $addresses);
                 $this->logger->debug("Message sent to: $addresses");
             } else {
-                $this->logger->debug("No 'to' found");
+                $this->logger->error("No 'to' found");
             }
         }
         $this->clearRecipients();

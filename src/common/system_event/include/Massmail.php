@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS - 2016-2018. All rights reserved
+ * Copyright (c) Enalean SAS - 2016-Present. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -114,7 +114,6 @@ class Massmail extends SystemEvent
     {
         $nb_rows = db_numrows($recipients);
         $tolist  = [];
-        $noreply = ForgeConfig::get('sys_noreply');
 
         for ($i = 1; $i <= $nb_rows; $i++) {
             $tolist[] = db_result($recipients, $i - 1, 'email');
@@ -122,7 +121,6 @@ class Massmail extends SystemEvent
                 foreach ($tolist as $to) {
                     $mail->setBcc($to, true);
                 }
-                $mail->setTo($noreply, true);
                 if ($mail->send()) {
                     $has_success = true;
                 } else {
@@ -138,7 +136,6 @@ class Massmail extends SystemEvent
             foreach ($tolist as $to) {
                 $mail->setBcc($to, true);
             }
-            $mail->setTo($noreply, true);
             if ($mail->send()) {
                 $has_success = true;
             } else {
