@@ -67,7 +67,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
 
         // ShowOptions
         this.actionsForItem = {};
-        this.initShowOptions_already_done = false;
         this.initShowOptionsEvent = this.initShowOptions.bindAsEventListener(this);
         if (this.options.action == "browse") {
             document.observe("dom:loaded", this.initShowOptionsEvent);
@@ -149,36 +148,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         this.actionsForItem[item_id] = action;
     },
     initShowOptions: function () {
-        this.initShowOptions_already_done = true;
-        //{{{ IE Hack
-        // Microsoft said:
-        //   All windowless elements are rendered on the same MSHTML plane,
-        //   and windowed elements draw on a separate MSHTML plane.
-        //   You can use z-index to manipulate elements on the same plane
-        //   but not to mix and match with elements in different planes.
-        //   You can rearrange the z-indexing of the elements on each plane,
-        //   but the windowed plane always draws on the top of
-        //   the windowless plane.
-        // Selectboxes are windowed therefore we need to put an invisible iframe
-        // on top of them to be able to display menus.
-        var invisible_iframe = $("docman_item_menu_invisible_iframe");
-        if (!invisible_iframe) {
-            invisible_iframe = Builder.node("iframe", {
-                id: "docman_item_menu_invisible_iframe",
-                style: "position:absolute;display:none;z-index:1000;width:200px;height:100px;",
-                frameborder: 0,
-                scrolling: "no",
-                marginwidth: 0,
-                marginheight: 0,
-            });
-            // Without "dom:loaded" IE may crash when attempt to append
-            // the iframe to the document. See:
-            // http://www.garyharan.com/index.php/2008/04/22/internet-explorer-cannot-open-the-internet-site-operation-aborted/
-            document.observe("dom:loaded", function () {
-                document.body.appendChild(invisible_iframe);
-            });
-        }
-        //}}}
         if (!this.showOptions_Menus) {
             this.showOptions_Menus = {};
         }
@@ -1342,18 +1311,12 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         if (!com.xerox.codendi.openedMenu || com.xerox.codendi.openedMenu != menu) {
             this.hide();
             com.xerox.codendi.openedMenu = menu;
-            Element.setStyle("docman_item_menu_invisible_iframe", {
-                width: this.dimensions.width + "px",
-                height: this.dimensions.height + "px",
-            });
             var pos = {
                 left: Event.pointerX(evt) + "px",
                 top: Event.pointerY(evt) + "px",
             };
-            ["docman_item_menu_invisible_iframe", menu].each(function (element) {
-                Element.setStyle(element, pos);
-                Element.show(element);
-            });
+            Element.setStyle(menu, pos);
+            Element.show(menu);
         }
         Event.stop(evt);
         return false;
@@ -1361,7 +1324,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
     hide: function (evt) {
         this._lockIcon();
         if (com.xerox.codendi.openedMenu) {
-            $("docman_item_menu_invisible_iframe").hide();
             $(com.xerox.codendi.openedMenu).remove();
             com.xerox.codendi.openedMenu = null;
         }
