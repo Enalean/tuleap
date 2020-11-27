@@ -23,13 +23,13 @@ import { createListPicker } from "@tuleap/list-picker/src/list-picker";
 
 export default ListPickerController;
 
-ListPickerController.$inject = ["$element"];
+ListPickerController.$inject = ["$element", "$timeout"];
 
-function ListPickerController($element) {
+function ListPickerController($element, $timeout) {
     var self = this;
 
     Object.assign(self, {
-        $onInit: init,
+        $onInit: $timeout(init, 0),
         $onDestroy: destroy,
         isFieldValid,
     });

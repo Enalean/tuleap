@@ -23,13 +23,13 @@ import { createListPicker } from "@tuleap/list-picker/src/list-picker";
 
 export default MultiselectBoxController;
 
-MultiselectBoxController.$inject = ["$element"];
+MultiselectBoxController.$inject = ["$element", "$timeout"];
 
-function MultiselectBoxController($element) {
+function MultiselectBoxController($element, $timeout) {
     var self = this;
 
     Object.assign(self, {
-        $onInit: init,
+        $onInit: $timeout(init, 0),
         $onDestroy: destroy,
         isFieldValid,
     });
