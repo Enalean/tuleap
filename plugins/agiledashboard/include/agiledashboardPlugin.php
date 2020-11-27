@@ -19,7 +19,9 @@
  */
 
 use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
+use Tuleap\AgileDashboard\Artifact\EventRedirectAfterArtifactCreationOrUpdateHandler;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
+use Tuleap\AgileDashboard\Artifact\RedirectParameterInjector;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
@@ -105,7 +107,6 @@ use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
-use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
@@ -119,8 +120,8 @@ use Tuleap\Tracker\Creation\DefaultTemplatesXMLFileCollection;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
@@ -569,16 +570,17 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function redirectAfterArtifactCreationOrUpdateEvent(RedirectAfterArtifactCreationOrUpdateEvent $event): void
     {
-        $params_extractor        = new AgileDashboard_PaneRedirectionExtractor();
-        $artifact_linker         = new Planning_ArtifactLinker($this->getArtifactFactory(), PlanningFactory::build());
-        $request                 = $event->getRequest();
-        $artifact                = $event->getArtifact();
-        $last_milestone_artifact = $artifact_linker->linkBacklogWithPlanningItems($request, $artifact);
-        $requested_planning      = $params_extractor->extractParametersFromRequest($request);
+        $planning_factory = PlanningFactory::build();
+        $params_extractor = new AgileDashboard_PaneRedirectionExtractor();
 
-        if ($requested_planning) {
-            $this->redirectOrAppend($request, $artifact, $event->getRedirect(), $requested_planning, $last_milestone_artifact);
-        }
+        $processor = new EventRedirectAfterArtifactCreationOrUpdateHandler(
+            $params_extractor,
+            new Planning_ArtifactLinker($this->getArtifactFactory(), $planning_factory),
+            $planning_factory,
+            new RedirectParameterInjector($params_extractor),
+        );
+
+        $processor->process($event->getRequest(), $event->getRedirect(), $event->getArtifact());
     }
 
     public function tracker_usage($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -678,75 +680,10 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    private function redirectOrAppend(Codendi_Request $request, Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, ?Artifact $last_milestone_artifact = null)
-    {
-        $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
-
-        if ($planning && ! $redirect->stayInTracker()) {
-            $this->redirectToPlanning($artifact, $requested_planning, $planning, $redirect);
-        } elseif (! $redirect->stayInTracker()) {
-            $this->redirectToTopPlanning($artifact, $requested_planning, $redirect);
-        } else {
-             $this->setQueryParametersFromRequest($request, $redirect);
-             // Pass the right parameters so parent can be created in the right milestone (see updateBacklogs)
-            if ($planning && $last_milestone_artifact && $redirect->mode == Tracker_Artifact_Redirect::STATE_CREATE_PARENT) {
-                $redirect->query_parameters['child_milestone'] = (string) $last_milestone_artifact->getId();
-            }
-        }
-    }
-
-    private function redirectToPlanning(Artifact $artifact, $requested_planning, Planning $planning, Tracker_Artifact_Redirect $redirect)
-    {
-        $redirect_to_artifact = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
-        if ($redirect_to_artifact == -1) {
-            $redirect_to_artifact = $artifact->getId();
-        }
-        $redirect->base_url = '/plugins/agiledashboard/';
-        $redirect->query_parameters = [
-            'group_id'    => $planning->getGroupId(),
-            'planning_id' => $planning->getId(),
-            'action'      => 'show',
-            'aid'         => $redirect_to_artifact,
-            'pane'        => $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE],
-        ];
-    }
-
-    private function redirectToTopPlanning(Artifact $artifact, $requested_planning, Tracker_Artifact_Redirect $redirect)
-    {
-        $redirect->base_url = '/plugins/agiledashboard/';
-        $group_id = null;
-
-        if ($artifact->getTracker() && $artifact->getTracker()->getProject()) {
-            $group_id = $artifact->getTracker()->getProject()->getID();
-        }
-
-        $redirect->query_parameters = [
-            'group_id'    => $group_id,
-            'action'      => 'show-top',
-            'pane'        => $requested_planning['pane'],
-        ];
-    }
-
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
-        $request = $event->getRequest();
-        $redirect = $event->getRedirect();
-
-        $this->setQueryParametersFromRequest($request, $redirect);
-        if ($request->exist('child_milestone')) {
-            $redirect->query_parameters['child_milestone'] = $request->getValidated('child_milestone', 'uint', 0);
-        }
-    }
-
-    private function setQueryParametersFromRequest(Codendi_Request $request, Tracker_Artifact_Redirect $redirect): void
-    {
-        $params_extractor   = new AgileDashboard_PaneRedirectionExtractor();
-        $requested_planning = $params_extractor->extractParametersFromRequest($request);
-        if ($requested_planning) {
-            $key   = 'planning[' . $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE] . '][' . $requested_planning[AgileDashboard_PaneRedirectionExtractor::PLANNING_ID] . ']';
-            $value = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
-            $redirect->query_parameters[$key] = $value;
-        }
+        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
+        $injector->injectParametersWithChildMilestoneFromRequest($event->getRequest(), $event->getRedirect());
     }
 
     /**
