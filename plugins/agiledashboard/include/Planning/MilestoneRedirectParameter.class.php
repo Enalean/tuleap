@@ -33,12 +33,4 @@ class Planning_MilestoneRedirectParameter
 
         return "planning[$pane_identifier][$planning_id]=$artifact_id";
     }
-
-    /** @return string */
-    public function getPlanningRedirectToNew(Planning_Milestone $milestone, $pane_identifier)
-    {
-        $planning_id = (int) $milestone->getPlanningId();
-
-        return "planning[$pane_identifier][$planning_id]=-1";
-    }
 }
