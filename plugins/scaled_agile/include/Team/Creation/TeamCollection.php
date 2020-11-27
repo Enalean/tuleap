@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Team\Creation;
 
-use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
 
 /**
  * @psalm-immutable
@@ -34,14 +34,14 @@ final class TeamCollection
      */
     private $teams;
     /**
-     * @var Program
+     * @var ToBeCreatedProgram
      */
     private $program;
 
     /**
      * @param Team[] $teams
      */
-    public function __construct(array $teams, Program $program)
+    public function __construct(array $teams, ToBeCreatedProgram $program)
     {
         $this->teams = $teams;
         $this->program = $program;
@@ -60,7 +60,7 @@ final class TeamCollection
         );
     }
 
-    public function getProgram(): Program
+    public function getProgram(): ToBeCreatedProgram
     {
         return $this->program;
     }

@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
-use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
 use Tuleap\ScaledAgile\Team\Creation\Team;
 use Tuleap\ScaledAgile\Team\Creation\TeamCollection;
 
@@ -70,7 +70,7 @@ final class TeamAdapterTest extends TestCase
     {
         $team_id = 202;
         $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = new Program(101);
+        $program = new ToBeCreatedProgram(101);
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($team_id)->andReturnFalse();
         $user->shouldReceive('isMember')->with($team_id)->andReturnFalse();
@@ -88,7 +88,7 @@ final class TeamAdapterTest extends TestCase
     {
         $team_id = 202;
         $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = new Program(101);
+        $program = new ToBeCreatedProgram(101);
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($team_id)->andReturnTrue();
         $user->shouldReceive('isAnonymous')->andReturnFalse();
@@ -103,7 +103,7 @@ final class TeamAdapterTest extends TestCase
 
     public function testItThrowExceptionWhenNoTeamIsFound(): void
     {
-        $program = new Program(101);
+        $program = new ToBeCreatedProgram(101);
         $user    = \Mockery::mock(\PFUser::class);
 
         $this->expectException(AtLeastOneTeamShouldBeDefinedException::class);
@@ -114,7 +114,7 @@ final class TeamAdapterTest extends TestCase
     {
         $team_id = 202;
         $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
-        $program = new Program(101);
+        $program = new ToBeCreatedProgram(101);
         $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($team_id)->andReturnTrue();
         $user->shouldReceive('isAnonymous')->andReturnFalse();

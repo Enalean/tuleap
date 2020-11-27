@@ -25,6 +25,7 @@ namespace Tuleap\ScaledAgile\Program\Plan;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
 
 interface BuildProgram
 {
@@ -32,5 +33,11 @@ interface BuildProgram
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public function buildProgramProject(int $id, \PFUser $user): Program;
+    public function buildExistingProgramProject(int $id, \PFUser $user): Program;
+
+    /**
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
+     */
+    public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram;
 }

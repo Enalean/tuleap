@@ -27,6 +27,7 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
 use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
 
 final class ProgramAdapter implements BuildProgram
 {
@@ -49,7 +50,29 @@ final class ProgramAdapter implements BuildProgram
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public function buildProgramProject(int $id, \PFUser $user): Program
+    public function buildExistingProgramProject(int $id, \PFUser $user): Program
+    {
+        $project = $this->buildProject($id, $user);
+
+        if (! $this->program_dao->isProjectAProgramProject((int) $project->getId())) {
+            throw new ProjectIsNotAProgramException((int) $project->getId());
+        }
+
+        return new Program((int) $project->getID());
+    }
+
+    /**
+     * @throws ProjectIsNotAProgramException
+     * @throws ProgramAccessException
+     */
+    public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram
+    {
+        $project = $this->buildProject($id, $user);
+
+        return new ToBeCreatedProgram((int) $project->getID());
+    }
+
+    private function buildProject(int $id, \PFUser $user): \Project
     {
         $project = $this->project_manager->getProject($id);
         try {
@@ -58,10 +81,6 @@ final class ProgramAdapter implements BuildProgram
             throw new ProgramAccessException();
         }
 
-        if (! $this->program_dao->isProjectAProgramProject((int) $project->getId())) {
-            throw new ProjectIsNotAProgramException((int) $project->getId());
-        }
-
-        return new Program((int) $project->getID());
+        return $project;
     }
 }

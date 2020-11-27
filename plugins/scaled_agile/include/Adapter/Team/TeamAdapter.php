@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Adapter\Team;
 use Luracast\Restler\RestException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
-use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
 use Tuleap\ScaledAgile\Team\Creation\BuildTeam;
 use Tuleap\ScaledAgile\Team\Creation\Team;
 use Tuleap\ScaledAgile\Team\Creation\TeamCollection;
@@ -52,7 +52,7 @@ final class TeamAdapter implements BuildTeam
      * @throws ProjectIsAProgramException
      * @throws TeamAccessException
      */
-    public function buildTeamProject(array $team_ids, Program $program, \PFUser $user): TeamCollection
+    public function buildTeamProject(array $team_ids, ToBeCreatedProgram $program, \PFUser $user): TeamCollection
     {
         $team_list = [];
         foreach ($team_ids as $team_id) {

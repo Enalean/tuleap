@@ -42,7 +42,7 @@ final class PlanCreatorTest extends TestCase
 
         $user = UserTestBuilder::aUser()->build();
 
-        $program_adapter->shouldReceive('buildProgramProject')
+        $program_adapter->shouldReceive('buildExistingProgramProject')
             ->with($project_id, $user)->once()
             ->andReturn(new Program($project_id));
         $tracker_adapter->shouldReceive('buildProgramIncrementTracker')

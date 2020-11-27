@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Team\Creation;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
-use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamCreatorTest extends TestCase
@@ -42,8 +42,8 @@ final class TeamCreatorTest extends TestCase
 
         $user = UserTestBuilder::aUser()->build();
 
-        $program = new Program($project_id);
-        $program_adapter->shouldReceive('buildProgramProject')
+        $program = new ToBeCreatedProgram($project_id);
+        $program_adapter->shouldReceive('buildNewProgramProject')
             ->with($project_id, $user)->once()
             ->andReturn($program);
         $collection = new TeamCollection([new Team($team_project_id)], $program);

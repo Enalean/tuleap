@@ -48,7 +48,7 @@ final class HierarchyCreatorTest extends TestCase
         $program = new Program($program_id);
         $hierarchy = new Hierarchy($program_tracker_id, $team_tracker_id);
 
-        $program_build->shouldReceive('buildProgramProject')->once()->andReturn($program);
+        $program_build->shouldReceive('buildExistingProgramProject')->once()->andReturn($program);
         $hierarchy_build->shouldReceive('buildHierarchy')->once()->andReturn($hierarchy);
 
         $hierarchy_store->shouldReceive('save')->with($hierarchy)->once();
