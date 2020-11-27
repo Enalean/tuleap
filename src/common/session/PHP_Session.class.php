@@ -35,10 +35,15 @@ class PHP_Session
         session_start();
     }
 
+    public static function regenerateID(): void
+    {
+        session_regenerate_id();
+    }
+
     public static function destroy()
     {
         unset($_SESSION);
-        session_destroy();
+        session_regenerate_id(true);
     }
 
     public function clean()

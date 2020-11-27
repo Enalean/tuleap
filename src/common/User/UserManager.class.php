@@ -634,6 +634,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $session_identifier,
             $this->getExpireTimestamp($user)
         );
+        PHP_Session::regenerateID();
 
         $this->markReleaseNoteAsSeenTheFirstTimeTheWebSessionIsOpened($user);
     }
