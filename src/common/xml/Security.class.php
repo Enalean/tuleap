@@ -23,31 +23,13 @@
  */
 class XML_Security
 {
-
-    public function enableExternalLoadOfEntities()
+    public static function enableExternalLoadOfEntities(callable $callback): void
     {
-        return $this->setExternalLoadOfEntities(false);
-    }
-
-    /**
-     * Prevent XXE attacks
-     *
-     * Important fact:
-     * * not thread safe (php-fpm)
-     *
-     * Useful links:
-     * https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing
-     * https://bugs.php.net/bug.php?id=64938
-     *
-     * @return The previous value
-     */
-    public function disableExternalLoadOfEntities()
-    {
-        return $this->setExternalLoadOfEntities(true);
-    }
-
-    private function setExternalLoadOfEntities($value)
-    {
-        return libxml_disable_entity_loader($value);
+        \libxml_disable_entity_loader(false); // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
+        try {
+            $callback();
+        } finally {
+            \libxml_disable_entity_loader(true); // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
+        }
     }
 }

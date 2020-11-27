@@ -88,8 +88,9 @@ if ($request->exist('wsdl')) {
             new ProjectDao()
         )
     );
-    $xml_security = new XML_Security();
-    $xml_security->enableExternalLoadOfEntities();
-    $server->handle();
-    $xml_security->disableExternalLoadOfEntities();
+    XML_Security::enableExternalLoadOfEntities(
+        function () use ($server) {
+            $server->handle();
+        }
+    );
 }

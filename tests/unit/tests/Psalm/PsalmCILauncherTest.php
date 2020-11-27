@@ -34,22 +34,6 @@ final class PsalmCILauncherTest extends TestCase
     private const FILE_OUT_OF_SCOPE = 'src/vendor/Something/Foo.php';
     private const FILE_NOT_EXISTING = 'DoNotExist.php';
 
-    /**
-     * @var bool
-     */
-    private $previous_status_xml_entity_loading;
-
-    protected function setUp(): void
-    {
-        // Psalm XML configuration will be verified against a XSD file external entities are needed
-        $this->previous_status_xml_entity_loading = libxml_disable_entity_loader(false);
-    }
-
-    protected function tearDown(): void
-    {
-        libxml_disable_entity_loader($this->previous_status_xml_entity_loading);
-    }
-
     public function testPsalmIsLaunchedOnlyWithFilesInScopeOfTheConfig(): void
     {
         $shell_passthrough = Mockery::mock(ShellPassthrough::class);

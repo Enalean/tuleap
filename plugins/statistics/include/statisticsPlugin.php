@@ -297,10 +297,9 @@ class StatisticsPlugin extends Plugin
 
         $server = new TuleapSOAPServer($uri . '/?wsdl', ['cache_wsdl' => WSDL_CACHE_NONE]);
         $server->setClass($service_class, $soap_request_validator, $disk_usage_manager, $project_quota_manager);
-        $xml_security = new XML_Security();
-        $xml_security->enableExternalLoadOfEntities();
-        $server->handle();
-        $xml_security->disableExternalLoadOfEntities();
+        XML_Security::enableExternalLoadOfEntities(function () use ($server) {
+            $server->handle();
+        });
     }
 
     /**

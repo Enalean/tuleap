@@ -31,10 +31,9 @@ class TuleapSOAPServer extends SoapServer
             $options = [];
         }
         $options['soap_version'] = SOAP_1_2;
-        $xml_security = new XML_Security();
-        $xml_security->enableExternalLoadOfEntities();
-        parent::__construct($wsdl, $options);
-        $xml_security->disableExternalLoadOfEntities();
+        XML_Security::enableExternalLoadOfEntities(function () use ($options, $wsdl) {
+            parent::__construct($wsdl, $options);
+        });
     }
 
     /**

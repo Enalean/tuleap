@@ -103,9 +103,6 @@ class XMLDocmanImport
      */
     public function __construct($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, Logger $logger)
     {
-        $xml_security = new XML_Security();
-        $xml_security->enableExternalLoadOfEntities();
-
         $this->force = $force;
         $this->reorder = $reorder;
         $this->importMessageMetadata = $importMessageMetadata;
@@ -114,17 +111,21 @@ class XMLDocmanImport
 
         $this->logger->info("Init Import process");
 
-        try {
-            $this->soap = new SoapClient($wsdl, ['trace' => true]);
-            $this->hash = $this->soap->login($login, $password, "3.6")->session_hash;
-            if ($projectId === null) {
-                $this->groupId = $this->soap->getGroupByName($this->hash, $project)->group_id;
-            } else {
-                $this->groupId = $projectId;
+        XML_Security::enableExternalLoadOfEntities(
+            function () use ($project, $projectId, $password, $login, $wsdl) {
+                try {
+                    $this->soap = new SoapClient($wsdl, ['trace' => true]);
+                    $this->hash = $this->soap->login($login, $password, "3.6")->session_hash;
+                    if ($projectId === null) {
+                        $this->groupId = $this->soap->getGroupByName($this->hash, $project)->group_id;
+                    } else {
+                        $this->groupId = $projectId;
+                    }
+                } catch (SoapFault $e) {
+                    $this->printSoapResponseAndThrow($e);
+                }
             }
-        } catch (SoapFault $e) {
-            $this->printSoapResponseAndThrow($e);
-        }
+        );
 
         $this->logger->info("Connected to $wsdl as $login.");
     }
