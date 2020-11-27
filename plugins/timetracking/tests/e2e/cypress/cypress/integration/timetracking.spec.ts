@@ -126,7 +126,6 @@ describe("Time tracking", function () {
 
     it("manager should be able to track time of his subordinates", function () {
         cy.ProjectAdministratorLogin();
-        cy.server();
         cy.visit("/my");
 
         cy.get("[data-test=dashboard-add-widget-button]").click({ force: true });
@@ -134,20 +133,16 @@ describe("Time tracking", function () {
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
         // select some trackers
-        cy.getProjectId("timetracking").then((project_id) => {
-            cy.visit("/my/");
-
-            cy.route(
-                `/api/v1/projects/${project_id}/trackers?representation=minimal&limit=*&offset=*&query=*`
-            ).as("loadTrackers");
-        });
+        cy.intercept(`*trackers?representation=minimal&limit=*&offset=*&query=*`).as(
+            "loadTrackers"
+        );
 
         cy.get("[data-test=overview-toggle-reading-mode]").click();
         // select project
         cy.get("[data-test=overview-project-list]").select("timetracking");
+        cy.wait("@loadTrackers", { timeout: 3000 });
 
         //select tracker
-        cy.wait("@loadTrackers", { timeout: 3000 });
         cy.get("[data-test=overview-tracker-selector]").select("Issues");
         cy.get("[data-test=add-tracker-button]").click();
 
