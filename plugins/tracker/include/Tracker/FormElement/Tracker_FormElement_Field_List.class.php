@@ -22,6 +22,8 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
+use Tuleap\Tracker\FormElement\Field\ListFields\ListFieldDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
@@ -62,7 +64,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if (! $this->bind) {
             $this->bind = null;
             //retrieve the type of the bind first...
-            $dao = new Tracker_FormElement_Field_ListDao();
+            $dao = new ListFieldDao();
             if ($row = $dao->searchByFieldId($this->id)->getRow()) {
                 //...and build the bind
                 $bind_factory = $this->getFormElementFieldListBindFactory();
@@ -101,7 +103,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function duplicate($from_field_id)
     {
-        $dao = new Tracker_FormElement_Field_ListDao();
+        $dao = new ListFieldDao();
         if ($dao->duplicate($from_field_id, $this->id)) {
             $bf = new Tracker_FormElement_Field_List_BindFactory();
             return $bf->duplicate($from_field_id, $this->id);
@@ -626,11 +628,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
-     * @return Tracker_FormElement_Field_Value_ListDao
+     * @return ListValueDao
      */
     protected function getValueDao()
     {
-        return new Tracker_FormElement_Field_Value_ListDao();
+        return new ListValueDao();
     }
 
     /**
@@ -1210,7 +1212,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         $bf = new Tracker_FormElement_Field_List_BindFactory();
         if ($this->bind = $bf->createBind($this, $type, $bind_data)) {
-            $dao = new Tracker_FormElement_Field_ListDao();
+            $dao = new ListFieldDao();
             $dao->save($this->getId(), $bf->getType($this->bind));
         }
     }
@@ -1280,11 +1282,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Get an instance of Tracker_FormElement_Field_ListDao
      *
-     * @return Tracker_FormElement_Field_ListDao
+     * @return ListFieldDao
      */
     public function getListDao()
     {
-        return new Tracker_FormElement_Field_ListDao();
+        return new ListFieldDao();
     }
 
     /**

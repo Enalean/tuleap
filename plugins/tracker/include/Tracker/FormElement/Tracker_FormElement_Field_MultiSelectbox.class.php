@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListFields\MultiSelectboxFieldDao;
 
 class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field_Selectbox
 {
@@ -42,7 +43,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
 
     protected function getDao()
     {
-        return new Tracker_FormElement_Field_MultiSelectboxDao();
+        return new MultiSelectboxFieldDao();
     }
 
     /**

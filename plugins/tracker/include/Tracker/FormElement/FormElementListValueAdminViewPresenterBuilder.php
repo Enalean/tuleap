@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\FormElement;
 
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElement_Field_List_OpenValue;
 use Tracker_FormElement_Field_List_Value;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
@@ -31,12 +31,12 @@ use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 class FormElementListValueAdminViewPresenterBuilder
 {
     /**
-     * @var Tracker_FormElement_Field_List_Bind_Static_ValueDao
+     * @var BindStaticValueDao
      */
     private $value_dao;
 
     public function __construct(
-        Tracker_FormElement_Field_List_Bind_Static_ValueDao $value_dao
+        BindStaticValueDao $value_dao
     ) {
         $this->value_dao = $value_dao;
     }

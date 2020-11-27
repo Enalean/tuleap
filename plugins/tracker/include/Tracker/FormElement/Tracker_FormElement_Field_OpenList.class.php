@@ -25,6 +25,9 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListFieldDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListChangesetValueDao;
 
 class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List implements BindVisitor
 {
@@ -285,11 +288,11 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     /**
      * Return the dao
      *
-     * @return Tracker_FormElement_Field_OpenListDao The dao
+     * @return OpenListFieldDao The dao
      */
     protected function getDao()
     {
-        return new Tracker_FormElement_Field_OpenListDao();
+        return new OpenListFieldDao();
     }
 
     public static function getFactoryLabel()
@@ -316,7 +319,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     protected function getValueDao()
     {
-        return new Tracker_FormElement_Field_Value_OpenListDao();
+        return new OpenListChangesetValueDao();
     }
 
     /**
@@ -361,7 +364,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     protected function getOpenValueDao()
     {
-        return new Tracker_FormElement_Field_List_OpenValueDao();
+        return new OpenListValueDao();
     }
 
     protected $cache_openvalues = [];

@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
+namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
+
+use DataAccessObject;
+use Tracker_FormElement_Field_List;
+
+class BindDecoratorDao extends DataAccessObject
 {
     public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_decorator';
     }
+
     public function searchByFieldId($field_id)
     {
-        $field_id  = $this->da->escapeInt($field_id);
-        $sql = "SELECT *
+        $field_id = $this->da->escapeInt($field_id);
+        $sql      = "SELECT *
                 FROM tracker_field_list_bind_decorator
                 WHERE field_id = $field_id ";
         return $this->retrieve($sql);
@@ -40,7 +47,7 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
         $from_field_id = $this->da->escapeInt($from_field_id);
         $to_field_id   = $this->da->escapeInt($to_field_id);
         $sql
-            = "INSERT INTO tracker_field_list_bind_decorator (field_id, value_id, red, green, blue, tlp_color_name)
+                       = "INSERT INTO tracker_field_list_bind_decorator (field_id, value_id, red, green, blue, tlp_color_name)
                 SELECT $to_field_id, value_id, red, green, blue, tlp_color_name
                 FROM tracker_field_list_bind_decorator
                 WHERE field_id = $from_field_id";
@@ -131,7 +138,7 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
     {
         $tlp_color = $this->da->quoteSmart($tlp_color);
         $field_id  = $this->da->escapeInt($field_id);
-        $value_id = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+        $value_id  = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
 
         $sql = "INSERT INTO tracker_field_list_bind_decorator(field_id, value_id, red, green, blue, tlp_color_name)
             VALUES ($field_id, $value_id, null, null, null, $tlp_color)";
@@ -154,7 +161,7 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
     public function updateNoneTlpColor(int $field_id, string $tlp_color): void
     {
         $tlp_color = $this->da->quoteSmart($tlp_color);
-        $value_id = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+        $value_id  = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
 
         $sql = "REPLACE INTO tracker_field_list_bind_decorator  (field_id, value_id, red, green, blue, tlp_color_name)
                 VALUES ($field_id, $value_id, null, null, null, $tlp_color)";

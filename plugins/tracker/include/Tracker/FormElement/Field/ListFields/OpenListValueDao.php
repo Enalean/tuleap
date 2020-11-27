@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -17,29 +17,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject
+namespace Tuleap\Tracker\FormElement\Field\ListFields;
+
+use DataAccessObject;
+
+class OpenListValueDao extends DataAccessObject
 {
     public function __construct()
     {
         parent::__construct();
         $this->table_name = 'tracker_field_openlist_value';
     }
+
     public function searchById($field_id, $id)
     {
-        $field_id  = $this->da->escapeInt($field_id);
-        $id        = $this->da->escapeInt($id);
-        $sql = "SELECT *
+        $field_id = $this->da->escapeInt($field_id);
+        $id       = $this->da->escapeInt($id);
+        $sql      = "SELECT *
                 FROM $this->table_name
-                WHERE field_id = $field_id 
+                WHERE field_id = $field_id
                   AND id = $id ";
         return $this->retrieve($sql);
     }
 
     public function searchByFieldId($field_id)
     {
-        $field_id  = $this->da->escapeInt($field_id);
+        $field_id = $this->da->escapeInt($field_id);
 
         $sql = "SELECT *
                 FROM $this->table_name
@@ -52,7 +58,7 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject
         $id       = $this->da->escapeInt($id);
         $field_id = $this->da->escapeInt($field_id);
         $label    = $this->da->quoteSmart($label);
-        $sql = "UPDATE $this->table_name 
+        $sql      = "UPDATE $this->table_name
                 SET label = $label
                 WHERE field_id = $field_id
                   AND id = $id";
@@ -63,7 +69,7 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject
     {
         $field_id = $this->da->escapeInt($field_id);
         $label    = $this->da->quoteSmart($label);
-        $sql = "INSERT INTO $this->table_name (field_id, label)
+        $sql      = "INSERT INTO $this->table_name (field_id, label)
                 VALUES ($field_id, $label)";
         return $this->updateAndGetLastId($sql);
     }
@@ -71,9 +77,9 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject
     public function searchByKeyword($field_id, $keyword, $limit = 10)
     {
         $field_id = $this->da->escapeInt($field_id);
-        $limit = $this->da->escapeInt($limit);
-        $keyword = $this->da->quoteLikeValueSurround($keyword);
-        $sql = "SELECT *
+        $limit    = $this->da->escapeInt($limit);
+        $keyword  = $this->da->quoteLikeValueSurround($keyword);
+        $sql      = "SELECT *
                 FROM $this->table_name
                 WHERE field_id = $field_id
                   AND is_hidden != 1
@@ -86,7 +92,7 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject
     {
         $field_id = $this->da->escapeInt($field_id);
         $label    = $this->da->quoteSmart($label);
-        $sql = "SELECT *
+        $sql      = "SELECT *
                 FROM $this->table_name
                 WHERE field_id = $field_id
                   AND label = $label";

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
+
 final class Tracker_FormElement_Field_List_BindTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -96,7 +98,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \PHPUnit\Framework\T
 
     public function testItFilterDefaultValuesReturnEmptyArrayIfNoDefaultValues(): void
     {
-        $default_value_dao = Mockery::mock(Tracker_FormElement_Field_List_Bind_DefaultvalueDao::class);
+        $default_value_dao = Mockery::mock(BindDefaultValueDao::class);
 
         $this->bind->shouldReceive("filterDefaultValues")->never();
         $this->field->shouldReceive("getId")->andReturn(42);
@@ -110,7 +112,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \PHPUnit\Framework\T
 
     public function testItExtractDefaultValues(): void
     {
-        $default_value_dao = Mockery::mock(Tracker_FormElement_Field_List_Bind_DefaultvalueDao::class);
+        $default_value_dao = Mockery::mock(BindDefaultValueDao::class);
         $this->field->shouldReceive("getId")->andReturn(42);
         $this->bind->shouldReceive("getDefaultValueDao")->andReturn($default_value_dao);
 
@@ -132,7 +134,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \PHPUnit\Framework\T
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();
 
-        $default_value_dao = Mockery::mock(Tracker_FormElement_Field_List_Bind_DefaultvalueDao::class);
+        $default_value_dao = Mockery::mock(BindDefaultValueDao::class);
         $field->shouldReceive("getId")->andReturn(42);
 
         $default_value_dao->shouldReceive("save")->andReturn(true);

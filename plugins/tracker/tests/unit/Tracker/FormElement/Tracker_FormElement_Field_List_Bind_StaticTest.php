@@ -29,7 +29,7 @@ use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
 use UserXMLExporter;
@@ -152,7 +152,7 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase
 
     public function testItAddsANewValue(): void
     {
-        $value_dao = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static_ValueDao::class);
+        $value_dao = Mockery::mock(BindStaticValueDao::class);
         $value_dao->shouldReceive('propagateCreation');
         $bind_static = $this->getListFieldWIthBindValues([]);
 

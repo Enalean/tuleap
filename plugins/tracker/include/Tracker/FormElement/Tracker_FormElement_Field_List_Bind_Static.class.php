@@ -24,6 +24,9 @@ use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticXmlExporter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\FormElement\View\Admin\Field\ListFields\BindValuesAdder;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
 use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
@@ -40,7 +43,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     protected $is_rank_alpha;
 
     /**
-     * @var Tracker_FormElement_Field_List_Bind_Static_ValueDao
+     * @var BindStaticValueDao
      */
     private $value_dao = null;
 
@@ -410,12 +413,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
     public function getDao()
     {
-        return new Tracker_FormElement_Field_List_Bind_StaticDao();
+        return new BindStaticDao();
     }
 
     private function getOpenValueDao()
     {
-        return new Tracker_FormElement_Field_List_OpenValueDao();
+        return new OpenListValueDao();
     }
 
     private function getTemplateRenderer(): TemplateRenderer
@@ -445,12 +448,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_Static_ValueDao
+     * @return BindStaticValueDao
      */
     public function getValueDao()
     {
         if ($this->value_dao === null) {
-            $this->value_dao = new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
+            $this->value_dao = new BindStaticValueDao();
         }
         return $this->value_dao;
     }
@@ -841,7 +844,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     public function saveObject()
     {
-        $dao = new Tracker_FormElement_Field_List_Bind_StaticDao();
+        $dao = new BindStaticDao();
         if ($dao->save($this->field->getId(), $this->is_rank_alpha)) {
             $value_dao = $this->getValueDao();
             foreach ($this->getAllValues() as $v) {
@@ -976,7 +979,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     public function getBindValueById($bindvalue_id)
     {
-        $dao = new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
+        $dao = new BindStaticValueDao();
         $row = $dao->searchById($bindvalue_id)->getRow();
 
         return $this->getValueFromRow($row);

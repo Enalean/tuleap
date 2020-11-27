@@ -18,6 +18,8 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 
 final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -41,11 +43,11 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
      */
     private $integrators_ugroup_value;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_List_Bind_DefaultvalueDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BindDefaultValueDao
      */
     private $default_value_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BindUgroupsValueDao
      */
     private $value_dao;
     /**
@@ -60,8 +62,8 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
     protected function setUp(): void
     {
         $this->ugroup_manager    = Mockery::mock(UGroupManager::class);
-        $this->value_dao         = Mockery::mock(Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao::class);
-        $this->default_value_dao = Mockery::mock(Tracker_FormElement_Field_List_Bind_DefaultvalueDao::class);
+        $this->value_dao         = Mockery::mock(BindUgroupsValueDao::class);
+        $this->default_value_dao = Mockery::mock(BindDefaultValueDao::class);
         $this->field             = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
 
         $integrators_ugroup_id          = 103;

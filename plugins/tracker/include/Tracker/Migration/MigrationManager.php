@@ -34,6 +34,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
 class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -180,7 +181,7 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
             $this->getChangesetCreator($fields_validator, $changeset_dao),
             $this->form_element_factory,
             new XMLImportHelper($this->user_manager),
-            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
+            new BindStaticValueDao(),
             $this->logger,
             false,
             Tracker_ArtifactFactory::instance(),

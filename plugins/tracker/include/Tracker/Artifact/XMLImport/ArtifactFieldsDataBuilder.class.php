@@ -22,6 +22,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\XMLImport\XMLImportFieldStrategyComputed;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 
 /**
  * I convert the xml changeset data into data structure in order to create changeset in one artifact
@@ -65,7 +66,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         Tracker $tracker,
         Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer,
         $extraction_path,
-        Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
+        BindStaticValueDao $static_value_dao,
         \Psr\Log\LoggerInterface $logger,
         TrackerXmlFieldsMapping $xml_fields_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,

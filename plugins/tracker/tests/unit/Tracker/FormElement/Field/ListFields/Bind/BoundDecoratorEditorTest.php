@@ -42,13 +42,15 @@ final class BoundDecoratorEditorTest extends TestCase
      */
     private $bound_decorator_editor;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_List_BindDecoratorDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao
      */
     private $bind_decorator_dao;
 
     protected function setUp(): void
     {
-        $this->bind_decorator_dao    = \Mockery::mock(\Tracker_FormElement_Field_List_BindDecoratorDao::class);
+        $this->bind_decorator_dao    = \Mockery::mock(
+            \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao::class
+        );
         $this->bound_decorator_editor = new BoundDecoratorEditor($this->bind_decorator_dao);
 
         $this->field = \Mockery::mock(\Tracker_FormElement_Field_List::class);

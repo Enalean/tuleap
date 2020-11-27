@@ -30,7 +30,6 @@ use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List_Bind_DefaultvalueDao;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
 
 class BindListUserValueGetterTest extends TestCase
@@ -43,7 +42,7 @@ class BindListUserValueGetterTest extends TestCase
     private $getter;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_List_Bind_DefaultvalueDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BindDefaultValueDao
      */
     private $default_dao;
     /**
@@ -55,7 +54,7 @@ class BindListUserValueGetterTest extends TestCase
     {
         parent::setUp();
 
-        $this->default_dao = Mockery::mock(Tracker_FormElement_Field_List_Bind_DefaultvalueDao::class);
+        $this->default_dao = Mockery::mock(BindDefaultValueDao::class);
         $this->user_helper = Mockery::mock(\UserHelper::class);
 
         $this->getter = Mockery::mock(BindListUserValueGetter::class, [$this->default_dao, $this->user_helper])

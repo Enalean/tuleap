@@ -29,6 +29,7 @@ use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
 class Tracker_Artifact_XMLImport
@@ -52,7 +53,7 @@ class Tracker_Artifact_XMLImport
     /** @var User\XML\Import\IFindUserFromXMLReference */
     private $user_finder;
 
-    /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
+    /** @var BindStaticValueDao */
     private $static_value_dao;
 
     /** @var WrapperLogger */
@@ -97,7 +98,7 @@ class Tracker_Artifact_XMLImport
         Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator,
         Tracker_FormElementFactory $formelement_factory,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
+        BindStaticValueDao $static_value_dao,
         \Psr\Log\LoggerInterface $logger,
         $send_notifications,
         Tracker_ArtifactFactory $tracker_artifact_factory,

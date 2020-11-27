@@ -22,6 +22,7 @@
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindListUserValueGetter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsersDao;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\REST\FieldListBindUserValueRepresentation;
 use Tuleap\Tracker\REST\FormElement\UserListValueRepresentation;
@@ -561,7 +562,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
     public function getDao()
     {
-        return new Tracker_FormElement_Field_List_Bind_UsersDao();
+        return new BindUsersDao();
     }
 
     /**
@@ -831,7 +832,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function saveObject()
     {
-        $dao = new Tracker_FormElement_Field_List_Bind_UsersDao();
+        $dao = new BindUsersDao();
         $dao->save($this->field->getId(), $this->getValueFunction());
         parent::saveObject();
     }

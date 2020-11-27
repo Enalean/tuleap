@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use ProjectUGroup;
-use Tracker_FormElement_Field_List_Bind_DefaultvalueDao;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
 use UserHelper;
 
 class BindListUserValueGetter
 {
     /**
-     * @var Tracker_FormElement_Field_List_Bind_DefaultvalueDao
+     * @var BindDefaultValueDao
      */
     private $bind_defaultvalue_dao;
     /**
@@ -40,7 +39,7 @@ class BindListUserValueGetter
     private $user_helper;
 
     public function __construct(
-        Tracker_FormElement_Field_List_Bind_DefaultvalueDao $bind_defaultvalue_dao,
+        BindDefaultValueDao $bind_defaultvalue_dao,
         UserHelper $user_helper
     ) {
         $this->bind_defaultvalue_dao = $bind_defaultvalue_dao;

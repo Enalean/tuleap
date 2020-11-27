@@ -24,16 +24,15 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use ColorHelper;
 use Tracker_FormElement_Field_List_BindDecorator;
-use Tracker_FormElement_Field_List_BindDecoratorDao;
 
 class BoundDecoratorEditor
 {
     /**
-     * @var Tracker_FormElement_Field_List_BindDecoratorDao
+     * @var BindDecoratorDao
      */
     private $decorator_dao;
 
-    public function __construct(Tracker_FormElement_Field_List_BindDecoratorDao $decorator_dao)
+    public function __construct(BindDecoratorDao $decorator_dao)
     {
         $this->decorator_dao = $decorator_dao;
     }

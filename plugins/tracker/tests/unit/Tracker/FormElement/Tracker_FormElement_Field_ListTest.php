@@ -22,6 +22,8 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListFields\ListFieldDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
@@ -51,7 +53,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
     private $bind;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Value_ListDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ListValueDao
      */
     private $value_dao;
 
@@ -59,7 +61,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
     {
         $this->list_field             = Mockery::mock(Tracker_FormElement_Field_List::class)
             ->shouldAllowMockingProtectedMethods()->makePartial();
-        $this->value_dao              = Mockery::spy(Tracker_FormElement_Field_Value_ListDao::class);
+        $this->value_dao              = Mockery::spy(ListValueDao::class);
         $this->changeset_value        = Mockery::spy(Tracker_Artifact_ChangesetValue_List::class);
         $this->bind                   = Mockery::spy(Tracker_FormElement_Field_List_Bind_Static::class);
         $this->bind_value             = Mockery::spy(Tracker_FormElement_Field_List_BindValue::class);
@@ -352,7 +354,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
     {
         $tracker = Mockery::mock(Tracker::class);
         $factory = Mockery::mock(Tracker_FormElement_Field_List_BindFactory::class);
-        $dao     = Mockery::mock(Tracker_FormElement_Field_ListDao::class);
+        $dao     = Mockery::mock(ListFieldDao::class);
 
         $this->list_field->shouldReceive('getBindFactory')->andReturn($factory);
         $this->list_field->shouldReceive('getListDao')->andReturn($dao);

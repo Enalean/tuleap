@@ -19,6 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsersDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
+
 class Tracker_FormElement_Field_List_BindFactory
 {
     public const STATIK  = 'static';
@@ -31,7 +38,7 @@ class Tracker_FormElement_Field_List_BindFactory
     private $ugroup_manager;
 
     /**
-     * @var Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao
+     * @var BindUgroupsValueDao
      */
     private $ugroups_value_dao;
 
@@ -43,12 +50,12 @@ class Tracker_FormElement_Field_List_BindFactory
     private function getUgroupsValueDao()
     {
         if (! $this->ugroups_value_dao) {
-            $this->ugroups_value_dao = new Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao();
+            $this->ugroups_value_dao = new BindUgroupsValueDao();
         }
         return $this->ugroups_value_dao;
     }
 
-    public function setUgroupsValueDao(Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao $dao)
+    public function setUgroupsValueDao(BindUgroupsValueDao $dao)
     {
         $this->ugroups_value_dao = $dao;
     }
@@ -61,12 +68,12 @@ class Tracker_FormElement_Field_List_BindFactory
     public function getBind($field, $type)
     {
         $default_value = [];
-        $dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
+        $dao = new BindDefaultValueDao();
         foreach ($dao->searchByFieldId($field->id) as $row) {
             $default_value[$row['value_id']] = true;
         }
         $decorators = [];
-        $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
+        $dao = new BindDecoratorDao();
         foreach ($dao->searchByFieldId($field->id) as $row) {
             $decorators[$row['value_id']] = new Tracker_FormElement_Field_List_BindDecorator(
                 $row['field_id'],
@@ -81,10 +88,10 @@ class Tracker_FormElement_Field_List_BindFactory
         $bind = new Tracker_FormElement_Field_List_Bind_Null($field);
         switch ($type) {
             case self::STATIK:
-                $dao = new Tracker_FormElement_Field_List_Bind_StaticDao();
+                $dao = new BindStaticDao();
                 if ($row = $dao->searchByFieldId($field->id)->getRow()) {
                     $values = [];
-                    $dao = new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
+                    $dao = new BindStaticValueDao();
                     foreach ($dao->searchByFieldId($field->id, $row['is_rank_alpha']) as $row_value) {
                         $values[$row_value['id']] = $this->getStaticValueInstance(
                             $row_value['id'],
@@ -98,7 +105,7 @@ class Tracker_FormElement_Field_List_BindFactory
                 }
                 break;
             case self::USERS:
-                $dao = new Tracker_FormElement_Field_List_Bind_UsersDao();
+                $dao = new BindUsersDao();
                 if ($row = $dao->searchByFieldId($field->id)->getRow()) {
                     $bind = new Tracker_FormElement_Field_List_Bind_Users($field, $row['value_function'], $default_value, $decorators);
                 }
@@ -130,7 +137,7 @@ class Tracker_FormElement_Field_List_BindFactory
      */
     public function duplicate($from_field_id, $to_field_id)
     {
-        return $this->_duplicate($from_field_id, $to_field_id, Tracker_FormElement_Field_List_Bind_Static_ValueDao::COPY_BY_VALUE);
+        return $this->_duplicate($from_field_id, $to_field_id, BindStaticValueDao::COPY_BY_VALUE);
     }
 
     /**
@@ -141,22 +148,22 @@ class Tracker_FormElement_Field_List_BindFactory
      */
     public function duplicateByReference($from_field_id, $to_field_id)
     {
-        return $this->_duplicate($from_field_id, $to_field_id, Tracker_FormElement_Field_List_Bind_Static_ValueDao::COPY_BY_REFERENCE);
+        return $this->_duplicate($from_field_id, $to_field_id, BindStaticValueDao::COPY_BY_REFERENCE);
     }
 
     private function _duplicate($from_field_id, $to_field_id, $by_reference)
     {
         //duplicate users info, if any
-        $dao = new Tracker_FormElement_Field_List_Bind_UsersDao();
+        $dao = new BindUsersDao();
         $dao->duplicate($from_field_id, $to_field_id);
 
         //duplicate Static info, if any
-        $dao = new Tracker_FormElement_Field_List_Bind_StaticDao();
+        $dao = new BindStaticDao();
         $dao->duplicate($from_field_id, $to_field_id);
 
         $value_mapping = [];
         //duplicate Static value, if any
-        $dao = new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
+        $dao = new BindStaticValueDao();
         foreach ($dao->searchByFieldId($from_field_id, 0) as $row) {
             if ($id = $dao->duplicate($row['id'], $to_field_id, $by_reference)) {
                 $value_mapping[$row['id']] = $id;
@@ -171,10 +178,10 @@ class Tracker_FormElement_Field_List_BindFactory
             }
         }
 
-        $dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
+        $dao = new BindDefaultValueDao();
         $dao->duplicate($from_field_id, $to_field_id, $value_mapping);
 
-        $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
+        $dao = new BindDecoratorDao();
         $dao->duplicate($from_field_id, $to_field_id, $value_mapping);
 
         return $value_mapping;
@@ -424,14 +431,14 @@ class Tracker_FormElement_Field_List_BindFactory
         switch ($type) {
             case '': //default is static
             case self::STATIK:
-                $dao = new Tracker_FormElement_Field_List_Bind_StaticDao();
+                $dao = new BindStaticDao();
                 if ($dao->save($field->getId(), 0)) {
                     $bind = new Tracker_FormElement_Field_List_Bind_Static($field, 0, [], [], []);
                     $bind->process($bind_data, 'no redirect');
                 }
                 break;
             case self::USERS:
-                $dao = new Tracker_FormElement_Field_List_Bind_UsersDao();
+                $dao = new BindUsersDao();
                 if ($dao->save($field->getId(), [])) {
                     $bind = new Tracker_FormElement_Field_List_Bind_Users($field, '', [], []);
                     $bind->process($bind_data, 'no redirect');

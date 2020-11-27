@@ -21,6 +21,8 @@ use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\REST\FieldListBindUGroupValueRepresentation;
 
 /**
@@ -46,11 +48,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     private $values_indexed_by_ugroup_id;
 
     /**
-     * @var Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao
+     * @var BindUgroupsValueDao
      */
     protected $value_dao;
 
-    public function __construct($field, $values, $default_values, $decorators, UGroupManager $ugroup_manager, Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao $value_dao)
+    public function __construct($field, $values, $default_values, $decorators, UGroupManager $ugroup_manager, BindUgroupsValueDao $value_dao)
     {
         parent::__construct($field, $default_values, $decorators);
         $this->values         = $values;
@@ -379,7 +381,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
     private function getOpenValueDao()
     {
-        return new Tracker_FormElement_Field_List_OpenValueDao();
+        return new OpenListValueDao();
     }
 
     public function getValueDao()
