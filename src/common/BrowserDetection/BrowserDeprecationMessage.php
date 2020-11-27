@@ -53,8 +53,8 @@ final class BrowserDeprecationMessage
 
         if ($detected_browser->isIE11()) {
             return new self(
-                _('Your web browser will be unsupported soon'),
-                _('Internet Explorer will be unsupported soon, some features are already not available to you. Please upgrade to a modern, fully supported browser such as Firefox, Chrome or Edge.')
+                _('Your web browser is not supported'),
+                _('Starting January 2021 access with Internet Explorer will no longer work. Some features are already not available to you. Please upgrade to a modern, fully supported browser such as Firefox, Chrome or Edge.')
             );
         }
 

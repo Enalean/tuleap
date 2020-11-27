@@ -1051,15 +1051,6 @@ msgstr ""
 "rencontrerez des problèmes si vous continuez. Veuillez utiliser un "
 "navigateur modern tel que tel que Firefox, Chrome ou Edge."
 
-msgid ""
-"Internet Explorer will be unsupported soon, some features are already not "
-"available to you. Please upgrade to a modern, fully supported browser such "
-"as Firefox, Chrome or Edge."
-msgstr ""
-"Internet Explorer ne sera bientôt plus supporté, des fonctionnalités ne vous "
-"sont déjà pas disponibles. Veuillez utiliser un navigateur moderne tel que "
-"Firefox, Chrome ou Edge."
-
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
@@ -2028,6 +2019,15 @@ msgstr "Commencez par choisir un widget"
 
 msgid "Start working"
 msgstr "Commencez le travail"
+
+msgid ""
+"Starting January 2021 access with Internet Explorer will no longer work. "
+"Some features are already not available to you. Please upgrade to a modern, "
+"fully supported browser such as Firefox, Chrome or Edge."
+msgstr ""
+"À partir de janvier 2021, l'accès avec Internet Explorer ne fonctionnera plus. Des "
+"fonctionnalités ne vous sont déjà pas disponibles. Veuillez utiliser un "
+"navigateur moderne tel que Firefox, Chrome ou Edge."
 
 msgid "Status"
 msgstr "Statut"
@@ -3124,9 +3124,6 @@ msgstr "Votre requête n'est pas valide"
 
 msgid "Your web browser is not supported"
 msgstr "Votre navigateur web n'est pas supporté"
-
-msgid "Your web browser will be unsupported soon"
-msgstr "Votre navigateur web ne sera bientôt plus pris en charge"
 
 #, php-format
 msgid "[%s] Email change confirmation"

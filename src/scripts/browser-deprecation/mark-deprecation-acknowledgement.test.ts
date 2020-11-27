@@ -33,8 +33,8 @@ describe("mark-deprecation-acknowledgement", () => {
 
     it("deprecation notice is considered seen only for some time", () => {
         jest.spyOn(Date, "now").mockReturnValueOnce(1);
-        const a_month_in_ms = 30 * 24 * 60 * 60 * 1000;
-        jest.spyOn(Date, "now").mockReturnValueOnce(a_month_in_ms);
+        const an_hour_in_ms = 60 * 60 * 1000;
+        jest.spyOn(Date, "now").mockReturnValueOnce(an_hour_in_ms);
         expect(markAndCheckBrowserDeprecationAcknowledgement(localStorage)).toBe(false);
         expect(markAndCheckBrowserDeprecationAcknowledgement(localStorage)).toBe(false);
     });
