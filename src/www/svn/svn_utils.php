@@ -290,7 +290,8 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
 
 function svn_utils_make_viewlink($group_name, $filename, $text, $view_params)
 {
-    return '<A href="/svn/viewvc.php/' . $filename . '?root=' . $group_name . '&roottype=svn' . $view_params . '"><B>' . $text . '</B></A>';
+    $purifier = Codendi_HTMLPurifier::instance();
+    return '<A href="/svn/viewvc.php/' . $purifier->purify(urlencode($filename)) . '?root=' . $purifier->purify(urlencode($group_name)) . '&roottype=svn' . $view_params . '"><B>' . $purifier->purify($text) . '</B></A>';
 }
 
 

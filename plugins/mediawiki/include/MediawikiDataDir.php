@@ -29,7 +29,7 @@ class MediawikiDataDir
 {
     public function getMediawikiDir(Project $project)
     {
-        $name_with_id        = forge_get_config('projects_path', 'mediawiki') . '/' . $project->getID();
+        $name_with_id        = forge_get_config('projects_path', 'mediawiki') . '/' . (int) $project->getID();
         $name_with_shortname = forge_get_config('projects_path', 'mediawiki') . '/' . $project->getUnixName();
 
         if (is_dir($name_with_id)) {

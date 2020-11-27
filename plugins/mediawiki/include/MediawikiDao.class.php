@@ -408,9 +408,9 @@ class MediawikiDao extends DataAccessObject
         return str_replace('_', ' ', $user_name_with_first_char_uppercase);
     }
 
-    public function getTableName(Project $project, $table_name)
+    private function getTableName(Project $project, $table_name): string
     {
-        return $this->getMediawikiDatabaseName($project) . '.' . $this->getMediawikiTableNamePrefix($project) . $table_name;
+        return $this->da->quoteSmartSchema($this->getMediawikiDatabaseName($project) . '.' . $this->getMediawikiTableNamePrefix($project) . $table_name);
     }
 
     public function getMediawikiTableNamePrefix(Project $project)
@@ -456,7 +456,7 @@ class MediawikiDao extends DataAccessObject
         if ($this->central_database) {
             return $this->central_database;
         } else {
-            $db_name = self::DEDICATED_DATABASE_PREFIX . $project->getID();
+            $db_name = $this->da->quoteSmartSchema(self::DEDICATED_DATABASE_PREFIX . $project->getID());
             if ($this->update('CREATE DATABASE ' . $db_name)) {
                 return $db_name;
             }

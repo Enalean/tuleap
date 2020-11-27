@@ -78,11 +78,11 @@ echo $token->fetchHTMLInput();
 echo '<input type="hidden" name="group_id" value="' . (int) $group_id . '" />
     <p>
         <label for="newtracker_login"><b>' . $Language->getOverridableText('account_login', 'name') . '</b>:<br />
-        ' . $generic_user->getUserName() . '
+        ' . $hp->purify($generic_user->getUserName()) . '
     </p>
     <p>
         <label for="newtracker_real_name"><b>' . $Language->getText('account_register', 'realname') . '</b>:</label><br />
-        ' . $generic_user->getRealName() . '
+        ' . $hp->purify($generic_user->getRealName()) . '
     </p>
     <p>
         <label for="generic_user_email"><b>' . _('Change email address') . '</b>:</label><br />

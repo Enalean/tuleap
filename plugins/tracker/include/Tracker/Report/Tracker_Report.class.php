@@ -71,6 +71,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public const TYPE_TABLE             = 'table';
     public const COMMENT_CRITERION_NAME = 'comment';
 
+    /**
+     * @var int
+     */
     public $id;
     public $name;
     public $description;
@@ -808,7 +811,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         if ($link_artifact_id) {
             //Store in user preferences
             if ($current_user->getPreference('tracker_' . $this->tracker_id . '_last_report') != $this->id) {
-                $current_user->setPreference('tracker_' . $this->tracker_id . '_last_report', $this->id);
+                $current_user->setPreference('tracker_' . $this->tracker_id . '_last_report', (string) $this->id);
             }
         }
 
@@ -1679,7 +1682,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     {
         //Delete user preferences
         $dao = new UserPreferencesDao();
-        $dao->deleteByPreferenceNameAndValue('tracker_' . $this->tracker_id . '_last_report', $this->id);
+        $dao->deleteByPreferenceNameAndValue('tracker_' . $this->tracker_id . '_last_report', (string) $this->id);
 
         //Delete criteria
         foreach ($this->getCriteria() as $criteria) {

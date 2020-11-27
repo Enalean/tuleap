@@ -43,6 +43,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     public $chunksz;
     public $multisort;
+    /**
+     * @var Tracker_Report_Session
+     */
+    private $report_session;
 
     /**
      * Constructor
@@ -1753,7 +1757,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     /**
      * Process the request
-     * @param Request $request
+     * @param HTTPRequest $request
      */
     public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user)
     {

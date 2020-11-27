@@ -34,6 +34,9 @@ class PermissionsFunctionsWrapper
         return plugin_tracker_permission_get_field_tracker_ugroups_permissions($tracker->getGroupId(), $tracker->getId(), [$form_element]);
     }
 
+    /**
+     * @return array[]
+     */
     public function getTrackerUGroupsPermissions(\Tracker $tracker)
     {
         return plugin_tracker_permission_get_tracker_ugroups_permissions($tracker->getGroupId(), $tracker->getId());

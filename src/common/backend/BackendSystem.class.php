@@ -466,7 +466,7 @@ class BackendSystem extends Backend
         $backupfile = ForgeConfig::get('sys_project_backup_path') . "/" . $project->getUnixName(false) . ".tgz";
 
         if (is_dir($mydir)) {
-            system("cd " . ForgeConfig::get('grpdir_prefix') . "; tar cfz $backupfile " . $project->getUnixName(false));
+            system("cd " . ForgeConfig::get('grpdir_prefix') . "; tar cfz " . escapeshellarg($backupfile) . " " . escapeshellarg($project->getUnixName(false)));
             chmod($backupfile, 0600);
             $this->recurseDeleteInDir($mydir);
             rmdir($mydir);
@@ -504,7 +504,7 @@ class BackendSystem extends Backend
         $anonymousFTP = ForgeConfig::get('ftp_anon_dir_prefix') . "/" . $project->getUnixName(false);
         $backupfile   = ForgeConfig::get('sys_project_backup_path') . "/" . $project->getUnixName(false) . "-ftp.tgz";
         if (is_dir($anonymousFTP)) {
-            system("cd " . ForgeConfig::get('ftp_anon_dir_prefix') . "; tar cfz $backupfile " . $project->getUnixName(false));
+            system("cd " . ForgeConfig::get('ftp_anon_dir_prefix') . "; tar cfz " . escapeshellarg($backupfile) . " " . escapeshellarg($project->getUnixName(false)));
             chmod($backupfile, 0600);
             $this->recurseDeleteInDir($anonymousFTP);
         }

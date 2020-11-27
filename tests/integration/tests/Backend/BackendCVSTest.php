@@ -140,7 +140,7 @@ final class BackendCVSTest extends TestCase
         $backend->shouldReceive('getProjectManager')->andReturns($pm);
         $backend->shouldReceive('chown');
         $backend->shouldReceive('chgrp');
-        $backend->shouldReceive('system')->with('chown -R :TestProj ' . ForgeConfig::get('cvs_prefix') . '/TestProj')->once();
+        $backend->shouldReceive('system')->with('chown -R \':TestProj\' \'' . ForgeConfig::get('cvs_prefix') . '/TestProj\'')->once();
 
         $this->assertTrue($backend->createProjectCVS(142));
         $this->assertDirectoryExists(ForgeConfig::get('cvs_prefix') . '/TestProj', 'CVS dir should be created');
@@ -258,7 +258,7 @@ final class BackendCVSTest extends TestCase
 
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $backend->shouldReceive('getProjectManager')->andReturns($pm);
-        $backend->shouldReceive('system')->with('chown -R :TestProj ' . ForgeConfig::get('cvs_prefix') . '/TestProj')->once();
+        $backend->shouldReceive('system')->with('chown -R \':TestProj\' \'' . ForgeConfig::get('cvs_prefix') . '/TestProj\'')->once();
 
         $backend->createProjectCVS(142);
 
@@ -295,7 +295,7 @@ final class BackendCVSTest extends TestCase
         $backend->shouldReceive('getProjectManager')->andReturns($pm);
         $backend->shouldReceive('chown');
         $backend->shouldReceive('chgrp');
-        $backend->shouldReceive('system')->with('chown -R :TestProj ' . ForgeConfig::get('cvs_prefix') . '/TestProj')->once();
+        $backend->shouldReceive('system')->with('chown -R \':TestProj\' \'' . ForgeConfig::get('cvs_prefix') . '/TestProj\'')->once();
 
         $backend->createProjectCVS(142);
 
@@ -349,9 +349,9 @@ final class BackendCVSTest extends TestCase
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $backend->shouldReceive('useCVSNT')->andReturns(true);
         $loginfo_path = ForgeConfig::get('cvs_prefix') . '/foobar/CVSROOT/loginfo';
-        $backend->shouldReceive('system')->with('co -q -l ' . $loginfo_path, 0)->once();
+        $backend->shouldReceive('system')->with('co -q -l \'' . $loginfo_path . '\'', 0)->once();
         $backend->shouldReceive('system')->with(
-            sprintf('/usr/bin/rcs -q -l %s; ci -q -m"Codendi modification" %s; co -q %s', $loginfo_path, $loginfo_path, $loginfo_path),
+            sprintf('/usr/bin/rcs -q -l \'%s\'; ci -q -m"Codendi modification" \'%s\'; co -q \'%s\'', $loginfo_path, $loginfo_path, $loginfo_path),
             0
         )->once();
 
@@ -492,7 +492,7 @@ final class BackendCVSTest extends TestCase
 
         $backend = $this->GivenACVSRepositoryWithWrongOwnership($project, $cvsdir);
         $backend->shouldReceive('log')->with('Restoring ownership on CVS dir: ' . $cvsdir, 'info')->once();
-        $backend->shouldReceive('system')->with('chown -R :TestProj ' . ForgeConfig::get('cvs_prefix') . '/TestProj')->once();
+        $backend->shouldReceive('system')->with('chown -R \':TestProj\' \'' . ForgeConfig::get('cvs_prefix') . '/TestProj\'')->once();
 
         $this->assertTrue($backend->checkCVSMode($project));
     }

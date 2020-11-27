@@ -1093,10 +1093,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             }
             if (
                 ! isset($submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED])
-                || ! (
-                    isset($submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED])
-                    && $submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED]
-                )
+                || ! $submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED]
             ) {
                 return $this->isValidRegardingRequiredProperty($artifact, $submitted_value)
                     && $this->validateField($artifact, $submitted_value);

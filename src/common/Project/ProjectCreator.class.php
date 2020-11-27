@@ -540,7 +540,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function initFileModule($group_id)
     {
-        $result = db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','" . $this->project_manager->getProject($group_id)->getUnixName() . "')");
+        $result = db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('" . db_ei($group_id) . "','" . db_es($this->project_manager->getProject($group_id)->getUnixName()) . "')");
         if (! $result) {
             [$host, $port] = explode(':', ForgeConfig::get('sys_default_domain'));
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_file_fail', [$host, db_error()]));
@@ -554,8 +554,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     protected function setProjectAdmin($group_id, PFUser $user)
     {
         $result = db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ("
-            . $user->getId() . ","
-            . $group_id . ","
+            . db_ei($user->getId()) . ","
+            . db_ei($group_id) . ","
             . "'A'," // admin flags
             . "2," // bug flags
             . "2," // forum flags
@@ -597,7 +597,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function initForumModuleFromTemplate($group_id, $template_id)
     {
-        $sql = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=$template_id ";
+        $sql = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=" . db_ei($template_id) . " ";
         $result = db_query($sql);
         while ($arr = db_fetch_array($result)) {
             $fid = forum_create_forum(
@@ -619,7 +619,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function initCVSModuleFromTemplate($group_id, $template_id)
     {
-        $sql = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble, cvs_is_private FROM groups WHERE group_id=$template_id ";
+        $sql = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble, cvs_is_private FROM groups WHERE group_id=" . db_ei($template_id);
         $result = db_query($sql);
         $arr = db_fetch_array($result);
         $query = "UPDATE groups
@@ -627,7 +627,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                       cvs_watch_mode='" . db_ei($arr['cvs_watch_mode']) . "' ,
                       cvs_preamble='" . db_escape_string($arr['cvs_preamble']) . "',
                       cvs_is_private = " . db_escape_int($arr['cvs_is_private']) . "
-                  WHERE group_id = '$group_id'";
+                  WHERE group_id = '" . db_ei($group_id) . "'";
 
         $result = db_query($query);
         if (! $result) {
@@ -643,14 +643,14 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $current_timestamp = db_escape_int($_SERVER['REQUEST_TIME']);
 
         $sql = "INSERT INTO svn_accessfile_history (version_number, group_id, version_date)
-                VALUES (1, $group_id, $current_timestamp)";
+                VALUES (1, " . db_ei($group_id) . ", $current_timestamp)";
 
         $result = db_query($sql);
         if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_svn_infos'));
         }
 
-        $sql = "SELECT svn_tracker, svn_preamble, svn_mandatory_ref, svn_commit_to_tag_denied FROM groups WHERE group_id=$template_id ";
+        $sql = "SELECT svn_tracker, svn_preamble, svn_mandatory_ref, svn_commit_to_tag_denied FROM groups WHERE group_id=" . db_ei($template_id) . " ";
         $result = db_query($sql);
         $arr = db_fetch_array($result);
         $query = "UPDATE groups, svn_accessfile_history
@@ -659,7 +659,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                       svn_preamble='" . db_escape_string($arr['svn_preamble']) . "',
                       svn_commit_to_tag_denied='" . db_ei($arr['svn_commit_to_tag_denied']) . "',
                       svn_accessfile_version_id = svn_accessfile_history.id
-                  WHERE groups.group_id = $group_id
+                  WHERE groups.group_id = " . db_ei($group_id) . "
                       AND groups.group_id = svn_accessfile_history.group_id";
 
         $result = db_query($query);
@@ -697,13 +697,13 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 );
                 $rid = db_query($sql);
                 if ($rid) {
-                    $package_id = db_insertid($rid);
+                    $package_id = db_ei(db_insertid($rid));
                     $packages_mapping[(int) $template_package_id] = (int) $package_id;
                     $sql = "INSERT INTO permissions(permission_type, object_id, ugroup_id)
                       SELECT permission_type, $package_id, $sql_ugroup_mapping
                       FROM permissions
                       WHERE permission_type = 'PACKAGE_READ'
-                        AND object_id = $template_package_id";
+                        AND object_id = " . db_ei($template_package_id);
                     db_query($sql);
                 }
             }

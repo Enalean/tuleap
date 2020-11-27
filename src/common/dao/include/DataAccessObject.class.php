@@ -279,6 +279,8 @@ class DataAccessObject
      * @return  mixed false if there is no rank to update of the numerical
      *          value of the new rank of the item. If return 'null' it means
      *          that sth wrong happended.
+     *
+     * @psalm-taint-specialize
      */
     protected function prepareRanking(
         string $table_name,

@@ -223,7 +223,7 @@ if (! IS_SCRIPT) {
     (static function () use ($current_user) {
         if (! $current_user->isAnonymous()) {
             /**
-             * @psalm-taint-escape text
+             * @psalm-taint-escape header
              */
             $header = 'X-Tuleap-Username: ' . $current_user->getUserName();
             header($header);
@@ -231,11 +231,13 @@ if (! IS_SCRIPT) {
     })();
 }
 
-//Check post max size
-if ($request->exist('postExpected') && ! $request->exist('postReceived')) {
-    $e = 'You tried to upload a file that is larger than the Codendi post_max_size setting.';
-    exit_error('Error', $e);
-}
+(static function () use ($request) {
+    //Check post max size
+    if ($request->exist('postExpected') && ! $request->exist('postReceived')) {
+        $e = 'You tried to upload a file that is larger than the Codendi post_max_size setting.';
+        exit_error('Error', $e);
+    }
+})();
 
 if ($request->isAjax()) {
     header("Cache-Control: no-store, no-cache, must-revalidate");

@@ -195,7 +195,7 @@ class PluginFactory // phpcs:ignore
     /**
      * Check for directory separator to prevent potential LFI
      *
-     * @psalm-taint-escape text
+     * @psalm-taint-escape include
      * @psalm-taint-escape shell
      * @psalm-pure
      */

@@ -95,7 +95,7 @@ echo svn_utils_format_svn_history($group_id);
 print '<HR><B>' . $Language->getText('svn_intro', 'browse_tree') . '</B>
 <P>' . $Language->getText('svn_intro', 'browse_comment') . '
 <UL>
-<LI><A HREF="/svn/viewvc.php/?roottype=svn&root=' . $project->getUnixNameMixedCase() . '"><B>' . $Language->getText('svn_intro', 'browse_tree') . '</B></A></LI>';
+<LI><A HREF="/svn/viewvc.php/?roottype=svn&root=' . $hp->purify(urlencode($project->getUnixNameMixedCase())) . '"><B>' . $Language->getText('svn_intro', 'browse_tree') . '</B></A></LI>';
 
 print $HTML->box1_bottom();
 

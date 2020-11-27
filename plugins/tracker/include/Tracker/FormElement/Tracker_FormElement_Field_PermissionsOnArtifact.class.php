@@ -570,11 +570,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
                 if ($predefined_ugroups) {
                     $predefined_ugroups .= ' ,';
                 }
-                $predefined_ugroups .= $row['ugroup_id'];
+                $predefined_ugroups .= db_ei($row['ugroup_id']);
             }
         }
 
-        $sql = "SELECT * FROM ugroup WHERE group_id=" . $this->getTracker()->getGroupId() . " OR ugroup_id IN (" . $predefined_ugroups . ") ORDER BY ugroup_id";
+        $sql = "SELECT * FROM ugroup WHERE group_id=" . db_ei($this->getTracker()->getGroupId()) . " OR ugroup_id IN (" . $predefined_ugroups . ") ORDER BY ugroup_id";
         $res = db_query($sql);
 
         while ($row = db_fetch_array($res)) {

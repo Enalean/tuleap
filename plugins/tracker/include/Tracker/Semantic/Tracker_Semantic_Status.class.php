@@ -318,7 +318,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
                     $select = $hp->purify($this->getField()->getLabel());
                 }
 
-                $html .= sprintf(dgettext('tuleap-tracker', '<p>An artifact is considered to be <strong>open</strong> when its field <strong>%1$s</strong> will have one of the following values:</p>'), $select) . $values . ' ' . $submit;
+                $html .= sprintf(dgettext('tuleap-tracker', '<p>An artifact is considered to be <strong>open</strong> when its field <strong>%1$s</strong> will have one of the following values:</p>'), $hp->purify($select)) . $values . ' ' . $submit;
             }
             $html .= '</form>';
         } else {

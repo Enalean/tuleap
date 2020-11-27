@@ -352,7 +352,7 @@ class MediaWikiInstantiater
 
         foreach ($mappings as $group_name => $mapping) {
             foreach ($mapping as $ugroup_id) {
-                $values[] = "($group_id, $ugroup_id, '$group_name')";
+                $values[] = "(" . db_ei($group_id)  . ", " . db_ei($ugroup_id) . ", '" . db_es($group_name) . "')";
             }
         }
 

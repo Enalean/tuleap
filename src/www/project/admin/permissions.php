@@ -135,6 +135,7 @@ function permission_get_object_name($permission_type, $object_id)
 
     $pm = ProjectManager::instance();
     if ($permission_type == 'NEWS_READ') {
+        require_once __DIR__ . '/../../news/news_utils.php';
         return get_news_name_from_forum_id($object_id);
     } elseif ($permission_type == 'PACKAGE_READ') {
         $package_factory = new FRSPackageFactory();

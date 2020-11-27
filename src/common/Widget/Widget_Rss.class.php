@@ -149,15 +149,15 @@ abstract class Widget_Rss extends Widget
         $owner_type
     ) {
         $sql = "INSERT INTO widget_rss (owner_id, owner_type, title, url)
-        SELECT  " . $owner_id . ", '" . $owner_type . "', title, url
+        SELECT  " . db_ei($owner_id) . ", '" . db_es($owner_type) . "', title, url
         FROM widget_rss
-        WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' ";
+        WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' ";
         $res = db_query($sql);
         return db_insertid($res);
     }
     public function loadContent($id)
     {
-        $sql = "SELECT * FROM widget_rss WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . $id;
+        $sql = "SELECT * FROM widget_rss WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_es($id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
@@ -185,7 +185,7 @@ abstract class Widget_Rss extends Widget
                     $rss['title'] = $request->get('title');
                 }
             }
-            $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES (' . $this->owner_id . ", '" . $this->owner_type . "', '" . db_escape_string($rss['title']) . "', '" . db_escape_string($rss['url']) . "')";
+            $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($rss['title']) . "', '" . db_escape_string($rss['url']) . "')";
             $res = db_query($sql);
             $content_id = db_insertid($res);
         }
@@ -212,7 +212,7 @@ abstract class Widget_Rss extends Widget
             }
 
             if ($url || $title) {
-                $sql = "UPDATE widget_rss SET " . $title . ", " . $url . " WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . (int) $request->get('content_id');
+                $sql = "UPDATE widget_rss SET " . $title . ", " . $url . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei((int) $request->get('content_id'));
                 $res = db_query($sql);
                 $done = true;
             }
@@ -221,7 +221,7 @@ abstract class Widget_Rss extends Widget
     }
     public function destroy($id)
     {
-        $sql = 'DELETE FROM widget_rss WHERE id = ' . $id . ' AND owner_id = ' . $this->owner_id . " AND owner_type = '" . $this->owner_type . "'";
+        $sql = 'DELETE FROM widget_rss WHERE id = ' . db_ei($id) . ' AND owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "'";
         db_query($sql);
     }
     public function isUnique()

@@ -258,8 +258,16 @@ class BaseLanguage
     public function loadLanguage($lang)
     {
         if ($this->lang !== $lang) {
-            $this->lang = $lang;
-            $this->loadFromSerialized($lang) || $this->loadFromTabs($lang);
+            if (strpos($lang, DIRECTORY_SEPARATOR) !== false) {
+                throw new RuntimeException('$lang is not expected to contain a directory separator, got ' . $lang);
+            }
+            /**
+             * @psalm-taint-escape include
+             * @psalm-taint-escape file
+             */
+            $new_lang = $lang;
+            $this->lang = $new_lang;
+            $this->loadFromSerialized($new_lang) || $this->loadFromTabs($new_lang);
         }
     }
 
@@ -274,12 +282,6 @@ class BaseLanguage
      */
     private function loadFromSerialized($lang)
     {
-        if (strpos($lang, DIRECTORY_SEPARATOR) !== false) {
-            throw new RuntimeException('$lang is not expected to contain a directory separator, got ' . $lang);
-        }
-        /**
-         * @psalm-taint-escape text
-         */
         $filepath = $this->getCacheDirectory() . DIRECTORY_SEPARATOR . $lang . '.php';
         if (is_file($filepath)) {
             $this->text_array = require $filepath;
@@ -355,7 +357,7 @@ class BaseLanguage
         // Language for current user unless it is specified in the param list
         if (! isset($lang_code) && preg_match('/^[A-Za-z]{2,4}_[A-Za-z]{2}$/', $this->lang) === 1) {
             /**
-             * @psalm-taint-escape text
+             * @psalm-taint-escape include
              */
             $lang_code = $this->lang;
         }

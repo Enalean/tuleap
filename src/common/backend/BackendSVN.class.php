@@ -871,7 +871,7 @@ class BackendSVN extends Backend
         if ($need_owner_update) {
             $this->log("Restoring ownership on SVN dir: $svnroot", Backend::LOG_INFO);
             $this->setUserAndGroup($project, $svnroot);
-            system("chmod g+rw $svnroot");
+            system("chmod g+rw " . escapeshellarg($svnroot));
         }
 
         return true;

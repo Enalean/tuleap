@@ -4,6 +4,8 @@
 // http://sourceforge.net
 
 
+$request = HTTPRequest::instance();
+
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if (! $request->valid($vGroupId)) {

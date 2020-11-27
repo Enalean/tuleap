@@ -195,7 +195,7 @@ function Button($action, $label = false, $page_or_rev = false)
 }
 
 
-class Theme
+class PHPWikiTheme
 {
     public $HTML_DUMP_SUFFIX = '';
     public $DUMP_MODE = false;
@@ -210,7 +210,7 @@ class Theme
         $this->_theme = "themes/$theme_name";
 
         if ($theme_name != 'default') {
-            $this->_default_theme = new Theme();
+            $this->_default_theme = new PHPWikiTheme();
         }
 
         // by pixels

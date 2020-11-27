@@ -141,15 +141,15 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         $owner_type
     ) {
         $sql = "INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id)
-        SELECT  " . $owner_id . ", '" . $owner_type . "', title, chart_id
+        SELECT  " . db_ei($owner_id) . ", '" . db_es($owner_type) . "', title, chart_id
         FROM plugin_graphontrackersv5_widget_chart
-        WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' ";
+        WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' ";
         $res = db_query($sql);
         return db_insertid($res);
     }
     public function loadContent($id)
     {
-        $sql = "SELECT * FROM plugin_graphontrackersv5_widget_chart WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . $id;
+        $sql = "SELECT * FROM plugin_graphontrackersv5_widget_chart WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
@@ -166,7 +166,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         $vId->required();
         if ($request->validInArray('chart', $vId)) {
             $chart = $request->get('chart');
-            $sql = 'INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id) VALUES (' . $this->owner_id . ", '" . $this->owner_type . "', '" . db_escape_string($chart['title']) . "', " . db_escape_int($chart['chart_id']) . ")";
+            $sql = 'INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($chart['title']) . "', " . db_escape_int($chart['chart_id']) . ")";
             $res = db_query($sql);
             $content_id = db_insertid($res);
         }
@@ -193,7 +193,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
             }
 
             if ($id || $title) {
-                $sql = "UPDATE plugin_graphontrackersv5_widget_chart SET " . $title . ", " . $id . " WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . (int) $request->get('content_id');
+                $sql = "UPDATE plugin_graphontrackersv5_widget_chart SET " . $title . ", " . $id . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . (int) $request->get('content_id');
                 $res = db_query($sql);
                 $done = true;
             }
@@ -202,7 +202,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
     }
     public function destroy($id)
     {
-        $sql = 'DELETE FROM plugin_graphontrackersv5_widget_chart WHERE id = ' . $id . ' AND owner_id = ' . $this->owner_id . " AND owner_type = '" . $this->owner_type . "'";
+        $sql = 'DELETE FROM plugin_graphontrackersv5_widget_chart WHERE id = ' . db_ei($id) . ' AND owner_id = ' . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "'";
         db_query($sql);
     }
     public function isUnique()

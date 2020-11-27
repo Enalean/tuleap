@@ -63,9 +63,9 @@ class Docman_PermissionsManagerDao extends DataAccessObject
                       ' WHERE i.group_id = %d ' .
                       ' AND i.item_type = ' . PLUGIN_DOCMAN_ITEM_TYPE_FOLDER .
                       ' AND p.permission_type IN (\'PLUGIN_DOCMAN_WRITE\', \'PLUGIN_DOCMAN_MANAGE\')' .
-                      ' AND p.ugroup_id IN (' . implode(',', $ugroupIds) . ')' .
+                      ' AND p.ugroup_id IN (' . $this->da->quoteSmartImplode(',', $ugroupIds) . ')' .
                       ' AND p.object_id = CAST(i.item_id as CHAR CHARACTER SET utf8)',
-            $group_id
+            $this->da->escapeInt($group_id)
         );
         $res = $this->retrieve($sql);
         if (! $res->isError() && $res->rowCount() > 0) {

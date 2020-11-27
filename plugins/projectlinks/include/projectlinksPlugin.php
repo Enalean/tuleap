@@ -853,9 +853,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             $feedback = sprintf(dgettext('tuleap-projectlinks', 'Update cancelled (it would create a duplicate link to "%1$s")'), $hp->purify($targetProject->getPublicName()));
         } else {
             $updates = [
-                "link_type_id" => $link_type_id,
-                "target_group_id" => $target_group_id,
-                "master_group_id" => $group_id
+                "link_type_id" => db_ei($link_type_id),
+                "target_group_id" => db_ei($target_group_id),
+                "master_group_id" => db_ei($group_id)
             ];
             if (is_null($link_id)) {
                 // new item - set date, otherwise leave it alone
@@ -866,7 +866,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 update_database(
                     "plugin_projectlinks_relationship",
                     $updates,
-                    is_null($link_id) ? "" : "link_id=$link_id"
+                    is_null($link_id) ? "" : "link_id=" . db_ei($link_id)
                 )
             ) {
                 $feedback = sprintf(dgettext('tuleap-projectlinks', 'update OK (%1$s)'), $hp->purify($targetProject->getPublicName())) . ' ';

@@ -107,9 +107,9 @@ class BackendCVS extends Backend
 
             if ($this->useCVSNT()) {
                 // Tell cvsnt not to update /etc/cvsnt/PServer: this is done later by this the script.
-                $output = $this->system("$cvs_command -d$cvs_dir init -n ", $return_code);
+                $output = $this->system("$cvs_command -d" . escapeshellarg($cvs_dir) . " init -n ", $return_code);
             } else {
-                $output = $this->system("$cvs_command -d$cvs_dir init", $return_code);
+                $output = $this->system("$cvs_command -d" . escapeshellarg($cvs_dir) . " init", $return_code);
             }
 
             if ($return_code > 0) {
@@ -130,7 +130,7 @@ class BackendCVS extends Backend
 
             $return_code_turn_off = 0;
 
-            $output_turn_off = $this->system("echo '' > $cvs_dir/CVSROOT/writers", $return_code_turn_off);
+            $output_turn_off = $this->system("echo '' > " . escapeshellarg("$cvs_dir/CVSROOT/writers"), $return_code_turn_off);
 
             if ($return_code_turn_off > 0) {
                 $this->log("Echo in /CVSROOT/writers returns: $output_turn_off", Backend::LOG_ERROR);
@@ -143,12 +143,12 @@ class BackendCVS extends Backend
                 $lockdir = ForgeConfig::get('cvslock_prefix') . "/$unix_group_name";
                 $filename = "$cvs_dir/CVSROOT/config";
                 $this->_RcsCheckout($filename);
-                $this->system("echo  >> $filename");
-                $this->system("echo '# !!! Codendi Specific !!! DO NOT REMOVE' >> $filename");
-                $this->system("echo '# Put all CVS lock files in a single directory world writable' >> $filename");
-                $this->system("echo '# directory so that any registered user can checkout/update' >> $filename");
-                $this->system("echo '# without having write permission on the entire cvs tree.' >> $filename");
-                $this->system("echo 'LockDir=$lockdir' >> $filename");
+                $this->system("echo  >> " . escapeshellarg($filename));
+                $this->system("echo '# !!! Codendi Specific !!! DO NOT REMOVE' >> " . escapeshellarg($filename));
+                $this->system("echo '# Put all CVS lock files in a single directory world writable' >> " . escapeshellarg($filename));
+                $this->system("echo '# directory so that any registered user can checkout/update' >> " . escapeshellarg($filename));
+                $this->system("echo '# without having write permission on the entire cvs tree.' >> " . escapeshellarg($filename));
+                $this->system("echo " . escapeshellarg("LockDir=$lockdir") . " >> " . escapeshellarg($filename));
                 // commit changes to config file (directly with RCS)
                 $this->_RcsCommit($filename);
 
@@ -158,8 +158,8 @@ class BackendCVS extends Backend
 
             // put an empty line in in the valid tag cache (means no tag yet)
             // (this file is not under version control so don't check it in)
-            $this->system("echo \"\" > $cvs_dir/CVSROOT/val-tags");
-            $this->system("chmod 0664 $cvs_dir/CVSROOT/val-tags");
+            $this->system("echo \"\" > " . escapeshellarg("$cvs_dir/CVSROOT/val-tags"));
+            $this->system("chmod 0664 " . escapeshellarg("$cvs_dir/CVSROOT/val-tags"));
 
             // set group ownership, http user
             $this->changeRepoOwnership($cvs_dir, $unix_group_name);
@@ -175,9 +175,9 @@ class BackendCVS extends Backend
         // history was deleted (or not created)? Recreate it.
         if ($this->useCVSNT()) {
             // Create history file (not created by default by cvsnt)
-            $this->system("touch $cvs_dir/CVSROOT/history");
+            $this->system("touch " . escapeshellarg("$cvs_dir/CVSROOT/history"));
             // Must be writable
-            $this->system("chmod 0666 $cvs_dir/CVSROOT/history");
+            $this->system("chmod 0666 " . escapeshellarg("$cvs_dir/CVSROOT/history"));
             $no_filter_file_extension = [];
             $this->recurseChownChgrp(
                 $cvs_dir . "/CVSROOT",
@@ -202,7 +202,7 @@ class BackendCVS extends Backend
 
     protected function recursiveSgidOnDirectories($root)
     {
-        $this->system('find ' . $root . ' -type d -exec chmod g+rws {} \;');
+        $this->system('find ' . escapeshellarg($root) . ' -type d -exec chmod g+rws {} \;');
     }
 
     /**
@@ -222,7 +222,7 @@ class BackendCVS extends Backend
                     $this->log("Can't create project CVS lock dir: $lockdir", Backend::LOG_ERROR);
                     return false;
                 }
-                $this->system("chmod 02777 $lockdir"); // overwrite umask value
+                $this->system("chmod 02777 " . escapeshellarg($lockdir)); // overwrite umask value
             }
         }
         return true;
@@ -385,7 +385,7 @@ class BackendCVS extends Backend
                 // Apply cvs watch on only if cvs_watch_mode changed to on
                 $this->CVSWatch($cvs_dir, $unix_group_name, 1);
                 $this->changeRepoOwnership($cvs_dir, $unix_group_name);
-                $this->system("chmod g+rws $cvs_dir");
+                $this->system("chmod g+rws " . escapeshellarg($cvs_dir));
             }
         } else {
             // Remove notify command if cvs_watch_mode is off.
@@ -418,46 +418,46 @@ class BackendCVS extends Backend
      */
     public function CVSWatch($cvs_dir, $unix_group_name, $watch_mode)
     {
-        $sandbox_dir =  ForgeConfig::get('tmp_dir') . "/" . $unix_group_name . ".cvs_watch_sandbox";
+        $sandbox_dir         =  ForgeConfig::get('tmp_dir') . "/" . $unix_group_name . ".cvs_watch_sandbox";
+        $sandbox_dir_escaped = escapeshellarg($sandbox_dir);
         if (is_dir($sandbox_dir)) {
             return false;
         } else {
             mkdir("$sandbox_dir", 0700);
-            $this->system("chmod 0700 $sandbox_dir"); // overwrite umask value
+            $this->system("chmod 0700 $sandbox_dir_escaped"); // overwrite umask value
         }
+
+        $cvs_dir_escaped     = escapeshellarg($cvs_dir);
         if ($watch_mode == 1) {
-            $this->system("cd $sandbox_dir;cvs -d$cvs_dir co . 2>/dev/null 1>&2;cvs -d$cvs_dir watch on 2>/dev/null 1>&2;");
+            $this->system("cd $sandbox_dir_escaped;cvs -d$cvs_dir_escaped co . 2>/dev/null 1>&2;cvs -d$cvs_dir_escaped watch on 2>/dev/null 1>&2;");
         } else {
-            $this->system("cd $sandbox_dir;cvs -d$cvs_dir co . 2>/dev/null 1>&2;cvs -d$cvs_dir watch off 2>/dev/null 1>&2;");
+            $this->system("cd $sandbox_dir_escaped;cvs -d$cvs_dir_escaped co . 2>/dev/null 1>&2;cvs -d$cvs_dir_escaped watch off 2>/dev/null 1>&2;");
         }
-        $this->system("rm -rf $sandbox_dir;");
+        $this->system("rm -rf $sandbox_dir_escaped;");
         return true;
     }
 
     /**
      * Checkout the file
      *
-     * @param File $file file to checkout
-     *
-     * @return void
+     * @param string $file file to checkout
      */
     public function _RcsCheckout($file, &$output = '')
     {
         $rcode = 0;
-        $output = $this->system("co -q -l $file", $rcode);
+        $output = $this->system("co -q -l " . escapeshellarg($file), $rcode);
         return $rcode;
     }
 
     /**
      * Commit the file
      *
-     * @param File $file file to be committed
-     *
-     * @return void
+     * @param string $file file to be committed
      */
     public function _RcsCommit($file, &$output = '')
     {
         $rcode  = 0;
+        $file   = escapeshellarg($file);
         $output = $this->system("/usr/bin/rcs -q -l $file; ci -q -m\"Codendi modification\" $file; co -q $file", $rcode);
         return $rcode;
     }
@@ -479,7 +479,7 @@ class BackendCVS extends Backend
         $backupfile = ForgeConfig::get('sys_project_backup_path') . "/" . $project->getUnixName(false) . "-cvs.tgz";
 
         if (is_dir($mydir)) {
-            $this->system("cd " . ForgeConfig::get('cvs_prefix') . "; tar cfz $backupfile " . $project->getUnixName(false));
+            $this->system("cd " . ForgeConfig::get('cvs_prefix') . "; tar cfz " . escapeshellarg($backupfile) . " " . escapeshellarg($project->getUnixName(false)));
             chmod($backupfile, 0600);
             $this->recurseDeleteInDir($mydir);
             rmdir($mydir);
@@ -628,7 +628,7 @@ class BackendCVS extends Backend
         if ($need_owner_update) {
             $this->log("Restoring ownership on CVS dir: $cvsroot", Backend::LOG_INFO);
             $this->changeRepoOwnership($cvsroot, $unix_group_name);
-            $this->system('chmod g+rws ' . $cvsroot);
+            $this->system('chmod g+rws ' . escapeshellarg($cvsroot));
         }
 
         return true;
@@ -636,7 +636,7 @@ class BackendCVS extends Backend
 
     public function changeRepoOwnership($repo_path, $unix_group_name)
     {
-            return $this->system("chown -R {$this->getHTTPUser()}:{$unix_group_name} $repo_path");
+            return $this->system("chown -R " . escapeshellarg($this->getHTTPUser() . ":" . $unix_group_name) . " " . escapeshellarg($repo_path));
     }
 
     /**
