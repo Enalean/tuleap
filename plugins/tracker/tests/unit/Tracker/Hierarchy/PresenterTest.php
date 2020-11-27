@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Hierarchy_PresenterTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -42,7 +43,8 @@ final class Tracker_Hierarchy_PresenterTest extends \PHPUnit\Framework\TestCase
             $tracker,
             $possible_children,
             new TreeNode(),
-            [],
+            false,
+            null,
             []
         );
 

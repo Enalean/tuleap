@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Hierarchy;
 use Codendi_Request;
 use Feedback;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tracker;
@@ -69,6 +70,10 @@ class HierarchyController
      * @var TemplateRenderer
      */
     private $renderer;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     public function __construct(
         Codendi_Request $request,
@@ -76,7 +81,8 @@ class HierarchyController
         Tracker_Hierarchy_HierarchicalTrackerFactory $factory,
         HierarchyDAO $dao,
         ArtifactLinksUsageDao $artifact_links_usage_dao,
-        Tracker_Workflow_Trigger_RulesDao $tracker_workflow_trigger_rules_dao
+        Tracker_Workflow_Trigger_RulesDao $tracker_workflow_trigger_rules_dao,
+        EventDispatcherInterface $event_dispatcher
     ) {
         $this->request                            = $request;
         $this->tracker                            = $tracker;
@@ -85,6 +91,7 @@ class HierarchyController
         $this->artifact_links_usage_dao           = $artifact_links_usage_dao;
         $this->tracker_workflow_trigger_rules_dao = $tracker_workflow_trigger_rules_dao;
         $this->renderer                           = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
+        $this->event_dispatcher                   = $event_dispatcher;
     }
 
     public function edit(): void
@@ -99,6 +106,7 @@ class HierarchyController
             $this->factory->getPossibleChildren($this->tracker),
             $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker()),
             $this->isIsChildTypeDisabledForProject($this->tracker->getProject()),
+            $this->getOtherResourceNameManagingTheTrackerHierarchy(),
             $this->getChildrenUsedInTriggerRules()
         );
     }
@@ -137,12 +145,19 @@ class HierarchyController
             );
     }
 
+    private function getOtherResourceNameManagingTheTrackerHierarchy(): ?string
+    {
+        $tracker_hierarchy_delegation = new TrackerHierarchyDelegation($this->tracker->getUnhierarchizedTracker());
+        $this->event_dispatcher->dispatch($tracker_hierarchy_delegation);
+        return $tracker_hierarchy_delegation->getResourceNameTrackerHierarchyHasBeenDelegatedTo();
+    }
+
     public function update(): void
     {
         $vChildren = new Valid_UInt('children');
         $vChildren->required();
 
-        if ($this->isIsChildTypeDisabledForProject($this->tracker->getProject())) {
+        if ($this->getOtherResourceNameManagingTheTrackerHierarchy() !== null || $this->isIsChildTypeDisabledForProject($this->tracker->getProject())) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-tracker', 'The tracker hierarchy cannot be defined.')

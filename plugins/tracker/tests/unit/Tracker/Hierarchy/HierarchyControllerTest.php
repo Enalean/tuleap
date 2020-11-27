@@ -23,29 +23,22 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Hierarchy;
 
 use Codendi_Request;
-use Layout;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tracker_Hierarchy_HierarchicalTracker;
 use Tracker_Hierarchy_HierarchicalTrackerFactory;
 use Tracker_Workflow_Trigger_RulesDao;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class HierarchyControllerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function setUp(): void
-    {
-        $GLOBALS['Response'] = Mockery::spy(Layout::class);
-    }
-
-    public function tearDown(): void
-    {
-        unset($GLOBALS['Response']);
-    }
+    use GlobalResponseMock;
 
     public function testTrackersImplicatedInTriggersRulesCanNotBeRemovedFromTheChild(): void
     {
@@ -54,18 +47,26 @@ final class HierarchyControllerTest extends TestCase
         $hierarchy_dao        = Mockery::mock(HierarchyDAO::class);
         $artifact_links_dao   = Mockery::mock(ArtifactLinksUsageDao::class);
         $trigger_rules_dao    = Mockery::mock(Tracker_Workflow_Trigger_RulesDao::class);
+        $event_dispatcher     = new class implements EventDispatcherInterface {
+            public function dispatch(object $event)
+            {
+                return $event;
+            }
+        };
         $controller = new HierarchyController(
             $request,
             $hierarchical_tracker,
             Mockery::mock(Tracker_Hierarchy_HierarchicalTrackerFactory::class),
             $hierarchy_dao,
             $artifact_links_dao,
-            $trigger_rules_dao
+            $trigger_rules_dao,
+            $event_dispatcher
         );
 
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturn(101);
         $hierarchical_tracker->shouldReceive('getProject')->andReturn($project);
+        $hierarchical_tracker->shouldReceive('getUnhierarchizedTracker')->andReturn(TrackerTestBuilder::aTracker()->build());
         $artifact_links_dao->shouldReceive('isProjectUsingArtifactLinkTypes')->andReturn(true);
         $artifact_links_dao->shouldReceive('isTypeDisabledInProject')->andReturn(false);
 
@@ -86,6 +87,38 @@ final class HierarchyControllerTest extends TestCase
                 return count($children) === 2;
             })
         );
+
+        $controller->update();
+    }
+
+    public function testTrackerInvolvedInADelegatedHierarchyCannotBeUpdated(): void
+    {
+        $request              = Mockery::mock(Codendi_Request::class);
+        $hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker(TrackerTestBuilder::aTracker()->build(), []);
+        $hierarchy_dao        = Mockery::mock(HierarchyDAO::class);
+        $artifact_links_dao   = Mockery::mock(ArtifactLinksUsageDao::class);
+        $trigger_rules_dao    = Mockery::mock(Tracker_Workflow_Trigger_RulesDao::class);
+        $event_dispatcher     = new class implements EventDispatcherInterface {
+            public function dispatch(object $event)
+            {
+                if ($event instanceof TrackerHierarchyDelegation) {
+                    $event->enableTrackerHierarchyDelegation('test');
+                }
+                return $event;
+            }
+        };
+
+        $controller = new HierarchyController(
+            $request,
+            $hierarchical_tracker,
+            Mockery::mock(Tracker_Hierarchy_HierarchicalTrackerFactory::class),
+            $hierarchy_dao,
+            $artifact_links_dao,
+            $trigger_rules_dao,
+            $event_dispatcher
+        );
+
+        $hierarchy_dao->shouldNotReceive('updateChildren');
 
         $controller->update();
     }

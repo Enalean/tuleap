@@ -7,7 +7,7 @@
         {{/ hierarchy }}
     </div>
     <div class="tracker-admin-hierarchy-edit-form">
-        <h3>{{ edit_children_title }}</h3>
+        <h3>{{# dgettext }} tuleap-tracker | Edit children of %1$s | {{ tracker_being_edited_name }} {{/ dgettext }}</h3>
         {{# tracker_used_in_trigger_rules_names }}
         <div class="feedback_warning">
             {{# dngettext }}
@@ -22,21 +22,31 @@
             </a>
         </div>
         {{/ tracker_used_in_trigger_rules_names }}
-        <form method="post"
-              action="{{ getTrackerUrl }}/?tracker={{ getTrackerId }}&func=admin-hierarchy-update">
-            <select
-                    class="tracker-admin-hierarchy-edit-children"
-                    name="children[]"
-                    multiple="multiple"
-            >
-                {{# getPossibleChildren }}
-                    <option value="{{ id }}"{{ selected }}>{{ name }}</option>
-                {{/ getPossibleChildren }}
-            </select>
-            <p>
-                <input type="submit" class="btn" value="{{ getSubmitLabel }}">
-            </p>
-        </form>
+        {{# tracker_hierarchy_delegated_to_name }}
+            {{# dgettext }}
+                tuleap-tracker |
+                The tracker %s is involved in a hierarchy managed by %s. You will not be able to change the hierarchy from this administration panel. |
+                {{ tracker_being_edited_name }} |
+                {{ tracker_hierarchy_delegated_to_name }}
+            {{/ dgettext }}
+        {{/ tracker_hierarchy_delegated_to_name }}
+        {{^ tracker_hierarchy_delegated_to_name }}
+            <form method="post"
+                  action="{{ getTrackerUrl }}/?tracker={{ getTrackerId }}&func=admin-hierarchy-update">
+                <select
+                        class="tracker-admin-hierarchy-edit-children"
+                        name="children[]"
+                        multiple="multiple"
+                >
+                    {{# getPossibleChildren }}
+                        <option value="{{ id }}"{{ selected }}>{{ name }}</option>
+                    {{/ getPossibleChildren }}
+                </select>
+                <p>
+                    <input type="submit" class="btn" value="{{ getSubmitLabel }}">
+                </p>
+            </form>
+        {{/ tracker_hierarchy_delegated_to_name }}
     </div>
 {{/ can_be_defined }}
 

@@ -18,7 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Hierarchy\TrackerHierarchyDelegation;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase //phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -38,7 +41,7 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
         $tracker_factory->shouldReceive('getTrackerById')->with(2)->andReturns($child1);
         $tracker_factory->shouldReceive('getTrackerById')->with(3)->andReturns($child2);
 
-        $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+        $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, Mockery::mock(EventDispatcherInterface::class));
         $hierarchical_tracker = $factory->getWithChildren($tracker);
 
         $children = $hierarchical_tracker->getChildren();
@@ -81,13 +84,52 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
         $tracker_factory = \Mockery::spy(\TrackerFactory::class);
         $tracker_factory->shouldReceive('getTrackersByGroupId')->with($project_id)->andReturns($project_trackers);
 
-        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+        $event_dispatcher = new class implements EventDispatcherInterface {
+            public function dispatch(object $event)
+            {
+                return $event;
+            }
+        };
+
+        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, $event_dispatcher);
 
         $actual_possible_children = $factory->getPossibleChildren($hierarchical_tracker);
 
         $actual_possible_children = $this->assertChildEquals($actual_possible_children, $possible_child_1);
         $actual_possible_children = $this->assertChildEquals($actual_possible_children, $possible_child_2);
         $this->assertCount(0, $actual_possible_children);
+    }
+
+    public function testPossibleChildrenDoesNotIncludeTheOnesWithAHierarchyManagedByAnotherResource(): void
+    {
+        $tracker_factory  = Mockery::mock(\TrackerFactory::class);
+        $hierarchy_dao    = Mockery::mock(HierarchyDAO::class);
+        $event_dispatcher = new class implements EventDispatcherInterface {
+            public function dispatch(object $event)
+            {
+                if ($event instanceof TrackerHierarchyDelegation) {
+                    $event->enableTrackerHierarchyDelegation('test');
+                }
+
+                return $event;
+            }
+        };
+        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $hierarchy_dao, $event_dispatcher);
+
+        $current_tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject(Project::buildForTest())->build();
+        $other_tracker   = TrackerTestBuilder::aTracker()->withId(103)->build();
+
+        $tracker_factory->shouldReceive('getTrackersByGroupId')->andReturn([$current_tracker, $other_tracker]);
+        $hierarchy_dao->shouldReceive('searchAncestorIds')->andReturn([]);
+
+        $possible_children = $factory->getPossibleChildren(
+            new Tracker_Hierarchy_HierarchicalTracker(
+                $current_tracker,
+                []
+            )
+        );
+
+        self::assertEmpty($possible_children);
     }
 
     private function getHierarchyAsTreeNode($hierarchy): \TreeNode
@@ -160,7 +202,7 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
 
         $dao             = $this->aMockDaoWith($project_id, $hierarchy_dar);
         $tracker_factory = $this->aMockTrackerFactoryWith($project_id, $project_trackers);
-        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, Mockery::mock(EventDispatcherInterface::class));
 
         $this->assertEquals($expected_hierarchy->__toString(), $factory->getHierarchy($tracker)->__toString());
     }
@@ -184,7 +226,7 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
         $project_id       = 100;
         $dao              = $this->aMockDaoWith($project_id, $hierarchy_dar);
         $tracker_factory  = \Mockery::spy(\TrackerFactory::class);
-        $factory          = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+        $factory          = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, Mockery::mock(EventDispatcherInterface::class));
         $expected         = [
             1      => [2],
             2      => [3, 5],
@@ -246,7 +288,7 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
 
         $dao             = $this->aMockDaoWith($project_id, $hierarchy_dar);
         $tracker_factory = $this->aMockTrackerFactoryWith($project_id, $project_trackers);
-        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, Mockery::mock(EventDispatcherInterface::class));
 
         $this->assertEquals($expected_hierarchy->__toString(), $factory->getHierarchy($tracker)->__toString());
     }
@@ -308,7 +350,7 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
     private function getRootTrackerId($hierarchy_dar, $current_tracker_id)
     {
         $dao     = Mockery::spy(HierarchyDAO::class);
-        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(\Mockery::spy(\TrackerFactory::class), $dao);
+        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(\Mockery::spy(\TrackerFactory::class), $dao, Mockery::mock(EventDispatcherInterface::class));
 
         return $factory->getRootTrackerId($hierarchy_dar, $current_tracker_id);
     }

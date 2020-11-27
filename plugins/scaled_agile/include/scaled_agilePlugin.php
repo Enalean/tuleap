@@ -62,6 +62,7 @@ use Tuleap\ScaledAgile\Workspace\ComponentInvolvedVerifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\Hierarchy\TrackerHierarchyDelegation;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -93,6 +94,7 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook('tracker_usage', 'trackerUsage');
         $this->addHook('project_is_deleted', 'projectIsDeleted');
         $this->addHook(ConfigurationCheckDelegation::NAME);
+        $this->addHook(TrackerHierarchyDelegation::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -255,9 +257,17 @@ final class scaled_agilePlugin extends Plugin
         }
     }
 
+    public function trackerHierarchyDelegation(
+        TrackerHierarchyDelegation $tracker_hierarchy_delegation
+    ): void {
+        if ((new \Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao())->isPartOfAPlan(new TrackerData($tracker_hierarchy_delegation->getTracker()))) {
+            $tracker_hierarchy_delegation->enableTrackerHierarchyDelegation($this->getPluginInfo()->getPluginDescriptor()->getFullName());
+        }
+    }
+
     public function trackerUsage(array $params): void
     {
-        if ((new \Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao())->isPartOfAPlan(new TrackerData($params['tracker']))) {
+        if ((new \Tuleap\ScaledAgile\Adapter\Program\Hierarchy\ScaledAgileHierarchyDAO())->isPartOfAHierarchy(new TrackerData($params['tracker']))) {
             $params['result'] = [
                 'can_be_deleted' => false,
                 'message'        => $this->getPluginInfo()->getPluginDescriptor()->getFullName()

@@ -1314,7 +1314,6 @@ msgstr ""
 msgid "Edit"
 msgstr "Éditer"
 
-#, php-format
 msgid "Edit children of %1$s"
 msgstr "Modifier les enfants de %1$s"
 
@@ -3269,6 +3268,14 @@ msgstr[1] ""
 "Les outils de suivi %s sont impliqués dans des règles globales sur les "
 "déclencheurs. Il ne sera pas possible de les enlever de la hiérarchie tant "
 "que des déclencheurs les impliquent."
+
+msgid ""
+"The tracker %s is involved in a hierarchy managed by %s. You will not be "
+"able to change the hierarchy from this administration panel."
+msgstr ""
+"L'outil de suivi %s est impliqué dans une hiérarchie gérée par %s. "
+"Vous ne pouvez pas modifier la hiérarchie de cet outil de suivi depuis "
+"cette section de l'administration."
 
 #, php-format
 msgid ""
