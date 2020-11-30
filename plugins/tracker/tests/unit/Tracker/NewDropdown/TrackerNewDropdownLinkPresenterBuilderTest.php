@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\NewDropdown;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\layout\NewDropdown\DataAttributePresenter;
 
 class TrackerNewDropdownLinkPresenterBuilderTest extends TestCase
 {
@@ -49,5 +50,28 @@ class TrackerNewDropdownLinkPresenterBuilderTest extends TestCase
         self::assertCount(1, $presenter->data_attributes);
         self::assertEquals('tracker-id', $presenter->data_attributes[0]->name);
         self::assertEquals('102', $presenter->data_attributes[0]->value);
+    }
+
+    public function testBuildWithAdditionalDataAttributes(): void
+    {
+        $tracker = Mockery::mock(\Tracker::class)
+            ->shouldReceive([
+                'getId' => 102,
+                'getSubmitUrl' => '/path/to/102',
+                'getItemName' => 'bug',
+            ])
+            ->getMock();
+
+        $builder = new TrackerNewDropdownLinkPresenterBuilder();
+        $presenter = $builder->buildWithAdditionalDataAttributes($tracker, [new DataAttributePresenter('additional-name', 'additional-value')]);
+
+        self::assertEquals('New bug', $presenter->label);
+        self::assertEquals('/path/to/102', $presenter->url);
+        self::assertEquals('fa-plus', $presenter->icon);
+        self::assertCount(2, $presenter->data_attributes);
+        self::assertEquals('tracker-id', $presenter->data_attributes[0]->name);
+        self::assertEquals('102', $presenter->data_attributes[0]->value);
+        self::assertEquals('additional-name', $presenter->data_attributes[1]->name);
+        self::assertEquals('additional-value', $presenter->data_attributes[1]->value);
     }
 }

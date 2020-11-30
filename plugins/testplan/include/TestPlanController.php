@@ -26,7 +26,6 @@ use AgileDashboardPlugin;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
-use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
@@ -71,7 +70,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
      */
     private $testplan_assets;
     /**
-     * @var HeaderOptionsProvider
+     * @var TestPlanHeaderOptionsProvider
      */
     private $header_options_provider;
 
@@ -84,7 +83,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         VisitRecorder $visit_recorder,
         \Planning_MilestoneFactory $milestone_factory,
         TestPlanPresenterBuilder $presenter_builder,
-        HeaderOptionsProvider $header_options_provider
+        TestPlanHeaderOptionsProvider $header_options_provider
     ) {
         $this->renderer                  = $renderer;
         $this->bread_crumbs_builder      = $bread_crumbs_builder;
@@ -137,7 +136,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
             dgettext('tuleap-testmanagement', "Tests") . ' - ' . $milestone->getArtifactTitle(),
             $this->bread_crumbs_builder->getBreadcrumbs($user, $project, $milestone),
             [],
-            $this->getHeaderOptions($user, $milestone)
+            $this->header_options_provider->getHeaderOptions($user, $milestone)
         );
 
         $expand_backlog_item_id       = (int) ($variables['backlog_item_id'] ?? 0);
@@ -152,25 +151,14 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         );
         if ($detected_browser->isIE11()) {
             $this->renderer->renderToPage('test-plan-unsupported-browser-ie11', $presenter);
-        } elseif ($detected_browser->isEdgeLegacy()) {
-            $this->renderer->renderToPage('test-plan-unsupported-browser-edge-legacy', $presenter);
         } else {
-            $layout->includeFooterJavascriptFile($this->testplan_assets->getFileURL('testplan.js'));
-            $this->renderer->renderToPage('test-plan', $presenter);
+            if ($detected_browser->isEdgeLegacy()) {
+                $this->renderer->renderToPage('test-plan-unsupported-browser-edge-legacy', $presenter);
+            } else {
+                $layout->includeFooterJavascriptFile($this->testplan_assets->getFileURL('testplan.js'));
+                $this->renderer->renderToPage('test-plan', $presenter);
+            }
         }
         $service->displayFooter();
-    }
-
-    private function getHeaderOptions(\PFUser $user, \Planning_Milestone $milestone): array
-    {
-        $header_options = $this->header_options_provider->getHeaderOptions($user, $milestone, 'taskboard');
-        if (! isset($header_options['main_classes'])) {
-            $header_options['main_classes'] = [];
-        }
-        if (! in_array('fluid-main', $header_options['main_classes'], true)) {
-            $header_options['main_classes'][] = 'fluid-main';
-        }
-
-        return $header_options;
     }
 }

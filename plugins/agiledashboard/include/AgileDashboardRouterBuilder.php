@@ -43,6 +43,7 @@ use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
@@ -115,6 +116,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $service_crumb_builder        = new AgileDashboardCrumbBuilder($plugin->getPluginPath());
         $admin_crumb_builder          = new AdministrationCrumbBuilder();
+        $header_options_inserter      = new CurrentContextSectionToHeaderOptionsInserter();
         $milestone_controller_factory = new Planning_MilestoneControllerFactory(
             ProjectManager::instance(),
             $milestone_factory,
@@ -136,11 +138,13 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                     ),
                     $tracker_new_dropdown_link_presenter_builder,
                     $event_manager,
+                    $header_options_inserter,
                 ),
                 $event_manager,
                 new \Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever(
                     $planning_factory,
                 ),
+                $header_options_inserter
             ),
         );
 

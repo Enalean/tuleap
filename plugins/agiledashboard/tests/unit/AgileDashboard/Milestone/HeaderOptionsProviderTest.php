@@ -32,6 +32,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
+use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 class HeaderOptionsProviderTest extends TestCase
@@ -82,6 +83,7 @@ class HeaderOptionsProviderTest extends TestCase
             $this->header_options_for_planning_provider,
             $this->event_dispatcher,
             $this->parent_retriever,
+            new CurrentContextSectionToHeaderOptionsInserter(),
         );
 
         $this->user      = Mockery::mock(\PFUser::class);

@@ -37,6 +37,7 @@ use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\CardwallIsAllowedEvent;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Taskboard\Admin\ScrumBoardTypeSelectorController;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
@@ -131,6 +132,8 @@ class taskboardPlugin extends Plugin
 
         $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
 
+        $header_options_inserter = new CurrentContextSectionToHeaderOptionsInserter();
+
         return new \Tuleap\Taskboard\Routing\TaskboardController(
             new MilestoneExtractor(
                 $agiledashboard_plugin->getMilestoneFactory(),
@@ -171,11 +174,13 @@ class taskboardPlugin extends Plugin
                     ),
                     $tracker_new_dropdown_link_presenter_builder,
                     $event_manager,
+                    $header_options_inserter,
                 ),
                 $event_manager,
                 new \Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever(
                     $planning_factory,
                 ),
+                $header_options_inserter
             ),
         );
     }

@@ -84,6 +84,18 @@ export default class ListOfCampaigns extends Vue {
         this.loadCampaigns();
     }
 
+    mounted(): void {
+        const new_dropdown_link = document.querySelector(
+            "[data-shortcut-create-option][data-test-plan-create-new-campaign]"
+        );
+        if (new_dropdown_link instanceof HTMLAnchorElement) {
+            new_dropdown_link.addEventListener("click", (event) => {
+                event.preventDefault();
+                this.showCreateModal();
+            });
+        }
+    }
+
     showCreateModal(): void {
         this.show_create_modal = (): Promise<Record<string, unknown>> =>
             import(/* webpackChunkName: "testplan-create-campaign-modal" */ "./CreateModal.vue");

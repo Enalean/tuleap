@@ -23,19 +23,31 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\NewDropdown;
 
 use Tuleap\layout\NewDropdown\DataAttributePresenter;
+use Tuleap\layout\NewDropdown\NewDropdownLinkPresenter;
 
 final class TrackerNewDropdownLinkPresenterBuilder
 {
-    public function build(\Tracker $tracker): \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter
+    public function build(\Tracker $tracker): NewDropdownLinkPresenter
     {
-        return new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter(
+        return $this->buildWithAdditionalDataAttributes($tracker, []);
+    }
+
+    /**
+     * @param DataAttributePresenter[] $data_attributes
+     */
+    public function buildWithAdditionalDataAttributes(\Tracker $tracker, array $data_attributes): NewDropdownLinkPresenter
+    {
+        return new NewDropdownLinkPresenter(
             $tracker->getSubmitUrl(),
             sprintf(
                 dgettext('tuleap-tracker', 'New %s'),
                 $tracker->getItemName()
             ),
             'fa-plus',
-            [new DataAttributePresenter('tracker-id', (string) $tracker->getId())]
+            array_merge(
+                [new DataAttributePresenter('tracker-id', (string) $tracker->getId())],
+                $data_attributes
+            ),
         );
     }
 }

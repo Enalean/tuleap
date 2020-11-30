@@ -31,7 +31,7 @@ use Planning_VirtualTopMilestone;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
-use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
+use Tuleap\layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 
 class HeaderOptionsProvider
@@ -60,6 +60,10 @@ class HeaderOptionsProvider
      * @var ParentTrackerRetriever
      */
     private $parent_tracker_retriever;
+    /**
+     * @var CurrentContextSectionToHeaderOptionsInserter
+     */
+    private $header_options_inserter;
 
     public function __construct(
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
@@ -67,7 +71,8 @@ class HeaderOptionsProvider
         TrackerNewDropdownLinkPresenterBuilder $presenter_builder,
         HeaderOptionsForPlanningProvider $header_options_for_planning_provider,
         EventDispatcherInterface $event_dispatcher,
-        ParentTrackerRetriever $parent_tracker_retriever
+        ParentTrackerRetriever $parent_tracker_retriever,
+        CurrentContextSectionToHeaderOptionsInserter $header_options_inserter
     ) {
         $this->backlog_factory                      = $backlog_factory;
         $this->pane_info_identifier                 = $pane_info_identifier;
@@ -75,6 +80,7 @@ class HeaderOptionsProvider
         $this->header_options_for_planning_provider = $header_options_for_planning_provider;
         $this->event_dispatcher                     = $event_dispatcher;
         $this->parent_tracker_retriever             = $parent_tracker_retriever;
+        $this->header_options_inserter              = $header_options_inserter;
     }
 
     public function getHeaderOptions(PFUser $user, Planning_Milestone $milestone, string $identifier): array
@@ -121,17 +127,14 @@ class HeaderOptionsProvider
         array &$header_options
     ): void {
         $parent_trackers = $this->parent_tracker_retriever->getCreatableParentTrackers($milestone, $user, $trackers);
-        $links = [];
         foreach (array_merge($trackers, $parent_trackers) as $tracker) {
             if ($tracker->userCanSubmitArtifact($user)) {
-                $links[] = $this->presenter_builder->build($tracker);
+                $this->header_options_inserter->addLinkToCurrentContextSection(
+                    $section_label,
+                    $this->presenter_builder->build($tracker),
+                    $header_options
+                );
             }
-        }
-        if (! empty($links)) {
-            $header_options['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
-                $section_label,
-                $links,
-            );
         }
     }
 
