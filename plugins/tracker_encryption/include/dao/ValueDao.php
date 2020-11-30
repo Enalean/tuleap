@@ -20,9 +20,9 @@
 
 namespace Tuleap\TrackerEncryption\Dao;
 
-use Tracker_FormElement_Field_ValueDao;
+use Tuleap\Tracker\FormElement\Field\FieldValueDao;
 
-class ValueDao extends Tracker_FormElement_Field_ValueDao
+class ValueDao extends FieldValueDao
 {
     public function __construct()
     {

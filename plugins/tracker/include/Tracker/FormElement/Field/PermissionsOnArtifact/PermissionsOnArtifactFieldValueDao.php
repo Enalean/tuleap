@@ -22,9 +22,9 @@
 
 namespace Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact;
 
-use Tracker_FormElement_Field_ValueDao;
+use Tuleap\Tracker\FormElement\Field\FieldValueDao;
 
-class PermissionsOnArtifactFieldValueDao extends Tracker_FormElement_Field_ValueDao
+class PermissionsOnArtifactFieldValueDao extends FieldValueDao
 {
 
     public function __construct()

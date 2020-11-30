@@ -23,9 +23,9 @@
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Tracker_FormElement_Field_ArtifactLink;
-use Tracker_FormElement_Field_ValueDao;
+use Tuleap\Tracker\FormElement\Field\FieldValueDao;
 
-class ArtifactLinkFieldValueDao extends Tracker_FormElement_Field_ValueDao
+class ArtifactLinkFieldValueDao extends FieldValueDao
 {
     public function __construct()
     {

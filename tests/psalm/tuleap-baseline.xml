@@ -145,11 +145,7 @@
     <MissingParamType occurrences="1">
       <code>$groupId</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$_plugin</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="3">
-      <code>_showProjectAdmins</code>
+    <MissingReturnType occurrences="2">
       <code>getCategory</code>
       <code>getProjectAdmins</code>
     </MissingReturnType>
@@ -37809,6 +37805,121 @@
       <code>keep</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/FieldDao.php">
+    <FalsableReturnStatement occurrences="3">
+      <code>$this-&gt;retrieve($sql)</code>
+      <code>$this-&gt;retrieve($sql)</code>
+      <code>$this-&gt;retrieve($sql)</code>
+    </FalsableReturnStatement>
+    <InvalidFalsableReturnType occurrences="3">
+      <code>DataAccessResult</code>
+      <code>DataAccessResult</code>
+      <code>DataAccessResult</code>
+    </InvalidFalsableReturnType>
+    <MissingParamType occurrences="60">
+      <code>$TrackerId</code>
+      <code>$description</code>
+      <code>$field</code>
+      <code>$field</code>
+      <code>$field</code>
+      <code>$field_id</code>
+      <code>$field_id</code>
+      <code>$field_id</code>
+      <code>$force_absolute_ranking</code>
+      <code>$from_field_id</code>
+      <code>$group_id</code>
+      <code>$id</code>
+      <code>$id</code>
+      <code>$id</code>
+      <code>$id</code>
+      <code>$id</code>
+      <code>$label</code>
+      <code>$mapping</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$name</code>
+      <code>$notifications</code>
+      <code>$original_field_id</code>
+      <code>$original_field_id</code>
+      <code>$parent_id</code>
+      <code>$parent_id</code>
+      <code>$parent_id</code>
+      <code>$prefix_name</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+      <code>$rank</code>
+      <code>$required</code>
+      <code>$scope</code>
+      <code>$shared_field_id</code>
+      <code>$to_tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$tracker_id</code>
+      <code>$type</code>
+      <code>$type</code>
+      <code>$type</code>
+      <code>$type</code>
+      <code>$type</code>
+      <code>$use_it</code>
+      <code>$used</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="29">
+      <code>create</code>
+      <code>delete</code>
+      <code>duplicate</code>
+      <code>getUsedUserClosedListFieldById</code>
+      <code>getUsedUserListFieldById</code>
+      <code>mapNewParentsAfterDuplication</code>
+      <code>save</code>
+      <code>searchById</code>
+      <code>searchByParentId</code>
+      <code>searchByTrackerId</code>
+      <code>searchByTrackerIdAndName</code>
+      <code>searchByTrackerIdAndType</code>
+      <code>searchFieldFromTrackerIdAndSharedFieldId</code>
+      <code>searchFieldIdsByGroupId</code>
+      <code>searchNextUsedSibling</code>
+      <code>searchPreviousUsedSibling</code>
+      <code>searchProjectSharedFieldsTargets</code>
+      <code>searchSharedTargets</code>
+      <code>searchUnusedByTrackerId</code>
+      <code>searchUsedByIdAndType</code>
+      <code>searchUsedByParentId</code>
+      <code>searchUsedByTrackerId</code>
+      <code>searchUsedByTrackerIdAndName</code>
+      <code>searchUsedByTrackerIdAndType</code>
+      <code>searchUsedStaticSbFieldByTrackerId</code>
+      <code>searchUsedUserClosedListFieldsByTrackerId</code>
+      <code>searchUsedUserListFieldByTrackerId</code>
+      <code>setType</code>
+      <code>updateOriginalFieldId</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/FieldValueDao.php">
+    <MissingParamType occurrences="2">
+      <code>$changeset_value_id</code>
+      <code>$changeset_value_id</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>delete</code>
+      <code>searchById</code>
+    </MissingReturnType>
+  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/File/FieldDataFromRESTBuilder.php">
     <MissingParamType occurrences="1">
       <code>$rest_value</code>
@@ -41043,121 +41154,6 @@
       <code>displayFooter</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_FieldDao.php">
-    <FalsableReturnStatement occurrences="3">
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType occurrences="3">
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-      <code>DataAccessResult</code>
-    </InvalidFalsableReturnType>
-    <MissingParamType occurrences="60">
-      <code>$TrackerId</code>
-      <code>$description</code>
-      <code>$field</code>
-      <code>$field</code>
-      <code>$field</code>
-      <code>$field_id</code>
-      <code>$field_id</code>
-      <code>$field_id</code>
-      <code>$force_absolute_ranking</code>
-      <code>$from_field_id</code>
-      <code>$group_id</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$id</code>
-      <code>$label</code>
-      <code>$mapping</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$notifications</code>
-      <code>$original_field_id</code>
-      <code>$original_field_id</code>
-      <code>$parent_id</code>
-      <code>$parent_id</code>
-      <code>$parent_id</code>
-      <code>$prefix_name</code>
-      <code>$project_id</code>
-      <code>$project_id</code>
-      <code>$rank</code>
-      <code>$required</code>
-      <code>$scope</code>
-      <code>$shared_field_id</code>
-      <code>$to_tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$tracker_id</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$use_it</code>
-      <code>$used</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="29">
-      <code>create</code>
-      <code>delete</code>
-      <code>duplicate</code>
-      <code>getUsedUserClosedListFieldById</code>
-      <code>getUsedUserListFieldById</code>
-      <code>mapNewParentsAfterDuplication</code>
-      <code>save</code>
-      <code>searchById</code>
-      <code>searchByParentId</code>
-      <code>searchByTrackerId</code>
-      <code>searchByTrackerIdAndName</code>
-      <code>searchByTrackerIdAndType</code>
-      <code>searchFieldFromTrackerIdAndSharedFieldId</code>
-      <code>searchFieldIdsByGroupId</code>
-      <code>searchNextUsedSibling</code>
-      <code>searchPreviousUsedSibling</code>
-      <code>searchProjectSharedFieldsTargets</code>
-      <code>searchSharedTargets</code>
-      <code>searchUnusedByTrackerId</code>
-      <code>searchUsedByIdAndType</code>
-      <code>searchUsedByParentId</code>
-      <code>searchUsedByTrackerId</code>
-      <code>searchUsedByTrackerIdAndName</code>
-      <code>searchUsedByTrackerIdAndType</code>
-      <code>searchUsedStaticSbFieldByTrackerId</code>
-      <code>searchUsedUserClosedListFieldsByTrackerId</code>
-      <code>searchUsedUserListFieldByTrackerId</code>
-      <code>setType</code>
-      <code>updateOriginalFieldId</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_Field_ValueDao.php">
-    <MissingParamType occurrences="2">
-      <code>$changeset_value_id</code>
-      <code>$changeset_value_id</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>delete</code>
-      <code>searchById</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/GeneralSettings_Presenter.class.php">
     <MissingParamType occurrences="2">
       <code>$action_url</code>
@@ -41174,7 +41170,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/HierarchicalTrackerFactory.class.php">
-    <MissingParamType occurrences="11">
+    <MissingParamType occurrences="9">
       <code>$children_map</code>
       <code>$current_tracker</code>
       <code>$current_tracker</code>
@@ -41184,30 +41180,16 @@
       <code>$project_trackers</code>
       <code>$project_trackers</code>
       <code>$tracker</code>
-      <code>$tracker_ids_to_remove</code>
-      <code>$tracker_list</code>
     </MissingParamType>
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="7">
       <code>buildHierarchyChildrenOf</code>
       <code>clearInstance</code>
       <code>getChildrenMapFromDar</code>
       <code>getProjectTrackers</code>
       <code>getRootTrackerId</code>
       <code>makeNodeFor</code>
-      <code>removeIdsFromTrackerList</code>
       <code>setInstance</code>
     </MissingReturnType>
-    <UndefinedThisPropertyAssignment occurrences="2">
-      <code>$this-&gt;dao</code>
-      <code>$this-&gt;tracker_factory</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="5">
-      <code>$this-&gt;dao</code>
-      <code>$this-&gt;dao</code>
-      <code>$this-&gt;dao</code>
-      <code>$this-&gt;tracker_factory</code>
-      <code>$this-&gt;tracker_factory</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/Hierarchy.class.php">
     <MissingClosureParamType occurrences="2">
@@ -41281,9 +41263,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/Presenter.class.php">
-    <MissingParamType occurrences="1">
-      <code>$is_child_is_disabled</code>
-    </MissingParamType>
     <MissingReturnType occurrences="6">
       <code>getManageHierarchyTitle</code>
       <code>getPossibleChildren</code>
@@ -65693,9 +65672,8 @@
       <code>db_numrows($res)</code>
       <code>db_query($sql)</code>
     </DeprecatedFunction>
-    <MissingParamType occurrences="7">
+    <MissingParamType occurrences="6">
       <code>$condensed</code>
-      <code>$currRef</code>
       <code>$entity_group_id</code>
       <code>$entity_id</code>
       <code>$entity_type</code>
@@ -65707,14 +65685,12 @@
       <code>$entity_id</code>
       <code>$entity_type</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="9">
+    <MissingReturnType occurrences="7">
       <code>DisplayCrossRefs</code>
       <code>fetchDatas</code>
       <code>getHTMLCrossRefsForCSVExport</code>
       <code>getHTMLCrossRefsForMail</code>
-      <code>getHTMLDisplayCrossRefs</code>
       <code>getNbReferences</code>
-      <code>getParams</code>
       <code>getRefSource</code>
       <code>getRefTarget</code>
     </MissingReturnType>
@@ -73198,18 +73174,6 @@
     <MissingReturnType occurrences="1">
       <code>merge</code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/xml/Security.class.php">
-    <MissingParamType occurrences="1">
-      <code>$value</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>enableExternalLoadOfEntities</code>
-      <code>setExternalLoadOfEntities</code>
-    </MissingReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>The</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/xml/SimpleXMLCDATAFactory.class.php">
     <MissingParamType occurrences="2">

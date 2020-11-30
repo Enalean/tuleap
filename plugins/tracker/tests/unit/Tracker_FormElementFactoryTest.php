@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\FieldDao;
 
 final class Tracker_FormElementFactoryTest extends PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -36,7 +37,7 @@ final class Tracker_FormElementFactoryTest extends PHPUnit\Framework\TestCase //
     private $project_id;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_FieldDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FieldDao
      */
     private $dao;
 
@@ -65,7 +66,7 @@ final class Tracker_FormElementFactoryTest extends PHPUnit\Framework\TestCase //
         $this->backup_globals = array_merge([], $GLOBALS);
         $GLOBALS['HTML']      = Mockery::spy(Layout::class);
 
-        $this->dao = Mockery::spy(Tracker_FormElement_FieldDao::class);
+        $this->dao = Mockery::spy(FieldDao::class);
 
         $this->factory = Mockery::spy(Tracker_FormElementFactory::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();

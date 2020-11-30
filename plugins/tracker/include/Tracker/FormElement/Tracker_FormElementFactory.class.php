@@ -22,6 +22,7 @@
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
+use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
@@ -1197,7 +1198,7 @@ class Tracker_FormElementFactory
 
     protected function getDao()
     {
-        return new Tracker_FormElement_FieldDao();
+        return new FieldDao();
     }
 
     /**
@@ -1361,7 +1362,7 @@ class Tracker_FormElementFactory
         //rank = <parent_id>:<rank> | <rank>
         $parent_id = isset($form_element_data['parent_id']) ? $form_element_data['parent_id'] : 0;
         if (strpos($rank, ':') !== false) {
-            list($parent_id, $rank) = explode(':', $rank);
+            [$parent_id, $rank] = explode(':', $rank);
         }
         $form_element_data['parent_id'] = $parent_id;
         $form_element_data['rank']      = $rank;
@@ -1629,7 +1630,7 @@ class Tracker_FormElementFactory
                 //rank = <parent_id>:<rank> | <rank>
                 $parent_id = isset($form_element_data['parent_id']) ? $form_element_data['parent_id'] : 0;
                 if (strpos($rank, ':') !== false) {
-                    list($parent_id, $rank) = explode(':', $rank);
+                    [$parent_id, $rank] = explode(':', $rank);
                 }
 
                 //Check that parent_id is valid

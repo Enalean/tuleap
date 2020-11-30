@@ -20,7 +20,7 @@
 
 namespace Tuleap\TestManagement\Step\Execution\Field;
 
-class StepExecutionChangesetValueDao extends \Tracker_FormElement_Field_ValueDao
+class StepExecutionChangesetValueDao extends \Tuleap\Tracker\FormElement\Field\FieldValueDao
 {
     public function __construct()
     {
