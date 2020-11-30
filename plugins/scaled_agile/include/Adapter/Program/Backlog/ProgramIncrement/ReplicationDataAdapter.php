@@ -26,7 +26,7 @@ use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactChangesetNotFoundException;
-use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactUserNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ArtifactData;
@@ -45,9 +45,9 @@ final class ReplicationDataAdapter
      */
     private $user_manager;
     /**
-     * @var PendingArtifactCreationDao
+     * @var PendingArtifactCreationStore
      */
-    private $pending_artifact_creation_dao;
+    private $pending_artifact_creation_store;
     /**
      * @var \Tracker_Artifact_ChangesetFactory
      */
@@ -56,18 +56,18 @@ final class ReplicationDataAdapter
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         UserManager $user_manager,
-        PendingArtifactCreationDao $pending_artifact_creation_dao,
+        PendingArtifactCreationStore $pending_artifact_creation_store,
         Tracker_Artifact_ChangesetFactory $changeset_factory
     ) {
-        $this->artifact_factory              = $artifact_factory;
-        $this->user_manager                  = $user_manager;
-        $this->pending_artifact_creation_dao = $pending_artifact_creation_dao;
-        $this->changeset_factory             = $changeset_factory;
+        $this->artifact_factory                = $artifact_factory;
+        $this->user_manager                    = $user_manager;
+        $this->pending_artifact_creation_store = $pending_artifact_creation_store;
+        $this->changeset_factory               = $changeset_factory;
     }
 
     public function buildFromArtifactAndUserId(int $artifact_id, int $user_id): ReplicationData
     {
-        $pending_artifact = $this->pending_artifact_creation_dao->getPendingArtifactById(
+        $pending_artifact = $this->pending_artifact_creation_store->getPendingArtifactById(
             $artifact_id,
             $user_id
         );

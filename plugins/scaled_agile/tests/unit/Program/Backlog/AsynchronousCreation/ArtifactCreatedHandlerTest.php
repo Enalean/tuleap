@@ -27,8 +27,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Planning;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -49,30 +49,30 @@ final class ArtifactCreatedHandlerTest extends TestCase
     private $asyncronous_runner;
 
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|PendingArtifactCreationDao
+     * @var M\LegacyMockInterface|M\MockInterface|PendingArtifactCreationStore
      */
-    private $pending_artifact_creation_dao;
+    private $pending_artifact_creation_store;
 
     /**
      * @var ArtifactCreatedHandler
      */
     private $handler;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProgramDao
+     * @var M\LegacyMockInterface|M\MockInterface|ProgramStore
      */
-    private $program_dao;
+    private $program_store;
 
     protected function setUp(): void
     {
-        $this->program_dao                   = M::mock(ProgramDao::class);
-        $this->planning_factory              = M::mock(\PlanningFactory::class);
-        $planning_adapter                    = new PlanningAdapter($this->planning_factory);
-        $this->pending_artifact_creation_dao = M::mock(PendingArtifactCreationDao::class);
-        $this->asyncronous_runner            = M::mock(CreateProgramIncrementsRunner::class);
-        $this->handler                       = new ArtifactCreatedHandler(
-            $this->program_dao,
+        $this->program_store                   = M::mock(ProgramStore::class);
+        $this->planning_factory                = M::mock(\PlanningFactory::class);
+        $planning_adapter                      = new PlanningAdapter($this->planning_factory);
+        $this->pending_artifact_creation_store = M::mock(PendingArtifactCreationStore::class);
+        $this->asyncronous_runner              = M::mock(CreateProgramIncrementsRunner::class);
+        $this->handler                         = new ArtifactCreatedHandler(
+            $this->program_store,
             $this->asyncronous_runner,
-            $this->pending_artifact_creation_dao,
+            $this->pending_artifact_creation_store,
             $planning_adapter
         );
     }
@@ -81,7 +81,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
     {
         $project = new \Project(['group_id' => 101, 'unix_group_name' => 'project', 'group_name' => 'My project']);
         $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->andReturnTrue();
+        $this->program_store->shouldReceive('isProjectAProgramProject')->andReturnTrue();
         $current_user = UserTestBuilder::aUser()->withId(1001)->build();
         $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
         $artifact->setTracker($tracker);
@@ -91,7 +91,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
         $planning->setPlanningTracker($tracker);
         $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
 
-        $this->pending_artifact_creation_dao->shouldReceive('addArtifactToPendingCreation')
+        $this->pending_artifact_creation_store->shouldReceive('addArtifactToPendingCreation')
             ->withArgs([$artifact->getId(), $current_user->getId(), $changeset->getId()])
             ->once();
 
@@ -106,7 +106,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
         $project = new \Project(['group_id' => 101, 'unix_group_name' => 'project', 'group_name' => 'My project']);
         $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
 
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->with(101)->once()->andReturnFalse();
+        $this->program_store->shouldReceive('isProjectAProgramProject')->with(101)->once()->andReturnFalse();
 
         $current_user = UserTestBuilder::aUser()->build();
         $artifact     = new Artifact(1, $tracker->getId(), $current_user->getId(), 12345678, false);
@@ -122,7 +122,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
     {
         $project = new \Project(['group_id' => 101, 'unix_group_name' => 'project', 'group_name' => 'My project']);
         $tracker = TrackerTestBuilder::aTracker()->withId(15)->withProject($project)->build();
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->andReturnTrue();
+        $this->program_store->shouldReceive('isProjectAProgramProject')->andReturnTrue();
         $this->planning_factory->shouldReceive('getRootPlanning')
             ->andThrow(new TopPlanningNotFoundInProjectException(102));
 
@@ -140,7 +140,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
     {
         $project     = new \Project(['group_id' => 101, 'unix_group_name' => 'project', 'group_name' => 'My project']);
         $top_tracker = TrackerTestBuilder::aTracker()->withId(404)->withProject($project)->build();
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->andReturnTrue();
+        $this->program_store->shouldReceive('isProjectAProgramProject')->andReturnTrue();
 
         $other_tracker = TrackerTestBuilder::aTracker()->withId(12)->withProject($project)->build();
         $planning      = new Planning(7, 'Irrelevant', $project->getID(), '', []);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program;
+namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
-interface ProgramStore
+interface PendingArtifactCreationStore
 {
-    public function isProjectAProgramProject(int $project_id): bool;
+    public function getPendingArtifactById(int $artifact_id, int $user_id): ?array;
 
-    /**
-     * @psalm-return list<array{team_project_id:int}>
-     */
-    public function getTeamProjectIdsForGivenProgramProject(int $project_id): array;
+    public function addArtifactToPendingCreation(int $artifact_id, int $user_id, int $changeset_id): void;
 
-    public function saveProgram(int $program_project_id, int $team_project_id): void;
+    public function deleteArtifactFromPendingCreation(int $artifact_id, int $user_id): void;
 }

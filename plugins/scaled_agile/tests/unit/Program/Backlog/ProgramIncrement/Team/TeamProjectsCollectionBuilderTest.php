@@ -29,6 +29,7 @@ use Project;
 use ProjectManager;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Program\ProgramStore;
 
 final class TeamProjectsCollectionBuilderTest extends TestCase
 {
@@ -42,7 +43,7 @@ final class TeamProjectsCollectionBuilderTest extends TestCase
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProgramDao
      */
-    private $program_dao;
+    private $program_store;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
@@ -58,12 +59,12 @@ final class TeamProjectsCollectionBuilderTest extends TestCase
     {
         parent::setUp();
 
-        $this->program_dao     = Mockery::mock(ProgramDao::class);
+        $this->program_store   = Mockery::mock(ProgramStore::class);
         $this->project_manager = Mockery::mock(ProjectManager::class);
         $project_data_adapter  = new ProjectDataAdapter($this->project_manager);
 
         $this->builder = new TeamProjectsCollectionBuilder(
-            $this->program_dao,
+            $this->program_store,
             $project_data_adapter
         );
 
@@ -72,7 +73,7 @@ final class TeamProjectsCollectionBuilderTest extends TestCase
 
     public function testItBuildsACollectionOfTeamProjects(): void
     {
-        $this->program_dao->shouldReceive('getTeamProjectIdsForGivenProgramProject')
+        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')
             ->once()
             ->with(123)
             ->andReturn([
@@ -104,7 +105,7 @@ final class TeamProjectsCollectionBuilderTest extends TestCase
 
     public function testItReturnsAnEmptyCollectionIfProvidedProjectIsNotProgram(): void
     {
-        $this->program_dao->shouldReceive('getTeamProjectIdsForGivenProgramProject')
+        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')
             ->once()
             ->with(123)
             ->andReturn([]);

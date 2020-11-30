@@ -26,7 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
+use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
 use Tuleap\ScaledAgile\Team\Creation\Team;
 use Tuleap\ScaledAgile\Team\Creation\TeamCollection;
@@ -42,9 +42,9 @@ final class TeamAdapterTest extends TestCase
     private $adapter;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramStore
      */
-    private $program_dao;
+    private $program_store;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
@@ -54,9 +54,9 @@ final class TeamAdapterTest extends TestCase
     protected function setUp(): void
     {
         $this->project_manager = \Mockery::mock(ProjectManager::class);
-        $this->program_dao     = \Mockery::mock(ProgramDao::class);
+        $this->program_store   = \Mockery::mock(ProgramStore::class);
 
-        $this->adapter = new TeamAdapter($this->project_manager, $this->program_dao);
+        $this->adapter = new TeamAdapter($this->project_manager, $this->program_store);
 
         $_SERVER['REQUEST_URI'] = '/';
     }
@@ -95,7 +95,7 @@ final class TeamAdapterTest extends TestCase
         $user->shouldReceive('isSuperUser')->andReturnTrue();
 
         $this->project_manager->shouldReceive('getProject')->with($team_id)->once()->andReturn($project);
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->with($team_id)->andReturn(true);
+        $this->program_store->shouldReceive('isProjectAProgramProject')->with($team_id)->andReturn(true);
 
         $this->expectException(ProjectIsAProgramException::class);
         $this->adapter->buildTeamProject([$team_id], $program, $user);
@@ -121,7 +121,7 @@ final class TeamAdapterTest extends TestCase
         $user->shouldReceive('isSuperUser')->andReturnTrue();
 
         $this->project_manager->shouldReceive('getProject')->with($team_id)->once()->andReturn($project);
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->with($team_id)->andReturn(false);
+        $this->program_store->shouldReceive('isProjectAProgramProject')->with($team_id)->andReturn(false);
 
         $team_collection = new TeamCollection([new Team($team_id)], $program);
 

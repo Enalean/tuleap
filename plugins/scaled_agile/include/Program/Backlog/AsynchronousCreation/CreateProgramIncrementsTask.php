@@ -33,6 +33,7 @@ use Tracker_Semantic_StatusFactory;
 use Tracker_Semantic_TitleFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkValueAdapter;
@@ -85,9 +86,9 @@ class CreateProgramIncrementsTask
      */
     private $logger;
     /**
-     * @var PendingArtifactCreationDao
+     * @var PendingArtifactCreationStore
      */
-    private $pending_artifact_creation_dao;
+    private $pending_artifact_creation_store;
 
     public function __construct(
         SourceChangesetValuesCollectionAdapter $changeset_collection_adapter,
@@ -95,14 +96,14 @@ class CreateProgramIncrementsTask
         TrackerCollectionFactory $scale_tracker_factory,
         ProgramIncrementsCreator $program_increment_creator,
         LoggerInterface $logger,
-        PendingArtifactCreationDao $pending_artifact_creation_dao
+        PendingArtifactCreationStore $pending_artifact_creation_store
     ) {
-        $this->changeset_collection_adapter  = $changeset_collection_adapter;
-        $this->projects_collection_builder   = $projects_collection_builder;
-        $this->scale_tracker_factory         = $scale_tracker_factory;
-        $this->program_increment_creator     = $program_increment_creator;
-        $this->logger                        = $logger;
-        $this->pending_artifact_creation_dao = $pending_artifact_creation_dao;
+        $this->changeset_collection_adapter    = $changeset_collection_adapter;
+        $this->projects_collection_builder     = $projects_collection_builder;
+        $this->scale_tracker_factory           = $scale_tracker_factory;
+        $this->program_increment_creator       = $program_increment_creator;
+        $this->logger                          = $logger;
+        $this->pending_artifact_creation_store = $pending_artifact_creation_store;
     }
 
     public function createProgramIncrements(ReplicationData $replication_data): void
@@ -136,7 +137,7 @@ class CreateProgramIncrementsTask
             $replication_data->getUser()
         );
 
-        $this->pending_artifact_creation_dao->deleteArtifactFromPendingCreation(
+        $this->pending_artifact_creation_store->deleteArtifactFromPendingCreation(
             (int) $replication_data->getArtifactData()->getId(),
             (int) $replication_data->getUser()->getId()
         );

@@ -29,6 +29,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use UserManager;

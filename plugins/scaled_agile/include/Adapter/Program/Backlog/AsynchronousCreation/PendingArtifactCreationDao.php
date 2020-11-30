@@ -20,11 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 
-class PendingArtifactCreationDao extends DataAccessObject
+final class PendingArtifactCreationDao extends DataAccessObject implements PendingArtifactCreationStore
 {
     public function getPendingArtifactById(int $artifact_id, int $user_id): ?array
     {

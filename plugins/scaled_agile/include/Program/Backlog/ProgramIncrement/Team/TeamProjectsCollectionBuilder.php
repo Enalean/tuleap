@@ -22,24 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team;
 
-use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
+use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\ScaledAgile\ProjectData;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 
 final class TeamProjectsCollectionBuilder
 {
     /**
-     * @var ProgramDao
+     * @var ProgramStore
      */
-    private $program_dao;
+    private $program_store;
     /**
      * @var ProjectDataAdapter
      */
     private $project_data_adapter;
 
-    public function __construct(ProgramDao $program_dao, ProjectDataAdapter $project_data_adapter)
+    public function __construct(ProgramStore $program_store, ProjectDataAdapter $project_data_adapter)
     {
-        $this->program_dao          = $program_dao;
+        $this->program_store        = $program_store;
         $this->project_data_adapter = $project_data_adapter;
     }
 
@@ -47,7 +47,7 @@ final class TeamProjectsCollectionBuilder
     {
         $program_project_id = (int) $project->getID();
         $team_projects  = [];
-        foreach ($this->program_dao->getTeamProjectIdsForGivenProgramProject($program_project_id) as $row) {
+        foreach ($this->program_store->getTeamProjectIdsForGivenProgramProject($program_project_id) as $row) {
             $team_projects[] = $this->project_data_adapter->buildFromId((int) $row['team_project_id']);
         }
 
