@@ -60,7 +60,7 @@ final class TeamCreator implements CreateTeam
      */
     public function create(\PFUser $user, int $project_id, array $team_ids): void
     {
-        $program_project = $this->program_build->buildProgramProject($project_id, $user);
+        $program_project = $this->program_build->buildNewProgramProject($project_id, $user);
 
         $team_collection = $this->build_team->buildTeamProject(
             $team_ids,

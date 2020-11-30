@@ -36,6 +36,24 @@ class ProjectResourceTest extends \RestBase
         $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
+    public function testPUTTeam(): void
+    {
+        $program_id = $this->getProgramProjectId();
+        $team_id = $this->getTeamProjectId();
+
+        $team_definition  = json_encode(["team_ids" => [$team_id]]);
+
+        $response = $this->getResponse(
+            $this->client->put('projects/' . $program_id . '/scaled_agile_teams', null, $team_definition),
+            REST_TestDataBuilder::TEST_USER_1_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testPUTTeam
+     */
     public function testPUTPlan(): void
     {
         $project_id = $this->getProgramProjectId();
@@ -49,21 +67,6 @@ class ProjectResourceTest extends \RestBase
 
         $response = $this->getResponse(
             $this->client->put('projects/' . $project_id . '/scaled_agile_plan', null, $plan_definition),
-            REST_TestDataBuilder::TEST_USER_1_NAME
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-    }
-
-    public function testPUTTeam(): void
-    {
-        $program_id = $this->getProgramProjectId();
-        $team_id = $this->getTeamProjectId();
-
-        $team_definition  = json_encode(["team_ids" => [$team_id]]);
-
-        $response = $this->getResponse(
-            $this->client->put('projects/' . $program_id . '/scaled_agile_teams', null, $team_definition),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
