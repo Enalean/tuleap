@@ -72,6 +72,11 @@ final class PlanDao extends DataAccessObject implements PlanStore
                 INNER JOIN tracker ON tracker.id = plugin_scaled_agile_plan.program_increment_tracker_id
                     WHERE tracker.group_id = ?';
 
-        return $this->getDB()->single($sql, [$project_id]);
+        $tracker_id = $this->getDB()->single($sql, [$project_id]);
+        if (! $tracker_id) {
+            return null;
+        }
+
+        return $tracker_id;
     }
 }

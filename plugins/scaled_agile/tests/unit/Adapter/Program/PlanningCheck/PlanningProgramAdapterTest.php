@@ -139,6 +139,18 @@ final class PlanningProgramAdapterTest extends TestCase
         $this->assertEquals($program, $this->adapter->buildProgramFromTeamProject($project, $user));
     }
 
+    public function testItReturnsNullWhenProgramIsNotFound(): void
+    {
+        $user    = UserTestBuilder::aUser()->build();
+        $project = new Project(['group_id' => 101]);
+        $team    = new Project(['group_id' => $project->getID()]);
+        $this->project_manager->shouldReceive('getProject')->with($project->getId())->andReturn($team);
+
+        $this->team_store->shouldReceive('getProgramIncrementOfTeam')->andReturnNull();
+
+        $this->assertNull($this->adapter->buildProgramFromTeamProject($project, $user));
+    }
+
     public function testItThrowAnExceptionIfProgramTrackerIsNotFound(): void
     {
         $user = UserTestBuilder::aUser()->build();

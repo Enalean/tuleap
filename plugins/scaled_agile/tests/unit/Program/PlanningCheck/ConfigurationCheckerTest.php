@@ -48,4 +48,17 @@ final class ConfigurationCheckerTest extends TestCase
 
         $this->assertEquals($program_increment, $checker->getProgramIncrementTracker($user, $project));
     }
+
+    public function testItReturnsNullWhenThereIsNOProgram(): void
+    {
+        $adapter = Mockery::mock(BuildPlanningConfiguration::class);
+        $checker = new ConfigurationChecker($adapter);
+
+        $adapter->shouldReceive('buildProgramFromTeamProject')->andReturn(null);
+
+        $user = UserTestBuilder::aUser()->build();
+        $project = new Project(['group_id' => 1]);
+
+        $this->assertNull($checker->getProgramIncrementTracker($user, $project));
+    }
 }
