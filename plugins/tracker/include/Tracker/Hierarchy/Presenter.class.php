@@ -25,6 +25,10 @@ class Tracker_Hierarchy_Presenter
      * @var Tracker_Hierarchy_HierarchicalTracker
      */
     public $tracker;
+    /**
+     * @var string
+     */
+    public $tracker_being_edited_name;
 
     /**
      * @var Array of Tracker
@@ -40,11 +44,6 @@ class Tracker_Hierarchy_Presenter
      * @var String
      */
     public $current_full_hierarchy_title;
-
-    /**
-     * @var String
-     */
-    public $edit_children_title;
 
     /**
      * @var String
@@ -79,6 +78,10 @@ class Tracker_Hierarchy_Presenter
      * @var int
      */
     public $tracker_used_in_trigger_rules_nb;
+    /**
+     * @var string|null
+     */
+    public $tracker_hierarchy_delegated_to_name;
 
     /**
      * @param Tracker[] $trackers_used_in_trigger_rules
@@ -87,7 +90,8 @@ class Tracker_Hierarchy_Presenter
         Tracker_Hierarchy_HierarchicalTracker $tracker,
         array $possible_children,
         TreeNode $hierarchy,
-        $is_child_is_disabled,
+        bool $is_child_is_disabled,
+        ?string $tracker_hierarchy_delegated_to_name,
         array $trackers_used_in_trigger_rules
     ) {
         $this->tracker           = $tracker;
@@ -99,7 +103,7 @@ class Tracker_Hierarchy_Presenter
 
         $this->current_full_hierarchy_title = dgettext('tuleap-tracker', 'Current Full Hierarchy');
 
-        $this->edit_children_title = sprintf(dgettext('tuleap-tracker', 'Edit children of %1$s'), $tracker->getUnhierarchizedTracker()->getName());
+        $this->tracker_being_edited_name = $tracker->getUnhierarchizedTracker()->getName();
 
         $this->can_be_defined = ! $is_child_is_disabled;
 
@@ -120,7 +124,8 @@ class Tracker_Hierarchy_Presenter
                 $trackers_used_in_trigger_rules
             )
         );
-        $this->tracker_used_in_trigger_rules_nb = count($trackers_used_in_trigger_rules);
+        $this->tracker_used_in_trigger_rules_nb    = count($trackers_used_in_trigger_rules);
+        $this->tracker_hierarchy_delegated_to_name = $tracker_hierarchy_delegated_to_name;
     }
 
     public function getTrackerUrl()

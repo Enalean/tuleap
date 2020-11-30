@@ -19,14 +19,32 @@
  */
 
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Hierarchy\TrackerHierarchyDelegation;
 
 class Tracker_Hierarchy_HierarchicalTrackerFactory
 {
 
-    public function __construct(TrackerFactory $tracker_factory, HierarchyDAO $dao)
-    {
-        $this->tracker_factory = $tracker_factory;
-        $this->dao             = $dao;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+    /**
+     * @var HierarchyDAO
+     */
+    private $dao;
+    /**
+     * @var \Psr\EventDispatcher\EventDispatcherInterface
+     */
+    private $event_dispatcher;
+
+    public function __construct(
+        TrackerFactory $tracker_factory,
+        HierarchyDAO $dao,
+        \Psr\EventDispatcher\EventDispatcherInterface $event_dispatcher
+    ) {
+        $this->tracker_factory  = $tracker_factory;
+        $this->dao              = $dao;
+        $this->event_dispatcher = $event_dispatcher;
     }
 
     /**
@@ -61,7 +79,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
     public static function instance()
     {
         if (! self::$instance) {
-            self::$instance = new Tracker_Hierarchy_HierarchicalTrackerFactory(TrackerFactory::instance(), new HierarchyDAO());
+            self::$instance = new Tracker_Hierarchy_HierarchicalTrackerFactory(TrackerFactory::instance(), new HierarchyDAO(), EventManager::instance());
         }
         return self::$instance;
     }
@@ -98,9 +116,22 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
         $ids_to_remove     = $this->dao->searchAncestorIds($tracker->getId());
         $ids_to_remove[]   = $tracker->getId();
 
+        foreach ($this->removeIdsFromTrackerList($project_trackers, $ids_to_remove) as $project_tracker) {
+            if ($this->isTrackerHierarchyDelegatedToAnotherResource($project_tracker)) {
+                $ids_to_remove[] = $project_tracker->getId();
+            }
+        }
+
         $project_trackers = $this->removeIdsFromTrackerList($project_trackers, $ids_to_remove);
 
         return $project_trackers;
+    }
+
+    private function isTrackerHierarchyDelegatedToAnotherResource(Tracker $tracker): bool
+    {
+        $tracker_hierarchy_delegation = new TrackerHierarchyDelegation($tracker);
+        $this->event_dispatcher->dispatch($tracker_hierarchy_delegation);
+        return $tracker_hierarchy_delegation->getResourceNameTrackerHierarchyHasBeenDelegatedTo() !== null;
     }
 
     private function getProjectTrackers(Project $project)
@@ -108,10 +139,19 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
         return $this->tracker_factory->getTrackersByGroupId($project->getID());
     }
 
-    private function removeIdsFromTrackerList($tracker_list, $tracker_ids_to_remove)
+    /**
+     * @param Tracker[] $tracker_list
+     * @return Tracker[]
+     */
+    private function removeIdsFromTrackerList(array $tracker_list, array $tracker_ids_to_remove): array
     {
-        $array_with_keys_to_remove = array_combine($tracker_ids_to_remove, range(0, count($tracker_ids_to_remove) - 1));
-        return array_diff_key($tracker_list, $array_with_keys_to_remove);
+        $updated_tracker_list = [];
+        foreach ($tracker_list as $tracker) {
+            if (! in_array($tracker->getId(), $tracker_ids_to_remove, true)) {
+                $updated_tracker_list[] = $tracker;
+            }
+        }
+        return $updated_tracker_list;
     }
 
     /**

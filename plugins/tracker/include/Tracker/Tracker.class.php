@@ -914,7 +914,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         $dao                  = new HierarchyDAO();
         $tracker_factory      = $this->getTrackerFactory();
-        $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+        $event_manager        = EventManager::instance();
+        $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, $event_manager);
         $hierarchical_tracker = $factory->getWithChildren($this);
         $controller           = new HierarchyController(
             $request,
@@ -922,7 +923,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             $factory,
             $dao,
             new ArtifactLinksUsageDao(),
-            new Tracker_Workflow_Trigger_RulesDao()
+            new Tracker_Workflow_Trigger_RulesDao(),
+            $event_manager
         );
 
         return $controller;
