@@ -410,7 +410,7 @@ class MediawikiDao extends DataAccessObject
 
     private function getTableName(Project $project, $table_name): string
     {
-        return $this->da->quoteSmartSchema($this->getMediawikiDatabaseName($project) . '.' . $this->getMediawikiTableNamePrefix($project) . $table_name);
+        return $this->da->quoteSmartSchema($this->getMediawikiDatabaseName($project)) . '.' . $this->da->quoteSmartSchema($this->getMediawikiTableNamePrefix($project) . $table_name);
     }
 
     public function getMediawikiTableNamePrefix(Project $project)
