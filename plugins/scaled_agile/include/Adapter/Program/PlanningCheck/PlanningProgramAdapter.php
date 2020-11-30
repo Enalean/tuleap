@@ -122,11 +122,16 @@ final class PlanningProgramAdapter implements BuildPlanningConfiguration
      * @throws ProjectIsNotAProgramException
      * @throws UserCanNotAccessToProgramException
      */
-    public function buildProgramFromTeamProject(\Project $project, \PFUser $user): Program
+    public function buildProgramFromTeamProject(\Project $project, \PFUser $user): ?Program
     {
         $team = $this->project_manager->getProject($project->getID());
 
         $program_increment_id = $this->team_store->getProgramIncrementOfTeam((int) $team->getID());
+
+        if (! $program_increment_id) {
+            return null;
+        }
+
         $program              = $this->project_manager->getProject($program_increment_id);
 
         if (! $this->program_store->isProjectAProgramProject((int) $program->getId())) {

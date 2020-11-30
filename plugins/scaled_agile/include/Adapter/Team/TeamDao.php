@@ -55,10 +55,16 @@ final class TeamDao extends DataAccessObject implements TeamStore
         return $this->getDB()->exists($sql, $team_project_id);
     }
 
-    public function getProgramIncrementOfTeam(int $team_project_id): int
+    public function getProgramIncrementOfTeam(int $team_project_id): ?int
     {
         $sql = 'SELECT program_project_id FROM plugin_scaled_agile_team_projects WHERE team_project_id = ?';
 
-        return (int) $this->getDB()->single($sql, [$team_project_id]);
+        $program_increment = $this->getDB()->single($sql, [$team_project_id]);
+
+        if ($program_increment  === false) {
+            return null;
+        }
+
+        return $program_increment;
     }
 }

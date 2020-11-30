@@ -43,5 +43,5 @@ interface BuildPlanningConfiguration
      * @throws ProjectIsNotAProgramException
      * @throws UserCanNotAccessToProgramException
      */
-    public function buildProgramFromTeamProject(\Project $project, \PFUser $user): Program;
+    public function buildProgramFromTeamProject(\Project $project, \PFUser $user): ?Program;
 }
