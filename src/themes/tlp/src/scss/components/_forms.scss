@@ -443,6 +443,13 @@ $tlp-form-element-select-small-background-size: 6px;
     }
 }
 
+.list-picker-avatar {
+    @extend %tlp-avatar;
+    width: 20px;
+    height: 20px;
+    margin: 0 4px 0 0;
+}
+
 %tlp-select2 {
     z-index: 2003;
 

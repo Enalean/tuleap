@@ -18,7 +18,6 @@
  *
  */
 
-import { get } from "tlp";
 import { createListPicker } from "@tuleap/list-picker";
 
 export default ListPickerController;
@@ -36,11 +35,17 @@ function ListPickerController($element, $timeout) {
     const select = $element[0].querySelector("[data-select=list-picker]");
 
     async function init() {
-        if (self.is_list_picker_enabled) {
-            self.destroy = await createListPicker(select, getOptions()).then((list_picker) => {
-                return list_picker.destroy;
-            });
+        if (!self.is_list_picker_enabled) {
+            return;
         }
+
+        if (self.field.bindings.type === "users") {
+            bindUsersAvatars();
+        }
+
+        self.destroy = await createListPicker(select, getOptions()).then((list_picker) => {
+            return list_picker.destroy;
+        });
     }
 
     function destroy() {
@@ -50,29 +55,25 @@ function ListPickerController($element, $timeout) {
     }
 
     function getOptions() {
-        let options = {
+        return {
             locale: document.body.dataset.userLocale,
             is_filterable: true,
         };
-        if (self.field.bindings.type === "users") {
-            options.items_template_formatter = async (value_id, label) => {
-                const value = value_id.split(":")[1];
-                if (value === "100") {
-                    return label;
-                }
-
-                const response = await get(`/api/users/${encodeURIComponent(value)}`);
-                const user_representation = await response.json();
-                const avatar_url = user_representation.avatar_url;
-
-                return `<img class="tlp-avatar tlp-avatar-mini tuleap-artifact-modal-list-field-avatar" src="${avatar_url}"/>${label}`;
-            };
-        }
-
-        return options;
     }
 
     function isFieldValid() {
         return select.checkValidity();
+    }
+
+    function bindUsersAvatars() {
+        select.options.forEach((option, option_index) => {
+            const value = self.field.values[option_index];
+            if (!value.user_reference) {
+                return;
+            }
+
+            const avatar_url = value.user_reference.avatar_url;
+            option.setAttribute("data-avatar-url", avatar_url);
+        });
     }
 }

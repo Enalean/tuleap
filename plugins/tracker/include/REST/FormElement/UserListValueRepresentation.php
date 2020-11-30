@@ -47,11 +47,17 @@ final class UserListValueRepresentation
      */
     public $username;
 
+    /**
+     * @var string
+     */
+    public $avatar_url;
+
     public function build(Tracker_FormElement_Field_List_Bind_UsersValue $user): void
     {
-        $this->id        = $user->getId();
-        $this->uri       = self::ROUTE . '/' . $this->id;
-        $this->real_name = $user->getLabel();
-        $this->username  = $user->getUsername();
+        $this->id         = $user->getId();
+        $this->uri        = self::ROUTE . '/' . $this->id;
+        $this->real_name  = $user->getLabel();
+        $this->username   = $user->getUsername();
+        $this->avatar_url = $user->getUser()->getAvatarUrl();
     }
 }
