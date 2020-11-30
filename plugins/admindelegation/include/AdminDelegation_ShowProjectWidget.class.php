@@ -136,6 +136,9 @@ class AdminDelegation_ShowProjectWidget extends Widget
         $purifier = Codendi_HTMLPurifier::instance();
 
         $html = '';
+
+        $html .= '<div class="tlp-alert-warning">' . dgettext('tuleap-admindelegation', '<strong>Candidate for removal.</strong> This widget is subject for removal on <strong>31 march 2021</strong>. If you still use it, please contact the <a href="https://tuleap.net/plugins/tracker/?aid=14917">Tuleap development team</a>.') . '</div>';
+
         $html .= '<form method="post" action="">';
 
         $html .= '<div class="tlp-form-element">';

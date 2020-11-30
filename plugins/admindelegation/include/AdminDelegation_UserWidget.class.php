@@ -24,7 +24,10 @@
  */
 class AdminDelegation_UserWidget extends Widget //phpcs:ignore
 {
-    protected $_plugin;
+    /**
+     * @var Plugin
+     */
+    protected $plugin;
 
     /**
      * Constructor
@@ -34,7 +37,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
     public function __construct(Plugin $plugin)
     {
         parent::__construct('admindelegation');
-        $this->_plugin = $plugin;
+        $this->plugin = $plugin;
     }
 
     /**
@@ -77,7 +80,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
         return $admins;
     }
 
-    protected function _showProjectAdmins()
+    protected function showProjectAdmins(): string
     {
         $html = '';
 
@@ -106,6 +109,8 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
             $groupValue = '';
         }
 
+        $html .= '<div class="tlp-alert-warning">' . dgettext('tuleap-admindelegation', '<strong>Candidate for removal.</strong> This widget is subject for removal on <strong>31 march 2021</strong>. If you still use it, please contact the <a href="https://tuleap.net/plugins/tracker/?aid=14917">Tuleap development team</a>.') . '</div>';
+
         $html .= '<form method="post" action="">';
         $html .= '<div class="tlp-form-element">';
         $html .= '<label class="tlp-label" for="plugin_admindelegation_func">' . dgettext('tuleap-admindelegation', 'Show administrators of project:') . '</label>';
@@ -114,9 +119,6 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
         $html .= '</div>';
         $html .= '<input type="submit" class="tlp-button-primary" value="' . dgettext('tuleap-admindelegation', 'Search') . '"/>';
         $html .= '</form>';
-
-        $js = "new ProjectAutoCompleter('plugin_admindelegation_group', '" . util_get_dir_image_theme() . "', false);";
-        $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
         if ($func == 'show_admins' && $project && $project->isActive()) {
             $allAdmins = [];
@@ -167,7 +169,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
             new AdminDelegation_UserServiceLogDao()
         );
         if ($usm->isUserGrantedForService(UserManager::instance()->getCurrentUser(), AdminDelegation_Service::SHOW_PROJECT_ADMINS)) {
-            $html .= $this->_showProjectAdmins();
+            $html .= $this->showProjectAdmins();
         }
 
         return $html;

@@ -10,11 +10,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #, php-format
 msgid "%1$s project(s) found"
 msgstr "%1$s projet(s) trouvé(s)"
+
+msgid ""
+"<strong>Candidate for removal.</strong> This widget is subject for removal "
+"on <strong>31 march 2021</strong>. If you still use it, please contact the "
+"<a href=\"https://tuleap.net/plugins/tracker/?aid=14917\">Tuleap development "
+"team</a>."
+msgstr ""
+"<strong>Candidat à la suppression.</strong> La suppression de ce widget est "
+"prévue le <strong>31 mars 2021</strong>. Si vous l'utilisez toujours, merci "
+"de contacter <a href=\"https://tuleap.net/plugins/tracker/?"
+"aid=14917\">l'équipe de développement Tuleap</a>."
 
 msgid "Admin delegation"
 msgstr "Délégation d'admin"
