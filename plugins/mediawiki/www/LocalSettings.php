@@ -87,8 +87,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     ];
 
 //Trust Mediawiki security
-    $xml_security = new XML_Security();
-    $xml_security->enableExternalLoadOfEntities();
+    \libxml_disable_entity_loader(false); // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
 
     $wgServer = HTTPRequest::instance()->getServerUrl();
 

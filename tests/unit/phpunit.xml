@@ -20,7 +20,6 @@
     </listeners>
     <extensions>
         <extension class="\Tuleap\Test\PHPUnit\NoMockeryMockInDataProviderExtension"/>
-        <extension class="\Tuleap\Test\PHPUnit\XMLEntityLoadingNotRestoredToDisabledState"/>
     </extensions>
     <coverage processUncoveredFiles="true">
         <include>

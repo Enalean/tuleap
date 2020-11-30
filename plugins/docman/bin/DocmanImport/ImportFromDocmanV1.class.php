@@ -33,16 +33,18 @@ class Docman_ImportFromDocmanV1
         $this->wsdl_url            = $wsdl_url;
         $this->user_login          = $login;
         $this->user_password       = $password;
-        $xml_security = new XML_Security();
-        $xml_security->enableExternalLoadOfEntities();
     }
 
     public function migrate(Project $project)
     {
         $this->createTemporaryDirectory();
-        $this->dumpDocmanV1($project);
-        $folder_id = $this->createTarget($project);
-        $this->importDump($project, $folder_id);
+        XML_Security::enableExternalLoadOfEntities(
+            function () use ($project) {
+                $this->dumpDocmanV1($project);
+                $folder_id = $this->createTarget($project);
+                $this->importDump($project, $folder_id);
+            }
+        );
         $this->removeTemporaryDirectory();
     }
 

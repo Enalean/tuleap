@@ -42,9 +42,6 @@ ForgeConfig::loadFromFile(ForgeConfig::get('redis_config_file'));
 bindtextdomain('tuleap-core', ForgeConfig::get('sys_incdir'));
 textdomain('tuleap-core');
 
-$xml_security = new XML_Security();
-$xml_security->disableExternalLoadOfEntities();
-
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (! defined('IS_SCRIPT')) {
     if (php_sapi_name() == "cli") {

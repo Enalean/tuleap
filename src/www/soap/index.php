@@ -72,10 +72,9 @@ try {
 // if POST was used to send this request, we handle it
 // else, we display a list of available methods
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $xml_security = new XML_Security();
-    $xml_security->enableExternalLoadOfEntities();
-    $server->handle();
-    $xml_security->disableExternalLoadOfEntities();
+    XML_Security::enableExternalLoadOfEntities(function () use ($server) {
+        $server->handle();
+    });
 } else {
     site_header(['title' => "SOAP API"]);
     $renderer = new MustacheRenderer(new TemplateCache(), 'templates');

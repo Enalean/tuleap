@@ -60,6 +60,7 @@
                 <element key="srand" value="null"/>
                 <element key="mt_srand" value="null"/>
                 <element key="uniqid" value="random_bytes"/>
+                <element key="libxml_disable_entity_loader" value="null"/>
             </property>
         </properties>
     </rule>
