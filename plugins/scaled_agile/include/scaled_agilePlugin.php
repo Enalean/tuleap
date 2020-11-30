@@ -32,6 +32,7 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapt
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\ScaledAgileHierarchyDAO;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
@@ -260,14 +261,14 @@ final class scaled_agilePlugin extends Plugin
     public function trackerHierarchyDelegation(
         TrackerHierarchyDelegation $tracker_hierarchy_delegation
     ): void {
-        if ((new \Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao())->isPartOfAPlan(new TrackerData($tracker_hierarchy_delegation->getTracker()))) {
+        if ((new ScaledAgileHierarchyDAO())->isPartOfAHierarchy(new TrackerData($tracker_hierarchy_delegation->getTracker()))) {
             $tracker_hierarchy_delegation->enableTrackerHierarchyDelegation($this->getPluginInfo()->getPluginDescriptor()->getFullName());
         }
     }
 
     public function trackerUsage(array $params): void
     {
-        if ((new \Tuleap\ScaledAgile\Adapter\Program\Hierarchy\ScaledAgileHierarchyDAO())->isPartOfAHierarchy(new TrackerData($params['tracker']))) {
+        if ((new PlanDao())->isPartOfAPlan(new TrackerData($params['tracker']))) {
             $params['result'] = [
                 'can_be_deleted' => false,
                 'message'        => $this->getPluginInfo()->getPluginDescriptor()->getFullName()
