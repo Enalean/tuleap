@@ -28,13 +28,14 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SourceChangesetValuesCollectionAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsTask;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
@@ -48,6 +49,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
+use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -79,7 +81,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProgramDao
      */
-    private $program_dao;
+    private $program_store;
 
     /**
      * @var CreateProgramIncrementsTask
@@ -88,7 +90,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PendingArtifactCreationDao
      */
-    private $pending_artifact_creation_dao;
+    private $pending_artifact_creation_store;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
      */
@@ -100,21 +102,21 @@ final class CreateProgramIncrementsTaskTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->changeset_values_adapter      = \Mockery::mock(SourceChangesetValuesCollectionAdapter::class);
-        $this->program_dao                   = \Mockery::mock(ProgramDao::class);
-        $this->project_manager               = Mockery::mock(\ProjectManager::class);
-        $project_data_adapter                = new ProjectDataAdapter($this->project_manager);
-        $projects_collection_builder         = new TeamProjectsCollectionBuilder(
-            $this->program_dao,
+        $this->changeset_values_adapter        = \Mockery::mock(SourceChangesetValuesCollectionAdapter::class);
+        $this->program_store                   = \Mockery::mock(ProgramStore::class);
+        $this->project_manager                 = Mockery::mock(\ProjectManager::class);
+        $project_data_adapter                  = new ProjectDataAdapter($this->project_manager);
+        $projects_collection_builder           = new TeamProjectsCollectionBuilder(
+            $this->program_store,
             $project_data_adapter
         );
-        $this->planning_factory              = Mockery::mock(\PlanningFactory::class);
-        $milestone_trackers_factory          = new TrackerCollectionFactory(
+        $this->planning_factory                = Mockery::mock(\PlanningFactory::class);
+        $milestone_trackers_factory            = new TrackerCollectionFactory(
             new PlanningAdapter($this->planning_factory)
         );
-        $this->mirror_creator                = \Mockery::mock(ProgramIncrementsCreator::class);
-        $this->logger                        = \Mockery::mock(LoggerInterface::class);
-        $this->pending_artifact_creation_dao = \Mockery::mock(PendingArtifactCreationDao::class);
+        $this->mirror_creator                  = \Mockery::mock(ProgramIncrementsCreator::class);
+        $this->logger                          = \Mockery::mock(LoggerInterface::class);
+        $this->pending_artifact_creation_store = \Mockery::mock(PendingArtifactCreationStore::class);
 
         $this->task = new CreateProgramIncrementsTask(
             $this->changeset_values_adapter,
@@ -122,7 +124,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
             $milestone_trackers_factory,
             $this->mirror_creator,
             $this->logger,
-            $this->pending_artifact_creation_dao
+            $this->pending_artifact_creation_store
         );
 
         $this->project = new Project(['group_id' => 101, 'unix_group_name' => 'test', 'group_name' => 'My project']);
@@ -134,7 +136,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
 
         $copied_values = $this->buildCopiedValues();
         $this->changeset_values_adapter->shouldReceive('buildCollection')->andReturn($copied_values);
-        $this->program_dao->shouldReceive('getTeamProjectIdsForGivenProgramProject')
+        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')
             ->andReturn([['team_project_id' => $this->project->getID()]]);
         $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
 
@@ -144,7 +146,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
 
         $this->mirror_creator->shouldReceive('createProgramIncrements')->once();
 
-        $this->pending_artifact_creation_dao->shouldReceive('deleteArtifactFromPendingCreation')
+        $this->pending_artifact_creation_store->shouldReceive('deleteArtifactFromPendingCreation')
             ->once()
             ->withArgs(
                 [(int) $replication_data->getArtifactData()->getId(), (int) $replication_data->getUser()->getId()]

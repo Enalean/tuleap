@@ -24,38 +24,38 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
+use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 class ArtifactCreatedHandler
 {
     /**
-     * @var ProgramDao
+     * @var ProgramStore
      */
-    private $program_dao;
+    private $program_store;
     /**
      * @var CreateProgramIncrementsRunner
      */
     private $create_program_increments_runner;
     /**
-     * @var PendingArtifactCreationDao
+     * @var PendingArtifactCreationStore
      */
-    private $pending_artifact_creation_dao;
+    private $pending_artifact_creation_store;
     /**
      * @var PlanningAdapter
      */
     private $planning_adapter;
 
     public function __construct(
-        ProgramDao $program_dao,
+        ProgramStore $program_store,
         CreateProgramIncrementsRunner $create_program_increments_runner,
-        PendingArtifactCreationDao $pending_artifact_creation_dao,
+        PendingArtifactCreationStore $pending_artifact_creation_store,
         PlanningAdapter $planning_adapter
     ) {
-        $this->program_dao                      = $program_dao;
+        $this->program_store                    = $program_store;
         $this->create_program_increments_runner = $create_program_increments_runner;
-        $this->pending_artifact_creation_dao    = $pending_artifact_creation_dao;
+        $this->pending_artifact_creation_store  = $pending_artifact_creation_store;
         $this->planning_adapter                 = $planning_adapter;
     }
 
@@ -66,7 +66,7 @@ class ArtifactCreatedHandler
         $source_project  = $source_tracker->getProject();
         $current_user    = $event->getUser();
 
-        if (! $this->program_dao->isProjectAProgramProject((int) $source_project->getID())) {
+        if (! $this->program_store->isProjectAProgramProject((int) $source_project->getID())) {
             return;
         }
 
@@ -82,7 +82,7 @@ class ArtifactCreatedHandler
             return;
         }
 
-        $this->pending_artifact_creation_dao->addArtifactToPendingCreation(
+        $this->pending_artifact_creation_store->addArtifactToPendingCreation(
             (int) $event->getArtifact()->getId(),
             (int) $event->getUser()->getId(),
             (int) $event->getChangeset()->getId()

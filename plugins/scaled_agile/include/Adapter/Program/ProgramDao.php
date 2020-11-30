@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Adapter\Program;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ScaledAgile\Program\ProgramStore;
 
-class ProgramDao extends DataAccessObject implements ProgramStore
+final class ProgramDao extends DataAccessObject implements ProgramStore
 {
     public function isProjectAProgramProject(int $project_id): bool
     {

@@ -25,8 +25,8 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Plan;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
 
 final class ProgramAdapterTest extends TestCase
@@ -39,9 +39,9 @@ final class ProgramAdapterTest extends TestCase
      */
     private $adapter;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramStore
      */
-    private $program_dao;
+    private $program_store;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectManager
      */
@@ -50,9 +50,9 @@ final class ProgramAdapterTest extends TestCase
     public function setUp(): void
     {
         $this->project_manager = \Mockery::mock(\ProjectManager::class);
-        $this->program_dao     = \Mockery::mock(ProgramDao::class);
+        $this->program_store   = \Mockery::mock(ProgramStore::class);
 
-        $this->adapter = new ProgramAdapter($this->project_manager, $this->program_dao);
+        $this->adapter = new ProgramAdapter($this->project_manager, $this->program_store);
 
         $_SERVER['REQUEST_URI'] = '/';
     }
@@ -67,7 +67,7 @@ final class ProgramAdapterTest extends TestCase
         $project_id = 101;
         $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
         $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnFalse();
+        $this->program_store->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnFalse();
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($project_id)->andReturnFalse();
@@ -86,7 +86,7 @@ final class ProgramAdapterTest extends TestCase
         $project_id = 101;
         $project    = new \Project(['group_id' => $project_id, 'status' => 'A']);
         $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnFalse();
+        $this->program_store->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnFalse();
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($project_id)->andReturnTrue();
@@ -102,7 +102,7 @@ final class ProgramAdapterTest extends TestCase
         $project_id = 101;
         $project    = new \Project(['group_id' => $project_id, 'status' => 'A']);
         $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnTrue();
+        $this->program_store->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnTrue();
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($project_id)->andReturnTrue();
@@ -119,7 +119,7 @@ final class ProgramAdapterTest extends TestCase
         $project_id = 101;
         $project    = new \Project(['group_id' => $project_id, 'status' => 'A', 'access' => 'public']);
         $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn($project);
-        $this->program_dao->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnFalse();
+        $this->program_store->shouldReceive('isProjectAProgramProject')->with($project_id)->andReturnFalse();
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isAdmin')->with($project_id)->andReturnFalse();

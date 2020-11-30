@@ -44,6 +44,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Synchroniz
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\ScaledAgile\TrackerData;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -70,7 +71,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
     /**
      * @var Mockery\LegacyMockInterface|MockInterface|ProgramDao
      */
-    private $program_dao;
+    private $program_store;
 
     /**
      * @var \Tuleap\ScaledAgile\ProjectData
@@ -106,12 +107,12 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
     {
         parent::setUp();
 
-        $this->program_dao     = Mockery::mock(ProgramDao::class);
+        $this->program_store   = Mockery::mock(ProgramStore::class);
         $this->project_manager = Mockery::mock(ProjectManager::class);
         $project_data_adapter  = new ProjectDataAdapter($this->project_manager);
 
         $projects_collection_builder = new TeamProjectsCollectionBuilder(
-            $this->program_dao,
+            $this->program_store,
             $project_data_adapter
         );
 
@@ -169,7 +170,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $user              = UserTestBuilder::aUser()->build();
         $program_milestone = $this->getPlanningData();
 
-        $this->program_dao->shouldReceive('getTeamProjectIdsForGivenProgramProject')->andReturn([]);
+        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')->andReturn([]);
 
         $this->assertTrue($this->checker->canProgramIncrementBeCreated($program_milestone, $user));
     }
@@ -186,7 +187,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $first_team_project = new \Project(
             ['group_id' => '104', 'unix_group_name' => 'proj02', 'group_name' => 'Project 02']
         );
-        $this->program_dao->shouldReceive('getTeamProjectIdsForGivenProgramProject')
+        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')
             ->andReturn([['team_project_id' => $first_team_project->getID()]]);
         $this->project_manager->shouldReceive('getProject')
             ->with($first_team_project->getID())
@@ -296,7 +297,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
             ['group_id' => '198', 'unix_group_name' => 'proj03', 'group_name' => 'Project 03']
         );
 
-        $this->program_dao->shouldReceive('getTeamProjectIdsForGivenProgramProject')
+        $this->program_store->shouldReceive('getTeamProjectIdsForGivenProgramProject')
             ->andReturn([['team_project_id' => $project->getID()]]);
         $this->project_manager->shouldReceive('getProject')
             ->with($project->getID())

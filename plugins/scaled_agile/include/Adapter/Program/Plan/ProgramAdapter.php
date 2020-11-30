@@ -24,9 +24,9 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Plan;
 
 use Luracast\Restler\RestException;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
 use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
 
 final class ProgramAdapter implements BuildProgram
@@ -36,14 +36,14 @@ final class ProgramAdapter implements BuildProgram
      */
     private $project_manager;
     /**
-     * @var ProgramDao
+     * @var ProgramStore
      */
-    private $program_dao;
+    private $program_store;
 
-    public function __construct(\ProjectManager $project_manager, ProgramDao $program_dao)
+    public function __construct(\ProjectManager $project_manager, ProgramStore $program_store)
     {
         $this->project_manager = $project_manager;
-        $this->program_dao     = $program_dao;
+        $this->program_store   = $program_store;
     }
 
     /**
@@ -54,7 +54,7 @@ final class ProgramAdapter implements BuildProgram
     {
         $project = $this->buildProject($id, $user);
 
-        if (! $this->program_dao->isProjectAProgramProject((int) $project->getId())) {
+        if (! $this->program_store->isProjectAProgramProject((int) $project->getId())) {
             throw new ProjectIsNotAProgramException((int) $project->getId());
         }
 

@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactChangesetNotFoundException;
-use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactUserNotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -48,9 +48,9 @@ final class ReplicationDataAdapterTest extends TestCase
      */
     private $changeset_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingArtifactCreationDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingArtifactCreationStore
      */
-    private $pending_artifact_creation_dao;
+    private $pending_artifact_creation_store;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
      */
@@ -62,22 +62,22 @@ final class ReplicationDataAdapterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->artifact_factory              = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->user_manager                  = Mockery::mock(UserManager::class);
-        $this->pending_artifact_creation_dao = Mockery::mock(PendingArtifactCreationDao::class);
-        $this->changeset_factory             = Mockery::mock(Tracker_Artifact_ChangesetFactory::class);
+        $this->artifact_factory                = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->user_manager                    = Mockery::mock(UserManager::class);
+        $this->pending_artifact_creation_store = Mockery::mock(PendingArtifactCreationStore::class);
+        $this->changeset_factory               = Mockery::mock(Tracker_Artifact_ChangesetFactory::class);
 
         $this->adapter = new ReplicationDataAdapter(
             $this->artifact_factory,
             $this->user_manager,
-            $this->pending_artifact_creation_dao,
+            $this->pending_artifact_creation_store,
             $this->changeset_factory
         );
     }
 
     public function testItThrowErrorWhenPendingArtifactIsNotFoundInDB(): void
     {
-        $this->pending_artifact_creation_dao->shouldReceive('getPendingArtifactById')->once()->andReturnNull();
+        $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')->once()->andReturnNull();
 
         $this->expectException(PendingArtifactNotFoundException::class);
 
@@ -86,7 +86,7 @@ final class ReplicationDataAdapterTest extends TestCase
 
     public function testItThrowErrorWhenPendingArtifactIsNotFound(): void
     {
-        $this->pending_artifact_creation_dao->shouldReceive('getPendingArtifactById')
+        $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')
             ->once()
             ->andReturn(['program_artifact_id' => 1, 'user_id' => 101, 'changeset_id' => 666]);
 
@@ -99,7 +99,7 @@ final class ReplicationDataAdapterTest extends TestCase
 
     public function testItThrowsWhenUserIsNotFound(): void
     {
-        $this->pending_artifact_creation_dao->shouldReceive('getPendingArtifactById')
+        $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')
             ->once()
             ->andReturn(['program_artifact_id' => 1, 'user_id' => 101, 'changeset_id' => 666]);
 
@@ -115,7 +115,7 @@ final class ReplicationDataAdapterTest extends TestCase
 
     public function testItThrowsWhenChangesetIsNotFound(): void
     {
-        $this->pending_artifact_creation_dao->shouldReceive('getPendingArtifactById')
+        $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')
             ->once()
             ->andReturn(['program_artifact_id' => 1, 'user_id' => 101, 'changeset_id' => 666]);
 
@@ -134,7 +134,7 @@ final class ReplicationDataAdapterTest extends TestCase
 
     public function testItBuilsReplicationData(): void
     {
-        $this->pending_artifact_creation_dao->shouldReceive('getPendingArtifactById')
+        $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')
             ->once()
             ->andReturn(['program_artifact_id' => 1, 'user_id' => 101, 'changeset_id' => 666]);
 

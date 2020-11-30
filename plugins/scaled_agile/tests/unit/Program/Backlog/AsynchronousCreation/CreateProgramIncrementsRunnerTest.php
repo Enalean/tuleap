@@ -56,7 +56,7 @@ final class CreateProgramIncrementsRunnerTest extends TestCase
         $replication_adapter = new ReplicationDataAdapter(
             Mockery::mock(Tracker_ArtifactFactory::class),
             Mockery::mock(UserManager::class),
-            Mockery::mock(PendingArtifactCreationDao::class),
+            Mockery::mock(PendingArtifactCreationStore::class),
             Mockery::mock(Tracker_Artifact_ChangesetFactory::class)
         );
         $this->runner        = new CreateProgramIncrementsRunner(

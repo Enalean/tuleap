@@ -24,7 +24,7 @@ namespace Tuleap\ScaledAgile\Adapter\Team;
 
 use Luracast\Restler\RestException;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
+use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
 use Tuleap\ScaledAgile\Team\Creation\BuildTeam;
 use Tuleap\ScaledAgile\Team\Creation\Team;
@@ -37,14 +37,14 @@ final class TeamAdapter implements BuildTeam
      */
     private $project_manager;
     /**
-     * @var ProgramDao
+     * @var ProgramStore
      */
     private $program_dao;
 
-    public function __construct(\ProjectManager $project_manager, ProgramDao $program_dao)
+    public function __construct(\ProjectManager $project_manager, ProgramStore $program_store)
     {
         $this->project_manager = $project_manager;
-        $this->program_dao     = $program_dao;
+        $this->program_dao     = $program_store;
     }
 
     /**
