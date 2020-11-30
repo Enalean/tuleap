@@ -310,7 +310,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function tracker_formelement_get_classnames($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['dynamic']['burnup'] = "Tuleap\AgileDashboard\FormElement\Burnup";
+        $params['dynamic']['burnup'] = \Tuleap\AgileDashboard\FormElement\Burnup::class;
     }
 
     /**

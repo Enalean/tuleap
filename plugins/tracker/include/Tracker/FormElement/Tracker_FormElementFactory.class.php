@@ -65,42 +65,42 @@ class Tracker_FormElementFactory
 
     // Please use unique key for each element
     protected $classnames = [
-        self::FIELD_STRING_TYPE           => 'Tracker_FormElement_Field_String',
-        self::FIELD_TEXT_TYPE             => 'Tracker_FormElement_Field_Text',
-        self::FIELD_FLOAT_TYPE            => 'Tracker_FormElement_Field_Float',
-        self::FIELD_DATE_TYPE             => 'Tracker_FormElement_Field_Date',
-        self::FIELD_SELECT_BOX_TYPE       => 'Tracker_FormElement_Field_Selectbox',
-        self::FIELD_RADIO_BUTTON_TYPE     => 'Tracker_FormElement_Field_Radiobutton',
-        self::FIELD_MULTI_SELECT_BOX_TYPE => 'Tracker_FormElement_Field_MultiSelectbox',
-        self::FIELD_FILE_TYPE             => 'Tracker_FormElement_Field_File',
-        'cb'       => 'Tracker_FormElement_Field_Checkbox',
-        'int'      => 'Tracker_FormElement_Field_Integer',
-        'tbl'      => 'Tracker_FormElement_Field_OpenList',
-        'art_link' => 'Tracker_FormElement_Field_ArtifactLink',
-        'perm'     => 'Tracker_FormElement_Field_PermissionsOnArtifact',
-        'shared'   => 'Tracker_FormElement_Shared',
+        self::FIELD_STRING_TYPE           => Tracker_FormElement_Field_String::class,
+        self::FIELD_TEXT_TYPE             => Tracker_FormElement_Field_Text::class,
+        self::FIELD_FLOAT_TYPE            => Tracker_FormElement_Field_Float::class,
+        self::FIELD_DATE_TYPE             => Tracker_FormElement_Field_Date::class,
+        self::FIELD_SELECT_BOX_TYPE       => Tracker_FormElement_Field_Selectbox::class,
+        self::FIELD_RADIO_BUTTON_TYPE     => Tracker_FormElement_Field_Radiobutton::class,
+        self::FIELD_MULTI_SELECT_BOX_TYPE => Tracker_FormElement_Field_MultiSelectbox::class,
+        self::FIELD_FILE_TYPE             => Tracker_FormElement_Field_File::class,
+        'cb'                              => Tracker_FormElement_Field_Checkbox::class,
+        'int'                             => Tracker_FormElement_Field_Integer::class,
+        'tbl'                             => Tracker_FormElement_Field_OpenList::class,
+        'art_link'                        => Tracker_FormElement_Field_ArtifactLink::class,
+        'perm'                            => Tracker_FormElement_Field_PermissionsOnArtifact::class,
+        'shared'                          => Tracker_FormElement_Shared::class,
     ];
 
     protected $special_classnames = [
-        self::FIELD_LAST_UPDATE_DATE_TYPE  => 'Tracker_FormElement_Field_LastUpdateDate',
-        self::FIELD_ARTIFACT_ID_TYPE       => 'Tracker_FormElement_Field_ArtifactId',
-        self::FIELD_SUBMITTED_ON_TYPE      => 'Tracker_FormElement_Field_SubmittedOn',
-        'atid'      => 'Tracker_FormElement_Field_PerTrackerArtifactId',
-        'subby'     => 'Tracker_FormElement_Field_SubmittedBy',
-        'luby'      => 'Tracker_FormElement_Field_LastModifiedBy',
-        'cross'     => 'Tracker_FormElement_Field_CrossReferences',
-        'burndown'  => 'Tracker_FormElement_Field_Burndown',
-        'computed'  => 'Tracker_FormElement_Field_Computed',
-        'priority'  => 'Tracker_FormElement_Field_Priority'
+        self::FIELD_LAST_UPDATE_DATE_TYPE  => Tracker_FormElement_Field_LastUpdateDate::class,
+        self::FIELD_ARTIFACT_ID_TYPE       => Tracker_FormElement_Field_ArtifactId::class,
+        self::FIELD_SUBMITTED_ON_TYPE      => Tracker_FormElement_Field_SubmittedOn::class,
+        'atid'                             => Tracker_FormElement_Field_PerTrackerArtifactId::class,
+        'subby'                            => Tracker_FormElement_Field_SubmittedBy::class,
+        'luby'                             => Tracker_FormElement_Field_LastModifiedBy::class,
+        'cross'                            => Tracker_FormElement_Field_CrossReferences::class,
+        'burndown'                         => Tracker_FormElement_Field_Burndown::class,
+        'computed'                         => Tracker_FormElement_Field_Computed::class,
+        'priority'                         => Tracker_FormElement_Field_Priority::class,
     ];
     protected $group_classnames       = [
-        self::CONTAINER_FIELDSET_TYPE => 'Tracker_FormElement_Container_Fieldset',
-        self::CONTAINER_COLUMN_TYPE   => 'Tracker_FormElement_Container_Column',
+        self::CONTAINER_FIELDSET_TYPE => Tracker_FormElement_Container_Fieldset::class,
+        self::CONTAINER_COLUMN_TYPE   => Tracker_FormElement_Container_Column::class,
     ];
     protected $staticfield_classnames = [
-        'linebreak'   => 'Tracker_FormElement_StaticField_LineBreak',
-        'separator'   => 'Tracker_FormElement_StaticField_Separator',
-        'staticrichtext' => 'Tracker_FormElement_StaticField_RichText',
+        'linebreak'      => Tracker_FormElement_StaticField_LineBreak::class,
+        'separator'      => Tracker_FormElement_StaticField_Separator::class,
+        'staticrichtext' => Tracker_FormElement_StaticField_RichText::class,
     ];
 
     /**
@@ -506,7 +506,7 @@ class Tracker_FormElementFactory
     public function getFieldById($id)
     {
         $field = $this->getFormElementById($id);
-        if (! is_a($field, 'Tracker_FormElement_Field')) {
+        if (! $field instanceof Tracker_FormElement_Field) {
             $field = null;
         }
         return $field;
@@ -515,7 +515,7 @@ class Tracker_FormElementFactory
     public function getFieldsetById($id)
     {
         $fieldset = $this->getFormElementById($id);
-        if (! is_a($fieldset, 'Tracker_FormElement_Container_Fieldset')) {
+        if (! $fieldset instanceof Tracker_FormElement_Container_Fieldset) {
             $fieldset = null;
         }
         return $fieldset;
@@ -1433,9 +1433,9 @@ class Tracker_FormElementFactory
                     //Set default permissions
                     $permissions = [ $form_element_id =>
                          [
-                               $GLOBALS['UGROUP_ANONYMOUS']     => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_READ'),
-                               $GLOBALS['UGROUP_REGISTERED']    => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_SUBMIT'),
-                               $GLOBALS['UGROUP_PROJECT_MEMBERS']  => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_UPDATE')
+                             ProjectUGroup::ANONYMOUS        => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_READ),
+                             ProjectUGroup::REGISTERED       => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_SUBMIT),
+                             ProjectUGroup::PROJECT_MEMBERS  => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_UPDATE)
                          ]
                     ];
                     $tracker = $form_element->getTracker();
@@ -1749,9 +1749,9 @@ class Tracker_FormElementFactory
         } else {
             $ugroups_permissions = [$elmtId =>
                 [
-                    $GLOBALS['UGROUP_ANONYMOUS'] => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_READ'),
-                    $GLOBALS['UGROUP_REGISTERED'] => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_SUBMIT'),
-                    $GLOBALS['UGROUP_PROJECT_MEMBERS'] => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_UPDATE')
+                    ProjectUGroup::ANONYMOUS       => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_READ),
+                    ProjectUGroup::REGISTERED      => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_SUBMIT),
+                    ProjectUGroup::PROJECT_MEMBERS => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_UPDATE)
                 ]
             ];
         }

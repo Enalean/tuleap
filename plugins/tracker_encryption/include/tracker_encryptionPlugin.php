@@ -79,7 +79,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     public function tracker_formelement_get_classnames($params)
     {
         $request = HTTPRequest::instance();
-        $params['fields']['Encrypted'] = "Tracker_FormElement_Field_Encrypted";
+        $params['fields']['Encrypted'] = Tracker_FormElement_Field_Encrypted::class;
         if ($request->get('func') === 'admin-formElements') {
             $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-tracker_encryption', 'Please add a public key in the tracker administration in order to use encrypted field.'));
         }
