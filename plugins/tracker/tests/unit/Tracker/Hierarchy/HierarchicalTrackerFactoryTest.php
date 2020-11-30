@@ -293,6 +293,30 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
         $this->assertEquals($expected_hierarchy->__toString(), $factory->getHierarchy($tracker)->__toString());
     }
 
+    public function testDoesNotComplainsWhenAChildDoesNotExistInTheTrackersOfTheProject(): void
+    {
+        $project_id = 110;
+        $project    = \Mockery::spy(\Project::class);
+        $project->shouldReceive('getID')->andReturns($project_id);
+
+        $story_tracker = $this->mockTrackerWithId(119, 'Stories');
+        $story_tracker->shouldReceive("getProject")->andReturn($project);
+        $story_tracker->shouldReceive("getGroupId")->andReturn($project_id);
+        $project_trackers = [
+            '119' => $story_tracker
+        ];
+
+        $hierarchy_dar = [
+            ['parent_id' => 119, 'child_id' => 120],
+        ];
+
+        $dao             = $this->aMockDaoWith($project_id, $hierarchy_dar);
+        $tracker_factory = $this->aMockTrackerFactoryWith($project_id, $project_trackers);
+        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao, Mockery::mock(EventDispatcherInterface::class));
+
+        self::assertCount(1, $factory->getHierarchy($story_tracker)->getChildren());
+    }
+
     public function testGetRootTrackerIdFromHierarchyWithNoChildren(): void
     {
         $hierarchy_dar = [];
