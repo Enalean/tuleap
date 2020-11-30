@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 
 class AgileDashboard_KanbanColumnManager
 {
@@ -24,7 +25,7 @@ class AgileDashboard_KanbanColumnManager
     /** @var AgileDashboard_KanbanColumnDao */
     private $column_dao;
 
-    /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
+    /** @var BindStaticValueDao */
     private $formelement_field_list_bind_static_value_dao;
 
     /** @var AgileDashboard_KanbanActionsChecker */
@@ -32,7 +33,7 @@ class AgileDashboard_KanbanColumnManager
 
     public function __construct(
         AgileDashboard_KanbanColumnDao $column_dao,
-        Tracker_FormElement_Field_List_Bind_Static_ValueDao $formelement_field_list_bind_static_value_dao,
+        BindStaticValueDao $formelement_field_list_bind_static_value_dao,
         AgileDashboard_KanbanActionsChecker $kanban_actions_checker
     ) {
         $this->column_dao                                   = $column_dao;

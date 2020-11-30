@@ -19,9 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\ListFields;
+
 use Tuleap\Tracker\FormElement\SpecificPropertiesDao;
 
-class Tracker_FormElement_Field_OpenListDao extends SpecificPropertiesDao // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class OpenListFieldDao extends SpecificPropertiesDao
 {
     public function __construct()
     {
@@ -31,7 +33,7 @@ class Tracker_FormElement_Field_OpenListDao extends SpecificPropertiesDao // php
 
     public function save($field_id, $row)
     {
-        $field_id  = $this->da->escapeInt($field_id);
+        $field_id = $this->da->escapeInt($field_id);
 
         if (isset($row['hint'])) {
             $hint = $this->da->quoteSmart($row['hint']);
@@ -64,8 +66,14 @@ class Tracker_FormElement_Field_OpenListDao extends SpecificPropertiesDao // php
         return $this->update($sql);
     }
 
-    public function searchChangesetValues($changeset_id, $field_id, $bindtable_select, $bindtable_select_nb, $bindtable_from, $bindtable_join_on_id)
-    {
+    public function searchChangesetValues(
+        $changeset_id,
+        $field_id,
+        $bindtable_select,
+        $bindtable_select_nb,
+        $bindtable_from,
+        $bindtable_join_on_id
+    ) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id     = $this->da->escapeInt($field_id);
         //      SELECT user.user_id AS id, user.user_name, user.realname, CONCAT(user.realname,' (',user.user_name,')') AS full_name, null as openvalue_label, l.insertion_order

@@ -56,6 +56,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionB
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -3324,7 +3325,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             $new_changeset_creator,
             Tracker_FormElementFactory::instance(),
             new XMLImportHelper($this->getUserManager()),
-            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
+            new BindStaticValueDao(),
             $logger,
             $send_notifications,
             Tracker_ArtifactFactory::instance(),

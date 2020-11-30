@@ -82,7 +82,9 @@ class AgileDashboard_KanbanColumnManagerTest extends TestCase //phpcs:ignore PSR
         $this->kanban                = new AgileDashboard_Kanban($this->kanban_id, $this->tracker_id, "My Kanban");
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $this->column_dao,
-            \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static_ValueDao::class),
+            \Mockery::spy(
+                \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao::class
+            ),
             $this->kanban_actions_checker
         );
     }

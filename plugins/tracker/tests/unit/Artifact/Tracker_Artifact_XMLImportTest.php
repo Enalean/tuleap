@@ -29,6 +29,7 @@ use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -69,7 +70,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
     /** @var Artifact  */
     protected $artifact;
 
-    /** @var  Tracker_FormElement_Field_List_Bind_Static_ValueDao */
+    /** @var  BindStaticValueDao */
     protected $static_value_dao;
 
     /** @var  \Psr\Log\LoggerInterface */
@@ -129,7 +130,9 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
         $this->extraction_path = $this->getTmpDir();
 
-        $this->static_value_dao = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static_ValueDao::class);
+        $this->static_value_dao = \Mockery::spy(
+            \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao::class
+        );
 
         $this->logger = \Mockery::spy(\Psr\Log\LoggerInterface::class);
 
@@ -2215,7 +2218,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
             $new_changeset_creator,
             Mockery::mock(Tracker_FormElementFactory::class),
             $user_finder,
-            Mockery::mock(Tracker_FormElement_Field_List_Bind_Static_ValueDao::class),
+            Mockery::mock(BindStaticValueDao::class),
             Mockery::spy(LoggerInterface::class),
             false,
             Mockery::mock(Tracker_ArtifactFactory::class),

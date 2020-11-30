@@ -50,7 +50,7 @@ use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tracker_Permission_PermissionRetrieveAssignee;
@@ -221,7 +221,7 @@ class KanbanResource extends AuthenticatedResource
 
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             new AgileDashboard_KanbanColumnDao(),
-            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
+            new BindStaticValueDao(),
             $this->kanban_actions_checker
         );
 

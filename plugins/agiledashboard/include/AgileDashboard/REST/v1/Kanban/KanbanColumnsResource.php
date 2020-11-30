@@ -45,7 +45,7 @@ use PFUser;
 use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_KanbanActionsChecker;
 use Tracker_FormElementFactory;
-use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\RealTime\NodeJSClient;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_Permission_PermissionRetrieveAssignee;
@@ -98,7 +98,7 @@ class KanbanColumnsResource
         );
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $kanban_column_dao,
-            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
+            new BindStaticValueDao(),
             new AgileDashboard_KanbanActionsChecker(
                 $this->tracker_factory,
                 $permissions_manager,

@@ -23,7 +23,7 @@ namespace Tuleap\Tracker;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_OpenValue;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
@@ -39,7 +39,7 @@ class FormElementListValueAdminViewPresenterBuilderTest extends TestCase
      */
     private $presenter_builder;
     /**
-     * @var \Mockery\MockInterface|Tracker_FormElement_Field_List_Bind_Static_ValueDao
+     * @var \Mockery\MockInterface|BindStaticValueDao
      */
     private $value_dao;
     /**
@@ -52,7 +52,7 @@ class FormElementListValueAdminViewPresenterBuilderTest extends TestCase
         $this->field             = \Mockery::mock(Tracker_FormElement_Field::class);
         $this->field->shouldReceive('getTrackerId')->andReturn(5);
 
-        $this->value_dao         = \Mockery::mock(Tracker_FormElement_Field_List_Bind_Static_ValueDao::class);
+        $this->value_dao         = \Mockery::mock(BindStaticValueDao::class);
         $this->presenter_builder = new FormElementListValueAdminViewPresenterBuilder($this->value_dao);
     }
 

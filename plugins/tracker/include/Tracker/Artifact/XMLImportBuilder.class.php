@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 
 class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -99,7 +100,7 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
             $new_changeset_creator,
             Tracker_FormElementFactory::instance(),
             $user_finder,
-            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
+            new BindStaticValueDao(),
             $logger,
             $send_notifications,
             Tracker_ArtifactFactory::instance(),

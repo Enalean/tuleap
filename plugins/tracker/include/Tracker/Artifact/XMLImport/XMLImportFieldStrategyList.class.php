@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric
 {
@@ -27,7 +28,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
     public const BIND_UGROUPS = 'ugroups';
     public const FORMAT_ID    = 'id';
 
-    /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
+    /** @var BindStaticValueDao */
     private $static_value_dao;
 
     /** @var User\XML\Import\IFindUserFromXMLReference */
@@ -37,7 +38,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
     private $xml_fields_mapping;
 
     public function __construct(
-        Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
+        BindStaticValueDao $static_value_dao,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         TrackerXmlFieldsMapping $xml_fields_mapping
     ) {

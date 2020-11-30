@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObject
+namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
+
+use DataAccessObject;
+
+class BindUgroupsValueDao extends DataAccessObject
 {
 
     public function __construct()
@@ -39,18 +44,19 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObj
 
     public function searchByFieldId($field_id)
     {
-        $field_id  = $this->da->escapeInt($field_id);
-        $sql = "SELECT *
+        $field_id = $this->da->escapeInt($field_id);
+        $sql      = "SELECT *
                 FROM $this->table_name
                 WHERE field_id = $field_id
                 ORDER BY id";
         return $this->retrieve($sql);
     }
+
     public function duplicate($from_value_id, $to_field_id)
     {
-        $from_value_id  = $this->da->escapeInt($from_value_id);
-        $to_field_id    = $this->da->escapeInt($to_field_id);
-        $sql = "REPLACE INTO $this->table_name (field_id, ugroup_id, is_hidden)
+        $from_value_id = $this->da->escapeInt($from_value_id);
+        $to_field_id   = $this->da->escapeInt($to_field_id);
+        $sql           = "REPLACE INTO $this->table_name (field_id, ugroup_id, is_hidden)
                 SELECT $to_field_id, u1.ugroup_id, v.is_hidden
                 FROM ugroup u1
                     INNER JOIN tracker t ON (
@@ -103,7 +109,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObj
     {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id     = $this->da->escapeInt($field_id);
-        $sql = "SELECT f.id, f.ugroup_id, f.is_hidden
+        $sql          = "SELECT f.id, f.ugroup_id, f.is_hidden
                 FROM tracker_field_list_bind_ugroups_value AS f
                      INNER JOIN tracker_changeset_value_list AS l ON (l.bindvalue_id = f.id AND f.field_id = $field_id)
                      INNER JOIN tracker_changeset_value AS c

@@ -22,13 +22,15 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListChangesetValueDao;
 
 final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_List_OpenValueDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OpenListValueDao
      */
     private $dao;
     /**
@@ -48,7 +50,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
             ->shouldAllowMockingProtectedMethods();
 
         $this->bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->dao   = Mockery::mock(Tracker_FormElement_Field_List_OpenValueDao::class);
+        $this->dao   = Mockery::mock(OpenListValueDao::class);
 
         $this->field->shouldReceive('getBind')->andReturn($this->bind);
         $this->field->shouldReceive('getOpenValueDao')->andReturn($this->dao);
@@ -56,7 +58,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
 
     public function testGetChangesetValue(): void
     {
-        $open_value_dao = Mockery::mock(Tracker_FormElement_Field_Value_OpenListDao::class);
+        $open_value_dao = Mockery::mock(OpenListChangesetValueDao::class);
         $open_value_dao->shouldReceive('searchById')->andReturn(
             TestHelper::arrayToDar(
                 ['id' => '10', 'field_id' => '1', 'label' => 'Open_1', 'is_hidden' => false],
@@ -67,7 +69,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
         $open_value_dao->shouldReceive('searchById')->andReturn([1, '10']); //, $odar_10,
         $open_value_dao->shouldReceive('searchById')->andReturn([1, '20']); //, $odar_20,
 
-        $value_dao = Mockery::mock(Tracker_FormElement_Field_Value_OpenListDao::class);
+        $value_dao = Mockery::mock(OpenListChangesetValueDao::class);
         $results = TestHelper::arrayToDar(
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1000', 'openvalue_id' => null],
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1001', 'openvalue_id' => null],
@@ -115,7 +117,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
 
     public function testGetChangesetValueDoesntExist(): void
     {
-        $value_dao = Mockery::mock(Tracker_FormElement_Field_Value_OpenListDao::class);
+        $value_dao = Mockery::mock(OpenListChangesetValueDao::class);
         $value_dao->shouldReceive('searchbyId')->andReturn(TestHelper::arrayToDar());
 
         $list_field = Mockery::mock(Tracker_FormElement_Field_OpenList::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -142,11 +144,11 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
         $submitted_value[] = '!new_2'; //new open value
         $submitted_value = implode(',', $submitted_value);
 
-        $open_value_dao = Mockery::mock(Tracker_FormElement_Field_Value_OpenListDao::class);
+        $open_value_dao = Mockery::mock(OpenListChangesetValueDao::class);
         $open_value_dao->shouldReceive('create')->andReturn([1, 'new_1'])->once()->andReturn(901);
         $open_value_dao->shouldReceive('create')->andReturn([1, 'new_2'])->once()->andReturn(902);
 
-        $value_dao = Mockery::mock(Tracker_FormElement_Field_Value_OpenListDao::class);
+        $value_dao = Mockery::mock(OpenListChangesetValueDao::class);
         $value_dao->shouldReceive('create')->withArgs(
             [
                 $changeset_id,

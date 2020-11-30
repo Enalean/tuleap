@@ -22,6 +22,8 @@
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorEditor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorSaver;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitable;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao;
 use Tuleap\Tracker\REST\FieldValueRepresentation;
 
 /**
@@ -40,7 +42,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     public const NONE_VALUE = 100;
 
     /**
-     * @var Tracker_FormElement_Field_List_Bind_DefaultvalueDao
+     * @var BindDefaultValueDao
      */
     protected $default_value_dao;
 
@@ -449,7 +451,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      */
     public function process($params, $no_redirect = false)
     {
-        $decorator_editor = new BoundDecoratorEditor(new Tracker_FormElement_Field_List_BindDecoratorDao());
+        $decorator_editor = new BoundDecoratorEditor(new BindDecoratorDao());
 
         if (isset($params['decorator'])) {
             foreach ($params['decorator'] as $value_id => $hexacolor) {
@@ -494,17 +496,17 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_DefaultvalueDao
+     * @return BindDefaultValueDao
      */
     protected function getDefaultValueDao()
     {
         if (! $this->default_value_dao) {
-            $this->default_value_dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
+            $this->default_value_dao = new BindDefaultValueDao();
         }
         return $this->default_value_dao;
     }
 
-    public function setDefaultValueDao(Tracker_FormElement_Field_List_Bind_DefaultvalueDao $dao)
+    public function setDefaultValueDao(BindDefaultValueDao $dao)
     {
         $this->default_value_dao = $dao;
     }
@@ -630,7 +632,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
 
     private function getBoundDecoratorSaver(): BoundDecoratorSaver
     {
-        return new BoundDecoratorSaver(new Tracker_FormElement_Field_List_BindDecoratorDao());
+        return new BoundDecoratorSaver(new BindDecoratorDao());
     }
 
     /**

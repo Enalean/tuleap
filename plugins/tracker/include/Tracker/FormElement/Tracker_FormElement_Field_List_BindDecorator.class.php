@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorExporter;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao;
 
 class Tracker_FormElement_Field_List_BindDecorator
 {
@@ -203,7 +204,7 @@ class Tracker_FormElement_Field_List_BindDecorator
      */
     public static function delete($field_id, $value_id)
     {
-        $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
+        $dao = new BindDecoratorDao();
         $dao->delete((int) $field_id, (int) $value_id);
     }
 

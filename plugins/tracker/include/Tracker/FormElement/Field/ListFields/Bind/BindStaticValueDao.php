@@ -1,29 +1,35 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
+namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
-class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObject
+use DataAccessObject;
+use EventManager;
+use Tracker_FormElement_Field;
+
+class BindStaticValueDao extends DataAccessObject
 {
     public const COPY_BY_REFERENCE = true;
-    public const COPY_BY_VALUE = false;
+    public const COPY_BY_VALUE     = false;
 
     private $cache_canbedeleted_values = [];
     private $cache_canbehidden_values = [];
@@ -45,17 +51,18 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
 
     public function searchByFieldId($field_id, $is_rank_alpha)
     {
-        $field_id  = $this->da->escapeInt($field_id);
-        $sql = "SELECT *
+        $field_id = $this->da->escapeInt($field_id);
+        $sql      = "SELECT *
                 FROM $this->table_name
                 WHERE field_id = $field_id
                 ORDER BY " . ($is_rank_alpha ? 'label' : 'rank');
         return $this->retrieve($sql);
     }
+
     public function duplicate($from_value_id, $to_field_id, $by_reference)
     {
-        $from_value_id  = $this->da->escapeInt($from_value_id);
-        $to_field_id    = $this->da->escapeInt($to_field_id);
+        $from_value_id = $this->da->escapeInt($from_value_id);
+        $to_field_id   = $this->da->escapeInt($to_field_id);
         if ($by_reference) {
             $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
                     SELECT $to_field_id, label, description, rank, is_hidden, $from_value_id";
@@ -72,11 +79,13 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
 
     public function create($field_id, $label, $description, $rank, $is_hidden)
     {
-        $field_id     = $this->da->escapeInt($field_id);
-        $label        = $this->da->quoteSmart($label);
-        $description  = $this->da->quoteSmart($description);
-        $rank         = $this->da->escapeInt($this->prepareRanking('tracker_field_list_bind_static_value', 0, $field_id, $rank, 'id', 'field_id'));
-        $is_hidden    = $this->da->escapeInt($is_hidden);
+        $field_id    = $this->da->escapeInt($field_id);
+        $label       = $this->da->quoteSmart($label);
+        $description = $this->da->quoteSmart($description);
+        $rank        = $this->da->escapeInt(
+            $this->prepareRanking('tracker_field_list_bind_static_value', 0, $field_id, $rank, 'id', 'field_id')
+        );
+        $is_hidden   = $this->da->escapeInt($is_hidden);
 
         $sql = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden)
                 VALUES ($field_id, $label, $description, $rank, $is_hidden)";
@@ -85,8 +94,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
 
     public function propagateCreation($field, $original_value_id)
     {
-        $field_id     = $this->da->escapeInt($field->id);
-        $original_value_id     = $this->da->escapeInt($original_value_id);
+        $field_id          = $this->da->escapeInt($field->id);
+        $original_value_id = $this->da->escapeInt($original_value_id);
 
         $sql = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
                 SELECT target.id, original_value.label, original_value.description, original_value.rank, original_value.is_hidden, $original_value_id
@@ -100,7 +109,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
 
     public function hideValue($id)
     {
-        $id  = $this->da->escapeInt($id);
+        $id = $this->da->escapeInt($id);
 
         $sql = "UPDATE $this->table_name
                 SET is_hidden = 1
@@ -125,12 +134,14 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
 
     public function save($id, $field_id, $label, $description, $rank, $is_hidden)
     {
-        $id           = $this->da->escapeInt($id);
-        $field_id     = $this->da->escapeInt($field_id);
-        $label        = $this->da->quoteSmart($label);
-        $description  = $this->da->quoteSmart($description);
-        $rank         = $this->da->escapeInt($this->prepareRanking('tracker_field_list_bind_static_value', $id, $field_id, $rank, 'id', 'field_id'));
-        $is_hidden    = $this->da->escapeInt($is_hidden);
+        $id          = $this->da->escapeInt($id);
+        $field_id    = $this->da->escapeInt($field_id);
+        $label       = $this->da->quoteSmart($label);
+        $description = $this->da->quoteSmart($description);
+        $rank        = $this->da->escapeInt(
+            $this->prepareRanking('tracker_field_list_bind_static_value', $id, $field_id, $rank, 'id', 'field_id')
+        );
+        $is_hidden   = $this->da->escapeInt($is_hidden);
 
         $sql = "UPDATE $this->table_name
                 SET label = $label,
@@ -144,7 +155,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
 
     public function delete($id)
     {
-        $id       = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name
                 WHERE id = $id
                    OR original_value_id = $id";
@@ -156,7 +167,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
     {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id     = $this->da->escapeInt($field_id);
-        $sql = "SELECT f.id
+        $sql          = "SELECT f.id
                 FROM tracker_field_list_bind_static_value AS f
                      INNER JOIN tracker_changeset_value_list AS l ON (l.bindvalue_id = f.id)
                      INNER JOIN tracker_changeset_value AS c
@@ -327,7 +338,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         $this->startTransaction();
 
         $ids_in_right_order = array_filter($ids_in_right_order);
-        $ids = $this->da->escapeIntImplode($ids_in_right_order);
+        $ids                = $this->da->escapeIntImplode($ids_in_right_order);
 
         $when_conditions = '';
         foreach ($ids_in_right_order as $rank => $id) {

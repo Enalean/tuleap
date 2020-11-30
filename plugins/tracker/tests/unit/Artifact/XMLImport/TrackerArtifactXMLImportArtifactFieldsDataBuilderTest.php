@@ -30,7 +30,7 @@ use Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder;
 use Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping;
@@ -76,7 +76,7 @@ class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends TestCase
         $this->tracker             = Mockery::mock(Tracker::class);
         $files_importer            = Mockery::mock(Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact::class);
         $extraction_path           = '';
-        $static_value_dao          = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static_ValueDao::class);
+        $static_value_dao          = Mockery::mock(BindStaticValueDao::class);
         $logger                    = Mockery::mock(LoggerInterface::class);
         $xml_fields_mapping        = Mockery::mock(TrackerXmlFieldsMapping::class);
         $artifact_id_mapping       = Mockery::mock(Tracker_XML_Importer_ArtifactImportedMapping::class);
