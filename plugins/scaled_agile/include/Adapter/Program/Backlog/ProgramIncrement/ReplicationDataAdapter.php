@@ -65,7 +65,7 @@ final class ReplicationDataAdapter
         $this->changeset_factory               = $changeset_factory;
     }
 
-    public function buildFromArtifactAndUserId(int $artifact_id, int $user_id): ReplicationData
+    public function buildFromArtifactAndUserId(int $artifact_id, int $user_id): ?ReplicationData
     {
         $pending_artifact = $this->pending_artifact_creation_store->getPendingArtifactById(
             $artifact_id,
@@ -73,7 +73,7 @@ final class ReplicationDataAdapter
         );
 
         if ($pending_artifact === null) {
-            throw new PendingArtifactNotFoundException($artifact_id, $user_id);
+            return null;
         }
 
         $source_artifact = $this->artifact_factory->getArtifactById($pending_artifact['program_artifact_id']);
@@ -103,7 +103,7 @@ final class ReplicationDataAdapter
             );
         }
 
-        return $this->build($source_artifact, $user, $source_changeset);
+        return self::build($source_artifact, $user, $source_changeset);
     }
 
     public static function build(
