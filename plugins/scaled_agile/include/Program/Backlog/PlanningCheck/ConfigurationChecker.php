@@ -43,9 +43,13 @@ final class ConfigurationChecker
      * @throws \Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\UserCanNotAccessToProgramException
      * @throws \Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException
      */
-    public function getProgramIncrementTracker(\PFUser $user, Project $project): ProgramIncrementTracker
+    public function getProgramIncrementTracker(\PFUser $user, Project $project): ?ProgramIncrementTracker
     {
         $program = $this->planning_program_adapter->buildProgramFromTeamProject($project, $user);
+
+        if (! $program) {
+            return null;
+        }
 
         return $this->planning_program_adapter->buildProgramIncrementFromProjectId($program->getId(), $user);
     }
