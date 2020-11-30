@@ -171,11 +171,14 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
         return $root;
     }
 
-    private function buildHierarchyChildrenOf($parent_node, $children_map, $project_trackers, $current_tracker)
+    private function buildHierarchyChildrenOf($parent_node, $children_map, $project_trackers, $current_tracker): void
     {
         $children_ids = $children_map[$parent_node->getId()];
 
         foreach ($children_ids as $child_id) {
+            if (! isset($project_trackers[$child_id])) {
+                continue;
+            }
             $tracker = $project_trackers[$child_id];
             $node    = $this->makeNodeFor($tracker, $current_tracker);
 
