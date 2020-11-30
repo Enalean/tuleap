@@ -20,14 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck;
 
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 
-class StatusSemanticChecker
+final class StatusSemanticChecker implements CheckStatus
 {
     /**
      * @var Tracker_Semantic_StatusDao
@@ -47,12 +48,14 @@ class StatusSemanticChecker
         $this->semantic_status_factory = $semantic_status_factory;
     }
 
-    public function areSemanticStatusWellConfigured(
+    public function isStatusWellConfigured(
         PlanningData $planning,
         SourceTrackerCollection $source_tracker_collection
     ): bool {
-        $program_top_milestone_tracker   = $planning->getPlanningTrackerData();
-        $program_tracker_status_semantic = $this->semantic_status_factory->getByTracker($program_top_milestone_tracker->getFullTracker());
+        $program_top_milestone_tracker = $planning->getPlanningTrackerData();
+        $program_tracker_status_semantic = $this->semantic_status_factory->getByTracker(
+            $program_top_milestone_tracker->getFullTracker()
+        );
 
         if ($program_tracker_status_semantic->getField() === null) {
             return false;

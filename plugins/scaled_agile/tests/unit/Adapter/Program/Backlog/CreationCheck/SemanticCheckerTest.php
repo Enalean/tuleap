@@ -20,11 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\ScaledAgile\ProjectData;
@@ -63,7 +64,7 @@ final class SemanticCheckerTest extends TestCase
         $this->title_dao               = M::mock(\Tracker_Semantic_TitleDao::class);
         $this->description_dao         = M::mock(\Tracker_Semantic_DescriptionDao::class);
         $this->timeframe_dao           = M::mock(SemanticTimeframeDao::class);
-        $this->semantic_status_checker = M::mock(StatusSemanticChecker::class);
+        $this->semantic_status_checker = M::mock(CheckStatus::class);
         $this->checker                 = new SemanticChecker(
             $this->title_dao,
             $this->description_dao,
@@ -95,7 +96,7 @@ final class SemanticCheckerTest extends TestCase
             ->once()
             ->with([1024, 2048])
             ->andReturn(0);
-        $this->semantic_status_checker->shouldReceive('areSemanticStatusWellConfigured')
+        $this->semantic_status_checker->shouldReceive('isStatusWellConfigured')
             ->once()
             ->andReturnTrue();
         $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
@@ -179,7 +180,7 @@ final class SemanticCheckerTest extends TestCase
             ->andReturn(0);
         $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->andReturn(0);
-        $this->semantic_status_checker->shouldReceive('areSemanticStatusWellConfigured')
+        $this->semantic_status_checker->shouldReceive('isStatusWellConfigured')
             ->andReturnTrue();
         $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
             ->andReturn(1);
@@ -208,7 +209,7 @@ final class SemanticCheckerTest extends TestCase
             ->andReturn(0);
         $this->description_dao->shouldReceive('getNbOfTrackerWithoutSemanticDescriptionDefined')
             ->andReturn(0);
-        $this->semantic_status_checker->shouldReceive('areSemanticStatusWellConfigured')
+        $this->semantic_status_checker->shouldReceive('isStatusWellConfigured')
             ->andReturnTrue();
         $this->timeframe_dao->shouldReceive('getNbOfTrackersWithoutTimeFrameSemanticDefined')
             ->andReturn(0);
@@ -243,7 +244,7 @@ final class SemanticCheckerTest extends TestCase
             ->andReturn(0);
         $this->timeframe_dao->shouldReceive('areTimeFrameSemanticsUsingSameTypeOfField')
             ->andReturnTrue();
-        $this->semantic_status_checker->shouldReceive('areSemanticStatusWellConfigured')
+        $this->semantic_status_checker->shouldReceive('isStatusWellConfigured')
             ->once()
             ->andReturnFalse();
 

@@ -33,8 +33,8 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
@@ -87,11 +87,11 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
      */
     private $field_collection_builder;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticChecker
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CheckSemantic
      */
     private $semantic_checker;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RequiredFieldChecker
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CheckRequiredField
      */
     private $required_field_checker;
     /**
@@ -124,9 +124,9 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $this->field_collection_builder = new SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder(
             $this->fields_adapter
         );
-        $this->semantic_checker         = Mockery::mock(SemanticChecker::class);
-        $this->required_field_checker   = Mockery::mock(RequiredFieldChecker::class);
-        $this->workflow_checker         = Mockery::mock(WorkflowChecker::class);
+        $this->semantic_checker         = Mockery::mock(CheckSemantic::class);
+        $this->required_field_checker   = Mockery::mock(CheckRequiredField::class);
+        $this->workflow_checker         = Mockery::mock(CheckWorkflow::class);
 
         $this->checker = new ProgramIncrementArtifactCreatorChecker(
             $projects_collection_builder,

@@ -43,7 +43,7 @@ final class ArtifactCreatorCheckerTest extends TestCase
     private $planning_factory;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementArtifactCreatorChecker
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CheckProgramIncrementCanBeCreated
      */
     private $milestone_creator_checker;
 

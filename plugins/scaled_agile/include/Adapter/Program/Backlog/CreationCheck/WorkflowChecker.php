@@ -20,13 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\CheckWorkflow;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 
-class WorkflowChecker
+final class WorkflowChecker implements CheckWorkflow
 {
     /**
      * @var \Workflow_Dao
