@@ -22,10 +22,12 @@
     <div class="document-new-item-type-selector">
         <div
             class="document-new-item-type"
+            tabindex="0"
             v-for="type of supported_types"
             v-bind:key="type.identifier"
             v-bind:class="{ 'document-new-item-type-checked': type.is_checked }"
             v-on:click="$emit('input', type.identifier)"
+            v-on:keyup.enter="$emit('input', type.identifier)"
         >
             <i
                 class="document-new-item-type-icon fa"

@@ -47,6 +47,10 @@
     &:last-child {
         margin-right: 0;
     }
+
+    &:focus {
+        box-shadow: $tlp-shadow-focus;
+    }
 }
 
 .document-new-item-type-icon {
