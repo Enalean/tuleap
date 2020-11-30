@@ -22,6 +22,7 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
+use Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset\ItemsDatasetBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\ListFieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
@@ -1065,18 +1066,30 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
     {
-        $id = $value->getId();
-        if ($id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+        $value_id  = $value->getId();
+        $list_bind = $this->getBind();
+        if ($value_id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
             $label = $value->getLabel();
         } else {
-            $label = $this->getBind()->formatArtifactValue($id);
+            $label = $list_bind->formatArtifactValue($value_id);
         }
 
-        $styles = $this->getBind()->getSelectOptionStyles($id);
-
+        $styles = $list_bind->getSelectOptionStyles($value_id);
         $selected = $is_selected ? 'selected="selected"' : '';
+        $option_start = '<option value="'
+                        . $value_id
+                        . '" '
+                        . $selected
+                        . ' title="'
+                        . $label
+                        . '" style="'
+                        . $styles['inline-styles']
+                        . '" class="'
+                        . $styles['classes']
+                        . '"';
 
-        return '<option value="' . $id . '" ' . $selected . ' title="' . $label . '" style="' . $styles['inline-styles'] . '" class="' .  $styles['classes'] . ' ">' . $label . '</option>';
+        $dataset = ItemsDatasetBuilder::buildDataAttributesForValue($value);
+        return $option_start . $dataset . '>' . $label . '</option>';
     }
 
     protected function fetchFieldContainerEnd()
@@ -1115,8 +1128,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         foreach ($this->getBind()->getAllValues() as $id => $value) {
             if (! $value->isHidden()) {
                 $styles  = $this->getBind()->getSelectOptionStyles($id);
+                $dataset = ItemsDatasetBuilder::buildDataAttributesForValue($value);
 
-                $html .= '<option value="' . $id . '" title="' . $this->getBind()->formatArtifactValue($id) . '" style="' . $styles['inline-styles'] . '" classe="' . $styles['classes'] . '">';
+                $html .= '<option value="' . $id . '" title="' . $this->getBind()->formatArtifactValue($id) . '" style="' . $styles['inline-styles'] . '" classe="' . $styles['classes'] . '"' . $dataset . '">';
                 $html .= $this->getBind()->formatArtifactValue($id);
                 $html .= '</option>';
             }

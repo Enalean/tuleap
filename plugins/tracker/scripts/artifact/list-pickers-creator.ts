@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "../../../../src/themes/tlp/src/js/fetch-wrapper";
 import { ListPicker, ListPickerOptions } from "@tuleap/list-picker";
 
 export type ListPickerCreator = (
@@ -119,25 +118,7 @@ async function createListPickerForSelect(
     select: HTMLSelectElement,
     createListPicker: ListPickerCreator
 ): Promise<void> {
-    const options: ListPickerOptions = {
+    await createListPicker(select, {
         is_filterable: true,
-    };
-
-    if (select.dataset.bindType === "users") {
-        options.items_template_formatter = async (
-            value_id: string,
-            item_label: string
-        ): Promise<string> => {
-            if (value_id === "100" || value_id === "-1") {
-                return item_label;
-            }
-            const response = await get(`/api/users/${encodeURIComponent(value_id)}`);
-            const user_representation = await response.json();
-            const avatar_url = user_representation.avatar_url;
-
-            return `<img class="tracker-list-picker-avatar" src="${avatar_url}"/>${item_label}`;
-        };
-    }
-
-    await createListPicker(select, options);
+    });
 }

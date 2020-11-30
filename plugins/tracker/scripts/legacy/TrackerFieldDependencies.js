@@ -141,11 +141,12 @@ tuleap.tracker.Field = function (id, name, label) {
         label: label,
         _highlight: null,
         options: new Map(),
-        addOption: function (text, value, selected) {
+        addOption: function (text, value, selected, dataset) {
             this.options.set(parseInt(value, 10), {
                 value: value,
                 text: text,
                 selected: selected,
+                dataset: dataset,
             });
             return this;
         },
@@ -165,6 +166,15 @@ tuleap.tracker.Field = function (id, name, label) {
                 function (option, value) {
                     if (new_options.has(value)) {
                         var opt = new Option(option.text, option.value);
+                        if (option.dataset) {
+                            Object.keys(option.dataset).forEach((data_attribute_name) => {
+                                opt.setAttribute(
+                                    data_attribute_name,
+                                    option.dataset[data_attribute_name]
+                                );
+                            });
+                        }
+
                         if (new_options.get(value).selected) {
                             opt.selected = true;
                             const option_key = parseInt(option.value, 10);
@@ -245,7 +255,7 @@ tuleap.tracker.runTrackerFieldDependencies = function () {
     tuleap.tracker.rule_forest.reset();
     tuleap.tracker.rules_definitions.forEach(function (rule_definition) {
         if (
-            rule_definition.source_field != rule_definition.target_field &&
+            rule_definition.source_field !== rule_definition.target_field &&
             tuleap.tracker.fields.get(rule_definition.source_field) &&
             tuleap.tracker.fields.get(rule_definition.target_field) &&
             tuleap.tracker.fields.get(rule_definition.source_field).element() &&

@@ -53,6 +53,13 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $this->getUserHelper()->getDisplayNameFromUserId($this->getId());
     }
 
+    public function getDataset(): array
+    {
+        return [
+            'data-avatar-url' => $this->getUser()->getAvatarUrl()
+        ];
+    }
+
     protected function getUserHelper()
     {
         return UserHelper::instance();

@@ -197,3 +197,15 @@ $form-element-small-font-size: .8125rem;
 .list-picker-dropdown-option-value-disabled {
     color: $tlp-ui-dimmed;
 }
+
+.list-picker-avatar {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 0 6px 0 0;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #e3e5ed url('../images/list-picker-default-avatar.svg') no-repeat center center;
+    background-size: contain;
+    vertical-align: middle;
+}
