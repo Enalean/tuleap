@@ -156,19 +156,17 @@ class CrossReferenceFactory
 
     public function getHTMLDisplayCrossRefs($with_links = true, $condensed = false, $isBrowser = true): string
     {
-        $cross_ref_array   = $this->getCrossReferences();
-        $user              = UserManager::instance()->getCurrentUser();
-        $can_delete        = $isBrowser && ($user->isSuperUser() || $user->isMember($this->entity_gid, 'A'));
-        $renderer          = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/common');
-        $available_natures = ReferenceManager::instance()->getAvailableNatures();
-        $display_params    = $with_links && $can_delete && ! $condensed;
+        $user           = UserManager::instance()->getCurrentUser();
+        $can_delete     = $isBrowser && ($user->isSuperUser() || $user->isMember($this->entity_gid, 'A'));
+        $renderer       = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/common');
+        $display_params = $with_links && $can_delete && ! $condensed;
 
         $cross_ref_by_nature_presenter_builder = new CrossReferenceByNaturePresenterBuilder(
             new CrossReferenceLinkListPresenterBuilder(),
             new CrossReferenceLinkPresenterCollectionBuilder()
         );
 
-        $cross_ref_by_nature_collection = new CrossReferenceByNatureCollection($cross_ref_array, $available_natures);
+        $cross_ref_by_nature_collection = $this->getCrossReferencesByNatureCollection();
 
         $cross_refs_by_nature_presenter_collection = [];
 
@@ -242,6 +240,14 @@ class CrossReferenceFactory
         }
 
         return $html;
+    }
+
+    public function getCrossReferencesByNatureCollection(): CrossReferenceByNatureCollection
+    {
+        return new CrossReferenceByNatureCollection(
+            $this->getCrossReferences(),
+            ReferenceManager::instance()->getAvailableNatures()
+        );
     }
 
     /**

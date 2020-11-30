@@ -786,6 +786,9 @@ msgstr ""
 "Ci-dessous se trouve un catalogue d'éléments préconfigurés prêts à être "
 "utilisés."
 
+msgid "Bidirectionnal references:"
+msgstr "Références bidirectionnelles :"
+
 msgid "Bind to user groups"
 msgstr "Associer à des groupes d'utilisateurs"
 
@@ -1181,6 +1184,9 @@ msgstr "Suppression annulée"
 
 msgid "Delete permanently the field"
 msgstr "Supprimer définitivement le champ"
+
+msgid "Delete the reference?"
+msgstr "Supprimer la référence ?"
 
 msgid "Delete the value"
 msgstr "Supprimer la valeur"
@@ -1800,6 +1806,9 @@ msgid "List artifacts you have submitted or assigned to you, by project."
 msgstr ""
 "Affiche la liste des artefacts par projet que vous avez soumis ou qui vous "
 "ont été assignés."
+
+msgid "List of items referenced by or referencing this item."
+msgstr "Liste des objets étant référencés par cet objet ou le référençant."
 
 msgid "Load artifacts"
 msgstr "Charger les artefacts"
@@ -3493,6 +3502,12 @@ msgstr "Ce champ est utilisé par les outils de suivi suivants :"
 
 msgid "This file has been removed meantime."
 msgstr "Ce fichier a été supprimé entre temps."
+
+msgid "This item is referenced by:"
+msgstr "Cet objet est référencé par :"
+
+msgid "This item references:"
+msgstr "Cet objet référence :"
 
 msgid ""
 "This page is deprecated and will be removed soon. You should switch to the "
