@@ -24,6 +24,7 @@ namespace Tuleap\TestManagement\Administration;
 
 use Project;
 use TrackerFactory;
+use Tuleap\TestManagement\TestmanagementTrackersConfiguration;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 
@@ -57,6 +58,38 @@ class TrackerChecker
         $this->tracker_factory      = $tracker_factory;
         $this->frozen_fields_dao    = $frozen_fields_dao;
         $this->hidden_fieldsets_dao = $hidden_fieldsets_dao;
+    }
+
+    /**
+     * @throws TrackerDoesntExistException
+     * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
+     * @throws TrackerHasAtLeastOneHiddenFieldsetsPostActionException
+     * @throws TrackerIsDeletedException
+     * @throws TrackerNotInProjectException
+     */
+    public function checkTrackers(Project $project, TestmanagementTrackersConfiguration $config_trackers): void
+    {
+        $this->checkTrackerIsInProject(
+            $project,
+            $config_trackers->getCampaign()->getTrackerId()
+        );
+
+        $this->checkSubmittedTrackerCanBeUsed(
+            $project,
+            $config_trackers->getTestDefinition()->getTrackerId()
+        );
+        $this->checkSubmittedTrackerCanBeUsed(
+            $project,
+            $config_trackers->getTestExecution()->getTrackerId()
+        );
+
+        $issue_tracker = $config_trackers->getIssue();
+        if ($issue_tracker && $issue_tracker->getTrackerId()) {
+            $this->checkTrackerIsInProject(
+                $project,
+                $issue_tracker->getTrackerId()
+            );
+        }
     }
 
     /**
