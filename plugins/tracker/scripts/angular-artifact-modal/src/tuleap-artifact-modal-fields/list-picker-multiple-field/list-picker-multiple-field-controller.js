@@ -19,7 +19,7 @@
  */
 
 import { get } from "tlp";
-import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+import { createListPicker } from "@tuleap/list-picker";
 
 export default MultiselectBoxController;
 
@@ -51,8 +51,10 @@ function MultiselectBoxController($element, $timeout) {
     }
 
     function getOptions() {
+        const base_options = { locale: document.body.dataset.userLocale };
         if (self.field.bindings.type === "users") {
             return {
+                ...base_options,
                 items_template_formatter: async (value_id, label) => {
                     const value = value_id.split(":")[1];
                     if (value === "100") {
@@ -68,7 +70,7 @@ function MultiselectBoxController($element, $timeout) {
             };
         }
 
-        return {};
+        return base_options;
     }
 
     function isFieldValid() {

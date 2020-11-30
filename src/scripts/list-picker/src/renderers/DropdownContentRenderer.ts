@@ -18,8 +18,8 @@
  */
 
 import { ListPickerItemGroup } from "../type";
-import { GetText } from "../../../tuleap/gettext/gettext-init";
 import { ItemsMapManager } from "../items/ItemsMapManager";
+import { GettextProvider } from "../../../tuleap/gettext/gettext-sync";
 
 export class DropdownContentRenderer {
     private readonly groups_map: Map<string, ListPickerItemGroup>;
@@ -28,7 +28,7 @@ export class DropdownContentRenderer {
         private readonly source_select_box: HTMLSelectElement,
         private readonly dropdown_list_element: Element,
         private readonly items_map_manager: ItemsMapManager,
-        private readonly gettext_provider: GetText
+        private readonly gettext_provider: GettextProvider
     ) {
         this.groups_map = new Map();
     }

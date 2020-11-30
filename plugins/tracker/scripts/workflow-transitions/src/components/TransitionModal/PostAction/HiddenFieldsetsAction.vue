@@ -79,7 +79,7 @@ import { mapState, mapGetters } from "vuex";
 import MultiSelect from "../MultiSelect.vue";
 import { CONTAINER_FIELDSET } from "../../../../../constants/fields-constants.js";
 import { compare } from "../../../support/string.js";
-import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+import { createListPicker } from "@tuleap/list-picker";
 
 export default {
     name: "HiddenFieldsetsAction",
@@ -124,6 +124,7 @@ export default {
             this.list_picker = await createListPicker(
                 this.$refs.workflow_transition_modal_hidden_fieldsets,
                 {
+                    locale: document.body.dataset.userLocale,
                     is_filterable: true,
                     placeholder: this.$gettext("Choose a fieldset"),
                 }

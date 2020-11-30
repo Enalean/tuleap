@@ -22,7 +22,6 @@ import { DropdownContentRenderer } from "./renderers/DropdownContentRenderer";
 import { EventManager } from "./events/EventManager";
 import { DropdownToggler } from "./dropdown/DropdownToggler";
 import { BaseComponentRenderer } from "./renderers/BaseComponentRenderer";
-import { getPOFileFromLocale, initGettext } from "../../tuleap/gettext/gettext-init";
 import { SingleSelectionManager } from "./selection/SingleSelectionManager";
 import { MultipleSelectionManager } from "./selection/MultipleSelectionManager";
 import { hideSourceSelectBox } from "./helpers/hide-selectbox-helper";
@@ -31,24 +30,14 @@ import { ListItemHighlighter } from "./navigation/ListItemHighlighter";
 import { ItemsMapManager } from "./items/ItemsMapManager";
 import { ListOptionsChangesObserver } from "./events/ListOptionsChangesObserver";
 import { ListItemMapBuilder } from "./items/ListItemMapBuilder";
+import { GettextProvider } from "../../tuleap/gettext/gettext-sync";
 
 export async function createListPicker(
     source_select_box: HTMLSelectElement,
+    gettext_provider: GettextProvider,
     options?: ListPickerOptions
 ): Promise<ListPicker> {
     hideSourceSelectBox(source_select_box);
-
-    let language = document.body.dataset.userLocale;
-    if (language === undefined) {
-        language = "en_US";
-    }
-
-    const gettext_provider = await initGettext(
-        language,
-        "tuleap-list-picker",
-        (locale) =>
-            import(/* webpackChunkName: "list-picker-po-" */ "../po/" + getPOFileFromLocale(locale))
-    );
 
     const items_map_manager = new ItemsMapManager(
         new ListItemMapBuilder(source_select_box, options)

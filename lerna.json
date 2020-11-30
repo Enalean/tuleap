@@ -1,6 +1,7 @@
 {
     "packages": [
         "src/themes/tlp/",
+        "src/scripts/**/",
         "src/",
         "src/themes/BurningParrot/",
         "plugins/**/"

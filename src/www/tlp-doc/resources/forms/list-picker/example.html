@@ -7,9 +7,10 @@
         <option value="3">3</option>
     </select>
     <script type="text/javascript">
-        import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+        import { createListPicker } from "@tuleap/list-picker";
 
         createListPicker(document.querySelector('#list-picker-sb'), {
+            locale: "en_US",
             placeholder: "Choose a value in the list",
             is_filterable: true
         });
@@ -34,7 +35,7 @@
         </optgroup>
     </select>
     <script type="text/javascript">
-        import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+        import { createListPicker } from "@tuleap/list-picker";
 
         createListPicker(document.querySelector('#list-picker-sb-with-optgroups'), {
             placeholder: "Choose a value in the list",
@@ -55,7 +56,7 @@
         <option value="3">3</option>
     </select>
     <script type="text/javascript">
-        import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+        import { createListPicker } from "@tuleap/list-picker";
 
         createListPicker(document.querySelector('#list-picker-sb-disabled'), {
             placeholder: "You can't choose any value yet"
@@ -75,7 +76,7 @@
     </select>
     <p class="tlp-text-danger">This field is mandatory, please choose a value in the list.</p>
     <script type="text/javascript">
-        import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+        import { createListPicker } from "@tuleap/list-picker";
 
         createListPicker(document.querySelector('#list-picker-sb-error'), {
             placeholder: "Choose a value in the list"
@@ -101,7 +102,7 @@
         </optgroup>
     </select>
     <script type="text/javascript">
-        import { createListPicker } from "@tuleap/list-picker/src/list-picker";
+        import { createListPicker } from "@tuleap/list-picker";
 
         createListPicker(document.querySelector('#list-picker-sb-avatars'), {
             placeholder: "Choose a GoT character",

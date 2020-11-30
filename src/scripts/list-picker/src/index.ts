@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { POFile } from "./vue-gettext-init";
-import GetText from "node-gettext";
+import french_translations from "../po/fr_FR.po";
+import { ListPicker, ListPickerOptions } from "./type";
+import { initGettextSync } from "../../tuleap/gettext/gettext-sync";
+import * as creator from "./list-picker";
 
-export { GetText };
-
-export function getPOFileFromLocale(locale: string): string;
-
-export function initGettext(
-    locale: string,
-    domain: string,
-    load_translations_callback: (locale: string) => Promise<POFile>
-): Promise<GetText>;
+export { ListPicker, ListPickerOptions };
+export function createListPicker(
+    source_select_box: HTMLSelectElement,
+    options: ListPickerOptions
+): Promise<ListPicker> {
+    const gettext_provider = initGettextSync(
+        "tuleap-list-picker",
+        french_translations,
+        options.locale
+    );
+    return creator.createListPicker(source_select_box, gettext_provider, options);
+}

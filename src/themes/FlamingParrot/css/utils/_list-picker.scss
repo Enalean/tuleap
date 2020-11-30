@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../scripts/list-picker/themes/style';
+@import '~@tuleap/list-picker';
 
 $form-element-border-color: darken($ui-border-dark, 5%);
 $form-element-padding-horizontal: 12px;

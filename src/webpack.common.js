@@ -26,6 +26,7 @@ const webpack_configurator = require("../tools/utils/scripts/webpack-configurato
 const {
     SuppressNullNamedEntryPlugin,
 } = require("../tools/utils/scripts/webpack-custom-plugins.js");
+
 const context = __dirname;
 const assets_dir_path = path.resolve(__dirname, "./www/assets/core");
 const output = webpack_configurator.configureOutput(assets_dir_path, "/assets/core/");
@@ -365,32 +366,6 @@ const webpack_config_vue_breadcrumb_privacy = {
     ],
 };
 
-const webpack_config_list_picker = {
-    entry: "./scripts/list-picker/src/list-picker.ts",
-    context,
-    output: {
-        path: path.join(context, "./scripts/list-picker/dist/"),
-        filename: "list-picker.js",
-        library: "ListPicker",
-        libraryTarget: "umd",
-    },
-    resolve: {
-        extensions: [".ts", ".js"],
-    },
-    module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_ie11
-            ),
-            webpack_configurator.rule_po_files,
-        ],
-    },
-    plugins: [
-        webpack_configurator.getCleanWebpackPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(false),
-    ],
-};
-
 const fat_combined_files = [
         "./www/scripts/prototype/prototype.js",
         "./www/scripts/protocheck/protocheck.js",
@@ -593,6 +568,5 @@ module.exports = [
     webpack_config_for_vue,
     webpack_config_for_burning_parrot_css,
     webpack_config_for_flaming_parrot_css,
-    webpack_config_list_picker,
     webpack_config_vue_breadcrumb_privacy,
 ];

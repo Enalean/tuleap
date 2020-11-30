@@ -6,8 +6,18 @@
   "private": true,
   "version": "0.0.0",
   "main": "dist/list-picker.js",
+  "types": "dist/list-picker/src/index.d.ts",
+  "style": "dist/list-picker-style.css",
   "dependencies": {
     "dompurify": "^2.2.2"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "config": {
+    "bin": "../../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "test": "$npm_package_config_bin/jest"
+  }
 }
