@@ -22,11 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildField;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\TrackerData;
 
-final class StatusFieldAdapter
+final class StatusFieldAdapter implements BuildField
 {
     /**
      * @var \Tracker_Semantic_StatusFactory

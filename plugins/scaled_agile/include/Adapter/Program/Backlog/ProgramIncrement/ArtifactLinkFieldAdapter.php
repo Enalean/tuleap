@@ -22,12 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildField;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\NoArtifactLinkFieldException;
 use Tuleap\ScaledAgile\TrackerData;
 
-final class ArtifactLinkFieldAdapter
+final class ArtifactLinkFieldAdapter implements BuildField
 {
     /**
      * @var \Tracker_FormElementFactory

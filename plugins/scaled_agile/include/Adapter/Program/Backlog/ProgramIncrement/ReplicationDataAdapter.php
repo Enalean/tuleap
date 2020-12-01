@@ -27,11 +27,12 @@ use Tracker_ArtifactFactory;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ArtifactData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ScaledAgile\TrackerData;
 use UserManager;
 
-final class ReplicationDataAdapter
+final class ReplicationDataAdapter implements BuildReplicationData
 {
     /**
      * @var Tracker_ArtifactFactory

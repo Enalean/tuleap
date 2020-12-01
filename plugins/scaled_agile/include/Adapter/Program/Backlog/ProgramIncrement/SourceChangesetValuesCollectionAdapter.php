@@ -23,58 +23,66 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildArtifactLinkValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildDescriptionValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildEndPeriodValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildStartDateValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildStatusValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildTitleValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 
-class SourceChangesetValuesCollectionAdapter
+final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
 {
     /**
-     * @var SynchronizedFieldsAdapter
+     * @var BuildSynchronizedFields
      */
     private $fields_gatherer;
     /**
-     * @var TitleValueAdapter
+     * @var BuildTitleValue
      */
-    private $title_value_adapter;
+    private $build_title_value;
     /**
-     * @var DescriptionValueAdapter
+     * @var BuildDescriptionValue
      */
-    private $description_value_adapter;
+    private $build_description_value;
     /**
-     * @var StatusValueAdapter
+     * @var BuildStatusValue
      */
-    private $status_value_adapter;
+    private $build_status_value;
     /**
-     * @var StartDateValueAdapter
+     * @var BuildStartDateValue
      */
-    private $start_date_value_adapter;
+    private $build_start_date_value;
     /**
-     * @var EndPeriodValueAdapter
+     * @var BuildEndPeriodValue
      */
-    private $end_period_value_adapter;
+    private $build_end_period_value;
     /**
-     * @var ArtifactLinkValueAdapter
+     * @var BuildArtifactLinkValue
      */
-    private $artifact_link_value_adapter;
+    private $build_artifact_link_value;
 
     public function __construct(
-        SynchronizedFieldsAdapter $fields_gatherer,
-        TitleValueAdapter $title_value_adapter,
-        DescriptionValueAdapter $description_value_adapter,
-        StatusValueAdapter $status_value_adapter,
-        StartDateValueAdapter $start_date_value_adapter,
-        EndPeriodValueAdapter $end_period_value_adapter,
-        ArtifactLinkValueAdapter $artifact_link_value_adapter
+        BuildSynchronizedFields $fields_gatherer,
+        BuildTitleValue $build_title_value,
+        BuildDescriptionValue $build_description_value,
+        BuildStatusValue $build_status_value,
+        BuildStartDateValue $build_start_date_value,
+        BuildEndPeriodValue $build_end_period_value,
+        BuildArtifactLinkValue $build_artifact_link_value
     ) {
-        $this->fields_gatherer             = $fields_gatherer;
-        $this->title_value_adapter         = $title_value_adapter;
-        $this->description_value_adapter   = $description_value_adapter;
-        $this->status_value_adapter        = $status_value_adapter;
-        $this->start_date_value_adapter    = $start_date_value_adapter;
-        $this->end_period_value_adapter    = $end_period_value_adapter;
-        $this->artifact_link_value_adapter = $artifact_link_value_adapter;
+        $this->fields_gatherer           = $fields_gatherer;
+        $this->build_title_value         = $build_title_value;
+        $this->build_description_value   = $build_description_value;
+        $this->build_status_value        = $build_status_value;
+        $this->build_start_date_value    = $build_start_date_value;
+        $this->build_end_period_value    = $build_end_period_value;
+        $this->build_artifact_link_value = $build_artifact_link_value;
     }
 
     /**
@@ -84,12 +92,12 @@ class SourceChangesetValuesCollectionAdapter
     public function buildCollection(ReplicationData $replication_data): SourceChangesetValuesCollection
     {
         $fields              = $this->fields_gatherer->build($replication_data->getTrackerData());
-        $title_value         = $this->title_value_adapter->build($fields->getTitleField(), $replication_data);
-        $description_value   = $this->description_value_adapter->build($fields->getDescriptionField(), $replication_data);
-        $status_value        = $this->status_value_adapter->build($fields->getStatusField(), $replication_data);
-        $start_date_value    = $this->start_date_value_adapter->build($fields->getStartDateField(), $replication_data);
-        $end_period_value    = $this->end_period_value_adapter->build($fields->getEndPeriodField(), $replication_data);
-        $artifact_link_value = $this->artifact_link_value_adapter->build($replication_data);
+        $title_value         = $this->build_title_value->build($fields->getTitleField(), $replication_data);
+        $description_value   = $this->build_description_value->build($fields->getDescriptionField(), $replication_data);
+        $status_value        = $this->build_status_value->build($fields->getStatusField(), $replication_data);
+        $start_date_value    = $this->build_start_date_value->build($fields->getStartDateField(), $replication_data);
+        $end_period_value    = $this->build_end_period_value->build($fields->getEndPeriodField(), $replication_data);
+        $artifact_link_value = $this->build_artifact_link_value->build($replication_data);
 
         return new SourceChangesetValuesCollection(
             $replication_data->getArtifactData()->getId(),

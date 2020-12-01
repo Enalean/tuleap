@@ -23,9 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildArtifactLinkValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-final class ArtifactLinkValueAdapter
+final class ArtifactLinkValueAdapter implements BuildArtifactLinkValue
 {
     public function build(ReplicationData $replication_data): ArtifactLinkValue
     {

@@ -24,9 +24,9 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreationException;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\CreateArtifact;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFieldsData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
@@ -38,23 +38,23 @@ class ProgramIncrementsCreator
      */
     private $transaction_executor;
     /**
-     * @var SynchronizedFieldsAdapter
+     * @var BuildSynchronizedFields
      */
     private $synchronized_fields_adapter;
     /**
-     * @var StatusValueMapper
+     * @var MapStatusByValue
      */
     private $status_mapper;
     /**
-     * @var ArtifactCreatorAdapter
+     * @var CreateArtifact
      */
     private $artifact_creator;
 
     public function __construct(
         DBTransactionExecutor $transaction_executor,
-        SynchronizedFieldsAdapter $synchronized_fields_adapter,
-        StatusValueMapper $status_mapper,
-        ArtifactCreatorAdapter $artifact_creator
+        BuildSynchronizedFields $synchronized_fields_adapter,
+        MapStatusByValue $status_mapper,
+        CreateArtifact $artifact_creator
     ) {
         $this->transaction_executor        = $transaction_executor;
         $this->synchronized_fields_adapter = $synchronized_fields_adapter;

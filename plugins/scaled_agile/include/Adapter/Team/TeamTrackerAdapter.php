@@ -25,10 +25,11 @@ namespace Tuleap\ScaledAgile\Adapter\Team;
 use TrackerFactory;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerNotFoundException;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TrackerDoesNotBelongToTeamException;
+use Tuleap\ScaledAgile\Team\BuildTeamTracker;
 use Tuleap\ScaledAgile\Team\Creation\TeamStore;
 use Tuleap\ScaledAgile\Team\TeamTracker;
 
-final class TeamTrackerAdapter
+final class TeamTrackerAdapter implements BuildTeamTracker
 {
     /**
      * @var TeamStore

@@ -22,29 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildEndPeriodValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildStartDateValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
-final class EndPeriodValueAdapter implements BuildEndPeriodValue
+final class StartDateValueValueAdapter implements BuildStartDateValue
 {
-    public function build(FieldData $end_period_field_data, ReplicationData $replication_data): EndPeriodValue
+    /**
+     * @throws ChangesetValueNotFoundException
+     */
+    public function build(FieldData $field_start_date_data, ReplicationData $replication_data): StartDateValue
     {
-        $end_period_value = $replication_data->getFullChangeset()->getValue($end_period_field_data->getFullField());
+        $start_date_value = $replication_data->getFullChangeset()->getValue($field_start_date_data->getFullField());
 
-        if (! $end_period_value) {
+        if (! $start_date_value) {
             throw new ChangesetValueNotFoundException(
                 (int) $replication_data->getFullChangeset()->getId(),
-                (int) $end_period_field_data->getId(),
-                "time frame end period"
+                (int) $field_start_date_data->getId(),
+                "timeframe start date"
             );
         }
-
-        assert($end_period_value instanceof \Tracker_Artifact_ChangesetValue_Date ||
-               $end_period_value instanceof  \Tracker_Artifact_ChangesetValue_Numeric);
-
-        return new EndPeriodValue((string) $end_period_value->getValue());
+        assert($start_date_value instanceof \Tracker_Artifact_ChangesetValue_Date);
+        return new StartDateValue($start_date_value->getValue());
     }
 }

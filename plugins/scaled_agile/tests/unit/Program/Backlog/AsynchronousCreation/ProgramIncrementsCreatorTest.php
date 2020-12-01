@@ -25,8 +25,8 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreationException;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreatorAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\CreateArtifact;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ArtifactData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
@@ -36,6 +36,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
@@ -57,20 +58,20 @@ final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
      */
     private $synchronized_fields_adapter;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|StatusValueMapper
+     * @var M\LegacyMockInterface|M\MockInterface|MapStatusByValue
      */
     private $status_mapper;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|ArtifactCreatorAdapter
+     * @var M\LegacyMockInterface|M\MockInterface|CreateArtifact
      */
     private $artifact_creator;
 
     protected function setUp(): void
     {
         $transaction_executor              = new DBTransactionExecutorPassthrough();
-        $this->synchronized_fields_adapter = M::mock(SynchronizedFieldsAdapter::class);
-        $this->artifact_creator            = M::mock(ArtifactCreatorAdapter::class);
-        $this->status_mapper               = M::mock(StatusValueMapper::class);
+        $this->synchronized_fields_adapter = M::mock(BuildSynchronizedFields::class);
+        $this->artifact_creator            = M::mock(CreateArtifact::class);
+        $this->status_mapper               = M::mock(MapStatusByValue::class);
         $this->mirrors_creator             = new ProgramIncrementsCreator(
             $transaction_executor,
             $this->synchronized_fields_adapter,

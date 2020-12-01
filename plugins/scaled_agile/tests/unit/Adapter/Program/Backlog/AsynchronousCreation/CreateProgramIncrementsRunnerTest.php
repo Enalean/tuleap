@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -32,9 +32,8 @@ use Tracker_ArtifactFactory;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;

@@ -20,33 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement;
 
-use Project;
-use Tuleap\ScaledAgile\BuildProject;
-use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
+use Tuleap\ScaledAgile\TrackerData;
 
-final class ProjectDataAdapter implements BuildProject
+interface CreateArtifact
 {
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-
-    public function __construct(\ProjectManager $project_manager)
-    {
-        $this->project_manager = $project_manager;
-    }
-
-    public static function build(Project $project): ProjectData
-    {
-        return new ProjectData((int) $project->getID(), (string) $project->getUnixName(), (string) $project->getPublicName());
-    }
-
-    public function buildFromId(int $id): ProjectData
-    {
-        $team_project = $this->project_manager->getProject($id);
-
-        return self::build($team_project);
-    }
+    public function create(
+        TrackerData $tracker,
+        ProgramIncrementFieldsData $fields_and_values,
+        \PFUser $user,
+        SubmissionDate $submission_date
+    ): void;
 }

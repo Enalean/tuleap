@@ -20,33 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Project;
-use Tuleap\ScaledAgile\BuildProject;
-use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\TrackerData;
 
-final class ProjectDataAdapter implements BuildProject
+interface BuildSynchronizedFields
 {
     /**
-     * @var \ProjectManager
+     * @throws FieldSynchronizationException
      */
-    private $project_manager;
-
-    public function __construct(\ProjectManager $project_manager)
-    {
-        $this->project_manager = $project_manager;
-    }
-
-    public static function build(Project $project): ProjectData
-    {
-        return new ProjectData((int) $project->getID(), (string) $project->getUnixName(), (string) $project->getPublicName());
-    }
-
-    public function buildFromId(int $id): ProjectData
-    {
-        $team_project = $this->project_manager->getProject($id);
-
-        return self::build($team_project);
-    }
+    public function build(TrackerData $source_tracker): SynchronizedFields;
 }

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

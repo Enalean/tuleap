@@ -22,11 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\TrackerData;
 
-class SynchronizedFieldsAdapter
+final class SynchronizedFieldsAdapter implements BuildSynchronizedFields
 {
     /**
      * @var ArtifactLinkFieldAdapter

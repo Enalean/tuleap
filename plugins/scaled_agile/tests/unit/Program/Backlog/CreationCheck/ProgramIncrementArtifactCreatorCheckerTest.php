@@ -33,10 +33,10 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
@@ -54,7 +54,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|MockInterface|SynchronizedFieldsAdapter
+     * @var Mockery\LegacyMockInterface|MockInterface|BuildSynchronizedFields
      */
     private $fields_adapter;
 
@@ -95,7 +95,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
      */
     private $required_field_checker;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WorkflowChecker
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CheckWorkflow
      */
     private $workflow_checker;
     /**
@@ -120,7 +120,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $planning_adapter       = new PlanningAdapter($this->planning_factory);
         $trackers_builder       = new TrackerCollectionFactory($planning_adapter);
 
-        $this->fields_adapter           = Mockery::mock(SynchronizedFieldsAdapter::class);
+        $this->fields_adapter           = Mockery::mock(BuildSynchronizedFields::class);
         $this->field_collection_builder = new SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder(
             $this->fields_adapter
         );

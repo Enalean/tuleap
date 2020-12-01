@@ -22,12 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildField;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
 use Tuleap\ScaledAgile\TrackerData;
 
-final class TitleFieldAdapter
+final class TitleFieldAdapter implements BuildField
 {
     /**
      * @var \Tracker_Semantic_TitleFactory
