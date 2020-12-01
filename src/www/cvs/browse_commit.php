@@ -36,14 +36,14 @@ $service = $project->getService(\Service::CVS);
 if (! ($service instanceof ServiceCVS)) {
     exit_error(
         $GLOBALS['Language']->getText('global', 'error'),
-        $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off')
+        _('This Project Has Turned CVS Off')
     );
     return;
 }
 
 $service->displayCVSRepositoryHeader(
     $request->getCurrentUser(),
-    $GLOBALS['Language']->getText('cvs_browse_commit', 'title'),
+    _('CVS Commit Browsing'),
     'query',
 );
 
@@ -194,17 +194,17 @@ $purifier = Codendi_HTMLPurifier::instance();
     Show the new pop-up boxes to select assigned to and/or status
 */
 echo '<div class="cvs-commits">';
-echo '<H3>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'browse_by') . ':</H3>';
+echo '<H3>' . _('Browse commits by') . ':</H3>';
 echo '<FORM class="form-inline" name="commit_form" ACTION="?" METHOD="GET">
         <TABLE WIDTH="10%" BORDER="0">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
         <TR align="center">
-                      <TD><b>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'id') . '</b></TD>
-                      <TD><b>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'branch') . '</b></TD>
-                      <TD><b>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'who') . '</b></TD>
-                      <TD><b>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'keyword') . '</b></TD>' .
+                      <TD><b>' . _('ID') . '</b></TD>
+                      <TD><b>' . _('Branch') . '</b></TD>
+                      <TD><b>' . _('Submitted by') . '</b></TD>
+                      <TD><b>' . _('Keywords in log messages') . '</b></TD>' .
         '</TR>' .
         '<TR><TD><INPUT TYPE="TEXT" CLASS="input-mini" SIZE=5 NAME=_commit_id VALUE=' . $purifier->purify($_commit_id) . '></TD>' .
         '<TD><FONT SIZE="-1">' . commits_branches_box($group_id, '_branch', $_branch, 'Any') . '</TD>' .
@@ -215,7 +215,7 @@ echo '<FORM class="form-inline" name="commit_form" ACTION="?" METHOD="GET">
 
 '<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('global', 'btn_browse') . '">' .
 ' <input CLASS="input-mini" TYPE="text" name="chunksz" size="3" MAXLENGTH="5" ' .
-'VALUE="' . $purifier->purify($chunksz) . '">' . $GLOBALS['Language']->getText('cvs_browse_commit', 'nb_at_once') . '.' .
+'VALUE="' . $purifier->purify($chunksz) . '">' . _('commits at once') . '.' .
 '</FORM>';
 
 
@@ -230,7 +230,7 @@ if ($result && db_numrows($result) > 0) {
     show_commitslist($group_id, $result, $offset, $totalrows, $set, $_commiter, $_tag, $_branch, $_srch, $chunksz, $morder, $msort);
 } else {
     echo '
-	       <H3>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'no_commit') . '</H3>';
+	       <H3>' . _('No Commit matches your criteria') . '</H3>';
 }
 echo '</div>';
 

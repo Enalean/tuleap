@@ -45,7 +45,7 @@ function commits_footer($params)
 function commits_branches_box($group_id, $name = 'branch', $checked = 'xzxz', $text_100 = 'None')
 {
     if (! $group_id) {
-        return $GLOBALS['Language']->getText('cvs_commit_utils', 'error_nogid');
+        return _('ERROR - no group_id');
     } else {
         $sql = "SELECT unix_group_name from groups where group_id=" . db_ei($group_id);
 
@@ -79,7 +79,7 @@ function commits_data_get_technicians($projectname)
 function commits_technician_box($projectname, $name = '_commiter', $checked = 'xzxz', $text_100 = 'None')
 {
     if (! $projectname) {
-        return $GLOBALS['Language']->getText('cvs_commit_utils', 'error_nogid');
+        return _('ERROR - no group_id');
     } else {
         $result = commits_data_get_technicians($projectname);
         if (! in_array($checked, util_result_column_to_array($result))) {
@@ -131,12 +131,12 @@ function show_commitslist(
     $url .= "&morder=" . urlencode($morder);
 
     if ($morder != '') {
-        $orderstr = ' ' . $GLOBALS['Language']->getText('cvs_commit_utils', 'sorted_by') . ' ' . commit_criteria_list_to_text($morder, $url_nomorder);
+        $orderstr = ' ' . _('sorted by') . ' ' . commit_criteria_list_to_text($morder, $url_nomorder);
     } else {
         $orderstr = '';
     }
     echo '<A name="results"></A>';
-    echo '<h3>' . $total_rows . ' ' . $GLOBALS['Language']->getText('cvs_commit_utils', 'matching') . ($total_rows > 1 ? 's' : '') . $orderstr . '</h3>';
+    echo '<h3>' . $total_rows . ' ' . _('matching commits') . ($total_rows > 1 ? 's' : '') . $orderstr . '</h3>';
 
     $nav_bar = '<table width= "100%"><tr>';
     $nav_bar .= '<td width="20%" align ="left">';
@@ -144,14 +144,14 @@ function show_commitslist(
     if ($msort) {
         $url_alternate_sort = str_replace('msort=1', 'msort=0', $url) .
         '&order=#results';
-        $text = $GLOBALS['Language']->getText('cvs_commit_utils', 'deactivate');
+        $text = _('deactivate');
     } else {
         $url_alternate_sort = str_replace('msort=0', 'msort=1', $url) .
         '&order=#results';
-        $text = $GLOBALS['Language']->getText('cvs_commit_utils', 'activate');
+        $text = _('activate');
     }
 
-    echo '<P>' . $GLOBALS['Language']->getText('cvs_commit_utils', 'sort_msg', [$url . '&order=#results', $url_alternate_sort, $text]);
+    echo '<P>' . sprintf(_('Click a column heading to sort results (up or down), or <A HREF="%1$s"><b>Reset sort</b></a>. You can also <a href="%2$s"><b>%3$s multicolumn sort</b></a>.'), $url . '&order=#results', $url_alternate_sort, $text);
 
     $purifier = Codendi_HTMLPurifier::instance();
 
@@ -219,10 +219,10 @@ function show_commitslist(
     $rows = db_numrows($result);
     $url .= "&order=";
     $title_arr = [];
-    $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'id');
-    $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'description');
-    $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'date');
-    $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'who');
+    $title_arr[] = _('ID');
+    $title_arr[] = _('Description');
+    $title_arr[] = _('Date');
+    $title_arr[] = _('Submitted by');
 
     $links_arr = [];
     $links_arr[] = $url . 'id#results';
@@ -377,10 +377,10 @@ function commit_criteria_list_to_text($criteria_list, $url)
 function commit_field_get_label($sortField)
 {
     if ($sortField == "id") {
-        return $GLOBALS['Language']->getText('cvs_commit_utils', 'id');
+        return _('ID');
     }
     if ($sortField == "f_when") {
-        return $GLOBALS['Language']->getText('cvs_commit_utils', 'date');
+        return _('Date');
     }
     return $sortField;
 }
@@ -399,9 +399,9 @@ function show_commit_details($group_id, $commit_id, $result)
     $list_log = '<pre>' . $purifier->purify(util_line_wrap(db_result($result, 0, 'description')), CODENDI_PURIFIER_BASIC_NOBR, $group_id) . '</pre>';
 
     if ($commit_id) {
-        $hdr = '[' . $GLOBALS['Language']->getText('cvs_commit_utils', 'commit') . $purifier->purify($commit_id) . '] - ';
+        $hdr = '[' . _('Commit #') . $purifier->purify($commit_id) . '] - ';
     } else {
-        $hdr = $GLOBALS['Language']->getText('cvs_commit_utils', 'checkin') . ' ';
+        $hdr = _('Checkin -') . ' ';
     }
     echo '<div class="cvs-commit">';
     echo '<h2>' . $hdr . uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'c_when')) . '</h2></h2>';
@@ -414,14 +414,14 @@ function show_commit_details($group_id, $commit_id, $result)
         $crossref_fact->DisplayCrossRefs();
     }
 
-    echo '<h3>' . $GLOBALS['Language']->getText('cvs_commit_utils', 'impacted_file') . '</h3>';
+    echo '<h3>' . _('List of impacted files') . '</h3>';
     $title_arr = [];
-    $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'file');
-    $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'rev');
-    $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'branch');
-    $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'type');
-    $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'added_line');
-    $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'removed_line');
+    $title_arr[] = _('File');
+    $title_arr[] = _('Revision');
+    $title_arr[] = _('Branch');
+    $title_arr[] = _('Type');
+    $title_arr[] = _('Added Lines');
+    $title_arr[] = _('Removed Lines');
 
     $links_arr = [];
     $links_arr[] = $url . 'filename';
@@ -442,11 +442,11 @@ function show_commit_details($group_id, $commit_id, $result)
         $filename = db_result($result, $i, 'dir') . '/' . db_result($result, $i, 'file');
 
         if ('remove' === strtolower($type)) {
-            $type_text = $GLOBALS['Language']->getText('cvs_commit_utils', 'remove');
+            $type_text = _('Delete');
         } elseif ('add' === strtolower($type)) {
-            $type_text = $GLOBALS['Language']->getText('cvs_commit_utils', 'add');
+            $type_text = _('Add');
         } else {
-            $type_text = $GLOBALS['Language']->getText('cvs_commit_utils', 'change');
+            $type_text = _('Change');
         }
 
         if (
@@ -554,7 +554,7 @@ function format_cvs_history($group_id)
     $res_cvsfullhist = get_cvs_history($group_id);
 
     if (! $res_cvsfullhist || db_numrows($res_cvsfullhist) < 1) {
-        $output = '<P>' . $GLOBALS['Language']->getText('cvs_intro', 'no_history');
+        $output = '<P>' . _('This project has no CVS history.');
     } else {
         $cvshist = [];
         while ($row_cvsfullhist = db_fetch_array($res_cvsfullhist)) {
@@ -570,7 +570,7 @@ function format_cvs_history($group_id)
         }
 
       // Format output
-        $output = '<P><b>' . $GLOBALS['Language']->getText('cvs_intro', 'nb_commits') . '</b><BR>&nbsp;';
+        $output = '<P><b>' . _('Developer Commits (Last 7 days/Total)') . '</b><BR>&nbsp;';
         foreach ($cvshist as $user => $value) {
             $output .= '<BR>' . $user . ' (' . $cvshist[$user]['last'] . '/'
             . $cvshist[$user]['full'] . ')';

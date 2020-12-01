@@ -188,14 +188,14 @@ class ViewVCProxy
         if (! ($service instanceof ServiceCVS)) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
-                $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off')
+                _('This Project Has Turned CVS Off')
             );
             return;
         }
 
         $service->displayCVSRepositoryHeader(
             $user,
-            $GLOBALS['Language']->getText('cvs_viewvc', 'title'),
+            _('Browse CVS Tree'),
             'browse',
             ['body_class' => ['viewvc-epel']]
         );
@@ -212,8 +212,8 @@ class ViewVCProxy
         $purifier = Codendi_HTMLPurifier::instance();
         $url      = session_make_url("/project/memberlist.php?group_id=" . urlencode((string) $project->getID()));
 
-        $title  = $purifier->purify($GLOBALS['Language']->getText('cvs_viewvc', 'error_noaccess'));
-        $reason = $GLOBALS['Language']->getText('cvs_viewvc', 'error_noaccess_msg', $purifier->purify($url));
+        $title  = $purifier->purify(_('Access Denied'));
+        $reason = sprintf(_('You are not authorized to access this file. Please contact a <A HREF="%1$s">Project Administrator</A>.'), $purifier->purify($url));
 
         return '<link rel="stylesheet" href="/viewvc-theme-tuleap/style.css">
             <div class="tuleap-viewvc-header">
