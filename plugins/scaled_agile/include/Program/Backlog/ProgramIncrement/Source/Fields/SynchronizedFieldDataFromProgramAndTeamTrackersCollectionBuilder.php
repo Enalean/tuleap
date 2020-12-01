@@ -22,17 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 
 class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder
 {
     /**
-     * @var SynchronizedFieldsAdapter
+     * @var BuildSynchronizedFields
      */
     private $fields_adapter;
 
-    public function __construct(SynchronizedFieldsAdapter $fields_adapter)
+    public function __construct(BuildSynchronizedFields $fields_adapter)
     {
         $this->fields_adapter = $fields_adapter;
     }

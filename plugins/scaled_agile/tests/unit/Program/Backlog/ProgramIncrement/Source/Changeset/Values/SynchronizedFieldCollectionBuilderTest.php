@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Data\SynchronizedF
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
@@ -38,7 +38,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|SynchronizedFieldsAdapter
+     * @var M\LegacyMockInterface|M\MockInterface|BuildSynchronizedFields
      */
     private $fields_adapter;
 
@@ -49,7 +49,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->fields_adapter = \Mockery::mock(SynchronizedFieldsAdapter::class);
+        $this->fields_adapter = \Mockery::mock(BuildSynchronizedFields::class);
         $this->collection     = new SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder(
             $this->fields_adapter
         );

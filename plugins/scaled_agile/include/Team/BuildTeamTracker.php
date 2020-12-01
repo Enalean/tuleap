@@ -20,33 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter;
+namespace Tuleap\ScaledAgile\Team;
 
-use Project;
-use Tuleap\ScaledAgile\BuildProject;
-use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerNotFoundException;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TrackerDoesNotBelongToTeamException;
 
-final class ProjectDataAdapter implements BuildProject
+interface BuildTeamTracker
 {
     /**
-     * @var \ProjectManager
+     * @throws TeamTrackerNotFoundException
+     * @throws TrackerDoesNotBelongToTeamException
      */
-    private $project_manager;
-
-    public function __construct(\ProjectManager $project_manager)
-    {
-        $this->project_manager = $project_manager;
-    }
-
-    public static function build(Project $project): ProjectData
-    {
-        return new ProjectData((int) $project->getID(), (string) $project->getUnixName(), (string) $project->getPublicName());
-    }
-
-    public function buildFromId(int $id): ProjectData
-    {
-        $team_project = $this->project_manager->getProject($id);
-
-        return self::build($team_project);
-    }
+    public function buildTeamTracker(int $team_backlog_id): TeamTracker;
 }

@@ -89,7 +89,7 @@ final class StartDateValueAdapterTest extends TestCase
         $source_changeset->shouldReceive('getValue')->with($this->field_start_date)->andReturnNull();
         $source_changeset->shouldReceive('getId')->andReturn(1);
 
-        $adapter = new StartDateValueAdapter();
+        $adapter = new StartDateValueValueAdapter();
 
         $this->expectException(ChangesetValueNotFoundException::class);
 
@@ -105,7 +105,7 @@ final class StartDateValueAdapterTest extends TestCase
         $changset_value->shouldReceive('getValue')->once()->andReturn("2020-10-01");
         $source_changeset->shouldReceive('getValue')->with($this->field_start_date)->andReturn($changset_value);
 
-        $adapter = new StartDateValueAdapter();
+        $adapter = new StartDateValueValueAdapter();
 
         $expected_data = new StartDateValue("2020-10-01");
 

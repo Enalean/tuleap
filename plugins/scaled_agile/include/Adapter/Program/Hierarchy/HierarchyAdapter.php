@@ -24,21 +24,21 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Hierarchy;
 
 use PFUser;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerAdapter;
-use Tuleap\ScaledAgile\Adapter\Team\TeamTrackerAdapter;
+use Tuleap\ScaledAgile\Program\BuildPlanning;
 use Tuleap\ScaledAgile\Program\Hierarchy\BuildHierarchy;
 use Tuleap\ScaledAgile\Program\Hierarchy\Hierarchy;
 use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\ScaledAgile\Team\BuildTeamTracker;
 
 final class HierarchyAdapter implements BuildHierarchy
 {
     /**
-     * @var PlanningAdapter
+     * @var BuildPlanning
      */
     private $planning_adapter;
     /**
-     * @var TeamTrackerAdapter
+     * @var BuildTeamTracker
      */
     private $team_tracker_adapter;
     /**
@@ -47,8 +47,8 @@ final class HierarchyAdapter implements BuildHierarchy
     private $program_tracker_adapter;
 
     public function __construct(
-        PlanningAdapter $planning_adapter,
-        TeamTrackerAdapter $team_tracker_adapter,
+        BuildPlanning $planning_adapter,
+        BuildTeamTracker $team_tracker_adapter,
         ProgramTrackerAdapter $program_tracker_adapter
     ) {
         $this->planning_adapter        = $planning_adapter;

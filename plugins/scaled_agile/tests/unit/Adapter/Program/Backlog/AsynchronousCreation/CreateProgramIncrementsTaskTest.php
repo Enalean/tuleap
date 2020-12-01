@@ -29,13 +29,13 @@ use Project;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SourceChangesetValuesCollectionAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
@@ -67,7 +67,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
     private $planning_factory;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SourceChangesetValuesCollectionAdapter
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BuildFieldValues
      */
     private $changeset_values_adapter;
 
@@ -100,16 +100,16 @@ final class CreateProgramIncrementsTaskTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->changeset_values_adapter        = \Mockery::mock(SourceChangesetValuesCollectionAdapter::class);
-        $this->program_store                   = \Mockery::mock(ProgramStore::class);
-        $this->project_manager                 = Mockery::mock(\ProjectManager::class);
-        $project_data_adapter                  = new ProjectDataAdapter($this->project_manager);
-        $projects_collection_builder           = new TeamProjectsCollectionBuilder(
+        $this->changeset_values_adapter = \Mockery::mock(BuildFieldValues::class);
+        $this->program_store            = \Mockery::mock(ProgramStore::class);
+        $this->project_manager          = Mockery::mock(\ProjectManager::class);
+        $project_data_adapter           = new ProjectDataAdapter($this->project_manager);
+        $projects_collection_builder    = new TeamProjectsCollectionBuilder(
             $this->program_store,
             $project_data_adapter
         );
-        $this->planning_factory                = Mockery::mock(\PlanningFactory::class);
-        $milestone_trackers_factory            = new TrackerCollectionFactory(
+        $this->planning_factory         = Mockery::mock(\PlanningFactory::class);
+        $milestone_trackers_factory     = new TrackerCollectionFactory(
             new PlanningAdapter($this->planning_factory)
         );
         $this->mirror_creator                  = \Mockery::mock(ProgramIncrementsCreator::class);

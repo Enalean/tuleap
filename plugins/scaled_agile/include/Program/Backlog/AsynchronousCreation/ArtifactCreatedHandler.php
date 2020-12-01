@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
+use Tuleap\ScaledAgile\Program\BuildPlanning;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -37,25 +37,25 @@ class ArtifactCreatedHandler
     /**
      * @var RunProgramIncrementCreation
      */
-    private $create_program_increments_runner;
+    private $run_program_increment_creation;
     /**
      * @var PendingArtifactCreationStore
      */
     private $pending_artifact_creation_store;
     /**
-     * @var PlanningAdapter
+     * @var BuildPlanning
      */
     private $planning_adapter;
 
     public function __construct(
         ProgramStore $program_store,
-        RunProgramIncrementCreation $create_program_increments_runner,
+        RunProgramIncrementCreation $run_program_increment_creation,
         PendingArtifactCreationStore $pending_artifact_creation_store,
-        PlanningAdapter $planning_adapter
+        BuildPlanning $planning_adapter
     ) {
-        $this->program_store                    = $program_store;
-        $this->create_program_increments_runner = $create_program_increments_runner;
-        $this->pending_artifact_creation_store  = $pending_artifact_creation_store;
+        $this->program_store                   = $program_store;
+        $this->run_program_increment_creation  = $run_program_increment_creation;
+        $this->pending_artifact_creation_store = $pending_artifact_creation_store;
         $this->planning_adapter                 = $planning_adapter;
     }
 
@@ -89,6 +89,6 @@ class ArtifactCreatedHandler
         );
 
         $replication_data = ReplicationDataAdapter::build($source_artifact, $current_user, $event->getChangeset());
-        $this->create_program_increments_runner->executeProgramIncrementsCreation($replication_data);
+        $this->run_program_increment_creation->executeProgramIncrementsCreation($replication_data);
     }
 }

@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SourceChangesetValuesCollectionAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateTaskProgramIncrement;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildFieldValues;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementTrackerRetrievalException;
@@ -37,7 +37,7 @@ use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
 {
     /**
-     * @var SourceChangesetValuesCollectionAdapter
+     * @var BuildFieldValues
      */
     private $changeset_collection_adapter;
     /**
@@ -62,7 +62,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     private $pending_artifact_creation_store;
 
     public function __construct(
-        SourceChangesetValuesCollectionAdapter $changeset_collection_adapter,
+        BuildFieldValues $changeset_collection_adapter,
         TeamProjectsCollectionBuilder $projects_collection_builder,
         TrackerCollectionFactory $scale_tracker_factory,
         ProgramIncrementsCreator $program_increment_creator,

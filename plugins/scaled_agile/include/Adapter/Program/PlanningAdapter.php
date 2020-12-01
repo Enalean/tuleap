@@ -24,11 +24,12 @@ namespace Tuleap\ScaledAgile\Adapter\Program;
 
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
+use Tuleap\ScaledAgile\Program\BuildPlanning;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ScaledAgile\TrackerData;
 
-final class PlanningAdapter
+final class PlanningAdapter implements BuildPlanning
 {
     /**
      * @var \PlanningFactory

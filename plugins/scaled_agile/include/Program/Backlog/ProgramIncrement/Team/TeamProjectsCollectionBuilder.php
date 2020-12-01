@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team;
 
+use Tuleap\ScaledAgile\BuildProject;
 use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\ScaledAgile\ProjectData;
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 
 final class TeamProjectsCollectionBuilder
 {
@@ -33,11 +33,11 @@ final class TeamProjectsCollectionBuilder
      */
     private $program_store;
     /**
-     * @var ProjectDataAdapter
+     * @var BuildProject
      */
     private $project_data_adapter;
 
-    public function __construct(ProgramStore $program_store, ProjectDataAdapter $project_data_adapter)
+    public function __construct(ProgramStore $program_store, BuildProject $project_data_adapter)
     {
         $this->program_store        = $program_store;
         $this->project_data_adapter = $project_data_adapter;

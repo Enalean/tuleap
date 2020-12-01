@@ -26,8 +26,8 @@ use Exception;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerEvent;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class CreateProgramIncrementsRunner implements RunProgramIncrementCreation
@@ -43,7 +43,7 @@ final class CreateProgramIncrementsRunner implements RunProgramIncrementCreation
      */
     private $queue_factory;
     /**
-     * @var ReplicationDataAdapter
+     * @var BuildReplicationData
      */
     private $replication_data_adapter;
     /**
@@ -55,7 +55,7 @@ final class CreateProgramIncrementsRunner implements RunProgramIncrementCreation
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         QueueFactory $queue_factory,
-        ReplicationDataAdapter $replication_data_adapter,
+        BuildReplicationData $replication_data_adapter,
         TaskBuilder $task_builder
     ) {
         $this->logger                   = $logger;

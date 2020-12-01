@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use PFUser;
-use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
+use Tuleap\ScaledAgile\Program\BuildPlanning;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 use Tuleap\ScaledAgile\ProjectData;
 use Tuleap\ScaledAgile\TrackerData;
@@ -35,22 +35,22 @@ class ArtifactCreatorChecker
      */
     private $program_increment_artifact_creator_checker;
     /**
-     * @var PlanningAdapter
+     * @var BuildPlanning
      */
-    private $planning_adapter;
+    private $build_planning;
 
     public function __construct(
-        PlanningAdapter $planning_adapter,
+        BuildPlanning $build_planning,
         ProgramIncrementArtifactCreatorChecker $program_increment_artifact_creator_checker
     ) {
         $this->program_increment_artifact_creator_checker = $program_increment_artifact_creator_checker;
-        $this->planning_adapter                           = $planning_adapter;
+        $this->build_planning                             = $build_planning;
     }
 
     public function canCreateAnArtifact(PFUser $user, TrackerData $tracker_data, ProjectData $project_data): bool
     {
         try {
-            $root_planning = $this->planning_adapter->buildRootPlanning(
+            $root_planning = $this->build_planning->buildRootPlanning(
                 $user,
                 $project_data->getId()
             );

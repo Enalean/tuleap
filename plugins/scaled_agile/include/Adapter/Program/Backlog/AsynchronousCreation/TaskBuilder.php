@@ -39,7 +39,7 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\DescriptionField
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\DescriptionValueAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\EndPeriodValueAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SourceChangesetValuesCollectionAdapter;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\StartDateValueAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\StartDateValueValueAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\StatusValueAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
@@ -50,7 +50,6 @@ use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
-use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\StatusValueMapper;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -106,7 +105,7 @@ class TaskBuilder
                 new TitleValueAdapterAlias(),
                 new DescriptionValueAdapter(),
                 new StatusValueAdapter(),
-                new StartDateValueAdapter(),
+                new StartDateValueValueAdapter(),
                 new EndPeriodValueAdapter(),
                 new ArtifactLinkValueAdapter()
             ),
