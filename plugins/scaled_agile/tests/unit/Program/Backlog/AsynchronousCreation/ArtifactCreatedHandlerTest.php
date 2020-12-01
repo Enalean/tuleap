@@ -68,7 +68,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
         $this->planning_factory                = M::mock(\PlanningFactory::class);
         $planning_adapter                      = new PlanningAdapter($this->planning_factory);
         $this->pending_artifact_creation_store = M::mock(PendingArtifactCreationStore::class);
-        $this->asyncronous_runner              = M::mock(CreateProgramIncrementsRunner::class);
+        $this->asyncronous_runner              = M::mock(RunProgramIncrementCreation::class);
         $this->handler                         = new ArtifactCreatedHandler(
             $this->program_store,
             $this->asyncronous_runner,

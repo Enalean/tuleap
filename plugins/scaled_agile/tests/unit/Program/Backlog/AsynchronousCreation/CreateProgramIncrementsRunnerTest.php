@@ -32,6 +32,8 @@ use Tracker_ArtifactFactory;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -69,7 +71,8 @@ final class CreateProgramIncrementsRunnerTest extends TestCase
         $this->runner        = new CreateProgramIncrementsRunner(
             $logger,
             $this->queue_factory,
-            $replication_adapter
+            $replication_adapter,
+            Mockery::mock(TaskBuilder::class)
         );
     }
 

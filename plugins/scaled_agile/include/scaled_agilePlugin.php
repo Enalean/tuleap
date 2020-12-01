@@ -24,14 +24,18 @@ use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
+use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck\RequiredFieldChecker;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck\SemanticChecker;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck\StatusSemanticChecker;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck\WorkflowChecker;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
@@ -48,7 +52,6 @@ use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
 use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
-use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ArtifactCreatorChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ProgramIncrementArtifactCreatorChecker;
 use Tuleap\ScaledAgile\Program\Backlog\PlanningCheck\ConfigurationChecker;
@@ -208,7 +211,7 @@ final class scaled_agilePlugin extends Plugin
 
     public function workerEvent(WorkerEvent $event): void
     {
-        $create_mirrors_runner = CreateProgramIncrementsRunner::build();
+        $create_mirrors_runner = $this->getProgramIncrementRunner();
         $create_mirrors_runner->addListener($event);
     }
 
@@ -227,7 +230,7 @@ final class scaled_agilePlugin extends Plugin
 
         $handler = new ArtifactCreatedHandler(
             $program_dao,
-            CreateProgramIncrementsRunner::build(),
+            $this->getProgramIncrementRunner(),
             new PendingArtifactCreationDao(),
             $this->getPlanningAdapter()
         );
@@ -362,5 +365,22 @@ final class scaled_agilePlugin extends Plugin
     private function getProjectDataAdapter(): ProjectDataAdapter
     {
         return new ProjectDataAdapter(ProjectManager::instance());
+    }
+
+    private function getProgramIncrementRunner(): CreateProgramIncrementsRunner
+    {
+        $logger = $this->getLogger();
+
+        return new CreateProgramIncrementsRunner(
+            $this->getLogger(),
+            new QueueFactory($logger),
+            new ReplicationDataAdapter(
+                Tracker_ArtifactFactory::instance(),
+                UserManager::instance(),
+                new PendingArtifactCreationDao(),
+                Tracker_Artifact_ChangesetFactoryBuilder::build()
+            ),
+            new TaskBuilder()
+        );
     }
 }

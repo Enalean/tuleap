@@ -20,7 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
+
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
 
 class PendingArtifactNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
 {

@@ -20,12 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
-final class PendingArtifactChangesetNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementCreationException;
+
+class PendingArtifactUserNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
 {
-    public function __construct(int $artifact_id, int $changeset_id)
+    public function __construct(int $artifact_id, int $user_id)
     {
-        parent::__construct("Could not find changeset #$changeset_id of source artifact #$artifact_id ");
+        parent::__construct(
+            "Could not find User #$user_id for program source artifact #$artifact_id"
+        );
     }
 }

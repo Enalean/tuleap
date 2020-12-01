@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Administration\Administration\ProgramIncremant\Mirroring\Asynchronous;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -33,8 +33,6 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SourceChangesetV
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
-use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsTask;
-use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
@@ -88,7 +86,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
      */
     private $task;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PendingArtifactCreationDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PendingArtifactCreationStore
      */
     private $pending_artifact_creation_store;
     /**
