@@ -27,7 +27,7 @@ import { ItemsMapManager } from "../items/ItemsMapManager";
 import { GetText } from "../../../tuleap/gettext/gettext-init";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 
-describe("dropdown-content-renderer", () => {
+describe("DropDownContentRenderer", () => {
     let select: HTMLSelectElement,
         dropdown: Element,
         dropdown_list: Element,

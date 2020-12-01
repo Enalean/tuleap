@@ -38,7 +38,7 @@ describe("ListItemBuilder", () => {
 
         const map = await builder.buildListPickerItemsMap();
 
-        expect(map.size).toEqual(5);
+        expect(map.size).toEqual(8);
 
         const iterator = map.entries();
 
@@ -255,42 +255,6 @@ describe("ListItemBuilder", () => {
 
             await builder.buildListPickerItemsMap();
             expect(itemsTemplateFormatter).toHaveBeenCalledTimes(5);
-        });
-    });
-
-    describe("When options have a data-avatar-url attribute", () => {
-        it("should create an image with the url found on the option", async () => {
-            const option_with_image = document.createElement("option");
-            const name = "John Doe (jdoe)";
-            option_with_image.appendChild(document.createTextNode(name));
-            const avatar_url = "/url/to/jdoe/avatar.png";
-            option_with_image.setAttribute("data-avatar-url", avatar_url);
-            option_with_image.setAttribute("value", "101");
-
-            select.appendChild(option_with_image);
-
-            const map = await builder.buildListPickerItemsMap();
-            const items = map.entries();
-
-            expect(items.next().value).toEqual([
-                "list-picker-item-101",
-                {
-                    id: "list-picker-item-101",
-                    // The source of truth is the production code, Prettier should not interfere with the spacing here
-                    // prettier-ignore
-                    template: html`
-                <span class="list-picker-avatar"><img src="${avatar_url}" loading="lazy" /></span>
-                ${name}
-            `,
-                    label: name,
-                    value: "101",
-                    is_disabled: false,
-                    group_id: "",
-                    is_selected: false,
-                    element: expect.any(Element),
-                    target_option: expect.any(Element),
-                },
-            ]);
         });
     });
 

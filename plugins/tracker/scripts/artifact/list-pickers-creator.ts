@@ -118,10 +118,6 @@ async function createListPickerForSelect(
     select: HTMLSelectElement,
     createListPicker: ListPickerCreator
 ): Promise<void> {
-    if (select.hasAttribute("multiple") && Boolean(select.dataset.usesColors) === true) {
-        return;
-    }
-
     await createListPicker(select, {
         is_filterable: true,
     });

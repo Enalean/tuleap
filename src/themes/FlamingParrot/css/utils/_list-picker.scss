@@ -151,6 +151,14 @@ $form-element-small-font-size: .8125rem;
     cursor: pointer;
 }
 
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .list-picker-badge-#{$color-name} {
+        border: 1px solid transparentize(map-get($colors, 'primary'), .4);
+        background: transparentize(map-get($colors, 'primary'), .9);
+        color: map-get($colors, 'text');
+    }
+}
+
 .list-picker-search-field {
     height: 32px;
     padding: 0;
@@ -235,4 +243,22 @@ $form-element-small-font-size: .8125rem;
     background: #e3e5ed url('../images/list-picker-default-avatar.svg') no-repeat center center;
     background-size: contain;
     vertical-align: middle;
+}
+
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .list-picker-circular-color-#{$color-name} {
+        width: 14px;
+        height: 14px;
+        margin: 0 6px 0 0;
+        border: 3px solid map-get($colors, 'primary');
+        border-radius: 50%;
+        background-color: map-get($colors, 'secondary');
+        color: map-get($colors, 'primary');
+        cursor: pointer;
+    }
+}
+
+.list-picker-option-colored-label-container {
+    display: flex;
+    align-items: center;
 }

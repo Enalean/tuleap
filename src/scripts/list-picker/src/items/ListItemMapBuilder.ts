@@ -19,6 +19,11 @@
 
 import { ListPickerItem, ListPickerItemMap, ListPickerOptions } from "../type";
 import { html, render, TemplateResult } from "lit-html";
+import { getOptionsLabel } from "../helpers/option-label-helper";
+import {
+    hasOptionPredefinedTemplate,
+    retrievePredefinedTemplate,
+} from "../helpers/templates/predefined-item-template-retriever-helper";
 
 export class ListItemMapBuilder {
     private items_templates_cache: Map<string, TemplateResult>;
@@ -57,7 +62,7 @@ export class ListItemMapBuilder {
                 group_id,
                 value: option.value,
                 template,
-                label: this.getOptionsLabel(option),
+                label: getOptionsLabel(option),
                 is_disabled,
                 is_selected: false,
                 target_option: option,
@@ -132,14 +137,11 @@ export class ListItemMapBuilder {
             return template;
         }
 
-        const option_label = this.getOptionsLabel(option);
-        const avatar_url = option.dataset.avatarUrl;
-        if (avatar_url && avatar_url !== "") {
-            return html`
-                <span class="list-picker-avatar"><img src="${avatar_url}" loading="lazy" /></span>
-                ${option_label}
-            `;
+        const option_label = getOptionsLabel(option);
+        if (hasOptionPredefinedTemplate(option)) {
+            return retrievePredefinedTemplate(option);
         }
+
         if (this.options && this.options.items_template_formatter) {
             const custom_template = await this.options.items_template_formatter(
                 option.value,
@@ -157,11 +159,5 @@ export class ListItemMapBuilder {
         return html`
             ${value}
         `;
-    }
-
-    private getOptionsLabel(option: HTMLOptionElement): string {
-        return option.innerText !== "" && option.innerText !== undefined
-            ? option.innerText
-            : option.label;
     }
 }

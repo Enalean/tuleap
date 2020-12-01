@@ -1049,8 +1049,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $size      = '';
         $required  = '';
         $bind_type = 'data-bind-type="' . $this->getBind()->getType() . '"';
-        $has_colors = count($this->getDecorators()) > 0;
-        $uses_colors = 'data-uses-colors="' . $has_colors . '"';
 
         if ($this->isMultiple()) {
             $multiple = 'multiple="multiple"';
@@ -1060,7 +1058,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $required = 'required';
         }
 
-        $html .= "<select $id $name $multiple $size $bind_type $uses_colors $required";
+        $html .= "<select $id $name $multiple $size $bind_type $required";
         if ($data_target_fields_ids !== '') {
             $html .= $data_target_fields_ids;
         }
@@ -1069,6 +1067,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
     {
+        $purifier = Codendi_HTMLPurifier::instance();
         $value_id  = $value->getId();
         $list_bind = $this->getBind();
         if ($value_id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
@@ -1092,6 +1091,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                         . '"';
 
         $dataset = ItemsDatasetBuilder::buildDataAttributesForValue($value);
+        if (isset($this->getDecorators()[$value_id])) {
+            $dataset .= '" data-color-value="' . $purifier->purify($this->getDecorators()[$value_id]->getCurrentColor())   . '"';
+        }
         return $option_start . $dataset . '>' . $label . '</option>';
     }
 
@@ -1109,7 +1111,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $size      = ' ';
         $bind_type = 'data-bind-type="' . $this->getBind()->getType() . '"';
         $has_colors = count($this->getDecorators()) > 0;
-        $uses_colors = 'data-uses-colors="' . $has_colors . '"';
 
         if ($this->isMultiple()) {
             $multiple = ' multiple="multiple" ';
@@ -1125,7 +1126,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($name) {
             $html .= 'name="' . $name . '" ';
         }
-        $html .= $size . $multiple . $bind_type . $uses_colors . '>';
+        $html .= $size . $multiple . $bind_type . '>';
 
         $html .= '<option value="' . $purifier->purify(BindStaticValueUnchanged::VALUE_ID) . '" selected="selected">' .
             $GLOBALS['Language']->getText('global', 'unchanged') . '</option>';
@@ -1135,7 +1136,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             if (! $value->isHidden()) {
                 $styles  = $this->getBind()->getSelectOptionStyles($id);
                 $dataset = ItemsDatasetBuilder::buildDataAttributesForValue($value);
-
+                if (isset($this->getDecorators()[$id])) {
+                    $dataset .= '" data-color-value="' . $purifier->purify($this->getDecorators()[$id]->getCurrentColor())   . '"';
+                }
                 $html .= '<option value="' . $id . '" title="' . $this->getBind()->formatArtifactValue($id) . '" style="' . $styles['inline-styles'] . '" class="' . $styles['classes'] . '"' . $dataset . '">';
                 $html .= $this->getBind()->formatArtifactValue($id);
                 $html .= '</option>';
