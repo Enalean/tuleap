@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker;
+namespace Tuleap\Tracker\Masschange;
 
 use Codendi_Request;
 use EventManager;
@@ -36,7 +36,6 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tracker_MasschangeDataValueExtractor;
-use Tracker_MasschangeUpdater;
 use Tracker_Report;
 use Tracker_Rule_List;
 use Tracker_RuleFactory;
@@ -92,7 +91,7 @@ final class MasschangeUpdaterTest extends TestCase
         $event_manager = Mockery::mock(EventManager::class);
         $event_manager->shouldReceive('processEvent')->once();
 
-        $masschange_updater = new Tracker_MasschangeUpdater(
+        $masschange_updater = new MasschangeUpdater(
             $tracker,
             Mockery::mock(Tracker_Report::class),
             $masschange_data_value_extractor,
@@ -144,7 +143,7 @@ final class MasschangeUpdaterTest extends TestCase
         $event_manager = Mockery::mock(EventManager::class);
         $event_manager->shouldReceive('processEvent')->once();
 
-        $masschange_updater = new Tracker_MasschangeUpdater(
+        $masschange_updater = new MasschangeUpdater(
             $tracker,
             Mockery::mock(Tracker_Report::class),
             $masschange_data_value_extractor,
@@ -235,7 +234,7 @@ final class MasschangeUpdaterTest extends TestCase
         $event_manager = Mockery::mock(EventManager::class);
         $event_manager->shouldReceive('processEvent')->once();
 
-        $masschange_updater = new Tracker_MasschangeUpdater(
+        $masschange_updater = new MasschangeUpdater(
             $tracker,
             Mockery::mock(Tracker_Report::class),
             $masschange_data_value_extractor,

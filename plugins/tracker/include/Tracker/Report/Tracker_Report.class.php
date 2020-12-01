@@ -24,6 +24,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\Masschange\MasschangeUpdater;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionPresenter;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueSaver;
@@ -1307,7 +1308,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 break;
             case 'update-masschange-aids':
                 $form_element_factory = $this->getFormElementFactory();
-                $masschange_updater   = new Tracker_MasschangeUpdater(
+                $masschange_updater   = new MasschangeUpdater(
                     $tracker,
                     $this,
                     new Tracker_MasschangeDataValueExtractor($form_element_factory),
