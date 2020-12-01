@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program\Plan;
 
 use Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
 use Tuleap\ScaledAgile\Program\Program;
@@ -39,11 +40,19 @@ final class ProgramAdapter implements BuildProgram
      * @var ProgramStore
      */
     private $program_store;
+    /**
+     * @var ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
 
-    public function __construct(\ProjectManager $project_manager, ProgramStore $program_store)
-    {
-        $this->project_manager = $project_manager;
-        $this->program_store   = $program_store;
+    public function __construct(
+        \ProjectManager $project_manager,
+        ProgramStore $program_store,
+        ExplicitBacklogDao $explicit_backlog_dao
+    ) {
+        $this->project_manager      = $project_manager;
+        $this->program_store        = $program_store;
+        $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
     /**
@@ -62,12 +71,16 @@ final class ProgramAdapter implements BuildProgram
     }
 
     /**
-     * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
+     * @throws ProgramMustHaveExplicitBacklogEnabledException
      */
     public function buildNewProgramProject(int $id, \PFUser $user): ToBeCreatedProgram
     {
         $project = $this->buildProject($id, $user);
+
+        if (! $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID())) {
+            throw new ProgramMustHaveExplicitBacklogEnabledException($project);
+        }
 
         return new ToBeCreatedProgram((int) $project->getID());
     }

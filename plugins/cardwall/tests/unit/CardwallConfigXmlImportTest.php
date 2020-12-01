@@ -332,4 +332,25 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
 
         $cardwall_config_xml_import->import($this->default_xml_input);
     }
+
+    public function testEventIsSentToCommunicateTheCardwallImportIsDoneEvenWhenThereIsNoCardwallNode(): void
+    {
+        $cardwall_config_xml_import = new CardwallConfigXmlImport(
+            $this->group_id,
+            $this->mapping,
+            $this->field_mapping,
+            $this->artifact_id_mapping,
+            $this->cardwall_ontop_dao,
+            $this->column_dao,
+            $this->mapping_field_dao,
+            $this->mapping_field_value_dao,
+            $this->event_manager,
+            Mockery::mock(XML_RNGValidator::class),
+            $this->logger
+        );
+
+        $this->event_manager->shouldReceive('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, Mockery::any())->once();
+
+        $cardwall_config_xml_import->import(new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project></project>'));
+    }
 }

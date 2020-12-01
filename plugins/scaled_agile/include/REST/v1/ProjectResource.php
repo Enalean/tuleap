@@ -23,21 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\REST\v1;
 
 use Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramMustHaveExplicitBacklogEnabledException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
-use Tuleap\ScaledAgile\Adapter\Team\AtLeastOneTeamShouldBeDefinedException;
-use Tuleap\ScaledAgile\Adapter\Team\ProjectIsAProgramException;
-use Tuleap\ScaledAgile\Adapter\Team\TeamAccessException;
 use Tuleap\ScaledAgile\Adapter\Team\TeamAdapter;
 use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
+use Tuleap\ScaledAgile\Adapter\Team\TeamException;
 use Tuleap\ScaledAgile\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ScaledAgile\Program\Plan\CreatePlan;
 use Tuleap\ScaledAgile\Program\Plan\PlanCreator;
@@ -60,15 +60,16 @@ final class ProjectResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->user_manager = \UserManager::instance();
-        $plan_dao           = new PlanDao();
-        $tracker_adapter    = new ProgramTrackerAdapter(\TrackerFactory::instance(), new PlanDao());
-        $project_manager    = \ProjectManager::instance();
-        $program_dao        = new ProgramDao();
-        $project_adapter    = new ProgramAdapter($project_manager, $program_dao);
-        $this->plan_creator = new PlanCreator($project_adapter, $tracker_adapter, $plan_dao);
+        $this->user_manager   = \UserManager::instance();
+        $plan_dao             = new PlanDao();
+        $tracker_adapter      = new ProgramTrackerAdapter(\TrackerFactory::instance(), new PlanDao());
+        $project_manager      = \ProjectManager::instance();
+        $program_dao          = new ProgramDao();
+        $explicit_backlog_dao = new ExplicitBacklogDao();
+        $project_adapter      = new ProgramAdapter($project_manager, $program_dao, $explicit_backlog_dao);
+        $this->plan_creator   = new PlanCreator($project_adapter, $tracker_adapter, $plan_dao);
 
-        $team_adapter       = new TeamAdapter($project_manager, $program_dao);
+        $team_adapter       = new TeamAdapter($project_manager, $program_dao, $explicit_backlog_dao);
         $team_dao           = new TeamDao();
         $this->team_creator = new TeamCreator($project_adapter, $team_adapter, $team_dao);
     }
@@ -137,7 +138,7 @@ final class ProjectResource extends AuthenticatedResource
                 $id,
                 $representation->team_ids
             );
-        } catch (TeamAccessException | ProjectIsAProgramException | ProjectIsNotAProgramException | AtLeastOneTeamShouldBeDefinedException $e) {
+        } catch (TeamException | ProgramMustHaveExplicitBacklogEnabledException $e) {
             throw new RestException(400, $e->getMessage());
         } catch (ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());

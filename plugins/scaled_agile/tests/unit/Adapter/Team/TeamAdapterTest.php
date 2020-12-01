@@ -25,6 +25,7 @@ namespace Tuleap\ScaledAgile\Adapter\Team;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use ProjectManager;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
@@ -50,18 +51,23 @@ final class TeamAdapterTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
      */
     private $project_manager;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
 
     protected function setUp(): void
     {
-        $this->project_manager = \Mockery::mock(ProjectManager::class);
-        $this->program_store   = \Mockery::mock(ProgramStore::class);
+        $this->project_manager      = \Mockery::mock(ProjectManager::class);
+        $this->program_store        = \Mockery::mock(ProgramStore::class);
+        $this->explicit_backlog_dao = \Mockery::mock(ExplicitBacklogDao::class);
 
-        $this->adapter = new TeamAdapter($this->project_manager, $this->program_store);
+        $this->adapter = new TeamAdapter($this->project_manager, $this->program_store, $this->explicit_backlog_dao);
 
         $_SERVER['REQUEST_URI'] = '/';
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($_SERVER['REQUEST_URI']);
     }
@@ -110,6 +116,25 @@ final class TeamAdapterTest extends TestCase
         $this->adapter->buildTeamProject([], $program, $user);
     }
 
+    public function testThrowsExceptionWhenTeamProjectDoesNotHaveTheExplicitBacklogModeEnabled(): void
+    {
+        $team_id = 202;
+        $project = new \Project(['group_id' => $team_id, 'status' => 'A', 'access' => 'public']);
+        $program = new ToBeCreatedProgram(101);
+        $user    = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAdmin')->andReturnTrue();
+        $user->shouldReceive('isAnonymous')->andReturnFalse();
+        $user->shouldReceive('isSuperUser')->andReturnTrue();
+
+        $this->project_manager->shouldReceive('getProject')->with($team_id)->once()->andReturn($project);
+        $this->program_store->shouldReceive('isProjectAProgramProject')->with($team_id)->andReturn(false);
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false);
+
+        $this->expectException(TeamMustHaveExplicitBacklogEnabledException::class);
+        $this->adapter->buildTeamProject([$team_id], $program, $user);
+    }
+
     public function testItBuildTeamCollection(): void
     {
         $team_id = 202;
@@ -122,6 +147,8 @@ final class TeamAdapterTest extends TestCase
 
         $this->project_manager->shouldReceive('getProject')->with($team_id)->once()->andReturn($project);
         $this->program_store->shouldReceive('isProjectAProgramProject')->with($team_id)->andReturn(false);
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(true);
 
         $team_collection = new TeamCollection([new Team($team_id)], $program);
 

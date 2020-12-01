@@ -96,6 +96,7 @@ class CardwallConfigXmlImport
     public function import(SimpleXMLElement $xml_input)
     {
         if (! $xml_input->{CardwallConfigXml::NODE_CARDWALL}) {
+            $this->communicateProjectCardwallImportIsDone($xml_input);
             return;
         }
 
@@ -105,6 +106,13 @@ class CardwallConfigXmlImport
         $this->cardwall_ontop_dao->startTransaction();
         $this->importCardwalls($xml_input->{CardwallConfigXml::NODE_CARDWALL});
 
+        $this->communicateProjectCardwallImportIsDone($xml_input);
+
+        $this->cardwall_ontop_dao->commit();
+    }
+
+    private function communicateProjectCardwallImportIsDone(SimpleXMLElement $xml_input): void
+    {
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
             [
@@ -115,8 +123,6 @@ class CardwallConfigXmlImport
                 'artifact_id_mapping' => $this->artifact_id_mapping
             ]
         );
-
-        $this->cardwall_ontop_dao->commit();
     }
 
     private function importCardwalls(SimpleXMLElement $cardwalls)

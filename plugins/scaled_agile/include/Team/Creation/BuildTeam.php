@@ -25,6 +25,7 @@ namespace Tuleap\ScaledAgile\Team\Creation;
 use Tuleap\ScaledAgile\Adapter\Team\AtLeastOneTeamShouldBeDefinedException;
 use Tuleap\ScaledAgile\Adapter\Team\ProjectIsAProgramException;
 use Tuleap\ScaledAgile\Adapter\Team\TeamAccessException;
+use Tuleap\ScaledAgile\Adapter\Team\TeamMustHaveExplicitBacklogEnabledException;
 use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
 
 interface BuildTeam
@@ -33,6 +34,7 @@ interface BuildTeam
      * @throws AtLeastOneTeamShouldBeDefinedException
      * @throws ProjectIsAProgramException
      * @throws TeamAccessException
+     * @throws TeamMustHaveExplicitBacklogEnabledException
      */
     public function buildTeamProject(array $team_ids, ToBeCreatedProgram $program, \PFUser $user): TeamCollection;
 }
