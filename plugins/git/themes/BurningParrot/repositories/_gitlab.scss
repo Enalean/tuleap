@@ -107,23 +107,33 @@
 .gitlab-tooltip-button-radio {
     &::before {
         top: -10px;
-        left: 155px;
+        left: 225px;
     }
 
     &::after {
         top: -10px;
-        left: 155px;
+        left: 225px;
     }
 }
 
 .gitlab-tooltip-avatar {
     &::before {
         top: 5px;
-        left: 130px;
+        left: 200px;
     }
 
     &::after {
         top: 5px;
-        left: 130px;
+        left: 200px;
+    }
+}
+
+.gitlab-tooltip-name {
+    &::before {
+        left: 175px;
+    }
+
+    &::after {
+        left: 175px;
     }
 }

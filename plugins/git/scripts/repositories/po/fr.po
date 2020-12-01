@@ -22,6 +22,9 @@ msgid_plural "%{ numberPullRequest } pull requests"
 msgstr[0] "%{ numberPullRequest } pull request"
 msgstr[1] "%{ numberPullRequest } pull requests"
 
+msgid "A repository with same name and path was already integrated."
+msgstr "Un dépôt avec le même nom et chemin a déjà été intégré."
+
 msgid "Add GitLab repository"
 msgstr "Ajouter un dépôt GitLab"
 
