@@ -22,9 +22,9 @@
 
 namespace Tuleap\Tracker\FormElement\Field\File;
 
-use Tracker_FormElement_Field_ValueDao;
+use Tuleap\Tracker\FormElement\Field\FieldValueDao;
 
-class FileFieldValueDao extends Tracker_FormElement_Field_ValueDao
+class FileFieldValueDao extends FieldValueDao
 {
 
     public function __construct()

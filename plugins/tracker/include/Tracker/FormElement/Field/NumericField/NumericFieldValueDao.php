@@ -21,9 +21,9 @@
 
 namespace Tuleap\Tracker\FormElement\Field\NumericField;
 
-use Tracker_FormElement_Field_ValueDao;
+use Tuleap\Tracker\FormElement\Field\FieldValueDao;
 
-abstract class NumericFieldValueDao extends Tracker_FormElement_Field_ValueDao
+abstract class NumericFieldValueDao extends FieldValueDao
 {
 
     /**

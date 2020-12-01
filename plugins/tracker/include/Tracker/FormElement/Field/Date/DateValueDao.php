@@ -22,9 +22,9 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Date;
 
-use Tracker_FormElement_Field_ValueDao;
+use Tuleap\Tracker\FormElement\Field\FieldValueDao;
 
-class DateValueDao extends Tracker_FormElement_Field_ValueDao
+class DateValueDao extends FieldValueDao
 {
 
     public function __construct()
