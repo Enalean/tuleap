@@ -71,6 +71,7 @@ class GitlabRepositoryCreator
 
     /**
      * @throws GitlabRepositoryAlreadyIntegratedInProjectException
+     * @throws GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException
      */
     public function integrateGitlabRepositoryInProject(
         Credentials $credentials,
@@ -78,8 +79,19 @@ class GitlabRepositoryCreator
         Project $project
     ): GitlabRepository {
         return $this->db_transaction_executor->execute(function () use ($credentials, $gitlab_project, $project) {
-            $gitlab_internal_id = $gitlab_project->getId();
-            $gitlab_web_url     = $gitlab_project->getWebUrl();
+            $gitlab_internal_id    = $gitlab_project->getId();
+            $gitlab_web_url        = $gitlab_project->getWebUrl();
+            $gitlab_name_with_path = $gitlab_project->getPathWithNamespace();
+
+            if (
+                $this->gitlab_repository_dao->isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject(
+                    $gitlab_name_with_path,
+                    $gitlab_web_url,
+                    (int) $project->getID()
+                )
+            ) {
+                throw new GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException($gitlab_name_with_path);
+            }
 
             $already_existing_gitlab_repository = $this->gitlab_repository_factory->getGitlabRepositoryByInternalIdAndPath(
                 $gitlab_internal_id,

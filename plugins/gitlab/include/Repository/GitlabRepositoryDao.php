@@ -99,4 +99,18 @@ class GitlabRepositoryDao extends DataAccessObject
             ]
         );
     }
+
+    public function isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject(string $name, string $web_url, int $project_id): bool
+    {
+        $sql = "SELECT NULL
+                FROM plugin_gitlab_repository
+                    INNER JOIN plugin_gitlab_repository_project ON (plugin_gitlab_repository.id = plugin_gitlab_repository_project.id)
+                WHERE plugin_gitlab_repository.name = ?
+                    AND plugin_gitlab_repository.full_url != ?
+                    AND plugin_gitlab_repository_project.project_id = ?";
+
+        $rows = $this->getDB()->run($sql, $name, $web_url, $project_id);
+
+        return count($rows) > 0;
+    }
 }

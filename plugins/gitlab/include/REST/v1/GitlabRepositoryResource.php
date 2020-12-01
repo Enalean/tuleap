@@ -47,6 +47,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryDeletor;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotIntegratedInAnyProjectException;
+use Tuleap\Gitlab\Repository\GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretGenerator;
@@ -155,7 +156,11 @@ final class GitlabRepositoryResource
             );
 
             return GitlabRepositoryRepresentation::buildFromGitlabRepository($integrated_gitlab_repository);
-        } catch (GitlabResponseAPIException | GitlabRepositoryAlreadyIntegratedInProjectException $exception) {
+        } catch (
+            GitlabResponseAPIException |
+            GitlabRepositoryAlreadyIntegratedInProjectException |
+            GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException $exception
+        ) {
             throw new RestException(400, $exception->getMessage());
         } catch (GitlabRequestException $exception) {
             throw new RestException(

@@ -105,8 +105,35 @@ class GitlabRepositoryCreatorTest extends TestCase
         $this->project = Project::buildForTest();
     }
 
+    public function testItThrowsAnExceptionIfARepositoryWithSameNameAlreadyIntegratedInProject(): void
+    {
+        $this->gitlab_repository_dao->shouldReceive('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
+            ->once()
+            ->andReturnTrue();
+
+        $this->gitlab_repository_factory->shouldNotReceive('getGitlabRepositoryByInternalIdAndPath');
+        $this->gitlab_repository_project_dao->shouldNotReceive('isGitlabRepositoryIntegratedInProject');
+        $this->gitlab_repository_project_dao->shouldNotReceive('addGitlabRepositoryIntegrationInProject');
+        $this->gitlab_repository_dao->shouldNotReceive('createGitlabRepository');
+        $this->gitlab_repository_factory->shouldNotReceive('getGitlabRepositoryByGitlabProjectAndIntegrationId');
+        $this->gitlab_repository_project_dao->shouldNotReceive('addGitlabRepositoryIntegrationInProject');
+        $this->webhook_creator->shouldNotReceive('addWebhookInGitlabProject');
+
+        $this->expectException(GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException::class);
+
+        $this->creator->integrateGitlabRepositoryInProject(
+            $this->credentials,
+            $this->gitlab_project,
+            $this->project
+        );
+    }
+
     public function testItAddsRepositoryInProjectIfAtLeastOneIntegrationAlreadyExists(): void
     {
+        $this->gitlab_repository_dao->shouldReceive('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
+            ->once()
+            ->andReturnFalse();
+
         $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
             ->once()
             ->with(12569, 'https://example.com/root/project01')
@@ -135,6 +162,10 @@ class GitlabRepositoryCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfRepositoryIsAlreadyIntegratedInProject(): void
     {
+        $this->gitlab_repository_dao->shouldReceive('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
+            ->once()
+            ->andReturnFalse();
+
         $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
             ->once()
             ->with(12569, 'https://example.com/root/project01')
@@ -164,6 +195,10 @@ class GitlabRepositoryCreatorTest extends TestCase
 
     public function testItCreatesTheWholeRepositoryIntegrationIfThisIsTheFirstTimeTheGitlabRepositoryIsIntegrated(): void
     {
+        $this->gitlab_repository_dao->shouldReceive('isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject')
+            ->once()
+            ->andReturnFalse();
+
         $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
             ->once()
             ->with(12569, 'https://example.com/root/project01')
