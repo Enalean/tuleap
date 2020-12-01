@@ -25,6 +25,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\ForgeConfigSandbox;
+    use \Tuleap\TemporaryTestDirectory;
 
     /** @var ArtifactXMLExporter */
     private $exporter;
@@ -46,15 +47,21 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
         $this->dao                = \Mockery::spy(\ArtifactXMLExporterDao::class);
         $this->dom                = new DOMDocument("1.0", "UTF8");
-        $this->archive            = \Mockery::spy(\ZipArchive::class);
+        $this->archive            = new ZipArchive();
+        $this->archive->open($this->getTmpDir() . '/a', ZipArchive::CREATE);
         $node_helper              = new ArtifactXMLNodeHelper($this->dom);
-        $attachment_exporter      = new ArtifactAttachmentXMLZipper($node_helper, $this->dao, $this->archive, false);
+        $attachment_exporter      = new ArtifactAttachmentXMLZipper($node_helper, $this->dao, $this->archive, true);
         $this->logger             = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->exporter           = new ArtifactXMLExporter($this->dao, $attachment_exporter, $node_helper, $this->logger);
         $this->fixtures_dir       = __DIR__ . '/_fixtures/';
         $this->expected_open_date = $this->toExpectedDate($this->open_date);
         ForgeConfig::store();
         ForgeConfig::set('sys_data_dir', dirname($this->fixtures_dir));
+    }
+
+    protected function tearDown(): void
+    {
+        $this->archive->close();
     }
 
     protected function toExpectedDate(int $timestamp): string
@@ -275,8 +282,6 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
     public function testItCreatesAChangesetWithOneAttachment(): void
     {
-        $this->archive->shouldReceive('addEmptyDir')->with('data')->once();
-
         $this->exportTrackerDataFromFixture('artifact_with_one_attachment');
         $this->assertCount(2, $this->xml->artifact->changeset);
 
@@ -291,6 +296,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(12323, (int) $this->xml->artifact->file[0]->filesize);
         $this->assertEquals('image/png', (string) $this->xml->artifact->file[0]->filetype);
         $this->assertEquals('The screenshot', (string) $this->xml->artifact->file[0]->description);
+        self::assertEquals(2, $this->archive->numFiles);
     }
 
     public function testItCreatesAChangesetWithTwoAttachmentsWithSameName(): void
