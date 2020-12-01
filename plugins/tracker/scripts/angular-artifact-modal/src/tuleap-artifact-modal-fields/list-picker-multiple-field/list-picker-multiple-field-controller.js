@@ -18,7 +18,6 @@
  *
  */
 
-import { get } from "tlp";
 import { createListPicker } from "@tuleap/list-picker";
 
 export default MultiselectBoxController;
@@ -37,11 +36,17 @@ function MultiselectBoxController($element, $timeout) {
     const select = $element[0].querySelector("[data-select=list-picker-multiple]");
 
     async function init() {
-        if (self.is_list_picker_enabled) {
-            self.destroy = await createListPicker(select, getOptions()).then((list_picker) => {
-                return list_picker.destroy;
-            });
+        if (!self.is_list_picker_enabled) {
+            return;
         }
+
+        if (self.field.bindings.type === "users") {
+            bindUsersAvatars();
+        }
+
+        self.destroy = await createListPicker(select, getOptions()).then((list_picker) => {
+            return list_picker.destroy;
+        });
     }
 
     function destroy() {
@@ -51,29 +56,22 @@ function MultiselectBoxController($element, $timeout) {
     }
 
     function getOptions() {
-        const base_options = { locale: document.body.dataset.userLocale };
-        if (self.field.bindings.type === "users") {
-            return {
-                ...base_options,
-                items_template_formatter: async (value_id, label) => {
-                    const value = value_id.split(":")[1];
-                    if (value === "100") {
-                        return label;
-                    }
-
-                    const response = await get(`/api/users/${encodeURIComponent(value)}`);
-                    const user_representation = await response.json();
-                    const avatar_url = user_representation.avatar_url;
-
-                    return `<img class="tlp-avatar tlp-avatar-mini tuleap-artifact-modal-list-field-avatar-badge" src="${avatar_url}"/>${label}`;
-                },
-            };
-        }
-
-        return base_options;
+        return { locale: document.body.dataset.userLocale };
     }
 
     function isFieldValid() {
         return select.checkValidity();
+    }
+
+    function bindUsersAvatars() {
+        select.options.forEach((option, option_index) => {
+            const value = self.field.values[option_index];
+            if (!value.user_reference) {
+                return;
+            }
+
+            const avatar_url = value.user_reference.avatar_url;
+            option.setAttribute("data-avatar-url", avatar_url);
+        });
     }
 }
