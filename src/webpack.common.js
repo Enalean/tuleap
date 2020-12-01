@@ -348,7 +348,7 @@ const webpack_config_vue_breadcrumb_privacy = {
         libraryTarget: "umd",
     },
     resolve: {
-        extensions: [".ts", ".vue"],
+        extensions: [".ts", ".vue", ".js"],
     },
     externals: ["tlp", "vue"],
     module: {
