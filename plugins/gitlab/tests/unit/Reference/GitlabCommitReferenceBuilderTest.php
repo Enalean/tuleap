@@ -1,0 +1,170 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\Gitlab\Reference;
+
+use DateTimeImmutable;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Project;
+use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+
+class GitlabCommitReferenceBuilderTest extends TestCase
+{
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @var GitlabCommitReferenceBuilder
+     */
+    private $builder;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReferenceDao
+     */
+    private $reference_dao;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryFactory
+     */
+    private $gitlab_repository_factory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->reference_dao             = Mockery::mock(ReferenceDao::class);
+        $this->gitlab_repository_factory = Mockery::mock(GitlabRepositoryFactory::class);
+
+        $this->builder = new GitlabCommitReferenceBuilder(
+            $this->reference_dao,
+            $this->gitlab_repository_factory
+        );
+    }
+
+    public function testItReturnsNullIfKeywordIsNotKnown(): void
+    {
+        $this->assertNull(
+            $this->builder->buildGitlabCommitReference(
+                Project::buildForTest(),
+                'whatever',
+                'root/project01/10ee559cb0'
+            )
+        );
+    }
+
+    public function testItReturnsNullIfAProjectReferenceIsAlreadyExisting(): void
+    {
+        $this->reference_dao->shouldReceive('isAProjectReferenceExisting')
+            ->once()
+            ->with('gitlab_commit', 101)
+            ->andReturnTrue();
+
+        $this->assertNull(
+            $this->builder->buildGitlabCommitReference(
+                Project::buildForTest(),
+                'gitlab_commit',
+                'root/project01/10ee559cb0'
+            )
+        );
+    }
+
+    public function testItReturnsNullIfTheReferenceValueIsNotWellFormed(): void
+    {
+        $this->reference_dao->shouldReceive('isAProjectReferenceExisting')
+            ->once()
+            ->with('gitlab_commit', 101)
+            ->andReturnFalse();
+
+        $this->assertNull(
+            $this->builder->buildGitlabCommitReference(
+                Project::buildForTest(),
+                'gitlab_commit',
+                'root10ee559cb0'
+            )
+        );
+    }
+
+    public function testItReturnsNullIfTheRepositoryIsNotIntegratedIntoProject(): void
+    {
+        $project = Project::buildForTest();
+
+        $this->reference_dao->shouldReceive('isAProjectReferenceExisting')
+            ->once()
+            ->with('gitlab_commit', 101)
+            ->andReturnFalse();
+
+        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByNameInProject')
+            ->once()
+            ->with(
+                $project,
+                'root/project01'
+            )
+            ->andReturnNull();
+
+        $this->assertNull(
+            $this->builder->buildGitlabCommitReference(
+                $project,
+                'gitlab_commit',
+                'root/project01/10ee559cb0'
+            )
+        );
+    }
+
+    public function testItReturnsTheReference(): void
+    {
+        $project = Project::buildForTest();
+
+        $this->reference_dao->shouldReceive('isAProjectReferenceExisting')
+            ->once()
+            ->with('gitlab_commit', 101)
+            ->andReturnFalse();
+
+        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByNameInProject')
+            ->once()
+            ->with(
+                $project,
+                'root/project01'
+            )
+            ->andReturn(
+                new GitlabRepository(
+                    1,
+                    123456,
+                    'root/project01',
+                    '',
+                    'https://example.com/root/project01',
+                    new DateTimeImmutable()
+                )
+            );
+
+        $reference = $this->builder->buildGitlabCommitReference(
+            $project,
+            'gitlab_commit',
+            'root/project01/10ee559cb0'
+        );
+
+        $this->assertSame('gitlab_commit', $reference->getKeyword());
+        $this->assertSame('plugin_gitlab', $reference->getNature());
+        $this->assertSame('https://example.com/root/project01/-/commit/10ee559cb0', $reference->getLink());
+        $this->assertSame(101, $reference->getGroupId());
+    }
+}

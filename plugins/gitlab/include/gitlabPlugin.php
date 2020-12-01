@@ -21,6 +21,7 @@
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
+use Tuleap\Gitlab\Reference\GitlabCommitReferenceBuilder;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
@@ -35,6 +36,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -69,6 +71,11 @@ class gitlabPlugin extends Plugin
         $this->addHook(Event::REST_PROJECT_RESOURCES);
 
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(GetReferenceEvent::NAME);
+
+        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
+        $this->addHook(Event::GET_REFERENCE_ADMIN_CAPABILITIES);
+        $this->addHook(Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE);
 
         return parent::getHooksAndCallbacks();
     }
@@ -126,9 +133,7 @@ class gitlabPlugin extends Plugin
                 )
             ),
             new WebhookRepositoryRetriever(
-                new GitlabRepositoryFactory(
-                    new GitlabRepositoryDao()
-                )
+                $this->getGitlabRepositoryFactory()
             ),
             new SecretChecker(
                 new SecretRetriever(
@@ -147,6 +152,58 @@ class gitlabPlugin extends Plugin
             $logger,
             HTTPFactoryBuilder::responseFactory(),
             new SapiEmitter()
+        );
+    }
+
+    public function getReference(GetReferenceEvent $event): void
+    {
+        if ($event->getKeyword() === 'gitlab_commit') {
+            $builder = new GitlabCommitReferenceBuilder(
+                new \Tuleap\Gitlab\Reference\ReferenceDao(),
+                $this->getGitlabRepositoryFactory()
+            );
+
+            $reference = $builder->buildGitlabCommitReference(
+                $event->getProject(),
+                $event->getKeyword(),
+                $event->getValue()
+            );
+
+            if ($reference !== null) {
+                $event->setReference($reference);
+            }
+        }
+    }
+
+    public function get_plugins_available_keywords_references(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $params['keywords'][] = 'gitlab_commit';
+    }
+
+    /** @see \Event::GET_REFERENCE_ADMIN_CAPABILITIES */
+    public function get_reference_admin_capabilities(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $reference = $params['reference'];
+        \assert($reference instanceof Reference);
+
+        if ($reference->getNature() === 'plugin_gitlab') {
+            $params['can_be_deleted'] = false;
+            $params['can_be_edited']  = false;
+        }
+    }
+
+    /** @see \Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE */
+    public function can_user_create_reference_with_this_nature(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        if ($params['nature'] === 'plugin_gitlab') {
+            $params['can_create'] = false;
+        }
+    }
+
+    private function getGitlabRepositoryFactory(): GitlabRepositoryFactory
+    {
+        return new GitlabRepositoryFactory(
+            new GitlabRepositoryDao()
         );
     }
 }
