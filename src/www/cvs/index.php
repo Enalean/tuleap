@@ -32,7 +32,7 @@ switch ($func) {
         $result = db_query($sql);
         $initial_settings = db_fetch_array($result);
 
-        $status = $GLOBALS['Language']->getText('cvs_index', 'full_success');
+        $status = _('successfully');
         $feedback_level = \Feedback::INFO;
 
         $tracked               = $request->get('tracked');
@@ -51,13 +51,13 @@ switch ($func) {
         } else {
             if (! validate_emails($mailing_list)) {
                 $mailing_list = 'NULL';
-                $status = $GLOBALS['Language']->getText('cvs_index', 'partial_success');
+                $status = _('partly<br>Email Address Appears Invalid, e-mail notification is off.');
                 $feedback_level = \Feedback::WARN;
             }
         }
         $GLOBALS['Response']->addFeedback(
             $feedback_level,
-            $GLOBALS['Language']->getText('cvs_index', 'config_updated') . ' ' . $status,
+            _('Configuration updated') . ' ' . $status,
             Codendi_HTMLPurifier::CONFIG_LIGHT,
         );
         $is_private = '';

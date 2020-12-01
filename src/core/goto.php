@@ -155,17 +155,17 @@ if ($request->isAjax()) {
             $commit_id = $request->get('val');
             $result =  cvs_get_revision_detail($commit_id);
             if (db_numrows($result) < 1) {
-                echo $GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound', [$commit_id]);
+                echo sprintf(_('Commit #%1$s not found in this project'), $commit_id);
             } else {
                 $date = uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'c_when'));
                 $list_log = util_line_wrap(db_result($result, 0, 'description'), $group_id);
                 echo '<table>';
                 echo ' <tr>';
-                echo '  <td><strong>' . $GLOBALS['Language']->getText('cvs_commit_utils', 'date') . ':</strong></td>';
+                echo '  <td><strong>' . _('Date') . ':</strong></td>';
                 echo '  <td>' . $html_purifier->purify($date) . '</td>';
                 echo ' </tr>';
                 echo ' <tr>';
-                echo '  <td><strong>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'log_message') . ':</strong></td>';
+                echo '  <td><strong>' . _('Log message') . ':</strong></td>';
                 echo '  <td>' . $html_purifier->purify($list_log) . '</td>';
                 echo ' </tr>';
                 echo '</table>';

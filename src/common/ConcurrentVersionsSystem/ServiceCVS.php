@@ -34,7 +34,7 @@ class ServiceCVS extends \Service
 {
     public function displayCVSAdminHeader(\PFUser $user): void
     {
-        $title = $GLOBALS['Language']->getText('cvs_admin_commit', 'title');
+        $title = _('CVS Administration');
         $this->displayCVSHeader($user, $title, $title, [], []);
     }
 
@@ -42,7 +42,7 @@ class ServiceCVS extends \Service
     {
         $tabs = [
             new NavigationItemPresenter(
-                $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_info'),
+                _('Info'),
                 '/cvs/?' . http_build_query(
                     [
                         'func'     => 'info',
@@ -56,7 +56,7 @@ class ServiceCVS extends \Service
 
         if ($this->project->isPublic() || user_isloggedin()) {
             $tabs[] = new NavigationItemPresenter(
-                $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_browse'),
+                _('Tree'),
                 '/cvs/viewvc.php/?' . http_build_query(
                     [
                         'root'     => $this->project->getUnixName(false),
@@ -70,7 +70,7 @@ class ServiceCVS extends \Service
 
         if (user_isloggedin()) {
             $tabs[] = new NavigationItemPresenter(
-                $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_query'),
+                _('Commits'),
                 '/cvs/?' . http_build_query(
                     [
                         'func'     => 'browse',

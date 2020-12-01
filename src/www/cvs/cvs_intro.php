@@ -36,14 +36,14 @@ $service = $project->getService(\Service::CVS);
 if (! ($service instanceof ServiceCVS)) {
     exit_error(
         $GLOBALS['Language']->getText('global', 'error'),
-        $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off')
+        _('This Project Has Turned CVS Off')
     );
     return;
 }
 
 $service->displayCVSRepositoryHeader(
     $request->getCurrentUser(),
-    $GLOBALS['Language']->getText('cvs_intro', 'title'),
+    _('CVS Information'),
     'info',
 );
 
@@ -64,16 +64,16 @@ if ($row_grp['cvs_preamble'] != '') {
 
 // Summary info
 echo '</TD><TD width="25%">';
-echo $HTML->box1_top($GLOBALS['Language']->getText('cvs_intro', 'repo_history'));
+echo $HTML->box1_top(_('Repository History'));
 echo format_cvs_history($group_id);
 
 
 // CVS Browsing Box
 $uri = session_make_url('/cvs/viewvc.php/?root=' . $row_grp['unix_group_name'] . '&roottype=cvs');
-echo '<HR><B>' . $GLOBALS['Language']->getText('cvs_intro', 'browse_title') . '</B>
-<P>' . $GLOBALS['Language']->getText('cvs_intro', 'browse_msg') . '
+echo '<HR><B>' . _('Browse the CVS Tree') . '</B>
+<P>' . _('Browsing the CVS tree gives you a great view into the current status of this project\'s code. You may also view the complete histories of any file in the repository.') . '
 <UL>
-<LI><A href="' . $uri . '"><B>' . $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_browse') . '</B></A></LI>';
+<LI><A href="' . $uri . '"><B>' . _('Tree') . '</B></A></LI>';
 
 echo $HTML->box1_bottom();
 

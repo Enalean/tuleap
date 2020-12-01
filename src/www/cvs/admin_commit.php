@@ -40,7 +40,7 @@ $service = $project->getService(\Service::CVS);
 if (! ($service instanceof ServiceCVS)) {
     exit_error(
         $GLOBALS['Language']->getText('global', 'error'),
-        $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off')
+        _('This Project Has Turned CVS Off')
     );
     return;
 }
@@ -77,37 +77,37 @@ $purifier = Codendi_HTMLPurifier::instance();
 echo '<FORM ACTION="?" METHOD="GET" class="cvs-admin">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="setAdmin">
-	<h3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'private_hdr') . '</h3>
+	<h3>' . _('CVS Permissions') . '</h3>
     <p>
     <label class="checkbox" for="cvs_private"><input type="hidden" name="private" ' . $checked . ' ' . $readonly . ' value="0" />
     <input type="checkbox" name="private" ' . $checked . ' ' . $readonly . ' value="1" id="cvs_private" />
-    ' . $GLOBALS['Language']->getText('cvs_admin_commit', 'private_lbl') . '</label>';
+    ' . _('private repository') . '</label>';
 if (! $project->isPublic()) {
-    echo '<br /><em>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'private_private_msg') . '</em>';
+    echo '<br /><em>' . _('Private projects can\'t make their repository public.') . '</em>';
 }
     echo '</p>
-	<h3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'tracking_hdr') .
-'</H3><p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'tracking_msg', [ForgeConfig::get('sys_name')]) .
-        '<p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'tracking_lbl') .
+	<h3>' . _('CVS Tracking') .
+'</H3><p>' . sprintf(_('When CVS tracking is on, the commits (file change, addition and removal) are registered in the %1$s database so that they can be browsed and searched. Else commits are not logged in the database; only the CVS history is available'), ForgeConfig::get('sys_name')) .
+        '<p>' . _('CVS Tracking') .
         '&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="tracked"> ' .
         '<OPTION VALUE="1"' . (($cvs_tracked == '1') ? ' SELECTED' : '') . '>' . $GLOBALS['Language']->getText('global', 'on') . '</OPTION>' .
         '<OPTION VALUE="0"' . (($cvs_tracked == '0') ? ' SELECTED' : '') . '>' . $GLOBALS['Language']->getText('global', 'off') . '</OPTION>' .
     '</SELECT></p>' .
-    '<h3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'watches_hdr') .
-    '</H3><p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'watches_msg') .
-        '<p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'watches_lbl') .
+    '<h3>' . _('CVS Watch Mode') .
+    '</H3><p>' . _('CVS creates working copies of project files read-only, to remind developers to run the cvs edit command before working on them.') .
+        '<p>' . _('CVS Watch Mode') .
         '&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="watches"> ' .
         '<OPTION VALUE="1"' . (($cvs_watch_mode == '1') ? ' SELECTED' : '') . '>' . $GLOBALS['Language']->getText('global', 'on') . '</OPTION>' .
         '<OPTION VALUE="0"' . (($cvs_watch_mode == '0') ? ' SELECTED' : '') . '>' . $GLOBALS['Language']->getText('global', 'off') . '</OPTION>' .
         '</SELECT></p>' .
-        '<H3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'notif_hdr') .
-        '</H3><p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'notif_msg') . '</p>' .
-        '<br>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'mail_to') .
+        '<H3>' . _('E-mail notification on commits') .
+        '</H3><p>' . _('Each commit event can also be notified via email to specific recipients or mailing lists (comma separated). A specific subject header for the email message can also be specified.') . '</p>' .
+        '<br>' . _('Mail To') .
          ':<br><INPUT TYPE="TEXT" SIZE="70" NAME="mailing_list" VALUE="' . $cvs_mailing_list . '">' .
-        '<p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'subject') . ': <br>' .
+        '<p>' . _('Subject header') . ': <br>' .
         '<INPUT TYPE="TEXT" SIZE="30" NAME="custom_mailing_header" VALUE="' . $custom_mailing_header .
-        '"></p> <h3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'preamble_hdr') .
-'</h3><P>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'preamble_msg', ["/cvs/?func=info&group_id=" . $purifier->purify(urlencode($group_id)), ForgeConfig::get('sys_name')]) .
+        '"></p> <h3>' . _('CVS Preamble') .
+'</h3><P>' . sprintf(_('Introductory message to replace the default one on the <a href="%1$s">CVS welcome page</a>. (HTML tags allowed)'), "/cvs/?func=info&group_id=" . $purifier->purify(urlencode($group_id))) .
         '<p><TEXTAREA cols="70" rows="8" wrap="virtual" name="form_preamble">' . $cvs_preamble . '</TEXTAREA>';
 echo '</p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '"></p></FORM>';
 
