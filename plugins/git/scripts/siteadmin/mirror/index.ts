@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createModal } from "tlp";
+import {
+    openAllTargetModalsOnClick,
+    openTargetModalIdOnClick,
+} from "@tuleap/core/scripts/tuleap/modals/modal-opener";
 
-export function initAddModal() {
-    const modal_add_mirror_element = document.getElementById("modal-add-mirror");
-    const modal_add_mirror = createModal(modal_add_mirror_element, {});
+document.addEventListener("DOMContentLoaded", () => {
+    initAddModal();
+    initConfigurationModal();
+});
 
-    document.getElementById("button-modal-add-mirror").addEventListener("click", function () {
-        modal_add_mirror.toggle();
-    });
+function initAddModal(): void {
+    openTargetModalIdOnClick(document, "button-modal-add-mirror");
+}
+
+function initConfigurationModal(): void {
+    openAllTargetModalsOnClick(
+        document,
+        "#button-modal-mirror-configuration, .mirror-show-repositories, .mirror-action-edit-button, [data-delete-mirror-button]"
+    );
 }

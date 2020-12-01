@@ -67,25 +67,34 @@ const webpack_config_for_vue = {
 
 const webpack_config_for_vanilla = {
     entry: {
-        "siteadmin-gitolite": "./scripts/siteadmin/gitolite.js",
-        "siteadmin-gerrit": "./scripts/siteadmin/gerrit/index.js",
-        "siteadmin-mirror": "./scripts/siteadmin/mirror/index.js",
+        "siteadmin-gitolite": "./scripts/siteadmin/gitolite.ts",
+        "siteadmin-gerrit": "./scripts/siteadmin/gerrit/index.ts",
+        "siteadmin-mirror": "./scripts/siteadmin/mirror/index.ts",
         "repo-admin-notifications": "./scripts/admin-notifications.js",
     },
     context,
     output,
     externals: {
         tlp: "tlp",
-        tuleap: "tuleap",
         jquery: "jQuery",
     },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_po_files,
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
         ],
     },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
+    plugins: [
+        manifest_plugin,
+        webpack_configurator.getMomentLocalePlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(false),
+    ],
+    resolve: {
+        extensions: [".ts", ".js"],
+    },
 };
 
 const webpack_config_for_legacy_scripts = {
