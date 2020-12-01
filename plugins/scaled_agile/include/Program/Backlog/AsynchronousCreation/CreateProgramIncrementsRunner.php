@@ -36,8 +36,8 @@ use UserManager;
 
 class CreateProgramIncrementsRunner
 {
+    private const TOPIC = 'tuleap.scaled_agile.program_increment.creation';
 
-    private const TOPIC = 'tuleap.tracker.artifact.creation';
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -91,6 +91,10 @@ class CreateProgramIncrementsRunner
                 $message['user_id']
             );
 
+            if ($replication_data === null) {
+                return;
+            }
+
             $this->processProgramIncrementCreation($replication_data);
         }
     }
@@ -114,7 +118,7 @@ class CreateProgramIncrementsRunner
                 ]
             );
         } catch (Exception $exception) {
-            $this->logger->error("Unable to queue artifact mirrors creation for artifact #{$artifact_id}");
+            $this->logger->error("Unable to queue artifact mirrors creation for artifact #{$artifact_id}", ['exception' => $exception]);
 
 
             $this->processProgramIncrementCreation($replication_data);

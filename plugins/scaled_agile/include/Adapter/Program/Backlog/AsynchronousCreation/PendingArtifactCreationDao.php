@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation;
 
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 
@@ -29,11 +30,14 @@ final class PendingArtifactCreationDao extends DataAccessObject implements Pendi
 {
     public function getPendingArtifactById(int $artifact_id, int $user_id): ?array
     {
-        return $this->getDB()->row(
-            'SELECT program_artifact_id, user_id, changeset_id FROM plugin_scaled_agile_pending_mirrors WHERE program_artifact_id = ? AND user_id = ?',
-            $artifact_id,
-            $user_id
-        );
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artifact_id, $user_id): ?array {
+            $this->deleteNonExistentArtifactFromPendingCreation($artifact_id);
+            return $db->row(
+                'SELECT program_artifact_id, user_id, changeset_id FROM plugin_scaled_agile_pending_mirrors WHERE program_artifact_id = ? AND user_id = ?',
+                $artifact_id,
+                $user_id
+            );
+        });
     }
 
     public function addArtifactToPendingCreation(int $artifact_id, int $user_id, int $changeset_id): void
@@ -55,5 +59,15 @@ final class PendingArtifactCreationDao extends DataAccessObject implements Pendi
             $artifact_id,
             $user_id
         );
+    }
+
+    private function deleteNonExistentArtifactFromPendingCreation(int $artifact_id): void
+    {
+        $sql = 'DELETE plugin_scaled_agile_pending_mirrors.*
+                FROM plugin_scaled_agile_pending_mirrors
+                LEFT JOIN tracker_artifact ON (tracker_artifact.id = plugin_scaled_agile_pending_mirrors.program_artifact_id)
+                WHERE tracker_artifact.id IS NULL AND plugin_scaled_agile_pending_mirrors.program_artifact_id = ?';
+
+        $this->getDB()->run($sql, $artifact_id);
     }
 }

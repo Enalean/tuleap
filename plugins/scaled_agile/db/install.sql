@@ -27,7 +27,8 @@ CREATE TABLE plugin_scaled_agile_pending_mirrors(
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     program_artifact_id INT(11) NOT NULL,
     user_id INT(11) NOT NULL,
-    changeset_id INT(11) NOT NULL
+    changeset_id INT(11) NOT NULL,
+    INDEX idx_program_artifact_id(program_artifact_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_scaled_agile_plan(

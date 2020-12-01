@@ -75,13 +75,11 @@ final class ReplicationDataAdapterTest extends TestCase
         );
     }
 
-    public function testItThrowErrorWhenPendingArtifactIsNotFoundInDB(): void
+    public function testReturnsNullWhenPendingArtifactIsNotFoundInDB(): void
     {
         $this->pending_artifact_creation_store->shouldReceive('getPendingArtifactById')->once()->andReturnNull();
 
-        $this->expectException(PendingArtifactNotFoundException::class);
-
-        $this->adapter->buildFromArtifactAndUserId(1, 101);
+        self::assertNull($this->adapter->buildFromArtifactAndUserId(1, 101));
     }
 
     public function testItThrowErrorWhenPendingArtifactIsNotFound(): void

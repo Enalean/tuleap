@@ -25,11 +25,13 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Psr\Log\NullLogger;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -48,15 +50,20 @@ final class CreateProgramIncrementsRunnerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|QueueFactory
      */
     private $queue_factory;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingArtifactCreationStore
+     */
+    private $pending_creation_store;
 
     protected function setUp(): void
     {
-        $logger              = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->queue_factory = Mockery::mock(QueueFactory::class);
-        $replication_adapter = new ReplicationDataAdapter(
+        $logger                       = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->queue_factory          = Mockery::mock(QueueFactory::class);
+        $this->pending_creation_store = Mockery::mock(PendingArtifactCreationStore::class);
+        $replication_adapter          = new ReplicationDataAdapter(
             Mockery::mock(Tracker_ArtifactFactory::class),
             Mockery::mock(UserManager::class),
-            Mockery::mock(PendingArtifactCreationStore::class),
+            $this->pending_creation_store,
             Mockery::mock(Tracker_Artifact_ChangesetFactory::class)
         );
         $this->runner        = new CreateProgramIncrementsRunner(
@@ -87,12 +94,24 @@ final class CreateProgramIncrementsRunnerTest extends TestCase
 
         $queue->shouldReceive('pushSinglePersistentMessage')
             ->withArgs(
-                ['tuleap.tracker.artifact.creation', ['artifact_id' => $artifact->getId(), 'user_id' => $user->getId()]]
+                ['tuleap.scaled_agile.program_increment.creation', ['artifact_id' => $artifact->getId(), 'user_id' => $user->getId()]]
             )
             ->once();
 
         $replication_data = ReplicationDataAdapter::build($artifact, $user, $changeset);
 
         $this->runner->executeProgramIncrementsCreation($replication_data);
+    }
+
+    public function testSkipsEventWhenReplicationDataDoesNotExist(): void
+    {
+        $event = new WorkerEvent(
+            new NullLogger(),
+            ['event_name' => 'tuleap.scaled_agile.program_increment.creation', 'payload' => ['artifact_id' => 123, 'user_id' => 101]]
+        );
+
+        $this->pending_creation_store->shouldReceive('getPendingArtifactById')->andReturn(null);
+
+        $this->runner->addListener($event);
     }
 }
