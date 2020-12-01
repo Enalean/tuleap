@@ -66,9 +66,9 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
         Tracker_Artifact_Redirect $redirect,
         Artifact $artifact
     ): void {
-        $last_milestone_artifact = $this->artifact_linker->linkBacklogWithPlanningItems($request, $artifact);
+        $requested_planning      = $this->params_extractor->extractParametersFromRequest($request);
+        $last_milestone_artifact = $this->artifact_linker->linkBacklogWithPlanningItems($request, $artifact, $requested_planning);
 
-        $requested_planning = $this->params_extractor->extractParametersFromRequest($request);
         if (! $requested_planning) {
             return;
         }
@@ -77,12 +77,10 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
 
         if ($redirect->stayInTracker()) {
             $this->saveToRequestForFutureRedirection($planning, $last_milestone_artifact, $redirect, $request);
+        } elseif ($planning) {
+            $this->addRedirectionToPlanning($artifact, $requested_planning, $planning, $redirect);
         } else {
-            if ($planning) {
-                $this->addRedirectionToPlanning($artifact, $requested_planning, $planning, $redirect);
-            } else {
-                $this->addRedirectionToTopPlanning($artifact, $requested_planning, $redirect);
-            }
+            $this->addRedirectionToTopPlanning($artifact, $requested_planning, $redirect);
         }
     }
 

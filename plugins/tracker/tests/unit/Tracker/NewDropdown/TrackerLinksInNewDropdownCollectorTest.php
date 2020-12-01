@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\NewDropdown;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\layout\NewDropdown\DataAttributePresenter;
 use Tuleap\layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\layout\NewDropdown\NewDropdownProjectLinksCollector;
 
@@ -91,7 +92,12 @@ class TrackerLinksInNewDropdownCollectorTest extends TestCase
             ->once();
 
         $current_context_section = new NewDropdownLinkSectionPresenter("section label", [
-            new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus', [])
+            new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter(
+                '/path/to/submit/story',
+                'New story',
+                'fa-plus',
+                [new DataAttributePresenter('tracker-id', '103')],
+            ),
         ]);
 
         $links_collector

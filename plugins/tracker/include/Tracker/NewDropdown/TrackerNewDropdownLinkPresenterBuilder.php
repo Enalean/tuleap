@@ -33,12 +33,28 @@ final class TrackerNewDropdownLinkPresenterBuilder
     }
 
     /**
+     * @param array<string, string|array> $url_parameters
+     */
+    public function buildWithAdditionalUrlParameters(\Tracker $tracker, array $url_parameters): NewDropdownLinkPresenter
+    {
+        return $this->buildTrackerLink($tracker, $tracker->getSubmitUrlWithParameters($url_parameters), []);
+    }
+
+    /**
      * @param DataAttributePresenter[] $data_attributes
      */
     public function buildWithAdditionalDataAttributes(\Tracker $tracker, array $data_attributes): NewDropdownLinkPresenter
     {
+        return $this->buildTrackerLink($tracker, $tracker->getSubmitUrl(), $data_attributes);
+    }
+
+    /**
+     * @param DataAttributePresenter[] $data_attributes
+     */
+    private function buildTrackerLink(\Tracker $tracker, string $url, array $data_attributes): NewDropdownLinkPresenter
+    {
         return new NewDropdownLinkPresenter(
-            $tracker->getSubmitUrl(),
+            $url,
             sprintf(
                 dgettext('tuleap-tracker', 'New %s'),
                 $tracker->getItemName()

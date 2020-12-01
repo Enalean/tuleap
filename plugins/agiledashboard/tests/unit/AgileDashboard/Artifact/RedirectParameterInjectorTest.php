@@ -58,6 +58,23 @@ class RedirectParameterInjectorTest extends TestCase
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);
     }
 
+    public function testInjectParametersWithChildMilestoneFromRequestInjectsTheRequestedPlanningAndAsksForALinkToMilestone(): void
+    {
+        $request = HTTPRequestBuilder::get()
+            ->withParam('planning', ['details' => ['42' => '101']])
+            ->withParam('link-to-milestone', '1')
+            ->build();
+
+        $redirect = new \Tracker_Artifact_Redirect();
+
+        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
+        $injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
+
+        self::assertCount(2, $redirect->query_parameters);
+        self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);
+        self::assertEquals(1, $redirect->query_parameters['link-to-milestone']);
+    }
+
     public function testInjectParametersWithChildMilestoneFromRequestInjectsTheChildMilestone(): void
     {
         $request = HTTPRequestBuilder::get()

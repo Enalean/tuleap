@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,6 +38,8 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class Planning_ArtifactLinker
 {
+    public const LINK_TO_MILESTONE_PARAMETER = 'link-to-milestone';
+
     private $artifact_factory;
     private $planning_factory;
 
@@ -48,44 +50,48 @@ class Planning_ArtifactLinker
     }
 
     /**
-     * Ensure consistency of backlogs
-     *
-     * This method returns the last milestone artifact we linked $artifact with
-     *
-     * @param Codendi_Request $request  The comment about the request parameter
-     * @param Artifact        $artifact The just created artifact
-     *
-     * @return Artifact
+     * @psalm-param array{planning_id: string, pane: string, aid: string, pane: string}|null $requested_planning
      */
-    public function linkBacklogWithPlanningItems(Codendi_Request $request, Artifact $artifact)
-    {
+    public function linkBacklogWithPlanningItems(
+        Codendi_Request $request,
+        Artifact $artifact,
+        ?array $requested_planning
+    ): ?Artifact {
         $user               = $request->getCurrentUser();
-        $milestone_artifact = $this->getMilestoneArtifact($user, $request, $artifact);
+        $milestone_artifact = $this->getMilestoneArtifact($user, $request, $artifact, $requested_planning);
+
         return $this->linkWithMilestoneArtifact($user, $artifact, $milestone_artifact);
     }
 
-    private function getMilestoneArtifact(PFUser $user, Codendi_Request $request, Artifact $artifact)
-    {
-        $source_artifact = null;
+    /**
+     * @psalm-param array{planning_id: string, pane: string, aid: string, pane: string}|null $requested_planning
+     */
+    private function getMilestoneArtifact(
+        PFUser $user,
+        Codendi_Request $request,
+        Artifact $artifact,
+        ?array $requested_planning
+    ): ?Artifact {
         if ($request->exist('link-artifact-id')) {
-            $ancestors = $artifact->getAllAncestors($user);
-            if (count($ancestors) == 0) {
-                $source_artifact = $this->getSourceArtifact($request, 'link-artifact-id');
-            }
-        } else {
-            $source_artifact = $this->getSourceArtifact($request, 'child_milestone');
+            return $this->getMilestoneThatHasJustBeenLinkedToTheArtifact($artifact, $user, $request);
         }
-        return $source_artifact;
+
+        if ($requested_planning && $request->get(self::LINK_TO_MILESTONE_PARAMETER)) {
+            return $this->linkArtifactToTheMilestoneThatIsPartOfRedirectionParameter(
+                $requested_planning,
+                $artifact,
+                $user
+            );
+        }
+
+        return $this->getChildMilestone($request);
     }
 
-    private function getSourceArtifact(Codendi_Request $request, $key)
-    {
-        $artifact_id = (int) $request->getValidated($key, 'uint', 0);
-        return $this->artifact_factory->getArtifactById($artifact_id);
-    }
-
-    private function linkWithMilestoneArtifact(PFUser $user, Artifact $artifact, ?Artifact $source_artifact = null)
-    {
+    private function linkWithMilestoneArtifact(
+        PFUser $user,
+        Artifact $artifact,
+        ?Artifact $source_artifact = null
+    ): ?Artifact {
         $last_ancestor = $source_artifact;
         if ($source_artifact) {
             foreach ($source_artifact->getAllAncestors($user) as $ancestor) {
@@ -96,6 +102,47 @@ class Planning_ArtifactLinker
                 }
             }
         }
+
         return $last_ancestor;
+    }
+
+    private function getMilestoneThatHasJustBeenLinkedToTheArtifact(
+        Artifact $artifact,
+        PFUser $user,
+        Codendi_Request $request
+    ): ?Artifact {
+        $ancestors = $artifact->getAllAncestors($user);
+        if (count($ancestors) !== 0) {
+            return null;
+        }
+
+        return $this->artifact_factory->getArtifactById(
+            (int) $request->getValidated('link-artifact-id', 'uint', 0)
+        );
+    }
+
+    /**
+     * @psalm-param array{planning_id: string, pane: string, aid: string, pane: string} $requested_planning
+     */
+    private function linkArtifactToTheMilestoneThatIsPartOfRedirectionParameter(
+        array $requested_planning,
+        Artifact $artifact,
+        PFUser $user
+    ): ?Artifact {
+        $source_artifact = $this->artifact_factory->getArtifactById(
+            (int) $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID]
+        );
+        if ($source_artifact) {
+            $source_artifact->linkArtifact($artifact->getId(), $user);
+        }
+
+        return $source_artifact;
+    }
+
+    private function getChildMilestone(Codendi_Request $request): ?Artifact
+    {
+        return $this->artifact_factory->getArtifactById(
+            (int) $request->getValidated('child_milestone', 'uint', 0)
+        );
     }
 }
