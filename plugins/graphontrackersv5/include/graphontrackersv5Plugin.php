@@ -103,7 +103,6 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     public function tracker_report_renderer_instance($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['type'] == self::RENDERER_TYPE) {
-            require_once('GraphOnTrackersV5_Renderer.class.php');
             $params['instance'] = new GraphOnTrackersV5_Renderer(
                 $params['row']['id'],
                 $params['report'],
@@ -190,7 +189,6 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     public function trackers_get_renderers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['renderer_type'] == 'plugin_graphontrackersv5') {
-            require_once('GraphOnTrackersV5_Renderer.class.php');
             $params['renderers'][$params['renderer_key']] = new GraphOnTrackersV5_Renderer(
                 $params['renderer_key'],
                 $params['report'],
@@ -214,11 +212,9 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     {
         switch ($get_widget_event->getName()) {
             case 'my_plugin_graphontrackersv5_chart':
-                require_once('GraphOnTrackersV5_Widget_MyChart.class.php');
                 $get_widget_event->setWidget(new GraphOnTrackersV5_Widget_MyChart());
                 break;
             case 'project_plugin_graphontrackersv5_chart':
-                require_once('GraphOnTrackersV5_Widget_ProjectChart.class.php');
                 $get_widget_event->setWidget(new GraphOnTrackersV5_Widget_ProjectChart());
                 break;
             default:
@@ -248,7 +244,6 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     public function getPluginInfo()
     {
         if (! is_a($this->pluginInfo, 'GraphOnTrackersV5PluginInfo')) {
-            require_once('GraphOnTrackersV5PluginInfo.class.php');
             $this->pluginInfo = new GraphOnTrackersV5PluginInfo($this);
         }
         return $this->pluginInfo;
@@ -282,12 +277,6 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
 
     public function graphontrackersv5_load_chart_factories($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        require_once('GraphOnTrackersV5_Renderer.class.php');
-        require_once('data-access/GraphOnTrackersV5_Chart_Bar.class.php');
-        require_once('data-access/GraphOnTrackersV5_Chart_Pie.class.php');
-        require_once('data-access/GraphOnTrackersV5_Chart_Gantt.class.php');
-        require_once('data-access/GraphOnTrackersV5_Chart_Burndown.class.php');
-        require_once('data-access/GraphOnTrackersV5_Chart_CumulativeFlow.class.php');
         $params['factories']['pie'] = [
             'chart_type'      => 'pie',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Pie',

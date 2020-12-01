@@ -23,13 +23,6 @@
 
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 
-require_once('GraphOnTrackersV5_Chart.class.php');
-require_once(dirname(__FILE__) . '/../data-transformation/GraphOnTrackersV5_Chart_BarDataBuilder.class.php');
-require_once(dirname(__FILE__) . '/../graphic-library/GraphOnTrackersV5_Engine_Bar.class.php');
-require_once(dirname(__FILE__) . '/../common/HTML_Element_Selectbox_TrackerFields_SelectboxesV5.class.php');
-require_once(TRACKER_BASE_DIR . '/Tracker/Report/Tracker_Report_Session.class.php');
-require_once('GraphOnTrackersV5_Chart_BarDao.class.php');
-
 class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
 {
 

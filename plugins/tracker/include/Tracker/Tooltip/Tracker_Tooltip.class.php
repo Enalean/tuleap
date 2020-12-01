@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__) . '/../Semantic/Tracker_Semantic.class.php');
-require_once(dirname(__FILE__) . '/../FormElement/Tracker_FormElementFactory.class.php');
-require_once('dao/Tracker_TooltipDao.class.php');
-
 class Tracker_Tooltip extends Tracker_Semantic
 {
 

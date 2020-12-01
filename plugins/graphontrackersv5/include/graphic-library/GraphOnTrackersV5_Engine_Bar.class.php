@@ -23,6 +23,8 @@
 
 use Tuleap\Chart\Chart;
 
+require_once __DIR__ . '/../../../../src/embedded_vendor/jpgraph/jpgraph.php';
+
 class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
 {
 

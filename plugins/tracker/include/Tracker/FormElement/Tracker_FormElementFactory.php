@@ -27,9 +27,9 @@ use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
-require_once TRACKER_BASE_DIR . '/tracker_permissions.php';
+require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory
+class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const FIELD_STRING_TYPE           = 'string';
     public const FIELD_TEXT_TYPE             = 'text';
@@ -142,41 +142,33 @@ class Tracker_FormElementFactory
     /**
      * Hold an instance of the class
      *
-     * @var self|null
+     * @var self
      */
-    protected static $_instance;
+    protected static $instance;
 
-    /**
-     * The singleton method
-     *
-     * @return Tracker_FormElementFactory
-     */
-    public static function instance()
+    public static function instance(): self
     {
-        if (! isset(self::$_instance)) {
-            $FormElementFactory_class = self::class;
-            self::setInstance(new $FormElementFactory_class());
+        if (! isset(self::$instance)) {
+            self::setInstance(new self());
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
      * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
      *
      */
-    public static function setInstance(Tracker_FormElementFactory $factory)
+    public static function setInstance(Tracker_FormElementFactory $factory): void
     {
-        self::$_instance = $factory;
+        self::$instance = $factory;
     }
 
     /**
      * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
-     *
-     * @param Tracker_ArtifactFactory $factory
      */
-    public static function clearInstance()
+    public static function clearInstance(): void
     {
-        self::$_instance = null;
+        self::$instance = null;
     }
 
     public function clearCaches()

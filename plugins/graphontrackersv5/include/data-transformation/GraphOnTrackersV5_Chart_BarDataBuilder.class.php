@@ -20,9 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('DataBuilderV5.class.php');
-require_once('ChartDataBuilderV5.class.php');
-
 class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
 {
     /**
@@ -58,11 +55,11 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
                 }
             }
             $select = " SELECT count(a.id) AS nb, " . $af->getQuerySelectWithDecorator() . $select_group;
-            $from   = " FROM tracker_artifact AS a 
+            $from   = " FROM tracker_artifact AS a
                              INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) " .
                              $af->getQueryFromWithDecorator() .
                              $from_group;
-            $where  = " WHERE a.id IN (" . $this->artifacts['id'] . ") 
+            $where  = " WHERE a.id IN (" . $this->artifacts['id'] . ")
                           AND c.id IN (" . $this->artifacts['last_changeset_id'] . ") ";
             $sql = $select . $from . $where . ' GROUP BY ' . $af->getQueryGroupBy() . $group_group . ' ORDER BY ' . $af->getQueryOrderby() . $order_group;
             //echo($sql);
