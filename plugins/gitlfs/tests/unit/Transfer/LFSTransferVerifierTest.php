@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\GitLFS\Transfer;
 
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemOperator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\LFSObject\LFSObject;
@@ -41,13 +41,13 @@ class LFSTransferVerifierTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->filesystem           = \Mockery::mock(FilesystemInterface::class);
+        $this->filesystem           = \Mockery::mock(FilesystemOperator::class);
         $this->lfs_object_retriever = \Mockery::mock(LFSObjectRetriever::class);
         $this->path_allocator       = \Mockery::mock(LFSObjectPathAllocator::class);
         $this->dao                  = \Mockery::mock(LFSObjectDAO::class);
     }
 
-    public function testReadyObjectIsMarkedAsAvailable()
+    public function testReadyObjectIsMarkedAsAvailable(): void
     {
         $verifier = new LFSTransferVerifier(
             $this->filesystem,
@@ -63,7 +63,7 @@ class LFSTransferVerifierTest extends TestCase
         $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns($available_path);
 
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(true);
+        $this->filesystem->shouldReceive('fileExists')->with($ready_path)->andReturns(true);
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(false);
 
         $lfs_object = $lfs_object = new LFSObject(
@@ -75,12 +75,12 @@ class LFSTransferVerifierTest extends TestCase
 
         $this->dao->shouldReceive('saveObject')->once();
         $this->dao->shouldReceive('saveObjectReference')->once();
-        $this->filesystem->shouldReceive('rename')->with($ready_path, $available_path)->andReturns(true)->once();
+        $this->filesystem->shouldReceive('move')->with($ready_path, $available_path)->once();
 
         $verifier->verifyAndMarkLFSObjectAsAvailable($lfs_object, $repository);
     }
 
-    public function testAlreadyAvailableObjectIsAttachedToTheRepository()
+    public function testAlreadyAvailableObjectIsAttachedToTheRepository(): void
     {
         $verifier = new LFSTransferVerifier(
             $this->filesystem,
@@ -94,7 +94,7 @@ class LFSTransferVerifierTest extends TestCase
         $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);
 
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(true);
+        $this->filesystem->shouldReceive('fileExists')->with($ready_path)->andReturns(true);
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(true);
 
         $lfs_object = $lfs_object = new LFSObject(
@@ -105,12 +105,12 @@ class LFSTransferVerifierTest extends TestCase
         $repository->shouldReceive('getId')->andReturns(100);
 
         $this->dao->shouldReceive('saveObjectReferenceByOIDValue')->once();
-        $this->filesystem->shouldReceive('delete')->with($ready_path)->andReturns(true)->once();
+        $this->filesystem->shouldReceive('delete')->with($ready_path)->once();
 
         $verifier->verifyAndMarkLFSObjectAsAvailable($lfs_object, $repository);
     }
 
-    public function testObjectAlreadyAvailableForRepositoryIsRemovedFromItsTemporaryPath()
+    public function testObjectAlreadyAvailableForRepositoryIsRemovedFromItsTemporaryPath(): void
     {
         $verifier = new LFSTransferVerifier(
             $this->filesystem,
@@ -125,7 +125,7 @@ class LFSTransferVerifierTest extends TestCase
 
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(true);
 
-        $this->filesystem->shouldReceive('delete')->with($ready_path)->andReturns(true)->once();
+        $this->filesystem->shouldReceive('delete')->with($ready_path)->once();
 
         $verifier->verifyAndMarkLFSObjectAsAvailable(\Mockery::mock(LFSObject::class), \Mockery::mock(\GitRepository::class));
     }

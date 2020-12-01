@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\GitLFS\Transfer\Basic;
 
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemOperator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBConnection;
@@ -42,14 +42,14 @@ class LFSBasicTransferObjectSaverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->filesystem           = \Mockery::mock(FilesystemInterface::class);
+        $this->filesystem           = \Mockery::mock(FilesystemOperator::class);
         $this->db_connection        = \Mockery::mock(DBConnection::class);
         $this->lfs_object_retriever = \Mockery::mock(LFSObjectRetriever::class);
         $this->path_allocator       = \Mockery::mock(LFSObjectPathAllocator::class);
         $this->prometheus           = Prometheus::getInMemory();
     }
 
-    public function testObjectIsSavedIfNeeded()
+    public function testObjectIsSavedIfNeeded(): void
     {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,
@@ -65,7 +65,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $this->path_allocator->shouldReceive('getPathForSaveInProgressObject')->andReturns($temporary_save_path);
 
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(false);
+        $this->filesystem->shouldReceive('fileExists')->with($ready_path)->andReturns(false);
 
         $input_size     = 1024;
         $input_data     = str_repeat('A', $input_size);
@@ -76,23 +76,22 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $lfs_object         = new LFSObject(new LFSObjectID($expected_oid_value), $input_size);
 
         $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturnUsing(
-            function ($save_path, $input_stream) {
+            function ($save_path, $input_stream): void {
                 $destination_resource = fopen('php://memory', 'wb');
                 stream_copy_to_stream($input_stream, $destination_resource);
                 fclose($destination_resource);
-                return true;
             }
         );
 
         $this->db_connection->shouldReceive('reconnectAfterALongRunningProcess')->once();
 
-        $this->filesystem->shouldReceive('rename')->with($temporary_save_path, $ready_path)->once()->andReturns(true);
+        $this->filesystem->shouldReceive('move')->with($temporary_save_path, $ready_path)->once();
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
 
         $object_saver->saveObject(\Mockery::mock(\GitRepository::class), $lfs_object, $input_resource);
     }
 
-    public function testAlreadySavedObjectIsSkipped()
+    public function testAlreadySavedObjectIsSkipped(): void
     {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,
@@ -105,7 +104,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns('path');
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(true);
 
-        $this->filesystem->shouldReceive('rename')->never();
+        $this->filesystem->shouldReceive('move')->never();
 
         $object_saver->saveObject(
             \Mockery::mock(\GitRepository::class),
@@ -114,7 +113,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         );
     }
 
-    public function testSaveIsRejectedWhenInputIsNotAResource()
+    public function testSaveIsRejectedWhenInputIsNotAResource(): void
     {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,
@@ -126,7 +125,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
 
         $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns('path');
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('has')->andReturns(false);
+        $this->filesystem->shouldReceive('fileExists')->andReturns(false);
 
         $this->expectException(\InvalidArgumentException::class);
 
@@ -138,7 +137,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         );
     }
 
-    public function testSaveIsRejectedWhenOIDOfSavedFileDoesNotMatchTheExpectation()
+    public function testSaveIsRejectedWhenOIDOfSavedFileDoesNotMatchTheExpectation(): void
     {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,
@@ -154,7 +153,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $this->path_allocator->shouldReceive('getPathForSaveInProgressObject')->andReturns($temporary_save_path);
 
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(false);
+        $this->filesystem->shouldReceive('fileExists')->with($ready_path)->andReturns(false);
 
         $input_size     = 1024;
         $input_data     = str_repeat('A', $input_size);
@@ -168,11 +167,10 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $this->expectException(LFSBasicTransferObjectIntegrityException::class);
 
         $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturnUsing(
-            function ($save_path, $input_stream) {
+            function ($save_path, $input_stream): void {
                 $destination_resource = fopen('php://memory', 'wb');
                 stream_copy_to_stream($input_stream, $destination_resource);
                 fclose($destination_resource);
-                return true;
             }
         );
 
@@ -189,7 +187,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $input_size,
         $object_size,
         $excepted_exception
-    ) {
+    ): void {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,
             $this->db_connection,
@@ -204,7 +202,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $this->path_allocator->shouldReceive('getPathForSaveInProgressObject')->andReturns($temporary_save_path);
 
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
-        $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(false);
+        $this->filesystem->shouldReceive('fileExists')->with($ready_path)->andReturns(false);
 
         $input_data     = str_repeat('A', $input_size);
         $input_resource = fopen('php://memory', 'rb+');
@@ -216,11 +214,10 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         );
 
         $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturnUsing(
-            function ($save_path, $input_stream) {
+            function ($save_path, $input_stream): void {
                 $destination_resource = fopen('php://memory', 'wb');
                 stream_copy_to_stream($input_stream, $destination_resource);
                 fclose($destination_resource);
-                return true;
             }
         );
 

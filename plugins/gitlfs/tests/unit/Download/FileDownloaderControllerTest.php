@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\GitLFS\Download;
 
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemReader;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
@@ -42,7 +42,7 @@ final class FileDownloaderControllerTest extends TestCase
             $repository_factory,
             \Mockery::mock(LFSObjectRetriever::class),
             \Mockery::mock(LFSObjectPathAllocator::class),
-            \Mockery::mock(FilesystemInterface::class),
+            \Mockery::mock(FilesystemReader::class),
             Prometheus::getInMemory()
         );
 

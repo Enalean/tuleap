@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,8 @@
 
 namespace Tuleap\GitLFS\LFSObject;
 
-use League\Flysystem\FileNotFoundException;
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemWriter;
+use League\Flysystem\UnableToDeleteFile;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -36,12 +36,12 @@ class LFSObjectRemoverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->filesystem     = \Mockery::mock(FilesystemInterface::class);
+        $this->filesystem     = \Mockery::mock(FilesystemWriter::class);
         $this->path_allocator = \Mockery::mock(LFSObjectPathAllocator::class);
         $this->dao            = \Mockery::mock(LFSObjectDAO::class);
     }
 
-    public function testDanglingObjectsAreRemoved()
+    public function testDanglingObjectsAreRemoved(): void
     {
         $deletion_delay = 3;
         $lfs_object_remover = new LFSObjectRemover(
@@ -58,13 +58,13 @@ class LFSObjectRemoverTest extends TestCase
         $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns('object/path');
 
         $this->dao->shouldReceive('deleteUnusableReferences')->with($deletion_delay)->once();
-        $this->filesystem->shouldReceive('delete')->andReturns(true)->twice();
+        $this->filesystem->shouldReceive('delete')->twice();
         $this->dao->shouldReceive('deleteObjectByID')->twice();
 
         $lfs_object_remover->removeDanglingObjects($deletion_delay);
     }
 
-    public function testRemovingADanglingObjectNotPresentOnTheFilesystemWorks()
+    public function testReferenceToTheDanglingObjectIsKeptWhenDeletionFails(): void
     {
         $deletion_delay = 3;
         $lfs_object_remover = new LFSObjectRemover(
@@ -80,31 +80,10 @@ class LFSObjectRemoverTest extends TestCase
         $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns('object/path');
 
         $this->dao->shouldReceive('deleteUnusableReferences')->with($deletion_delay)->once();
-        $this->filesystem->shouldReceive('delete')->andThrows(FileNotFoundException::class);
-        $this->dao->shouldReceive('deleteObjectByID')->once();
-
-        $lfs_object_remover->removeDanglingObjects($deletion_delay);
-    }
-
-    public function testReferenceToTheDanglingObjectIsKeptWhenDeletionFails()
-    {
-        $deletion_delay = 3;
-        $lfs_object_remover = new LFSObjectRemover(
-            $this->dao,
-            new DBTransactionExecutorPassthrough(),
-            $this->filesystem,
-            $this->path_allocator
-        );
-
-        $this->dao->shouldReceive('searchUnusedObjects')->andReturns([
-            ['id' => 123, 'object_oid' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'object_size' => 741]
-        ]);
-        $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns('object/path');
-
-        $this->dao->shouldReceive('deleteUnusableReferences')->with($deletion_delay)->once();
-        $this->filesystem->shouldReceive('delete')->andReturns(false);
+        $this->filesystem->shouldReceive('delete')->andThrow(UnableToDeleteFile::class);
         $this->dao->shouldReceive('deleteObjectByID')->never();
 
+        $this->expectException(UnableToDeleteFile::class);
         $lfs_object_remover->removeDanglingObjects($deletion_delay);
     }
 }

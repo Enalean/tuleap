@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,9 @@
 
 namespace Tuleap\GitLFS\Transfer\Basic;
 
-use League\Flysystem\FileExistsException;
-use League\Flysystem\FileNotFoundException;
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemOperator;
+use League\Flysystem\UnableToMoveFile;
+use League\Flysystem\UnableToWriteFile;
 use Tuleap\DB\DBConnection;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
@@ -34,7 +34,7 @@ use Tuleap\GitLFS\Transfer\BytesAmountHandledLFSObjectInstrumentationFilter;
 class LFSBasicTransferObjectSaver
 {
     /**
-     * @var FilesystemInterface
+     * @var FilesystemOperator
      */
     private $filesystem;
     /**
@@ -55,7 +55,7 @@ class LFSBasicTransferObjectSaver
     private $prometheus;
 
     public function __construct(
-        FilesystemInterface $filesystem,
+        FilesystemOperator $filesystem,
         DBConnection $db_connection,
         LFSObjectRetriever $lfs_object_retriever,
         LFSObjectPathAllocator $path_allocator,
@@ -100,7 +100,7 @@ class LFSBasicTransferObjectSaver
             StreamFilter::removeFilter($sha256_filter_handle);
             StreamFilter::removeFilter($max_size_filter_handle);
             StreamFilter::removeFilter($received_bytes_filter_handle);
-            $this->tryToCleanUpFile($temporary_path);
+            $this->filesystem->delete($temporary_path);
         }
     }
 
@@ -110,17 +110,19 @@ class LFSBasicTransferObjectSaver
     private function doesObjectNeedsToBeSaved($ready_to_be_added_path, \GitRepository $repository, LFSObject $lfs_object)
     {
         return ! $this->lfs_object_retriever->doesLFSObjectExistsForRepository($repository, $lfs_object) &&
-                ! $this->filesystem->has($ready_to_be_added_path);
+                ! $this->filesystem->fileExists($ready_to_be_added_path);
     }
 
-    private function writeTemporaryObjectFile($path, $input_resource, BlockToMaxSizeOnReadFilter $max_size_blocker_filter)
+    private function writeTemporaryObjectFile($path, $input_resource, BlockToMaxSizeOnReadFilter $max_size_blocker_filter): void
     {
-        $is_writing_temporary_file_success = $this->filesystem->writeStream($path, $input_resource);
+        try {
+            $this->filesystem->writeStream($path, $input_resource);
+        } catch (UnableToWriteFile $exception) {
+            throw new \RuntimeException('Cannot write LFS object to the path temporary ' . $path, 0, $exception);
+        }
+
         if ($max_size_blocker_filter->hasMaximumSizeBeenExceeded()) {
             throw new LFSBasicTransferObjectOutOfBoundSizeException();
-        }
-        if (! $is_writing_temporary_file_success) {
-            throw new \RuntimeException('Cannot write LFS object to the path temporary ' . $path);
         }
     }
 
@@ -153,25 +155,16 @@ class LFSBasicTransferObjectSaver
         $ready_to_be_added_path,
         \GitRepository $repository,
         LFSObject $lfs_object
-    ) {
-        try {
-            $is_marking_object_as_ready_success = ! $this->doesObjectNeedsToBeSaved($ready_to_be_added_path, $repository, $lfs_object) ||
-                $this->filesystem->rename($temporary_path, $ready_to_be_added_path);
-        } catch (FileExistsException $ex) {
-            return;
-        }
-
-        if (! $is_marking_object_as_ready_success) {
-            $oid_value = $lfs_object->getOID()->getValue();
+    ): void {
+        $oid_value = $lfs_object->getOID()->getValue();
+        if (! $this->doesObjectNeedsToBeSaved($ready_to_be_added_path, $repository, $lfs_object)) {
             throw new \RuntimeException("Cannot mark LFS object $oid_value has ready to be available");
         }
-    }
 
-    private function tryToCleanUpFile($path)
-    {
         try {
-            $this->filesystem->delete($path);
-        } catch (FileNotFoundException $ex) {
+            $this->filesystem->move($temporary_path, $ready_to_be_added_path);
+        } catch (UnableToMoveFile $exception) {
+            throw new \RuntimeException("Cannot mark LFS object $oid_value has ready to be available", 0, $exception);
         }
     }
 }
