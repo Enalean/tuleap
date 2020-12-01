@@ -25,9 +25,9 @@ namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
@@ -47,16 +47,16 @@ class ProgramIncrementArtifactCreatorChecker
      */
     private $field_collection_builder;
     /**
-     * @var SemanticChecker
+     * @var CheckSemantic
      */
     private $semantic_checker;
 
     /**
-     * @var RequiredFieldChecker
+     * @var CheckRequiredField
      */
     private $required_field_checker;
     /**
-     * @var WorkflowChecker
+     * @var CheckWorkflow
      */
     private $workflow_checker;
     /**
@@ -68,9 +68,9 @@ class ProgramIncrementArtifactCreatorChecker
         TeamProjectsCollectionBuilder $team_projects_collection_builder,
         TrackerCollectionFactory $scale_tracker_factory,
         SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder,
-        SemanticChecker $semantic_checker,
-        RequiredFieldChecker $required_field_checker,
-        WorkflowChecker $workflow_checker,
+        CheckSemantic $semantic_checker,
+        CheckRequiredField $required_field_checker,
+        CheckWorkflow $workflow_checker,
         LoggerInterface $logger
     ) {
         $this->projects_builder         = $team_projects_collection_builder;

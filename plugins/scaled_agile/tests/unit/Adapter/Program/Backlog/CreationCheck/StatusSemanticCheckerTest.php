@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -140,7 +140,7 @@ final class StatusSemanticCheckerTest extends TestCase
             ->andReturn(['open', 'in progress', 'review']);
 
         $this->assertTrue(
-            $this->checker->areSemanticStatusWellConfigured(
+            $this->checker->isStatusWellConfigured(
                 $top_planning,
                 $this->collection
             )
@@ -167,7 +167,7 @@ final class StatusSemanticCheckerTest extends TestCase
             ->andReturnNull();
 
         $this->assertFalse(
-            $this->checker->areSemanticStatusWellConfigured(
+            $this->checker->isStatusWellConfigured(
                 $top_planning,
                 $this->collection
             )
@@ -199,7 +199,7 @@ final class StatusSemanticCheckerTest extends TestCase
             ->andReturn(1);
 
         $this->assertFalse(
-            $this->checker->areSemanticStatusWellConfigured(
+            $this->checker->isStatusWellConfigured(
                 $top_planning,
                 $this->collection
             )
@@ -244,7 +244,7 @@ final class StatusSemanticCheckerTest extends TestCase
             ->andReturn(['open']);
 
         $this->assertFalse(
-            $this->checker->areSemanticStatusWellConfigured(
+            $this->checker->isStatusWellConfigured(
                 $top_planning,
                 $this->collection
             )

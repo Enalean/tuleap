@@ -20,13 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck;
 
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\CheckSemantic;
+use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
-class SemanticChecker
+final class SemanticChecker implements CheckSemantic
 {
     /**
      * @var \Tracker_Semantic_TitleDao
@@ -41,7 +43,7 @@ class SemanticChecker
      */
     private $semantic_timeframe_dao;
     /**
-     * @var StatusSemanticChecker
+     * @var CheckStatus
      */
     private $semantic_status_checker;
 
@@ -49,7 +51,7 @@ class SemanticChecker
         \Tracker_Semantic_TitleDao $semantic_title_dao,
         \Tracker_Semantic_DescriptionDao $semantic_description_dao,
         SemanticTimeframeDao $semantic_timeframe_dao,
-        StatusSemanticChecker $semantic_status_checker
+        CheckStatus $semantic_status_checker
     ) {
         $this->semantic_title_dao       = $semantic_title_dao;
         $this->semantic_description_dao = $semantic_description_dao;
@@ -72,7 +74,7 @@ class SemanticChecker
             return false;
         }
         if (
-            $this->semantic_status_checker->areSemanticStatusWellConfigured(
+            $this->semantic_status_checker->isStatusWellConfigured(
                 $planning,
                 $source_tracker_collection
             ) === false
