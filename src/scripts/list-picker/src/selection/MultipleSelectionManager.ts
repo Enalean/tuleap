@@ -18,7 +18,7 @@
  */
 
 import { ListPickerItem, ListPickerSelectionStateMultiple, SelectionManager } from "../type";
-import { DropdownToggler } from "../dropdown/DropdownToggler";
+import { DropdownManager } from "../dropdown/DropdownManager";
 import { sanitize } from "dompurify";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { GettextProvider } from "../../../tuleap/gettext/gettext-sync";
@@ -34,7 +34,7 @@ export class MultipleSelectionManager implements SelectionManager {
         private readonly selection_element: Element,
         private readonly search_field_element: HTMLInputElement,
         private readonly placeholder_text: string,
-        private readonly dropdown_toggler: DropdownToggler,
+        private readonly dropdown_manager: DropdownManager,
         private readonly items_map_manager: ItemsMapManager,
         private readonly gettext_provider: GettextProvider
     ) {
@@ -208,7 +208,7 @@ export class MultipleSelectionManager implements SelectionManager {
             this.clearSelectionState(true);
             this.togglePlaceholder();
             this.removeClearSelectionStateButton();
-            this.dropdown_toggler.openListPicker();
+            this.dropdown_manager.openListPicker();
         });
 
         return remove_value_button;
@@ -240,7 +240,7 @@ export class MultipleSelectionManager implements SelectionManager {
             event.cancelBubble = true;
 
             this.processSelection(list_item.element);
-            this.dropdown_toggler.openListPicker();
+            this.dropdown_manager.openListPicker();
         });
 
         return badge;

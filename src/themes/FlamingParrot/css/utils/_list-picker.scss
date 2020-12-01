@@ -80,6 +80,7 @@ $form-element-small-font-size: .8125rem;
 
 .list-picker-dropdown {
     z-index: 2002;
+    box-sizing: border-box;
     padding: 0;
     border-right: 1px solid $main;
     border-bottom: 1px solid $main;

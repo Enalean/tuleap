@@ -29,7 +29,7 @@ describe("base-component-renderer", () => {
 
         doc.body.appendChild(select);
 
-        renderer = new BaseComponentRenderer(select, {
+        renderer = new BaseComponentRenderer(doc, select, {
             placeholder: "Please select a value",
         });
     });
@@ -52,10 +52,10 @@ describe("base-component-renderer", () => {
         }
 
         expect(base_component.contains(list_picker_element)).toBe(true);
-        expect(base_component.contains(dropdown_element)).toBe(true);
         expect(base_component.contains(selection_element)).toBe(true);
         expect(base_component.contains(placeholder_element)).toBe(true);
-        expect(base_component.contains(dropdown_list_element)).toBe(true);
+        expect(doc.body.contains(dropdown_element)).toBe(true);
+        expect(dropdown_element.contains(dropdown_list_element)).toBe(true);
     });
 
     it("When the source <select> is disabled, then the list-picker should be disabled", () => {
@@ -74,7 +74,10 @@ describe("base-component-renderer", () => {
         });
 
         it("Should display an empty string otherwise", () => {
-            const { placeholder_element } = new BaseComponentRenderer(select).renderBaseComponent();
+            const { placeholder_element } = new BaseComponentRenderer(
+                doc,
+                select
+            ).renderBaseComponent();
             expect(placeholder_element.textContent).toEqual("");
         });
     });

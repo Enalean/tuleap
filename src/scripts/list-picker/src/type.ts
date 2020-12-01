@@ -50,9 +50,9 @@ export interface ListPickerItemGroup {
 }
 
 export interface ListPickerComponent {
-    wrapper_element: Element;
+    wrapper_element: HTMLElement;
     list_picker_element: Element;
-    dropdown_element: Element;
+    dropdown_element: HTMLElement;
     selection_element: Element;
     placeholder_element: Element;
     dropdown_list_element: Element;
@@ -74,4 +74,9 @@ export interface SelectionManager {
     readonly initSelection: () => void;
     readonly handleBackspaceKey: (event: KeyboardEvent) => void;
     readonly resetAfterDependenciesUpdate: () => void;
+}
+
+export interface ScrollCoordinates {
+    x_position: number;
+    y_position: number;
 }

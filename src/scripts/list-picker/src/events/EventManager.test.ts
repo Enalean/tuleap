@@ -19,7 +19,7 @@
 
 import { EventManager } from "./EventManager";
 import { SingleSelectionManager } from "../selection/SingleSelectionManager";
-import { DropdownToggler } from "../dropdown/DropdownToggler";
+import { DropdownManager } from "../dropdown/DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
@@ -29,11 +29,11 @@ import { SelectionManager } from "../type";
 describe("event manager", () => {
     let doc: HTMLDocument,
         source_select_box: HTMLSelectElement,
-        component_wrapper: Element,
+        component_wrapper: HTMLElement,
         list_picker_input: Element,
         dropdown: Element,
         manager: EventManager,
-        toggler: DropdownToggler,
+        dropdown_manager: DropdownManager,
         clickable_item: Element,
         search_field: HTMLInputElement,
         item_highlighter: ListItemHighlighter,
@@ -49,6 +49,7 @@ describe("event manager", () => {
     }
 
     beforeEach(() => {
+        doc = document.implementation.createHTMLDocument();
         source_select_box = document.createElement("select");
         source_select_box.setAttribute("multiple", "multiple");
 
@@ -58,28 +59,23 @@ describe("event manager", () => {
             dropdown_element,
             dropdown_list_element,
             search_field_element,
-            selection_element,
-        } = new BaseComponentRenderer(source_select_box, {
+        } = new BaseComponentRenderer(doc, source_select_box, {
             is_filterable: true,
         }).renderBaseComponent();
 
         component_wrapper = wrapper_element;
         list_picker_input = list_picker_element;
         clickable_item = document.createElement("li");
-
-        doc = document.implementation.createHTMLDocument();
         clickable_item.classList.add("list-picker-dropdown-option-value");
         dropdown_list_element.appendChild(clickable_item);
 
         search_field = getSearchField(search_field_element);
         dropdown = dropdown_element;
-        toggler = new DropdownToggler(
-            component_wrapper,
-            dropdown_element,
-            dropdown_list_element,
-            search_field_element,
-            selection_element
-        );
+        dropdown_manager = ({
+            openListPicker: jest.fn(),
+            closeListPicker: jest.fn(),
+            isDropdownOpen: jest.fn(),
+        } as unknown) as DropdownManager;
 
         item_highlighter = ({
             resetHighlight: jest.fn(),
@@ -108,7 +104,7 @@ describe("event manager", () => {
             search_field_element,
             source_select_box,
             selection_manager,
-            toggler,
+            dropdown_manager,
             dropdown_content_renderer,
             navigation_manager,
             item_highlighter
@@ -133,27 +129,28 @@ describe("event manager", () => {
 
     describe("Dropdown opening", () => {
         it("Opens the dropdown when I click on the component root, closes it when it is open", () => {
-            const openListPicker = jest.spyOn(toggler, "openListPicker");
-            const closeListPicker = jest.spyOn(toggler, "closeListPicker");
+            const isDropdownOpen = jest.spyOn(dropdown_manager, "isDropdownOpen");
+            isDropdownOpen.mockReturnValueOnce(false);
 
             manager.attachEvents();
 
             list_picker_input.dispatchEvent(new MouseEvent("pointerdown"));
-            expect(openListPicker).toHaveBeenCalled();
+            expect(dropdown_manager.openListPicker).toHaveBeenCalled();
             expect(item_highlighter.resetHighlight).toHaveBeenCalledTimes(1);
 
+            isDropdownOpen.mockReturnValueOnce(true);
+
             list_picker_input.dispatchEvent(new MouseEvent("pointerdown"));
-            expect(closeListPicker).toHaveBeenCalled();
+            expect(dropdown_manager.closeListPicker).toHaveBeenCalled();
         });
 
         it("Does not open the dropdown when I click on the component root while the source <select> is disabled", () => {
-            const openListPicker = jest.spyOn(toggler, "openListPicker");
             source_select_box.setAttribute("disabled", "disabled");
 
             manager.attachEvents();
             component_wrapper.dispatchEvent(new MouseEvent("click"));
 
-            expect(openListPicker).not.toHaveBeenCalled();
+            expect(dropdown_manager.openListPicker).not.toHaveBeenCalled();
         });
 
         it("In a single list-picker, when a keyboard selection has occurred, and user hits Enter, then it should reopen the dropdown", () => {
@@ -166,57 +163,58 @@ describe("event manager", () => {
                 null,
                 single_select,
                 selection_manager,
-                toggler,
+                dropdown_manager,
                 dropdown_content_renderer,
                 navigation_manager,
                 item_highlighter
             );
 
-            jest.spyOn(toggler, "openListPicker");
-            jest.spyOn(toggler, "closeListPicker");
-            dropdown.classList.add("list-picker-dropdown-shown");
+            const isDropdownOpen = jest.spyOn(dropdown_manager, "isDropdownOpen");
+
             manager.attachEvents();
 
             // Keyboard selection has occurred
+            isDropdownOpen.mockReturnValueOnce(true);
             jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValueOnce(clickable_item);
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
-            expect(toggler.closeListPicker).toHaveBeenCalled();
+            expect(dropdown_manager.closeListPicker).toHaveBeenCalled();
 
             // Now user hits the Enter key again
+            isDropdownOpen.mockReturnValueOnce(false);
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
-            expect(toggler.openListPicker).toHaveBeenCalled();
+            expect(dropdown_manager.openListPicker).toHaveBeenCalled();
 
             // Now user closes the dropdown without selecting any item
+            isDropdownOpen.mockReturnValueOnce(true);
             doc.dispatchEvent(new Event("click"));
-            expect(toggler.closeListPicker).toHaveBeenCalledTimes(1);
+
+            expect(dropdown_manager.closeListPicker).toHaveBeenCalledTimes(1);
 
             // And finally, he hits enter once again
+            isDropdownOpen.mockReturnValueOnce(false);
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
-            expect(toggler.openListPicker).toHaveBeenCalledTimes(1);
+            expect(dropdown_manager.openListPicker).toHaveBeenCalledTimes(1);
         });
     });
 
     describe("Dropdown closure", () => {
         it("should close the dropdown when the escape key has been pressed", () => {
-            const closeListPicker = jest.spyOn(toggler, "closeListPicker");
             manager.attachEvents();
 
             [{ key: "Escape" }, { key: "Esc" }, { keyCode: 27 }].forEach(
                 (event_init: KeyboardEventInit) => {
                     doc.dispatchEvent(new KeyboardEvent("keyup", event_init));
 
-                    expect(closeListPicker).toHaveBeenCalled();
+                    expect(dropdown_manager.closeListPicker).toHaveBeenCalled();
                 }
             );
         });
 
         it("should close the dropdown when the user mouse downs outside the list-picker", () => {
-            const closeListPicker = jest.spyOn(toggler, "closeListPicker");
             manager.attachEvents();
-
             doc.dispatchEvent(new MouseEvent("pointerdown"));
 
-            expect(closeListPicker).toHaveBeenCalled();
+            expect(dropdown_manager.closeListPicker).toHaveBeenCalled();
         });
     });
 
@@ -225,6 +223,7 @@ describe("event manager", () => {
             manager.attachEvents();
             clickable_item.dispatchEvent(new MouseEvent("pointerup"));
             expect(selection_manager.processSelection).toHaveBeenCalled();
+            expect(dropdown_manager.closeListPicker).toHaveBeenCalled();
         });
     });
 
@@ -241,12 +240,10 @@ describe("event manager", () => {
         });
 
         it("should open the multiple list picker when the search input has the focus", () => {
-            const openListPicker = jest.spyOn(toggler, "openListPicker");
-
             manager.attachEvents();
             search_field.dispatchEvent(new Event("pointerdown"));
 
-            expect(openListPicker).toHaveBeenCalled();
+            expect(dropdown_manager.openListPicker).toHaveBeenCalled();
         });
 
         it("should handle the backspace key when the user presses it", () => {
@@ -260,44 +257,39 @@ describe("event manager", () => {
         });
 
         it("should open the dropdown when the Enter key is pressed", () => {
-            jest.spyOn(toggler, "openListPicker");
-
             manager.attachEvents();
             search_field.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
 
-            expect(toggler.openListPicker).toHaveBeenCalled();
+            expect(dropdown_manager.openListPicker).toHaveBeenCalled();
         });
 
         it("should not reopen the dropdown when a keyboard selection has just occurred", () => {
             const highlighted_item = document.createElement("li");
             jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(highlighted_item);
-            jest.spyOn(toggler, "openListPicker");
-            dropdown.classList.add("list-picker-dropdown-shown");
+            jest.spyOn(dropdown_manager, "isDropdownOpen").mockReturnValueOnce(true);
 
             manager.attachEvents();
 
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
             search_field.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
 
-            expect(toggler.openListPicker).not.toHaveBeenCalled();
+            expect(dropdown_manager.openListPicker).not.toHaveBeenCalled();
         });
     });
 
     describe("removeEventsListenersOnDocument", () => {
         it("should remove the keyup event on document", () => {
-            const closeListPicker = jest.spyOn(toggler, "closeListPicker");
             manager.attachEvents();
             manager.removeEventsListenersOnDocument();
             doc.dispatchEvent(new Event("keyup"));
-            expect(closeListPicker).not.toHaveBeenCalled();
+            expect(dropdown_manager.closeListPicker).not.toHaveBeenCalled();
         });
 
         it("should remove the click event on document", () => {
-            const closeListPicker = jest.spyOn(toggler, "closeListPicker");
             manager.attachEvents();
             manager.removeEventsListenersOnDocument();
             doc.dispatchEvent(new Event("click"));
-            expect(closeListPicker).not.toHaveBeenCalled();
+            expect(dropdown_manager.closeListPicker).not.toHaveBeenCalled();
         });
 
         it("should remove the keydown event on document", () => {
@@ -339,7 +331,7 @@ describe("event manager", () => {
 
         it("should call the navigation manager when the dropdown is open", () => {
             jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(null);
-            dropdown.classList.add("list-picker-dropdown-shown");
+            jest.spyOn(dropdown_manager, "isDropdownOpen").mockReturnValueOnce(true);
 
             manager.attachEvents();
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
@@ -350,8 +342,7 @@ describe("event manager", () => {
         it("should select the currently highlighted item when the Enter key is pressed", () => {
             const highlighted_item = document.createElement("li");
             jest.spyOn(item_highlighter, "getHighlightedItem").mockReturnValue(highlighted_item);
-            jest.spyOn(toggler, "closeListPicker");
-            dropdown.classList.add("list-picker-dropdown-shown");
+            jest.spyOn(dropdown_manager, "isDropdownOpen").mockReturnValue(true);
 
             manager.attachEvents();
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
@@ -359,7 +350,7 @@ describe("event manager", () => {
             expect(navigation_manager.navigate).not.toHaveBeenCalled();
             expect(selection_manager.processSelection).toHaveBeenCalledWith(highlighted_item);
             expect(item_highlighter.resetHighlight).toHaveBeenCalled();
-            expect(toggler.closeListPicker).toHaveBeenCalled();
+            expect(dropdown_manager.closeListPicker).toHaveBeenCalled();
         });
     });
 });

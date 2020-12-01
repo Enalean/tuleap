@@ -39,11 +39,13 @@
     display: none;
     position: absolute;
     z-index: 1000;
-    right: 0;
-    left: 0;
     flex-direction: column;
     border-radius: 0 0 4px 4px;
     background-color: #ffffff;
+
+    &.list-picker-dropdown-over-modal {
+        z-index: 2007;
+    }
 
     &.list-picker-dropdown-shown {
         display: flex;
@@ -108,7 +110,6 @@
 
 .list-picker-component-wrapper {
     display: inline-block;
-    position: relative;
     width: 100%;
 }
 

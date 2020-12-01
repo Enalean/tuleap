@@ -11,7 +11,9 @@
   "dependencies": {
     "dompurify": "^2.2.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/resize-observer-browser": "^0.1.4"
+  },
   "config": {
     "bin": "../../../node_modules/.bin"
   },

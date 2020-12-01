@@ -54,6 +54,7 @@ describe("dropdown-content-renderer", () => {
     describe("without search input", () => {
         beforeEach(() => {
             const { dropdown_element, dropdown_list_element } = new BaseComponentRenderer(
+                document.implementation.createHTMLDocument(),
                 select
             ).renderBaseComponent();
 
@@ -100,9 +101,13 @@ describe("dropdown-content-renderer", () => {
 
     describe("with search input", () => {
         beforeEach(() => {
-            const { dropdown_element, dropdown_list_element } = new BaseComponentRenderer(select, {
-                is_filterable: true,
-            }).renderBaseComponent();
+            const { dropdown_element, dropdown_list_element } = new BaseComponentRenderer(
+                document.implementation.createHTMLDocument(),
+                select,
+                {
+                    is_filterable: true,
+                }
+            ).renderBaseComponent();
 
             dropdown = dropdown_element;
             dropdown_list = dropdown_list_element;
@@ -170,6 +175,7 @@ describe("dropdown-content-renderer", () => {
     describe("renderAfterDependenciesUpdate", () => {
         beforeEach(() => {
             const { dropdown_list_element } = new BaseComponentRenderer(
+                document.implementation.createHTMLDocument(),
                 select
             ).renderBaseComponent();
 
