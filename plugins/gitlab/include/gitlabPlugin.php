@@ -24,10 +24,13 @@ use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencesParser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
+use Tuleap\Gitlab\Repository\Webhook\WebhookActions;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Gitlab\REST\ResourcesInjector;
@@ -133,9 +136,16 @@ class gitlabPlugin extends Plugin
                     new KeyFactory()
                 )
             ),
-            new GitlabRepositoryDao(),
-            HTTPFactoryBuilder::responseFactory(),
+            new WebhookActions(
+                new GitlabRepositoryDao(),
+                new PostPushWebhookActionProcessor(
+                    new CommitTuleapReferencesParser(),
+                    $logger,
+                ),
+                $logger
+            ),
             $logger,
+            HTTPFactoryBuilder::responseFactory(),
             new SapiEmitter()
         );
     }
