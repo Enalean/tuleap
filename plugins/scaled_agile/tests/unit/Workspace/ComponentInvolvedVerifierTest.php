@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Workspace;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\ProgramStore;
-use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\Project;
 use Tuleap\ScaledAgile\Team\Creation\TeamStore;
 
 final class ComponentInvolvedVerifierTest extends TestCase
@@ -73,8 +73,8 @@ final class ComponentInvolvedVerifierTest extends TestCase
         self::assertTrue($this->component_involved_verifier->isInvolvedInAScaledAgileWorkspace($this->buildProjectData()));
     }
 
-    private function buildProjectData(): ProjectData
+    private function buildProjectData(): Project
     {
-        return new ProjectData(12, 'Name', 'Public name');
+        return new Project(12, 'Name', 'Public name');
     }
 }

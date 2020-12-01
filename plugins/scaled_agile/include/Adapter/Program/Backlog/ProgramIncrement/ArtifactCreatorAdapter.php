@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\CreateArtifact;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\SystemActionContext;
@@ -46,8 +46,8 @@ final class ArtifactCreatorAdapter implements CreateArtifact
      * @throws ArtifactCreationException
      */
     public function create(
-        TrackerData $tracker,
-        ProgramIncrementFieldsData $fields_and_values,
+        ScaledAgileTracker $tracker,
+        ProgramIncrementFields $fields_and_values,
         \PFUser $user,
         SubmissionDate $submission_date
     ): void {

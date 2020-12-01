@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program;
 
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
 use Tuleap\ScaledAgile\Program\BuildPlanning;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 final class PlanningAdapter implements BuildPlanning
 {
@@ -44,7 +44,7 @@ final class PlanningAdapter implements BuildPlanning
     /**
      * @throws TopPlanningNotFoundInProjectException
      */
-    public function buildRootPlanning(\PFUser $user, int $project_id): PlanningData
+    public function buildRootPlanning(\PFUser $user, int $project_id): Planning
     {
         $root_planning = $this->planning_factory->getRootPlanning(
             $user,
@@ -58,15 +58,15 @@ final class PlanningAdapter implements BuildPlanning
         return $this->buildFromPlanning($root_planning);
     }
 
-    public static function buildFromPlanning(\Planning $planning): PlanningData
+    public static function buildFromPlanning(\Planning $planning): Planning
     {
         if ($planning->getPlanningTracker() instanceof \NullTracker) {
             throw new NoProgramIncrementException($planning->getId());
         }
-        $project_data = ProjectDataAdapter::build($planning->getPlanningTracker()->getProject());
+        $project_data = ProjectAdapter::build($planning->getPlanningTracker()->getProject());
 
-        return new PlanningData(
-            new TrackerData($planning->getPlanningTracker()),
+        return new Planning(
+            new ScaledAgileTracker($planning->getPlanningTracker()),
             $planning->getId(),
             $planning->getName(),
             $planning->getBacklogTrackersIds(),

@@ -28,37 +28,37 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 final class SynchronizedFields
 {
     /**
-     * @var FieldData
+     * @var Field
      */
     private $artifact_link_field;
     /**
-     * @var FieldData
+     * @var Field
      */
     private $title_field;
     /**
-     * @var FieldData
+     * @var Field
      */
     private $description_field;
     /**
-     * @var FieldData
+     * @var Field
      */
     private $status_field;
     /**
-     * @var FieldData
+     * @var Field
      */
     private $start_date_field;
     /**
-     * @var FieldData
+     * @var Field
      */
     private $end_period_field;
 
     public function __construct(
-        FieldData $artifact_link_field,
-        FieldData $title_field,
-        FieldData $description_field,
-        FieldData $status_field,
-        FieldData $start_date_field,
-        FieldData $end_period_field
+        Field $artifact_link_field,
+        Field $title_field,
+        Field $description_field,
+        Field $status_field,
+        Field $start_date_field,
+        Field $end_period_field
     ) {
         $this->artifact_link_field = $artifact_link_field;
         $this->title_field         = $title_field;
@@ -68,32 +68,32 @@ final class SynchronizedFields
         $this->end_period_field    = $end_period_field;
     }
 
-    public function getArtifactLinkField(): FieldData
+    public function getArtifactLinkField(): Field
     {
         return $this->artifact_link_field;
     }
 
-    public function getTitleField(): FieldData
+    public function getTitleField(): Field
     {
         return $this->title_field;
     }
 
-    public function getDescriptionField(): FieldData
+    public function getDescriptionField(): Field
     {
         return $this->description_field;
     }
 
-    public function getStatusField(): FieldData
+    public function getStatusField(): Field
     {
         return $this->status_field;
     }
 
-    public function getStartDateField(): FieldData
+    public function getStartDateField(): Field
     {
         return $this->start_date_field;
     }
 
-    public function getEndPeriodField(): FieldData
+    public function getEndPeriodField(): Field
     {
         return $this->end_period_field;
     }
@@ -115,7 +115,7 @@ final class SynchronizedFields
     }
 
     /**
-     * @return FieldData[]
+     * @return Field[]
      * @psalm-readonly
      */
     public function getAllFields(): array

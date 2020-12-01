@@ -25,10 +25,10 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Semantic_Title;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\TitleFieldHasIncorrectTypeException;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TitleFieldAdapterTest extends TestCase
@@ -52,7 +52,7 @@ final class TitleFieldAdapterTest extends TestCase
 
     public function testItThrowsWhenNoTitleIsFound(): void
     {
-        $source_tracker = new TrackerData(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $source_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(123)->build());
         $semantic_title = new Tracker_Semantic_Title($source_tracker->getFullTracker());
         $this->semantic_title_factory->shouldReceive('getByTracker')->with($source_tracker->getFullTracker())->andReturn($semantic_title);
 
@@ -62,7 +62,7 @@ final class TitleFieldAdapterTest extends TestCase
 
     public function testItThrowsWhenTitleIsNotAString(): void
     {
-        $source_tracker = new TrackerData(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $source_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(123)->build());
         $field          = new \Tracker_FormElement_Field_Text(
             1,
             $source_tracker->getTrackerId(),
@@ -77,7 +77,7 @@ final class TitleFieldAdapterTest extends TestCase
             1
         );
 
-        $source_tracker = new TrackerData(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $source_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(123)->build());
         $semantic_title = \Mockery::mock(Tracker_Semantic_Title::class);
         $semantic_title->shouldReceive('getField')->andReturn($field);
         $this->semantic_title_factory->shouldReceive('getByTracker')->with($source_tracker->getFullTracker())->andReturn(
@@ -90,7 +90,7 @@ final class TitleFieldAdapterTest extends TestCase
 
     public function testItBuildTitleField(): void
     {
-        $source_tracker = new TrackerData(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $source_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(123)->build());
         $field          = new \Tracker_FormElement_Field_String(
             1,
             $source_tracker->getTrackerId(),
@@ -105,14 +105,14 @@ final class TitleFieldAdapterTest extends TestCase
             1
         );
 
-        $source_tracker = new TrackerData(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $source_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(123)->build());
         $semantic_title = \Mockery::mock(Tracker_Semantic_Title::class);
         $semantic_title->shouldReceive('getField')->andReturn($field);
         $this->semantic_title_factory->shouldReceive('getByTracker')->with($source_tracker->getFullTracker())->andReturn(
             $semantic_title
         );
 
-        $title_field_data = new FieldData($field);
+        $title_field_data = new Field($field);
 
         $this->assertEquals($title_field_data, $this->adapter->build($source_tracker));
     }

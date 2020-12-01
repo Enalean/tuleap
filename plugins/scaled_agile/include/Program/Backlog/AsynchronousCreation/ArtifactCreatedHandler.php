@@ -77,7 +77,7 @@ class ArtifactCreatedHandler
             return;
         }
 
-        $program_top_milestones_tracker_id = $root_planning->getPlanningTrackerData()->getTrackerId();
+        $program_top_milestones_tracker_id = $root_planning->getPlanningTracker()->getTrackerId();
         if ($source_tracker->getId() !== $program_top_milestones_tracker_id) {
             return;
         }

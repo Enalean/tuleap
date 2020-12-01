@@ -22,18 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source;
 
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 final class SourceTrackerCollection
 {
     /**
-     * @var TrackerData[]
+     * @var ScaledAgileTracker[]
      * @psalm-readonly
      */
     private $source_trackers;
 
     /**
-     * @param TrackerData[] $source_trackers
+     * @param ScaledAgileTracker[] $source_trackers
      */
     public function __construct(array $source_trackers)
     {
@@ -50,7 +50,7 @@ final class SourceTrackerCollection
     }
 
     /**
-     * @return TrackerData[]
+     * @return ScaledAgileTracker[]
      * @psalm-mutation-free
      */
     public function getSourceTrackers(): array
@@ -59,14 +59,15 @@ final class SourceTrackerCollection
     }
 
     /**
-     * @param TrackerData[] $trackers
+     * @param ScaledAgileTracker[] $trackers
+     *
      * @return int[]
      * @psalm-pure
      */
     private static function extractTrackerIDs(array $trackers): array
     {
         return array_map(
-            static function (TrackerData $tracker) {
+            static function (ScaledAgileTracker $tracker) {
                 return $tracker->getTrackerId();
             },
             $trackers

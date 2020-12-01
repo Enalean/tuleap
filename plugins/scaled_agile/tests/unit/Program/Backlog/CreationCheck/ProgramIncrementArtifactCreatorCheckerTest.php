@@ -35,17 +35,17 @@ use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
 use Tuleap\ScaledAgile\Program\ProgramStore;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -74,7 +74,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
     private $program_store;
 
     /**
-     * @var \Tuleap\ScaledAgile\ProjectData
+     * @var \Tuleap\ScaledAgile\Project
      */
     private $project_data;
 
@@ -83,7 +83,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
      */
     private $checker;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
      */
     private $field_collection_builder;
     /**
@@ -109,7 +109,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
 
         $this->program_store   = Mockery::mock(ProgramStore::class);
         $this->project_manager = Mockery::mock(ProjectManager::class);
-        $project_data_adapter  = new ProjectDataAdapter($this->project_manager);
+        $project_data_adapter  = new ProjectAdapter($this->project_manager);
 
         $projects_collection_builder = new TeamProjectsCollectionBuilder(
             $this->program_store,
@@ -121,7 +121,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $trackers_builder       = new TrackerCollectionFactory($planning_adapter);
 
         $this->fields_adapter           = Mockery::mock(BuildSynchronizedFields::class);
-        $this->field_collection_builder = new SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder(
+        $this->field_collection_builder = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             $this->fields_adapter
         );
         $this->semantic_checker         = Mockery::mock(CheckSemantic::class);
@@ -142,7 +142,7 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
             ['group_id' => '101', 'unix_group_name' => 'proj01', 'group_name' => 'Project 01']
         );
 
-        $this->project_data = ProjectDataAdapter::build($this->project);
+        $this->project_data = ProjectAdapter::build($this->project);
     }
 
     public function testItReturnsTrueIfAllChecksAreOk(): void
@@ -321,38 +321,38 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
     }
 
-    private function getPlanningData(): PlanningData
+    private function getPlanningData(): Planning
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(1)->withProject($this->project)->build();
 
-        return new PlanningData(new TrackerData($tracker), 1, 'Release Planning', [], $this->project_data);
+        return new Planning(new ScaledAgileTracker($tracker), 1, 'Release Planning', [], $this->project_data);
     }
 
     private function buildSynchronizedFields(bool $submitable): void
     {
         $title_field = Mockery::mock(\Tracker_FormElement_Field_Text::class);
         $this->mockField($title_field, 1, true, true);
-        $title_field_data = new FieldData($title_field);
+        $title_field_data = new Field($title_field);
 
         $artifact_link = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
         $this->mockField($artifact_link, 1, $submitable, true);
-        $artifact_link_field_data = new FieldData($artifact_link);
+        $artifact_link_field_data = new Field($artifact_link);
 
         $description_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
         $this->mockField($description_field, 2, true, true);
-        $description_field_data = new FieldData($description_field);
+        $description_field_data = new Field($description_field);
 
         $status_field        = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
         $this->mockField($status_field, 3, true, true);
-        $status_field_data = new FieldData($status_field);
+        $status_field_data = new Field($status_field);
 
         $field_start_date      = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_start_date, 4, true, true);
-        $start_date_field_data = new FieldData($field_start_date);
+        $start_date_field_data = new Field($field_start_date);
 
         $field_end_date          = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_end_date, 5, true, true);
-        $end_date_field_data = new FieldData($field_end_date);
+        $end_date_field_data = new Field($field_end_date);
 
         $synchronized_fields = new SynchronizedFields(
             $artifact_link_field_data,

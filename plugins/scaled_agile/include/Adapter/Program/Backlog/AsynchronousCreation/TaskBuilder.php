@@ -48,7 +48,7 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapte
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleValueAdapter as TitleValueAdapterAlias;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
@@ -111,7 +111,7 @@ class TaskBuilder
             ),
             new TeamProjectsCollectionBuilder(
                 $program_dao,
-                new ProjectDataAdapter(ProjectManager::instance())
+                new ProjectAdapter(ProjectManager::instance())
             ),
             new TrackerCollectionFactory(new PlanningAdapter(\PlanningFactory::build())),
             $mirror_creator,

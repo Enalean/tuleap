@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Planning;
 use Project;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -43,22 +43,22 @@ final class TrackerCollectionFactoryTest extends TestCase
      */
     private $planning_factory;
     /**
-     * @var \Tuleap\ScaledAgile\ProjectData
+     * @var \Tuleap\ScaledAgile\Project
      */
     private $project_data;
 
     /**
-     * @var \Tuleap\ScaledAgile\ProjectData
+     * @var \Tuleap\ScaledAgile\Project
      */
     private $second_team_project_data;
 
     /**
-     * @var \Tuleap\ScaledAgile\ProjectData
+     * @var \Tuleap\ScaledAgile\Project
      */
     private $first_team_project_data;
 
     /**
-     * @var \Tuleap\ScaledAgile\ProjectData
+     * @var \Tuleap\ScaledAgile\Project
      */
     private $program_project_data;
     /**
@@ -72,20 +72,20 @@ final class TrackerCollectionFactoryTest extends TestCase
         $planning_adapter       = new PlanningAdapter($this->planning_factory);
         $this->builder          = new TrackerCollectionFactory($planning_adapter);
 
-        $this->program_project_data     = ProjectDataAdapter::build(
+        $this->program_project_data     = ProjectAdapter::build(
             new \Project(['group_id' => '101', 'unix_group_name' => "program", 'group_name' => 'Program'])
         );
-        $this->first_team_project_data  = ProjectDataAdapter::build(
+        $this->first_team_project_data  = ProjectAdapter::build(
             new \Project(['group_id' => '103', 'unix_group_name' => "teamA", 'group_name' => 'First Team'])
         );
-        $this->second_team_project_data = ProjectDataAdapter::build(
+        $this->second_team_project_data = ProjectAdapter::build(
             new \Project(['group_id' => '123', 'unix_group_name' => "teamB", 'group_name' => 'Second Team'])
         );
 
         $project            = new \Project(
             ['group_id' => 101, 'unix_group_name' => "project_name", 'group_name' => 'Public Name']
         );
-        $this->project_data = ProjectDataAdapter::build($project);
+        $this->project_data = ProjectAdapter::build($project);
     }
 
     public function testBuildFromProgramProjectAndItsTeams(): void

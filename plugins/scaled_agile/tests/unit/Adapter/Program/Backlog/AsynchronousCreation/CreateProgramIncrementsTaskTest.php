@@ -31,7 +31,7 @@ use Tracker_Artifact_Changeset;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ProgramIncrementsCreator;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
@@ -103,7 +103,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
         $this->changeset_values_adapter = \Mockery::mock(BuildFieldValues::class);
         $this->program_store            = \Mockery::mock(ProgramStore::class);
         $this->project_manager          = Mockery::mock(\ProjectManager::class);
-        $project_data_adapter           = new ProjectDataAdapter($this->project_manager);
+        $project_data_adapter           = new ProjectAdapter($this->project_manager);
         $projects_collection_builder    = new TeamProjectsCollectionBuilder(
             $this->program_store,
             $project_data_adapter
@@ -139,7 +139,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
         $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
 
         $planning = new \Planning(1, "Root planning", $this->project->getID(), '', '');
-        $planning->setPlanningTracker($replication_data->getTrackerData()->getFullTracker());
+        $planning->setPlanningTracker($replication_data->getTracker()->getFullTracker());
         $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturn($planning);
 
         $this->mirror_creator->shouldReceive('createProgramIncrements')->once();
@@ -147,7 +147,7 @@ final class CreateProgramIncrementsTaskTest extends TestCase
         $this->pending_artifact_creation_store->shouldReceive('deleteArtifactFromPendingCreation')
             ->once()
             ->withArgs(
-                [(int) $replication_data->getArtifactData()->getId(), (int) $replication_data->getUser()->getId()]
+                [(int) $replication_data->getArtifact()->getId(), (int) $replication_data->getUser()->getId()]
             );
 
         $this->task->createProgramIncrements($replication_data);

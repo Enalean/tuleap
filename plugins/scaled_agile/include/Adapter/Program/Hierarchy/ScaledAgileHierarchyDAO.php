@@ -24,11 +24,11 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Hierarchy;
 
 use Tuleap\DB\DataAccessObject;
 use Tuleap\ScaledAgile\Program\Hierarchy\HierarchyAnalyzer;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 final class ScaledAgileHierarchyDAO extends DataAccessObject implements HierarchyAnalyzer
 {
-    public function isPartOfAHierarchy(TrackerData $tracker_data): bool
+    public function isPartOfAHierarchy(ScaledAgileTracker $tracker_data): bool
     {
         $sql = 'SELECT COUNT(*)
                 FROM tracker_hierarchy

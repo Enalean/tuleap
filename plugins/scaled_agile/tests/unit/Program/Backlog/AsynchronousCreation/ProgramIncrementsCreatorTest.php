@@ -27,7 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactCreationException;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\CreateArtifact;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ArtifactData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Artifact;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ArtifactLinkValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
@@ -37,11 +37,11 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
@@ -101,11 +101,11 @@ final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
         $this->artifact_creator->shouldReceive('create')
             ->once()
             ->with($test_tracker_data, M::any(), $current_user, $copied_values->getSubmittedOn())
-            ->andReturn(new ArtifactData(201, 123456789));
+            ->andReturn(new Artifact(201, 123456789));
         $this->artifact_creator->shouldReceive('create')
             ->once()
             ->with($second_tracker_data, M::any(), $current_user, $copied_values->getSubmittedOn())
-            ->andReturn(new ArtifactData(202, 123456789));
+            ->andReturn(new Artifact(202, 123456789));
 
         $this->mirrors_creator->createProgramIncrements($copied_values, $trackers, $current_user);
     }
@@ -152,7 +152,7 @@ final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    private function buildTestTrackerData(int $tracker_id, \Project $project): TrackerData
+    private function buildTestTrackerData(int $tracker_id, \Project $project): ScaledAgileTracker
     {
         $tracker = new \Tracker(
             $tracker_id,
@@ -172,7 +172,7 @@ final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
             false
         );
         $tracker->setProject($project);
-        return new TrackerData($tracker);
+        return new ScaledAgileTracker($tracker);
     }
 
     private function buildSynchronizedFields(
@@ -183,17 +183,17 @@ final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
         int $start_date_id,
         int $end_date_id
     ): SynchronizedFields {
-        $artifact_link_field_data = new FieldData(new \Tracker_FormElement_Field_ArtifactLink($artifact_link_id, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1));
+        $artifact_link_field_data = new Field(new \Tracker_FormElement_Field_ArtifactLink($artifact_link_id, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1));
 
-        $title_field_data = new FieldData(new \Tracker_FormElement_Field_String($title_id, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2));
+        $title_field_data = new Field(new \Tracker_FormElement_Field_String($title_id, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2));
 
-        $description_field_data = new FieldData(new \Tracker_FormElement_Field_Text($description_id, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3));
+        $description_field_data = new Field(new \Tracker_FormElement_Field_Text($description_id, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3));
 
-        $status_field_data = new FieldData(new \Tracker_FormElement_Field_Selectbox($status_id, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4));
+        $status_field_data = new Field(new \Tracker_FormElement_Field_Selectbox($status_id, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4));
 
-        $start_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date($start_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5));
+        $start_date_field_data = new Field(new \Tracker_FormElement_Field_Date($start_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5));
 
-        $end_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date($end_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6));
+        $end_date_field_data = new Field(new \Tracker_FormElement_Field_Date($end_date_id, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6));
 
         return new SynchronizedFields(
             $artifact_link_field_data,

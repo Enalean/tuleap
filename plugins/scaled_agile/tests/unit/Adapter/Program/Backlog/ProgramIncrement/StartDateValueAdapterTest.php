@@ -26,7 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -51,7 +51,7 @@ final class StartDateValueAdapterTest extends TestCase
     private $field_start_date;
 
     /**
-     * @var FieldData
+     * @var Field
      */
     private $start_date;
 
@@ -70,7 +70,7 @@ final class StartDateValueAdapterTest extends TestCase
             true,
             1
         );
-        $this->start_date = new FieldData($this->field_start_date);
+        $this->start_date = new Field($this->field_start_date);
 
         $this->user          = UserTestBuilder::aUser()->withId(101)->build();
         $submitted_on        = 123456789;

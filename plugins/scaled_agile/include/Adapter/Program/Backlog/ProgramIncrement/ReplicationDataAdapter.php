@@ -24,12 +24,12 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\PendingArtifactCreationStore;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ArtifactData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Artifact;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\BuildReplicationData;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use UserManager;
 
 final class ReplicationDataAdapter implements BuildReplicationData
@@ -109,9 +109,9 @@ final class ReplicationDataAdapter implements BuildReplicationData
         \PFUser $user,
         \Tracker_Artifact_Changeset $source_changeset
     ): ReplicationData {
-        $artifact_data = new ArtifactData((int) $source_artifact->getId(), (int) $source_artifact->getSubmittedOn());
-        $tracker_data = new TrackerData($source_artifact->getTracker());
-        $project_data = ProjectDataAdapter::build($source_artifact->getTracker()->getProject());
+        $artifact_data = new Artifact((int) $source_artifact->getId(), (int) $source_artifact->getSubmittedOn());
+        $tracker_data = new ScaledAgileTracker($source_artifact->getTracker());
+        $project_data = ProjectAdapter::build($source_artifact->getTracker()->getProject());
 
         return new ReplicationData($tracker_data, $source_changeset, $user, $artifact_data, $project_data);
     }

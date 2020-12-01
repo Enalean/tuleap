@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program;
 
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 interface BuildPlanning
@@ -30,7 +30,7 @@ interface BuildPlanning
     /**
      * @throws TopPlanningNotFoundInProjectException
      */
-    public function buildRootPlanning(\PFUser $user, int $project_id): PlanningData;
+    public function buildRootPlanning(\PFUser $user, int $project_id): Planning;
 
-    public static function buildFromPlanning(\Planning $planning): PlanningData;
+    public static function buildFromPlanning(\Planning $planning): Planning;
 }

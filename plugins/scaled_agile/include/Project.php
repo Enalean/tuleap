@@ -20,35 +20,45 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source;
+namespace Tuleap\ScaledAgile;
 
 /**
  * @psalm-immutable
  */
-final class ArtifactData
+class Project
 {
     /**
      * @var int
      */
     private $id;
     /**
-     * @var int
+     * @var string
      */
-    private $submitted_on;
+    private $name;
+    /**
+     * @var string
+     */
+    private $public_name;
 
-    public function __construct(int $id, int $submitted_on)
+    public function __construct(int $id, string $name, string $public_name)
     {
-        $this->id = $id;
-        $this->submitted_on = $submitted_on;
+        $this->id          = $id;
+        $this->name        = $name;
+        $this->public_name = $public_name;
     }
 
     public function getId(): int
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
-    public function getSubmittedOn(): int
+    public function getName(): string
     {
-        return $this->submitted_on;
+        return (string) $this->name;
+    }
+
+    public function getPublicName(): string
+    {
+        return (string) $this->public_name;
     }
 }

@@ -25,45 +25,45 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 final class TimeFrameFields
 {
     /**
-     * @var FieldData
+     * @var Field
      * @psalm-readonly
      */
     private $start_date;
     /**
-     * @var FieldData
+     * @var Field
      * @psalm-readonly
      */
     private $end_period_field_data;
 
 
     private function __construct(
-        FieldData $start_date,
-        FieldData $end_period_field_data
+        Field $start_date,
+        Field $end_period_field_data
     ) {
         $this->start_date            = $start_date;
         $this->end_period_field_data = $end_period_field_data;
     }
 
     public static function fromStartDateAndDuration(
-        FieldData $start_date,
-        FieldData $duration
+        Field $start_date,
+        Field $duration
     ): self {
         return new self($start_date, $duration);
     }
 
     public static function fromStartAndEndDates(
-        FieldData $start_date,
-        FieldData $end_date
+        Field $start_date,
+        Field $end_date
     ): self {
         return new self($start_date, $end_date);
     }
 
-    public function getStartDateField(): FieldData
+    public function getStartDateField(): Field
     {
         return $this->start_date;
     }
 
-    public function getEndPeriodField(): FieldData
+    public function getEndPeriodField(): Field
     {
         return $this->end_period_field_data;
     }

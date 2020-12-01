@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\PlanningConfiguration;
 
-use Tuleap\ScaledAgile\TrackerData;
-use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
+use Tuleap\ScaledAgile\Project;
 
 /**
  * @psalm-immutable
  */
-final class PlanningData
+final class Planning
 {
     /**
      * @var int
@@ -36,7 +36,7 @@ final class PlanningData
     private $id;
 
     /**
-     * @var TrackerData
+     * @var ScaledAgileTracker
      */
     private $planning_tracker;
     /**
@@ -48,16 +48,16 @@ final class PlanningData
      */
     private $backlog_tracker_ids = [];
     /**
-     * @var ProjectData
+     * @var Project
      */
     private $project_data;
 
     public function __construct(
-        TrackerData $planning_tracker,
+        ScaledAgileTracker $planning_tracker,
         int $id,
         string $name,
         array $backlog_tracker_ids,
-        ProjectData $project_data
+        Project $project_data
     ) {
         $this->id                  = $id;
         $this->planning_tracker    = $planning_tracker;
@@ -71,7 +71,7 @@ final class PlanningData
         return (int) $this->id;
     }
 
-    public function getPlanningTrackerData(): TrackerData
+    public function getPlanningTracker(): ScaledAgileTracker
     {
         return $this->planning_tracker;
     }
@@ -86,7 +86,7 @@ final class PlanningData
         return $this->backlog_tracker_ids;
     }
 
-    public function getProjectData(): ProjectData
+    public function getProjectData(): Project
     {
         return $this->project_data;
     }

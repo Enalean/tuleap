@@ -25,9 +25,9 @@ namespace Tuleap\ScaledAgile\Adapter\Program;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Planning;
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning as ScaledPlanning;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -61,9 +61,9 @@ final class PlanningAdapterTest extends TestCase
 
         $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturn($planning);
 
-        $tracker_data            = new TrackerData($tracker);
-        $project_data            = ProjectDataAdapter::build($project);
-        $expected_built_planning = new PlanningData($tracker_data, 1, "test", [], $project_data);
+        $tracker_data            = new ScaledAgileTracker($tracker);
+        $project_data            = ProjectAdapter::build($project);
+        $expected_built_planning = new ScaledPlanning($tracker_data, 1, "test", [], $project_data);
 
         $user       = UserTestBuilder::aUser()->build();
         $project_id = 101;

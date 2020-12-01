@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildField;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 final class DescriptionFieldAdapter implements BuildField
 {
@@ -43,13 +43,13 @@ final class DescriptionFieldAdapter implements BuildField
     /**
      * @throws FieldRetrievalException
      */
-    public function build(TrackerData $replication_tracker_data): FieldData
+    public function build(ScaledAgileTracker $replication_tracker_data): Field
     {
         $description_field = $this->description_factory->getByTracker($replication_tracker_data->getFullTracker())->getField();
         if (! $description_field) {
             throw new FieldRetrievalException($replication_tracker_data->getTrackerId(), "Description");
         }
 
-        return new FieldData($description_field);
+        return new Field($description_field);
     }
 }

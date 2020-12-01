@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Hierarchy;
 
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 interface HierarchyAnalyzer
 {
-    public function isPartOfAHierarchy(TrackerData $tracker_data): bool;
+    public function isPartOfAHierarchy(ScaledAgileTracker $tracker_data): bool;
 }

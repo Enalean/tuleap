@@ -20,33 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source;
 
-use Project;
-use Tuleap\ScaledAgile\BuildProject;
-use Tuleap\ScaledAgile\ProjectData;
-
-final class ProjectDataAdapter implements BuildProject
+/**
+ * @psalm-immutable
+ */
+final class Artifact
 {
     /**
-     * @var \ProjectManager
+     * @var int
      */
-    private $project_manager;
+    private $id;
+    /**
+     * @var int
+     */
+    private $submitted_on;
 
-    public function __construct(\ProjectManager $project_manager)
+    public function __construct(int $id, int $submitted_on)
     {
-        $this->project_manager = $project_manager;
+        $this->id = $id;
+        $this->submitted_on = $submitted_on;
     }
 
-    public static function build(Project $project): ProjectData
+    public function getId(): int
     {
-        return new ProjectData((int) $project->getID(), (string) $project->getUnixName(), (string) $project->getPublicName());
+        return $this->id;
     }
 
-    public function buildFromId(int $id): ProjectData
+    public function getSubmittedOn(): int
     {
-        $team_project = $this->project_manager->getProject($id);
-
-        return self::build($team_project);
+        return $this->submitted_on;
     }
 }

@@ -24,9 +24,9 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class StatusFieldAdapterTest extends TestCase
@@ -52,7 +52,7 @@ final class StatusFieldAdapterTest extends TestCase
     {
         $semantic_status = \Mockery::mock(\Tracker_Semantic_Status::class);
         $semantic_status->shouldReceive('getField')->andReturnNull();
-        $source_tracker = new TrackerData(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $source_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(123)->build());
         $this->semantic_status_factory->shouldReceive('getByTracker')->with($source_tracker->getFullTracker())->andReturn($semantic_status);
 
         $this->expectException(FieldRetrievalException::class);
@@ -61,7 +61,7 @@ final class StatusFieldAdapterTest extends TestCase
 
     public function testItBuildStatusFieldData(): void
     {
-        $source_tracker = new TrackerData(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $source_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(123)->build());
         $field          = new \Tracker_FormElement_Field_Selectbox(
             1,
             $source_tracker->getTrackerId(),
@@ -81,7 +81,7 @@ final class StatusFieldAdapterTest extends TestCase
             $semantic_status
         );
 
-        $field_status_data = new FieldData($field);
+        $field_status_data = new Field($field);
 
         $this->assertEquals($field_status_data, $this->adapter->build($source_tracker));
     }

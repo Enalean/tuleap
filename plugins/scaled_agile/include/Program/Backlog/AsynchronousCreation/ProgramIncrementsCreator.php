@@ -28,7 +28,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\CreateArtifact;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 
 class ProgramIncrementsCreator
@@ -79,7 +79,7 @@ class ProgramIncrementsCreator
                     $mapped_status       = $this->status_mapper
                         ->mapStatusValueByDuckTyping($copied_values, $synchronized_fields->getStatusField());
 
-                    $fields_data         = ProgramIncrementFieldsData::fromSourceChangesetValuesAndSynchronizedFields(
+                    $fields_data         = ProgramIncrementFields::fromSourceChangesetValuesAndSynchronizedFields(
                         $copied_values,
                         $mapped_status,
                         $synchronized_fields

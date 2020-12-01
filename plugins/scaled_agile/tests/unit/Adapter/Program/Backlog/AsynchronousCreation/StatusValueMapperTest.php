@@ -32,7 +32,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
@@ -61,7 +61,7 @@ final class StatusValueMapperTest extends \PHPUnit\Framework\TestCase
         $first_list_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Not found', 'Irrelevant', 1, 0);
         $second_list_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(2001, 'Planned', 'Irrelevant', 2, 0);
         $copied_values     = $this->buildCopiedValues([$first_list_value, $second_list_value]);
-        $status_field_data = new FieldData(
+        $status_field_data = new Field(
             new \Tracker_FormElement_Field_Selectbox(1004, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4)
         );
 
@@ -87,7 +87,7 @@ final class StatusValueMapperTest extends \PHPUnit\Framework\TestCase
         $first_list_value  = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Not found', 'Irrelevant', 1, 0);
         $second_list_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(2001, 'Planned', 'Irrelevant', 1, 0);
         $copied_values     = $this->buildCopiedValues([$first_list_value, $second_list_value]);
-        $status_field_data = new FieldData(new \Tracker_FormElement_Field_Selectbox(
+        $status_field_data = new Field(new \Tracker_FormElement_Field_Selectbox(
             1004,
             89,
             1000,

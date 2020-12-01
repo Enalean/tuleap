@@ -25,17 +25,17 @@ namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 use Tracker_FormElement_Field_List;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\SourceChangesetValuesCollection;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
 
 interface MapStatusByValue
 {
     /**
-     * @psalm-param FieldData<Tracker_FormElement_Field_List> $field_status_data
+     * @psalm-param Field<Tracker_FormElement_Field_List> $field_status_data
      * @throws NoDuckTypedMatchingValueException
      */
     public function mapStatusValueByDuckTyping(
         SourceChangesetValuesCollection $changeset_values_collection,
-        FieldData $field_status_data
+        Field $field_status_data
     ): MappedStatusValue;
 }

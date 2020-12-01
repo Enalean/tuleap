@@ -20,45 +20,33 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile;
+namespace Tuleap\ScaledAgile\Adapter;
 
-/**
- * @psalm-immutable
- */
-class ProjectData
+use Project;
+use Tuleap\ScaledAgile\BuildProject;
+use Tuleap\ScaledAgile\Project as ScaledProject;
+
+final class ProjectAdapter implements BuildProject
 {
     /**
-     * @var int
+     * @var \ProjectManager
      */
-    private $id;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var string
-     */
-    private $public_name;
+    private $project_manager;
 
-    public function __construct(int $id, string $name, string $public_name)
+    public function __construct(\ProjectManager $project_manager)
     {
-        $this->id          = $id;
-        $this->name        = $name;
-        $this->public_name = $public_name;
+        $this->project_manager = $project_manager;
     }
 
-    public function getId(): int
+    public static function build(Project $project): ScaledProject
     {
-        return (int) $this->id;
+        return new ScaledProject((int) $project->getID(), (string) $project->getUnixName(), (string) $project->getPublicName());
     }
 
-    public function getName(): string
+    public function buildFromId(int $id): ScaledProject
     {
-        return (string) $this->name;
-    }
+        $team_project = $this->project_manager->getProject($id);
 
-    public function getPublicName(): string
-    {
-        return (string) $this->public_name;
+        return self::build($team_project);
     }
 }

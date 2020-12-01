@@ -91,7 +91,7 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
      */
     public function buildCollection(ReplicationData $replication_data): SourceChangesetValuesCollection
     {
-        $fields              = $this->fields_gatherer->build($replication_data->getTrackerData());
+        $fields              = $this->fields_gatherer->build($replication_data->getTracker());
         $title_value         = $this->build_title_value->build($fields->getTitleField(), $replication_data);
         $description_value   = $this->build_description_value->build($fields->getDescriptionField(), $replication_data);
         $status_value        = $this->build_status_value->build($fields->getStatusField(), $replication_data);
@@ -100,11 +100,11 @@ final class SourceChangesetValuesCollectionAdapter implements BuildFieldValues
         $artifact_link_value = $this->build_artifact_link_value->build($replication_data);
 
         return new SourceChangesetValuesCollection(
-            $replication_data->getArtifactData()->getId(),
+            $replication_data->getArtifact()->getId(),
             $title_value,
             $description_value,
             $status_value,
-            new SubmissionDate($replication_data->getArtifactData()->getSubmittedOn()),
+            new SubmissionDate($replication_data->getArtifact()->getSubmittedOn()),
             $start_date_value,
             $end_period_value,
             $artifact_link_value

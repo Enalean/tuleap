@@ -23,10 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile;
 
 use Project;
+use Tuleap\ScaledAgile\Project as ScaledProject;
 
 interface BuildProject
 {
-    public static function build(Project $project): ProjectData;
+    public static function build(Project $project): ScaledProject;
 
-    public function buildFromId(int $id): ProjectData;
+    public function buildFromId(int $id): ScaledProject;
 }

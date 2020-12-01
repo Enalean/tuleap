@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 
-final class SynchronizedFieldDataFromProgramAndTeamTrackersCollection
+final class SynchronizedFieldFromProgramAndTeamTrackersCollection
 {
     /**
      * @var array<int, true>
      */
     private $synchronized_fields_ids = [];
     /**
-     * @var FieldData[]
+     * @var Field[]
      */
     private $synchronized_fields = [];
 
@@ -67,7 +67,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollection
         return array_keys($this->synchronized_fields_ids);
     }
 
-    public function add(SynchronizedFieldDataFromProgramAndTeamTrackers $synchronized_field_data): void
+    public function add(SynchronizedFieldFromProgramAndTeamTrackers $synchronized_field_data): void
     {
         $this->synchronized_fields     = array_merge(
             $this->synchronized_fields,

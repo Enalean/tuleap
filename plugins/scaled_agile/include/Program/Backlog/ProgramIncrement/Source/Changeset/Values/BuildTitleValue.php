@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 interface BuildTitleValue
@@ -31,5 +31,5 @@ interface BuildTitleValue
      * @throws UnsupportedTitleFieldException
      * @throws ChangesetValueNotFoundException
      */
-    public function build(FieldData $field_title_data, ReplicationData $replication_data): TitleValue;
+    public function build(Field $field_title_data, ReplicationData $replication_data): TitleValue;
 }

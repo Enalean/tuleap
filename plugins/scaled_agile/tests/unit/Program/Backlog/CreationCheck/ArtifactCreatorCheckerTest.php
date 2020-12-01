@@ -27,9 +27,9 @@ use PHPUnit\Framework\TestCase;
 use Planning;
 use Project;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -76,8 +76,8 @@ final class ArtifactCreatorCheckerTest extends TestCase
         $this->assertFalse(
             $this->artifact_creator_checker->canCreateAnArtifact(
                 UserTestBuilder::aUser()->build(),
-                new TrackerData($tracker),
-                ProjectDataAdapter::build($project)
+                new ScaledAgileTracker($tracker),
+                ProjectAdapter::build($project)
             )
         );
     }
@@ -94,8 +94,8 @@ final class ArtifactCreatorCheckerTest extends TestCase
         $this->assertTrue(
             $this->artifact_creator_checker->canCreateAnArtifact(
                 UserTestBuilder::aUser()->build(),
-                new TrackerData($tracker),
-                ProjectDataAdapter::build($project)
+                new ScaledAgileTracker($tracker),
+                ProjectAdapter::build($project)
             )
         );
     }
@@ -113,8 +113,8 @@ final class ArtifactCreatorCheckerTest extends TestCase
         $this->assertTrue(
             $this->artifact_creator_checker->canCreateAnArtifact(
                 UserTestBuilder::aUser()->build(),
-                new TrackerData($tracker),
-                ProjectDataAdapter::build($project)
+                new ScaledAgileTracker($tracker),
+                ProjectAdapter::build($project)
             )
         );
     }

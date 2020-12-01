@@ -49,19 +49,19 @@ use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\PlanningProgramAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\ProgramNotFoundException;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\UserCanNotAccessToProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ArtifactCreatorChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ProgramIncrementArtifactCreatorChecker;
 use Tuleap\ScaledAgile\Program\Backlog\PlanningCheck\ConfigurationChecker;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\REST\ResourcesInjector;
 use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\ScaledAgile\Workspace\ComponentInvolvedVerifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -133,7 +133,7 @@ final class scaled_agilePlugin extends Plugin
     public function displayTopPlanningAppEvent(DisplayTopPlanningAppEvent $event): void
     {
         $virtual_top_milestone = $event->getTopMilestone();
-        $project_data = ProjectDataAdapter::build($virtual_top_milestone->getProject());
+        $project_data = ProjectAdapter::build($virtual_top_milestone->getProject());
         $team_project_collection = $this->getTeamProjectCollectionBuilder()->getTeamProjectForAGivenProgramProject(
             $project_data
         );
@@ -196,8 +196,8 @@ final class scaled_agilePlugin extends Plugin
             $this->getProjectIncrementCreatorChecker()
         );
 
-        $tracker_data = new TrackerData($can_submit_new_artifact->getTracker());
-        $project_data = ProjectDataAdapter::build($can_submit_new_artifact->getTracker()->getProject());
+        $tracker_data = new ScaledAgileTracker($can_submit_new_artifact->getTracker());
+        $project_data = ProjectAdapter::build($can_submit_new_artifact->getTracker()->getProject());
         if (
             ! $artifact_creator_checker->canCreateAnArtifact(
                 $can_submit_new_artifact->getUser(),
@@ -255,7 +255,7 @@ final class scaled_agilePlugin extends Plugin
             new \Tuleap\ScaledAgile\Adapter\Team\TeamDao(),
             new ProgramDao()
         );
-        $project_data                = ProjectDataAdapter::build($planning_administration_delegation->getProject());
+        $project_data                = ProjectAdapter::build($planning_administration_delegation->getProject());
         if ($component_involved_verifier->isInvolvedInAScaledAgileWorkspace($project_data)) {
             $planning_administration_delegation->enablePlanningAdministrationDelegation();
         }
@@ -264,14 +264,14 @@ final class scaled_agilePlugin extends Plugin
     public function trackerHierarchyDelegation(
         TrackerHierarchyDelegation $tracker_hierarchy_delegation
     ): void {
-        if ((new ScaledAgileHierarchyDAO())->isPartOfAHierarchy(new TrackerData($tracker_hierarchy_delegation->getTracker()))) {
+        if ((new ScaledAgileHierarchyDAO())->isPartOfAHierarchy(new ScaledAgileTracker($tracker_hierarchy_delegation->getTracker()))) {
             $tracker_hierarchy_delegation->enableTrackerHierarchyDelegation($this->getPluginInfo()->getPluginDescriptor()->getFullName());
         }
     }
 
     public function trackerUsage(array $params): void
     {
-        if ((new PlanDao())->isPartOfAPlan(new TrackerData($params['tracker']))) {
+        if ((new PlanDao())->isPartOfAPlan(new ScaledAgileTracker($params['tracker']))) {
             $params['result'] = [
                 'can_be_deleted' => false,
                 'message'        => $this->getPluginInfo()->getPluginDescriptor()->getFullName()
@@ -318,7 +318,7 @@ final class scaled_agilePlugin extends Plugin
             new TrackerCollectionFactory(
                 $this->getPlanningAdapter()
             ),
-            new SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder(
+            new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
                 new SynchronizedFieldsAdapter(
                     new ArtifactLinkFieldAdapter($form_element_factory),
                     new TitleFieldAdapter(new Tracker_Semantic_TitleFactory()),
@@ -362,9 +362,9 @@ final class scaled_agilePlugin extends Plugin
         );
     }
 
-    private function getProjectDataAdapter(): ProjectDataAdapter
+    private function getProjectDataAdapter(): ProjectAdapter
     {
-        return new ProjectDataAdapter(ProjectManager::instance());
+        return new ProjectAdapter(ProjectManager::instance());
     }
 
     private function getProgramIncrementRunner(): CreateProgramIncrementsRunner

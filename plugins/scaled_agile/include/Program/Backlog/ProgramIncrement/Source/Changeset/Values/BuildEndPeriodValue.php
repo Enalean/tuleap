@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 interface BuildEndPeriodValue
 {
-    public function build(FieldData $end_period_field_data, ReplicationData $replication_data): EndPeriodValue;
+    public function build(Field $end_period_field_data, ReplicationData $replication_data): EndPeriodValue;
 }

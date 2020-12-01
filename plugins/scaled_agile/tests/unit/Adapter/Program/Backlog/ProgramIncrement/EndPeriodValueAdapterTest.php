@@ -26,7 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -56,12 +56,12 @@ final class EndPeriodValueAdapterTest extends TestCase
     private $duration_field;
 
     /**
-     * @var FieldData
+     * @var Field
      */
     private $end_date_field_data;
 
     /**
-     * @var FieldData
+     * @var Field
      */
     private $duration_field_data;
 
@@ -80,7 +80,7 @@ final class EndPeriodValueAdapterTest extends TestCase
             true,
             1
         );
-        $this->duration_field_data = new FieldData($this->duration_field);
+        $this->duration_field_data = new Field($this->duration_field);
         $this->end_date_field      = new \Tracker_FormElement_Field_Date(
             20,
             10,
@@ -94,7 +94,7 @@ final class EndPeriodValueAdapterTest extends TestCase
             true,
             1
         );
-        $this->end_date_field_data = new FieldData($this->end_date_field);
+        $this->end_date_field_data = new Field($this->end_date_field);
 
         $this->user          = UserTestBuilder::aUser()->withId(101)->build();
         $submitted_on        = 123456789;

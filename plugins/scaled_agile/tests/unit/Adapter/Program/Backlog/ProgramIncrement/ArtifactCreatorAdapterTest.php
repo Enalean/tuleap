@@ -29,9 +29,9 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\MappedStatusValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StartDateValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -59,7 +59,7 @@ final class ArtifactCreatorAdapterTest extends \PHPUnit\Framework\TestCase
 
     public function testItCreatesAnArtifact(): void
     {
-        $tracker           = new TrackerData(TrackerTestBuilder::aTracker()->build());
+        $tracker           = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->build());
         $fields_and_values = $this->buildProgramIncrementFieldsData();
         $user              = UserTestBuilder::aUser()->build();
         $submission_date   = new SubmissionDate(1234567890);
@@ -82,7 +82,7 @@ final class ArtifactCreatorAdapterTest extends \PHPUnit\Framework\TestCase
 
     public function testItThrowsWhenThereIsAnErrorDuringCreation(): void
     {
-        $tracker           = new TrackerData(TrackerTestBuilder::aTracker()->build());
+        $tracker           = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->build());
         $fields_and_values = $this->buildProgramIncrementFieldsData();
         $user              = UserTestBuilder::aUser()->build();
         $submission_date   = new SubmissionDate(1234567890);
@@ -93,9 +93,9 @@ final class ArtifactCreatorAdapterTest extends \PHPUnit\Framework\TestCase
         $this->adapter->create($tracker, $fields_and_values, $user, $submission_date);
     }
 
-    private function buildProgramIncrementFieldsData(): ProgramIncrementFieldsData
+    private function buildProgramIncrementFieldsData(): ProgramIncrementFields
     {
-        return new ProgramIncrementFieldsData(
+        return new ProgramIncrementFields(
             1000,
             new ArtifactLinkValue(200),
             1001,
