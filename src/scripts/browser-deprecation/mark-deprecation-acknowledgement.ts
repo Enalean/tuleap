@@ -18,7 +18,7 @@
  */
 
 const STORAGE_KEY = "last_ack_browser_deprecation";
-const ACK_EXPIRATION_MS = 4 * 24 * 60 * 60 * 1000; // 4 days
+const ACK_EXPIRATION_MS = 55 * 60 * 1000; // 55 minutes
 
 export function markAndCheckBrowserDeprecationAcknowledgement(storage: Storage): boolean {
     const last_ack = parseInt(storage.getItem(STORAGE_KEY) ?? "", 10) ?? Infinity;
