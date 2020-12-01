@@ -20,21 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
+namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation;
 
-use BackendLogger;
 use Exception;
-use Tracker_Artifact_ChangesetFactoryBuilder;
-use Tracker_ArtifactFactory;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Queue\WorkerEvent;
-use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
+use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\RunProgramIncrementCreation;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
-use UserManager;
 
-class CreateProgramIncrementsRunner
+final class CreateProgramIncrementsRunner implements RunProgramIncrementCreation
 {
     private const TOPIC = 'tuleap.scaled_agile.program_increment.creation';
 
@@ -50,32 +46,22 @@ class CreateProgramIncrementsRunner
      * @var ReplicationDataAdapter
      */
     private $replication_data_adapter;
+    /**
+     * @var TaskBuilder
+     */
+    private $task_builder;
 
 
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         QueueFactory $queue_factory,
-        ReplicationDataAdapter $replication_data_adapter
+        ReplicationDataAdapter $replication_data_adapter,
+        TaskBuilder $task_builder
     ) {
         $this->logger                   = $logger;
         $this->queue_factory            = $queue_factory;
         $this->replication_data_adapter = $replication_data_adapter;
-    }
-
-    public static function build(): self
-    {
-        $logger = BackendLogger::getDefaultLogger("scaled_agile_syslog");
-
-        return new self(
-            $logger,
-            new QueueFactory($logger),
-            new ReplicationDataAdapter(
-                Tracker_ArtifactFactory::instance(),
-                UserManager::instance(),
-                new PendingArtifactCreationDao(),
-                Tracker_Artifact_ChangesetFactoryBuilder::build()
-            )
-        );
+        $this->task_builder             = $task_builder;
     }
 
     /**
@@ -101,7 +87,7 @@ class CreateProgramIncrementsRunner
 
     private function processProgramIncrementCreation(ReplicationData $replication_data): void
     {
-        $task = CreateProgramIncrementsTask::build();
+        $task = $this->task_builder->build();
         $task->createProgramIncrements($replication_data);
     }
 

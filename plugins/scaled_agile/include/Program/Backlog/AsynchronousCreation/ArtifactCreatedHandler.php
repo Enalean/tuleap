@@ -35,7 +35,7 @@ class ArtifactCreatedHandler
      */
     private $program_store;
     /**
-     * @var CreateProgramIncrementsRunner
+     * @var RunProgramIncrementCreation
      */
     private $create_program_increments_runner;
     /**
@@ -49,7 +49,7 @@ class ArtifactCreatedHandler
 
     public function __construct(
         ProgramStore $program_store,
-        CreateProgramIncrementsRunner $create_program_increments_runner,
+        RunProgramIncrementCreation $create_program_increments_runner,
         PendingArtifactCreationStore $pending_artifact_creation_store,
         PlanningAdapter $planning_adapter
     ) {

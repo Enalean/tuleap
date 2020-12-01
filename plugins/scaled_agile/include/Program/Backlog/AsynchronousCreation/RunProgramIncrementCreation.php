@@ -22,12 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation;
 
-class PendingArtifactUserNotFoundException extends \RuntimeException implements ProgramIncrementCreationException
+use Tuleap\Queue\WorkerEvent;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
+
+interface RunProgramIncrementCreation
 {
-    public function __construct(int $artifact_id, int $user_id)
-    {
-        parent::__construct(
-            "Could not find User #$user_id for program source artifact #$artifact_id"
-        );
-    }
+    /**
+     * @throw ProgramIncrementCreationException
+     */
+    public function addListener(WorkerEvent $event): void;
+
+    public function executeProgramIncrementsCreation(ReplicationData $replication_data): void;
 }
