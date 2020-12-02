@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 interface BuildStartDateValue
@@ -30,5 +30,5 @@ interface BuildStartDateValue
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public function build(FieldData $field_start_date_data, ReplicationData $replication_data): StartDateValue;
+    public function build(Field $field_start_date_data, ReplicationData $replication_data): StartDateValue;
 }

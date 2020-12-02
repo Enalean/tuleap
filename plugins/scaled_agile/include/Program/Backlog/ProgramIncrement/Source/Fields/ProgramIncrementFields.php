@@ -33,7 +33,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\
 /**
  * @psalm-immutable
  */
-final class ProgramIncrementFieldsData
+final class ProgramIncrementFields
 {
     /**
      * @var int

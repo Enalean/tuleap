@@ -25,12 +25,12 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackers;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackers;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 final class RequiredFieldCheckerTest extends TestCase
 {
@@ -71,11 +71,11 @@ final class RequiredFieldCheckerTest extends TestCase
             $required_title,
             $non_required_artifact_link
         );
-        $collection         = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+        $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_field);
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
             new ProgramIncrementsTrackerCollection(
-                [new TrackerData($tracker), new TrackerData($other_tracker_with_no_required_field)]
+                [new ScaledAgileTracker($tracker), new ScaledAgileTracker($other_tracker_with_no_required_field)]
             ),
             $collection
         );
@@ -105,11 +105,11 @@ final class RequiredFieldCheckerTest extends TestCase
             $required_title,
             $required_artifact_link
         );
-        $collection         = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+        $collection         = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_field);
 
         $no_other_required_fields = $this->checker->areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
-            new ProgramIncrementsTrackerCollection([new TrackerData($tracker)]),
+            new ProgramIncrementsTrackerCollection([new ScaledAgileTracker($tracker)]),
             $collection
         );
         $this->assertFalse($no_other_required_fields);
@@ -118,12 +118,12 @@ final class RequiredFieldCheckerTest extends TestCase
     private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(
         \Tracker_FormElement_Field_Text $title_field,
         \Tracker_FormElement_Field_ArtifactLink $artifact_link_field
-    ): SynchronizedFieldDataFromProgramAndTeamTrackers {
-        $artifact_link_field_data = new FieldData($artifact_link_field);
+    ): SynchronizedFieldFromProgramAndTeamTrackers {
+        $artifact_link_field_data = new Field($artifact_link_field);
 
-        $title_field_data = new FieldData($title_field);
+        $title_field_data = new Field($title_field);
 
-        $description_field_data = new FieldData(
+        $description_field_data = new Field(
             new \Tracker_FormElement_Field_Text(
                 3,
                 89,
@@ -139,7 +139,7 @@ final class RequiredFieldCheckerTest extends TestCase
             )
         );
 
-        $status_field_data = new FieldData(
+        $status_field_data = new Field(
             new \Tracker_FormElement_Field_Selectbox(
                 4,
                 89,
@@ -155,11 +155,11 @@ final class RequiredFieldCheckerTest extends TestCase
             )
         );
 
-        $start_date_field_data = new FieldData(
+        $start_date_field_data = new Field(
             new \Tracker_FormElement_Field_Date(5, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5)
         );
 
-        $end_date_field_data = new FieldData(
+        $end_date_field_data = new Field(
             new \Tracker_FormElement_Field_Date(6, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6)
         );
 
@@ -172,6 +172,6 @@ final class RequiredFieldCheckerTest extends TestCase
             $end_date_field_data
         );
 
-        return new SynchronizedFieldDataFromProgramAndTeamTrackers($synchronized_fields);
+        return new SynchronizedFieldFromProgramAndTeamTrackers($synchronized_fields);
     }
 }

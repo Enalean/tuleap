@@ -25,12 +25,12 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildStatusValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class StatusValueAdapter implements BuildStatusValue
 {
-    public function build(FieldData $field_status_data, ReplicationData $replication_data): StatusValue
+    public function build(Field $field_status_data, ReplicationData $replication_data): StatusValue
     {
         $status_value = $replication_data->getFullChangeset()->getValue($field_status_data->getFullField());
         if (! $status_value) {

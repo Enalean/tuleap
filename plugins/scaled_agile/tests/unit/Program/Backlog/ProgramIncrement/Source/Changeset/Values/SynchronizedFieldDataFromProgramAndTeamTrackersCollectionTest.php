@@ -43,7 +43,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $collection = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_field_data);
         $this->assertTrue($collection->canUserSubmitAndUpdateAllFields($user));
     }
@@ -54,7 +54,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(false, true);
 
-        $collection = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_field_data);
         $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user));
     }
@@ -65,7 +65,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, false);
 
-        $collection = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_field_data);
         $this->assertFalse($collection->canUserSubmitAndUpdateAllFields($user));
     }
@@ -77,7 +77,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
 
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $collection = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_field_data);
         $this->assertTrue($collection->isFieldSynchronized($field));
 
@@ -90,36 +90,36 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
     {
         $synchronized_field_data = $this->buildSynchronizedFieldDataFromProgramAndTeamTrackers(true, true);
 
-        $collection = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_field_data);
         $this->assertEquals([1, 2, 3, 4, 5, 6], $collection->getSynchronizedFieldIDs());
     }
 
-    private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(bool $submitable, bool $updatable): SynchronizedFieldDataFromProgramAndTeamTrackers
+    private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(bool $submitable, bool $updatable): SynchronizedFieldFromProgramAndTeamTrackers
     {
         $artifact_link      = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
         $this->mockField($artifact_link, 1, $submitable, $updatable);
-        $artifact_link_field_data = new FieldData($artifact_link);
+        $artifact_link_field_data = new Field($artifact_link);
 
         $title_field = Mockery::mock(\Tracker_FormElement_Field_Text::class);
         $this->mockField($title_field, 2, true, true);
-        $title_field_data = new FieldData($title_field);
+        $title_field_data = new Field($title_field);
 
         $description_field    = Mockery::mock(Tracker_FormElement_Field_Text::class);
         $this->mockField($description_field, 3, true, true);
-        $description_field_data = new FieldData($description_field);
+        $description_field_data = new Field($description_field);
 
         $status_field        = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
         $this->mockField($status_field, 4, true, true);
-        $status_field_data = new FieldData($status_field);
+        $status_field_data = new Field($status_field);
 
         $field_start_date      = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_start_date, 5, true, true);
-        $start_date_field_data = new FieldData($field_start_date);
+        $start_date_field_data = new Field($field_start_date);
 
         $field_end_date          = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_end_date, 6, true, true);
-        $end_date_field_data = new FieldData($field_end_date);
+        $end_date_field_data = new Field($field_end_date);
 
         $synchronized_field_data = new SynchronizedFields(
             $artifact_link_field_data,
@@ -130,7 +130,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
             $end_date_field_data
         );
 
-        return new SynchronizedFieldDataFromProgramAndTeamTrackers($synchronized_field_data);
+        return new SynchronizedFieldFromProgramAndTeamTrackers($synchronized_field_data);
     }
 
     private function mockField(MockInterface $field, int $id, bool $submitable, bool $updatable): void

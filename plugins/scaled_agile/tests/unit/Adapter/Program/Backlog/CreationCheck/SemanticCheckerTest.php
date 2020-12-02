@@ -27,9 +27,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
-use Tuleap\ScaledAgile\ProjectData;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
+use Tuleap\ScaledAgile\Project;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
@@ -76,12 +76,12 @@ final class SemanticCheckerTest extends TestCase
     public function testItReturnsTrueIfAllChecksAreOk(): void
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_milestone    = new PlanningData(
-            new TrackerData($top_planning_tracker),
+        $program_milestone    = new Planning(
+            new ScaledAgileTracker($top_planning_tracker),
             1,
             'Release Planning',
             [],
-            new ProjectData(1, "my_project", "My project")
+            new Project(1, "my_project", "My project")
         );
 
         $first_tracker                = $this->buildTestTracker(1024);
@@ -116,12 +116,12 @@ final class SemanticCheckerTest extends TestCase
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTitleSemantic(): void
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_milestone    = new PlanningData(
-            new TrackerData($top_planning_tracker),
+        $program_milestone    = new Planning(
+            new ScaledAgileTracker($top_planning_tracker),
             1,
             'Release Planning',
             [],
-            new ProjectData(1, "my_project", "My project")
+            new Project(1, "my_project", "My project")
         );
 
         $first_tracker                = $this->buildTestTracker(1024);
@@ -139,12 +139,12 @@ final class SemanticCheckerTest extends TestCase
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveDescriptionSemantic(): void
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_milestone    = new PlanningData(
-            new TrackerData($top_planning_tracker),
+        $program_milestone    = new Planning(
+            new ScaledAgileTracker($top_planning_tracker),
             1,
             'Release Planning',
             [],
-            new ProjectData(1, "my_project", "My project")
+            new Project(1, "my_project", "My project")
         );
 
         $first_tracker                = $this->buildTestTracker(1024);
@@ -164,12 +164,12 @@ final class SemanticCheckerTest extends TestCase
     public function testItReturnsFalseIfOneMilestoneTrackerDoesNotHaveTimeFrameSemantic(): void
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_milestone    = new PlanningData(
-            new TrackerData($top_planning_tracker),
+        $program_milestone    = new Planning(
+            new ScaledAgileTracker($top_planning_tracker),
             1,
             'Release Planning',
             [],
-            new ProjectData(1, "my_project", "My project")
+            new Project(1, "my_project", "My project")
         );
 
         $first_tracker                = $this->buildTestTracker(1024);
@@ -193,12 +193,12 @@ final class SemanticCheckerTest extends TestCase
     public function testItReturnsFalseIfTimeFrameSemanticsDontUseTheSameFieldType(): void
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_milestone    = new PlanningData(
-            new TrackerData($top_planning_tracker),
+        $program_milestone    = new Planning(
+            new ScaledAgileTracker($top_planning_tracker),
             1,
             'Release Planning',
             [],
-            new ProjectData(1, "my_project", "My project")
+            new Project(1, "my_project", "My project")
         );
 
         $first_tracker                = $this->buildTestTracker(1024);
@@ -224,12 +224,12 @@ final class SemanticCheckerTest extends TestCase
     public function testItReturnsFalseIfOneStatusSemanticIsNotWellConfigured(): void
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $program_milestone    = new PlanningData(
-            new TrackerData($top_planning_tracker),
+        $program_milestone    = new Planning(
+            new ScaledAgileTracker($top_planning_tracker),
             1,
             'Release Planning',
             [],
-            new ProjectData(1, "my_project", "My project")
+            new Project(1, "my_project", "My project")
         );
 
         $first_tracker                = $this->buildTestTracker(1024);
@@ -253,9 +253,9 @@ final class SemanticCheckerTest extends TestCase
         );
     }
 
-    private function buildTestTracker(int $tracker_id): TrackerData
+    private function buildTestTracker(int $tracker_id): ScaledAgileTracker
     {
-        return new TrackerData(
+        return new ScaledAgileTracker(
             new \Tracker(
                 $tracker_id,
                 null,

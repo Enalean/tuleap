@@ -26,7 +26,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\TitleValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\UnsupportedTitleFieldException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class TitleValueAdapter implements BuildTitleValue
@@ -35,7 +35,7 @@ final class TitleValueAdapter implements BuildTitleValue
      * @throws UnsupportedTitleFieldException
      * @throws ChangesetValueNotFoundException
      */
-    public function build(FieldData $field_title_data, ReplicationData $replication_data): TitleValue
+    public function build(Field $field_title_data, ReplicationData $replication_data): TitleValue
     {
         $title_value = $replication_data->getFullChangeset()->getValue($field_title_data->getFullField());
         if (! $title_value) {

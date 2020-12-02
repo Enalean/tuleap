@@ -20,58 +20,37 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile;
+namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tracker;
-use Tuleap\Tracker\TrackerColor;
-
-final class TrackerData
+final class SynchronizedFieldFromProgramAndTeamTrackers
 {
     /**
-     * @var Tracker
+     * @var array<int, true>
      * @psalm-readonly
      */
-    private $tracker;
+    private $synchronized_field_data_ids;
+    /**
+     * @var SynchronizedFields
+     * @psalm-readonly
+     */
+    private $synchronized_fields_data;
 
-    public function __construct(Tracker $tracker)
+    public function __construct(SynchronizedFields $synchronized_fields)
     {
-        $this->tracker = $tracker;
+        $this->synchronized_fields_data    = $synchronized_fields;
+        $this->synchronized_field_data_ids = $synchronized_fields->getSynchronizedFieldIDsAsKeys();
+    }
+
+    public function getSynchronizedFieldsData(): SynchronizedFields
+    {
+        return $this->synchronized_fields_data;
     }
 
     /**
-     * @psalm-mutation-free
+     * @return array<int, true>
      */
-    public function getTrackerId(): int
+    public function getSynchronizedFieldDataIds(): array
     {
-        return (int) $this->tracker->getId();
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getFullTracker(): Tracker
-    {
-        return $this->tracker;
-    }
-
-    public function userCanSubmitArtifact(\PFUser $user): bool
-    {
-        return $this->tracker->userCanSubmitArtifact($user);
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getName(): string
-    {
-        return (string) $this->tracker->getName();
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getColor(): TrackerColor
-    {
-        return $this->tracker->getColor();
+        return $this->synchronized_field_data_ids;
     }
 }

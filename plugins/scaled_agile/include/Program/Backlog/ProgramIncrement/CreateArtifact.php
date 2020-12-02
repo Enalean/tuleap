@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFieldsData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\ProgramIncrementFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SubmissionDate;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 interface CreateArtifact
 {
     public function create(
-        TrackerData $tracker,
-        ProgramIncrementFieldsData $fields_and_values,
+        ScaledAgileTracker $tracker,
+        ProgramIncrementFields $fields_and_values,
         \PFUser $user,
         SubmissionDate $submission_date
     ): void;

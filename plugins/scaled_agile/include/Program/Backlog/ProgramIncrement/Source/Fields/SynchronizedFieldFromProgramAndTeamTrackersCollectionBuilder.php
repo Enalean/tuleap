@@ -24,7 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
 
-class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder
+class SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
 {
     /**
      * @var BuildSynchronizedFields
@@ -41,11 +41,11 @@ class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder
      */
     public function buildFromSourceTrackers(
         SourceTrackerCollection $source_tracker_collection
-    ): SynchronizedFieldDataFromProgramAndTeamTrackersCollection {
-        $collection = new SynchronizedFieldDataFromProgramAndTeamTrackersCollection();
+    ): SynchronizedFieldFromProgramAndTeamTrackersCollection {
+        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         foreach ($source_tracker_collection->getSourceTrackers() as $source_tracker) {
             $collection->add(
-                new SynchronizedFieldDataFromProgramAndTeamTrackers($this->fields_adapter->build($source_tracker))
+                new SynchronizedFieldFromProgramAndTeamTrackers($this->fields_adapter->build($source_tracker))
             );
         }
 

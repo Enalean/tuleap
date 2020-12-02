@@ -25,12 +25,12 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildEndPeriodValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\EndPeriodValue;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class EndPeriodValueAdapter implements BuildEndPeriodValue
 {
-    public function build(FieldData $end_period_field_data, ReplicationData $replication_data): EndPeriodValue
+    public function build(Field $end_period_field_data, ReplicationData $replication_data): EndPeriodValue
     {
         $end_period_value = $replication_data->getFullChangeset()->getValue($end_period_field_data->getFullField());
 

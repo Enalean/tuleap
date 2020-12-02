@@ -31,9 +31,9 @@ use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
-use Tuleap\ScaledAgile\ProjectData;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
+use Tuleap\ScaledAgile\Project;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
@@ -87,8 +87,8 @@ final class StatusSemanticCheckerTest extends TestCase
         $this->tracker_team_02 = new Tracker(124, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
         $this->collection      = new SourceTrackerCollection(
             [
-                new TrackerData($this->tracker_team_01),
-                new TrackerData($this->tracker_team_02)
+                new ScaledAgileTracker($this->tracker_team_01),
+                new ScaledAgileTracker($this->tracker_team_02)
             ]
         );
     }
@@ -96,12 +96,12 @@ final class StatusSemanticCheckerTest extends TestCase
     public function testItReturnsTrueIfAllStatusSemanticAreWellConfigured(): void
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $top_planning         = new PlanningData(
-            new TrackerData($top_planning_tracker),
+        $top_planning         = new Planning(
+            new ScaledAgileTracker($top_planning_tracker),
             1,
             'Release Planning',
             [],
-            new ProjectData(1, "my_project", "My project")
+            new Project(1, "my_project", "My project")
         );
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
@@ -150,12 +150,12 @@ final class StatusSemanticCheckerTest extends TestCase
     public function testItReturnsFalseIfProgramTrackerDoesNotHaveStatusSemantic(): void
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $top_planning         = new PlanningData(
-            new TrackerData($top_planning_tracker),
+        $top_planning         = new Planning(
+            new ScaledAgileTracker($top_planning_tracker),
             1,
             'Release Planning',
             [],
-            new ProjectData(1, "my_project", "My project")
+            new Project(1, "my_project", "My project")
         );
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
@@ -177,12 +177,12 @@ final class StatusSemanticCheckerTest extends TestCase
     public function testItReturnsFalseIfSomeCTeamTrackersDoNotHaveSemanticStatusDefined(): void
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $top_planning         = new PlanningData(
-            new TrackerData($top_planning_tracker),
+        $top_planning         = new Planning(
+            new ScaledAgileTracker($top_planning_tracker),
             1,
             'Release Planning',
             [],
-            new ProjectData(1, "my_project", "My project")
+            new Project(1, "my_project", "My project")
         );
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);
@@ -209,12 +209,12 @@ final class StatusSemanticCheckerTest extends TestCase
     public function testItReturnsFalseIfSomeTeamStatusSemanticDoNotContainTheProgramOpenValue(): void
     {
         $top_planning_tracker = TrackerTestBuilder::aTracker()->withId(104)->build();
-        $top_planning         = new PlanningData(
-            new TrackerData($top_planning_tracker),
+        $top_planning         = new Planning(
+            new ScaledAgileTracker($top_planning_tracker),
             1,
             'Release Planning',
             [],
-            new ProjectData(1, "my_project", "My project")
+            new Project(1, "my_project", "My project")
         );
 
         $top_planning_tracker_semantic_status = Mockery::mock(Tracker_Semantic_Status::class);

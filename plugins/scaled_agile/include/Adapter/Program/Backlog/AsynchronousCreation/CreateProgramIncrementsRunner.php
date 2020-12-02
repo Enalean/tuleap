@@ -93,7 +93,7 @@ final class CreateProgramIncrementsRunner implements RunProgramIncrementCreation
 
     public function executeProgramIncrementsCreation(ReplicationData $replication_data): void
     {
-        $artifact_id = $replication_data->getArtifactData()->getId();
+        $artifact_id = $replication_data->getArtifact()->getId();
         try {
             $queue       = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
             $queue->pushSinglePersistentMessage(

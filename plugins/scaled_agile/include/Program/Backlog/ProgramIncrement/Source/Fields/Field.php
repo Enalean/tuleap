@@ -27,7 +27,7 @@ use Tracker_FormElement_Field;
 /**
  * @template F of Tracker_FormElement_Field
  */
-final class FieldData
+final class Field
 {
     /**
      * @psalm-var F

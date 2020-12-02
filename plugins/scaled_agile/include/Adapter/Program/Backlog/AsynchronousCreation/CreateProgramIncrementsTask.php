@@ -95,7 +95,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
     {
         $copied_values = $this->changeset_collection_adapter->buildCollection($replication_data);
 
-        $team_projects = $this->projects_collection_builder->getTeamProjectForAGivenProgramProject($replication_data->getProjectData());
+        $team_projects = $this->projects_collection_builder->getTeamProjectForAGivenProgramProject($replication_data->getProject());
 
         $team_program_increments_tracker = $this->scale_tracker_factory->buildFromTeamProjects(
             $team_projects,
@@ -109,7 +109,7 @@ final class CreateProgramIncrementsTask implements CreateTaskProgramIncrement
         );
 
         $this->pending_artifact_creation_store->deleteArtifactFromPendingCreation(
-            (int) $replication_data->getArtifactData()->getId(),
+            (int) $replication_data->getArtifact()->getId(),
             (int) $replication_data->getUser()->getId()
         );
     }

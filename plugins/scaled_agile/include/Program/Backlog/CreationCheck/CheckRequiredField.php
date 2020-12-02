@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollection;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollection;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTrackerCollection;
 
 interface CheckRequiredField
 {
     public function areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
         ProgramIncrementsTrackerCollection $program_increment_trackers,
-        SynchronizedFieldDataFromProgramAndTeamTrackersCollection $field_collection
+        SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection
     ): bool;
 }

@@ -30,6 +30,6 @@ final class ArtifactLinkValueAdapter implements BuildArtifactLinkValue
 {
     public function build(ReplicationData $replication_data): ArtifactLinkValue
     {
-        return new ArtifactLinkValue((int) $replication_data->getArtifactData()->getID());
+        return new ArtifactLinkValue((int) $replication_data->getArtifact()->getID());
     }
 }

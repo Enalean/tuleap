@@ -26,10 +26,10 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\NoProgramIncrementException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldSynchronizationException;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
 
 class ProgramIncrementArtifactCreatorChecker
@@ -43,7 +43,7 @@ class ProgramIncrementArtifactCreatorChecker
      */
     private $scale_trackers_factory;
     /**
-     * @var SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder
+     * @var SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
      */
     private $field_collection_builder;
     /**
@@ -67,7 +67,7 @@ class ProgramIncrementArtifactCreatorChecker
     public function __construct(
         TeamProjectsCollectionBuilder $team_projects_collection_builder,
         TrackerCollectionFactory $scale_tracker_factory,
-        SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder,
+        SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder $field_collection_builder,
         CheckSemantic $semantic_checker,
         CheckRequiredField $required_field_checker,
         CheckWorkflow $workflow_checker,
@@ -82,7 +82,7 @@ class ProgramIncrementArtifactCreatorChecker
         $this->logger                   = $logger;
     }
 
-    public function canProgramIncrementBeCreated(PlanningData $planning, PFUser $user): bool
+    public function canProgramIncrementBeCreated(Planning $planning, PFUser $user): bool
     {
         $program_project = $planning->getProjectData();
         $this->logger->debug(

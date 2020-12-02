@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BuildDescriptionValue;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\ChangesetValueNotFoundException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValue;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\ReplicationData;
 
 final class DescriptionValueAdapter implements BuildDescriptionValue
@@ -33,7 +33,7 @@ final class DescriptionValueAdapter implements BuildDescriptionValue
     /**
      * @throws ChangesetValueNotFoundException
      */
-    public function build(FieldData $field_description_data, ReplicationData $replication_data): DescriptionValue
+    public function build(Field $field_description_data, ReplicationData $replication_data): DescriptionValue
     {
         $description_value = $replication_data->getFullChangeset()->getValue($field_description_data->getFullField());
         if (! $description_value) {

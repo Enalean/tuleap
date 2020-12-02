@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Adapter;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\Project as ScaledProject;
 
 final class ProjectDataAdapterTest extends TestCase
 {
@@ -37,9 +37,9 @@ final class ProjectDataAdapterTest extends TestCase
         $project_manager = \Mockery::mock(\ProjectManager::class);
         $project_manager->shouldReceive('getProject')->with(101)->andReturn($project)->once();
 
-        $project_data = new ProjectData($project->getID(), $project->getUnixName(), $project->getPublicName());
+        $project_data = new ScaledProject($project->getID(), $project->getUnixName(), $project->getPublicName());
 
-        $adapter = new ProjectDataAdapter($project_manager);
+        $adapter = new ProjectAdapter($project_manager);
         $this->assertEquals($project_data, $adapter->buildFromId(101));
     }
 }

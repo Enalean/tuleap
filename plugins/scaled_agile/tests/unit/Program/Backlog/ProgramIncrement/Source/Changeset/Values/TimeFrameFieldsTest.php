@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Data\SynchronizedFields;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\TimeFrameFields;
 
 final class TimeFrameFieldsTest extends \PHPUnit\Framework\TestCase
@@ -32,7 +32,7 @@ final class TimeFrameFieldsTest extends \PHPUnit\Framework\TestCase
         $start_date_field = new \Tracker_FormElement_Field_Date(12, 67, 10, 'start_date', 'Start Date', 'Irrelevant', true, 'P', false, '', 1);
         $duration_field   = new \Tracker_FormElement_Field_Integer(13, 67, 10, 'duration', 'Duration (in days)', 'Irrelevant', true, 'P', false, '', 2);
 
-        $fields = TimeFrameFields::fromStartDateAndDuration(new FieldData($start_date_field), new FieldData($duration_field));
+        $fields = TimeFrameFields::fromStartDateAndDuration(new Field($start_date_field), new Field($duration_field));
 
         self::assertSame($start_date_field, $fields->getStartDateField()->getFullField());
         self::assertInstanceOf(\Tracker_FormElement_Field_Integer::class, $fields->getEndPeriodField()->getFullField());
@@ -44,7 +44,7 @@ final class TimeFrameFieldsTest extends \PHPUnit\Framework\TestCase
         $start_date_field = new \Tracker_FormElement_Field_Date(12, 67, 10, 'start_date', 'Start Date', 'Irrelevant', true, 'P', false, '', 1);
         $end_date_field   = new \Tracker_FormElement_Field_Date(13, 67, 10, 'end_date', 'End Date', 'Irrelevant', true, 'P', false, '', 2);
 
-        $fields = TimeFrameFields::fromStartAndEndDates(new FieldData($start_date_field), new FieldData($end_date_field));
+        $fields = TimeFrameFields::fromStartAndEndDates(new Field($start_date_field), new Field($end_date_field));
 
         self::assertSame($start_date_field, $fields->getStartDateField()->getFullField());
         self::assertInstanceOf(\Tracker_FormElement_Field_Date::class, $fields->getEndPeriodField()->getFullField());

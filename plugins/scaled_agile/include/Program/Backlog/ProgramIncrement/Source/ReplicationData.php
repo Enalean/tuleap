@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source;
 
-use Tuleap\ScaledAgile\ProjectData;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\Project;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 /**
  * @psalm-immutable
@@ -31,7 +31,7 @@ use Tuleap\ScaledAgile\TrackerData;
 class ReplicationData
 {
     /**
-     * @var TrackerData
+     * @var ScaledAgileTracker
      */
     private $tracker;
     /**
@@ -43,29 +43,29 @@ class ReplicationData
      */
     private $user;
     /**
-     * @var ArtifactData
+     * @var Artifact
      */
-    private $artifact_data;
+    private $artifact;
     /**
-     * @var ProjectData
+     * @var Project
      */
-    private $project_data;
+    private $project;
 
     public function __construct(
-        TrackerData $tracker,
+        ScaledAgileTracker $tracker,
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
-        ArtifactData $artifact_data,
-        ProjectData $project_data
+        Artifact $artifact,
+        Project $project
     ) {
-        $this->tracker       = $tracker;
-        $this->changeset     = $changeset;
-        $this->user          = $user;
-        $this->artifact_data = $artifact_data;
-        $this->project_data  = $project_data;
+        $this->tracker   = $tracker;
+        $this->changeset = $changeset;
+        $this->user      = $user;
+        $this->artifact  = $artifact;
+        $this->project   = $project;
     }
 
-    public function getTrackerData(): TrackerData
+    public function getTracker(): ScaledAgileTracker
     {
         return $this->tracker;
     }
@@ -80,13 +80,13 @@ class ReplicationData
         return $this->user;
     }
 
-    public function getArtifactData(): ArtifactData
+    public function getArtifact(): Artifact
     {
-        return $this->artifact_data;
+        return $this->artifact;
     }
 
-    public function getProjectData(): ProjectData
+    public function getProject(): Project
     {
-        return $this->project_data;
+        return $this->project;
     }
 }

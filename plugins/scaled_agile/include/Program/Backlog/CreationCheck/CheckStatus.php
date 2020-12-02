@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Program\Backlog\CreationCheck;
 
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
 
 interface CheckStatus
 {
     public function isStatusWellConfigured(
-        PlanningData $planning,
+        Planning $planning,
         SourceTrackerCollection $source_tracker_collection
     ): bool;
 }

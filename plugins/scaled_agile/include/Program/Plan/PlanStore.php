@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Plan;
 
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 interface PlanStore
 {
@@ -30,7 +30,7 @@ interface PlanStore
 
     public function isPlannable(int $plannable_tracker_id): bool;
 
-    public function isPartOfAPlan(TrackerData $tracker_data): bool;
+    public function isPartOfAPlan(ScaledAgileTracker $tracker_data): bool;
 
     public function getProgramIncrementTrackerId(int $project_id): ?int;
 }

@@ -27,8 +27,8 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\ProgramIncrementsTr
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollection;
 use Tuleap\ScaledAgile\Program\BuildPlanning;
 use Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
-use Tuleap\ScaledAgile\ProjectData;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\Project;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 class TrackerCollectionFactory
 {
@@ -46,7 +46,7 @@ class TrackerCollectionFactory
      * @throws TopPlanningNotFoundInProjectException
      */
     public function buildFromProgramProjectAndItsTeam(
-        ProjectData $program_project,
+        Project $program_project,
         TeamProjectsCollection $team_projects_collection,
         \PFUser $user
     ): SourceTrackerCollection {
@@ -77,9 +77,9 @@ class TrackerCollectionFactory
     /**
      * @throws TopPlanningNotFoundInProjectException
      */
-    private function getProgramIncrementTracker(\PFUser $user, ProjectData $project): TrackerData
+    private function getProgramIncrementTracker(\PFUser $user, Project $project): ScaledAgileTracker
     {
         $root_planning     = $this->planning_adapter->buildRootPlanning($user, (int) $project->getID());
-        return $root_planning->getPlanningTrackerData();
+        return $root_planning->getPlanningTracker();
     }
 }

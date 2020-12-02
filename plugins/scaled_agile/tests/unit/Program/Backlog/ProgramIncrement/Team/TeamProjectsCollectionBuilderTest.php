@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
-use Tuleap\ScaledAgile\Adapter\ProjectDataAdapter;
+use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Program\ProgramStore;
 
 final class TeamProjectsCollectionBuilderTest extends TestCase
@@ -61,7 +61,7 @@ final class TeamProjectsCollectionBuilderTest extends TestCase
 
         $this->program_store   = Mockery::mock(ProgramStore::class);
         $this->project_manager = Mockery::mock(ProjectManager::class);
-        $project_data_adapter  = new ProjectDataAdapter($this->project_manager);
+        $project_data_adapter  = new ProjectAdapter($this->project_manager);
 
         $this->builder = new TeamProjectsCollectionBuilder(
             $this->program_store,
@@ -94,11 +94,11 @@ final class TeamProjectsCollectionBuilderTest extends TestCase
             ->once()
             ->andReturn($team_project_02);
 
-        $collection = $this->builder->getTeamProjectForAGivenProgramProject(ProjectDataAdapter::build($this->project));
+        $collection = $this->builder->getTeamProjectForAGivenProgramProject(ProjectAdapter::build($this->project));
 
         $this->assertCount(2, $collection->getTeamProjects());
         $this->assertEquals(
-            [ProjectDataAdapter::build($team_project_01), ProjectDataAdapter::build($team_project_02)],
+            [ProjectAdapter::build($team_project_01), ProjectAdapter::build($team_project_02)],
             $collection->getTeamProjects()
         );
     }
@@ -110,7 +110,7 @@ final class TeamProjectsCollectionBuilderTest extends TestCase
             ->with(123)
             ->andReturn([]);
 
-        $collection = $this->builder->getTeamProjectForAGivenProgramProject(ProjectDataAdapter::build($this->project));
+        $collection = $this->builder->getTeamProjectForAGivenProgramProject(ProjectAdapter::build($this->project));
 
         $this->assertEmpty($collection->getTeamProjects());
     }

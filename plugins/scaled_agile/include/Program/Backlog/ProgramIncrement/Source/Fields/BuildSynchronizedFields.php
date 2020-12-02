@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields;
 
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 interface BuildSynchronizedFields
 {
     /**
      * @throws FieldSynchronizationException
      */
-    public function build(TrackerData $source_tracker): SynchronizedFields;
+    public function build(ScaledAgileTracker $source_tracker): SynchronizedFields;
 }

@@ -25,7 +25,7 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\CheckSemantic;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\CheckStatus;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
-use Tuleap\ScaledAgile\Program\PlanningConfiguration\PlanningData;
+use Tuleap\ScaledAgile\Program\PlanningConfiguration\Planning;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 final class SemanticChecker implements CheckSemantic
@@ -60,7 +60,7 @@ final class SemanticChecker implements CheckSemantic
     }
 
     public function areTrackerSemanticsWellConfigured(
-        PlanningData $planning,
+        Planning $planning,
         SourceTrackerCollection $source_tracker_collection
     ): bool {
         $tracker_ids = $source_tracker_collection->getTrackerIds();

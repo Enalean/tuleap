@@ -22,18 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team;
 
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 
 final class ProgramIncrementsTrackerCollection
 {
     /**
-     * @var TrackerData[]
+     * @var ScaledAgileTracker[]
      * @psalm-readonly
      */
     private $program_increments_tracker_collection;
 
     /**
-     * @param TrackerData[] $program_increment_tracker
+     * @param ScaledAgileTracker[] $program_increment_tracker
      */
     public function __construct(array $program_increment_tracker)
     {
@@ -47,7 +47,7 @@ final class ProgramIncrementsTrackerCollection
     public function getTrackerIds(): array
     {
         return array_map(
-            static function (TrackerData $tracker) {
+            static function (ScaledAgileTracker $tracker) {
                 return $tracker->getTrackerId();
             },
             $this->program_increments_tracker_collection
@@ -55,7 +55,7 @@ final class ProgramIncrementsTrackerCollection
     }
 
     /**
-     * @return TrackerData[]
+     * @return ScaledAgileTracker[]
      * @psalm-mutation-free
      */
     public function getProgramIncrementTrackers(): array

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Workspace;
 
 use Tuleap\ScaledAgile\Program\ProgramStore;
-use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\Project;
 use Tuleap\ScaledAgile\Team\Creation\TeamStore;
 
 final class ComponentInvolvedVerifier
@@ -43,7 +43,7 @@ final class ComponentInvolvedVerifier
         $this->program_store = $program_store;
     }
 
-    public function isInvolvedInAScaledAgileWorkspace(ProjectData $project_data): bool
+    public function isInvolvedInAScaledAgileWorkspace(Project $project_data): bool
     {
         return $this->team_store->isATeam($project_data->getId()) || $this->program_store->isProjectAProgramProject($project_data->getId());
     }

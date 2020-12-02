@@ -26,11 +26,11 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\BuildSynchronizedFields;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\SourceTrackerCollection;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SynchronizedFieldCollectionBuilderTest extends TestCase
@@ -43,22 +43,22 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
     private $fields_adapter;
 
     /**
-     * @var SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder
+     * @var SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder
      */
     private $collection;
 
     protected function setUp(): void
     {
         $this->fields_adapter = \Mockery::mock(BuildSynchronizedFields::class);
-        $this->collection     = new SynchronizedFieldDataFromProgramAndTeamTrackersCollectionBuilder(
+        $this->collection     = new SynchronizedFieldFromProgramAndTeamTrackersCollectionBuilder(
             $this->fields_adapter
         );
     }
 
     public function testBuildFromMilestoneTrackersReturnsACollection(): void
     {
-        $first_tracker = new TrackerData(TrackerTestBuilder::aTracker()->withId(102)->build());
-        $second_tracker = new TrackerData(TrackerTestBuilder::aTracker()->withId(104)->build());
+        $first_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(102)->build());
+        $second_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(104)->build());
         $milestones = new SourceTrackerCollection([$first_tracker, $second_tracker]);
 
         $first_synchronized_fields = $this->buildSynchronizedFieldsWithIds(1, 2, 3, 4, 5, 6);
@@ -94,7 +94,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
         int $start_date_id,
         int $end_period_id
     ): SynchronizedFields {
-        $artifact_link_field_data = new FieldData(
+        $artifact_link_field_data = new Field(
             new \Tracker_FormElement_Field_ArtifactLink(
                 $artlink_id,
                 89,
@@ -110,7 +110,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
             )
         );
 
-        $title_field_data = new FieldData(
+        $title_field_data = new Field(
             new \Tracker_FormElement_Field_String(
                 $title_id,
                 89,
@@ -126,7 +126,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
             )
         );
 
-        $description_field_data = new FieldData(
+        $description_field_data = new Field(
             new \Tracker_FormElement_Field_Text(
                 $description_id,
                 89,
@@ -142,7 +142,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
             )
         );
 
-        $status_field_data = new FieldData(
+        $status_field_data = new Field(
             new \Tracker_FormElement_Field_Selectbox(
                 $status_id,
                 89,
@@ -158,7 +158,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
             )
         );
 
-        $start_date_field_data = new FieldData(
+        $start_date_field_data = new Field(
             new \Tracker_FormElement_Field_Date(
                 $start_date_id,
                 89,
@@ -174,7 +174,7 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
             )
         );
 
-        $end_date_field_data = new FieldData(
+        $end_date_field_data = new Field(
             new \Tracker_FormElement_Field_Date(
                 $end_period_id,
                 89,

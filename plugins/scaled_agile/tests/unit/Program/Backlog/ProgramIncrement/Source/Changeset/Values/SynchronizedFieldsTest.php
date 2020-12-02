@@ -22,24 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Data\SynchronizedFields;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFields;
 
 final class SynchronizedFieldsTest extends \PHPUnit\Framework\TestCase
 {
     public function testItReturnsAnArrayOfFields(): void
     {
-        $artifact_link_field_data = new FieldData(new \Tracker_FormElement_Field_ArtifactLink(1, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1));
+        $artifact_link_field_data = new Field(new \Tracker_FormElement_Field_ArtifactLink(1, 89, 1000, 'art_link', 'Links', 'Irrelevant', true, 'P', false, '', 1));
 
-        $title_field_data = new FieldData(new \Tracker_FormElement_Field_String(2, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2));
+        $title_field_data = new Field(new \Tracker_FormElement_Field_String(2, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2));
 
-        $description_field_data = new FieldData(new \Tracker_FormElement_Field_Text(3, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3));
+        $description_field_data = new Field(new \Tracker_FormElement_Field_Text(3, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3));
 
-        $status_field_data = new FieldData(new \Tracker_FormElement_Field_Selectbox(4, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4));
+        $status_field_data = new Field(new \Tracker_FormElement_Field_Selectbox(4, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4));
 
-        $start_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date(5, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5));
+        $start_date_field_data = new Field(new \Tracker_FormElement_Field_Date(5, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5));
 
-        $end_date_field_data = new FieldData(new \Tracker_FormElement_Field_Date(6, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6));
+        $end_date_field_data = new Field(new \Tracker_FormElement_Field_Date(6, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6));
 
         $fields = new SynchronizedFields(
             $artifact_link_field_data,

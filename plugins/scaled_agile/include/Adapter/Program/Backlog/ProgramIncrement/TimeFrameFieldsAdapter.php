@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 
-use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\FieldData;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Field;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\MissingTimeFrameFieldException;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\TimeFrameFields;
-use Tuleap\ScaledAgile\TrackerData;
+use Tuleap\ScaledAgile\ScaledAgileTracker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 final class TimeFrameFieldsAdapter
@@ -44,7 +44,7 @@ final class TimeFrameFieldsAdapter
     /**
      * @throws MissingTimeFrameFieldException
      */
-    public function build(TrackerData $replication_tracker_data): TimeFrameFields
+    public function build(ScaledAgileTracker $replication_tracker_data): TimeFrameFields
     {
         $source_tracker   = $replication_tracker_data->getFullTracker();
         $semantic         = $this->timeframe_builder->getSemantic($source_tracker);
@@ -53,16 +53,16 @@ final class TimeFrameFieldsAdapter
             throw new MissingTimeFrameFieldException($replication_tracker_data->getTrackerId(), 'start date');
         }
 
-        $start_date_field_data = new FieldData($start_date_field);
+        $start_date_field_data = new Field($start_date_field);
 
         $duration_field = $semantic->getDurationField();
         if ($duration_field !== null) {
-            $duration_field_data = new FieldData($duration_field);
+            $duration_field_data = new Field($duration_field);
             return TimeFrameFields::fromStartDateAndDuration($start_date_field_data, $duration_field_data);
         }
         $end_date_field = $semantic->getEndDateField();
         if ($end_date_field !== null) {
-            $end_date_field_data = new FieldData($end_date_field);
+            $end_date_field_data = new Field($end_date_field);
             return TimeFrameFields::fromStartAndEndDates($start_date_field_data, $end_date_field_data);
         }
         throw new MissingTimeFrameFieldException($replication_tracker_data->getTrackerId(), 'end date or duration');

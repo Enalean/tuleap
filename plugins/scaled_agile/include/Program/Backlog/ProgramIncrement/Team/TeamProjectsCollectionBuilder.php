@@ -24,7 +24,7 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team;
 
 use Tuleap\ScaledAgile\BuildProject;
 use Tuleap\ScaledAgile\Program\ProgramStore;
-use Tuleap\ScaledAgile\ProjectData;
+use Tuleap\ScaledAgile\Project;
 
 final class TeamProjectsCollectionBuilder
 {
@@ -43,7 +43,7 @@ final class TeamProjectsCollectionBuilder
         $this->project_data_adapter = $project_data_adapter;
     }
 
-    public function getTeamProjectForAGivenProgramProject(ProjectData $project): TeamProjectsCollection
+    public function getTeamProjectForAGivenProgramProject(Project $project): TeamProjectsCollection
     {
         $program_project_id = (int) $project->getID();
         $team_projects  = [];
