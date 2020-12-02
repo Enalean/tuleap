@@ -461,6 +461,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboar
 
 %if %{with experimental}
 
+%package plugin-scaled_agile
+Summary: Scaled Agile Backlog
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-agiledashboard
+%description plugin-scaled_agile
+%{summary}.
+
 %endif
 
 #
@@ -524,10 +531,8 @@ done
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/scaled_agile
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/scaled_agile
 %if %{with enterprise}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
@@ -560,6 +565,7 @@ done
 %endif
 %if %{with experimental}
 %else
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/scaled_agile
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
@@ -814,6 +820,13 @@ done
 # Plugin GitLab
 %{__install} plugins/gitlab/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
+%endif
+
+%if %{with experimental}
+# Plugin scaled_agile
+%{__install} plugins/scaled_agile/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_scaled_agile
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_scaled_agile
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_scaled_agile
 %endif
 
 # Symlink for compatibility with older version
@@ -1423,6 +1436,12 @@ fi
 %endif
 
 %if %{with experimental}
+
+%files plugin-scaled_agile
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/scaled_agile
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_scaled_agile
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_scaled_agile
 
 %endif
 
