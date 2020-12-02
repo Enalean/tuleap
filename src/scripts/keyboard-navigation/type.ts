@@ -26,6 +26,5 @@ export interface Shortcut {
 
 export interface ShortcutsGroup {
     readonly title: string;
-    readonly cells_id: string;
     readonly shortcuts: Array<Shortcut>;
 }

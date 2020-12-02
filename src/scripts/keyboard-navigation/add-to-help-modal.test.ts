@@ -17,140 +17,114 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Shortcut } from "./type";
-import { addToShortcutsModalTable, addHelpModalHeader } from "./add-to-help-modal";
+import { Shortcut, ShortcutsGroup } from "./type";
+import {
+    createShortcutsGroupInHelpModal,
+    createKeyboardInputElement,
+    createShortcutCell,
+} from "./add-to-help-modal";
 
 describe("add-to-help-modal.ts", () => {
     let doc: Document;
-    let shortcuts_table: HTMLTableSectionElement;
-    let fake_shortcuts_table: HTMLElement;
+    let shortcuts_modal: HTMLElement;
 
-    let shortcut_row;
-    let keyboard_inputs_cell;
-    let keyboard_input_element;
-
-    const table_attribute = "data-modal-shortcuts";
-    const group_title = "group_title";
-    const cell_id = "cell_id";
+    const shortcuts_help_attribute = "data-shortcuts-help";
 
     const shortcut_simple = {
         keyboard_inputs: "a",
         displayed_inputs: "c",
-        description: "description",
+        description: "shortcut_simple description",
     } as Shortcut;
 
     const shortcut_two_options = {
-        keyboard_inputs: "a, b",
-        description: "description",
+        keyboard_inputs: "a,b",
+        description: "shortcut_two_options description",
     } as Shortcut;
 
     const shortcut_two_keystrokes = {
-        keyboard_inputs: "a + b",
-        description: "description",
+        keyboard_inputs: "a+b",
+        description: "shortcut_two_keystrokes description",
     } as Shortcut;
+
+    const shortcuts_group: ShortcutsGroup = {
+        title: "shortcuts_group title",
+        shortcuts: [shortcut_simple, shortcut_two_options, shortcut_two_keystrokes],
+    };
+
+    const snapshot = `
+        <h2 class="tlp-modal-subtitle">shortcuts_group title</h2>
+        <table class="tlp-table help-modal-shortcuts-table">
+          <thead>
+            <tr>
+              <th scope="colgroup" class="help-modal-shortcuts-description">Description</th>
+              <th scope="colgroup" class="tlp-table-cell-actions">Shortcut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>shortcut_simple description</td>
+              <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>c</kbd></td>
+            </tr>
+            <tr>
+              <td>shortcut_two_options description</td>
+              <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>a</kbd> / <kbd>b</kbd></td>
+            </tr>
+            <tr>
+              <td>shortcut_two_keystrokes description</td>
+              <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd><kbd>a</kbd> + <kbd>b</kbd></kbd></td>
+            </tr>
+          </tbody>
+        </table>
+    `;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
-        setupDocumentTable(doc);
+        shortcuts_modal = doc.createElement("section");
+        shortcuts_modal.setAttribute(shortcuts_help_attribute, "");
+        doc.body.appendChild(shortcuts_modal);
     });
 
-    describe("addToShortcutsModalTable", () => {
-        it("inserts a row in shortcuts table", () => {
-            addToShortcutsModalTable(doc, cell_id, shortcut_simple);
-            expect(shortcuts_table.firstChild).toBeInstanceOf(HTMLTableRowElement);
+    describe("createShortcutsGroupInHelpModal", () => {
+        it("creates a shortcuts group and appends it to the Shortcuts Help modal", () => {
+            createShortcutsGroupInHelpModal(doc, shortcuts_group);
+
+            expect(shortcuts_modal.innerHTML).toMatchInlineSnapshot(snapshot);
         });
 
-        it("inserts a single and final kbd element if there is a single shortcut option using one keystroke", () => {
-            addToShortcutsModalTable(doc, cell_id, shortcut_simple);
+        it("throws an error if shortcuts modal was not found and stops", () => {
+            shortcuts_modal.removeAttribute(shortcuts_help_attribute);
+            expect(() => {
+                createShortcutsGroupInHelpModal(doc, shortcuts_group);
+            }).toThrow();
+            expect(shortcuts_modal.childNodes.length).toBe(0);
+        });
+    });
 
-            shortcut_row = shortcuts_table.firstChild;
-            keyboard_inputs_cell = shortcut_row?.firstChild;
-            keyboard_input_element = keyboard_inputs_cell?.firstChild;
+    describe("createShortcutCell", () => {
+        it("returns a cell containing a different keyboard input if there is one provided", () => {
+            const shortcut_cell = createShortcutCell(doc, shortcut_simple);
+            const keyboard_input_element = shortcut_cell.firstElementChild;
 
-            expect(keyboard_inputs_cell?.childNodes.length).toBe(1);
-            expect(keyboard_input_element?.hasChildNodes()).toBe(false);
+            expect(keyboard_input_element?.innerHTML).toBe("c");
         });
 
-        it("displays a different keyboard input if there is one provided", () => {
-            addToShortcutsModalTable(doc, cell_id, shortcut_simple);
+        it("return a cell containing two kbd elements separated by ' / ' if there are two shortcuts options", () => {
+            const shortcut_cell = createShortcutCell(doc, shortcut_two_options);
 
-            shortcut_row = shortcuts_table.firstChild;
-            keyboard_inputs_cell = shortcut_row?.firstChild;
-            keyboard_input_element = keyboard_inputs_cell?.firstChild;
-
-            if (!(keyboard_input_element instanceof HTMLElement)) {
-                keyboard_input_element = null;
-            }
-
-            expect(keyboard_input_element?.innerText).toBe("c");
+            expect(shortcut_cell?.childNodes.length).toBe(3);
+            expect(shortcut_cell?.childNodes[1].textContent).toEqual(" / ");
         });
+    });
 
-        it("inserts two kbd elements separated by ' / ' if there are two shortcuts options", () => {
-            addToShortcutsModalTable(doc, cell_id, shortcut_two_options);
+    describe("createKeyboardInputElement", () => {
+        it("returns a kbd element containing two kbd elements separated by ' + ' if passed a double input", () => {
+            const keyboard_input_element = createKeyboardInputElement(
+                doc,
+                shortcut_two_keystrokes.keyboard_inputs
+            );
 
-            shortcut_row = shortcuts_table.firstChild;
-            keyboard_inputs_cell = shortcut_row?.firstChild;
-
-            expect(keyboard_inputs_cell?.childNodes.length).toBe(3);
-            expect(keyboard_inputs_cell?.childNodes[1].nodeValue).toEqual(" / ");
-        });
-
-        it("inserts a single kbd element containing two kbd elements separated by ' + ' if passed a double input", () => {
-            addToShortcutsModalTable(doc, cell_id, shortcut_two_keystrokes);
-
-            shortcut_row = shortcuts_table.firstChild;
-            keyboard_inputs_cell = shortcut_row?.firstChild;
-            keyboard_input_element = keyboard_inputs_cell?.firstChild;
-
-            expect(keyboard_inputs_cell?.childNodes.length).toBe(1);
             expect(keyboard_input_element?.childNodes.length).toBe(3);
-            expect(keyboard_input_element?.childNodes[1].nodeValue).toEqual(" + ");
-        });
-
-        it("throws an error if shortcuts modal was not found and stops", () => {
-            shortcuts_table.removeAttribute(table_attribute);
-            expect(() => {
-                addToShortcutsModalTable(doc, cell_id, shortcut_simple);
-            }).toThrow();
-            expect(shortcuts_table.childNodes.length).toBe(0);
-        });
-
-        it("throws an error if shortcuts modal is not a HTMLTableSectionElement found and stops", () => {
-            fake_shortcuts_table.setAttribute(table_attribute, "");
-            expect(() => {
-                addToShortcutsModalTable(doc, cell_id, shortcut_simple);
-            }).toThrow();
-            expect(shortcuts_table.childNodes.length).toBe(0);
+            expect(keyboard_input_element?.childNodes[1].textContent).toEqual(" + ");
         });
     });
-
-    describe("addHelpModalHeader", () => {
-        it("inserts a header row in shortcuts table", () => {
-            addHelpModalHeader(doc, group_title, cell_id);
-            expect(shortcuts_table.childNodes.length).toBe(1);
-        });
-
-        it("throws an error if shortcuts modal was not found and stops", () => {
-            shortcuts_table.removeAttribute(table_attribute);
-            expect(() => {
-                addHelpModalHeader(doc, group_title, cell_id);
-            }).toThrow();
-            expect(shortcuts_table.childNodes.length).toBe(0);
-        });
-
-        it("throws an error if shortcuts modal is not a HTMLTableSectionElement and stops", () => {
-            fake_shortcuts_table.setAttribute(table_attribute, "");
-            expect(() => {
-                addHelpModalHeader(doc, group_title, cell_id);
-            }).toThrow();
-            expect(shortcuts_table.childNodes.length).toBe(0);
-        });
-    });
-
-    function setupDocumentTable(doc: Document): void {
-        shortcuts_table = doc.createElement("tbody");
-        shortcuts_table.setAttribute(table_attribute, "");
-        fake_shortcuts_table = doc.createElement("div");
-        doc.body.append(fake_shortcuts_table, shortcuts_table);
-    }
 });

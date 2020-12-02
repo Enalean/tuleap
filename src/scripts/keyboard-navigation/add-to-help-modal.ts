@@ -17,38 +17,82 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Shortcut } from "./type";
+import { Shortcut, ShortcutsGroup } from "./type";
 
-export function addToShortcutsModalTable(
+export function createShortcutsGroupInHelpModal(
     doc: Document,
-    cells_id: string,
-    shortcut: Shortcut
+    shortcuts_group: ShortcutsGroup
 ): void {
-    const shortcuts_table = doc.querySelector("[data-modal-shortcuts]");
-    if (!(shortcuts_table instanceof HTMLTableSectionElement)) {
+    const shortcuts_modal = doc.querySelector("[data-shortcuts-help]");
+    if (!(shortcuts_modal instanceof HTMLElement)) {
         throw new Error("Could not find shortcuts modal");
     }
 
-    const shortcut_row = shortcuts_table.insertRow();
-
-    const keyboard_inputs_cell = createKeyboardInputsCell(doc, cells_id, shortcut);
-
-    const description_cell = shortcut_row.insertCell();
-    description_cell.innerText = shortcut.description;
-    description_cell.headers = `action ${cells_id}`;
-
-    shortcut_row.append(keyboard_inputs_cell, description_cell);
-    shortcuts_table.appendChild(shortcut_row);
+    const shortcuts_group_head = createShortcutsGroupHead(doc, shortcuts_group);
+    const shortcuts_group_table = createShortcutsGroupTable(doc, shortcuts_group);
+    shortcuts_modal.append(shortcuts_group_head, shortcuts_group_table);
 }
 
-function createKeyboardInputsCell(
+function createShortcutsGroupHead(doc: Document, shortcuts_group: ShortcutsGroup): HTMLElement {
+    const group_title = doc.createElement("h2");
+    group_title.classList.add("tlp-modal-subtitle");
+    group_title.append(shortcuts_group.title);
+
+    return group_title;
+}
+
+function createShortcutsGroupTable(
     doc: Document,
-    cells_id: string,
-    shortcut: Shortcut
-): HTMLTableDataCellElement {
-    const keyboard_inputs_cell = doc.createElement("td");
-    keyboard_inputs_cell.classList.add("help-modal-shortcuts-kbds");
-    keyboard_inputs_cell.headers = `shortcut ${cells_id}`;
+    shortcuts_group: ShortcutsGroup
+): HTMLTableElement {
+    const shortcuts_group_table = doc.createElement("table");
+    shortcuts_group_table.classList.add("tlp-table", "help-modal-shortcuts-table");
+
+    const table_head = createTableHead(doc);
+
+    const table_body = doc.createElement("tbody");
+    table_body.append(
+        ...shortcuts_group.shortcuts.map((shortcut) => createShortcutRow(doc, shortcut))
+    );
+
+    shortcuts_group_table.append(table_head, table_body);
+    return shortcuts_group_table;
+}
+
+function createTableHead(doc: Document): HTMLTableSectionElement {
+    const table_head = doc.createElement("thead");
+    const head_row = table_head.insertRow();
+
+    const shortcut_cell = doc.createElement("th");
+    shortcut_cell.scope = "colgroup";
+    shortcut_cell.classList.add("tlp-table-cell-actions");
+    shortcut_cell.append("Shortcut");
+
+    const description_cell = doc.createElement("th");
+    description_cell.scope = "colgroup";
+    description_cell.classList.add("help-modal-shortcuts-description");
+    description_cell.append("Description");
+
+    head_row.append(description_cell, shortcut_cell);
+    table_head.append(head_row);
+    return table_head;
+}
+
+function createShortcutRow(doc: Document, shortcut: Shortcut): HTMLTableRowElement {
+    const shortcut_row = doc.createElement("tr");
+
+    const shortcut_cell = createShortcutCell(doc, shortcut);
+
+    const description_cell = shortcut_row.insertCell();
+    description_cell.append(shortcut.description);
+
+    shortcut_row.append(description_cell, shortcut_cell);
+    return shortcut_row;
+}
+
+export function createShortcutCell(doc: Document, shortcut: Shortcut): HTMLTableDataCellElement {
+    const shortcut_cell = doc.createElement("td");
+    shortcut_cell.classList.add("help-modal-shortcuts-kbds", "tlp-table-cell-actions");
 
     const keyboard_inputs = shortcut.displayed_inputs
         ? shortcut.displayed_inputs
@@ -57,29 +101,29 @@ function createKeyboardInputsCell(
     const keyboard_inputs_parts = keyboard_inputs.split(",");
     keyboard_inputs_parts.forEach((keyboard_input, i = 0) => {
         const keyboard_input_element = createKeyboardInputElement(doc, keyboard_input);
-        keyboard_inputs_cell.append(keyboard_input_element);
+        shortcut_cell.append(keyboard_input_element);
 
         if (i < keyboard_inputs_parts.length - 1) {
-            keyboard_inputs_cell.append(" / ");
+            shortcut_cell.append(" / ");
         }
         i++;
     });
 
-    return keyboard_inputs_cell;
+    return shortcut_cell;
 }
 
-function createKeyboardInputElement(doc: Document, keyboard_input: string): HTMLElement {
+export function createKeyboardInputElement(doc: Document, keyboard_input: string): HTMLElement {
     const keyboard_input_element = doc.createElement("kbd");
 
     const keystrokes = keyboard_input.split("+");
     if (keystrokes.length === 1) {
-        keyboard_input_element.innerText = keyboard_input;
+        keyboard_input_element.append(keyboard_input);
         return keyboard_input_element;
     }
 
     keystrokes.forEach((keystroke, i = 0) => {
         const inner_keyboard_input_element = doc.createElement("kbd");
-        inner_keyboard_input_element.innerText = keystroke;
+        inner_keyboard_input_element.append(keystroke);
         keyboard_input_element.appendChild(inner_keyboard_input_element);
         if (i < keystrokes.length - 1) {
             keyboard_input_element.append(" + ");
@@ -88,23 +132,4 @@ function createKeyboardInputElement(doc: Document, keyboard_input: string): HTML
     });
 
     return keyboard_input_element;
-}
-
-export function addHelpModalHeader(doc: Document, group_title: string, cell_id: string): void {
-    const shortcuts_table = doc.querySelector("[data-modal-shortcuts]");
-    if (!(shortcuts_table instanceof HTMLTableSectionElement)) {
-        throw new Error("Could not find shortcuts modal");
-    }
-
-    const header_row = shortcuts_table.insertRow();
-
-    const header_cell = doc.createElement("th");
-    header_cell.id = cell_id;
-    header_cell.classList.add("help-modal-shortcuts-group-title");
-    header_cell.scope = "colgroup";
-    header_cell.colSpan = 2;
-    header_cell.innerText = group_title;
-
-    header_row.appendChild(header_cell);
-    shortcuts_table.appendChild(header_row);
 }

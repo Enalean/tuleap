@@ -124,15 +124,32 @@
     }
 }
 
+.help-modal-shortcuts-body {
+    display: flex;
+    padding: 0;
+}
+
+.help-modal-shortcuts-table {
+    margin-bottom: $tlp-jumbo-spacing;
+}
+
+.help-modal-shortcuts-section {
+    padding: $tlp-medium-spacing;
+}
+
+.help-modal-global-shortcuts {
+    flex-grow: 1;
+}
+
+.help-modal-specific-shortcuts {
+    flex-grow: 0;
+}
+
 .help-modal-shortcuts-kbds {
+    width: 190px;
     white-space: nowrap;
 }
 
-.help-modal-shortcuts-action {
+.help-modal-shortcuts-description {
     width: 100%;
-}
-
-.help-modal-shortcuts-group-title {
-    padding: 10px 8px;
-    font-weight: bold;
 }
