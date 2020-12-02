@@ -59,7 +59,9 @@
                                         repository
                                     ),
                                 }"
-                                v-bind:data-tlp-tooltip="message_tooltip_repository_disabled"
+                                v-bind:data-tlp-tooltip="
+                                    message_tooltip_repository_disabled(repository)
+                                "
                             >
                                 <label class="tlp-radio">
                                     <input
@@ -84,7 +86,9 @@
                                         repository
                                     ),
                                 }"
-                                v-bind:data-tlp-tooltip="message_tooltip_repository_disabled"
+                                v-bind:data-tlp-tooltip="
+                                    message_tooltip_repository_disabled(repository)
+                                "
                             >
                                 <img
                                     v-if="repository.avatar_url !== null"
@@ -103,9 +107,14 @@
                         >
                             <span
                                 v-bind:class="{
-                                    'tlp-tooltip tlp-tooltip-top': isRepositoryDisabled(repository),
+                                    'gitlab-tooltip-name tlp-tooltip tlp-tooltip-top': isRepositoryDisabled(
+                                        repository
+                                    ),
                                 }"
-                                v-bind:data-tlp-tooltip="message_tooltip_repository_disabled"
+                                v-bind:data-tlp-tooltip="
+                                    message_tooltip_repository_disabled(repository)
+                                "
+                                v-bind:data-test="`gitlab-repositories-tooltip-${repository.id}`"
                             >
                                 <span class="gitlab-repository-name-namespace">
                                     {{ repository.name_with_namespace }}
@@ -188,12 +197,16 @@ export default {
         have_any_rest_error() {
             return this.message_error_rest.length > 0;
         },
-        message_tooltip_repository_disabled() {
-            return this.$gettext("This repository is already integrated.");
-        },
     },
     methods: {
         ...mapActions(["postIntegrationGitlab"]),
+        message_tooltip_repository_disabled(repository) {
+            if (this.isRepositoryAlreadyIntegrated(repository)) {
+                return this.$gettext("This repository is already integrated.");
+            }
+
+            return this.$gettext("A repository with same name and path was already integrated.");
+        },
         async fetchRepositories(event) {
             event.preventDefault();
             this.is_loading = true;
@@ -231,13 +244,27 @@ export default {
                 this.is_loading = false;
             }
         },
-        isRepositoryDisabled(repository) {
+        isRepositoryWithSameNamePath(repository) {
+            return this.getGitlabRepositoriesIntegrated.find((repository_integrated) => {
+                return (
+                    repository_integrated.normalized_path === repository.path_with_namespace &&
+                    repository_integrated.gitlab_data.full_url !== repository.web_url
+                );
+            });
+        },
+        isRepositoryAlreadyIntegrated(repository) {
             return this.getGitlabRepositoriesIntegrated.find((repository_integrated) => {
                 return (
                     repository_integrated.gitlab_data.gitlab_id === repository.id &&
                     repository_integrated.gitlab_data.full_url === repository.web_url
                 );
             });
+        },
+        isRepositoryDisabled(repository) {
+            return (
+                this.isRepositoryWithSameNamePath(repository) ||
+                this.isRepositoryAlreadyIntegrated(repository)
+            );
         },
         selectRepository(repository) {
             if (!this.isRepositoryDisabled(repository)) {

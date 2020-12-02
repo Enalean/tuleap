@@ -221,6 +221,62 @@ describe("ListRepositoriesModal", () => {
         expect(wrapper.find("[data-test=gitlab-repositories-displayed-2]").classes()).toEqual([
             "gitlab-select-repository",
         ]);
+        expect(wrapper.find("[data-test=gitlab-repositories-tooltip-1]").classes()).toEqual([
+            "gitlab-tooltip-name",
+            "tlp-tooltip",
+            "tlp-tooltip-top",
+        ]);
+        expect(
+            wrapper.find("[data-test=gitlab-repositories-tooltip-1]").attributes("data-tlp-tooltip")
+        ).toEqual("This repository is already integrated.");
+    });
+
+    it("When repository with same namepath and another instance is already integrated, Then button is disabled", () => {
+        store_options.getters.getGitlabRepositoriesIntegrated = [
+            {
+                gitlab_data: { gitlab_id: 152, full_url: "https://example.com/MyPath/152" },
+                normalized_path: "my-path/repository",
+            },
+        ];
+
+        propsData = {
+            repositories: [
+                {
+                    id: 1,
+                    name_with_namespace: "My Path / Repository",
+                    path_with_namespace: "my-path/repository",
+                    web_url: "https://another.instance.example.com/MyPath/1",
+                },
+                {
+                    id: 2,
+                    name_with_namespace: "My Second / Repository",
+                    path_with_namespace: "my-second/repository",
+                    avatar_url: "example.com",
+                    web_url: "https://example.com/MySecond/2",
+                },
+            ],
+        };
+
+        const wrapper = instantiateComponent();
+
+        expect(wrapper.find("[data-test=gitlab-repositories-displayed-1]").classes()).toEqual([
+            "gitlab-select-repository",
+            "gitlab-select-repository-disabled",
+        ]);
+        expect(
+            wrapper.find("[data-test=gitlab-repository-disabled-1]").attributes().disabled
+        ).toBeTruthy();
+        expect(wrapper.find("[data-test=gitlab-repositories-displayed-2]").classes()).toEqual([
+            "gitlab-select-repository",
+        ]);
+        expect(wrapper.find("[data-test=gitlab-repositories-tooltip-1]").classes()).toEqual([
+            "gitlab-tooltip-name",
+            "tlp-tooltip",
+            "tlp-tooltip-top",
+        ]);
+        expect(
+            wrapper.find("[data-test=gitlab-repositories-tooltip-1]").attributes("data-tlp-tooltip")
+        ).toEqual("A repository with same name and path was already integrated.");
     });
 
     it("When user clicks on avatar or path, Then repository is selected", async () => {
