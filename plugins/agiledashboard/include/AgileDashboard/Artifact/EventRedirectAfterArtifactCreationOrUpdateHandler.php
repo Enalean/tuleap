@@ -78,7 +78,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
         if ($redirect->stayInTracker()) {
             $this->saveToRequestForFutureRedirection($planning, $last_milestone_artifact, $redirect, $request);
         } elseif ($planning) {
-            $this->addRedirectionToPlanning($artifact, $requested_planning, $planning, $redirect);
+            $this->addRedirectionToPlanning($requested_planning, $planning, $redirect);
         } else {
             $this->addRedirectionToTopPlanning($artifact, $requested_planning, $redirect);
         }
@@ -88,15 +88,12 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
      * @psalm-param array{planning_id: string, pane: string, aid: string, pane: string} $requested_planning
      */
     private function addRedirectionToPlanning(
-        Artifact $artifact,
         array $requested_planning,
         Planning $planning,
         Tracker_Artifact_Redirect $redirect
     ): void {
         $redirect_to_artifact = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
-        if ((int) $redirect_to_artifact === -1) {
-            $redirect_to_artifact = $artifact->getId();
-        }
+
         $redirect->base_url         = '/plugins/agiledashboard/';
         $redirect->query_parameters = [
             'group_id'    => (string) $planning->getGroupId(),

@@ -157,50 +157,6 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
         );
     }
 
-    public function testItRedirectsToPlanningOfNewMilestone(): void
-    {
-        $request = HTTPRequestBuilder::get()
-            ->withParam('planning', ['details' => [self::PLANNING_ID => -1]])
-            ->build();
-
-        $this->artifact_linker
-            ->shouldReceive('linkBacklogWithPlanningItems')
-            ->with(
-                $request,
-                $this->artifact,
-                [
-                    'pane'        => 'details',
-                    'planning_id' => self::PLANNING_ID,
-                    'aid'         => -1,
-                    'action'      => 'show',
-                ]
-            )
-            ->once();
-
-        $this->planning_factory
-            ->shouldReceive('getPlanning')
-            ->with(self::PLANNING_ID)
-            ->once()
-            ->andReturn($this->planning);
-
-        $redirect       = new Tracker_Artifact_Redirect();
-        $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-
-        $this->processor->process($request, $redirect, $this->artifact);
-
-        self::assertEquals('/plugins/agiledashboard/', $redirect->base_url);
-        self::assertEquals(
-            [
-                'group_id'    => self::PROJECT_ID,
-                'planning_id' => self::PLANNING_ID,
-                'action'      => 'show',
-                'aid'         => self::ARTIFACT_ID,
-                'pane'        => 'details'
-            ],
-            $redirect->query_parameters
-        );
-    }
-
     public function testItRedirectsToTopPlanningIfPlanningCannotBeInstantiated(): void
     {
         $request = HTTPRequestBuilder::get()
