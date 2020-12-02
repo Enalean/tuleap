@@ -1,44 +1,54 @@
-<p id="cross_references_legend">{{# dgettext }}tuleap-tracker | List of items referenced by or referencing this item.{{/ dgettext }}</p>
+{{^ has_cross_refs }}
+<div>
+    <span class='empty_value'>
+        {{# dgettext }}tuleap-tracker | References list is empty{{/ dgettext }}
+    </span>
+</div>
+{{/ has_cross_refs }}
 
-{{# cross_refs_by_nature }}
-    <div class="nature not-condensed">
-        <p><b> {{ nature_label }} </b></p>
-        <ul class="cross_reference_list">
-            {{# cross_reference_link_list }}
-                <li class="{{ classes_key }}">
-                    <img
-                        src="{{ icon_path }}"
-                        alt="{{ icon_message }}"
-                        align="top-left"
-                        hspace="5"
-                        title="{{ icon_message }}"
-                        />
-                    {{# cross_ref_link_collection }}
-                        <span id="{{ id }}" class="link_to_ref">
-                            <a class="cross-reference"
-                               title="{{ nature_label }}"
-                               href="{{ url }}">
-                                {{ ref }}
-                            </a>
-                            {{# can_delete }}
-                                <a class="delete_ref"
-                                   href='/reference/rmreference.php?target_id={{ target_id }}&target_gid={{ target_gid }}&target_type={{ target_type }}&target_key={{ target_key }}&source_id={{ source_id }}&source_gid={{ source_gid }}&source_type={{ source_type }}&source_key={{ source_key }}'
-                                   onClick="return delete_ref('{{ id }}', '{{# dgettext }}tuleap-tracker | Delete the reference?{{/ dgettext }}');"
-                                >
-                                    <img
-                                        src="/themes/FlamingParrot/images/ic/cross.png"
-                                        alt="{{# dgettext }}tuleap-tracker | Delete{{/ dgettext }}"
-                                        title="{{# dgettext }}tuleap-tracker | Delete{{/ dgettext }}"
-                                    />
+{{# has_cross_refs }}
+    <p id="cross_references_legend">{{# dgettext }}tuleap-tracker | List of items referenced by or referencing this item.{{/ dgettext }}</p>
+
+    {{# cross_refs_by_nature }}
+        <div class="nature not-condensed">
+            <p><b> {{ nature_label }} </b></p>
+            <ul class="cross_reference_list">
+                {{# cross_reference_link_list }}
+                    <li class="{{ classes_key }}">
+                        <img
+                            src="{{ icon_path }}"
+                            alt="{{ icon_message }}"
+                            align="top-left"
+                            hspace="5"
+                            title="{{ icon_message }}"
+                            />
+                        {{# cross_ref_link_collection }}
+                            <span id="{{ id }}" class="link_to_ref">
+                                <a class="cross-reference"
+                                   title="{{ nature_label }}"
+                                   href="{{ url }}">
+                                    {{ ref }}
                                 </a>
-                            {{/ can_delete }}
-                            {{# display_comma }}
-                                ,
-                            {{/ display_comma }}
-                        </span>
-                    {{/ cross_ref_link_collection }}
-                </li>
-            {{/ cross_reference_link_list }}
-        </ul>
-    </div>
-{{/ cross_refs_by_nature }}
+                                {{# can_delete }}
+                                    <a class="delete_ref"
+                                       href='/reference/rmreference.php?target_id={{ target_id }}&target_gid={{ target_gid }}&target_type={{ target_type }}&target_key={{ target_key }}&source_id={{ source_id }}&source_gid={{ source_gid }}&source_type={{ source_type }}&source_key={{ source_key }}'
+                                       onClick="return delete_ref('{{ id }}', '{{# dgettext }}tuleap-tracker | Delete the reference?{{/ dgettext }}');"
+                                    >
+                                        <img
+                                            src="/themes/FlamingParrot/images/ic/cross.png"
+                                            alt="{{# dgettext }}tuleap-tracker | Delete{{/ dgettext }}"
+                                            title="{{# dgettext }}tuleap-tracker | Delete{{/ dgettext }}"
+                                        />
+                                    </a>
+                                {{/ can_delete }}
+                                {{# display_comma }}
+                                    ,
+                                {{/ display_comma }}
+                            </span>
+                        {{/ cross_ref_link_collection }}
+                    </li>
+                {{/ cross_reference_link_list }}
+            </ul>
+        </div>
+    {{/ cross_refs_by_nature }}
+{{/ has_cross_refs }}

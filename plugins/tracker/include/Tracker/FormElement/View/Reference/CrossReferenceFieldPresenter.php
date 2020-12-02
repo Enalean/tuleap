@@ -35,6 +35,10 @@ class CrossReferenceFieldPresenter
      * @var bool
      */
     public $can_delete;
+    /**
+     * @var bool
+     */
+    public $has_cross_refs = false;
 
     /**
      * @param CrossReferenceByNaturePresenter[] $cross_refs_by_nature_presenter_collection
@@ -45,5 +49,6 @@ class CrossReferenceFieldPresenter
     ) {
         $this->can_delete           = $can_delete;
         $this->cross_refs_by_nature = $cross_refs_by_nature_presenter_collection;
+        $this->has_cross_refs       = count($cross_refs_by_nature_presenter_collection) > 0;
     }
 }

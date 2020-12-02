@@ -57,20 +57,16 @@ class CrossReferenceFieldRenderer
 
         $cross_reference_factory->fetchDatas();
 
-        if ($cross_reference_factory->getNbReferences()) {
-            $cross_ref_by_nature_collection = $cross_reference_factory->getCrossReferencesByNatureCollection();
+        $cross_ref_by_nature_collection = $cross_reference_factory->getCrossReferencesByNatureCollection();
 
-            $can_delete = $user->isSuperUser() || $user->isAdmin((int) $artifact->getTracker()->getGroupId());
-            $renderer   = $this->template_renderer->getRenderer(
-                __DIR__ . '/../../../../../templates/form-element/reference'
-            );
+        $can_delete = $user->isSuperUser() || $user->isAdmin((int) $artifact->getTracker()->getGroupId());
+        $renderer   = $this->template_renderer->getRenderer(
+            __DIR__ . '/../../../../../templates/form-element/reference'
+        );
 
-            return $renderer->renderToString(
-                'cross_reference',
-                $this->cross_ref_field_presenter_builder->build($cross_ref_by_nature_collection, $can_delete)
-            );
-        }
-
-        return '<div>' . "<span class='empty_value'>" . dgettext('tuleap-tracker', 'References list is empty') . "</span>" . '</div>';
+        return $renderer->renderToString(
+            'cross_reference',
+            $this->cross_ref_field_presenter_builder->build($cross_ref_by_nature_collection, $can_delete)
+        );
     }
 }
