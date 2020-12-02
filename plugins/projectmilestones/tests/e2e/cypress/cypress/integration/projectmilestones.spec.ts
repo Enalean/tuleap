@@ -45,7 +45,7 @@ describe("Project Milestones Widget", function () {
             });
             cy.wait("@loadReleases", { timeout: 1000 });
 
-            cy.get("[data-test=widget-content-project-milestones]");
+            cy.get("[data-test=project-milestone-empty-state]").contains("Start Planning");
         });
     });
 
@@ -81,7 +81,7 @@ describe("Project Milestones Widget", function () {
             });
             cy.wait("@loadReleases", { timeout: 1000 });
 
-            cy.get("[data-test=widget-content-project-milestones]");
+            cy.get("[data-test=project-milestone-empty-state]").contains("Start Planning");
         });
     });
 });

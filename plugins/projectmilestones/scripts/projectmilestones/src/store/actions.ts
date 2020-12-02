@@ -51,8 +51,10 @@ async function getCurrentMilestones(context: ActionContext<State, State>): Promi
         });
     }
 
-    milestones.sort((milestone_1, milestone_2) => milestone_2.id - milestone_1.id);
-    return context.commit("setCurrentMilestones", milestones);
+    if (milestones.length > 0 && milestones[0].id !== undefined) {
+        milestones.sort((milestone_1, milestone_2) => milestone_2.id - milestone_1.id);
+        context.commit("setCurrentMilestones", milestones);
+    }
 }
 
 export function getEnhancedMilestones(
