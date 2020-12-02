@@ -11,7 +11,7 @@
     "p-retry": "^4.2.0",
     "vue": "^2.6.12",
     "vue-dompurify-html": "^2.3.0",
-    "vuex": "^3.5.1"
+    "vuex": "^3.6.0"
   },
   "devDependencies": {
     "@types/dompurify": "^2.0.4",
@@ -21,7 +21,7 @@
     "@vue/test-utils": "^1.1.1",
     "jquery": "^3.5.1",
     "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.0.2",
+    "vue-property-decorator": "^9.1.2",
     "vuex-class": "^0.3.2"
   },
   "config": {
