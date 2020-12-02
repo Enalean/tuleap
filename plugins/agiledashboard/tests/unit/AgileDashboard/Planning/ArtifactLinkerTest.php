@@ -135,7 +135,7 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
         $request->shouldReceive('getCurrentUser')->andReturn($this->user);
         $request->shouldReceive('exist')->with('link-artifact-id')->andReturn($this->release_id);
 
-        $this->linker->linkBacklogWithPlanningItems($request, $task);
+        $this->linker->linkBacklogWithPlanningItems($request, $task, null);
     }
 
     public function testItLinksWithAllHierarchyWhenItWasLinkedToAnAssociatedTracker(): void
@@ -152,7 +152,7 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
             $this->release_id
         );
 
-        $this->linker->linkBacklogWithPlanningItems($request, $this->epic);
+        $this->linker->linkBacklogWithPlanningItems($request, $this->epic, null);
     }
 
     public function testItLinksTheThemeWithCorpWhenCorpIsParentOfProduct(): void
@@ -164,7 +164,7 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
         $request->shouldReceive('getValidated')->withArgs(['child_milestone', 'uint', 0])->andReturn($this->product_id);
         $request->shouldReceive('exist')->with('link-artifact-id')->andReturnFalse();
 
-        $this->linker->linkBacklogWithPlanningItems($request, $this->theme);
+        $this->linker->linkBacklogWithPlanningItems($request, $this->theme, null);
     }
 
     public function testItLinksTheEpicWithAllMilestonesParentOfSprintThatCanPlanEpics(): void
@@ -180,7 +180,7 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
         $request->shouldReceive('exist')->with('child_milestone')->andReturn(9001);
         $request->shouldReceive('getValidated')->withArgs(['child_milestone', 'uint', 0])->andReturn(9001);
         $request->shouldReceive('exist')->with('link-artifact-id')->andReturnFalse();
-        $this->linker->linkBacklogWithPlanningItems($request, $this->epic);
+        $this->linker->linkBacklogWithPlanningItems($request, $this->epic, null);
     }
 
     public function testItDoesntLinkTheEpicWithCorpPlanningWhenCorpPlanningDoesntManageEpics(): void
@@ -192,7 +192,7 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
         $request->shouldReceive('exist')->with('child_milestone')->andReturn($this->release_id);
         $request->shouldReceive('getValidated')->withArgs(['child_milestone', 'uint', 0])->andReturn($this->release_id);
         $request->shouldReceive('exist')->with('link-artifact-id')->andReturnFalse();
-        $this->linker->linkBacklogWithPlanningItems($request, $this->epic);
+        $this->linker->linkBacklogWithPlanningItems($request, $this->epic, null);
     }
 
     public function testItReturnsNullWhenNotLinkedToAnyArtifacts(): void
@@ -204,7 +204,7 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
 
         $this->product->shouldReceive('linkArtifact');
 
-        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($request, $this->theme);
+        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($request, $this->theme, null);
         $this->assertNull($latest_milestone_artifact);
     }
 
@@ -215,7 +215,7 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
         $request->shouldReceive('exist')->with('link-artifact-id')->andReturn($this->corp_id);
         $request->shouldReceive('getValidated')->withArgs(['link-artifact-id', 'uint', 0])->andReturn($this->corp_id);
 
-        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($request, $this->theme);
+        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($request, $this->theme, null);
         $this->assertEquals($this->corp, $latest_milestone_artifact);
     }
 
@@ -228,7 +228,7 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
         $request->shouldReceive('exist')->with('link-artifact-id')->andReturn($this->release_id);
         $request->shouldReceive('getValidated')->withArgs(['link-artifact-id', 'uint', 0])->andReturn($this->release_id);
 
-        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($request, $this->epic);
+        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($request, $this->epic, null);
         $this->assertEquals($this->product, $latest_milestone_artifact);
     }
 
@@ -242,7 +242,36 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
         $request->shouldReceive('exist')->with('child_milestone')->andReturn($this->release_id);
         $request->shouldReceive('getValidated')->withArgs(['child_milestone', 'uint', 0])->andReturn($this->release_id);
 
-        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($request, $this->epic);
+        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($request, $this->epic, null);
         $this->assertEquals($this->product, $latest_milestone_artifact);
+    }
+
+    public function testItLinksToCurrentMilestone(): void
+    {
+        $request = \Tuleap\Test\Builders\HTTPRequestBuilder::get()
+            ->withUser($this->user)
+            ->withParam('link-to-milestone', 1)
+            ->build();
+
+        $this->release
+            ->shouldReceive('linkArtifact')
+            ->with($this->epic_id, $this->user)
+            ->once();
+
+        $this->product
+            ->shouldReceive('linkArtifact')
+            ->with($this->epic_id, $this->user)
+            ->once();
+
+        $this->linker->linkBacklogWithPlanningItems(
+            $request,
+            $this->epic,
+            [
+                'pane'        => 'details',
+                'planning_id' => 666,
+                'aid'         => $this->release_id,
+                'action'      => 'show',
+            ]
+        );
     }
 }

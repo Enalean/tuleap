@@ -122,8 +122,16 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
 
         $this->artifact_linker
             ->shouldReceive('linkBacklogWithPlanningItems')
-            ->with($request, $this->artifact)
-            ->once();
+            ->with(
+                $request,
+                $this->artifact,
+                [
+                    'pane'        => 'details',
+                    'planning_id' => self::PLANNING_ID,
+                    'aid'         => self::MILESTONE_ID,
+                    'action'      => 'show',
+                ]
+            )->once();
 
         $this->planning_factory
             ->shouldReceive('getPlanning')
@@ -157,7 +165,16 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
 
         $this->artifact_linker
             ->shouldReceive('linkBacklogWithPlanningItems')
-            ->with($request, $this->artifact)
+            ->with(
+                $request,
+                $this->artifact,
+                [
+                    'pane'        => 'details',
+                    'planning_id' => self::PLANNING_ID,
+                    'aid'         => -1,
+                    'action'      => 'show',
+                ]
+            )
             ->once();
 
         $this->planning_factory
@@ -192,7 +209,16 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
 
         $this->artifact_linker
             ->shouldReceive('linkBacklogWithPlanningItems')
-            ->with($request, $this->artifact)
+            ->with(
+                $request,
+                $this->artifact,
+                [
+                    'pane'        => 'details',
+                    'planning_id' => self::PLANNING_ID,
+                    'aid'         => self::MILESTONE_ID,
+                    'action'      => 'show',
+                ]
+            )
             ->once();
 
         $this->planning_factory
@@ -225,7 +251,16 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
 
         $this->artifact_linker
             ->shouldReceive('linkBacklogWithPlanningItems')
-            ->with($request, $this->artifact)
+            ->with(
+                $request,
+                $this->artifact,
+                [
+                    'pane'        => 'details',
+                    'planning_id' => self::PLANNING_ID,
+                    'aid'         => self::MILESTONE_ID,
+                    'action'      => 'show',
+                ]
+            )
             ->once();
 
         $this->planning_factory
@@ -260,7 +295,16 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
 
         $this->artifact_linker
             ->shouldReceive('linkBacklogWithPlanningItems')
-            ->with($request, $this->artifact)
+            ->with(
+                $request,
+                $this->artifact,
+                [
+                    'pane'        => 'details',
+                    'planning_id' => self::PLANNING_ID,
+                    'aid'         => self::MILESTONE_ID,
+                    'action'      => 'show',
+                ]
+            )
             ->once()
             ->andReturn($last_milestone_artifact);
 

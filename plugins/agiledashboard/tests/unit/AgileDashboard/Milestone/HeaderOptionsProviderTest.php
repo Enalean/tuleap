@@ -88,8 +88,13 @@ class HeaderOptionsProviderTest extends TestCase
 
         $this->user      = Mockery::mock(\PFUser::class);
         $this->milestone = Mockery::mock(\Planning_Milestone::class)
-            ->shouldReceive(['getArtifactTitle' => 'Milestone title'])
-            ->getMock();
+            ->shouldReceive(
+                [
+                    'getArtifactTitle' => 'Milestone title',
+                    'getPlanningId' => 69,
+                    'getArtifactId' => 42
+                ]
+            )->getMock();
 
         $this->backlog = Mockery::mock(AgileDashboard_Milestone_Backlog_Backlog::class);
         $backlog_factory
@@ -148,56 +153,66 @@ class HeaderOptionsProviderTest extends TestCase
             ->shouldReceive(
                 [
                     'getId'                 => 101,
-                    'getSubmitUrl'          => '/path/to/101',
                     'getItemName'           => 'epic',
                     'userCanSubmitArtifact' => true
                 ]
             )
             ->getMock();
+        $epic->shouldReceive('getSubmitUrlWithParameters')
+            ->with(['planning[details][69]' => 42, 'link-to-milestone' => '1'])
+            ->andReturn('/path/to/101');
 
         $story = Mockery::mock(Tracker::class)
             ->shouldReceive(
                 [
                     'getId'                 => 102,
-                    'getSubmitUrl'          => '/path/to/102',
                     'getItemName'           => 'story',
                     'userCanSubmitArtifact' => true
                 ]
             )
             ->getMock();
+        $story->shouldReceive('getSubmitUrlWithParameters')
+            ->with(['planning[details][69]' => 42, 'link-to-milestone' => '1'])
+            ->andReturn('/path/to/102');
 
         $requirement = Mockery::mock(Tracker::class)
             ->shouldReceive(
                 [
                     'getId'                 => 103,
-                    'getSubmitUrl'          => '/path/to/103',
                     'getItemName'           => 'req',
                     'userCanSubmitArtifact' => false
                 ]
             )
             ->getMock();
+        $requirement->shouldReceive('getSubmitUrlWithParameters')
+            ->with(['planning[details][69]' => 42, 'link-to-milestone' => '1'])
+            ->andReturn('/path/to/103');
 
         $task = Mockery::mock(Tracker::class)
             ->shouldReceive(
                 [
                     'getId'                 => 104,
-                    'getSubmitUrl'          => '/path/to/104',
                     'getItemName'           => 'task',
                     'userCanSubmitArtifact' => true
                 ]
             )
             ->getMock();
+        $task->shouldReceive('getSubmitUrlWithParameters')
+            ->with(['planning[details][69]' => 42, 'link-to-milestone' => '1'])
+            ->andReturn('/path/to/104');
 
         $top_requirement = Mockery::mock(Tracker::class)
             ->shouldReceive(
                 [
                     'getId'                 => 105,
-                    'getSubmitUrl'          => '/path/to/105',
                     'getItemName'           => 'top',
                     'userCanSubmitArtifact' => false
                 ]
             )
             ->getMock();
+        $top_requirement->shouldReceive('getSubmitUrlWithParameters')
+            ->with(['planning[details][69]' => 42, 'link-to-milestone' => '1'])
+            ->andReturn('/path/to/105');
 
         $this->backlog->shouldReceive(['getDescendantTrackers' => [$story, $requirement, $task]]);
         $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => [$epic, $top_requirement]]);
@@ -216,12 +231,14 @@ class HeaderOptionsProviderTest extends TestCase
             ->shouldReceive(
                 [
                     'getId'                 => 101,
-                    'getSubmitUrl'          => '/path/to/101',
                     'getItemName'           => 'epic',
                     'userCanSubmitArtifact' => true
                 ]
             )
             ->getMock();
+        $epic->shouldReceive('getSubmitUrlWithParameters')
+            ->with(['planning[details][69]' => '', 'link-to-milestone' => '1'])
+            ->andReturn('/path/to/101');
 
         $story = Mockery::mock(Tracker::class)
             ->shouldReceive(
@@ -233,6 +250,9 @@ class HeaderOptionsProviderTest extends TestCase
                 ]
             )
             ->getMock();
+        $story->shouldReceive('getSubmitUrlWithParameters')
+            ->with(['planning[details][69]' => '', 'link-to-milestone' => '1'])
+            ->andReturn('/path/to/102');
 
         $requirement = Mockery::mock(Tracker::class)
             ->shouldReceive(
@@ -244,6 +264,9 @@ class HeaderOptionsProviderTest extends TestCase
                 ]
             )
             ->getMock();
+        $requirement->shouldReceive('getSubmitUrlWithParameters')
+            ->with(['planning[details][69]' => '', 'link-to-milestone' => '1'])
+            ->andReturn('/path/to/103');
 
         $task = Mockery::mock(Tracker::class)
             ->shouldReceive(
@@ -255,6 +278,9 @@ class HeaderOptionsProviderTest extends TestCase
                 ]
             )
             ->getMock();
+        $task->shouldReceive('getSubmitUrlWithParameters')
+            ->with(['planning[details][69]' => '', 'link-to-milestone' => '1'])
+            ->andReturn('/path/to/104');
 
         $top_requirement = Mockery::mock(Tracker::class)
             ->shouldReceive(
@@ -266,6 +292,9 @@ class HeaderOptionsProviderTest extends TestCase
                 ]
             )
             ->getMock();
+        $top_requirement->shouldReceive('getSubmitUrlWithParameters')
+            ->with(['planning[details][69]' => '', 'link-to-milestone' => '1'])
+            ->andReturn('/path/to/105');
 
         $top_milestone = Mockery::mock(\Planning_VirtualTopMilestone::class)
             ->shouldReceive(
@@ -279,6 +308,8 @@ class HeaderOptionsProviderTest extends TestCase
                                     ->getMock(),
                             ]
                         )->getMock(),
+                    'getPlanningId' => 69,
+                    'getArtifactId' => null,
                 ]
             )->getMock();
         $this->parent_retriever->shouldReceive(['getCreatableParentTrackers' => [$epic, $top_requirement]]);

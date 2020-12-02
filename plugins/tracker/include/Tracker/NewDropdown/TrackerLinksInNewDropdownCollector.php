@@ -73,9 +73,11 @@ class TrackerLinksInNewDropdownCollector
             return false;
         }
 
-        $submit_url = $tracker->getSubmitUrl();
+        $id = $tracker->getId();
         foreach ($current_context_links as $link) {
-            if ($link->url === $submit_url) {
+            $data_attributes = array_column($link->data_attributes, 'value', 'name');
+            $link_tracker_id = (int) ($data_attributes['tracker-id'] ?? 0);
+            if ($link_tracker_id === $id) {
                 return true;
             }
         }

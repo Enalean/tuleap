@@ -92,7 +92,7 @@ class HeaderOptionsProvider
             'body_class'                 => ['agiledashboard-body']
         ];
 
-        $this->createCurrentContextSectionWithBacklogTrackers($milestone, $user, $header_options);
+        $this->createCurrentContextSectionWithBacklogTrackers($milestone, $user, $header_options, $identifier);
 
         if ($is_pane_a_planning_v2) {
             $this->header_options_for_planning_provider->addPlanningOptions($user, $milestone, $header_options);
@@ -104,17 +104,19 @@ class HeaderOptionsProvider
     private function createCurrentContextSectionWithBacklogTrackers(
         Planning_Milestone $milestone,
         PFUser $user,
-        array &$header_options
+        array &$header_options,
+        string $pane_identifier
     ): void {
         if ($milestone instanceof Planning_VirtualTopMilestone) {
-            $this->createCurrentContextSectionForTopBacklog($milestone, $user, $header_options);
+            $this->createCurrentContextSectionForTopBacklog($milestone, $user, $header_options, $pane_identifier);
         } else {
             $this->createCurrentContextSectionFromTrackers(
                 $milestone,
                 $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers(),
                 $user,
                 (string) $milestone->getArtifactTitle(),
-                $header_options
+                $header_options,
+                $pane_identifier
             );
         }
     }
@@ -124,14 +126,18 @@ class HeaderOptionsProvider
         array $trackers,
         PFUser $user,
         string $section_label,
-        array &$header_options
+        array &$header_options,
+        string $pane_identifier
     ): void {
         $parent_trackers = $this->parent_tracker_retriever->getCreatableParentTrackers($milestone, $user, $trackers);
         foreach (array_merge($trackers, $parent_trackers) as $tracker) {
             if ($tracker->userCanSubmitArtifact($user)) {
                 $this->header_options_inserter->addLinkToCurrentContextSection(
                     $section_label,
-                    $this->presenter_builder->build($tracker),
+                    $this->presenter_builder->buildWithAdditionalUrlParameters($tracker, [
+                        'planning[' . $pane_identifier . '][' . $milestone->getPlanningId() . ']' => (string) $milestone->getArtifactId(),
+                        \Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER => '1'
+                    ]),
                     $header_options
                 );
             }
@@ -141,7 +147,8 @@ class HeaderOptionsProvider
     private function createCurrentContextSectionForTopBacklog(
         Planning_VirtualTopMilestone $milestone,
         PFUser $user,
-        array &$header_options
+        array &$header_options,
+        string $pane_identifier
     ): void {
         $event = $this->event_dispatcher->dispatch(new DisplayTopPlanningAppEvent($milestone, $user));
         assert($event instanceof DisplayTopPlanningAppEvent);
@@ -153,7 +160,8 @@ class HeaderOptionsProvider
             $milestone->getPlanning()->getBacklogTrackers(),
             $user,
             dgettext('tuleap-agiledashboard', 'Top backlog'),
-            $header_options
+            $header_options,
+            $pane_identifier
         );
     }
 }

@@ -66,6 +66,10 @@ final class RedirectParameterInjector
             $key = 'planning[' . $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE] . '][' . $requested_planning[AgileDashboard_PaneRedirectionExtractor::PLANNING_ID] . ']';
 
             $redirect->query_parameters[$key] = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
+
+            if ($request->get(\Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER)) {
+                $redirect->query_parameters[\Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER] = '1';
+            }
         }
     }
 }

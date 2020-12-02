@@ -54,6 +54,16 @@ class TrackerTest extends TestCase
         unset($GLOBALS['Response']);
     }
 
+    public function testGetSubmitUrlWithParameters(): void
+    {
+        self::assertEquals(
+            '/plugins/tracker/?tracker=110&func=new-artifact&whatever=foo',
+            $this->tracker->getSubmitUrlWithParameters([
+                'whatever' => 'foo'
+            ])
+        );
+    }
+
     public function testHasBlockingErrorWorkflowThrowException()
     {
         $header = ['summary', 'details'];

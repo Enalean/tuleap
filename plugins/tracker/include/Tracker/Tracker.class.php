@@ -241,10 +241,23 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function getSubmitUrl()
     {
-        return TRACKER_BASE_URL . '/?' . http_build_query([
-            'tracker' => $this->getId(),
-            'func'    => 'new-artifact'
-        ]);
+        return $this->getSubmitUrlWithParameters([]);
+    }
+
+    /**
+     * @param array<string, string|array> $parameters
+     */
+    public function getSubmitUrlWithParameters(array $parameters): string
+    {
+        return TRACKER_BASE_URL . '/?' . http_build_query(
+            array_merge(
+                [
+                    'tracker' => $this->getId(),
+                    'func'    => 'new-artifact',
+                ],
+                $parameters
+            )
+        );
     }
 
     /**
