@@ -3586,7 +3586,7 @@
     <InvalidNullableReturnType occurrences="1">
       <code>\Tuleap\AgileDashboard\JavascriptDependenciesProvider</code>
     </InvalidNullableReturnType>
-    <MissingParamType occurrences="36">
+    <MissingParamType occurrences="33">
       <code>$id</code>
       <code>$parameters</code>
       <code>$parameters</code>
@@ -3620,11 +3620,8 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$requested_planning</code>
-      <code>$requested_planning</code>
-      <code>$requested_planning</code>
     </MissingParamType>
-    <MissingReturnType occurrences="89">
+    <MissingReturnType occurrences="86">
       <code>burning_parrot_compatible_page</code>
       <code>burning_parrot_get_javascript_files</code>
       <code>burning_parrot_get_stylesheets</code>
@@ -3675,9 +3672,6 @@
       <code>plugin_statistics_service_usage</code>
       <code>postActionVisitExternalActionsEvent</code>
       <code>project_is_deleted</code>
-      <code>redirectOrAppend</code>
-      <code>redirectToPlanning</code>
-      <code>redirectToTopPlanning</code>
       <code>register_project_creation</code>
       <code>rest_project_additional_informations</code>
       <code>rest_project_resources</code>
@@ -21775,13 +21769,6 @@
       <code>$id</code>
     </MissingParamType>
   </file>
-  <file src="plugins/gitlfs/include/Authorization/Action/ActionAuthorizationRemover.php">
-    <MissingReturnType occurrences="3">
-      <code>cleanDB</code>
-      <code>cleanWorkFiles</code>
-      <code>deleteExpired</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/gitlfs/include/Authorization/Action/ActionAuthorizationVerifier.php">
     <MissingParamType occurrences="1">
       <code>$oid</code>
@@ -21887,11 +21874,6 @@
       <code>checkProjectQuota</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/gitlfs/include/Download/FileDownloaderController.php">
-    <PossiblyFalseArgument occurrences="1">
-      <code>$object_resource</code>
-    </PossiblyFalseArgument>
-  </file>
   <file src="plugins/gitlfs/include/GitPHPDisplay/Detector.php">
     <MissingParamType occurrences="1">
       <code>$file_content</code>
@@ -21947,11 +21929,6 @@
     <MissingParamType occurrences="1">
       <code>$oid_value</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/gitlfs/include/LFSObject/LFSObjectRemover.php">
-    <MissingReturnType occurrences="1">
-      <code>removeDanglingObjects</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/gitlfs/include/LFSObject/LFSObjectRetriever.php">
     <MissingParamType occurrences="1">
@@ -22044,11 +22021,6 @@
       <code>$max_size</code>
     </MissingParamType>
   </file>
-  <file src="plugins/gitlfs/include/Transfer/Basic/LFSBasicTransferDownloadController.php">
-    <PossiblyFalseArgument occurrences="1">
-      <code>$object_resource</code>
-    </PossiblyFalseArgument>
-  </file>
   <file src="plugins/gitlfs/include/Transfer/Basic/LFSBasicTransferObjectIntegrityException.php">
     <MissingParamType occurrences="2">
       <code>$expected_oid_value</code>
@@ -22056,21 +22028,17 @@
     </MissingParamType>
   </file>
   <file src="plugins/gitlfs/include/Transfer/Basic/LFSBasicTransferObjectSaver.php">
-    <MissingParamType occurrences="7">
+    <MissingParamType occurrences="6">
       <code>$input_resource</code>
       <code>$input_resource</code>
-      <code>$path</code>
       <code>$path</code>
       <code>$ready_to_be_added_path</code>
       <code>$ready_to_be_added_path</code>
       <code>$temporary_path</code>
     </MissingParamType>
-    <MissingReturnType occurrences="5">
+    <MissingReturnType occurrences="2">
       <code>checkTemporaryObjectFileMatchesExpectations</code>
-      <code>markAsReadyToBeAvailable</code>
       <code>saveObject</code>
-      <code>tryToCleanUpFile</code>
-      <code>writeTemporaryObjectFile</code>
     </MissingReturnType>
   </file>
   <file src="plugins/gitlfs/include/Transfer/Basic/LFSBasicTransferObjectSizeException.php">
@@ -22104,11 +22072,6 @@
     <MissingParamType occurrences="1">
       <code>$oid</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/gitlfs/include/Transfer/LFSTransferVerifier.php">
-    <MissingReturnType occurrences="1">
-      <code>verifyAndMarkLFSObjectAsAvailable</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/gitlfs/include/Transfer/Transfer.php">
     <MissingParamType occurrences="1">
@@ -23372,20 +23335,6 @@
     <PossiblyFalseOperand occurrences="1">
       <code>$dateDisp</code>
     </PossiblyFalseOperand>
-    <UndefinedConstant occurrences="12">
-      <code>GANTT_HDAY</code>
-      <code>GANTT_HMONTH</code>
-      <code>GANTT_HMONTH</code>
-      <code>GANTT_HMONTH</code>
-      <code>GANTT_HWEEK</code>
-      <code>GANTT_HWEEK</code>
-      <code>GANTT_HYEAR</code>
-      <code>GANTT_HYEAR</code>
-      <code>GANTT_HYEAR</code>
-      <code>GANTT_HYEAR</code>
-      <code>GANTT_RDIAG</code>
-      <code>GANTT_SOLID</code>
-    </UndefinedConstant>
     <UndefinedThisPropertyFetch occurrences="2">
       <code>$this-&gt;height</code>
       <code>$this-&gt;width</code>
@@ -37076,7 +37025,7 @@
       <code>parseFormElement</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/DateFormatter.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/DateFormatter.php">
     <MissingParamType occurrences="4">
       <code>$timestamp</code>
       <code>$timestamp</code>
@@ -37100,7 +37049,7 @@
       <code>getTimestamp</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/DateTimeFormatter.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/DateTimeFormatter.php">
     <MissingParamType occurrences="4">
       <code>$timestamp</code>
       <code>$timestamp</code>
@@ -37566,18 +37515,18 @@
       <code>setIsGraph</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetCommand.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetCommand.php">
     <MissingReturnType occurrences="1">
       <code>execute</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetQueue.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/PostSaveNewChangesetQueue.php">
     <MissingReturnType occurrences="2">
       <code>add</code>
       <code>execute</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ProcessChildrenTriggersCommand.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ProcessChildrenTriggersCommand.php">
     <MissingReturnType occurrences="2">
       <code>execute</code>
       <code>hasChanges</code>
@@ -37622,7 +37571,7 @@
       <code>removeLinksFromSubmittedValue</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/UpdateLinkingDirectionCommand.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/UpdateLinkingDirectionCommand.php">
     <MissingReturnType occurrences="1">
       <code>execute</code>
     </MissingReturnType>
@@ -38185,7 +38134,7 @@
       <code>accept</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/Bind/BindVisitor.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/ListFields/Bind/BindVisitor.php">
     <MissingReturnType occurrences="4">
       <code>visitListBindNull</code>
       <code>visitListBindStatic</code>
@@ -38406,12 +38355,12 @@
       <code>calculate</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/IAcceptFieldVisitor.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/IAcceptFieldVisitor.php">
     <MissingReturnType occurrences="1">
       <code>accept</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/IComputeValues.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/IComputeValues.php">
     <MissingParamType occurrences="2">
       <code>$timestamp</code>
       <code>$timestamp</code>
@@ -38469,7 +38418,7 @@
       <code>getFormAdminVisitor</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement.php">
     <ArgumentTypeCoercion occurrences="2">
       <code>$layout</code>
       <code>$request</code>
@@ -38570,7 +38519,7 @@
       <code>searchByFieldId</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElementFactory.php">
     <ArgumentTypeCoercion occurrences="2">
       <code>$form_element</code>
       <code>$request</code>
@@ -38581,8 +38530,7 @@
     <InvalidFalsableReturnType occurrences="1">
       <code>string</code>
     </InvalidFalsableReturnType>
-    <InvalidNullableReturnType occurrences="4">
-      <code>Tracker_FormElementFactory</code>
+    <InvalidNullableReturnType occurrences="3">
       <code>Tracker_FormElement_Field</code>
       <code>Tracker_FormElement_Field</code>
       <code>Tracker_FormElement_IComputeValues</code>
@@ -38677,12 +38625,11 @@
       <code>$used_formElements</code>
       <code>$used_formElements_by_name</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="43">
+    <MissingReturnType occurrences="41">
       <code>addFormElement</code>
       <code>augmentFieldsDataWithDefaultValue</code>
       <code>canReadAllTargets</code>
       <code>clearCaches</code>
-      <code>clearInstance</code>
       <code>createFormElement</code>
       <code>deleteFormElement</code>
       <code>displayAdminCreateFormElement</code>
@@ -38717,7 +38664,6 @@
       <code>isFieldUniqueAndAlreadyUsed</code>
       <code>originalFieldIsInTemplateProject</code>
       <code>removeFormElement</code>
-      <code>setInstance</code>
       <code>typeIsValid</code>
       <code>updateFormElement</code>
       <code>userCanReadSharedField</code>
@@ -38725,14 +38671,13 @@
     <MoreSpecificReturnType occurrences="1">
       <code>Tracker_FormElement</code>
     </MoreSpecificReturnType>
-    <NullableReturnStatement occurrences="7">
+    <NullableReturnStatement occurrences="6">
       <code>$this-&gt;formElements[$form_element_id]</code>
       <code>$this-&gt;formElements_by_name[$tracker_id][$name]</code>
       <code>$this-&gt;used_formElements[$id]</code>
       <code>null</code>
       <code>null</code>
       <code>null</code>
-      <code>self::$_instance</code>
     </NullableReturnStatement>
     <PossiblyNullReference occurrences="2">
       <code>getGroupID</code>
@@ -38753,7 +38698,7 @@
       <code>$this-&gt;formElements_by_formElementcomponent</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container.php">
     <MissingParamType occurrences="17">
       <code>$format</code>
       <code>$format</code>
@@ -38801,7 +38746,7 @@
       <code>hasBeenDisplayed</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Column.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Column.php">
     <MissingParamType occurrences="13">
       <code>$format</code>
       <code>$format</code>
@@ -38834,7 +38779,7 @@
       <code>fetchWithColumnGroup</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Column_Group.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Column_Group.php">
     <MissingParamType occurrences="23">
       <code>$columns</code>
       <code>$columns</code>
@@ -38875,7 +38820,7 @@
       <code>fetchSubmitMasschange</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Fieldset.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Fieldset.php">
     <MissingParamType occurrences="5">
       <code>$extra_class</code>
       <code>$format</code>
@@ -38892,7 +38837,7 @@
       <code>fetchRecursiveArtifact</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field.php">
     <DeprecatedFunction occurrences="4">
       <code>db_ei($this-&gt;getId())</code>
       <code>db_fetch_array($res)</code>
@@ -38982,7 +38927,7 @@
       <code>Criteria</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_FieldVisitor.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_FieldVisitor.php">
     <MissingReturnType occurrences="24">
       <code>visitArtifactId</code>
       <code>visitArtifactLink</code>
@@ -39010,7 +38955,7 @@
       <code>visitText</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Alphanum.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Alphanum.php">
     <MissingParamType occurrences="5">
       <code>$criteria</code>
       <code>$criteria</code>
@@ -39025,7 +38970,7 @@
       <code>quote</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactId.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactId.php">
     <MissingParamType occurrences="2">
       <code>$from_aid</code>
       <code>$report</code>
@@ -39045,7 +38990,7 @@
       <code>$report</code>
     </ParamNameMismatch>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.php">
     <ImplementedParamTypeMismatch occurrences="1">
       <code>$fields_data</code>
     </ImplementedParamTypeMismatch>
@@ -39180,7 +39125,7 @@
       <code>$value</code>
     </UndefinedVariable>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.php">
     <InvalidReturnType occurrences="12">
       <code>fetchCSVChangesetValue</code>
       <code>fetchChangesetValue</code>
@@ -39229,7 +39174,7 @@
       <code>$report</code>
     </ParamNameMismatch>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Checkbox.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Checkbox.php">
     <MissingParamType occurrences="4">
       <code>$is_selected</code>
       <code>$name</code>
@@ -39246,7 +39191,7 @@
       <code>$previous_changesetvalue</code>
     </ParamNameMismatch>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Computed.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Computed.php">
     <InvalidReturnStatement occurrences="2">
       <code>($value !== null) ? $value : "-"</code>
       <code>($value !== null) ? $value : "-"</code>
@@ -39347,7 +39292,7 @@
       <code>isManualValue</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_CrossReferences.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_CrossReferences.php">
     <InvalidNullableReturnType occurrences="2">
       <code>Tracker_Artifact_ChangesetValue</code>
       <code>int</code>
@@ -39378,15 +39323,14 @@
     <ParamNameMismatch occurrences="1">
       <code>$report</code>
     </ParamNameMismatch>
-    <PossiblyNullReference occurrences="5">
-      <code>getGroupId</code>
+    <PossiblyNullReference occurrences="4">
       <code>getGroupId</code>
       <code>getGroupId</code>
       <code>getGroupId</code>
       <code>getGroupId</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Date.php">
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker_Artifact_ChangesetValue</code>
     </InvalidNullableReturnType>
@@ -39480,7 +39424,7 @@
       <code>getTimestamp</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_File.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_File.php">
     <ImplementedParamTypeMismatch occurrences="2">
       <code>$csv_value</code>
       <code>$value</code>
@@ -39573,7 +39517,7 @@
       <code>getFiles</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Float.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Float.php">
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker_Artifact_ChangesetValue</code>
     </InvalidNullableReturnType>
@@ -39604,7 +39548,7 @@
       <code>$report</code>
     </ParamNameMismatch>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Integer.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Integer.php">
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker_Artifact_ChangesetValue</code>
     </InvalidNullableReturnType>
@@ -39629,7 +39573,7 @@
       <code>$report</code>
     </ParamNameMismatch>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_LastModifiedBy.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_LastModifiedBy.php">
     <InvalidNullableReturnType occurrences="1">
       <code>keepValue</code>
     </InvalidNullableReturnType>
@@ -39664,7 +39608,7 @@
       <code>getEmail</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_LastUpdateDate.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_LastUpdateDate.php">
     <InvalidNullableReturnType occurrences="1">
       <code>int</code>
     </InvalidNullableReturnType>
@@ -39702,7 +39646,7 @@
       <code>date</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List.php">
     <ArgumentTypeCoercion occurrences="1">
       <code>$changeset_value</code>
     </ArgumentTypeCoercion>
@@ -39811,7 +39755,7 @@
       <code>getListValues</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind.php">
     <LessSpecificReturnStatement occurrences="1">
       <code>$this-&gt;field</code>
     </LessSpecificReturnStatement>
@@ -39875,7 +39819,7 @@
       <code>Field</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindDecorator.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindDecorator.php">
     <InvalidScalarArgument occurrences="1">
       <code>$val</code>
     </InvalidScalarArgument>
@@ -39913,7 +39857,7 @@
       <code>isTlpColorNamedDefined</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindFactory.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindFactory.php">
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker_FormElement_Field_List_Bind_UgroupsValue</code>
     </InvalidNullableReturnType>
@@ -39958,13 +39902,13 @@
       <code>Field</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindValue.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindValue.php">
     <MissingReturnType occurrences="2">
       <code>getJsonId</code>
       <code>getXMLExportLabel</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Null.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Null.php">
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker_FormElement_Field_List_BindValue</code>
     </InvalidNullableReturnType>
@@ -40001,7 +39945,7 @@
       <code>Field</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Static.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Static.php">
     <ImplementedReturnTypeMismatch occurrences="1">
       <code>void</code>
     </ImplementedReturnTypeMismatch>
@@ -40076,7 +40020,7 @@
       <code>isMultiple</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_StaticValue.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_StaticValue.php">
     <MissingParamType occurrences="5">
       <code>$description</code>
       <code>$id</code>
@@ -40091,12 +40035,12 @@
       <code>getDecorators</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_StaticValue_None.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_StaticValue_None.php">
     <MissingReturnType occurrences="1">
       <code>getXMLId</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Ugroups.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Ugroups.php">
     <ImplementedReturnTypeMismatch occurrences="1">
       <code>void</code>
     </ImplementedReturnTypeMismatch>
@@ -40184,7 +40128,7 @@
       <code>isMultiple</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UgroupsValue.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UgroupsValue.php">
     <MissingParamType occurrences="2">
       <code>$id</code>
       <code>$is_hidden</code>
@@ -40203,7 +40147,7 @@
       <code>getProject</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Users.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Users.php">
     <DeprecatedFunction occurrences="9">
       <code>db_fetch_array(ugroup_db_get_ugroup($matches[1]))</code>
       <code>db_numrows($ugroup_res)</code>
@@ -40291,7 +40235,7 @@
       <code>parent::testImport()</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UsersValue.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UsersValue.php">
     <MissingParamType occurrences="3">
       <code>$display_name</code>
       <code>$id</code>
@@ -40321,7 +40265,7 @@
       <code>getXMLExportLabel</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_OpenValue.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_OpenValue.php">
     <MissingParamType occurrences="2">
       <code>$id</code>
       <code>$label</code>
@@ -40337,7 +40281,7 @@
       <code>getXMLExportLabel</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_UnsavedValue.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_UnsavedValue.php">
     <MissingParamType occurrences="1">
       <code>$id</code>
     </MissingParamType>
@@ -40349,7 +40293,7 @@
       <code>getLabel</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Value.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Value.php">
     <MissingParamType occurrences="3">
       <code>$id</code>
       <code>$id</code>
@@ -40371,7 +40315,7 @@
       <code>setId</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_MultiSelectbox.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_MultiSelectbox.php">
     <MissingParamType occurrences="4">
       <code>$fields_data</code>
       <code>$value</code>
@@ -40393,7 +40337,7 @@
       <code>delete</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Numeric.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Numeric.php">
     <ForbiddenCode occurrences="1">
       <code>var_dump($this, 'Properties must be "maxchars" and "size"')</code>
     </ForbiddenCode>
@@ -40424,7 +40368,7 @@
       <code>getNumeric</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_OpenList.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_OpenList.php">
     <ArgumentTypeCoercion occurrences="1">
       <code>$value</code>
     </ArgumentTypeCoercion>
@@ -40504,7 +40448,7 @@
       <code>$report</code>
     </ParamNameMismatch>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_PermissionsOnArtifact.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_PermissionsOnArtifact.php">
     <DeprecatedFunction occurrences="8">
       <code>db_ei($row['ugroup_id'])</code>
       <code>db_ei($this-&gt;getTracker()-&gt;getGroupId())</code>
@@ -40579,7 +40523,7 @@
       <code>$this-&gt;values</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Priority.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Priority.php">
     <MissingParamType occurrences="5">
       <code>$artifact_id</code>
       <code>$artifact_id</code>
@@ -40602,7 +40546,7 @@
       <code>getValue</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Radiobutton.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Radiobutton.php">
     <MissingParamType occurrences="4">
       <code>$is_selected</code>
       <code>$name</code>
@@ -40619,7 +40563,7 @@
       <code>$old_value</code>
     </ParamNameMismatch>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Selectbox.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Selectbox.php">
     <MissingParamType occurrences="4">
       <code>$changeset_values</code>
       <code>$timestamp</code>
@@ -40640,12 +40584,12 @@
       <code>$submitted_values_array</code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Shareable.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Shareable.php">
     <MissingReturnType occurrences="1">
       <code>fixOriginalValueIds</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_String.php">
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker_Artifact_ChangesetValue</code>
     </InvalidNullableReturnType>
@@ -40673,7 +40617,7 @@
       <code>getText</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_SubmittedBy.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_SubmittedBy.php">
     <InvalidNullableReturnType occurrences="1">
       <code>int</code>
     </InvalidNullableReturnType>
@@ -40705,7 +40649,7 @@
       <code>$display_preferences</code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_SubmittedOn.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_SubmittedOn.php">
     <InvalidNullableReturnType occurrences="1">
       <code>int</code>
     </InvalidNullableReturnType>
@@ -40727,7 +40671,7 @@
       <code>date</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Text.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Text.php">
     <ForbiddenCode occurrences="2">
       <code>var_dump($this, 'Properties must be "maxchars" and "size"')</code>
       <code>var_dump($this, 'Properties must be "rows" and "cols"')</code>
@@ -40797,7 +40741,7 @@
       <code>getText</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Interface.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Interface.php">
     <MissingParamType occurrences="2">
       <code>$project_export_context</code>
       <code>$xmlMapping</code>
@@ -40806,7 +40750,7 @@
       <code>exportToXml</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Shared.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Shared.php">
     <MissingParamType occurrences="11">
       <code>$description</code>
       <code>$id</code>
@@ -40838,7 +40782,7 @@
       <code>$this-&gt;use_it</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField.php">
     <MissingReturnType occurrences="5">
       <code>accept</code>
       <code>fetchReadOnly</code>
@@ -40847,7 +40791,7 @@
       <code>getDefaultValue</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_LineBreak.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_LineBreak.php">
     <MissingParamType occurrences="1">
       <code>$tracker</code>
     </MissingParamType>
@@ -40856,7 +40800,7 @@
       <code>fetchReadOnly</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_RichText.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_RichText.php">
     <MissingParamType occurrences="1">
       <code>$tracker</code>
     </MissingParamType>
@@ -40874,7 +40818,7 @@
       <code>searchByFieldId</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_Separator.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_Separator.php">
     <MissingParamType occurrences="1">
       <code>$tracker</code>
     </MissingParamType>
@@ -40883,7 +40827,7 @@
       <code>fetchReadOnly</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Visitor.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Visitor.php">
     <MissingParamType occurrences="1">
       <code>$element</code>
     </MissingParamType>
@@ -40891,7 +40835,7 @@
       <code>visit</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_SharedFormElementFactory.php">
     <DuplicateArrayKey occurrences="1">
       <code>'label'             =&gt; $originField-&gt;getLabel()</code>
     </DuplicateArrayKey>
@@ -40935,7 +40879,7 @@
       <code>getListValues</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin.php">
     <MissingParamType occurrences="2">
       <code>$allUsedElements</code>
       <code>$name</code>
@@ -40956,12 +40900,12 @@
       <code>fetchTypeNotModifiable</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/CreateSharedVisitor.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/CreateSharedVisitor.php">
     <MissingReturnType occurrences="1">
       <code>fetchForm</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/CreateVisitor.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/CreateVisitor.php">
     <MissingParamType occurrences="2">
       <code>$label</code>
       <code>$type</code>
@@ -40979,7 +40923,7 @@
       <code>getId</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field.php">
     <MissingPropertyType occurrences="2">
       <code>$this-&gt;formElement-&gt;notifications</code>
       <code>$this-&gt;formElement-&gt;required</code>
@@ -40988,53 +40932,53 @@
       <code>isNotificationsSupported</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Checkbox.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Checkbox.php">
     <MissingPropertyType occurrences="1">
       <code>$availableTypes</code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Computed.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Computed.php">
     <MissingReturnType occurrences="2">
       <code>canUpgrade</code>
       <code>isMigrated</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/LastModifiedBy.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/LastModifiedBy.php">
     <MissingReturnType occurrences="1">
       <code>fetchCustomHelp</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/LastUpdateDate.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/LastUpdateDate.php">
     <MissingReturnType occurrences="1">
       <code>fetchCustomHelp</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/List.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/List.php">
     <UndefinedMethod occurrences="1">
       <code>getBind</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/MultiSelectbox.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/MultiSelectbox.php">
     <MissingPropertyType occurrences="1">
       <code>$availableTypes</code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/PermissionsOnArtifact.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/PermissionsOnArtifact.php">
     <MissingReturnType occurrences="1">
       <code>fetchCustomHelp</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Priority.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Priority.php">
     <MissingReturnType occurrences="1">
       <code>fetchCustomHelp</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Radiobutton.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Radiobutton.php">
     <MissingPropertyType occurrences="1">
       <code>$availableTypes</code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Selectbox.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/Selectbox.php">
     <ArgumentTypeCoercion occurrences="1">
       <code>$this-&gt;formElement</code>
     </ArgumentTypeCoercion>
@@ -41048,12 +40992,12 @@
       <code>getAvailableTypes</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/SubmittedBy.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/SubmittedBy.php">
     <MissingReturnType occurrences="1">
       <code>fetchCustomHelp</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/SubmittedOn.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Field/SubmittedOn.php">
     <MissingReturnType occurrences="1">
       <code>fetchCustomHelp</code>
     </MissingReturnType>
@@ -41066,7 +41010,7 @@
       <code>removeByType</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Shared.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Shared.php">
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$formElement</code>
     </InvalidPropertyAssignmentValue>
@@ -41074,22 +41018,22 @@
       <code>$allUsedElements</code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/StaticField/LineBreak.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/StaticField/LineBreak.php">
     <MissingReturnType occurrences="1">
       <code>fetchCustomHelp</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/StaticField/Separator.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/StaticField/Separator.php">
     <MissingReturnType occurrences="1">
       <code>fetchCustomHelp</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/UpdateVisitor.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/UpdateVisitor.php">
     <MissingReturnType occurrences="1">
       <code>fetchForm</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Visitor.class.php">
+  <file src="plugins/tracker/include/Tracker/FormElement/View/Admin/Visitor.php">
     <InvalidArgument occurrences="1">
       <code>$element</code>
     </InvalidArgument>
@@ -41181,8 +41125,7 @@
       <code>$project_trackers</code>
       <code>$tracker</code>
     </MissingParamType>
-    <MissingReturnType occurrences="7">
-      <code>buildHierarchyChildrenOf</code>
+    <MissingReturnType occurrences="6">
       <code>clearInstance</code>
       <code>getChildrenMapFromDar</code>
       <code>getProjectTrackers</code>
@@ -41300,15 +41243,6 @@
     </MissingParamType>
     <MissingReturnType occurrences="1">
       <code>getNewValues</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/MasschangeUpdater.class.php">
-    <MissingParamType occurrences="1">
-      <code>$artifact_id</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>unsubscribeUserFromEachArtifactNotification</code>
-      <code>updateArtifacts</code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Masschange_Presenter.class.php">
@@ -60831,6 +60765,21 @@
       <code>getChartBackgroundColor</code>
       <code>getChartBackgroundColor</code>
     </TooManyArguments>
+    <UndefinedConstant occurrences="4">
+      <code>FF_USERFONT</code>
+      <code>FS_BOLD</code>
+      <code>FS_NORMAL</code>
+      <code>FS_NORMAL</code>
+    </UndefinedConstant>
+  </file>
+  <file src="src/common/chart/Chart_Gantt.class.php">
+    <UndefinedConstant occurrences="5">
+      <code>FS_NORMAL</code>
+      <code>FS_NORMAL</code>
+      <code>FS_NORMAL</code>
+      <code>FS_NORMAL</code>
+      <code>FS_NORMAL</code>
+    </UndefinedConstant>
   </file>
   <file src="src/common/chart/Chart_GanttBar.class.php">
     <InvalidReturnType occurrences="1">
@@ -60839,9 +60788,6 @@
     <MissingPropertyType occurrences="1">
       <code>$jpgraph_instance</code>
     </MissingPropertyType>
-    <UndefinedConstant occurrences="1">
-      <code>GANTT_SOLID</code>
-    </UndefinedConstant>
   </file>
   <file src="src/common/chart/Chart_GanttMilestone.class.php">
     <InvalidReturnType occurrences="1">
@@ -60850,6 +60796,11 @@
     <MissingPropertyType occurrences="1">
       <code>$jpgraph_instance</code>
     </MissingPropertyType>
+    <UndefinedConstant occurrences="3">
+      <code>FF_USERFONT</code>
+      <code>FS_NORMAL</code>
+      <code>FS_NORMAL</code>
+    </UndefinedConstant>
   </file>
   <file src="src/common/chart/Chart_TTFFactory.class.php">
     <MissingParamType occurrences="1">
@@ -60888,6 +60839,10 @@
       <code>$padding_left</code>
       <code>$padding_top</code>
     </MissingParamType>
+    <UndefinedConstant occurrences="2">
+      <code>FS_BOLD</code>
+      <code>FS_NORMAL</code>
+    </UndefinedConstant>
   </file>
   <file src="src/common/chart/GanttVerticalLine.php">
     <MissingParamType occurrences="12">

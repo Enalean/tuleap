@@ -348,7 +348,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function getPluginInfo()
     {
         if (! is_a($this->pluginInfo, 'trackerPluginInfo')) {
-            include_once('trackerPluginInfo.class.php');
             $this->pluginInfo = new trackerPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -1001,7 +1000,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function codendi_daily_start($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        include_once 'Tracker/TrackerManager.class.php';
         $trackerManager = new TrackerManager();
         $logger = BackendLogger::getDefaultLogger();
         $logger->debug("[TDR] Tuleap daily start event: launch date reminder");

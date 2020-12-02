@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/../../../../src/embedded_vendor/jpgraph/jpgraph_ttf.inc.php';
+
 class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
 {
 

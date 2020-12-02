@@ -23,12 +23,6 @@
 
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 
-require_once('GraphOnTrackersV5_Chart.class.php');
-require_once(dirname(__FILE__) . '/../data-transformation/GraphOnTrackersV5_Burndown_DataBuilder.class.php');
-require_once(dirname(__FILE__) . '/../graphic-library/GraphOnTrackersV5_Engine_Burndown.class.php');
-require_once('GraphOnTrackersV5_Chart_BurndownDao.class.php');
-require_once(dirname(__FILE__) . '/../common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.class.php');
-
 /**
  * Base class to provide a Scrum Burndown Chart
  */

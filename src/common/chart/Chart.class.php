@@ -21,6 +21,8 @@
 
 namespace Tuleap\Chart;
 
+require_once __DIR__ . '/../../embedded_vendor/jpgraph/jpgraph_ttf.inc.php';
+
 use Chart_TTFFactory;
 use Feedback;
 use TTF;

@@ -23,14 +23,13 @@
 /**
  * Define an html selectbox field for selectbox fields and text fields provided by the tracker
  */
-class HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5 extends HTML_Element_Selectbox
+class HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5 extends HTML_Element_Selectbox // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = "", $with_user = true, $desc = "")
     {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 
-        require_once(TRACKER_BASE_DIR . '/Tracker/FormElement/Tracker_FormElementFactory.class.php');
         $aff = Tracker_FormElementFactory::instance();
 
         foreach ($aff->getUsedListFields($tracker) as $field) {

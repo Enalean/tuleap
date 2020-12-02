@@ -24,9 +24,6 @@ use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
-require_once('data-access/GraphOnTrackersV5_ChartFactory.class.php');
-require_once(TRACKER_BASE_DIR . '/Tracker/Report/Tracker_Report_Renderer.class.php');
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 {

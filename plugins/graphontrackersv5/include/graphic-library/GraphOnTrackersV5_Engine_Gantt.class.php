@@ -23,6 +23,9 @@
 
 use Tuleap\chart\GanttVerticalLine;
 
+require_once __DIR__ . '/../../../../src/embedded_vendor/jpgraph/jpgraph_ttf.inc.php';
+require_once __DIR__ . '/../../../../src/embedded_vendor/jpgraph/jpgraph_gantt.php';
+
 class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
 {
 

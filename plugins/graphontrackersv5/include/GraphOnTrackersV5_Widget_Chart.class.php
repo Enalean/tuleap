@@ -23,13 +23,6 @@ use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 
-require_once('data-access/GraphOnTrackersV5_ChartFactory.class.php');
-
-/**
-* GraphOnTrackersV5_Widget_Chart
-*
-* Tracker Chart
-*/
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class GraphOnTrackersV5_Widget_Chart extends Widget
 {

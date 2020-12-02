@@ -21,6 +21,9 @@
 
 use Tuleap\Chart\ColorsForCharts;
 
+require_once __DIR__ . '/../../embedded_vendor/jpgraph/jpgraph_gantt.php';
+require_once __DIR__ . '/../../embedded_vendor/jpgraph/jpgraph_ttf.inc.php';
+
 /**
 * Chart_GanttBar
 *

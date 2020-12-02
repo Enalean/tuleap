@@ -21,13 +21,6 @@
 
 use Tuleap\Dashboard\User\UserDashboardController;
 
-require_once('GraphOnTrackersV5_Widget_Chart.class.php');
-
-/**
- * GraphOnTrackersV5_Widget_Chart
- *
- * My Tracker Chart
- */
 class GraphOnTrackersV5_Widget_MyChart extends GraphOnTrackersV5_Widget_Chart
 {
 
