@@ -100,7 +100,7 @@ import {
     TYPE_LINK,
     TYPE_WIKI,
     USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE,
-} from "../constants.js";
+} from "../constants";
 import { addNewFolder } from "../api/rest-querier";
 import { getCustomMetadata } from "../helpers/metadata-helpers/custom-metadata-helper.js";
 import { formatCustomMetadataForFolderUpdate } from "../helpers/metadata-helpers/data-transformatter-helper.js";

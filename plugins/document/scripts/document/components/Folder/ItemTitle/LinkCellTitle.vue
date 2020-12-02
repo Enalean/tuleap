@@ -32,7 +32,7 @@
 <script>
 import { mapState } from "vuex";
 import FakeCaret from "./FakeCaret.vue";
-import { ICON_LINK } from "../../../constants.js";
+import { ICON_LINK } from "../../../constants";
 
 export default {
     name: "LinkCellTitle",

@@ -19,7 +19,7 @@
  *
  */
 
-import { ICON_EMPTY } from "../constants.js";
+import { ICON_EMPTY } from "../constants";
 
 function iconForMimeType(mime_type) {
     const mime_type_lower = mime_type.toLowerCase();

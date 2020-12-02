@@ -18,7 +18,7 @@
  */
 
 import { highlightItem } from "./highlight-items-helper.js";
-import { TYPE_FILE, TYPE_FOLDER } from "../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../constants";
 
 describe("highlight-items-helper", () => {
     describe("Highlight preview pane", () => {

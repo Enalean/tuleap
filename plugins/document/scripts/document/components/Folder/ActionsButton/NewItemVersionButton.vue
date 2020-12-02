@@ -38,7 +38,7 @@
     </button>
 </template>
 <script>
-import { TYPE_LINK, TYPE_WIKI } from "../../../constants.js";
+import { TYPE_LINK, TYPE_WIKI } from "../../../constants";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {

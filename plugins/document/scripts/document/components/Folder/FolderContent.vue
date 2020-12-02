@@ -71,7 +71,7 @@
 import { mapState } from "vuex";
 import FolderContentRow from "./FolderContentRow.vue";
 import QuicklookGlobal from "./QuickLook/QuickLookGlobal.vue";
-import { TYPE_FOLDER, TYPE_FILE } from "../../constants.js";
+import { TYPE_FOLDER, TYPE_FILE } from "../../constants";
 import EventBus from "../../helpers/event-bus.js";
 
 export default {

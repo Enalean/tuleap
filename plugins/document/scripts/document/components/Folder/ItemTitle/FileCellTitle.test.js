@@ -22,7 +22,7 @@ import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import FileCellTitle from "./FileCellTitle.vue";
 import localVue from "../../../helpers/local-vue";
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE } from "../../../constants";
 
 describe("FileCellTitle", () => {
     it(`Given file_properties is not set

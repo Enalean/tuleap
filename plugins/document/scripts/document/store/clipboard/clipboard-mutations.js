@@ -18,7 +18,7 @@
  */
 
 import defaultState from "./clipboard-default-state.js";
-import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../constants.js";
+import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../constants";
 
 export {
     cutItem,

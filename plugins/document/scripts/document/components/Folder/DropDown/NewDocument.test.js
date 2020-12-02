@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import NewDocument from "./NewDocument.vue";
-import { TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FOLDER } from "../../../constants";
 import EventBus from "../../../helpers/event-bus.js";
 
 describe("NewDocument", () => {

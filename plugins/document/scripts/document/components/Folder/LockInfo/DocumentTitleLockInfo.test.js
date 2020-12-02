@@ -21,7 +21,7 @@ import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import DocumentTitleLockInfo from "./DocumentTitleLockInfo.vue";
 import localVue from "../../../helpers/local-vue.js";
-import { TYPE_EMBEDDED } from "../../../constants.js";
+import { TYPE_EMBEDDED } from "../../../constants";
 
 describe("DocumentTitleLockInfo", () => {
     let document_locked_factory, store;

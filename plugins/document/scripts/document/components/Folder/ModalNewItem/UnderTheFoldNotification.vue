@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FOLDER } from "../../../constants";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {

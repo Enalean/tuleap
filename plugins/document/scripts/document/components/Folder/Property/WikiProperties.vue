@@ -43,7 +43,7 @@
     </div>
 </template>
 <script>
-import { TYPE_WIKI } from "../../../constants.js";
+import { TYPE_WIKI } from "../../../constants";
 export default {
     props: {
         value: Object,

@@ -29,7 +29,7 @@ import {
     TYPE_EMPTY,
     CLIPBOARD_OPERATION_COPY,
     CLIPBOARD_OPERATION_CUT,
-} from "../../../constants.js";
+} from "../../../constants";
 
 describe("PasteItem", () => {
     let store, paste_item_factory;

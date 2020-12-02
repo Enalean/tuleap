@@ -40,7 +40,7 @@ import {
     TYPE_WIKI,
     CLIPBOARD_OPERATION_CUT,
     CLIPBOARD_OPERATION_COPY,
-} from "../../constants.js";
+} from "../../constants";
 import { adjustItemToContentAfterItemCreationInAFolder } from "../actions-helpers/adjust-item-to-content-after-item-creation-in-folder.js";
 import { handleErrors } from "../actions-helpers/handle-errors.js";
 

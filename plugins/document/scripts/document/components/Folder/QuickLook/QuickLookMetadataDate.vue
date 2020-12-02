@@ -62,7 +62,7 @@ import {
     isDateValid,
     isToday,
 } from "../../../helpers/date-formatter.js";
-import { METADATA_OBSOLESCENCE_DATE_SHORT_NAME } from "../../../constants.js";
+import { METADATA_OBSOLESCENCE_DATE_SHORT_NAME } from "../../../constants";
 import {
     relativeDatePlacement,
     relativeDatePreference,

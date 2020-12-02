@@ -93,7 +93,7 @@ import {
     TYPE_FOLDER,
     TYPE_LINK,
     TYPE_WIKI,
-} from "../../constants.js";
+} from "../../constants";
 import SearchBox from "./SearchBox.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewItemModal from "./ModalNewItem/NewItemModal.vue";

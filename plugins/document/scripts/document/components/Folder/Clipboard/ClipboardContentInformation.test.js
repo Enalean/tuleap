@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import ClipboardContentInformation from "./ClipboardContentInformation.vue";
-import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants.js";
+import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
 
 describe("ClipboardContentInformation", () => {
     let store, content_information_factory;

@@ -55,7 +55,7 @@ import {
 } from "./rest-querier.js";
 
 import { mockFetchSuccess } from "../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
-import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants.js";
+import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
 import * as tlp from "tlp";
 
 jest.mock("tlp");

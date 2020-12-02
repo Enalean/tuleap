@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 
 import PermissionsUpdateFolderSubItems from "./PermissionsUpdateFolderSubItems.vue";
-import { TYPE_FOLDER, TYPE_EMPTY } from "../../../constants.js";
+import { TYPE_FOLDER, TYPE_EMPTY } from "../../../constants";
 
 describe("PermissionsUpdateFolderSubItems", () => {
     let factory;

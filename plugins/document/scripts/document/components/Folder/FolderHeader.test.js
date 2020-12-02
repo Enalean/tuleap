@@ -23,7 +23,7 @@ import localVue from "../../helpers/local-vue.js";
 
 import FolderHeader from "./FolderHeader.vue";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import { TYPE_EMPTY } from "../../constants.js";
+import { TYPE_EMPTY } from "../../constants";
 
 describe("FolderHeader", () => {
     let factory, store;

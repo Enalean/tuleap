@@ -25,7 +25,7 @@ import {
     startPasting,
     pastingHasFailed,
 } from "./clipboard-mutations.js";
-import { TYPE_EMPTY, CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../constants.js";
+import { TYPE_EMPTY, CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../constants";
 import defaultState from "./clipboard-default-state.js";
 
 describe("Clipboard mutations", () => {

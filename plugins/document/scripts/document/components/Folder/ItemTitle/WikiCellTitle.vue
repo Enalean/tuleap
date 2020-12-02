@@ -32,7 +32,7 @@
 <script>
 import { mapState } from "vuex";
 import FakeCaret from "./FakeCaret.vue";
-import { ICON_WIKI } from "../../../constants.js";
+import { ICON_WIKI } from "../../../constants";
 
 export default {
     name: "WikiCellTitle",

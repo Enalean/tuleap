@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
 
 import localVue from "../../../helpers/local-vue.js";
-import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
 
 describe("QuickLookDocumentMetadata", () => {
     let metadata_factory, store;

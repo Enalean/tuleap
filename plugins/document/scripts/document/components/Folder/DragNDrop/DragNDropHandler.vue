@@ -35,7 +35,7 @@
 <script>
 import { mapGetters, mapState } from "vuex";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
-import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
 import { highlightItem } from "../../../helpers/highlight-items-helper.js";
 import EventBus from "./../../../helpers/event-bus.js";
 

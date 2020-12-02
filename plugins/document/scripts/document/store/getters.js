@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FOLDER, TYPE_WIKI } from "../constants.js";
+import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FOLDER, TYPE_WIKI } from "../constants";
 
 export const is_folder_empty = (state) => state.folder_content.length === 0;
 

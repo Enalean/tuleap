@@ -53,7 +53,7 @@ import {
     TYPE_LINK,
     TYPE_WIKI,
     TYPE_FILE,
-} from "../../../constants.js";
+} from "../../../constants";
 import { mapState } from "vuex";
 
 export default {

@@ -101,7 +101,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI, TYPE_EMBEDDED } from "../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI, TYPE_EMBEDDED } from "../../constants";
 import { formatDateUsingPreferredUserFormat } from "../../helpers/date-formatter.js";
 import {
     hasNoUploadingContent,

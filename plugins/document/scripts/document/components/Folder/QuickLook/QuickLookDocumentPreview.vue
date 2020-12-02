@@ -111,7 +111,7 @@
 import { mapState, mapGetters } from "vuex";
 import IconQuicklookFolder from "../../svg/svg-icons/IconQuicklookFolder.vue";
 import IconQuicklookDropIntoFolder from "../../svg/svg-icons/IconQuicklookDropIntoFolder.vue";
-import { TYPE_EMBEDDED } from "../../../constants.js";
+import { TYPE_EMBEDDED } from "../../../constants";
 
 export default {
     components: {

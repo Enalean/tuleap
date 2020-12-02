@@ -44,7 +44,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import { TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FOLDER } from "../../../constants";
 
 export default {
     props: {

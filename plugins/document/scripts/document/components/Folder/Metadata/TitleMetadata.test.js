@@ -21,7 +21,7 @@ import localVue from "../../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import TitleMetadata from "./TitleMetadata.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
 
 describe("TitleMetadata", () => {
     let title_metadata_factory,

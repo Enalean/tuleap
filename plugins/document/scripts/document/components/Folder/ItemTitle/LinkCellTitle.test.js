@@ -22,7 +22,7 @@ import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import LinkCellTitle from "./LinkCellTitle.vue";
 import localVue from "../../../helpers/local-vue";
-import { TYPE_LINK } from "../../../constants.js";
+import { TYPE_LINK } from "../../../constants";
 
 describe("LinkCellTitle", () => {
     it(`should render link title`, () => {

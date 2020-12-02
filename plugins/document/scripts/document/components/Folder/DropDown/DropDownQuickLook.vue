@@ -75,7 +75,7 @@ import UnlockItem from "./UnlockItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import UpdateProperties from "./UpdateProperties.vue";
 import UpdatePermissions from "./UpdatePermissions.vue";
-import { TYPE_WIKI } from "../../../constants.js";
+import { TYPE_WIKI } from "../../../constants";
 
 export default {
     name: "DropDownQuickLook",

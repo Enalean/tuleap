@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import { TYPE_FOLDER } from "../constants.js";
+import { TYPE_FOLDER } from "../constants";
 import { getFolderSubtree } from "../helpers/retrieve-subtree-helper.js";
 
 export {

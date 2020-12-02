@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { ICON_EMPTY } from "../../../constants.js";
+import { ICON_EMPTY } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
 
 export default {
