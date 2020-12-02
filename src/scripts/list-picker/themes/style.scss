@@ -43,6 +43,10 @@
     border-radius: 0 0 4px 4px;
     background-color: #ffffff;
 
+    &.list-picker-dropdown-above {
+        border-radius: 4px 4px 0 0;
+    }
+
     &.list-picker-dropdown-over-modal {
         z-index: 2007;
     }

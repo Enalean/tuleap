@@ -57,6 +57,7 @@ export async function createListPicker(
 
     const scrolling_manager = new ScrollingManager(wrapper_element);
     const dropdown_manager = new DropdownManager(
+        document,
         wrapper_element,
         list_picker_element,
         dropdown_element,
