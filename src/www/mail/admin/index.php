@@ -29,10 +29,10 @@ if ($group_id && user_ismember($group_id, 'A')) {
             $list_password = sodium_bin2base64(random_bytes(12), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING);
             $list_name = $request->getValidated('list_name', 'string', '');
             if (! $list_name || strlen($list_name) < ForgeConfig::get('sys_lists_name_min_length')) {
-                exit_error($Language->getText('global', 'error'), $Language->getText('mail_admin_index', 'provide_correct_list_name'));
+                exit_error($Language->getText('global', 'error'), _('Must Provide List Name That Is 4 or More Characters Long'));
             }
             if (! preg_match('/(^([a-zA-Z\_0-9\.-]*))$/', $list_name)) {
-                exit_error($Language->getText('global', 'error'), $Language->getText('mail_admin_index', 'list_name_unauthorized_char'));
+                exit_error($Language->getText('global', 'error'), _('List Name Contains Bad Characters. Authorized Characters are : letters, numbers, -, _, .'));
             }
             if (user_is_super_user()) {
                 $new_list_name = strtolower($list_name);
@@ -45,7 +45,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
                 $result = db_query("SELECT * FROM mail_group_list WHERE lower(list_name)='" . db_es($new_list_name) . "'");
 
                 if (db_numrows($result) > 0) {
-                    $feedback .= ' ' . $Language->getText('mail_admin_index', 'list_exists_err') . ' ';
+                    $feedback .= ' ' . _('ERROR - List Already Exists') . ' ';
                 } else {
                     $group_id = db_ei($group_id);
                     $is_public = db_ei($request->getValidated('is_public', 'int', 0));
@@ -68,10 +68,10 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     $group_list_id = db_insertid($result);
 
                     if (! $result) {
-                        $feedback .= ' ' . $Language->getText('mail_admin_index', 'add_list_err') . ' ';
+                        $feedback .= ' ' . _('Error Adding List') . ' ';
                         echo db_error();
                     } else {
-                        $feedback .= ' ' . $Language->getText('mail_admin_index', 'list_added') . ' ';
+                        $feedback .= ' ' . _('List Added') . ' ';
                     }
 
                     // Raise an event
@@ -80,22 +80,36 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     // get email addr
                     $res_email = db_query("SELECT email FROM user WHERE user_id='" . $db_escaped_user_id . "'");
                     if (db_numrows($res_email) < 1) {
-                        exit_error($Language->getText('mail_admin_index', 'invalid_userid'), $Language->getText('mail_admin_index', 'does_not_compute'));
+                        exit_error(_('Invalid userid'), _('Email address not found.'));
                     }
                     $row_email = db_fetch_array($res_email);
 
                     // mail password to admin
-                    $message = $Language->getText('mail_admin_index', 'list_create_explain', [ForgeConfig::get('sys_name'), $new_list_name . '@' . $sys_lists_domain, $list_server . "/mailman/listinfo/$new_list_name", $list_server . "/mailman/admin/$new_list_name", $list_password]);
+                    $message = sprintf(_('A mailing list will be created on %1$s in a few minutes
+and you are the list administrator.
+
+Your mailing list info is at:
+%3$s
+
+List administration can be found at:
+%4$s
+
+Your list password is: %5$s
+You are encouraged to change this password as soon as possible.
+
+Thank you for using %1$s.
+
+ -- The %1$s Team'), ForgeConfig::get('sys_name'), $new_list_name . '@' . $sys_lists_domain, $list_server . "/mailman/listinfo/$new_list_name", $list_server . "/mailman/admin/$new_list_name", $list_password);
 
                     $hdrs = "From: " . ForgeConfig::get('sys_email_admin') . ForgeConfig::get('sys_lf');
                     $hdrs .= 'Content-type: text/plain; charset=utf-8' . ForgeConfig::get('sys_lf');
 
-                    mail($row_email['email'], ForgeConfig::get('sys_name') . " " . $Language->getText('mail_admin_index', 'new_mail_list'), $message, $hdrs);
+                    mail($row_email['email'], ForgeConfig::get('sys_name') . " " . _('New Mailing List'), $message, $hdrs);
 
-                    $feedback .= " " . $Language->getText('mail_admin_index', 'mail_sent_to', $row_email['email']) . " ";
+                    $feedback .= " " . sprintf(_('Email sent with details to: %1$s'), $row_email['email']) . " ";
                 }
             } else {
-                $feedback .= ' ' . $Language->getText('mail_admin_index', 'invalid_list_name') . ' ';
+                $feedback .= ' ' . _('Invalid List Name') . ' ';
             }
         } elseif ($request->existAndNonEmpty('change_status')) {
             /*
@@ -109,14 +123,14 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     "WHERE group_list_id='" . db_ei($group_list_id) . "' AND group_id='" . db_ei($group_id) . "'";
             $result = db_query($sql);
             if (! $result || db_affected_rows($result) < 1) {
-                $feedback .= ' ' . $Language->getText('mail_admin_index', 'upate_status_err') . ' ';
+                $feedback .= ' ' . _('Error Updating Status') . ' ';
                 echo db_error();
             } else {
                 if ($is_public == 9) {
                     // List deleted: raise event
                     EventManager::instance()->processEvent('mail_list_delete', ['group_list_id' => $group_list_id,]);
                 }
-                $feedback .= ' ' . $Language->getText('mail_admin_index', 'status_update_success') . ' ';
+                $feedback .= ' ' . _('Status Updated Successfully') . ' ';
             }
         }
     }
@@ -125,21 +139,21 @@ if ($group_id && user_ismember($group_id, 'A')) {
         /*
           Show the form for adding mailing list
          */
-        mail_header(['title' => $Language->getText('mail_admin_index', 'add_a_mail_list')]);
+        mail_header(['title' => _('Add a Mailing List')]);
 
         echo '
-            <H3>' . $Language->getText('mail_admin_index', 'add_a_mail_list') . '</H3>';
+            <H3>' . _('Add a Mailing List') . '</H3>';
         include($Language->getContent('mail/addlist_intro'));
 
         $result = db_query("SELECT list_name FROM mail_group_list WHERE group_id='$group_id'");
-        ShowResultSet($result, $Language->getText('mail_admin_index', 'existing_mail_list'), false);
+        ShowResultSet($result, _('Existing Mailing Lists'), false);
 
         echo '<P>
             <FORM METHOD="POST" ACTION="?">
             <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
             <INPUT TYPE="HIDDEN" NAME="add_list" VALUE="y">
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
-            <B>' . $Language->getText('mail_admin_index', 'mail_list_name') . ':</B><BR>';
+            <B>' . _('Mailing List Name') . ':</B><BR>';
 
         // if the user is super user then he has the right to choose the
         // full mailing list name
@@ -150,13 +164,13 @@ if ($group_id && user_ismember($group_id, 'A')) {
             echo '<B>' . ForgeConfig::get('sys_lists_prefix') . $purifier->purify($pm->getProject($group_id)->getUnixName()) . '-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" SIZE="15" MAXLENGTH="20" CLASS="textfield_small">@' . $purifier->purify($sys_lists_domain) . '</B><BR>';
         }
         echo '    <P>
-            <B>' . $Language->getText('mail_admin_index', 'is_public') . ' </B>' . $Language->getText('mail_admin_index', 'public_explain') . '<BR>
+            <B>' . _('Is Public?') . ' </B>' . _('(Public means subscription right is granted to any user, and archives are public)') . '<BR>
             <INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> ' . $Language->getText('global', 'yes') . '<BR>
             <INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> ' . $Language->getText('global', 'no') . '<P>
-            <B>' . $Language->getText('mail_admin_index', 'desc') . ':</B><BR>
+            <B>' . _('Description') . ':</B><BR>
             <INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="160"><BR>
             <P>
-            <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $Language->getText('mail_admin_index', 'add_this_list') . '">
+            <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . _('Add This List') . '">
             </FORM>';
 
         mail_footer([]);
@@ -164,7 +178,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
         /*
           Change a forum to public/private
          */
-        mail_header(['title' => $Language->getText('mail_admin_index', 'update_mail_list')]);
+        mail_header(['title' => _('Update Mailing Lists')]);
 
         $sql = "SELECT list_name,group_list_id,is_public,description " .
                 "FROM mail_group_list " .
@@ -174,21 +188,21 @@ if ($group_id && user_ismember($group_id, 'A')) {
 
         if (! $result || $rows < 1) {
             echo '
-                <H2>' . $Language->getText('mail_admin_index', 'no_list_found') . '</H2>
+                <H2>' . _('No Lists Found') . '</H2>
                 <P>
-                ' . $Language->getText('mail_admin_index', 'none_found_for_project');
+                ' . _('None found for this project');
             echo db_error();
         } else {
             echo '
-            <H2>' . $Language->getText('mail_admin_index', 'update_mail_list') . '</H2>
+            <H2>' . _('Update Mailing Lists') . '</H2>
             <P>
-            ' . $Language->getText('mail_admin_index', 'admin_lists_here', ForgeConfig::get('sys_name') . '<P>');
+            ' . sprintf(_('You can administrate lists from here. Please note that private lists can still be viewed by members of your project, but are not listed on %1$s'), ForgeConfig::get('sys_name') . '<P>');
 
             $title_arr = [];
-            $title_arr[] = $Language->getText('mail_admin_index', 'list');
+            $title_arr[] = _('List');
             $title_arr[] = $Language->getText('global', 'status');
-            $title_arr[] = $Language->getText('mail_admin_index', 'update');
-            $title_arr[] = $Language->getText('mail_admin_index', 'list_admin');
+            $title_arr[] = _('Update');
+            $title_arr[] = _('List Admin');
 
             echo html_build_list_table_top($title_arr);
 
@@ -203,18 +217,18 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
                     <TD>
                         <FONT SIZE="-1">
-                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="1"' . ((db_result($result, $i, 'is_public') == '1') ? ' CHECKED' : '') . '> ' . $Language->getText('mail_admin_index', 'public') . '<BR>
-                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="0"' . ((db_result($result, $i, 'is_public') == '0') ? ' CHECKED' : '') . '> ' . $Language->getText('mail_admin_index', 'private') . '<BR>
-                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="9"' . ((db_result($result, $i, 'is_public') == '9') ? ' CHECKED' : '') . '> ' . $Language->getText('mail_admin_index', 'delete') . '<BR>
+                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="1"' . ((db_result($result, $i, 'is_public') == '1') ? ' CHECKED' : '') . '> ' . _('Public') . '<BR>
+                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="0"' . ((db_result($result, $i, 'is_public') == '0') ? ' CHECKED' : '') . '> ' . _('Private') . '<BR>
+                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="9"' . ((db_result($result, $i, 'is_public') == '9') ? ' CHECKED' : '') . '> ' . _('Deleted') . '<BR>
                     </TD><TD>
                         <FONT SIZE="-1">
                         <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $Language->getText('global', 'btn_update') . '">
                     </TD>
                     <TD><A href="' . $list_server . '/mailman/admin/'
-                . db_result($result, $i, 'list_name') . '">[' . $Language->getText('mail_admin_index', 'admin_in_gnu') . ']</A>
+                . db_result($result, $i, 'list_name') . '">[' . _('Administrate this list in GNU Mailman') . ']</A>
                        </TD></TR>
                        <TR class="' . util_get_alt_row_color($i) . '"><TD COLSPAN="4">
-                                        ' . $Language->getText('mail_admin_index', 'desc') . ':
+                                        ' . _('Description') . ':
                         <INPUT TYPE="TEXT" NAME="description" VALUE="' .
                 db_result($result, $i, 'description') . '" SIZE="70" MAXLENGTH="160"><BR>
                     </TD></TR></FORM>';
@@ -228,15 +242,15 @@ if ($group_id && user_ismember($group_id, 'A')) {
           Show main page for choosing
           either moderotor or delete
          */
-        mail_header(['title' => $Language->getText('mail_admin_index', 'mail_list_admin')]);
+        mail_header(['title' => _('Mailing List Administration')]);
 
         echo '
-            <H2>' . $Language->getText('mail_admin_index', 'mail_list_admin') . '</H2>
+            <H2>' . _('Mailing List Administration') . '</H2>
             <h3>
-            <A HREF="?group_id=' . $group_id . '&add_list=1">' . $Language->getText('mail_admin_index', 'add_mail_list') . '</A></h3>
-                                                      <p>' . $Language->getText('mail_admin_index', 'create_new_mail_lists') . '
-            <h3><A HREF="?group_id=' . $group_id . '&change_status=1">' . $Language->getText('mail_admin_index', 'admin_update_lists') . '</A></h3>
-                                                      <p>' . $Language->getText('mail_admin_index', 'manage_mail');
+            <A HREF="?group_id=' . $group_id . '&add_list=1">' . _('Add Mailing List') . '</A></h3>
+                                                      <p>' . _('Create new mailing lists') . '
+            <h3><A HREF="?group_id=' . $group_id . '&change_status=1">' . _('Administrate/Update Lists') . '</A></h3>
+                                                      <p>' . _('Manage existing mailing (change description, privacy...)');
         mail_footer([]);
     }
 } else {

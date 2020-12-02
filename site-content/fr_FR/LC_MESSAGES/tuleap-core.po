@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -78,6 +78,16 @@ msgstr "Annonces phares des projets %s"
 msgid "%s with email %s created an account on %s."
 msgstr "%s avec l'email %s a créé un compte sur %s."
 
+msgid ""
+"(Public means subscription right is granted to any user, and archives are "
+"public)"
+msgstr ""
+"(Publique signifie que tous les utilisateurs peuvent s'abonner, et que les "
+"archives sont publiques)"
+
+msgid "(Un)Subscribe/Preferences"
+msgstr "(Dés)Abonnement/Préférences"
+
 msgid "(day/month/year)"
 msgstr "(jour/mois/année)"
 
@@ -92,6 +102,37 @@ msgstr "il y a 5 jours"
 
 msgid "A deleted project can not be restored."
 msgstr "Un projet détruit ne peut être restoré."
+
+#, php-format
+msgid ""
+"A mailing list will be created on %1$s in a few minutes\n"
+"and you are the list administrator.\n"
+"\n"
+"Your mailing list info is at:\n"
+"%3$s\n"
+"\n"
+"List administration can be found at:\n"
+"%4$s\n"
+"\n"
+"Your list password is: %5$s\n"
+"You are encouraged to change this password as soon as possible.\n"
+"\n"
+"Thank you for using %1$s.\n"
+"\n"
+" -- The %1$s Team"
+msgstr ""
+"Une liste de distribution sera créée sur %1$s dans quelques minutes\n"
+" et vous en êtes l'administrateur. Cette liste est : %3$s \n"
+"\n"
+"Les informations concernant cette liste de distribution sont sur : \n"
+"%4$s\n"
+"\n"
+"Votre mot de passe d'administration est : %5$s\n"
+"Nous vous invitons à changer ce mot de passe par défaut dès que possible.\n"
+"\n"
+"Merci d'utiliser %1$s.\n"
+"\n"
+" -- L'équipe %1$s"
 
 msgid ""
 "A non available service cannot be enabled. To enable this service, switch it "
@@ -235,8 +276,17 @@ msgstr "Ajouter"
 msgid "Add List"
 msgstr "Créer une liste"
 
+msgid "Add Mailing List"
+msgstr "Créer une liste de diffusion"
+
 msgid "Add SSH key"
 msgstr "Ajouter une clef SSH"
+
+msgid "Add This List"
+msgstr "Créer cette liste"
+
+msgid "Add a Mailing List"
+msgstr "Créer une liste de distribution"
 
 msgid "Add a new service"
 msgstr "Ajouter un nouveau service"
@@ -279,6 +329,12 @@ msgstr "Ajouter un utilisateur non membre du projet"
 
 msgid "Admin service cannot be disabled."
 msgstr "Le service admin ne peut pas être désactivé."
+
+msgid "Administrate this list in GNU Mailman"
+msgstr "Administrer cette liste depuis Mailman"
+
+msgid "Administrate/Update Lists"
+msgstr "Administrer/Modifier les listes de diffusion"
 
 msgid "Administration"
 msgstr "Administration"
@@ -388,6 +444,9 @@ msgstr "Utilisateur anonyme"
 
 msgid "Appearance & language"
 msgstr "Apparence et langue"
+
+msgid "Archives"
+msgstr "Archives"
 
 msgid ""
 "As notified %s days ago and without any connection from you since, your user "
@@ -609,8 +668,14 @@ msgstr "Checkin -"
 msgid "Child projects"
 msgstr "Projets enfants"
 
+msgid "Choose a Group First"
+msgstr "Choisissez d'abord un groupe (projet)"
+
 msgid "Choose a category…"
 msgstr "Choisissez une catégorie…"
+
+msgid "Choose a list to browse, search, and post messages."
+msgstr "Choisissez une liste où naviguer, chercher ou poster des messages."
 
 msgid "Clear history"
 msgstr "Effacer l'historique"
@@ -723,6 +788,9 @@ msgstr "Créer le label"
 msgid "Create new License Agreement"
 msgstr "Créer une nouvelle licence"
 
+msgid "Create new mailing lists"
+msgstr "Créer une nouvelle liste de diffusion"
+
 msgid "Create user group"
 msgstr "Ajouter un groupe utilisateur"
 
@@ -777,6 +845,38 @@ msgstr "Cher utilisateur {{tuleap_server_name}},"
 msgid "Dear %s user,"
 msgstr "Cher utilisateur %s,"
 
+#, php-format
+msgid ""
+"Dear Files service user,\n"
+"\n"
+" An error occurs while trying to compute md5sum in your uploaded file %1$s.\n"
+"Please try to upload it again."
+msgstr ""
+"Cher utilisateur du servcie Fichiers,\n"
+"\n"
+" Une erreur est survenue lors du calcul du md5sum de votre fichier %1$s.\n"
+"Veuillez le télécharger une autre fois."
+
+#, php-format
+msgid ""
+"Dear Files service user,\n"
+"\n"
+"The entered reference md5sum for the file %1$s differs from the computed one "
+"which equals = %2$s.\n"
+" Note that an error message will be shown each time you display the release "
+"content in the web interface.\n"
+"If you consider that the upload has been well done, you can modify the value "
+"in the md5sum field by putting the right value."
+msgstr ""
+"Cher utilisateur du servcie Fichiers, \n"
+"\n"
+"La référence md5sum donnée pour le fichier %1$s diffère de celle calculée "
+"sur le serveur qui est équale = %2$s.\n"
+" Il est à noter qu'un message d'erreur sera affiché chaque fois  que vous "
+"tenterez d'accéder à partir du web au contenu de la release en question. \n"
+"Si vous considérez que l'upload du fichier s'est bien passé, vous pouvez "
+"modifier la valeur du champ md5sum en soumettant la bonne valeur."
+
 msgid "Default dates display"
 msgstr "Affichage des dates relatives par défaut"
 
@@ -822,6 +922,9 @@ msgstr "Supprimer un groupe utilisateurs"
 msgid "Delete widget"
 msgstr "Supprimer le widget"
 
+msgid "Deleted"
+msgstr "Détruire"
+
 msgid "Description"
 msgstr "Description"
 
@@ -860,6 +963,9 @@ msgstr "Accord de téléchargement"
 
 msgid "E-mail notification on commits"
 msgstr "Notification e-mail sur les commits"
+
+msgid "ERROR - List Already Exists"
+msgstr "ERREUR - La liste existe déjà"
 
 msgid "ERROR - no group_id"
 msgstr "ERREUR - pas de group_id"
@@ -911,8 +1017,15 @@ msgstr "E-mail"
 msgid "Email %s is not valid"
 msgstr "L'email %s n'est valide"
 
+msgid "Email address not found."
+msgstr "Adresse e-mail introuvable"
+
 msgid "Email format preference successfully updated"
 msgstr "La préférence de format de courriel a été mise à jour"
+
+#, php-format
+msgid "Email sent with details to: %1$s"
+msgstr "Note détaillée envoyée par e-mail à : %1$s"
 
 msgid "Email was not updated"
 msgstr "L'adresse de courriel n'a pas été mise à jour"
@@ -951,6 +1064,18 @@ msgid ""
 msgstr ""
 "Entrez les personnes à inviter sur %s. Nous leur enverrons un email "
 "d'invitation."
+
+msgid "Error - choose a group first"
+msgstr "Erreur - Choisissez d'abord un groupe (projet)"
+
+msgid "Error Adding List"
+msgstr "Erreur lors de la création de la liste"
+
+msgid "Error Updating Status"
+msgstr "Erreur lors de la mise à jour du statut"
+
+msgid "Existing Mailing Lists"
+msgstr "Listes de diffusion existantes"
 
 msgid "Experimental"
 msgstr "Expérimental"
@@ -1180,6 +1305,9 @@ msgstr ""
 "par défaut figurant sur la <a href=\"%1$s\">page d'accueil de CVS</a>. "
 "(balises HTML autorisées)"
 
+msgid "Invalid List Name"
+msgstr "Nom de liste invalide"
+
 #, php-format
 msgid "Invalid group name: %s. Please use only alphanumerical characters."
 msgstr ""
@@ -1188,6 +1316,9 @@ msgstr ""
 
 msgid "Invalid selection of categories"
 msgstr "La selection de catégories n'est pas valide"
+
+msgid "Invalid userid"
+msgstr "ID utilisateur invalide"
 
 #, php-format
 msgid "Invitation complete!"
@@ -1228,8 +1359,14 @@ msgstr "Inviter quelqu'un à rejoindre %s"
 msgid "Invited by"
 msgstr "Invitation envoyée par"
 
+msgid "Is Public?"
+msgstr "Publique ?"
+
 msgid "Is default?"
 msgstr "Par défaut ?"
+
+msgid "Is this email not displaying correctly?"
+msgstr "Ce message ne s'affiche pas correctement?"
 
 msgid "Is used?"
 msgstr "Utilisé ?"
@@ -1311,6 +1448,22 @@ msgstr "Lien"
 msgid "Links"
 msgstr "Liens"
 
+msgid "List"
+msgstr "Liste"
+
+msgid "List Added"
+msgstr "Liste créée avec succès"
+
+msgid "List Admin"
+msgstr "Administration des listes"
+
+msgid ""
+"List Name Contains Bad Characters. Authorized Characters are : letters, "
+"numbers, -, _, ."
+msgstr ""
+"Le nom de la liste contient des caractères non autorisés. Les caractères "
+"autorisés sont : lettres, nombres, -, _, ."
+
 msgid "List of impacted files"
 msgstr "Liste des fichiers concernés"
 
@@ -1335,11 +1488,29 @@ msgstr "Trafic faible, fortement recommandé."
 msgid "Low traffic."
 msgstr "Trafic faible."
 
+msgid "ML Administration"
+msgstr "Administration de la liste"
+
 msgid "Mail To"
 msgstr "Envoyer à"
 
+msgid "Mailing List Administration"
+msgstr "Administration des listes de diffusion"
+
+msgid "Mailing List Name"
+msgstr "Nom de la liste de diffusion"
+
+#, php-format
+msgid "Mailing Lists for %1$s"
+msgstr "Liste De Diffusions for %1$s"
+
 msgid "Mailing lists (Lists Service)"
 msgstr "Listes de diffusion (Service Listes)"
+
+msgid "Manage existing mailing (change description, privacy...)"
+msgstr ""
+"Gérer les listes de diffusion existantes (modifier la description, la "
+"confidentialité&hellip;)"
 
 msgid "Manage help links"
 msgstr "Gestion des liens d'aide"
@@ -1417,6 +1588,9 @@ msgstr "Moderation"
 msgid "Month"
 msgstr "Mois"
 
+msgid "Must Provide List Name That Is 4 or More Characters Long"
+msgstr "Le nom de la liste doit comporter au moins 4 caractères"
+
 msgid "My Dashboard"
 msgstr "Mon tableau de bord"
 
@@ -1450,6 +1624,9 @@ msgstr "Jamais"
 
 msgid "New"
 msgstr "Nouveau"
+
+msgid "New Mailing List"
+msgstr "Nouvelle liste de distribution"
 
 msgid "New avatar"
 msgstr "Nouvel avatar"
@@ -1485,6 +1662,13 @@ msgstr "Non"
 msgid "No Commit matches your criteria"
 msgstr "Aucun commit ne correspond à vos critères"
 
+msgid "No Lists Found"
+msgstr "Aucune liste disponible"
+
+#, php-format
+msgid "No Lists found for %1$s"
+msgstr "Aucune liste pour %1$s"
+
 msgid "No activity yet"
 msgstr "Pas encore d'activité"
 
@@ -1517,6 +1701,9 @@ msgstr "Personne"
 
 msgid "Non active projects cannot be used to be project template"
 msgstr "Les projets non actifs ne peuvent être utilisés comme modèle de projet"
+
+msgid "None found for this project"
+msgstr "Aucune liste n'est disponible pour ce projet"
 
 msgid "Not categorized"
 msgstr "Non catégorisé"
@@ -1756,6 +1943,10 @@ msgstr "Administration du projet"
 
 msgid "Project administrators can choose project visibility"
 msgstr "Les administrateurs de projet peuvent choisir la visibilité du projet"
+
+msgid "Project administrators use the admin link to request mailing lists."
+msgstr ""
+"Utiliser la fonction d'administration pour créer une liste de diffusion."
 
 msgid ""
 "Project admins can't be removed from project. You must remove them from "
@@ -2181,12 +2372,15 @@ msgid ""
 "Some features are already not available to you. Please upgrade to a modern, "
 "fully supported browser such as Firefox, Chrome or Edge."
 msgstr ""
-"À partir de janvier 2021, l'accès avec Internet Explorer ne fonctionnera plus. Des "
-"fonctionnalités ne vous sont déjà pas disponibles. Veuillez utiliser un "
-"navigateur moderne tel que Firefox, Chrome ou Edge."
+"À partir de janvier 2021, l'accès avec Internet Explorer ne fonctionnera "
+"plus. Des fonctionnalités ne vous sont déjà pas disponibles. Veuillez "
+"utiliser un navigateur moderne tel que Firefox, Chrome ou Edge."
 
 msgid "Status"
 msgstr "Statut"
+
+msgid "Status Updated Successfully"
+msgstr "Statut mis à jour avec succès"
 
 msgid ""
 "Streamline your workflow and focus on what's hot with an easy-to-use board"
@@ -2471,6 +2665,9 @@ msgstr "Un lien de parenté existe déjà entre ces projets."
 msgid "This Project Has Turned CVS Off"
 msgstr "Ce projet a désactivé CVS"
 
+msgid "This Project Has Turned Off Mailing Lists"
+msgstr "Ce projet a désactivé les listes de diffusion"
+
 msgid ""
 "This feature aims to provide a way to structure projects organizations from\n"
 "            permissions, user groups and control point of view. As of today, "
@@ -2736,6 +2933,9 @@ msgstr "Mettre à jour"
 msgid "Update List"
 msgstr "Modifier une liste"
 
+msgid "Update Mailing Lists"
+msgstr "Modifier les listes de diffusion"
+
 msgid "Update failed"
 msgstr "La mise à jour a échoué"
 
@@ -2756,6 +2956,9 @@ msgstr "Mettre à jour le mot de passe"
 
 msgid "Update successful"
 msgstr "Mis à jour avec succès"
+
+msgid "Update your email preferences"
+msgstr "Mettre à jour vos préférences"
 
 msgid "Upload text file"
 msgstr "Téléverser un fichier texte"
@@ -3064,6 +3267,15 @@ msgid "You are trying to send one invitation."
 msgid_plural "You are trying to send %s invitations."
 msgstr[0] "Vous essayez d'envoyer une invitation."
 msgstr[1] "Vous essayez d'envoyer %s invitations."
+
+#, php-format
+msgid ""
+"You can administrate lists from here. Please note that private lists can "
+"still be viewed by members of your project, but are not listed on %1$s"
+msgstr ""
+"Vous pouvez administrez vos listes de diffusion depuis cette page. Veuillez "
+"noter que les listes privées sont visibles pour les membres du projet mais "
+"qu'elles n'apparaissent pas sur %1$s"
 
 msgid "You can choose up to %s category"
 msgid_plural "You can choose up to %s categories"
@@ -3374,8 +3586,14 @@ msgstr ""
 msgid "permissions"
 msgstr "permissions"
 
+msgid "private"
+msgstr "privée"
+
 msgid "private repository"
 msgstr "dépôt privé"
+
+msgid "public"
+msgstr "publique"
 
 msgid "sorted by"
 msgstr "trié par"

@@ -74,8 +74,6 @@ class SystemEvent_COMPUTE_MD5SUMTest extends TestCase
             ]
         );
 
-        $this->language = Mockery::mock(BaseLanguage::class);
-
         $base_language_factory = Mockery::mock(BaseLanguageFactory::class);
         $base_language_factory
             ->shouldReceive('getBaseLanguage')
@@ -114,11 +112,6 @@ class SystemEvent_COMPUTE_MD5SUMTest extends TestCase
     {
         $this->evt->shouldReceive('computeFRSMd5Sum')->andReturns(false);
 
-        $this->language
-            ->shouldReceive('getText')
-            ->once()
-            ->andReturn("Dear Files service user,\n\n An error occurs while trying to compute md5sum in your uploaded file $1.\nPlease try to upload it again.");
-
         $this->evt->shouldReceive('sendNotificationMail')->andReturns(true);
 
         $this->evt->shouldReceive('done')->never();
@@ -151,11 +144,6 @@ class SystemEvent_COMPUTE_MD5SUMTest extends TestCase
         $this->evt->shouldReceive('updateDB')->andReturns(true);
         $this->evt->shouldReceive('compareMd5Checksums')->andReturns(false);
 
-        $this->language
-            ->shouldReceive('getText')
-            ->once()
-            ->andReturn("Dear Files service user, \n\nThe entered reference md5sum for the file $1 differs from the computed one which equals = $2.\n Note that an error message will be shown each time you display the release content in the web interface. \nIf you consider that the upload has been well done, you can modify the value in the md5sum field by putting the right value.");
-
         $this->evt->shouldReceive('sendNotificationMail')->andReturns(true);
 
         $this->evt->shouldReceive('done')->once();
@@ -168,11 +156,6 @@ class SystemEvent_COMPUTE_MD5SUMTest extends TestCase
         $this->evt->shouldReceive('computeFRSMd5Sum')->andReturns(true);
         $this->evt->shouldReceive('updateDB')->andReturns(true);
         $this->evt->shouldReceive('compareMd5Checksums')->andReturns(false);
-
-        $this->language
-            ->shouldReceive('getText')
-            ->once()
-            ->andReturn("Dear Files service user, \n\nThe entered reference md5sum for the file $1 differs from the computed one which equals = $2.\n Note that an error message will be shown each time you display the release content in the web interface. \nIf you consider that the upload has been well done, you can modify the value in the md5sum field by putting the right value.");
 
         $this->evt->shouldReceive('sendNotificationMail')->andReturns(false);
 

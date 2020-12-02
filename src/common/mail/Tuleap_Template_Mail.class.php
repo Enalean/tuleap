@@ -34,8 +34,8 @@ class Tuleap_Template_Mail extends Tuleap_Template
     public function __construct()
     {
         parent::__construct($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
-        $this->set('txt_display_not_correct', $GLOBALS['Language']->getText('mail_html_template', 'display_not_correct'));
-        $this->set('txt_can_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'can_update_prefs'));
+        $this->set('txt_display_not_correct', _('Is this email not displaying correctly?'));
+        $this->set('txt_can_update_prefs', _('Update your email preferences'));
         $this->set('http_url', HTTPRequest::instance()->getServerUrl());
         $this->set('title', '');
     }
