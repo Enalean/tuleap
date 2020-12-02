@@ -21,6 +21,11 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceByNaturePresenterBuilder;
+use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceLinkListPresenterBuilder;
+use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceLinkPresenterCollectionBuilder;
+use Tuleap\Tracker\FormElement\Field\CrossReference\CrossReferenceFieldRenderer;
+use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceFieldPresenterBuilder;
 
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
 {
@@ -326,15 +331,19 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      */
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $html = '';
-        $crossref_fact = new CrossReferenceFactory($artifact->getId(), Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
-        $crossref_fact->fetchDatas();
-        if ($crossref_fact->getNbReferences()) {
-            $html .= $crossref_fact->getHTMLDisplayCrossRefs();
-        } else {
-            $html .= '<div>' . "<span class='empty_value'>" . dgettext('tuleap-tracker', 'References list is empty') . "</span>" . '</div>';
-        }
-        return $html;
+        $cross_ref_by_nature_presenter_builder = new CrossReferenceByNaturePresenterBuilder(
+            new CrossReferenceLinkListPresenterBuilder(),
+            new CrossReferenceLinkPresenterCollectionBuilder()
+        );
+
+        $cross_ref_field_presenter_builder = new CrossReferenceFieldPresenterBuilder($cross_ref_by_nature_presenter_builder);
+
+        $field_cross_ref_renderer = new CrossReferenceFieldRenderer(
+            TemplateRendererFactory::build(),
+            $cross_ref_field_presenter_builder
+        );
+
+        return $field_cross_ref_renderer->renderCrossReferences($artifact, $this->getCurrentUser());
     }
 
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
