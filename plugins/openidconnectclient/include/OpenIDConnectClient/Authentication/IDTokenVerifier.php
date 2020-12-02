@@ -22,15 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
+use Lcobucci\Clock\FrozenClock;
 use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
-use Lcobucci\JWT\ValidationData;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Lcobucci\JWT\Validation\Constraint\ValidAt;
+use Lcobucci\JWT\Validation\Validator;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class IDTokenVerifier
 {
-    private const LEEWAY_IN_SECOND = 10;
+    private const LEEWAY_DATE_INTERVAL = 'PT10S';
 
     /**
      * @var Parser
@@ -48,17 +52,23 @@ class IDTokenVerifier
      * @var Sha256
      */
     private $signer;
+    /**
+     * @var Validator
+     */
+    private $jwt_validator;
 
     public function __construct(
         Parser $parser,
         IssuerClaimValidator $issuer_claim_validator,
         JWKSKeyFetcher $jwks_key_fetcher,
-        Sha256 $signer
+        Sha256 $signer,
+        Validator $jwt_validator
     ) {
         $this->parser                 = $parser;
         $this->issuer_claim_validator = $issuer_claim_validator;
         $this->jwks_key_fetcher       = $jwks_key_fetcher;
         $this->signer                 = $signer;
+        $this->jwt_validator          = $jwt_validator;
     }
 
     /**
@@ -72,20 +82,18 @@ class IDTokenVerifier
             throw new MalformedIDTokenException($exception->getMessage(), 0, $exception);
         }
 
-        $validation_data = new ValidationData(null, self::LEEWAY_IN_SECOND);
-
         try {
-            $sub_claim = $id_token->getClaim('sub');
+            $sub_claim = $id_token->claims()->get('sub');
         } catch (\OutOfBoundsException $exception) {
             throw new MalformedIDTokenException('sub claim is not present', 0, $exception);
         }
 
         if (
             ! is_string($sub_claim) ||
-            ! $id_token->validate($validation_data) ||
+            ! $this->jwt_validator->validate($id_token, new ValidAt(new FrozenClock(new \DateTimeImmutable()), new \DateInterval(self::LEEWAY_DATE_INTERVAL))) ||
             ! $this->isNonceValid($nonce, $id_token) ||
             ! $this->isAudienceClaimValid($provider->getClientId(), $id_token) ||
-            ! $this->issuer_claim_validator->isIssuerClaimValid($provider, $id_token->getClaim('iss', ''))
+            ! $this->issuer_claim_validator->isIssuerClaimValid($provider, $id_token->claims()->get('iss', '') ?? '')
         ) {
             throw new MalformedIDTokenException('ID token claims are not valid');
         }
@@ -99,22 +107,12 @@ class IDTokenVerifier
 
     private function isAudienceClaimValid(string $provider_client_id, Token $id_token): bool
     {
-        $audience_claim = $id_token->getClaim('aud');
-
-        if (is_string($audience_claim)) {
-            return $provider_client_id === $audience_claim;
-        }
-
-        if (is_array($audience_claim)) {
-            return in_array($provider_client_id, $audience_claim, true);
-        }
-
-        return false;
+        return $id_token->isPermittedFor($provider_client_id);
     }
 
     private function isNonceValid(string $nonce, Token $id_token): bool
     {
-        return hash_equals($nonce, $id_token->getClaim('nonce', ''));
+        return hash_equals($nonce, $id_token->claims()->get('nonce', '') ?? '');
     }
 
     private function verifySignature(Provider $provider, Token $id_token): bool
@@ -126,7 +124,7 @@ class IDTokenVerifier
         }
 
         foreach ($keys_pem_format as $key_pem_format) {
-            if ($id_token->verify($this->signer, $key_pem_format)) {
+            if ($this->jwt_validator->validate($id_token, new SignedWith($this->signer, InMemory::plainText($key_pem_format)))) {
                 return true;
             }
         }

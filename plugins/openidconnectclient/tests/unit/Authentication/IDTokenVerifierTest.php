@@ -26,6 +26,7 @@ use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Validation\Validator;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -63,7 +64,7 @@ class IDTokenVerifierTest extends TestCase
     protected function setUp(): void
     {
         $this->jwks_key_fetcher  = Mockery::mock(JWKSKeyFetcher::class);
-        $this->id_token_verifier = new IDTokenVerifier(new Parser(), $this->generateIssuerValidatorValid(), $this->jwks_key_fetcher, new Sha256());
+        $this->id_token_verifier = new IDTokenVerifier(new Parser(), $this->generateIssuerValidatorValid(), $this->jwks_key_fetcher, new Sha256(), new Validator());
     }
 
     public function testItRejectsIDTokenIfPartsAreMissingInTheJWT(): void
@@ -97,10 +98,7 @@ class IDTokenVerifierTest extends TestCase
         $nonce    = 'random_string';
 
         $id_token = $this->buildIDToken(
-            [
-                'iss' => 'example.com',
-                'aud' => 'client_id',
-            ]
+            (new Builder())->issuedBy('example.com')->permittedFor('client_id')
         );
 
         $this->expectException(MalformedIDTokenException::class);
@@ -115,30 +113,10 @@ class IDTokenVerifierTest extends TestCase
         $nonce    = 'random_string';
 
         $id_token = $this->buildIDToken(
-            [
-                'iss' => 'example.com',
-                'aud' => 'evil_client_id',
-                'sub' => '123'
-            ]
-        );
-
-        $this->expectException(MalformedIDTokenException::class);
-        $this->id_token_verifier->validate($provider, $nonce, $id_token);
-    }
-
-    public function testItRejectsIDTokenIfAudienceClaimIsNotPresentInTheList(): void
-    {
-        $provider = Mockery::mock(Provider::class);
-        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
-        $provider->shouldReceive('getClientId')->andReturns('client_id');
-        $nonce    = 'random_string';
-
-        $id_token = $this->buildIDToken(
-            [
-                'iss' => 'example.com',
-                'aud' => ['evil0_client_id', 'evil1_client_id'],
-                'sub' => '123'
-            ]
+            (new Builder())
+                ->issuedBy('example.com')
+                ->permittedFor('evil_client_id')
+                ->relatedTo('123')
         );
 
         $this->expectException(MalformedIDTokenException::class);
@@ -152,14 +130,13 @@ class IDTokenVerifierTest extends TestCase
         $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce    = 'random_string';
 
-        $id_token_verifier = new IDTokenVerifier(new Parser(), $this->generateIssuerValidatorInvalid(), $this->jwks_key_fetcher, new Sha256());
+        $id_token_verifier = new IDTokenVerifier(new Parser(), $this->generateIssuerValidatorInvalid(), $this->jwks_key_fetcher, new Sha256(), new Validator());
         $id_token          = $this->buildIDToken(
-            [
-                'nonce' => $nonce,
-                'iss'   => 'evil.example.com',
-                'aud'   => 'client_id',
-                'sub'   => '123'
-            ]
+            (new Builder())
+                ->withClaim('nonce', $nonce)
+                ->issuedBy('evil.example.com')
+                ->permittedFor('client_id')
+                ->relatedTo('123')
         );
 
         $this->expectException(MalformedIDTokenException::class);
@@ -174,12 +151,11 @@ class IDTokenVerifierTest extends TestCase
         $nonce    = 'random_string';
 
         $id_token = $this->buildIDToken(
-            [
-                'nonce' => 'different_random_string',
-                'iss'   => 'evil.example.com',
-                'aud'   => 'client_id',
-                'sub'   => '123'
-            ]
+            (new Builder())
+                ->withClaim('nonce', 'different_random_string')
+                ->issuedBy('evil.example.com')
+                ->permittedFor('client_id')
+                ->relatedTo('123')
         );
 
         $this->expectException(MalformedIDTokenException::class);
@@ -194,10 +170,10 @@ class IDTokenVerifierTest extends TestCase
         $nonce    = 'random_string';
 
         $id_token_builder = new Builder();
-        $id_token_builder->withClaim('iss', 'example.com');
+        $id_token_builder->issuedBy('example.com');
         $id_token_builder->withClaim('nonce', $nonce);
-        $id_token_builder->withClaim('aud', 'client_id_2');
-        $id_token_builder->withClaim('sub', '123');
+        $id_token_builder->permittedFor('client_id_2');
+        $id_token_builder->relatedTo('123');
         $id_token = (string) $id_token_builder->getToken(new \Lcobucci\JWT\Signer\Hmac\Sha256(), new Key('HMAC'));
 
         $key_details = openssl_pkey_get_details(self::$rsa_key);
@@ -209,23 +185,21 @@ class IDTokenVerifierTest extends TestCase
 
     /**
      * @dataProvider dataProviderValidIDToken
-     *
-     * @param string|string[] $audience
      */
-    public function testItAcceptsAValidIDToken($audience, bool $with_jwks_key): void
+    public function testItAcceptsAValidIDToken(bool $with_jwks_key): void
     {
         $provider = Mockery::mock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id_2');
         $nonce    = 'random_string';
 
-        $expected_id_token_content  = [
-            'nonce' => $nonce,
-            'iss'   => 'example.com',
-            'aud'   => $audience,
-            'sub'   => '123'
-        ];
-        $id_token = $this->buildIDToken($expected_id_token_content);
+        $id_token = $this->buildIDToken(
+            (new Builder())
+                ->withClaim('nonce', $nonce)
+                ->issuedBy('example.com')
+                ->permittedFor('client_id_2')
+                ->relatedTo('123')
+        );
         if ($with_jwks_key) {
             $key_details = openssl_pkey_get_details(self::$rsa_key);
             $this->jwks_key_fetcher->shouldReceive('fetchKey')->andReturn([$key_details['key']]);
@@ -240,18 +214,13 @@ class IDTokenVerifierTest extends TestCase
     public function dataProviderValidIDToken(): array
     {
         return [
-            ['client_id_2', false],
-            [['client_id_1', 'client_id_2'], false],
-            ['client_id_2', true],
+            [false],
+            [true],
         ];
     }
 
-    private function buildIDToken(array $id_token_content): string
+    private function buildIDToken(Builder $id_token_builder): string
     {
-        $id_token_builder = new Builder();
-        foreach ($id_token_content as $name => $value) {
-            $id_token_builder = $id_token_builder->withClaim($name, $value);
-        }
         openssl_pkey_export(self::$rsa_key, $private_key);
         return (string) $id_token_builder->getToken(new Sha256(), new Key($private_key));
     }
