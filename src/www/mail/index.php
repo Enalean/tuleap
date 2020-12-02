@@ -38,14 +38,14 @@ function display_ml_details($group_id, $list_server, $result, $i)
         echo $html_a;
     } else {
         if ($list_is_public) {
-            echo ' <A HREF="?group_id=' . $group_id . '&amp;action=pipermail&amp;id=' . db_result($result, $i, 'group_list_id') . '">' . $GLOBALS['Language']->getText('mail_index', 'archive') . '</A>';
+            echo ' <A HREF="?group_id=' . $group_id . '&amp;action=pipermail&amp;id=' . db_result($result, $i, 'group_list_id') . '">' . _('Archives') . '</A>';
         } else {
-            echo ' ' . $GLOBALS['Language']->getText('mail_index', 'archive') . ': <A HREF="?group_id=' . $group_id . '&amp;action=pipermail&amp;id=' . db_result($result, $i, 'group_list_id') . '">' . $GLOBALS['Language']->getText('mail_index', 'public') . '</A>/<A HREF="?group_id=' . $group_id . '&amp;action=private&amp;id=' . db_result($result, $i, 'group_list_id') . '">' . $GLOBALS['Language']->getText('mail_index', 'private') . '</A>';
+            echo ' ' . _('Archives') . ': <A HREF="?group_id=' . $group_id . '&amp;action=pipermail&amp;id=' . db_result($result, $i, 'group_list_id') . '">' . _('public') . '</A>/<A HREF="?group_id=' . $group_id . '&amp;action=private&amp;id=' . db_result($result, $i, 'group_list_id') . '">' . _('private') . '</A>';
         }
     }
 
-    echo ' | <A HREF="?group_id=' . $group_id . '&amp;action=listinfo&amp;id=' . db_result($result, $i, 'group_list_id') . '">' . $GLOBALS['Language']->getText('mail_index', 'unsubscribe') . '</A>)';
-    echo ' | <A HREF="?group_id=' . $group_id . '&amp;action=admin&amp;id=' . db_result($result, $i, 'group_list_id') . '">' . $GLOBALS['Language']->getText('mail_index', 'ml_admin') . '</A>';
+    echo ' | <A HREF="?group_id=' . $group_id . '&amp;action=listinfo&amp;id=' . db_result($result, $i, 'group_list_id') . '">' . _('(Un)Subscribe/Preferences') . '</A>)';
+    echo ' | <A HREF="?group_id=' . $group_id . '&amp;action=admin&amp;id=' . db_result($result, $i, 'group_list_id') . '">' . _('ML Administration') . '</A>';
     echo ' ]<br>&nbsp;' .  db_result($result, $i, 'description') . '<p>';
 }
 
@@ -62,7 +62,7 @@ if ($group_id) {
 
     $hp = Codendi_HTMLPurifier::instance();
     $pm = ProjectManager::instance();
-    $params = ['title' => $Language->getText('mail_index', 'mail_list_for') . $pm->getProject($group_id)->getPublicName(),
+    $params = ['title' => sprintf(_('Mailing Lists for %1$s'), $pm->getProject($group_id)->getPublicName()),
               'help' => 'collaboration.html#mailing-lists',
                   'pv'   => isset($pv) ? $pv : false];
     mail_header($params);
@@ -107,20 +107,22 @@ if ($group_id) {
         if (! $result || $rows < 1) {
             $pm = ProjectManager::instance();
             echo '
-                <H1>' . $Language->getText('mail_index', 'no_list_found_for') . $hp->purify($pm->getProject($group_id)->getPublicName()) . '</H1>';
+                <H1>' . sprintf(_('No Lists found for %1$s'), $hp->purify($pm->getProject($group_id)->getPublicName())) . '</H1>';
             echo '
-                <P>' . $Language->getText('mail_index', 'proj_admin_use_admin_link');
+                <P>' . _('Project administrators use the admin link to request mailing lists.');
                     mail_footer(['pv'   => isset($pv) ? $pv : false]);
             exit;
         }
 
-        echo '<P>' . $Language->getOverridableText('mail_index', 'mail_list_via_gnu');
+        if ($Language->hasText('mail_index', 'mail_list_via_gnu')) {
+            echo '<p>' . $Language->getOverridableText('mail_index', 'mail_list_via_gnu') . '</p>';
+        }
 
         if ($pv) {
-            echo "<P>" . $Language->getText('mail_index', 'choose_and_browse') . "<P>\n";
+            echo "<P>" . _('Choose a list to browse, search, and post messages.') . "<P>\n";
         } else {
             echo "<TABLE width='100%'><TR><TD>";
-            echo "<P>" . $Language->getText('mail_index', 'choose_and_browse') . "<P>\n";
+            echo "<P>" . _('Choose a list to browse, search, and post messages.') . "<P>\n";
             echo "</TD>";
             echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
             echo "</TR></TABLE>";
@@ -139,11 +141,11 @@ if ($group_id) {
         echo '</TD></TR></TABLE>';
     }
 } else {
-    $params = ['title' => $Language->getText('mail_index', 'choose_group_first'),
+    $params = ['title' => _('Choose a Group First'),
                   'help' => 'collaboration.html#mailing-lists',
                   'pv'   => $pv];
     mail_header($params);
     echo '
-		<H1>' . $Language->getText('mail_index', 'group_err') . '</H1>';
+		<H1>' . _('Error - choose a group first') . '</H1>';
 }
 mail_footer(['pv'   => $pv]);

@@ -24,7 +24,7 @@ function mail_header($params)
     $project = $pm->getProject($group_id);
 
     if (! $project->usesMail()) {
-        exit_error($Language->getText('global', 'error'), $Language->getText('mail_utils', 'mail_turned_off'));
+        exit_error($Language->getText('global', 'error'), _('This Project Has Turned Off Mailing Lists'));
     }
 
     $list_breadcrumb = new BreadCrumb(

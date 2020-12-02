@@ -77,11 +77,10 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
             //Compute Md5sum for files
             $md5Computed = $this->computeFRSMd5Sum($file->getFileLocation());
             if (! $md5Computed) {
-                $body = $language->getText(
-                    'mail_system_event',
-                    'md5_compute_error',
-                    [$file->getFileLocation()]
-                );
+                $body = sprintf(_('Dear Files service user,
+
+ An error occurs while trying to compute md5sum in your uploaded file %1$s.
+Please try to upload it again.'), $file->getFileLocation());
                 if (! $this->sendNotificationMail($user, $file, $body)) {
                     $this->error('Could not send mail to inform user that computing md5sum failed');
                     return false;
@@ -98,11 +97,11 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
             //Compare file checksum
             $file = $fileFactory->getFRSFileFromDb($fileId);
             if (! $this->compareMd5Checksums($file)) {
-                $body = $language->getText(
-                    'mail_system_event',
-                    'md5_compare_error',
-                    [$file->getFileLocation(), $md5Computed]
-                );
+                $body = sprintf(_('Dear Files service user,
+
+The entered reference md5sum for the file %1$s differs from the computed one which equals = %2$s.
+ Note that an error message will be shown each time you display the release content in the web interface.
+If you consider that the upload has been well done, you can modify the value in the md5sum field by putting the right value.'), $file->getFileLocation(), $md5Computed);
                 if (! $this->sendNotificationMail($user, $file, $body)) {
                     $this->error('Could not send mail to inform user that comparing md5sum failed');
                     return false;
