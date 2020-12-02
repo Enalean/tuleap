@@ -77,7 +77,7 @@
     "symfony/var-exporter": "^5.0",
     "tuleap/prometheus-client": "^1.0",
     "webimpress/safe-writer": "^2.0",
-    "willdurand/negotiation": "^2.3"
+    "willdurand/negotiation": "^3.0"
   },
   "config": {
     "platform": {
