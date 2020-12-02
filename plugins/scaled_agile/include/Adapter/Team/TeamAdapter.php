@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Team;
 
 use Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\ScaledAgile\Program\ProgramStore;
 use Tuleap\ScaledAgile\Program\ToBeCreatedProgram;
@@ -40,17 +41,26 @@ final class TeamAdapter implements BuildTeam
      * @var ProgramStore
      */
     private $program_dao;
+    /**
+     * @var ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
 
-    public function __construct(\ProjectManager $project_manager, ProgramStore $program_store)
-    {
-        $this->project_manager = $project_manager;
-        $this->program_dao     = $program_store;
+    public function __construct(
+        \ProjectManager $project_manager,
+        ProgramStore $program_store,
+        ExplicitBacklogDao $explicit_backlog_dao
+    ) {
+        $this->project_manager      = $project_manager;
+        $this->program_dao          = $program_store;
+        $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
     /**
      * @throws AtLeastOneTeamShouldBeDefinedException
      * @throws ProjectIsAProgramException
      * @throws TeamAccessException
+     * @throws TeamMustHaveExplicitBacklogEnabledException
      */
     public function buildTeamProject(array $team_ids, ToBeCreatedProgram $program, \PFUser $user): TeamCollection
     {
@@ -65,6 +75,10 @@ final class TeamAdapter implements BuildTeam
 
             if ($this->program_dao->isProjectAProgramProject((int) $project->getId())) {
                 throw new ProjectIsAProgramException((int) $project->getId());
+            }
+
+            if (! $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getId())) {
+                throw new TeamMustHaveExplicitBacklogEnabledException($project);
             }
 
             $team_list[] = new Team((int) $project->getID());
