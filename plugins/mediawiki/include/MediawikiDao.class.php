@@ -456,8 +456,8 @@ class MediawikiDao extends DataAccessObject
         if ($this->central_database) {
             return $this->central_database;
         } else {
-            $db_name = $this->da->quoteSmartSchema(self::DEDICATED_DATABASE_PREFIX . $project->getID());
-            if ($this->update('CREATE DATABASE ' . $db_name)) {
+            $db_name = self::DEDICATED_DATABASE_PREFIX . $project->getID();
+            if ($this->update('CREATE DATABASE ' . $this->da->quoteSmartSchema($db_name))) {
                 return $db_name;
             }
             throw new Exception("Unable to create database $db_name");
