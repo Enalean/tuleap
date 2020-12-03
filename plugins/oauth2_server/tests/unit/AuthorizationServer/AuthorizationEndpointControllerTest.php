@@ -428,7 +428,7 @@ final class AuthorizationEndpointControllerTest extends TestCase
             ->andReturnTrue();
         $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
 
-        $this->form_renderer->shouldReceive('renderForm')->once();
+        $this->form_renderer->shouldReceive('renderForm')->once()->andReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
 
         $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
     }
@@ -461,7 +461,7 @@ final class AuthorizationEndpointControllerTest extends TestCase
             ->andReturnTrue();
         $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
 
-        $this->form_renderer->shouldReceive('renderForm')->once();
+        $this->form_renderer->shouldReceive('renderForm')->once()->andReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
 
         $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
     }
@@ -536,9 +536,12 @@ final class AuthorizationEndpointControllerTest extends TestCase
             ->once()
             ->andReturnFalse();
         $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
-        $this->form_renderer->shouldReceive('renderForm')->once();
+        $this->form_renderer->shouldReceive('renderForm')->once()->andReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
 
-        $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
+        $response = $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
+
+        $content_security_policy = $response->getHeaderLine('Content-Security-Policy');
+        self::assertStringContainsString("form-action 'self' https://example.com/redirect;", $content_security_policy);
     }
 
     public function dataProviderSupportedRequestHTTPMethod(): array
@@ -579,7 +582,7 @@ final class AuthorizationEndpointControllerTest extends TestCase
             ->once()
             ->andReturnFalse();
         $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
-        $this->form_renderer->shouldReceive('renderForm')->once();
+        $this->form_renderer->shouldReceive('renderForm')->once()->andReturn(HTTPFactoryBuilder::responseFactory()->createResponse());
 
         $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
     }
