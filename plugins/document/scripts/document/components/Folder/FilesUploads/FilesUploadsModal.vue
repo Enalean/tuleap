@@ -77,7 +77,7 @@
 <script>
 import { mapState } from "vuex";
 import UploadProgressBar from "../ProgressBar/UploadProgressBar.vue";
-import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../../constants.js";
+import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../../constants";
 
 export default {
     components: {

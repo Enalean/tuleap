@@ -20,7 +20,7 @@
 import localVue from "../../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import OwnerMetadata from "./OwnerMetadata.vue";
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE } from "../../../constants";
 
 describe("OwnerMetadata", () => {
     let owner_factory;

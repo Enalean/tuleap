@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import { TYPE_EMPTY } from "../../../constants.js";
+import { TYPE_EMPTY } from "../../../constants";
 import QuickLookGlobal from "./QuickLookGlobal.vue";
 
 describe("QuickLookGlobal", () => {

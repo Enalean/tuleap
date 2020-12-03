@@ -21,7 +21,7 @@ import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import ApprovalTableBadge from "./ApprovalTableBadge.vue";
 import localVue from "../../../helpers/local-vue.js";
-import { TYPE_EMBEDDED } from "../../../constants.js";
+import { TYPE_EMBEDDED } from "../../../constants";
 
 describe("ApprovalTableBadge", () => {
     let approval_badge_factory, store;

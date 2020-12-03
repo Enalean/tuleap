@@ -44,7 +44,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import EventBus from "../../../helpers/event-bus.js";
-import { TYPE_FOLDER, CLIPBOARD_OPERATION_COPY } from "../../../constants.js";
+import { TYPE_FOLDER, CLIPBOARD_OPERATION_COPY } from "../../../constants";
 import {
     doesFolderNameAlreadyExist,
     doesDocumentNameAlreadyExist,

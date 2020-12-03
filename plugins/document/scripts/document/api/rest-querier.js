@@ -18,7 +18,7 @@
  */
 
 import { del, get, patch, post, put, recursiveGet } from "tlp";
-import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants.js";
+import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
 
 export {
     getDocumentManagerServiceInformation,

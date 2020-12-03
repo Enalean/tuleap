@@ -39,13 +39,7 @@
     </div>
 </template>
 <script>
-import {
-    ICON_EMBEDDED,
-    ICON_LINK,
-    TYPE_EMBEDDED,
-    TYPE_LINK,
-    TYPE_FILE,
-} from "../../../constants.js";
+import { ICON_EMBEDDED, ICON_LINK, TYPE_EMBEDDED, TYPE_LINK, TYPE_FILE } from "../../../constants";
 import { mapState } from "vuex";
 
 export default {

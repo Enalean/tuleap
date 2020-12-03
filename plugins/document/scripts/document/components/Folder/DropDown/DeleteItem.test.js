@@ -25,7 +25,7 @@ import DeleteItem from "./DeleteItem.vue";
 
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE } from "../../../constants";
 import EventBus from "../../../helpers/event-bus.js";
 
 describe("DeleteItem", () => {

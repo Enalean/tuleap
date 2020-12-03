@@ -21,7 +21,7 @@ import { createStoreMock } from "../../../../../../src/scripts/vue-components/st
 import localVue from "../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import FolderContentRow from "./FolderContentRow.vue";
-import { TYPE_FILE } from "../../constants.js";
+import { TYPE_FILE } from "../../constants";
 
 function getFolderContentRowInstance(store, props) {
     return shallowMount(FolderContentRow, {

@@ -30,7 +30,7 @@
 
 <script>
 import { extractApprovalTableData } from "../../../helpers/approval-table-helper.js";
-import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../../../constants.js";
+import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../../../constants";
 
 export default {
     props: {

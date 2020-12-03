@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import localVue from "../../../../helpers/local-vue.js";
 import OtherInformationMetadataForCreate from "./OtherInformationMetadataForCreate.vue";
-import { TYPE_FILE } from "../../../../constants.js";
+import { TYPE_FILE } from "../../../../constants";
 import EventBus from "../../../../helpers/event-bus.js";
 
 describe("OtherInformationMetadataForCreate", () => {

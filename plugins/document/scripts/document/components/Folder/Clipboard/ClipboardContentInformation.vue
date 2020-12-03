@@ -58,7 +58,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants.js";
+import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
 
 export default {
     name: "ClipboardContentInformation",

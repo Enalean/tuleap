@@ -55,7 +55,7 @@
 <script>
 import { mapState } from "vuex";
 import { createModal } from "tlp";
-import { TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FOLDER } from "../../../constants";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";

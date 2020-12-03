@@ -41,7 +41,7 @@
 
 <!-- eslint-disable vue/no-mutating-props -->
 <script>
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE } from "../../../constants";
 import { mapState } from "vuex";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";

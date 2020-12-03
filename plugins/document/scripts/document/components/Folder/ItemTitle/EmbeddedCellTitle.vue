@@ -32,7 +32,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { ICON_EMBEDDED } from "../../../constants.js";
+import { ICON_EMBEDDED } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
 
 export default {

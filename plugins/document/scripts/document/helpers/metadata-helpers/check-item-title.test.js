@@ -18,7 +18,7 @@
  *
  */
 
-import { TYPE_FILE, TYPE_FOLDER } from "../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../../constants";
 import {
     doesDocumentAlreadyExistsAtUpdate,
     doesDocumentNameAlreadyExist,

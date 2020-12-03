@@ -52,7 +52,7 @@
     </div>
 </template>
 <script>
-import { METADATA_OBSOLESCENCE_DATE_SHORT_NAME } from "../../../constants.js";
+import { METADATA_OBSOLESCENCE_DATE_SHORT_NAME } from "../../../constants";
 import QuicklookMetadataDate from "./QuickLookMetadataDate.vue";
 
 export default {

@@ -18,7 +18,7 @@
  *
  */
 
-import { TYPE_FOLDER } from "../../constants.js";
+import { TYPE_FOLDER } from "../../constants";
 
 function doesTitleAlreadyExists(text_value, item, parent_folder) {
     return item.title === text_value && item.parent_id === parent_folder.id;

@@ -34,7 +34,7 @@
 
 <script>
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
-import { ICON_EMPTY } from "../../../constants.js";
+import { ICON_EMPTY } from "../../../constants";
 import FakeCaret from "./FakeCaret.vue";
 
 export default {

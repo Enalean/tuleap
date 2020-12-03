@@ -67,7 +67,7 @@ import {
     TYPE_LINK,
     TYPE_WIKI,
     TYPE_EMPTY,
-} from "../../../constants.js";
+} from "../../../constants";
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
 import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
 import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";

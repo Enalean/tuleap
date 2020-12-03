@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TYPE_FOLDER } from "../constants.js";
+import { TYPE_FOLDER } from "../constants";
 
 export function getFolderSubtree(folder_content, subtree_root_folder_id) {
     const children = folder_content.filter((item) => item.parent_id === subtree_root_folder_id);

@@ -84,7 +84,7 @@
 <script>
 import { mapState } from "vuex";
 import { createModal } from "tlp";
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE } from "../../../constants";
 import DocumentGlobalMetadataForCreate from "../Metadata/DocumentMetadata/DocumentGlobalMetadataForCreate.vue";
 import LinkProperties from "../Property/LinkProperties.vue";
 import WikiProperties from "../Property/WikiProperties.vue";

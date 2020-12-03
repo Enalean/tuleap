@@ -20,7 +20,7 @@
 import { Upload } from "tus-js-client";
 import { getItem } from "../../api/rest-querier.js";
 import { flagItemAsCreated } from "./flag-item-as-created.js";
-import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../constants.js";
+import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../constants";
 
 function updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, parent) {
     if (bytes_total === 0) {

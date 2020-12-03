@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TYPE_FOLDER, TYPE_FILE } from "../constants.js";
+import { TYPE_FOLDER, TYPE_FILE } from "../constants";
 
 export const highlightItem = (item, closest_row) => {
     if (item.user_can_write) {

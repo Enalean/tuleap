@@ -23,7 +23,7 @@ import VueRouter from "vue-router";
 import { shallowMount } from "@vue/test-utils";
 import EmbeddedCellTitle from "./EmbeddedCellTitle.vue";
 import localVue from "../../../helpers/local-vue";
-import { TYPE_EMBEDDED } from "../../../constants.js";
+import { TYPE_EMBEDDED } from "../../../constants";
 
 describe("EmbeddedCellTitle", () => {
     let embedded_cell_title_factory, store;

@@ -44,7 +44,7 @@
     </div>
 </template>
 <script>
-import { TYPE_LINK } from "../../../constants.js";
+import { TYPE_LINK } from "../../../constants";
 export default {
     name: "LinkProperties",
     props: {

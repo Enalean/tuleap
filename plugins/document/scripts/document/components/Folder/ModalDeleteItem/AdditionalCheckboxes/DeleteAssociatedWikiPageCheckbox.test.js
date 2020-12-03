@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue.js";
-import { TYPE_WIKI } from "../../../../constants.js";
+import { TYPE_WIKI } from "../../../../constants";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import WikiCheckbox from "./DeleteAssociatedWikiPageCheckbox.vue";
 

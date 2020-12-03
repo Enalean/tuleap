@@ -18,7 +18,7 @@
  */
 
 import { extractApprovalTableData } from "./approval-table-helper.js";
-import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../constants.js";
+import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../constants";
 
 describe("extractApprovalTableData", () => {
     let translated_states;
