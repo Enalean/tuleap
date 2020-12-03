@@ -603,8 +603,7 @@ class AgileDashboardRouter
         $aid = $request->getValidated('aid', 'int', 0);
         switch ($aid) {
             case -1:
-                $controller = new Planning_ArtifactCreationController($this->planning_factory, $request);
-                $this->executeAction($controller, 'createArtifact');
+                $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL . '/?group_id=' . urlencode((string) $request->getProject()->getID()));
                 break;
             case 0:
                 $controller = new Planning_MilestoneSelectorController($request, $this->milestone_factory);

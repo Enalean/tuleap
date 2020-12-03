@@ -160,23 +160,4 @@ final class AgileDashboardRouterTest extends \PHPUnit\Framework\TestCase //phpcs
 
         $this->router->routeShowPlanning($request);
     }
-
-    public function testItRoutesToArtifactCreationWhenAidIsSetToMinusOne(): void
-    {
-        $request = Mockery::mock(Codendi_Request::class);
-        $request->shouldReceive('getCurrentUser')->andReturn(Mockery::mock(PFUser::class));
-        $request->shouldReceive('getValidated')->andReturn(-1);
-
-        $last_milestone = Mockery::mock(Planning_Milestone::class);
-        $last_milestone->shouldReceive('getArtifact');
-        $this->planning_milestone_factory->shouldReceive('getLastMilestoneCreated')->andReturn($last_milestone);
-
-        $this->milestone_controller_factory->shouldReceive('getMilestoneController')->never();
-
-        $this->router->shouldReceive('renderAction')->never();
-        $this->router->shouldReceive('executeAction')->withArgs([Mockery::any(), 'createArtifact'])->once();
-        $this->router->shouldReceive('executeAction')->withArgs([Mockery::any(), 'show'])->never();
-
-        $this->router->routeShowPlanning($request);
-    }
 }
