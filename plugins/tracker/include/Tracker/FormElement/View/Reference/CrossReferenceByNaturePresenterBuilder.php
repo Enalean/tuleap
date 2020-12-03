@@ -72,6 +72,6 @@ class CrossReferenceByNaturePresenterBuilder
             );
         }
 
-        return new CrossReferenceByNaturePresenter($cross_reference_collection->getLabel(), $cross_ref_list_array);
+        return new CrossReferenceByNaturePresenter($cross_reference_collection->getLabel(), $cross_ref_list_array, $cross_reference_collection->getNatureIcon());
     }
 }

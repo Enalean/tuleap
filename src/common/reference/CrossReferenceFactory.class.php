@@ -246,7 +246,8 @@ class CrossReferenceFactory
     {
         return new CrossReferenceByNatureCollection(
             $this->getCrossReferences(),
-            ReferenceManager::instance()->getAvailableNatures()
+            ReferenceManager::instance()->getAvailableNatures(),
+            EventManager::instance()
         );
     }
 

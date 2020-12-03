@@ -11,7 +11,10 @@
 
     {{# cross_refs_by_nature }}
         <div class="nature not-condensed">
-            <p><b> {{ nature_label }} </b></p>
+            <p>
+                {{# has_nature_icon }} <i class="fas {{ nature_icon }}"></i> {{/ has_nature_icon }}
+                <b> {{ nature_label }} </b>
+            </p>
             <ul class="cross_reference_list">
                 {{# cross_reference_link_list }}
                     <li class="{{ classes_key }}">

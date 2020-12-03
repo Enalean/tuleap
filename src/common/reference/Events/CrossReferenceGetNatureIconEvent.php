@@ -18,45 +18,45 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-declare(strict_types=1);
+namespace Tuleap\reference\Events;
 
-namespace Tuleap\Tracker\FormElement\View\Reference;
-
+use Tuleap\Event\Dispatchable;
 use Tuleap\reference\CrossReferenceNatureIcon;
 
-/**
- * @psalm-immutable
- */
-class CrossReferenceByNaturePresenter
+class CrossReferenceGetNatureIconEvent implements Dispatchable
 {
-    /**
-     * @var string
-     */
-    public $nature_label;
-    /**
-     * @var CrossReferenceLinkListPresenter[]
-     */
-    public $cross_reference_link_list;
-    /**
-     * @var string
-     */
-    public $nature_icon;
-    /**
-     * @var bool
-     */
-    public $has_nature_icon = false;
+    public const NAME = 'crossReferenceGetNatureIconEvent';
 
     /**
-     * @param CrossReferenceLinkListPresenter[] $cross_reference_link_list
+     * @var string
      */
-    public function __construct(string $nature_label, array $cross_reference_link_list, ?CrossReferenceNatureIcon $nature_icon)
+    private $nature;
+    /**
+     * @var null|CrossReferenceNatureIcon
+     */
+    private $icons_nature = null;
+
+    /**
+     * @var string $natures
+     */
+
+    public function __construct(string $nature)
     {
-        $this->nature_label              = $nature_label;
-        $this->cross_reference_link_list = $cross_reference_link_list;
+        $this->nature = $nature;
+    }
 
-        if ($nature_icon) {
-            $this->has_nature_icon = true;
-            $this->nature_icon     = $nature_icon->getIconName();
-        }
+    public function getNature(): string
+    {
+        return $this->nature;
+    }
+
+    public function setCrossReferenceNatureIcon(CrossReferenceNatureIcon $icon_nature): void
+    {
+        $this->icons_nature = $icon_nature;
+    }
+
+    public function getCrossReferencesNatureIcon(): ?CrossReferenceNatureIcon
+    {
+        return $this->icons_nature;
     }
 }

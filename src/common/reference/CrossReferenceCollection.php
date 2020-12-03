@@ -44,19 +44,24 @@ class CrossReferenceCollection
      * @var \CrossReference[]
      */
     private $source;
+    /**
+     * @var CrossReferenceNatureIcon|null
+     */
+    private $nature_icon;
 
     /**
      * @param \CrossReference[] $both
      * @param \CrossReference[] $target
      * @param \CrossReference[] $source
      */
-    public function __construct(string $nature, string $label, array $both, array $target, array $source)
+    public function __construct(string $nature, string $label, array $both, array $target, array $source, ?CrossReferenceNatureIcon $nature_icon = null)
     {
-        $this->nature = $nature;
-        $this->label  = $label;
-        $this->both   = $both;
-        $this->target = $target;
-        $this->source = $source;
+        $this->nature      = $nature;
+        $this->label       = $label;
+        $this->both        = $both;
+        $this->target      = $target;
+        $this->source      = $source;
+        $this->nature_icon = $nature_icon;
     }
 
     public function getLabel(): string
@@ -67,6 +72,14 @@ class CrossReferenceCollection
     public function getNature(): string
     {
         return $this->nature;
+    }
+
+    /**
+     * @return CrossReferenceNatureIcon|null
+     */
+    public function getNatureIcon()
+    {
+        return $this->nature_icon;
     }
 
     /**

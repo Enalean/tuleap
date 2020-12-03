@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceLinkPresenterCollect
 use Tuleap\Tracker\FormElement\Field\CrossReference\CrossReferenceFieldRenderer;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceFieldPresenterBuilder;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
 {
 
