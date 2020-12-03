@@ -40,12 +40,12 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         // Prepare validators
         // Forum Name
         $vForumName = new Valid_String('forum_name');
-        $vForumName->setErrorMessage($GLOBALS['Language']->getText('forum_admin_index', 'params_missing'));
+        $vForumName->setErrorMessage(_('Missing forum name or description, please press the "Back" button and complete this information'));
         $vForumName->required();
 
         // Description
         $vDescription = new Valid_String('description');
-        $vDescription->setErrorMessage($GLOBALS['Language']->getText('forum_admin_index', 'params_missing'));
+        $vDescription->setErrorMessage(_('Missing forum name or description, please press the "Back" button and complete this information'));
         $vDescription->required();
 
         // Is public
@@ -90,12 +90,12 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     if ($authorized_to_delete_message) {
                         //delete monitor settings on the corresponding thread, before deleting the message
                         forum_thread_delete_monitor($forum_id, $msg_id);
-                        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('forum_admin_index', 'msgs_del', recursive_delete($msg_id, $forum_id)));
+                        $GLOBALS['Response']->addFeedback(Feedback::INFO, sprintf(_('%1$s message(s) deleted'), recursive_delete($msg_id, $forum_id)));
                     } else {
-                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('forum_admin_index', 'msg_not_in_group'));
+                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Message is not in your group'));
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('forum_admin_index', 'msg_not_found'));
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Message not found'));
                 }
             }
         } elseif ($request->existAndNonEmpty('add_forum')) {
@@ -151,9 +151,9 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     "WHERE group_forum_id=" . db_ei($group_forum_id) . " AND group_id=" . db_ei($group_id);
                     $result = db_query($sql);
                     if (! $result || db_affected_rows($result) < 1) {
-                        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('forum_admin_index', 'upd_err'));
+                        $GLOBALS['Response']->addFeedback(Feedback::INFO, _('Error Updating Forum Info'));
                     } else {
-                        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('forum_admin_index', 'upd_success'));
+                        $GLOBALS['Response']->addFeedback(Feedback::INFO, _('Forum Info Updated Successfully'));
                     }
                 }
             }
@@ -166,19 +166,19 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         /*
             Show page for deleting messages
         */
-        forum_header(['title' => $GLOBALS['Language']->getText('forum_admin_index', 'del_a_msg'),
+        forum_header(['title' => _('Delete a message'),
         'help' => 'collaboration.html#web-forums']);
 
         echo '
-			<H2>' . $GLOBALS['Language']->getText('forum_admin_index', 'del_a_msg') . '</H2>
+			<H2>' . _('Delete a message') . '</H2>
 
-			<div class="alert">' . $GLOBALS['Language']->getText('forum_admin_index', 'delete_warn') . '</div>
+			<div class="alert">' . _('WARNING! You are about to permanently delete a message and all of its followups!!') . '</div>
 			<FORM METHOD="POST" ACTION="?">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="delete" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
 			<div class="control-group">
-                <label for="msg_id">' . $GLOBALS['Language']->getText('forum_admin_index', 'enter_msg_id') . '</label>
+                <label for="msg_id">' . _('Enter the Message ID') . '</label>
 			    <div class="controls">
                     <INPUT TYPE="TEXT" NAME="msg_id" id="msg_id" VALUE=""><BR>
                 </div>
@@ -190,40 +190,40 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         /*
             Show the form for adding forums
         */
-        forum_header(['title' => $GLOBALS['Language']->getText('forum_admin_index', 'add_a_forum'),
+        forum_header(['title' => _('Add a Forum'),
         'help' => 'collaboration.html#web-forums']);
 
         $sql = "SELECT forum_name FROM forum_group_list WHERE group_id=" . db_ei($group_id);
         $result = db_query($sql);
-        ShowResultSet($result, $GLOBALS['Language']->getText('forum_admin_index', 'existing_forums'), false);
+        ShowResultSet($result, _('Existing Forums'), false);
 
         echo '
 			<P>
-			<H2>' . $GLOBALS['Language']->getText('forum_admin_index', 'add_a_forum') . '</H2>
+			<H2>' . _('Add a Forum') . '</H2>
 
 			<FORM METHOD="POST" ACTION="?">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="add_forum" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
-			<B>' . $GLOBALS['Language']->getText('forum_admin_index', 'forum_name') . ':</B><BR>
+			<B>' . _('Forum Name') . ':</B><BR>
 			<INPUT TYPE="TEXT" NAME="forum_name" VALUE="" SIZE="30" MAXLENGTH="50"><BR>
-			<B>' . $GLOBALS['Language']->getText('forum_admin_index', 'description') . ':</B><BR>
+			<B>' . _('Description') . ':</B><BR>
                         <INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="255"><BR>';
         if (in_array($current_project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
             echo '<INPUT TYPE="HIDDEN" NAME="is_public" VALUE="0" CHECKED>';
         } else {
-            echo '<P><B>' . $GLOBALS['Language']->getText('forum_admin_index', 'is_public') . '</B><BR>
+            echo '<P><B>' . _('Is Public?') . '</B><BR>
                         <INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> ' . $GLOBALS['Language']->getText('global', 'yes') . ' &nbsp;&nbsp;&nbsp;&nbsp;
                         <INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> ' . $GLOBALS['Language']->getText('global', 'no') . '<P>';
         }
-                        echo '<P><B>' . $GLOBALS['Language']->getText('forum_admin_index', 'monitor') . '</B><BR>
-                                                      ' . $GLOBALS['Language']->getText('forum_admin_index', 'monitor_recommendation') . ' <br>
+                        echo '<P><B>' . _('Want to monitor this forum?') . '</B><BR>
+                                                      ' . _('As the Forum creator it is <u>strongly recommend</u> that you monitor this forum to be instantly notified via email of any new message posted to the Forum.') . ' <br>
 			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="1" CHECKED> ' . $GLOBALS['Language']->getText('global', 'yes') . ' &nbsp;&nbsp;&nbsp;&nbsp;
 			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="0"> ' . $GLOBALS['Language']->getText('global', 'no') . '<P>
 			<P>
-			<B><span class="highlight">' . $GLOBALS['Language']->getText('forum_admin_index', 'once_added_no_delete') . '</span></B>
+			<B><span class="highlight">' . _('Once you add a forum, it cannot be modified or deleted!') . '</span></B>
 			<P>
-			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('forum_admin_index', 'add_this_forum') . '">
+			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . _('Add This Forum') . '">
 			</FORM>';
 
         forum_footer([]);
@@ -231,7 +231,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         /*
             Change a forum to public/private
         */
-        forum_header(['title' => $GLOBALS['Language']->getText('forum_admin_index', 'change_status'),
+        forum_header(['title' => _('Change Forum Status'),
         'help' => 'collaboration.html#web-forums']);
 
         $sql = "SELECT * FROM forum_group_list WHERE group_id=" . db_ei($group_id);
@@ -240,20 +240,20 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 
         if (! $result || $rows < 1) {
             echo '
-				<H2>' . $GLOBALS['Language']->getText('forum_admin_index', 'forum_not_found') . '</H2>
+				<H2>' . _('No Forums Found') . '</H2>
 				<P>
-				' . $GLOBALS['Language']->getText('forum_admin_index', 'none_found_for_group');
+				' . _('No forum for this project');
         } else {
             echo '
-                        <H2>' . $GLOBALS['Language']->getText('forum_admin_index', 'update_f_status') . '</H2>';
+                        <H2>' . _('Update Forum Status') . '</H2>';
             if (forum_can_be_public($current_project)) {
                 echo '<P>
-			         ' . $GLOBALS['Language']->getText('forum_admin_index', 'private_explain') . '<P>';
+			         ' . _('You can make forums private from here. Please note that private forums can still be viewed by members of your project, not the general public.') . '<P>';
             }
             $title_arr = [];
-            $title_arr[] = $GLOBALS['Language']->getText('forum_admin_index', 'forum');
+            $title_arr[] = _('Forum');
             $title_arr[] = $GLOBALS['Language']->getText('global', 'status');
-            $title_arr[] = $GLOBALS['Language']->getText('forum_admin_index', 'update');
+            $title_arr[] = _('Update');
 
             echo html_build_list_table_top($title_arr);
 
@@ -268,20 +268,20 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 					<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
 					<TD>
 						<FONT SIZE="-1">
-                                                <B>' . $GLOBALS['Language']->getText('forum_admin_index', 'is_public') . '</B><BR>';
+                                                <B>' . _('Is Public?') . '</B><BR>';
                 if (forum_can_be_public($current_project)) {
                     echo '<INPUT TYPE="RADIO" NAME="is_public" VALUE="1"' . ((db_result($result, $i, 'is_public') == '1') ? ' CHECKED' : '') . '> ' . $GLOBALS['Language']->getText('global', 'yes') . '<BR>';
                 }
                                             echo '<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"' . ((db_result($result, $i, 'is_public') == '0') ? ' CHECKED' : '') . '> ' . $GLOBALS['Language']->getText('global', 'no') . '<BR>
-                                                  <INPUT TYPE="RADIO" NAME="is_public" VALUE="9"' . ((db_result($result, $i, 'is_public') == '9') ? ' CHECKED' : '') . '> ' . $GLOBALS['Language']->getText('forum_admin_index', 'deleted') . '<BR>
+                                                  <INPUT TYPE="RADIO" NAME="is_public" VALUE="9"' . ((db_result($result, $i, 'is_public') == '9') ? ' CHECKED' : '') . '> ' . _('Deleted') . '<BR>
 					</TD><TD>
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '">
 					</TD></TR>
 					<TR class="' . util_get_alt_row_color($i) . '"><TD COLSPAN="4">
-						<B>' . $GLOBALS['Language']->getText('forum_admin_index', 'forum_name') . ':</B><BR>
+						<B>' . _('Forum Name') . ':</B><BR>
 						<INPUT TYPE="TEXT" NAME="forum_name" VALUE="' . $purifier->purify(html_entity_decode(db_result($result, $i, 'forum_name'))) . '" SIZE="30" MAXLENGTH="50"><BR>
-						<B>' . $GLOBALS['Language']->getText('forum_admin_index', 'description') . ':</B><BR>
+						<B>' . _('Description') . ':</B><BR>
 						<INPUT TYPE="TEXT" NAME="description" VALUE="' . $purifier->purify(html_entity_decode(db_result($result, $i, 'description'))) . '" SIZE="60" MAXLENGTH="255"><BR>
 					</TD></TR></FORM>';
             }
@@ -294,15 +294,15 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
       Show main page for choosing
       either moderotor or delete
      */
-        forum_header(['title' => $GLOBALS['Language']->getText('forum_admin_index', 'forum_admin'),
+        forum_header(['title' => _('Forum Administration'),
           'help' => 'collaboration.html#web-forums']);
 
         echo '
-			<H2>' . $GLOBALS['Language']->getText('forum_admin_index', 'forum_admin') . '</H2>
+			<H2>' . _('Forum Administration') . '</H2>
 			<P>
-			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&add_forum=1">' . $GLOBALS['Language']->getText('forum_admin_index', 'add_forum') . '</A><BR>
-			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&delete=1">' . $GLOBALS['Language']->getText('forum_admin_index', 'del_msg') . '</A><BR>
-			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&change_status=1">' . $GLOBALS['Language']->getText('forum_admin_index', 'update_forum_status') . '</A>';
+			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&add_forum=1">' . _('Add Forum') . '</A><BR>
+			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&delete=1">' . _('Delete Message') . '</A><BR>
+			<A HREF="?group_id=' . $purifier->purify(urlencode($group_id)) . '&change_status=1">' . _('Update Forum Info/Status') . '</A>';
 
         forum_footer([]);
     }

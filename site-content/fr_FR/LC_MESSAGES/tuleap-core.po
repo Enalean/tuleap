@@ -28,6 +28,10 @@ msgid "## Some notes"
 msgstr "## Du contenu en markdown"
 
 #, php-format
+msgid "%1$s message(s) deleted"
+msgstr "%1$s message(s) détruit(s)"
+
+#, php-format
 msgid "%d member"
 msgid_plural "%d members"
 msgstr[0] "%d membre"
@@ -99,6 +103,17 @@ msgstr "-- Aucun --"
 
 msgid "5 days ago"
 msgstr "il y a 5 jours"
+
+#, php-format
+msgid ""
+"<A HREF=\"%1$s\"><u>Log in first</u></A><span class=\"highlight\"> to post "
+"messages</span>"
+msgstr ""
+"<A HREF=\"%1$s\"><u>Connectez-vous en premier</u></A><span class=\"highlight"
+"\"> pour poster un message</span>"
+
+msgid "<strong>Monitor this thread</strong>"
+msgstr "<strong>Surveiller ce fil de discussion</strong>"
 
 msgid "A deleted project can not be restored."
 msgstr "Un projet détruit ne peut être restoré."
@@ -273,6 +288,9 @@ msgstr "Activer la gestion synchronisée de l'appartenance au projet"
 msgid "Add"
 msgstr "Ajouter"
 
+msgid "Add Forum"
+msgstr "Ajouter un forum"
+
 msgid "Add List"
 msgstr "Créer une liste"
 
@@ -282,8 +300,14 @@ msgstr "Créer une liste de diffusion"
 msgid "Add SSH key"
 msgstr "Ajouter une clef SSH"
 
+msgid "Add This Forum"
+msgstr "Ajouter ce forum"
+
 msgid "Add This List"
 msgstr "Créer cette liste"
+
+msgid "Add a Forum"
+msgstr "Ajouter un forum"
 
 msgid "Add a Mailing List"
 msgstr "Créer une liste de distribution"
@@ -455,11 +479,23 @@ msgstr ""
 "Comme notifié(e) il y a %s jours et sans aucune connexion de votre part "
 "depuis, votre compte est suspendu conformément aux règles de %s."
 
+msgid ""
+"As the Forum creator it is <u>strongly recommend</u> that you monitor this "
+"forum to be instantly notified via email of any new message posted to the "
+"Forum."
+msgstr ""
+"En tant que créateur de ce forum, il vous est <u>fortement recommandé</u> de "
+"le surveiller pour recevoir immédiatement par e-mail tout nouveau message "
+"posté sur ce forum."
+
 msgid "Ask to join"
 msgstr "Demander à rejoindre"
 
 msgid "Ask to join this project"
 msgstr "Demander à rejoindre ce projet"
+
+msgid "Author"
+msgstr "Auteur"
 
 msgid "Available?"
 msgstr "Disponible ?"
@@ -494,6 +530,9 @@ msgstr "Bleu"
 msgid "Branch"
 msgstr "Branche"
 
+msgid "Broken Thread"
+msgstr "Fil de discussion brisée"
+
 msgid "Browse CVS Tree"
 msgstr "Affichage de l'arbre CVS"
 
@@ -511,6 +550,9 @@ msgstr ""
 "La navigation dans l'arbre CVS donne un bon aperçu de l'état courant du code "
 "source de ce projet. Vous pouvez aussi voir l'historique complet des "
 "fichiers du dépôt."
+
+msgid "By"
+msgstr "De"
 
 msgid "By %s"
 msgstr "Par %s"
@@ -649,6 +691,12 @@ msgstr ""
 msgid "Change"
 msgstr "Changer"
 
+msgid "Change Forum Status"
+msgstr "Changer le statut du forum"
+
+msgid "Change View"
+msgstr "Changer de format"
+
 msgid "Change avatar"
 msgstr "Changer l'avatar"
 
@@ -673,6 +721,14 @@ msgstr "Choisissez d'abord un groupe (projet)"
 
 msgid "Choose a category…"
 msgstr "Choisissez une catégorie…"
+
+msgid "Choose a forum First"
+msgstr "Veuillez d'abord choisir un forum"
+
+msgid "Choose a forum and you can browse, search, and post messages."
+msgstr ""
+"Choisissez un forum et vous pourrez le parcourir, effectuer une recherche et "
+"poster un message."
 
 msgid "Choose a list to browse, search, and post messages."
 msgstr "Choisissez une liste où naviguer, chercher ou poster des messages."
@@ -901,6 +957,12 @@ msgstr "Supprimer"
 msgid "Delete %s"
 msgstr "Supprimer %s"
 
+msgid "Delete Message"
+msgstr "Détruire un message"
+
+msgid "Delete a message"
+msgstr "Détruire un message"
+
 msgid "Delete binding"
 msgstr "Supprimer le lien"
 
@@ -939,6 +1001,9 @@ msgstr "Restreindre pour tous les projets"
 
 msgid "Disallowing for all projects"
 msgstr "Restriction pour tous les projets"
+
+msgid "Discussion Forums"
+msgstr "Forums de discussions"
 
 msgid "Display density"
 msgstr "Densité d'affichage"
@@ -1023,6 +1088,12 @@ msgstr "Adresse e-mail introuvable"
 msgid "Email format preference successfully updated"
 msgstr "La préférence de format de courriel a été mise à jour"
 
+msgid "Email not sent"
+msgstr "E-mail pas envoyé"
+
+msgid "Email sent"
+msgstr "E-mail envoyé"
+
 #, php-format
 msgid "Email sent with details to: %1$s"
 msgstr "Note détaillée envoyée par e-mail à : %1$s"
@@ -1065,14 +1136,42 @@ msgstr ""
 "Entrez les personnes à inviter sur %s. Nous leur enverrons un email "
 "d'invitation."
 
+msgid "Enter the Message ID"
+msgstr "Entrer l'identifiant (ID) du message"
+
+msgid "Error - choose a forum first"
+msgstr "Erreur - Veuillez d'abord choisir un forum"
+
 msgid "Error - choose a group first"
 msgstr "Erreur - Choisissez d'abord un groupe (projet)"
+
+msgid "Error - this news item was not found"
+msgstr "Erreur - cette annonce est introuvable"
+
+#, php-format
+msgid "Error Adding Forum '%1$s'."
+msgstr "Erreur lors de l'ajout du forum '%1$s'."
 
 msgid "Error Adding List"
 msgstr "Erreur lors de la création de la liste"
 
+msgid "Error Updating Forum Info"
+msgstr "Erreur lors de la mise à jour des informations du forum"
+
 msgid "Error Updating Status"
 msgstr "Erreur lors de la mise à jour du statut"
+
+msgid "Error inserting into forum_monitoring"
+msgstr "Erreur lors de l'insertion dans forum_monitoring"
+
+msgid "Error inserting into forum_saved_place"
+msgstr "Erreur lors de l'insertion dans forum_saved_place"
+
+msgid "Error updating time in forum_saved_place"
+msgstr "Erreur lors de la mise de la date et de l'heure dans forum_saved_place"
+
+msgid "Existing Forums"
+msgstr "Forums existants"
 
 msgid "Existing Mailing Lists"
 msgstr "Listes de diffusion existantes"
@@ -1113,14 +1212,46 @@ msgstr "Rempli"
 msgid "Filter by name"
 msgstr "Filtrer par nom"
 
+msgid "Flat"
+msgstr "A plat"
+
 msgid "Forbidden"
 msgstr "Interdit"
 
 msgid "Force usage?"
 msgstr "Forcer l'utilisation ?"
 
+msgid "Forum"
+msgstr "Forum"
+
+#, php-format
+msgid "Forum '%1$s' Added."
+msgstr "Forum '%1$s' Ajouté."
+
+msgid "Forum Administration"
+msgstr "Administration des forums"
+
+msgid "Forum Info Updated Successfully"
+msgstr "Informations du forum mises à jour avec succès"
+
+msgid "Forum Name"
+msgstr "Nom du forum"
+
+msgid "Forum already monitored"
+msgstr "Forum déjà sous surveillance"
+
+msgid "Forum is now being monitored"
+msgstr "La surveillance du forum est maintenant activée"
+
+msgid "Forum is restricted"
+msgstr "Forum restreint"
+
 msgid "Forums"
 msgstr "Forums"
+
+#, php-format
+msgid "Forums for '%1$s'"
+msgstr "Forums pour '%1$s'"
 
 msgid "General"
 msgstr "Général"
@@ -1188,6 +1319,10 @@ msgstr "Groupes"
 msgid "HTML"
 msgstr "HTML"
 
+msgid "HTML tags will display in your post as text"
+msgstr ""
+"Les balises HTML seront affichées sous forme de texte dans vos messages"
+
 msgid "Header background"
 msgstr "Image de fond de l'entête"
 
@@ -1231,6 +1366,9 @@ msgstr "Je refuse"
 
 msgid "ID"
 msgstr "ID"
+
+msgid "INSERT FAILED"
+msgstr "L'insertion a échoué"
 
 msgid "Id"
 msgstr "Id"
@@ -1570,8 +1708,17 @@ msgstr "Gestion des membres"
 msgid "Message"
 msgstr "Message"
 
+msgid "Message Posted"
+msgstr "Message posté"
+
 msgid "Message from %s:"
 msgstr "Message de la part de %s :"
+
+msgid "Message is not in your group"
+msgstr "Ce message n'est pas de votre projet"
+
+msgid "Message not found"
+msgstr "Message introuvable"
 
 msgid "Message sent to administrator should not be empty."
 msgstr "Le message envoyé à l'administrateur ne doit pas être vide."
@@ -1582,14 +1729,39 @@ msgstr "Message aux administrateurs de projet"
 msgid "Missing Information. PLEASE fill in all required information."
 msgstr "Information manquante. Veuillez saisir les informations demandées."
 
+msgid ""
+"Missing forum name or description, please press the \"Back\" button and "
+"complete this information"
+msgstr ""
+"Nom ou description du forum manquant, veuillez appuyez sur le bouton \"Retour"
+"\" de votre navigateur et compléter ces informations"
+
 msgid "Moderation"
 msgstr "Moderation"
+
+msgid "Monitor Forum"
+msgstr "Surveiller Forum"
+
+msgid "Monitor a forum"
+msgstr "Surveiller un forum"
+
+msgid "Monitor?"
+msgstr "Surveiller?"
+
+msgid "Monitoring has been turned off"
+msgstr "La surveillance du forum est arrêté"
 
 msgid "Month"
 msgstr "Mois"
 
 msgid "Must Provide List Name That Is 4 or More Characters Long"
 msgstr "Le nom de la liste doit comporter au moins 4 caractères"
+
+msgid "Must choose a message first"
+msgstr "Veuillez d'abord choisir un message"
+
+msgid "Must include a message body and subject"
+msgstr "Veuillez remplir le sujet et le corps du message"
 
 msgid "My Dashboard"
 msgstr "Mon tableau de bord"
@@ -1619,6 +1791,9 @@ msgstr "Nb maximum de valeurs autorisées doit être à 1."
 msgid "Nb members"
 msgstr "Nb membres"
 
+msgid "Nested"
+msgstr "Hiérarchisé"
+
 msgid "Never"
 msgstr "Jamais"
 
@@ -1640,6 +1815,9 @@ msgstr ""
 "changement, <strong>cliquez sur le lien</strong> qui se trouvera dans le "
 "message de confirmation que vous allez recevoir (à la nouvelle adresse)."
 
+msgid "New messages will be highlighted when you return."
+msgstr "Les nouveaux messages seront mis en valeur lorsque vous reviendrez."
+
 msgid "New password"
 msgstr "Nouveau mot de passe"
 
@@ -1656,11 +1834,20 @@ msgstr "Annonces"
 msgid "News {{ user_group_name }} can see"
 msgstr "Annonces que {{ user_group_name }} peuvent voir"
 
+msgid "Next Messages"
+msgstr "Messages suivants"
+
 msgid "No"
 msgstr "Non"
 
+msgid "No Comments"
+msgstr "Sans message"
+
 msgid "No Commit matches your criteria"
 msgstr "Aucun commit ne correspond à vos critères"
+
+msgid "No Forums Found"
+msgstr "Forum introuvable"
 
 msgid "No Lists Found"
 msgstr "Aucune liste disponible"
@@ -1668,6 +1855,10 @@ msgstr "Aucune liste disponible"
 #, php-format
 msgid "No Lists found for %1$s"
 msgstr "Aucune liste pour %1$s"
+
+#, php-format
+msgid "No Messages in %1$s"
+msgstr "Aucun message dans %1$s"
 
 msgid "No activity yet"
 msgstr "Pas encore d'activité"
@@ -1681,6 +1872,16 @@ msgstr "Aucun projet enfant"
 msgid "No email for user account"
 msgstr "Pas d'adresse email pour ce compte"
 
+msgid "No followup ID present when trying to post to an existing thread."
+msgstr "Identifiant de fil de discussion manquant pour une réponse."
+
+msgid "No forum for this project"
+msgstr "Aucun forum pour ce projet"
+
+#, php-format
+msgid "No forums found for '%1$s'"
+msgstr "Aucun forum pour '%1$s'"
+
 msgid "No items can use labels in this project."
 msgstr "Aucun éléments dans ce projet ne peux utiliser les labels."
 
@@ -1693,6 +1894,9 @@ msgstr "Pas de licence à approuver"
 msgid "No matching labels"
 msgstr "Il n'y a aucun label correspondant"
 
+msgid "No one monitoring"
+msgstr "Forum non surveillé"
+
 msgid "No project trove categories"
 msgstr "Aucune catégorie de projet"
 
@@ -1704,6 +1908,9 @@ msgstr "Les projets non actifs ne peuvent être utilisés comme modèle de proje
 
 msgid "None found for this project"
 msgstr "Aucune liste n'est disponible pour ce projet"
+
+msgid "Not Found"
+msgstr "Introuvable"
 
 msgid "Not categorized"
 msgstr "Non catégorisé"
@@ -1722,6 +1929,9 @@ msgstr "Notifications"
 
 msgid "Ok, got it"
 msgstr "Ok, j'ai compris"
+
+msgid "Once you add a forum, it cannot be modified or deleted!"
+msgstr "Une fois ajouté, un forum ne peut être ni modifié ni détruit !"
 
 msgid "Only project members can access its content."
 msgstr "Seuls les membres du projet peuvent accéder à son contenu."
@@ -1887,6 +2097,18 @@ msgstr "Veuillez soumettre un message pertinent afin d'aider l'administrateur."
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"
 
+msgid "Post Comment"
+msgstr "Poster un commentaire"
+
+msgid "Post a followup to this message"
+msgstr "Poster une réponse dans cette discussion"
+
+msgid "Posted By"
+msgstr "Posté par"
+
+msgid "Posting Failed"
+msgstr "L'envoi du message a échoué"
+
 msgid "Preferences"
 msgstr "Préférences"
 
@@ -1895,6 +2117,9 @@ msgstr "Aperçu"
 
 msgid "Preview:"
 msgstr "Aperçu :"
+
+msgid "Previous Messages"
+msgstr "Messages précédents"
 
 msgid "Previous successful login"
 msgstr "Connexion précédente"
@@ -1928,6 +2153,9 @@ msgstr "Export des données"
 
 msgid "Project History"
 msgstr "Historique du projet"
+
+msgid "Project Latest News"
+msgstr "Dernières annonces du projet"
 
 msgid "Project Registration"
 msgstr "Enregistrement d'un projet"
@@ -2104,6 +2332,9 @@ msgstr "RSS"
 msgid "Rank"
 msgstr "Rang"
 
+msgid "Read and respond to this message at"
+msgstr "Pour lire et répondre à ce message aller sur"
+
 msgid "Read only access to information about projects"
 msgstr "Accès en lecture seule aux informations concernant les projets"
 
@@ -2239,6 +2470,12 @@ msgstr "Les clés d'accès ont été supprimées avec succès"
 msgid "Save"
 msgstr "Enregistrer"
 
+msgid "Save Place"
+msgstr "Sauvegarder cette position"
+
+msgid "Save Your Place"
+msgstr "Sauvegarder cette position"
+
 msgid "Save categories"
 msgstr "Sauvegarder les catégories"
 
@@ -2259,6 +2496,9 @@ msgstr "Enregister"
 
 msgid "Save the link"
 msgstr "Enregister le lien"
+
+msgid "Save your place"
+msgstr "Sauvegarder cette position"
 
 msgid "Scope"
 msgstr "Portée"
@@ -2343,6 +2583,10 @@ msgid ""
 msgstr ""
 "Si vous voulez garder votre compte, notifiez votre contact %s pour ce projet."
 
+#, php-format
+msgid "Show %1$s"
+msgstr "Afficher %1$s"
+
 msgid "Site content customisations"
 msgstr "Personnalisations du site content"
 
@@ -2357,6 +2601,12 @@ msgstr "Des catégories sont manquantes"
 
 msgid "Source code management"
 msgstr "Gestion de code source"
+
+msgid "Start New Thread"
+msgstr "Commencer une nouvelle discussion"
+
+msgid "Start a New Thread"
+msgstr "Commencer une nouvelle discussion"
 
 msgid "Start a new project"
 msgstr "Démarrer un nouveau projet"
@@ -2382,6 +2632,9 @@ msgstr "Statut"
 msgid "Status Updated Successfully"
 msgstr "Statut mis à jour avec succès"
 
+msgid "Stop Monitoring Forum"
+msgstr "Arrêter la surveillance"
+
 msgid ""
 "Streamline your workflow and focus on what's hot with an easy-to-use board"
 msgstr ""
@@ -2390,6 +2643,9 @@ msgstr ""
 
 msgid "Style"
 msgstr "Style"
+
+msgid "Subject"
+msgstr "Sujet"
 
 msgid "Subject header"
 msgstr "Entête du sujet"
@@ -2433,6 +2689,9 @@ msgstr ""
 
 msgid "Successfully updated."
 msgstr "Mis à jour avec succès."
+
+msgid "Summary"
+msgstr "Résumé"
 
 msgid "Switch to new tracker creation flow"
 msgstr "Basculer sur la nouvelle interface de création de projet"
@@ -2829,6 +3088,24 @@ msgstr "Ce widget est déprécié, vous devriez le supprimer."
 msgid "This will remove this service from all projects."
 msgstr "Ceci supprimera ce service de tous les projets."
 
+msgid "Thread"
+msgstr "Fil de discussion"
+
+msgid "Thread Monitoring Panel"
+msgstr "Ecran de surveillance des fils de discussion"
+
+msgid "Thread View"
+msgstr "Vue des fils de discussion"
+
+msgid "Thread monitoring update failed."
+msgstr "Echec de la mise à jour de la surveillance des fils de discussion."
+
+msgid "Thread monitoring updated."
+msgstr "Mise à jour de la surveillance des fils de discussion."
+
+msgid "Threaded"
+msgstr "En fils de discussions"
+
 msgid "Timezone"
 msgstr "Fuseau horaire"
 
@@ -2865,6 +3142,11 @@ msgstr "Pour vous connecter (votre nom d'utilisateur est %s) :"
 msgid "To sign up:"
 msgstr "Pour vous enregistrer :"
 
+msgid "To turn off monitoring, simply click the <B>Stop Monitoring Forum</B>."
+msgstr ""
+"Pour arrêter la surveillance, cliquer sur le lien <b>Arrêter la "
+"surveillance</B>."
+
 msgid "Today"
 msgstr "Aujourd'hui"
 
@@ -2888,6 +3170,12 @@ msgstr "Arborescence"
 
 msgid "Trove categories"
 msgstr "Catégories"
+
+msgid "Trying to followup to a message that doesn't exist."
+msgstr "Tentative de poster une réponse sur un fil de discussion inexistant."
+
+msgid "Trying to post without a forum ID"
+msgstr "Tentative de poster un message sans identifiant (ID) de forum"
 
 msgid ""
 "Tuleap experimental features in preview mode for bleeding edge users. Only "
@@ -2929,6 +3217,12 @@ msgstr "Jusqu'à 2 catégories peuvent être utilisées en tant que marqueur."
 
 msgid "Update"
 msgstr "Mettre à jour"
+
+msgid "Update Forum Info/Status"
+msgstr "Mettre à jour les infos et le statut du forum"
+
+msgid "Update Forum Status"
+msgstr "Mettre à jour le statut du forum"
 
 msgid "Update List"
 msgstr "Modifier une liste"
@@ -3047,6 +3341,16 @@ msgid "Visibility"
 msgstr "Visibilité"
 
 msgid ""
+"WARNING! You are about to permanently delete a message and all of its "
+"followups!!"
+msgstr ""
+"ATTENTION ! Vous êtes sur le point de détruire un message et tout son fil de "
+"discussion !!"
+
+msgid "Want to monitor this forum?"
+msgstr "Surveiller ce forum ?"
+
+msgid ""
 "We are sorry you caught an error, something meaningful was logged for site "
 "administrators. You may want got get in touch with them."
 msgstr ""
@@ -3078,6 +3382,10 @@ msgstr "Bienvenue à bord"
 
 msgid "Welcome message and information for users"
 msgstr "Message de bienvenue et informations générales pour les utilisateurs"
+
+#, php-format
+msgid "Welcome to %1$s"
+msgstr "Bienvenue sur %1$s"
 
 msgid "Welcome to your new project"
 msgstr "Bienvenue dans votre nouveau projet"
@@ -3160,6 +3468,13 @@ msgid "Yesterday"
 msgstr "Hier"
 
 msgid ""
+"You appear to be double-posting this message, since it has the same subject "
+"and followup information as a prior post."
+msgstr ""
+"Il semble que vous tentiez de poster ce message deux fois, car il a le même "
+"sujet et les mêmes information d fil de discussion qu'un précédent message."
+
+msgid ""
 "You are about to allow access to a resource for every projects on the "
 "platform."
 msgstr ""
@@ -3240,6 +3555,13 @@ msgstr[1] ""
 "confirmer votre action. La suppression sera effective quelques minutes après "
 "votre confirmation."
 
+msgid ""
+"You are monitoring the whole forum. If you want to monitor only specific "
+"threads, Stop Monitoring Forum."
+msgstr ""
+"Vous surveillez tout le forum. Si vous souhaitez seulement surveiller "
+"certains fils de discussion, stoppez la surveillance du forum."
+
 msgid "You are not allowed to access this resource"
 msgstr "Vous n'avez pas l'autorisation d'accéder à cette resource"
 
@@ -3255,6 +3577,23 @@ msgid "You are not the user who asked for email change"
 msgstr ""
 "Vous n'etes pas l'utilisateur à l'origine de la demande de changement d'e-"
 "mail"
+
+#, php-format
+msgid ""
+"You are receiving this email because you elected to monitor this forum or "
+"this thread.\n"
+"To stop monitoring this forum, login and visit:\n"
+" %1$s .\n"
+"To change thread monitoring settings, visit:\n"
+" %2$s."
+msgstr ""
+"Vous recevez ce courrier électronique car vous avez choisi de surveiller ce "
+"forum ou ce fil de discussion. \n"
+"Pour arrêter la surveillance, connectez-vous et aller sur :\n"
+" %1$s .\n"
+"Pour modifier les paramètres de surveillance des fils de discussion, aller "
+"sur :\n"
+" %2$s."
 
 #, php-format
 msgid "You are trying to send %s invitations, but the maximum is %s per day."
@@ -3317,6 +3656,13 @@ msgid "You can include empty lines in the import file."
 msgstr "Vous pouvez inclure des lignes vides dans le fichier d'import."
 
 msgid ""
+"You can make forums private from here. Please note that private forums can "
+"still be viewed by members of your project, not the general public."
+msgstr ""
+"Vous pouvez rendre un forum privé. veuillez noter que les forums privés ne "
+"sont visibles que pour les membres du projet."
+
+msgid ""
 "You can no longer invite people to use %s you have reached the limit of %s "
 "invitations by day."
 msgstr ""
@@ -3375,6 +3721,9 @@ msgstr "Vous ne pouvez pas accéder à cette page."
 
 msgid "You cannot create an already expired access key."
 msgstr "Vous ne pouvez pas créer une clé déja expirée."
+
+msgid "You could post if you were logged in"
+msgstr "Vous pourriez poster un message si vous étiez connecté"
 
 msgid "You do not have permission to access the site administration."
 msgstr ""
@@ -3494,6 +3843,15 @@ msgid ""
 "confusion."
 msgstr "La variable <code>$sys_project_approval</code> est toujours présente"
 
+msgid "You will not receive any more emails from this forum."
+msgstr ""
+"Vous ne recevrez plus de courrier électronique en provenance de ce forum."
+
+msgid "You will now be emailed followups to this entire forum."
+msgstr ""
+"Vous recevrez désormais un courrier électronique pour chaque message posté "
+"sur ce forum."
+
 #, php-format
 msgid "Your account has been created on %s"
 msgstr "Votre compte a été créé sur %s"
@@ -3522,6 +3880,9 @@ msgstr ""
 
 msgid "Your history is empty"
 msgstr "Votre historique est vide"
+
+msgid "Your place was saved"
+msgstr "Position dans le forum sauvegardée."
 
 msgid "Your platform does not allow restricted users."
 msgstr "Votre plateforme n'authorise pas les utilisateurs restreints"
@@ -3583,6 +3944,9 @@ msgstr ""
 "en partie<br>L'adresse e-mail semble invalide. la notification e-mail est "
 "désactivée."
 
+msgid "people monitoring"
+msgstr "Forum sous surveillance"
+
 msgid "permissions"
 msgstr "permissions"
 
@@ -3594,6 +3958,9 @@ msgstr "dépôt privé"
 
 msgid "public"
 msgstr "publique"
+
+msgid "reply"
+msgstr "répondre"
 
 msgid "sorted by"
 msgstr "trié par"

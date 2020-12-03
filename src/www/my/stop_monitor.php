@@ -49,9 +49,9 @@ if (user_isloggedin()) {
             $forum_monitor_error = ! forum_add_monitor($forum_id, $user_id);
         }
     } else {
-        forum_header(['title' => $Language->getText('forum_monitor', 'choose_forum_first')]);
+        forum_header(['title' => _('Choose a forum First')]);
         echo '
-			<H1>' . $Language->getText('forum_forum', 'choose_forum_first') . '</H1>';
+			<H1>' . _('Error - choose a forum first') . '</H1>';
         forum_footer([]);
     }
 } else {

@@ -51,7 +51,7 @@ if ($request->valid($vMsg)) {
 
         // Check permissions
     if (! forum_utils_access_allowed($forum_id)) {
-        exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum', 'forum_restricted'));
+        exit_error($Language->getText('global', 'error'), _('Forum is restricted'));
     }
 
     //check if the message is a comment on a piece of news.  If so, check permissions on this news
@@ -89,9 +89,9 @@ if ($request->valid($vMsg)) {
     $purifier = Codendi_HTMLPurifier::instance();
     $poster   = UserManager::instance()->getUserByUserName(db_result($result, 0, "user_name"));
     echo "<TR><TD class=\"threadmsg\">\n";
-    echo $Language->getText('forum_message', 'by') . ": " . UserHelper::instance()->getLinkOnUser($poster) . "<BR>";
-    echo $Language->getText('forum_message', 'date') . ": " . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, "date")) . "<BR>";
-    echo $Language->getText('forum_message', 'subject') . ": " . db_result($result, 0, "subject") . "<P>";
+    echo _('By') . ": " . UserHelper::instance()->getLinkOnUser($poster) . "<BR>";
+    echo _('Date') . ": " . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, "date")) . "<BR>";
+    echo _('Subject') . ": " . db_result($result, 0, "subject") . "<P>";
     echo $purifier->purify(db_result($result, 0, 'body'), CODENDI_PURIFIER_BASIC, $group_id);
     echo "</TD></TR>";
 
@@ -112,7 +112,7 @@ if ($request->valid($vMsg)) {
     /*
      Show entire thread
     */
-        echo '<BR>&nbsp;<P><H3>' . $Language->getText('forum_message', 'thread_view') . '</H3>';
+        echo '<BR>&nbsp;<P><H3>' . _('Thread View') . '</H3>';
 
         //highlight the current message in the thread list
         $current_message = $msg_id;
@@ -123,12 +123,12 @@ if ($request->valid($vMsg)) {
     */
 
         echo '<P>&nbsp;<P>';
-        echo '<CENTER><h3>' . $Language->getText('forum_message', 'post_followup') . '</h3></CENTER>';
+        echo '<CENTER><h3>' . _('Post a followup to this message') . '</h3></CENTER>';
 
         show_post_form(db_result($result, 0, 'group_forum_id'), db_result($result, 0, 'thread_id'), $msg_id, db_result($result, 0, 'subject'));
     }
 } else {
-    exit_error($Language->getText('global', 'error'), $Language->getText('forum_message', 'choose_msg_first'));
+    exit_error($Language->getText('global', 'error'), _('Must choose a message first'));
 }
 
 forum_footer($params);

@@ -82,20 +82,20 @@ function forum_header($params)
             } else {
                 $HTML->header($params);
                 echo '
-					<H2>' . ForgeConfig::get('sys_name') . ' <A HREF="/news/">' . $Language->getText('forum_forum_utils', 'news') . '</A></H2><P>';
+					<H2>' . ForgeConfig::get('sys_name') . ' <A HREF="/news/">' . _('News') . '</A></H2><P>';
             }
 
             echo '<TABLE><TR><TD VALIGN="TOP">';
             if (! $result || db_numrows($result) < 1) {
                 echo '
-					<h3>' . $Language->getText('forum_forum_utils', 'news_not_found') . '</h3>';
+					<h3>' . _('Error - this news item was not found') . '</h3>';
             } else {
                 echo '
-				<B>' . $Language->getText('forum_forum_utils', 'posted_by') . ':</B> ' .
+				<B>' . _('Posted By') . ':</B> ' .
                 $hp->purify($uh->getDisplayNameFromUserId(db_result($result, 0, 'submitted_by')), CODENDI_PURIFIER_CONVERT_HTML) .
                 '<BR>
-				<B>' . $Language->getText('forum_forum', 'date') . ':</B> ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'date')) . '<BR>
-				<B>' . $Language->getText('forum_forum_utils', 'summary') . ':</B><A HREF="' . $hp->purify('/forum/forum.php?forum_id=' . urlencode(db_result($result, 0, 'forum_id'))) . '">' . $hp->purify(db_result($result, 0, 'summary')) . '</A>
+				<B>' . _('Date') . ':</B> ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'date')) . '<BR>
+				<B>' . _('Summary') . ':</B><A HREF="' . $hp->purify('/forum/forum.php?forum_id=' . urlencode(db_result($result, 0, 'forum_id'))) . '">' . $hp->purify(db_result($result, 0, 'summary')) . '</A>
 				<P>
 				' . $hp->purify(db_result($result, 0, 'details', $group_id), CODENDI_PURIFIER_BASIC);
 
@@ -109,7 +109,7 @@ function forum_header($params)
                 }
             }
             echo '</TD><TD VALIGN="TOP" WIDTH="35%">';
-            echo $HTML->box1_top($Language->getText('forum_forum_utils', 'proj_latest_news'), 0);
+            echo $HTML->box1_top(_('Project Latest News'), 0);
             echo news_show_latest(db_result($result, 0, 'group_id'), 5, false);
             echo $HTML->box1_bottom();
             echo '</TD></TR></TABLE>';
@@ -146,7 +146,7 @@ function forum_header($params)
         Show horizontal forum links
     */
     if ($forum_id && $forum_name) {
-        echo '<P><H3>' . $Language->getText('forum_forum_utils', 'discuss_forum') . ': <A HREF="/forum/forum.php?forum_id=' . $forum_id . '">' . $forum_name . '</A></H3>';
+        echo '<P><H3>' . _('Discussion Forums') . ': <A HREF="/forum/forum.php?forum_id=' . $forum_id . '">' . $forum_name . '</A></H3>';
     }
 
     if (! isset($params['pv']) || (isset($params['pv']) && ! $params['pv'])) {
@@ -154,19 +154,19 @@ function forum_header($params)
         if ($forum_id && user_isloggedin() && ! $request->exist('delete')) {
             echo '<P><B>';
             if (user_monitor_forum($forum_id, UserManager::instance()->getCurrentUser()->getId())) {
-                $msg = $Language->getText('forum_forum_utils', 'stop_monitor');
+                $msg = _('Stop Monitoring Forum');
             } else {
-                $msg = $Language->getText('forum_forum_utils', 'monitor');
+                $msg = _('Monitor Forum');
             }
             echo '<A HREF="/forum/monitor.php?forum_id=' . $forum_id . '">';
             echo html_image("ic/monitor_forum.png", []) . ' ' . $msg . '</A> | ';
 
-            echo '<A HREF="/forum/monitor_thread.php?forum_id=' . $forum_id . '"> ' . html_image("ic/monitor_thread.png", []) . $Language->getText('forum_forum_utils', 'monitor_thread') . '</A> | ';
+            echo '<A HREF="/forum/monitor_thread.php?forum_id=' . $forum_id . '"> ' . html_image("ic/monitor_thread.png", []) . _('Thread Monitoring Panel') . '</A> | ';
 
             echo '<A HREF="/forum/save.php?forum_id=' . $forum_id . '">';
-            echo html_image("ic/save.png", []) . ' ' . $Language->getText('forum_forum_utils', 'save_place') . '</A> | ';
+            echo html_image("ic/save.png", []) . ' ' . _('Save Place') . '</A> | ';
             print ' <a href="forum.php?forum_id=' . $forum_id . '#start_new_thread">';
-            echo html_image("ic/thread.png", []) . ' ' . $Language->getText('forum_forum_utils', 'start_thread') . '</A> | ';
+            echo html_image("ic/thread.png", []) . ' ' . _('Start New Thread') . '</A> | ';
             if (isset($msg_id) && $msg_id) {
                 echo "<A HREF='?msg_id=$msg_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A>";
             } else {
@@ -225,14 +225,14 @@ function forum_add_monitor($forum_id, $user_id)
     global $feedback,$Language;
 
     if (user_monitor_forum($forum_id, $user_id)) {
-        $feedback .= $Language->getText('forum_forum_utils', 'forum_monitored');
+        $feedback .= _('Forum already monitored');
     } else {
         // Not already monitoring so add it.
         $sql = "INSERT INTO forum_monitored_forums (forum_id,user_id) VALUES (" . db_ei($forum_id) . "," . db_ei($user_id) . ")";
         $result = db_query($sql);
 
         if (! $result) {
-            $feedback .= $Language->getText('forum_forum_utils', 'insert_err');
+            $feedback .= _('Error inserting into forum_monitoring');
             return false;
         }
     }
@@ -262,12 +262,12 @@ function forum_create_forum($group_id, $forum_name, $is_public = 1, $create_defa
     $result = db_query($sql);
     if (! $result) {
         if ($need_feedback) {
-            $feedback .= ' ' . $GLOBALS['Language']->getText('forum_forum_utils', 'add_err', [$forum_name]) . ' ';
+            $feedback .= ' ' . sprintf(_('Error Adding Forum \'%1$s\'.'), $forum_name) . ' ';
         }
         return -1;
     } else {
         if ($need_feedback) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('forum_forum_utils', 'forum_added', [$forum_name]));
+            $GLOBALS['Response']->addFeedback('info', sprintf(_('Forum \'%1$s\' Added.'), $forum_name));
         }
 
         $forum_id = db_insertid($result);
@@ -285,8 +285,8 @@ function forum_create_forum($group_id, $forum_name, $is_public = 1, $create_defa
          //set up a cheap default message
             $result2 = db_query("INSERT INTO forum " .
              "(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) " .
-             "VALUES (" . db_ei($forum_id) . ",100,'" . db_es($GLOBALS['Language']->getText('forum_forum_utils', 'welcome_to', [$hp->purify($group_name)]) . " " . htmlspecialchars($forum_name)) . "'," .
-             "'" . db_es($GLOBALS['Language']->getText('forum_forum_utils', 'welcome_to', [$group_name]) . " " . htmlspecialchars($forum_name)) . "','" . time() . "',0,'" . get_next_thread_id() . "')");
+             "VALUES (" . db_ei($forum_id) . ",100,'" . db_es(sprintf(_('Welcome to %1$s'), $hp->purify($group_name)) . " " . htmlspecialchars($forum_name)) . "'," .
+             "'" . db_es(sprintf(_('Welcome to %1$s'), $group_name) . " " . htmlspecialchars($forum_name)) . "','" . time() . "',0,'" . get_next_thread_id() . "')");
         }
         return $forum_id;
     }
@@ -301,7 +301,7 @@ function get_forum_name($id)
     $sql = "SELECT forum_name FROM forum_group_list WHERE group_forum_id=" . db_ei($id);
     $result = db_query($sql);
     if (! $result || db_numrows($result) < 1) {
-        return $Language->getText('forum_forum_utils', 'not_found');
+        return _('Not Found');
     } else {
         return db_result($result, 0, "forum_name");
     }
@@ -341,12 +341,12 @@ function show_thread($thread_id, $et = 0)
     $total_rows = 0;
 
     if (! $result || db_numrows($result) < 1) {
-        return $Language->getText('forum_forum_utils', 'broken_thread');
+        return _('Broken Thread');
     } else {
         $title_arr = [];
-        $title_arr[] = $Language->getText('forum_forum', 'thread');
-        $title_arr[] = $Language->getText('forum_forum', 'author');
-        $title_arr[] = $Language->getText('forum_forum', 'date');
+        $title_arr[] = _('Thread');
+        $title_arr[] = _('Author');
+        $title_arr[] = _('Date');
 
         $ret_val .= html_build_list_table_top($title_arr);
 
@@ -512,10 +512,10 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
     if (user_isloggedin()) {
         $request = HTTPRequest::instance();
         if (! $group_forum_id) {
-            exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum_utils', 'post_without_id'));
+            exit_error($Language->getText('global', 'error'), _('Trying to post without a forum ID'));
         }
         if (! $body || ! $subject) {
-            exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum_utils', 'include_body_and_subject'));
+            exit_error($Language->getText('global', 'error'), _('Must include a message body and subject'));
         }
 
         $user_id            = UserManager::instance()->getCurrentUser()->getId();
@@ -530,7 +530,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 
         if (db_numrows($res3) > 0) {
             //already posted this message
-            exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum_utils', 'do_not_double_post'));
+            exit_error($Language->getText('global', 'error'), _('You appear to be double-posting this message, since it has the same subject and followup information as a prior post.'));
         } else {
             echo db_error();
         }
@@ -550,11 +550,11 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
                         db_query("UPDATE forum SET has_followups='1' WHERE msg_id=" . db_ei($is_followup_to) . " AND thread_id=" . db_ei($thread_id) . " AND group_forum_id=" . db_ei($group_forum_id));
                     }
                 } else {
-                    exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum_utils', 'msg_not_exist'));
+                    exit_error($Language->getText('global', 'error'), _('Trying to followup to a message that doesn\'t exist.'));
                 }
             } else {
                 //should never happen except with shoddy browsers or mucking with the HTML form
-                exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum_utils', 'no_folowup_id'));
+                exit_error($Language->getText('global', 'error'), _('No followup ID present when trying to post to an existing thread.'));
             }
         }
 
@@ -564,11 +564,11 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
         $result = db_query($sql);
 
         if (! $result) {
-            echo $Language->getText('forum_forum_utils', 'insert_fail');
+            echo _('INSERT FAILED');
             echo db_error();
-            $feedback .= ' ' . $Language->getText('forum_forum_utils', 'post_failed') . ' ';
+            $feedback .= ' ' . _('Posting Failed') . ' ';
         } else {
-            $feedback .= ' ' . $Language->getText('forum_forum_utils', 'msg_posted') . ' ';
+            $feedback .= ' ' . _('Message Posted') . ' ';
         }
 
         $msg_id = db_insertid($result);
@@ -587,7 +587,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
         handle_monitoring($group_forum_id, $thread_id, $msg_id);
     } else {
         echo '
-			<H3>' . $Language->getText('forum_forum_utils', 'could_post_if_logged') . '</H3>';
+			<H3>' . _('You could post if you were logged in') . '</H3>';
     }
 }
 
@@ -616,16 +616,16 @@ function show_post_form($forum_id, $thread_id = 0, $is_followup_to = 0, $subject
         <INPUT TYPE="HIDDEN" NAME="thread_id" VALUE="<?php echo $purifier->purify($thread_id); ?>">
         <INPUT TYPE="HIDDEN" NAME="msg_id" VALUE="<?php echo $purifier->purify($is_followup_to); ?>">
         <INPUT TYPE="HIDDEN" NAME="is_followup_to" VALUE="<?php echo $purifier->purify($is_followup_to); ?>">
-        <B><?php echo $Language->getText('forum_forum_utils', 'subj'); ?>:
+        <B><?php echo _('Subject'); ?>:
             </TD><TD>
         <INPUT TYPE="TEXT" NAME="subject" VALUE="<?php echo $subject; ?>" CLASS="textfield_medium">
           </TD></TR>
-      <TR><TD><B><?php echo $Language->getText('forum_forum_utils', 'msg'); ?>:
+      <TR><TD><B><?php echo _('Message'); ?>:
             </TD><TD>
         <TEXTAREA NAME="body" VALUE="" ROWS="10" COLS="80" WRAP="SOFT"></TEXTAREA>
       </TD></TR>
       <TR><TD COLSPAN="2" ALIGN="center">
-        <B><span class="highlight"><?php echo $Language->getText('forum_forum_utils', 'html_displays_as_text'); ?></span></B>
+        <B><span class="highlight"><?php echo _('HTML tags will display in your post as text'); ?></span></B>
       </TR>
         <?php
         $user_id = UserManager::instance()->getCurrentUser()->getId();
@@ -646,12 +646,12 @@ function show_post_form($forum_id, $thread_id = 0, $is_followup_to = 0, $subject
         }
           echo '
 	           <TR><TD align="right"><INPUT TYPE="checkbox" NAME="enable_monitoring" VALUE="1" ' . $disabled . ' ' . $checked . '></TD>
-	           <TD> ' . $GLOBALS['Language']->getText('forum_forum_utils', 'monitor_this_thread') . '</TD>
+	           <TD> ' . _('<strong>Monitor this thread</strong>') . '</TD>
 	           </TR>';
         ?>
           <TR><td>&nbsp;</td><TD ALIGN="left"> </TR>
           <TR><TD COLSPAN="2" ALIGN="center">
-        <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="<?php echo $Language->getText('forum_forum_utils', 'post_comment'); ?>">
+        <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="<?php echo _('Post Comment'); ?>">
              </TD>
              <TD VALIGN="top">
              </TD>
@@ -661,7 +661,7 @@ function show_post_form($forum_id, $thread_id = 0, $is_followup_to = 0, $subject
         <?php
     } else {
         echo "<CENTER>";
-        echo "\n\n<H3>" . $Language->getText('forum_forum_utils', 'log_to_post', "/account/login.php?return_to=" . urlencode($_SERVER['REQUEST_URI'])) . '</H3>';
+        echo "\n\n<H3>" . sprintf(_('<A HREF="%1$s"><u>Log in first</u></A><span class="highlight"> to post messages</span>'), "/account/login.php?return_to=" . urlencode($_SERVER['REQUEST_URI'])) . '</H3>';
         echo "</CENTER>";
     }
 }
@@ -727,29 +727,33 @@ function handle_monitoring($forum_id, $thread_id, $msg_id)
             $server_url = HTTPRequest::instance()->getServerUrl();
             $url1 = $server_url . "/forum/monitor.php?forum_id=" . $forum_id;
             $url2 = $server_url . "/forum/monitor_thread.php?forum_id=" . $forum_id;
-            $body = $Language->getText('forum_forum_utils', 'read_and_respond') . ": " .
+            $body = _('Read and respond to this message at') . ": " .
              "\n" . $server_url . "/forum/message.php?msg_id=" . $msg_id .
              "\n" . $Language->getText('global', 'by') . ' ' . db_result($result, 0, 'user_name') . ' (' . db_result($result, 0, 'realname') . ')' .
              "\n\n" . util_unconvert_htmlspecialchars(db_result($result, 0, 'body')) .
              "\n\n______________________________________________________________________" .
-             "\n" . $Language->getText('forum_forum_utils', 'stop_monitor_explain', [$url1, $url2]);
+             "\n" . sprintf(_('You are receiving this email because you elected to monitor this forum or this thread.
+To stop monitoring this forum, login and visit:
+ %1$s .
+To change thread monitoring settings, visit:
+ %2$s.'), $url1, $url2);
                 $mail->setBodyText($body);
 
             if ($mail->send()) {
-                $feedback .= ' - ' . $Language->getText('forum_forum_utils', 'mail_sent');
+                $feedback .= ' - ' . _('Email sent');
             } else {//ERROR
                 $feedback .= ' - ' . $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')]);
             }
 
             if (forum_is_monitored($forum_id) || forum_thread_is_monitored($thread_id)) {
-                $feedback .= ' - ' . $Language->getText('forum_forum_utils', 'people_monitoring');
+                $feedback .= ' - ' . _('people monitoring');
             }
         } else {
-            $feedback .= ' ' . $Language->getText('forum_forum_utils', 'mail_not_sent') . ' ';
+            $feedback .= ' ' . _('Email not sent') . ' ';
             echo db_error();
         }
     } else {
-        $feedback .= ' ' . $Language->getText('forum_forum_utils', 'mail_not_sent') . ' - ' . $Language->getText('forum_forum_utils', 'no_one_monitoring') . ' ';
+        $feedback .= ' ' . _('Email not sent') . ' - ' . _('No one monitoring') . ' ';
         echo db_error();
     }
 }

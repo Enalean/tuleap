@@ -53,11 +53,11 @@ function forum_show_a_nested_message($result, $row = 0)
     $ret_val  = '
 		<TABLE BORDER="0" WIDTH="100%">
 			<TR>                  
-              <TD class="thread" NOWRAP>' . $Language->getText('forum_forum', 'by') . ': ' . UserHelper::instance()->getLinkOnUser($poster) .
+              <TD class="thread" NOWRAP>' . _('By') . ': ' . UserHelper::instance()->getLinkOnUser($poster) .
                     '<BR><A HREF="/forum/message.php?msg_id=' .
                     db_result($result, $row, 'msg_id') . '">' .
                     '<IMG SRC="' . util_get_image_theme("msg.png") . '" BORDER=0 HEIGHT=12 WIDTH=10> ' .
-                    db_result($result, $row, 'subject') . ' [ ' . $Language->getText('forum_forum', 'reply') . ' ]</A> &nbsp; ' .
+                    db_result($result, $row, 'subject') . ' [ ' . _('reply') . ' ]</A> &nbsp; ' .
                     '<BR>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $row, 'date')) . '
                 </TD>      
                                
@@ -140,7 +140,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         // Check permissions
     if (! forum_utils_access_allowed($forum_id)) {
-        exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum', 'forum_restricted'));
+        exit_error($Language->getText('global', 'error'), _('Forum is restricted'));
     }
 
     //If the forum is associated to a news, check permissions on this news
@@ -162,7 +162,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
                 $user_id = UserManager::instance()->getCurrentUser()->getId();
                 if (! user_monitor_forum($forum_id, $user_id)) {
                     if (! forum_thread_add_monitor($forum_id, $request->get('thread_id'), $user_id)) {
-                        $feedback .= $Language->getText('forum_forum_utils', 'insert_err');
+                        $feedback .= _('Error inserting into forum_monitoring');
                     }
                 }
             }
@@ -176,11 +176,11 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         $vSubject = new Valid_String('subject');
         $vSubject->required();
-        $vSubject->setErrorMessage($GLOBALS['Language']->getText('forum_forum_utils', 'include_body_and_subject'));
+        $vSubject->setErrorMessage(_('Must include a message body and subject'));
 
         $vBody = new Valid_Text('body');
         $vBody->required();
-        $vBody->setErrorMessage($GLOBALS['Language']->getText('forum_forum_utils', 'include_body_and_subject'));
+        $vBody->setErrorMessage(_('Must include a message body and subject'));
 
         if (
             $request->valid($vThreadId)
@@ -300,7 +300,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
              /*
               If this is a private forum, kick 'em out
              */
-                echo '<h1>' . $Language->getText('forum_forum', 'forum_restricted') . '</H1>';
+                echo '<h1>' . _('Forum is restricted') . '</H1>';
                 forum_footer($params);
                 exit;
             }
@@ -329,7 +329,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         if (! $result || $rows < 1) {
          //empty forum
-            $ret_val .= $Language->getText('forum_forum', 'no_msg', $forum_name) . '<P>' . db_error();
+            $ret_val .= sprintf(_('No Messages in %1$s'), $forum_name) . '<P>' . db_error();
         } else {
          /*
 
@@ -360,13 +360,13 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         //create a pop-up select box showing options for viewing threads
 
             $vals = forum_utils_get_styles();
-            $texts = [$Language->getText('forum_forum', 'nested'), $Language->getText('forum_forum', 'flat'), $Language->getText('forum_forum', 'threaded'), $Language->getText('forum_forum', 'no_comments')];
+            $texts = [_('Nested'), _('Flat'), _('Threaded'), _('No Comments')];
 
             $options_popup = html_build_select_box_from_arrays($vals, $texts, 'style', $style, false);
 
         //create a pop-up select box showing options for max_row count
             $vals = [25, 50, 75, 100];
-            $texts = [$Language->getText('forum_forum', 'show', '25'), $Language->getText('forum_forum', 'show', '50'), $Language->getText('forum_forum', 'show', '75'), $Language->getText('forum_forum', 'show', '100')];
+            $texts = [sprintf(_('Show %1$s'), '25'), sprintf(_('Show %1$s'), '50'), sprintf(_('Show %1$s'), '75'), sprintf(_('Show %1$s'), '100')];
 
             $max_row_popup = html_build_select_box_from_arrays($vals, $texts, 'max_rows', $max_rows, false);
 
@@ -379,7 +379,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 				<TR><TD><FONT SIZE="-1">' . $forum_popup .
                 '</TD><TD><FONT SIZE="-1">' . $options_popup .
                 '</TD><TD><FONT SIZE="-1">' . $max_row_popup .
-                '</TD><TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $Language->getText('forum_forum', 'change_view') . '"></TD></TR></TABLE></FORM>';
+                '</TD><TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . _('Change View') . '"></TD></TR></TABLE></FORM>';
             }
 
             if (($style == 'nested') || ($style == 'flat')) {
@@ -394,9 +394,9 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
              */
 
                 $title_arr = [];
-                $title_arr[] = $Language->getText('forum_forum', 'thread');
-                $title_arr[] = $Language->getText('forum_forum', 'author');
-                $title_arr[] = $Language->getText('forum_forum', 'date');
+                $title_arr[] = _('Thread');
+                $title_arr[] = _('Author');
+                $title_arr[] = _('Date');
 
                 $ret_val .= html_build_list_table_top($title_arr);
             }
@@ -482,7 +482,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
                      $ret_val .= '<B><span>
                         <A HREF="javascript:history.back()">
                         <B><IMG SRC="' . util_get_image_theme("t2.png") . '" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center> '
-                    . $Language->getText('forum_forum', 'prev_msg') . '</A></B></span>';
+                    . _('Previous Messages') . '</A></B></span>';
                 } else {
                     $ret_val .= '&nbsp;';
                 }
@@ -496,7 +496,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
                     }
                      $ret_val .= '<B><span>
                      <A HREF="/forum/forum.php?max_rows=' . $purifier->purify(urlencode((string) $max_rows)) . '&style=' . $purifier->purify(urlencode($style)) . '&offset=' . $purifier->purify(urlencode($offset + $i)) . '&forum_id=' . $purifier->purify(urlencode($forum_id)) . '' . $pv_param . '">
-                     <B>' . $Language->getText('forum_forum', 'next_msg') .
+                     <B>' . _('Next Messages') .
                      ' <IMG SRC="' . util_get_image_theme("t.png") . '" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
                 } else {
                     $ret_val .= '&nbsp;';
@@ -517,13 +517,13 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         if (! isset($pv) || ! $pv) {
             echo '<P>&nbsp;<P>';
 
-            echo '<h3>' . $Language->getText('forum_forum', 'start_new_thread') . ':</H3><a name="start_new_thread"></a>';
+            echo '<h3>' . _('Start a New Thread') . ':</H3><a name="start_new_thread"></a>';
             show_post_form($forum_id);
         }
 
         forum_footer($params);
 } else {
     forum_header(['title' => $Language->getText('global', 'error')]);
-    echo '<H1' . $Language->getText('forum_forum', 'choose_forum_first') . '</H1>';
+    echo '<H1' . _('Error - choose a forum first') . '</H1>';
     forum_footer([]);
 }
