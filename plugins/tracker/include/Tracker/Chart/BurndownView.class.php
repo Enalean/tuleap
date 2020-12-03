@@ -21,8 +21,6 @@
 use Tuleap\Chart\Chart;
 use Tuleap\TimezoneRetriever;
 
-require_once __DIR__ . '/../../../../../src/embedded_vendor/jpgraph/jpgraph.php';
-
 /**
  * I'm responsible of
  * - displaying a Burndown chart

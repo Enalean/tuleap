@@ -2936,16 +2936,6 @@
       <code>createArtifact</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/agiledashboard/include/Planning/ArtifactLinker.class.php">
-    <MissingParamType occurrences="1">
-      <code>$key</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="3">
-      <code>getMilestoneArtifact</code>
-      <code>getSourceArtifact</code>
-      <code>linkWithMilestoneArtifact</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/Planning/ArtifactMilestone.class.php">
     <MissingParamType occurrences="4">
       <code>$artifacts</code>
@@ -23225,6 +23215,9 @@
       <code>getGroupedValuesBySource</code>
       <code>sort</code>
     </MissingReturnType>
+    <UndefinedConstant occurrences="1">
+      <code>SIDE_DOWN</code>
+    </UndefinedConstant>
   </file>
   <file src="plugins/graphontrackersv5/include/graphic-library/GraphOnTrackersV5_Engine_Burndown.class.php">
     <MissingPropertyType occurrences="2">
@@ -29699,6 +29692,10 @@
       <code>$databarx</code>
       <code>$databarx</code>
     </PossiblyUndefinedVariable>
+    <UndefinedConstant occurrences="2">
+      <code>BGRAD_MARGIN</code>
+      <code>GRAD_HOR</code>
+    </UndefinedConstant>
   </file>
   <file src="plugins/statistics/include/ProjectQuotaHtml.class.php">
     <MissingParamType occurrences="1">
@@ -36544,6 +36541,14 @@
       <code>setTitle</code>
       <code>setWidth</code>
     </MissingReturnType>
+    <UndefinedConstant occurrences="1">
+      <code>MARK_FILLEDCIRCLE</code>
+    </UndefinedConstant>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Chart/BurndownView.class.php">
+    <UndefinedConstant occurrences="1">
+      <code>MARK_FILLEDCIRCLE</code>
+    </UndefinedConstant>
   </file>
   <file src="plugins/tracker/include/Tracker/Chart/Data/Burndown.class.php">
     <MissingParamType occurrences="7">
@@ -60765,21 +60770,6 @@
       <code>getChartBackgroundColor</code>
       <code>getChartBackgroundColor</code>
     </TooManyArguments>
-    <UndefinedConstant occurrences="4">
-      <code>FF_USERFONT</code>
-      <code>FS_BOLD</code>
-      <code>FS_NORMAL</code>
-      <code>FS_NORMAL</code>
-    </UndefinedConstant>
-  </file>
-  <file src="src/common/chart/Chart_Gantt.class.php">
-    <UndefinedConstant occurrences="5">
-      <code>FS_NORMAL</code>
-      <code>FS_NORMAL</code>
-      <code>FS_NORMAL</code>
-      <code>FS_NORMAL</code>
-      <code>FS_NORMAL</code>
-    </UndefinedConstant>
   </file>
   <file src="src/common/chart/Chart_GanttBar.class.php">
     <InvalidReturnType occurrences="1">
@@ -60796,11 +60786,6 @@
     <MissingPropertyType occurrences="1">
       <code>$jpgraph_instance</code>
     </MissingPropertyType>
-    <UndefinedConstant occurrences="3">
-      <code>FF_USERFONT</code>
-      <code>FS_NORMAL</code>
-      <code>FS_NORMAL</code>
-    </UndefinedConstant>
   </file>
   <file src="src/common/chart/Chart_TTFFactory.class.php">
     <MissingParamType occurrences="1">
@@ -60839,10 +60824,6 @@
       <code>$padding_left</code>
       <code>$padding_top</code>
     </MissingParamType>
-    <UndefinedConstant occurrences="2">
-      <code>FS_BOLD</code>
-      <code>FS_NORMAL</code>
-    </UndefinedConstant>
   </file>
   <file src="src/common/chart/GanttVerticalLine.php">
     <MissingParamType occurrences="12">
@@ -74040,14 +74021,14 @@
       <code>db_error()</code>
       <code>db_error()</code>
       <code>db_error()</code>
-      <code>db_es($GLOBALS['Language']-&gt;getText('forum_forum_utils', 'welcome_to', [$group_name]) . " " . htmlspecialchars($forum_name))</code>
-      <code>db_es($GLOBALS['Language']-&gt;getText('forum_forum_utils', 'welcome_to', [$hp-&gt;purify($group_name)]) . " " . htmlspecialchars($forum_name))</code>
       <code>db_es(htmlspecialchars($body))</code>
       <code>db_es(htmlspecialchars($body))</code>
       <code>db_es(htmlspecialchars($description))</code>
       <code>db_es(htmlspecialchars($forum_name))</code>
       <code>db_es(htmlspecialchars($subject))</code>
       <code>db_es(htmlspecialchars($subject))</code>
+      <code>db_es(sprintf(_('Welcome to %1$s'), $group_name) . " " . htmlspecialchars($forum_name))</code>
+      <code>db_es(sprintf(_('Welcome to %1$s'), $hp-&gt;purify($group_name)) . " " . htmlspecialchars($forum_name))</code>
       <code>db_fetch_array($result)</code>
       <code>db_insertid($result)</code>
       <code>db_insertid($result)</code>
