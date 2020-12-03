@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListFieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListChangesetValueDao;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List implements BindVisitor
 {
     public const BIND_PREFIX = 'b';
@@ -255,7 +256,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     }
 
 
-    public function textboxlist($keyword, $limit = 10)
+    private function textboxlist($keyword, $limit = 10): array
     {
         $json_values = [];
         $matching_values = $this->getBind()->getValuesByKeyword($keyword, $limit);
@@ -272,7 +273,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         foreach ($matching_values as $v) {
             $json_values[] = $v->fetchForOpenListJson();
         }
-        return json_encode($json_values);
+        return $json_values;
     }
 
     /**
@@ -1010,7 +1011,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         parent::process($layout, $request, $current_user);
 
         if ($request->get('func') === 'textboxlist') {
-            echo $this->textboxlist($request->get('keyword'), $limit = 10);
+            $GLOBALS['Response']->sendJSON($this->textboxlist($request->get('keyword'), $limit = 10));
+            exit();
         }
     }
 
