@@ -34,7 +34,7 @@ class ScaledAgileResourceTest extends \RestBase
         $hierarchy_definition  = json_encode(
             [
                 "program_tracker_id" => $this->tracker_ids[$program_id]['bug'],
-                "team_tracker_id" => $this->tracker_ids[$team_id]['story']
+                "team_tracker_ids" => [$this->tracker_ids[$team_id]['story']]
             ]
         );
 

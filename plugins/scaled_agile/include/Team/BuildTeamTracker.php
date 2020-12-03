@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\Team;
 
-use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerNotFoundException;
-use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TrackerDoesNotBelongToTeamException;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\HierarchyException;
 
 interface BuildTeamTracker
 {
     /**
-     * @throws TeamTrackerNotFoundException
-     * @throws TrackerDoesNotBelongToTeamException
+     * @param int[] $team_backlog_ids
+     *
+     * @throws HierarchyException
      */
-    public function buildTeamTracker(int $team_backlog_id): TeamTracker;
+    public function buildTeamTrackers(array $team_backlog_ids, \PFUser $user): void;
 }

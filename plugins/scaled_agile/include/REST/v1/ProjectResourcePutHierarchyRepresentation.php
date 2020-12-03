@@ -32,13 +32,13 @@ final class ProjectResourcePutHierarchyRepresentation
      */
     public $program_tracker_id;
     /**
-     * @var int {@required true}
+     * @var array {@type int} {@required true} {@min 1}
      */
-    public $team_tracker_id;
+    public $team_tracker_ids;
 
-    public function __construct(int $program_tracker_id, int $team_tracker_id)
+    public function __construct(int $program_tracker_id, array $team_tracker_ids)
     {
         $this->program_tracker_id = $program_tracker_id;
-        $this->team_tracker_id    = $team_tracker_id;
+        $this->team_tracker_ids    = $team_tracker_ids;
     }
 }

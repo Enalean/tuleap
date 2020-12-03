@@ -40,6 +40,6 @@ final class HierarchySaver implements HierarchyStore
 
     public function save(Hierarchy $hierarchy): void
     {
-        $this->dao->updateChildren($hierarchy->getProgramTrackerId(), [$hierarchy->getTeamTrackerId()]);
+        $this->dao->updateChildren($hierarchy->getProgramTrackerId(), $hierarchy->getTeamBacklogIds());
     }
 }
