@@ -578,6 +578,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             new Planning_ArtifactLinker($this->getArtifactFactory(), $planning_factory),
             $planning_factory,
             new RedirectParameterInjector($params_extractor),
+            $this->getMilestoneFactory(),
+            $this->getMilestonePaneFactory()
         );
 
         $processor->process($event->getRequest(), $event->getRedirect(), $event->getArtifact());

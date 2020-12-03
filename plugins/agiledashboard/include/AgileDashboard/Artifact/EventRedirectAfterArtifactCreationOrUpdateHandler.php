@@ -24,10 +24,16 @@ namespace Tuleap\AgileDashboard\Artifact;
 
 use AgileDashboard_PaneRedirectionExtractor;
 use Codendi_Request;
+use PFUser;
 use Planning;
 use Planning_ArtifactLinker;
+use Planning_MilestoneFactory;
+use Planning_MilestonePaneFactory;
 use PlanningFactory;
+use Project;
 use Tracker_Artifact_Redirect;
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
+use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class EventRedirectAfterArtifactCreationOrUpdateHandler
@@ -48,17 +54,29 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
      * @var RedirectParameterInjector
      */
     private $injector;
+    /**
+     * @var Planning_MilestoneFactory
+     */
+    private $milestone_factory;
+    /**
+     * @var Planning_MilestonePaneFactory
+     */
+    private $pane_factory;
 
     public function __construct(
         AgileDashboard_PaneRedirectionExtractor $params_extractor,
         Planning_ArtifactLinker $artifact_linker,
         PlanningFactory $planning_factory,
-        RedirectParameterInjector $injector
+        RedirectParameterInjector $injector,
+        Planning_MilestoneFactory $milestone_factory,
+        Planning_MilestonePaneFactory $pane_factory
     ) {
-        $this->params_extractor = $params_extractor;
-        $this->artifact_linker  = $artifact_linker;
-        $this->planning_factory = $planning_factory;
-        $this->injector         = $injector;
+        $this->params_extractor  = $params_extractor;
+        $this->artifact_linker   = $artifact_linker;
+        $this->planning_factory  = $planning_factory;
+        $this->injector          = $injector;
+        $this->milestone_factory = $milestone_factory;
+        $this->pane_factory      = $pane_factory;
     }
 
     public function process(
@@ -67,7 +85,11 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
         Artifact $artifact
     ): void {
         $requested_planning      = $this->params_extractor->extractParametersFromRequest($request);
-        $last_milestone_artifact = $this->artifact_linker->linkBacklogWithPlanningItems($request, $artifact, $requested_planning);
+        $last_milestone_artifact = $this->artifact_linker->linkBacklogWithPlanningItems(
+            $request,
+            $artifact,
+            $requested_planning
+        );
 
         if (! $requested_planning) {
             return;
@@ -77,10 +99,18 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
 
         if ($redirect->stayInTracker()) {
             $this->saveToRequestForFutureRedirection($planning, $last_milestone_artifact, $redirect, $request);
-        } elseif ($planning) {
-            $this->addRedirectionToPlanning($requested_planning, $planning, $redirect);
         } else {
-            $this->addRedirectionToTopPlanning($artifact, $requested_planning, $redirect);
+            if ($planning) {
+                $this->addRedirectionToPlanning(
+                    $request->getCurrentUser(),
+                    $request->getProject(),
+                    $requested_planning,
+                    $planning,
+                    $redirect
+                );
+            } else {
+                $this->addRedirectionToTopPlanning($artifact, $requested_planning, $redirect);
+            }
         }
     }
 
@@ -88,19 +118,79 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
      * @psalm-param array{planning_id: string, pane: string, aid: string, pane: string} $requested_planning
      */
     private function addRedirectionToPlanning(
+        PFUser $user,
+        Project $project,
         array $requested_planning,
         Planning $planning,
         Tracker_Artifact_Redirect $redirect
     ): void {
-        $redirect_to_artifact = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
+        $redirect_to_artifact_id = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
+        $pane_identifier         = $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE];
 
+        $pane_info_to_be_redirected_to = $this->getPaneInfoToBeRedirectedTo(
+            $user,
+            $project,
+            $planning,
+            $redirect_to_artifact_id,
+            $pane_identifier
+        );
+
+        if ($pane_info_to_be_redirected_to !== null) {
+            $redirect->base_url         = $pane_info_to_be_redirected_to->getUri();
+            $redirect->query_parameters = [];
+        } else {
+            $this->fallbackToLegacyRedirection(
+                $redirect,
+                $planning,
+                $redirect_to_artifact_id,
+                $pane_identifier
+            );
+        }
+    }
+
+    private function getPaneInfoToBeRedirectedTo(
+        PFUser $user,
+        Project $project,
+        Planning $planning,
+        string $redirect_to_artifact_id,
+        string $pane_identifier
+    ): ?PaneInfo {
+        $pane_info_to_be_redirected_to = null;
+        try {
+            $milestone = $this->milestone_factory->getBareMilestone(
+                $user,
+                $project,
+                $planning->getId(),
+                (int) $redirect_to_artifact_id
+            );
+
+            $list_of_pane_info = $this->pane_factory->getListOfPaneInfo($milestone, $user);
+            foreach ($list_of_pane_info as $pane_info) {
+                if ($pane_info->getIdentifier() === $pane_identifier) {
+                    $pane_info_to_be_redirected_to = $pane_info;
+                    break;
+                }
+            }
+        } catch (NotFoundException $e) {
+            // Do nothing, fallback to legacy redirect
+        }
+
+        return $pane_info_to_be_redirected_to;
+    }
+
+    private function fallbackToLegacyRedirection(
+        Tracker_Artifact_Redirect $redirect,
+        Planning $planning,
+        string $redirect_to_artifact_id,
+        string $pane_identifier
+    ): void {
         $redirect->base_url         = '/plugins/agiledashboard/';
         $redirect->query_parameters = [
             'group_id'    => (string) $planning->getGroupId(),
             'planning_id' => (string) $planning->getId(),
             'action'      => 'show',
-            'aid'         => (string) $redirect_to_artifact,
-            'pane'        => $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE],
+            'aid'         => $redirect_to_artifact_id,
+            'pane'        => $pane_identifier,
         ];
     }
 
