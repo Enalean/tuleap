@@ -52,6 +52,7 @@ if ($action == 'permissions_frs_package') {
             new LicenseAgreementFactory(
                 new LicenseAgreementDao()
             ),
+            Codendi_HTMLPurifier::instance(),
         );
 
         $package_controller->displayUserGroups($project, FRSPackage::PERM_READ);
@@ -68,7 +69,8 @@ if ($action == 'permissions_frs_package') {
             $project    = ProjectManager::instance()->getProject($group_id);
             $release_controller = new FRSReleaseController(
                 FRSReleaseFactory::instance(),
-                new User_ForgeUserGroupFactory(new UserGroupDao())
+                new User_ForgeUserGroupFactory(new UserGroupDao()),
+                Codendi_HTMLPurifier::instance()
             );
 
             $release_controller->displayUserGroups($project, FRSRelease::PERM_READ);

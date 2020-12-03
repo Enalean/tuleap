@@ -24,6 +24,9 @@ namespace Tuleap;
 
 final class JSONHeader
 {
+    /**
+     * @psalm-taint-escape header
+     */
     public static function getHeaderForPrototypeJS($params): string
     {
         return 'X-JSON: ' . json_encode($params);

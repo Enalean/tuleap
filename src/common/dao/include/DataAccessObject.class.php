@@ -445,7 +445,7 @@ class DataAccessObject
                                '  AND ' . $rank_key . ' >= %d ' .
                                ' %s',
                         $parent_id,
-                        $rank,
+                        $this->da->escapeInt($rank),
                         $additional_where_statement
                     );
                     $updated = $this->update($sql);

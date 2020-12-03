@@ -138,7 +138,11 @@ class Response
     public function sendJSON($content)
     {
         $this->setContentType('application/json');
-        echo json_encode($content);
+        /**
+         * @psalm-taint-escape html
+         */
+        $json_content = json_encode($content, JSON_THROW_ON_ERROR);
+        echo $json_content;
     }
 
     public function sendXMLAttachementFile($xml, $output_filename)
