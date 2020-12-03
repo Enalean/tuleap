@@ -37,7 +37,7 @@ if (user_isloggedin()) {
 
             // Check permissions
         if (! forum_utils_access_allowed($forum_id)) {
-            exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum', 'forum_restricted'));
+            exit_error($Language->getText('global', 'error'), _('Forum is restricted'));
         }
 
         $user_id = UserManager::instance()->getCurrentUser()->getId();
@@ -68,27 +68,27 @@ if (user_isloggedin()) {
         $group_id = db_result($result, 0, 'group_id');
         $forum_name = db_result($result, 0, 'forum_name');
 
-        forum_header(['title' => $Language->getText('forum_monitor', 'monitor')]);
+        forum_header(['title' => _('Monitor a forum')]);
 
         echo '
-			<H2>' . $Language->getText('forum_monitor', 'monitor') . '</H2>';
+			<H2>' . _('Monitor a forum') . '</H2>';
 
         if (user_monitor_forum($forum_id, $user_id)) {
-            echo "<span class=\"highlight\"><H3>" . $Language->getText('forum_monitor', 'now_monitoring') . "</H3></span>";
-            echo '<P>' . $Language->getText('forum_monitor', 'get_followups') . '</p>';
-            echo '<P>' . $Language->getText('forum_monitor', 'to_turn_monitor_off') . '</p>';
+            echo "<span class=\"highlight\"><H3>" . _('Forum is now being monitored') . "</H3></span>";
+            echo '<P>' . _('You will now be emailed followups to this entire forum.') . '</p>';
+            echo '<P>' . _('To turn off monitoring, simply click the <B>Stop Monitoring Forum</B>.') . '</p>';
         } else {
-            echo "<span class=\"highlight\"><H3>" . $Language->getText('forum_monitor', 'monitor_off') . "</H3></span>";
-            echo '<P>' . $Language->getText('forum_monitor', 'no_mails_anymore') . '</p>';
+            echo "<span class=\"highlight\"><H3>" . _('Monitoring has been turned off') . "</H3></span>";
+            echo '<P>' . _('You will not receive any more emails from this forum.') . '</p>';
         }
         if ($forum_monitor_error) {
-            echo "<span class=\"highlight\">" . $Language->getText('forum_forum_utils', 'insert_err') . "</span>";
+            echo "<span class=\"highlight\">" . _('Error inserting into forum_monitoring') . "</span>";
         }
         forum_footer([]);
     } else {
-        forum_header(['title' => $Language->getText('forum_monitor', 'choose_forum_first')]);
+        forum_header(['title' => _('Choose a forum First')]);
         echo '
-			<H1>' . $Language->getText('forum_forum', 'choose_forum_first') . '</H1>';
+			<H1>' . _('Error - choose a forum first') . '</H1>';
         forum_footer([]);
     }
 } else {

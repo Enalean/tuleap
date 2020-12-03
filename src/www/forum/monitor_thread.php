@@ -55,9 +55,9 @@ if ($request->isPost() && $request->exist('submit')) {
 
     //set user-specific thread monitoring preferences
     if (forum_thread_monitor($mthread, $uid, $forum_id)) {
-        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread', 'monitor_success');
+        $GLOBALS['feedback'] .= _('Thread monitoring updated.');
     } else {
-        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread', 'monitor_fail');
+        $GLOBALS['feedback'] .= _('Thread monitoring update failed.');
     }
 }
 
@@ -67,7 +67,7 @@ if ($request->valid($vFrm)) {
 
     // Check permissions
     if (! forum_utils_access_allowed($forum_id)) {
-        exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('forum_forum', 'forum_restricted'));
+        exit_error($GLOBALS['Language']->getText('global', 'error'), _('Forum is restricted'));
     }
 
     $qry = sprintf(
@@ -99,13 +99,13 @@ if ($request->valid($vFrm)) {
 
     if (! $result || $rows < 1) {
         //empty forum
-        $ret_val = $GLOBALS['Language']->getText('forum_forum', 'no_msg', $forum_name) . '<P>' . db_error();
+        $ret_val = sprintf(_('No Messages in %1$s'), $forum_name) . '<P>' . db_error();
     } else {
         $title_arr = [];
-        $title_arr[] = $GLOBALS['Language']->getText('forum_monitor_thread', 'tmonitor');
-        $title_arr[] = $GLOBALS['Language']->getText('forum_forum', 'thread');
-        $title_arr[] = $GLOBALS['Language']->getText('forum_forum', 'author');
-        $title_arr[] = $GLOBALS['Language']->getText('forum_forum', 'date');
+        $title_arr[] = _('Monitor?');
+        $title_arr[] = _('Thread');
+        $title_arr[] = _('Author');
+        $title_arr[] = _('Date');
 
         $ret_val = html_build_list_table_top($title_arr);
 
@@ -165,12 +165,12 @@ if ($request->valid($vFrm)) {
     echo $ret_val;
 
     if (user_monitor_forum($forum_id, $user_id)) {
-        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread', 'notice');
+        $GLOBALS['feedback'] .= _('You are monitoring the whole forum. If you want to monitor only specific threads, Stop Monitoring Forum.');
     }
 
     forum_footer($params);
 } else {
     forum_header(['title' => $GLOBALS['Language']->getText('global', 'error')]);
-    $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_forum', 'choose_forum_first');
+    $GLOBALS['feedback'] .= _('Error - choose a forum first');
     forum_footer([]);
 }

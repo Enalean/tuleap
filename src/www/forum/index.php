@@ -41,7 +41,7 @@ if ($request->valid(new Valid_Pv())) {
 
 
 $pm = ProjectManager::instance();
-$params = ['title' => $Language->getText('forum_index', 'forums_for', $pm->getProject($group_id)->getPublicName()),
+$params = ['title' => sprintf(_('Forums for \'%1$s\''), $pm->getProject($group_id)->getPublicName()),
               'help' => 'collaboration.html#web-forums',
               'pv'   => isset($pv) ? $pv : false];
 forum_header($params);
@@ -66,23 +66,23 @@ $purifier = Codendi_HTMLPurifier::instance();
 
 if (! $result || $rows < 1) {
     $pm = ProjectManager::instance();
-    echo '<H1>' . $purifier->purify($Language->getText('forum_index', 'no_forums', $pm->getProject($group_id)->getPublicName())) . '</H1>';
+    echo '<H1>' . $purifier->purify(sprintf(_('No forums found for \'%1$s\''), $pm->getProject($group_id)->getPublicName())) . '</H1>';
     echo db_error();
     forum_footer($params);
     exit;
 }
 
 if (isset($pv) && $pv) {
-    echo '<H3>' . $Language->getText('forum_forum_utils', 'discuss_forum') . '</H3>';
+    echo '<H3>' . _('Discussion Forums') . '</H3>';
 } else {
     echo "<TABLE width='100%'><TR><TD>";
-    echo '<H3>' . $Language->getText('forum_forum_utils', 'discuss_forum') . '</H3>';
+    echo '<H3>' . _('Discussion Forums') . '</H3>';
     echo "</TD>";
         echo "<TD align='left'> ( <A HREF='?group_id=" . $purifier->purify(urlencode($group_id)) . "&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
     echo "</TR></TABLE>";
 }
 
-echo '<P>' . $Language->getText('forum_index', 'choose_forum') . '<P>';
+echo '<P>' . _('Choose a forum and you can browse, search, and post messages.') . '<P>';
 
 /*
   Put the result set (list of forums for this group) into a column with folders
