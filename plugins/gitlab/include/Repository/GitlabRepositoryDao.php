@@ -42,6 +42,20 @@ class GitlabRepositoryDao extends DataAccessObject
     /**
      * @psalm-return array{id:int, gitlab_id:int, name:string, description:string, full_url:string, last_push_date:int}
      */
+    public function getGitlabRepositoryByNameInProject(string $name, int $project_id): ?array
+    {
+        $sql = 'SELECT plugin_gitlab_repository.*
+                FROM plugin_gitlab_repository
+                    INNER JOIN plugin_gitlab_repository_project ON (plugin_gitlab_repository.id = plugin_gitlab_repository_project.id)
+                WHERE plugin_gitlab_repository.name = ?
+                    AND plugin_gitlab_repository_project.project_id = ?';
+
+        return $this->getDB()->row($sql, $name, $project_id);
+    }
+
+    /**
+     * @psalm-return array{id:int, gitlab_id:int, name:string, description:string, full_url:string, last_push_date:int}
+     */
     public function getGitlabRepositoryByIntegrationId(int $id): ?array
     {
         $sql = 'SELECT *

@@ -9,5 +9,8 @@ msgstr ""
 msgid "GitLab"
 msgstr "GitLab"
 
+msgid "GitLab commit"
+msgstr "Commit GitLab"
+
 msgid "Provides an integration GitLab to Tuleap."
 msgstr "Fournit une integration de GitLab vers Tuleap."

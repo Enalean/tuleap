@@ -49,6 +49,16 @@ class GitlabRepositoryFactory
         return $gitlab_repositories;
     }
 
+    public function getGitlabRepositoryByNameInProject(Project $project, string $gitlab_repository_name): ?GitlabRepository
+    {
+        $row = $this->dao->getGitlabRepositoryByNameInProject($gitlab_repository_name, (int) $project->getID());
+        if ($row === null) {
+            return null;
+        }
+
+        return $this->getInstanceFromRow($row);
+    }
+
     public function getGitlabRepositoryByIntegrationId(int $integration_id): ?GitlabRepository
     {
         $row = $this->dao->getGitlabRepositoryByIntegrationId($integration_id);
