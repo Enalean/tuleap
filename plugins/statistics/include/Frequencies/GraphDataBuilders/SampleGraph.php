@@ -25,8 +25,6 @@ use BarPlot;
 use DateLocale;
 use PlotBand;
 
-require_once __DIR__ . '/../../../../../src/embedded_vendor/jpgraph/jpgraph.php';
-
 /**
  * Display data
  *
