@@ -26,6 +26,7 @@ $form-element-height: 40px;
 $form-element-small-font-size: .8125rem;
 
 .list-picker-component-wrapper {
+    box-sizing: border-box;
     line-height: normal;
 }
 
@@ -57,8 +58,8 @@ $form-element-small-font-size: .8125rem;
 
     .list-picker-selection {
         display: flex;
+        box-sizing: border-box;
         align-items: center;
-        padding: $form-element-padding-horizontal;
         border: 1px solid $form-element-border-color;
         border-radius: 4px;
         background: $white;
@@ -72,8 +73,12 @@ $form-element-small-font-size: .8125rem;
         }
 
         &.list-picker-multiple {
+            position: relative;
             min-height: $form-element-height;
-            padding: 0 $form-element-padding-horizontal 5px 6px;
+            padding: 0 52px 5px 6px;
+            background: $white url('../images/list-picker-multi-background.svg') no-repeat;
+            background-position: right 10px top 17px;
+            background-size: 15px 5px;
         }
     }
 }
@@ -116,8 +121,10 @@ $form-element-small-font-size: .8125rem;
 }
 
 .list-picker-badge {
+    display: flex;
     flex: 0 0 auto;
-    margin: 6px 5px 0 0;
+    align-items: center;
+    margin: 5px 5px 0 0;
     padding: 5px 8px;
     border: 1px solid transparentize($main, .4);
     border-radius: 15px;
@@ -133,7 +140,6 @@ $form-element-small-font-size: .8125rem;
 }
 
 .list-picker-search-field {
-    box-sizing: unset;
     height: 32px;
     padding: 0;
     box-shadow: none;
@@ -142,6 +148,14 @@ $form-element-small-font-size: .8125rem;
 
     &:focus {
         box-shadow: none;
+    }
+}
+
+.list-picker-multiple-search-section {
+    flex: 1;
+
+    > .list-picker-search-field {
+        height: 100%;
     }
 }
 
