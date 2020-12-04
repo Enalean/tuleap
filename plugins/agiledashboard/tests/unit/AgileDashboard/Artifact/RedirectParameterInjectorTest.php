@@ -76,7 +76,7 @@ class RedirectParameterInjectorTest extends TestCase
         );
     }
 
-    public function testInjectParametersWithChildMilestoneFromRequestDoesNothingByDefault(): void
+    public function testInjectAndInformUserAboutBacklogItemWillBeLinkedDoesNothingByDefault(): void
     {
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -84,12 +84,12 @@ class RedirectParameterInjectorTest extends TestCase
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $this->injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
+        $this->injector->injectAndInformUserAboutBacklogItemWillBeLinked($request, $redirect);
 
         self::assertEmpty($redirect->query_parameters);
     }
 
-    public function testInjectParametersWithChildMilestoneFromRequestInjectsTheRequestedPlanning(): void
+    public function testInjectAndInformUserAboutBacklogItemWillBeLinkedInjectsTheRequestedPlanning(): void
     {
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -98,13 +98,13 @@ class RedirectParameterInjectorTest extends TestCase
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $this->injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
+        $this->injector->injectAndInformUserAboutBacklogItemWillBeLinked($request, $redirect);
 
         self::assertCount(1, $redirect->query_parameters);
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);
     }
 
-    public function testInjectParametersWithChildMilestoneFromRequestInjectsTheRequestedPlanningAndAsksForALinkToMilestone(): void
+    public function testInjectAndInformUserAboutBacklogItemWillBeLinkedInjectsTheRequestedPlanningAndAsksForALinkToMilestone(): void
     {
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -145,14 +145,14 @@ class RedirectParameterInjectorTest extends TestCase
             ->once();
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $this->injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
+        $this->injector->injectAndInformUserAboutBacklogItemWillBeLinked($request, $redirect);
 
         self::assertCount(2, $redirect->query_parameters);
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);
         self::assertEquals(1, $redirect->query_parameters['link-to-milestone']);
     }
 
-    public function testInjectParametersWithChildMilestoneFromRequestInjectsTheChildMilestone(): void
+    public function testInjectAndInformUserAboutBacklogItemWillBeLinkedInjectsTheChildMilestone(): void
     {
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -161,13 +161,13 @@ class RedirectParameterInjectorTest extends TestCase
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $this->injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
+        $this->injector->injectAndInformUserAboutBacklogItemWillBeLinked($request, $redirect);
 
         self::assertCount(1, $redirect->query_parameters);
         self::assertEquals('666', $redirect->query_parameters['child_milestone']);
     }
 
-    public function testInjectParametersWithChildMilestoneFromRequestInjectsThePlanningAndTheChildMilestone(): void
+    public function testInjectAndInformUserAboutBacklogItemWillBeLinkedInjectsThePlanningAndTheChildMilestone(): void
     {
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -177,14 +177,14 @@ class RedirectParameterInjectorTest extends TestCase
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $this->injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
+        $this->injector->injectAndInformUserAboutBacklogItemWillBeLinked($request, $redirect);
 
         self::assertCount(2, $redirect->query_parameters);
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);
         self::assertEquals('666', $redirect->query_parameters['child_milestone']);
     }
 
-    public function testInjectParametersWithGivenChildMilestoneDoesNothingByDefault(): void
+    public function testInjectParametersDoesNothingByDefault(): void
     {
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -192,12 +192,12 @@ class RedirectParameterInjectorTest extends TestCase
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $this->injector->injectParametersWithGivenChildMilestone($request, $redirect, null);
+        $this->injector->injectParameters($request, $redirect, null);
 
         self::assertEmpty($redirect->query_parameters);
     }
 
-    public function testInjectParametersWithGivenChildMilestoneInjectsTheRequestedPlanning(): void
+    public function testInjectParametersInjectsTheRequestedPlanning(): void
     {
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -206,13 +206,13 @@ class RedirectParameterInjectorTest extends TestCase
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $this->injector->injectParametersWithGivenChildMilestone($request, $redirect, null);
+        $this->injector->injectParameters($request, $redirect, null);
 
         self::assertCount(1, $redirect->query_parameters);
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);
     }
 
-    public function testInjectParametersWithGivenChildMilestoneInjectsTheChildMilestone(): void
+    public function testInjectParametersInjectsTheChildMilestone(): void
     {
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -220,13 +220,13 @@ class RedirectParameterInjectorTest extends TestCase
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $this->injector->injectParametersWithGivenChildMilestone($request, $redirect, '666');
+        $this->injector->injectParameters($request, $redirect, '666');
 
         self::assertCount(1, $redirect->query_parameters);
         self::assertEquals('666', $redirect->query_parameters['child_milestone']);
     }
 
-    public function testInjectParametersWithGivenChildMilestoneInjectsThePlanningAndTheChildMilestone(): void
+    public function testInjectParametersInjectsThePlanningAndTheChildMilestone(): void
     {
         $request = HTTPRequestBuilder::get()
             ->withUser($this->user)
@@ -235,7 +235,7 @@ class RedirectParameterInjectorTest extends TestCase
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $this->injector->injectParametersWithGivenChildMilestone($request, $redirect, '666');
+        $this->injector->injectParameters($request, $redirect, '666');
 
         self::assertCount(2, $redirect->query_parameters);
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);

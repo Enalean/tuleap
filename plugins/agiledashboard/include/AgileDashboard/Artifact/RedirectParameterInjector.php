@@ -60,47 +60,50 @@ final class RedirectParameterInjector
         $this->template_renderer = $template_renderer;
     }
 
-    public function injectParametersWithChildMilestoneFromRequest(
+    public function injectAndInformUserAboutBacklogItemWillBeLinked(
         Codendi_Request $request,
         Tracker_Artifact_Redirect $redirect
     ): void {
-        $this->injectParameters($request, $redirect);
+        $this->informUserThatTheArtifactWillBeLinkedToTheMilestone($request);
+
+        $child_milestone_id = null;
         if ($request->exist('child_milestone')) {
-            $redirect->query_parameters['child_milestone'] = $request->getValidated('child_milestone', 'uint', 0);
+            $child_milestone_id = $request->getValidated('child_milestone', 'uint', 0);
         }
+        $this->injectParameters($request, $redirect, $child_milestone_id);
     }
 
-    public function injectParametersWithGivenChildMilestone(
-        Codendi_Request $request,
-        Tracker_Artifact_Redirect $redirect,
-        ?string $child_milestone_id
-    ): void {
-        $this->injectParameters($request, $redirect);
-        if ($child_milestone_id !== null) {
-            $redirect->query_parameters['child_milestone'] = $child_milestone_id;
-        }
-    }
-
-    private function injectParameters(Codendi_Request $request, Tracker_Artifact_Redirect $redirect): void
+    public function injectParameters(Codendi_Request $request, Tracker_Artifact_Redirect $redirect, ?string $child_milestone_id): void
     {
         $requested_planning = $this->params_extractor->extractParametersFromRequest($request);
         if ($requested_planning) {
             $key = 'planning[' . $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE] . '][' . $requested_planning[AgileDashboard_PaneRedirectionExtractor::PLANNING_ID] . ']';
 
-            $milestone_id = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
-
-            $redirect->query_parameters[$key] = $milestone_id;
+            $redirect->query_parameters[$key] = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
 
             if ($request->get(\Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER)) {
-                $this->informUserThatTheArtifactWillBeLinkedToTheMilestone($request, (int) $milestone_id);
-
                 $redirect->query_parameters[\Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER] = '1';
             }
         }
+
+        if ($child_milestone_id !== null) {
+            $redirect->query_parameters['child_milestone'] = $child_milestone_id;
+        }
     }
 
-    private function informUserThatTheArtifactWillBeLinkedToTheMilestone(Codendi_Request $request, int $milestone_id): void
+    private function informUserThatTheArtifactWillBeLinkedToTheMilestone(Codendi_Request $request): void
     {
+        $requested_planning = $this->params_extractor->extractParametersFromRequest($request);
+        if (! $requested_planning) {
+            return;
+        }
+
+        if (! $request->get(\Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER)) {
+            return;
+        }
+
+        $milestone_id = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
+
         $milestone_artifact = $this->artifact_factory->getArtifactByIdUserCanView(
             $request->getCurrentUser(),
             $milestone_id
