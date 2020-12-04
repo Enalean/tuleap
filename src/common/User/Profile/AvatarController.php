@@ -25,8 +25,6 @@ use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
-use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\NotFoundException;
 use UserManager;
 
 class AvatarController implements DispatchableWithRequest, DispatchableWithRequestNoAuthz
@@ -53,13 +51,13 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
     {
         // Avatar is a public information for all authenticated users
         if (! ForgeConfig::areAnonymousAllowed() && $request->getCurrentUser()->isAnonymous()) {
-            throw new ForbiddenException();
+            $this->displayDefaultAvatarAsError();
         }
 
         $user_manager = UserManager::instance();
         $user         = $user_manager->getUserByUserName($variables['name']);
         if ($user === null) {
-            throw new NotFoundException(_("That user does not exist."));
+            $this->displayDefaultAvatarAsError();
         }
 
         if ($user->hasAvatar()) {
@@ -99,5 +97,14 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
             header('Cache-Control: max-age=60');
         }
         readfile($path);
+    }
+
+    private function displayDefaultAvatarAsError(): void
+    {
+        http_response_code(404);
+        header('Content-Type: image/png');
+        header('Cache-Control: max-age=60');
+        readfile(self::DEFAULT_AVATAR);
+        exit;
     }
 }
