@@ -75,7 +75,7 @@ final class RedirectParameterInjectorTest extends TestCase
         $this->injector = new RedirectParameterInjector(
             $this->artifact_factory,
             $this->response,
-            $template_renderer_factory->getRenderer(__DIR__ . '/../../../templates/'),
+            $template_renderer_factory->getRenderer(__DIR__ . '/../../../../agiledashboard/templates/'),
         );
     }
 

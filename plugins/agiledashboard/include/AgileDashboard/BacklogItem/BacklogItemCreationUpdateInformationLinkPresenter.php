@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TestPlan\TestDefinition;
+namespace Tuleap\AgileDashboard\BacklogItem;
 
 /**
  * @psalm-immutable
  */
-final class BacklogItemTestCreationUpdateInformationLinkPresenter
+final class BacklogItemCreationUpdateInformationLinkPresenter
 {
     /**
      * @var string

@@ -577,7 +577,12 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $params_extractor,
             new Planning_ArtifactLinker($this->getArtifactFactory(), $planning_factory),
             $planning_factory,
-            new RedirectParameterInjector($params_extractor),
+            new RedirectParameterInjector(
+                $params_extractor,
+                Tracker_ArtifactFactory::instance(),
+                $GLOBALS['Response'],
+                $this->getTemplateRenderer()
+            ),
             $this->getMilestoneFactory(),
             $this->getMilestonePaneFactory()
         );
@@ -684,7 +689,12 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
-        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
+        $injector = new RedirectParameterInjector(
+            new AgileDashboard_PaneRedirectionExtractor(),
+            Tracker_ArtifactFactory::instance(),
+            $GLOBALS['Response'],
+            $this->getTemplateRenderer()
+        );
         $injector->injectParametersWithChildMilestoneFromRequest($event->getRequest(), $event->getRedirect());
     }
 
@@ -2127,5 +2137,13 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             EventManager::instance()
         );
+    }
+
+    /**
+     * @return MustacheRenderer|TemplateRenderer
+     */
+    private function getTemplateRenderer()
+    {
+        return TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
     }
 }

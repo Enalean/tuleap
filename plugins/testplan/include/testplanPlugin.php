@@ -262,7 +262,7 @@ final class testplanPlugin extends Plugin
         $redirect_parameter_injector = new RedirectParameterInjector(
             Tracker_ArtifactFactory::instance(),
             $GLOBALS['Response'],
-            $this->buildTemplateRenderer(),
+            $this->buildAgileDashboardTemplateRenderer(),
         );
         $redirect_parameter_injector->injectAndInformUserAboutBacklogItemBeingCovered($event->getRequest(), $event->getRedirect());
     }
@@ -288,7 +288,7 @@ final class testplanPlugin extends Plugin
             new RedirectParameterInjector(
                 Tracker_ArtifactFactory::instance(),
                 $GLOBALS['Response'],
-                $this->buildTemplateRenderer(),
+                $this->buildAgileDashboardTemplateRenderer(),
             )
         );
         $processor->process($event->getRequest(), $event->getRedirect(), $event->getArtifact());
@@ -297,5 +297,10 @@ final class testplanPlugin extends Plugin
     private function buildTemplateRenderer(): TemplateRenderer
     {
         return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates');
+    }
+
+    private function buildAgileDashboardTemplateRenderer(): TemplateRenderer
+    {
+        return TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../agiledashboard/templates');
     }
 }
