@@ -22,7 +22,9 @@ import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { ScrollingManager } from "../events/ScrollingManager";
 
 describe("dropdown-manager", () => {
-    let list_picker: Element,
+    let doc: HTMLDocument,
+        wrapper: HTMLElement,
+        list_picker: Element,
         dropdown: HTMLElement,
         list: Element,
         search_field: HTMLInputElement,
@@ -70,12 +72,15 @@ describe("dropdown-manager", () => {
             unlockScrolling: jest.fn(),
         } as unknown) as ScrollingManager;
 
+        doc = document.implementation.createHTMLDocument();
+        wrapper = wrapper_element;
         list_picker = list_picker_element;
         dropdown = dropdown_element;
         list = dropdown_list_element;
         selection_container = selection_element;
         search_field = getSearchField(search_field_element);
         dropdown_manager = new DropdownManager(
+            doc,
             wrapper_element,
             list_picker,
             dropdown,
@@ -151,5 +156,69 @@ describe("dropdown-manager", () => {
 
         expect(disconnect).toHaveBeenCalled();
         expect(scroll_manager.unlockScrolling).toHaveBeenCalled();
+    });
+
+    describe("dropdown positioning", () => {
+        function getDropdownManagerWithSizedElements(
+            document_client_height: number
+        ): DropdownManager {
+            const mocked_doc = ({
+                documentElement: {
+                    clientHeight: document_client_height,
+                },
+                body: document.createElement("body"),
+            } as unknown) as HTMLDocument;
+
+            return new DropdownManager(
+                mocked_doc,
+                wrapper,
+                list_picker,
+                dropdown,
+                list,
+                search_field,
+                selection_container,
+                scroll_manager
+            );
+        }
+
+        beforeEach(() => {
+            jest.spyOn(dropdown, "getBoundingClientRect").mockReturnValue({
+                height: 250,
+            } as DOMRect);
+            jest.spyOn(wrapper, "getBoundingClientRect").mockReturnValue({
+                left: 60,
+                bottom: 900,
+                width: 250,
+                height: 40,
+            } as DOMRect);
+        });
+
+        it("should place the dropdown below the list picker", () => {
+            const dropdown_manager = getDropdownManagerWithSizedElements(1200);
+
+            dropdown_manager.openListPicker();
+
+            expect(list_picker.classList).not.toContain("list-picker-with-dropdown-above");
+            expect(dropdown.classList).not.toContain("list-picker-dropdown-above");
+            expect(dropdown.style.left).toEqual("60px");
+            expect(dropdown.style.width).toEqual("250px");
+            expect(dropdown.style.top).toEqual("900px"); // Below the wrapper
+
+            dropdown_manager.destroy();
+        });
+
+        it("should place the dropdown on top of the list picker when there is not enough room below it", () => {
+            const dropdown_manager = getDropdownManagerWithSizedElements(1000);
+
+            dropdown_manager.openListPicker();
+
+            expect(list_picker.classList).toContain("list-picker-with-dropdown-above");
+            expect(dropdown.classList).toContain("list-picker-dropdown-above");
+            expect(dropdown.style.left).toEqual("60px");
+            expect(dropdown.style.width).toEqual("250px");
+            expect(dropdown.style.top).toEqual("610px"); // Above the wrapper
+
+            dropdown_manager.destroy();
+        });
     });
 });

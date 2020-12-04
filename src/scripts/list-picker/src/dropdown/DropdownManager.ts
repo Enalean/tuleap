@@ -22,6 +22,7 @@ export class DropdownManager {
     private resize_observer: ResizeObserver;
 
     constructor(
+        private readonly doc: HTMLDocument,
         private readonly wrapper_element: HTMLElement,
         private readonly list_picker_element: Element,
         private readonly dropdown_element: HTMLElement,
@@ -39,7 +40,7 @@ export class DropdownManager {
         this.resize_observer = new ResizeObserver(resize_dropdown_callback);
 
         this.resize_observer.observe(wrapper_element);
-        this.resize_observer.observe(document.body);
+        this.resize_observer.observe(this.doc.body);
     }
 
     public isDropdownOpen(): boolean {
@@ -68,9 +69,9 @@ export class DropdownManager {
         }
 
         this.scrolling_manager.lockScrolling();
-        this.resizeAndMoveDropdownUnderWrapperElement();
         this.dropdown_element.classList.add("list-picker-dropdown-shown");
         this.list_picker_element.classList.add("list-picker-with-open-dropdown");
+        this.resizeAndMoveDropdownUnderWrapperElement();
         this.setAriaExpandedAttribute(this.dropdown_list_element, true);
 
         if (this.selection_element.hasAttribute("aria-expanded")) {
@@ -90,11 +91,27 @@ export class DropdownManager {
     private resizeAndMoveDropdownUnderWrapperElement(): void {
         const list_picker_boundaries = this.wrapper_element.getBoundingClientRect();
         const x_coordinate = list_picker_boundaries.left + window.scrollX;
-        const y_coordinate = Math.ceil(list_picker_boundaries.bottom + window.scrollY);
+        const y_coordinate = list_picker_boundaries.bottom + window.scrollY;
+        const { height } = this.dropdown_element.getBoundingClientRect();
+        const has_enough_room_below =
+            list_picker_boundaries.bottom + height <= this.doc.documentElement.clientHeight;
 
-        this.dropdown_element.style.top = y_coordinate + "px";
         this.dropdown_element.style.width = list_picker_boundaries.width + "px";
         this.dropdown_element.style.left = x_coordinate + "px";
+
+        this.dropdown_element.classList.remove("list-picker-dropdown-above");
+        this.list_picker_element.classList.remove("list-picker-with-dropdown-above");
+
+        if (!has_enough_room_below) {
+            const pos = y_coordinate - height - list_picker_boundaries.height;
+            this.dropdown_element.style.top = pos + "px";
+
+            this.dropdown_element.classList.add("list-picker-dropdown-above");
+            this.list_picker_element.classList.add("list-picker-with-dropdown-above");
+            return;
+        }
+
+        this.dropdown_element.style.top = Math.ceil(y_coordinate) + "px";
     }
 
     private setAriaExpandedAttribute(element: Element, is_expanded: boolean): void {

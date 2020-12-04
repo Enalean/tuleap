@@ -55,6 +55,12 @@ $form-element-small-font-size: .8125rem;
         border-color: $main;
     }
 
+    &.list-picker-with-open-dropdown {
+        &.list-picker-with-dropdown-above .list-picker-selection {
+            border-radius: 0 0 4px 4px;
+        }
+    }
+
     .list-picker-selection {
         display: flex;
         align-items: center;
@@ -86,6 +92,12 @@ $form-element-small-font-size: .8125rem;
     border-bottom: 1px solid $main;
     border-left: 1px solid $main;
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+
+    &.list-picker-dropdown-above {
+        border-top: 1px solid $main;
+        border-bottom: unset;
+        box-shadow: 0 0 12px rgba(0, 0, 0, .175);
+    }
 }
 
 .list-picker-dropdown-option-value {
