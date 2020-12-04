@@ -31,8 +31,8 @@ class Docman_MetadataValueDao extends DataAccessObject
                        ' FROM plugin_docman_metadata_value' .
                        ' WHERE field_id = %d' .
                        ' AND item_id = %d',
-            $fieldId,
-            $itemId
+            $this->da->escapeInt($fieldId),
+            $this->da->escapeInt($itemId)
         );
         return $this->retrieve($sql);
     }
@@ -55,13 +55,13 @@ class Docman_MetadataValueDao extends DataAccessObject
             case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
                 $field        = 'valueDate';
                 $dataType     = '%d';
-                $escapedValue = $value;
+                $escapedValue = $this->da->escapeInt($value);
                 break;
 
             case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                 $field        = 'valueInt';
                 $dataType     = '%d';
-                $escapedValue = $value;
+                $escapedValue = $this->da->escapeInt($value);
                 break;
 
             default:
@@ -82,8 +82,8 @@ class Docman_MetadataValueDao extends DataAccessObject
                        ' AND mdv.item_id = %d' .
                        ' AND love.value_id = mdv.valueInt' .
                        ' ORDER BY love.rank',
-            $fieldId,
-            $itemId
+            $this->da->escapeInt($fieldId),
+            $this->da->escapeInt($itemId)
         );
         return $this->retrieve($sql);
     }
@@ -106,8 +106,8 @@ class Docman_MetadataValueDao extends DataAccessObject
                 'INSERT INTO plugin_docman_metadata_value' .
                            ' (' . implode(',', $fields) . ')' .
                            ' VALUES (' . implode(',', $types) . ')',
-                $fieldId,
-                $itemId,
+                $this->da->escapeInt($fieldId),
+                $this->da->escapeInt($itemId),
                 $val
             );
 
@@ -145,8 +145,8 @@ class Docman_MetadataValueDao extends DataAccessObject
                            ' WHERE field_id = %d' .
                            ' AND item_id = %d',
                 $val,
-                $fieldId,
-                $itemId
+                $this->da->escapeInt($fieldId),
+                $this->da->escapeInt($itemId)
             );
 
             return $this->update($sql);
@@ -162,8 +162,8 @@ class Docman_MetadataValueDao extends DataAccessObject
                        ' FROM plugin_docman_metadata_value' .
                        ' WHERE item_id = %d' .
                        ' AND field_id = %d',
-            $itemId,
-            $fieldId
+            $this->da->escapeInt($itemId),
+            $this->da->escapeInt($fieldId)
         );
         return $this->retrieve($sql);
     }
@@ -175,9 +175,9 @@ class Docman_MetadataValueDao extends DataAccessObject
                        ' SET valueInt = %d' .
                        ' WHERE field_id = %d' .
                        '  AND valueInt = %d',
-            $newValue,
-            $fieldId,
-            $previousValue
+            $this->da->escapeInt($newValue),
+            $this->da->escapeInt($fieldId),
+            $this->da->escapeInt($previousValue)
         );
         return $this->update($sql);
     }
@@ -206,7 +206,7 @@ class Docman_MetadataValueDao extends DataAccessObject
                        '  AND mdv.valueInt IS NULL' .
                        '  AND md.data_type = ' . PLUGIN_DOCMAN_METADATA_TYPE_LIST .
                        '  AND md.field_id = %d',
-            $fieldId
+            $this->da->escapeInt($fieldId)
         );
         return $this->update($sql);
     }
@@ -228,8 +228,8 @@ class Docman_MetadataValueDao extends DataAccessObject
             'DELETE FROM plugin_docman_metadata_value' .
                        ' WHERE field_id = %d' .
                        ' AND item_id IN (%s)',
-            $fieldId,
-            implode(',', $itemId)
+            $this->da->escapeInt($fieldId),
+            $this->da->escapeIntImplode($itemId)
         );
         return $this->update($sql);
     }
@@ -242,7 +242,7 @@ class Docman_MetadataValueDao extends DataAccessObject
         $sql = sprintf(
             'DELETE FROM plugin_docman_metadata_value' .
                        ' WHERE valueInt = %d',
-            $loveId
+            $this->da->escapeInt($loveId)
         );
         return $this->update($sql);
     }
@@ -283,9 +283,9 @@ class Docman_MetadataValueDao extends DataAccessObject
                        ' WHERE mdv_src.item_id = %d' .
                        ' AND mdv_src.field_id = %d' .
                        ' AND item.item_id IN (%s)',
-            $srcItemId,
-            $fieldId,
-            implode(',', $dstItemIdArray)
+            $this->da->escapeInt($srcItemId),
+            $this->da->escapeInt($fieldId),
+            $this->da->escapeIntImplode($dstItemIdArray)
         );
         return $this->update($sql);
     }

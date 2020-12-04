@@ -49,6 +49,7 @@ $router = new FRSPackageRouter(
         new LicenseAgreementFactory(
             new LicenseAgreementDao()
         ),
+        Codendi_HTMLPurifier::instance(),
     ),
     FRSPackageFactory::instance(),
     FRSPermissionManager::build()

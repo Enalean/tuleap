@@ -200,7 +200,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset)
         $previous
         . "</td>
 					<td align='center' width='55%'>" .
-        dgettext('tuleap-forumml', 'Threads') . " " . ($start + 1) . " - " . ($end + 1) . " <b>(" . $nbThreads . ")</b>
+        dgettext('tuleap-forumml', 'Threads') . " " . $hp->purify($start + 1) . " - " . $hp->purify($end + 1) . " <b>(" . $hp->purify($nbThreads) . ")</b>
 					</td>
 					<td align='right' width='10%'>
 						$next
@@ -266,7 +266,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset)
             $previous
             . "</td>
 						<td align='center' width='55%'>" .
-            dgettext('tuleap-forumml', 'Threads') . " " . ($start + 1) . " - " . ($end + 1) . " <b>(" . $nbThreads . ")</b>
+            dgettext('tuleap-forumml', 'Threads') . " " . $hp->purify($start + 1) . " - " . $hp->purify($end + 1) . " <b>(" . $hp->purify($nbThreads) . ")</b>
 						</td>
 						<td align='right' width='10%'>
 							$next

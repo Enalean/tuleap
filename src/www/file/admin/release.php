@@ -47,7 +47,8 @@ $files_factory   = new FRSFileFactory();
 $router = new FRSReleaseRouter(
     new FRSReleaseController(
         $release_factory,
-        new User_ForgeUserGroupFactory(new UserGroupDao())
+        new User_ForgeUserGroupFactory(new UserGroupDao()),
+        Codendi_HTMLPurifier::instance()
     ),
     $release_factory,
     $package_factory

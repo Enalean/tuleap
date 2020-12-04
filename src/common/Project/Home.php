@@ -73,13 +73,7 @@ class Home implements DispatchableWithRequest
             $request->params['group_id'] = $_REQUEST['group_id'];
 
             if ($request->isAjax() && ! $request->existAndNonEmpty('action')) {
-                header('Content-type: application/json');
-                echo json_encode(
-                    [
-                        'id' => $group_id,
-                        'name' => $project->getPublicName(),
-                    ]
-                );
+                $layout->sendJSON(['id' => $group_id, 'name' => $project->getPublicName()]);
                 exit;
             }
             // if the summary service is active we display the dashboard of the project

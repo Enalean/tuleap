@@ -40,11 +40,19 @@ class FRSReleaseController
 
     /** @var User_ForgeUserGroupFactory  */
     private $ugroup_factory;
+    /**
+     * @var \Codendi_HTMLPurifier
+     */
+    private $purifier;
 
-    public function __construct(FRSReleaseFactory $release_factory, User_ForgeUserGroupFactory $ugroup_factory)
-    {
+    public function __construct(
+        FRSReleaseFactory $release_factory,
+        User_ForgeUserGroupFactory $ugroup_factory,
+        \Codendi_HTMLPurifier $purifier
+    ) {
         $this->release_factory = $release_factory;
         $this->ugroup_factory  = $ugroup_factory;
+        $this->purifier        = $purifier;
     }
 
     public function delete(Project $project, FRSRelease $release)
@@ -54,7 +62,7 @@ class FRSReleaseController
         }
 
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_del'));
-        $GLOBALS['Response']->redirect('/file/?group_id=' . $project->getGroupId());
+        $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode($project->getGroupId()));
     }
 
     public function add(Project $project, $package_id)
@@ -65,7 +73,7 @@ class FRSReleaseController
         $release->setReleaseDate(time());
 
         $title = $GLOBALS['Language']->getText('file_admin_editreleases', 'create_new_release');
-        $url   = '?func=create&amp;postExpected=&amp;group_id=' . $project->getGroupId() . '&amp;package_id=' . $package_id;
+        $url   = '?func=create&amp;postExpected=&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId())) . '&amp;package_id=' . $this->purifier->purify(urlencode($package_id));
         frs_display_release_form($is_update = false, $release, $project->getGroupId(), $title, $url);
     }
 
@@ -73,7 +81,7 @@ class FRSReleaseController
     {
         if ($request->exist('cancel')) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'create_canceled'));
-            $GLOBALS['Response']->redirect('/file/?group_id=' . $project->getGroupId());
+            $GLOBALS['Response']->redirect('/file/?group_id=' . urlencode($project->getGroupId()));
         }
 
         frs_process_release_form(
@@ -81,7 +89,7 @@ class FRSReleaseController
             $request,
             $project->getGroupId(),
             $GLOBALS['Language']->getText('file_admin_editreleases', 'release_new_file_version'),
-            '?func=create&amp;postExpected=&amp;group_id=' . $project->getGroupId() . '&amp;package_id=' . $package->getPackageID()
+            '?func=create&amp;postExpected=&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId())) . '&amp;package_id=' . $this->purifier->purify(urlencode($package->getPackageID()))
         );
     }
 
@@ -92,7 +100,7 @@ class FRSReleaseController
             $release,
             $project->getGroupId(),
             $GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release'),
-            '?func=update&amp;postExpected=&amp;group_id=' . $project->getGroupId() . '&amp;package_id=' . $release->getPackageID() . '&amp;id=' . $release->getReleaseID()
+            '?func=update&amp;postExpected=&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId())) . '&amp;package_id=' . $this->purifier->purify(urlencode($release->getPackageID())) . '&amp;id=' . $this->purifier->purify(urlencode((string) $release->getReleaseID()))
         );
     }
 
@@ -103,7 +111,7 @@ class FRSReleaseController
             $request,
             $project->getGroupId(),
             $GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release'),
-            '?func=update&amp;postExpected=&amp;group_id=' . $project->getGroupId() . '&amp;package_id=' . $release->getPackageID() . '&amp;id=' . $release->getReleaseID()
+            '?func=update&amp;postExpected=&amp;group_id=' . $this->purifier->purify(urlencode($project->getGroupId())) . '&amp;package_id=' . $this->purifier->purify(urlencode($release->getPackageID())) . '&amp;id=' . $this->purifier->purify(urlencode((string) $release->getReleaseID()))
         );
     }
 

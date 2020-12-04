@@ -224,8 +224,9 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     }
 
     /**
-     * @return int group_id | null.
+     * @return int|string|null group_id | null.
      *
+     * @psalm-ignore-nullable-return
      * @psalm-mutation-free
      */
     public function getID()

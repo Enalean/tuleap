@@ -339,6 +339,7 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
             new LicenseAgreementFactory(
                 new LicenseAgreementDao()
             ),
+            Codendi_HTMLPurifier::instance(),
         );
 
         $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $package->getPackageID());
@@ -719,6 +720,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                                                 new LicenseAgreementFactory(
                                                     new LicenseAgreementDao()
                                                 ),
+                                                Codendi_HTMLPurifier::instance(),
                                             );
 
                                             $release_controller->displayUserGroups($project, FRSRelease::PERM_READ, $release->getReleaseID());
@@ -731,6 +733,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                                                 new LicenseAgreementFactory(
                                                     new LicenseAgreementDao()
                                                 ),
+                                                Codendi_HTMLPurifier::instance(),
                                             );
 
                                             $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $release->getPackageID());
