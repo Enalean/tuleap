@@ -23,11 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile\Adapter\Team;
 
 use TrackerFactory;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\HierarchyException;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamCanOnlyHaveOneBacklogTrackerException;
+use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerMustBeInPlannableTopBacklogException;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TeamTrackerNotFoundException;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\TrackerDoesNotBelongToTeamException;
+use Tuleap\ScaledAgile\Program\BuildPlanning;
 use Tuleap\ScaledAgile\Team\BuildTeamTracker;
 use Tuleap\ScaledAgile\Team\Creation\TeamStore;
-use Tuleap\ScaledAgile\Team\TeamTracker;
 
 final class TeamTrackerAdapter implements BuildTeamTracker
 {
@@ -39,28 +42,53 @@ final class TeamTrackerAdapter implements BuildTeamTracker
      * @var TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var BuildPlanning
+     */
+    private $planning_adapter;
 
-    public function __construct(TrackerFactory $tracker_factory, TeamStore $team_store)
-    {
-        $this->team_store      = $team_store;
-        $this->tracker_factory = $tracker_factory;
+    public function __construct(
+        TrackerFactory $tracker_factory,
+        TeamStore $team_store,
+        BuildPlanning $planning_adapter
+    ) {
+        $this->team_store       = $team_store;
+        $this->tracker_factory  = $tracker_factory;
+        $this->planning_adapter = $planning_adapter;
     }
 
     /**
-     * @throws TeamTrackerNotFoundException
-     * @throws TrackerDoesNotBelongToTeamException
+     * @param int[]   $team_backlog_ids
+     *
+     * @throws HierarchyException
      */
-    public function buildTeamTracker(int $team_backlog_id): TeamTracker
+    public function buildTeamTrackers(array $team_backlog_ids, \PFUser $user): void
     {
-        $team_tracker = $this->tracker_factory->getTrackerById($team_backlog_id);
-        if (! $team_tracker) {
-            throw new TeamTrackerNotFoundException($team_backlog_id);
-        }
+        $team_project_backlog_ids = [];
+        foreach ($team_backlog_ids as $team_backlog_id) {
+            $team_tracker = $this->tracker_factory->getTrackerById($team_backlog_id);
+            if (! $team_tracker) {
+                throw new TeamTrackerNotFoundException($team_backlog_id);
+            }
 
-        if (! $this->team_store->isATeam((int) $team_tracker->getGroupId())) {
-            throw new TrackerDoesNotBelongToTeamException($team_backlog_id);
-        }
+            if (! $this->team_store->isATeam((int) $team_tracker->getGroupId())) {
+                throw new TrackerDoesNotBelongToTeamException($team_backlog_id);
+            }
 
-        return new TeamTracker($team_tracker->getId(), (int) $team_tracker->getGroupId());
+            $planning_configuration = $this->planning_adapter->buildRootPlanning(
+                $user,
+                (int) $team_tracker->getGroupId()
+            );
+
+            if (! in_array($team_tracker->getId(), $planning_configuration->getPlannableTrackerIds())) {
+                throw new TeamTrackerMustBeInPlannableTopBacklogException($team_tracker->getId());
+            }
+
+            if (isset($team_project_backlog_ids[$team_tracker->getGroupId()])) {
+                throw new TeamCanOnlyHaveOneBacklogTrackerException($team_tracker->getGroupId());
+            }
+
+            $team_project_backlog_ids[$team_tracker->getGroupId()][] = $team_tracker->getId();
+        }
     }
 }

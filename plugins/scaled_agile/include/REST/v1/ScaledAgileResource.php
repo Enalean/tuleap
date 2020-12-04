@@ -67,8 +67,7 @@ final class ScaledAgileResource extends AuthenticatedResource
                 new ExplicitBacklogDao()
             ),
             new HierarchyAdapter(
-                new PlanningAdapter(\PlanningFactory::build()),
-                new TeamTrackerAdapter($tracker_factory, new TeamDao()),
+                new TeamTrackerAdapter($tracker_factory, new TeamDao(), new PlanningAdapter(\PlanningFactory::build())),
                 new ProgramTrackerAdapter($tracker_factory, new PlanDao()),
             ),
             new HierarchySaver(new HierarchyDAO())
@@ -107,7 +106,7 @@ final class ScaledAgileResource extends AuthenticatedResource
                 $user,
                 $id,
                 $representation->program_tracker_id,
-                $representation->team_tracker_id
+                $representation->team_tracker_ids
             );
         } catch (ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());

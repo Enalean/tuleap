@@ -39,5 +39,5 @@ interface CreateHierarchy
      * @throws PlanTrackerException
      * @throws ProgramTrackerException
      */
-    public function create(\PFUser $user, int $program_id, int $program_tracker_id, int $team_tracker_id): void;
+    public function create(\PFUser $user, int $program_id, int $program_tracker_id, array $team_tracker_ids): void;
 }

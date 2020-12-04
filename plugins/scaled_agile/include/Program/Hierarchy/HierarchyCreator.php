@@ -63,10 +63,10 @@ class HierarchyCreator implements CreateHierarchy
      * @throws PlanTrackerException
      * @throws ProgramTrackerException
      */
-    public function create(\PFUser $user, int $program_id, int $program_tracker_id, int $team_tracker_id): void
+    public function create(\PFUser $user, int $program_id, int $program_tracker_id, array $team_tracker_ids): void
     {
         $program   = $this->program_build->buildExistingProgramProject($program_id, $user);
-        $hierarchy = $this->build_hierarchy->buildHierarchy($user, $program, $program_tracker_id, $team_tracker_id);
+        $hierarchy = $this->build_hierarchy->buildHierarchy($user, $program, $program_tracker_id, $team_tracker_ids);
 
         $this->hierarchy_store->save($hierarchy);
     }

@@ -38,11 +38,13 @@ interface BuildHierarchy
      * @throws PlanTrackerException
      * @throws \Tuleap\ScaledAgile\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException
      * @throws \Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException
+     *
+     * @param int[] $team_backlog_ids
      */
     public function buildHierarchy(
         PFUser $user,
         Program $program,
         int $program_tracker_id,
-        int $team_backlog_id
+        array $team_backlog_ids
     ): Hierarchy;
 }

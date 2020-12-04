@@ -37,7 +37,7 @@ final class HierarchyCreatorTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
         $program_id = 101;
         $program_tracker_id = 1;
-        $team_tracker_id = 20;
+        $team_tracker_ids = [20];
 
         $program_build = \Mockery::mock(BuildProgram::class);
         $hierarchy_build = \Mockery::mock(BuildHierarchy::class);
@@ -46,13 +46,13 @@ final class HierarchyCreatorTest extends TestCase
         $hierarchy_creator = new HierarchyCreator($program_build, $hierarchy_build, $hierarchy_store);
 
         $program = new Program($program_id);
-        $hierarchy = new Hierarchy($program_tracker_id, $team_tracker_id);
+        $hierarchy = new Hierarchy($program_tracker_id, $team_tracker_ids);
 
         $program_build->shouldReceive('buildExistingProgramProject')->once()->andReturn($program);
         $hierarchy_build->shouldReceive('buildHierarchy')->once()->andReturn($hierarchy);
 
         $hierarchy_store->shouldReceive('save')->with($hierarchy)->once();
 
-        $hierarchy_creator->create($user, $program_id, $program_tracker_id, $team_tracker_id);
+        $hierarchy_creator->create($user, $program_id, $program_tracker_id, $team_tracker_ids);
     }
 }

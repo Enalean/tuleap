@@ -36,9 +36,9 @@ final class HierarchySaverTest extends TestCase
         $dao = \Mockery::mock(HierarchyDAO::class);
         $saver = new HierarchySaver($dao);
 
-        $hierarchy = new Hierarchy(1, 20);
+        $hierarchy = new Hierarchy(1, [30, 40]);
 
-        $dao->shouldReceive('updateChildren')->with(1, [20])->once();
+        $dao->shouldReceive('updateChildren')->with(1, [30, 40])->once();
         $saver->save($hierarchy);
     }
 }
