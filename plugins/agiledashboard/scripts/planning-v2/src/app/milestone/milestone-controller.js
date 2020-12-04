@@ -45,6 +45,7 @@ function MilestoneController(
         dragular_instance_for_milestone: undefined,
         get_content_promise: $q.when(),
         additionalPanesToDisplay,
+        hasExternalParent: hasOriginalProject,
     });
 
     self.init();
@@ -67,6 +68,10 @@ function MilestoneController(
                 self.initDragularForMilestone();
             });
         }
+    }
+
+    function hasOriginalProject() {
+        return self.milestone.original_project_provider !== null;
     }
 
     function isCollapsed() {

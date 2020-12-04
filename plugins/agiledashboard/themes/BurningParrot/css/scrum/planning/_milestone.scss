@@ -132,3 +132,12 @@
 .milestone-content-loading {
     @extend %loader;
 }
+
+.external-milestone-pane {
+    border: 1px dashed rgba($tlp-ui-dimmed, .6);
+}
+
+.external-milestone {
+    display: flex;
+    flex-direction: column;
+}

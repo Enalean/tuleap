@@ -22,6 +22,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use AgileDashboard_MilestonesCardwallRepresentation;
 use Planning_Milestone;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
+use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
+use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -189,6 +191,10 @@ class MilestoneRepresentation
         'siblings'         => null,
         'additional_panes' => [],
     ];
+    /**
+     * @var MinimalProjectRepresentation|null
+     */
+    public $original_project_provider;
 
     private function __construct(
         int $id,
@@ -214,7 +220,8 @@ class MilestoneRepresentation
         bool $has_user_priority_change_permission,
         ?string $last_modified_date,
         ?array $status_count,
-        array $resources
+        array $resources,
+        ?MinimalProjectRepresentation $original_project_provider
     ) {
         $this->id                                  = $id;
         $this->uri                                 = $uri;
@@ -243,6 +250,7 @@ class MilestoneRepresentation
         $this->last_modified_date                  = $last_modified_date;
         $this->status_count                        = $status_count;
         $this->resources                           = $resources;
+        $this->original_project_provider           = $original_project_provider;
     }
 
     public static function build(
@@ -254,7 +262,8 @@ class MilestoneRepresentation
         $representation_type,
         ?\Planning $sub_planning,
         PaneInfoCollector $pane_info_collector,
-        ?\Tracker $sub_milestone_tracker
+        ?\Tracker $sub_milestone_tracker,
+        OriginalProjectCollector $original_project_collector
     ): self {
         $artifact_id = $milestone->getArtifactId();
         $uri         = self::ROUTE . '/' . $artifact_id;
@@ -283,6 +292,12 @@ class MilestoneRepresentation
             if ($parent) {
                 $parent_reference = MilestoneParentReference::build($parent);
             }
+        }
+
+        $original_project_provider = null;
+        $original_project = $original_project_collector->getOriginalProject();
+        if ($original_project) {
+            $original_project_provider = new MinimalProjectRepresentation($original_project);
         }
 
         $status_count_ref = null;
@@ -354,7 +369,8 @@ class MilestoneRepresentation
             $has_user_priority_change_permission,
             JsonCast::toDate($milestone->getLastModifiedDate()),
             $status_count_ref,
-            $resources
+            $resources,
+            $original_project_provider
         );
     }
 

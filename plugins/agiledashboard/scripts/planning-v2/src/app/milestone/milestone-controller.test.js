@@ -581,4 +581,26 @@ describe("MilestoneController", function () {
             );
         });
     });
+
+    describe("hasExternalParent() -", function () {
+        it("Given a milestone without original parent, then it will return false", function () {
+            MilestoneController.milestone = {
+                original_project_provider: null,
+            };
+
+            var result = MilestoneController.hasExternalParent();
+
+            expect(result).toBeFalsy();
+        });
+
+        it("Given a milestone with original parent, then it will return true", function () {
+            MilestoneController.milestone = {
+                original_project_provider: { id: 101, description: "AAA", label: "parent label" },
+            };
+
+            var result = MilestoneController.hasExternalParent();
+
+            expect(result).toBeTruthy();
+        });
+    });
 });

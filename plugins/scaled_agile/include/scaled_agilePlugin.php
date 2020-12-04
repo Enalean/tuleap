@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
+use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
@@ -36,6 +37,8 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck\WorkflowChecker;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\StatusFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\SynchronizedFieldsAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsAdapter;
@@ -99,6 +102,7 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook('project_is_deleted', 'projectIsDeleted');
         $this->addHook(ConfigurationCheckDelegation::NAME);
         $this->addHook(TrackerHierarchyDelegation::NAME);
+        $this->addHook(OriginalProjectCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -282,6 +286,25 @@ final class scaled_agilePlugin extends Plugin
     public function projectIsDeleted(): void
     {
         (new \Tuleap\ScaledAgile\Adapter\Workspace\WorkspaceDAO())->dropUnusedComponents();
+    }
+
+    public function externalParentCollector(OriginalProjectCollector $original_project_collector): void
+    {
+        $source_analyser = new SourceArtifactNatureAnalyzer(new TeamDao(), ProjectManager::instance(), Tracker_ArtifactFactory::instance());
+        $artifact = $original_project_collector->getOriginalArtifact();
+        $user = $original_project_collector->getUser();
+
+        try {
+            $project = $source_analyser->retrieveProjectOfMirroredArtifact($artifact, $user);
+            if (! $project) {
+                return;
+            }
+
+            $original_project_collector->setOriginalProject($project);
+        } catch (NatureAnalyzerException $exception) {
+            $logger = $this->getLogger();
+            $logger->debug($exception->getMessage(), ['exception' => $exception]);
+        }
     }
 
     public function configurationCheckDelegation(ConfigurationCheckDelegation $configuration_check_delegation): void
