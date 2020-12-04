@@ -83,7 +83,7 @@ class SessionState
 
     public static function buildFromMinimalRepresentation(\stdClass $representation): self
     {
-        if (! isset($representation->secret_key, $representation->return_to, $representation->nonce, $representation->pkce_code_verifier)) {
+        if (! isset($representation->secret_key, $representation->nonce, $representation->pkce_code_verifier) || ! property_exists($representation, 'return_to')) {
             throw new \InvalidArgumentException('Given $representation is incorrectly formatted');
         }
         $pkce_code_verifier = new ConcealedString($representation->pkce_code_verifier);

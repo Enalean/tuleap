@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,6 @@
 
 namespace Tuleap\OpenIDConnectClient\Login;
 
-use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationRequestCreator;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
 class LoginUniqueAuthenticationUrlGenerator
@@ -30,17 +29,17 @@ class LoginUniqueAuthenticationUrlGenerator
      */
     private $provider_manager;
     /**
-     * @var AuthorizationRequestCreator
+     * @var LoginURLGenerator
      */
-    private $authorization_request_creator;
+    private $login_url_generator;
 
-    public function __construct(ProviderManager $provider_manager, AuthorizationRequestCreator $authorization_request_creator)
+    public function __construct(ProviderManager $provider_manager, LoginURLGenerator $login_url_generator)
     {
-        $this->provider_manager              = $provider_manager;
-        $this->authorization_request_creator = $authorization_request_creator;
+        $this->provider_manager    = $provider_manager;
+        $this->login_url_generator = $login_url_generator;
     }
 
-    public function getURL($return_to)
+    public function getURL(?string $return_to): string
     {
         $providers = $this->provider_manager->getProvidersUsableToLogIn();
         if (count($providers) !== 1) {
@@ -48,10 +47,6 @@ class LoginUniqueAuthenticationUrlGenerator
         }
 
         $unique_authentication_provider = $providers[0];
-        $authorization_request          = $this->authorization_request_creator->createAuthorizationRequest(
-            $unique_authentication_provider,
-            $return_to
-        );
-        return $authorization_request->getURL();
+        return $this->login_url_generator->getLoginURL($unique_authentication_provider, $return_to);
     }
 }

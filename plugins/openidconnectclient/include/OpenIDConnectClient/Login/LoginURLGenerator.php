@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,38 +16,38 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\OpenIDConnectClient\Provider;
+namespace Tuleap\OpenIDConnectClient\Login;
 
-interface Provider
+use Tuleap\OpenIDConnectClient\Provider\Provider;
+
+/**
+ * @psalm-immutable
+ */
+class LoginURLGenerator
 {
     /**
-     * @psalm-mutation-free
+     * @var string
      */
-    public function getId(): int;
+    private $base_url;
 
-    public function getName(): string;
+    public function __construct(string $base_url)
+    {
+        $this->base_url = $base_url;
+    }
 
-    public function getClientId(): string;
+    public function getLoginURL(Provider $provider, ?string $return_to): string
+    {
+        $login_url = $this->base_url . '/login_to/' . urlencode((string) $provider->getId());
 
-    public function getClientSecret(): string;
+        if ($return_to) {
+            $login_url .= '?return_to=' . urlencode($return_to);
+        }
 
-    public function isUniqueAuthenticationEndpoint(): bool;
-
-    public function getIcon(): string;
-
-    public function getColor(): string;
-
-    public function getAuthorizationEndpoint(): string;
-
-    public function getTokenEndpoint(): string;
-
-    public function getUserInfoEndpoint(): string;
-
-    public function getJWKSEndpoint(): ?string;
-
-    public function getRedirectUri(): string;
+        return $login_url;
+    }
 }
