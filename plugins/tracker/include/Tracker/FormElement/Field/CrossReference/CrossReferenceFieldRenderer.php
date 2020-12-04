@@ -57,7 +57,7 @@ class CrossReferenceFieldRenderer
 
         $cross_reference_factory->fetchDatas();
 
-        $cross_ref_by_nature_collection = $cross_reference_factory->getCrossReferencesByNatureCollection();
+        $cross_ref_by_direction_collection = $cross_reference_factory->getCrossReferencesByDirectionCollection();
 
         $can_delete = $user->isSuperUser() || $user->isAdmin((int) $artifact->getTracker()->getGroupId());
         $renderer   = $this->template_renderer->getRenderer(
@@ -65,8 +65,8 @@ class CrossReferenceFieldRenderer
         );
 
         return $renderer->renderToString(
-            'cross_reference',
-            $this->cross_ref_field_presenter_builder->build($cross_ref_by_nature_collection, $can_delete)
+            'cross_reference_section',
+            $this->cross_ref_field_presenter_builder->build($cross_ref_by_direction_collection, $can_delete, $artifact)
         );
     }
 }

@@ -786,9 +786,6 @@ msgstr ""
 "Ci-dessous se trouve un catalogue d'éléments préconfigurés prêts à être "
 "utilisés."
 
-msgid "Bidirectionnal references:"
-msgstr "Références bidirectionnelles :"
-
 msgid "Bind to user groups"
 msgstr "Associer à des groupes d'utilisateurs"
 
@@ -1807,9 +1804,6 @@ msgstr ""
 "Affiche la liste des artefacts par projet que vous avez soumis ou qui vous "
 "ont été assignés."
 
-msgid "List of items referenced by or referencing this item."
-msgstr "Liste des objets étant référencés par cet objet ou le référençant."
-
 msgid "Load artifacts"
 msgstr "Charger les artefacts"
 
@@ -2318,8 +2312,14 @@ msgstr "Recevoir les notifications de cet artefact"
 msgid "Recent artifacts"
 msgstr "Artefacts récents"
 
+msgid "Referenced by {{ artifact_xref }}"
+msgstr "Référencé par {{ artifact_xref }}"
+
 msgid "References list is empty"
 msgstr "Cet artefact n'est pas référencé, et n'est pas source de références."
+
+msgid "Referencing {{ artifact_xref }}"
+msgstr "Référençant {{ artifact_xref }}"
 
 #, php-format
 msgid "Reminder: '%1$s' %2$s for '%3$s'"
@@ -3282,9 +3282,9 @@ msgid ""
 "The tracker %s is involved in a hierarchy managed by %s. You will not be "
 "able to change the hierarchy from this administration panel."
 msgstr ""
-"L'outil de suivi %s est impliqué dans une hiérarchie gérée par %s. "
-"Vous ne pouvez pas modifier la hiérarchie de cet outil de suivi depuis "
-"cette section de l'administration."
+"L'outil de suivi %s est impliqué dans une hiérarchie gérée par %s. Vous ne "
+"pouvez pas modifier la hiérarchie de cet outil de suivi depuis cette section "
+"de l'administration."
 
 #, php-format
 msgid ""
