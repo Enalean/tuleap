@@ -127,7 +127,7 @@ class Controller
         }
     }
 
-    private function openSession(UserMapping $user_mapping, $return_to, $login_time)
+    private function openSession(UserMapping $user_mapping, ?string $return_to, $login_time)
     {
         $user = $this->user_manager->getUserById($user_mapping->getUserId());
         try {
@@ -147,7 +147,7 @@ class Controller
                 dgettext('tuleap-openidconnectclient', 'An error occurred, please retry')
             );
         }
-        \account_redirect_after_login($user, $return_to);
+        \account_redirect_after_login($user, $return_to ?? '');
     }
 
     /**

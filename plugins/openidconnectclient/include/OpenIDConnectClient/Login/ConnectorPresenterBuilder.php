@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,6 @@
 
 namespace Tuleap\OpenIDConnectClient\Login;
 
-use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationRequestCreator;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
 class ConnectorPresenterBuilder
@@ -30,14 +29,14 @@ class ConnectorPresenterBuilder
      */
     private $provider_manager;
     /**
-     * @var AuthorizationRequestCreator
+     * @var LoginURLGenerator
      */
-    private $authorization_request_creator;
+    private $login_url_generator;
 
-    public function __construct(ProviderManager $provider_manager, AuthorizationRequestCreator $authorization_request_creator)
+    public function __construct(ProviderManager $provider_manager, LoginURLGenerator $login_url_generator)
     {
-        $this->provider_manager              = $provider_manager;
-        $this->authorization_request_creator = $authorization_request_creator;
+        $this->provider_manager    = $provider_manager;
+        $this->login_url_generator = $login_url_generator;
     }
 
     /**
@@ -58,24 +57,19 @@ class ConnectorPresenterBuilder
         return new SpecificLoginPresenter($providers_authorization_request_uri);
     }
 
-    /**
-     * @return array
-     */
-    private function getProvidersWithRequestUri($return_to)
+    private function getProvidersWithRequestUri(?string $return_to): array
     {
-        $providers                           = $this->provider_manager->getProvidersUsableToLogIn();
-        $providers_authorization_request_uri = [];
+        $providers                   = $this->provider_manager->getProvidersUsableToLogIn();
+        $providers_login_request_uri = [];
         foreach ($providers as $provider) {
-            $authorization_request = $this->authorization_request_creator->createAuthorizationRequest($provider, $return_to);
-
-            $providers_authorization_request_uri[] = [
+            $providers_login_request_uri[] = [
                 'name'                      => $provider->getName(),
                 'icon'                      => $provider->getIcon(),
                 'color'                     => $provider->getColor(),
-                'authorization_request_uri' => $authorization_request->getURL()
+                'login_request_uri'         => $this->login_url_generator->getLoginURL($provider, $return_to),
             ];
         }
 
-        return $providers_authorization_request_uri;
+        return $providers_login_request_uri;
     }
 }

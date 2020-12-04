@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,8 +22,6 @@ namespace Tuleap\OpenIDConnectClient\Login;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationRequest;
-use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationRequestCreator;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
@@ -31,42 +29,42 @@ class LoginUniqueAuthenticationUrlGeneratorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testTheLoginUrlIsGeneratedForTheProviderDefinedAsUniqueAuthenticationEndpoint()
+    public function testTheLoginUrlIsGeneratedForTheProviderDefinedAsUniqueAuthenticationEndpoint(): void
     {
         $provider         = \Mockery::mock(Provider::class);
         $provider_manager = \Mockery::mock(ProviderManager::class);
         $provider_manager->shouldReceive('getProvidersUsableToLogIn')->andReturns([$provider]);
-        $authorization_request_creator = \Mockery::mock(AuthorizationRequestCreator::class);
-        $authorization_request_creator->shouldReceive('createAuthorizationRequest')
-            ->withArgs([$provider, 'return_to'])->andReturns(\Mockery::spy(AuthorizationRequest::class));
+        $login_url_generator = \Mockery::mock(LoginURLGenerator::class);
+        $login_url_generator->shouldReceive('getLoginURL')
+            ->withArgs([$provider, 'return_to'])->andReturns('login_url');
 
-        $url_generator = new LoginUniqueAuthenticationUrlGenerator($provider_manager, $authorization_request_creator);
+        $url_generator = new LoginUniqueAuthenticationUrlGenerator($provider_manager, $login_url_generator);
         $url_generator->getURL('return_to');
     }
 
-    public function testAProviderDefinedAsUniqueAuthenticationEndpointIsExpected()
+    public function testAProviderDefinedAsUniqueAuthenticationEndpointIsExpected(): void
     {
         $provider_manager = \Mockery::mock(ProviderManager::class);
         $provider_manager->shouldReceive('getProvidersUsableToLogIn')->andReturns([]);
-        $authorization_request_creator = \Mockery::mock(AuthorizationRequestCreator::class);
+        $login_url_generator = new LoginURLGenerator('base_url');
 
-        $url_generator = new LoginUniqueAuthenticationUrlGenerator($provider_manager, $authorization_request_creator);
+        $url_generator = new LoginUniqueAuthenticationUrlGenerator($provider_manager, $login_url_generator);
 
         $this->expectException(IncoherentDataUniqueProviderException::class);
 
         $url_generator->getURL('');
     }
 
-    public function testOnlyOneProviderDefinedAsUniqueAuthenticationEndpointIsExpected()
+    public function testOnlyOneProviderDefinedAsUniqueAuthenticationEndpointIsExpected(): void
     {
         $provider_manager = \Mockery::mock(ProviderManager::class);
         $provider_manager->shouldReceive('getProvidersUsableToLogIn')->andReturns([
             \Mockery::mock(Provider::class),
             \Mockery::mock(Provider::class)
         ]);
-        $authorization_request_creator = \Mockery::mock(AuthorizationRequestCreator::class);
+        $login_url_generator = new LoginURLGenerator('base_url');
 
-        $url_generator = new LoginUniqueAuthenticationUrlGenerator($provider_manager, $authorization_request_creator);
+        $url_generator = new LoginUniqueAuthenticationUrlGenerator($provider_manager, $login_url_generator);
 
         $this->expectException(IncoherentDataUniqueProviderException::class);
 

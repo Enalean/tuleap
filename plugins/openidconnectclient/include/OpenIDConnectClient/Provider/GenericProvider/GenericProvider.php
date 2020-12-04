@@ -108,6 +108,9 @@ final class GenericProvider implements Provider
         $this->color                             = $color;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getId(): int
     {
         return $this->id;

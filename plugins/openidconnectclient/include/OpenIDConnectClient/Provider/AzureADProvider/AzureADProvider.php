@@ -95,6 +95,9 @@ final class AzureADProvider implements Provider
         $this->acceptable_tenant_for_authentication_configuration = $acceptable_tenant_for_authentication_configuration;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getId(): int
     {
         return $this->id;

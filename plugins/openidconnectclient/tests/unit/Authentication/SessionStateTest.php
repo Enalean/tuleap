@@ -27,9 +27,11 @@ use Tuleap\Cryptography\ConcealedString;
 
 final class SessionStateTest extends TestCase
 {
-    public function testCanBeTransformedToAMinimalRepresentationAndBuiltFromIt(): void
+    /**
+     * @dataProvider dataProviderSessionStates
+     */
+    public function testCanBeTransformedToAMinimalRepresentationAndBuiltFromIt(SessionState $session_state): void
     {
-        $session_state         = new SessionState('secret_key', 'return_to', 'nonce', new ConcealedString('code_verifier'));
         $representation        = $session_state->convertToMinimalRepresentation();
         $rebuilt_session_state = SessionState::buildFromMinimalRepresentation($representation);
 
@@ -37,6 +39,14 @@ final class SessionStateTest extends TestCase
         $this->assertSame($session_state->getNonce(), $rebuilt_session_state->getNonce());
         $this->assertSame($session_state->getReturnTo(), $rebuilt_session_state->getReturnTo());
         $this->assertTrue($session_state->getPKCECodeVerifier()->isIdenticalTo($rebuilt_session_state->getPKCECodeVerifier()));
+    }
+
+    public function dataProviderSessionStates(): array
+    {
+        return [
+            [new SessionState('secret_key', 'return_to', 'nonce', new ConcealedString('code_verifier'))],
+            [new SessionState('secret_key', null, 'nonce', new ConcealedString('code_verifier'))],
+        ];
     }
 
     public function testBuildingFromAnInvalidRepresentationIsRejected(): void

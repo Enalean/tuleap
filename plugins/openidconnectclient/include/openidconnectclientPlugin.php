@@ -31,6 +31,8 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\Client\Authentication\BasicAuth;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\DisableCacheMiddleware;
+use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenIDConnectClient\AccountLinker;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDao;
@@ -193,7 +195,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
         $url_generator = new Login\LoginUniqueAuthenticationUrlGenerator(
             $provider_manager,
-            $this->getAuthorizationRequestCreator()
+            new Login\LoginURLGenerator($this->getPluginPath())
         );
 
         try {
@@ -259,7 +261,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $provider_manager                  = $this->getProviderManager();
         $login_connector_presenter_builder = new ConnectorPresenterBuilder(
             $provider_manager,
-            $this->getAuthorizationRequestCreator()
+            new Login\LoginURLGenerator($this->getPluginPath())
         );
         $login_connector_presenter         = $login_connector_presenter_builder->getLoginConnectorPresenter(
             $params['return_to']
@@ -320,7 +322,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
                 $provider_manager,
                 $user_mapping_manager,
                 $unlinked_account_manager,
-                new ConnectorPresenterBuilder($provider_manager, $this->getAuthorizationRequestCreator()),
+                new ConnectorPresenterBuilder($provider_manager, new Login\LoginURLGenerator($this->getPluginPath())),
                 EventManager::instance(),
                 $storage,
             );
@@ -452,7 +454,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             $provider_manager,
             $user_mapping_manager,
             $unlinked_account_manager,
-            new ConnectorPresenterBuilder($provider_manager, $this->getAuthorizationRequestCreator()),
+            new ConnectorPresenterBuilder($provider_manager, new Login\LoginURLGenerator($this->getPluginPath())),
             EventManager::instance(),
             $storage,
         );
@@ -496,8 +498,20 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         return new LoginController(
             new ConnectorPresenterBuilder(
                 $this->getProviderManager(),
-                $this->getAuthorizationRequestCreator()
+                new Login\LoginURLGenerator($this->getPluginPath())
             )
+        );
+    }
+
+    public function routeStartLoginToProvider(): Login\RedirectToProviderForAuthorizationController
+    {
+        return new Login\RedirectToProviderForAuthorizationController(
+            HTTPFactoryBuilder::responseFactory(),
+            $this->getProviderManager(),
+            $this->getAuthorizationRequestCreator(),
+            new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter(),
+            new ServiceInstrumentationMiddleware($this->getName()),
+            new DisableCacheMiddleware()
         );
     }
 
@@ -511,6 +525,8 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
             $r->get('/account', $this->getRouteHandler('routeGetUserAccount'));
             $r->post('/account', $this->getRouteHandler('routePostUserAccount'));
+
+            $r->get('/login_to/{provider_id:\d+}', $this->getRouteHandler('routeStartLoginToProvider'));
         });
     }
 
