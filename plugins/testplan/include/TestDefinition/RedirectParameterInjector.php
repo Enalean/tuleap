@@ -27,6 +27,7 @@ use Response;
 use TemplateRenderer;
 use Tracker_Artifact_Redirect;
 use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\BacklogItem\BacklogItemCreationUpdateInformationLinkPresenter;
 
 class RedirectParameterInjector
 {
@@ -84,24 +85,24 @@ class RedirectParameterInjector
             $feedback_message = sprintf(
                 dgettext('tuleap-testplan', 'You are editing a backlog item included in the milestone: %s'),
                 $this->template_renderer->renderToString(
-                    'backlog-item-test-creation-update-information-link',
-                    BacklogItemTestCreationUpdateInformationLinkPresenter::fromArtifact($milestone)
+                    'backlog-item-creation-update-information-link',
+                    BacklogItemCreationUpdateInformationLinkPresenter::fromArtifact($milestone)
                 )
             );
         } elseif ($request->get('func') === 'new-artifact') {
             $feedback_message = sprintf(
                 dgettext('tuleap-testplan', 'You are creating a new test that will cover: %s'),
                 $this->template_renderer->renderToString(
-                    'backlog-item-test-creation-update-information-link',
-                    BacklogItemTestCreationUpdateInformationLinkPresenter::fromArtifact($backlog_item)
+                    'backlog-item-creation-update-information-link',
+                    BacklogItemCreationUpdateInformationLinkPresenter::fromArtifact($backlog_item)
                 )
             );
         } else {
             $feedback_message = sprintf(
                 dgettext('tuleap-testplan', 'You are editing a test covering: %s'),
                 $this->template_renderer->renderToString(
-                    'backlog-item-test-creation-update-information-link',
-                    BacklogItemTestCreationUpdateInformationLinkPresenter::fromArtifact($backlog_item)
+                    'backlog-item-creation-update-information-link',
+                    BacklogItemCreationUpdateInformationLinkPresenter::fromArtifact($backlog_item)
                 )
             );
         }

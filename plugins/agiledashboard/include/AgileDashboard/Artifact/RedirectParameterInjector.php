@@ -24,7 +24,10 @@ namespace Tuleap\AgileDashboard\Artifact;
 
 use AgileDashboard_PaneRedirectionExtractor;
 use Codendi_Request;
+use Response;
+use TemplateRenderer;
 use Tracker_Artifact_Redirect;
+use Tuleap\AgileDashboard\BacklogItem\BacklogItemCreationUpdateInformationLinkPresenter;
 
 final class RedirectParameterInjector
 {
@@ -32,10 +35,29 @@ final class RedirectParameterInjector
      * @var AgileDashboard_PaneRedirectionExtractor
      */
     private $params_extractor;
+    /**
+     * @var \Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var TemplateRenderer
+     */
+    private $template_renderer;
+    /**
+     * @var Response
+     */
+    private $response;
 
-    public function __construct(AgileDashboard_PaneRedirectionExtractor $params_extractor)
-    {
-        $this->params_extractor = $params_extractor;
+    public function __construct(
+        AgileDashboard_PaneRedirectionExtractor $params_extractor,
+        \Tracker_ArtifactFactory $artifact_factory,
+        Response $response,
+        TemplateRenderer $template_renderer
+    ) {
+        $this->params_extractor  = $params_extractor;
+        $this->artifact_factory  = $artifact_factory;
+        $this->response          = $response;
+        $this->template_renderer = $template_renderer;
     }
 
     public function injectParametersWithChildMilestoneFromRequest(
@@ -65,11 +87,41 @@ final class RedirectParameterInjector
         if ($requested_planning) {
             $key = 'planning[' . $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE] . '][' . $requested_planning[AgileDashboard_PaneRedirectionExtractor::PLANNING_ID] . ']';
 
-            $redirect->query_parameters[$key] = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
+            $milestone_id = $requested_planning[AgileDashboard_PaneRedirectionExtractor::ARTIFACT_ID];
+
+            $redirect->query_parameters[$key] = $milestone_id;
 
             if ($request->get(\Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER)) {
+                $this->informUserThatTheArtifactWillBeLinkedToTheMilestone($request, (int) $milestone_id);
+
                 $redirect->query_parameters[\Planning_ArtifactLinker::LINK_TO_MILESTONE_PARAMETER] = '1';
             }
         }
+    }
+
+    private function informUserThatTheArtifactWillBeLinkedToTheMilestone(Codendi_Request $request, int $milestone_id): void
+    {
+        $milestone_artifact = $this->artifact_factory->getArtifactByIdUserCanView(
+            $request->getCurrentUser(),
+            $milestone_id
+        );
+
+        if (! $milestone_artifact) {
+            return;
+        }
+
+        $feedback_message = sprintf(
+            dgettext('tuleap-agiledashboard', 'You are creating a new backlog item in: %s'),
+            $this->template_renderer->renderToString(
+                'backlog-item-creation-update-information-link',
+                BacklogItemCreationUpdateInformationLinkPresenter::fromArtifact($milestone_artifact)
+            )
+        );
+
+        $this->response->addFeedback(
+            \Feedback::INFO,
+            $feedback_message,
+            CODENDI_PURIFIER_FULL
+        );
     }
 }

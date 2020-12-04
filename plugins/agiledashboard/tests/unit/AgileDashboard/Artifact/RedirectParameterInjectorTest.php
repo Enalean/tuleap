@@ -23,22 +23,68 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Artifact;
 
 use AgileDashboard_PaneRedirectionExtractor;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use TemplateRendererFactory;
+use Tracker;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Templating\TemplateCache;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\TrackerColor;
 
 class RedirectParameterInjectorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
+
+    /**
+     * @var mixed
+     */
+    private $response;
+    /**
+     * @var RedirectParameterInjector
+     */
+    private $injector;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
+     */
+    private $user;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
+    protected function setUp(): void
+    {
+        $this->response = $GLOBALS['Response'];
+
+        $this->user = Mockery::mock(\PFUser::class);
+
+        $this->artifact_factory = Mockery::mock(\Tracker_ArtifactFactory::class);
+
+        $template_cache = \Mockery::mock(TemplateCache::class);
+        $template_cache->shouldReceive('getPath')->andReturnNull();
+        $template_renderer_factory = new TemplateRendererFactory($template_cache);
+
+        $this->injector = new RedirectParameterInjector(
+            new AgileDashboard_PaneRedirectionExtractor(),
+            $this->artifact_factory,
+            $this->response,
+            $template_renderer_factory->getRenderer(__DIR__ . '/../../../../templates/')
+        );
+    }
 
     public function testInjectParametersWithChildMilestoneFromRequestDoesNothingByDefault(): void
     {
-        $request = HTTPRequestBuilder::get()->build();
+        $request = HTTPRequestBuilder::get()
+            ->withUser($this->user)
+            ->build();
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
-        $injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
+        $this->injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
 
         self::assertEmpty($redirect->query_parameters);
     }
@@ -46,13 +92,13 @@ class RedirectParameterInjectorTest extends TestCase
     public function testInjectParametersWithChildMilestoneFromRequestInjectsTheRequestedPlanning(): void
     {
         $request = HTTPRequestBuilder::get()
+            ->withUser($this->user)
             ->withParam('planning', ['details' => ['42' => '101']])
             ->build();
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
-        $injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
+        $this->injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
 
         self::assertCount(1, $redirect->query_parameters);
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);
@@ -61,14 +107,45 @@ class RedirectParameterInjectorTest extends TestCase
     public function testInjectParametersWithChildMilestoneFromRequestInjectsTheRequestedPlanningAndAsksForALinkToMilestone(): void
     {
         $request = HTTPRequestBuilder::get()
+            ->withUser($this->user)
             ->withParam('planning', ['details' => ['42' => '101']])
             ->withParam('link-to-milestone', '1')
             ->build();
 
+        $artifact = Mockery::mock(Artifact::class)
+            ->shouldReceive(
+                [
+                    'getUri'     => '/plugins/tracker/?aid=42',
+                    'getTitle'   => 'Some milestone',
+                    'getXref'    => 'rel #42',
+                    'getTracker' => Mockery::mock(Tracker::class)
+                        ->shouldReceive(['getColor' => TrackerColor::default()])
+                        ->getMock(),
+                ]
+            )->getMock();
+
+        $this->artifact_factory
+            ->shouldReceive('getArtifactByIdUserCanView')
+            ->with($this->user, 101)
+            ->once()
+            ->andReturn($artifact);
+
+        $this->response
+            ->shouldReceive('addFeedback')
+            ->with(
+                \Feedback::INFO,
+                Mockery::on(
+                    static function (string $content_to_display): bool {
+                        return strpos($content_to_display, 'Some milestone') !== false &&
+                            strpos($content_to_display, 'rel #42') !== false;
+                    }
+                ),
+                CODENDI_PURIFIER_FULL
+            )
+            ->once();
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
-        $injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
+        $this->injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
 
         self::assertCount(2, $redirect->query_parameters);
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);
@@ -78,13 +155,13 @@ class RedirectParameterInjectorTest extends TestCase
     public function testInjectParametersWithChildMilestoneFromRequestInjectsTheChildMilestone(): void
     {
         $request = HTTPRequestBuilder::get()
+            ->withUser($this->user)
             ->withParam('child_milestone', '666')
             ->build();
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
-        $injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
+        $this->injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
 
         self::assertCount(1, $redirect->query_parameters);
         self::assertEquals('666', $redirect->query_parameters['child_milestone']);
@@ -93,14 +170,14 @@ class RedirectParameterInjectorTest extends TestCase
     public function testInjectParametersWithChildMilestoneFromRequestInjectsThePlanningAndTheChildMilestone(): void
     {
         $request = HTTPRequestBuilder::get()
+            ->withUser($this->user)
             ->withParam('planning', ['details' => ['42' => '101']])
             ->withParam('child_milestone', '666')
             ->build();
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
-        $injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
+        $this->injector->injectParametersWithChildMilestoneFromRequest($request, $redirect);
 
         self::assertCount(2, $redirect->query_parameters);
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);
@@ -109,12 +186,13 @@ class RedirectParameterInjectorTest extends TestCase
 
     public function testInjectParametersWithGivenChildMilestoneDoesNothingByDefault(): void
     {
-        $request = HTTPRequestBuilder::get()->build();
+        $request = HTTPRequestBuilder::get()
+            ->withUser($this->user)
+            ->build();
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
-        $injector->injectParametersWithGivenChildMilestone($request, $redirect, null);
+        $this->injector->injectParametersWithGivenChildMilestone($request, $redirect, null);
 
         self::assertEmpty($redirect->query_parameters);
     }
@@ -122,13 +200,13 @@ class RedirectParameterInjectorTest extends TestCase
     public function testInjectParametersWithGivenChildMilestoneInjectsTheRequestedPlanning(): void
     {
         $request = HTTPRequestBuilder::get()
+            ->withUser($this->user)
             ->withParam('planning', ['details' => ['42' => '101']])
             ->build();
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
-        $injector->injectParametersWithGivenChildMilestone($request, $redirect, null);
+        $this->injector->injectParametersWithGivenChildMilestone($request, $redirect, null);
 
         self::assertCount(1, $redirect->query_parameters);
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);
@@ -137,12 +215,12 @@ class RedirectParameterInjectorTest extends TestCase
     public function testInjectParametersWithGivenChildMilestoneInjectsTheChildMilestone(): void
     {
         $request = HTTPRequestBuilder::get()
+            ->withUser($this->user)
             ->build();
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
-        $injector->injectParametersWithGivenChildMilestone($request, $redirect, '666');
+        $this->injector->injectParametersWithGivenChildMilestone($request, $redirect, '666');
 
         self::assertCount(1, $redirect->query_parameters);
         self::assertEquals('666', $redirect->query_parameters['child_milestone']);
@@ -151,13 +229,13 @@ class RedirectParameterInjectorTest extends TestCase
     public function testInjectParametersWithGivenChildMilestoneInjectsThePlanningAndTheChildMilestone(): void
     {
         $request = HTTPRequestBuilder::get()
+            ->withUser($this->user)
             ->withParam('planning', ['details' => ['42' => '101']])
             ->build();
 
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $injector = new RedirectParameterInjector(new AgileDashboard_PaneRedirectionExtractor());
-        $injector->injectParametersWithGivenChildMilestone($request, $redirect, '666');
+        $this->injector->injectParametersWithGivenChildMilestone($request, $redirect, '666');
 
         self::assertCount(2, $redirect->query_parameters);
         self::assertEquals('101', $redirect->query_parameters['planning[details][42]']);

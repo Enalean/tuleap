@@ -38,12 +38,14 @@ use Tracker;
 use Tracker_Artifact_Redirect;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Planning\NotFoundException;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
     private const PROJECT_ID   = 101;
     private const ARTIFACT_ID  = 1001;
@@ -100,9 +102,15 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
         $this->params_extractor  = new AgileDashboard_PaneRedirectionExtractor();
         $this->artifact_linker   = Mockery::mock(Planning_ArtifactLinker::class);
         $this->planning_factory  = Mockery::mock(PlanningFactory::class);
-        $this->injector          = new RedirectParameterInjector($this->params_extractor);
         $this->milestone_factory = Mockery::mock(Planning_MilestoneFactory::class);
         $this->pane_factory      = Mockery::mock(Planning_MilestonePaneFactory::class);
+
+        $this->injector = new RedirectParameterInjector(
+            $this->params_extractor,
+            Mockery::mock(\Tracker_ArtifactFactory::class),
+            $GLOBALS['Response'],
+            Mockery::spy(\TemplateRenderer::class),
+        );
 
         $this->processor = new EventRedirectAfterArtifactCreationOrUpdateHandler(
             $this->params_extractor,

@@ -611,7 +611,9 @@ msgid "The initial effort is now: %1$s"
 msgstr "L'effort estimé est maintenant : %1$s"
 
 msgid "The planning configuration is incorrect, you can not plan items here."
-msgstr "La configuration du planning est incorrecte, vous ne pouvez pas planifier d'éléments ici."
+msgstr ""
+"La configuration du planning est incorrecte, vous ne pouvez pas planifier "
+"d'éléments ici."
 
 msgid ""
 "The post actions cannot be saved because this tracker not a top backlog "
@@ -807,6 +809,10 @@ msgstr "À venir"
 
 msgid "Who can prioritize items?"
 msgstr "Qui peut prioriser les éléments ?"
+
+#, php-format
+msgid "You are creating a new backlog item in: %s"
+msgstr "Vous êtes en train de créer un nouvel élément du backlog pour : %s"
 
 msgid ""
 "You are going to remove the top backlog planning permanently (no possible "
