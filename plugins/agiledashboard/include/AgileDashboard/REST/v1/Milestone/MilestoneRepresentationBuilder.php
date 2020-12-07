@@ -102,6 +102,9 @@ class MilestoneRepresentationBuilder
 
         $submilestone_tracker = $this->sub_milestone_finder->findFirstSubmilestoneTracker($milestone);
 
+        $original_project_collector = new OriginalProjectCollector($milestone->getArtifact(), $user);
+        $this->event_manager->processEvent($original_project_collector);
+
         $milestone_representation = MilestoneRepresentation::build(
             $milestone,
             $status_count,
@@ -111,7 +114,8 @@ class MilestoneRepresentationBuilder
             $representation_type,
             $this->getSubPlanning($milestone, $is_scrum_mono_milestone_enabled),
             $pane_info_collector,
-            $submilestone_tracker
+            $submilestone_tracker,
+            $original_project_collector
         );
 
         $milestone_representation_reference_holder = new class
