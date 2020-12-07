@@ -1,8 +1,11 @@
-<div class="tlp-form-element"
+<div
+    class="tlp-form-element"
     ng-class="{
-    'tlp-form-element-disabled': users_open_list_field.isDisabled(),
-    'tlp-form-element-error': users_open_list_field.isRequiredAndEmpty()
-}">
+        'tlp-form-element-disabled': users_open_list_field.isDisabled(),
+        'tlp-form-element-error': users_open_list_field.isRequiredAndEmpty()
+    }"
+    data-test="openlist-field"
+>
     <label
         class="tlp-label"
         ng-class="{ loading: users_open_list_field.field.loading }"

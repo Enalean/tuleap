@@ -1,5 +1,7 @@
-<div class="tlp-form-element"
+<div
+    class="tlp-form-element"
     ng-class="{'tlp-form-element-disabled': link_field.isDisabled() }"
+    data-test="artifactlink-field"
 >
     <label class="tlp-label"
         for="{{ ::('tracker_field_' + link_field.field.field_id) }}"
@@ -7,12 +9,14 @@
         {{ ::link_field.field.label }}
         <i ng-if="::link_field.field.required" class="fa fa-asterisk"></i>
     </label>
-    <input type="text"
+    <input
+        type="text"
         class="tlp-input"
         placeholder="{{ 'Enter artifact ids separated by a comma' | translate }}"
         id="{{ ::('tracker_field_' + field.field_id) }}"
         ng-model="link_field.value_model.unformatted_links"
         ng-disabled="::link_field.isDisabled(field)"
+        data-test="artifactlink-field-input"
     >
 </div>
 <i ng-if="link_field.is_loading" class="fa fa-spinner fa-spin"></i>

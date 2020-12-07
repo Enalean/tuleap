@@ -4,6 +4,7 @@
         'tlp-form-element-disabled': date_field.isDisabled(),
         'tlp-form-element-error': date_field.isRequiredAndEmpty()
     }"
+    data-test="date-field"
 >
     <label
         for="{{ ::('tracker_field_' + date_field.field.field_id) }}"
@@ -18,6 +19,7 @@
             id="{{ ::('tracker_field_' + date_field.field.field_id) }}"
             type="text"
             class="tlp-input tlp-input-date"
+            data-test="date-field-input"
             size="{{ ::date_field.getFieldSize() }}"
             ng-model="date_field.value_model.value"
             ng-disabled="::date_field.isDisabled()"

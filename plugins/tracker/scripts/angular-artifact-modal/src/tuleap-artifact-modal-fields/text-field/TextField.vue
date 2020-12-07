@@ -24,6 +24,7 @@
             'tlp-form-element-disabled': disabled,
             'tlp-form-element-error': is_required_and_empty,
         }"
+        data-test="text-field"
     >
         <format-selector
             v-bind:id="id"

@@ -1,8 +1,11 @@
-<div class="tlp-form-element"
+<div
+    class="tlp-form-element"
     ng-class="{
-    'tlp-form-element-disabled': ugroups_open_list_field.isDisabled(),
-    'tlp-form-element-error': ugroups_open_list_field.isRequiredAndEmpty()
-}">
+        'tlp-form-element-disabled': ugroups_open_list_field.isDisabled(),
+        'tlp-form-element-error': ugroups_open_list_field.isRequiredAndEmpty()
+    }"
+    data-test="openlist-field"
+>
     <label
         class="tlp-label"
     >{{ ::ugroups_open_list_field.field.label }} <i class="fa fa-asterisk" ng-if="::ugroups_open_list_field.field.required"></i></label>

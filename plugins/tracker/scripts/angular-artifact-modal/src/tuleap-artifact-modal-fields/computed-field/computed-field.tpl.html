@@ -33,6 +33,7 @@
         ng-if="! computed_field.isDisabled() && computed_field.value_model.is_autocomputed"
         ng-click="computed_field.switchToManual()"
         tuleap-focus-on-click="{{ ::('tracker_field_' + computed_field.field.field_id) }}"
+        data-test="switch-to-manual"
     >
         <i class="fas fa-pencil-alt tlp-button-icon"></i> {{ 'Edit' | translate }}
     </button>
@@ -48,6 +49,7 @@
         ng-model="computed_field.value_model.manual_value"
         ng-required="! computed_field.value_model.is_autocomputed"
         id="{{ ::('tracker_field_' + computed_field.field.field_id) }}"
+        data-test="computed-field-input"
     >
     <button type="button"
         class="tlp-append tlp-button-primary tlp-button-outline"
