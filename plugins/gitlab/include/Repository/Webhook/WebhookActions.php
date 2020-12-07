@@ -67,7 +67,7 @@ class WebhookActions
         $this->updateLastPushDateForRepository($gitlab_repository, $webhook_reception_date);
 
         if ($webhook_data instanceof PostPushWebhookData) {
-            $this->post_push_webhook_action_processor->process($webhook_data);
+            $this->post_push_webhook_action_processor->process($gitlab_repository, $webhook_data);
         }
     }
 
