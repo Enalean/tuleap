@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceLinkListPresenterBui
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceLinkPresenterCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\CrossReference\CrossReferenceFieldRenderer;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceFieldPresenterBuilder;
+use Tuleap\Layout\IncludeAssets;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
@@ -343,6 +344,12 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
             TemplateRendererFactory::build(),
             $cross_ref_field_presenter_builder
         );
+
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/trackers',
+            '/assets/trackers'
+        );
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('cross-references-fields.js'));
 
         return $field_cross_ref_renderer->renderCrossReferences($artifact, $this->getCurrentUser());
     }

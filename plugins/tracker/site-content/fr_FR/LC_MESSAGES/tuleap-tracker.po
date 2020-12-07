@@ -2537,6 +2537,9 @@ msgstr "Voir le format"
 msgid "Show diff"
 msgstr "Afficher le diff"
 
+msgid "Show items referenced by {{ artifact_xref }}"
+msgstr "Voir les objets référencés par {{ artifact_xref }}"
+
 msgid "Show/hide this value"
 msgstr "Afficher/cacher cette valeur"
 
