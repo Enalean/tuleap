@@ -207,7 +207,6 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const document_navigation_shortcuts_group: ShortcutsGroup = {
         title: gettext_provider.$gettext("Navigation in Documents service"),
-        cells_id: "documents-service-navigation",
         shortcuts: [
             move_to_top_file,
             move_to_bottom_file,
@@ -220,7 +219,6 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const document_dropdown_shortcuts_group: ShortcutsGroup = {
         title: gettext_provider.$gettext("Actions in Documents service"),
-        cells_id: "documents-service-actions",
         shortcuts: [
             create_new_document,
             create_new_folder,

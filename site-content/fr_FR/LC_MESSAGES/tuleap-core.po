@@ -276,9 +276,6 @@ msgstr "Le compte doit être actif pour changer le mot de passe"
 msgid "Account status"
 msgstr "Statut du compte utilisateur"
 
-msgid "Action"
-msgstr "Action"
-
 msgid "Actions"
 msgstr "Actions"
 

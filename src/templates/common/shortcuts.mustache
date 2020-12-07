@@ -1,31 +1,30 @@
-<table class="tlp-table table">
-    <thead>
-        <tr>
-            <th>{{# gettext }}Shortcut{{/ gettext }}</th>
-            <th class="help-modal-shortcuts-action">{{# gettext }}Action{{/ gettext }}</th>
-        </tr>
-    </thead>
-    <tbody data-modal-shortcuts>
-        <tr>
-            <th id="global" class="help-modal-shortcuts-group-title" colspan="2" scope="colgroup">
-                {{# gettext }}Global shortcuts{{/ gettext }}
-            </th>
-        </tr>
-        <tr>
-            <td class="help-modal-shortcuts-kbds" headers="shortcut global"><kbd>?</kbd></td>
-            <td headers="action global">{{# gettext }}Open this window{{/ gettext }}</td>
-        </tr>
-        <tr>
-            <td class="help-modal-shortcuts-kbds" headers="shortcut global"><kbd>c</kbd></td>
-            <td headers="action global">{{# gettext }}Open "+ New" dropdown{{/ gettext }}</td>
-        </tr>
-        <tr>
-            <td class="help-modal-shortcuts-kbds" headers="shortcut global"><kbd>d</kbd></td>
-            <td headers="action global">{{# gettext }}Go to personal dashboard{{/ gettext }}</td>
-        </tr>
-        <tr>
-            <td class="help-modal-shortcuts-kbds" headers="shortcut global"><kbd>/</kbd> {{# gettext }}or{{/gettext}} <kbd>s</kbd></td>
-            <td headers="action global">{{# gettext }}Switch to...{{/gettext}}</td>
-        </tr>
-    </tbody>
-</table>
+<section class="help-modal-shortcuts-section help-modal-global-shortcuts">
+    <h2 class="tlp-modal-subtitle">{{# gettext }}Global shortcuts{{/gettext}}</h2>
+    <table class="tlp-table help-modal-shortcuts-table">
+        <thead>
+            <tr>
+                <th class="help-modal-shortcuts-description">{{# gettext }}Description{{/ gettext }}</th>
+                <th class="tlp-table-cell-actions">{{# gettext }}Shortcut{{/ gettext }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{# gettext }}Open this window{{/ gettext }}</td>
+                <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>?</kbd></td>
+            </tr>
+            <tr>
+                <td>{{# gettext }}Open "+ New" dropdown{{/ gettext }}</td>
+                <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>c</kbd></td>
+            </tr>
+            <tr>
+                <td>{{# gettext }}Go to personal dashboard{{/ gettext }}</td>
+                <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>d</kbd></td>
+            </tr>
+            <tr>
+                <td>{{# gettext }}Switch to...{{/gettext}}</td>
+                <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>/</kbd> {{# gettext }}or{{/gettext}} <kbd>s</kbd></td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="help-modal-shortcuts-section help-modal-specific-shortcuts" data-shortcuts-help></section>
