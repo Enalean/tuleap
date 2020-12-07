@@ -57,21 +57,14 @@ import {
     postNewFileVersionFromEmpty,
     postNewLinkVersionFromEmpty,
     postWiki,
-    putEmbeddedFileMetadata,
     putEmbeddedFilePermissions,
-    putEmptyDocumentMetadata,
     putEmptyDocumentPermissions,
-    putFileMetadata,
     putFilePermissions,
-    putFolderDocumentMetadata,
     putFolderPermissions,
-    putLinkMetadata,
     putLinkPermissions,
-    putWikiMetadata,
     putWikiPermissions,
     removeUserPreferenceForEmbeddedDisplay,
     setNarrowModeForEmbeddedDisplay,
-    getItemWithSize,
 } from "../api/rest-querier.js";
 
 import {
@@ -102,8 +95,6 @@ import {
     USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE,
 } from "../constants";
 import { addNewFolder } from "../api/rest-querier";
-import { getCustomMetadata } from "../helpers/metadata-helpers/custom-metadata-helper.js";
-import { formatCustomMetadataForFolderUpdate } from "../helpers/metadata-helpers/data-transformatter-helper.js";
 import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../helpers/permissions/ugroups.js";
 
 export const loadRootFolder = async (context) => {
@@ -736,110 +727,6 @@ export const getEmbeddedFileDisplayPreference = async (context, item) => {
     }
 };
 
-export const updateMetadata = async (context, [item, item_to_update, current_folder]) => {
-    const custom_metadata = getCustomMetadata(item_to_update.metadata);
-    let obsolescence_date = item_to_update.obsolescence_date;
-    if (obsolescence_date === "") {
-        obsolescence_date = null;
-    }
-    try {
-        switch (item_to_update.type) {
-            case TYPE_FILE:
-                await putFileMetadata(
-                    item_to_update.id,
-                    item_to_update.title,
-                    item_to_update.description,
-                    item_to_update.owner.id,
-                    item_to_update.status,
-                    obsolescence_date,
-                    custom_metadata
-                );
-                break;
-            case TYPE_EMBEDDED:
-                await putEmbeddedFileMetadata(
-                    item_to_update.id,
-                    item_to_update.title,
-                    item_to_update.description,
-                    item_to_update.owner.id,
-                    item_to_update.status,
-                    obsolescence_date,
-                    custom_metadata
-                );
-                break;
-            case TYPE_LINK:
-                await putLinkMetadata(
-                    item_to_update.id,
-                    item_to_update.title,
-                    item_to_update.description,
-                    item_to_update.owner.id,
-                    item_to_update.status,
-                    obsolescence_date,
-                    custom_metadata
-                );
-                break;
-            case TYPE_WIKI:
-                await putWikiMetadata(
-                    item_to_update.id,
-                    item_to_update.title,
-                    item_to_update.description,
-                    item_to_update.owner.id,
-                    item_to_update.status,
-                    obsolescence_date,
-                    custom_metadata
-                );
-                break;
-            case TYPE_EMPTY:
-                await putEmptyDocumentMetadata(
-                    item_to_update.id,
-                    item_to_update.title,
-                    item_to_update.description,
-                    item_to_update.owner.id,
-                    item_to_update.status,
-                    obsolescence_date,
-                    custom_metadata
-                );
-                break;
-            case TYPE_FOLDER:
-                await putFolderDocumentMetadata(
-                    item_to_update.id,
-                    item_to_update.title,
-                    item_to_update.description,
-                    item_to_update.owner.id,
-                    {
-                        value: item_to_update.status.value,
-                        recursion: item_to_update.status.recursion,
-                    },
-                    obsolescence_date,
-                    custom_metadata
-                );
-                break;
-            default:
-                break;
-        }
-        const updated_item = await getItem(item.id);
-
-        if (item.id === current_folder.id) {
-            context.commit("replaceCurrentFolder", updated_item);
-            await context.dispatch("loadFolder", item.id);
-        } else {
-            Vue.set(updated_item, "updated", true);
-            context.commit("removeItemFromFolderContent", updated_item);
-            context.commit("addJustCreatedItemToFolderContent", updated_item);
-            context.commit("updateCurrentItemForQuickLokDisplay", updated_item);
-        }
-    } catch (exception) {
-        await handleErrorsForModal(context, exception);
-    }
-};
-
-export const updateFolderMetadata = async (
-    context,
-    [item, item_to_update, current_folder, metadata_list_to_update, recursion_option]
-) => {
-    formatCustomMetadataForFolderUpdate(item_to_update, metadata_list_to_update, recursion_option);
-    await updateMetadata(context, [item, item_to_update, current_folder]);
-};
-
 export const updatePermissions = async (context, [item, updated_permissions]) => {
     try {
         switch (item.type) {
@@ -940,16 +827,5 @@ export const createNewVersionFromEmpty = async (context, [selected_type, item, i
         context.commit("updateCurrentItemForQuickLokDisplay", updated_item);
     } catch (exception) {
         await handleErrorsForModal(context, exception);
-    }
-};
-
-export const getFolderProperties = async (context, [folder_item]) => {
-    try {
-        const { folder_properties } = await getItemWithSize(folder_item.id);
-
-        return folder_properties;
-    } catch (exception) {
-        await context.dispatch("error/handleGlobalModalError", exception);
-        return null;
     }
 };

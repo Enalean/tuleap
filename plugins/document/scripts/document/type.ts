@@ -28,3 +28,13 @@ export interface GettextProvider {
     $gettext: (msgid: string) => string;
     $pgettext: (context: string, msgid: string) => string;
 }
+
+export interface Metadata {
+    short_name: string;
+    name: string;
+    description: string | null;
+    type: string;
+    is_required: boolean;
+    is_multiple_value_allowed: boolean;
+    is_used: boolean;
+}

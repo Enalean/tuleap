@@ -37,7 +37,7 @@
     </button>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import EventBus from "../../../../helpers/event-bus.js";
 import { redirectToUrl } from "../../../../helpers/location-helper";
 
@@ -65,7 +65,6 @@ export default {
         },
     },
     methods: {
-        ...mapActions(["getFolderProperties"]),
         shouldWarnOSXUser(total_size, nb_files) {
             if (window.navigator.platform !== "MacIntel") {
                 return false;
@@ -77,7 +76,9 @@ export default {
         async checkFolderSize() {
             this.is_retrieving_folder_size = true;
 
-            const folder_properties = await this.getFolderProperties([this.item]);
+            const folder_properties = await this.$store.dispatch("metadata/getFolderProperties", [
+                this.item,
+            ]);
             this.is_retrieving_folder_size = false;
 
             if (folder_properties === null) {
