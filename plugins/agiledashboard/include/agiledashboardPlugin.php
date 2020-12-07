@@ -695,7 +695,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $GLOBALS['Response'],
             $this->getTemplateRenderer()
         );
-        $injector->injectParametersWithChildMilestoneFromRequest($event->getRequest(), $event->getRedirect());
+        $injector->injectAndInformUserAboutBacklogItemWillBeLinked($event->getRequest(), $event->getRedirect());
     }
 
     /**

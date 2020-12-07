@@ -222,6 +222,6 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
             $child_milestone_id = (string) $last_milestone_artifact->getId();
         }
 
-        $this->injector->injectParametersWithGivenChildMilestone($request, $redirect, $child_milestone_id);
+        $this->injector->injectParameters($request, $redirect, $child_milestone_id);
     }
 }
