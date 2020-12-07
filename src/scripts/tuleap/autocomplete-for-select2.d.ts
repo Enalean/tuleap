@@ -17,10 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface OptionsSelect2 {
+interface OptionsProjectSelect2 {
     include_private_projects?: boolean;
     placeholder?: string;
     minimumInputLength?: number;
 }
 
-export function autocomplete_projects_for_select2(element: Element, options: OptionsSelect2): void;
+interface OptionsUserSelect2 {
+    use_tuleap_id?: boolean;
+    internal_users_only?: 0 | 1;
+    placeholder?: string;
+    project_id?: string;
+}
+
+export function autocomplete_projects_for_select2(
+    element: Element,
+    options: OptionsProjectSelect2
+): void;
+
+export function autocomplete_users_for_select2(element: Element, options: OptionsUserSelect2): void;

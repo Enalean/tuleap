@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createModal } from "tlp";
-import { autocomplete_users_for_select2 } from "../../../src/scripts/tuleap/autocomplete-for-select2.js";
+import { openTargetModalIdOnClick } from "@tuleap/core/scripts/tuleap/modals/modal-opener";
+import { autocomplete_users_for_select2 } from "@tuleap/core/scripts/tuleap/autocomplete-for-select2";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user_to_grant_element = document.getElementById("permission-delegation-add-user");
@@ -27,30 +27,24 @@ document.addEventListener("DOMContentLoaded", () => {
         autocomplete_users_for_select2(user_to_grant_element, { internal_users_only: 1 });
     }
 
-    const modal_add_permission_element = document.getElementById("siteadmin-add-permission-modal");
-    const modal_add_permission = createModal(modal_add_permission_element, {});
-
-    document.getElementById("button-grant-permission").addEventListener("click", () => {
-        modal_add_permission.toggle();
-    });
-
-    const modal_revoke_permission_element = document.getElementById(
-        "siteadmin-revoke-permission-modal"
-    );
-    const modal_revoke_permission = createModal(modal_revoke_permission_element, {});
-
-    document.getElementById("button-revoke-permission").addEventListener("click", () => {
-        modal_revoke_permission.toggle();
-    });
+    openTargetModalIdOnClick(document, "button-grant-permission");
+    openTargetModalIdOnClick(document, "button-revoke-permission");
 
     handlePrimaryButtonState(
         'input[type="checkbox"][name="users_to_revoke[]"]',
         "#button-revoke-permission"
     );
 
-    function handlePrimaryButtonState(source_selector, target_button_selector) {
+    function handlePrimaryButtonState(
+        source_selector: string,
+        target_button_selector: string
+    ): void {
         const source_elements = document.querySelectorAll(source_selector),
             target_button = document.querySelector(target_button_selector);
+
+        if (!target_button || !(target_button instanceof HTMLButtonElement)) {
+            return;
+        }
 
         for (const source of source_elements) {
             source.addEventListener("change", () => {
