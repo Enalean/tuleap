@@ -70,6 +70,7 @@ class CardRepresentationBuilder
         $initial_effort       = $this->getInitialEffort($artifact, $user);
         $remaining_effort     = $this->remaining_effort_representation_builder->getRemainingEffort($user, $artifact);
 
+
         return CardRepresentation::build(
             $artifact,
             $background_color,
@@ -78,7 +79,8 @@ class CardRepresentationBuilder
             $mapped_list_value,
             $initial_effort,
             $remaining_effort,
-            $this->isCollapsed($user, $artifact, $milestone)
+            $this->isCollapsed($user, $artifact, $milestone),
+            $milestone,
         );
     }
 

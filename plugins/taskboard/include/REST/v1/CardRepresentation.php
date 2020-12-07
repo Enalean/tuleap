@@ -24,6 +24,7 @@ namespace Tuleap\Taskboard\REST\v1;
 
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\REST\JsonCast;
+use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
@@ -111,7 +112,9 @@ class CardRepresentation
         ?MappedListValueRepresentation $mapped_list_value,
         ?float $initial_effort,
         ?RemainingEffortRepresentation $remaining_effort,
-        bool $is_collapsed
+        bool $is_collapsed,
+        int $planning_id,
+        int $milestone_artifact_id
     ) {
         $this->id                = JsonCast::toInt($artifact->getId());
         $this->tracker_id        = JsonCast::toInt($artifact->getTrackerId());
@@ -119,7 +122,6 @@ class CardRepresentation
         $this->xref              = $artifact_xref;
         $this->rank              = $rank;
         $this->color             = $color;
-        $this->artifact_html_uri = $artifact->getUri();
         $this->background_color  = (string) $background_color->getBackgroundColorName();
         $this->assignees         = $assignees;
         $this->has_children      = $artifact_has_children;
@@ -128,6 +130,16 @@ class CardRepresentation
         $this->remaining_effort  = $remaining_effort;
         $this->is_open           = $artifact_is_open;
         $this->is_collapsed      = $is_collapsed;
+
+        $this->artifact_html_uri = $artifact->getUriWithParameters(
+            [
+                'planning' => [
+                    TaskboardPaneInfo::NAME => [
+                        $planning_id => $milestone_artifact_id,
+                    ],
+                ],
+            ],
+        );
     }
 
     /**
@@ -143,7 +155,8 @@ class CardRepresentation
         ?MappedListValueRepresentation $mapped_list_value,
         $initial_effort,
         ?RemainingEffortRepresentation $remaining_effort,
-        bool $is_collapsed
+        bool $is_collapsed,
+        \Planning_ArtifactMilestone $milestone
     ): self {
         return new self(
             $artifact,
@@ -159,6 +172,8 @@ class CardRepresentation
             self::formatNumeric($initial_effort),
             $remaining_effort,
             $is_collapsed,
+            $milestone->getPlanningId(),
+            $milestone->getArtifactId(),
         );
     }
 
