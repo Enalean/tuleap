@@ -54,6 +54,7 @@ const webpack_config_for_ts = {
     entry: {
         "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
         "list-fields": "./scripts/artifact/list-fields.ts",
+        "cross-references-fields": "./scripts/form-element/src/cross-references-fields.ts",
     },
     context,
     output,

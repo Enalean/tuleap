@@ -16,10 +16,22 @@
 {{/ has_cross_refs_source }}
 
 {{# has_cross_refs_target }}
-    <h5>{{# dgettext }}tuleap-tracker | Referenced by {{ artifact_xref }}{{/ dgettext}}</h5>
-    {{# cross_refs_target_by_nature }}
+    <div class="tracker-cross-reference-by-section-toggle">
+        <label class="tlp-label" for="toggle-cross-referenced-by">
+            {{# dgettext }}tuleap-tracker | Show items referenced by {{ artifact_xref }}{{/ dgettext }}
+        </label>
+        <div class="tlp-switch tracker-cross-reference-switch">
+            <input type="checkbox" id="toggle-cross-referenced-by" class="tlp-switch-checkbox" autocomplete="off">
+            <label for="toggle-cross-referenced-by" class="tlp-switch-button" aria-hidden></label>
+        </div>
+    </div>
 
-        {{> cross_reference }}
+    <div id="tracker-cross-referenced-by-section" class="tracker-cross-reference-hide-referenced-by">
+        <h5>{{# dgettext }}tuleap-tracker | Referenced by {{ artifact_xref }}{{/ dgettext }}</h5>
+        {{# cross_refs_target_by_nature }}
 
-    {{/ cross_refs_target_by_nature }}
+            {{> cross_reference }}
+
+        {{/ cross_refs_target_by_nature }}
+    </div>
 {{/ has_cross_refs_target }}

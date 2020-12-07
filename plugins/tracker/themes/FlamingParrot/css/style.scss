@@ -189,30 +189,42 @@ body {
     &.FlamingParrot_Orange { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
         @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
+        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
+        @import '../../../../../src/themes/tlp/src/scss/components/switch';
     }
 
     &.FlamingParrot_Blue { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
         @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
+        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
+        @import '../../../../../src/themes/tlp/src/scss/components/switch';
     }
 
     &.FlamingParrot_Green { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
         @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
+        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
+        @import '../../../../../src/themes/tlp/src/scss/components/switch';
     }
 
     &.FlamingParrot_BlueGrey { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
         @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
+        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
+        @import '../../../../../src/themes/tlp/src/scss/components/switch';
     }
 
     &.FlamingParrot_Purple { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
         @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
+        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
+        @import '../../../../../src/themes/tlp/src/scss/components/switch';
     }
 
     &.FlamingParrot_Red { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
         @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info);
+        @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
+        @import '../../../../../src/themes/tlp/src/scss/components/switch';
     }
 }
