@@ -296,7 +296,13 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         assert($layout instanceof BaseLayout);
         $csrf_token = new \CSRFSynchronizerToken(self::CSRF_TOKEN);
         $data       = new AuthorizationFormData($client_app, $csrf_token, $redirect_uri, $state_value, $code_challenge, $oidc_nonce, ...$scopes);
-        return $this->form_renderer->renderForm($data, $layout);
+        return $this->form_renderer->renderForm($data, $layout)
+            ->withHeader(
+                'Content-Security-Policy',
+                "default-src 'none'; base-uri 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self'; font-src 'self'; img-src 'self'; manifest-src 'self';"
+                        . "form-action 'self' " . $redirect_uri . ";"
+                        . "frame-ancestors 'none'; block-all-mixed-content; report-uri /csp-violation;"
+            );
     }
 
     /**
