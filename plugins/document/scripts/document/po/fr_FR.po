@@ -135,17 +135,23 @@ msgstr "Contenu"
 msgid "Copy"
 msgstr "Copier"
 
-msgid "Copy current folder or selected item"
-msgstr "Copier le dossier courant ou l'élément sélectionné"
-
 msgid "Copy the previous approval table."
 msgstr "Copier la table d'approbation précédente."
 
 msgid "Corrupted"
 msgstr "Corrompu"
 
+msgid "Create a new document"
+msgstr "Créer un nouveau document"
+
 msgid "Create a new empty approval table."
 msgstr "Créer une nouvelle table d'approbation vide."
+
+msgid "Create a new folder"
+msgstr "Créer un nouveau dossier"
+
+msgid "Create a new version of document"
+msgstr "Créer une nouvelle version du document"
 
 msgid "Create document"
 msgstr "Créer le document"
@@ -153,17 +159,8 @@ msgstr "Créer le document"
 msgid "Create folder"
 msgstr "Créer le dossier"
 
-msgid "Create new document in current or selected folder"
-msgstr "Créer un nouveau document dans le dossier courant ou sélectionné"
-
-msgid "Create new folder in current or selected folder"
-msgstr "Créer un nouveau dossier dans le dossier courant ou sélectionné"
-
 msgid "Create new version"
 msgstr "Créer une nouvelle version"
-
-msgid "Create new version of selected document"
-msgstr "Créer une nouvelle version du document sélectionné"
 
 msgid "Creation"
 msgstr "Création"
@@ -174,9 +171,6 @@ msgstr "État de la table d’approbation actuel: %{ table_state }."
 msgid "Cut"
 msgstr "Couper"
 
-msgid "Cut current folder or selected item"
-msgstr "Couper le dossier courant ou l'élément sélectionné"
-
 msgid "Default properties"
 msgstr "Propriétés par défaut"
 
@@ -186,9 +180,6 @@ msgstr "Supprimer"
 msgctxt "keyboard key"
 msgid "Delete"
 msgstr "Suppr"
-
-msgid "Delete current folder or selected item"
-msgstr "Supprimer le dossier courant ou l'élément sélectionné"
 
 msgid ""
 "Depending on the speed of your network, it can take some time to complete.\n"
@@ -217,9 +208,6 @@ msgstr "Télécharger quand même"
 
 msgid "Download as zip"
 msgstr "Télécharger au format zip"
-
-msgid "Download current or selected folder as zip"
-msgstr "Télécharger le dossier courant ou sélectionné au format zip"
 
 msgid "Draft"
 msgstr "Brouillon"
@@ -326,8 +314,8 @@ msgstr "Lien"
 msgid "Lock"
 msgstr "Verrouiller"
 
-msgid "Lock and unlock selected document"
-msgstr "Verrouiller et déverrouiller le document sélectionné"
+msgid "Lock and unlock document"
+msgstr "Verrouiller et déverrouiller le document"
 
 msgid "Lock new version"
 msgstr "Verrouiller la nouvelle version"
@@ -414,29 +402,23 @@ msgid_plural "Oops… Unable to upload files"
 msgstr[0] "Oups… Impossible de téléverser un fichier"
 msgstr[1] "Oups… Impossible de téléverser des fichiers"
 
-msgid "Open current folder's or selected item's approval tables"
-msgstr ""
-"Ouvrir les tables d'approbation du dossier courant ou de l'élément "
-"sélectionné"
-
-msgid "Open current folder's or selected item's history"
-msgstr "Ouvrir l'historique du dossier courant ou de l'élément sélectionné"
-
-msgid "Open current folder's or selected item's notifications settings"
-msgstr ""
-"Ouvrir les paramètres de notification du dossier courant ou de l'élément "
-"sélectionné"
-
-msgid "Open current folder's or selected item's permissions settings"
-msgstr ""
-"Ouvrir les paramètres de permissions du dossier courant ou de l'élément "
-"sélectionné"
+msgid "Open approval tables"
+msgstr "Ouvrir les tables d'approbation"
 
 msgid "Open dropdown menu"
 msgstr "Ouvrir le menu déroulant"
 
+msgid "Open history"
+msgstr "Ouvrir l'historique"
+
 msgid "Open link"
 msgstr "Ouvrir le lien"
+
+msgid "Open notifications settings"
+msgstr "Ouvrir les paramètres de notification"
+
+msgid "Open permissions settings"
+msgstr "Ouvrir les paramètres de permissions"
 
 msgid "Other information"
 msgstr "Autres informations"
@@ -450,9 +432,6 @@ msgstr ""
 
 msgid "Paste"
 msgstr "Coller"
-
-msgid "Paste in current or selected folder"
-msgstr "Coller dans le dossier courant ou sélectionné"
 
 msgid "Permanent"
 msgstr "Permanent"
@@ -526,6 +505,13 @@ msgstr "Sélectionner le premier élément"
 
 msgid "Send mail"
 msgstr "Envoyer un Email"
+
+msgid ""
+"Shortcuts will apply to the selected document or folder. If there is no "
+"selected item they will apply to the current folder."
+msgstr ""
+"Les raccourcis s'appliquent au document ou dossier sélectionné. S'il n'y a "
+"pas d'élément sélectionné, ils s'appliqueront au dossier courant."
 
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
@@ -636,10 +622,6 @@ msgstr "URL"
 
 msgid "Unlock"
 msgstr "Déverrouiller"
-
-msgid "Update current folder's or selected item's properties"
-msgstr ""
-"Mettre à jour les propriétés du dossier courant ou de l'élément sélectionné"
 
 msgid "Update permissions"
 msgstr "Mettre à jour les permissions"

@@ -34,11 +34,22 @@ export function createShortcutsGroupInHelpModal(
 }
 
 function createShortcutsGroupHead(doc: Document, shortcuts_group: ShortcutsGroup): HTMLElement {
+    const shortcuts_group_head = doc.createElement("div");
+    shortcuts_group_head.classList.add("help-modal-shortcuts-group-head");
+
     const group_title = doc.createElement("h2");
     group_title.classList.add("tlp-modal-subtitle");
     group_title.append(shortcuts_group.title);
+    shortcuts_group_head.append(group_title);
 
-    return group_title;
+    if (shortcuts_group.details) {
+        const group_details = doc.createElement("p");
+        group_details.classList.add("help-modal-shortcuts-group-details");
+        group_details.append(shortcuts_group.details);
+        shortcuts_group_head.append(group_details);
+    }
+
+    return shortcuts_group_head;
 }
 
 function createShortcutsGroupTable(
@@ -64,12 +75,10 @@ function createTableHead(doc: Document): HTMLTableSectionElement {
     const head_row = table_head.insertRow();
 
     const shortcut_cell = doc.createElement("th");
-    shortcut_cell.scope = "colgroup";
     shortcut_cell.classList.add("tlp-table-cell-actions");
     shortcut_cell.append("Shortcut");
 
     const description_cell = doc.createElement("th");
-    description_cell.scope = "colgroup";
     description_cell.classList.add("help-modal-shortcuts-description");
     description_cell.append("Description");
 

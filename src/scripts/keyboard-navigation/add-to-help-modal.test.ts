@@ -48,16 +48,20 @@ describe("add-to-help-modal.ts", () => {
 
     const shortcuts_group: ShortcutsGroup = {
         title: "shortcuts_group title",
+        details: "shortcuts_group details",
         shortcuts: [shortcut_simple, shortcut_two_options, shortcut_two_keystrokes],
     };
 
     const snapshot = `
-        <h2 class="tlp-modal-subtitle">shortcuts_group title</h2>
+        <div class="help-modal-shortcuts-group-head">
+          <h2 class="tlp-modal-subtitle">shortcuts_group title</h2>
+          <p class="help-modal-shortcuts-group-details">shortcuts_group details</p>
+        </div>
         <table class="tlp-table help-modal-shortcuts-table">
           <thead>
             <tr>
-              <th scope="colgroup" class="help-modal-shortcuts-description">Description</th>
-              <th scope="colgroup" class="tlp-table-cell-actions">Shortcut</th>
+              <th class="help-modal-shortcuts-description">Description</th>
+              <th class="tlp-table-cell-actions">Shortcut</th>
             </tr>
           </thead>
           <tbody>

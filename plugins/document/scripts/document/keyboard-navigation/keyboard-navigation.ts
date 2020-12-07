@@ -83,7 +83,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const create_new_document: Shortcut = {
         keyboard_inputs: "n",
-        description: gettext_provider.$gettext("Create new document in current or selected folder"),
+        description: gettext_provider.$gettext("Create a new document"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-create-document]");
         },
@@ -91,7 +91,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const create_new_folder: Shortcut = {
         keyboard_inputs: "b",
-        description: gettext_provider.$gettext("Create new folder in current or selected folder"),
+        description: gettext_provider.$gettext("Create a new folder"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-create-folder]");
         },
@@ -99,7 +99,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const create_document_new_version: Shortcut = {
         keyboard_inputs: "u",
-        description: gettext_provider.$gettext("Create new version of selected document"),
+        description: gettext_provider.$gettext("Create a new version of document"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-new-version]");
         },
@@ -107,7 +107,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const lock_unlock_document: Shortcut = {
         keyboard_inputs: "l",
-        description: gettext_provider.$gettext("Lock and unlock selected document"),
+        description: gettext_provider.$gettext("Lock and unlock document"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-lock-document]");
         },
@@ -115,9 +115,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const update_document_properties: Shortcut = {
         keyboard_inputs: "e",
-        description: gettext_provider.$gettext(
-            "Update current folder's or selected item's properties"
-        ),
+        description: gettext_provider.$gettext("Update properties"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-update-properties]");
         },
@@ -126,7 +124,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
     const delete_document: Shortcut = {
         keyboard_inputs: "delete",
         displayed_inputs: gettext_provider.$pgettext("keyboard key", "Delete"),
-        description: gettext_provider.$gettext("Delete current folder or selected item"),
+        description: gettext_provider.$gettext("Delete"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-delete]");
         },
@@ -135,7 +133,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
     const cut_document: Shortcut = {
         keyboard_inputs: "ctrl+x",
         displayed_inputs: "Ctrl+x",
-        description: gettext_provider.$gettext("Cut current folder or selected item"),
+        description: gettext_provider.$gettext("Cut"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-cut]");
         },
@@ -144,7 +142,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
     const copy_document: Shortcut = {
         keyboard_inputs: "ctrl+c",
         displayed_inputs: "Ctrl+c",
-        description: gettext_provider.$gettext("Copy current folder or selected item"),
+        description: gettext_provider.$gettext("Copy"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-copy]");
         },
@@ -153,7 +151,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
     const paste_document: Shortcut = {
         keyboard_inputs: "ctrl+v",
         displayed_inputs: "Ctrl+v",
-        description: gettext_provider.$gettext("Paste in current or selected folder"),
+        description: gettext_provider.$gettext("Paste"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-paste]");
         },
@@ -161,7 +159,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const download_folder: Shortcut = {
         keyboard_inputs: "z",
-        description: gettext_provider.$gettext("Download current or selected folder as zip"),
+        description: gettext_provider.$gettext("Download as zip"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-download-zip]");
         },
@@ -169,9 +167,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const open_document_notifications: Shortcut = {
         keyboard_inputs: "m",
-        description: gettext_provider.$gettext(
-            "Open current folder's or selected item's notifications settings"
-        ),
+        description: gettext_provider.$gettext("Open notifications settings"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-notifications]");
         },
@@ -179,7 +175,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const open_document_history: Shortcut = {
         keyboard_inputs: "h",
-        description: gettext_provider.$gettext("Open current folder's or selected item's history"),
+        description: gettext_provider.$gettext("Open history"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-history]");
         },
@@ -187,9 +183,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const open_document_permissions: Shortcut = {
         keyboard_inputs: "p",
-        description: gettext_provider.$gettext(
-            "Open current folder's or selected item's permissions settings"
-        ),
+        description: gettext_provider.$gettext("Open permissions settings"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-permissions]");
         },
@@ -197,9 +191,7 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const open_document_approval_tables: Shortcut = {
         keyboard_inputs: "v",
-        description: gettext_provider.$gettext(
-            "Open current folder's or selected item's approval tables"
-        ),
+        description: gettext_provider.$gettext("Open approval tables"),
         handle: () => {
             clickOnDatashortcutElement(document, "[data-shortcut-approval-tables]");
         },
@@ -219,6 +211,9 @@ export function setupDocumentShortcuts(gettext_provider: GettextProvider): void 
 
     const document_dropdown_shortcuts_group: ShortcutsGroup = {
         title: gettext_provider.$gettext("Actions in Documents service"),
+        details: gettext_provider.$gettext(
+            "Shortcuts will apply to the selected document or folder. If there is no selected item they will apply to the current folder."
+        ),
         shortcuts: [
             create_new_document,
             create_new_folder,
