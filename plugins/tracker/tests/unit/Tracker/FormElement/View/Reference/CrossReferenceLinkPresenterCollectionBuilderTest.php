@@ -77,7 +77,7 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
     public function testItReturnsOneTargetCrossRefAndDontDisplayComma(): void
     {
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(
-            "git_commit_1",
+            "target_git_commit_1",
             "git_commit #1",
             "/plugins/git/1",
             false,
@@ -92,7 +92,7 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
     public function testItReturnsTwoTargetsCrossRefs(): void
     {
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(
-            "git_commit_1",
+            "target_git_commit_1",
             "git_commit #1",
             "/plugins/git/1",
             true,
@@ -100,7 +100,7 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
         );
 
         $cross_ref_link_2 = new CrossReferenceLinkPresenter(
-            "tracker_58",
+            "target_tracker_58",
             "tracker #58",
             "/plugins/tracker/58",
             false,
@@ -115,7 +115,7 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
     public function testItReturnsOneSourceCrossRefAndDontDisplayComma(): void
     {
         $cross_ref_link_1 = new CrossReferenceLinkPresenter(
-            'tracker_789',
+            'source_tracker_789',
             'tracker #789',
             '/plugins/tracker/789',
             false,
