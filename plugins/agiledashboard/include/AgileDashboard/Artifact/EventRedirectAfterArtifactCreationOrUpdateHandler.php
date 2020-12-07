@@ -163,6 +163,9 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
                 $planning->getId(),
                 (int) $redirect_to_artifact_id
             );
+            if (! $milestone->getArtifact()) {
+                return null;
+            }
 
             $list_of_pane_info = $this->pane_factory->getListOfPaneInfo($milestone, $user);
             foreach ($list_of_pane_info as $pane_info) {

@@ -602,9 +602,6 @@ class AgileDashboardRouter
     {
         $aid = $request->getValidated('aid', 'int', 0);
         switch ($aid) {
-            case -1:
-                $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL . '/?group_id=' . urlencode((string) $request->getProject()->getID()));
-                break;
             case 0:
                 $controller = new Planning_MilestoneSelectorController($request, $this->milestone_factory);
                 $this->executeAction($controller, 'show');
