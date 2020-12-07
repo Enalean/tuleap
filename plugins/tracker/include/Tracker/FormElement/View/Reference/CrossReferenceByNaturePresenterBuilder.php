@@ -45,7 +45,6 @@ class CrossReferenceByNaturePresenterBuilder
     public function build(CrossReferenceCollection $cross_reference_collection): ?CrossReferenceByNaturePresenter
     {
         if (
-            $cross_reference_collection->getCrossReferencesBoth() === [] &&
             $cross_reference_collection->getCrossReferencesTarget() === [] &&
             $cross_reference_collection->getCrossReferencesSource() === []
         ) {
@@ -53,12 +52,6 @@ class CrossReferenceByNaturePresenterBuilder
         }
 
         $cross_ref_list_array = [];
-
-        if ($cross_reference_collection->getCrossReferencesBoth() !== []) {
-            $cross_ref_list_array[] = $this->link_list_builder->buildForBoth(
-                $this->link_presenter_collection_builder->build($cross_reference_collection->getCrossReferencesBoth(), "both")
-            );
-        }
 
         if ($cross_reference_collection->getCrossReferencesTarget() !== []) {
             $cross_ref_list_array[] = $this->link_list_builder->buildForTarget(

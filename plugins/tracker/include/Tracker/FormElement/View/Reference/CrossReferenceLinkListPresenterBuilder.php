@@ -32,7 +32,7 @@ class CrossReferenceLinkListPresenterBuilder
     {
         $icon_message = dgettext('tuleap-tracker', 'This item references:');
         $icon_path = "/themes/FlamingParrot/images/ic/right_arrow.png";
-        return new CrossReferenceLinkListPresenter('reference_to', $icon_message, $icon_path, $cross_ref_link_collection);
+        return new CrossReferenceLinkListPresenter('tracker-cross-reference-to', $icon_message, $icon_path, $cross_ref_link_collection);
     }
 
     /**
@@ -42,16 +42,6 @@ class CrossReferenceLinkListPresenterBuilder
     {
         $icon_message = dgettext('tuleap-tracker', 'This item is referenced by:');
         $icon_path = "/themes/FlamingParrot/images/ic/left_arrow.png";
-        return new CrossReferenceLinkListPresenter('referenced_by', $icon_message, $icon_path, $cross_ref_link_collection);
-    }
-
-    /**
-     * @param CrossReferenceLinkPresenter[] $cross_ref_link_collection
-     */
-    public function buildForBoth(array $cross_ref_link_collection): CrossReferenceLinkListPresenter
-    {
-        $icon_message = dgettext('tuleap-tracker', 'Bidirectionnal references:');
-        $icon_path = "/themes/FlamingParrot/images/ic/both_arrows.png";
-        return new CrossReferenceLinkListPresenter('cross_reference', $icon_message, $icon_path, $cross_ref_link_collection);
+        return new CrossReferenceLinkListPresenter('tracker-cross-reference-by', $icon_message, $icon_path, $cross_ref_link_collection);
     }
 }

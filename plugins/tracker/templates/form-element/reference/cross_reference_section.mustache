@@ -1,0 +1,25 @@
+{{^ has_cross_refs_to_display }}
+<div>
+    <span class='empty_value'>
+        {{# dgettext }}tuleap-tracker | References list is empty{{/ dgettext }}
+    </span>
+</div>
+{{/ has_cross_refs_to_display }}
+
+{{# has_cross_refs_source }}
+    <h5>{{# dgettext }}tuleap-tracker | Referencing {{ artifact_xref }}{{/ dgettext}}</h5>
+    {{# cross_refs_source_by_nature }}
+
+        {{> cross_reference }}
+
+    {{/ cross_refs_source_by_nature }}
+{{/ has_cross_refs_source }}
+
+{{# has_cross_refs_target }}
+    <h5>{{# dgettext }}tuleap-tracker | Referenced by {{ artifact_xref }}{{/ dgettext}}</h5>
+    {{# cross_refs_target_by_nature }}
+
+        {{> cross_reference }}
+
+    {{/ cross_refs_target_by_nature }}
+{{/ has_cross_refs_target }}
