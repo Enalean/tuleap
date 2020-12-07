@@ -108,10 +108,11 @@ class IndexPresenter
      * @psalm-readonly
      */
     public $ttm_admin_url = '';
+
     /**
      * @var string
      */
-    public $is_list_picker_enabled;
+    public $trackers_ids_using_list_picker;
 
     /**
      * @param int|false                         $campaign_tracker_id
@@ -168,7 +169,10 @@ class IndexPresenter
         $this->project_flags              = $project_flags;
         $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
         $this->has_project_flags          = count($project_flags) > 0;
-        $this->is_list_picker_enabled     = json_encode((bool) ListPickerIncluder::isListPickerEnabledAndBrowserCompatible());
+        $this->trackers_ids_using_list_picker = $this->getTrackersUsingListPicker(
+            $test_definition_tracker_id,
+            $issue_tracker_id
+        );
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string
@@ -176,5 +180,25 @@ class IndexPresenter
         [$lang, $country] = explode('_', $current_user->getLocale());
 
         return $lang;
+    }
+
+    /**
+     * @param int|false      $test_definition_tracker_id
+     * @param int|false|null $issue_tracker_id
+     */
+    private function getTrackersUsingListPicker($test_definition_tracker_id, $issue_tracker_id): string
+    {
+        $request                    = \HTTPRequest::instance();
+        $trackers_using_list_picker = [];
+
+        if ($test_definition_tracker_id && ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, $test_definition_tracker_id)) {
+            $trackers_using_list_picker[] = $test_definition_tracker_id;
+        }
+
+        if ($issue_tracker_id && ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, $issue_tracker_id)) {
+            $trackers_using_list_picker[] = $issue_tracker_id;
+        }
+
+        return json_encode($trackers_using_list_picker);
     }
 }

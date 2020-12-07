@@ -185,11 +185,12 @@ function ExecutionDetailCtrl(
             },
         ];
 
+        const issue_tracker_id = SharedPropertiesService.getIssueTrackerId();
         NewTuleapArtifactModalService.showCreation(
-            SharedPropertiesService.getIssueTrackerId(),
+            issue_tracker_id,
             null,
             callback,
-            SharedPropertiesService.isListPickerEnabled(),
+            SharedPropertiesService.isListPickerUsedByTracker(issue_tracker_id),
             prefill_values
         );
     }
@@ -271,7 +272,7 @@ function ExecutionDetailCtrl(
                     artifact.tracker.id,
                     artifact.id,
                     callback,
-                    SharedPropertiesService.isListPickerEnabled()
+                    SharedPropertiesService.isListPickerUsedByTracker(artifact.tracker.id)
                 );
             });
         }

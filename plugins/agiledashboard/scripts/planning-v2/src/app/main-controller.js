@@ -57,6 +57,11 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
         const is_list_picker_enabled = Boolean(JSON.parse(planning_init_data.isListPickerEnabled));
         SharedPropertiesService.setEnableListPicker(is_list_picker_enabled);
 
+        const trackers_disabling_list_picker = JSON.parse(
+            planning_init_data.trackersIdsHavingListPickerDisabled
+        );
+        SharedPropertiesService.setTrackersDisablingListPicker(trackers_disabling_list_picker);
+
         const language = planning_init_data.language;
         initLocale(language);
     }

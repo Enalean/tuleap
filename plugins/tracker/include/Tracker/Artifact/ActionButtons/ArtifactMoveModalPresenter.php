@@ -57,6 +57,9 @@ class ArtifactMoveModalPresenter
         $this->tracker_color          = $artifact->getTracker()->getColor()->getName();
         $this->artifact_id            = $artifact->getId();
         $this->project_id             = $artifact->getTracker()->getProject()->getID();
-        $this->is_list_picker_enabled = json_encode((bool) \ForgeConfig::get(ListPickerIncluder::FORGE_CONFIG_KEY));
+        $this->is_list_picker_enabled = json_encode(ListPickerIncluder::isListPickerEnabledAndBrowserCompatible(
+            \HTTPRequest::instance(),
+            $artifact->getTrackerId()
+        ));
     }
 }
