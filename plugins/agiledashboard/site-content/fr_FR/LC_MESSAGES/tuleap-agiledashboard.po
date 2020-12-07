@@ -749,6 +749,9 @@ msgstr "Sémantique fini"
 msgid "Unable to export the configuration"
 msgstr "Impossible d'exporter la configuration"
 
+msgid "Unable to find milestone"
+msgstr "Impossible de trouver le jalon"
+
 msgid "Unable to import the configuration!"
 msgstr "Impossible d'importer la configuration!"
 

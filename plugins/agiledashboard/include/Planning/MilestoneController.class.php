@@ -81,6 +81,10 @@ class Planning_MilestoneController extends BaseController
     public function show()
     {
         $this->generateBareMilestone();
+        if (! $this->milestone->getArtifact()) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'Unable to find milestone'));
+            $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL . '/?group_id=' . urlencode((string) $this->project->getID()));
+        }
         $this->redirectToCorrectPane();
         $this->recordVisit();
 

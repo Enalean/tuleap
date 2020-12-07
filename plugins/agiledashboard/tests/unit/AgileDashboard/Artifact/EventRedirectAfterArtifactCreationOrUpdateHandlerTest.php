@@ -187,7 +187,10 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
             ->once()
             ->andReturn($this->planning);
 
-        $milestone = Mockery::mock(\Planning_Milestone::class);
+        $milestone = Mockery::mock(\Planning_Milestone::class)
+            ->shouldReceive(['getArtifact' => Mockery::mock(Artifact::class)])
+            ->getMock();
+
         $this->milestone_factory
             ->shouldReceive('getBareMilestone')
             ->with($this->user, $this->project, self::PLANNING_ID, self::MILESTONE_ID)
@@ -244,7 +247,10 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
             ->once()
             ->andReturn($this->planning);
 
-        $milestone = Mockery::mock(\Planning_Milestone::class);
+        $milestone = Mockery::mock(\Planning_Milestone::class)
+            ->shouldReceive(['getArtifact' => Mockery::mock(Artifact::class)])
+            ->getMock();
+
         $this->milestone_factory
             ->shouldReceive('getBareMilestone')
             ->with($this->user, $this->project, self::PLANNING_ID, self::MILESTONE_ID)
@@ -263,6 +269,59 @@ class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends TestCase
                         ]
                     )->getMock()
             ]);
+
+        $redirect       = new Tracker_Artifact_Redirect();
+        $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
+
+        $this->processor->process($request, $redirect, $this->artifact);
+        self::assertEquals('/plugins/agiledashboard/', $redirect->base_url);
+        self::assertEquals(
+            [
+                'group_id'    => self::PROJECT_ID,
+                'planning_id' => self::PLANNING_ID,
+                'action'      => 'show',
+                'aid'         => self::MILESTONE_ID,
+                'pane'        => 'details'
+            ],
+            $redirect->query_parameters
+        );
+    }
+
+    public function testItRedirectsToPlanningWithFallbackToLegacyUrlIfMilestoneHasNoArtifact(): void
+    {
+        $request = HTTPRequestBuilder::get()
+            ->withUser($this->user)
+            ->withParam('planning', ['details' => [(string) self::PLANNING_ID => (string) self::MILESTONE_ID]])
+            ->build();
+
+        $this->artifact_linker
+            ->shouldReceive('linkBacklogWithPlanningItems')
+            ->with(
+                $request,
+                $this->artifact,
+                [
+                    'pane'        => 'details',
+                    'planning_id' => self::PLANNING_ID,
+                    'aid'         => self::MILESTONE_ID,
+                    'action'      => 'show',
+                ]
+            )->once();
+
+        $this->planning_factory
+            ->shouldReceive('getPlanning')
+            ->with(self::PLANNING_ID)
+            ->once()
+            ->andReturn($this->planning);
+
+        $milestone = Mockery::mock(\Planning_Milestone::class)
+            ->shouldReceive(['getArtifact' => null])
+            ->getMock();
+
+        $this->milestone_factory
+            ->shouldReceive('getBareMilestone')
+            ->with($this->user, $this->project, self::PLANNING_ID, self::MILESTONE_ID)
+            ->once()
+            ->andReturn($milestone);
 
         $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
