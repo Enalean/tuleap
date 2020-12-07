@@ -85,24 +85,6 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
         $this->assertMatchesRegularExpression('/<input type="hidden" lename/', $html);
     }
 
-    public function testItPresentsReadOnlyViewAsAList(): void
-    {
-        $artifact = Mockery::mock(Artifact::class);
-        $value = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind_value = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $bind_value->shouldReceive('getId')->andReturn(523);
-        $bind->shouldReceive('getAllVisibleValues')->andReturn([523 => $bind_value]);
-        $value->shouldReceive('getListValues')->andReturn([523 => $bind_value]);
-        $bind->shouldReceive('formatChangesetValueWithoutLink')->with($bind_value)->andReturn('A List Value');
-        $field = $this->getCheckboxField();
-        $field->setBind($bind);
-
-        $html = $field->fetchArtifactValueReadOnly($artifact, $value);
-        $this->assertStringContainsString('<ul', $html);
-        $this->assertStringContainsString('<li', $html);
-    }
-
     public function testItReplaceCSVNullValueByNone(): void
     {
         $field = $this->getCheckboxField();
