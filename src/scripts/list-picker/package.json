@@ -9,7 +9,7 @@
   "types": "dist/list-picker/src/index.d.ts",
   "style": "dist/list-picker-style.css",
   "dependencies": {
-    "dompurify": "^2.2.2"
+    "dompurify": "^2.2.3"
   },
   "devDependencies": {
     "@types/resize-observer-browser": "^0.1.4"
