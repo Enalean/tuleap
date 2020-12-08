@@ -531,15 +531,13 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/DirectArtifactLinkCleaner.php">
-    <RedundantCastGivenDocblockType occurrences="2">
+    <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $milestone_artifact-&gt;getId()</code>
-      <code>(int) $milestone_artifact-&gt;getTracker()-&gt;getGroupId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/UnplannedArtifactsAdder.php">
-    <RedundantCastGivenDocblockType occurrences="2">
+    <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $artifact-&gt;getId()</code>
-      <code>(int) $artifact-&gt;getTracker()-&gt;getGroupId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/UnplannedCriterionOptionsProvider.php">
@@ -900,18 +898,10 @@
       <code>$artifact_id</code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Kanban/RecentlyVisited/VisitRetriever.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $collection-&gt;getUser()-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Kanban/ShowKanbanController.php">
     <MissingReturnType occurrences="1">
       <code>showKanban</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Kanban/TrackerReport/ReportFilterFromWhereBuilder.php">
     <MissingParamType occurrences="1">
@@ -1204,6 +1194,9 @@
       <code>$selected_tracker_report_id</code>
       <code>$user_is_kanban_admin</code>
     </MissingParamType>
+    <PossiblyInvalidPropertyAssignmentValue occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </PossiblyInvalidPropertyAssignmentValue>
     <RedundantCast occurrences="1">
       <code>(bool) ListPickerIncluder::isListPickerEnabledAndBrowserCompatible()</code>
     </RedundantCast>
@@ -1597,6 +1590,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/MilestoneReportCriterionOptionsProvider.class.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$backlog_tracker-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="6">
       <code>$content</code>
       <code>$milestone_id</code>
@@ -1726,7 +1722,8 @@
     <MissingParamType occurrences="1">
       <code>$milestone_id</code>
     </MissingParamType>
-    <PossiblyInvalidPropertyAssignmentValue occurrences="1">
+    <PossiblyInvalidPropertyAssignmentValue occurrences="2">
+      <code>$current_user-&gt;getId()</code>
       <code>$project-&gt;getId()</code>
     </PossiblyInvalidPropertyAssignmentValue>
     <RedundantCast occurrences="1">
@@ -2781,8 +2778,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Widget/Kanban.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
       <code>$new_project-&gt;getID()</code>
+      <code>$this-&gt;getCurrentUser()-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="10">
       <code>$id</code>
@@ -2990,21 +2988,15 @@
     <MissingReturnType occurrences="1">
       <code>duplicate</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="3">
+    <RedundantCastGivenDocblockType occurrences="2">
       <code>(int) $to_transition_id</code>
       <code>(int) $transition-&gt;getGroupId()</code>
-      <code>(int) $workflow-&gt;getTracker()-&gt;getGroupId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Workflow/PostAction/Update/AddToTopBacklogValue.php">
     <MissingReturnType occurrences="1">
       <code>accept</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Workflow/REST/v1/AddToTopBacklogJsonParser.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $workflow-&gt;getTracker()-&gt;getGroupId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/XMLExporter.class.php">
     <MissingReturnType occurrences="1">
@@ -3573,6 +3565,11 @@
       <code>planningPlanTitle</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/agiledashboard/include/Planning/PlanningTrackerBacklogChecker.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$tracker-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="plugins/agiledashboard/include/Planning/Presenters/BaseHomePresenter.class.php">
     <MissingParamType occurrences="3">
       <code>$group_id</code>
@@ -3938,10 +3935,8 @@
     <PossiblyUndefinedVariable occurrences="1">
       <code>$result</code>
     </PossiblyUndefinedVariable>
-    <RedundantCastGivenDocblockType occurrences="3">
+    <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $event-&gt;getTransition()-&gt;getGroupId()</code>
-      <code>(int) $tracker-&gt;getGroupId()</code>
-      <code>(int) $user-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
     <TypeDoesNotContainType occurrences="1">
       <code>get_class($field) === 'Tuleap\AgileDashboard\FormElement\Burnup'</code>
@@ -5081,6 +5076,9 @@
     <InvalidReturnType occurrences="1">
       <code>Cardwall_OnTop_Config_TrackerMappingFreestyle</code>
     </InvalidReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$tracker-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="1">
       <code>$mapping_field</code>
     </MissingParamType>
@@ -6144,9 +6142,6 @@
       <code>sendAllowHeaders</code>
       <code>sendPaginationHeaders</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
     <UndefinedDocblockClass occurrences="2">
       <code>$this-&gt;representation_factory</code>
       <code>CrossTrackerArtifactRepresentationFactory</code>
@@ -6156,9 +6151,6 @@
     <MissingReturnType occurrences="1">
       <code>checkUserIsAllowedToSeeReport</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/CSVRepresentation.php">
     <MissingReturnType occurrences="2">
@@ -6779,9 +6771,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>$project-&gt;getID()</code>
     </InvalidScalarArgument>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/crosstracker/include/crosstrackerPlugin.php">
     <MissingParamType occurrences="1">
@@ -9516,9 +9505,10 @@
       <code>Docman_ItemFactory</code>
       <code>Docman_ItemFactory</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="2">
+    <InvalidScalarArgument occurrences="3">
       <code>$group_id</code>
       <code>$group_id</code>
+      <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="73">
       <code>$dar</code>
@@ -11935,6 +11925,9 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/docman/include/Docman_Widget_MyEmbedded.class.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>UserManager::instance()-&gt;getCurrentUser()-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="1">
       <code>$plugin_path</code>
     </MissingParamType>
@@ -12044,11 +12037,6 @@
     <MissingParamType occurrences="1">
       <code>$value</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/docman/include/Metadata/Owner/OwnerRetriever.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $owner-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/docman/include/Notifications/CollectionOfUgroupMonitoredItemsBuilder.php">
     <MissingParamType occurrences="1">
@@ -12567,11 +12555,6 @@
       <code>getActiveProjectUnixNamesThatUseDocman</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Upload/Document/DocumentBeingUploadedInformationProvider.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $current_user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/docman/include/Upload/Document/DocumentOngoingUploadDAO.php">
     <MissingParamType occurrences="16">
       <code>$current_time</code>
@@ -12621,9 +12604,6 @@
     <MissingReturnType occurrences="1">
       <code>create</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/docman/include/Upload/Document/DocumentUploadCleaner.php">
     <MissingReturnType occurrences="1">
@@ -12643,26 +12623,12 @@
       <code>searchVersionOngoingUploadItemIDs</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/docman/include/Upload/Version/VersionBeingUploadedInformationProvider.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $current_user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/docman/include/Upload/Version/VersionOngoingUploadRetriever.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/docman/include/Upload/Version/VersionToUploadCreator.php">
     <RedundantCast occurrences="3">
       <code>(int) $file_size</code>
       <code>(int) $file_size</code>
       <code>(int) $filesize</code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="2">
-      <code>(int) $user-&gt;getId()</code>
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/docman/include/Upload/Version/VersionUploadCleaner.php">
     <MissingReturnType occurrences="1">
@@ -14973,9 +14939,6 @@
       <code>$_SESSION</code>
       <code>$_SESSION</code>
     </NullReference>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $event-&gt;user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/forumml/bin/mail2dbng.php">
     <DeprecatedFunction occurrences="4">
@@ -15484,6 +15447,10 @@
       <code>$body-&gt;name</code>
       <code>$body-&gt;name</code>
     </InvalidCast>
+    <InvalidScalarArgument occurrences="2">
+      <code>$user-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="5">
       <code>$id</code>
       <code>$id</code>
@@ -15526,21 +15493,10 @@
       <code>$current_time</code>
     </MissingParamType>
   </file>
-  <file src="plugins/frs/include/FRS/Upload/FileToUploadCreator.php">
-    <RedundantCastGivenDocblockType occurrences="2">
-      <code>(int) $user-&gt;getId()</code>
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/frs/include/FRS/Upload/FileUploadCleaner.php">
     <MissingReturnType occurrences="1">
       <code>deleteDanglingFilesToUpload</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/frs/include/FRS/Upload/Tus/FileBeingUploadedInformationProvider.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $current_user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/frs/include/FRS/Upload/Tus/FileUploadFinisher.php">
     <InvalidScalarArgument occurrences="1">
@@ -17339,8 +17295,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Hook/ExtractCrossReferences.class.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
       <code>$push_details-&gt;getRepository()-&gt;getProject()-&gt;getId()</code>
+      <code>$push_details-&gt;getUser()-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="1">
       <code>$commit_sha1</code>
@@ -17357,6 +17314,9 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/Hook/LogPushes.class.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$push_details-&gt;getUser()-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingReturnType occurrences="1">
       <code>executeForRepository</code>
     </MissingReturnType>
@@ -21161,6 +21121,9 @@
       <code>$project-&gt;getId()</code>
       <code>Git::PERM_ADMIN</code>
     </InvalidArgument>
+    <InvalidScalarArgument occurrences="1">
+      <code>$this-&gt;user_finder-&gt;getUser($push_informations-&gt;user)-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="3">
       <code>$extraction_path</code>
       <code>$extraction_path</code>
@@ -21451,6 +21414,10 @@
       <code>user_set_preference('plugin_git_user_pushes_offset', $this-&gt;offset)</code>
       <code>user_set_preference('plugin_git_user_pushes_past_days', $this-&gt;pastDays)</code>
     </DeprecatedFunction>
+    <InvalidScalarArgument occurrences="2">
+      <code>$user-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="2">
       <code>$widget_id</code>
       <code>$widget_id</code>
@@ -22449,6 +22416,11 @@
       <code>getName</code>
     </PossiblyNullReference>
   </file>
+  <file src="plugins/gitlfs/include/Lock/LockCreator.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="plugins/gitlfs/include/Lock/LockDao.php">
     <InvalidReturnStatement occurrences="2"/>
     <InvalidReturnType occurrences="2">
@@ -22457,6 +22429,10 @@
     </InvalidReturnType>
   </file>
   <file src="plugins/gitlfs/include/Lock/LockRetriever.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>$owner ? $owner-&gt;getId() : null</code>
+      <code>$owner-&gt;getId()</code>
+    </InvalidScalarArgument>
     <PossiblyNullArgument occurrences="1">
       <code>$this-&gt;user_manager-&gt;getUserById($lock_row['lock_owner'])</code>
     </PossiblyNullArgument>
@@ -23996,6 +23972,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/hudson/include/HudsonWidget.class.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$owner_id</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="2">
       <code>$group_id</code>
       <code>$widget_id</code>
@@ -24150,6 +24129,13 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/hudson/include/hudsonPlugin.php">
+    <InvalidScalarArgument occurrences="5">
+      <code>$user-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="5">
       <code>$id</code>
       <code>$params</code>
@@ -25013,9 +24999,6 @@
     <MissingReturnType occurrences="1">
       <code>setUp</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $member-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/ldap/include/LDAP_CleanUpManager.class.php">
     <MissingParamType occurrences="2">
@@ -25270,11 +25253,6 @@
       <code>$this-&gt;ldapSyncMail</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/ldap/include/LDAP_User.class.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $this-&gt;user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/ldap/include/LDAP_UserDao.class.php">
     <DeprecatedFunction occurrences="5">
       <code>db_ei($date)</code>
@@ -25362,8 +25340,9 @@
     </NullableReturnStatement>
   </file>
   <file src="plugins/ldap/include/LDAP_UserManager.class.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
       <code>$ldapUid</code>
+      <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="4">
       <code>$identifier</code>
@@ -25400,8 +25379,10 @@
     </RedundantPropertyInitializationCheck>
   </file>
   <file src="plugins/ldap/include/LDAP_UserWrite.class.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="3">
+      <code>$new_user-&gt;getId()</code>
       <code>$new_user-&gt;getLdapId()</code>
+      <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="2">
       <code>$password</code>
@@ -25458,7 +25439,15 @@
       <code>getNonUniqueLdapUid</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/ldap/include/WelcomeDisplayController.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$request-&gt;getCurrentUser()-&gt;getId()</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="plugins/ldap/include/WelcomeUpdateController.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$current_user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="5">
       <code>$mailSite</code>
       <code>$mailVa</code>
@@ -25506,9 +25495,11 @@
     <InvalidReturnType occurrences="1">
       <code>void</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="2">
+    <InvalidScalarArgument occurrences="4">
+      <code>$account_information-&gt;getUser()-&gt;getId()</code>
       <code>$event-&gt;getProject()-&gt;getID()</code>
       <code>$event-&gt;getProject()-&gt;getID()</code>
+      <code>$event-&gt;user-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="22">
       <code>$id</code>
@@ -26606,17 +26597,15 @@
       <code>getPluginInfo</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/oauth2_server/include/Grant/AuthorizationCode/OAuth2AuthorizationCodeCreator.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/oauth2_server/include/Grant/TokenRevocationController.php">
     <InvalidReturnType occurrences="1">
       <code>ResponseInterface</code>
     </InvalidReturnType>
   </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/AccountLinker/Controller.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="5">
       <code>$link_id</code>
       <code>$message</code>
@@ -26900,19 +26889,20 @@
     </MissingReturnType>
   </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Login/ConnectorPresenterBuilder.php">
-    <MissingParamType occurrences="3">
-      <code>$return_to</code>
+    <MissingParamType occurrences="2">
       <code>$return_to</code>
       <code>$return_to</code>
     </MissingParamType>
   </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Login/Controller.php">
-    <MissingParamType occurrences="7">
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
+    <MissingParamType occurrences="6">
       <code>$login_time</code>
       <code>$login_time</code>
       <code>$login_time</code>
       <code>$message</code>
-      <code>$return_to</code>
       <code>$return_to</code>
       <code>$return_to</code>
     </MissingParamType>
@@ -26926,14 +26916,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$user</code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Login/LoginUniqueAuthenticationUrlGenerator.php">
-    <MissingParamType occurrences="1">
-      <code>$return_to</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>getURL</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/Login/Registration/UsernameGenerator.php">
     <MissingParamType occurrences="1">
@@ -27064,9 +27046,6 @@
       <code>$last_used</code>
       <code>$provider_id</code>
     </MissingParamType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/openidconnectclient/include/OpenIDConnectClient/UserMapping/UserMappingUsage.php">
     <MissingParamType occurrences="6">
@@ -28332,11 +28311,6 @@
       <code>getPluginInfo</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/pullrequest/include/PullRequest/BranchUpdate/PullRequestUpdatedEvent.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/pullrequest/include/PullRequest/Comment/Comment.php">
     <MissingParamType occurrences="5">
       <code>$content</code>
@@ -28370,6 +28344,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Comment/Factory.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="6">
       <code>$limit</code>
       <code>$offset</code>
@@ -28503,6 +28480,12 @@
     </MissingParamType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Factory.php">
+    <InvalidScalarArgument occurrences="4">
+      <code>$user-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="11">
       <code>$branch_name</code>
       <code>$branch_name</code>
@@ -28768,6 +28751,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/InlineComment/InlineCommentCreator.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="2">
       <code>$post_date</code>
       <code>$project_id</code>
@@ -29311,12 +29297,6 @@
       <code>$repository</code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/pullrequest/include/PullRequest/Reviewer/ReviewerUpdater.php">
-    <RedundantCastGivenDocblockType occurrences="2">
-      <code>(int) $user-&gt;getId()</code>
-      <code>(int) $user_changing_the_reviewers-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/pullrequest/include/PullRequest/Reviewer/UserCannotBeAddedAsReviewerException.php">
     <ImpureMethodCall occurrences="1">
       <code>getId</code>
@@ -29333,16 +29313,6 @@
       <code>getLinesAddedNumber</code>
       <code>getLinesRemovedNumber</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/StateStatus/PullRequestAbandonedEvent.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/StateStatus/PullRequestMergedEvent.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Timeline/Dao.php">
     <MissingParamType occurrences="5">
@@ -29758,17 +29728,11 @@
     <RedundantCast occurrences="1">
       <code>(int) $artifact_id</code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $replication_data-&gt;getUser()-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/AsynchronousCreation/CreateProgramIncrementsTask.php">
     <RedundantCast occurrences="1">
       <code>(int) $replication_data-&gt;getArtifact()-&gt;getId()</code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $replication_data-&gt;getUser()-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/AsynchronousCreation/StatusValueMapper.php">
     <RedundantCast occurrences="1">
@@ -29802,6 +29766,12 @@
       <code>(int) $source_artifact-&gt;getSubmittedOn()</code>
     </RedundantCastGivenDocblockType>
   </file>
+  <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/ProgramIncrement/Source/SourceArtifactNatureAnalyzer.php">
+    <RedundantCastGivenDocblockType occurrences="2">
+      <code>(int) $artifact-&gt;getId()</code>
+      <code>(int) $artifact-&gt;getId()</code>
+    </RedundantCastGivenDocblockType>
+  </file>
   <file src="plugins/scaled_agile/include/Adapter/Program/Backlog/ProgramIncrement/StartDateValueValueAdapter.php">
     <RedundantCast occurrences="1">
       <code>(int) $field_start_date_data-&gt;getId()</code>
@@ -29832,38 +29802,24 @@
       <code>(int) $replication_data-&gt;getFullChangeset()-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Hierarchy/HierarchyAdapter.php">
-    <RedundantCast occurrences="1">
-      <code>(int) $team_tracker-&gt;getProjectId()</code>
-    </RedundantCast>
-  </file>
   <file src="plugins/scaled_agile/include/Adapter/Program/PlanningCheck/PlanningProgramAdapter.php">
-    <PossiblyInvalidArgument occurrences="1">
+    <PossiblyInvalidArgument occurrences="2">
       <code>$program-&gt;getID()</code>
+      <code>$user-&gt;getId()</code>
     </PossiblyInvalidArgument>
     <RedundantCast occurrences="1">
       <code>(int) $program_increment_tracker-&gt;getId()</code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/scaled_agile/include/Adapter/Program/Tracker/ProgramTrackerAdapter.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $tracker-&gt;getGroupId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/scaled_agile/include/Adapter/Team/TeamTrackerAdapter.php">
-    <RedundantCastGivenDocblockType occurrences="2">
-      <code>(int) $team_tracker-&gt;getGroupId()</code>
-      <code>(int) $team_tracker-&gt;getGroupId()</code>
-    </RedundantCastGivenDocblockType>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$team_tracker-&gt;getGroupId()</code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="plugins/scaled_agile/include/Program/Backlog/AsynchronousCreation/ArtifactCreatedHandler.php">
-    <RedundantCastGivenDocblockType occurrences="3">
+    <RedundantCastGivenDocblockType occurrences="2">
       <code>(int) $event-&gt;getArtifact()-&gt;getId()</code>
       <code>(int) $event-&gt;getChangeset()-&gt;getId()</code>
-      <code>(int) $event-&gt;getUser()-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/scaled_agile/include/Program/Backlog/ProgramIncrement/Source/Fields/Field.php">
@@ -29910,9 +29866,8 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/scaled_agile/include/scaled_agilePlugin.php">
-    <RedundantCastGivenDocblockType occurrences="2">
+    <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $event-&gt;getArtifact()-&gt;getId()</code>
-      <code>(int) $event-&gt;getUser()-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/statistics/bin/collectDiskUsage.php">
@@ -30531,9 +30486,10 @@
     <InvalidReturnType occurrences="1">
       <code>int</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="3">
+    <InvalidScalarArgument occurrences="4">
       <code>$project-&gt;getId()</code>
       <code>$quota</code>
+      <code>$userId</code>
       <code>intval($defaultQuota)</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="2">
@@ -32228,7 +32184,8 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Hooks/PostCommit.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
+      <code>$committer-&gt;getId()</code>
       <code>$project_id</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="14">
@@ -33334,6 +33291,11 @@
       <code>$project_id</code>
     </InvalidScalarArgument>
   </file>
+  <file src="plugins/testmanagement/include/TestManagement/REST/v1/DefinitionRepresentation.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$artifact-&gt;getTracker()-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/v1/Execution/ListOfDefinitionsForCampaignRetriever.php">
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $campaign_artifact-&gt;getId()</code>
@@ -33361,6 +33323,12 @@
       <code>(int) $campaign_artifact-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
+  <file src="plugins/testmanagement/include/TestManagement/REST/v1/StepDefinitionRepresentation.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>$project_id</code>
+      <code>$project_id</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="plugins/testmanagement/include/TestManagement/REST/v1/StepsResultsChangesBuilder.php">
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $execution_field-&gt;getId()</code>
@@ -33382,6 +33350,12 @@
   <file src="plugins/testmanagement/include/TestManagement/StartTestManagementController.php">
     <InvalidScalarArgument occurrences="1">
       <code>$project_id</code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="plugins/testmanagement/include/TestManagement/Step/Definition/Field/StepDefinition.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>$this-&gt;getCurrentUser()-&gt;getId()</code>
+      <code>$tracker-&gt;getGroupID()</code>
     </InvalidScalarArgument>
   </file>
   <file src="plugins/testmanagement/include/TestManagement/Step/StepPresenter.php">
@@ -33475,6 +33449,11 @@
     </MissingReturnType>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Admin/AdminController.php">
+    <InvalidScalarArgument occurrences="3">
+      <code>$tracker-&gt;getGroupId()</code>
+      <code>$tracker-&gt;getGroupId()</code>
+      <code>$tracker-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="2">
       <code>$selected_read_ugroup</code>
       <code>$selected_write_ugroup</code>
@@ -33576,6 +33555,10 @@
     </PossiblyFalsePropertyAssignmentValue>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Permissions/PermissionsRetriever.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>$tracker-&gt;getGroupId()</code>
+      <code>$tracker-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
     <MissingReturnType occurrences="2">
       <code>userCanAddTimeInTracker</code>
       <code>userCanSeeAggregatedTimesInTracker</code>
@@ -33638,9 +33621,6 @@
       <code>options</code>
       <code>sendAllowHeaders</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingResource.php">
     <MissingParamType occurrences="2">
@@ -33731,9 +33711,6 @@
       <code>checkMandatoryTimeValue</code>
       <code>doesTimeBelongsToUser</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Time/TimeController.php">
     <MissingReturnType occurrences="3">
@@ -33786,9 +33763,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$user</code>
     </PossiblyNullArgument>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $current_user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Time/TimeRetriever.php">
     <InvalidArgument occurrences="1">
@@ -34698,8 +34672,9 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>TrackerFactory::instance()</code>
     </InvalidPropertyAssignmentValue>
-    <InvalidScalarArgument occurrences="3">
+    <InvalidScalarArgument occurrences="4">
       <code>$field-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
       <code>$workflow-&gt;getId()</code>
       <code>$workflow-&gt;getId()</code>
     </InvalidScalarArgument>
@@ -35140,9 +35115,6 @@
       <code>$project-&gt;getID()</code>
       <code>$project-&gt;getID()</code>
     </InvalidScalarArgument>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $tracker-&gt;getGroupId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Admin/GlobalAdmin/Trackers/TrackersDisplayController.php">
     <InvalidScalarArgument occurrences="1">
@@ -35417,11 +35389,6 @@
       <code>hasChildren</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/ArtifactDescriptionProvider.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $artifact-&gt;getTracker()-&gt;getGroupId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ArtifactNotificationSubscriber.class.php">
     <MissingParamType occurrences="5">
       <code>$feedback_level</code>
@@ -35460,6 +35427,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ArtifactsDeletion/ArtifactDeletor.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$artifact-&gt;getTracker()-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
     <MissingReturnType occurrences="5">
       <code>addProjectHistory</code>
       <code>delete</code>
@@ -35469,8 +35439,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ArtifactsDeletion/ArtifactDependenciesDeletor.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
       <code>$artifact-&gt;getId()</code>
+      <code>$tracker-&gt;getGroupId()</code>
     </InvalidScalarArgument>
     <MissingReturnType occurrences="1">
       <code>cleanDependencies</code>
@@ -35511,9 +35482,8 @@
     <PossiblyNullArgument occurrences="1">
       <code>$user</code>
     </PossiblyNullArgument>
-    <RedundantCastGivenDocblockType occurrences="2">
+    <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $artifact-&gt;getId()</code>
-      <code>(int) $user-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ArtifactsDeletion/PendingArtifactRemovalDao.php">
@@ -35730,6 +35700,11 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/NewChangesetCreatorBase.class.php">
+    <InvalidScalarArgument occurrences="3">
+      <code>$artifact-&gt;getTracker()-&gt;getGroupID()</code>
+      <code>$submitter-&gt;getId()</code>
+      <code>$submitter-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="10">
       <code>$changeset_id</code>
       <code>$changeset_id</code>
@@ -35846,10 +35821,8 @@
     <PossiblyNullReference occurrences="1">
       <code>isAnonymous</code>
     </PossiblyNullReference>
-    <RedundantCastGivenDocblockType occurrences="3">
+    <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $art-&gt;getId()</code>
-      <code>(int) $assigned_to_user-&gt;getId()</code>
-      <code>(int) $recipient-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/PostCreation/MailSender.php">
@@ -35924,6 +35897,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Creation/TrackerArtifactCreator.class.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>$user-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <RedundantCast occurrences="1">
       <code>(int) $submitted_on</code>
     </RedundantCast>
@@ -36475,6 +36452,9 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_ArtifactLinkInfo.class.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$tracker-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="3">
       <code>$nature</code>
       <code>$nature</code>
@@ -36515,6 +36495,9 @@
       <code>$result</code>
       <code>$result</code>
     </FalseOperand>
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="19">
       <code>$body</code>
       <code>$changes</code>
@@ -37220,6 +37203,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLImport.class.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$this-&gt;getSubmittedBy($first_changeset)-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="7">
       <code>$artifact_id</code>
       <code>$extraction_path</code>
@@ -37277,11 +37263,6 @@
     <MissingParamType occurrences="1">
       <code>$file</code>
     </MissingParamType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/XMLImport/TrackerXmlImportConfig.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLImport/XMLImportFieldStrategyArtifactLink.class.php">
     <MissingParamType occurrences="6">
@@ -37939,11 +37920,6 @@
       <code>the</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/AsyncJiraScheduler.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/ClientWrapper.php">
     <RedundantCastGivenDocblockType occurrences="2">
       <code>(int) $response-&gt;getStatusCode()</code>
@@ -37956,44 +37932,38 @@
     </RedundantCast>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Changelog/ListFieldChangeInitialValueRetriever.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$selected_users_ids</code>
+    </InvalidScalarArgument>
     <RedundantCast occurrences="1">
       <code>(int) TrackerImporterUser::ID</code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Comment/CommentXMLValueEnhancer.php">
     <RedundantCast occurrences="1">
       <code>(int) TrackerImporterUser::ID</code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $snapshot_owner-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/JiraTuleapUsersMapping.php">
     <RedundantCast occurrences="1">
       <code>(int) TrackerImporterUser::ID</code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $tuleap_user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Snapshot/ChangelogSnapshotBuilder.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$selected_users_ids</code>
+    </InvalidScalarArgument>
     <RedundantCast occurrences="1">
       <code>(int) TrackerImporterUser::ID</code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Artifact/Snapshot/CurrentSnapshotBuilder.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$selected_users_ids</code>
+    </InvalidScalarArgument>
     <RedundantCast occurrences="1">
       <code>(int) TrackerImporterUser::ID</code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Creation/JiraImporter/Import/Semantic/SemanticsXMLExporter.php">
     <RedundantCast occurrences="4">
@@ -38032,7 +38002,8 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/tracker/include/Tracker/DateReminder/Tracker_DateReminder.class.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
+      <code>$tracker-&gt;getGroupId()</code>
       <code>$ugroup</code>
     </InvalidScalarArgument>
     <MissingPropertyType occurrences="8">
@@ -38062,9 +38033,12 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker_DateReminder</code>
     </InvalidNullableReturnType>
-    <InvalidScalarArgument occurrences="2">
+    <InvalidScalarArgument occurrences="5">
       <code>$reminder-&gt;getId()</code>
       <code>$reminder-&gt;getId()</code>
+      <code>$this-&gt;getTracker()-&gt;getGroupId()</code>
+      <code>$this-&gt;getTracker()-&gt;getGroupId()</code>
+      <code>$this-&gt;tracker-&gt;getGroupId()</code>
     </InvalidScalarArgument>
     <MissingReturnType occurrences="1">
       <code>deleteTrackerReminder</code>
@@ -38080,8 +38054,9 @@
     <ImplicitToStringCast occurrences="1">
       <code>$user</code>
     </ImplicitToStringCast>
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
       <code>$artifact-&gt;getId()</code>
+      <code>$this-&gt;tracker-&gt;getGroupId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="3">
       <code>$artifact</code>
@@ -38112,6 +38087,9 @@
       <code>$this-&gt;displayAllReminders()</code>
     </InvalidOperand>
     <InvalidReturnStatement occurrences="1"/>
+    <InvalidScalarArgument occurrences="1">
+      <code>$groupId</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="1">
       <code>$reminderId</code>
     </MissingParamType>
@@ -39102,11 +39080,6 @@
       <code>deleteArtifactCacheValue</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/CrossReference/CrossReferenceFieldRenderer.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $artifact-&gt;getTracker()-&gt;getGroupId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Date/CSVFormatter.php">
     <MissingParamType occurrences="2">
       <code>$is_time_shown</code>
@@ -39262,7 +39235,15 @@
       <code>(int) $fileinfo-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/File/AttachmentForRestCreator.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$current_user-&gt;getId()</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/File/AttachmentForTraditionalUploadCreator.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$submitted_by-&gt;getId()</code>
+    </InvalidScalarArgument>
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $attachment-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
@@ -39301,22 +39282,15 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/File/Upload/FileToUploadCreator.php">
-    <RedundantCastGivenDocblockType occurrences="4">
+    <RedundantCastGivenDocblockType occurrences="2">
       <code>(int) $field-&gt;getId()</code>
       <code>(int) $field-&gt;getId()</code>
-      <code>(int) $user-&gt;getId()</code>
-      <code>(int) $user-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/File/Upload/FileUploadCleaner.php">
     <MissingReturnType occurrences="1">
       <code>deleteDanglingFilesToUpload</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/File/Upload/Tus/FileBeingUploadedInformationProvider.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $current_user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/FloatingPointNumber/ChangesChecker.php">
     <MissingParamType occurrences="1">
@@ -40452,7 +40426,8 @@
     <InvalidReturnType occurrences="1">
       <code>string</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
+      <code>$this-&gt;getCurrentUser()-&gt;getId()</code>
       <code>trim($id)</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="36">
@@ -40594,6 +40569,9 @@
       <code>getQuerySelect</code>
       <code>keepValue</code>
     </InvalidReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$artifact-&gt;getTracker()-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="3">
       <code>$criteria</code>
       <code>$from_aid</code>
@@ -42177,6 +42155,10 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker_Artifact_ChangesetValue</code>
     </InvalidNullableReturnType>
+    <InvalidScalarArgument occurrences="2">
+      <code>$this-&gt;getTracker()-&gt;getGroupID()</code>
+      <code>UserManager::instance()-&gt;getCurrentUser()-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="11">
       <code>$artifact</code>
       <code>$content</code>
@@ -42619,8 +42601,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/HierarchicalTrackerFactory.class.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
       <code>$project-&gt;getID()</code>
+      <code>$tracker-&gt;getGroupId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="9">
       <code>$children_map</code>
@@ -43383,9 +43366,6 @@
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
     </PossiblyNullReference>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/Settings/Administration/NotificationsAdminSettingsControllerCommon.php">
     <InvalidScalarArgument occurrences="1">
@@ -43409,6 +43389,9 @@
     </InvalidScalarArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/Settings/NotificationsUserSettingsUpdateController.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$tracker-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
     <MissingReturnType occurrences="1">
       <code>processUpdate</code>
     </MissingReturnType>
@@ -43477,9 +43460,6 @@
     <RedundantCast occurrences="1">
       <code>(int) $tracker-&gt;getId()</code>
     </RedundantCast>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/TrackerForceNotificationsLevelCommand.php">
     <MissingReturnType occurrences="1">
@@ -43661,6 +43641,11 @@
       <code>(int) $this-&gt;field-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Permission/Fields/ByField/ByFieldPresenter.php">
+    <PossiblyInvalidPropertyAssignmentValue occurrences="1">
+      <code>$tracker-&gt;getGroupId()</code>
+    </PossiblyInvalidPropertyAssignmentValue>
+  </file>
   <file src="plugins/tracker/include/Tracker/Permission/Fields/ByGroup/ByGroupController.php">
     <MissingReturnType occurrences="1">
       <code>display</code>
@@ -43676,14 +43661,21 @@
       <code>setUgroupList</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Permission/Fields/ByGroup/ByGroupPresenter.php">
+    <PossiblyInvalidPropertyAssignmentValue occurrences="1">
+      <code>$tracker-&gt;getGroupId()</code>
+    </PossiblyInvalidPropertyAssignmentValue>
+  </file>
   <file src="plugins/tracker/include/Tracker/Permission/Fields/PermissionsOnFieldsUpdateController.php">
     <MissingReturnType occurrences="1">
       <code>getUrl</code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Permission/PermissionChecker.class.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="3">
+      <code>$artifact-&gt;getTracker()-&gt;getGroupId()</code>
       <code>$project-&gt;getID()</code>
+      <code>$tracker-&gt;getGroupId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="1">
       <code>$ugroup_id</code>
@@ -43724,9 +43716,6 @@
       <code>ugroup_permissions</code>
       <code>ugroup_title</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $this-&gt;tracker-&gt;getGroupID()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/tracker/include/Tracker/Permission/PermissionPresenterBuilder.class.php">
     <MissingParamType occurrences="2">
@@ -46263,6 +46252,9 @@
     <InvalidReturnType occurrences="1">
       <code>ReportRenderer</code>
     </InvalidReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$group_id</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="44">
       <code>$additional_criteria_values</code>
       <code>$current_renderer</code>
@@ -46558,6 +46550,9 @@
     </MissingParamType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_HeaderRenderer.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$current_user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="5">
       <code>$is_admin</code>
       <code>$link_artifact_id</code>
@@ -48183,8 +48178,11 @@
       <code>int</code>
       <code>void</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="4">
+      <code>$current_user-&gt;getid()</code>
       <code>$report_id</code>
+      <code>$this-&gt;getGroupId()</code>
+      <code>$this-&gt;getGroupId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="52">
       <code>$allow_copy</code>
@@ -48375,9 +48373,10 @@
       <code>Hierarchy</code>
       <code>bool</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="2">
+    <InvalidScalarArgument occurrences="3">
       <code>$project-&gt;getID()</code>
       <code>$project-&gt;getID()</code>
+      <code>$project_id</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="19">
       <code>$description</code>
@@ -48570,6 +48569,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Tracker_NotificationsManager.class.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>$this-&gt;tracker-&gt;getGroupId()</code>
+      <code>$this-&gt;tracker-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="16">
       <code>$addresses</code>
       <code>$email_address</code>
@@ -48644,6 +48647,12 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Tracker_URL.class.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$tracker-&gt;getGroupId()</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>?int</code>
+    </InvalidReturnType>
     <MissingReturnType occurrences="3">
       <code>getArtifactFactory</code>
       <code>getArtifactReportFactory</code>
@@ -50359,11 +50368,13 @@
       <code>$conditions</code>
       <code>$this-&gt;getConditionFactory()-&gt;getConditions($this)</code>
     </InvalidPropertyAssignmentValue>
-    <InvalidReturnStatement occurrences="1">
+    <InvalidReturnStatement occurrences="2">
       <code>$this-&gt;conditions</code>
+      <code>$this-&gt;getWorkflow()-&gt;getTracker()-&gt;getGroupId()</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
+    <InvalidReturnType occurrences="3">
       <code>Workflow_Transition_ConditionsCollection</code>
+      <code>int</code>
       <code>int</code>
     </InvalidReturnType>
     <MissingPropertyType occurrences="2">
@@ -50503,6 +50514,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Workflow/Transition/Condition/Permissions.class.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$tracker-&gt;getGroupId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="3">
       <code>$authorized_ugroups_keyname</code>
       <code>$fields_data</code>
@@ -52342,6 +52356,9 @@
     <InvalidArgument occurrences="1">
       <code>$this-&gt;getLastModified()</code>
     </InvalidArgument>
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingPropertyType occurrences="3">
       <code>$file</code>
       <code>$project</code>
@@ -53064,6 +53081,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Dashboard/User/AtUserCreationDefaultWidgetsCreator.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingReturnType occurrences="1">
       <code>createDefaultDashboard</code>
     </MissingReturnType>
@@ -53627,9 +53647,6 @@
     <PossiblyNullReference occurrences="1">
       <code>loadContent</code>
     </PossiblyNullReference>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/Dashboard/Widget/Router.php">
     <MissingReturnType occurrences="2">
@@ -53897,6 +53914,11 @@
       <code>getPackageID</code>
     </PossiblyNullReference>
   </file>
+  <file src="src/common/FRS/FRSFileDownloadController.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$current_user-&gt;getId()</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="src/common/FRS/FRSFileFactory.class.php">
     <ArgumentTypeCoercion occurrences="1">
       <code>$backend</code>
@@ -53965,6 +53987,11 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/FRS/FRSLog.class.php">
+    <InvalidScalarArgument occurrences="3">
+      <code>$userID</code>
+      <code>$userID</code>
+      <code>$userID</code>
+    </InvalidScalarArgument>
     <MissingPropertyType occurrences="2">
       <code>$_instance</code>
       <code>$dao</code>
@@ -54838,9 +54865,11 @@
     </MissingReturnType>
   </file>
   <file src="src/common/FRS/UploadedLinkDeletor.php">
-    <InvalidScalarArgument occurrences="2">
+    <InvalidScalarArgument occurrences="4">
       <code>$release-&gt;getProject()-&gt;getID()</code>
       <code>$release-&gt;getProject()-&gt;getID()</code>
+      <code>$requester-&gt;getId()</code>
+      <code>$requester-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingReturnType occurrences="2">
       <code>deleteByIDsAndRelease</code>
@@ -54916,8 +54945,9 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/FRS/UploadedLinksUpdater.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
       <code>$release-&gt;getProject()-&gt;getID()</code>
+      <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="1">
       <code>$release_time</code>
@@ -55063,15 +55093,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/InviteBuddy/AccountCreationFeedback.php">
-    <RedundantCastGivenDocblockType occurrences="3">
-      <code>(int) $just_created_user-&gt;getId()</code>
+    <RedundantCastGivenDocblockType occurrences="2">
       <code>(string) $just_created_user-&gt;getEmail()</code>
       <code>(string) $just_created_user-&gt;getEmail()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/common/InviteBuddy/Admin/InvitedByPresenterBuilder.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/InviteBuddy/Admin/InvitedByUserPresenter.php">
@@ -55088,22 +55112,6 @@
   <file src="src/common/InviteBuddy/InvitationEmailRegisterPresenter.php">
     <RedundantCastGivenDocblockType occurrences="1">
       <code>(string) $current_user-&gt;getRealName()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/common/InviteBuddy/InvitationLimitChecker.php">
-    <RedundantCastGivenDocblockType occurrences="2">
-      <code>(int) $user-&gt;getId()</code>
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/common/InviteBuddy/InvitationRecipient.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $this-&gt;user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/common/InviteBuddy/InvitationSender.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $current_user-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/JWT/REST/JWTRepresentation.class.php">
@@ -55128,11 +55136,6 @@
     <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\JWT\REST\JWTRepresentation</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="src/common/JWT/generators/JWTGenerator.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $current_user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/Jenkins/Client.class.php">
     <MissingParamType occurrences="3">
@@ -55625,11 +55628,6 @@
     <MissingPropertyType occurrences="1">
       <code>$description</code>
     </MissingPropertyType>
-  </file>
-  <file src="src/common/Platform/Banner/BannerRetriever.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/Project/Admin/Categories/CategoryCollection.php">
     <RedundantCastGivenDocblockType occurrences="1">
@@ -56937,11 +56935,6 @@
       <code>$project-&gt;getID()</code>
     </InvalidScalarArgument>
   </file>
-  <file src="src/common/Project/Banner/BannerRetriever.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="src/common/Project/CustomDescription/CustomDescription.class.php">
     <MissingParamType occurrences="6">
       <code>$description</code>
@@ -57804,10 +57797,11 @@
     <InvalidReturnType occurrences="1">
       <code>ProjectManager</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="3">
+    <InvalidScalarArgument occurrences="4">
       <code>$project-&gt;getID()</code>
       <code>$project-&gt;getId()</code>
       <code>$project_id</code>
+      <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="33">
       <code>$access_level</code>
@@ -57897,6 +57891,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Project/ProjectUGroup.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="15">
       <code>$group_id</code>
       <code>$group_id</code>
@@ -58202,11 +58199,6 @@
       <code>(int) $user_group-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="src/common/Project/Registration/ProjectRegistrationUserPermissionChecker.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $requester-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="src/common/Project/Registration/Template/AgileALMTemplate.php">
     <MissingPropertyType occurrences="1">
       <code>$description</code>
@@ -58461,6 +58453,9 @@
     <InvalidReturnType occurrences="1">
       <code>DataAccessResult</code>
     </InvalidReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="10">
       <code>$group_id</code>
       <code>$name</code>
@@ -58522,9 +58517,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>$project-&gt;getID()</code>
     </InvalidScalarArgument>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/Project/UGroups/Membership/DynamicUGroups/DynamicUGroupMembersUpdater.php">
     <MissingReturnType occurrences="12">
@@ -58543,15 +58535,15 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Project/UGroups/Membership/MemberAdder.php">
-    <InvalidScalarArgument occurrences="2">
+    <InvalidScalarArgument occurrences="3">
       <code>$project_id</code>
       <code>$project_id</code>
+      <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
   </file>
   <file src="src/common/Project/UGroups/Membership/StaticUGroups/StaticMemberRemover.php">
-    <RedundantCastGivenDocblockType occurrences="2">
+    <RedundantCastGivenDocblockType occurrences="1">
       <code>(int) $ugroup-&gt;getId()</code>
-      <code>(int) $user-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/Project/UgroupDuplicator.php">
@@ -58716,9 +58708,6 @@
     <MissingReturnType occurrences="1">
       <code>buildPayload</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $owner-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/Project/Webhook/Webhook.php">
     <MissingParamType occurrences="3">
@@ -59549,11 +59538,6 @@
       <code>$_SESSION</code>
     </NullReference>
   </file>
-  <file src="src/common/User/AccessKey/AccessKeyCreator.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="src/common/User/AccessKey/AccessKeyDAO.php">
     <MissingParamType occurrences="2">
       <code>$current_time</code>
@@ -59570,16 +59554,6 @@
       <code>$last_used_on</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/User/AccessKey/AccessKeyMetadataRetriever.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="src/common/User/AccessKey/AccessKeyRevoker.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="src/common/User/AccessKey/AccessKeyVerifier.php">
     <MissingParamType occurrences="3">
       <code>$ip_address_requesting_verification</code>
@@ -59593,9 +59567,8 @@
     </PossiblyNullArgument>
   </file>
   <file src="src/common/User/Account/AccountInformationCollectionPresenter.php">
-    <RedundantCastGivenDocblockType occurrences="2">
+    <RedundantCastGivenDocblockType occurrences="1">
       <code>(bool) $user-&gt;hasAvatar()</code>
-      <code>(int) $user-&gt;getId()</code>
     </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/User/Account/AccountTabPresenterCollection.php">
@@ -59760,11 +59733,6 @@
       <code>$this-&gt;validate_all_label</code>
       <code>$this-&gt;validate_label</code>
     </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/User/Admin/RestrictedProjectsUserCounter.php">
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/User/Admin/UserChangePasswordPresenter.php">
     <MissingPropertyType occurrences="6">
@@ -60355,10 +60323,20 @@
       <code>$regexp</code>
     </MissingPropertyType>
   </file>
+  <file src="src/common/User/Password/Reset/Creator.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="src/common/User/Password/Reset/ResetTokenSerializer.php">
     <ImplicitToStringCast occurrences="1">
       <code>$identifier</code>
     </ImplicitToStringCast>
+  </file>
+  <file src="src/common/User/Password/Reset/Revoker.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
   </file>
   <file src="src/common/User/Password/Reset/Verifier.php">
     <InvalidNullableReturnType occurrences="1">
@@ -60387,6 +60365,11 @@
       <code>displayAvatar</code>
       <code>redirectIfStalled</code>
     </MissingReturnType>
+  </file>
+  <file src="src/common/User/Profile/AvatarGenerator.php">
+    <PossiblyInvalidOperand occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </PossiblyInvalidOperand>
   </file>
   <file src="src/common/User/Profile/ProfileController.php">
     <MissingReturnType occurrences="1">
@@ -60491,9 +60474,6 @@
       <code>getPreference</code>
       <code>setPreference</code>
     </PossiblyNullReference>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $this-&gt;user_manager-&gt;getCurrentUser()-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/User/RandomNumberGenerator.class.php">
     <MissingParamType occurrences="1">
@@ -60822,10 +60802,12 @@
     <InvalidReturnType occurrences="1">
       <code>type</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="3">
+    <InvalidScalarArgument occurrences="5">
       <code>$newUid</code>
       <code>$this-&gt;getDao()-&gt;foundRows()</code>
       <code>$this-&gt;getDao()-&gt;foundRows()</code>
+      <code>$user-&gt;getId()</code>
+      <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="23">
       <code>$allowpending</code>
@@ -61190,9 +61172,6 @@
     <MissingReturnType occurrences="1">
       <code>add</code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $user-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="src/common/User/XML/UserXMLExporter.class.php">
     <MissingParamType occurrences="5">
@@ -69106,8 +69085,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/svn/hook/PostRevPropset.class.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
       <code>$project-&gt;getID()</code>
+      <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="2">
       <code>$old_commit_message</code>
@@ -69774,6 +69754,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/system_event/include/SystemEventUserActiveStatusChange.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$user-&gt;getId()</code>
+    </InvalidScalarArgument>
     <MissingReturnType occurrences="1">
       <code>process</code>
     </MissingReturnType>
@@ -75299,9 +75282,6 @@
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <RedundantCastGivenDocblockType occurrences="1">
-      <code>(int) $author-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
     <UndefinedDocblockClass occurrences="3">
       <code>$this-&gt;wrapper-&gt;getRequest()</code>
       <code>$this-&gt;wrapper-&gt;getRequest()</code>
@@ -75885,8 +75865,9 @@
     </PossiblyFalseReference>
   </file>
   <file src="src/www/api/reference/extractCross.php">
-    <InvalidScalarArgument occurrences="1">
+    <InvalidScalarArgument occurrences="2">
       <code>$group_id</code>
+      <code>$user_id</code>
     </InvalidScalarArgument>
   </file>
   <file src="src/www/cvs/admin_commit.php">
@@ -81000,10 +80981,6 @@
     <ParadoxicalCondition occurrences="1">
       <code>! $group || ! is_object($group) || $group-&gt;isError()</code>
     </ParadoxicalCondition>
-    <RedundantCastGivenDocblockType occurrences="2">
-      <code>(int) UserManager::instance()-&gt;getCurrentUser()-&gt;getId()</code>
-      <code>(int) UserManager::instance()-&gt;getCurrentUser()-&gt;getId()</code>
-    </RedundantCastGivenDocblockType>
   </file>
   <file src="src/www/tracker/index.php">
     <AssignmentToVoid occurrences="5">
