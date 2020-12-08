@@ -34,20 +34,60 @@ final class ListPickerIncluder
      */
     public const FORGE_CONFIG_KEY = 'feature_flag_use_list_pickers_in_trackers_and_modals';
 
-    public static function includeListPickerAssets(): void
+    public static function includeListPickerAssets(HTTPRequest $request, int $tracker_id): void
     {
-        if (self::isListPickerEnabledAndBrowserCompatible()) {
+        if (self::isListPickerEnabledAndBrowserCompatible($request, $tracker_id)) {
             $include_assets = new \Tuleap\Layout\IncludeAssets(
                 __DIR__ . '/../../../../../../src/www/assets/trackers',
                 '/assets/trackers'
             );
+
             $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('list-fields.js'));
         }
     }
 
-    public static function isListPickerEnabledAndBrowserCompatible(): bool
+    public static function isListPickerEnabledAndBrowserCompatible(HTTPRequest $request, int $tracker_id): bool
     {
-        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
-        return $detected_browser->isIE11() || $detected_browser->isEdgeLegacy() || $detected_browser->isIEBefore11() ? false : (bool) \ForgeConfig::get(self::FORGE_CONFIG_KEY);
+        if (self::isListPickerEnabledOnPlatform() === false) {
+            return false;
+        }
+
+        if (self::isFeatureDisabledForCurrentTracker($tracker_id)) {
+            return false;
+        }
+
+        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
+        return ! $detected_browser->isIE11() && ! $detected_browser->isEdgeLegacy() && ! $detected_browser->isIEBefore11();
+    }
+
+    public static function isListPickerEnabledOnPlatform(): bool
+    {
+        return \ForgeConfig::get(self::FORGE_CONFIG_KEY) !== "0";
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getTrackersHavingListPickerDisabled(): array
+    {
+        $config_value = \ForgeConfig::get(self::FORGE_CONFIG_KEY);
+        $tracker_id_prefix_position = strpos($config_value, "t:");
+        if ($tracker_id_prefix_position === false) {
+            return [];
+        }
+
+        return explode(
+            ",",
+            str_replace(
+                "t:",
+                "",
+                $config_value
+            )
+        );
+    }
+
+    private static function isFeatureDisabledForCurrentTracker(int $tracker_id): bool
+    {
+        return array_search($tracker_id, self::getTrackersHavingListPickerDisabled()) !== false;
     }
 }

@@ -214,11 +214,12 @@ function CampaignEditCtrl(
             DefinitionService.getDefinitionById(definition_id).then(addTest);
         };
 
+        const definition_tracker_id = SharedPropertiesService.getDefinitionTrackerId();
         NewTuleapArtifactModalService.showCreation(
-            SharedPropertiesService.getDefinitionTrackerId(),
+            definition_tracker_id,
             null,
             callback,
-            SharedPropertiesService.isListPickerEnabled()
+            SharedPropertiesService.isListPickerUsedByTracker(definition_tracker_id)
         );
     }
 

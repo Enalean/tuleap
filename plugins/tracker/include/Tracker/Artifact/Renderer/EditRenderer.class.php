@@ -124,20 +124,21 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function displayHeader()
     {
-        $title = sprintf(
+        $title        = sprintf(
             '%s - %s #%d',
             mb_substr($this->artifact->getTitle() ?? '', 0, 64),
             $this->tracker->getItemName(),
             $this->artifact->getId()
         );
-        $breadcrumbs = [
+        $breadcrumbs  = [
             ['title' => $this->artifact->getXRef(),
                   'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId()]
         ];
-        $params = [
+        $request = HTTPRequest::instance();
+        $params       = [
             'body_class' => ['widgetable', 'has-sidebar-with-pinned-header', 'tracker-artifact-view-body'],
             'open_graph' => new \Tuleap\OpenGraph\OpenGraphPresenter(
-                HTTPRequest::instance()->getServerUrl() . $this->artifact->getUri(),
+                $request->getServerUrl() . $this->artifact->getUri(),
                 $this->artifact->getTitle(),
                 $this->artifact->getDescription()
             )
@@ -152,7 +153,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('text-follow-up.js'));
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tracker-email-copy-paste-fp.js'));
         $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
-        ListPickerIncluder::includeListPickerAssets();
+        ListPickerIncluder::includeListPickerAssets($request, $this->tracker->getId());
 
         $event = new GetAdditionalJavascriptFilesForArtifactDisplay();
         $this->event_manager->dispatch($event);

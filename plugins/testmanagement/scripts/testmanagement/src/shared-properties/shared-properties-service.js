@@ -9,7 +9,7 @@ function SharedPropertiesService() {
         nodejs_server_version: undefined,
         uuid: undefined,
         milestone: undefined,
-        is_list_picker_enabled: false,
+        trackers_using_list_picker: [],
     };
 
     return {
@@ -37,8 +37,8 @@ function SharedPropertiesService() {
         getIssueTrackerConfig: getIssueTrackerConfig,
         getCurrentMilestone: getCurrentMilestone,
         setCurrentMilestone: setCurrentMilestone,
-        isListPickerEnabled: isListPickerEnabled,
-        setIsListPickerEnabled: setIsListPickerEnabled,
+        isListPickerUsedByTracker: isListPickerUsedByTracker,
+        setTrackersUsingListPicker: setTrackersUsingListPicker,
     };
 
     function getProjectId() {
@@ -137,11 +137,11 @@ function SharedPropertiesService() {
         property.milestone = milestone;
     }
 
-    function isListPickerEnabled() {
-        return property.is_list_picker_enabled;
+    function isListPickerUsedByTracker(tracker_id) {
+        return property.trackers_using_list_picker.includes(tracker_id);
     }
 
-    function setIsListPickerEnabled(is_list_picker_enabled) {
-        property.is_list_picker_enabled = is_list_picker_enabled;
+    function setTrackersUsingListPicker(trackers_using_list_picker) {
+        property.trackers_using_list_picker = trackers_using_list_picker;
     }
 }

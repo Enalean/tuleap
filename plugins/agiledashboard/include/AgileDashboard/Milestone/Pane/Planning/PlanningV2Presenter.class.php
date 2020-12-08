@@ -67,6 +67,12 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
      * @var string
      */
     public $is_list_picker_enabled;
+
+    /**
+     * @var string
+     */
+    public $trackers_ids_having_list_picker_disabled;
+
     /**
      * @var bool
      */
@@ -85,18 +91,19 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         bool $backlog_add_item_allowed,
         bool $is_planning_available
     ) {
-        $this->user_id                             = $current_user->getId();
-        $this->lang                                = $this->getLanguageAbbreviation($current_user);
-        $this->project_id                          = $project->getId();
-        $this->milestone_id                        = $milestone_id;
-        $this->view_mode                           = (string) $current_user->getPreference('agiledashboard_planning_item_view_mode_' . $this->project_id);
-        $this->user_accessibility_mode             = json_encode((bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE));
-        $this->is_in_explicit_top_backlog          = $is_in_explicit_top_backlog;
-        $this->allowed_additional_panes_to_display = json_encode($allowed_additional_panes_to_display);
-        $this->create_milestone_allowed            = json_encode($create_milestone_allowed);
-        $this->backlog_add_item_allowed            = json_encode($backlog_add_item_allowed);
-        $this->is_list_picker_enabled              = json_encode((bool) ListPickerIncluder::isListPickerEnabledAndBrowserCompatible());
-        $this->is_planning_available               = $is_planning_available;
+        $this->user_id                                  = $current_user->getId();
+        $this->lang                                     = $this->getLanguageAbbreviation($current_user);
+        $this->project_id                               = $project->getId();
+        $this->milestone_id                             = $milestone_id;
+        $this->view_mode                                = (string) $current_user->getPreference('agiledashboard_planning_item_view_mode_' . $this->project_id);
+        $this->is_in_explicit_top_backlog               = $is_in_explicit_top_backlog;
+        $this->is_planning_available                    = $is_planning_available;
+        $this->user_accessibility_mode                  = json_encode((bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE));
+        $this->allowed_additional_panes_to_display      = json_encode($allowed_additional_panes_to_display);
+        $this->create_milestone_allowed                 = json_encode($create_milestone_allowed);
+        $this->backlog_add_item_allowed                 = json_encode($backlog_add_item_allowed);
+        $this->trackers_ids_having_list_picker_disabled = json_encode(ListPickerIncluder::getTrackersHavingListPickerDisabled());
+        $this->is_list_picker_enabled                   = json_encode(ListPickerIncluder::isListPickerEnabledOnPlatform());
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

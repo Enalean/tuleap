@@ -1108,3 +1108,5 @@ FROM groups
     INNER JOIN service USING (group_id)
 WHERE groups.status != 'D'
       AND service.short_name = 'plugin_tracker';
+
+INSERT INTO forgeconfig (name, value) VALUES ('feature_flag_use_list_pickers_in_trackers_and_modals', 1);

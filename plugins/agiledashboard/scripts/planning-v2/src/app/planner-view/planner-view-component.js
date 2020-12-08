@@ -239,7 +239,7 @@ function controller(
             submilestone.artifact.tracker.id,
             submilestone.artifact.id,
             self.refreshSubmilestone,
-            SharedPropertiesService.isListPickerEnabled()
+            SharedPropertiesService.isListPickerEnabledForTracker(submilestone.artifact.tracker.id)
         );
     }
 
@@ -258,7 +258,7 @@ function controller(
             submilestone_type.id,
             self.milestone_id,
             callback,
-            SharedPropertiesService.isListPickerEnabled()
+            SharedPropertiesService.isListPickerEnabledForTracker(submilestone_type.id)
         );
     }
 
@@ -322,7 +322,7 @@ function controller(
             item_type.id,
             null,
             callback,
-            SharedPropertiesService.isListPickerEnabled()
+            SharedPropertiesService.isListPickerEnabledForTracker(item_type.id)
         );
     }
 

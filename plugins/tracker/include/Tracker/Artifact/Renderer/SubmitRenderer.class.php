@@ -62,7 +62,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
             ['body_class' => ['widgetable']]
         );
 
-        ListPickerIncluder::includeListPickerAssets();
+        ListPickerIncluder::includeListPickerAssets(HTTPRequest::instance(), $this->tracker->getId());
 
         echo $this->fetchSubmitInstructions();
     }

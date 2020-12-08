@@ -1647,7 +1647,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $event = new TrackerMasschangeGetExternalActionsEvent($this, $user);
         EventManager::instance()->processEvent($event);
-        \Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder::includeListPickerAssets();
+        \Tuleap\Tracker\Artifact\Renderer\ListPickerIncluder::includeListPickerAssets(HTTPRequest::instance(), $this->getId());
         $this->renderer->renderToPage(
             'masschange',
             new Tracker_Masschange_Presenter(
