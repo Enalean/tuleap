@@ -274,7 +274,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * getGroupId - get this Tracker Group ID.
      *
-     * @return int The group_id
+     * @return int|string The group_id
      */
     public function getGroupId()
     {
