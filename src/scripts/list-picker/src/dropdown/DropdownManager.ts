@@ -20,6 +20,7 @@ import { ScrollingManager } from "../events/ScrollingManager";
 
 export class DropdownManager {
     private resize_observer: ResizeObserver;
+    private is_dropdown_placed_above: boolean;
 
     constructor(
         private readonly doc: HTMLDocument,
@@ -31,16 +32,27 @@ export class DropdownManager {
         private readonly selection_element: Element,
         private readonly scrolling_manager: ScrollingManager
     ) {
-        const resize_dropdown_callback = (): void => {
+        const resize_dropdown_callback = (entries: readonly ResizeObserverEntry[]): void => {
             if (!this.isDropdownOpen()) {
                 return;
             }
-            this.resizeAndMoveDropdownUnderWrapperElement();
+            let is_list_being_filtered = false;
+            if (
+                entries.length === 1 &&
+                entries[0].target.classList.contains("list-picker-dropdown")
+            ) {
+                is_list_being_filtered = true;
+            }
+
+            this.resizeAndMoveDropdownUnderWrapperElement(is_list_being_filtered);
         };
         this.resize_observer = new ResizeObserver(resize_dropdown_callback);
 
         this.resize_observer.observe(wrapper_element);
         this.resize_observer.observe(this.doc.body);
+        this.resize_observer.observe(dropdown_element);
+
+        this.is_dropdown_placed_above = false;
     }
 
     public isDropdownOpen(): boolean {
@@ -71,7 +83,7 @@ export class DropdownManager {
         this.scrolling_manager.lockScrolling();
         this.dropdown_element.classList.add("list-picker-dropdown-shown");
         this.list_picker_element.classList.add("list-picker-with-open-dropdown");
-        this.resizeAndMoveDropdownUnderWrapperElement();
+        this.resizeAndMoveDropdownUnderWrapperElement(false);
         this.setAriaExpandedAttribute(this.dropdown_list_element, true);
 
         if (this.selection_element.hasAttribute("aria-expanded")) {
@@ -88,7 +100,7 @@ export class DropdownManager {
         this.resize_observer.disconnect();
     }
 
-    private resizeAndMoveDropdownUnderWrapperElement(): void {
+    private resizeAndMoveDropdownUnderWrapperElement(is_list_being_filtered: boolean): void {
         const list_picker_boundaries = this.wrapper_element.getBoundingClientRect();
         const x_coordinate = list_picker_boundaries.left + window.scrollX;
         const y_coordinate = list_picker_boundaries.bottom + window.scrollY;
@@ -102,16 +114,18 @@ export class DropdownManager {
         this.dropdown_element.classList.remove("list-picker-dropdown-above");
         this.list_picker_element.classList.remove("list-picker-with-dropdown-above");
 
-        if (!has_enough_room_below) {
+        if (!has_enough_room_below || (this.is_dropdown_placed_above && is_list_being_filtered)) {
             const pos = y_coordinate - height - list_picker_boundaries.height;
             this.dropdown_element.style.top = pos + "px";
 
             this.dropdown_element.classList.add("list-picker-dropdown-above");
             this.list_picker_element.classList.add("list-picker-with-dropdown-above");
+            this.is_dropdown_placed_above = true;
             return;
         }
 
         this.dropdown_element.style.top = Math.ceil(y_coordinate) + "px";
+        this.is_dropdown_placed_above = false;
     }
 
     private setAriaExpandedAttribute(element: Element, is_expanded: boolean): void {
