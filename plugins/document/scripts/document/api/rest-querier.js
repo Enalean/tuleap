@@ -71,12 +71,6 @@ export {
     setNarrowModeForEmbeddedDisplay,
     removeUserPreferenceForEmbeddedDisplay,
     getPreferenceForEmbeddedDisplay,
-    putFileMetadata,
-    putEmbeddedFileMetadata,
-    putLinkMetadata,
-    putWikiMetadata,
-    putEmptyDocumentMetadata,
-    putFolderDocumentMetadata,
     putEmbeddedFilePermissions,
     putFilePermissions,
     putLinkPermissions,
@@ -84,7 +78,6 @@ export {
     putEmptyDocumentPermissions,
     putFolderPermissions,
     getProjectUserGroups,
-    getProjectMetadata,
     postNewLinkVersionFromEmpty,
     postNewEmbeddedFileVersionFromEmpty,
     postNewFileVersionFromEmpty,
@@ -572,126 +565,6 @@ async function getPreferenceForEmbeddedDisplay(user_id, project_id, document_id)
     return response.json();
 }
 
-function putFileMetadata(id, title, description, owner_id, status, obsolescence_date, metadata) {
-    return put(`/api/docman_files/${encodeURIComponent(id)}/metadata`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            title,
-            description,
-            owner_id,
-            status,
-            obsolescence_date,
-            metadata,
-        }),
-    });
-}
-
-function putEmbeddedFileMetadata(
-    id,
-    title,
-    description,
-    owner_id,
-    status,
-    obsolescence_date,
-    metadata
-) {
-    return put(`/api/docman_embedded_files/${encodeURIComponent(id)}/metadata`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            title,
-            description,
-            owner_id,
-            status,
-            obsolescence_date,
-            metadata,
-        }),
-    });
-}
-
-function putLinkMetadata(id, title, description, owner_id, status, obsolescence_date, metadata) {
-    return put(`/api/docman_links/${encodeURIComponent(id)}/metadata`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            title,
-            description,
-            owner_id,
-            status,
-            obsolescence_date,
-            metadata,
-        }),
-    });
-}
-
-function putWikiMetadata(id, title, description, owner_id, status, obsolescence_date, metadata) {
-    return put(`/api/docman_wikis/${encodeURIComponent(id)}/metadata`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            title,
-            description,
-            owner_id,
-            status,
-            obsolescence_date,
-            metadata,
-        }),
-    });
-}
-
-function putEmptyDocumentMetadata(
-    id,
-    title,
-    description,
-    owner_id,
-    status,
-    obsolescence_date,
-    metadata
-) {
-    return put(`/api/docman_empty_documents/${encodeURIComponent(id)}/metadata`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            title,
-            description,
-            owner_id,
-            status,
-            obsolescence_date,
-            metadata,
-        }),
-    });
-}
-
-function putFolderDocumentMetadata(
-    id,
-    title,
-    description,
-    owner_id,
-    status,
-    obsolescence_date,
-    metadata
-) {
-    return put(`/api/docman_folders/${encodeURIComponent(id)}/metadata`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            title,
-            description,
-            owner_id,
-            status,
-            obsolescence_date,
-            metadata,
-        }),
-    });
-}
-
 function putEmbeddedFilePermissions(id, permissions) {
     return put(`/api/docman_embedded_files/${encodeURIComponent(id)}/permissions`, {
         headers: {
@@ -755,16 +628,6 @@ async function getProjectUserGroups(project_id) {
     );
 
     return response.json();
-}
-
-function getProjectMetadata(project_id) {
-    const escaped_project_id = encodeURIComponent(project_id);
-    return recursiveGet(`/api/projects/${escaped_project_id}/docman_metadata`, {
-        params: {
-            limit: 50,
-            offset: 0,
-        },
-    });
 }
 
 function postNewLinkVersionFromEmpty(item_id, link_url) {

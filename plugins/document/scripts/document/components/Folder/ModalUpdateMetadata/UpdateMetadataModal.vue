@@ -161,7 +161,7 @@ export default {
             this.$store.commit("error/resetModalError");
 
             this.item_to_update.metadata = this.formatted_item_metadata;
-            await this.$store.dispatch("updateMetadata", [
+            await this.$store.dispatch("metadata/updateMetadata", [
                 this.item,
                 this.item_to_update,
                 this.current_folder,

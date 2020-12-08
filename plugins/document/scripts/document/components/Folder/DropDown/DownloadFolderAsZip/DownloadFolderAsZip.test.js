@@ -63,7 +63,7 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("getFolderProperties", [
+        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", [
             { id: 10, type: "folder" },
         ]);
         expect(event_bus_emit).toHaveBeenCalledWith(
@@ -89,7 +89,7 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("getFolderProperties", [
+        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", [
             { id: 10, type: "folder" },
         ]);
         expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
@@ -125,7 +125,7 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("getFolderProperties", [
+        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", [
             { id: 10, type: "folder" },
         ]);
         expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
@@ -162,7 +162,7 @@ describe("DownloadFolderAsZip", () => {
 
         await Vue.nextTick();
 
-        expect(store.dispatch).toHaveBeenCalledWith("getFolderProperties", [
+        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", [
             { id: 10, type: "folder" },
         ]);
         expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
@@ -187,7 +187,7 @@ describe("DownloadFolderAsZip", () => {
 
         await wrapper.vm.checkFolderSize();
 
-        expect(store.dispatch).toHaveBeenCalledWith("getFolderProperties", [
+        expect(store.dispatch).toHaveBeenCalledWith("metadata/getFolderProperties", [
             { id: 10, type: "folder" },
         ]);
         expect(eventBusEmit).not.toHaveBeenCalled();
