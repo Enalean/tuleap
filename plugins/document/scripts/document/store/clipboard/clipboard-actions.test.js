@@ -29,7 +29,7 @@ import {
     CLIPBOARD_OPERATION_COPY,
 } from "../../constants";
 import { mockFetchError } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
-import * as rest_querier from "../../api/rest-querier.js";
+import * as rest_querier from "../../api/move-rest-querier";
 import * as adjust_item_to_content_after_item_creation_in_folder from "../actions-helpers/adjust-item-to-content-after-item-creation-in-folder.js";
 
 describe("Clipboard actions", () => {

@@ -30,7 +30,7 @@ import {
     copyLink,
     copyWiki,
     copyFile,
-} from "../../api/rest-querier.js";
+} from "../../api/move-rest-querier";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
