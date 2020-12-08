@@ -38,11 +38,11 @@ class CrossReferenceLinkPresenterCollectionBuilder
 
         foreach ($cross_references as $index => $current_cross_ref) {
             if ($key === 'source') {
-                $id  = $current_cross_ref->getRefSourceKey() . "_" . $current_cross_ref->getRefSourceId();
+                $id  = "source_" . $current_cross_ref->getRefSourceKey() . "_" . $current_cross_ref->getRefSourceId();
                 $ref = $current_cross_ref->getRefSourceKey() . " #" . $current_cross_ref->getRefSourceId();
                 $url = $current_cross_ref->getRefSourceUrl();
             } else {
-                $id  = $current_cross_ref->getRefTargetKey() . "_" . $current_cross_ref->getRefTargetId();
+                $id  = "target_" . $current_cross_ref->getRefTargetKey() . "_" . $current_cross_ref->getRefTargetId();
                 $ref = $current_cross_ref->getRefTargetKey() . " #" . $current_cross_ref->getRefTargetId();
                 $url = $current_cross_ref->getRefTargetUrl();
             }
