@@ -32,11 +32,6 @@ import {
     deleteFile,
     deleteFolder,
     deleteLink,
-    deleteLockEmbedded,
-    deleteLockEmpty,
-    deleteLockFile,
-    deleteLockLink,
-    deleteLockWiki,
     deleteUserPreferenciesForFolderInProject,
     deleteWiki,
     getDocumentManagerServiceInformation,
@@ -48,11 +43,6 @@ import {
     patchUserPreferenciesForFolderInProject,
     postEmbeddedFile,
     postLinkVersion,
-    postLockEmbedded,
-    postLockEmpty,
-    postLockFile,
-    postLockLink,
-    postLockWiki,
     postNewEmbeddedFileVersionFromEmpty,
     postNewFileVersionFromEmpty,
     postNewLinkVersionFromEmpty,
@@ -72,7 +62,6 @@ import {
     handleErrors,
     handleErrorsForDeletionModal,
     handleErrorsForDocument,
-    handleErrorsForLock,
     handleErrorsForModal,
 } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
@@ -629,63 +618,6 @@ export const getWikisReferencingSameWikiPage = async (context, item) => {
         );
     } catch (exception) {
         return USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE;
-    }
-};
-
-export const lockDocument = async (context, item) => {
-    try {
-        switch (item.type) {
-            case TYPE_FILE:
-                await postLockFile(item);
-                break;
-            case TYPE_EMBEDDED:
-                await postLockEmbedded(item);
-                break;
-            case TYPE_WIKI:
-                await postLockWiki(item);
-                break;
-            case TYPE_LINK:
-                await postLockLink(item);
-                break;
-            case TYPE_EMPTY:
-                await postLockEmpty(item);
-                break;
-            default:
-                break;
-        }
-
-        const updated_item = await getItem(item.id);
-        context.commit("replaceLockInfoWithNewVersion", [item, updated_item.lock_info]);
-    } catch (exception) {
-        return handleErrorsForLock(context, exception);
-    }
-};
-
-export const unlockDocument = async (context, item) => {
-    try {
-        switch (item.type) {
-            case TYPE_FILE:
-                await deleteLockFile(item);
-                break;
-            case TYPE_EMBEDDED:
-                await deleteLockEmbedded(item);
-                break;
-            case TYPE_WIKI:
-                await deleteLockWiki(item);
-                break;
-            case TYPE_LINK:
-                await deleteLockLink(item);
-                break;
-            case TYPE_EMPTY:
-                await deleteLockEmpty(item);
-                break;
-            default:
-                break;
-        }
-        const updated_item = await getItem(item.id);
-        context.commit("replaceLockInfoWithNewVersion", [item, updated_item.lock_info]);
-    } catch (exception) {
-        return handleErrorsForLock(context, exception);
     }
 };
 

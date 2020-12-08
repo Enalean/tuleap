@@ -137,6 +137,6 @@ describe("UnlockItem", () => {
 
         wrapper.get("[data-test=document-dropdown-menu-unlock-item]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith("unlockDocument", item);
+        expect(store.dispatch).toHaveBeenCalledWith("lock/unlockDocument", item);
     });
 });
