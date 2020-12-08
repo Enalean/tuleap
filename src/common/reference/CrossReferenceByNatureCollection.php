@@ -40,6 +40,10 @@ class CrossReferenceByNatureCollection
     public function __construct(array $cross_reference_by_nature, array $available_natures, EventDispatcherInterface $event_manager)
     {
         foreach ($cross_reference_by_nature as $nature => $cross_reference_by_key) {
+            if (! isset($available_natures[$nature])) {
+                continue;
+            }
+
             $reference_get_icon_nature_event = new CrossReferenceGetNatureIconEvent($nature);
             $event_manager->dispatch($reference_get_icon_nature_event);
 
