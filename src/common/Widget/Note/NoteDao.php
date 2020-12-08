@@ -34,17 +34,15 @@ class NoteDao extends DataAccessObject
     }
 
     /**
-     * @param $project_id
-     * @return string
      * @throws \Exception
      */
-    public function create($project_id, $title, $content)
+    public function create(int $owner_id, string $owner_type, string $title, string $content): string
     {
         return $this->getDB()->insertReturnId(
             'widget_note',
             [
-                'owner_id'   => $project_id,
-                'owner_type' => ProjectDashboardController::LEGACY_DASHBOARD_TYPE,
+                'owner_id'   => $owner_id,
+                'owner_type' => $owner_type,
                 'title'      => $title,
                 'content'    => $content,
             ]

@@ -22,6 +22,7 @@
 namespace Tuleap\Widget\Event;
 
 use Tuleap\Widget\MyWelcomeMessage;
+use Tuleap\Widget\Note\UserNote;
 
 class GetUserWidgetList extends GetWidgetList
 {
@@ -39,6 +40,7 @@ class GetUserWidgetList extends GetWidgetList
         'mysystemevent',
         'myrss',
         MyWelcomeMessage::NAME,
+        UserNote::NAME,
     ];
 
     public function __construct()
