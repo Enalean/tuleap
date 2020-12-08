@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2016 - present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -86,21 +86,33 @@ class ProjectDetailsPresenter
     public $built_from_project;
     public $built_from_xml_template;
     public $built_from_label;
+    /**
+     * @var bool
+     */
+    public $is_unix_name_editable;
+    /**
+     * @var string
+     */
+    public $not_editable_reason;
 
     public function __construct(
         Project $project,
         $all_custom_fields,
         ProjectAccessPresenter $access_presenter,
         \CSRFSynchronizerToken $csrf_token,
-        array $plugin_suspended_and_not_blocked_warnings
+        array $plugin_suspended_and_not_blocked_warnings,
+        bool $is_unix_name_editable,
+        string $not_editable_reason
     ) {
-        $this->id          = $project->getID();
-        $this->public_name = $project->getPublicName();
-        $this->unix_name   = $project->getUnixNameMixedCase();
-        $this->short_name  = $project->getUnixName();
-        $this->description = $project->getDescription();
-        $this->is_system   = $project->getStatus() === Project::STATUS_SYSTEM;
-        $this->is_active   = $project->isActive();
+        $this->id                    = $project->getID();
+        $this->public_name           = $project->getPublicName();
+        $this->unix_name             = $project->getUnixNameMixedCase();
+        $this->short_name            = $project->getUnixName();
+        $this->description           = $project->getDescription();
+        $this->is_system             = $project->getStatus() === Project::STATUS_SYSTEM;
+        $this->is_active             = $project->isActive();
+        $this->is_unix_name_editable = $is_unix_name_editable;
+        $this->not_editable_reason   = $not_editable_reason;
 
         $this->is_status_invalid = ! array_key_exists(
             $project->getStatus(),

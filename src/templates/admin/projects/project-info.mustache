@@ -52,6 +52,10 @@
                                            id="public-name"
                                            name="new_name"
                                            value="{{ unix_name }}"
+                                           {{^ is_unix_name_editable }}
+                                           title="{{# gettext }} Shortname edition is not allowed : {{/ gettext }}{{ not_editable_reason }}"
+                                           disabled
+                                           {{/ is_unix_name_editable }}
                                            size="30">
                                 </div>
                                 <div class="tlp-form-element">

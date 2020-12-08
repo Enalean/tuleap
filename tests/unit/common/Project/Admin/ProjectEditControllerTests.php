@@ -75,18 +75,23 @@ class ProjectEditControllerTests extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
      */
     private $project;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectRenameChecker
+     */
+    private $project_rename_checker;
 
     protected function setUp(): void
     {
         $this->project              = Mockery::mock(Project::class);
         $this->project->shouldReceive('getId')->andReturn(111);
 
-        $this->details_presenter    = Mockery::mock(ProjectDetailsPresenter::class);
-        $this->dao                  = Mockery::mock(ProjectEditDao::class);
-        $this->project_manager      = Mockery::mock(ProjectManager::class);
-        $this->event_manager        = Mockery::mock(EventManager::class);
-        $this->system_event_manager = Mockery::mock(SystemEventManager::class);
-        $this->project_history_dao  = Mockery::mock(ProjectHistoryDao::class);
+        $this->details_presenter      = Mockery::mock(ProjectDetailsPresenter::class);
+        $this->dao                    = Mockery::mock(ProjectEditDao::class);
+        $this->project_manager        = Mockery::mock(ProjectManager::class);
+        $this->event_manager          = Mockery::mock(EventManager::class);
+        $this->system_event_manager   = Mockery::mock(SystemEventManager::class);
+        $this->project_history_dao    = Mockery::mock(ProjectHistoryDao::class);
+        $this->project_rename_checker = Mockery::mock(ProjectRenameChecker::class);
 
         $this->project_edit_controller = new ProjectEditController(
             $this->details_presenter,
@@ -94,7 +99,8 @@ class ProjectEditControllerTests extends TestCase
             $this->project_manager,
             $this->event_manager,
             $this->system_event_manager,
-            $this->project_history_dao
+            $this->project_history_dao,
+            $this->project_rename_checker
         );
     }
 
@@ -125,6 +131,39 @@ class ProjectEditControllerTests extends TestCase
         $GLOBALS['Response']->shouldReceive("addFeedback")->withArgs([Feedback::INFO, 'Updating Project Info']);
 
         $this->project_history_dao->shouldReceive('groupAddHistory');
+
+        $this->event_manager->shouldReceive('processEvent');
+
+        $this->project_manager->shouldReceive('removeProjectFromCache');
+
+        $this->project_edit_controller->updateProject($request);
+    }
+
+    public function testUpdateProjectUnixNameDoesntWorkIfUnixNameCantBeEdited(): void
+    {
+        $request = Mockery::mock(HTTPRequest::class);
+        $request->shouldReceive('get')->with('new_name')->andReturn("new_name");
+        $request->shouldReceive('get')->with('group_id')->andReturn(111);
+
+        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
+
+        $request->shouldReceive('getValidated')->withArgs(['form_status', 'string', 'H'])->andReturn('A');
+        $request->shouldReceive('getValidated')->withArgs(['group_type', 'string', 'type'])->andReturn('type');
+
+        $this->project->shouldReceive('getGroupId')->andReturn(111);
+        $this->project->shouldReceive('getStatus')->andReturn('H');
+        $this->project->shouldReceive('getType')->andReturn('type');
+
+        $this->project->shouldReceive('getUnixNameMixedCase')->andReturn('old_name');
+
+        $this->dao->shouldReceive("updateProjectStatusAndType");
+
+        $GLOBALS['Response']->shouldReceive("addFeedback")->withArgs([Feedback::WARN, "This project doesn't allow unix name edition."]);
+
+        $this->project_history_dao->shouldReceive('groupAddHistory');
+
+        $this->system_event_manager->shouldReceive('canRenameProject')->andReturn(true);
+        $this->project_rename_checker->shouldReceive('isProjectUnixNameEditable')->andReturn(false);
 
         $this->event_manager->shouldReceive('processEvent');
 

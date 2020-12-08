@@ -31,6 +31,7 @@ use ProjectManager;
 use Rule_ProjectName;
 use SystemEventManager;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
+use Tuleap\Project\Admin\ProjectRenameChecker;
 
 class ProjectEditController
 {
@@ -59,6 +60,10 @@ class ProjectEditController
      * @var ProjectHistoryDao
      */
     private $project_history_dao;
+    /**
+     * @var ProjectRenameChecker
+     */
+    private $project_rename_checker;
 
     public function __construct(
         ProjectDetailsPresenter $details_presenter,
@@ -66,14 +71,16 @@ class ProjectEditController
         ProjectManager $project_manager,
         EventManager $event_manager,
         SystemEventManager $system_event_manager,
-        ProjectHistoryDao $project_history_dao
+        ProjectHistoryDao $project_history_dao,
+        ProjectRenameChecker $project_rename_checker
     ) {
-        $this->details_presenter    = $details_presenter;
-        $this->dao                  = $dao;
-        $this->project_manager      = $project_manager;
-        $this->event_manager        = $event_manager;
-        $this->system_event_manager = $system_event_manager;
-        $this->project_history_dao  = $project_history_dao;
+        $this->details_presenter      = $details_presenter;
+        $this->dao                    = $dao;
+        $this->project_manager        = $project_manager;
+        $this->event_manager          = $event_manager;
+        $this->system_event_manager   = $system_event_manager;
+        $this->project_history_dao    = $project_history_dao;
+        $this->project_rename_checker = $project_rename_checker;
     }
 
     public function index()
@@ -180,6 +187,11 @@ class ProjectEditController
         if (! $this->system_event_manager->canRenameProject($project)) {
             $GLOBALS['Response']->addFeedback(Feedback::WARN, $GLOBALS['Language']->getText('admin_groupedit', 'rename_project_already_queued'), CODENDI_PURIFIER_DISABLED);
 
+            return;
+        }
+
+        if (! $this->project_rename_checker->isProjectUnixNameEditable($project)) {
+            $GLOBALS['Response']->addFeedback(Feedback::WARN, dgettext('tuleap-core', "This project doesn't allow short name edition."));
             return;
         }
 

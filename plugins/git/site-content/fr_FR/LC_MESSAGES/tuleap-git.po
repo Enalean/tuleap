@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid " At least a git repository is migrated to gerrit"
+msgstr " Au moins un repertoire git est migré sur gerrit"
+
 #, php-format
 msgid "%1$s"
 msgstr "%1$s"
