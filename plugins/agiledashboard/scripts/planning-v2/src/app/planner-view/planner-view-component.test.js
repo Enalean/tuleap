@@ -792,4 +792,19 @@ describe("PlannerView", () => {
             expect(result).toBeTruthy();
         });
     });
+
+    describe("hasOriginalProject() -", function () {
+        it("Given that there is no original project, then it will returns false", function () {
+            const result = PlanningController.hasOriginalProject();
+
+            expect(result).toBeFalsy();
+        });
+
+        it("Given that there is an original project, then it will returns true", function () {
+            PlanningController.backlog.original_project = { id: 101, label: "other project" };
+            const result = PlanningController.hasOriginalProject();
+
+            expect(result).toBeTruthy();
+        });
+    });
 });
