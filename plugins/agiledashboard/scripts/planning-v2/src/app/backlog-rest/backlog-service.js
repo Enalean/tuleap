@@ -37,6 +37,7 @@ function BacklogService($filter, ProjectService, BacklogItemCollectionService) {
             rest_base_route: undefined,
             rest_route_id: undefined,
             user_can_move_cards: false,
+            original_project: undefined,
         },
         items: {
             content: [],
@@ -126,6 +127,7 @@ function BacklogService($filter, ProjectService, BacklogItemCollectionService) {
             submilestone_type: milestone.sub_milestone_type,
             accepted_types: milestone.backlog_accepted_types,
             user_can_move_cards: milestone.has_user_priority_change_permission,
+            original_project: milestone.original_project_provider,
         });
     }
 

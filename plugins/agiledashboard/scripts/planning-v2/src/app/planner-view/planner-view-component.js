@@ -108,6 +108,7 @@ function controller(
         thereAreClosedMilestonesLoaded,
         thereAreOpenMilestonesLoaded,
         canUserCreateMilestone,
+        hasOriginalProject,
     });
 
     function init() {
@@ -379,6 +380,12 @@ function controller(
             self.backlog.submilestone_type &&
             self.backlog.user_can_move_cards &&
             self.user_can_create_milestone
+        );
+    }
+
+    function hasOriginalProject() {
+        return (
+            self.backlog.original_project !== null && self.backlog.original_project !== undefined
         );
     }
 }

@@ -247,6 +247,7 @@ describe("BacklogService", () => {
                 },
                 sub_milestone_type: { id: 66, label: "Sprints" },
                 has_user_priority_change_permission: true,
+                original_project_provider: { id: 101, label: "other project" },
             };
 
             BacklogService.loadMilestoneBacklog(milestone);
@@ -262,6 +263,10 @@ describe("BacklogService", () => {
                 { id: 72, label: "User Stories" },
             ]);
             expect(BacklogService.backlog.user_can_move_cards).toBeTruthy();
+            expect(BacklogService.backlog.original_project).toEqual({
+                id: 101,
+                label: "other project",
+            });
         });
     });
 });

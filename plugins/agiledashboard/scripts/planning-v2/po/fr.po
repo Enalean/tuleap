@@ -141,6 +141,13 @@ msgstr "Il y a eu un problème"
 msgid "To be planned"
 msgstr "A planifier"
 
+msgid ""
+"You are in the context of the Program {{ planning.backlog.original_project."
+"label }}"
+msgstr ""
+"Vous êtes dans le contexte du Programme {{ planning.backlog.original_project."
+"label }}"
+
 msgid "You are not allowed to rank on this planning"
 msgstr "Vous n'êtes pas autorisé à prioriser sur ce planning"
 
