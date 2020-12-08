@@ -1176,7 +1176,23 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     public function getUri(): string
     {
-        return TRACKER_BASE_URL . '/?aid=' . $this->getId();
+        return $this->getUriWithParameters([]);
+    }
+
+    /**
+     * @param array<string, string|array> $parameters
+     * @psalm-mutation-free
+     */
+    public function getUriWithParameters(array $parameters): string
+    {
+        return TRACKER_BASE_URL . '/?' . http_build_query(
+            array_merge(
+                [
+                        'aid' => $this->getId(),
+                    ],
+                $parameters
+            )
+        );
     }
 
     /**
@@ -1663,7 +1679,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     public function getId()
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     /**

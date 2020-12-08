@@ -31,12 +31,24 @@ class TaskboardTest extends RestBase
      * @var int
      */
     private static $milestone_id;
+    /**
+     * @var int
+     */
+    private static $planning_id;
 
     public function setUp(): void
     {
         parent::setUp();
-        if (! self::$milestone_id) {
-            self::$milestone_id = $this->getMilestoneId();
+        if (! self::$milestone_id || ! self::$planning_id) {
+            $project_id = $this->getProjectId('taskboard');
+
+            $response   = $this->getResponse($this->client->get('projects/' . $project_id . '/milestones'));
+            $milestones = $response->json();
+
+            $this->assertCount(1, $milestones);
+
+            self::$milestone_id = (int) $milestones[0]['id'];
+            self::$planning_id  = (int) $milestones[0]['planning']['id'];
         }
     }
 
@@ -72,7 +84,7 @@ class TaskboardTest extends RestBase
             $this->assertStringMatchesFormat('story #%i', $cards[$key]['xref']);
             $this->assertNotEmpty($cards[$key]['rank']);
             $this->assertEquals('lake-placid-blue', $cards[$key]['color']);
-            $this->assertEquals('/plugins/tracker/?aid=' . $cards[$key]['id'], $cards[$key]['artifact_html_uri']);
+            $this->assertEquals('/plugins/tracker/?aid=' . $cards[$key]['id'] . '&planning%5Btaskboard%5D%5B' . self::$planning_id . '%5D=' . self::$milestone_id, $cards[$key]['artifact_html_uri']);
             $expected_background_color = $label === 'US2' ? 'fiesta-red' : '';
             $this->assertEquals($expected_background_color, $cards[$key]['background_color']);
             $expected_has_children = in_array($label, ['US2', 'US6'], true);
@@ -168,17 +180,5 @@ class TaskboardTest extends RestBase
             [REST_TestDataBuilder::TEST_USER_1_NAME],
             [REST_TestDataBuilder::TEST_BOT_USER_NAME]
         ];
-    }
-
-    private function getMilestoneId(): int
-    {
-        $project_id = $this->getProjectId('taskboard');
-
-        $response   = $this->getResponse($this->client->get('projects/' . $project_id . '/milestones'));
-        $milestones = $response->json();
-
-        $this->assertCount(1, $milestones);
-
-        return (int) $milestones[0]['id'];
     }
 }
