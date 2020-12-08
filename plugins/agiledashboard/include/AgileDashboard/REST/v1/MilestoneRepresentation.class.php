@@ -192,7 +192,7 @@ class MilestoneRepresentation
         'additional_panes' => [],
     ];
     /**
-     * @var MinimalProjectRepresentation|null
+     * @var MinimalProjectRepresentation | null
      */
     public $original_project_provider;
 
