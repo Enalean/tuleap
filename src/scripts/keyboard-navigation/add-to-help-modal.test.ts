@@ -27,8 +27,8 @@ import {
 describe("add-to-help-modal.ts", () => {
     let doc: Document;
     let shortcuts_modal: HTMLElement;
-
-    const shortcuts_help_attribute = "data-shortcuts-help";
+    let shortcuts_modal_body: HTMLElement;
+    let specific_shortcuts_section: HTMLElement;
 
     const shortcut_simple = {
         keyboard_inputs: "a",
@@ -53,54 +53,78 @@ describe("add-to-help-modal.ts", () => {
     };
 
     const snapshot = `
-        <div class="help-modal-shortcuts-group-head">
-          <h2 class="tlp-modal-subtitle">shortcuts_group title</h2>
-          <p class="help-modal-shortcuts-group-details">shortcuts_group details</p>
-        </div>
-        <table class="tlp-table help-modal-shortcuts-table">
-          <thead>
-            <tr>
-              <th class="help-modal-shortcuts-description">Description</th>
-              <th class="tlp-table-cell-actions">Shortcut</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>shortcut_simple description</td>
-              <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>c</kbd></td>
-            </tr>
-            <tr>
-              <td>shortcut_two_options description</td>
-              <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>a</kbd> / <kbd>b</kbd></td>
-            </tr>
-            <tr>
-              <td>shortcut_two_keystrokes description</td>
-              <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd><kbd>a</kbd> + <kbd>b</kbd></kbd></td>
-            </tr>
-          </tbody>
-        </table>
+        <section data-shortcuts-specific-section="" class="help-modal-shortcuts-section">
+          <div class="help-modal-shortcuts-group-head">
+            <h2 class="tlp-modal-subtitle">shortcuts_group title</h2>
+            <p class="help-modal-shortcuts-group-details">shortcuts_group details</p>
+          </div>
+          <table class="tlp-table help-modal-shortcuts-table">
+            <thead>
+              <tr>
+                <th class="help-modal-shortcuts-description">Description</th>
+                <th class="tlp-table-cell-actions">Shortcut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>shortcut_simple description</td>
+                <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>c</kbd></td>
+              </tr>
+              <tr>
+                <td>shortcut_two_options description</td>
+                <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd>a</kbd> / <kbd>b</kbd></td>
+              </tr>
+              <tr>
+                <td>shortcut_two_keystrokes description</td>
+                <td class="help-modal-shortcuts-kbds tlp-table-cell-actions"><kbd><kbd>a</kbd> + <kbd>b</kbd></kbd></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
     `;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
-        shortcuts_modal = doc.createElement("section");
-        shortcuts_modal.setAttribute(shortcuts_help_attribute, "");
-        doc.body.appendChild(shortcuts_modal);
+        setupDocument(doc);
     });
 
     describe("createShortcutsGroupInHelpModal", () => {
-        it("creates a shortcuts group and appends it to the Shortcuts Help modal", () => {
+        it("creates a shortcuts group and adds it to the specific shortcuts section in the help modal", () => {
+            specific_shortcuts_section = doc.createElement("section");
+            specific_shortcuts_section.setAttribute("data-shortcuts-specific-section", "");
+            specific_shortcuts_section.classList.add("help-modal-shortcuts-section");
+            shortcuts_modal_body.append(specific_shortcuts_section);
+
             createShortcutsGroupInHelpModal(doc, shortcuts_group);
 
-            expect(shortcuts_modal.innerHTML).toMatchInlineSnapshot(snapshot);
+            expect(shortcuts_modal_body.innerHTML).toMatchInlineSnapshot(snapshot);
         });
 
-        it("throws an error if shortcuts modal was not found and stops", () => {
-            shortcuts_modal.removeAttribute(shortcuts_help_attribute);
+        it("creates the specific shortcuts section in the help modal if this section was not found", () => {
+            createShortcutsGroupInHelpModal(doc, shortcuts_group);
+
+            expect(shortcuts_modal_body.innerHTML).toMatchInlineSnapshot(snapshot);
+            expect(shortcuts_modal.classList.contains("tlp-modal-medium-sized")).toBe(true);
+        });
+
+        it(`throws an error if the help modal was not found
+            while trying to widen it and stops`, () => {
+            shortcuts_modal.id = "";
+
             expect(() => {
                 createShortcutsGroupInHelpModal(doc, shortcuts_group);
             }).toThrow();
-            expect(shortcuts_modal.childNodes.length).toBe(0);
+            expect(shortcuts_modal_body.innerHTML).toBe("");
+        });
+
+        it(`throws an error if the help modal body was not found
+            while trying to create the specific shortcuts section in it and stops`, () => {
+            shortcuts_modal_body.removeAttribute("data-shortcuts-modal-body");
+
+            expect(() => {
+                createShortcutsGroupInHelpModal(doc, shortcuts_group);
+            }).toThrow();
+            expect(shortcuts_modal_body.innerHTML).toBe("");
         });
     });
 
@@ -131,4 +155,15 @@ describe("add-to-help-modal.ts", () => {
             expect(keyboard_input_element?.childNodes[1].textContent).toEqual(" + ");
         });
     });
+
+    function setupDocument(doc: Document): void {
+        shortcuts_modal = doc.createElement("div");
+        shortcuts_modal.id = "help-modal-shortcuts";
+
+        shortcuts_modal_body = doc.createElement("div");
+        shortcuts_modal_body.setAttribute("data-shortcuts-modal-body", "");
+
+        shortcuts_modal.append(shortcuts_modal_body);
+        doc.body.appendChild(shortcuts_modal);
+    }
 });
