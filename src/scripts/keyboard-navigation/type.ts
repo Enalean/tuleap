@@ -26,5 +26,6 @@ export interface Shortcut {
 
 export interface ShortcutsGroup {
     readonly title: string;
+    readonly details?: string;
     readonly shortcuts: Array<Shortcut>;
 }
