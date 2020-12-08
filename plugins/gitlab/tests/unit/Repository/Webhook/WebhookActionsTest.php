@@ -110,7 +110,7 @@ final class WebhookActionsTest extends TestCase
 
         $this->post_push_webhook_action_processor
             ->shouldReceive('process')
-            ->with($webhook_data)
+            ->with($this->gitlab_repository, $webhook_data)
             ->once();
 
         $this->actions->performActions(

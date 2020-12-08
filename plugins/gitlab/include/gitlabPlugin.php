@@ -25,6 +25,8 @@ use Tuleap\Gitlab\Reference\GitlabCommitReferenceBuilder;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
+use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
+use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencesParser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
@@ -76,6 +78,7 @@ class gitlabPlugin extends Plugin
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_REFERENCE_ADMIN_CAPABILITIES);
         $this->addHook(Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE);
+        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
 
         return parent::getHooksAndCallbacks();
     }
@@ -145,6 +148,12 @@ class gitlabPlugin extends Plugin
                 new GitlabRepositoryDao(),
                 new PostPushWebhookActionProcessor(
                     new CommitTuleapReferencesParser(),
+                    new GitlabRepositoryProjectRetriever(
+                        new GitlabRepositoryProjectDao(),
+                        ProjectManager::instance()
+                    ),
+                    ReferenceManager::instance(),
+                    EventManager::instance(),
                     $logger,
                 ),
                 $logger
@@ -186,7 +195,7 @@ class gitlabPlugin extends Plugin
         $reference = $params['reference'];
         \assert($reference instanceof Reference);
 
-        if ($reference->getNature() === 'plugin_gitlab') {
+        if ($reference->getNature() === 'plugin_gitlab_commit') {
             $params['can_be_deleted'] = false;
             $params['can_be_edited']  = false;
         }
@@ -195,7 +204,7 @@ class gitlabPlugin extends Plugin
     /** @see \Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE */
     public function can_user_create_reference_with_this_nature(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if ($params['nature'] === 'plugin_gitlab') {
+        if ($params['nature'] === 'plugin_gitlab_commit') {
             $params['can_create'] = false;
         }
     }
@@ -205,5 +214,14 @@ class gitlabPlugin extends Plugin
         return new GitlabRepositoryFactory(
             new GitlabRepositoryDao()
         );
+    }
+
+    public function get_available_reference_natures(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $params['natures']['plugin_gitlab_commit'] =
+            [
+                'keyword' => 'gitlab_commit',
+                'label'   => dgettext('tuleap-gitlab', 'GitLab commit')
+            ];
     }
 }
