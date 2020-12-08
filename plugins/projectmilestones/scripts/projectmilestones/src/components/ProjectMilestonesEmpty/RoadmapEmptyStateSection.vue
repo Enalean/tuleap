@@ -20,7 +20,7 @@
 <template>
     <div class="project-release-timeframe">
         <translate class="project-release-label">Roadmap</translate>
-        <div class="empty-state-container">
+        <div class="empty-state-container" data-test="project-milestone-empty-state">
             <s-v-g-project-milestones-empty-state />
             <translate class="empty-state-text" v-bind:translate-params="{ name: project_name }">
                 There is no item nor milestone in the %{ name } backlog yet.

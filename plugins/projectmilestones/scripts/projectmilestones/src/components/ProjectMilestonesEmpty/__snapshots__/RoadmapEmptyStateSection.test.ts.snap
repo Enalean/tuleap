@@ -13,6 +13,7 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
    
   <div
     class="empty-state-container"
+    data-test="project-milestone-empty-state"
   >
     <s-v-g-project-milestones-empty-state-stub />
      
