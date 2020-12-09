@@ -25,8 +25,9 @@ import {
     sortByLastUpdateDate,
 } from "../support/filter";
 
-export const currentRepositoryList = (state) =>
-    state.repositories_for_owner[state.selected_owner_id];
+export const currentRepositoryList = (state) => [
+    ...state.repositories_for_owner[state.selected_owner_id],
+];
 
 export const getGitlabRepositoriesIntegrated = (state) => {
     return state.repositories_for_owner[state.selected_owner_id].filter((repository) => {
