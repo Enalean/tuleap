@@ -82,7 +82,7 @@ export default {
             default: "",
         },
         servicesNameUsed: {
-            type: Array(String),
+            type: Array,
             default: () => [],
         },
     },
