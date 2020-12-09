@@ -86,13 +86,13 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=transition-modal]").within(() => {
                 const project_administrators_ugroup_id =
                     this.project_id + "_" + PROJECT_ADMINISTRATORS_ID;
-                cy.get("[data-test=authorized-ugroups-select]").select(
-                    project_administrators_ugroup_id
-                );
+                cy.get(
+                    "[data-test=authorized-ugroups-select]"
+                ).select(project_administrators_ugroup_id, { force: true });
                 cy.get("[data-test=not-empty-field-form-element]").within(() => {
-                    // ignore for select2
-                    // eslint-disable-next-line cypress/require-data-selectors
-                    cy.get(".select2-search__field").type(REMAINING_EFFORT_FIELD_LABEL + "{enter}");
+                    cy.get("[data-test=list-picker-search-field]").type(
+                        REMAINING_EFFORT_FIELD_LABEL + "{enter}"
+                    );
                 });
                 cy.get("[data-test=not-empty-comment-checkbox]").check();
                 cy.get("[data-test=add-post-action]").click();
@@ -100,9 +100,9 @@ describe(`Tracker Workflow`, () => {
                     POST_ACTION_TYPE.FROZEN_FIELDS
                 );
                 cy.get("[data-test=frozen-fields-form-element]").within(() => {
-                    // ignore for select2
-                    // eslint-disable-next-line cypress/require-data-selectors
-                    cy.get(".select2-search__field").type(INITIAL_EFFORT_FIELD_LABEL + "{enter}");
+                    cy.get("[data-test=list-picker-search-field]").type(
+                        INITIAL_EFFORT_FIELD_LABEL + "{enter}"
+                    );
                 });
                 cy.get("[data-test=save-button]").click();
             });

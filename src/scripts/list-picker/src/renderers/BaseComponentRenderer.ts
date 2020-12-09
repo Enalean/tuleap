@@ -154,11 +154,10 @@ export class BaseComponentRenderer {
 
     private createSearchFieldElement(): HTMLInputElement {
         const search_field_element = document.createElement("input");
-
         if (this.source_select_box.disabled) {
             search_field_element.setAttribute("disabled", "disabled");
         }
-
+        search_field_element.setAttribute("data-test", "list-picker-search-field");
         search_field_element.classList.add("list-picker-search-field");
         search_field_element.setAttribute("type", "search");
         search_field_element.setAttribute("tabindex", "0");
