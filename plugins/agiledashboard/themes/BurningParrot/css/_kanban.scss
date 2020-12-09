@@ -154,7 +154,8 @@ $kanban-column-footer-height: 50px;
     border-left: 1px solid $tlp-ui-border-normal;
     background: $tlp-theme-background-color;
 
-    &:hover {
+    &:hover,
+    &:focus-within {
         > .add-in-place {
             opacity: 1;
             pointer-events: auto;

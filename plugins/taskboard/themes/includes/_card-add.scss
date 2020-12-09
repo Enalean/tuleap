@@ -35,7 +35,8 @@ $button-margin: $tlp-small-spacing;
 .taskboard-cell-with-add-form {
     padding: $tlp-small-spacing $tlp-small-spacing ($button-size + 2 * $button-margin + $tlp-small-spacing);
 
-    &:hover {
+    &:hover,
+    &:focus-within {
         padding: $tlp-small-spacing;
 
         > .taskboard-add-card-form {
