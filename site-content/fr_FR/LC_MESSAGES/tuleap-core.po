@@ -82,13 +82,6 @@ msgstr "Annonces phares des projets %s"
 msgid "%s with email %s created an account on %s."
 msgstr "%s avec l'email %s a créé un compte sur %s."
 
-msgid ""
-"(Public means subscription right is granted to any user, and archives are "
-"public)"
-msgstr ""
-"(Publique signifie que tous les utilisateurs peuvent s'abonner, et que les "
-"archives sont publiques)"
-
 msgid "(Un)Subscribe/Preferences"
 msgstr "(Dés)Abonnement/Préférences"
 
@@ -300,13 +293,13 @@ msgstr "Ajouter une clef SSH"
 msgid "Add This Forum"
 msgstr "Ajouter ce forum"
 
-msgid "Add This List"
-msgstr "Créer cette liste"
-
 msgid "Add a Forum"
 msgstr "Ajouter un forum"
 
 msgid "Add a Mailing List"
+msgstr "Créer une liste de distribution"
+
+msgid "Add a mailing list"
 msgstr "Créer une liste de distribution"
 
 msgid "Add a new service"
@@ -332,6 +325,9 @@ msgstr "Ajouter une nouvelle clef"
 
 msgid "Add parent project"
 msgstr "Ajouter projet parent"
+
+msgid "Add this list"
+msgstr "Créer cette liste"
 
 msgid "Add users group"
 msgstr "Ajouter un groupe"
@@ -1170,7 +1166,7 @@ msgstr "Erreur lors de la mise de la date et de l'heure dans forum_saved_place"
 msgid "Existing Forums"
 msgstr "Forums existants"
 
-msgid "Existing Mailing Lists"
+msgid "Existing mailing lists"
 msgstr "Listes de diffusion existantes"
 
 msgid "Experimental"
@@ -1586,9 +1582,6 @@ msgstr "Liens"
 msgid "List"
 msgstr "Liste"
 
-msgid "List Added"
-msgstr "Liste créée avec succès"
-
 msgid "List Admin"
 msgstr "Administration des listes"
 
@@ -1598,6 +1591,12 @@ msgid ""
 msgstr ""
 "Le nom de la liste contient des caractères non autorisés. Les caractères "
 "autorisés sont : lettres, nombres, -, _, ."
+
+msgid "List about development of…"
+msgstr "Liste à propos du développement de…"
+
+msgid "List added"
+msgstr "Liste créée avec succès"
 
 msgid "List of impacted files"
 msgstr "Liste des fichiers concernés"
@@ -1632,15 +1631,18 @@ msgstr "Envoyer à"
 msgid "Mailing List Administration"
 msgstr "Administration des listes de diffusion"
 
-msgid "Mailing List Name"
-msgstr "Nom de la liste de diffusion"
-
 #, php-format
 msgid "Mailing Lists for %1$s"
 msgstr "Liste De Diffusions for %1$s"
 
+msgid "Mailing list name"
+msgstr "Nom de la liste de diffusion"
+
 msgid "Mailing lists (Lists Service)"
 msgstr "Listes de diffusion (Service Listes)"
+
+msgid "Mailing lists administration"
+msgstr "Administration des listes de diffusion"
 
 msgid "Manage existing mailing (change description, privacy...)"
 msgstr ""
@@ -2310,6 +2312,13 @@ msgstr "Publique, incluant les utilisateurs restreints"
 
 msgid "Public information"
 msgstr "Informations publiques"
+
+msgid ""
+"Public means subscription right is granted to any user, and archives are "
+"public"
+msgstr ""
+"Publique signifie que tous les utilisateurs peuvent s'abonner, et que les "
+"archives sont publiques"
 
 msgid "Purple"
 msgstr "Violet"
