@@ -99,6 +99,9 @@ describe("base-component-renderer", () => {
                 throw new Error("Search input has no parent");
             }
 
+            expect(search_field_element.getAttribute("data-test")).toEqual(
+                "list-picker-search-field"
+            );
             expect(search_field_element.parentElement.classList).toContain(
                 "list-picker-multiple-search-section"
             );
