@@ -615,9 +615,6 @@ msgstr "Natures de liens entre artefacts"
 msgid "Artifact Successfully Created (%1$s)"
 msgstr "Artefact créé avec succès (%1$s)"
 
-msgid "Artifact Title"
-msgstr "Titre de l'artefact"
-
 msgid "Artifact id(s)"
 msgstr "Artefact id(s)"
 
@@ -2442,9 +2439,6 @@ msgstr "Sauvegarder vos modifications"
 
 msgid "Search"
 msgstr "Rechercher"
-
-msgid "Search Result"
-msgstr "Résultats de recherche"
 
 msgid "Search artifacts"
 msgstr "Rechercher des artefacts"

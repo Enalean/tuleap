@@ -855,22 +855,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         return ReferenceManager::instance();
     }
 
-    public function search($request, $current_user)
-    {
-        if ($request->exist('tracker')) {
-            $tracker_id = $request->get('tracker');
-            $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
-            if ($tracker) {
-                if ($tracker->userCanView($current_user)) {
-                    $tracker->displaySearch($this, $request, $current_user);
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
-                    $GLOBALS['HTML']->redirect(TRACKER_BASE_URL . '/?group_id=' . $tracker->getGroupId());
-                }
-            }
-        }
-    }
-
     /**
      * Mark as deleted all trackers of a given project
      *
