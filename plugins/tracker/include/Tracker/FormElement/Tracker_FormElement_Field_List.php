@@ -1049,6 +1049,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $size      = '';
         $required  = '';
         $bind_type = 'data-bind-type="' . $this->getBind()->getType() . '"';
+        $has_colors = count($this->getDecorators()) > 0;
+        $uses_colors = 'data-uses-colors="' . $has_colors . '"';
+
         if ($this->isMultiple()) {
             $multiple = 'multiple="multiple"';
             $size     = 'size="' . min($this->getMaxSize(), count($this->getBind()->getBindValues()) + 2) . '"';
@@ -1057,7 +1060,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $required = 'required';
         }
 
-        $html .= "<select $id $name $multiple $size $bind_type $required";
+        $html .= "<select $id $name $multiple $size $bind_type $uses_colors $required";
         if ($data_target_fields_ids !== '') {
             $html .= $data_target_fields_ids;
         }
@@ -1105,6 +1108,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $multiple  = ' ';
         $size      = ' ';
         $bind_type = 'data-bind-type="' . $this->getBind()->getType() . '"';
+        $has_colors = count($this->getDecorators()) > 0;
+        $uses_colors = 'data-uses-colors="' . $has_colors . '"';
+
         if ($this->isMultiple()) {
             $multiple = ' multiple="multiple" ';
             $size     = ' size="' . min($this->getMaxSize(), count($this->getBind()->getAllValues()) + 2) . '" ';
@@ -1119,7 +1125,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($name) {
             $html .= 'name="' . $name . '" ';
         }
-        $html .= $size . $multiple . $bind_type . '>';
+        $html .= $size . $multiple . $bind_type . $uses_colors . '>';
 
         $html .= '<option value="' . $purifier->purify(BindStaticValueUnchanged::VALUE_ID) . '" selected="selected">' .
             $GLOBALS['Language']->getText('global', 'unchanged') . '</option>';
@@ -1130,7 +1136,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 $styles  = $this->getBind()->getSelectOptionStyles($id);
                 $dataset = ItemsDatasetBuilder::buildDataAttributesForValue($value);
 
-                $html .= '<option value="' . $id . '" title="' . $this->getBind()->formatArtifactValue($id) . '" style="' . $styles['inline-styles'] . '" classe="' . $styles['classes'] . '"' . $dataset . '">';
+                $html .= '<option value="' . $id . '" title="' . $this->getBind()->formatArtifactValue($id) . '" style="' . $styles['inline-styles'] . '" class="' . $styles['classes'] . '"' . $dataset . '">';
                 $html .= $this->getBind()->formatArtifactValue($id);
                 $html .= '</option>';
             }
