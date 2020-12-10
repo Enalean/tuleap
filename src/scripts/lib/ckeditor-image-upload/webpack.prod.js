@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../../../tests/jest/jest.base.config.js");
-const path = require("path");
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-module.exports = {
-    ...base_config,
-    displayName: "kanban",
-    setupFiles: ["./tests/jest.setup.js"],
-    moduleNameMapper: {
-        ...base_config.moduleNameMapper,
-        "^.+\\.html$": "identity-obj-proxy",
-        // angular is imported by the artifact modal
-        "^angular$": "<rootDir>/node_modules/angular/index.js",
-        "^@tuleap/ckeditor-image-upload$": path.resolve(
-            __dirname,
-            "./tests/ckeditor-image-upload-mock.js"
-        ),
-    },
-};
+module.exports = webpack_configurator.extendProdConfiguration(common);

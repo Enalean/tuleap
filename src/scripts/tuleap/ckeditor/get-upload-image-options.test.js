@@ -19,12 +19,21 @@
 
 import * as element_adapter from "./element-adapter.js";
 import * as gettext_factory from "../gettext/gettext-factory.js";
-import { MaxSizeUploadExceededError, UploadError } from "./file-upload-handler-factory.js";
-import * as file_upload_handler_factory from "./file-upload-handler-factory.js";
+import { MaxSizeUploadExceededError, UploadError } from "@tuleap/ckeditor-image-upload";
+import * as image_upload from "@tuleap/ckeditor-image-upload";
 import * as form_adapter from "./form-adapter.js";
 import * as consistent_uploaded_files_before_submit_checker from "./consistent-uploaded-files-before-submit-checker.js";
-import * as image_urls_finder from "./image-urls-finder.js";
 import { getUploadImageOptions, initiateUploadImage } from "./get-upload-image-options.js";
+
+jest.mock("@tuleap/ckeditor-image-upload", () => {
+    const actual_module = jest.requireActual("@tuleap/ckeditor-image-upload");
+    return {
+        MaxSizeUploadExceededError: actual_module.MaxSizeUploadExceededError,
+        UploadError: actual_module.UploadError,
+        buildFileUploadHandler: jest.fn(),
+        isThereAnImageWithDataURI: jest.fn(),
+    };
+});
 
 describe(`get-upload-image-options`, () => {
     let isUploadEnabled,
@@ -60,7 +69,7 @@ describe(`get-upload-image-options`, () => {
             ckeditor_instance.on.mockImplementation((event_name, handler) => {
                 triggerPaste = handler;
             });
-            jest.spyOn(image_urls_finder, "isThereAnImageWithDataURI").mockReturnValue(true);
+            jest.spyOn(image_upload, "isThereAnImageWithDataURI").mockReturnValue(true);
 
             await initiateUploadImage(ckeditor_instance, options, element);
 
@@ -104,10 +113,7 @@ describe(`get-upload-image-options`, () => {
             });
 
             it(`builds the file upload handler and registers it on the CKEditor instance`, async () => {
-                const buildFileUploadHandler = jest.spyOn(
-                    file_upload_handler_factory,
-                    "buildFileUploadHandler"
-                );
+                const buildFileUploadHandler = jest.spyOn(image_upload, "buildFileUploadHandler");
 
                 await initiateUploadImage(ckeditor_instance, options, element);
 
@@ -123,12 +129,11 @@ describe(`get-upload-image-options`, () => {
 
             it(`when the upload starts, it disables form submits`, async () => {
                 let triggerStart;
-                jest.spyOn(
-                    file_upload_handler_factory,
-                    "buildFileUploadHandler"
-                ).mockImplementation(({ onStartCallback }) => {
-                    triggerStart = onStartCallback;
-                });
+                jest.spyOn(image_upload, "buildFileUploadHandler").mockImplementation(
+                    ({ onStartCallback }) => {
+                        triggerStart = onStartCallback;
+                    }
+                );
                 const disableFormSubmit = jest
                     .spyOn(form_adapter, "disableFormSubmit")
                     .mockImplementation(() => {});
@@ -142,12 +147,11 @@ describe(`get-upload-image-options`, () => {
             describe(`when the upload succeeds`, () => {
                 let triggerSuccess, enableFormSubmit;
                 beforeEach(async () => {
-                    jest.spyOn(
-                        file_upload_handler_factory,
-                        "buildFileUploadHandler"
-                    ).mockImplementation(({ onSuccessCallback }) => {
-                        triggerSuccess = onSuccessCallback;
-                    });
+                    jest.spyOn(image_upload, "buildFileUploadHandler").mockImplementation(
+                        ({ onSuccessCallback }) => {
+                            triggerSuccess = onSuccessCallback;
+                        }
+                    );
                     jest.spyOn(form, "appendChild").mockImplementation();
                     enableFormSubmit = jest
                         .spyOn(form_adapter, "enableFormSubmit")
@@ -173,12 +177,11 @@ describe(`get-upload-image-options`, () => {
             describe(`when the upload fails`, () => {
                 let triggerError, enableFormSubmit;
                 beforeEach(async () => {
-                    jest.spyOn(
-                        file_upload_handler_factory,
-                        "buildFileUploadHandler"
-                    ).mockImplementation(({ onErrorCallback }) => {
-                        triggerError = onErrorCallback;
-                    });
+                    jest.spyOn(image_upload, "buildFileUploadHandler").mockImplementation(
+                        ({ onErrorCallback }) => {
+                            triggerError = onErrorCallback;
+                        }
+                    );
                     enableFormSubmit = jest
                         .spyOn(form_adapter, "enableFormSubmit")
                         .mockImplementation(() => {});

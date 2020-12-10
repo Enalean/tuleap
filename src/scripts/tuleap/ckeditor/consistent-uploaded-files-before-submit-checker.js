@@ -18,7 +18,7 @@
  */
 
 import { findAllHiddenInputByNames } from "./form-adapter.js";
-import { findImageUrls } from "./image-urls-finder.js";
+import { findImageUrls } from "@tuleap/ckeditor-image-upload";
 
 const forms = new Map();
 

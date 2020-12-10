@@ -40,11 +40,11 @@ import CKEDITOR from "ckeditor4";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import {
+    isThereAnImageWithDataURI,
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
     UploadError,
-} from "../../../../../../src/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
-import { isThereAnImageWithDataURI } from "../../../../../../src/scripts/tuleap/ckeditor/image-urls-finder.js";
+} from "@tuleap/ckeditor-image-upload";
 import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../../constants/fields-constants.js";
 import {
     setIsNotUploadingInCKEditor,

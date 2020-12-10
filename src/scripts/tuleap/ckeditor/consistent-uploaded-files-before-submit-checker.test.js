@@ -19,7 +19,13 @@
 
 import { addInstance } from "./consistent-uploaded-files-before-submit-checker.js";
 import * as form_adapter from "./form-adapter.js";
-import * as image_urls_finder from "./image-urls-finder.js";
+import * as image_urls_finder from "@tuleap/ckeditor-image-upload";
+
+jest.mock("@tuleap/ckeditor-image-upload", () => {
+    return {
+        findImageUrls: jest.fn(),
+    };
+});
 
 describe(`consistent-uploaded-files-before-submit-checker`, () => {
     describe(`addInstance()`, () => {
@@ -30,6 +36,7 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
         const field_name = "Attachments";
 
         beforeEach(() => {
+            jest.resetAllMocks();
             form = {
                 addEventListener: jest.fn((event_name, handler) => {
                     triggerFormSubmit = handler.bind(form);
