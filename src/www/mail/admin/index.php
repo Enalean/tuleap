@@ -6,6 +6,8 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 
+use Tuleap\MailingList\MailingListCreationPresenterBuilder;
+
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../mail_utils.php';
 
@@ -18,6 +20,7 @@ $purifier = Codendi_HTMLPurifier::instance();
 
 $pm = ProjectManager::instance();
 if ($group_id && user_ismember($group_id, 'A')) {
+    $csrf = new CSRFSynchronizerToken('/mail/?group_id=' . urlencode((string) $group_id));
     $list_server = get_list_server_url();
 
     if ($request->existAndNonEmpty('post_changes')) {
@@ -26,6 +29,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
          */
 
         if ($request->existAndNonEmpty('add_list')) {
+            $csrf->check();
             $list_password = sodium_bin2base64(random_bytes(12), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING);
             $list_name = $request->getValidated('list_name', 'string', '');
             if (! $list_name || strlen($list_name) < ForgeConfig::get('sys_lists_name_min_length')) {
@@ -45,7 +49,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
                 $result = db_query("SELECT * FROM mail_group_list WHERE lower(list_name)='" . db_es($new_list_name) . "'");
 
                 if (db_numrows($result) > 0) {
-                    $feedback .= ' ' . _('ERROR - List Already Exists') . ' ';
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('ERROR - List Already Exists'));
                 } else {
                     $group_id = db_ei($group_id);
                     $is_public = db_ei($request->getValidated('is_public', 'int', 0));
@@ -68,10 +72,9 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     $group_list_id = db_insertid($result);
 
                     if (! $result) {
-                        $feedback .= ' ' . _('Error Adding List') . ' ';
-                        echo db_error();
+                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Error Adding List'));
                     } else {
-                        $feedback .= ' ' . _('List Added') . ' ';
+                        $GLOBALS['Response']->addFeedback(Feedback::INFO, _('List added'));
                     }
 
                     // Raise an event
@@ -106,11 +109,21 @@ Thank you for using %1$s.
 
                     mail($row_email['email'], ForgeConfig::get('sys_name') . " " . _('New Mailing List'), $message, $hdrs);
 
-                    $feedback .= " " . sprintf(_('Email sent with details to: %1$s'), $row_email['email']) . " ";
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::INFO,
+                        sprintf(_('Email sent with details to: %1$s'), $row_email['email']),
+                    );
                 }
             } else {
-                $feedback .= ' ' . _('Invalid List Name') . ' ';
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Invalid List Name'));
             }
+            $GLOBALS['Response']->redirect('/mail/admin/?' .
+                http_build_query(
+                    [
+                        'group_id' => $group_id,
+                        'add_list' => 1,
+                    ]
+                ));
         } elseif ($request->existAndNonEmpty('change_status')) {
             /*
               Change a list to public/private and description
@@ -141,37 +154,19 @@ Thank you for using %1$s.
          */
         mail_header(['title' => _('Add a Mailing List')]);
 
-        echo '
-            <H3>' . _('Add a Mailing List') . '</H3>';
-        include($Language->getContent('mail/addlist_intro'));
+        ob_start();
+        include($GLOBALS['Language']->getContent('mail/addlist_intro'));
+        $intro = (string) ob_get_clean();
 
-        $result = db_query("SELECT list_name FROM mail_group_list WHERE group_id='$group_id'");
-        ShowResultSet($result, _('Existing Mailing Lists'), false);
+        $presenter = (new MailingListCreationPresenterBuilder(new MailingListDao(), $purifier))->build(
+            $request,
+            $csrf,
+            $sys_lists_domain,
+            $intro,
+        );
 
-        echo '<P>
-            <FORM METHOD="POST" ACTION="?">
-            <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-            <INPUT TYPE="HIDDEN" NAME="add_list" VALUE="y">
-            <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
-            <B>' . _('Mailing List Name') . ':</B><BR>';
-
-        // if the user is super user then he has the right to choose the
-        // full mailing list name
-        if (user_is_super_user()) {
-            echo '<INPUT TYPE="TEXT" NAME="list_name"
-            VALUE="' . ForgeConfig::get('sys_lists_prefix') . $purifier->purify($pm->getProject($group_id)->getUnixName()) . '-xxxxx" SIZE="15" MAXLENGTH="20" CLASS="textfield_small">@' . $purifier->purify($sys_lists_domain) . '</B><BR>';
-        } else {
-            echo '<B>' . ForgeConfig::get('sys_lists_prefix') . $purifier->purify($pm->getProject($group_id)->getUnixName()) . '-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" SIZE="15" MAXLENGTH="20" CLASS="textfield_small">@' . $purifier->purify($sys_lists_domain) . '</B><BR>';
-        }
-        echo '    <P>
-            <B>' . _('Is Public?') . ' </B>' . _('(Public means subscription right is granted to any user, and archives are public)') . '<BR>
-            <INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> ' . $Language->getText('global', 'yes') . '<BR>
-            <INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> ' . $Language->getText('global', 'no') . '<P>
-            <B>' . _('Description') . ':</B><BR>
-            <INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="160"><BR>
-            <P>
-            <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . _('Add This List') . '">
-            </FORM>';
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/lists/');
+        $renderer->renderToPage('admin-add', $presenter);
 
         mail_footer([]);
     } elseif ($request->existAndNonEmpty('change_status')) {
