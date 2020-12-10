@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { sanitize } from "dompurify";
 import { ListPickerItem, ListPickerItemMap, ListPickerOptions } from "../type";
+import { html, render, TemplateResult } from "lit-html";
 
 export class ListItemMapBuilder {
-    private items_templates_cache: Map<string, string>;
+    private items_templates_cache: Map<string, TemplateResult>;
 
     constructor(
         private readonly source_select_box: HTMLSelectElement,
@@ -73,21 +73,35 @@ export class ListItemMapBuilder {
 
     private getRenderedListItem(
         option_id: string,
-        template: string,
+        template: TemplateResult,
         is_disabled: boolean
-    ): HTMLElement {
-        const list_item = document.createElement("li");
-        list_item.innerHTML = sanitize(template);
-        list_item.setAttribute("role", "option");
-        list_item.setAttribute("aria-selected", "false");
-        list_item.setAttribute("data-item-id", option_id);
-
+    ): Element {
+        let class_name = "list-picker-dropdown-option-value";
         if (is_disabled) {
-            list_item.classList.add("list-picker-dropdown-option-value-disabled");
-        } else {
-            list_item.classList.add("list-picker-dropdown-option-value");
+            class_name = "list-picker-dropdown-option-value-disabled";
         }
-        return list_item;
+
+        const document_fragment = document.createDocumentFragment();
+        render(
+            html`
+                <li
+                    role="option"
+                    aria-selected="false"
+                    data-item-id="${option_id}"
+                    class="${class_name}"
+                >
+                    ${template}
+                </li>
+            `,
+            document_fragment
+        );
+
+        const list_item = document_fragment.firstElementChild;
+        if (list_item !== null) {
+            return list_item;
+        }
+
+        throw new Error("Cannot render the list item");
     }
 
     private getItemId(option: HTMLOptionElement, group_id: string): string {
@@ -109,7 +123,10 @@ export class ListItemMapBuilder {
         return base_id + option_value;
     }
 
-    private async getTemplateForItem(option: HTMLOptionElement, item_id: string): Promise<string> {
+    private async getTemplateForItem(
+        option: HTMLOptionElement,
+        item_id: string
+    ): Promise<TemplateResult> {
         const template = this.items_templates_cache.get(item_id);
         if (template) {
             return template;
@@ -118,10 +135,8 @@ export class ListItemMapBuilder {
         const option_label = this.getOptionsLabel(option);
         const avatar_url = option.dataset.avatarUrl;
         if (avatar_url && avatar_url !== "") {
-            return `
-                <span class="list-picker-avatar">
-                    <img src="${avatar_url}" loading="lazy"/>
-                </span>
+            return html`
+                <span class="list-picker-avatar"><img src="${avatar_url}" loading="lazy" /></span>
                 ${option_label}
             `;
         }
@@ -130,15 +145,18 @@ export class ListItemMapBuilder {
                 option.value,
                 option_label
             );
+            this.items_templates_cache.set(item_id, custom_template);
 
-            const sanitized_template = sanitize(custom_template, {
-                ALLOWED_TAGS: ["span", "div", "img", "i"],
-            });
-            this.items_templates_cache.set(item_id, sanitized_template);
-            return sanitized_template;
+            return custom_template;
         }
 
-        return option_label;
+        return ListItemMapBuilder.buildDefaultTemplateForItem(option_label);
+    }
+
+    public static buildDefaultTemplateForItem(value: string): TemplateResult {
+        return html`
+            ${value}
+        `;
     }
 
     private getOptionsLabel(option: HTMLOptionElement): string {

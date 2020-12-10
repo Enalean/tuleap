@@ -19,9 +19,11 @@
 
 import { ListPickerItem, ListPickerSelectionStateMultiple, SelectionManager } from "../type";
 import { DropdownManager } from "../dropdown/DropdownManager";
-import { sanitize } from "dompurify";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { GettextProvider } from "../../../tuleap/gettext/gettext-sync";
+import { html, render } from "lit-html";
+import { classMap } from "lit-html/directives/class-map";
+import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 
 export class MultipleSelectionManager implements SelectionManager {
     private readonly selection_state: ListPickerSelectionStateMultiple;
@@ -195,7 +197,7 @@ export class MultipleSelectionManager implements SelectionManager {
     private createClearSelectionStateButton(): Element {
         const remove_value_button = document.createElement("span");
         remove_value_button.classList.add("list-picker-selected-value-remove-button");
-        remove_value_button.innerHTML = sanitize("&times");
+        remove_value_button.innerText = "×";
         remove_value_button.setAttribute(
             "title",
             this.gettext_provider.gettext("Remove all values")
@@ -215,35 +217,45 @@ export class MultipleSelectionManager implements SelectionManager {
     }
 
     private createItemBadgeElement(list_item: ListPickerItem): Element {
-        const remove_badge_button = document.createElement("span");
-        remove_badge_button.innerHTML = sanitize("&times");
-        remove_badge_button.setAttribute("role", "presentation");
-        remove_badge_button.classList.add("list-picker-value-remove-button");
-
-        const badge = document.createElement("span");
-        badge.classList.add("list-picker-badge");
-
-        if (list_item.template !== list_item.label) {
-            badge.classList.add("list-picker-badge-custom");
-        }
-
-        badge.appendChild(remove_badge_button);
-        badge.insertAdjacentHTML("beforeend", sanitize(list_item.template));
-        badge.setAttribute("title", list_item.label);
-
-        if (this.source_select_box.disabled) {
-            return badge;
-        }
-
-        remove_badge_button.addEventListener("pointerup", (event: Event) => {
+        const remove_button_event_listener = (event: Event): void => {
+            if (this.source_select_box.disabled) {
+                return;
+            }
             event.preventDefault();
             event.cancelBubble = true;
 
             this.processSelection(list_item.element);
             this.dropdown_manager.openListPicker();
-        });
+        };
 
-        return badge;
+        const badge_classes = {
+            "list-picker-badge": true,
+            "list-picker-badge-custom":
+                list_item.template.getHTML() !==
+                ListItemMapBuilder.buildDefaultTemplateForItem(list_item.label).getHTML(),
+        };
+
+        const badge_template = html`
+            <span class="${classMap(badge_classes)}" title="${list_item.label}">
+                <span
+                    role="presentation"
+                    class="list-picker-value-remove-button"
+                    @pointerup=${remove_button_event_listener}
+                >
+                    &times;
+                </span>
+                ${list_item.template}
+            </span>
+        `;
+
+        const badge_document_fragment = document.createDocumentFragment();
+        render(badge_template, badge_document_fragment);
+
+        const badge_document_element = badge_document_fragment.firstElementChild;
+        if (badge_document_element !== null && badge_document_fragment.children.length === 1) {
+            return badge_document_element;
+        }
+        throw new Error("Cannot create item badge element");
     }
 
     private removeListItemFromSelection(

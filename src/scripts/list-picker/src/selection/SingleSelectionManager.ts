@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { sanitize } from "dompurify";
+
 import { DropdownManager } from "../dropdown/DropdownManager";
 import { ListPickerItem, ListPickerSelectionStateSingle, SelectionManager } from "../type";
 import { ItemsMapManager } from "../items/ItemsMapManager";
+import { html, render } from "lit-html";
 
 export class SingleSelectionManager implements SelectionManager {
     private selection_state: ListPickerSelectionStateSingle | null;
@@ -110,14 +111,22 @@ export class SingleSelectionManager implements SelectionManager {
         this.processSelection(available_items[0].element);
     }
 
-    private createCurrentSelectionElement(item: ListPickerItem): Element {
-        const selected_value = document.createElement("span");
-        selected_value.classList.add("list-picker-selected-value");
-        selected_value.setAttribute("data-item-id", item.id);
-        selected_value.setAttribute("aria-readonly", "true");
-        selected_value.innerHTML = sanitize(item.template);
+    private createCurrentSelectionElement(item: ListPickerItem): DocumentFragment {
+        const document_fragment = document.createDocumentFragment();
+        render(
+            html`
+                <span
+                    class="list-picker-selected-value"
+                    data-item-id="${item.id}"
+                    aria-readonly="true"
+                >
+                    ${item.template}
+                </span>
+            `,
+            document_fragment
+        );
 
-        return selected_value;
+        return document_fragment;
     }
 
     private replacePlaceholderWithCurrentSelection(
@@ -173,7 +182,7 @@ export class SingleSelectionManager implements SelectionManager {
     private createRemoveCurrentSelectionButton(item: ListPickerItem): Element {
         const remove_value_button = document.createElement("span");
         remove_value_button.classList.add("list-picker-selected-value-remove-button");
-        remove_value_button.innerHTML = sanitize("&times");
+        remove_value_button.innerText = "×";
 
         remove_value_button.addEventListener("pointerdown", (event: Event) => {
             event.preventDefault();

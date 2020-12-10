@@ -23,6 +23,7 @@ import {
 } from "../test-helpers/select-box-options-generator";
 import { ListItemMapBuilder } from "./ListItemMapBuilder";
 import { ListPickerOptions } from "../type";
+import { html, TemplateResult } from "lit-html";
 
 describe("ListItemBuilder", () => {
     let select: HTMLSelectElement, builder: ListItemMapBuilder;
@@ -40,11 +41,12 @@ describe("ListItemBuilder", () => {
         expect(map.size).toEqual(5);
 
         const iterator = map.entries();
+
         expect(iterator.next().value).toEqual([
             "list-picker-item-100",
             {
                 id: "list-picker-item-100",
-                template: "None",
+                template: buildTemplateResult("None"),
                 label: "None",
                 value: "100",
                 is_disabled: false,
@@ -58,7 +60,7 @@ describe("ListItemBuilder", () => {
             "list-picker-item-value_0",
             {
                 id: "list-picker-item-value_0",
-                template: "Value 0",
+                template: buildTemplateResult("Value 0"),
                 label: "Value 0",
                 value: "value_0",
                 is_disabled: false,
@@ -72,7 +74,7 @@ describe("ListItemBuilder", () => {
             "list-picker-item-value_1",
             {
                 id: "list-picker-item-value_1",
-                template: "Value 1",
+                template: buildTemplateResult("Value 1"),
                 label: "Value 1",
                 value: "value_1",
                 is_disabled: false,
@@ -86,7 +88,7 @@ describe("ListItemBuilder", () => {
             "list-picker-item-value_2",
             {
                 id: "list-picker-item-value_2",
-                template: "Value 2",
+                template: buildTemplateResult("Value 2"),
                 label: "Value 2",
                 value: "value_2",
                 is_disabled: false,
@@ -100,7 +102,7 @@ describe("ListItemBuilder", () => {
             "list-picker-item-value_3",
             {
                 id: "list-picker-item-value_3",
-                template: "Value 3",
+                template: buildTemplateResult("Value 3"),
                 label: "Value 3",
                 value: "value_3",
                 is_disabled: false,
@@ -124,7 +126,7 @@ describe("ListItemBuilder", () => {
             "list-picker-item-group1-value_0",
             {
                 id: "list-picker-item-group1-value_0",
-                template: "Value 0",
+                template: buildTemplateResult("Value 0"),
                 label: "Value 0",
                 value: "value_0",
                 is_disabled: false,
@@ -138,7 +140,7 @@ describe("ListItemBuilder", () => {
             "list-picker-item-group1-value_1",
             {
                 id: "list-picker-item-group1-value_1",
-                template: "Value 1",
+                template: buildTemplateResult("Value 1"),
                 label: "Value 1",
                 value: "value_1",
                 is_disabled: false,
@@ -152,7 +154,7 @@ describe("ListItemBuilder", () => {
             "list-picker-item-group1-value_2",
             {
                 id: "list-picker-item-group1-value_2",
-                template: "Value 2",
+                template: buildTemplateResult("Value 2"),
                 label: "Value 2",
                 value: "value_2",
                 is_disabled: false,
@@ -166,7 +168,7 @@ describe("ListItemBuilder", () => {
             "list-picker-item-group2-value_3",
             {
                 id: "list-picker-item-group2-value_3",
-                template: "Value 3",
+                template: buildTemplateResult("Value 3"),
                 label: "Value 3",
                 value: "value_3",
                 is_disabled: false,
@@ -180,7 +182,7 @@ describe("ListItemBuilder", () => {
             "list-picker-item-group2-value_4",
             {
                 id: "list-picker-item-group2-value_4",
-                template: "Value 4",
+                template: buildTemplateResult("Value 4"),
                 label: "Value 4",
                 value: "value_4",
                 is_disabled: false,
@@ -194,7 +196,7 @@ describe("ListItemBuilder", () => {
             "list-picker-item-group2-value_5",
             {
                 id: "list-picker-item-group2-value_5",
-                template: "Value 5",
+                template: buildTemplateResult("Value 5"),
                 label: "Value 5",
                 value: "value_5",
                 is_disabled: true,
@@ -259,8 +261,10 @@ describe("ListItemBuilder", () => {
     describe("When options have a data-avatar-url attribute", () => {
         it("should create an image with the url found on the option", async () => {
             const option_with_image = document.createElement("option");
-            option_with_image.appendChild(document.createTextNode("John Doe (jdoe)"));
-            option_with_image.setAttribute("data-avatar-url", "/url/to/jdoe/avatar.png");
+            const name = "John Doe (jdoe)";
+            option_with_image.appendChild(document.createTextNode(name));
+            const avatar_url = "/url/to/jdoe/avatar.png";
+            option_with_image.setAttribute("data-avatar-url", avatar_url);
             option_with_image.setAttribute("value", "101");
 
             select.appendChild(option_with_image);
@@ -272,8 +276,13 @@ describe("ListItemBuilder", () => {
                 "list-picker-item-101",
                 {
                     id: "list-picker-item-101",
-                    template: expect.stringContaining('<img src="/url/to/jdoe/avatar.png"'),
-                    label: "John Doe (jdoe)",
+                    // The source of truth is the production code, Prettier should not interfere with the spacing here
+                    // prettier-ignore
+                    template: html`
+                <span class="list-picker-avatar"><img src="${avatar_url}" loading="lazy" /></span>
+                ${name}
+            `,
+                    label: name,
                     value: "101",
                     is_disabled: false,
                     group_id: "",
@@ -284,4 +293,10 @@ describe("ListItemBuilder", () => {
             ]);
         });
     });
+
+    function buildTemplateResult(value: string): TemplateResult {
+        return html`
+            ${value}
+        `;
+    }
 });

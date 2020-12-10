@@ -20,6 +20,7 @@
 import { ItemsMapManager } from "./ItemsMapManager";
 import { appendGroupedOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { ListItemMapBuilder } from "./ListItemMapBuilder";
+import { html, TemplateResult } from "lit-html";
 
 describe("ItemsMapManager", () => {
     let items_manager: ItemsMapManager, source_select_box: HTMLSelectElement;
@@ -56,7 +57,7 @@ describe("ItemsMapManager", () => {
                 is_disabled: true,
                 is_selected: false,
                 target_option: expect.any(HTMLOptionElement),
-                template: "Value 5",
+                template: buildTemplateResult("Value 5"),
                 label: "Value 5",
                 value: "value_5",
             });
@@ -66,4 +67,10 @@ describe("ItemsMapManager", () => {
             expect(items_manager.getItemWithValue("value_25")).toBeNull();
         });
     });
+
+    function buildTemplateResult(value: string): TemplateResult {
+        return html`
+            ${value}
+        `;
+    }
 });

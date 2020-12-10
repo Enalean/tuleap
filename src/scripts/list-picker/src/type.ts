@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { TemplateResult } from "lit-html";
+
 export interface ListPicker {
     destroy: () => void;
 }
@@ -25,20 +27,20 @@ export interface ListPickerOptions {
     readonly locale?: string;
     placeholder?: string;
     is_filterable?: boolean;
-    items_template_formatter?: (value_id: string, item_label: string) => Promise<string>;
+    items_template_formatter?: (value_id: string, item_label: string) => Promise<TemplateResult>;
 }
 
 export type ListPickerItemMap = Map<string, ListPickerItem>;
 
 export interface ListPickerItem {
     id: string;
-    template: string;
+    template: TemplateResult;
     label: string;
     value: string;
     is_disabled: boolean;
     is_selected: boolean;
     group_id: string;
-    element: HTMLElement;
+    element: Element;
     target_option: HTMLOptionElement;
 }
 
@@ -61,7 +63,7 @@ export interface ListPickerComponent {
 
 export interface ListPickerSelectionStateSingle {
     selected_item: ListPickerItem;
-    selected_value_element: Element;
+    selected_value_element: DocumentFragment;
 }
 
 export interface ListPickerSelectionStateMultiple {
