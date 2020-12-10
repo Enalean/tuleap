@@ -39,16 +39,12 @@ import {
     createNewVersionFromEmpty,
     createNewWikiVersionFromModal,
     deleteItem,
-    displayEmbeddedInLargeMode,
-    displayEmbeddedInNarrowMode,
     getWikisReferencingSameWikiPage,
     loadDocument,
     loadDocumentWithAscendentHierarchy,
     loadFolder,
     loadProjectUserGroupsIfNeeded,
     loadRootFolder,
-    setUserPreferenciesForFolder,
-    setUserPreferenciesForUI,
     toggleQuickLook,
     updatePermissions,
 } from "./actions.js";
@@ -358,70 +354,6 @@ describe("Store actions", () => {
             expect(loadAscendantHierarchy).not.toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith("saveAscendantHierarchy", [folder_a]);
             expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolder", folder_a);
-        });
-    });
-
-    describe("setUserPreferenciesForFolder", () => {
-        let patchUserPreferenciesForFolderInProject, deleteUserPreferenciesForFolderInProject;
-
-        beforeEach(() => {
-            patchUserPreferenciesForFolderInProject = jest
-                .spyOn(rest_querier, "patchUserPreferenciesForFolderInProject")
-                .mockReturnValue(Promise.resolve());
-            deleteUserPreferenciesForFolderInProject = jest
-                .spyOn(rest_querier, "deleteUserPreferenciesForFolderInProject")
-                .mockReturnValue(Promise.resolve());
-        });
-
-        it("sets the user preference for the state of a given folder if its new state is 'open' (expanded)", async () => {
-            const folder_id = 30;
-            const should_be_closed = false;
-            const context = {
-                state: {
-                    user_id: 102,
-                    project_id: 110,
-                },
-            };
-
-            await setUserPreferenciesForFolder(context, [folder_id, should_be_closed]);
-
-            expect(patchUserPreferenciesForFolderInProject).toHaveBeenCalled();
-            expect(deleteUserPreferenciesForFolderInProject).not.toHaveBeenCalled();
-        });
-
-        it("deletes the user preference for the state of a given folder if its new state is 'closed' (collapsed)", async () => {
-            const folder_id = 30;
-            const should_be_closed = true;
-            const context = {
-                state: {
-                    user_id: 102,
-                    project_id: 110,
-                },
-            };
-
-            await setUserPreferenciesForFolder(context, [folder_id, should_be_closed]);
-
-            expect(patchUserPreferenciesForFolderInProject).not.toHaveBeenCalled();
-            expect(deleteUserPreferenciesForFolderInProject).toHaveBeenCalled();
-        });
-    });
-
-    describe("setUserPreferenciesForUI", () => {
-        it("sets the user preference to old ui", async () => {
-            const context = {
-                state: {
-                    user_id: 102,
-                    project_id: 110,
-                },
-            };
-
-            const addUserLegacyUIPreferency = jest
-                .spyOn(rest_querier, "addUserLegacyUIPreferency")
-                .mockReturnValue(Promise.resolve());
-
-            await setUserPreferenciesForUI(context);
-
-            expect(addUserLegacyUIPreferency).toHaveBeenCalled();
         });
     });
 
@@ -1596,64 +1528,6 @@ describe("Store actions", () => {
             const referencers = await getWikisReferencingSameWikiPage(context, target_wiki);
 
             expect(referencers).toEqual(null);
-        });
-    });
-
-    describe("displayEmbeddedInLargeMode", () => {
-        let context;
-
-        beforeEach(() => {
-            context = {
-                state: {
-                    user_id: 102,
-                    project_id: 110,
-                },
-                commit: jest.fn(),
-            };
-
-            jest.spyOn(rest_querier, "removeUserPreferenceForEmbeddedDisplay").mockReturnValue(
-                Promise.resolve()
-            );
-        });
-
-        it("should store in user preferences the new mode and then update the store value", async () => {
-            const item = {
-                id: 123,
-                title: "My embedded",
-            };
-
-            await displayEmbeddedInLargeMode(context, item);
-
-            expect(context.commit).toHaveBeenCalledWith("shouldDisplayEmbeddedInLargeMode", true);
-        });
-    });
-
-    describe("displayEmbeddedInNarrowMode", () => {
-        let context;
-
-        beforeEach(() => {
-            context = {
-                state: {
-                    user_id: 102,
-                    project_id: 110,
-                },
-                commit: jest.fn(),
-            };
-
-            jest.spyOn(rest_querier, "setNarrowModeForEmbeddedDisplay").mockReturnValue(
-                Promise.resolve()
-            );
-        });
-
-        it("should store in user preferences the new mode and then update the store value", async () => {
-            const item = {
-                id: 123,
-                title: "My embedded",
-            };
-
-            await displayEmbeddedInNarrowMode(context, item);
-
-            expect(context.commit).toHaveBeenCalledWith("shouldDisplayEmbeddedInLargeMode", false);
         });
     });
 

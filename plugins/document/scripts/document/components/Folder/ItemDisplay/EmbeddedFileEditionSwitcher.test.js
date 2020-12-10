@@ -41,7 +41,9 @@ describe("EmbeddedFileEditionSwitcher", () => {
 
     it(`Given user is not in large view
         Then switch button should be check on narrow`, () => {
-        store.state.is_embedded_in_large_view = false;
+        store.state.preferencies = {
+            is_embedded_in_large_view: false,
+        };
         const wrapper = factory();
 
         expect(wrapper.get("[data-test=view-switcher-narrow]").element.checked).toBe(true);
@@ -49,7 +51,9 @@ describe("EmbeddedFileEditionSwitcher", () => {
     });
 
     it(`Embedded document is well rendered in narrow mode`, () => {
-        store.state.is_embedded_in_large_view = true;
+        store.state.preferencies = {
+            is_embedded_in_large_view: true,
+        };
         const wrapper = factory();
 
         expect(wrapper.get("[data-test=view-switcher-narrow]").element.checked).toBe(false);
@@ -58,24 +62,28 @@ describe("EmbeddedFileEditionSwitcher", () => {
 
     it(`Should switch view to narrow when user click on narrow view`, () => {
         store.state.currently_previewed_item = { id: 42, title: "my embedded document" };
-        store.state.is_embedded_in_large_view = false;
+        store.state.preferencies = {
+            is_embedded_in_large_view: false,
+        };
         const wrapper = factory();
 
         wrapper.get("[data-test=view-switcher-narrow]").trigger("click");
         expect(store.dispatch).toHaveBeenCalledWith(
-            "displayEmbeddedInNarrowMode",
+            "preferencies/displayEmbeddedInNarrowMode",
             store.state.currently_previewed_item
         );
     });
 
     it(`Should switch view to large when user click on large view`, () => {
         store.state.currently_previewed_item = { id: 42, title: "my embedded document" };
-        store.state.is_embedded_in_large_view = true;
+        store.state.preferencies = {
+            is_embedded_in_large_view: true,
+        };
         const wrapper = factory();
 
         wrapper.get("[data-test=view-switcher-large]").trigger("click");
         expect(store.dispatch).toHaveBeenCalledWith(
-            "displayEmbeddedInLargeMode",
+            "preferencies/displayEmbeddedInLargeMode",
             store.state.currently_previewed_item
         );
     });

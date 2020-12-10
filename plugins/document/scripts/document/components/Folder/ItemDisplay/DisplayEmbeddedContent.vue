@@ -115,7 +115,8 @@ export default {
         };
     },
     computed: {
-        ...mapState(["is_embedded_in_large_view", "currently_previewed_item"]),
+        ...mapState(["currently_previewed_item"]),
+        ...mapState("preferencies", ["is_embedded_in_large_view"]),
         embedded_content() {
             if (!this.currently_previewed_item.embedded_file_properties) {
                 return "";

@@ -18,32 +18,28 @@
  */
 
 import {
-    addNewLink,
-    addNewFolder,
     addNewEmpty,
+    addNewFolder,
+    addNewLink,
     addNewWiki,
-    getFolderContent,
+    createNewVersion,
     getDocumentManagerServiceInformation,
+    getFolderContent,
     getItem,
     getParents,
-    postEmbeddedFile,
-    patchUserPreferenciesForFolderInProject,
-    postWiki,
-    deleteUserPreferenciesForFolderInProject,
-    addUserLegacyUIPreferency,
-    createNewVersion,
-    postLinkVersion,
     getProjectUserGroups,
+    postEmbeddedFile,
+    postLinkVersion,
+    postWiki,
     putEmbeddedFilePermissions,
+    putEmptyDocumentPermissions,
     putFilePermissions,
+    putFolderPermissions,
     putLinkPermissions,
     putWikiPermissions,
-    putEmptyDocumentPermissions,
-    putFolderPermissions,
 } from "./rest-querier.js";
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
 import * as tlp from "tlp";
 
 jest.mock("tlp");
@@ -166,54 +162,6 @@ describe("rest-querier", () => {
             });
             expect(tlpRecursiveGet.mock.calls.length).toEqual(2);
             expect(result).toEqual(parents);
-        });
-    });
-
-    describe("User preferences", () => {
-        const user_id = 102;
-        const project_id = 110;
-        const folder_id = 30;
-        const preference_key = "plugin_docman_hide_110_30";
-        const headers = {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        };
-
-        describe("patchUserPreferenciesForFolderInProject() -", () => {
-            it("should set the current user's preferencies for a given folder on 'expanded'", async () => {
-                const tlpPatch = jest.spyOn(tlp, "patch");
-                await patchUserPreferenciesForFolderInProject(user_id, project_id, folder_id);
-
-                expect(tlpPatch).toHaveBeenCalledWith("/api/users/102/preferences", {
-                    ...headers,
-                    body: JSON.stringify({
-                        key: preference_key,
-                        value: DOCMAN_FOLDER_EXPANDED_VALUE,
-                    }),
-                });
-            });
-        });
-
-        describe("deleteUserPreferenciesForFolderInProject() -", () => {
-            it("should delete the current user's preferencies for a given folder (e.g collapsed)", async () => {
-                const tlpDel = jest.spyOn(tlp, "del");
-                await deleteUserPreferenciesForFolderInProject(user_id, project_id, folder_id);
-
-                expect(tlpDel).toHaveBeenCalledWith(
-                    "/api/users/102/preferences?key=plugin_docman_hide_110_30"
-                );
-            });
-        });
-
-        describe("addUserLegacyUIPreferency() -", () => {
-            it("should set the current user's preferencies to old UI", async () => {
-                const tlpPatch = jest.spyOn(tlp, "patch");
-                mockFetchSuccess(tlpPatch, JSON.stringify({ id: 10 }));
-
-                await addUserLegacyUIPreferency(user_id, project_id, folder_id);
-                expect(tlpPatch).toHaveBeenCalled();
-            });
         });
     });
 

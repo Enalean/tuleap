@@ -63,7 +63,7 @@ export default {
     },
     methods: {
         async redirectUser() {
-            await this.$store.dispatch("setUserPreferenciesForUI");
+            await this.$store.dispatch("preferencies/setUserPreferenciesForUI");
             redirectToUrl(this.redirect_url);
         },
     },

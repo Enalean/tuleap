@@ -30,7 +30,6 @@ export {
     updateCurrentlyPreviewedItem,
     showPostDeletionNotification,
     hidePostDeletionNotification,
-    shouldDisplayEmbeddedInLargeMode,
     replaceCurrentFolder,
     setProjectUserGroups,
     toggleQuickLook,
@@ -171,9 +170,6 @@ function showPostDeletionNotification(state) {
 
 function hidePostDeletionNotification(state) {
     state.show_post_deletion_notification = false;
-}
-function shouldDisplayEmbeddedInLargeMode(state, is_embedded_in_large_view) {
-    state.is_embedded_in_large_view = is_embedded_in_large_view;
 }
 
 function setProjectUserGroups(state, project_ugroups) {

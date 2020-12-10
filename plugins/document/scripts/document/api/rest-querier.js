@@ -17,20 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { del, get, patch, post, put, recursiveGet } from "tlp";
-import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
+import { del, get, post, put, recursiveGet } from "tlp";
 
 export {
     getDocumentManagerServiceInformation,
     getFolderContent,
     getItem,
     getParents,
-    patchUserPreferenciesForFolderInProject,
     postEmbeddedFile,
     postWiki,
     postLinkVersion,
-    deleteUserPreferenciesForFolderInProject,
-    addUserLegacyUIPreferency,
     cancelUpload,
     createNewVersion,
     addNewFile,
@@ -46,9 +42,6 @@ export {
     deleteEmptyDocument,
     deleteFolder,
     getItemsReferencingSameWikiPage,
-    setNarrowModeForEmbeddedDisplay,
-    removeUserPreferenceForEmbeddedDisplay,
-    getPreferenceForEmbeddedDisplay,
     putEmbeddedFilePermissions,
     putFilePermissions,
     putLinkPermissions,
@@ -180,18 +173,6 @@ function getParents(folder_id) {
     });
 }
 
-async function patchUserPreferenciesForFolderInProject(user_id, project_id, folder_id) {
-    await patch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            key: `plugin_docman_hide_${project_id}_${folder_id}`,
-            value: DOCMAN_FOLDER_EXPANDED_VALUE,
-        }),
-    });
-}
-
 function postEmbeddedFile(
     item,
     content,
@@ -254,32 +235,6 @@ function postLinkVersion(
     });
 }
 
-async function deleteUserPreference(user_id, key) {
-    await del(
-        `/api/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(key)}`
-    );
-}
-
-async function deleteUserPreferenciesForFolderInProject(user_id, project_id, folder_id) {
-    const key = `plugin_docman_hide_${project_id}_${folder_id}`;
-
-    await deleteUserPreference(user_id, key);
-}
-
-async function addUserLegacyUIPreferency(user_id, project_id) {
-    const key = `plugin_docman_display_new_ui_${project_id}`;
-
-    await patch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            key,
-            value: "0",
-        }),
-    });
-}
-
 function cancelUpload(item) {
     return del(item.uploader.url, {
         headers: {
@@ -325,38 +280,6 @@ function deleteEmptyDocument(item) {
 async function getItemsReferencingSameWikiPage(page_id) {
     const escaped_page_id = encodeURIComponent(page_id);
     const response = await get(`/api/phpwiki/${escaped_page_id}/items_referencing_wiki_page`);
-
-    return response.json();
-}
-
-async function setNarrowModeForEmbeddedDisplay(user_id, project_id, document_id) {
-    await patch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            key: `plugin_docman_display_embedded_${project_id}_${document_id}`,
-            value: "narrow",
-        }),
-    });
-}
-
-async function removeUserPreferenceForEmbeddedDisplay(user_id, project_id, document_id) {
-    const key = `plugin_docman_display_embedded_${project_id}_${document_id}`;
-
-    await del(
-        `/api/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(key)}`
-    );
-}
-
-async function getPreferenceForEmbeddedDisplay(user_id, project_id, document_id) {
-    const escaped_user_id = encodeURIComponent(user_id);
-    const escaped_preference_key = encodeURIComponent(
-        `plugin_docman_display_embedded_${project_id}_${document_id}`
-    );
-    const response = await get(
-        `/api/users/${escaped_user_id}/preferences?key=${escaped_preference_key}`
-    );
 
     return response.json();
 }
