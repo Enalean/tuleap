@@ -177,7 +177,7 @@ class ListMailsController implements DispatchableWithRequest
         if ($request->valid(new Valid_Pv('pv'))) {
             $params['pv'] = $request->get('pv');
         }
-        mail_header($params);
+        mail_header($params, $user);
 
         if ($request->exist('send_reply') && $request->valid($vTopic)) {
             if (isset($ret) && $ret) {

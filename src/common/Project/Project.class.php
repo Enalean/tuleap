@@ -101,6 +101,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
             Service::FILE => ServiceFile::class,
             Service::SVN  => ServiceSVN::class,
             Service::CVS  => \Tuleap\ConcurrentVersionsSystem\ServiceCVS::class,
+            Service::ML   => \Tuleap\MailingList\ServiceMailingList::class,
         ];
 
         EventManager::instance()->processEvent(

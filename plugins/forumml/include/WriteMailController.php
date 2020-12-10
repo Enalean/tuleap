@@ -92,7 +92,7 @@ class WriteMailController implements DispatchableWithRequest
         $params['group'] = $group_id;
         $params['toptab'] = 'mail';
         $params['help'] = "collaboration.html#mailing-lists";
-        mail_header($params);
+        mail_header($params, $request->getCurrentUser());
 
         $purifier = \Codendi_HTMLPurifier::instance();
 

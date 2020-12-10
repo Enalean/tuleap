@@ -6,6 +6,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 
+use Tuleap\MailingList\MailingListAdministrationController;
 use Tuleap\MailingList\MailingListCreationPresenterBuilder;
 
 require_once __DIR__ . '/../../include/pre.php';
@@ -107,7 +108,7 @@ Thank you for using %1$s.
                     $hdrs = "From: " . ForgeConfig::get('sys_email_admin') . ForgeConfig::get('sys_lf');
                     $hdrs .= 'Content-type: text/plain; charset=utf-8' . ForgeConfig::get('sys_lf');
 
-                    mail($row_email['email'], ForgeConfig::get('sys_name') . " " . _('New Mailing List'), $message, $hdrs);
+                    mail($row_email['email'], ForgeConfig::get('sys_name') . " " . _('New mailing list'), $message, $hdrs);
 
                     $GLOBALS['Response']->addFeedback(
                         Feedback::INFO,
@@ -117,13 +118,7 @@ Thank you for using %1$s.
             } else {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Invalid List Name'));
             }
-            $GLOBALS['Response']->redirect('/mail/admin/?' .
-                http_build_query(
-                    [
-                        'group_id' => $group_id,
-                        'add_list' => 1,
-                    ]
-                ));
+            $GLOBALS['Response']->redirect(MailingListAdministrationController::getUrl($pm->getProject($group_id)));
         } elseif ($request->existAndNonEmpty('change_status')) {
             /*
               Change a list to public/private and description
@@ -152,7 +147,7 @@ Thank you for using %1$s.
         /*
           Show the form for adding mailing list
          */
-        mail_header(['title' => _('Add a Mailing List')]);
+        mail_header(['title' => _('Add a mailing list')], $request->getCurrentUser());
 
         ob_start();
         include($GLOBALS['Language']->getContent('mail/addlist_intro'));
@@ -173,7 +168,7 @@ Thank you for using %1$s.
         /*
           Change a forum to public/private
          */
-        mail_header(['title' => _('Update Mailing Lists')]);
+        mail_header(['title' => _('Update Mailing Lists')], $request->getCurrentUser());
 
         $sql = "SELECT list_name,group_list_id,is_public,description " .
                 "FROM mail_group_list " .
@@ -237,7 +232,7 @@ Thank you for using %1$s.
           Show main page for choosing
           either moderotor or delete
          */
-        mail_header(['title' => _('Mailing List Administration')]);
+        mail_header(['title' => _('Mailing List Administration')], $request->getCurrentUser());
 
         echo '
             <H2>' . _('Mailing List Administration') . '</H2>
