@@ -396,38 +396,6 @@ class Tracker_ArtifactDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function quote_keyword($keyword)
-    {
-        return $this->da->quoteLikeValueSurround($keyword);
-    }
-
-    public function searchByKeywords($tracker_id, $keywords, $criteria, $offset, $limit)
-    {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-        $criteria   = $criteria === 'OR' ? 'OR' : 'AND'; //make sure that the request is not forged
-        $offset     = $this->da->escapeInt($offset);
-        $limit      = $this->da->escapeInt($limit);
-        $keywords_array = array_map([$this, 'quote_keyword'], explode(" ", $keywords));
-
-        // search in all text fields
-        $search_query1 = implode(" $criteria cvt.value LIKE ", $keywords_array);
-        $search_query2 = implode(" $criteria cc.body LIKE ", $keywords_array);
-        $sql = "SELECT SQL_CALC_FOUND_ROWS a.id AS artifact_id
-                FROM tracker_artifact AS a
-                INNER JOIN tracker_changeset AS c ON (a.id = c.artifact_id)
-                INNER JOIN tracker_changeset_value AS cv ON (c.id = cv.changeset_id)
-                INNER JOIN tracker_changeset_value_text AS cvt ON (cv.id = cvt.changeset_value_id)
-                LEFT JOIN tracker_changeset_comment AS cc ON (c.id = cc.changeset_id)
-                WHERE a.tracker_id = $tracker_id AND
-                      (
-                        (cvt.value LIKE $search_query1) OR
-                        (cc.body LIKE $search_query2)
-                      )
-                GROUP BY a.submitted_on DESC
-                LIMIT $offset, $limit";
-        return $this->retrieve($sql);
-    }
-
     public function create($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
     {
         $transaction_executor = new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection());

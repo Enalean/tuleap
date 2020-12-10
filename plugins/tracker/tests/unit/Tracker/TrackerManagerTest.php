@@ -191,40 +191,6 @@ class TrackerManagerTest extends TestCase
         $tm->process($request_artifact, $this->user);
     }
 
-    public function testSearch()
-    {
-        $request = Mockery::spy(HTTPRequest::class);
-        $request->shouldReceive('exist')->with('tracker')->andReturn(true);
-        $request->shouldReceive('get')->with('tracker')->andReturn(3);
-        $this->tracker->shouldReceive('userCanView')->with($this->user)->andReturns(true);
-
-        $this->tracker->shouldReceive('displaySearch')->once();
-        $this->tm->search($request, $this->user);
-    }
-
-    public function testSearchUserCannotViewTracker()
-    {
-        $request = Mockery::spy(HTTPRequest::class);
-        $request->shouldReceive('exist')->with('tracker')->andReturn(true);
-        $request->shouldReceive('get')->with('tracker')->andReturn(3);
-
-        $this->tracker->shouldReceive('displaySearch')->never();
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', Mockery::any())->once();
-        $GLOBALS['HTML']->shouldReceive('redirect')->once();
-        $this->tracker->shouldReceive('userCanView')->with($this->user)->andReturns(false);
-        $this->tm->search($request, $this->user);
-    }
-
-    public function testSearchAllTrackerDisplaySearchNotCalled()
-    {
-        $request = Mockery::spy(HTTPRequest::class);
-        $request->shouldReceive('exist')->with('tracker')->andReturn(false);
-        $this->tracker->shouldReceive('userCanView')->with($this->user)->andReturns(true);
-
-        $this->tracker->shouldReceive('displaySearch')->never();
-        $this->tm->search($request, $this->user);
-    }
-
     /**
      * Given I have 3 plugin_tracker_artifact references in the template project
      * - bug
