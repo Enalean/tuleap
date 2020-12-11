@@ -70,7 +70,7 @@ final class FileBeingUploadedLocker implements TusLocker
         }
 
         $semaphore = sem_get($key);
-        if (! is_resource($semaphore)) {
+        if ($semaphore === false) {
             throw new UploadLockVerificationException($this->getPathForFile($file_information));
         }
         self::$holded_semaphores[$key] = $semaphore;
