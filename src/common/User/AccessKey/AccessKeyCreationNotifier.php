@@ -79,6 +79,6 @@ class AccessKeyCreationNotifier
 
     private function buildURLToAccountAccessTokenSection(): string
     {
-        return $this->server_url . '/account/#account-access-keys';
+        return $this->server_url . '/account/keys-tokens';
     }
 }
