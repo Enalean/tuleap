@@ -6,8 +6,8 @@
   "private": true,
   "dependencies": {
     "@tuleap/plugin-tracker": "file:../tracker",
-    "d3": "^6.2.0",
-    "d3-array": "^2.8.0",
+    "d3": "^6.3.1",
+    "d3-array": "^2.9.1",
     "d3-axis": "^2.0.0",
     "d3-scale": "^3.2.3",
     "d3-selection": "^2.0.0",

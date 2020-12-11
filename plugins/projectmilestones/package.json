@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "d3-array": "^2.8.0",
+    "d3-array": "^2.9.1",
     "d3-selection": "^2.0.0",
     "d3-shape": "^2.0.0",
     "sprintf-js": "^1.1.2",
@@ -15,7 +15,7 @@
     "vuex": "^3.6.0"
   },
   "devDependencies": {
-    "@types/d3-array": "^2.0.0",
+    "@types/d3-array": "^2.8.0",
     "@types/d3-selection": "^2.0.0",
     "@types/d3-shape": "^2.0.0",
     "@types/sprintf-js": "^1.1.2",
