@@ -20,11 +20,10 @@
 
 declare(strict_types=1);
 
-namespace unit\Tracker\FormElement\Field\ListFields\ItemsDataset;
+namespace Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset\ItemsDatasetBuilder;
 
 class ItemsDatasetBuilderTest extends TestCase
 {
