@@ -45,6 +45,10 @@ export class BaseComponentRenderer {
         } else {
             selection_element.appendChild(placeholder_element);
 
+            if (!this.source_select_box.disabled) {
+                selection_element.setAttribute("tabindex", "0");
+            }
+
             if (this.options?.is_filterable) {
                 const search_section_element = this.createSearchSectionElement();
                 search_section_element.appendChild(search_field_element);
@@ -106,7 +110,7 @@ export class BaseComponentRenderer {
         return placeholder_element;
     }
 
-    private createSelectionElement(): Element {
+    private createSelectionElement(): HTMLElement {
         const selection_element = document.createElement("span");
         selection_element.classList.add("list-picker-selection");
 

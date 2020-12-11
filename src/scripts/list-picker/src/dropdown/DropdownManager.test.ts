@@ -20,6 +20,7 @@
 import { DropdownManager } from "./DropdownManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { ScrollingManager } from "../events/ScrollingManager";
+import { FieldFocusManager } from "../navigation/FieldFocusManager";
 
 describe("dropdown-manager", () => {
     let doc: HTMLDocument,
@@ -27,19 +28,12 @@ describe("dropdown-manager", () => {
         list_picker: Element,
         dropdown: HTMLElement,
         list: Element,
-        search_field: HTMLInputElement,
-        selection_container: Element,
+        selection_container: HTMLElement,
         dropdown_manager: DropdownManager,
         scroll_manager: ScrollingManager,
+        field_focus_manager: FieldFocusManager,
         ResizeObserverSpy: jest.SpyInstance,
         disconnect: jest.SpyInstance;
-
-    function getSearchField(search_field_element: HTMLInputElement | null): HTMLInputElement {
-        if (search_field_element === null) {
-            throw new Error("search_field is null");
-        }
-        return search_field_element;
-    }
 
     beforeEach(() => {
         disconnect = jest.fn();
@@ -52,42 +46,43 @@ describe("dropdown-manager", () => {
     });
 
     beforeEach(() => {
+        doc = document.implementation.createHTMLDocument();
+        const source_select_box = document.createElement("select");
         const {
             wrapper_element,
             list_picker_element,
             dropdown_element,
             dropdown_list_element,
-            search_field_element,
             selection_element,
-        } = new BaseComponentRenderer(
-            document.implementation.createHTMLDocument(),
-            document.createElement("select"),
-            {
-                is_filterable: true,
-            }
-        ).renderBaseComponent();
+        } = new BaseComponentRenderer(doc, source_select_box, {
+            is_filterable: true,
+        }).renderBaseComponent();
 
         scroll_manager = ({
             lockScrolling: jest.fn(),
             unlockScrolling: jest.fn(),
         } as unknown) as ScrollingManager;
 
-        doc = document.implementation.createHTMLDocument();
+        field_focus_manager = ({
+            applyFocusOnSelectionElement: jest.fn(),
+            applyFocusOnSearchField: jest.fn(),
+        } as unknown) as FieldFocusManager;
+
         wrapper = wrapper_element;
         list_picker = list_picker_element;
         dropdown = dropdown_element;
         list = dropdown_list_element;
         selection_container = selection_element;
-        search_field = getSearchField(search_field_element);
+
         dropdown_manager = new DropdownManager(
             doc,
             wrapper_element,
             list_picker,
             dropdown,
             list,
-            search_field_element,
             selection_element,
-            scroll_manager
+            scroll_manager,
+            field_focus_manager
         );
     });
 
@@ -97,13 +92,12 @@ describe("dropdown-manager", () => {
 
     it("opens the dropdown by appending a 'shown' class to the dropdown element, focuses the search input and moves it under the list-picker", () => {
         expect(ResizeObserverSpy).toHaveBeenCalled();
-        jest.spyOn(search_field, "focus");
         dropdown_manager.openListPicker();
 
         expect(list_picker.classList).toContain("list-picker-with-open-dropdown");
         expect(dropdown.classList).toContain("list-picker-dropdown-shown");
         expect(list.getAttribute("aria-expanded")).toBe("true");
-        expect(search_field.focus).toHaveBeenCalled();
+        expect(field_focus_manager.applyFocusOnSearchField).toHaveBeenCalled();
         expect(scroll_manager.lockScrolling).toHaveBeenCalled();
         expect(dropdown.style).toContain("top");
         expect(dropdown.style).toContain("left");
@@ -119,6 +113,7 @@ describe("dropdown-manager", () => {
         expect(dropdown.classList).not.toContain("list-picker-dropdown-shown");
         expect(list.getAttribute("aria-expanded")).toBe("false");
         expect(scroll_manager.unlockScrolling).toHaveBeenCalled();
+        expect(field_focus_manager.applyFocusOnSelectionElement).toHaveBeenCalled();
     });
 
     it("should not open the list picker if it's already open", () => {
@@ -175,9 +170,9 @@ describe("dropdown-manager", () => {
                 list_picker,
                 dropdown,
                 list,
-                search_field,
                 selection_container,
-                scroll_manager
+                scroll_manager,
+                field_focus_manager
             );
         }
 

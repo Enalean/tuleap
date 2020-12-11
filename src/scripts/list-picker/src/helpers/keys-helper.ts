@@ -51,6 +51,18 @@ export function isArrowUp(event: Event): event is KeyboardEvent {
     return keyboard_event.key === "ArrowUp" || keyboard_event.keyCode === 38;
 }
 
+export function isTabKey(event: Event): event is KeyboardEvent {
+    const keyboard_event = getKeyboardEvent(event);
+
+    return keyboard_event.key === "Tab" || keyboard_event.keyCode === 9;
+}
+
+export function isShiftKey(event: Event): event is KeyboardEvent {
+    const keyboard_event = getKeyboardEvent(event);
+
+    return keyboard_event.key === "Shift" || keyboard_event.keyCode === 16;
+}
+
 function getKeyboardEvent(event: Event): KeyboardEvent {
     if (!(event instanceof KeyboardEvent)) {
         throw new Error("Event is not a keyboard event");

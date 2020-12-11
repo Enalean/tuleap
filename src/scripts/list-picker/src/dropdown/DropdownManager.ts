@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { ScrollingManager } from "../events/ScrollingManager";
+import { FieldFocusManager } from "../navigation/FieldFocusManager";
 
 export class DropdownManager {
     private resize_observer: ResizeObserver;
@@ -28,9 +29,9 @@ export class DropdownManager {
         private readonly list_picker_element: Element,
         private readonly dropdown_element: HTMLElement,
         private readonly dropdown_list_element: Element,
-        private readonly search_field_element: HTMLInputElement | null,
-        private readonly selection_element: Element,
-        private readonly scrolling_manager: ScrollingManager
+        private readonly selection_element: HTMLElement,
+        private readonly scrolling_manager: ScrollingManager,
+        private readonly field_focus_manager: FieldFocusManager
     ) {
         const resize_dropdown_callback = (entries: readonly ResizeObserverEntry[]): void => {
             if (!this.isDropdownOpen()) {
@@ -69,6 +70,7 @@ export class DropdownManager {
         this.dropdown_element.classList.remove("list-picker-dropdown-shown");
         this.list_picker_element.classList.remove("list-picker-with-open-dropdown");
         this.setAriaExpandedAttribute(this.dropdown_list_element, false);
+        this.field_focus_manager.applyFocusOnSelectionElement();
 
         if (this.selection_element.hasAttribute("aria-expanded")) {
             this.setAriaExpandedAttribute(this.selection_element, false);
@@ -90,9 +92,7 @@ export class DropdownManager {
             this.setAriaExpandedAttribute(this.selection_element, true);
         }
 
-        if (this.search_field_element) {
-            this.search_field_element.focus();
-        }
+        this.field_focus_manager.applyFocusOnSearchField();
     }
 
     public destroy(): void {
