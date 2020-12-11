@@ -67,15 +67,23 @@ final class Supervisord
         $this->units = $units;
     }
 
-    public function run(OutputInterface $output): void
+    public function configure(OutputInterface $output): void
     {
         $this->setupSupervisord($output);
         $this->deployCrondConfig();
+    }
+
+    public function exec(OutputInterface $output): void
+    {
         $output->writeln('Let the place for Supervisord');
-        $return = pcntl_exec('/usr/bin/supervisord', ['--nodaemon', '--configuration', '/etc/supervisord.conf']);
-        if ($return !== null) {
-            throw new \RuntimeException('Exec of /usr/bin/supervisord failed');
-        }
+        pcntl_exec('/usr/bin/supervisord', ['--nodaemon', '--configuration', '/etc/supervisord.conf']);
+        throw new \RuntimeException('Exec of /usr/bin/supervisord failed');
+    }
+
+    public function run(OutputInterface $output): void
+    {
+        $this->configure($output);
+        $this->exec($output);
     }
 
     private function setupSupervisord(OutputInterface $output): void

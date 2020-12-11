@@ -7,7 +7,8 @@ version: "2"
 services:
   web:
     image: docker.tuleap.org/tuleap-enterprise-edition:dev
-    command: /usr/share/tuleap/plugins/tee_container/bin/tee-container.php run
+    #entrypoint: ["/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run"]
+    #command: ["--no-supervisord", "--exec=sleep 62"]
     volumes:
       - ../../../:/usr/share/tuleap:ro,cached
       - tuleap-data:/data
