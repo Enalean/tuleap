@@ -20,6 +20,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\User\AccessKey\AccessKeyDAO;
+use Tuleap\User\AccessKey\AccessKeyVerifier;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
+use Tuleap\WebDAV\Authentication\AccessKey\WebDAVAccessKeyScope;
 use Tuleap\Webdav\Authentication\HeadersSender;
 
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
@@ -39,8 +48,10 @@ class WebDAVPlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
+        bindtextdomain('tuleap-webdav', __DIR__ . '/../site-content');
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook('url_verification_instance', 'urlVerification', false);
+        $this->addHook(AccessKeyScopeBuilderCollector::NAME);
     }
 
     /**
@@ -87,6 +98,18 @@ class WebDAVPlugin extends Plugin
         return strpos($http_host . $server['REQUEST_URI'], $webdav_host . $webdav_base_uri) !== false;
     }
 
+    public function collectAccessKeyScopeBuilder(AccessKeyScopeBuilderCollector $collector): void
+    {
+        $collector->addAccessKeyScopeBuilder($this->buildAccessKeyScopeBuilder());
+    }
+
+    private function buildAccessKeyScopeBuilder(): AuthenticationScopeBuilder
+    {
+        return new AuthenticationScopeBuilderFromClassNames(
+            WebDAVAccessKeyScope::class
+        );
+    }
+
     /**
      * Setup then return the WebDAV server
      *
@@ -95,7 +118,26 @@ class WebDAVPlugin extends Plugin
     public function getServer()
     {
         // Authentication
-        $auth = new WebDAVAuthentication(new HeadersSender());
+        $auth = new WebDAVAuthentication(
+            UserManager::instance(),
+            new HeadersSender(),
+            new \Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyAuthenticator(
+                new \Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer(
+                    new \Tuleap\User\AccessKey\PrefixAccessKey()
+                ),
+                new AccessKeyVerifier(
+                    new AccessKeyDAO(),
+                    new SplitTokenVerificationStringHasher(),
+                    \UserManager::instance(),
+                    new AccessKeyScopeRetriever(
+                        new AccessKeyScopeDAO(),
+                        $this->buildAccessKeyScopeBuilder()
+                    )
+                ),
+                WebDAVAccessKeyScope::fromItself(),
+                BackendLogger::getDefaultLogger()
+            )
+        );
         $user = $auth->authenticate();
 
         // Creating the Root directory from WebDAV file system

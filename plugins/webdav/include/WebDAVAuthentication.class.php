@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyAuthenticator;
+use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyMisusageException;
 use Tuleap\Webdav\Authentication\HeadersSender;
 
 /**
@@ -27,54 +30,51 @@ use Tuleap\Webdav\Authentication\HeadersSender;
 class WebDAVAuthentication
 {
     /**
+     * @var UserManager
+     */
+    private $user_manager;
+    /**
      * @var HeadersSender
      */
     private $headers_sender;
+    /**
+     * @var HTTPBasicAuthUserAccessKeyAuthenticator
+     */
+    private $access_key_authenticator;
 
-    public function __construct(HeadersSender $headers_sender)
-    {
-        $this->headers_sender = $headers_sender;
+    public function __construct(
+        UserManager $user_manager,
+        HeadersSender $headers_sender,
+        HTTPBasicAuthUserAccessKeyAuthenticator $access_key_authenticator
+    ) {
+        $this->user_manager             = $user_manager;
+        $this->headers_sender           = $headers_sender;
+        $this->access_key_authenticator = $access_key_authenticator;
     }
 
     /**
      * Authentication method
      *
      * Returns the authenticated user
-     *
-     * @return PFUser
      */
-    public function authenticate()
+    public function authenticate(): PFUser
     {
-        // test if username field is empty
-        if (! $this->issetUsername()) {
+        $username = $this->getUsername();
+        $password = $this->getPassword();
+        $user = $this->getUser($username, $password);
+        // Ask again for authentication if the user entered a wrong username or password
+        // if fields are left blank the user is considered as anonymous unless Tuleap don't accept anonymous access
+        if ($user->isAnonymous() && ($username || ! $password->isIdenticalTo(new ConcealedString('')) || ! ForgeConfig::areAnonymousAllowed())) {
             $this->setHeader();
         } else {
-            $username = $this->getUsername();
-            $password = $this->getPassword();
-            $user = $this->getUser($username, $password);
-            // Ask again for authentication if the user entered a wrong username or password
-            // if fields are left blank the user is considered as anonymous unless Tuleap don't accept anonymous access
-            if ($user->isAnonymous() && ($username || $password || ! ForgeConfig::areAnonymousAllowed())) {
-                $this->setHeader();
-            } else {
-                return $user;
-            }
+            return $user;
         }
-    }
-
-    /**
-     * Returns whether the username field is empty or not
-     *
-     * @return bool
-     */
-    public function issetUsername()
-    {
-        return isset($_SERVER['PHP_AUTH_USER']);
     }
 
     /**
      * Sets the authentication header
      *
+     * @psalm-return never-return
      */
     public function setHeader(): void
     {
@@ -83,35 +83,34 @@ class WebDAVAuthentication
 
     /**
      * Returns the content of username field
-     *
-     * @return String
      */
-    public function getUsername()
+    private function getUsername(): string
     {
-        return $_SERVER['PHP_AUTH_USER'];
+        return $_SERVER['PHP_AUTH_USER'] ?? '';
     }
 
     /**
      * Returns the content of password field
      *
-     * @return String
      */
-    public function getPassword()
+    private function getPassword(): ConcealedString
     {
-        return $_SERVER['PHP_AUTH_PW'];
+        if (! isset($_SERVER['PHP_AUTH_PW'])) {
+            return new ConcealedString('');
+        }
+        return new ConcealedString($_SERVER['PHP_AUTH_PW']);
     }
 
     /**
      * Returns the authenticated user or anonymous user
-     *
-     * @param String $username
-     *
-     * @param String $password
-     *
-     * @return PFUser
      */
-    public function getUser($username, $password)
+    public function getUser(string $username, ConcealedString $password): PFUser
     {
-        return UserManager::instance()->login($username, new \Tuleap\Cryptography\ConcealedString($password));
+        try {
+            $user = $this->access_key_authenticator->getUser($username, $password, \HTTPRequest::instance()->getIPAddress());
+        } catch (HTTPBasicAuthUserAccessKeyMisusageException $exception) {
+            $this->setHeader();
+        }
+        return $user ?? $this->user_manager->login($username, $password);
     }
 }

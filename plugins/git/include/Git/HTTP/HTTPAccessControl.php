@@ -25,6 +25,8 @@ use Psr\Log\LoggerInterface;
 use PermissionsManager;
 use PFUser;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyAuthenticator;
+use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyMisusageException;
 use User_LoginManager;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 use UserDao;
@@ -52,7 +54,7 @@ class HTTPAccessControl
     private $replication_http_user_authenticator;
 
     /**
-     * @var HTTPUserAccessKeyAuthenticator
+     * @var HTTPBasicAuthUserAccessKeyAuthenticator
      */
     private $access_key_authenticator;
     /**
@@ -73,7 +75,7 @@ class HTTPAccessControl
         \ForgeAccess $forge_access,
         User_LoginManager $login_manager,
         ReplicationHTTPUserAuthenticator $replication_http_user_authenticator,
-        HTTPUserAccessKeyAuthenticator $access_key_authenticator,
+        HTTPBasicAuthUserAccessKeyAuthenticator $access_key_authenticator,
         PermissionsManager $permissions_manager,
         UserDao $user_dao,
         GitHTTPAskBasicAuthenticationChallenge $ask_basic_authentication_challenge
@@ -168,7 +170,7 @@ class HTTPAccessControl
                 new ConcealedString($_SERVER['PHP_AUTH_PW']),
                 \HTTPRequest::instance()->getIPAddress()
             );
-        } catch (HTTPUserAccessKeyMisusageException $ex) {
+        } catch (HTTPBasicAuthUserAccessKeyMisusageException $ex) {
             $this->logger->debug('LOGIN ERROR ' . $exception->getMessage());
             $this->basicAuthenticationChallenge();
         }

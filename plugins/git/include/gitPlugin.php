@@ -61,7 +61,6 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
 use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\VersionDetector;
-use Tuleap\Git\HTTP\HTTPUserAccessKeyAuthenticator;
 use Tuleap\Git\Repository\GitRepositoryObjectsSizeRetriever;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\GitXmlExporter;
@@ -2488,7 +2487,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $this->getGerritServerFactory(),
                 new HttpUserValidator()
             ),
-            new HTTPUserAccessKeyAuthenticator(
+            new \Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyAuthenticator(
                 new \Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer(new \Tuleap\User\AccessKey\PrefixAccessKey()),
                 new AccessKeyVerifier(
                     new AccessKeyDAO(),
@@ -2499,6 +2498,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                         $this->buildAccessKeyScopeBuilder()
                     )
                 ),
+                GitRepositoryAccessKeyScope::fromItself(),
                 $logger
             ),
             $this->getPermissionsManager(),

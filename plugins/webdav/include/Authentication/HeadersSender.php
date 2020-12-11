@@ -24,6 +24,9 @@ namespace Tuleap\Webdav\Authentication;
 
 class HeadersSender
 {
+    /**
+     * @psalm-return never-return
+     */
     public function sendHeaders(): void
     {
         header('WWW-Authenticate: Basic realm="' . \ForgeConfig::get('sys_name') . ' WebDAV Authentication"');

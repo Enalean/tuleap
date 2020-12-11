@@ -23,6 +23,8 @@ namespace Tuleap\Git\HTTP;
 use PermissionsManager;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
+use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyAuthenticator;
+use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyMisusageException;
 
 final class HTTPAccessControlTest extends TestCase
 {
@@ -39,7 +41,7 @@ final class HTTPAccessControlTest extends TestCase
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
 
@@ -77,7 +79,7 @@ final class HTTPAccessControlTest extends TestCase
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
 
@@ -121,7 +123,7 @@ final class HTTPAccessControlTest extends TestCase
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
 
@@ -163,7 +165,7 @@ final class HTTPAccessControlTest extends TestCase
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
         $ask_basic_authentication_challenge  = \Mockery::mock(GitHTTPAskBasicAuthenticationChallenge::class);
@@ -193,7 +195,7 @@ final class HTTPAccessControlTest extends TestCase
         $found_user = \Mockery::mock(\PFUser::class);
         $found_user->shouldReceive('getUserName')->andReturn('username');
         $access_key_authenticator->shouldReceive('getUser')
-            ->andThrow(new HTTPUserAccessKeyMisusageException('user1', $found_user));
+            ->andThrow(new HTTPBasicAuthUserAccessKeyMisusageException('user1', $found_user));
 
         $not_supposed_to_return = new class extends \LogicException
         {
@@ -210,7 +212,7 @@ final class HTTPAccessControlTest extends TestCase
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
         $ask_basic_authentication_challenge  = \Mockery::mock(GitHTTPAskBasicAuthenticationChallenge::class);
@@ -255,7 +257,7 @@ final class HTTPAccessControlTest extends TestCase
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
         $ask_basic_authentication_challenge  = \Mockery::mock(GitHTTPAskBasicAuthenticationChallenge::class);
@@ -294,7 +296,7 @@ final class HTTPAccessControlTest extends TestCase
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
         $user_login_manager                  = \Mockery::mock(\User_LoginManager::class);
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
-        $access_key_authenticator            = \Mockery::mock(HTTPUserAccessKeyAuthenticator::class);
+        $access_key_authenticator            = \Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
 

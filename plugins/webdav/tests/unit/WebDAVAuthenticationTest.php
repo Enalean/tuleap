@@ -28,34 +28,42 @@ use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyAuthenticator;
+use Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyMisusageException;
 use Tuleap\Webdav\Authentication\HeadersSender;
 
-require_once __DIR__ . '/bootstrap.php';
-
-/**
- * This is the unit test of WebDAVAuthentication
- */
-class WebDAVAuthenticationTest extends TestCase
+final class WebDAVAuthenticationTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HeadersSender
      */
     private $headers_sender;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserManager
+     */
+    private $user_manager;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|HTTPBasicAuthUserAccessKeyAuthenticator
+     */
+    private $access_key_authenticator;
 
     protected function setUp(): void
     {
         parent::setUp();
-        ForgeConfig::store();
 
-        $this->headers_sender = Mockery::mock(HeadersSender::class);
+        $this->headers_sender           = Mockery::mock(HeadersSender::class);
+        $this->user_manager             = Mockery::mock(\UserManager::class);
+        $this->access_key_authenticator = Mockery::mock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
     }
 
     protected function tearDown(): void
     {
-        ForgeConfig::restore();
-        parent::tearDown();
+        unset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_SERVER['REMOTE_ADDR']);
     }
 
     /**
@@ -63,16 +71,16 @@ class WebDAVAuthenticationTest extends TestCase
      */
     public function testAuthenticateFailureWithOnlyUsername(): void
     {
-        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->headers_sender])->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVAuthentication->shouldReceive('issetUsername')->andReturns(true);
-        $webDAVAuthentication->shouldReceive('getUsername')->andReturns('username');
-        $webDAVAuthentication->shouldReceive('getPassword')->andReturns(null);
+        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
+        $_SERVER['PHP_AUTH_USER'] = 'username';
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
-        $this->headers_sender->shouldReceive('sendHeaders')->once();
+        $end_of_execution_exception = new \Exception();
+        $this->headers_sender->shouldReceive('sendHeaders')->once()->andThrow($end_of_execution_exception);
 
+        $this->expectExceptionObject($end_of_execution_exception);
         $webDAVAuthentication->authenticate();
     }
 
@@ -81,15 +89,16 @@ class WebDAVAuthenticationTest extends TestCase
      */
     public function testAuthenticateFailureWithOnlyPassword(): void
     {
-        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->headers_sender])->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVAuthentication->shouldReceive('issetUsername')->andReturns(true);
-        $webDAVAuthentication->shouldReceive('getUsername')->andReturns(null);
-        $webDAVAuthentication->shouldReceive('getPassword')->andReturns('password');
+        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
+        $_SERVER['PHP_AUTH_PW'] = 'password';
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
-        $this->headers_sender->shouldReceive('sendHeaders')->once();
+        $end_of_execution_exception = new \Exception();
+        $this->headers_sender->shouldReceive('sendHeaders')->once()->andThrow($end_of_execution_exception);
+
+        $this->expectExceptionObject($end_of_execution_exception);
 
         $webDAVAuthentication->authenticate();
     }
@@ -99,15 +108,17 @@ class WebDAVAuthenticationTest extends TestCase
      */
     public function testAuthenticateFailureWithWrongUsernameAndPassword(): void
     {
-        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->headers_sender])->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVAuthentication->shouldReceive('issetUsername')->andReturns(true);
-        $webDAVAuthentication->shouldReceive('getUsername')->andReturns('username');
-        $webDAVAuthentication->shouldReceive('getPassword')->andReturns('password');
+        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
+        $_SERVER['PHP_AUTH_USER'] = 'username';
+        $_SERVER['PHP_AUTH_PW']   = 'password';
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
-        $this->headers_sender->shouldReceive('sendHeaders')->once();
+        $end_of_execution_exception = new \Exception();
+        $this->headers_sender->shouldReceive('sendHeaders')->once()->andThrow($end_of_execution_exception);
+
+        $this->expectExceptionObject($end_of_execution_exception);
 
         $webDAVAuthentication->authenticate();
     }
@@ -119,15 +130,17 @@ class WebDAVAuthenticationTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
-        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->headers_sender])->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVAuthentication->shouldReceive('issetUsername')->andReturns(true);
-        $webDAVAuthentication->shouldReceive('getUsername')->andReturns(null);
-        $webDAVAuthentication->shouldReceive('getPassword')->andReturns(null);
+        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
+        $_SERVER['PHP_AUTH_USER'] = 'username';
+        $_SERVER['PHP_AUTH_PW']   = 'password';
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
-        $this->headers_sender->shouldReceive('sendHeaders')->once();
+        $end_of_execution_exception = new \Exception();
+        $this->headers_sender->shouldReceive('sendHeaders')->once()->andThrow($end_of_execution_exception);
+
+        $this->expectExceptionObject($end_of_execution_exception);
 
         $webDAVAuthentication->authenticate();
     }
@@ -139,10 +152,7 @@ class WebDAVAuthenticationTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->headers_sender])->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVAuthentication->shouldReceive('issetUsername')->andReturns(true);
-        $webDAVAuthentication->shouldReceive('getUsername')->andReturns(null);
-        $webDAVAuthentication->shouldReceive('getPassword')->andReturns(null);
+        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
@@ -155,14 +165,50 @@ class WebDAVAuthenticationTest extends TestCase
      */
     public function testAuthenticateSuccessWithNotAnonymousUser(): void
     {
-        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->headers_sender])->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVAuthentication->shouldReceive('issetUsername')->andReturns(true);
-        $webDAVAuthentication->shouldReceive('getUsername')->andReturns('username');
-        $webDAVAuthentication->shouldReceive('getPassword')->andReturns('password');
+        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
+        $_SERVER['PHP_AUTH_USER'] = 'username';
+        $_SERVER['PHP_AUTH_PW']   = 'password';
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(false);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
-        $this->assertEquals($user, $webDAVAuthentication->authenticate());
+        self::assertEquals($user, $webDAVAuthentication->authenticate());
+    }
+
+    public function testCanAuthenticateUserWithAnAccessKey(): void
+    {
+        $webdav_authentication = new \WebDAVAuthentication($this->user_manager, $this->headers_sender, $this->access_key_authenticator);
+
+        $_SERVER['REMOTE_ADDR']   = '2001:db8::3';
+        $_SERVER['PHP_AUTH_USER'] = 'username';
+        $_SERVER['PHP_AUTH_PW']   = 'tlp.k1.aaaaaa';
+
+        $expected_user = UserTestBuilder::aUser()->withId(102)->withUserName('username')->build();
+
+        $this->access_key_authenticator->shouldReceive('getUser')->andReturn($expected_user);
+
+        $authenticated_user = $webdav_authentication->authenticate();
+
+        self::assertSame($expected_user, $authenticated_user);
+    }
+
+    public function testAskForAuthenticationAgainWhenUsernameDoesNotMatchTheUserAssociatedWithTheAccessKey(): void
+    {
+        $webdav_authentication = new \WebDAVAuthentication($this->user_manager, $this->headers_sender, $this->access_key_authenticator);
+
+        $_SERVER['REMOTE_ADDR']   = '2001:db8::3';
+        $_SERVER['PHP_AUTH_USER'] = 'wrong_username';
+        $_SERVER['PHP_AUTH_PW']   = 'tlp.k1.aaaaaa';
+
+        $user = UserTestBuilder::aUser()->withId(102)->withUserName('username')->build();
+
+        $this->access_key_authenticator->shouldReceive('getUser')->andThrow(new HTTPBasicAuthUserAccessKeyMisusageException('wrong_username', $user));
+
+        $end_of_execution_exception = new \Exception();
+        $this->headers_sender->shouldReceive('sendHeaders')->once()->andThrow($end_of_execution_exception);
+
+        $this->expectExceptionObject($end_of_execution_exception);
+
+        $webdav_authentication->authenticate();
     }
 }
