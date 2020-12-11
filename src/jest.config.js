@@ -40,4 +40,5 @@ module.exports = {
         "!www/**/datepicker/**",
         "!scripts/FlamingParrot/keymaster-sequence/**",
     ],
+    testPathIgnorePatterns: ["node_modules", "themes/tlp", "scripts/list-picker"],
 };

@@ -126,7 +126,7 @@ describe("dropdown-content-renderer", () => {
             if (!dropdown_list.firstElementChild) {
                 throw new Error("List should not be empty, it should contains the item 'Value 1'");
             }
-            expect(dropdown_list.firstElementChild.textContent).toEqual("Value 1");
+            expect(dropdown_list.firstElementChild.textContent?.trim()).toEqual("Value 1");
         });
 
         it("renders an empty state if no items are matching the query", async () => {
@@ -168,7 +168,7 @@ describe("dropdown-content-renderer", () => {
 
             expect(group.textContent).toContain("Group 1");
             expect(group.contains(item)).toBe(true);
-            expect(item.textContent).toEqual("Value 1");
+            expect(item.textContent?.trim()).toEqual("Value 1");
         });
     });
 
@@ -200,7 +200,7 @@ describe("dropdown-content-renderer", () => {
             if (!list_item_1) {
                 throw new Error("List item not found in the list");
             }
-            expect(list_item_1.innerHTML).toEqual("Item 1");
+            expect(list_item_1.innerHTML.trim()).toEqual("Item 1");
 
             select.innerHTML = "";
             select.appendChild(option_2);
@@ -211,7 +211,7 @@ describe("dropdown-content-renderer", () => {
             if (!list_item_2) {
                 throw new Error("List item not found in the list");
             }
-            expect(list_item_2.innerHTML).toEqual("Item 2");
+            expect(list_item_2.innerHTML.trim()).toEqual("Item 2");
         });
 
         it("should render an empty state when the source <select> has no options", async () => {
@@ -228,7 +228,7 @@ describe("dropdown-content-renderer", () => {
             if (!list_item_1) {
                 throw new Error("List item not found in the list");
             }
-            expect(list_item_1.innerHTML).toEqual("Item 1");
+            expect(list_item_1.innerHTML.trim()).toEqual("Item 1");
 
             select.innerHTML = "";
             await items_map_manager.refreshItemsMap();
