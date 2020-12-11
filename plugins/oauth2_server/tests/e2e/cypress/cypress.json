@@ -10,5 +10,6 @@
     "videoUploadOnPasses": false,
     "pluginsFile": false,
     "pageLoadTimeout": 120000,
-    "chromeWebSecurity": false
+    "chromeWebSecurity": false,
+    "retries": 1
 }

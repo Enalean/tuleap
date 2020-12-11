@@ -10,5 +10,5 @@
     "videoUploadOnPasses": false,
     "pluginsFile": false,
     "pageLoadTimeout": 120000,
-    "experimentalFetchPolyfill": true
+    "retries": 1
 }

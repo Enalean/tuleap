@@ -7,5 +7,6 @@
     "screenshotsFolder": "/output/screenshots",
     "videosFolder": "/output/videos",
     "video": false,
-    "pluginsFile": false
+    "pluginsFile": false,
+    "retries": 1
 }
