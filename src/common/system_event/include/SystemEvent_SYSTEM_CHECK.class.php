@@ -46,14 +46,12 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
      */
     public function process()
     {
-        $backendSystem      = Backend::instance('System');
+        $backendSystem = Backend::instance('System');
         \assert($backendSystem instanceof BackendSystem);
-        $backendAliases     = Backend::instance('Aliases');
+        $backendAliases = Backend::instance('Aliases');
         \assert($backendAliases instanceof BackendAliases);
-        $backendSVN         = Backend::instance('SVN');
-        \assert($backendSVN instanceof BackendSVN);
-        $backendCVS         = Backend::instance('CVS');
-        \assert($backendCVS instanceof BackendCVS);
+        $backendSVN = Backend::instanceSVN();
+        $backendCVS = Backend::instanceCVS();
         $backendMailingList = Backend::instance('MailingList');
         \assert($backendMailingList instanceof BackendMailingList);
 
@@ -78,7 +76,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         // Check mailing lists
         // (re-)create missing ML
         $mailinglistdao = new MailingListDao();
-        $dar = $mailinglistdao->searchAllActiveML();
+        $dar            = $mailinglistdao->searchAllActiveML();
         foreach ($dar as $row) {
             $list = new MailingList($row);
             if (! $backendMailingList->listExists($list)) {
@@ -87,38 +85,27 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
             // TODO what about lists that changed their setting (description, public/private) ?
         }
 
+        $errors = [];
+
         $project_manager = ProjectManager::instance();
         foreach ($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
-            // Recreate project directories if they were deleted
-            if (! $backendSystem->createProjectHome($project->getId())) {
-                $this->error("Could not create project home");
-                return false;
+            try {
+                $backendSystem->systemCheck($project);
+            } catch (Exception $exception) {
+                $errors[] = $exception->getMessage();
             }
 
-            if ($project->usesCVS()) {
-                $backendCVS->setCVSRootListNeedUpdate();
-
-                if (! $backendCVS->repositoryExists($project)) {
-                    if (! $backendCVS->createProjectCVS($project->getId())) {
-                        $this->error("Could not create/initialize project CVS repository");
-                        return false;
-                    }
-                    $backendCVS->setCVSPrivacy($project, ! $project->isPublic() || $project->isCVSPrivate());
-                }
-                $backendCVS->createLockDirIfMissing($project);
-                // check post-commit hooks
-                if (! $backendCVS->updatePostCommit($project)) {
-                    return false;
-                }
-                $backendCVS->updateCVSwriters($project->getID());
-
-                $backendCVS->updateCVSWatchMode($project->getID());
-
-                // Check ownership/mode/access rights
-                $backendCVS->checkCVSMode($project);
+            try {
+                $backendCVS->systemCheck($project);
+            } catch (Exception $exception) {
+                $errors[] = $exception->getMessage();
             }
 
-            $backendSVN->systemCheck($project);
+            try {
+                $backendSVN->systemCheck($project);
+            } catch (Exception $exception) {
+                $errors[] = $exception->getMessage();
+            }
         }
 
         $backend_logger = BackendLogger::getDefaultLogger();
@@ -132,8 +119,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         // This is done after the verification all the project directories to avoid
         // bad surprises when moving files
         if (! $backendSystem->cleanupFRS()) {
-            $this->error('An error occurred while moving FRS files');
-            return false;
+            $errors[] = 'An error occurred while moving FRS files';
         }
 
         try {
@@ -144,19 +130,20 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
                 ]
             );
         } catch (Exception $exception) {
-            $this->error($exception->getMessage());
-            return false;
+            $errors[] = $exception->getMessage();
         }
 
         $this->expireRestTokens(UserManager::instance());
 
         if ($logger->hasWarnings()) {
             $this->warning($logger->getAllWarnings());
+        } elseif (count($errors) > 0) {
+            $this->error(implode("\n", $errors));
+            return false;
         } else {
             $this->done();
+            return true;
         }
-
-        return true;
     }
 
     public function expireRestTokens(UserManager $user_manager)

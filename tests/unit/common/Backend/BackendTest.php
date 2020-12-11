@@ -50,7 +50,7 @@ final class BackendTest extends TestCase
     {
         // Core backends
         $this->assertInstanceOf(\BackendSVN::class, Backend::instance(Backend::SVN));
-        $this->assertInstanceOf(\BackendCVS::class, Backend::instance(Backend::CVS));
+        $this->assertInstanceOf(\BackendCVS::class, Backend::instance('CVS'));
         $this->assertInstanceOf(\BackendMailingList::class, Backend::instance(Backend::MAILINGLIST));
         $this->assertInstanceOf(\Backend::class, Backend::instance(Backend::BACKEND));
         $this->assertInstanceOf(\BackendSystem::class, Backend::instance(Backend::SYSTEM));

@@ -79,13 +79,8 @@ class BackendCVS extends Backend
      *
      * @return bool true if repo is successfully created, false otherwise
      */
-    public function createProjectCVS($group_id)
+    public function createProjectCVS(\Project $project)
     {
-        $project = $this->getProjectManager()->getProject($group_id);
-        if (! $project) {
-            return false;
-        }
-
         $unix_group_name = $project->getUnixName(false);
         $cvs_dir         = ForgeConfig::get('cvs_prefix') . "/" . $unix_group_name;
 
@@ -167,7 +162,7 @@ class BackendCVS extends Backend
         }
 
         // Create writer file
-        if (! $this->updateCVSwriters($group_id)) {
+        if (! $this->updateCVSwriters($project)) {
             $this->log("Error while updating CVS Writers", Backend::LOG_ERROR);
             return false;
         }
@@ -193,7 +188,7 @@ class BackendCVS extends Backend
         }
 
         // Update watch mode
-        if (! $this->updateCVSWatchMode($group_id)) {
+        if (! $this->updateCVSWatchMode($project)) {
             return false;
         }
 
@@ -300,17 +295,10 @@ class BackendCVS extends Backend
      * in the CVS passwd file. The pserver protocol will fallback
      * on /etc/passwd (or NSS) for user authentication
      *
-     * @param int $group_id Project id for which committers will be updated
-     *
      * @return bool
      */
-    public function updateCVSwriters($group_id)
+    public function updateCVSwriters(\Project $project)
     {
-        $project = $this->getProjectManager()->getProject($group_id);
-        if (! $project) {
-            return false;
-        }
-
         $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
         $cvs_dir         = ForgeConfig::get('cvs_prefix') . "/" . $unix_group_name;
         $cvswriters_file = "$cvs_dir/CVSROOT/writers";
@@ -331,7 +319,7 @@ class BackendCVS extends Backend
      *
      * @return bool
      */
-    public function updateCVSWritersForGivenMember($user)
+    public function updateCVSWritersForGivenMember(PFUser $user)
     {
         $projects = $user->getProjects();
         if (isset($projects)) {
@@ -339,7 +327,7 @@ class BackendCVS extends Backend
             foreach ($projects as $groupId) {
                 $project = $pm->getProject($groupId);
                 if ($project->usesCVS() === true && $this->repositoryExists($project)) {
-                    if (! $this->updateCVSwriters($groupId)) {
+                    if (! $this->updateCVSwriters($project)) {
                         return false;
                     }
                 }
@@ -352,18 +340,10 @@ class BackendCVS extends Backend
     /**
      * Update CVS Watch Mode
      *
-     * @param int $group_id Project id for wich watch mode will be updated
-     *
      * @return bool
      */
-    public function updateCVSWatchMode($group_id)
+    public function updateCVSWatchMode(\Project $project)
     {
-        $project = $this->getProjectManager()->getProject($group_id);
-        if (! $project) {
-            $this->log("Project not found: $group_id", Backend::LOG_ERROR);
-            return false;
-        }
-
         $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
         $cvs_dir = ForgeConfig::get('cvs_prefix') . "/" . $unix_group_name;
         $filename = "$cvs_dir/CVSROOT/notify";
@@ -551,6 +531,31 @@ class BackendCVS extends Backend
         $this->installNewFileVersion($config_file_new, $config_file, $config_file_old);
 
         return true;
+    }
+
+    public function systemCheck(\Project $project): void
+    {
+        if ($project->usesCVS()) {
+            $this->setCVSRootListNeedUpdate();
+
+            if (! $this->repositoryExists($project)) {
+                if (! $this->createProjectCVS($project)) {
+                    throw new RuntimeException('Could not create/initialize project CVS repository');
+                }
+                $this->setCVSPrivacy($project, ! $project->isPublic() || $project->isCVSPrivate());
+            }
+            $this->createLockDirIfMissing($project);
+            // check post-commit hooks
+            if (! $this->updatePostCommit($project)) {
+                throw new RuntimeException('Could not update CVS post commits');
+            }
+            $this->updateCVSwriters($project);
+
+            $this->updateCVSWatchMode($project);
+
+            // Check ownership/mode/access rights
+            $this->checkCVSMode($project);
+        }
     }
 
     /**
