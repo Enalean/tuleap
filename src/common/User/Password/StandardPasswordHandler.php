@@ -32,7 +32,7 @@ class StandardPasswordHandler implements PasswordHandler
 
     public function computeHashPassword(ConcealedString $plain_password): string
     {
-        $password_hash = password_hash($plain_password->getString(), PASSWORD_DEFAULT);
+        $password_hash = \password_hash($plain_password->getString(), PASSWORD_BCRYPT, ['cost' => 13]);
         if (! $password_hash) {
             throw new LogicException('Could not compute password hash');
         }
@@ -41,16 +41,15 @@ class StandardPasswordHandler implements PasswordHandler
 
     public function isPasswordNeedRehash(string $hash_password): bool
     {
-        return password_needs_rehash($hash_password, PASSWORD_DEFAULT);
+        return \password_needs_rehash($hash_password, PASSWORD_BCRYPT, ['cost' => 13]);
     }
 
     public function computeUnixPassword(ConcealedString $plain_password): string
     {
         $number_generator = new RandomNumberGenerator(self::SALT_SIZE);
         $salt             = $number_generator->getNumber();
-        // We use SHA-512 with 5000 rounds to create the Unix Password
+        // We use SHA-512 with 20000 rounds to create the Unix Password
         // SHA-512 is more widely available than BCrypt in GLibc OS library
-        // Only 5000 rounds are used (which is the default value) to keep reasonable performance
-        return crypt($plain_password->getString(), '$6$rounds=5000$' . $salt . '$');
+        return crypt($plain_password->getString(), '$6$rounds=20000$' . $salt . '$');
     }
 }
