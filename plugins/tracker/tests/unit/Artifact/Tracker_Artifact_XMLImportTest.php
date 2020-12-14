@@ -159,6 +159,8 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
             Mockery::spy(\Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao::class),
             $this->external_field_extractor
         );
+
+        $this->tracker_xml_config->shouldReceive('isWithAllData')->andReturnFalse();
     }
 
     public function testItCallsImportFromXMLWithContentFromArchive(): void
@@ -1811,10 +1813,10 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->with($this->tracker_id, 'assigned_to')->andReturns($assto_field);
 
         $this->static_value_dao->shouldReceive('searchValueByLabel')->with(234, 'Open')->andReturns(\TestHelper::arrayToDar([
-                                                                                                                                                   'id'    => 104,
-                                                                                                                                                   'label' => 'Open',
-                                                                                                                                                   // ...
-                                                                                                                                               ]));
+            'id'    => 104,
+            'label' => 'Open',
+            // ...
+        ]));
         $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
             <artifacts>
               <artifact id="4918">
@@ -1871,14 +1873,14 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->with($this->tracker_id, 'multi_select_box')->andReturns($static_multi_selectbox_field);
         $this->static_value_dao->shouldReceive('searchValueByLabel')->with(456, 'UI')->andReturns(\TestHelper::arrayToDar([
-                                                                                                                                                                                  'id'    => 101,
-                                                                                                                                                                                  'label' => 'UI',
-                                                                                                                                                                              ]));
+            'id'    => 101,
+            'label' => 'UI',
+        ]));
 
         $this->static_value_dao->shouldReceive('searchValueByLabel')->with(456, 'Database')->andReturns(\TestHelper::arrayToDar([
-                                                                                                                                                                                        'id'    => 102,
-                                                                                                                                                                                        'label' => 'Database',
-                                                                                                                                                                                    ]));
+            'id'    => 102,
+            'label' => 'Database',
+        ]));
         $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
             <artifacts>
               <artifact id="4918">
@@ -1947,16 +1949,16 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
             </artifacts>');
 
         $jeanne = new PFUser([
-                                       'user_id' => 101,
-                                       'language_id' => 'en',
-                                       'user_name' => 'jeanne'
-                                   ]);
+            'user_id' => 101,
+            'language_id' => 'en',
+            'user_name' => 'jeanne'
+        ]);
 
         $serge = new PFUser([
-                                      'user_id' => 102,
-                                      'language_id' => 'en',
-                                      'user_name' => 'serge'
-                                  ]);
+            'user_id' => 102,
+            'language_id' => 'en',
+            'user_name' => 'serge'
+        ]);
 
         $this->user_manager->shouldReceive('getUserByIdentifier')->with('jeanne')->andReturns($jeanne);
         $this->user_manager->shouldReceive('getUserByIdentifier')->with('serge')->andReturns($serge);
@@ -2282,5 +2284,30 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(11001, $changeset_id_mapping->get('CHANGESET_10001'));
         $this->assertEquals(11002, $changeset_id_mapping->get('CHANGESET_10002'));
+    }
+
+    public function testItCreatesArtifactsWithProvidedIds(): void
+    {
+        $bare_artifact = Mockery::spy(Artifact::class);
+        $bare_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+
+        $this->artifact_creator->shouldNotReceive('createBare');
+        $this->artifact_creator->shouldReceive('createBareWithAllData')
+            ->with($this->tracker, 4918, Mockery::any(), Mockery::any())
+            ->once()
+            ->andReturn($bare_artifact);
+
+        $tracker_xml_config = Mockery::mock(\Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig::class);
+        $tracker_xml_config->shouldReceive('isWithAllData')->andReturnTrue();
+
+        $this->importer->importFromXML(
+            $this->tracker,
+            $this->buildValidXMLElement(),
+            $this->extraction_path,
+            new TrackerXmlFieldsMapping_InSamePlatform(),
+            $this->url_mapping,
+            $this->config,
+            $tracker_xml_config
+        );
     }
 }

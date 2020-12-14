@@ -267,7 +267,7 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 Mockery::any(),
-                Mockery::type(TrackerXmlImportConfig::class)
+                $this->import_config
             )
             ->andReturn($changeset_1)
             ->once();
@@ -287,7 +287,7 @@ class XmlImportTest extends TestCase
                 false,
                 "text",
                 $this->url_mapping,
-                Mockery::type(TrackerXmlImportConfig::class)
+                $this->import_config
             )
             ->andReturn($changeset_2)
             ->once();
@@ -307,7 +307,7 @@ class XmlImportTest extends TestCase
                 false,
                 "text",
                 $this->url_mapping,
-                Mockery::type(TrackerXmlImportConfig::class)
+                $this->import_config
             )
             ->andReturn($changeset_3)
             ->once();
@@ -323,6 +323,8 @@ class XmlImportTest extends TestCase
         $this->artifact_source_id_dao->shouldReceive('save')->withArgs([101, 4918, "https://web/"])->once();
 
         $this->external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact')->once();
+
+        $this->import_config->shouldReceive('isWithAllData')->once()->andReturnFalse();
 
         $this->importer->importFromXML(
             $this->tracker,

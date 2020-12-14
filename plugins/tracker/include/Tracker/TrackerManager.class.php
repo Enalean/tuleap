@@ -29,6 +29,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
+use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
@@ -354,7 +355,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             $new_tracker = $this->getTrackerFactory()->createFromTV3($user, $atid, $project, $name, $description, $itemname);
         } elseif ($request->get('create_mode') === 'migrate_from_tv3') {
             $tracker_id = $request->get('tracker_new_tv3');
-            if ($this->getTV3MigrationManager()->askForMigration($project, $tracker_id, $name, $description, $itemname)) {
+            if ($this->getTV3MigrationManager()->askForMigration($project, $tracker_id, $name, $description, $itemname, false)) {
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?group_id=' . $project->group_id);
+            }
+        } elseif ($request->get('create_mode') === 'migrate_from_tv3_with_ids') {
+            $tracker_id = $request->get('tracker_new_tv3');
+            if ($this->getTV3MigrationManager()->askForMigration($project, $tracker_id, $name, $description, $itemname, true)) {
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?group_id=' . $project->group_id);
             }
         }
@@ -468,15 +474,30 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         if ($trackers_v3) {
             $radio = $this->getCreateTrackerRadio('tv3', $requested_create_mode);
-            echo $this->getSelectBoxForTV3($requested_template_id, $radio, $trackers_v3, dgettext('tuleap-tracker', 'From a Tracker v3'));
+            echo $this->getSelectBoxForTV3(
+                $requested_template_id,
+                [
+                    [
+                        'button' => $radio,
+                        'label'  => dgettext('tuleap-tracker', 'From a Tracker v3')
+                    ]
+                ],
+                $trackers_v3
+            );
         }
     }
 
-    private function getSelectBoxForTV3($requested_template_id, $radio, array $trackers_v3, $label)
+    /**
+     * @param list<array{button: string, label: string}> $radio_buttons
+     */
+    private function getSelectBoxForTV3($requested_template_id, array $radio_buttons, array $trackers_v3): string
     {
         $html    = '';
         $hp      = Codendi_HTMLPurifier::instance();
-        $html   .= '<h3><label>' . $radio . $label . '</label></h3>';
+        foreach ($radio_buttons as $radio) {
+            $html   .= '<h3><label>' . $radio['button'] . $radio['label'] . '</label></h3>';
+        }
+        $html   .= '<br>';
         $html   .= '<div class="tracker_create_mode">';
         $checked = $requested_template_id ? '' : 'checked="checked"';
 
@@ -497,7 +518,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         return $html;
     }
 
-    public function getCreateTrackerRadio($create_mode, $requested_create_mode)
+    public function getCreateTrackerRadio($create_mode, $requested_create_mode): string
     {
         $checked = '';
         if (! $requested_create_mode) {
@@ -522,7 +543,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $hp          = Codendi_HTMLPurifier::instance();
         $breadcrumbs = [];
         $html        = '';
-        $trackers    = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
+        $trackers    = $this->getTrackerFactory()->getTrackersByGroupId($project->getID());
 
         $toolbar = [];
 
@@ -758,7 +779,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 continue;
             }
 
-            $trackers = $factory->getTrackersByGroupId($project->getID());
+            $trackers = $factory->getTrackersByGroupId((int) $project->getID());
             if ($trackers) {
                 foreach ($trackers as $key => $v) {
                     if (! $v->userCanView($user)) {
@@ -919,28 +940,44 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         if ($trackers_v3) {
             $html .= '<hr />';
             $html .= '<p>' . dgettext('tuleap-tracker', 'Or you can migrate a Tracker v3...') . '</p>';
-            $radio = $this->getCreateTrackerRadio('migrate_from_tv3', $requested_create_mode);
-            $html .= $this->getSelectBoxForTV3($requested_template_id, $radio, $trackers_v3, dgettext('tuleap-tracker', 'Migrate a Tracker v3 content'));
+            $radio_test = $this->getCreateTrackerRadio('migrate_from_tv3', $requested_create_mode);
+            $radio = $this->getCreateTrackerRadio('migrate_from_tv3_with_ids', $requested_create_mode);
+            $html .= $this->getSelectBoxForTV3(
+                $requested_template_id,
+                [
+                    [
+                        'button' => $radio_test,
+                        'label'  => dgettext('tuleap-tracker', 'Migrate a Tracker v3 content for test')
+                    ],
+                    [
+                        'button' => $radio,
+                        'label'  => dgettext('tuleap-tracker', 'Migrate a Tracker v3 content keeping original ids')
+                    ],
+                ],
+                $trackers_v3,
+            );
         }
         echo $html;
     }
 
-    private function getTV3MigrationManager()
+    private function getTV3MigrationManager(): Tracker_Migration_MigrationManager
     {
+        $backend_logger = BackendLogger::getDefaultLogger(Tracker_Migration_MigrationManager::LOG_FILE);
+        $mail_logger    = new Tracker_Migration_MailLogger();
+
         return new Tracker_Migration_MigrationManager(
             new Tracker_SystemEventManager(SystemEventManager::instance()),
             $this->getTrackerFactory(),
-            $this->getArtifactFactory(),
-            $this->getTrackerFormElementFactory(),
             UserManager::instance(),
             ProjectManager::instance(),
-            $this->getCreationDataChecker()
+            $this->getCreationDataChecker(),
+            new LegacyTrackerMigrationDao(),
+            $mail_logger,
+            new Tracker_Migration_MigrationLogger(
+                $backend_logger,
+                $mail_logger
+            )
         );
-    }
-
-    private function getTrackerFormElementFactory()
-    {
-        return Tracker_FormElementFactory::instance();
     }
 
     private function getCreationDataChecker(): TrackerCreationDataChecker

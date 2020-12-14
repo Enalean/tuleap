@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2104. All rights reserved.
+ * Copyright Enalean (c) 2104 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -40,7 +40,7 @@ class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent
         $parameters = $this->getParametersAsArray();
 
         if ($this->parametersAreMissing($parameters)) {
-            $this->error('It appears that  some parameters are missing. The parameters of this System Event should be username, project_id, tv3_id, tracker_name, tracker_description, tracker_shortname');
+            $this->error('It appears that  some parameters are missing. The parameters of this System Event should be username, project_id, tv3_id, tracker_name, tracker_description, tracker_shortname, keep_original_artifact_ids');
             return false;
         }
 
@@ -50,47 +50,61 @@ class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent
         $username            = (string) $parameters[3];
         $project_id          = (int) $parameters[4];
         $tv3_id              = (int) $parameters[5];
+        $keep_original_ids   = (bool) $parameters[6];
 
-        $this->migration_manager->migrate(
-            $username,
-            $project_id,
-            $tv3_id,
-            $tracker_name,
-            $tracker_description,
-            $tracker_shortname
-        );
-        $this->done();
+        try {
+            $this->migration_manager->migrate(
+                $username,
+                $project_id,
+                $tv3_id,
+                $tracker_name,
+                $tracker_description,
+                $tracker_shortname,
+                $keep_original_ids
+            );
+
+            $this->done();
+        } catch (Exception $exception) {
+            $this->error(
+                $exception->getMessage()
+            );
+        }
     }
 
     private function parametersAreMissing($parameters)
     {
-        if (empty($parameters[0])) {
+        if (! isset($parameters[0])) {
             $this->error('Missing argument: shortname');
             return true;
         }
 
-        if (empty($parameters[1])) {
+        if (! isset($parameters[1])) {
             $this->error('Missing argument: name');
             return true;
         }
 
-        if (empty($parameters[2])) {
+        if (! isset($parameters[2])) {
             $this->error('Missing argument: description');
             return true;
         }
 
-        if (empty($parameters[3])) {
+        if (! isset($parameters[3])) {
             $this->error('Missing argument: User');
             return true;
         }
 
-        if (empty($parameters[4])) {
+        if (! isset($parameters[4])) {
             $this->error('Missing argument: project id');
             return true;
         }
 
-        if (empty($parameters[5])) {
+        if (! isset($parameters[5])) {
             $this->error('Missing argument: tracker v3 id');
+            return true;
+        }
+
+        if (! isset($parameters[6])) {
+            $this->error('Missing argument: Keep original artifact ids');
             return true;
         }
 

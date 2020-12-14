@@ -155,6 +155,7 @@ use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\Legacy\Inheritor;
+use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownRetriever;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
@@ -1243,16 +1244,23 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return SystemEventManager::instance();
     }
 
-    private function getMigrationManager()
+    private function getMigrationManager(): Tracker_Migration_MigrationManager
     {
+        $backend_logger = BackendLogger::getDefaultLogger(Tracker_Migration_MigrationManager::LOG_FILE);
+        $mail_logger    = new Tracker_Migration_MailLogger();
+
         return new Tracker_Migration_MigrationManager(
             $this->getTrackerSystemEventManager(),
             $this->getTrackerFactory(),
-            $this->getArtifactFactory(),
-            $this->getTrackerFormElementFactory(),
             $this->getUserManager(),
             $this->getProjectManager(),
-            $this->getTrackerChecker()
+            $this->getTrackerChecker(),
+            new LegacyTrackerMigrationDao(),
+            $mail_logger,
+            new Tracker_Migration_MigrationLogger(
+                $backend_logger,
+                $mail_logger
+            )
         );
     }
 

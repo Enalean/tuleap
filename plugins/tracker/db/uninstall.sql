@@ -115,6 +115,8 @@ DROP TABLE IF EXISTS tracker_reminder_notified_roles;
 DROP TABLE IF EXISTS tracker_report_config;
 DROP TABLE IF EXISTS tracker_widget_renderer;
 
+DROP TABLE IF EXISTS plugin_tracker_legacy_tracker_migrated;
+
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 
