@@ -85,10 +85,14 @@ describe("add-to-help-modal.ts", () => {
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
-        setupDocument(doc);
     });
 
     describe("createShortcutsGroupInHelpModal", () => {
+        beforeEach(() => {
+            setupDocument(doc);
+            setupTableHeadTemplate(doc);
+        });
+
         it("creates a shortcuts group and adds it to the specific shortcuts section in the help modal", () => {
             specific_shortcuts_section = doc.createElement("section");
             specific_shortcuts_section.setAttribute("data-shortcuts-specific-section", "");
@@ -125,6 +129,16 @@ describe("add-to-help-modal.ts", () => {
                 createShortcutsGroupInHelpModal(doc, shortcuts_group);
             }).toThrow();
             expect(shortcuts_modal_body.innerHTML).toBe("");
+        });
+
+        it(`throws an error if table_head_template was not found
+            while trying to get table head`, () => {
+            const table_head_template = doc.querySelector("[data-shortcuts-help-header-template]");
+            table_head_template?.removeAttribute("data-shortcuts-help-header-template");
+
+            expect(() => {
+                createShortcutsGroupInHelpModal(doc, shortcuts_group);
+            }).toThrow();
         });
     });
 
@@ -165,5 +179,19 @@ describe("add-to-help-modal.ts", () => {
 
         shortcuts_modal.append(shortcuts_modal_body);
         doc.body.appendChild(shortcuts_modal);
+    }
+
+    function setupTableHeadTemplate(doc: Document): void {
+        doc.body.insertAdjacentHTML(
+            "beforeend",
+            `<template data-shortcuts-help-header-template="">
+                    <thead>
+                       <tr>
+                         <th class="help-modal-shortcuts-description">Description</th>
+                         <th class="tlp-table-cell-actions">Shortcut</th>
+                       </tr>
+                    </thead>
+                </template>`
+        );
     }
 });

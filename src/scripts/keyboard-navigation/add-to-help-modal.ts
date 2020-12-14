@@ -82,8 +82,7 @@ function createShortcutsGroupTable(
     const shortcuts_group_table = doc.createElement("table");
     shortcuts_group_table.classList.add("tlp-table", "help-modal-shortcuts-table");
 
-    const table_head = createTableHead(doc);
-
+    const table_head = getTableHead(doc);
     const table_body = doc.createElement("tbody");
     table_body.append(
         ...shortcuts_group.shortcuts.map((shortcut) => createShortcutRow(doc, shortcut))
@@ -93,21 +92,17 @@ function createShortcutsGroupTable(
     return shortcuts_group_table;
 }
 
-function createTableHead(doc: Document): HTMLTableSectionElement {
-    const table_head = doc.createElement("thead");
-    const head_row = table_head.insertRow();
+function getTableHead(doc: Document): Node {
+    const table_head_template = doc.querySelector("[data-shortcuts-help-header-template]");
+    if (!(table_head_template instanceof HTMLTemplateElement)) {
+        throw new Error("table_head_template was not found or is not a HTMLTemplateElement");
+    }
 
-    const shortcut_cell = doc.createElement("th");
-    shortcut_cell.classList.add("tlp-table-cell-actions");
-    shortcut_cell.append("Shortcut");
-
-    const description_cell = doc.createElement("th");
-    description_cell.classList.add("help-modal-shortcuts-description");
-    description_cell.append("Description");
-
-    head_row.append(description_cell, shortcut_cell);
-    table_head.append(head_row);
-    return table_head;
+    const table_head = table_head_template.content.firstElementChild;
+    if (!table_head) {
+        throw new Error("table_head_template should have one element child");
+    }
+    return table_head.cloneNode(true);
 }
 
 function createShortcutRow(doc: Document, shortcut: Shortcut): HTMLTableRowElement {
