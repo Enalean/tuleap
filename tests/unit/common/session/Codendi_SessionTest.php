@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Session\IncorrectSessionNamespaceException;
+
 class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
     /**
@@ -206,16 +208,15 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->assertFalse(isset($pseudo_php_session['riri']));
     }
 
-    public function testItRaisesAnErrorWhenTryingToUseAStringAsAStringOffset()
+    public function testItRaisesAnErrorWhenTryingToUseAStringAsAStringOffset(): void
     {
-        $this->expectWarning();
-
         $pseudo_php_session = [];
         $session            = new Codendi_Session($pseudo_php_session);
         $session->changeSessionNamespace('riri');
         $session->fifi = 'blop';
         $session->changeSessionNamespace('.riri.fifi');
 
+        $this->expectException(IncorrectSessionNamespaceException::class);
         $session->tutu = 'first';
     }
 
