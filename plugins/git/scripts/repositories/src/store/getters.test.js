@@ -19,21 +19,24 @@
 
 import * as getters from "./getters.js";
 import initial_state from "./state.js";
-import {
-    PROJECT_KEY,
-    REPOSITORIES_SORTED_BY_LAST_UPDATE,
-    REPOSITORIES_SORTED_BY_PATH,
-} from "../constants.js";
+import { PROJECT_KEY } from "../constants.js";
 
 describe("Store getters", () => {
-    let state;
+    let state, mock_getters;
     beforeEach(() => {
+        mock_getters = {
+            areRepositoriesAlreadyLoadedForCurrentOwner: true,
+            currentRepositoryList: [],
+        };
+
         state = { ...initial_state };
     });
 
     describe("getFilteredRepositoriesByLastUpdateDate", () => {
         it("Given that the repositories are not yet loaded, then an empty array will be returned", () => {
-            const result = getters.getFilteredRepositoriesByLastUpdateDate(state);
+            mock_getters.areRepositoriesAlreadyLoadedForCurrentOwner = false;
+
+            const result = getters.getFilteredRepositoriesByLastUpdateDate(state, mock_getters);
 
             expect(result).toEqual([]);
         });
@@ -48,10 +51,11 @@ describe("Store getters", () => {
                 last_update_date: "2021-03-24T01:35:50+01:00",
             };
 
+            mock_getters.currentRepositoryList = [first_repo, last_repo];
             state.repositories_for_owner[101] = [first_repo, last_repo];
             state.selected_owner_id = 101;
 
-            const result = getters.getFilteredRepositoriesByLastUpdateDate(state);
+            const result = getters.getFilteredRepositoriesByLastUpdateDate(state, mock_getters);
 
             expect(result).toEqual([last_repo, first_repo]);
         });
@@ -59,7 +63,9 @@ describe("Store getters", () => {
 
     describe("getFilteredRepositoriesGroupedByPath", () => {
         it("Given that the repositories are not yet loaded, then an empty structure will be returned", () => {
-            const result = getters.getFilteredRepositoriesGroupedByPath(state);
+            mock_getters.areRepositoriesAlreadyLoadedForCurrentOwner = false;
+
+            const result = getters.getFilteredRepositoriesGroupedByPath(state, mock_getters);
 
             expect(result).toEqual({
                 is_folder: true,
@@ -85,14 +91,13 @@ describe("Store getters", () => {
                 normalized_path: "sardanapalus/perform",
             };
 
-            state.repositories_for_owner[101] = [
+            mock_getters.currentRepositoryList = [
                 project_repository_with_path,
                 project_repository_at_root,
                 other_repo_with_path,
             ];
-            state.selected_owner_id = 101;
 
-            const result = getters.getFilteredRepositoriesGroupedByPath(state);
+            const result = getters.getFilteredRepositoriesGroupedByPath(state, mock_getters);
 
             expect(result).toEqual({
                 is_folder: true,
@@ -130,10 +135,8 @@ describe("Store getters", () => {
                 normalized_path: "u/jveloso/unpleadable",
             };
 
-            state.repositories_for_owner[101] = [forked_repository];
-            state.selected_owner_id = 101;
-
-            const result = getters.getFilteredRepositoriesGroupedByPath(state);
+            mock_getters.currentRepositoryList = [forked_repository];
+            const result = getters.getFilteredRepositoriesGroupedByPath(state, mock_getters);
 
             expect(result).toEqual({
                 is_folder: true,
@@ -171,10 +174,9 @@ describe("Store getters", () => {
                 label: "kafta",
                 normalized_path: "zannichelliaceae/kafta",
             };
-            state.repositories_for_owner[101] = [root_repository, project_repository_with_path];
-            state.selected_owner_id = 101;
+            mock_getters.currentRepositoryList = [root_repository, project_repository_with_path];
 
-            const result = getters.getFilteredRepositoriesGroupedByPath(state);
+            const result = getters.getFilteredRepositoriesGroupedByPath(state, mock_getters);
 
             const [folder, root_repo] = result.children;
             expect(folder.label).toEqual("zannichelliaceae");
@@ -198,15 +200,14 @@ describe("Store getters", () => {
                 normalized_path: "sardanapalus/perform",
             };
 
-            state.repositories_for_owner[101] = [
+            mock_getters.currentRepositoryList = [
                 project_repository_with_path,
                 project_repository_at_root,
                 other_repo_with_path,
             ];
-            state.selected_owner_id = 101;
             state.filter = "sol";
 
-            const result = getters.getFilteredRepositoriesGroupedByPath(state);
+            const result = getters.getFilteredRepositoriesGroupedByPath(state, mock_getters);
 
             expect(result.children.length).toEqual(2);
             const [first_folder, root_repo] = result.children;
@@ -246,7 +247,7 @@ describe("Store getters", () => {
         it("will return true when initial loading is done and there is no error", () => {
             state.is_loading_initial = false;
 
-            const result = getters.isInitialLoadingDoneWithoutError(state);
+            const result = getters.isInitialLoadingDoneWithoutError(state, mock_getters);
             expect(result).toEqual(true);
         });
 
@@ -288,36 +289,22 @@ describe("Store getters", () => {
 
     describe("isThereAResultInCurrentFilteredList", () => {
         it("Given current display mode is 'sorted by path', then it will return true if the root folder has children", () => {
-            state.display_mode = REPOSITORIES_SORTED_BY_PATH;
-            const project_repository_at_root = {
+            mock_getters.isFolderDisplayMode = true;
+            mock_getters.getFilteredRepositoriesGroupedByPath = {
                 is_folder: true,
                 label: "root",
-                children: [{ label: "whulk", normalized_path: "whulk" }],
-                normalized_path: "root",
+                children: [{ label: "whulk" }],
             };
 
-            state.repositories_for_owner[101] = [project_repository_at_root];
-            state.selected_owner_id = 101;
-            state.filter = "wh";
-
-            const result = getters.isThereAResultInCurrentFilteredList(state);
+            const result = getters.isThereAResultInCurrentFilteredList(state, mock_getters);
             expect(result).toEqual(true);
         });
 
         it("Given current display mode is 'sorted by last update date', then it will return true if the filtered array has at least one repository", () => {
-            state.display_mode = REPOSITORIES_SORTED_BY_LAST_UPDATE;
-            const project_repository_at_root = {
-                is_folder: true,
-                label: "prosternum",
-                children: [{ label: "whulk" }],
-                normalized_path: "soldiering",
-            };
+            mock_getters.isFolderDisplayMode = false;
+            mock_getters.getFilteredRepositoriesByLastUpdateDate = [{ label: "prosternum" }];
 
-            state.repositories_for_owner[101] = [project_repository_at_root];
-            state.selected_owner_id = 101;
-            state.filter = "sol";
-
-            const result = getters.isThereAResultInCurrentFilteredList(state);
+            const result = getters.isThereAResultInCurrentFilteredList(state, mock_getters);
             expect(result).toEqual(true);
         });
     });
@@ -348,10 +335,9 @@ describe("Store getters", () => {
                 additional_information: [],
             };
 
-            state.repositories_for_owner[101] = [git_repository, gitlab_repository];
-            state.selected_owner_id = 101;
+            mock_getters.currentRepositoryList = [git_repository, gitlab_repository];
 
-            const result = getters.getGitlabRepositoriesIntegrated(state);
+            const result = getters.getGitlabRepositoriesIntegrated(state, mock_getters);
             expect(result).toEqual([gitlab_repository]);
         });
     });

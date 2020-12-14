@@ -29,14 +29,15 @@ export const currentRepositoryList = (state) => [
     ...state.repositories_for_owner[state.selected_owner_id],
 ];
 
-export const getGitlabRepositoriesIntegrated = (state) => {
-    return state.repositories_for_owner[state.selected_owner_id].filter((repository) => {
+export const getGitlabRepositoriesIntegrated = (state, getters) => {
+    return getters.currentRepositoryList.filter((repository) => {
         return repository.gitlab_data !== undefined && repository.gitlab_data !== null;
     });
 };
 
-export const isCurrentRepositoryListEmpty = (state) =>
-    areRepositoriesAlreadyLoadedForCurrentOwner(state) && currentRepositoryList(state).length === 0;
+export const isCurrentRepositoryListEmpty = (state, getters) =>
+    getters.areRepositoriesAlreadyLoadedForCurrentOwner &&
+    getters.currentRepositoryList.length === 0;
 
 export const areRepositoriesAlreadyLoadedForCurrentOwner = (state) => {
     return Object.prototype.hasOwnProperty.call(
@@ -45,8 +46,8 @@ export const areRepositoriesAlreadyLoadedForCurrentOwner = (state) => {
     );
 };
 
-export const getFilteredRepositoriesByLastUpdateDate = (state) => {
-    if (!areRepositoriesAlreadyLoadedForCurrentOwner(state)) {
+export const getFilteredRepositoriesByLastUpdateDate = (state, getters) => {
+    if (!getters.areRepositoriesAlreadyLoadedForCurrentOwner) {
         return [];
     }
 
@@ -55,12 +56,12 @@ export const getFilteredRepositoriesByLastUpdateDate = (state) => {
     );
 };
 
-export const getFilteredRepositoriesGroupedByPath = (state) => {
-    if (!areRepositoriesAlreadyLoadedForCurrentOwner(state)) {
+export const getFilteredRepositoriesGroupedByPath = (state, getters) => {
+    if (!getters.areRepositoriesAlreadyLoadedForCurrentOwner) {
         return root_folder;
     }
 
-    return filterAFolder(groupRepositoriesByPath(currentRepositoryList(state)), state.filter);
+    return filterAFolder(groupRepositoriesByPath(getters.currentRepositoryList), state.filter);
 };
 
 const root_folder = {
@@ -69,10 +70,10 @@ const root_folder = {
     children: [],
 };
 
-export const isThereAResultInCurrentFilteredList = (state) => {
-    return isFolderDisplayMode(state)
-        ? getFilteredRepositoriesGroupedByPath(state).children.length > 0
-        : getFilteredRepositoriesByLastUpdateDate(state).length > 0;
+export const isThereAResultInCurrentFilteredList = (state, getters) => {
+    return getters.isFolderDisplayMode
+        ? getters.getFilteredRepositoriesGroupedByPath.children.length > 0
+        : getters.getFilteredRepositoriesByLastUpdateDate.length > 0;
 };
 
 export const hasError = (state) => state.error_message_type !== ERROR_TYPE_NO_ERROR;
@@ -81,8 +82,8 @@ export const hasSuccess = (state) => state.success_message.length > 0;
 
 export const getSuccessMessage = (state) => state.success_message;
 
-export const isInitialLoadingDoneWithoutError = (state) =>
-    !state.is_loading_initial && !hasError(state);
+export const isInitialLoadingDoneWithoutError = (state, getters) =>
+    !state.is_loading_initial && !getters.hasError;
 
 export const isFolderDisplayMode = (state) => state.display_mode === REPOSITORIES_SORTED_BY_PATH;
 
