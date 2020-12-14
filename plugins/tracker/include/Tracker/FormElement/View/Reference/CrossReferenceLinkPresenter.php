@@ -41,10 +41,6 @@ class CrossReferenceLinkPresenter
      */
     public $params;
     /**
-     * @var bool
-     */
-    public $display_comma;
-    /**
      * @var string
      */
     public $target_id;
@@ -77,12 +73,11 @@ class CrossReferenceLinkPresenter
      */
     public $source_key;
 
-    public function __construct(string $id, string $ref, string $url, bool $display_comma, \CrossReference $cross_reference)
+    public function __construct(string $id, string $ref, string $url, \CrossReference $cross_reference)
     {
         $this->id            = $id;
         $this->ref           = $ref;
         $this->url           = $url;
-        $this->display_comma = $display_comma;
         $this->target_id     = $cross_reference->getRefTargetId();
         $this->target_gid    = $cross_reference->getRefTargetGid();
         $this->target_type   = $cross_reference->getRefTargetType();

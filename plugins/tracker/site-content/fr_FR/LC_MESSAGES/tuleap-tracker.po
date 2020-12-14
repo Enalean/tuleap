@@ -3500,12 +3500,6 @@ msgstr "Ce champ est utilisé par les outils de suivi suivants :"
 msgid "This file has been removed meantime."
 msgstr "Ce fichier a été supprimé entre temps."
 
-msgid "This item is referenced by:"
-msgstr "Cet objet est référencé par :"
-
-msgid "This item references:"
-msgstr "Cet objet référence :"
-
 msgid ""
 "This page is deprecated and will be removed soon. You should switch to the "
 "new tracker creation flow."

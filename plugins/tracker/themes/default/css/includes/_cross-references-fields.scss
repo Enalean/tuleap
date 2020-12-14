@@ -31,3 +31,10 @@
 .tracker-cross-reference-switch {
     margin: 0 0 0 $tlp-medium-spacing;
 }
+
+.tracker-cross-reference-delete-link {
+    position: absolute;
+    top: $tlp-medium-spacing;
+    right: $tlp-medium-spacing;
+    transition: color 150ms linear;
+}

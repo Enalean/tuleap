@@ -17,11 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use '../variables/radius';
+
 .tlp-card {
     margin: 0 0 $tlp-medium-spacing;
     padding: $tlp-medium-spacing;
     border: 1px solid $tlp-ui-border-normal;
-    border-radius: $tlp-card-radius;
+    border-radius: radius.$tlp-card-radius;
     background: $tlp-ui-white;
 
     &:last-child {
@@ -49,8 +51,22 @@
     }
 }
 
+.tlp-card-container {
+    position: relative;
+}
+
 .tlp-pane-section-for-cards,
 .tlp-pane-section-for-cards-under-tabs {
+    > .tlp-card-container {
+        border-bottom: 1px solid $tlp-ui-border-light;
+
+        &:last-child,
+        > .tlp-card {
+            margin: 0;
+            border: 0;
+        }
+    }
+
     > .tlp-card {
         margin: 0;
         border: 0;
@@ -62,6 +78,7 @@
         }
     }
 
+    > .tlp-card-container > .tlp-card-selectable,
     > .tlp-card-selectable {
         transition: background-color 100ms linear;
 
@@ -72,6 +89,7 @@
         }
     }
 
+    > .tlp-card-container > .tlp-card-inactive,
     > .tlp-card-inactive {
         border: 0;
         background: $tlp-theme-color-dimmed-background;

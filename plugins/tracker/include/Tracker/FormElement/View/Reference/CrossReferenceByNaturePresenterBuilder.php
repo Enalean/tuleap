@@ -24,21 +24,14 @@ use Tuleap\reference\CrossReferenceCollection;
 
 class CrossReferenceByNaturePresenterBuilder
 {
-
-    /**
-     * @var CrossReferenceLinkListPresenterBuilder
-     */
-    private $link_list_builder;
     /**
      * @var CrossReferenceLinkPresenterCollectionBuilder
      */
     private $link_presenter_collection_builder;
 
     public function __construct(
-        CrossReferenceLinkListPresenterBuilder $link_list_builder,
         CrossReferenceLinkPresenterCollectionBuilder $link_presenter_array_builder
     ) {
-        $this->link_list_builder                 = $link_list_builder;
         $this->link_presenter_collection_builder = $link_presenter_array_builder;
     }
 
@@ -54,13 +47,13 @@ class CrossReferenceByNaturePresenterBuilder
         $cross_ref_list_array = [];
 
         if ($cross_reference_collection->getCrossReferencesTarget() !== []) {
-            $cross_ref_list_array[] = $this->link_list_builder->buildForTarget(
+            $cross_ref_list_array[] = new CrossReferenceLinkListPresenter(
                 $this->link_presenter_collection_builder->build($cross_reference_collection->getCrossReferencesTarget(), "target")
             );
         }
 
         if ($cross_reference_collection->getCrossReferencesSource() !== []) {
-            $cross_ref_list_array[] = $this->link_list_builder->buildForSource(
+            $cross_ref_list_array[] = new CrossReferenceLinkListPresenter(
                 $this->link_presenter_collection_builder->build($cross_reference_collection->getCrossReferencesSource(), "source")
             );
         }

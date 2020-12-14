@@ -80,7 +80,6 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
             "target_git_commit_1",
             "git_commit #1",
             "/plugins/git/1",
-            false,
             $this->cross_ref_target_1
         );
 
@@ -95,7 +94,6 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
             "target_git_commit_1",
             "git_commit #1",
             "/plugins/git/1",
-            true,
             $this->cross_ref_target_1
         );
 
@@ -103,7 +101,6 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
             "target_tracker_58",
             "tracker #58",
             "/plugins/tracker/58",
-            false,
             $this->cross_ref_target_2
         );
 
@@ -118,7 +115,6 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
             'source_tracker_789',
             'tracker #789',
             '/plugins/tracker/789',
-            false,
             $this->cross_ref_target_1
         );
 
