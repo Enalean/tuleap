@@ -25,6 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
         (modal_element: Element) => {
             jQuery(modal_element).modal("show");
         },
+        (modal_element: Element) => {
+            jQuery(modal_element).modal({
+                backdrop: "static",
+                keyboard: false,
+                show: true,
+                focus: true,
+            });
+        },
         window.localStorage
     );
 });

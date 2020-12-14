@@ -24,10 +24,12 @@ namespace Tuleap\BrowserDetection;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 
 final class BrowserDeprecationMessageTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     public function testNoDeprecationMessageForModernBrowsers(): void
     {
@@ -39,22 +41,39 @@ final class BrowserDeprecationMessageTest extends TestCase
     public function testGetsDeprecationMessageForIE11(): void
     {
         $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::IE11_USER_AGENT_STRING);
+        $message          = BrowserDeprecationMessage::fromDetectedBrowser($detected_browser);
 
-        self::assertNotNull($detected_browser);
+        self::assertNotNull($message);
+        self::assertFalse($message->can_be_dismiss);
     }
 
     public function testGetsDeprecationMessageForOldIE(): void
     {
         $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::OLD_IE_USER_AGENT_STRING);
+        $message          = BrowserDeprecationMessage::fromDetectedBrowser($detected_browser);
 
         self::assertNotNull($detected_browser);
+        self::assertFalse($message->can_be_dismiss);
+    }
+
+    public function testIEDeprecationMessageCanBeDismissedWithASpecialFlag(): void
+    {
+        \ForgeConfig::set('temporarily_allow_dismiss_ie_deprecation_message', 'I_understand_this_is_a_temporary_configuration_switch_(please_warn_the_Tuleap_dev_team_when_enabling_this)');
+
+        $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::IE11_USER_AGENT_STRING);
+        $message          = BrowserDeprecationMessage::fromDetectedBrowser($detected_browser);
+
+        self::assertNotNull($detected_browser);
+        self::assertTrue($message->can_be_dismiss);
     }
 
     public function testGetsDeprecationMessageForEdgeLegacy(): void
     {
         $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::EDGE_LEGACY_USER_AGENT_STRING);
+        $message          = BrowserDeprecationMessage::fromDetectedBrowser($detected_browser);
 
         self::assertNotNull($detected_browser);
+        self::assertTrue($message->can_be_dismiss);
     }
 
     private function buildDetectedBrowserFromUserAgent(string $user_agent): DetectedBrowser

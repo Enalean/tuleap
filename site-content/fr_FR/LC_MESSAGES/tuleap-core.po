@@ -1419,13 +1419,11 @@ msgid "Internal server error"
 msgstr "Erreur interne du serveur"
 
 msgid ""
-"Internet Explorer in compatibility mode is not supported, you will encounter "
-"issues if you continue. Please upgrade to a modern, fully supported browser "
-"such as Firefox, Chrome or Edge."
+"Internet Explorer is not supported. Please upgrade to a modern, fully "
+"supported browser such as Firefox, Chrome or Edge."
 msgstr ""
-"Internet Explorer en mode de compatibilité n'est pas supporté, vous "
-"rencontrerez des problèmes si vous continuez. Veuillez utiliser un "
-"navigateur modern tel que tel que Firefox, Chrome ou Edge."
+"Internet Explorer n'est pas supporté. Veuillez utiliser un "
+"navigateur moderne tel que tel que Firefox, Chrome ou Edge."
 
 #, php-format
 msgid ""
@@ -2623,15 +2621,6 @@ msgstr "Commencez par choisir un widget"
 msgid "Start working"
 msgstr "Commencez le travail"
 
-msgid ""
-"Starting January 2021 access with Internet Explorer will no longer work. "
-"Some features are already not available to you. Please upgrade to a modern, "
-"fully supported browser such as Firefox, Chrome or Edge."
-msgstr ""
-"À partir de janvier 2021, l'accès avec Internet Explorer ne fonctionnera "
-"plus. Des fonctionnalités ne vous sont déjà pas disponibles. Veuillez "
-"utiliser un navigateur moderne tel que Firefox, Chrome ou Edge."
-
 msgid "Status"
 msgstr "Statut"
 
@@ -2993,6 +2982,9 @@ msgid ""
 msgstr ""
 "Cet e-mail a été envoyé automatiquement par l'application "
 "{{tuleap_server_name}}"
+
+msgid "This message cannot be hidden until it has been taken into account"
+msgstr "Ce message ne peut pas être caché tant qu'il n'a pas été pris en compte."
 
 msgid ""
 "This option displays special patterns on colored cards in Agiledashboard and "
