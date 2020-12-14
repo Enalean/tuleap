@@ -70,7 +70,7 @@ class ClientWrapper
             }
         } catch (ClientExceptionInterface $exception) {
             throw new GitlabRequestException(
-                (int) $exception->getCode(),
+                500,
                 $exception->getMessage(),
                 $exception
             );
@@ -111,7 +111,7 @@ class ClientWrapper
             }
         } catch (ClientExceptionInterface $exception) {
             throw new GitlabRequestException(
-                (int) $exception->getCode(),
+                500,
                 $exception->getMessage(),
                 $exception
             );
