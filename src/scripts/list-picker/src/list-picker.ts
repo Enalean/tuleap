@@ -32,6 +32,7 @@ import { ListOptionsChangesObserver } from "./events/ListOptionsChangesObserver"
 import { ListItemMapBuilder } from "./items/ListItemMapBuilder";
 import { GettextProvider } from "../../tuleap/gettext/gettext-sync";
 import { ScrollingManager } from "./events/ScrollingManager";
+import { FieldFocusManager } from "./navigation/FieldFocusManager";
 
 export async function createListPicker(
     source_select_box: HTMLSelectElement,
@@ -56,15 +57,21 @@ export async function createListPicker(
     } = base_renderer.renderBaseComponent();
 
     const scrolling_manager = new ScrollingManager(wrapper_element);
+    const field_focus_manager = new FieldFocusManager(
+        document,
+        source_select_box,
+        selection_element,
+        search_field_element
+    );
     const dropdown_manager = new DropdownManager(
         document,
         wrapper_element,
         list_picker_element,
         dropdown_element,
         dropdown_list_element,
-        search_field_element,
         selection_element,
-        scrolling_manager
+        scrolling_manager,
+        field_focus_manager
     );
 
     let selection_manager;
@@ -114,7 +121,8 @@ export async function createListPicker(
         dropdown_manager,
         dropdown_content_renderer,
         keyboard_navigation_manager,
-        highlighter
+        highlighter,
+        field_focus_manager
     );
 
     event_manager.attachEvents();

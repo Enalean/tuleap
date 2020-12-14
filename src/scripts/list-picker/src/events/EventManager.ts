@@ -27,7 +27,10 @@ import {
     isBackspaceKey,
     isEnterKey,
     isEscapeKey,
+    isShiftKey,
+    isTabKey,
 } from "../helpers/keys-helper";
+import { FieldFocusManager } from "../navigation/FieldFocusManager";
 
 export class EventManager {
     private escape_key_handler!: (event: Event) => void;
@@ -47,7 +50,8 @@ export class EventManager {
         private readonly dropdown_manager: DropdownManager,
         private readonly dropdown_content_renderer: DropdownContentRenderer,
         private readonly keyboard_navigation_manager: KeyboardNavigationManager,
-        private readonly list_item_highlighter: ListItemHighlighter
+        private readonly list_item_highlighter: ListItemHighlighter,
+        private readonly field_focus_manager: FieldFocusManager
     ) {}
 
     public attachEvents(): void {
@@ -158,7 +162,7 @@ export class EventManager {
 
     private attachSearchEvent(search_field_element: HTMLInputElement): void {
         search_field_element.addEventListener("keyup", (event: Event) => {
-            if (isArrowUp(event) || isArrowDown(event)) {
+            if (isArrowUp(event) || isArrowDown(event) || isTabKey(event) || isShiftKey(event)) {
                 return;
             }
 
@@ -166,14 +170,15 @@ export class EventManager {
                 if (this.has_keyboard_selection_occurred) {
                     this.has_keyboard_selection_occurred = false;
                 } else {
+                    this.list_item_highlighter.resetHighlight();
                     this.dropdown_manager.openListPicker();
                 }
                 return;
             }
 
             const filter_query = search_field_element.value;
-
             this.dropdown_content_renderer.renderFilteredListPickerDropdownContent(filter_query);
+
             this.list_item_highlighter.resetHighlight();
             this.dropdown_manager.openListPicker();
         });
@@ -194,6 +199,10 @@ export class EventManager {
             if (isBackspaceKey(event)) {
                 this.selection_manager.handleBackspaceKey(event);
                 event.stopPropagation();
+            }
+
+            if (isTabKey(event)) {
+                this.resetSearchField();
             }
         });
     }
@@ -252,13 +261,24 @@ export class EventManager {
 
     private attachKeyboardNavigationEvents(): (event: Event) => void {
         const handler = (event: Event): void => {
-            if (this.shouldOpenDropdownForClosedSingleListPicker(event)) {
+            const is_dropdown_open = this.dropdown_manager.isDropdownOpen();
+            if (isTabKey(event) && is_dropdown_open) {
+                this.dropdown_manager.closeListPicker();
+                return;
+            }
+
+            if (
+                !is_dropdown_open &&
+                isEnterKey(event) &&
+                this.field_focus_manager.doesSelectionElementHaveTheFocus()
+            ) {
+                this.list_item_highlighter.resetHighlight();
                 this.dropdown_manager.openListPicker();
                 this.has_keyboard_selection_occurred = false;
                 return;
             }
 
-            if (!(event instanceof KeyboardEvent) || !this.dropdown_manager.isDropdownOpen()) {
+            if (!(event instanceof KeyboardEvent) || !is_dropdown_open) {
                 return;
             }
 
@@ -274,14 +294,6 @@ export class EventManager {
         };
         this.doc.addEventListener("keydown", handler);
         return handler;
-    }
-
-    private shouldOpenDropdownForClosedSingleListPicker(event: Event): boolean {
-        return (
-            this.source_select_box.getAttribute("multiple") === null &&
-            isEnterKey(event) &&
-            this.has_keyboard_selection_occurred
-        );
     }
 
     private preventEnterKeyInSearchFieldToSubmitForm(): (event: Event) => void {

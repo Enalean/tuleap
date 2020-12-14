@@ -17,7 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isArrowDown, isArrowUp, isBackspaceKey, isEnterKey, isEscapeKey } from "./keys-helper";
+import {
+    isArrowDown,
+    isArrowUp,
+    isBackspaceKey,
+    isEnterKey,
+    isEscapeKey,
+    isShiftKey,
+    isTabKey,
+} from "./keys-helper";
 
 describe("keys-helper", () => {
     describe("isEscapeKey", () => {
@@ -29,7 +37,7 @@ describe("keys-helper", () => {
             );
         });
 
-        it("should throw an error when the given error is not a KeyboardEvent", () => {
+        it("should throw an error when the event is not a KeyboardEvent", () => {
             expect(() => isEscapeKey(new Event("mouseenter"))).toThrowError();
         });
     });
@@ -41,7 +49,7 @@ describe("keys-helper", () => {
             });
         });
 
-        it("should throw an error when the given error is not a KeyboardEvent", () => {
+        it("should throw an error when the event is not a KeyboardEvent", () => {
             expect(() => isBackspaceKey(new Event("mouseenter"))).toThrowError();
         });
     });
@@ -53,7 +61,7 @@ describe("keys-helper", () => {
             });
         });
 
-        it("should throw an error when the given error is not a KeyboardEvent", () => {
+        it("should throw an error when the event is not a KeyboardEvent", () => {
             expect(() => isEnterKey(new Event("mouseenter"))).toThrowError();
         });
     });
@@ -65,7 +73,7 @@ describe("keys-helper", () => {
             });
         });
 
-        it("should throw an error when the given error is not a KeyboardEvent", () => {
+        it("should throw an error when the event is not a KeyboardEvent", () => {
             expect(() => isArrowDown(new Event("mouseenter"))).toThrowError();
         });
     });
@@ -77,8 +85,32 @@ describe("keys-helper", () => {
             });
         });
 
-        it("should throw an error when the given error is not a KeyboardEvent", () => {
+        it("should throw an error when the event is not a KeyboardEvent", () => {
             expect(() => isArrowUp(new Event("mouseenter"))).toThrowError();
+        });
+    });
+
+    describe("isTabKey", () => {
+        it("should return true", () => {
+            [{ key: "Tab" }, { keyCode: 9 }].forEach((event_init: KeyboardEventInit) => {
+                expect(isTabKey(new KeyboardEvent("keyup", event_init))).toBe(true);
+            });
+        });
+
+        it("should throw an error when the event is not a KeyboardEvent", () => {
+            expect(() => isTabKey(new Event("mouseenter"))).toThrowError();
+        });
+    });
+
+    describe("isShiftKey", () => {
+        it("should return true", () => {
+            [{ key: "Shift" }, { keyCode: 16 }].forEach((event_init: KeyboardEventInit) => {
+                expect(isShiftKey(new KeyboardEvent("keyup", event_init))).toBe(true);
+            });
+        });
+
+        it("should throw an error when the event is not a KeyboardEvent", () => {
+            expect(() => isShiftKey(new Event("mouseenter"))).toThrowError();
         });
     });
 });

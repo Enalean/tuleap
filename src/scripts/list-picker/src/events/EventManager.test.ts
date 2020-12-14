@@ -25,6 +25,7 @@ import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
 import { KeyboardNavigationManager } from "../navigation/KeyboardNavigationManager";
 import { ListItemHighlighter } from "../navigation/ListItemHighlighter";
 import { SelectionManager } from "../type";
+import { FieldFocusManager } from "../navigation/FieldFocusManager";
 
 describe("event manager", () => {
     let doc: HTMLDocument,
@@ -39,7 +40,8 @@ describe("event manager", () => {
         item_highlighter: ListItemHighlighter,
         dropdown_content_renderer: DropdownContentRenderer,
         selection_manager: SelectionManager,
-        navigation_manager: KeyboardNavigationManager;
+        navigation_manager: KeyboardNavigationManager,
+        field_focus_manager: FieldFocusManager;
 
     function getSearchField(search_field_element: HTMLInputElement | null): HTMLInputElement {
         if (search_field_element === null) {
@@ -94,6 +96,10 @@ describe("event manager", () => {
             resetAfterDependenciesUpdate: jest.fn(),
         } as unknown) as SingleSelectionManager;
 
+        field_focus_manager = ({
+            doesSelectionElementHaveTheFocus: jest.fn(),
+        } as unknown) as FieldFocusManager;
+
         navigation_manager = ({ navigate: jest.fn() } as unknown) as KeyboardNavigationManager;
 
         manager = new EventManager(
@@ -107,7 +113,8 @@ describe("event manager", () => {
             dropdown_manager,
             dropdown_content_renderer,
             navigation_manager,
-            item_highlighter
+            item_highlighter,
+            field_focus_manager
         );
     });
 
@@ -166,10 +173,15 @@ describe("event manager", () => {
                 dropdown_manager,
                 dropdown_content_renderer,
                 navigation_manager,
-                item_highlighter
+                item_highlighter,
+                field_focus_manager
             );
 
             const isDropdownOpen = jest.spyOn(dropdown_manager, "isDropdownOpen");
+            const doesSelectionElementHaveTheFocus = jest.spyOn(
+                field_focus_manager,
+                "doesSelectionElementHaveTheFocus"
+            );
 
             manager.attachEvents();
 
@@ -181,17 +193,20 @@ describe("event manager", () => {
 
             // Now user hits the Enter key again
             isDropdownOpen.mockReturnValueOnce(false);
+            doesSelectionElementHaveTheFocus.mockReturnValue(true);
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
             expect(dropdown_manager.openListPicker).toHaveBeenCalled();
 
             // Now user closes the dropdown without selecting any item
             isDropdownOpen.mockReturnValueOnce(true);
+            doesSelectionElementHaveTheFocus.mockReturnValue(false);
             doc.dispatchEvent(new Event("click"));
 
             expect(dropdown_manager.closeListPicker).toHaveBeenCalledTimes(1);
 
             // And finally, he hits enter once again
             isDropdownOpen.mockReturnValueOnce(false);
+            doesSelectionElementHaveTheFocus.mockReturnValue(true);
             doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
             expect(dropdown_manager.openListPicker).toHaveBeenCalledTimes(1);
         });
@@ -253,6 +268,24 @@ describe("event manager", () => {
                 search_field.dispatchEvent(new KeyboardEvent("keydown", event_init));
 
                 expect(selection_manager.handleBackspaceKey).toHaveBeenCalled();
+            });
+        });
+
+        it("should erase the search input content and reset the dropdown content when the tab key has been pressed", () => {
+            jest.spyOn(dropdown_manager, "isDropdownOpen").mockReturnValue(true);
+
+            manager.attachEvents();
+
+            [{ key: "Tab" }, { keyCode: 9 }].forEach((event_init: KeyboardEventInit) => {
+                search_field.value = "an old query";
+
+                search_field.dispatchEvent(new KeyboardEvent("keydown", event_init));
+
+                expect(search_field.value).toEqual("");
+                expect(
+                    dropdown_content_renderer.renderFilteredListPickerDropdownContent
+                ).toHaveBeenCalledWith("");
+                expect(item_highlighter.resetHighlight).toHaveBeenCalled();
             });
         });
 
@@ -350,6 +383,15 @@ describe("event manager", () => {
             expect(navigation_manager.navigate).not.toHaveBeenCalled();
             expect(selection_manager.processSelection).toHaveBeenCalledWith(highlighted_item);
             expect(item_highlighter.resetHighlight).toHaveBeenCalled();
+            expect(dropdown_manager.closeListPicker).toHaveBeenCalled();
+        });
+
+        it("should close the dropdown when the tab key has been pressed", () => {
+            jest.spyOn(dropdown_manager, "isDropdownOpen").mockReturnValue(true);
+
+            manager.attachEvents();
+            doc.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab" }));
+
             expect(dropdown_manager.closeListPicker).toHaveBeenCalled();
         });
     });

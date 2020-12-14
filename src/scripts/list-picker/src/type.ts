@@ -55,7 +55,7 @@ export interface ListPickerComponent {
     wrapper_element: HTMLElement;
     list_picker_element: Element;
     dropdown_element: HTMLElement;
-    selection_element: Element;
+    selection_element: HTMLElement;
     placeholder_element: Element;
     dropdown_list_element: Element;
     search_field_element: HTMLInputElement;
