@@ -34,7 +34,7 @@ class Backend
     public const LOG_DEBUG   = \Psr\Log\LogLevel::DEBUG;
 
     public const SVN         = 'SVN';
-    public const CVS         = 'CVS';
+    private const CVS         = 'CVS';
     public const MAILINGLIST = 'MailingList';
     public const BACKEND     = 'Backend';
     public const SYSTEM      = 'System';
@@ -139,6 +139,16 @@ class Backend
     {
         $instance = self::instance(self::SVN);
         assert($instance instanceof BackendSVN);
+        return $instance;
+    }
+
+    /**
+     * Helper for static analysis
+     */
+    public static function instanceCVS(): BackendCVS
+    {
+        $instance = self::instance(self::CVS);
+        assert($instance instanceof BackendCVS);
         return $instance;
     }
 

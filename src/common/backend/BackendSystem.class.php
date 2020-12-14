@@ -229,21 +229,22 @@ class BackendSystem extends Backend
         );
     }
 
+    public function systemCheck(\Project $project): void
+    {
+        // Recreate project directories if they were deleted
+        if (! $this->createProjectHome($project)) {
+            throw new \RuntimeException('Could not create project home');
+        }
+    }
+
     /**
      * Create project home directory
      * If the directory already exists, nothing is done.
      *
-     * @param int $group_id a group id
-     *
      * @return bool true if directory is successfully created, false otherwise
      */
-    public function createProjectHome($group_id)
+    public function createProjectHome(\Project $project)
     {
-        $project = $this->getProjectManager()->getProject($group_id);
-        if (! $project || $project->isDeleted()) {
-            return false;
-        }
-
         if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
             $this->createProjectWebDirectory($project);
             $this->createProjectAnonymousFTP($project);

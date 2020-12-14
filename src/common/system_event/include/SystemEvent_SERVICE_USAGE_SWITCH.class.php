@@ -57,16 +57,16 @@ class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent
             // if 'CVS' was inactivated... keep the repository, and do nothing.
             if (($shortname == 'cvs') && ($is_used)) {
                 // This function will not create the repo if it already exists
-                if (! Backend::instance('CVS')->createProjectCVS($group_id)) {
+                if (! Backend::instanceCVS()->createProjectCVS($project)) {
                     $this->error("Could not create CVS repo for project $group_id after service activation");
                     return false;
                 }
-                Backend::instance('CVS')->setCVSRootListNeedUpdate();
+                Backend::instanceCVS()->setCVSRootListNeedUpdate();
             }
 
             // Same as for CVS.
             if (($shortname == 'svn') && ($is_used)) {
-                $backendSVN    = Backend::instance('SVN');
+                $backendSVN    = Backend::instanceSVN();
                 if (! $backendSVN->createProjectSVN($group_id)) {
                     $this->error("Could not create SVN repo for project $group_id after service activation");
                     return false;

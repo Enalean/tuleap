@@ -138,13 +138,10 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $ftpdir = ForgeConfig::get('ftp_anon_dir_prefix') . "/TestPrj";
         $frsdir = ForgeConfig::get('ftp_frs_dir_prefix') . "/TestPrj";
 
-        $this->assertTrue($backend->createProjectHome(142));
+        $this->assertTrue($backend->createProjectHome($project));
         $this->assertDirectoryExists($projdir, "Project Home should be created");
         $this->assertDirectoryExists($ftpdir, "Ftp dir should be created");
         $this->assertDirectoryExists($frsdir, "Frs dir should be created");
-
-        // Check that a wrong project id does not raise an error
-        $this->assertEquals($backend->createProjectHome(99999), false);
     }
 
     public function testArchiveUserHome(): void
@@ -215,7 +212,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $backend->shouldReceive('chown')->with(Mockery::any(), 'dummy');
         $backend->shouldReceive('chgrp')->with(Mockery::any(), 'TestProject');
 
-        $backend->createProjectHome(142);
+        $backend->createProjectHome($project);
 
         $this->assertTrue($backend->renameProjectHomeDirectory($project, "FooBar"));
 
@@ -246,7 +243,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $backend->shouldReceive('chown')->with(Mockery::any(), 'dummy');
         $backend->shouldReceive('chgrp')->with(Mockery::any(), 'TestProject');
 
-        $backend->createProjectHome(142);
+        $backend->createProjectHome($project);
 
         $this->assertTrue($backend->renameProjectHomeDirectory($project, "testproject"));
 
@@ -273,7 +270,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $backend->shouldReceive('chown')->with(Mockery::any(), 'dummy');
         $backend->shouldReceive('chgrp')->with(Mockery::any(), 'testproject');
 
-        $backend->createProjectHome(142);
+        $backend->createProjectHome($project);
 
         $this->assertTrue($backend->renameProjectHomeDirectory($project, "TestProject"));
 
@@ -303,7 +300,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $backend->shouldReceive('chgrp')->with(Mockery::any(), 'testproject');
 
 
-        $backend->createProjectHome(142);
+        $backend->createProjectHome($project);
 
         $this->assertTrue($backend->renameProjectHomeDirectory($project, "projecttest"));
 

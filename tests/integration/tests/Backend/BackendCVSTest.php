@@ -142,7 +142,7 @@ final class BackendCVSTest extends TestCase
         $backend->shouldReceive('chgrp');
         $backend->shouldReceive('system')->with('chown -R \':TestProj\' \'' . ForgeConfig::get('cvs_prefix') . '/TestProj\'')->once();
 
-        $this->assertTrue($backend->createProjectCVS(142));
+        $this->assertTrue($backend->createProjectCVS($project));
         $this->assertDirectoryExists(ForgeConfig::get('cvs_prefix') . '/TestProj', 'CVS dir should be created');
         $this->assertDirectoryExists(ForgeConfig::get('cvs_prefix') . '/TestProj/CVSROOT', 'CVSROOT dir should be created');
         $this->assertFileExists(ForgeConfig::get('cvs_prefix') . '/TestProj/CVSROOT/loginfo', 'loginfo file should be created');
@@ -260,7 +260,7 @@ final class BackendCVSTest extends TestCase
         $backend->shouldReceive('getProjectManager')->andReturns($pm);
         $backend->shouldReceive('system')->with('chown -R \':TestProj\' \'' . ForgeConfig::get('cvs_prefix') . '/TestProj\'')->once();
 
-        $backend->createProjectCVS(142);
+        $backend->createProjectCVS($project);
 
         $this->assertTrue($backend->renameCVSRepository($project, "foobar"));
 
@@ -297,7 +297,7 @@ final class BackendCVSTest extends TestCase
         $backend->shouldReceive('chgrp');
         $backend->shouldReceive('system')->with('chown -R \':TestProj\' \'' . ForgeConfig::get('cvs_prefix') . '/TestProj\'')->once();
 
-        $backend->createProjectCVS(142);
+        $backend->createProjectCVS($project);
 
         $this->assertTrue($backend->renameCVSRepository($project, "foobar"));
 
@@ -405,8 +405,8 @@ final class BackendCVSTest extends TestCase
         $backend->shouldReceive('repositoryExists')->with($project1)->once()->andReturn(true);
         $backend->shouldReceive('repositoryExists')->with($project2)->once()->andReturn(true);
 
-        $backend->shouldReceive('updateCVSwriters')->with(102)->once()->andReturn(true);
-        $backend->shouldReceive('updateCVSwriters')->with(101)->once()->andReturn(true);
+        $backend->shouldReceive('updateCVSwriters')->with($project2)->once()->andReturn(true);
+        $backend->shouldReceive('updateCVSwriters')->with($project1)->once()->andReturn(true);
 
         $this->assertTrue($backend->updateCVSWritersForGivenMember($user));
     }
@@ -423,7 +423,7 @@ final class BackendCVSTest extends TestCase
 
         $backend->shouldReceive('log')->with('No such file: ' . ForgeConfig::get('cvs_prefix') . '/TestProj/CVSROOT/notify', 'error')->once();
 
-        $this->assertFalse($backend->updateCVSWatchMode(1));
+        $this->assertFalse($backend->updateCVSWatchMode($project));
     }
 
     public function testUpdateCVSWatchModeNotifyExist(): void
@@ -441,7 +441,7 @@ final class BackendCVSTest extends TestCase
         $cvsdir = ForgeConfig::get('cvs_prefix') . '/TestProj';
         mkdir($cvsdir);
         system(ForgeConfig::get('cvs_cmd') . " -d $cvsdir init");
-        $this->assertTrue($backend->updateCVSWatchMode(1));
+        $this->assertTrue($backend->updateCVSWatchMode($project));
     }
 
     public function testCheckCVSModeFilesMissing(): void
