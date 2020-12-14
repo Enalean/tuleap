@@ -23,14 +23,37 @@ export function createShortcutsGroupInHelpModal(
     doc: Document,
     shortcuts_group: ShortcutsGroup
 ): void {
-    const shortcuts_modal = doc.querySelector("[data-shortcuts-help]");
-    if (!(shortcuts_modal instanceof HTMLElement)) {
-        throw new Error("Could not find shortcuts modal");
+    let specific_shortcuts_section = doc.querySelector("[data-shortcuts-specific-section]");
+    if (!(specific_shortcuts_section instanceof HTMLElement)) {
+        widenModalSize(doc);
+        specific_shortcuts_section = createSpecificShortcutsSectionInHelpModal(doc);
     }
 
     const shortcuts_group_head = createShortcutsGroupHead(doc, shortcuts_group);
     const shortcuts_group_table = createShortcutsGroupTable(doc, shortcuts_group);
-    shortcuts_modal.append(shortcuts_group_head, shortcuts_group_table);
+    specific_shortcuts_section.append(shortcuts_group_head, shortcuts_group_table);
+}
+
+function widenModalSize(doc: Document): void {
+    const shortcuts_modal = doc.getElementById("help-modal-shortcuts");
+    if (!(shortcuts_modal instanceof HTMLElement)) {
+        throw new Error("Could not find shortcuts modal");
+    }
+    shortcuts_modal.classList.add("tlp-modal-medium-sized");
+}
+
+function createSpecificShortcutsSectionInHelpModal(doc: Document): HTMLElement {
+    const specific_shortcuts_section = doc.createElement("section");
+    specific_shortcuts_section.setAttribute("data-shortcuts-specific-section", "");
+    specific_shortcuts_section.classList.add("help-modal-shortcuts-section");
+
+    const shortcuts_modal_body = doc.querySelector("[data-shortcuts-modal-body]");
+    if (!(shortcuts_modal_body instanceof HTMLElement)) {
+        throw new Error("Could not find shortcuts modal body");
+    }
+    shortcuts_modal_body.append(specific_shortcuts_section);
+
+    return specific_shortcuts_section;
 }
 
 function createShortcutsGroupHead(doc: Document, shortcuts_group: ShortcutsGroup): HTMLElement {
