@@ -21,9 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\JWT\Generators;
 
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer;
-use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Configuration;
 use Tuleap\Project\UGroupLiteralizer;
 use UserManager;
 
@@ -35,23 +33,14 @@ class JWTGenerator
 
     /** @var UGroupLiteralizer */
     private $ugroup_literalizer;
-
-    /** @var Key */
-    private $private_key;
     /**
-     * @var Builder
+     * @var Configuration
      */
-    private $builder;
-    /**
-     * @var Signer
-     */
-    private $signer;
+    private $jwt_configuration;
 
-    public function __construct(Key $private_key, Builder $builder, Signer $signer, UserManager $user_manager, UGroupLiteralizer $ugroup_literalizer)
+    public function __construct(Configuration $jwt_configuration, UserManager $user_manager, UGroupLiteralizer $ugroup_literalizer)
     {
-        $this->private_key        = $private_key;
-        $this->builder            = $builder;
-        $this->signer             = $signer;
+        $this->jwt_configuration = $jwt_configuration;
         $this->user_manager       = $user_manager;
         $this->ugroup_literalizer = $ugroup_literalizer;
     }
@@ -68,18 +57,18 @@ class JWTGenerator
             'user_rights' => $this->ugroup_literalizer->getUserGroupsForUserWithArobase($current_user)
         ];
 
-        $token = $this->builder
+        $token = $this->jwt_configuration->builder()
             ->withClaim('data', $data)
             ->expiresAt($this->getExpireDate())
-            ->getToken($this->signer, $this->private_key);
+            ->getToken($this->jwt_configuration->signer(), $this->jwt_configuration->signingKey());
 
         return (string) $token;
     }
 
-    private function getExpireDate(): int
+    private function getExpireDate(): \DateTimeImmutable
     {
-        $issuedAt  = new \DateTime();
+        $issuedAt  = new \DateTimeImmutable();
         $notBefore = $issuedAt;
-        return $notBefore->modify('+30 minutes')->getTimestamp();
+        return $notBefore->modify('+30 minutes');
     }
 }

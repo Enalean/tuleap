@@ -23,7 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
 
 use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Lcobucci\JWT\Validation\Validator;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
@@ -138,19 +141,20 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
         $this->assertNotNull($payload);
 
         $token = (new Parser())->parse($payload);
-        $this->assertEquals('https://tuleap.example.com', $token->getClaim('iss'));
-        $this->assertEquals('147', $token->getClaim('sub'));
-        $this->assertEquals('tlp-client-id-987', $token->getClaim('aud'));
-        $this->assertEquals($current_time->getTimestamp(), $token->getClaim('iat'));
-        $this->assertEquals($current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS, $token->getClaim('exp'));
-        $this->assertEquals(5, $token->getClaim('auth_time'));
+        $this->assertEquals('https://tuleap.example.com', $token->claims()->get('iss'));
+        $this->assertEquals('147', $token->claims()->get('sub'));
+        $this->assertEquals(['tlp-client-id-987'], $token->claims()->get('aud'));
+        $this->assertEquals($current_time, $token->claims()->get('iat'));
+        $this->assertEquals($current_time->add(new \DateInterval('PT' . self::EXPECTED_EXPIRATION_DELAY_SECONDS . 'S')), $token->claims()->get('exp'));
+        $this->assertEquals(5, $token->claims()->get('auth_time'));
         if ($nonce === null) {
-            $this->assertFalse($token->hasClaim('nonce'));
+            $this->assertFalse($token->claims()->has('nonce'));
         } else {
-            $this->assertEquals($nonce, $token->getClaim('nonce'));
+            $this->assertEquals($nonce, $token->claims()->get('nonce'));
         }
-        $this->assertEquals(self::SIGNING_PUBLIC_KEY_FINGERPRINT, $token->getHeader('kid'));
-        $this->assertTrue($token->verify(new Sha256(), self::SIGNING_PUBLIC_KEY));
+        $this->assertEquals(self::SIGNING_PUBLIC_KEY_FINGERPRINT, $token->headers()->get('kid'));
+        $validator = new Validator();
+        self::assertTrue($validator->validate($token, new SignedWith(new Sha256(), InMemory::plainText(self::SIGNING_PUBLIC_KEY))));
     }
 
     public function testDoesNotIssueRefreshTokenWhenAuthorizationCodeDoesNotHaveSignInScope(): void

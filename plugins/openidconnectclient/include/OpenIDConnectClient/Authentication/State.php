@@ -26,6 +26,8 @@ use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Lcobucci\JWT\Validation\Validator;
 use Tuleap\Cryptography\ConcealedString;
 
 class State
@@ -63,10 +65,10 @@ class State
     public static function createFromSignature(string $signed_state, ?string $return_to, string $secret_key, string $nonce, ConcealedString $pkce_code_verifier): self
     {
         $token = (new Parser())->parse($signed_state);
-        if (! $token->verify(new Sha256(), $secret_key)) {
-            throw new \RuntimeException('Signed state cannot be verifier');
+        if (! (new Validator())->validate($token, new SignedWith(new Sha256(), Key\InMemory::plainText($secret_key)))) {
+            throw new \RuntimeException('Signed state cannot be verified');
         }
-        $provider_id = (int) $token->getClaim('provider_id');
+        $provider_id = (int) $token->claims()->get('provider_id');
         return new self($provider_id, $return_to, $secret_key, $nonce, $pkce_code_verifier);
     }
 

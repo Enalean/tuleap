@@ -92,8 +92,8 @@ class OpenIDConnectIDTokenCreator
         $builder = $this->builder_factory->getBuilder()->issuedBy(Issuer::toString())
                 ->relatedTo((string) $user->getId())
                 ->permittedFor(ClientIdentifier::fromOAuth2App($app)->toString())
-                ->issuedAt($current_time->getTimestamp())
-                ->expiresAt($current_time->add($this->id_token_expiration_delay)->getTimestamp())
+                ->issuedAt($current_time)
+                ->expiresAt($current_time->add($this->id_token_expiration_delay))
                 ->withClaim(self::CLAIM_AUTH_TIME, (int) $access_info['last_auth_success'])
                 ->withHeader(self::HEADER_KEY_ID, $signing_private_key->getFingerprintPublicKey());
 

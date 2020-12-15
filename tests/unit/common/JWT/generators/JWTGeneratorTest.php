@@ -22,10 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\JWT\Generators;
 
-use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -45,16 +46,10 @@ class JWTGeneratorTest extends TestCase
     /** @var  JWTGenerator */
     private $jwt_generator;
 
-    /** @var Key */
-    private $private_key;
     /**
-     * @var Builder
+     * @var Configuration
      */
-    private $builder;
-    /**
-     * @var Sha512
-     */
-    private $signer;
+    private $jwt_configuration;
 
     protected function setUp(): void
     {
@@ -71,17 +66,15 @@ class JWTGeneratorTest extends TestCase
         $this->ugroup_literalizer = \Mockery::mock(UGroupLiteralizer::class);
         $this->ugroup_literalizer->shouldReceive('getUserGroupsForUserWithArobase')->andReturn($u_groups);
 
-        $this->private_key   = new Key('private_key_test');
-        $this->builder       = new Builder();
-        $this->signer        = new Sha512();
-        $this->jwt_generator = new JWTGenerator($this->private_key, $this->builder, $this->signer, $this->user_manager, $this->ugroup_literalizer);
+        $this->jwt_configuration = Configuration::forSymmetricSigner(new Sha512(), Key\InMemory::plainText('private_key_test'));
+        $this->jwt_generator = new JWTGenerator($this->jwt_configuration, $this->user_manager, $this->ugroup_literalizer);
     }
 
     public function testJWTDecodedWithAlgorithmHS512(): void
     {
         $token   = $this->jwt_generator->getToken();
-        $decoded = (new Parser())->parse($token);
-        $this->assertTrue($decoded->verify($this->signer, $this->private_key));
+        $decoded = $this->jwt_configuration->parser()->parse($token);
+        self::assertTrue($this->jwt_configuration->validator()->validate($decoded, new SignedWith($this->jwt_configuration->signer(), $this->jwt_configuration->signingKey())));
     }
 
     public function testContentJWT(): void
@@ -94,6 +87,6 @@ class JWTGeneratorTest extends TestCase
         $token        = $this->jwt_generator->getToken();
         $decoded      = (new Parser())->parse($token);
 
-        $this->assertSame($expected, (array) $decoded->getClaim('data'));
+        self::assertSame($expected, (array) $decoded->claims()->get('data'));
     }
 }
