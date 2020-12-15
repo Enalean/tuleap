@@ -44,6 +44,12 @@ export interface ListPickerItem {
     target_option: HTMLOptionElement;
 }
 
+export interface LegacyColorRGB {
+    red: number;
+    green: number;
+    blue: number;
+}
+
 export interface ListPickerItemGroup {
     id: string;
     label: string;

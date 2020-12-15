@@ -21,9 +21,8 @@ import { ListPickerItem, ListPickerSelectionStateMultiple, SelectionManager } fr
 import { DropdownManager } from "../dropdown/DropdownManager";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { GettextProvider } from "../../../tuleap/gettext/gettext-sync";
-import { html, render } from "lit-html";
-import { classMap } from "lit-html/directives/class-map";
-import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
+import { render } from "lit-html";
+import { createItemBadgeTemplate } from "../helpers/templates/list-picker-element-badge-creator";
 
 export class MultipleSelectionManager implements SelectionManager {
     private readonly selection_state: ListPickerSelectionStateMultiple;
@@ -228,26 +227,7 @@ export class MultipleSelectionManager implements SelectionManager {
             this.dropdown_manager.openListPicker();
         };
 
-        const badge_classes = {
-            "list-picker-badge": true,
-            "list-picker-badge-custom":
-                list_item.template.getHTML() !==
-                ListItemMapBuilder.buildDefaultTemplateForItem(list_item.label).getHTML(),
-        };
-
-        const badge_template = html`
-            <span class="${classMap(badge_classes)}" title="${list_item.label}">
-                <span
-                    role="presentation"
-                    class="list-picker-value-remove-button"
-                    @pointerup=${remove_button_event_listener}
-                >
-                    &times;
-                </span>
-                ${list_item.template}
-            </span>
-        `;
-
+        const badge_template = createItemBadgeTemplate(remove_button_event_listener, list_item);
         const badge_document_fragment = document.createDocumentFragment();
         render(badge_template, badge_document_fragment);
 

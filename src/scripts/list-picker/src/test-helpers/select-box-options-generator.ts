@@ -41,6 +41,27 @@ export function appendSimpleOptionsToSourceSelectBox(select: HTMLSelectElement):
     option_with_label.label = "Value " + i;
     option_with_label.setAttribute("data-item-id", "list-picker-item-value_" + i);
     select.appendChild(option_with_label);
+
+    const option_with_colored_value = document.createElement("option");
+    option_with_colored_value.value = "value_colored";
+    option_with_colored_value.label = "Value Colored";
+    option_with_colored_value.setAttribute("data-item-id", "list-picker-item-value_colored");
+    option_with_colored_value.setAttribute("data-color-value", "acid-green");
+    select.appendChild(option_with_colored_value);
+
+    const option_with_user = document.createElement("option");
+    option_with_user.value = "peraltaj";
+    option_with_user.label = "Jack Peralta";
+    option_with_user.setAttribute("data-item-id", "list-picker-item-peraltaj");
+    option_with_user.setAttribute("data-avatar-url", "/url/to/jdoe/avatar.png");
+    select.appendChild(option_with_user);
+
+    const option_with_legacy_colored_value = document.createElement("option");
+    option_with_legacy_colored_value.value = "bad_colored";
+    option_with_legacy_colored_value.label = "Bad Colored";
+    option_with_legacy_colored_value.setAttribute("data-item-id", "list-picker-item-bad_colored");
+    option_with_legacy_colored_value.setAttribute("data-color-value", "#ffffff");
+    select.appendChild(option_with_legacy_colored_value);
 }
 
 export function appendGroupedOptionsToSourceSelectBox(select: HTMLSelectElement): void {

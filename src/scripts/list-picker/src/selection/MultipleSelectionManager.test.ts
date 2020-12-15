@@ -142,28 +142,42 @@ describe("MultipleSelectionManager", () => {
         });
 
         it("selects items", () => {
+            const colored_item = item_map_manager.findListPickerItemInItemMap(
+                "list-picker-item-value_colored"
+            );
+
             manager.processSelection(item_1.element);
             manager.processSelection(item_2.element);
+            manager.processSelection(colored_item.element);
 
             expect(isItemSelected(item_1)).toBe(true);
             expect(isItemSelected(item_2)).toBe(true);
+            expect(isItemSelected(colored_item)).toBe(true);
 
-            const items_badges = selection_container.querySelectorAll(".list-picker-badge");
+            const items_badges = selection_container.querySelectorAll("[class*=list-picker-badge]");
 
             if (items_badges === null) {
                 throw new Error("Badges of selected items are not found in selection element");
             }
-
-            expect(items_badges?.length).toEqual(2);
+            expect(items_badges?.length).toEqual(3);
             expect(items_badges[0].textContent).toContain("Value 1");
             expect(items_badges[1].textContent).toContain("Value 2");
+            expect(items_badges[2].textContent).toContain("Value Colored");
             expect(
                 items_badges[0].querySelector(".list-picker-value-remove-button")
             ).not.toBeNull();
             expect(
                 items_badges[1].querySelector(".list-picker-value-remove-button")
             ).not.toBeNull();
-            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 2);
+            expect(
+                items_badges[2].querySelector(".list-picker-value-remove-button")
+            ).not.toBeNull();
+
+            expect(items_badges[0].className).toContain("list-picker-badge");
+            expect(items_badges[1].className).toContain("list-picker-badge");
+            expect(items_badges[2].className).toContain("list-picker-badge-acid-green");
+
+            expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
         });
     });
 
