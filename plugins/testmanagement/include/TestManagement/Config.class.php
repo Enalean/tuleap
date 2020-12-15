@@ -149,4 +149,47 @@ class Config
     {
         return $this->dao->searchByProjectId($project->getId())->getRow();
     }
+
+    /**
+     * @return TestmanagementConfigTracker[]
+     */
+    public function getTrackersFromTemplate(Project $template): array
+    {
+        $campaign_tracker_id        = $this->getCampaignTrackerId($template);
+        $test_definition_tracker_id = $this->getTestDefinitionTrackerId($template);
+        $test_execution_tracker_id  = $this->getTestExecutionTrackerId($template);
+        $issue_tracker_id           = $this->getIssueTrackerId($template);
+
+        $trackers_id                = [];
+        if ($campaign_tracker_id) {
+            $trackers_id[] = new TestmanagementConfigTracker(
+                TestmanagementTrackersConfigurator::CAMPAIGN_TRACKER_NAME,
+                CAMPAIGN_TRACKER_SHORTNAME,
+                $campaign_tracker_id
+            );
+        }
+        if ($test_definition_tracker_id) {
+            $trackers_id[] = new TestmanagementConfigTracker(
+                TestmanagementTrackersConfigurator::DEFINITION_TRACKER_NAME,
+                DEFINITION_TRACKER_SHORTNAME,
+                $test_definition_tracker_id
+            );
+        }
+        if ($test_execution_tracker_id) {
+            $trackers_id[] = new TestmanagementConfigTracker(
+                TestmanagementTrackersConfigurator::EXECUTION_TRACKER_NAME,
+                EXECUTION_TRACKER_SHORTNAME,
+                $test_execution_tracker_id
+            );
+        }
+        if ($issue_tracker_id) {
+            $trackers_id[] = new TestmanagementConfigTracker(
+                TestmanagementTrackersConfigurator::ISSUE_TRACKER_NAME,
+                ISSUE_TRACKER_SHORTNAME,
+                $issue_tracker_id
+            );
+        }
+
+        return $trackers_id;
+    }
 }

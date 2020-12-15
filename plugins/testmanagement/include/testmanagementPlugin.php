@@ -45,6 +45,9 @@ use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\TestManagementPluginInfo;
+use Tuleap\TestManagement\TestmanagementTrackersConfiguration;
+use Tuleap\TestManagement\TestmanagementTrackersConfigurator;
+use Tuleap\TestManagement\TestmanagementTrackersCreator;
 use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
 use Tuleap\TestManagement\TrackerNotCreatedException;
 use Tuleap\TestManagement\XML\Exporter;
@@ -328,9 +331,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $config_creator = new FirstConfigCreator(
             $config,
             TrackerFactory::instance(),
-            TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
             $this->getTrackerChecker(),
-            $logger
+            new TestmanagementTrackersConfigurator(new TestmanagementTrackersConfiguration()),
+            new TestmanagementTrackersCreator(TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())), $logger)
         );
 
         try {

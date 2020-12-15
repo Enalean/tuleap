@@ -330,16 +330,20 @@ class Router
 
     private function getTestManagementController(CSRFSynchronizerToken $csrf_token): StartTestManagementController
     {
+        $tracker_xml_import = TrackerXmlImport::build(
+            new XMLImportHelper(UserManager::instance())
+        );
+
         return new StartTestManagementController(
-            $this->tracker_factory,
-            BackendLogger::getDefaultLogger(),
-            TrackerXmlImport::build(
-                new XMLImportHelper(UserManager::instance())
-            ),
             $this->artifact_links_usage_updater,
             $csrf_token,
-            $this->tracker_checker,
-            $this->config
+            new FirstConfigCreator(
+                $this->config,
+                $this->tracker_factory,
+                $this->tracker_checker,
+                new TestmanagementTrackersConfigurator(new TestmanagementTrackersConfiguration()),
+                new TestmanagementTrackersCreator($tracker_xml_import, BackendLogger::getDefaultLogger())
+            )
         );
     }
 }

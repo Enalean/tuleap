@@ -23,30 +23,11 @@ namespace Tuleap\TestManagement;
 use Feedback;
 use HTTPRequest;
 use Project;
-use Psr\Log\LoggerInterface;
-use TrackerFactory;
-use TrackerXmlImport;
-use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Breadcrumbs\NoCrumb;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 
 class StartTestManagementController
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $backend_logger;
-
-    /**
-     * @var TrackerXmlImport
-     */
-    private $tracker_xml_import;
-
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-
     /**
      * @var ArtifactLinksUsageUpdater
      */
@@ -55,32 +36,19 @@ class StartTestManagementController
      * @var \CSRFSynchronizerToken
      */
     private $csrf_token;
-
     /**
-     * @var TrackerChecker
+     * @var FirstConfigCreator
      */
-    private $tracker_checker;
-    /**
-     * @var Config
-     */
-    private $config;
+    private $config_creator;
 
     public function __construct(
-        TrackerFactory $tracker_factory,
-        LoggerInterface $backend_logger,
-        TrackerXmlImport $tracker_xml_import,
         ArtifactLinksUsageUpdater $artifact_link_usage_updater,
         \CSRFSynchronizerToken $csrf_token,
-        TrackerChecker $tracker_checker,
-        Config $config
+        FirstConfigCreator $config_creator
     ) {
-        $this->tracker_factory             = $tracker_factory;
-        $this->tracker_xml_import          = $tracker_xml_import;
-        $this->backend_logger              = $backend_logger;
         $this->artifact_link_usage_updater = $artifact_link_usage_updater;
         $this->csrf_token                  = $csrf_token;
-        $this->tracker_checker             = $tracker_checker;
-        $this->config                      = $config;
+        $this->config_creator              = $config_creator;
     }
 
     public function misconfiguration(HTTPRequest $request): string
@@ -103,16 +71,8 @@ class StartTestManagementController
         $this->csrf_token->check();
         $project = $request->getProject();
 
-        $config_creator = new FirstConfigCreator(
-            $this->config,
-            $this->tracker_factory,
-            $this->tracker_xml_import,
-            $this->tracker_checker,
-            $this->backend_logger
-        );
-
         try {
-            $config_creator->createConfigForProjectFromXML($project);
+            $this->config_creator->createConfigForProjectFromXML($project);
 
             $this->allowProjectToUseNature(
                 $project,
