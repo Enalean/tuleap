@@ -39,13 +39,15 @@
             background: map-get($colors, 'secondary');
 
             .backlog-item-details-id,
-            .backlog-item-details-parent > a,
             .extra-card-field-title,
-            .backlog-item-details-effort-container-content-no-initial-effort {
+            .backlog-item-details-effort-container-content-no-initial-effort,
+            .backlog-item-details-parent,
+            .backlog-item-details-parent-link {
                 color: map-get($colors, 'text');
             }
 
-            .backlog-item-details-effort-container-content-no-initial-effort {
+            .backlog-item-details-effort-container-content-no-initial-effort,
+            .backlog-item-details-parent {
                 $background-color-no-initial-effort: darken(map-get($colors, 'secondary'), 5%);
                 border-color: $background-color-no-initial-effort;
                 background: $background-color-no-initial-effort;
@@ -211,10 +213,20 @@
     flex: 0 1 auto;
     align-self: center;
     margin: 0 5px 0 13px;
+    padding: 3px 5px;
     transition: transform 100ms ease-in-out 500ms;
-    color: $tlp-theme-color;
+    border-radius: 3px;
     font-size: 12px;
     text-align: right;
+}
+
+.backlog-item-details-parent-link {
+    color: darken($tlp-ui-dimmed, 10%);
+
+    &:hover {
+        opacity: .7;
+        text-decoration: none;
+    }
 }
 
 .backlog-item-details-effort-container {

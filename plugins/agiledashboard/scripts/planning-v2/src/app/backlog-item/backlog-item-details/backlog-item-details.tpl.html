@@ -48,11 +48,11 @@
         filter-terms="{{ details.backlog_filter.terms }}"
     ></span>
 
-    <tuleap-card-link class="backlog-item-details-parent"
+    <card-parent-link ng-if="details.backlog_item.parent.label"
         text="{{ details.backlog_item.parent.label }}"
         url="{{ '/plugins/tracker/?aid=' + details.backlog_item.parent.id }}"
         filter-terms="{{ details.backlog_filter.terms }}"
-    ></tuleap-card-link>
+    ></card-parent-link>
 
     <div ng-if="details.user_has_accessibility_mode" class="card-accessibility {{ details.backlog_item.background_color_name }}"></div>
 
@@ -115,11 +115,11 @@
           filter-terms="{{ details.backlog_filter.terms }}"
     ></span>
 
-    <tuleap-card-link class="backlog-item-details-parent"
+    <card-parent-link ng-if="details.backlog_item.parent.label"
                       text="{{ details.backlog_item.parent.label }}"
                       url="{{ '/plugins/tracker/?aid=' + details.backlog_item.parent.id }}"
                       filter-terms="{{ details.backlog_filter.terms }}"
-    ></tuleap-card-link>
+    ></card-parent-link>
 
     <div ng-if="details.user_has_accessibility_mode" class="card-accessibility {{ details.backlog_item.background_color_name }}"></div>
 
