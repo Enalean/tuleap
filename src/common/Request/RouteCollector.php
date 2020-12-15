@@ -80,6 +80,7 @@ use Tuleap\InviteBuddy\Admin\InviteBuddyAdminController;
 use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SiteHomepageController;
+use Tuleap\MailingList\MailingListAdministrationController;
 use Tuleap\News\NewsDao;
 use Tuleap\News\PermissionsPerGroup;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
@@ -95,6 +96,7 @@ use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\Banner\BannerAdministrationController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
@@ -729,6 +731,16 @@ class RouteCollector
         );
     }
 
+    public function getMailingListsAdministration(): MailingListAdministrationController
+    {
+        return new MailingListAdministrationController(
+            new ProjectRetriever(\ProjectManager::instance()),
+            new ProjectAdministratorChecker(),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/lists'),
+            new \MailingListDao(),
+        );
+    }
+
 
     private function getLegacyControllerHandler(string $path): array
     {
@@ -767,6 +779,8 @@ class RouteCollector
             $r->post('/services/delete', [self::class, 'getPostServicesDelete']);
             $r->get('/banner', [self::class, 'getGetProjectBannerAdministration']);
             $r->get('/background', [self::class, 'getGetProjectBackgroundAdministration']);
+
+            $r->get('/mailing-lists', [self::class, 'getMailingListsAdministration']);
         });
 
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);

@@ -19,14 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
-use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
-function mail_header($params)
+function mail_header(array $params, PFUser $user): void
 {
     global $group_id, $Language;
 
@@ -43,45 +37,10 @@ function mail_header($params)
         exit_error($Language->getText('global', 'error'), _('This Project Has Turned Off Mailing Lists'));
     }
 
-    $list_breadcrumb = new BreadCrumb(
-        new BreadCrumbLink(_('Lists'), '/mail/?group_id=' . urlencode($group_id)),
-    );
-    $breadcrumbs = new BreadCrumbCollection();
-    $breadcrumbs->addBreadCrumb($list_breadcrumb);
+    $service = $project->getService(Service::ML);
+    assert($service instanceof \Tuleap\MailingList\ServiceMailingList);
 
-    if (user_ismember($group_id, 'A')) {
-        $sub_items = new BreadCrumbSubItems();
-        $sub_items->addSection(
-            new SubItemsUnlabelledSection(
-                new BreadCrumbLinkCollection(
-                    [
-                        new BreadCrumbLink(
-                            _('Add List'),
-                            '/mail/admin/?' . http_build_query(
-                                [
-                                    'group_id' => $project->getID(),
-                                    'add_list' => '1'
-                                ]
-                            ),
-                        ),
-                        new BreadCrumbLink(
-                            _('Update List'),
-                            '/mail/admin/?' . http_build_query(
-                                [
-                                    'group_id'      => $project->getID(),
-                                    'change_status' => '1'
-                                ]
-                            ),
-                        )
-                    ]
-                )
-            )
-        );
-        $list_breadcrumb->setSubItems($sub_items);
-    }
-
-    $GLOBALS['HTML']->addBreadcrumbs($breadcrumbs);
-    site_project_header($params);
+    $service->displayMailingListHeader($user, $params['title']);
 }
 
 function mail_footer($params)

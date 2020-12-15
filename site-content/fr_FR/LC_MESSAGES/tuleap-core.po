@@ -129,10 +129,10 @@ msgid ""
 "\n"
 " -- The %1$s Team"
 msgstr ""
-"Une liste de distribution sera créée sur %1$s dans quelques minutes\n"
+"Une liste de diffusion sera créée sur %1$s dans quelques minutes\n"
 " et vous en êtes l'administrateur. Cette liste est : %3$s \n"
 "\n"
-"Les informations concernant cette liste de distribution sont sur : \n"
+"Les informations concernant cette liste de diffusion sont sur : \n"
 "%4$s\n"
 "\n"
 "Votre mot de passe d'administration est : %5$s\n"
@@ -281,9 +281,6 @@ msgstr "Ajouter"
 msgid "Add Forum"
 msgstr "Ajouter un forum"
 
-msgid "Add List"
-msgstr "Créer une liste"
-
 msgid "Add Mailing List"
 msgstr "Créer une liste de diffusion"
 
@@ -296,11 +293,8 @@ msgstr "Ajouter ce forum"
 msgid "Add a Forum"
 msgstr "Ajouter un forum"
 
-msgid "Add a Mailing List"
-msgstr "Créer une liste de distribution"
-
 msgid "Add a mailing list"
-msgstr "Créer une liste de distribution"
+msgstr "Créer une liste de diffusion"
 
 msgid "Add a new service"
 msgstr "Ajouter un nouveau service"
@@ -1034,7 +1028,7 @@ msgid ""
 "message can also be specified."
 msgstr ""
 "Chaque commit peut faire l'objet d'une notification par courrier "
-"électronique vers certains destinataires ou vers une liste de distribution "
+"électronique vers certains destinataires ou vers une liste de diffusion "
 "(séparer les adresses avec une virgule). Une entête spécifique apparaissant "
 "au début du sujet du message peut aussi être spécifiée."
 
@@ -1638,6 +1632,9 @@ msgstr "Liste De Diffusions for %1$s"
 msgid "Mailing list name"
 msgstr "Nom de la liste de diffusion"
 
+msgid "Mailing lists"
+msgstr "Listes de diffusions"
+
 msgid "Mailing lists (Lists Service)"
 msgstr "Listes de diffusion (Service Listes)"
 
@@ -1799,9 +1796,6 @@ msgstr "Jamais"
 msgid "New"
 msgstr "Nouveau"
 
-msgid "New Mailing List"
-msgstr "Nouvelle liste de distribution"
-
 msgid "New avatar"
 msgstr "Nouvel avatar"
 
@@ -1813,6 +1807,9 @@ msgstr ""
 "La nouvelle adresse de courriel a été enregistrée. Pour finaliser le "
 "changement, <strong>cliquez sur le lien</strong> qui se trouvera dans le "
 "message de confirmation que vous allez recevoir (à la nouvelle adresse)."
+
+msgid "New mailing list"
+msgstr "Nouvelle liste de diffusion"
 
 msgid "New messages will be highlighted when you return."
 msgstr "Les nouveaux messages seront mis en valeur lorsque vous reviendrez."
@@ -2911,6 +2908,9 @@ msgstr "Il n'y a pas de groupe lié à celui-ci."
 
 msgid "There isn't <br> any activity yet"
 msgstr "Il n'y a pas <br> encore d'activité"
+
+msgid "There isn't any mailing list yet"
+msgstr "Il n'y a aucune liste de diffusion pour l'instant"
 
 msgid "There isn't any matching members"
 msgstr "Il n'y a aucun membre correspondant"

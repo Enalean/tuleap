@@ -65,7 +65,7 @@ if ($group_id) {
     $params = ['title' => sprintf(_('Mailing Lists for %1$s'), $pm->getProject($group_id)->getPublicName()),
               'help' => 'collaboration.html#mailing-lists',
                   'pv'   => isset($pv) ? $pv : false];
-    mail_header($params);
+    mail_header($params, $request->getCurrentUser());
 
     if (user_isloggedin() && user_ismember($group_id)) {
         $public_flag = '0,1';
@@ -144,7 +144,7 @@ if ($group_id) {
     $params = ['title' => _('Choose a Group First'),
                   'help' => 'collaboration.html#mailing-lists',
                   'pv'   => $pv];
-    mail_header($params);
+    mail_header($params, $request->getCurrentUser());
     echo '
 		<H1>' . _('Error - choose a group first') . '</H1>';
 }

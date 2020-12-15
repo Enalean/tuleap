@@ -1,0 +1,54 @@
+<h1 class="project-administration-title">
+    {{# gettext }}Mailing lists administration{{/ gettext }}
+</h1>
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fas fa-envelope tlp-pane-title-icon" aria-hidden="true"></i>
+                    {{# gettext }}Mailing lists{{/ gettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-table-actions">
+                    <a class="tlp-button-primary tlp-table-actions-element" href="{{ creation_url }}">
+                        <i class="fas fa-plus tlp-button-icon" aria-hidden="true"></i>
+                        {{# gettext }}New mailing list{{/ gettext }}
+                    </a>
+                </div>
+                <table class="tlp-table">
+                    <thead>
+                        <tr>
+                            <th>{{# gettext }}List{{/ gettext }}</th>
+                            <th>{{# gettext }}Description{{/ gettext }}</th>
+                            <th>{{# gettext }}Public{{/ gettext }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{^ lists }}
+                            <td colspan="3" class="tlp-table-cell-empty">
+                                {{# gettext }} There isn't any mailing list yet{{/ gettext }}
+                            </td>
+                        {{/ lists }}
+                        {{# lists }}
+                            <tr>
+                                <td>
+                                    {{ name }}
+                                </td>
+                                <td>
+                                    {{ description }}
+                                </td>
+                                <td>
+                                    {{# is_public }}
+                                        <i class="fas fa-check" aria-hidden="true"></i>
+                                    {{/ is_public }}
+                                </td>
+                            </tr>
+                        {{/ lists }}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
+</div>

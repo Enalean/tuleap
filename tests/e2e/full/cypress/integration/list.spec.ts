@@ -33,7 +33,7 @@ describe("List", function () {
 
         it("can access to admin section", function () {
             project_id = this.project_id;
-            cy.visit("/mail/admin/?group_id=" + project_id);
+            cy.visit("/project/" + project_id + "/admin/mailing-lists");
         });
     });
     context("Project members", function () {
@@ -46,7 +46,7 @@ describe("List", function () {
             Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
         });
         it("should raise an error when user try to access to List admin page", function () {
-            cy.visit("/mail/admin/?group_id=" + project_id);
+            cy.visit("/project/" + project_id + "/admin/mailing-lists");
 
             cy.get("[data-test=feedback]").contains(
                 "You are not granted sufficient permission to perform this operation."
