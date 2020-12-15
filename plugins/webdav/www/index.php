@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 $plugin_manager = PluginManager::instance();
 $p = $plugin_manager->getPluginByName('webdav');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
-    // Executing the WebDAV server
+    assert($p instanceof WebDAVPlugin);
     $p->getServer()->exec();
 } else {
     echo $GLOBALS['Language']->getText('plugin_webdav_common', 'plugin_not_active');

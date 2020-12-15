@@ -23,6 +23,8 @@
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
@@ -30,6 +32,8 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\WebDAV\Authentication\AccessKey\WebDAVAccessKeyScope;
 use Tuleap\Webdav\Authentication\HeadersSender;
+use Tuleap\WebDAV\ServerBuilder;
+use Tuleap\WebDAV\WebdavController;
 
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -37,30 +41,17 @@ require_once __DIR__ . '/../vendor/autoload.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class WebDAVPlugin extends Plugin
 {
-
-    /**
-     * Constructor of the class
-     *
-     * @param int $id
-     *
-     * @return void
-     */
-    public function __construct($id)
+    public function __construct(int $id)
     {
         parent::__construct($id);
         bindtextdomain('tuleap-webdav', __DIR__ . '/../site-content');
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook('url_verification_instance', 'urlVerification', false);
         $this->addHook(AccessKeyScopeBuilderCollector::NAME);
+        $this->addHook(CollectRoutesEvent::NAME);
     }
 
-    /**
-     * Returns information about the plugin
-     *
-     *
-     * @see src/common/plugin/Plugin#getPluginInfo()
-     */
-    public function getPluginInfo()
+    public function getPluginInfo(): WebDAVPluginInfo
     {
         if (! $this->pluginInfo instanceof WebDAVPluginInfo) {
             $this->pluginInfo = new WebDAVPluginInfo($this);
@@ -73,29 +64,36 @@ class WebDAVPlugin extends Plugin
         return ['docman'];
     }
 
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
+    {
+        $event->getRouteCollector()->addRoute(
+            WebdavController::VERBS,
+            WebdavController::getFastRoutePattern(),
+            $this->getRouteHandler('routeWebdav'),
+        );
+    }
+
+    public function routeWebdav(): DispatchableWithRequest
+    {
+        return new WebdavController(
+            $this->getWebDAVAuthentication(),
+            $this->getServerBuilder(),
+        );
+    }
+
     /**
      * Returns the class that will be in charge of the url verification
      *
      * @param Array $params
-     *
      */
     public function urlVerification(&$params): void
     {
-        if (! $this->urlIsWebDav($params['server_param'])) {
+        $webdav_host = $this->getPluginInfo()->getPropertyValueForName('webdav_host');
+        if (! Webdav_URLVerification::isRequestForDedicatedWebdavHost($params['server_param'], $webdav_host)) {
             return;
         }
 
-        $webdavHost                 = $this->getPluginInfo()->getPropertyValueForName('webdav_host');
-        $params['url_verification'] = new Webdav_URLVerification($webdavHost);
-    }
-
-    private function urlIsWebDav(array $server): bool
-    {
-        $webdav_host     = $this->getPluginInfo()->getPropertyValueForName('webdav_host');
-        $webdav_base_uri = $this->getPluginInfo()->getPropertyValueForName('webdav_base_uri');
-        $http_host       = HTTPRequest::instance()->getFromServer('HTTP_HOST');
-
-        return strpos($http_host . $server['REQUEST_URI'], $webdav_host . $webdav_base_uri) !== false;
+        $params['url_verification'] = new Webdav_URLVerification($webdav_host);
     }
 
     public function collectAccessKeyScopeBuilder(AccessKeyScopeBuilderCollector $collector): void
@@ -110,15 +108,19 @@ class WebDAVPlugin extends Plugin
         );
     }
 
-    /**
-     * Setup then return the WebDAV server
-     *
-     * @return Sabre_DAV_Server
-     */
-    public function getServer()
+    public function getServer(): Sabre_DAV_Server
     {
-        // Authentication
-        $auth = new WebDAVAuthentication(
+        return $this->getServerBuilder()->getServerOnDedicatedDomain($this->getWebDAVAuthentication()->authenticate());
+    }
+
+    private function getServerBuilder(): ServerBuilder
+    {
+        return new ServerBuilder($this);
+    }
+
+    private function getWebDAVAuthentication(): WebDAVAuthentication
+    {
+        return new WebDAVAuthentication(
             UserManager::instance(),
             new HeadersSender(),
             new \Tuleap\User\AccessKey\HTTPBasicAuth\HTTPBasicAuthUserAccessKeyAuthenticator(
@@ -138,36 +140,5 @@ class WebDAVPlugin extends Plugin
                 BackendLogger::getDefaultLogger()
             )
         );
-        $user = $auth->authenticate();
-
-        // Creating the Root directory from WebDAV file system
-        $maxFileSize = $this->getPluginInfo()->getPropertyValueForName('max_file_size');
-        $rootDirectory = new WebDAVRoot($this, $user, $maxFileSize, new ProjectDao());
-
-        // The tree manages all the file objects
-        $tree = new WebDAVTree($rootDirectory);
-
-        // Finally, we create the server object. The server object is responsible for making sense out of the WebDAV protocol
-        $server = new Sabre_DAV_Server($tree);
-
-        // Base URI is the path used to access to WebDAV server
-        $server->setBaseUri($this->getPluginInfo()->getPropertyValueForName('webdav_base_uri'));
-
-        // The lock manager is reponsible for making sure users don't overwrite each others changes.
-        // The locks repository is where temporary data related to locks is stored.
-        $locks_path = ForgeConfig::get('codendi_cache_dir') . '/plugins/webdav/locks';
-        if (! is_dir($locks_path)) {
-            mkdir($locks_path, 0750, true);
-        }
-        $lockBackend = new Sabre_DAV_Locks_Backend_FS($locks_path);
-        $lockPlugin = new Sabre_DAV_Locks_Plugin($lockBackend);
-        $server->addPlugin($lockPlugin);
-
-        // Creating the browser plugin
-        $plugin = new BrowserPlugin();
-        $server->addPlugin($plugin);
-
-        // The server is now ready to run
-        return $server;
     }
 }

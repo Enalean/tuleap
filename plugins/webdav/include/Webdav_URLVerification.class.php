@@ -67,17 +67,21 @@ class Webdav_URLVerification extends URLVerification
      */
     public function assertValidUrl($server, HTTPRequest $request, ?Project $project = null)
     {
-        if (
-            strcmp($server['HTTP_HOST'], $this->getWebDAVHost()) == 0
-            && strcmp($this->getWebDAVHost(), ForgeConfig::get('sys_default_domain')) != 0
-            && strcmp($this->getWebDAVHost(), ForgeConfig::get('sys_https_host')) != 0
-        ) {
+        if (self::isRequestForDedicatedWebdavHost($server, $this->getWebDAVHost())) {
             if (! $request->isSecure() && ForgeConfig::get('sys_https_host')) {
                 $this->forbiddenError();
             }
         } else {
             parent::assertValidUrl($server, $request);
         }
+    }
+
+    public static function isRequestForDedicatedWebdavHost(array $server, string $webdav_host): bool
+    {
+        return $webdav_host
+            && strcmp($server['HTTP_HOST'], $webdav_host) === 0
+            && strcmp($webdav_host, ForgeConfig::get('sys_default_domain')) !== 0
+            && strcmp($webdav_host, ForgeConfig::get('sys_https_host')) !== 0;
     }
 
     /**
