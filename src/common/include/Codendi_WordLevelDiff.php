@@ -29,10 +29,13 @@ class Codendi_WordLevelDiff extends \Codendi_MappedDiff // phpcs:ignore PSR1.Cla
         list($fin_words, $fin_stripped) = $this->_split($fin_lines);
         parent::__construct($orig_words, $fin_words, $orig_stripped, $fin_stripped);
     }
+
+    //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     public function _split($lines)
     {
         // FIXME: fix POSIX char class.
-        if (! \preg_match_all('/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs', \implode("\n", $lines), $m)) {
+        // The (*UTF8) at the beginning of the regexp helps to do a good diff with characters like é or è: https://www.php.net/manual/en/function.preg-match.php#95828
+        if (! \preg_match_all('/(*UTF8) ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs', \implode("\n", $lines), $m)) {
             return [[''], ['']];
         }
         return [$m[0], $m[1]];
@@ -49,6 +52,8 @@ class Codendi_WordLevelDiff extends \Codendi_MappedDiff // phpcs:ignore PSR1.Cla
         }
         return $orig->getLines();
     }
+
+    //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     public function _fin()
     {
         $fin = new \Codendi_HWLDF_WordAccumulator();
