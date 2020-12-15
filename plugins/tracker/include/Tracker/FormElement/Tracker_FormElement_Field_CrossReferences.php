@@ -19,10 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\Reference\CrossReferenceByDirectionPresenterBuilder;
+use Tuleap\Reference\CrossReferencePresenterFactory;
+use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceByNaturePresenterBuilder;
-use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceLinkPresenterCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\CrossReference\CrossReferenceFieldRenderer;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceFieldPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
@@ -332,11 +334,16 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      */
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $cross_ref_by_nature_presenter_builder = new CrossReferenceByNaturePresenterBuilder(
-            new CrossReferenceLinkPresenterCollectionBuilder()
+        $cross_ref_field_presenter_builder = new CrossReferenceFieldPresenterBuilder(
+            new CrossReferenceByDirectionPresenterBuilder(
+                EventManager::instance(),
+                ReferenceManager::instance(),
+                new CrossReferencePresenterFactory(
+                    new CrossReferencesDao(),
+                    new InstanceBaseURLBuilder()
+                )
+            )
         );
-
-        $cross_ref_field_presenter_builder = new CrossReferenceFieldPresenterBuilder($cross_ref_by_nature_presenter_builder);
 
         $field_cross_ref_renderer = new CrossReferenceFieldRenderer(
             TemplateRendererFactory::build(),

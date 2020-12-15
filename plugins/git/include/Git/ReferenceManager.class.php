@@ -51,17 +51,26 @@ class Git_ReferenceManager
      */
     public function getReference(Project $project, $keyword, $value): ?Reference
     {
-        $reference = null;
-        list($repository_name, $sha1) = $this->splitRepositoryAndSha1($value);
-        $repository = $this->repository_factory->getRepositoryByPath($project->getId(), $project->getUnixName() . '/' . $repository_name . '.git');
-        if ($repository !== null) {
-            $args = [$repository->getId(), $sha1];
-            $reference = $this->reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $project->getID(), count($args), $value);
-            if ($reference) {
-                $reference->replaceLink($args);
-            }
+        $repository = $this->getRepositoryFromCrossReferenceValue($project, $value);
+        if (! $repository) {
+            return null;
         }
+
+        [, $sha1] = $this->splitRepositoryAndSha1($value);
+        $args = [$repository->getId(), $sha1];
+        $reference = $this->reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $project->getID(), count($args), $value);
+        if ($reference) {
+            $reference->replaceLink($args);
+        }
+
         return $reference;
+    }
+
+    public function getRepositoryFromCrossReferenceValue(Project $project, string $value): ?GitRepository
+    {
+        [$repository_name] = $this->splitRepositoryAndSha1($value);
+
+        return $this->repository_factory->getRepositoryByPath($project->getId(), $project->getUnixName() . '/' . $repository_name . '.git');
     }
 
     private function splitRepositoryAndSha1($value)

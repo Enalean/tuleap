@@ -22,18 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\View\Reference;
 
+use Tuleap\Reference\CrossReferenceByDirectionPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class CrossReferenceFieldPresenter
 {
-    /**
-     * @var CrossReferenceByNaturePresenter[]
-     */
-    public $cross_refs_target_by_nature = [];
-    /**
-     * @var CrossReferenceByNaturePresenter[]
-     */
-    public $cross_refs_source_by_nature = [];
     /**
      * @var bool
      */
@@ -41,36 +34,24 @@ class CrossReferenceFieldPresenter
     /**
      * @var bool
      */
-    public $has_cross_refs_target = false;
-    /**
-     * @var bool
-     */
-    public $has_cross_refs_source = false;
-    /**
-     * @var bool
-     */
-    public $has_cross_refs_to_display = false;
+    public $has_cross_refs_to_display;
     /**
      * @var string
      */
     public $artifact_xref;
-
     /**
-     * @param CrossReferenceByNaturePresenter[] $cross_refs_target_by_nature_presenter_collection
-     * @param CrossReferenceByNaturePresenter[] $cross_refs_source_by_nature_presenter_collection
+     * @var CrossReferenceByDirectionPresenter
      */
+    public $by_direction;
+
     public function __construct(
         bool $can_delete,
-        array $cross_refs_target_by_nature_presenter_collection,
-        array $cross_refs_source_by_nature_presenter_collection,
+        CrossReferenceByDirectionPresenter $by_direction,
         Artifact $artifact
     ) {
-        $this->can_delete                  = $can_delete;
-        $this->cross_refs_target_by_nature = $cross_refs_target_by_nature_presenter_collection;
-        $this->cross_refs_source_by_nature = $cross_refs_source_by_nature_presenter_collection;
-        $this->has_cross_refs_target       = count($cross_refs_target_by_nature_presenter_collection) > 0;
-        $this->has_cross_refs_source       = count($cross_refs_source_by_nature_presenter_collection) > 0;
-        $this->has_cross_refs_to_display   = $this->has_cross_refs_source || $this->has_cross_refs_target;
-        $this->artifact_xref               = $artifact->getXRef();
+        $this->can_delete                = $can_delete;
+        $this->by_direction              = $by_direction;
+        $this->has_cross_refs_to_display = $by_direction->has_source || $by_direction->has_target;
+        $this->artifact_xref             = $artifact->getXRef();
     }
 }

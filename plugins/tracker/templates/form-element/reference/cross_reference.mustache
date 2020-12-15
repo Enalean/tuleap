@@ -2,27 +2,29 @@
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">
-                {{# has_nature_icon }}
-                    <i class="tlp-pane-title-icon {{ nature_icon }}" aria-hidden="true"></i>
-                {{/ has_nature_icon }}
-                {{ nature_label }}
+                {{# icon }}
+                    <i class="tlp-pane-title-icon {{ . }}" aria-hidden="true"></i>
+                {{/ icon }}
+                {{ label }}
             </h1>
         </div>
-        <section class="tlp-pane-section-for-cards">
-            {{# cross_reference_link_list }}
-                {{# cross_ref_link_collection }}
+        {{# sections }}
+            <section class="tlp-pane-section-for-cards">
+                {{# label }}
+                    <h2 class="tlp-pane-subtitle">{{ . }}</h2>
+                {{/ label }}
+                {{# cross_references }}
                     <div class="tlp-card-container" id="{{ id }}">
                         <a
                             class="tlp-card tlp-card-selectable cross-reference"
-                            title="{{ nature_label }}"
                             href="{{ url }}"
                         >
-                            {{ ref }}
+                            {{ title }}
                         </a>
                         {{# can_delete }}
                             <a
                                 class="tracker-cross-reference-delete-link delete_ref"
-                                href='/reference/rmreference.php?target_id={{ target_id }}&target_gid={{ target_gid }}&target_type={{ target_type }}&target_key={{ target_key }}&source_id={{ source_id }}&source_gid={{ source_gid }}&source_type={{ source_type }}&source_key={{ source_key }}'
+                                href='{{ delete_url }}'
                                 onClick="return delete_ref('{{ id }}', '{{# dgettext }}tuleap-tracker | Delete the reference?{{/ dgettext }}');"
                                 title="{{# dgettext }}tuleap-tracker | Delete{{/ dgettext }}"
                             >
@@ -30,8 +32,8 @@
                             </a>
                         {{/ can_delete }}
                     </div>
-                {{/ cross_ref_link_collection }}
-            {{/ cross_reference_link_list }}
-        </section>
+                {{/ cross_references }}
+            </section>
+        {{/ sections }}
     </div>
 </section>

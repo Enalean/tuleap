@@ -90,4 +90,18 @@ class Git_ReferenceManagerTest extends TestCase
             $this->git_reference_manager->getReference($this->project, Git::REFERENCE_KEYWORD, 'rantanplan/469eaa9')
         );
     }
+
+    public function testItReturnsTheRepositoryFromCrossReferenceValue(): void
+    {
+        $this->repository_factory
+            ->shouldReceive('getRepositoryByPath')
+            ->with(101, 'gpig/rantanplan.git')
+            ->once()
+            ->andReturn($this->repository);
+
+        self::assertEquals(
+            $this->repository,
+            $this->git_reference_manager->getRepositoryFromCrossReferenceValue($this->project, 'rantanplan/469eaa9')
+        );
+    }
 }
