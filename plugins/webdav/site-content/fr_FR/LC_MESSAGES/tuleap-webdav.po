@@ -1,0 +1,15 @@
+msgid ""
+msgstr ""
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid ""
+"Access document manager and file release system files via the WebDAV server"
+msgstr ""
+"Accès aux fichiers du gestionnaire de documents et de livrables par un serveur WebDAV"
+
+msgid "WebDAV"
+msgstr "WebDAV"

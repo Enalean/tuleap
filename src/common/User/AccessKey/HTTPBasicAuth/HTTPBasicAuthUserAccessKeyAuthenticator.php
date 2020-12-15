@@ -20,17 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\HTTP;
+namespace Tuleap\User\AccessKey\HTTPBasicAuth;
 
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\IncorrectSizeVerificationStringException;
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Git\User\AccessKey\Scope\GitRepositoryAccessKeyScope;
 use Tuleap\User\AccessKey\AccessKeyException;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 
-class HTTPUserAccessKeyAuthenticator
+class HTTPBasicAuthUserAccessKeyAuthenticator
 {
     /**
      * @var SplitTokenIdentifierTranslator
@@ -41,6 +41,10 @@ class HTTPUserAccessKeyAuthenticator
      */
     private $access_key_verifier;
     /**
+     * @var AuthenticationScope
+     */
+    private $authentication_scope;
+    /**
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
@@ -48,37 +52,43 @@ class HTTPUserAccessKeyAuthenticator
     public function __construct(
         SplitTokenIdentifierTranslator $access_key_identifier_unserializer,
         AccessKeyVerifier $access_key_verifier,
+        AuthenticationScope $authentication_scope,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->access_key_identifier_unserializer = $access_key_identifier_unserializer;
         $this->access_key_verifier                = $access_key_verifier;
+        $this->authentication_scope               = $authentication_scope;
         $this->logger                             = $logger;
     }
 
+    /**
+     * @throws HTTPBasicAuthUserAccessKeyMisusageException
+     */
     public function getUser(string $login, ConcealedString $potential_access_key_identifier, string $ip_address): ?\PFUser
     {
         try {
             $access_key = $this->access_key_identifier_unserializer->getSplitToken($potential_access_key_identifier);
         } catch (InvalidIdentifierFormatException | IncorrectSizeVerificationStringException $ex) {
-            $this->logger->debug('Given password does not look like an access key, skipping');
+            $this->logger->debug('Given password does not look like an access key, skipping', ['exception' => $ex]);
             return null;
         }
 
         try {
             $user = $this->access_key_verifier->getUser(
                 $access_key,
-                GitRepositoryAccessKeyScope::fromItself(),
+                $this->authentication_scope,
                 $ip_address
             );
         } catch (AccessKeyException $ex) {
             $this->logger->debug(
-                sprintf('Access key is not valid (%s), skipping', $ex->getMessage())
+                sprintf('Access key is not valid (%s), skipping', $ex->getMessage()),
+                ['exception' => $ex]
             );
             return null;
         }
 
         if (! \hash_equals($user->getUserName(), $login)) {
-            throw new HTTPUserAccessKeyMisusageException($login, $user);
+            throw new HTTPBasicAuthUserAccessKeyMisusageException($login, $user);
         }
 
         return $user;

@@ -20,10 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\HTTP;
+namespace Tuleap\User\AccessKey\HTTPBasicAuth;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\Scope\AuthenticationTestCoveringScope;
+use Tuleap\Authentication\Scope\AuthenticationTestScopeIdentifier;
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
@@ -31,7 +33,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\AccessKey\AccessKeyException;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 
-final class HTTPUserAccessKeyAuthenticatorTest extends TestCase
+final class HTTPBasicAuthUserAccessKeyAuthenticatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -45,7 +47,7 @@ final class HTTPUserAccessKeyAuthenticatorTest extends TestCase
     private $access_key_verifier;
 
     /**
-     * @var HTTPUserAccessKeyAuthenticator
+     * @var HTTPBasicAuthUserAccessKeyAuthenticator
      */
     private $authenticator;
 
@@ -54,9 +56,10 @@ final class HTTPUserAccessKeyAuthenticatorTest extends TestCase
         $this->access_key_identifier_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
         $this->access_key_verifier                = \Mockery::mock(AccessKeyVerifier::class);
 
-        $this->authenticator = new HTTPUserAccessKeyAuthenticator(
+        $this->authenticator = new HTTPBasicAuthUserAccessKeyAuthenticator(
             $this->access_key_identifier_unserializer,
             $this->access_key_verifier,
+            AuthenticationTestCoveringScope::fromIdentifier(AuthenticationTestScopeIdentifier::fromIdentifierKey('test')),
             new \Psr\Log\NullLogger()
         );
     }
@@ -78,7 +81,7 @@ final class HTTPUserAccessKeyAuthenticatorTest extends TestCase
             '2001:db8::2'
         );
 
-        $this->assertSame($expected_user, $user);
+        self::assertSame($expected_user, $user);
     }
 
     public function testDoesNotAuthenticateUserWhenThePasswordStringDoesNotLookLikeAnAccessKey(): void
@@ -92,7 +95,7 @@ final class HTTPUserAccessKeyAuthenticatorTest extends TestCase
             '2001:db8::2'
         );
 
-        $this->assertNull($user);
+        self::assertNull($user);
     }
 
     public function testDoesNotAuthenticateUserWhenTheGivenAccessKeyIsNotValid(): void
@@ -112,7 +115,7 @@ final class HTTPUserAccessKeyAuthenticatorTest extends TestCase
             '2001:db8::2'
         );
 
-        $this->assertNull($user);
+        self::assertNull($user);
     }
 
     public function testDoesNotAuthenticateUserWhenTheAccessKeyDoesNotMatchTheGivenUsername(): void
@@ -125,7 +128,7 @@ final class HTTPUserAccessKeyAuthenticatorTest extends TestCase
         $this->access_key_verifier->shouldReceive('getUser')
             ->andReturn($found_user_from_access_key);
 
-        $this->expectException(HTTPUserAccessKeyMisusageException::class);
+        $this->expectException(HTTPBasicAuthUserAccessKeyMisusageException::class);
         $this->authenticator->getUser(
             'username',
             new ConcealedString('access_key_identifier_for_a_different_username'),

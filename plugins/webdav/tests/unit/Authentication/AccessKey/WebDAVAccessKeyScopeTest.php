@@ -20,18 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Git\HTTP;
+namespace Tuleap\WebDAV\Authentication\AccessKey;
 
-final class HTTPUserAccessKeyMisusageException extends \RuntimeException
+use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
+use Tuleap\Authentication\Scope\AuthenticationTestCoveringScope;
+use Tuleap\Authentication\Scope\AuthenticationTestScopeIdentifier;
+use Tuleap\Git\User\AccessKey\Scope\GitRepositoryAccessKeyScope;
+
+final class WebDAVAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
-    public function __construct(string $requested_username, \PFUser $found_user)
+    public function getAuthenticationScopeClassname(): string
     {
-        parent::__construct(
-            sprintf(
-                'The access key found is for the user %s but username %s has been given',
-                $found_user->getUserName(),
-                $requested_username
-            )
-        );
+        return WebDAVAccessKeyScope::class;
+    }
+
+    public function testDoesNotCoversAllTheScopes(): void
+    {
+        $scope = AuthenticationTestCoveringScope::fromIdentifier(AuthenticationTestScopeIdentifier::fromIdentifierKey('test:webdav'));
+
+        self::assertFalse(GitRepositoryAccessKeyScope::fromItself()->covers($scope));
     }
 }
