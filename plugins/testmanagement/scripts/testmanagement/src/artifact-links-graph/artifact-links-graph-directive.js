@@ -285,7 +285,7 @@ function Graph(
                                     }
                                 })
                         )
-                        .on("click", function (d) {
+                        .on("click", function (event, d) {
                             if (d.clicked && d.has_children) {
                                 graphd3.remove(d);
                             } else {
