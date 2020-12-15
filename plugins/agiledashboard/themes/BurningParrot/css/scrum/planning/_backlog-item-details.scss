@@ -40,8 +40,15 @@
 
             .backlog-item-details-id,
             .backlog-item-details-parent > a,
-            .extra-card-field-title {
+            .extra-card-field-title,
+            .backlog-item-details-effort-container-content-no-initial-effort {
                 color: map-get($colors, 'text');
+            }
+
+            .backlog-item-details-effort-container-content-no-initial-effort {
+                $background-color-no-initial-effort: darken(map-get($colors, 'secondary'), 5%);
+                border-color: $background-color-no-initial-effort;
+                background: $background-color-no-initial-effort;
             }
         }
     }
