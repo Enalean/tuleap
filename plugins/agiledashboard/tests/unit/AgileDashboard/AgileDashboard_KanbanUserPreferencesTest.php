@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//phpcs:ignore: PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class AgileDashboard_KanbanUserPreferencesTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -51,6 +52,13 @@ class AgileDashboard_KanbanUserPreferencesTest extends \PHPUnit\Framework\TestCa
     public function testItOpensTheBacklog(): void
     {
         $this->user->shouldReceive('getPreference')->with('kanban_collapse_backlog_1')->andReturns(AgileDashboard_KanbanUserPreferences::EXPAND);
+
+        $this->assertTrue($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
+    }
+
+    public function testItOpensTheBacklogIfNoPreferenceSet(): void
+    {
+        $this->user->shouldReceive('getPreference')->with('kanban_collapse_backlog_1')->andReturnFalse();
 
         $this->assertTrue($this->user_preferences->isBacklogOpen($this->kanban, $this->user));
     }
