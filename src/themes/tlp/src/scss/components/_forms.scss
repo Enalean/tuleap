@@ -355,6 +355,12 @@ $tlp-form-element-select-small-background-size: 6px;
         cursor: pointer;
     }
 
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        .list-picker-badge-#{$color-name} {
+            @extend %tlp-badge, .tlp-badge-#{$color-name}, .tlp-badge-outline;;
+        }
+    }
+
     .list-picker-selection {
         @extend %tlp-form-element;
 
@@ -422,6 +428,11 @@ $tlp-form-element-select-small-background-size: 6px;
     }
 }
 
+.list-picker-option-colored-label-container {
+    display: flex;
+    align-items: center;
+}
+
 .list-picker-single-dropdown-search-section {
     padding: $tlp-form-element-padding-horizontal;
 
@@ -466,6 +477,25 @@ $tlp-form-element-select-small-background-size: 6px;
     width: 20px;
     height: 20px;
     margin: 0 4px 0 0;
+}
+
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .list-picker-badge-#{$color-name} {
+        @extend %tlp-badge, .tlp-badge-#{$color-name}, .tlp-badge-outline;
+    }
+}
+
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .list-picker-circular-color-#{$color-name} {
+        width: 20px;
+        height: 20px;
+        margin: 0 6px 0 0;
+        border: 3px solid map-get($colors, 'primary');
+        border-radius: 50%;
+        background-color: map-get($colors, 'secondary');
+        color: map-get($colors, 'primary');
+        cursor: pointer;
+    }
 }
 
 %tlp-select2 {

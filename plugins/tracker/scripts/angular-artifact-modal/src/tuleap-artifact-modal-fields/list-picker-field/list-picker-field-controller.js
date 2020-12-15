@@ -19,6 +19,7 @@
  */
 
 import { createListPicker } from "@tuleap/list-picker";
+import { sanitize } from "dompurify";
 
 export default ListPickerController;
 
@@ -42,8 +43,13 @@ function ListPickerController($element, $timeout) {
         if (self.field.bindings.type === "users") {
             bindUsersAvatars();
         }
+        buildColorValueOptionDataset();
 
-        self.destroy = await createListPicker(select, getOptions()).then((list_picker) => {
+        const options = {
+            locale: document.body.dataset.userLocale,
+            is_filterable: true,
+        };
+        self.destroy = await createListPicker(select, options).then((list_picker) => {
             return list_picker.destroy;
         });
     }
@@ -52,13 +58,6 @@ function ListPickerController($element, $timeout) {
         if (self.is_list_picker_enabled) {
             self.destroy();
         }
-    }
-
-    function getOptions() {
-        return {
-            locale: document.body.dataset.userLocale,
-            is_filterable: true,
-        };
     }
 
     function isFieldValid() {
@@ -74,6 +73,15 @@ function ListPickerController($element, $timeout) {
 
             const avatar_url = value.user_reference.avatar_url;
             option.setAttribute("data-avatar-url", avatar_url);
+        });
+    }
+
+    function buildColorValueOptionDataset() {
+        select.options.forEach((option, option_index) => {
+            const value = self.field.values[option_index];
+            if (value.value_color) {
+                option.setAttribute("data-color-value", sanitize(value.value_color));
+            }
         });
     }
 }

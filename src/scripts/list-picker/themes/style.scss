@@ -162,3 +162,13 @@
 .list-picker-multiple-search-section {
     flex: 1;
 }
+
+.list-picker-circular-legacy-color {
+    display: flex;
+    box-sizing: border-box; //To have the same round color size in BP and FP.
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin: 0 6px 0 0;
+    border-radius: 50%;
+}
