@@ -51,19 +51,10 @@ class CrossReferenceLinkPresenterCollectionBuilder
                 $id,
                 $ref,
                 $url,
-                $this->displayComma($cross_references, $index),
                 $current_cross_ref
             );
         }
 
         return $cross_ref_link_collection;
-    }
-
-    /**
-     * @param CrossReference[] $cross_references
-     */
-    private function displayComma(array $cross_references, int $index): bool
-    {
-        return count($cross_references) > 1 && $index < count($cross_references) - 1;
     }
 }

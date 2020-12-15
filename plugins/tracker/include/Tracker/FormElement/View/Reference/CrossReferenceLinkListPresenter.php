@@ -28,34 +28,15 @@ namespace Tuleap\Tracker\FormElement\View\Reference;
 class CrossReferenceLinkListPresenter
 {
     /**
-     * @var string
-     */
-    public $classes_key;
-    /**
-     * @var string
-     */
-    public $image;
-    /**
      * @var CrossReferenceLinkPresenter[]
      */
     public $cross_ref_link_collection = [];
-    /**
-     * @var string
-     */
-    public $icon_message;
-    /**
-     * @var string
-     */
-    public $icon_path;
 
     /**
      * @param CrossReferenceLinkPresenter[] $cross_ref_link_collection
      */
-    public function __construct(string $classes_key, string $icon_message, string $icon_path, array $cross_ref_link_collection)
+    public function __construct(array $cross_ref_link_collection)
     {
-        $this->classes_key               = $classes_key;
         $this->cross_ref_link_collection = $cross_ref_link_collection;
-        $this->icon_message              = $icon_message;
-        $this->icon_path                 = $icon_path;
     }
 }

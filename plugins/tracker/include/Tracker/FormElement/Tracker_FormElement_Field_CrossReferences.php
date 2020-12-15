@@ -22,7 +22,6 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceByNaturePresenterBuilder;
-use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceLinkListPresenterBuilder;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceLinkPresenterCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\CrossReference\CrossReferenceFieldRenderer;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceFieldPresenterBuilder;
@@ -334,7 +333,6 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $cross_ref_by_nature_presenter_builder = new CrossReferenceByNaturePresenterBuilder(
-            new CrossReferenceLinkListPresenterBuilder(),
             new CrossReferenceLinkPresenterCollectionBuilder()
         );
 

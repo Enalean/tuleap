@@ -34,14 +34,6 @@ class CrossReferenceByNaturePresenterBuilderTest extends TestCase
      */
     private $builder;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkListPresenterBuilder
-     */
-    private $cross_ref_link_list_presenter_builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkListPresenter
-     */
-    private $cross_reference_link_list;
-    /**
      * @var \CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $cross_ref_target_1;
@@ -49,10 +41,6 @@ class CrossReferenceByNaturePresenterBuilderTest extends TestCase
      * @var \CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
     private $cross_ref_target_2;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkListPresenter
-     */
-    private $cross_reference_link_list_2;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkPresenterCollectionBuilder
      */
@@ -69,37 +57,24 @@ class CrossReferenceByNaturePresenterBuilderTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceCollection
      */
     private $cross_ref_collection;
-    /**
-     * @var \CrossReference|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $cross_ref_target_3;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CrossReferenceLinkPresenter
-     */
-    private $cross_ref_link_3;
 
 
     protected function setUp(): void
     {
-        $this->cross_ref_link_list_presenter_builder       = \Mockery::mock(CrossReferenceLinkListPresenterBuilder::class);
-        $this->cross_ref_link_collection_presenter_builder = \Mockery::mock(CrossReferenceLinkPresenterCollectionBuilder::class);
-
-        $this->cross_reference_link_list   = \Mockery::mock(CrossReferenceLinkListPresenter::class);
-        $this->cross_reference_link_list_2 = \Mockery::mock(CrossReferenceLinkListPresenter::class);
+        $this->cross_ref_link_collection_presenter_builder = \Mockery::mock(
+            CrossReferenceLinkPresenterCollectionBuilder::class
+        );
 
         $this->cross_ref_collection = \Mockery::mock(CrossReferenceCollection::class);
         $this->cross_ref_collection->shouldReceive('getNature')->andReturn('');
 
         $this->cross_ref_target_1 = \Mockery::mock(\CrossReference::class);
         $this->cross_ref_target_2 = \Mockery::mock(\CrossReference::class);
-        $this->cross_ref_target_3 = \Mockery::mock(\CrossReference::class);
 
         $this->cross_ref_link_1 = \Mockery::mock(CrossReferenceLinkPresenter::class);
         $this->cross_ref_link_2 = \Mockery::mock(CrossReferenceLinkPresenter::class);
-        $this->cross_ref_link_3 = \Mockery::mock(CrossReferenceLinkPresenter::class);
 
         $this->builder = new CrossReferenceByNaturePresenterBuilder(
-            $this->cross_ref_link_list_presenter_builder,
             $this->cross_ref_link_collection_presenter_builder
         );
     }
@@ -120,13 +95,9 @@ class CrossReferenceByNaturePresenterBuilderTest extends TestCase
             ->with([$this->cross_ref_target_1], 'target')
             ->andReturn([$this->cross_ref_link_1]);
 
-        $this->cross_ref_link_list_presenter_builder
-            ->shouldReceive('buildForTarget')
-            ->with([$this->cross_ref_link_1])
-            ->once()
-            ->andReturn($this->cross_reference_link_list);
-
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesTarget')->times(3)->andReturn([$this->cross_ref_target_1]);
+        $this->cross_ref_collection->shouldReceive('getCrossReferencesTarget')->times(3)->andReturn(
+            [$this->cross_ref_target_1]
+        );
         $this->cross_ref_collection->shouldReceive('getCrossReferencesSource')->once()->andReturn([]);
         $this->cross_ref_collection->shouldReceive('getLabel')->once()->andReturn('Tracker');
         $this->cross_ref_collection->shouldReceive('getNatureIcon')->andReturn(null);
@@ -134,7 +105,10 @@ class CrossReferenceByNaturePresenterBuilderTest extends TestCase
         $presenter = $this->builder->build($this->cross_ref_collection);
 
         $this->assertEquals("Tracker", $presenter->nature_label);
-        $this->assertEquals([$this->cross_reference_link_list], $presenter->cross_reference_link_list);
+        $this->assertEquals(
+            [new CrossReferenceLinkListPresenter([$this->cross_ref_link_1])],
+            $presenter->cross_reference_link_list
+        );
     }
 
     public function testItCallsSourceCrossReferenceLinkListWithLinkArray(): void
@@ -144,24 +118,23 @@ class CrossReferenceByNaturePresenterBuilderTest extends TestCase
             ->with([$this->cross_ref_target_1], 'source')
             ->andReturn([$this->cross_ref_link_1]);
 
-        $this->cross_ref_link_list_presenter_builder
-            ->shouldReceive('buildForSource')
-            ->with([$this->cross_ref_link_1])
-            ->once()
-            ->andReturn($this->cross_reference_link_list);
-
         $this->cross_ref_collection->shouldReceive('getCrossReferencesTarget')->twice()->andReturn([]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesSource')->times(3)->andReturn([$this->cross_ref_target_1]);
+        $this->cross_ref_collection->shouldReceive('getCrossReferencesSource')->times(3)->andReturn(
+            [$this->cross_ref_target_1]
+        );
         $this->cross_ref_collection->shouldReceive('getLabel')->once()->andReturn('Tracker');
         $this->cross_ref_collection->shouldReceive('getNatureIcon')->andReturn(null);
 
         $presenter = $this->builder->build($this->cross_ref_collection);
 
         $this->assertEquals("Tracker", $presenter->nature_label);
-        $this->assertEquals([$this->cross_reference_link_list], $presenter->cross_reference_link_list);
+        $this->assertEquals(
+            [new CrossReferenceLinkListPresenter([$this->cross_ref_link_1])],
+            $presenter->cross_reference_link_list
+        );
     }
 
-    public function testItCallsSourceAndBothAndTargetCrossReferenceLinkListWithLinkArray(): void
+    public function testItCallsSourceAndTargetCrossReferenceLinkListWithLinkArray(): void
     {
         $this->cross_ref_link_collection_presenter_builder
             ->shouldReceive('build')
@@ -173,29 +146,24 @@ class CrossReferenceByNaturePresenterBuilderTest extends TestCase
             ->with([$this->cross_ref_target_2], 'target')
             ->andReturn([$this->cross_ref_link_2]);
 
-        $this->cross_ref_link_collection_presenter_builder
-            ->shouldReceive('build')
-            ->with([$this->cross_ref_target_3], 'both')
-            ->andReturn([$this->cross_ref_link_3]);
-
-        $this->cross_ref_link_list_presenter_builder
-            ->shouldReceive('buildForSource')
-            ->with([$this->cross_ref_link_1])
-            ->andReturn($this->cross_reference_link_list);
-
-        $this->cross_ref_link_list_presenter_builder
-            ->shouldReceive('buildForTarget')
-            ->with([$this->cross_ref_link_2])
-            ->andReturn($this->cross_reference_link_list_2);
-
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesTarget')->times(3)->andReturn([$this->cross_ref_target_2]);
-        $this->cross_ref_collection->shouldReceive('getCrossReferencesSource')->twice()->andReturn([$this->cross_ref_target_1]);
+        $this->cross_ref_collection->shouldReceive('getCrossReferencesTarget')->times(3)->andReturn(
+            [$this->cross_ref_target_2]
+        );
+        $this->cross_ref_collection->shouldReceive('getCrossReferencesSource')->twice()->andReturn(
+            [$this->cross_ref_target_1]
+        );
         $this->cross_ref_collection->shouldReceive('getLabel')->once()->andReturn('Tracker');
         $this->cross_ref_collection->shouldReceive('getNatureIcon')->andReturn(null);
 
         $presenter = $this->builder->build($this->cross_ref_collection);
 
         $this->assertEquals("Tracker", $presenter->nature_label);
-        $this->assertEquals([$this->cross_reference_link_list, $this->cross_reference_link_list_2], $presenter->cross_reference_link_list);
+        $this->assertEquals(
+            [
+                new CrossReferenceLinkListPresenter([$this->cross_ref_link_1]),
+                new CrossReferenceLinkListPresenter([$this->cross_ref_link_2]),
+            ],
+            $presenter->cross_reference_link_list
+        );
     }
 }
