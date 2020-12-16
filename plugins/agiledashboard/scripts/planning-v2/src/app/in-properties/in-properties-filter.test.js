@@ -19,6 +19,15 @@ describe("InPropertiesItemFilter", () => {
                 parent: {
                     id: "autoplagiarism",
                     label: "norleucine",
+                    tracker: {
+                        project: {
+                            id: 103,
+                            label: "parent_project",
+                        },
+                    },
+                },
+                project: {
+                    id: 103,
                 },
             },
             {
@@ -37,6 +46,24 @@ describe("InPropertiesItemFilter", () => {
                 label: "Donald & Daisy",
                 id: "significant others",
                 card_fields: [],
+            },
+            {
+                label: "Della",
+                id: "sister",
+                card_fields: [],
+                parent: {
+                    id: "some_id",
+                    label: "isoleucine",
+                    tracker: {
+                        project: {
+                            id: 103,
+                            label: "parent_project",
+                        },
+                    },
+                },
+                project: {
+                    id: 102,
+                },
             },
         ];
 
@@ -96,6 +123,15 @@ describe("InPropertiesItemFilter", () => {
             parent: {
                 id: "autoplagiarism",
                 label: "norleucine",
+                tracker: {
+                    project: {
+                        id: 103,
+                        label: "parent_project",
+                    },
+                },
+            },
+            project: {
+                id: 103,
             },
         });
         expect(in_properties_filter(list, "nephew")).toContainEqual({
@@ -131,6 +167,38 @@ describe("InPropertiesItemFilter", () => {
                 parent: {
                     id: "autoplagiarism",
                     label: "norleucine",
+                    tracker: {
+                        project: {
+                            id: 103,
+                            label: "parent_project",
+                        },
+                    },
+                },
+                project: {
+                    id: 103,
+                },
+            },
+        ]);
+    });
+
+    it("filters on the item's parent's project's label property when it's from another project", function () {
+        expect(in_properties_filter(list, "parent_project")).toEqual([
+            {
+                label: "Della",
+                id: "sister",
+                card_fields: [],
+                parent: {
+                    id: "some_id",
+                    label: "isoleucine",
+                    tracker: {
+                        project: {
+                            id: 103,
+                            label: "parent_project",
+                        },
+                    },
+                },
+                project: {
+                    id: 102,
                 },
             },
         ]);

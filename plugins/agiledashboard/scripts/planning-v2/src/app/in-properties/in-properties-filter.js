@@ -35,8 +35,17 @@ function InPropertiesFilter($filter) {
                     return true;
                 }
 
-                if (item.parent && match(item.parent.label)) {
-                    return true;
+                if (item.parent) {
+                    if (match(item.parent.label)) {
+                        return true;
+                    }
+
+                    if (
+                        item.parent.tracker.project.id !== item.project.id &&
+                        match(item.parent.tracker.project.label)
+                    ) {
+                        return true;
+                    }
                 }
 
                 if (hasChildren(item)) {
