@@ -24,7 +24,6 @@ describe("Test plan", function () {
 
     beforeEach(function () {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
-        cy.server();
     });
 
     context("As project member", () => {

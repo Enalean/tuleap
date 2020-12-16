@@ -18,10 +18,13 @@
  */
 
 describe("FRS plugin", () => {
+    let now: number;
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.ProjectAdministratorLogin();
         cy.getProjectId("frs-plugin").as("frs_project_id");
+
+        now = Date.now();
     });
 
     beforeEach(() => {
@@ -29,8 +32,6 @@ describe("FRS plugin", () => {
     });
 
     it("user can link a frs release to an agiledashboard release", function (): void {
-        cy.server();
-
         cy.visit(`https://tuleap/plugins/agiledashboard/?group_id=${this.frs_project_id}`)
             .get("[data-test=release-id]")
             .should("have.attr", "data-artifact-id")
@@ -39,16 +40,19 @@ describe("FRS plugin", () => {
                 cy.visit(`/file/showfiles.php?group_id=${this.frs_project_id}`);
 
                 cy.get("[data-test=create-new-package]").click();
-                cy.get("[data-test=frs-create-package]").type("My first package");
+                cy.get("[data-test=frs-create-package]").type("My first package " + now);
                 cy.get("[data-test=frs-create-package-button]").click({
                     timeout: 60000,
                 });
 
-                cy.route("/file/admin/frsajax.php*").as("createRelease");
-                cy.get("[data-test=create-release]").click({ force: true });
-                cy.get("[data-test=release-name]").type("My release name");
+                cy.intercept({
+                    url: /file\/admin\/frsajax\.php/,
+                }).as("createRelease");
+                cy.get(`[data-test=toggle-package]`).first().click();
+                cy.get("[data-test=create-release]").first().click();
+                cy.get("[data-test=release-name]").type("My release name" + now);
                 cy.get("[data-test=release-artifact-id]").type(this.release_id);
-                cy.get("[data-test=release-note]").type("My awesome RN");
+                cy.get("[data-test=release-note]").type("My awesome RN" + now);
                 cy.get("[data-test=create-release-button]").click({
                     timeout: 60000,
                 });
@@ -57,9 +61,9 @@ describe("FRS plugin", () => {
                 cy.visitProjectService("frs-plugin", "Files");
 
                 cy.visit(`/file/showfiles.php?group_id=${this.frs_project_id}`);
-                cy.get(`[data-test=toggle-package]`).click();
-                cy.get(`[data-test=release-note-access]`).click();
-                cy.get("[data-test=release-note]").contains("My awesome RN");
+                cy.get(`[data-test=toggle-package]`).first().click();
+                cy.get(`[data-test=release-note-access]`).first().click();
+                cy.get("[data-test=release-note]").contains("My awesome RN" + now);
 
                 cy.get(`[data-test=linked-artifacts]`).click();
 

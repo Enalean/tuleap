@@ -25,7 +25,6 @@ describe("Project Milestones Widget", function () {
     context("Project Dashboard", function () {
         it("Add Project Milestones on a dashboard project", () => {
             cy.ProjectAdministratorLogin();
-            cy.server();
             cy.visit("/projects/projectmilestones-dashboard");
 
             cy.get("[data-test=dashboard-configuration-button]").click();
@@ -38,11 +37,7 @@ describe("Project Milestones Widget", function () {
                 "ProjectMilestones Widget Milestones"
             );
 
-            cy.getProjectId("projectmilestones-dashboard").then((project_id) => {
-                cy.route(`/api/v1/projects/${project_id}/milestones?limit=*&offset=*&query=*`).as(
-                    "loadReleases"
-                );
-            });
+            cy.intercept("GET", "/milestones").as("loadReleases");
             cy.wait("@loadReleases", { timeout: 1000 });
 
             cy.get("[data-test=project-milestone-empty-state]").contains("Start Planning");
@@ -52,7 +47,6 @@ describe("Project Milestones Widget", function () {
     context("User Dashboard", function () {
         it("Add Project Milestones on user dashboard", function () {
             cy.projectMemberLogin();
-            cy.server();
             cy.visit("/my/");
 
             cy.get("[data-test=dashboard-configuration-button]").click();
@@ -74,11 +68,7 @@ describe("Project Milestones Widget", function () {
                 "ProjectMilestones Widget Milestones"
             );
 
-            cy.getProjectId("projectmilestones-dashboard").then((project_id) => {
-                cy.route(`/api/v1/projects/${project_id}/milestones?limit=*&offset=*&query=*`).as(
-                    "loadReleases"
-                );
-            });
+            cy.intercept("GET", "/milestones").as("loadReleases");
             cy.wait("@loadReleases", { timeout: 1000 });
 
             cy.get("[data-test=project-milestone-empty-state]").contains("Start Planning");

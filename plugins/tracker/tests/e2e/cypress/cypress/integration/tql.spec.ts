@@ -94,7 +94,6 @@ describe("Report expert queries", () => {
 
     beforeEach(function () {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
-        cy.server();
     });
 
     describe("Report table shows", () => {

@@ -46,11 +46,12 @@ describe("List", function () {
             Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
         });
         it("should raise an error when user try to access to List admin page", function () {
-            cy.visit("/project/" + project_id + "/admin/mailing-lists");
+            //failOnStatusCode ignore the 401 thrown in HTTP Headers by server
+            cy.visit("/project/" + project_id + "/admin/mailing-lists", {
+                failOnStatusCode: false,
+            });
 
-            cy.get("[data-test=feedback]").contains(
-                "You are not granted sufficient permission to perform this operation."
-            );
+            cy.contains("You don't have permission to access administration of this project.");
         });
     });
 });
