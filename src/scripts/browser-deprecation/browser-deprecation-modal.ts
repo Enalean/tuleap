@@ -22,6 +22,7 @@ import { markAndCheckBrowserDeprecationAcknowledgement } from "./mark-deprecatio
 export function displayBrowserDeprecationModalIfNeeded(
     mount_point: Document,
     showModal: (modal: Element) => void,
+    showNonDismissibleModal: (modal: Element) => void,
     storage: Storage
 ): void {
     const browser_deprecation_modal_element = mount_point.getElementById(
@@ -31,7 +32,14 @@ export function displayBrowserDeprecationModalIfNeeded(
         throw new Error("Browser deprecation modal #browser-deprecation-modal not found");
     }
 
-    if (!markAndCheckBrowserDeprecationAcknowledgement(storage)) {
+    const can_be_dismissed = !browser_deprecation_modal_element.hasAttribute(
+        "data-non-dismissible"
+    );
+
+    if (can_be_dismissed && !markAndCheckBrowserDeprecationAcknowledgement(storage)) {
         showModal(browser_deprecation_modal_element);
+    }
+    if (!can_be_dismissed) {
+        showNonDismissibleModal(browser_deprecation_modal_element);
     }
 }

@@ -26,6 +26,7 @@ use ForgeAccess;
 use phpDocumentor\Reflection\DocBlockFactory;
 use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
+use Tuleap\BrowserDetection\BrowserDeprecationMessage;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\InviteBuddy\InviteBuddyConfiguration;
@@ -60,6 +61,7 @@ final class GetWhitelistedKeys implements Dispatchable
         BackendLogger::class,
         LogToGraylog2::class,
         InviteBuddyConfiguration::class,
+        BrowserDeprecationMessage::class
     ];
 
     /**

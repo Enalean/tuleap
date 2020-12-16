@@ -19,12 +19,22 @@
 
 import { displayBrowserDeprecationModalIfNeeded } from "./browser-deprecation-modal";
 import { createModal } from "tlp";
+import { Modal } from "../../themes/tlp/src/js/modal";
+
+class NonDismissibleModal extends Modal {
+    hide(): void {
+        // Empty on purpose, we do not want this modal to be hidden
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     displayBrowserDeprecationModalIfNeeded(
         document,
         (modal_element: Element) => {
             createModal(modal_element).show();
+        },
+        (modal_element: Element) => {
+            new NonDismissibleModal(document, modal_element).show();
         },
         window.localStorage
     );

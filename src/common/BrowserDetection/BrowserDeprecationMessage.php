@@ -28,6 +28,14 @@ namespace Tuleap\BrowserDetection;
 final class BrowserDeprecationMessage
 {
     /**
+     * Allow to dismiss IE deprecation message
+     *
+     * @tlp-config-key
+     */
+    public const TEMPORARILY_ALLOW_IE                      = 'temporarily_allow_dismiss_ie_deprecation_message';
+    private const IE_DISMISS_EXPECTED_CONFIRMATION_MESSAGE = 'I_understand_this_is_a_temporary_configuration_switch_(please_warn_the_Tuleap_dev_team_when_enabling_this)';
+
+    /**
      * @var string
      */
     public $title;
@@ -35,34 +43,33 @@ final class BrowserDeprecationMessage
      * @var string
      */
     public $message;
+    /**
+     * @var bool
+     */
+    public $can_be_dismiss;
 
-    private function __construct(string $title, string $message)
+    private function __construct(string $title, string $message, bool $can_be_dismiss)
     {
-        $this->title   = $title;
-        $this->message = $message;
+        $this->title          = $title;
+        $this->message        = $message;
+        $this->can_be_dismiss = $can_be_dismiss;
     }
 
     public static function fromDetectedBrowser(DetectedBrowser $detected_browser): ?self
     {
-        if ($detected_browser->isIEBefore11()) {
+        if ($detected_browser->isIE11() || $detected_browser->isIEBefore11()) {
             return new self(
                 _('Your web browser is not supported'),
-                _('Internet Explorer in compatibility mode is not supported, you will encounter issues if you continue. Please upgrade to a modern, fully supported browser such as Firefox, Chrome or Edge.')
+                _('Internet Explorer is not supported. Please upgrade to a modern, fully supported browser such as Firefox, Chrome or Edge.'),
+                \ForgeConfig::get(self::TEMPORARILY_ALLOW_IE) === self::IE_DISMISS_EXPECTED_CONFIRMATION_MESSAGE,
             );
         }
-
-        if ($detected_browser->isIE11()) {
-            return new self(
-                _('Your web browser is not supported'),
-                _('Starting January 2021 access with Internet Explorer will no longer work. Some features are already not available to you. Please upgrade to a modern, fully supported browser such as Firefox, Chrome or Edge.')
-            );
-        }
-
 
         if ($detected_browser->isEdgeLegacy()) {
             return new self(
                 _('Your web browser is not supported'),
-                _('Edge Legacy is not supported. Please upgrade to the latest version of Edge or use another modern alternative such as Firefox or Chrome.')
+                _('Edge Legacy is not supported. Please upgrade to the latest version of Edge or use another modern alternative such as Firefox or Chrome.'),
+                true,
             );
         }
 
