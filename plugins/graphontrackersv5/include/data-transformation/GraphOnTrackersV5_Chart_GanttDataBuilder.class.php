@@ -65,7 +65,7 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
             if ($last_changeset === null) {
                 continue;
             }
-            $aid  = $artifact->getId();
+            $aid  = (string) $artifact->getId();
             $data = [
                 'id'       => $aid,
                 'summary'  => '#' . $aid,
