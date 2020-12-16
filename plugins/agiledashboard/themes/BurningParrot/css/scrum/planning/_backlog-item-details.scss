@@ -43,6 +43,7 @@
             .backlog-item-details-effort-container-content-no-initial-effort,
             .backlog-item-details-parent,
             .backlog-item-details-parent-link {
+                fill: map-get($colors, 'text');
                 color: map-get($colors, 'text');
             }
 
@@ -147,6 +148,7 @@
     flex: 1 0 auto;
     align-items: baseline;
     width: 100%;
+    padding: $tlp-small-spacing 0 $tlp-small-spacing 0;
 }
 
 .card-accessibility {
@@ -178,7 +180,7 @@
     display: flex;
     flex: 0 0 auto;
     margin: 0 7px 0 0;
-    padding: $tlp-small-spacing;
+    padding: 0 $tlp-small-spacing 0 $tlp-small-spacing;
     color: $tlp-ui-dimmed;
     font-size: 12px;
     white-space: nowrap;
@@ -202,31 +204,45 @@
 .backlog-item-details-title {
     display: block;
     flex: 1 1 auto;
-    padding: $tlp-small-spacing $tlp-small-spacing $tlp-small-spacing 0;
+    padding-right: $tlp-small-spacing;
     font-size: 14px;
     line-height: 18px;
 }
 
 .backlog-item-details-parent {
+    display: flex;
     position: relative;
     left: 0;
     flex: 0 1 auto;
+    flex-direction: column;
     align-self: center;
     margin: 0 5px 0 13px;
     padding: 3px 5px;
     transition: transform 100ms ease-in-out 500ms;
     border-radius: 3px;
+    fill: darken($tlp-ui-dimmed, 10%);
     font-size: 12px;
-    text-align: right;
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+
+        > span {
+            opacity: .7;
+        }
+    }
 }
 
 .backlog-item-details-parent-link {
     color: darken($tlp-ui-dimmed, 10%);
 
     &:hover {
-        opacity: .7;
         text-decoration: none;
     }
+}
+
+.backlog-item-details-parent-project {
+    margin-bottom: 2px;
 }
 
 .backlog-item-details-effort-container {

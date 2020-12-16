@@ -51,6 +51,9 @@
     <card-parent-link ng-if="details.backlog_item.parent.label"
         text="{{ details.backlog_item.parent.label }}"
         url="{{ '/plugins/tracker/?aid=' + details.backlog_item.parent.id }}"
+        parent_project_label="{{ details.backlog_item.parent.tracker.project.label }}"
+        parent_project_id="{{ details.backlog_item.parent.tracker.project.id }}"
+        project_id="{{ details.backlog_item.project.id }}"
         filter-terms="{{ details.backlog_filter.terms }}"
     ></card-parent-link>
 
@@ -118,6 +121,9 @@
     <card-parent-link ng-if="details.backlog_item.parent.label"
                       text="{{ details.backlog_item.parent.label }}"
                       url="{{ '/plugins/tracker/?aid=' + details.backlog_item.parent.id }}"
+                      parent_project_label="{{ details.backlog_item.parent.tracker.project.label }}"
+                      parent_project_id="{{ details.backlog_item.parent.tracker.project.id }}"
+                      project_id="{{ details.backlog_item.project.id }}"
                       filter-terms="{{ details.backlog_filter.terms }}"
     ></card-parent-link>
 
