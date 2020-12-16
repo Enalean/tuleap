@@ -23,6 +23,7 @@
         <div
             class="taskboard-header taskboard-cell-swimlane-header"
             v-bind:class="taskboard_cell_swimlane_header_classes"
+            v-if="backlog_trackers_have_children"
         ></div>
         <template v-for="column of columns">
             <collapsed-header-cell
@@ -37,7 +38,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { ColumnDefinition } from "../../../type";
 import ExpandedHeaderCell from "./Expanded/ExpandedHeaderCell.vue";
@@ -55,5 +56,8 @@ export default class TaskBoardHeader extends Vue {
 
     @swimlane.Getter
     readonly taskboard_cell_swimlane_header_classes!: string[];
+
+    @State
+    readonly backlog_trackers_have_children!: boolean;
 }
 </script>
