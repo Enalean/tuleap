@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\reference;
 
 use Generator;
-use Tuleap\reference\Events\CrossReferenceGetNatureIconEvent;
-use Psr\EventDispatcher\EventDispatcherInterface;
 
 class CrossReferenceByNatureCollection
 {
@@ -35,17 +33,14 @@ class CrossReferenceByNatureCollection
 
     /**
      * @psalm-param array<string, array{both?: \CrossReference[], target?: \CrossReference[], source?: \CrossReference[]}> $cross_reference_by_nature
-     * @psalm-param array<string, array{label: string}> $available_natures
+     * @psalm-param array<string, array{label: string, icon: string}> $available_natures
      */
-    public function __construct(array $cross_reference_by_nature, array $available_natures, EventDispatcherInterface $event_manager)
+    public function __construct(array $cross_reference_by_nature, array $available_natures)
     {
         foreach ($cross_reference_by_nature as $nature => $cross_reference_by_key) {
             if (! isset($available_natures[$nature])) {
                 continue;
             }
-
-            $reference_get_icon_nature_event = new CrossReferenceGetNatureIconEvent($nature);
-            $event_manager->dispatch($reference_get_icon_nature_event);
 
             $this->natures[$nature] = new CrossReferenceCollection(
                 $nature,
@@ -53,7 +48,7 @@ class CrossReferenceByNatureCollection
                 $cross_reference_by_key['both'] ?? [],
                 $cross_reference_by_key['target'] ?? [],
                 $cross_reference_by_key['source'] ?? [],
-                $reference_get_icon_nature_event->getCrossReferencesNatureIcon()
+                $available_natures[$nature]['icon']
             );
         }
     }

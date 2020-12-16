@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\View\Reference;
 
-use Tuleap\reference\CrossReferenceNatureIcon;
-
 /**
  * @psalm-immutable
  */
@@ -49,14 +47,14 @@ class CrossReferenceByNaturePresenter
     /**
      * @param CrossReferenceLinkListPresenter[] $cross_reference_link_list
      */
-    public function __construct(string $nature_label, array $cross_reference_link_list, ?CrossReferenceNatureIcon $nature_icon)
+    public function __construct(string $nature_label, array $cross_reference_link_list, string $nature_icon)
     {
         $this->nature_label              = $nature_label;
         $this->cross_reference_link_list = $cross_reference_link_list;
 
         if ($nature_icon) {
             $this->has_nature_icon = true;
-            $this->nature_icon     = $nature_icon->getIconName();
+            $this->nature_icon     = $nature_icon;
         }
     }
 }

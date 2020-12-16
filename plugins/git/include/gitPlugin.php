@@ -169,8 +169,6 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\PasswordVerifier;
-use Tuleap\reference\CrossReferenceNatureIcon;
-use Tuleap\reference\Events\CrossReferenceGetNatureIconEvent;
 
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -327,7 +325,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
         }
 
-        $this->addHook(CrossReferenceGetNatureIconEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -690,6 +687,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             [
                 Git::REFERENCE_NATURE => [
                     'keyword' => Git::REFERENCE_KEYWORD,
+                    'icon'    => 'fas fa-tlp-versioning-git',
                     'label'   => dgettext('tuleap-git', 'Git commit')
                 ]
             ]
@@ -2786,20 +2784,5 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function accountTabPresenterCollection(AccountTabPresenterCollection $collection): void
     {
         (new \Tuleap\Git\Account\AccountTabsBuilder($this->getGerritServerFactory()))->addTabs($collection);
-    }
-
-    public function getIconName(): string
-    {
-        return 'fa-tlp-versioning-git';
-    }
-
-    public function crossReferenceGetNatureIconEvent(CrossReferenceGetNatureIconEvent $reference): void
-    {
-        if ($reference->getNature() === Git::REFERENCE_NATURE) {
-            $formatted_label = new CrossReferenceNatureIcon(
-                $this->getIconName()
-            );
-            $reference->setCrossReferenceNatureIcon($formatted_label);
-        }
     }
 }

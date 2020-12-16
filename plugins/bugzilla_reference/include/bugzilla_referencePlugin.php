@@ -120,6 +120,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         $params['natures']['bugzilla'] =
             [
                 'keyword' => 'bugzilla',
+                'icon'    => '',
                 'label'   => dgettext('tuleap-bugzilla_reference', 'Bugzilla')
             ];
     }

@@ -221,6 +221,7 @@ class gitlabPlugin extends Plugin
         $params['natures']['plugin_gitlab_commit'] =
             [
                 'keyword' => 'gitlab_commit',
+                'icon'    => 'fab fa-gitlab',
                 'label'   => dgettext('tuleap-gitlab', 'GitLab commit')
             ];
     }

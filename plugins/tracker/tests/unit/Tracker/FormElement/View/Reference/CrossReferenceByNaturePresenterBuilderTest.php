@@ -100,7 +100,7 @@ class CrossReferenceByNaturePresenterBuilderTest extends TestCase
         );
         $this->cross_ref_collection->shouldReceive('getCrossReferencesSource')->once()->andReturn([]);
         $this->cross_ref_collection->shouldReceive('getLabel')->once()->andReturn('Tracker');
-        $this->cross_ref_collection->shouldReceive('getNatureIcon')->andReturn(null);
+        $this->cross_ref_collection->shouldReceive('getNatureIcon')->andReturn('');
 
         $presenter = $this->builder->build($this->cross_ref_collection);
 
@@ -123,7 +123,7 @@ class CrossReferenceByNaturePresenterBuilderTest extends TestCase
             [$this->cross_ref_target_1]
         );
         $this->cross_ref_collection->shouldReceive('getLabel')->once()->andReturn('Tracker');
-        $this->cross_ref_collection->shouldReceive('getNatureIcon')->andReturn(null);
+        $this->cross_ref_collection->shouldReceive('getNatureIcon')->andReturn('');
 
         $presenter = $this->builder->build($this->cross_ref_collection);
 
@@ -153,7 +153,7 @@ class CrossReferenceByNaturePresenterBuilderTest extends TestCase
             [$this->cross_ref_target_1]
         );
         $this->cross_ref_collection->shouldReceive('getLabel')->once()->andReturn('Tracker');
-        $this->cross_ref_collection->shouldReceive('getNatureIcon')->andReturn(null);
+        $this->cross_ref_collection->shouldReceive('getNatureIcon')->andReturn('');
 
         $presenter = $this->builder->build($this->cross_ref_collection);
 

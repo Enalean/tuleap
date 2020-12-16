@@ -20,9 +20,6 @@
 
 namespace Tuleap\reference;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\reference\Events\CrossReferenceGetNatureIconEvent;
-
 class CrossReferenceByDirectionCollection
 {
     /**
@@ -37,30 +34,25 @@ class CrossReferenceByDirectionCollection
 
     /**
      * @psalm-param array<string, array{both?: \CrossReference[], target?: \CrossReference[], source?: \CrossReference[]}> $cross_reference_by_nature
-     * @psalm-param array<string, array{label: string}> $available_natures
+     * @psalm-param array<string, array{label: string, icon: string}> $available_natures
      */
-    public function __construct(array $cross_reference_by_nature, array $available_natures, EventDispatcherInterface $event_manager)
+    public function __construct(array $cross_reference_by_nature, array $available_natures)
     {
         foreach ($cross_reference_by_nature as $nature => $cross_reference_by_key) {
             if (! isset($available_natures[$nature])) {
                 continue;
             }
 
-            $reference_get_icon_nature_event = new CrossReferenceGetNatureIconEvent($nature);
-            $event_manager->dispatch($reference_get_icon_nature_event);
-
             if (isset($cross_reference_by_key['both'])) {
                 $this->cross_ref_source[$nature] = $this->getSourceCrossReference(
                     $nature,
                     $available_natures,
-                    $reference_get_icon_nature_event->getCrossReferencesNatureIcon(),
                     $this->transformAllBothCrossRefInSourceCrossReference($cross_reference_by_key['both'])
                 );
 
                 $this->cross_ref_target[$nature] = $this->getTargetCrossReference(
                     $nature,
                     $available_natures,
-                    $reference_get_icon_nature_event->getCrossReferencesNatureIcon(),
                     $cross_reference_by_key['both']
                 );
             }
@@ -69,7 +61,6 @@ class CrossReferenceByDirectionCollection
                 $this->cross_ref_target[$nature] = $this->getTargetCrossReference(
                     $nature,
                     $available_natures,
-                    $reference_get_icon_nature_event->getCrossReferencesNatureIcon(),
                     $cross_reference_by_key['target']
                 );
             }
@@ -78,7 +69,6 @@ class CrossReferenceByDirectionCollection
                 $this->cross_ref_source[$nature] = $this->getSourceCrossReference(
                     $nature,
                     $available_natures,
-                    $reference_get_icon_nature_event->getCrossReferencesNatureIcon(),
                     $cross_reference_by_key['source']
                 );
             }
@@ -126,13 +116,12 @@ class CrossReferenceByDirectionCollection
     }
 
     /**
-     * @psalm-param array<string, array{label: string}> $available_natures
+     * @psalm-param array<string, array{label: string, icon: string}> $available_natures
      * @param \CrossReference[] $cross_references
      */
     public function getSourceCrossReference(
         string $nature,
         array $available_natures,
-        ?CrossReferenceNatureIcon $icon,
         array $cross_references
     ): CrossReferenceCollection {
         if (isset($this->cross_ref_source[$nature])) {
@@ -145,7 +134,7 @@ class CrossReferenceByDirectionCollection
                     $this->cross_ref_source[$nature]->getCrossReferencesSource(),
                     $cross_references
                 ),
-                $icon
+                $available_natures[$nature]['icon']
             );
         }
 
@@ -155,18 +144,17 @@ class CrossReferenceByDirectionCollection
             [],
             [],
             $cross_references,
-            $icon
+            $available_natures[$nature]['icon']
         );
     }
 
     /**
-     * @psalm-param array<string, array{label: string}> $available_natures
+     * @psalm-param array<string, array{label: string, icon: string}> $available_natures
      * @param \CrossReference[] $cross_references
      */
     public function getTargetCrossReference(
         string $nature,
         array $available_natures,
-        ?CrossReferenceNatureIcon $icon,
         array $cross_references
     ): CrossReferenceCollection {
         if (isset($this->cross_ref_target[$nature])) {
@@ -179,7 +167,7 @@ class CrossReferenceByDirectionCollection
                     $cross_references
                 ),
                 [],
-                $icon
+                $available_natures[$nature]['icon']
             );
         }
 
@@ -189,7 +177,7 @@ class CrossReferenceByDirectionCollection
             [],
             $cross_references,
             [],
-            $icon
+            $available_natures[$nature]['icon']
         );
     }
 }

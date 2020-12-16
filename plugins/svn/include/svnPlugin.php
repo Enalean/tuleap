@@ -127,8 +127,6 @@ use Tuleap\SVN\ViewVC\AccessHistorySaver;
 use Tuleap\SVN\ViewVC\ViewVCProxy;
 use Tuleap\SVN\XMLImporter;
 use Tuleap\SVN\XMLSvnExporter;
-use Tuleap\reference\Events\CrossReferenceGetNatureIconEvent;
-use Tuleap\reference\CrossReferenceNatureIcon;
 
 class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -217,7 +215,6 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(GetAllRepositories::NAME);
         $this->addHook(SvnCoreUsage::NAME);
         $this->addHook(SvnCoreAccess::NAME);
-        $this->addHook(CrossReferenceGetNatureIconEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1229,20 +1226,5 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function svnCoreAccess(SvnCoreAccess $svn_core_access): void
     {
         (new \Tuleap\SVN\Repository\SvnCoreAccess(new Dao()))->process($svn_core_access);
-    }
-
-    private function getIconName(): string
-    {
-        return 'fa-tlp-versioning-svn';
-    }
-
-    public function crossReferenceGetNatureIconEvent(CrossReferenceGetNatureIconEvent $reference): void
-    {
-        if ($reference->getNature() === ReferenceManager::REFERENCE_NATURE_SVNREVISION) {
-            $formatted_label = new CrossReferenceNatureIcon(
-                $this->getIconName()
-            );
-            $reference->setCrossReferenceNatureIcon($formatted_label);
-        }
     }
 }
