@@ -21,6 +21,7 @@
 import { html } from "lit-html";
 import { convertBadColorHexToRGB } from "../color-helper";
 import { retrievePredefinedTemplate } from "./predefined-item-template-retriever-helper";
+import { styleMap } from "lit-html/directives/style-map";
 
 describe("predefined-item-template-retriever", () => {
     it("should return the avatar template if data-avatar-url is set", () => {
@@ -70,18 +71,25 @@ describe("predefined-item-template-retriever", () => {
         if (rgb_legacy_color === null) {
             throw new Error("rgb_legacy_color should not be null");
         }
+
+        const legacy_color_styles = {
+            background: `rgba(${rgb_legacy_color.red}, ${rgb_legacy_color.green}, ${rgb_legacy_color.blue}, .6)`,
+            border: `3px solid rgba(${rgb_legacy_color.red}, ${rgb_legacy_color.green}, ${rgb_legacy_color.blue})`,
+            color: `${legacy_color}`,
+        };
+
         // The source of truth is the production code, Prettier should not interfere with the spacing here
         //prettier-ignore
-        expect(retrievePredefinedTemplate(option_with_colored_badge)).toEqual(
+        expect(retrievePredefinedTemplate(option_with_colored_badge).getTemplateElement()).toEqual(
             html`
             <span class="list-picker-option-colored-label-container">
                 <span
-                    style="display: flex; background: rgba(${rgb_legacy_color.red}, ${rgb_legacy_color.green}, ${rgb_legacy_color.blue}, .6); border-radius:50%; width: 14px;
-                             height: 14px; margin: 0 6px 0 0; align-items: center; border: 3px solid rgba(${rgb_legacy_color.red}, ${rgb_legacy_color.green}, ${rgb_legacy_color.blue}); color:${legacy_color};"
+                    class="list-picker-circular-legacy-color"
+                    style="${styleMap(legacy_color_styles)}"
                 ></span>
                 ${label}
             </span>
-        `
+        `.getTemplateElement()
         );
     });
 });

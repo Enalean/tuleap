@@ -21,6 +21,7 @@
 import { html, TemplateResult } from "lit-html";
 import { convertBadColorHexToRGB, isColorBad } from "../color-helper";
 import { getOptionsLabel } from "../option-label-helper";
+import { styleMap } from "lit-html/directives/style-map";
 
 export function retrievePredefinedTemplate(option: HTMLOptionElement): TemplateResult {
     const option_label = getOptionsLabel(option);
@@ -53,11 +54,17 @@ function getColoredTemplate(color_value: string, option_label: string): Template
     }
 
     if (is_color_bad && rgb_color_legacy !== null) {
+        const legacy_color_styles = {
+            background: `rgba(${rgb_color_legacy.red}, ${rgb_color_legacy.green}, ${rgb_color_legacy.blue}, .6)`,
+            border: `3px solid rgba(${rgb_color_legacy.red}, ${rgb_color_legacy.green}, ${rgb_color_legacy.blue})`,
+            color: `${color_value}`,
+        };
+
         return html`
             <span class="list-picker-option-colored-label-container">
                 <span
-                    style="display: flex; background: rgba(${rgb_color_legacy.red}, ${rgb_color_legacy.green}, ${rgb_color_legacy.blue}, .6); border-radius:50%; width: 14px;
-                             height: 14px; margin: 0 6px 0 0; align-items: center; border: 3px solid rgba(${rgb_color_legacy.red}, ${rgb_color_legacy.green}, ${rgb_color_legacy.blue}); color:${color_value};"
+                    class="list-picker-circular-legacy-color"
+                    style="${styleMap(legacy_color_styles)}"
                 ></span>
                 ${option_label}
             </span>

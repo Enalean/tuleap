@@ -31,6 +31,7 @@ use Tuleap\Tracker\FormElement\View\Admin\Field\ListFields\BindValuesAdder;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
 use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind
 {
     public const TYPE = 'static';
@@ -954,8 +955,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
     {
+        $value_color = null;
+        if (isset($this->decorators[$value->getId()])) {
+            $value_color = $this->decorators[$value->getId()]->getCurrentColor();
+        }
         $representation = new FieldListStaticValueRepresentation();
-        $representation->build($value);
+        $representation->build($value, Codendi_HTMLPurifier::instance()->purify($value_color));
 
         return $representation;
     }
