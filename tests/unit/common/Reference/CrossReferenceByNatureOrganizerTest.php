@@ -39,7 +39,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             [
                 'git'   => ['keyword' => 'git', 'icon' => 'fas fa-tlp-versioning-git', 'label' => 'Git'],
                 'other' => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
-            ]
+            ],
+            \Mockery::mock(\PFUser::class),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -69,7 +70,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             [
                 'git'   => ['keyword' => 'git', 'icon' => 'fas fa-tlp-versioning-git', 'label' => 'Git'],
                 'other' => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
-            ]
+            ],
+            \Mockery::mock(\PFUser::class),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -100,7 +102,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             [
                 'git'   => ['keyword' => 'git', 'icon' => 'fas fa-tlp-versioning-git', 'label' => 'Git'],
                 'other' => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
-            ]
+            ],
+            \Mockery::mock(\PFUser::class),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -133,7 +136,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
                 'git'     => ['keyword' => 'git', 'icon' => 'fas fa-tlp-versioning-git', 'label' => 'Git'],
                 'tracker' => ['keyword' => 'tracker', 'icon' => 'fas fa-list-ol', 'label' => 'Trackers'],
                 'other'   => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
-            ]
+            ],
+            \Mockery::mock(\PFUser::class),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -169,7 +173,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             [$a_ref],
             [
                 'other' => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
-            ]
+            ],
+            \Mockery::mock(\PFUser::class),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -189,7 +194,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
                 'git'   => ['keyword' => 'git', 'icon' => 'fas fa-tlp-versioning-git', 'label' => 'Git'],
                 'wiki'   => ['keyword' => 'wiki', 'icon' => 'fas fa-wiki', 'label' => 'Wiki'],
                 'other' => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
-            ]
+            ],
+            \Mockery::mock(\PFUser::class),
         );
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
@@ -214,6 +220,25 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
                 ),
             ],
             $organizer->getNatures()
+        );
+    }
+
+    public function testRemoveUnreadableCrossReference(): void
+    {
+        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever");
+        $another_ref = new CrossReferencePresenter(2, "wiki", "another_title", "url", "delete_url", 1, "whatever");
+
+        $organizer = new CrossReferenceByNatureOrganizer(
+            [$a_ref, $another_ref],
+            [],
+            \Mockery::mock(\PFUser::class),
+        );
+
+        $organizer->removeUnreadableCrossReference($a_ref);
+
+        self::assertEquals(
+            [$another_ref],
+            $organizer->getCrossReferences(),
         );
     }
 }

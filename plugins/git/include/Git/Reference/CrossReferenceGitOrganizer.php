@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Git\Reference;
 
 use Git;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
+use Tuleap\Reference\CrossReferencePresenter;
 
 class CrossReferenceGitOrganizer
 {
@@ -35,11 +37,19 @@ class CrossReferenceGitOrganizer
      * @var \Git_ReferenceManager
      */
     private $git_reference_manager;
+    /**
+     * @var ProjectAccessChecker
+     */
+    private $project_access_checker;
 
-    public function __construct(\ProjectManager $project_manager, \Git_ReferenceManager $git_reference_manager)
-    {
-        $this->project_manager       = $project_manager;
-        $this->git_reference_manager = $git_reference_manager;
+    public function __construct(
+        \ProjectManager $project_manager,
+        \Git_ReferenceManager $git_reference_manager,
+        ProjectAccessChecker $project_access_checker
+    ) {
+        $this->project_manager        = $project_manager;
+        $this->git_reference_manager  = $git_reference_manager;
+        $this->project_access_checker = $project_access_checker;
     }
 
     public function organizeGitReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -49,17 +59,37 @@ class CrossReferenceGitOrganizer
                 continue;
             }
 
-            $project    = $this->project_manager->getProject($cross_reference->target_gid);
-            $repository = $this->git_reference_manager->getRepositoryFromCrossReferenceValue(
-                $project,
-                $cross_reference->target_value
-            );
-            if ($repository) {
-                $by_nature_organizer->moveCrossReferenceToSection(
-                    $cross_reference,
-                    $project->getUnixNameLowerCase() . '/' . $repository->getFullName()
-                );
-            }
+            $this->moveGitCrossReferenceToRepositorySection($by_nature_organizer, $cross_reference);
         }
+    }
+
+    private function moveGitCrossReferenceToRepositorySection(
+        CrossReferenceByNatureOrganizer $by_nature_organizer,
+        CrossReferencePresenter $cross_reference
+    ): void {
+        $user = $by_nature_organizer->getCurrentUser();
+
+        $project = $this->project_manager->getProject($cross_reference->target_gid);
+        try {
+            $this->project_access_checker->checkUserCanAccessProject($user, $project);
+        } catch (\Project_AccessException $e) {
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference);
+            return;
+        }
+
+        $repository = $this->git_reference_manager->getRepositoryFromCrossReferenceValue(
+            $project,
+            $cross_reference->target_value
+        );
+
+        if (! $repository || ! $repository->userCanRead($user)) {
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference);
+            return;
+        }
+
+        $by_nature_organizer->moveCrossReferenceToSection(
+            $cross_reference,
+            $project->getUnixNameLowerCase() . '/' . $repository->getFullName()
+        );
     }
 }

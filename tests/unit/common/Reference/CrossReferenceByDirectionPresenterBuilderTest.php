@@ -63,6 +63,8 @@ class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
 
     public function testBuild()
     {
+        $user = Mockery::mock(\PFUser::class);
+
         $this->factory
             ->shouldReceive('getSourcesOfEntity')
             ->with("PageName", "wiki", 102)
@@ -94,7 +96,7 @@ class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
 
         $organizer->shouldReceive('getNatures')->twice()->andReturn([]);
 
-        $presenter = $this->builder->build("PageName", "wiki", 102);
+        $presenter = $this->builder->build("PageName", "wiki", 102, $user);
 
         self::assertEquals([], $presenter->sources_by_nature);
         self::assertEquals([], $presenter->targets_by_nature);
