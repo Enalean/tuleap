@@ -50,6 +50,7 @@ import BacklogItemSelectDirective from "./backlog-item-selected/backlog-item-sel
 import BacklogItemSelectedBarDirective from "./backlog-item-selected/backlog-item-selected-bar-directive.js";
 import BacklogItemSelectedService from "./backlog-item-selected/backlog-item-selected-service.js";
 import BacklogItemDetailsDirective from "./backlog-item/backlog-item-details/backlog-item-details-directive.js";
+import CardParentLinkDirective from "./backlog-item/card-parent-link/card-parent-link-directive.js";
 import SharedPropertiesService from "./shared-properties/shared-properties-service.js";
 import UserPreferencesService from "./user-preferences/user-preferences-service.js";
 import DroppedService from "./drop/dropped-service.js";
@@ -90,6 +91,7 @@ export default angular
     .directive("backlogItemSelect", BacklogItemSelectDirective)
     .directive("backlogItemSelectedBar", BacklogItemSelectedBarDirective)
     .directive("backlogItemDetails", BacklogItemDetailsDirective)
+    .directive("cardParentLink", CardParentLinkDirective)
     .directive("infiniteScroll", infiniteScrollDirective)
     .service("BacklogItemService", BacklogItemService)
     .service("MilestoneCollectionService", MilestoneCollectionService)
