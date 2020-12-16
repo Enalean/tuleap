@@ -31,7 +31,10 @@ const swimlane: Swimlane = {
     },
 } as Swimlane;
 
-async function createWrapper(is_fullscreen: boolean): Promise<Wrapper<SwimlaneHeader>> {
+async function createWrapper(
+    is_fullscreen: boolean,
+    backlog_trackers_have_children: boolean
+): Promise<Wrapper<SwimlaneHeader>> {
     return shallowMount(SwimlaneHeader, {
         localVue: await createTaskboardLocalVue(),
         mocks: {
@@ -39,6 +42,7 @@ async function createWrapper(is_fullscreen: boolean): Promise<Wrapper<SwimlaneHe
                 state: {
                     swimlane: {} as SwimlaneState,
                     fullscreen: {} as FullscreenState,
+                    backlog_trackers_have_children: backlog_trackers_have_children,
                 },
                 getters: {
                     "swimlane/taskboard_cell_swimlane_header_classes": is_fullscreen
@@ -55,7 +59,7 @@ async function createWrapper(is_fullscreen: boolean): Promise<Wrapper<SwimlaneHe
 
 describe("SwimlaneHeader", () => {
     it("displays a toggle icon", async () => {
-        const wrapper = await createWrapper(false);
+        const wrapper = await createWrapper(false, true);
 
         expect(
             wrapper
@@ -68,17 +72,22 @@ describe("SwimlaneHeader", () => {
     });
 
     it("adds fullscreen class when taskboard is in fullscreen mode", async () => {
-        const wrapper = await createWrapper(true);
+        const wrapper = await createWrapper(true, true);
         expect(wrapper.find(".taskboard-fullscreen").exists()).toBe(true);
     });
 
     it("collapse the swimlane when user click on the toggle icon", async () => {
-        const wrapper = await createWrapper(false);
+        const wrapper = await createWrapper(false, true);
 
         wrapper.get(".taskboard-swimlane-toggle").trigger("click");
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "swimlane/collapseSwimlane",
             swimlane
         );
+    });
+
+    it("does not display the swimline header is there is no tracker children", async () => {
+        const wrapper = await createWrapper(false, false);
+        expect(wrapper.find(".taskboard-cell-swimlane-header").exists()).toBe(false);
     });
 });

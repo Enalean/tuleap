@@ -17,46 +17,51 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, Wrapper } from "@vue/test-utils";
 import TaskBoardHeader from "./TaskBoardHeader.vue";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { ColumnDefinition } from "../../../type";
 import ExpandedHeaderCell from "./Expanded/ExpandedHeaderCell.vue";
 import CollapsedHeaderCell from "./Collapsed/CollapsedHeaderCell.vue";
 
+const todo: ColumnDefinition = {
+    id: 2,
+    label: "To do",
+    is_collapsed: false,
+} as ColumnDefinition;
+const ongoing: ColumnDefinition = {
+    id: 3,
+    label: "Ongoing",
+    is_collapsed: false,
+} as ColumnDefinition;
+const done: ColumnDefinition = {
+    id: 4,
+    label: "Done",
+    is_collapsed: true,
+} as ColumnDefinition;
+
+function createWrapper(backlog_trackers_have_children: boolean): Wrapper<TaskBoardHeader> {
+    return shallowMount(TaskBoardHeader, {
+        mocks: {
+            $store: createStoreMock({
+                state: {
+                    column: {
+                        columns: [todo, ongoing, done],
+                    },
+                    swimlane: {},
+                    backlog_trackers_have_children: backlog_trackers_have_children,
+                },
+                getters: {
+                    "swimlane/taskboard_cell_swimlane_header_classes": [],
+                },
+            }),
+        },
+    });
+}
+
 describe("TaskBoardHeader", () => {
     it("displays a header with many columns", () => {
-        const todo: ColumnDefinition = {
-            id: 2,
-            label: "To do",
-            is_collapsed: false,
-        } as ColumnDefinition;
-        const ongoing: ColumnDefinition = {
-            id: 3,
-            label: "Ongoing",
-            is_collapsed: false,
-        } as ColumnDefinition;
-        const done: ColumnDefinition = {
-            id: 4,
-            label: "Done",
-            is_collapsed: true,
-        } as ColumnDefinition;
-
-        const wrapper = shallowMount(TaskBoardHeader, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        column: {
-                            columns: [todo, ongoing, done],
-                        },
-                        swimlane: {},
-                    },
-                    getters: {
-                        "swimlane/taskboard_cell_swimlane_header_classes": [],
-                    },
-                }),
-            },
-        });
+        const wrapper = createWrapper(true);
 
         const children = wrapper.findAll("*");
         expect(children.at(1).classes("taskboard-cell-swimlane-header")).toBe(true);
@@ -69,5 +74,21 @@ describe("TaskBoardHeader", () => {
 
         expect(children.at(4).findComponent(CollapsedHeaderCell).exists()).toBe(true);
         expect(children.at(4).props("column")).toStrictEqual(done);
+    });
+
+    it("does not display swimlane header when no parent in hierarchy", () => {
+        const wrapper = createWrapper(false);
+
+        const children = wrapper.findAll("*");
+        expect(wrapper.find(".taskboard-cell-swimlane-header").exists()).toBe(false);
+
+        expect(children.at(1).findComponent(ExpandedHeaderCell).exists()).toBe(true);
+        expect(children.at(1).props("column")).toStrictEqual(todo);
+
+        expect(children.at(2).findComponent(ExpandedHeaderCell).exists()).toBe(true);
+        expect(children.at(2).props("column")).toStrictEqual(ongoing);
+
+        expect(children.at(3).findComponent(CollapsedHeaderCell).exists()).toBe(true);
+        expect(children.at(3).props("column")).toStrictEqual(done);
     });
 });

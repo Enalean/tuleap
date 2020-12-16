@@ -22,6 +22,7 @@
     <div
         class="taskboard-cell taskboard-cell-swimlane-header"
         v-bind:class="taskboard_cell_swimlane_header_classes"
+        v-if="backlog_trackers_have_children"
     >
         <i
             class="fa fa-minus-square taskboard-swimlane-toggle"
@@ -38,7 +39,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Swimlane } from "../../../../../type";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
 
 const fullscreen = namespace("fullscreen");
 const swimlane_store = namespace("swimlane");
@@ -56,6 +57,9 @@ export default class SwimlaneHeader extends Vue {
 
     @swimlane_store.Getter
     readonly taskboard_cell_swimlane_header_classes!: string[];
+
+    @State
+    readonly backlog_trackers_have_children!: boolean;
 
     get additional_classnames(): string {
         return `tlp-swatch-${this.swimlane.card.color}`;

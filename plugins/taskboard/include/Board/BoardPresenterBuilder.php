@@ -65,13 +65,23 @@ class BoardPresenterBuilder
         $this->backlog_item_dao->getBacklogArtifactsWithLimitAndOffset($milestone->getArtifactId(), 0, 0);
         $has_content = $this->backlog_item_dao->foundRows() > 0;
 
+        $planning                       = $milestone->getPlanning();
+        $backlog_trackers_have_children = false;
+        foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
+            if (count($backlog_tracker->getChildren()) > 0) {
+                $backlog_trackers_have_children = true;
+                break;
+            }
+        }
+
         return new BoardPresenter(
             new AgileDashboard_MilestonePresenter($milestone, $presenter_data),
             $user,
             $milestone,
             $this->columns_retriever->getColumns($user, $milestone),
             $this->trackers_builder->buildCollection($milestone, $user),
-            $has_content
+            $has_content,
+            $backlog_trackers_have_children
         );
     }
 }
