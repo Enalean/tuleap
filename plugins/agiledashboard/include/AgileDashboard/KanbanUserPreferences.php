@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -65,7 +65,7 @@ class AgileDashboard_KanbanUserPreferences
     {
         $user_preference = $user->getPreference(self::COLLAPSE_BACKLOG_PREFERENCE_PREFIX . $kanban->getId());
 
-        return $user_preference === self::EXPAND;
+        return $user_preference === false || $user_preference === self::EXPAND;
     }
 
     public function openBacklog(AgileDashboard_Kanban $kanban, PFUser $user)

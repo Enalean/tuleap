@@ -91,14 +91,14 @@ final class KanbanTest extends TestBase
     {
         $initial_state_response = $this->getResponse($this->client->get('kanban/' . REST_TestDataBuilder::KANBAN_ID));
         $initial_state_kanban   = $initial_state_response->json();
-        $this->assertFalse($initial_state_kanban['backlog']['is_open']);
+        $this->assertTrue($initial_state_kanban['backlog']['is_open']);
 
         $patch_response = $this->getResponse($this->client->patch(
             'kanban/' . REST_TestDataBuilder::KANBAN_ID,
             null,
             json_encode(
                 [
-                    'collapse_backlog' => false
+                    'collapse_backlog' => true
                 ]
             )
         ));
@@ -106,7 +106,7 @@ final class KanbanTest extends TestBase
 
         $new_state_response = $this->getResponse($this->client->get('kanban/' . REST_TestDataBuilder::KANBAN_ID));
         $new_state_kanban   = $new_state_response->json();
-        $this->assertTrue($new_state_kanban['backlog']['is_open']);
+        $this->assertFalse($new_state_kanban['backlog']['is_open']);
     }
 
     private function assertThatArchiveIsToggled()
