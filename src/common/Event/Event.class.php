@@ -193,8 +193,7 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
       *   'natures' => array of references natures
       *
       * Expected result:
-      *   A new nature added into $params['nature']
-      *   array('keyword' => 'awsome', label => 'Really kick ass')
+      *   A new \Tuleap\Reference\Nature added into $params['nature']
       */
     public const GET_AVAILABLE_REFERENCE_NATURE = 'get_available_reference_natures';
 

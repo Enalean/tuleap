@@ -37,7 +37,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
      */
     private $natures;
     /**
-     * @var array
+     * @var array<string, Nature>
      */
     private $available_natures;
     /**
@@ -47,7 +47,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
 
     /**
      * @param CrossReferencePresenter[] $cross_references
-     * @param array<string, array{keyword: string, icon: string, label: string}> $available_natures
+     * @param array<string, Nature> $available_natures
      */
     public function __construct(array $cross_references, array $available_natures, \PFUser $current_user)
     {
@@ -140,8 +140,8 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
         $this->setNature(
             $nature_identifier,
             new CrossReferenceNaturePresenter(
-                $available_nature['label'],
-                $available_nature['icon'],
+                $available_nature->label,
+                $available_nature->icon,
                 [
                     new CrossReferenceSectionPresenter(
                         $section_label,

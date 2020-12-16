@@ -95,6 +95,7 @@ use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\PullRequest\Tooltip\Presenter;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Reference\GetReferenceEvent;
+use Tuleap\Reference\Nature;
 use Tuleap\Request\CollectRoutesEvent;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -446,11 +447,9 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
     public function get_available_reference_natures($params) // phpcs:ignore
     {
-        $nature = [self::REFERENCE_NATURE => [
-            'keyword' => 'pullrequest',
-            'icon'    => 'fas fa-tlp-versioning-git',
-            'label'   => 'Git Pull Request'
-        ]];
+        $nature = [
+            self::REFERENCE_NATURE => new Nature('pullrequest', 'fas fa-tlp-versioning-git', 'Git Pull Request'),
+        ];
 
         $params['natures'] = array_merge($params['natures'], $nature);
     }

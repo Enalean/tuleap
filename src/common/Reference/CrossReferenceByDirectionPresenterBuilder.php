@@ -65,7 +65,7 @@ class CrossReferenceByDirectionPresenterBuilder
 
     /**
      * @param CrossReferencePresenter[] $cross_references
-     * @param array<string, array{keyword: string, icon: string, label: string}> $available_natures
+     * @param array<string, Nature> $available_natures
      *
      * @return CrossReferenceNaturePresenter[]
      */

@@ -207,7 +207,7 @@ class CrossReferenceFactory
                         $ref = $reference->getRefTargetKey() . " #" . $reference->getRefTargetId();
                         $url = $reference->getRefTargetUrl();
                     }
-                    $title = $available_natures[$nature]['label'];
+                    $title = $available_natures[$nature]->label;
                     $refs[] = '<a title="' . $title . '" href="' . $url . '">' . $ref . '</a>';
                 }
             }

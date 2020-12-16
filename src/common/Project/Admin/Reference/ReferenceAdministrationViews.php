@@ -33,7 +33,10 @@ use Views;
 
 class ReferenceAdministrationViews extends Views
 {
-    protected $natures;
+    /**
+     * @var \Tuleap\Reference\Nature[]
+     */
+    private $natures;
 
     public function __construct($controler, $view = null)
     {
@@ -180,7 +183,7 @@ class ReferenceAdministrationViews extends Views
         $description = $purifier->purify($this->getReferenceDescription($ref));
 
         if (array_key_exists($ref->getNature(), $this->natures)) {
-            $nature_desc = $purifier->purify($this->natures[$ref->getNature()]['label']);
+            $nature_desc = $purifier->purify($this->natures[$ref->getNature()]->label);
         } else {
             $nature_desc = $purifier->purify($ref->getNature());
         }
@@ -266,7 +269,7 @@ class ReferenceAdministrationViews extends Views
                 ]
             );
             if ($can_create) {
-                echo '<option value="' . $purifier->purify($nature_key) . '">' . $purifier->purify($nature_desc['label']) . '</option>';
+                echo '<option value="' . $purifier->purify($nature_key) . '">' . $purifier->purify($nature_desc->label) . '</option>';
             }
         }
 
@@ -422,7 +425,7 @@ class ReferenceAdministrationViews extends Views
                     } else {
                         $selected = '';
                     }
-                    echo '<option value="' . $purifier->purify($nature_key) . '" ' . $selected . '>' . $purifier->purify($nature_desc['label']) . '</option>';
+                    echo '<option value="' . $purifier->purify($nature_key) . '" ' . $selected . '>' . $purifier->purify($nature_desc->label) . '</option>';
                 }
             }
             echo '</select>';

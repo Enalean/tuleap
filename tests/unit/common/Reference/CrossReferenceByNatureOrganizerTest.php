@@ -37,8 +37,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
             [
-                'git'   => ['keyword' => 'git', 'icon' => 'fas fa-tlp-versioning-git', 'label' => 'Git'],
-                'other' => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
+                'git'   => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
+                'other' => new Nature('other', '', 'Other'),
             ],
             \Mockery::mock(\PFUser::class),
         );
@@ -68,8 +68,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
             [
-                'git'   => ['keyword' => 'git', 'icon' => 'fas fa-tlp-versioning-git', 'label' => 'Git'],
-                'other' => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
+                'git'   => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
+                'other' => new Nature('other', '', 'Other'),
             ],
             \Mockery::mock(\PFUser::class),
         );
@@ -100,8 +100,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
             [
-                'git'   => ['keyword' => 'git', 'icon' => 'fas fa-tlp-versioning-git', 'label' => 'Git'],
-                'other' => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
+                'git'   => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
+                'other' => new Nature('other', '', 'Other'),
             ],
             \Mockery::mock(\PFUser::class),
         );
@@ -133,9 +133,9 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
             [
-                'git'     => ['keyword' => 'git', 'icon' => 'fas fa-tlp-versioning-git', 'label' => 'Git'],
-                'tracker' => ['keyword' => 'tracker', 'icon' => 'fas fa-list-ol', 'label' => 'Trackers'],
-                'other'   => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
+                'git'     => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
+                'tracker' => new Nature('tracker', 'fas fa-list-ol', 'Trackers'),
+                'other'   => new Nature('other', '', 'Other'),
             ],
             \Mockery::mock(\PFUser::class),
         );
@@ -172,7 +172,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref],
             [
-                'other' => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
+                'other' => new Nature('other', '', 'Other'),
             ],
             \Mockery::mock(\PFUser::class),
         );
@@ -191,9 +191,9 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
             [
-                'git'   => ['keyword' => 'git', 'icon' => 'fas fa-tlp-versioning-git', 'label' => 'Git'],
-                'wiki'   => ['keyword' => 'wiki', 'icon' => 'fas fa-wiki', 'label' => 'Wiki'],
-                'other' => ['keyword' => 'other', 'icon' => '', 'label' => 'Other'],
+                'git'   => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
+                'wiki'  => new Nature('wiki', 'fas fa-wiki', 'Wiki'),
+                'other' => new Nature('other', '', 'Other'),
             ],
             \Mockery::mock(\PFUser::class),
         );

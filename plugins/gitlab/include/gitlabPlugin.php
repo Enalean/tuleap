@@ -39,6 +39,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Reference\GetReferenceEvent;
+use Tuleap\Reference\Nature;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -219,10 +220,10 @@ class gitlabPlugin extends Plugin
     public function get_available_reference_natures(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['natures']['plugin_gitlab_commit'] =
-            [
-                'keyword' => 'gitlab_commit',
-                'icon'    => 'fab fa-gitlab',
-                'label'   => dgettext('tuleap-gitlab', 'GitLab commit')
-            ];
+            new Nature(
+                'gitlab_commit',
+                'fab fa-gitlab',
+                dgettext('tuleap-gitlab', 'GitLab commit')
+            );
     }
 }

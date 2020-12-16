@@ -77,8 +77,8 @@ class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
             ->andReturn([]);
 
         $available_natures = [
-            ['keyword' => 'git', 'icon' => '', 'label' => 'Git'],
-            ['keyword' => 'wiki', 'icon' => '', 'label' => 'Wiki'],
+            new Nature('git', '', 'Git'),
+            new Nature('wiki', '', 'Wiki'),
         ];
 
         $this->reference_manager
