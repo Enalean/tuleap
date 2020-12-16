@@ -213,8 +213,6 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetPublicAreas;
-use Tuleap\reference\Events\CrossReferenceGetNatureIconEvent;
-use Tuleap\reference\CrossReferenceNatureIcon;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -344,7 +342,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(OAuth2ScopeBuilderCollector::NAME);
         $this->addHook(NewDropdownProjectLinksCollector::NAME);
-        $this->addHook(CrossReferenceGetNatureIconEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -773,8 +770,13 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function get_available_reference_natures($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $natures = [Artifact::REFERENCE_NATURE => ['keyword' => 'artifact',
-                                                   'label'   => 'Artifact Tracker v5']];
+        $natures = [
+            Artifact::REFERENCE_NATURE => [
+                'keyword' => 'artifact',
+                'icon'    => 'fas fa-list-ol',
+                'label'   => 'Artifact Tracker v5'
+            ]
+        ];
         $params['natures'] = array_merge($params['natures'], $natures);
     }
 
@@ -2425,20 +2427,5 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             new TrackerNewDropdownLinkPresenterBuilder(),
         ))->collect($collector);
-    }
-
-    private function getIconName(): string
-    {
-        return 'fa-list-ol';
-    }
-
-    public function crossReferenceGetNatureIconEvent(CrossReferenceGetNatureIconEvent $reference): void
-    {
-        if ($reference->getNature() === Artifact::REFERENCE_NATURE) {
-            $formatted_label = new CrossReferenceNatureIcon(
-                $this->getIconName()
-            );
-            $reference->setCrossReferenceNatureIcon($formatted_label);
-        }
     }
 }

@@ -111,8 +111,6 @@ use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
 use Tuleap\Widget\Event\GetPublicAreas;
 use Tuleap\wiki\Events\GetItemsReferencingWikiPageCollectionEvent;
-use Tuleap\reference\Events\CrossReferenceGetNatureIconEvent;
-use Tuleap\reference\CrossReferenceNatureIcon;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -234,7 +232,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->addHook(ExportXmlProject::NAME);
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook(PendingDocumentsRetriever::NAME);
-        $this->addHook(CrossReferenceGetNatureIconEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1718,20 +1715,5 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $xml_importer->import($params['xml_content']->docman);
 
         $logger->info('Import completed');
-    }
-
-    private function getIconName(): string
-    {
-        return 'fa-folder-open';
-    }
-
-    public function crossReferenceGetNatureIconEvent(CrossReferenceGetNatureIconEvent $reference): void
-    {
-        if ($reference->getNature() === ReferenceManager::REFERENCE_NATURE_DOCUMENT) {
-            $formatted_label = new CrossReferenceNatureIcon(
-                $this->getIconName()
-            );
-            $reference->setCrossReferenceNatureIcon($formatted_label);
-        }
     }
 }

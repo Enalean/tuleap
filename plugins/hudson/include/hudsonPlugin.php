@@ -241,8 +241,17 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
     public function getAvailableReferenceNatures($params)
     {
         $hudson_plugin_reference_natures = [
-            'hudson_build'  => ['keyword' => 'build', 'label' => dgettext('tuleap-hudson', 'Jenkins Build')],
-            'hudson_job' => ['keyword' => 'job', 'label' => dgettext('tuleap-hudson', 'Jenkins Job')]];
+            'hudson_build' => [
+                'keyword' => 'build',
+                'icon'    => '',
+                'label'   => dgettext('tuleap-hudson', 'Jenkins Build'),
+            ],
+            'hudson_job'   => [
+                'keyword' => 'job',
+                'icon'    => '',
+                'label'   => dgettext('tuleap-hudson', 'Jenkins Job'),
+            ],
+        ];
         $params['natures'] = array_merge($params['natures'], $hudson_plugin_reference_natures);
     }
 

@@ -97,8 +97,6 @@ use Tuleap\Queue\WorkerEvent;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use Tuleap\reference\Events\CrossReferenceGetNatureIconEvent;
-use Tuleap\reference\CrossReferenceNatureIcon;
 
 class pullrequestPlugin extends Plugin // phpcs:ignore
 {
@@ -132,8 +130,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(GetProjectHistoryEntryValue::NAME);
         $this->addHook(WorkerEvent::NAME);
-
-        $this->addHook(CrossReferenceGetNatureIconEvent::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
@@ -452,6 +448,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     {
         $nature = [self::REFERENCE_NATURE => [
             'keyword' => 'pullrequest',
+            'icon'    => 'fas fa-tlp-versioning-git',
             'label'   => 'Git Pull Request'
         ]];
 
@@ -761,20 +758,5 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->getRepositoryFactory(),
             new \Tuleap\InstanceBaseURLBuilder()
         );
-    }
-
-    public function getIconName(): string
-    {
-        return 'fa-tlp-versioning-git';
-    }
-
-    public function crossReferenceGetNatureIconEvent(CrossReferenceGetNatureIconEvent $reference): void
-    {
-        if ($reference->getNature() === self::REFERENCE_NATURE) {
-            $formatted_label = new CrossReferenceNatureIcon(
-                $this->getIconName()
-            );
-            $reference->setCrossReferenceNatureIcon($formatted_label);
-        }
     }
 }
