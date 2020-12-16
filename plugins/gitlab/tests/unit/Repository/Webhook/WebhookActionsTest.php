@@ -91,7 +91,11 @@ final class WebhookActionsTest extends TestCase
             [
                 new PostPushCommitWebhookData(
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
-                    'commit TULEAP-123 01'
+                    'commit TULEAP-123 01',
+                    'commit TULEAP-123 01',
+                    1608110510,
+                    'john-snow@the-wall.com',
+                    'John Snow'
                 )
             ]
         );
@@ -136,6 +140,11 @@ final class WebhookActionsTest extends TestCase
             public function getGitlabWebUrl(): string
             {
                 return '';
+            }
+
+            public function getCommits(): array
+            {
+                return [];
             }
         };
 

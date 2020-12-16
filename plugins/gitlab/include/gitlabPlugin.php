@@ -22,11 +22,13 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Gitlab\Reference\GitlabCommitReferenceBuilder;
+use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencesParser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
@@ -127,7 +129,8 @@ class gitlabPlugin extends Plugin
 
     public function routePostGitlabRepositoryWebhook(): GitlabRepositoryWebhookController
     {
-        $logger = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
+        $logger            = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
+        $reference_manager = ReferenceManager::instance();
 
         return new GitlabRepositoryWebhookController(
             new WebhookDataExtractor(
@@ -152,8 +155,12 @@ class gitlabPlugin extends Plugin
                         new GitlabRepositoryProjectDao(),
                         ProjectManager::instance()
                     ),
-                    ReferenceManager::instance(),
-                    EventManager::instance(),
+                    new CommitTuleapReferenceDAO(),
+                    $reference_manager,
+                    new TuleapReferenceRetriever(
+                        EventManager::instance(),
+                        $reference_manager
+                    ),
                     $logger,
                 ),
                 $logger

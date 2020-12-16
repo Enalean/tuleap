@@ -129,11 +129,23 @@ class WebhookDataExtractorTest extends TestCase
                   "commits": [
                       {
                           "id": "feff4ced04b237abb8b4a50b4160099313152c3c",
-                          "message": "commit 01"
+                          "title": "commit 01",
+                          "message": "commit 01",
+                          "timestamp": "2020-12-16T10:21:50+01:00",
+                          "author": {
+                            "name": "John Snow",
+                            "email": "john-snow@the-wall.com"
+                          }
                       },
                       {
                           "id": "08596fb6360bcc951a06471c616f8bc77800d4f4",
-                          "message": "commit 02"
+                          "title": "commit 02",
+                          "message": "commit 02",
+                          "timestamp": "2020-12-16T10:21:50+01:00",
+                          "author": {
+                            "name": "John Snow",
+                            "email": "john-snow@the-wall.com"
+                          }
                       }
                   ]
                 }'
