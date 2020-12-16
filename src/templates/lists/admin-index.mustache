@@ -23,15 +23,17 @@
                             <th>{{# gettext }}List{{/ gettext }}</th>
                             <th>{{# gettext }}Description{{/ gettext }}</th>
                             <th>{{# gettext }}Public{{/ gettext }}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {{^ lists }}
-                            <td colspan="3" class="tlp-table-cell-empty">
+                            <td colspan="4" class="tlp-table-cell-empty">
                                 {{# gettext }} There isn't any mailing list yet{{/ gettext }}
                             </td>
                         {{/ lists }}
                         {{# lists }}
+                            <tr>
                                 <td class="mailing-list-title">
                                     {{ name }}
                                 </td>
@@ -42,6 +44,14 @@
                                     {{# is_public }}
                                         <i class="fas fa-check" aria-hidden="true"></i>
                                     {{/ is_public }}
+                                </td>
+                                <td class="tlp-table-cell-actions">
+                                    <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                       href="{{ admin_url }}"
+                                    >
+                                        <i class="tlp-button-icon fas fa-cogs" aria-hidden="true"></i>
+                                        {{# gettext }}Administration in Mailman{{/ gettext }}
+                                    </a>
                                 </td>
                             </tr>
                         {{/ lists }}

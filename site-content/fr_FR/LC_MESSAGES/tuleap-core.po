@@ -350,6 +350,9 @@ msgstr "Administrer/Modifier les listes de diffusion"
 msgid "Administration"
 msgstr "Administration"
 
+msgid "Administration in Mailman"
+msgstr "Administrer cette liste depuis Mailman"
+
 msgid "Administrator"
 msgstr "Administrateur"
 
@@ -1416,8 +1419,8 @@ msgid ""
 "Internet Explorer is not supported. Please upgrade to a modern, fully "
 "supported browser such as Firefox, Chrome or Edge."
 msgstr ""
-"Internet Explorer n'est pas supporté. Veuillez utiliser un "
-"navigateur moderne tel que tel que Firefox, Chrome ou Edge."
+"Internet Explorer n'est pas supporté. Veuillez utiliser un navigateur "
+"moderne tel que tel que Firefox, Chrome ou Edge."
 
 #, php-format
 msgid ""
@@ -2984,7 +2987,8 @@ msgstr ""
 "{{tuleap_server_name}}"
 
 msgid "This message cannot be hidden until it has been taken into account"
-msgstr "Ce message ne peut pas être caché tant qu'il n'a pas été pris en compte."
+msgstr ""
+"Ce message ne peut pas être caché tant qu'il n'a pas été pris en compte."
 
 msgid ""
 "This option displays special patterns on colored cards in Agiledashboard and "

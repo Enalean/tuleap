@@ -39,11 +39,16 @@ final class MailingListPresenter
      * @var bool
      */
     public $is_public;
+    /**
+     * @var string
+     */
+    public $admin_url;
 
-    public function __construct(string $name, string $description, bool $is_public)
+    public function __construct(string $name, string $description, bool $is_public, string $admin_url)
     {
         $this->name        = $name;
         $this->description = $description;
         $this->is_public   = $is_public;
+        $this->admin_url   = $admin_url;
     }
 }
