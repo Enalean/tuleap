@@ -25,22 +25,30 @@ namespace Tuleap\Reference;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-class CrossReferenceSectionPresenterTest extends TestCase
+class CrossReferencePresenterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testWithAdditionalCrossReference(): void
+    public function testWithTitle()
     {
-        $a_ref       = new CrossReferencePresenter(1, "type", "title", "url", "delete_url", 1, "whatever", null);
-        $another_ref = new CrossReferencePresenter(2, "type", "reference", "url", "delete_url", 1, "whatever", null);
+        $a_ref = new CrossReferencePresenter(1, 'type', 'title', 'url', 'delete_url', 1, 'whatever', null);
 
-        $section = new CrossReferenceSectionPresenter("my section", [$a_ref]);
-        $new_section = $section->withAdditionalCrossReference($another_ref);
+        $new_ref = $a_ref->withTitle('New title', null);
 
-        self::assertEquals("my section", $new_section->label);
-        self::assertEquals(
-            [$a_ref, $another_ref],
-            $new_section->cross_references
-        );
+        self::assertEquals(1, $new_ref->id);
+        self::assertEquals('New title', $new_ref->title);
+        self::assertNull($new_ref->title_badge);
+    }
+
+    public function testWithTitleBadge()
+    {
+        $a_ref = new CrossReferencePresenter(1, 'type', 'title', 'url', 'delete_url', 1, 'whatever', null);
+
+        $new_ref = $a_ref->withTitle('New title', new TitleBadgePresenter('badge', 'color'));
+
+        self::assertEquals(1, $new_ref->id);
+        self::assertEquals('New title', $new_ref->title);
+        self::assertEquals('badge', $new_ref->title_badge->label);
+        self::assertEquals('color', $new_ref->title_badge->color);
     }
 }

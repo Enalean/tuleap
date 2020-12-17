@@ -31,8 +31,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItMovesOneCrossReferenceToASection(): void
     {
-        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever");
-        $another_ref = new CrossReferencePresenter(2, "git", "another_title", "url", "delete_url", 1, "whatever");
+        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever", null);
+        $another_ref = new CrossReferencePresenter(2, "git", "another_title", "url", "delete_url", 1, "whatever", null);
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
@@ -60,10 +60,45 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         );
     }
 
+    public function testItMoveCrossReferenceEvenIfItHasBeenPimped(): void
+    {
+        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever", null);
+        $another_ref = new CrossReferencePresenter(2, "git", "another_title", "url", "delete_url", 1, "whatever", null);
+
+        $organizer = new CrossReferenceByNatureOrganizer(
+            [$a_ref, $another_ref],
+            [
+                'git'   => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
+                'other' => new Nature('other', '', 'Other'),
+            ],
+            \Mockery::mock(\PFUser::class),
+        );
+
+        $pimped_reference = $a_ref->withTitle("My new title", null);
+        $organizer->moveCrossReferenceToSection(
+            $pimped_reference,
+            'cloudy/stable'
+        );
+
+        self::assertEquals([$another_ref], $organizer->getCrossReferences());
+        self::assertEquals(
+            [
+                new CrossReferenceNaturePresenter(
+                    'Git',
+                    'fas fa-tlp-versioning-git',
+                    [
+                        new CrossReferenceSectionPresenter('cloudy/stable', [$pimped_reference]),
+                    ],
+                ),
+            ],
+            $organizer->getNatures()
+        );
+    }
+
     public function testItMovesTwoCrossReferencesToSameSection(): void
     {
-        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever");
-        $another_ref = new CrossReferencePresenter(2, "git", "another_title", "url", "delete_url", 1, "whatever");
+        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever", null);
+        $another_ref = new CrossReferencePresenter(2, "git", "another_title", "url", "delete_url", 1, "whatever", null);
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
@@ -94,8 +129,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItMovesTwoCrossReferencesToDifferentSections(): void
     {
-        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever");
-        $another_ref = new CrossReferencePresenter(2, "git", "another_title", "url", "delete_url", 1, "whatever");
+        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever", null);
+        $another_ref = new CrossReferencePresenter(2, "git", "another_title", "url", "delete_url", 1, "whatever", null);
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
@@ -127,8 +162,17 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItMovesTwoCrossReferencesToDifferentNatures(): void
     {
-        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever");
-        $another_ref = new CrossReferencePresenter(2, "tracker", "another_title", "url", "delete_url", 1, "whatever");
+        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever", null);
+        $another_ref = new CrossReferencePresenter(
+            2,
+            "tracker",
+            "another_title",
+            "url",
+            "delete_url",
+            1,
+            "whatever",
+            null
+        );
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
@@ -167,7 +211,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItIgnoresCrossReferenceIfRequestedNatureIsNotFound(): void
     {
-        $a_ref = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever");
+        $a_ref = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever", null);
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref],
@@ -185,8 +229,17 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItOrganiseRemainingCrossReferences(): void
     {
-        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever");
-        $another_ref = new CrossReferencePresenter(2, "wiki", "another_title", "url", "delete_url", 1, "whatever");
+        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever", null);
+        $another_ref = new CrossReferencePresenter(
+            2,
+            "wiki",
+            "another_title",
+            "url",
+            "delete_url",
+            1,
+            "whatever",
+            null
+        );
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
@@ -225,8 +278,17 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testRemoveUnreadableCrossReference(): void
     {
-        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever");
-        $another_ref = new CrossReferencePresenter(2, "wiki", "another_title", "url", "delete_url", 1, "whatever");
+        $a_ref       = new CrossReferencePresenter(1, "git", "title", "url", "delete_url", 1, "whatever", null);
+        $another_ref = new CrossReferencePresenter(
+            2,
+            "wiki",
+            "another_title",
+            "url",
+            "delete_url",
+            1,
+            "whatever",
+            null
+        );
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],

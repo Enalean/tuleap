@@ -73,7 +73,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
                 [
                     'getCurrentUser'     => $user,
                     'getCrossReferences' => [
-                        new CrossReferencePresenter(1, "tracker", "another_title", "url", "delete_url", 1, "whatever"),
+                        new CrossReferencePresenter(1, "tracker", "another_title", "url", "delete_url", 1, "whatever", null),
                     ]
                 ]
             )->getMock();
@@ -109,7 +109,8 @@ class CrossReferenceGitOrganizerTest extends TestCase
             "url",
             "delete_url",
             1,
-            'cloudy/stable/1a2b3c4d5e'
+            'cloudy/stable/1a2b3c4d5e',
+            null,
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -151,7 +152,8 @@ class CrossReferenceGitOrganizerTest extends TestCase
             "url",
             "delete_url",
             1,
-            'cloudy/stable/1a2b3c4d5e'
+            'cloudy/stable/1a2b3c4d5e',
+            null,
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -225,7 +227,8 @@ class CrossReferenceGitOrganizerTest extends TestCase
             "url",
             "delete_url",
             1,
-            'cloudy/stable/1a2b3c4d5e'
+            'cloudy/stable/1a2b3c4d5e',
+            null,
         );
 
         $another_ref = new CrossReferencePresenter(
@@ -235,7 +238,8 @@ class CrossReferenceGitOrganizerTest extends TestCase
             "url",
             "delete_url",
             2,
-            'tuleap/stable/e5d4c3b2a1'
+            'tuleap/stable/e5d4c3b2a1',
+            null,
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -310,7 +314,8 @@ class CrossReferenceGitOrganizerTest extends TestCase
             "url",
             "delete_url",
             1,
-            'cloudy/stable/1a2b3c4d5e'
+            'cloudy/stable/1a2b3c4d5e',
+            null,
         );
 
         $another_ref = new CrossReferencePresenter(
@@ -320,7 +325,8 @@ class CrossReferenceGitOrganizerTest extends TestCase
             "url",
             "delete_url",
             2,
-            'tuleap/stable/e5d4c3b2a1'
+            'tuleap/stable/e5d4c3b2a1',
+            null,
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)

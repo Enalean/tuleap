@@ -27,6 +27,8 @@ namespace Tuleap\Reference;
  */
 final class CrossReferenceSectionPresenter
 {
+    public const UNLABELLED = '';
+
     /**
      * @var string
      */
