@@ -40,7 +40,7 @@
                         </tr>
                     </thead>
 
-                    <tbody data-test="document-tree-content">
+                    <tbody data-test="document-tree-content" data-shortcut-table>
                         <folder-content-row
                             v-for="item of folder_content"
                             v-bind:key="item.id"

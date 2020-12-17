@@ -67,24 +67,15 @@ describe("callNavigationShortcut", () => {
             expect(focusHeaderButton).toHaveBeenCalled();
             expect(clickHeaderButton).toHaveBeenCalled();
         });
-
-        it("stops if table was not found", () => {
-            document_table.removeChild(table_body);
-            clickOnDatashortcutElement(doc, datashortcut_selector);
-
-            expect(clickRowButton).not.toHaveBeenCalled();
-            expect(focusHeaderButton).not.toHaveBeenCalled();
-            expect(clickHeaderButton).not.toHaveBeenCalled();
-        });
     });
 
     function setupDocumentTable(doc: Document): void {
         document_table = doc.createElement("table");
-        document_table.classList.add("document-folder-pane");
         table_body = doc.createElement("tbody");
+        table_body.setAttribute("data-shortcut-table", "");
 
         const header: HTMLElement = doc.createElement("div");
-        header.classList.add("document-header-actions");
+        header.setAttribute("data-shortcut-header-actions", "");
         header_button = doc.createElement("button");
         header_button.setAttribute(datashortcut_attribute, "");
 
