@@ -22,9 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\MailingList;
 
+use CSRFSynchronizerToken;
 use HTTPRequest;
 use MailingListDao;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -76,15 +79,14 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
         $current_user = $request->getCurrentUser();
         $this->administrator_checker->checkUserIsProjectAdministrator($current_user, $project);
 
-        $mailing_list_presenters = [];
-        foreach ($this->dao->searchByProject((int) $project->getID()) as $row) {
-            $mailing_list_presenters[] = new MailingListPresenter(
-                $row['list_name'],
-                $row['description'],
-                (bool) $row['is_public'],
-                $this->getAdminUrl($request, $row['list_name']),
-            );
-        }
+        $layout->addJavascriptAsset(
+            new JavascriptAsset(
+                new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core'),
+                'mailing-lists-administration.js'
+            )
+        );
+
+        $mailing_list_presenters = $this->getMailingListPresenters($project, $request);
 
         $service->displayMailingListHeader($current_user, _('Mailing lists administration'));
         $this->renderer->renderToPage(
@@ -96,10 +98,16 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
                         'group_id' => $project->getID(),
                         'add_list' => 1,
                     ]
-                )
+                ),
+                self::getCSRF($project)
             )
         );
         $service->displayFooter();
+    }
+
+    public static function getCSRF(\Project $project): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken('/mail/?group_id=' . urlencode((string) $project->getID()));
     }
 
     public static function getUrl(\Project $project): string
@@ -112,5 +120,45 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
         $scheme = $request->isSecure() ? 'https://' : 'http://';
 
         return $scheme . \ForgeConfig::get('sys_lists_host') . '/mailman/admin/' . urlencode($list_name) . '/';
+    }
+
+    public function getUpdateUrl(\Project $project, int $list_id): string
+    {
+        return '/project/' . urlencode((string) $project->getID())
+            . '/admin/mailing-lists/update/' . urlencode((string) $list_id);
+    }
+
+    public function getDeleteUrl(\Project $project, int $list_id): string
+    {
+        return '/project/' . urlencode((string) $project->getID())
+            . '/admin/mailing-lists/delete/' . urlencode((string) $list_id);
+    }
+
+    /**
+     * @return MailingListPresenter[]
+     */
+    private function getMailingListPresenters(\Project $project, HTTPRequest $request): array
+    {
+        $data_access_result = $this->dao->searchActiveListInProject((int) $project->getID());
+        if (! $data_access_result) {
+            return [];
+        }
+
+        $mailing_list_presenters = [];
+        foreach ($data_access_result as $row) {
+            $list = (int) $row['group_list_id'];
+
+            $mailing_list_presenters[] = new MailingListPresenter(
+                $list,
+                $row['list_name'],
+                $row['description'],
+                (bool) $row['is_public'],
+                $this->getAdminUrl($request, $row['list_name']),
+                $this->getUpdateUrl($project, $list),
+                $this->getDeleteUrl($project, $list),
+            );
+        }
+
+        return $mailing_list_presenters;
     }
 }

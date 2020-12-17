@@ -46,12 +46,28 @@
                                     {{/ is_public }}
                                 </td>
                                 <td class="tlp-table-cell-actions">
+                                    <button
+                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline mailing-lists-action-button"
+                                        type="button"
+                                        data-target-modal-id="mailing-lists-edit-list-modal-{{ id }}"
+                                    >
+                                        <i class="tlp-button-icon fas fa-pencil-alt" aria-hidden="true"></i>
+                                        {{# gettext }}Edit{{/ gettext }}
+                                    </button>
                                     <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
                                        href="{{ admin_url }}"
                                     >
                                         <i class="tlp-button-icon fas fa-cogs" aria-hidden="true"></i>
                                         {{# gettext }}Administration in Mailman{{/ gettext }}
                                     </a>
+                                    <button
+                                        class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline mailing-lists-action-button"
+                                        type="button"
+                                        data-target-modal-id="mailing-lists-delete-list-modal-{{ id }}"
+                                    >
+                                        <i class="tlp-button-icon fas fa-trash-alt" aria-hidden="true"></i>
+                                        {{# gettext }}Delete{{/ gettext }}
+                                    </button>
                                 </td>
                             </tr>
                         {{/ lists }}
@@ -61,3 +77,8 @@
         </div>
     </section>
 </div>
+
+{{# lists }}
+    {{> edit-mailing-list-modal }}
+    {{> delete-mailing-list-modal }}
+{{/ lists }}

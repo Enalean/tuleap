@@ -281,9 +281,6 @@ msgstr "Ajouter"
 msgid "Add Forum"
 msgstr "Ajouter un forum"
 
-msgid "Add Mailing List"
-msgstr "Créer une liste de diffusion"
-
 msgid "Add SSH key"
 msgstr "Ajouter une clef SSH"
 
@@ -340,12 +337,6 @@ msgstr "Ajouter un utilisateur non membre du projet"
 
 msgid "Admin service cannot be disabled."
 msgstr "Le service admin ne peut pas être désactivé."
-
-msgid "Administrate this list in GNU Mailman"
-msgstr "Administrer cette liste depuis Mailman"
-
-msgid "Administrate/Update Lists"
-msgstr "Administrer/Modifier les listes de diffusion"
 
 msgid "Administration"
 msgstr "Administration"
@@ -834,9 +825,6 @@ msgstr "Créer le label"
 msgid "Create new License Agreement"
 msgstr "Créer une nouvelle licence"
 
-msgid "Create new mailing lists"
-msgstr "Créer une nouvelle liste de diffusion"
-
 msgid "Create user group"
 msgstr "Ajouter un groupe utilisateur"
 
@@ -949,6 +937,9 @@ msgstr "Supprimer %s"
 
 msgid "Delete Message"
 msgstr "Détruire un message"
+
+msgid "Delete a mailing list"
+msgstr "Supprimer une liste de diffusion"
 
 msgid "Delete a message"
 msgstr "Détruire un message"
@@ -1147,9 +1138,6 @@ msgstr "Erreur lors de la création de la liste"
 
 msgid "Error Updating Forum Info"
 msgstr "Erreur lors de la mise à jour des informations du forum"
-
-msgid "Error Updating Status"
-msgstr "Erreur lors de la mise à jour du statut"
 
 msgid "Error inserting into forum_monitoring"
 msgstr "Erreur lors de l'insertion dans forum_monitoring"
@@ -1577,9 +1565,6 @@ msgstr "Liens"
 msgid "List"
 msgstr "Liste"
 
-msgid "List Admin"
-msgstr "Administration des listes"
-
 msgid ""
 "List Name Contains Bad Characters. Authorized Characters are : letters, "
 "numbers, -, _, ."
@@ -1623,9 +1608,6 @@ msgstr "Administration de la liste"
 msgid "Mail To"
 msgstr "Envoyer à"
 
-msgid "Mailing List Administration"
-msgstr "Administration des listes de diffusion"
-
 #, php-format
 msgid "Mailing Lists for %1$s"
 msgstr "Liste De Diffusions for %1$s"
@@ -1641,11 +1623,6 @@ msgstr "Listes de diffusion (Service Listes)"
 
 msgid "Mailing lists administration"
 msgstr "Administration des listes de diffusion"
-
-msgid "Manage existing mailing (change description, privacy...)"
-msgstr ""
-"Gérer les listes de diffusion existantes (modifier la description, la "
-"confidentialité&hellip;)"
 
 msgid "Manage help links"
 msgstr "Gestion des liens d'aide"
@@ -1846,9 +1823,6 @@ msgstr "Aucun commit ne correspond à vos critères"
 msgid "No Forums Found"
 msgstr "Forum introuvable"
 
-msgid "No Lists Found"
-msgstr "Aucune liste disponible"
-
 #, php-format
 msgid "No Lists found for %1$s"
 msgstr "Aucune liste pour %1$s"
@@ -1902,9 +1876,6 @@ msgstr "Personne"
 
 msgid "Non active projects cannot be used to be project template"
 msgstr "Les projets non actifs ne peuvent être utilisés comme modèle de projet"
-
-msgid "None found for this project"
-msgstr "Aucune liste n'est disponible pour ce projet"
 
 msgid "Not Found"
 msgstr "Introuvable"
@@ -2624,9 +2595,6 @@ msgstr "Commencez le travail"
 msgid "Status"
 msgstr "Statut"
 
-msgid "Status Updated Successfully"
-msgstr "Statut mis à jour avec succès"
-
 msgid "Stop Monitoring Forum"
 msgstr "Arrêter la surveillance"
 
@@ -2990,6 +2958,9 @@ msgid "This message cannot be hidden until it has been taken into account"
 msgstr ""
 "Ce message ne peut pas être caché tant qu'il n'a pas été pris en compte."
 
+msgid "This operation cannot be undone."
+msgstr "Cette opération ne peut pas être annulée."
+
 msgid ""
 "This option displays special patterns on colored cards in Agiledashboard and "
 "Cardwall tracker reports. This helps distinguish between colors and their "
@@ -3226,17 +3197,14 @@ msgstr "Mettre à jour les infos et le statut du forum"
 msgid "Update Forum Status"
 msgstr "Mettre à jour le statut du forum"
 
-msgid "Update List"
-msgstr "Modifier une liste"
-
-msgid "Update Mailing Lists"
-msgstr "Modifier les listes de diffusion"
-
 msgid "Update failed"
 msgstr "La mise à jour a échoué"
 
 msgid "Update label"
 msgstr "Mettre à jour le label"
+
+msgid "Update mailing list"
+msgstr "Modifier la liste de diffusion"
 
 msgid "Update notifications settings"
 msgstr "Mettre à jour les paramètres de notification"
@@ -3557,6 +3525,9 @@ msgstr[1] ""
 "confirmer votre action. La suppression sera effective quelques minutes après "
 "votre confirmation."
 
+msgid "You are about to remove the mailing list %s."
+msgstr "Vous êtes sur le point de supprimer la liste de diffusion %s."
+
 msgid ""
 "You are monitoring the whole forum. If you want to monitor only specific "
 "threads, Stop Monitoring Forum."
@@ -3608,15 +3579,6 @@ msgid "You are trying to send one invitation."
 msgid_plural "You are trying to send %s invitations."
 msgstr[0] "Vous essayez d'envoyer une invitation."
 msgstr[1] "Vous essayez d'envoyer %s invitations."
-
-#, php-format
-msgid ""
-"You can administrate lists from here. Please note that private lists can "
-"still be viewed by members of your project, but are not listed on %1$s"
-msgstr ""
-"Vous pouvez administrez vos listes de diffusion depuis cette page. Veuillez "
-"noter que les listes privées sont visibles pour les membres du projet mais "
-"qu'elles n'apparaissent pas sur %1$s"
 
 msgid "You can choose up to %s category"
 msgid_plural "You can choose up to %s categories"

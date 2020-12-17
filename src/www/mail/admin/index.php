@@ -21,7 +21,7 @@ $purifier = Codendi_HTMLPurifier::instance();
 
 $pm = ProjectManager::instance();
 if ($group_id && user_ismember($group_id, 'A')) {
-    $csrf = new CSRFSynchronizerToken('/mail/?group_id=' . urlencode((string) $group_id));
+    $csrf = MailingListAdministrationController::getCSRF($pm->getProject((int) $group_id));
     $list_server = get_list_server_url();
 
     if ($request->existAndNonEmpty('post_changes')) {
@@ -119,27 +119,6 @@ Thank you for using %1$s.
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Invalid List Name'));
             }
             $GLOBALS['Response']->redirect(MailingListAdministrationController::getUrl($pm->getProject($group_id)));
-        } elseif ($request->existAndNonEmpty('change_status')) {
-            /*
-              Change a list to public/private and description
-             */
-            $is_public = $request->getValidated('is_public', 'int', 0);
-            $description = $request->getValidated('description', 'string', '');
-            $group_list_id = $request->getValidated('group_list_id', 'int', 0);
-            $sql = "UPDATE mail_group_list SET is_public='" . db_ei($is_public) . "', " .
-                    "description='" . db_es(htmlspecialchars($description)) . "' " .
-                    "WHERE group_list_id='" . db_ei($group_list_id) . "' AND group_id='" . db_ei($group_id) . "'";
-            $result = db_query($sql);
-            if (! $result || db_affected_rows($result) < 1) {
-                $feedback .= ' ' . _('Error Updating Status') . ' ';
-                echo db_error();
-            } else {
-                if ($is_public == 9) {
-                    // List deleted: raise event
-                    EventManager::instance()->processEvent('mail_list_delete', ['group_list_id' => $group_list_id,]);
-                }
-                $feedback .= ' ' . _('Status Updated Successfully') . ' ';
-            }
         }
     }
 
@@ -163,84 +142,6 @@ Thank you for using %1$s.
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/lists/');
         $renderer->renderToPage('admin-add', $presenter);
 
-        mail_footer([]);
-    } elseif ($request->existAndNonEmpty('change_status')) {
-        /*
-          Change a forum to public/private
-         */
-        mail_header(['title' => _('Update Mailing Lists')], $request->getCurrentUser());
-
-        $sql = "SELECT list_name,group_list_id,is_public,description " .
-                "FROM mail_group_list " .
-                "WHERE group_id='" . db_ei($group_id) . "'";
-        $result = db_query($sql);
-        $rows = db_numrows($result);
-
-        if (! $result || $rows < 1) {
-            echo '
-                <H2>' . _('No Lists Found') . '</H2>
-                <P>
-                ' . _('None found for this project');
-            echo db_error();
-        } else {
-            echo '
-            <H2>' . _('Update Mailing Lists') . '</H2>
-            <P>
-            ' . sprintf(_('You can administrate lists from here. Please note that private lists can still be viewed by members of your project, but are not listed on %1$s'), ForgeConfig::get('sys_name') . '<P>');
-
-            $title_arr = [];
-            $title_arr[] = _('List');
-            $title_arr[] = $Language->getText('global', 'status');
-            $title_arr[] = _('Update');
-            $title_arr[] = _('List Admin');
-
-            echo html_build_list_table_top($title_arr);
-
-            for ($i = 0; $i < $rows; $i++) {
-                echo '
-                    <TR class="' . util_get_alt_row_color($i) . '"><TD><B>' . db_result($result, $i, 'list_name') . '</B></TD>';
-                echo '
-                    <FORM ACTION="?" METHOD="POST">
-                    <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-                    <INPUT TYPE="HIDDEN" NAME="change_status" VALUE="y">
-                    <INPUT TYPE="HIDDEN" NAME="group_list_id" VALUE="' . db_result($result, $i, 'group_list_id') . '">
-                    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
-                    <TD>
-                        <FONT SIZE="-1">
-                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="1"' . ((db_result($result, $i, 'is_public') == '1') ? ' CHECKED' : '') . '> ' . _('Public') . '<BR>
-                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="0"' . ((db_result($result, $i, 'is_public') == '0') ? ' CHECKED' : '') . '> ' . _('Private') . '<BR>
-                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="9"' . ((db_result($result, $i, 'is_public') == '9') ? ' CHECKED' : '') . '> ' . _('Deleted') . '<BR>
-                    </TD><TD>
-                        <FONT SIZE="-1">
-                        <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $Language->getText('global', 'btn_update') . '">
-                    </TD>
-                    <TD><A href="' . $list_server . '/mailman/admin/'
-                . db_result($result, $i, 'list_name') . '">[' . _('Administrate this list in GNU Mailman') . ']</A>
-                       </TD></TR>
-                       <TR class="' . util_get_alt_row_color($i) . '"><TD COLSPAN="4">
-                                        ' . _('Description') . ':
-                        <INPUT TYPE="TEXT" NAME="description" VALUE="' .
-                db_result($result, $i, 'description') . '" SIZE="70" MAXLENGTH="160"><BR>
-                    </TD></TR></FORM>';
-            }
-            echo '</TABLE>';
-        }
-
-        mail_footer([]);
-    } else {
-        /*
-          Show main page for choosing
-          either moderotor or delete
-         */
-        mail_header(['title' => _('Mailing List Administration')], $request->getCurrentUser());
-
-        echo '
-            <H2>' . _('Mailing List Administration') . '</H2>
-            <h3>
-            <A HREF="?group_id=' . $group_id . '&add_list=1">' . _('Add Mailing List') . '</A></h3>
-                                                      <p>' . _('Create new mailing lists') . '
-            <h3><A HREF="?group_id=' . $group_id . '&change_status=1">' . _('Administrate/Update Lists') . '</A></h3>
-                                                      <p>' . _('Manage existing mailing (change description, privacy...)');
         mail_footer([]);
     }
 } else {

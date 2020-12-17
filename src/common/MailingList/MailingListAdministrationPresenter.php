@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\MailingList;
 
+use CSRFSynchronizerToken;
+
 /**
  * @psalm-immutable
  */
@@ -35,13 +37,18 @@ final class MailingListAdministrationPresenter
      * @var string
      */
     public $creation_url;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
     /**
      * @param MailingListPresenter[] $lists
      */
-    public function __construct(array $lists, string $creation_url)
+    public function __construct(array $lists, string $creation_url, CSRFSynchronizerToken $csrf_token)
     {
         $this->lists        = $lists;
         $this->creation_url = $creation_url;
+        $this->csrf_token   = $csrf_token;
     }
 }

@@ -265,6 +265,7 @@ const webpack_config_for_burning_parrot_code = {
         "browser-deprecation-fp": "./scripts/browser-deprecation/browser-deprecation-modal-fp.ts",
         "project/header-background-admin":
             "./scripts/project/admin/header-background/admin-index.ts",
+        "mailing-lists-administration": "./scripts/project/admin/mailing-list/administration.ts",
     },
     context,
     output,
