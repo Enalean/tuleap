@@ -144,8 +144,12 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         return $html;
     }
 
-    protected function fetchCharts(PFUser $current_user, $in_dashboard = false, $readonly = null, $store_in_session = true)
-    {
+    protected function fetchCharts(
+        PFUser $current_user,
+        $in_dashboard = false,
+        $readonly = false,
+        $store_in_session = true
+    ): string {
         $html = '';
 
         if (! $readonly) {
@@ -178,9 +182,20 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
                 <input type="hidden" name="renderer" VALUE="' . $this->id . '" />';
         }
 
+        $report_charts = $this->getChartFactory()->getCharts($this);
+        $matching_ids  = $this->report->getMatchingIds();
+        assert(is_array($matching_ids));
+
+        if ($this->widgetMustDisplayEmptyState($in_dashboard, $report_charts, $matching_ids)) {
+            $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../src/templates/dashboard');
+
+            $html .= $renderer->renderToString("widget-empty-content-svg", null);
+            return $html;
+        }
+
         $html .= '<div class="tracker_report_renderer_graphontrackers_charts">';
 
-        foreach ($this->getChartFactory()->getCharts($this) as $chart) {
+        foreach ($report_charts as $chart) {
             $html .= '<div class="widget_report_graph">';
             $html .= $chart->fetchOnReport($this, $current_user, $readonly, $store_in_session);
             $html .= '</div>';
@@ -193,6 +208,22 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         }
 
         return $html;
+    }
+
+    private function widgetMustDisplayEmptyState(
+        bool $in_dashboard,
+        array $report_charts,
+        array $matching_ids
+    ): bool {
+        if ($in_dashboard === true) {
+            if (count($report_charts) === 0) {
+                return true;
+            } elseif (isset($matching_ids['id']) && $matching_ids['id'] === '') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function fetchAdditionalButton()
