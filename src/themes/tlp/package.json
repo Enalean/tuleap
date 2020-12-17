@@ -7,9 +7,9 @@
   "types": "./src/index.d.ts",
   "private": true,
   "dependencies": {
-    "@formatjs/intl-getcanonicallocales": "^1.5.1",
-    "@formatjs/intl-pluralrules": "^3.5.5",
-    "@formatjs/intl-relativetimeformat": "^7.3.5",
+    "@formatjs/intl-getcanonicallocales": "^1.5.3",
+    "@formatjs/intl-pluralrules": "^4.0.1",
+    "@formatjs/intl-relativetimeformat": "^8.0.1",
     "@webcomponents/custom-elements": "^1.4.2",
     "flatpickr": "^4.6.6",
     "jquery": "^3.5.1",
