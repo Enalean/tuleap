@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,15 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface TableFilter {
-    filterTable(): void;
-}
-export function filterInlineTable(filter: Element): TableFilter;
+const base_config = require("../../../../tests/jest/jest.base.config.js");
 
-export const EMPTY_STATE_CLASS_NAME = "tlp-table-empty-filter";
-export const EMPTY_STATE_SHOWN_CLASS_NAME = "tlp-table-empty-filter-shown";
-export const FILTERABLE_CELL_CLASS_NAME = "tlp-table-cell-filterable";
-export const TABLE_SECTION_CLASS_NAME = "tlp-table-cell-section";
-export const HIDDEN_ROW_CLASS_NAME = "tlp-table-row-hidden";
-export const LAST_SHOWN_ROW_CLASS_NAME = "tlp-table-last-row";
-export const HIDDEN_SECTION_CLASS_NAME = "tlp-table-tbody-hidden";
+module.exports = {
+    ...base_config,
+    displayName: "filter-inline-table",
+};

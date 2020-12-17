@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { filterInlineTable } from "../../../../../src/scripts/tuleap/tables/filter-inline-table";
+import { filterInlineTable } from "@tuleap/filter-inline-table";
 
 export default EnableTlpTableFilter;
 

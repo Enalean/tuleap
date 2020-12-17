@@ -18,7 +18,7 @@
  */
 
 import { createModal } from "tlp";
-import { filterInlineTable } from "../../../src/scripts/tuleap/tables/filter-inline-table";
+import { filterInlineTable } from "@tuleap/filter-inline-table";
 
 document.addEventListener("DOMContentLoaded", function () {
     var switches = document.querySelectorAll(".enable-plugin-switch");

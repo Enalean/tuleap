@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { filterInlineTable } from "@tuleap/filter-inline-table";
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-document.addEventListener("DOMContentLoaded", () => {
-    const filter = document.getElementById("most-recent-logins-filter");
-
-    if (filter) {
-        filterInlineTable(filter);
-    }
-});
+module.exports = webpack_configurator.extendProdConfiguration(common);

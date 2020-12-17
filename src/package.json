@@ -8,6 +8,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@juggle/resize-observer": "^3.2.0",
+    "@tuleap/filter-inline-table": "file://./scripts/lib/filter-table",
     "@tuleap/list-picker": "file://./scripts/list-picker",
     "@webcomponents/custom-elements": "^1.4.1",
     "ckeditor4": "^4.14.1",

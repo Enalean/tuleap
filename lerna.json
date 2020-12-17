@@ -1,7 +1,8 @@
 {
     "packages": [
+        "src/scripts/lib/**/",
         "src/themes/tlp/",
-        "src/scripts/**/",
+        "src/scripts/list-picker/",
         "src/",
         "src/themes/BurningParrot/",
         "plugins/**/"

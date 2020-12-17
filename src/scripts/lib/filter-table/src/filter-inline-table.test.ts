@@ -116,6 +116,7 @@ describe(`Filter inline Table`, () => {
 
             const cells = [...table.querySelectorAll("tr")];
             const last_cell = cells[cells.length - 1];
+
             expect(last_cell.classList.contains(LAST_SHOWN_ROW_CLASS_NAME)).toBe(true);
             table.remove();
         });

@@ -22,7 +22,7 @@ import { render } from "mustache";
 import { sanitize } from "dompurify";
 import { get } from "jquery";
 import { createModal } from "tlp";
-import { filterInlineTable } from "../tuleap/tables/filter-inline-table";
+import { filterInlineTable } from "@tuleap/filter-inline-table";
 
 export default init;
 

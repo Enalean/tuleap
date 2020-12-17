@@ -27,6 +27,8 @@ module.exports = {
     projects: [
         "<rootDir>/plugins/**/jest.config.js",
         "<rootDir>/src/jest.config.js",
+        "<rootDir>/src/scripts/lib/**/jest.config.js",
+        "<rootDir>/src/scripts/list-picker/jest.config.js",
         "<rootDir>/src/themes/tlp/jest.config.js",
     ],
     collectCoverageFrom: [
