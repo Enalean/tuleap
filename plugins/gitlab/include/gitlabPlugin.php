@@ -21,6 +21,8 @@
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
+use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
+use Tuleap\Gitlab\Reference\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\GitlabCommitReferenceBuilder;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
@@ -40,6 +42,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Request\CollectRoutesEvent;
@@ -82,6 +85,7 @@ class gitlabPlugin extends Plugin
         $this->addHook(Event::GET_REFERENCE_ADMIN_CAPABILITIES);
         $this->addHook(Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
+        $this->addHook(ReferenceAdministrationWarningsCollectorEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -174,7 +178,7 @@ class gitlabPlugin extends Plugin
 
     public function getReference(GetReferenceEvent $event): void
     {
-        if ($event->getKeyword() === 'gitlab_commit') {
+        if ($event->getKeyword() === GitlabCommitReference::REFERENCE_NAME) {
             $builder = new GitlabCommitReferenceBuilder(
                 new \Tuleap\Gitlab\Reference\ReferenceDao(),
                 $this->getGitlabRepositoryFactory()
@@ -194,7 +198,7 @@ class gitlabPlugin extends Plugin
 
     public function get_plugins_available_keywords_references(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['keywords'][] = 'gitlab_commit';
+        $params['keywords'][] = GitlabCommitReference::REFERENCE_NAME;
     }
 
     /** @see \Event::GET_REFERENCE_ADMIN_CAPABILITIES */
@@ -228,9 +232,14 @@ class gitlabPlugin extends Plugin
     {
         $params['natures']['plugin_gitlab_commit'] =
             new Nature(
-                'gitlab_commit',
+                GitlabCommitReference::REFERENCE_NAME,
                 'fab fa-gitlab',
                 dgettext('tuleap-gitlab', 'GitLab commit')
             );
+    }
+
+    public function referenceAdministrationWarningsCollectorEvent(ReferenceAdministrationWarningsCollectorEvent $event): void
+    {
+        (new ReferenceAdministrationWarningsCollectorEventHandler())->handle($event);
     }
 }
