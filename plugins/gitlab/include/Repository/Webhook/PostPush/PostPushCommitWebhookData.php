@@ -34,14 +34,42 @@ class PostPushCommitWebhookData
     /**
      * @var string
      */
+    private $title;
+
+    /**
+     * @var string
+     */
     private $message;
+
+    /**
+     * @var int
+     */
+    private $commit_date;
+
+    /**
+     * @var string
+     */
+    private $author_email;
+
+    /**
+     * @var string
+     */
+    private $author_name;
 
     public function __construct(
         string $sha1,
-        string $message
+        string $title,
+        string $message,
+        int $commit_date,
+        string $author_email,
+        string $author_name
     ) {
-        $this->sha1    = $sha1;
-        $this->message = $message;
+        $this->sha1         = $sha1;
+        $this->title        = $title;
+        $this->message      = $message;
+        $this->commit_date  = $commit_date;
+        $this->author_email = $author_email;
+        $this->author_name  = $author_name;
     }
 
     public function getSha1(): string
@@ -52,5 +80,25 @@ class PostPushCommitWebhookData
     public function getMessage(): string
     {
         return $this->message;
+    }
+
+    public function getCommitDate(): int
+    {
+        return $this->commit_date;
+    }
+
+    public function getAuthorEmail(): string
+    {
+        return $this->author_email;
+    }
+
+    public function getAuthorName(): string
+    {
+        return $this->author_name;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
     }
 }

@@ -63,7 +63,6 @@ class WebhookActions
         DateTimeImmutable $webhook_reception_date
     ): void {
         $this->checkWebhookDataIsSupported($webhook_data);
-
         $this->updateLastPushDateForRepository($gitlab_repository, $webhook_reception_date);
 
         if ($webhook_data instanceof PostPushWebhookData) {

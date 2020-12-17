@@ -21,14 +21,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
+use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
 class PostPushCommitWebhookDataExtractor
 {
-    private const COMMIT_KEY         = 'commits';
-    private const COMMIT_SHA1_KEY    = 'id';
-    private const COMMIT_MESSAGE_KEY = 'message';
+    private const COMMIT_KEY              = 'commits';
+    private const COMMIT_SHA1_KEY         = 'id';
+    private const COMMIT_TITLE_KEY        = 'title';
+    private const COMMIT_MESSAGE_KEY      = 'message';
+    private const COMMIT_DATE_KEY         = 'timestamp';
+    private const COMMIT_AUTHOR_KEY       = 'author';
+    private const COMMIT_AUTHOR_EMAIL_KEY = 'email';
+    private const COMMIT_AUTHOR_NAME_KEY  = 'name';
 
     /**
      * @var LoggerInterface
@@ -64,23 +70,59 @@ class PostPushCommitWebhookDataExtractor
      */
     private function retrieveCommitData(array $commit_content): PostPushCommitWebhookData
     {
+        $this->checkNoMissingKeyInCommitData($commit_content);
+
+        $sha1         = $commit_content[self::COMMIT_SHA1_KEY];
+        $title        = $commit_content[self::COMMIT_TITLE_KEY];
+        $message      = $commit_content[self::COMMIT_MESSAGE_KEY];
+        $author_email = $commit_content[self::COMMIT_AUTHOR_KEY][self::COMMIT_AUTHOR_EMAIL_KEY];
+        $author_name  = $commit_content[self::COMMIT_AUTHOR_KEY][self::COMMIT_AUTHOR_NAME_KEY];
+        $commit_date  = (new DateTimeImmutable(
+            $commit_content[self::COMMIT_DATE_KEY]
+        ))->getTimestamp();
+
+        $this->logger->debug("Webhook commit with sha1 $sha1 retrieved.");
+        $this->logger->debug("  |_ It has been created by: $author_name ($author_email)");
+        $this->logger->debug("  |_ Its commit message is: $message");
+
+        return new PostPushCommitWebhookData(
+            $sha1,
+            $title,
+            $message,
+            $commit_date,
+            $author_email,
+            $author_name
+        );
+    }
+
+    private function checkNoMissingKeyInCommitData(array $commit_content): void
+    {
         if (! isset($commit_content[self::COMMIT_SHA1_KEY])) {
             throw new MissingKeyException(self::COMMIT_SHA1_KEY);
+        }
+
+        if (! isset($commit_content[self::COMMIT_TITLE_KEY])) {
+            throw new MissingKeyException(self::COMMIT_TITLE_KEY);
         }
 
         if (! isset($commit_content[self::COMMIT_MESSAGE_KEY])) {
             throw new MissingKeyException(self::COMMIT_MESSAGE_KEY);
         }
 
-        $sha1    = $commit_content[self::COMMIT_SHA1_KEY];
-        $message = $commit_content[self::COMMIT_MESSAGE_KEY];
+        if (! isset($commit_content[self::COMMIT_DATE_KEY])) {
+            throw new MissingKeyException(self::COMMIT_DATE_KEY);
+        }
 
-        $this->logger->debug("Webhook commit with sha1 $sha1 retrieved.");
-        $this->logger->debug("Its commit message is: $message");
+        if (! isset($commit_content[self::COMMIT_AUTHOR_KEY])) {
+            throw new MissingKeyException(self::COMMIT_AUTHOR_KEY);
+        }
 
-        return new PostPushCommitWebhookData(
-            $sha1,
-            $message
-        );
+        if (! isset($commit_content[self::COMMIT_AUTHOR_KEY][self::COMMIT_AUTHOR_EMAIL_KEY])) {
+            throw new MissingKeyException(self::COMMIT_AUTHOR_EMAIL_KEY . ' in ' . self::COMMIT_AUTHOR_KEY);
+        }
+
+        if (! isset($commit_content[self::COMMIT_AUTHOR_KEY][self::COMMIT_AUTHOR_NAME_KEY])) {
+            throw new MissingKeyException(self::COMMIT_AUTHOR_NAME_KEY . ' in ' . self::COMMIT_AUTHOR_KEY);
+        }
     }
 }
