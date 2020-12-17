@@ -93,12 +93,7 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
             'admin-index',
             new MailingListAdministrationPresenter(
                 $mailing_list_presenters,
-                '/mail/admin/?' . http_build_query(
-                    [
-                        'group_id' => $project->getID(),
-                        'add_list' => 1,
-                    ]
-                ),
+                $this->getCreationUrl($project),
                 self::getCSRF($project)
             )
         );
@@ -115,20 +110,25 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
         return '/project/' . urlencode((string) $project->getID()) . '/admin/mailing-lists';
     }
 
-    public function getAdminUrl(HTTPRequest $request, string $list_name): string
+    private function getCreationUrl(\Project $project): string
+    {
+        return self::getUrl($project) . '/add';
+    }
+
+    private function getAdminUrl(HTTPRequest $request, string $list_name): string
     {
         $scheme = $request->isSecure() ? 'https://' : 'http://';
 
         return $scheme . \ForgeConfig::get('sys_lists_host') . '/mailman/admin/' . urlencode($list_name) . '/';
     }
 
-    public function getUpdateUrl(\Project $project, int $list_id): string
+    private function getUpdateUrl(\Project $project, int $list_id): string
     {
         return '/project/' . urlencode((string) $project->getID())
             . '/admin/mailing-lists/update/' . urlencode((string) $list_id);
     }
 
-    public function getDeleteUrl(\Project $project, int $list_id): string
+    private function getDeleteUrl(\Project $project, int $list_id): string
     {
         return '/project/' . urlencode((string) $project->getID())
             . '/admin/mailing-lists/delete/' . urlencode((string) $list_id);

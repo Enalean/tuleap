@@ -40,13 +40,12 @@ class MailingListCreationPresenterBuilder
     }
 
     public function build(
-        \Codendi_Request $request,
+        \Project $project,
+        \PFUser $current_user,
         \CSRFSynchronizerToken $csrf,
         string $sys_lists_domain,
         string $intro
     ): MailingListCreationPresenter {
-        $project = $request->getProject();
-
         $existing_lists = [];
         foreach ($this->dao->searchByProject((int) $project->getID()) as $row) {
             $existing_lists[] = $row['list_name'];
@@ -54,7 +53,7 @@ class MailingListCreationPresenterBuilder
 
         $default_name_value = '';
         $list_prefix        = \ForgeConfig::get('sys_lists_prefix') . $project->getUnixName() . '-';
-        if ($request->getCurrentUser()->isSuperUser()) {
+        if ($current_user->isSuperUser()) {
             $default_name_value = $list_prefix . 'xxxxx';
             $list_prefix        = '';
         }
@@ -66,7 +65,13 @@ class MailingListCreationPresenterBuilder
             $list_prefix,
             $existing_lists,
             $this->purifier->purify($intro, \Codendi_HTMLPurifier::CONFIG_LIGHT),
-            $default_name_value
+            $default_name_value,
+            '/mail/admin/?' . http_build_query(
+                [
+                    'group_id' => $project->getID(),
+                    'add_list' => 1,
+                ]
+            )
         );
     }
 }
