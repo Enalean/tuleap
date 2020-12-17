@@ -81,6 +81,8 @@ use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\MailingList\MailingListAdministrationController;
+use Tuleap\MailingList\MailingListDeleteController;
+use Tuleap\MailingList\MailingListUpdateController;
 use Tuleap\News\NewsDao;
 use Tuleap\News\PermissionsPerGroup;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
@@ -741,6 +743,24 @@ class RouteCollector
         );
     }
 
+    public function getMailingListUpdateController(): MailingListUpdateController
+    {
+        return new MailingListUpdateController(
+            new ProjectRetriever(\ProjectManager::instance()),
+            new ProjectAdministratorChecker(),
+            new \MailingListDao(),
+        );
+    }
+
+    public function getMailingListDeleteController(): MailingListDeleteController
+    {
+        return new MailingListDeleteController(
+            new ProjectRetriever(\ProjectManager::instance()),
+            new ProjectAdministratorChecker(),
+            new \MailingListDao(),
+            EventManager::instance(),
+        );
+    }
 
     private function getLegacyControllerHandler(string $path): array
     {
@@ -781,6 +801,8 @@ class RouteCollector
             $r->get('/background', [self::class, 'getGetProjectBackgroundAdministration']);
 
             $r->get('/mailing-lists', [self::class, 'getMailingListsAdministration']);
+            $r->post('/mailing-lists/update/{list-id:\d+}', [self::class, 'getMailingListUpdateController']);
+            $r->post('/mailing-lists/delete/{list-id:\d+}', [self::class, 'getMailingListDeleteController']);
         });
 
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);

@@ -28,6 +28,10 @@ namespace Tuleap\MailingList;
 final class MailingListPresenter
 {
     /**
+     * @var int
+     */
+    public $id;
+    /**
      * @var string
      */
     public $name;
@@ -43,12 +47,30 @@ final class MailingListPresenter
      * @var string
      */
     public $admin_url;
+    /**
+     * @var string
+     */
+    public $update_url;
+    /**
+     * @var string
+     */
+    public $delete_url;
 
-    public function __construct(string $name, string $description, bool $is_public, string $admin_url)
-    {
+    public function __construct(
+        int $id,
+        string $name,
+        string $description,
+        bool $is_public,
+        string $admin_url,
+        string $update_url,
+        string $delete_url
+    ) {
+        $this->id          = $id;
         $this->name        = $name;
         $this->description = $description;
         $this->is_public   = $is_public;
         $this->admin_url   = $admin_url;
+        $this->update_url  = $update_url;
+        $this->delete_url  = $delete_url;
     }
 }

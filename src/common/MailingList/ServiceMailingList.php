@@ -61,23 +61,6 @@ class ServiceMailingList extends \Service
                     new BreadCrumbLinkCollection(
                         [
                             new BreadCrumbLink(
-                                _('Update List'),
-                                '/mail/admin/?' . http_build_query(
-                                    [
-                                        'group_id'      => $this->project->getID(),
-                                        'change_status' => '1'
-                                    ]
-                                ),
-                            )
-                        ]
-                    )
-                )
-            );
-            $sub_items->addSection(
-                new SubItemsUnlabelledSection(
-                    new BreadCrumbLinkCollection(
-                        [
-                            new BreadCrumbLink(
                                 _('Administration'),
                                 MailingListAdministrationController::getUrl($this->project),
                             )
