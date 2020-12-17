@@ -62,9 +62,7 @@ class WebDAVAuthentication
         $username = $this->getUsername();
         $password = $this->getPassword();
         $user = $this->getUser($username, $password);
-        // Ask again for authentication if the user entered a wrong username or password
-        // if fields are left blank the user is considered as anonymous unless Tuleap don't accept anonymous access
-        if ($user->isAnonymous() && ($username || ! $password->isIdenticalTo(new ConcealedString('')) || ! ForgeConfig::areAnonymousAllowed())) {
+        if ($user->isAnonymous()) {
             $this->setHeader();
         } else {
             return $user;

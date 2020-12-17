@@ -70,12 +70,11 @@ class WebDAVRoot extends Sabre_DAV_Directory
     public function getChildren()
     {
         if ($this->getUser()->isAnonymous()) {
-            // Generate public project list
-            return $this->getPublicProjectList();
-        } else {
-            // Generate project list for the given user
-            return $this->getUserProjectList($this->getUser());
+            throw new Sabre_DAV_Exception_Forbidden(dgettext('tuleap-webdav', 'Anonymous access to webdav is forbidden'));
         }
+
+        // Generate project list for the given user
+        return $this->getUserProjectList($this->getUser());
     }
 
     /**
@@ -221,23 +220,6 @@ class WebDAVRoot extends Sabre_DAV_Directory
                 if ($project->userCanRead()) {
                     $projects[] = $project;
                 }
-            }
-        }
-        return $projects;
-    }
-
-    /**
-     * Generates public projects list
-     *
-     * @return array
-     */
-    public function getPublicProjectList(): array
-    {
-        $projects = [];
-        foreach ($this->project_dao->searchByPublicStatus(true) as $row) {
-            if ($this->isWebDAVAllowedForProject($row['group_id'])) {
-                $project = $this->getWebDAVProject($row['group_id']);
-                $projects[] = $project;
             }
         }
         return $projects;

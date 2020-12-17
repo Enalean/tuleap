@@ -148,7 +148,7 @@ final class WebDAVAuthenticationTest extends TestCase
     /**
      * Testing when the user is authenticated as anonymous
      */
-    public function testAuthenticateSuccessWithAnonymousUserAllowed(): void
+    public function testAuthenticateFailsWithAnonymousUserAllowed(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
@@ -157,7 +157,12 @@ final class WebDAVAuthenticationTest extends TestCase
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
-        $this->assertEquals($user, $webDAVAuthentication->authenticate());
+        $end_of_execution_exception = new \Exception();
+        $this->headers_sender->shouldReceive('sendHeaders')->once()->andThrow($end_of_execution_exception);
+
+        $this->expectExceptionObject($end_of_execution_exception);
+
+        $webDAVAuthentication->authenticate();
     }
 
     /**
