@@ -34,6 +34,7 @@ import clipboard from "./clipboard/module.js";
 import metadata from "./metadata/module.js";
 import lock from "./lock/module.js";
 import preferencies from "./preferencies/module";
+import permissions from "./permissions/module";
 
 Vue.use(Vuex);
 
@@ -49,6 +50,7 @@ export function createStore(user_id, project_id) {
             metadata,
             lock,
             preferencies,
+            permissions,
         },
         plugins: [
             createPersistedState({

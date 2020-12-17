@@ -55,3 +55,18 @@ export interface User {
     has_avatar: boolean;
     avatar_url: string;
 }
+
+export interface Permissions {
+    can_read: Array<Permission>;
+    can_write: Array<Permission>;
+    can_manage: Array<Permission>;
+}
+
+export interface Permission {
+    id: string;
+    key: string;
+    label: string;
+    short_name: string;
+    uri: string;
+    users_uri: string;
+}

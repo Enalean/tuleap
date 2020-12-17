@@ -77,16 +77,6 @@ describe("Store mutations", () => {
         });
     });
 
-    it("store project user groups", () => {
-        const state = {
-            project_ugroups: null,
-        };
-
-        const retrieved_project_ugroups = [{ id: "102_3", label: "Project members" }];
-        mutations.setProjectUserGroups(state, retrieved_project_ugroups);
-        expect(state.project_ugroups).toEqual(retrieved_project_ugroups);
-    });
-
     describe("toggle quick look", () => {
         it("toggle quick look to true", () => {
             const state = {

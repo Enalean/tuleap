@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { del, get, post, put, recursiveGet } from "tlp";
+import { del, get, post, recursiveGet } from "tlp";
 
 export {
     getDocumentManagerServiceInformation,
@@ -42,12 +42,6 @@ export {
     deleteEmptyDocument,
     deleteFolder,
     getItemsReferencingSameWikiPage,
-    putEmbeddedFilePermissions,
-    putFilePermissions,
-    putLinkPermissions,
-    putWikiPermissions,
-    putEmptyDocumentPermissions,
-    putFolderPermissions,
     getProjectUserGroups,
     postNewLinkVersionFromEmpty,
     postNewEmbeddedFileVersionFromEmpty,
@@ -282,60 +276,6 @@ async function getItemsReferencingSameWikiPage(page_id) {
     const response = await get(`/api/phpwiki/${escaped_page_id}/items_referencing_wiki_page`);
 
     return response.json();
-}
-
-function putEmbeddedFilePermissions(id, permissions) {
-    return put(`/api/docman_embedded_files/${encodeURIComponent(id)}/permissions`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(permissions),
-    });
-}
-
-function putFilePermissions(id, permissions) {
-    return put(`/api/docman_files/${encodeURIComponent(id)}/permissions`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(permissions),
-    });
-}
-
-function putLinkPermissions(id, permissions) {
-    return put(`/api/docman_links/${encodeURIComponent(id)}/permissions`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(permissions),
-    });
-}
-
-function putWikiPermissions(id, permissions) {
-    return put(`/api/docman_wikis/${encodeURIComponent(id)}/permissions`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(permissions),
-    });
-}
-
-function putEmptyDocumentPermissions(id, permissions) {
-    return put(`/api/docman_empty_documents/${encodeURIComponent(id)}/permissions`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(permissions),
-    });
-}
-
-function putFolderPermissions(id, permissions) {
-    return put(`/api/docman_folders/${encodeURIComponent(id)}/permissions`, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(permissions),
-    });
 }
 
 async function getProjectUserGroups(project_id) {

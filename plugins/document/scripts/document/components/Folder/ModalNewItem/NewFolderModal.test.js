@@ -65,11 +65,13 @@ describe("NewFolderModal", () => {
                 is_obsolescence_date_metadata_used: true,
                 is_item_status_metadata_used: true,
                 project_id: 102,
-                project_ugroups: null,
             },
         };
 
-        store = createStoreMock(general_store, { metadata: {} });
+        store = createStoreMock(general_store, {
+            permissions: { project_ugroups: null },
+            metadata: {},
+        });
 
         factory = () => {
             return shallowMount(NewFolderModal, {

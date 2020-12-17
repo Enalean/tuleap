@@ -131,10 +131,10 @@ export default {
             "is_obsolescence_date_metadata_used",
             "is_item_status_metadata_used",
             "project_id",
-            "project_ugroups",
         ]),
         ...mapState("error", ["has_modal_error"]),
         ...mapState("metadata", ["has_loaded_metadata"]),
+        ...mapState("permissions", ["project_ugroups"]),
         submit_button_label() {
             return this.$gettext("Create document");
         },
@@ -198,7 +198,10 @@ export default {
             this.is_displayed = true;
             this.modal.show();
             try {
-                await this.$store.dispatch("loadProjectUserGroupsIfNeeded");
+                await this.$store.dispatch(
+                    "permissions/loadProjectUserGroupsIfNeeded",
+                    this.project_id
+                );
             } catch (e) {
                 await handleErrors(this.$store, e);
                 this.modal.hide();

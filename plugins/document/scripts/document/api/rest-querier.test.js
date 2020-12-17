@@ -31,12 +31,6 @@ import {
     postEmbeddedFile,
     postLinkVersion,
     postWiki,
-    putEmbeddedFilePermissions,
-    putEmptyDocumentPermissions,
-    putFilePermissions,
-    putFolderPermissions,
-    putLinkPermissions,
-    putWikiPermissions,
 } from "./rest-querier.js";
 
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
@@ -364,81 +358,6 @@ describe("rest-querier", () => {
                 should_lock_file,
                 approval_table_action
             );
-        });
-    });
-
-    describe("Update item permissions", () => {
-        const item_id = 123;
-        const permissions = {
-            can_read: [],
-            can_write: [],
-            can_manage: [],
-        };
-        let tlpPut;
-
-        beforeEach(() => {
-            tlpPut = jest.spyOn(tlp, "put");
-            mockFetchSuccess(tlpPut);
-        });
-
-        it("Update permissions of a file", async () => {
-            await putFilePermissions(item_id, permissions);
-
-            expect(tlpPut).toHaveBeenCalledWith(`/api/docman_files/${item_id}/permissions`, {
-                headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                body: JSON.stringify(permissions),
-            });
-        });
-
-        it("Update permissions of an embedded file", async () => {
-            await putEmbeddedFilePermissions(item_id, permissions);
-
-            expect(tlpPut).toHaveBeenCalledWith(
-                `/api/docman_embedded_files/${item_id}/permissions`,
-                {
-                    headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                    body: JSON.stringify(permissions),
-                }
-            );
-        });
-
-        it("Update permissions of a link", async () => {
-            await putLinkPermissions(item_id, permissions);
-
-            expect(tlpPut).toHaveBeenCalledWith(`/api/docman_links/${item_id}/permissions`, {
-                headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                body: JSON.stringify(permissions),
-            });
-        });
-
-        it("Update permissions of a wiki document", async () => {
-            await putWikiPermissions(item_id, permissions);
-
-            expect(tlp.put).toHaveBeenCalledWith(`/api/docman_wikis/${item_id}/permissions`, {
-                headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                body: JSON.stringify(permissions),
-            });
-        });
-
-        it("Update permissions of an empty document", async () => {
-            await putEmptyDocumentPermissions(item_id, permissions);
-
-            expect(tlpPut).toHaveBeenCalledWith(
-                `/api/docman_empty_documents/${item_id}/permissions`,
-                {
-                    headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                    body: JSON.stringify(permissions),
-                }
-            );
-        });
-
-        it("Update permissions of folder", async () => {
-            await putFolderPermissions(item_id, permissions);
-
-            expect(tlpPut).toHaveBeenCalledWith(`/api/docman_folders/${item_id}/permissions`, {
-                headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                body: JSON.stringify(permissions),
-            });
         });
     });
 
