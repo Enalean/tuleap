@@ -144,6 +144,7 @@ export class ListItemMapBuilder {
 
         if (this.options && this.options.items_template_formatter) {
             const custom_template = await this.options.items_template_formatter(
+                html,
                 option.value,
                 option_label
             );

@@ -2,8 +2,13 @@
     List pickers are the new Select2. They are meant to be easier to use and to customise while having a similar UX.
     <br>
     <br>
-    Please note: To display users avatars, you can either add a <code class="code-inline">data-avatar-url</code> on each <code class="code-inline">option</code> containing the url of the avatar,
-    either use the <code class="code-inline">items_template_formatter</code> callback.
+    Please note: There are predefined templates available by using special data-attributes on <code class="code-inline">option</code> tags:
+    <ul>
+        <li>Use <code class="code-inline">data-avatar-url</code> with the value of avatar url to display user avatar. Example:  <code class="code-inline">data-avatar-url="https://my-avatar.example.com"</code> </li>
+        <li>Use <code class="code-inline">data-color-value</code> with the value of the color to display a colored circle next to the option label. The color must be either a tlp-color (i.e inca-silver) or in hexadecimal (i.e #8f8f8f). Example: <code class="code-inline">data-avatar-url="fiesta-red"</code></li>
+    </ul>
+    You cannot have the both dataset in a same option. <br><br>
+    You can also use the <code class="code-inline">items_template_formatter</code> callback to display these templates. <br><br>
     <br>
     <br>
     Options:
@@ -14,8 +19,9 @@
         <li>
             <code class="code-inline">items_template_formatter (default: none)</code>: An asynchronous callback function returning a lit-html template result to customise items templates
             <br>
-            It takes two parameters:
+            It takes three parameters:
             <ul>
+                <li><code class="code-inline">html: HTMLTemplateStringProcessor</code> The lit-html tag function to help the developer to build a secured TemplateResult</li>
                 <li><code class="code-inline">option_value: string</code> The value of the current select box option</li>
                 <li><code class="code-inline">option_label: string</code> The text content of the current select box option</li>
             </ul>
