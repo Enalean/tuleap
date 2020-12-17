@@ -82,6 +82,7 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
                 $row['list_name'],
                 $row['description'],
                 (bool) $row['is_public'],
+                $this->getAdminUrl($request, $row['list_name']),
             );
         }
 
@@ -104,5 +105,12 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
     public static function getUrl(\Project $project): string
     {
         return '/project/' . urlencode((string) $project->getID()) . '/admin/mailing-lists';
+    }
+
+    public function getAdminUrl(HTTPRequest $request, string $list_name): string
+    {
+        $scheme = $request->isSecure() ? 'https://' : 'http://';
+
+        return $scheme . \ForgeConfig::get('sys_lists_host') . '/mailman/admin/' . urlencode($list_name) . '/';
     }
 }
