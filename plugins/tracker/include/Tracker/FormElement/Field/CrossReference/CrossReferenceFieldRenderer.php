@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\CrossReference;
 
-use CrossReferenceFactory;
 use TemplateRendererFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use PFUser;
@@ -49,16 +48,6 @@ class CrossReferenceFieldRenderer
 
     public function renderCrossReferences(Artifact $artifact, PFUser $user): string
     {
-        $cross_reference_factory = new CrossReferenceFactory(
-            $artifact->getId(),
-            Artifact::REFERENCE_NATURE,
-            $artifact->getTracker()->getGroupId()
-        );
-
-        $cross_reference_factory->fetchDatas();
-
-        $cross_ref_by_direction_collection = $cross_reference_factory->getCrossReferencesByDirectionCollection();
-
         $can_delete = $user->isSuperUser() || $user->isAdmin((int) $artifact->getTracker()->getGroupId());
         $renderer   = $this->template_renderer->getRenderer(
             __DIR__ . '/../../../../../templates/form-element/reference'
@@ -66,7 +55,7 @@ class CrossReferenceFieldRenderer
 
         return $renderer->renderToString(
             'cross_reference_section',
-            $this->cross_ref_field_presenter_builder->build($cross_ref_by_direction_collection, $can_delete, $artifact)
+            $this->cross_ref_field_presenter_builder->build($can_delete, $artifact)
         );
     }
 }

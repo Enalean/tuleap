@@ -61,7 +61,6 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
 use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\VersionDetector;
-use Tuleap\Git\Repository\GitRepositoryObjectsSizeRetriever;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GlobalParameterDao;
@@ -108,12 +107,14 @@ use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupController;
 use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupGitSectionBuilder;
 use Tuleap\Git\PermissionsPerGroup\RepositoryFineGrainedRepresentationBuilder;
 use Tuleap\Git\PermissionsPerGroup\RepositorySimpleRepresentationBuilder;
+use Tuleap\Git\Reference\CrossReferenceGitOrganizer;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Git\Repository\DescriptionUpdater;
 use Tuleap\Git\Repository\GitPHPProjectRetriever;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayerBuilder;
+use Tuleap\Git\Repository\GitRepositoryObjectsSizeRetriever;
 use Tuleap\Git\Repository\RepositoriesWithObjectsOverTheLimitCommand;
 use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
 use Tuleap\Git\Repository\Settings\CITokenController;
@@ -159,6 +160,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
@@ -325,6 +327,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
         }
 
+        $this->addHook(CrossReferenceByNatureOrganizer::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -2784,5 +2787,18 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function accountTabPresenterCollection(AccountTabPresenterCollection $collection): void
     {
         (new \Tuleap\Git\Account\AccountTabsBuilder($this->getGerritServerFactory()))->addTabs($collection);
+    }
+
+    public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $organizer): void
+    {
+        $git_organizer = new CrossReferenceGitOrganizer(
+            ProjectManager::instance(),
+            new Git_ReferenceManager(
+                $this->getRepositoryFactory(),
+                ReferenceManager::instance(),
+            )
+        );
+
+        $git_organizer->organizeGitReferences($organizer);
     }
 }

@@ -20,41 +20,40 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\View\Reference;
+namespace Tuleap\Reference;
 
 /**
  * @psalm-immutable
  */
-class CrossReferenceByNaturePresenter
+final class CrossReferenceByDirectionPresenter
 {
     /**
-     * @var string
+     * @var CrossReferenceNaturePresenter[]
      */
-    public $nature_label;
+    public $sources_by_nature;
     /**
-     * @var CrossReferenceLinkListPresenter[]
+     * @var CrossReferenceNaturePresenter[]
      */
-    public $cross_reference_link_list;
-    /**
-     * @var string
-     */
-    public $nature_icon;
+    public $targets_by_nature;
     /**
      * @var bool
      */
-    public $has_nature_icon = false;
+    public $has_source;
+    /**
+     * @var bool
+     */
+    public $has_target;
 
     /**
-     * @param CrossReferenceLinkListPresenter[] $cross_reference_link_list
+     * @psalm-param CrossReferenceNaturePresenter[] $sources_by_nature
+     * @psalm-param CrossReferenceNaturePresenter[] $targets_by_nature
      */
-    public function __construct(string $nature_label, array $cross_reference_link_list, string $nature_icon)
+    public function __construct(array $sources_by_nature, array $targets_by_nature)
     {
-        $this->nature_label              = $nature_label;
-        $this->cross_reference_link_list = $cross_reference_link_list;
+        $this->sources_by_nature = $sources_by_nature;
+        $this->targets_by_nature = $targets_by_nature;
 
-        if ($nature_icon) {
-            $this->has_nature_icon = true;
-            $this->nature_icon     = $nature_icon;
-        }
+        $this->has_source = ! empty($sources_by_nature);
+        $this->has_target = ! empty($targets_by_nature);
     }
 }

@@ -15,28 +15,44 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\View\Reference;
+namespace Tuleap\Reference;
 
 /**
  * @psalm-immutable
  */
-class CrossReferenceLinkListPresenter
+final class CrossReferenceSectionPresenter
 {
     /**
-     * @var CrossReferenceLinkPresenter[]
+     * @var string
      */
-    public $cross_ref_link_collection = [];
+    public $label;
+    /**
+     * @var CrossReferencePresenter[]
+     */
+    public $cross_references;
 
     /**
-     * @param CrossReferenceLinkPresenter[] $cross_ref_link_collection
+     * @param CrossReferencePresenter[] $cross_references
      */
-    public function __construct(array $cross_ref_link_collection)
+    public function __construct(string $label, array $cross_references)
     {
-        $this->cross_ref_link_collection = $cross_ref_link_collection;
+        $this->label            = $label;
+        $this->cross_references = $cross_references;
+    }
+
+    public function withAdditionalCrossReference(CrossReferencePresenter $cross_reference): self
+    {
+        return new self(
+            $this->label,
+            array_merge(
+                $this->cross_references,
+                [$cross_reference]
+            )
+        );
     }
 }

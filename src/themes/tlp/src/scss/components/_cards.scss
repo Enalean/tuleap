@@ -57,6 +57,10 @@
 
 .tlp-pane-section-for-cards,
 .tlp-pane-section-for-cards-under-tabs {
+    > .tlp-pane-subtitle {
+        margin: $tlp-medium-spacing $tlp-medium-spacing 0;
+    }
+
     > .tlp-card-container {
         border-bottom: 1px solid $tlp-ui-border-light;
 

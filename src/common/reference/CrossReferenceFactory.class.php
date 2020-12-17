@@ -23,7 +23,6 @@ use Tuleap\reference\Presenters\CrossReferenceByNaturePresenterBuilder;
 use Tuleap\reference\Presenters\CrossReferenceLinkListPresenterBuilder;
 use Tuleap\reference\Presenters\CrossReferenceLinkPresenterCollectionBuilder;
 use Tuleap\reference\CrossReferenceByNatureCollection;
-use Tuleap\reference\CrossReferenceByDirectionCollection;
 
 class CrossReferenceFactory
 {
@@ -246,14 +245,6 @@ class CrossReferenceFactory
     public function getCrossReferencesByNatureCollection(): CrossReferenceByNatureCollection
     {
         return new CrossReferenceByNatureCollection(
-            $this->getCrossReferences(),
-            ReferenceManager::instance()->getAvailableNatures()
-        );
-    }
-
-    public function getCrossReferencesByDirectionCollection(): CrossReferenceByDirectionCollection
-    {
-        return new CrossReferenceByDirectionCollection(
             $this->getCrossReferences(),
             ReferenceManager::instance()->getAvailableNatures()
         );

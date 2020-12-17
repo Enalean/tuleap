@@ -20,49 +20,30 @@
 
 namespace Tuleap\Tracker\FormElement\View\Reference;
 
-use Tuleap\reference\CrossReferenceByDirectionCollection;
+use Tuleap\Reference\CrossReferenceByDirectionPresenterBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class CrossReferenceFieldPresenterBuilder
 {
-
     /**
-     * @var CrossReferenceByNaturePresenterBuilder
+     * @var CrossReferenceByDirectionPresenterBuilder
      */
-    private $cross_ref_by_nature_presenter_builder;
+    private $builder;
 
-    public function __construct(CrossReferenceByNaturePresenterBuilder $cross_ref_by_nature_presenter_builder)
+    public function __construct(CrossReferenceByDirectionPresenterBuilder $builder)
     {
-        $this->cross_ref_by_nature_presenter_builder = $cross_ref_by_nature_presenter_builder;
+        $this->builder = $builder;
     }
 
-    public function build(CrossReferenceByDirectionCollection $cross_ref_by_direction_collection, bool $can_delete, Artifact $artifact): CrossReferenceFieldPresenter
+    public function build(bool $can_delete, Artifact $artifact): CrossReferenceFieldPresenter
     {
-        $cross_refs_target_by_nature_presenter_collection = [];
-        $cross_refs_source_by_nature_presenter_collection = [];
-
-        foreach ($cross_ref_by_direction_collection->getAllCrossReferencesTarget() as $cross_reference_collection) {
-            $cross_ref_by_nature_presenter = $this->cross_ref_by_nature_presenter_builder->build(
-                $cross_reference_collection
-            );
-            if ($cross_ref_by_nature_presenter) {
-                $cross_refs_target_by_nature_presenter_collection[] = $cross_ref_by_nature_presenter;
-            }
-        }
-
-        foreach ($cross_ref_by_direction_collection->getAllCrossReferencesSource() as $cross_reference_collection) {
-            $cross_ref_by_nature_presenter = $this->cross_ref_by_nature_presenter_builder->build(
-                $cross_reference_collection
-            );
-            if ($cross_ref_by_nature_presenter) {
-                $cross_refs_source_by_nature_presenter_collection[] = $cross_ref_by_nature_presenter;
-            }
-        }
-
         return new CrossReferenceFieldPresenter(
             $can_delete,
-            $cross_refs_target_by_nature_presenter_collection,
-            $cross_refs_source_by_nature_presenter_collection,
+            $this->builder->build(
+                (string) $artifact->getId(),
+                Artifact::REFERENCE_NATURE,
+                (int) $artifact->getTracker()->getGroupId()
+            ),
             $artifact
         );
     }
