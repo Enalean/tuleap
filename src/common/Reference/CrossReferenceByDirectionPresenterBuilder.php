@@ -50,15 +50,16 @@ class CrossReferenceByDirectionPresenterBuilder
     public function build(
         string $entity_id,
         string $entity_type,
-        int $entity_project_id
+        int $entity_project_id,
+        \PFUser $current_user
     ): CrossReferenceByDirectionPresenter {
         $available_natures = $this->reference_manager->getAvailableNatures();
         $source_presenters = $this->factory->getSourcesOfEntity($entity_id, $entity_type, $entity_project_id);
         $target_presenters = $this->factory->getTargetsOfEntity($entity_id, $entity_type, $entity_project_id);
 
         return new CrossReferenceByDirectionPresenter(
-            $this->getNaturesFromCrossReferences($source_presenters, $available_natures),
-            $this->getNaturesFromCrossReferences($target_presenters, $available_natures),
+            $this->getNaturesFromCrossReferences($source_presenters, $available_natures, $current_user),
+            $this->getNaturesFromCrossReferences($target_presenters, $available_natures, $current_user),
         );
     }
 
@@ -68,10 +69,13 @@ class CrossReferenceByDirectionPresenterBuilder
      *
      * @return CrossReferenceNaturePresenter[]
      */
-    private function getNaturesFromCrossReferences(array $cross_references, array $available_natures): array
-    {
+    private function getNaturesFromCrossReferences(
+        array $cross_references,
+        array $available_natures,
+        \PFUser $current_user
+    ): array {
         $organizer = $this->event_dispatcher->dispatch(
-            new CrossReferenceByNatureOrganizer($cross_references, $available_natures)
+            new CrossReferenceByNatureOrganizer($cross_references, $available_natures, $current_user)
         );
         assert($organizer instanceof CrossReferenceByNatureOrganizer);
 

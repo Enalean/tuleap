@@ -35,14 +35,15 @@ class CrossReferenceFieldPresenterBuilder
         $this->builder = $builder;
     }
 
-    public function build(bool $can_delete, Artifact $artifact): CrossReferenceFieldPresenter
+    public function build(bool $can_delete, Artifact $artifact, \PFUser $current_user): CrossReferenceFieldPresenter
     {
         return new CrossReferenceFieldPresenter(
             $can_delete,
             $this->builder->build(
                 (string) $artifact->getId(),
                 Artifact::REFERENCE_NATURE,
-                (int) $artifact->getTracker()->getGroupId()
+                (int) $artifact->getTracker()->getGroupId(),
+                $current_user
             ),
             $artifact
         );

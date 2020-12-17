@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\View\Reference;
 
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Reference\CrossReferenceByDirectionPresenter;
@@ -30,31 +33,33 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class CrossReferenceFieldPresenterBuilderTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
 
     public function testItBuildsThePresenter(): void
     {
-        $by_direction_builder = \Mockery::mock(CrossReferenceByDirectionPresenterBuilder::class);
+        $user = Mockery::mock(PFUser::class);
+
+        $by_direction_builder = Mockery::mock(CrossReferenceByDirectionPresenterBuilder::class);
 
         $by_direction_presenter = new CrossReferenceByDirectionPresenter([], []);
         $by_direction_builder->shouldReceive('build')
-            ->with('123', 'plugin_tracker_artifact', 102)
+            ->with('123', 'plugin_tracker_artifact', 102, $user)
             ->andReturn($by_direction_presenter);
 
         $builder = new CrossReferenceFieldPresenterBuilder($by_direction_builder);
 
-        $artifact = \Mockery::mock(Artifact::class)
+        $artifact = Mockery::mock(Artifact::class)
             ->shouldReceive(
                 [
                     'getXRef'    => 'art #123',
                     'getId'      => 123,
-                    'getTracker' => \Mockery::mock(Tracker::class)
+                    'getTracker' => Mockery::mock(Tracker::class)
                         ->shouldReceive(['getGroupId' => 102])
                         ->getMock(),
                 ]
             )->getMock();
 
-        $presenter = $builder->build(true, $artifact);
+        $presenter = $builder->build(true, $artifact, $user);
         self::assertEquals($by_direction_presenter, $presenter->by_direction);
         self::assertTrue($presenter->can_delete);
         self::assertEquals('art #123', $presenter->artifact_xref);

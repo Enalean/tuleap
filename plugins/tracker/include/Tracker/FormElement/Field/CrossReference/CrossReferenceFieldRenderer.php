@@ -55,7 +55,7 @@ class CrossReferenceFieldRenderer
 
         return $renderer->renderToString(
             'cross_reference_section',
-            $this->cross_ref_field_presenter_builder->build($can_delete, $artifact)
+            $this->cross_ref_field_presenter_builder->build($can_delete, $artifact, $user)
         );
     }
 }

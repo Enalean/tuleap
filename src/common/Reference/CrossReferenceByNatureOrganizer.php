@@ -40,15 +40,20 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
      * @var array
      */
     private $available_natures;
+    /**
+     * @var \PFUser
+     */
+    private $current_user;
 
     /**
      * @param CrossReferencePresenter[] $cross_references
      * @param array<string, array{keyword: string, icon: string, label: string}> $available_natures
      */
-    public function __construct(array $cross_references, array $available_natures)
+    public function __construct(array $cross_references, array $available_natures, \PFUser $current_user)
     {
         $this->cross_references  = $cross_references;
         $this->available_natures = $available_natures;
+        $this->current_user      = $current_user;
 
         $this->natures = [];
     }
@@ -59,6 +64,18 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
     public function getCrossReferences(): array
     {
         return $this->cross_references;
+    }
+
+    public function removeUnreadableCrossReference(CrossReferencePresenter $cross_reference_to_remove): void
+    {
+        foreach ($this->cross_references as $index => $cross_reference) {
+            if ($cross_reference === $cross_reference_to_remove) {
+                unset($this->cross_references[$index]);
+                break;
+            }
+        }
+
+        $this->cross_references = array_values($this->cross_references);
     }
 
     public function moveCrossReferenceToSection(
@@ -153,5 +170,10 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
         foreach ($this->cross_references as $cross_reference) {
             $this->moveCrossReferenceToSection($cross_reference, '');
         }
+    }
+
+    public function getCurrentUser(): \PFUser
+    {
+        return $this->current_user;
     }
 }
