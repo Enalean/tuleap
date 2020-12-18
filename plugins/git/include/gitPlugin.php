@@ -152,6 +152,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentat
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
+use Tuleap\Project\Event\ProjectUnixNameIsEditable;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\HeartbeatsEntryCollection;
@@ -316,6 +317,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
         $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(ProjectSuspendedAndNotBlockedWarningCollector::NAME);
+        $this->addHook(ProjectUnixNameIsEditable::NAME);
         $this->addHook(StatisticsCollectionCollector::NAME);
         $this->addHook(CLICommandsCollector::NAME);
         $this->addHook(AccessKeyScopeBuilderCollector::NAME);
@@ -2422,6 +2424,16 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $gerrit_server_factory = $this->getGerritServerFactory();
         if ($gerrit_server_factory->hasRemotesSetUp()) {
             $event->addWarning(dgettext('tuleap-git', 'Gerrit'));
+        }
+    }
+
+    public function projectUnixNameIsEditable(ProjectUnixNameIsEditable $event): void
+    {
+        $gerrit_server_factory = $this->getGerritServerFactory();
+        $is_editable = empty($gerrit_server_factory->getServersForProject($event->getProject()));
+        $event->setIsEditable($is_editable);
+        if (! $is_editable) {
+            $event->setMessage(dgettext('tuleap-git', " At least a git repository is migrated to gerrit"));
         }
     }
 

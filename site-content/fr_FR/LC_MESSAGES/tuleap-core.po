@@ -2535,6 +2535,9 @@ msgstr "Raccourci"
 msgid "Shortcuts"
 msgstr "Raccourcis"
 
+msgid "Shortname edition is not allowed :"
+msgstr "L'édition du nom court n'est pas autorisée :"
+
 msgid ""
 "Should you still need this account, please connect once to "
 "{{ tuleap_server_name}} web interface, this will automatically renew your "
@@ -2989,6 +2992,9 @@ msgid ""
 msgstr ""
 "Cette permission donne le droit de voir (GET/OPTIONS) l'ensemble du contenu "
 "de la plateforme via l'API REST"
+
+msgid "This project doesn't allow short name edition."
+msgstr "Ce projet n'autorise pas l'édition du nom court."
 
 msgid "This project doesn't use any services with permissions."
 msgstr "Ce project n'utilise pas de service avec des permissions."

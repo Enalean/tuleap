@@ -24,6 +24,7 @@ use Tuleap\admin\ProjectEdit\ProjectEditDao;
 use Tuleap\admin\ProjectEdit\ProjectEditRouter;
 use Tuleap\Project\Admin\DescriptionFields\ProjectDescriptionFieldBuilder;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
+use Tuleap\Project\Admin\ProjectRenameChecker;
 use Tuleap\Project\ProjectAccessPresenter;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 
@@ -57,12 +58,18 @@ $access_presenter     = new ProjectAccessPresenter($project->getAccess());
 $suspended_and_not_blocked_warnings = new ProjectSuspendedAndNotBlockedWarningCollector($project);
 $event_manager->processEvent($suspended_and_not_blocked_warnings);
 
+$project_rename_checker = new ProjectRenameChecker(
+    $event_manager
+);
+
 $details_presenter    = new ProjectDetailsPresenter(
     $project,
     $all_custom_fields,
     $access_presenter,
     $csrf_token,
-    $suspended_and_not_blocked_warnings->getWarnings()
+    $suspended_and_not_blocked_warnings->getWarnings(),
+    $project_rename_checker->isProjectUnixNameEditable($project),
+    $project_rename_checker->getNotEditableNameReasons()
 );
 $project_edit_dao     = new ProjectEditDao();
 $system_event_manager = SystemEventManager::instance();
@@ -73,7 +80,8 @@ $edit_controller = new ProjectEditController(
     $project_manager,
     $event_manager,
     $system_event_manager,
-    new ProjectHistoryDao()
+    new ProjectHistoryDao(),
+    $project_rename_checker
 );
 
 $router = new ProjectEditRouter($edit_controller);
