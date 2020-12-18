@@ -24,10 +24,26 @@ document.addEventListener("DOMContentLoaded", () => {
     for (const admin_homepage_queue of admin_homepage_queues) {
         admin_homepage_queue.addEventListener("click", (event) => {
             if (
+                !event.target ||
+                !(event.target instanceof HTMLElement) ||
+                !event.target.classList
+            ) {
+                throw new Error("Event target is not found or is not a DOM element");
+            }
+
+            if (!event.target.parentNode || !(event.target.parentNode instanceof HTMLElement)) {
+                throw new Error("Event target parent node is not found or is not a DOM element");
+            }
+
+            if (!(admin_homepage_queue instanceof HTMLElement)) {
+                throw new Error("admin_homepage_queue does not have a dataset");
+            }
+
+            if (
                 !event.target.classList.contains("system-event-type-count") &&
                 !event.target.parentNode.classList.contains("system-event-type-count")
             ) {
-                window.location = window.location.origin + admin_homepage_queue.dataset.href;
+                window.location.href = window.location.origin + admin_homepage_queue.dataset.href;
             }
         });
     }
