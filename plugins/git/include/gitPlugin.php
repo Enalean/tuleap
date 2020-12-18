@@ -162,6 +162,7 @@ use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
+use Tuleap\Reference\Nature;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\User\AccessKey\AccessKeyDAO;
@@ -688,11 +689,11 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $params['natures'] = array_merge(
             $params['natures'],
             [
-                Git::REFERENCE_NATURE => [
-                    'keyword' => Git::REFERENCE_KEYWORD,
-                    'icon'    => 'fas fa-tlp-versioning-git',
-                    'label'   => dgettext('tuleap-git', 'Git commit')
-                ]
+                Git::REFERENCE_NATURE => new Nature(
+                    Git::REFERENCE_KEYWORD,
+                    'fas fa-tlp-versioning-git',
+                    dgettext('tuleap-git', 'Git commit')
+                )
             ]
         );
     }

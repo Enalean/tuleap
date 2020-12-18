@@ -26,6 +26,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
+use Tuleap\Reference\Nature;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
@@ -241,16 +242,16 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
     public function getAvailableReferenceNatures($params)
     {
         $hudson_plugin_reference_natures = [
-            'hudson_build' => [
-                'keyword' => 'build',
-                'icon'    => '',
-                'label'   => dgettext('tuleap-hudson', 'Jenkins Build'),
-            ],
-            'hudson_job'   => [
-                'keyword' => 'job',
-                'icon'    => '',
-                'label'   => dgettext('tuleap-hudson', 'Jenkins Job'),
-            ],
+            'hudson_build' => new Nature(
+                'build',
+                Nature::NO_ICON,
+                dgettext('tuleap-hudson', 'Jenkins Build'),
+            ),
+            'hudson_job'   => new Nature(
+                'job',
+                Nature::NO_ICON,
+                dgettext('tuleap-hudson', 'Jenkins Job'),
+            ),
         ];
         $params['natures'] = array_merge($params['natures'], $hudson_plugin_reference_natures);
     }

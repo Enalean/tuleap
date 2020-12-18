@@ -33,7 +33,7 @@ class CrossReferenceByNatureCollection
 
     /**
      * @psalm-param array<string, array{both?: \CrossReference[], target?: \CrossReference[], source?: \CrossReference[]}> $cross_reference_by_nature
-     * @psalm-param array<string, array{label: string, icon: string}> $available_natures
+     * @psalm-param array<string, \Tuleap\Reference\Nature> $available_natures
      */
     public function __construct(array $cross_reference_by_nature, array $available_natures)
     {
@@ -44,11 +44,11 @@ class CrossReferenceByNatureCollection
 
             $this->natures[$nature] = new CrossReferenceCollection(
                 $nature,
-                $available_natures[$nature]['label'],
+                $available_natures[$nature]->label,
                 $cross_reference_by_key['both'] ?? [],
                 $cross_reference_by_key['target'] ?? [],
                 $cross_reference_by_key['source'] ?? [],
-                $available_natures[$nature]['icon']
+                $available_natures[$nature]->icon
             );
         }
     }

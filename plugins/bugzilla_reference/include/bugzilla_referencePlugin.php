@@ -33,6 +33,7 @@ use Tuleap\Bugzilla\Reference\ReferenceSaver;
 use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Reference\Nature;
 use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
 use Tuleap\Request\CollectRoutesEvent;
@@ -118,11 +119,11 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
     public function get_available_reference_natures($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['natures']['bugzilla'] =
-            [
-                'keyword' => 'bugzilla',
-                'icon'    => '',
-                'label'   => dgettext('tuleap-bugzilla_reference', 'Bugzilla')
-            ];
+            new Nature(
+                'bugzilla',
+                Nature::NO_ICON,
+                dgettext('tuleap-bugzilla_reference', 'Bugzilla')
+            );
     }
 
     /**

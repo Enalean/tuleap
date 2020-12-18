@@ -62,6 +62,7 @@ use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Reference\GetReferenceEvent;
+use Tuleap\Reference\Nature;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\BasicAuthentication;
@@ -771,11 +772,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function get_available_reference_natures($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $natures = [
-            Artifact::REFERENCE_NATURE => [
-                'keyword' => 'artifact',
-                'icon'    => 'fas fa-list-ol',
-                'label'   => 'Artifact Tracker v5'
-            ]
+            Artifact::REFERENCE_NATURE => new Nature('artifact', 'fas fa-list-ol', 'Artifact Tracker v5'),
         ];
         $params['natures'] = array_merge($params['natures'], $natures);
     }

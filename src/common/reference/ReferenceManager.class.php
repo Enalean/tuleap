@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Reference\GetReferenceEvent;
+use Tuleap\Reference\Nature;
 use Tuleap\Reference\ReferenceDescriptionTranslation;
 use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
@@ -135,74 +136,72 @@ class ReferenceManager
     }
 
     /**
-     * Returns available reference natures in Codendi
-     * Plugins that want to provide references natures must
-     * listen and implement the hook get_available_reference_natures
+     * @return array<string, Nature>
      */
-    public function getAvailableNatures()
+    public function getAvailableNatures(): array
     {
         $core_natures = [
-            self::REFERENCE_NATURE_ARTIFACT     => [
-                'keyword' => 'art',
-                'icon'    => '',
-                'label'   => $GLOBALS['Language']->getText('project_reference', 'reference_artifact_nature_key'),
-            ],
-            self::REFERENCE_NATURE_DOCUMENT     => [
-                'keyword' => 'doc',
-                'icon'    => 'fas fa-folder-open',
-                'label'   => $GLOBALS['Language']->getText('project_reference', 'reference_document_nature_key'),
-            ],
-            self::REFERENCE_NATURE_CVSCOMMIT    => [
-                'keyword' => 'cvs',
-                'icon'    => '',
-                'label'   => $GLOBALS['Language']->getText('project_reference', 'reference_cvs_commit_nature_key'),
-            ],
-            self::REFERENCE_NATURE_SVNREVISION  => [
-                'keyword' => 'svn',
-                'icon'    => 'fas fa-tlp-versioning-svn',
-                'label'   => $GLOBALS['Language']->getText('project_reference', 'reference_svn_revision_nature_key'),
-            ],
-            self::REFERENCE_NATURE_FILE         => [
-                'keyword' => 'file',
-                'icon'    => '',
-                'label'   => $GLOBALS['Language']->getText('project_reference', 'reference_file_nature_key'),
-            ],
-            self::REFERENCE_NATURE_RELEASE      => [
-                'keyword' => 'release',
-                'icon'    => '',
-                'label'   => $GLOBALS['Language']->getText('project_reference', 'reference_release_nature_key'),
-            ],
-            self::REFERENCE_NATURE_FORUM        => [
-                'keyword' => 'forum',
-                'icon'    => '',
-                'label'   => $GLOBALS['Language']->getText('project_reference', 'reference_forum_nature_key'),
-            ],
-            self::REFERENCE_NATURE_FORUMMESSAGE => [
-                'keyword' => 'msg',
-                'icon'    => '',
-                'label'   => $GLOBALS['Language']->getText('project_reference', 'reference_forum_message_nature_key'),
-            ],
-            self::REFERENCE_NATURE_NEWS         => [
-                'keyword' => 'news',
-                'icon'    => '',
-                'label'   => $GLOBALS['Language']->getText('project_reference', 'reference_news_nature_key'),
-            ],
-            self::REFERENCE_NATURE_WIKIPAGE     => [
-                'keyword' => 'wiki',
-                'icon'    => '',
-                'label'   => $GLOBALS['Language']->getText('project_reference', 'reference_wiki_page_nature_key'),
-            ],
+            self::REFERENCE_NATURE_ARTIFACT     => new Nature(
+                'art',
+                Nature::NO_ICON,
+                $GLOBALS['Language']->getText('project_reference', 'reference_artifact_nature_key'),
+            ),
+            self::REFERENCE_NATURE_DOCUMENT     => new Nature(
+                'doc',
+                'fas fa-folder-open',
+                $GLOBALS['Language']->getText('project_reference', 'reference_document_nature_key'),
+            ),
+            self::REFERENCE_NATURE_CVSCOMMIT    => new Nature(
+                'cvs',
+                Nature::NO_ICON,
+                $GLOBALS['Language']->getText('project_reference', 'reference_cvs_commit_nature_key'),
+            ),
+            self::REFERENCE_NATURE_SVNREVISION  => new Nature(
+                'svn',
+                'fas fa-tlp-versioning-svn',
+                $GLOBALS['Language']->getText('project_reference', 'reference_svn_revision_nature_key'),
+            ),
+            self::REFERENCE_NATURE_FILE         => new Nature(
+                'file',
+                Nature::NO_ICON,
+                $GLOBALS['Language']->getText('project_reference', 'reference_file_nature_key'),
+            ),
+            self::REFERENCE_NATURE_RELEASE      => new Nature(
+                'release',
+                Nature::NO_ICON,
+                $GLOBALS['Language']->getText('project_reference', 'reference_release_nature_key'),
+            ),
+            self::REFERENCE_NATURE_FORUM        => new Nature(
+                'forum',
+                Nature::NO_ICON,
+                $GLOBALS['Language']->getText('project_reference', 'reference_forum_nature_key'),
+            ),
+            self::REFERENCE_NATURE_FORUMMESSAGE => new Nature(
+                'msg',
+                Nature::NO_ICON,
+                $GLOBALS['Language']->getText('project_reference', 'reference_forum_message_nature_key'),
+            ),
+            self::REFERENCE_NATURE_NEWS         => new Nature(
+                'news',
+                Nature::NO_ICON,
+                $GLOBALS['Language']->getText('project_reference', 'reference_news_nature_key'),
+            ),
+            self::REFERENCE_NATURE_WIKIPAGE     => new Nature(
+                'wiki',
+                Nature::NO_ICON,
+                $GLOBALS['Language']->getText('project_reference', 'reference_wiki_page_nature_key'),
+            ),
         ];
 
         $plugins_natures = [];
         $this->eventManager->processEvent('get_available_reference_natures', ['natures' => &$plugins_natures]);
 
         $natures = array_merge($core_natures, $plugins_natures);
-        $natures[self::REFERENCE_NATURE_OTHER] = [
-            'keyword' => 'other',
-            'icon' => '',
-            'label' => $GLOBALS['Language']->getText('project_reference', 'reference_other_nature_key'),
-        ];
+        $natures[self::REFERENCE_NATURE_OTHER] = new Nature(
+            'other',
+            Nature::NO_ICON,
+            $GLOBALS['Language']->getText('project_reference', 'reference_other_nature_key'),
+        );
         return $natures;
     }
 
@@ -859,10 +858,10 @@ class ReferenceManager
             if ($source_type == self::REFERENCE_NATURE_ARTIFACT) {
                 $source_key = $this->getArtifactKeyword($source_id, $source_gid);
                 if (! $source_key) {
-                    $source_key = $available_natures[$source_type]['keyword'];
+                    $source_key = $available_natures[$source_type]->keyword;
                 }
             } else {
-                $source_key = $available_natures[$source_type]['keyword'];
+                $source_key = $available_natures[$source_type]->keyword;
             }
         }
 
