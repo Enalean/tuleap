@@ -55,7 +55,8 @@ class CrossReferencePresenterFactory
                 $this->getUrl($row['target_keyword'], $row['target_id'], (int) $row['target_gid']),
                 $this->getDeleteUrl($row),
                 (int) $row['target_gid'],
-                $row['target_id']
+                $row['target_id'],
+                null,
             );
         }
 
@@ -76,7 +77,8 @@ class CrossReferencePresenterFactory
                 $this->getUrl($row['source_keyword'], $row['source_id'], (int) $row['source_gid']),
                 $this->getDeleteUrl($row),
                 (int) $row['source_gid'],
-                $row['source_id']
+                $row['source_id'],
+                null,
             );
         }
 

@@ -22,25 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
-
-class CrossReferenceSectionPresenterTest extends TestCase
+/**
+ * @psalm-immutable
+ */
+final class TitleBadgePresenter
 {
-    use MockeryPHPUnitIntegration;
+    /**
+     * @var string
+     */
+    public $label;
+    /**
+     * @var string
+     */
+    public $color;
 
-    public function testWithAdditionalCrossReference(): void
+    public function __construct(string $label, string $color)
     {
-        $a_ref       = new CrossReferencePresenter(1, "type", "title", "url", "delete_url", 1, "whatever", null);
-        $another_ref = new CrossReferencePresenter(2, "type", "reference", "url", "delete_url", 1, "whatever", null);
-
-        $section = new CrossReferenceSectionPresenter("my section", [$a_ref]);
-        $new_section = $section->withAdditionalCrossReference($another_ref);
-
-        self::assertEquals("my section", $new_section->label);
-        self::assertEquals(
-            [$a_ref, $another_ref],
-            $new_section->cross_references
-        );
+        $this->label = $label;
+        $this->color = $color;
     }
 }

@@ -55,6 +55,10 @@ final class CrossReferencePresenter
      * @var string
      */
     public $target_value;
+    /**
+     * @var TitleBadgePresenter|null
+     */
+    public $title_badge;
 
     public function __construct(
         int $id,
@@ -63,7 +67,8 @@ final class CrossReferencePresenter
         string $url,
         string $delete_url,
         int $project_id,
-        string $value
+        string $value,
+        ?TitleBadgePresenter $title_badge
     ) {
         $this->id           = $id;
         $this->type         = $type;
@@ -72,5 +77,20 @@ final class CrossReferencePresenter
         $this->delete_url   = $delete_url;
         $this->target_gid   = $project_id;
         $this->target_value = $value;
+        $this->title_badge  = $title_badge;
+    }
+
+    public function withTitle(string $title, ?TitleBadgePresenter $title_badge): self
+    {
+        return new self(
+            $this->id,
+            $this->type,
+            $title,
+            $this->url,
+            $this->delete_url,
+            $this->target_gid,
+            $this->target_value,
+            $title_badge,
+        );
     }
 }

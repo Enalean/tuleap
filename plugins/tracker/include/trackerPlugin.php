@@ -61,6 +61,7 @@ use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Request\CurrentPage;
@@ -94,6 +95,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousSupervisor;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\ChangesetsForDiffRetriever;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\DiffProcessor;
 use Tuleap\Tracker\Artifact\Changeset\TextDiff\TextDiffRetriever;
+use Tuleap\Tracker\Artifact\CrossReference\CrossReferenceArtifactOrganizer;
 use Tuleap\Tracker\Artifact\InvertCommentsController;
 use Tuleap\Tracker\Artifact\InvertDisplayChangesController;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
@@ -343,6 +345,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(OAuth2ScopeBuilderCollector::NAME);
         $this->addHook(NewDropdownProjectLinksCollector::NAME);
+
+        $this->addHook(CrossReferenceByNatureOrganizer::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -2424,5 +2428,20 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             new TrackerNewDropdownLinkPresenterBuilder(),
         ))->collect($collector);
+    }
+
+    public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $by_nature_organizer): void
+    {
+        $tracker_organizer = new CrossReferenceArtifactOrganizer(
+            ProjectManager::instance(),
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            ),
+            Tracker_ArtifactFactory::instance(),
+        );
+
+        $tracker_organizer->organizeArtifactReferences($by_nature_organizer);
     }
 }

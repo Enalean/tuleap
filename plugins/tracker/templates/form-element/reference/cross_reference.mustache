@@ -19,6 +19,12 @@
                             class="tlp-card tlp-card-selectable cross-reference"
                             href="{{ url }}"
                         >
+                            {{# title_badge }}
+                                <span class="tlp-badge-{{ color }} tlp-badge-outline tracker-cross-reference-title-badge">
+                                    {{ label }}
+                                </span>
+                            {{/ title_badge }}
+
                             {{ title }}
                         </a>
                         {{# can_delete }}

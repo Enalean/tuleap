@@ -83,7 +83,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
         string $section_label
     ): void {
         foreach ($this->cross_references as $key => $xref) {
-            if ($xref !== $cross_reference) {
+            if ($xref->id !== $cross_reference->id) {
                 continue;
             }
 
@@ -168,7 +168,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
     public function organizeRemainingCrossReferences(): void
     {
         foreach ($this->cross_references as $cross_reference) {
-            $this->moveCrossReferenceToSection($cross_reference, '');
+            $this->moveCrossReferenceToSection($cross_reference, CrossReferenceSectionPresenter::UNLABELLED);
         }
     }
 
