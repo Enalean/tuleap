@@ -210,19 +210,14 @@ export class EventManager {
     private handleClicksOutsideListPicker(event: Event): void {
         const target_element = event.target;
 
-        if (!(target_element instanceof Element)) {
-            this.resetSearchField();
-            this.has_keyboard_selection_occurred = false;
-            return this.dropdown_manager.closeListPicker();
-        }
-
         if (
-            !this.wrapper_element.contains(target_element) &&
-            !this.dropdown_element.contains(target_element)
+            !(target_element instanceof Element) ||
+            (!this.wrapper_element.contains(target_element) &&
+                !this.dropdown_element.contains(target_element))
         ) {
             this.resetSearchField();
             this.has_keyboard_selection_occurred = false;
-            return this.dropdown_manager.closeListPicker();
+            this.dropdown_manager.closeListPicker();
         }
     }
 
