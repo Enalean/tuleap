@@ -55,6 +55,10 @@ class Tracker_Permission_PermissionChecker
             return false;
         }
 
+        if ($artifact->getTracker()->isDeleted()) {
+            return false;
+        }
+
         if ($user->isAdmin($project->getID())) {
             return true;
         }
@@ -93,6 +97,10 @@ class Tracker_Permission_PermissionChecker
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessException $e) {
+            return false;
+        }
+
+        if ($tracker->isDeleted()) {
             return false;
         }
 

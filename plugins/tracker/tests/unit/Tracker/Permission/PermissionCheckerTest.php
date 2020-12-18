@@ -650,6 +650,18 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertFalse($this->permission_checker->userCanView($this->u_ass, $artifact));
     }
 
+    public function testUserCanViewWhenTrackerIsDeleted(): void
+    {
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andReturn(true);
+        $this->tracker->shouldReceive('isDeleted')->AndReturn(true);
+
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturns($this->tracker);
+
+        $this->assertFalse($this->permission_checker->userCanView($this->user, $artifact));
+        $this->assertFalse($this->permission_checker->userCanViewTracker($this->user, $this->tracker));
+    }
+
     public function testUserCanViewTrackerAccessAssignee(): void
     {
         $ugroup_ass = 101;
