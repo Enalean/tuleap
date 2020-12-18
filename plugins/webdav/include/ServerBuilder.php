@@ -25,10 +25,12 @@ namespace Tuleap\WebDAV;
 
 use BrowserPlugin;
 use ForgeConfig;
-use ProjectDao;
+use PermissionsOverrider_PermissionsOverriderManager;
 use Sabre_DAV_Locks_Backend_FS;
 use Sabre_DAV_Locks_Plugin;
 use Sabre_DAV_Server;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use WebDAVRoot;
 use WebDAVTree;
 
@@ -62,7 +64,19 @@ final class ServerBuilder
     private function getServer(\PFUser $user, string $base_uri): Sabre_DAV_Server
     {
         // Creating the Root directory from WebDAV file system
-        $rootDirectory = new WebDAVRoot($this->plugin, $user, $this->max_file_size, new ProjectDao());
+        $rootDirectory = new WebDAVRoot(
+            $this->plugin,
+            $user,
+            $this->max_file_size,
+            \ProjectManager::instance(),
+            \WebDAVUtils::getInstance(),
+            \PluginManager::instance(),
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                \EventManager::instance(),
+            )
+        );
 
         // The tree manages all the file objects
         $tree = new WebDAVTree($rootDirectory);

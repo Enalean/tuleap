@@ -230,7 +230,6 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
     public function generateDirectoryIndex($path)
     {
         $node = $this->server->tree->getNodeForPath($path);
-        $class = get_class($node);
 
         echo $GLOBALS['HTML']->pv_header(['title' => ' WebDAV : ' . $this->purifier->purify($node->getName())]);
 
@@ -242,25 +241,24 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
 
         echo "<table>
         <tr><th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'name')) . "</th><th>Type</th>";
-        if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
+        if ($node instanceof WebDAVFRS && $node->userCanWrite()) {
             echo "<th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'delete')) . "</th><th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'rename')) . "</th>";
         }
-        if ($class == 'WebDAVFRSPackage') {
+        if ($node instanceof WebDAVFRSPackage) {
             echo "<th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'last_modified')) . "</th>";
             if ($node->userCanWrite()) {
                 echo "<th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'delete')) . "</th><th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'rename')) . "</th>";
             }
         }
-        if ($class == 'WebDAVFRSRelease') {
+        if ($node instanceof WebDAVFRSRelease) {
             echo "<th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'size')) . "</th><th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'last_modified')) . "</th>";
             if ($node->userCanWrite()) {
                 echo "<th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'delete')) . "</th>";
             }
         }
-        if ($class == 'WebDAVDocmanFolder') {
+        if ($node instanceof WebDAVDocmanFolder) {
             echo "<th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'size')) . "</th><th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'last_modified')) . "</th>";
-            $docmanPermissionManager = $node->getUtils()->getDocmanPermissionsManager($node->getProject());
-            if ($node->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($node->getUser(), $node->getItem()->getId())) {
+            if ($node->userCanWrite()) {
                 echo "<th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'delete')) . "</th><th>" . $this->purifier->purify($GLOBALS['Language']->getText('plugin_webdav_html', 'rename')) . "</th>";
             }
         }
@@ -320,11 +318,11 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
 
             echo str_replace("%", "%25", "<tr><td><a href=\"{$this->purifier->purify($fullPath)}\">{$this->purifier->purify($name)}</a></td>");
             echo "<td>{$type}</td>";
-            if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
+            if ($node instanceof WebDAVFRS && $node->userCanWrite()) {
                 $this->deleteForm($file);
                 $this->renameForm($file);
             }
-            if ($class == 'WebDAVFRSPackage') {
+            if ($node instanceof WebDAVFRSPackage) {
                 echo "<td>{$lastmodified}</td>";
                 if ($node->userCanWrite()) {
                     $this->deleteForm($file);
@@ -333,7 +331,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
                     //$this->moveForm($file, $destinations);
                 }
             }
-            if ($class == 'WebDAVFRSRelease') {
+            if ($node instanceof WebDAVFRSRelease) {
                 echo "<td>{$size}</td>";
                 echo "<td>{$lastmodified}</td>";
                 if ($node->userCanWrite()) {
@@ -342,7 +340,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
                     //$this->moveForm($file, $destinations);
                 }
             }
-            if ($class == 'WebDAVDocmanFolder') {
+            if ($node instanceof WebDAVDocmanFolder) {
                 echo "<td>{$size}</td>";
                 echo "<td>{$lastmodified}</td>";
                 $docmanPermissionManager = $node->getUtils()->getDocmanPermissionsManager($node->getProject());
@@ -358,15 +356,15 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
         <tr><td>";
 
         if ($this->enablePost) {
-            if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
+            if ($node instanceof WebDAVFRS && $node->userCanWrite()) {
                 echo '<h4>' . $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "create_package")) . ' :</h4>';
                 $this->mkcolForm();
             }
-            if ($class == 'WebDAVFRSPackage' && $node->userCanWrite()) {
+            if ($node instanceof WebDAVFRSPackage && $node->userCanWrite()) {
                 echo '<h4>' . $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "create_release")) . ' :</h4>';
                 $this->mkcolForm();
             }
-            if ($class == 'WebDAVFRSRelease' && $node->userCanWrite()) {
+            if ($node instanceof WebDAVFRSRelease && $node->userCanWrite()) {
                 echo '<h4>' . $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "upload_file")) . ' :</h4>
                 <form method="post" action="" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="put" />
@@ -375,7 +373,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
                 <button type="submit" style="background:white; border:0;" value="upload"><img src="https://' . ForgeConfig::get('sys_https_host') . '/themes/Dawn/images/ic/tick.png"></button>
                 </form>';
             }
-            if ($class == 'WebDAVDocmanFolder') {
+            if ($node instanceof WebDAVDocmanFolder) {
                 if ($node->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($node->getUser(), $node->getItem()->getId())) {
                     echo '<h4>Create a new folder :</h4>';
                     $this->mkcolForm();
