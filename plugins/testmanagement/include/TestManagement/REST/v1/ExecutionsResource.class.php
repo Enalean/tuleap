@@ -63,7 +63,7 @@ use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
-use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\Artifact\Followup\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -458,14 +458,14 @@ class ExecutionsResource
      *
      * @param string $id Id of the test execution artifact
      * @param string $issue_id Id of the issue artifact {@from body}
-     * @param ChangesetCommentRepresentation $comment Comment describing the test execution {body, format} {@from body}
+     * @param NewChangesetCommentRepresentation $comment Comment describing the test execution {body, format} {@from body}
      *
      * @throws RestException 400
      * @throws RestException 404
      * @throws RestException 500
      *
      */
-    protected function patchIssueLink($id, $issue_id, ?ChangesetCommentRepresentation $comment = null): void
+    protected function patchIssueLink($id, $issue_id, ?NewChangesetCommentRepresentation $comment = null): void
     {
         $user               = $this->getCurrentUser();
         $execution_artifact = $this->getArtifactById($user, (int) $id);

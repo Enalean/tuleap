@@ -89,8 +89,8 @@ use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Followup\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
-use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -624,13 +624,13 @@ class ArtifactsResource extends AuthenticatedResource
      * </ol>
      *
      * @url PUT {id}
-     * @param string $id Id of the artifact
-     * @param array $values Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
-     * @param ChangesetCommentRepresentation $comment Comment about update {body, format} {@from body}
+     * @param string                            $id      Id of the artifact
+     * @param array                             $values  Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
+     * @param NewChangesetCommentRepresentation $comment Comment about update {body, format} {@from body}
      *
      * @throws RestException 403
      */
-    protected function putId($id, array $values, ?ChangesetCommentRepresentation $comment = null)
+    protected function putId($id, array $values, ?NewChangesetCommentRepresentation $comment = null)
     {
         $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);

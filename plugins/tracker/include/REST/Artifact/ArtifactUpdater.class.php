@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Artifact\Followup\NewChangesetCommentRepresentation;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_REST_Artifact_ArtifactUpdater
@@ -37,8 +38,17 @@ class Tracker_REST_Artifact_ArtifactUpdater
         return new self(new Tracker_REST_Artifact_ArtifactValidator(Tracker_FormElementFactory::instance()));
     }
 
-    public function update(PFUser $user, Artifact $artifact, array $values, ?Tuleap\Tracker\REST\ChangesetCommentRepresentation $comment = null)
-    {
+    /**
+     * @throws Tracker_Exception
+     * @throws Tracker_NoChangeException
+     * @throws \Luracast\Restler\RestException
+     */
+    public function update(
+        PFUser $user,
+        Artifact $artifact,
+        array $values,
+        ?NewChangesetCommentRepresentation $comment = null
+    ): void {
         $this->checkArtifact($user, $artifact);
         $fields_data = $this->artifact_validator->getFieldsDataOnUpdate($values, $artifact);
 
@@ -54,9 +64,6 @@ class Tracker_REST_Artifact_ArtifactUpdater
 
     private function checkArtifact(PFUser $user, Artifact $artifact)
     {
-        if (! $artifact) {
-            throw new \Luracast\Restler\RestException(404, 'Artifact not found');
-        }
         if (! $artifact->userCanUpdate($user)) {
             throw new \Luracast\Restler\RestException(403, 'You have not the permission to update this card');
         }
