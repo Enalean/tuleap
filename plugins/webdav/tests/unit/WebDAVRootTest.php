@@ -79,45 +79,15 @@ final class WebDAVRootTest extends TestCase
     }
 
     /**
-     * Testing when There is no public projects
-     */
-    public function testGetChildrenWithNoPublicProjects(): void
-    {
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
-        $this->webDAVRoot->shouldReceive('getPublicProjectList')->andReturns([]);
-        $this->assertEquals($this->webDAVRoot->getChildren(), []);
-    }
-
-    /**
-     * Testing when There is no public project with WebDAV plugin activated
-     */
-    public function testGetChildrenWithNoPublicProjectWithWebDAVActivated(): void
-    {
-        $this->user->shouldReceive('isAnonymous')->andReturns(true);
-        $this->project_dao->shouldReceive('searchByPublicStatus')->andReturns([
-            ['group_id' => 101]
-        ]);
-
-        $webDAVProject = \Mockery::spy(\WebDAVProject::class);
-
-        $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($webDAVProject);
-        $this->webDAVRoot->shouldReceive('isWebDAVAllowedForProject')->andReturnFalse();
-        $this->assertEquals($this->webDAVRoot->getChildren(), []);
-    }
-
-    /**
      * Testing when there is public projects with WebDAV activated
      */
     public function testGetChildrenWithPublicProjects(): void
     {
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
-        $webDAVProject = \Mockery::spy(\WebDAVProject::class);
+        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
 
-        $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($webDAVProject);
-        $this->webDAVRoot->shouldReceive('getPublicProjectList')->andReturns([$webDAVProject]);
-
-        $this->assertEquals($this->webDAVRoot->getChildren(), [$webDAVProject]);
+        $this->webDAVRoot->getChildren();
     }
 
     /**
