@@ -16,7 +16,7 @@
                 {{# cross_references }}
                     <div class="tlp-card-container" id="{{ id }}">
                         <a
-                            class="tlp-card tlp-card-selectable cross-reference"
+                            class="tlp-card tlp-card-selectable cross-reference tracker-cross-reference-card {{# can_delete }}tracker-cross-reference-card-deletable{{/ can_delete }}"
                             href="{{ url }}"
                         >
                             {{# title_badge }}
@@ -25,7 +25,15 @@
                                 </span>
                             {{/ title_badge }}
 
-                            {{ title }}
+                            <span class="tracker-cross-reference-title">
+                                {{ title }}
+                            </span>
+
+                            {{# additional_badges }}
+                                <span class="tlp-badge-secondary tlp-badge-outline tracker-cross-reference-additional-badge">
+                                    {{ label }}
+                                </span>
+                            {{/ additional_badges }}
                         </a>
                         {{# can_delete }}
                             <a

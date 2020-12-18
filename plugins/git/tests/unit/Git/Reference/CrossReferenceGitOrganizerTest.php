@@ -73,7 +73,17 @@ class CrossReferenceGitOrganizerTest extends TestCase
                 [
                     'getCurrentUser'     => $user,
                     'getCrossReferences' => [
-                        new CrossReferencePresenter(1, "tracker", "another_title", "url", "delete_url", 1, "whatever", null),
+                        new CrossReferencePresenter(
+                            1,
+                            "tracker",
+                            "another_title",
+                            "url",
+                            "delete_url",
+                            1,
+                            "whatever",
+                            null,
+                            []
+                        ),
                     ]
                 ]
             )->getMock();
@@ -98,9 +108,9 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->once();
 
         $this->git_reference_manager
-            ->shouldReceive('getRepositoryFromCrossReferenceValue')
+            ->shouldReceive('getCommitInfoFromReferenceValue')
             ->with($project, 'cloudy/stable/1a2b3c4d5e')
-            ->andReturnNull();
+            ->andReturn(new CommitInfoFromReferenceValue(null, '1a2b3c4d5e'));
 
         $a_ref = new CrossReferencePresenter(
             1,
@@ -111,6 +121,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
             1,
             'cloudy/stable/1a2b3c4d5e',
             null,
+            [],
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -154,6 +165,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
             1,
             'cloudy/stable/1a2b3c4d5e',
             null,
+            [],
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -212,13 +224,13 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->getMock();
 
         $this->git_reference_manager
-            ->shouldReceive('getRepositoryFromCrossReferenceValue')
+            ->shouldReceive('getCommitInfoFromReferenceValue')
             ->with($project, 'cloudy/stable/1a2b3c4d5e')
-            ->andReturn($repository);
+            ->andReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
         $this->git_reference_manager
-            ->shouldReceive('getRepositoryFromCrossReferenceValue')
+            ->shouldReceive('getCommitInfoFromReferenceValue')
             ->with($another_project, 'tuleap/stable/e5d4c3b2a1')
-            ->andReturn($another_repository);
+            ->andReturn(new CommitInfoFromReferenceValue($another_repository, 'e5d4c3b2a1'));
 
         $a_ref = new CrossReferencePresenter(
             1,
@@ -229,6 +241,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
             1,
             'cloudy/stable/1a2b3c4d5e',
             null,
+            [],
         );
 
         $another_ref = new CrossReferencePresenter(
@@ -240,6 +253,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
             2,
             'tuleap/stable/e5d4c3b2a1',
             null,
+            [],
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -252,12 +266,22 @@ class CrossReferenceGitOrganizerTest extends TestCase
 
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($a_ref, 'acme/cloudy/stable')
-            ->once();
+            ->with(
+                Mockery::on(function (CrossReferencePresenter $ref) {
+                    return $ref->id === 1
+                        && $ref->additional_badges[0]->label === '1a2b3c4d5e';
+                }),
+                'acme/cloudy/stable'
+            )->once();
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($another_ref, 'foobar/tuleap/stable')
-            ->once();
+            ->with(
+                Mockery::on(function (CrossReferencePresenter $ref) {
+                    return $ref->id === 2
+                        && $ref->additional_badges[0]->label === 'e5d4c3b2a1';
+                }),
+                'foobar/tuleap/stable'
+            )->once();
 
         $this->organizer->organizeGitReferences($by_nature_organizer);
     }
@@ -299,13 +323,13 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->getMock();
 
         $this->git_reference_manager
-            ->shouldReceive('getRepositoryFromCrossReferenceValue')
+            ->shouldReceive('getCommitInfoFromReferenceValue')
             ->with($project, 'cloudy/stable/1a2b3c4d5e')
-            ->andReturn($repository);
+            ->andReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
         $this->git_reference_manager
-            ->shouldReceive('getRepositoryFromCrossReferenceValue')
+            ->shouldReceive('getCommitInfoFromReferenceValue')
             ->with($another_project, 'tuleap/stable/e5d4c3b2a1')
-            ->andReturn($another_repository);
+            ->andReturn(new CommitInfoFromReferenceValue($another_repository, 'e5d4c3b2a1'));
 
         $a_ref = new CrossReferencePresenter(
             1,
@@ -316,6 +340,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
             1,
             'cloudy/stable/1a2b3c4d5e',
             null,
+            [],
         );
 
         $another_ref = new CrossReferencePresenter(
@@ -327,6 +352,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
             2,
             'tuleap/stable/e5d4c3b2a1',
             null,
+            [],
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -339,12 +365,23 @@ class CrossReferenceGitOrganizerTest extends TestCase
 
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($a_ref, 'acme/cloudy/stable')
-            ->once();
+            ->with(
+                Mockery::on(function (CrossReferencePresenter $ref) {
+                    return $ref->id === 1
+                        && $ref->additional_badges[0]->label === '1a2b3c4d5e';
+                }),
+                'acme/cloudy/stable'
+            )->once();
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($another_ref, 'foobar/tuleap/stable')
-            ->never();
+            ->with(
+                Mockery::on(function (CrossReferencePresenter $ref) {
+                    return $ref->id === 2
+                        && $ref->additional_badges[0]->label === 'e5d4c3b2a1';
+                }),
+                'foobar/tuleap/stable'
+            )->never();
+
         $by_nature_organizer
             ->shouldReceive('removeUnreadableCrossReference')
             ->with($another_ref)

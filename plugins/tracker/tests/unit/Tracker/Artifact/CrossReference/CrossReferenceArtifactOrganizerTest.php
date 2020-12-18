@@ -87,7 +87,8 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
                             "delete_url",
                             1,
                             "whatever",
-                            null
+                            null,
+                            [],
                         ),
                     ]
                 ]
@@ -122,6 +123,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             1,
             '123',
             null,
+            [],
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -166,6 +168,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             1,
             '123',
             null,
+            [],
         );
 
         $this->artifact_factory
@@ -213,6 +216,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             1,
             '123',
             null,
+            [],
         );
 
         $this->artifact_factory
@@ -286,6 +290,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             1,
             '123',
             null,
+            [],
         );
 
         $this->artifact_factory

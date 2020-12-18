@@ -24,6 +24,7 @@ namespace Tuleap\Git\Reference;
 
 use Git;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 
@@ -77,10 +78,12 @@ class CrossReferenceGitOrganizer
             return;
         }
 
-        $repository = $this->git_reference_manager->getRepositoryFromCrossReferenceValue(
+        $commit_info = $this->git_reference_manager->getCommitInfoFromReferenceValue(
             $project,
             $cross_reference->target_value
         );
+
+        $repository = $commit_info->getRepository();
 
         if (! $repository || ! $repository->userCanRead($user)) {
             $by_nature_organizer->removeUnreadableCrossReference($cross_reference);
@@ -88,7 +91,14 @@ class CrossReferenceGitOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $cross_reference,
+            $cross_reference
+                ->withAdditionalBadges(
+                    [
+                        new AdditionalBadgePresenter(
+                            substr($commit_info->getSha1(), 0, 10)
+                        )
+                    ]
+                ),
             $project->getUnixNameLowerCase() . '/' . $repository->getFullName()
         );
     }
