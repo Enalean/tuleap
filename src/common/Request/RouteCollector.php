@@ -28,6 +28,7 @@ use FastRoute;
 use FRSFileFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
+use MailingListDao;
 use MailManager;
 use SVN_TokenHandler;
 use TemplateRendererFactory;
@@ -81,7 +82,10 @@ use Tuleap\InviteBuddy\Admin\InviteBuddyAdminUpdateController;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\MailingList\MailingListAdministrationController;
+use Tuleap\MailingList\MailingListCreationController;
+use Tuleap\MailingList\MailingListCreationPresenterBuilder;
 use Tuleap\MailingList\MailingListDeleteController;
+use Tuleap\MailingList\MailingListDomainBuilder;
 use Tuleap\MailingList\MailingListUpdateController;
 use Tuleap\News\NewsDao;
 use Tuleap\News\PermissionsPerGroup;
@@ -743,6 +747,20 @@ class RouteCollector
         );
     }
 
+    public function getMailingListsCreationController(): MailingListCreationController
+    {
+        return new MailingListCreationController(
+            new ProjectRetriever(\ProjectManager::instance()),
+            new ProjectAdministratorChecker(),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/lists'),
+            new MailingListDomainBuilder(),
+            new MailingListCreationPresenterBuilder(
+                new MailingListDao(),
+                \Codendi_HTMLPurifier::instance()
+            )
+        );
+    }
+
     public function getMailingListUpdateController(): MailingListUpdateController
     {
         return new MailingListUpdateController(
@@ -801,6 +819,7 @@ class RouteCollector
             $r->get('/background', [self::class, 'getGetProjectBackgroundAdministration']);
 
             $r->get('/mailing-lists', [self::class, 'getMailingListsAdministration']);
+            $r->get('/mailing-lists/add', [self::class, 'getMailingListsCreationController']);
             $r->post('/mailing-lists/update/{list-id:\d+}', [self::class, 'getMailingListUpdateController']);
             $r->post('/mailing-lists/delete/{list-id:\d+}', [self::class, 'getMailingListDeleteController']);
         });

@@ -7,7 +7,6 @@
 // http://sourceforge.net
 
 use Tuleap\MailingList\MailingListAdministrationController;
-use Tuleap\MailingList\MailingListCreationPresenterBuilder;
 
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../mail_utils.php';
@@ -120,29 +119,6 @@ Thank you for using %1$s.
             }
             $GLOBALS['Response']->redirect(MailingListAdministrationController::getUrl($pm->getProject($group_id)));
         }
-    }
-
-    if ($request->existAndNonEmpty('add_list')) {
-        /*
-          Show the form for adding mailing list
-         */
-        mail_header(['title' => _('Add a mailing list')], $request->getCurrentUser());
-
-        ob_start();
-        include($GLOBALS['Language']->getContent('mail/addlist_intro'));
-        $intro = (string) ob_get_clean();
-
-        $presenter = (new MailingListCreationPresenterBuilder(new MailingListDao(), $purifier))->build(
-            $request,
-            $csrf,
-            $sys_lists_domain,
-            $intro,
-        );
-
-        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/lists/');
-        $renderer->renderToPage('admin-add', $presenter);
-
-        mail_footer([]);
     }
 } else {
     /*
