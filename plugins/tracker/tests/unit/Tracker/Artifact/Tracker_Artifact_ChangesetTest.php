@@ -139,7 +139,15 @@ class Tracker_Artifact_ChangesetTest extends TestCase
             ->with($this->user, $this->changeset)
             ->andReturn($permissions_on_artifact_full_representation);
 
-        $field_value_text_representation = Mockery::mock(ArtifactFieldValueTextRepresentation::class);
+        $field_value_text_representation = new ArtifactFieldValueTextRepresentation(
+            2,
+            'text',
+            'Vroom vroom',
+            'Heaven',
+            'text',
+            null
+        );
+
         $this->string_field->shouldReceive('getRESTValue')
             ->once()
             ->with($this->user, $this->changeset)
@@ -164,7 +172,15 @@ class Tracker_Artifact_ChangesetTest extends TestCase
             ->with($this->user, $this->changeset)
             ->andReturnNull();
 
-        $field_value_text_representation = Mockery::mock(ArtifactFieldValueTextRepresentation::class);
+        $field_value_text_representation = new ArtifactFieldValueTextRepresentation(
+            2,
+            'text',
+            'Vroom vroom',
+            'Heaven',
+            'text',
+            null
+        );
+
         $this->string_field->shouldReceive('getRESTValue')
             ->once()
             ->with($this->user, $this->changeset)

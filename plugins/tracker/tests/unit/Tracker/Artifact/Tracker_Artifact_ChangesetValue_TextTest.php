@@ -98,17 +98,6 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
         $this->assertEquals('Problems with my code: &lt;b&gt;example&lt;/b&gt;', $text->getTextWithReferences(101));
     }
 
-    public function testItReturnsTheRESTValue(): void
-    {
-        $field = $this->getTextFieldWithProject();
-        $user  = Mockery::mock(PFUser::class);
-
-        $changeset = new Tracker_Artifact_ChangesetValue_Text(111, \Mockery::spy(\Tracker_Artifact_Changeset::class), $field, true, 'myxedemic enthymematic', 'html');
-        $representation = $changeset->getRESTValue($user);
-
-        $this->assertEquals('myxedemic enthymematic', $representation->value);
-        $this->assertEquals('html', $representation->format);
-    }
 
     /**
      * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Text
@@ -173,7 +162,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
     public function testItConsidersMarkdownAsTextFormat(): void
     {
         $field = $this->getTextFieldWithProject();
-        $text = new Tracker_Artifact_ChangesetValue_Text(
+        $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
             \Mockery::spy(\Tracker_Artifact_Changeset::class),
             $field,
@@ -183,5 +172,63 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
         );
 
         $this->assertEquals(Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT, $text->getFormat());
+    }
+
+    public function testItBuildTheMarkdownTextValueRepresentation(): void
+    {
+        $user                 = Mockery::mock(PFUser::class);
+        $text                 = 'Problems with my code: **example**';
+        $field                = $this->getTextFieldWithProject();
+        $changeset_value_text = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            $text,
+            Tracker_Artifact_ChangesetValue_Text::MARKDOWN_CONTENT
+        );
+
+        $representation = $changeset_value_text->getRESTValue($user);
+        $this->assertEquals("<p>Problems with my code: <strong>example</strong></p>\n", $representation->value);
+        $this->assertEquals('html', $representation->format);
+        $this->assertEquals($text, $representation->commonmark);
+    }
+
+    public function testItBuildTheHtmlTextValueRepresentation(): void
+    {
+        $user                 = Mockery::mock(PFUser::class);
+        $text                 = "<p>Problems with my code: <strong>example</strong></p>";
+        $field                = $this->getTextFieldWithProject();
+        $changeset_value_text = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            $text,
+            Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
+        );
+
+        $representation = $changeset_value_text->getRESTValue($user);
+        $this->assertEquals($text, $representation->value);
+        $this->assertEquals('html', $representation->format);
+    }
+
+    public function testItBuildTheTextTextValueRepresentation(): void
+    {
+        $user                 = Mockery::mock(PFUser::class);
+        $text                 = "Ca débite, Ca débite";
+        $field                = $this->getTextFieldWithProject();
+        $changeset_value_text = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            $text,
+            Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+        );
+
+        $representation = $changeset_value_text->getRESTValue($user);
+        $this->assertEquals($text, $representation->value);
+        $this->assertEquals('text', $representation->format);
     }
 }
