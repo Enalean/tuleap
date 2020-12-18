@@ -1,0 +1,57 @@
+<h1 class="project-administration-title">
+    {{# gettext }}Mailing lists{{/ gettext }}
+</h1>
+<div class="tlp-framed">
+    {{# purified_overridable_intro }}
+        <p>{{{ . }}}</p>
+    {{/ purified_overridable_intro
+    }}
+    {{# has_lists }}
+        <section class="mailing-list-homepage">
+            {{# lists }}
+                <div class="mailing-list-container">
+                    <a class="tlp-card tlp-card-selectable" href="{{ public_url }}">
+                        <span class="mailing-list-card-title">{{ name }}</span>
+                        <span class="mailing-list-card-description">{{ description }}</span>
+                    </a>
+                    <div class="tlp-dropdown mailing-list-dropdown">
+                        <i class="fas fa-cog fa-fw mailing-list-dropdown-trigger"></i>
+                        <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
+                            {{# archive_urls }}
+                                <a href="{{ url }}" class="tlp-dropdown-menu-item" role="menuitem">
+                                    {{ label }}
+                                </a>
+                            {{/ archive_urls }}
+                            <span class="tlp-dropdown-menu-separator" role="separator"></span>
+                            <a href="{{ subscribe_url }}" class="tlp-dropdown-menu-item" role="menuitem">
+                                {{# gettext }}(Un)Subscribe/Preferences{{/ gettext }}
+                            </a>
+                            <a href="{{ subscribe_url }}" class="tlp-dropdown-menu-item" role="menuitem">
+                                {{# gettext }}ML Administration{{/ gettext }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {{/ lists }}
+        </section>
+    {{/ has_lists }}
+    {{^ has_lists }}
+        <div class="empty-page">
+            <div class="empty-page-text-with-small-text">
+                {{# gettext }}There isn't any mailing lists yet.{{/ gettext }}
+                {{^ is_project_admin }}
+                    <div class="empty-page-small-text">
+                        {{# gettext }}Or you don't have permissions to see them.{{/ gettext }}
+                    </div>
+                {{/ is_project_admin }}
+            </div>
+
+            {{# is_project_admin }}
+                <a href="{{ creation_url }}" class="tlp-button-primary tlp-button-large">
+                    <i class="fas fa-plus tlp-button-icon"></i>
+                    {{# gettext }}New mailing list{{/ gettext }}
+                </a>
+            {{/ is_project_admin }}
+        </div>
+    {{/ has_lists }}
+</div>

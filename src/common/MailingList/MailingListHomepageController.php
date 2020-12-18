@@ -28,13 +28,12 @@ use MailingListDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
-use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Request\ProjectRetriever;
 
-class MailingListAdministrationController implements DispatchableWithBurningParrot, DispatchableWithRequest
+class MailingListHomepageController implements DispatchableWithBurningParrot, DispatchableWithRequest
 {
     /**
      * @var \TemplateRenderer
@@ -49,26 +48,26 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
      */
     private $project_retriever;
     /**
-     * @var ProjectAdministratorChecker
-     */
-    private $administrator_checker;
-    /**
      * @var MailingListPresenterCollectionBuilder
      */
     private $presenter_collection_builder;
+    /**
+     * @var \BaseLanguage
+     */
+    private $base_language;
 
     public function __construct(
         ProjectRetriever $project_retriever,
-        ProjectAdministratorChecker $administrator_checker,
         \TemplateRenderer $renderer,
         MailingListDao $dao,
-        MailingListPresenterCollectionBuilder $presenter_collection_builder
+        MailingListPresenterCollectionBuilder $presenter_collection_builder,
+        \BaseLanguage $base_language
     ) {
         $this->renderer                     = $renderer;
         $this->dao                          = $dao;
         $this->project_retriever            = $project_retriever;
-        $this->administrator_checker        = $administrator_checker;
         $this->presenter_collection_builder = $presenter_collection_builder;
+        $this->base_language                = $base_language;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -82,25 +81,33 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
             throw new NotFoundException();
         }
 
-        $current_user = $request->getCurrentUser();
-        $this->administrator_checker->checkUserIsProjectAdministrator($current_user, $project);
-
         $layout->addJavascriptAsset(
             new JavascriptAsset(
                 new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core'),
-                'mailing-lists-administration.js'
+                'mailing-lists-homepage.js'
             )
         );
 
-        $mailing_list_presenters = $this->getMailingListPresenters($project, $request);
+        $current_user = $request->getCurrentUser();
 
-        $service->displayMailingListHeader($current_user, _('Mailing lists administration'));
+        $mailing_list_presenters = $this->getMailingListPresenters($project, $request, $current_user);
+
+        $purified_overridable_intro = '';
+        if ($this->base_language->hasText('mail_index', 'mail_list_via_gnu')) {
+            $purified_overridable_intro = \Codendi_HTMLPurifier::instance()->purify(
+                $this->base_language->getOverridableText('mail_index', 'mail_list_via_gnu'),
+                \Codendi_HTMLPurifier::CONFIG_LIGHT,
+            );
+        }
+
+        $service->displayMailingListHeader($current_user, _('Mailing lists'));
         $this->renderer->renderToPage(
-            'admin-index',
-            new MailingListAdministrationPresenter(
+            'mailing-lists-homepage',
+            new MailingListHomepagePresenter(
                 $mailing_list_presenters,
+                $current_user->isAdmin((int) $project->getID()),
                 MailingListCreationController::getUrl($project),
-                self::getCSRF($project)
+                $purified_overridable_intro,
             )
         );
         $service->displayFooter();
@@ -119,9 +126,13 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
     /**
      * @return MailingListPresenter[]
      */
-    private function getMailingListPresenters(\Project $project, HTTPRequest $request): array
+    private function getMailingListPresenters(\Project $project, HTTPRequest $request, \PFUser $user): array
     {
-        $data_access_result = $this->dao->searchActiveListsInProject((int) $project->getID());
+        if ($user->isLoggedIn() && $user->isMember((int) $project->getID())) {
+            $data_access_result = $this->dao->searchActiveListsInProject((int) $project->getID());
+        } else {
+            $data_access_result = $this->dao->searchPublicListsInProject((int) $project->getID());
+        }
         if (! $data_access_result) {
             return [];
         }

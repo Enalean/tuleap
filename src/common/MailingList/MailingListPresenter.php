@@ -55,22 +55,46 @@ final class MailingListPresenter
      * @var string
      */
     public $delete_url;
+    /**
+     * @var string
+     */
+    public $public_url;
+    /**
+     * @var array[]
+     * @psalm-var array<array{url: string, label: string}>
+     */
+    public $archive_urls;
+    /**
+     * @var string
+     */
+    public $subscribe_url;
 
+    /**
+     * @param array[] $archive_urls
+     *
+     * @psalm-param array<array{url: string, label: string}> $archive_urls
+     */
     public function __construct(
         int $id,
         string $name,
         string $description,
         bool $is_public,
+        string $public_url,
         string $admin_url,
         string $update_url,
-        string $delete_url
+        string $delete_url,
+        string $subscribe_url,
+        array $archive_urls
     ) {
-        $this->id          = $id;
-        $this->name        = $name;
-        $this->description = $description;
-        $this->is_public   = $is_public;
-        $this->admin_url   = $admin_url;
-        $this->update_url  = $update_url;
-        $this->delete_url  = $delete_url;
+        $this->id            = $id;
+        $this->name          = $name;
+        $this->description   = $description;
+        $this->is_public     = $is_public;
+        $this->public_url    = $public_url;
+        $this->admin_url     = $admin_url;
+        $this->update_url    = $update_url;
+        $this->delete_url    = $delete_url;
+        $this->archive_urls  = $archive_urls;
+        $this->subscribe_url = $subscribe_url;
     }
 }

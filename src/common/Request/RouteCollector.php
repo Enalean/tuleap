@@ -87,6 +87,7 @@ use Tuleap\MailingList\MailingListCreationPresenterBuilder;
 use Tuleap\MailingList\MailingListDeleteController;
 use Tuleap\MailingList\MailingListDoCreateController;
 use Tuleap\MailingList\MailingListDomainBuilder;
+use Tuleap\MailingList\MailingListPresenterCollectionBuilder;
 use Tuleap\MailingList\MailingListUpdateController;
 use Tuleap\News\NewsDao;
 use Tuleap\News\PermissionsPerGroup;
@@ -745,6 +746,7 @@ class RouteCollector
             new ProjectAdministratorChecker(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/lists'),
             new \MailingListDao(),
+            new MailingListPresenterCollectionBuilder(EventManager::instance()),
         );
     }
 

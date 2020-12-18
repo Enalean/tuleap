@@ -104,13 +104,27 @@ class MailingListDao extends DataAccessObject
     /**
      * @return DataAccessResult|false
      */
-    public function searchActiveListInProject(int $project_id)
+    public function searchActiveListsInProject(int $project_id)
     {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT * FROM mail_group_list
                 WHERE group_id = $project_id
                   AND is_public IN (0, 1)";
+
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * @return DataAccessResult|false
+     */
+    public function searchPublicListsInProject(int $project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT * FROM mail_group_list
+                WHERE group_id = $project_id
+                  AND is_public = 1";
 
         return $this->retrieve($sql);
     }

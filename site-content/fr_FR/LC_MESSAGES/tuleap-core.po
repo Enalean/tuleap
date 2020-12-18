@@ -711,9 +711,6 @@ msgstr ""
 "Choisissez un forum et vous pourrez le parcourir, effectuer une recherche et "
 "poster un message."
 
-msgid "Choose a list to browse, search, and post messages."
-msgstr "Choisissez une liste où naviguer, chercher ou poster des messages."
-
 msgid "Clear history"
 msgstr "Effacer l'historique"
 
@@ -1818,10 +1815,6 @@ msgid "No Forums Found"
 msgstr "Forum introuvable"
 
 #, php-format
-msgid "No Lists found for %1$s"
-msgstr "Aucune liste pour %1$s"
-
-#, php-format
 msgid "No Messages in %1$s"
 msgstr "Aucun message dans %1$s"
 
@@ -1909,6 +1902,9 @@ msgstr "Ouvre cette fenêtre"
 
 msgid "Optional message…"
 msgstr "Message optionnel…"
+
+msgid "Or you don't have permissions to see them."
+msgstr "Ou alors vous n'avez pas la permission pour les voir."
 
 msgid "Orange"
 msgstr "Orange"
@@ -2089,6 +2085,9 @@ msgstr "Connexion précédente"
 msgid "Private"
 msgstr "Privé"
 
+msgid "Private archives"
+msgstr "Archives privées"
+
 msgid "Private incl. restricted"
 msgstr "Privé incl. les utilisateurs restreints"
 
@@ -2133,10 +2132,6 @@ msgstr "Administration du projet"
 
 msgid "Project administrators can choose project visibility"
 msgstr "Les administrateurs de projet peuvent choisir la visibilité du projet"
-
-msgid "Project administrators use the admin link to request mailing lists."
-msgstr ""
-"Utiliser la fonction d'administration pour créer une liste de diffusion."
 
 msgid ""
 "Project admins can't be removed from project. You must remove them from "
@@ -2266,6 +2261,9 @@ msgstr "Le lien de la release note n'est pas au bon format."
 
 msgid "Public"
 msgstr "Publique"
+
+msgid "Public archives"
+msgstr "Archives publiques"
 
 msgid "Public incl. restricted"
 msgstr "Publique, incluant les utilisateurs restreints"
@@ -2868,6 +2866,9 @@ msgstr "Il n'y a pas <br> encore d'activité"
 
 msgid "There isn't any mailing list yet"
 msgstr "Il n'y a aucune liste de diffusion pour l'instant"
+
+msgid "There isn't any mailing lists yet."
+msgstr "Il n'y a aucune liste de diffusion pour l'instant."
 
 msgid "There isn't any matching members"
 msgstr "Il n'y a aucun membre correspondant"
