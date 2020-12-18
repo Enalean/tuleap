@@ -46,7 +46,7 @@
     "whatwg-fetch": "^3.4.0"
   },
   "devDependencies": {
-    "@shopify/jest-dom-mocks": "^2.9.3",
+    "@shopify/jest-dom-mocks": "^2.9.5",
     "@types/bootstrap": "^4.5.0",
     "@types/ckeditor": "^4.9.10",
     "@types/d3-scale": "^3.2.1",
