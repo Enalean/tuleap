@@ -1010,9 +1010,6 @@ msgstr "Accord de téléchargement"
 msgid "E-mail notification on commits"
 msgstr "Notification e-mail sur les commits"
 
-msgid "ERROR - List Already Exists"
-msgstr "ERREUR - La liste existe déjà"
-
 msgid "ERROR - no group_id"
 msgstr "ERREUR - pas de group_id"
 
@@ -1062,9 +1059,6 @@ msgstr "E-mail"
 #, php-format
 msgid "Email %s is not valid"
 msgstr "L'email %s n'est valide"
-
-msgid "Email address not found."
-msgstr "Adresse e-mail introuvable"
 
 msgid "Email format preference successfully updated"
 msgstr "La préférence de format de courriel a été mise à jour"
@@ -1431,9 +1425,6 @@ msgstr ""
 msgid "Invalid selection of categories"
 msgstr "La selection de catégories n'est pas valide"
 
-msgid "Invalid userid"
-msgstr "ID utilisateur invalide"
-
 #, php-format
 msgid "Invitation complete!"
 msgstr "Invitation terminée !"
@@ -1565,18 +1556,21 @@ msgstr "Liens"
 msgid "List"
 msgstr "Liste"
 
-msgid ""
-"List Name Contains Bad Characters. Authorized Characters are : letters, "
-"numbers, -, _, ."
-msgstr ""
-"Le nom de la liste contient des caractères non autorisés. Les caractères "
-"autorisés sont : lettres, nombres, -, _, ."
-
 msgid "List about development of…"
 msgstr "Liste à propos du développement de…"
 
 msgid "List added"
 msgstr "Liste créée avec succès"
+
+msgid "List already exists"
+msgstr "La liste existe déjà"
+
+msgid ""
+"List name contains bad characters. Authorized characters are: letters, "
+"numbers, -, _, ."
+msgstr ""
+"Le nom de la liste contient des caractères non autorisés. Les caractères "
+"autorisés sont : lettres, nombres, -, _, ."
 
 msgid "List of impacted files"
 msgstr "Liste des fichiers concernés"
@@ -1728,14 +1722,14 @@ msgstr "La surveillance du forum est arrêté"
 msgid "Month"
 msgstr "Mois"
 
-msgid "Must Provide List Name That Is 4 or More Characters Long"
-msgstr "Le nom de la liste doit comporter au moins 4 caractères"
-
 msgid "Must choose a message first"
 msgstr "Veuillez d'abord choisir un message"
 
 msgid "Must include a message body and subject"
 msgstr "Veuillez remplir le sujet et le corps du message"
+
+msgid "Must provide list name that is 4 or more characters long"
+msgstr "Le nom de la liste doit comporter au moins 4 caractères"
 
 msgid "My Dashboard"
 msgstr "Mon tableau de bord"
