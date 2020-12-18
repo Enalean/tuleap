@@ -85,6 +85,7 @@ use Tuleap\MailingList\MailingListAdministrationController;
 use Tuleap\MailingList\MailingListCreationController;
 use Tuleap\MailingList\MailingListCreationPresenterBuilder;
 use Tuleap\MailingList\MailingListDeleteController;
+use Tuleap\MailingList\MailingListDoCreateController;
 use Tuleap\MailingList\MailingListDomainBuilder;
 use Tuleap\MailingList\MailingListUpdateController;
 use Tuleap\News\NewsDao;
@@ -761,6 +762,17 @@ class RouteCollector
         );
     }
 
+    public function getMailingListsDoCreateController(): MailingListDoCreateController
+    {
+        return new MailingListDoCreateController(
+            new ProjectRetriever(\ProjectManager::instance()),
+            new ProjectAdministratorChecker(),
+            new MailingListDao(),
+            EventManager::instance(),
+            new MailingListDomainBuilder(),
+        );
+    }
+
     public function getMailingListUpdateController(): MailingListUpdateController
     {
         return new MailingListUpdateController(
@@ -820,6 +832,7 @@ class RouteCollector
 
             $r->get('/mailing-lists', [self::class, 'getMailingListsAdministration']);
             $r->get('/mailing-lists/add', [self::class, 'getMailingListsCreationController']);
+            $r->post('/mailing-lists/add', [self::class, 'getMailingListsDoCreateController']);
             $r->post('/mailing-lists/update/{list-id:\d+}', [self::class, 'getMailingListUpdateController']);
             $r->post('/mailing-lists/delete/{list-id:\d+}', [self::class, 'getMailingListDeleteController']);
         });

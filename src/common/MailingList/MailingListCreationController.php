@@ -105,4 +105,9 @@ class MailingListCreationController implements DispatchableWithBurningParrot, Di
 
         return (string) ob_get_clean();
     }
+
+    public static function getUrl(\Project $project): string
+    {
+        return '/project/' . urlencode((string) $project->getID()) . '/admin/mailing-lists/add';
+    }
 }

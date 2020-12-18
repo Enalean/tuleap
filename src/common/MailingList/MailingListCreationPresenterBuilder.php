@@ -66,12 +66,7 @@ class MailingListCreationPresenterBuilder
             $existing_lists,
             $this->purifier->purify($intro, \Codendi_HTMLPurifier::CONFIG_LIGHT),
             $default_name_value,
-            '/mail/admin/?' . http_build_query(
-                [
-                    'group_id' => $project->getID(),
-                    'add_list' => 1,
-                ]
-            )
+            MailingListCreationController::getUrl($project),
         );
     }
 }

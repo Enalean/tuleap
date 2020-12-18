@@ -27,42 +27,45 @@ class MailingListDao extends DataAccessObject
 {
 
     /**
-    * Search active (=not deteted) mailing lists
-    * return all active lists
-    * @return DataAccessResult
-    */
+     * Search active (=not deteted) mailing lists
+     * return all active lists
+     * @return DataAccessResult
+     */
     public function searchAllActiveML()
     {
         $sql = "SELECT *
                 FROM mail_group_list
                 WHERE is_public IN (0,1)";
+
         return $this->retrieve($sql);
     }
 
     /**
-    * Searches by group_list_id
-    * @return DataAccessResult
-    */
+     * Searches by group_list_id
+     * @return DataAccessResult
+     */
     public function searchByGroupListId($group_list_id)
     {
         $group_list_id = $this->da->escapeInt($group_list_id);
-        $sql = "SELECT * FROM mail_group_list
+        $sql           = "SELECT * FROM mail_group_list
                 WHERE group_list_id = $group_list_id";
+
         return $this->retrieve($sql);
     }
 
     /**
-    * Searches by project id
-    *
-    * @param int $projectId id of the project
-    *
-    * @return DataAccessResult
-    */
+     * Searches by project id
+     *
+     * @param int $projectId id of the project
+     *
+     * @return DataAccessResult
+     */
     public function searchByProject($projectId)
     {
         $projectId = $this->da->escapeInt($projectId);
-        $sql = "SELECT * FROM mail_group_list
+        $sql       = "SELECT * FROM mail_group_list
                 WHERE group_id = $projectId";
+
         return $this->retrieve($sql);
     }
 
@@ -76,8 +79,9 @@ class MailingListDao extends DataAccessObject
     public function deleteList($listId)
     {
         $listId = $this->da->escapeInt($listId);
-        $sql = "UPDATE mail_group_list SET is_public=9 " .
-             " WHERE group_list_id=" . $listId;
+        $sql    = "UPDATE mail_group_list SET is_public=9 " .
+            " WHERE group_list_id=" . $listId;
+
         return $this->update($sql);
     }
 
@@ -91,8 +95,9 @@ class MailingListDao extends DataAccessObject
     public function deleteListDefinitively($listId)
     {
         $listId = $this->da->escapeInt($listId);
-        $sql = "DELETE FROM mail_group_list " .
-             " WHERE group_list_id=" . $listId;
+        $sql    = "DELETE FROM mail_group_list " .
+            " WHERE group_list_id=" . $listId;
+
         return $this->update($sql);
     }
 
@@ -128,8 +133,8 @@ class MailingListDao extends DataAccessObject
 
     public function deleteListInProject(int $list_id, int $project_id): bool
     {
-        $list_id     = $this->da->escapeInt($list_id);
-        $project_id  = $this->da->escapeInt($project_id);
+        $list_id    = $this->da->escapeInt($list_id);
+        $project_id = $this->da->escapeInt($project_id);
 
         $sql = "UPDATE mail_group_list
                 SET is_public = 9
@@ -137,5 +142,41 @@ class MailingListDao extends DataAccessObject
                   AND group_id = $project_id";
 
         return $this->update($sql);
+    }
+
+    /**
+     * @return false|int
+     */
+    public function create(
+        int $project_id,
+        string $name,
+        bool $is_public,
+        string $password,
+        int $user_id,
+        string $description
+    ) {
+        $project_id  = $this->da->escapeInt($project_id);
+        $name        = $this->da->quoteSmart($name);
+        $is_public   = $is_public ? 1 : 0;
+        $password    = $this->da->quoteSmart($password);
+        $user_id     = $this->da->escapeInt($user_id);
+        $description = $this->da->quoteSmart($description);
+
+        $sql = "INSERT INTO mail_group_list (group_id,list_name,is_public,password,list_admin,status,description)
+                VALUES ($project_id, $name, $is_public, $password, $user_id, 1, $description)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
+    public function isThereAnExistingListInTheProject(string $name, int $project_id): bool
+    {
+        $project_id  = $this->da->escapeInt($project_id);
+        $name        = $this->da->quoteSmart($name);
+
+        $sql = "SELECT NULL FROM mail_group_list
+                WHERE group_id = $project_id
+                  AND LOWER(list_name) = $name";
+
+        return $this->retrieveCount($sql) > 0;
     }
 }

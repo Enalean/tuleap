@@ -93,7 +93,7 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
             'admin-index',
             new MailingListAdministrationPresenter(
                 $mailing_list_presenters,
-                $this->getCreationUrl($project),
+                MailingListCreationController::getUrl($project),
                 self::getCSRF($project)
             )
         );
@@ -108,11 +108,6 @@ class MailingListAdministrationController implements DispatchableWithBurningParr
     public static function getUrl(\Project $project): string
     {
         return '/project/' . urlencode((string) $project->getID()) . '/admin/mailing-lists';
-    }
-
-    private function getCreationUrl(\Project $project): string
-    {
-        return self::getUrl($project) . '/add';
     }
 
     private function getAdminUrl(HTTPRequest $request, string $list_name): string
