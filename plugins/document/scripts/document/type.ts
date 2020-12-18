@@ -38,3 +38,20 @@ export interface Metadata {
     is_multiple_value_allowed: boolean;
     is_used: boolean;
 }
+
+export interface Item {
+    id: number;
+    lock_info: LockInfo | null;
+}
+
+export interface LockInfo {
+    lock_date: string;
+    lock_by: User;
+}
+
+export interface User {
+    id: number;
+    display_name: string;
+    has_avatar: boolean;
+    avatar_url: string;
+}

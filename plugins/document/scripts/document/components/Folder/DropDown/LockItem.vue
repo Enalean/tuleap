@@ -48,7 +48,7 @@ export default {
     },
     methods: {
         async lockDocument() {
-            await this.$store.dispatch("lockDocument", this.item);
+            await this.$store.dispatch("lock/lockDocument", this.item);
         },
     },
 };

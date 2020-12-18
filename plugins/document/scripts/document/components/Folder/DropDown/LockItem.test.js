@@ -117,6 +117,6 @@ describe("LockItem", () => {
 
         wrapper.get("[data-test=document-dropdown-menu-lock-item]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith("lockDocument", item);
+        expect(store.dispatch).toHaveBeenCalledWith("lock/lockDocument", item);
     });
 });

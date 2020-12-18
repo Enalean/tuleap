@@ -58,16 +58,6 @@ export {
     deleteEmptyDocument,
     deleteFolder,
     getItemsReferencingSameWikiPage,
-    postLockFile,
-    deleteLockFile,
-    postLockEmbedded,
-    deleteLockEmbedded,
-    postLockWiki,
-    deleteLockWiki,
-    postLockLink,
-    deleteLockLink,
-    postLockEmpty,
-    deleteLockEmpty,
     setNarrowModeForEmbeddedDisplay,
     removeUserPreferenceForEmbeddedDisplay,
     getPreferenceForEmbeddedDisplay,
@@ -451,86 +441,6 @@ async function getItemsReferencingSameWikiPage(page_id) {
     const response = await get(`/api/phpwiki/${escaped_page_id}/items_referencing_wiki_page`);
 
     return response.json();
-}
-
-function postLockFile(item) {
-    const headers = {
-        "content-type": "application/json",
-    };
-
-    const escaped_item_id = encodeURIComponent(item.id);
-
-    return post(`/api/docman_files/${escaped_item_id}/lock`, { headers });
-}
-
-function deleteLockFile(item) {
-    const escaped_item_id = encodeURIComponent(item.id);
-
-    return del(`/api/docman_files/${escaped_item_id}/lock`);
-}
-
-function postLockEmbedded(item) {
-    const headers = {
-        "content-type": "application/json",
-    };
-
-    const escaped_item_id = encodeURIComponent(item.id);
-
-    return post(`/api/docman_embedded_files/${escaped_item_id}/lock`, { headers });
-}
-
-function deleteLockEmbedded(item) {
-    const escaped_item_id = encodeURIComponent(item.id);
-
-    return del(`/api/docman_embedded_files/${escaped_item_id}/lock`);
-}
-
-function postLockWiki(item) {
-    const headers = {
-        "content-type": "application/json",
-    };
-
-    const escaped_item_id = encodeURIComponent(item.id);
-
-    return post(`/api/docman_wikis/${escaped_item_id}/lock`, { headers });
-}
-
-function deleteLockWiki(item) {
-    const escaped_item_id = encodeURIComponent(item.id);
-
-    return del(`/api/docman_wikis/${escaped_item_id}/lock`);
-}
-
-function postLockLink(item) {
-    const headers = {
-        "content-type": "application/json",
-    };
-
-    const escaped_item_id = encodeURIComponent(item.id);
-
-    return post(`/api/docman_links/${escaped_item_id}/lock`, { headers });
-}
-
-function deleteLockLink(item) {
-    const escaped_item_id = encodeURIComponent(item.id);
-
-    return del(`/api/docman_links/${escaped_item_id}/lock`);
-}
-
-function postLockEmpty(item) {
-    const headers = {
-        "content-type": "application/json",
-    };
-
-    const escaped_item_id = encodeURIComponent(item.id);
-
-    return post(`/api/docman_empty_documents/${escaped_item_id}/lock`, { headers });
-}
-
-function deleteLockEmpty(item) {
-    const escaped_item_id = encodeURIComponent(item.id);
-
-    return del(`/api/docman_empty_documents/${escaped_item_id}/lock`);
 }
 
 async function setNarrowModeForEmbeddedDisplay(user_id, project_id, document_id) {
