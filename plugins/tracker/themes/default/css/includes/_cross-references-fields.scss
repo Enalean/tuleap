@@ -32,11 +32,21 @@
     margin: 0 0 0 $tlp-medium-spacing;
 }
 
+.tracker-cross-reference-nature {
+    font-size: .875rem;
+    line-height: 1.375rem;
+}
+
 .tracker-cross-reference-delete-link {
     position: absolute;
     top: $tlp-medium-spacing;
     right: $tlp-medium-spacing;
     transition: color 150ms linear;
+}
+
+.tracker-cross-reference-card-main {
+    display: flex;
+    align-items: baseline;
 }
 
 .tracker-cross-reference-title {

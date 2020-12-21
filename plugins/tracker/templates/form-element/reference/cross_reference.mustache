@@ -1,4 +1,4 @@
-<section class="tlp-pane">
+<section class="tlp-pane tracker-cross-reference-nature">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">
@@ -19,21 +19,47 @@
                             class="tlp-card tlp-card-selectable cross-reference tracker-cross-reference-card {{# can_delete }}tracker-cross-reference-card-deletable{{/ can_delete }}"
                             href="{{ url }}"
                         >
-                            {{# title_badge }}
-                                <span class="tlp-badge-{{ color }} tlp-badge-outline tracker-cross-reference-title-badge">
-                                    {{ label }}
-                                </span>
-                            {{/ title_badge }}
+                            <div class="tracker-cross-reference-card-main">
+                                {{# title_badge }}
+                                    <span class="tlp-badge-{{ color }} tlp-badge-outline tracker-cross-reference-title-badge">
+                                        {{ label }}
+                                    </span>
+                                {{/ title_badge }}
 
-                            <span class="tracker-cross-reference-title">
-                                {{ title }}
-                            </span>
-
-                            {{# additional_badges }}
-                                <span class="tlp-badge-secondary tlp-badge-outline tracker-cross-reference-additional-badge">
-                                    {{ label }}
+                                <span class="tracker-cross-reference-title">
+                                    {{ title }}
                                 </span>
-                            {{/ additional_badges }}
+
+                                {{# additional_badges }}
+                                    <span class="tlp-badge-secondary tlp-badge-outline tracker-cross-reference-additional-badge">
+                                        {{ label }}
+                                    </span>
+                                {{/ additional_badges }}
+                            </div>
+
+                            {{# creation_metadata }}
+                                <div class="tracker-cross-reference-creation-metadata">
+                                    {{# created_by }}
+                                        <span class="tracker-cross-reference-created-by-tlp-avatar-mini">
+                                            {{# has_avatar }}
+                                                <img src="{{ avatar_url }}" alt="{{# gettext }}User avatar{{/ gettext }}">
+                                            {{/ has_avatar }}
+                                        </span>
+                                        <span>
+                                            {{ display_name }},
+                                            {{# created_on }}
+                                                <tlp-relative-date
+                                                    date="{{ date }}"
+                                                    absolute-date="{{ absolute_date }}"
+                                                    placement="{{ placement }}"
+                                                    preference="{{ preference }}"
+                                                    locale="{{ locale }}"
+                                                ></tlp-relative-date>
+                                            {{/ created_on }}
+                                        </span>
+                                    {{/ created_by }}
+                                </div>
+                            {{/ creation_metadata }}
                         </a>
                         {{# can_delete }}
                             <a

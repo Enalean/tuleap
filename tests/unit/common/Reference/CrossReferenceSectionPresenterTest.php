@@ -41,6 +41,7 @@ class CrossReferenceSectionPresenterTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
         $another_ref = new CrossReferencePresenter(
             2,
@@ -52,6 +53,7 @@ class CrossReferenceSectionPresenterTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
 
         $section = new CrossReferenceSectionPresenter("my section", [$a_ref]);

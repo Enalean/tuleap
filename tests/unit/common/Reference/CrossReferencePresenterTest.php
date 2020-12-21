@@ -24,6 +24,8 @@ namespace Tuleap\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Date\TlpRelativeDatePresenter;
+use Tuleap\Reference\Metadata\CreatedByPresenter;
 
 class CrossReferencePresenterTest extends TestCase
 {
@@ -41,6 +43,7 @@ class CrossReferencePresenterTest extends TestCase
             'whatever',
             null,
             [],
+            null,
         );
 
         $new_ref = $a_ref->withTitle('New title', null);
@@ -62,6 +65,7 @@ class CrossReferencePresenterTest extends TestCase
             'whatever',
             null,
             [],
+            null,
         );
 
         $new_ref = $a_ref->withTitle('New title', new TitleBadgePresenter('badge', 'color'));
@@ -84,11 +88,37 @@ class CrossReferencePresenterTest extends TestCase
             'whatever',
             null,
             [],
+            null,
         );
 
         $new_ref = $a_ref->withAdditionalBadges([new AdditionalBadgePresenter('riri')]);
 
         self::assertEquals(1, $new_ref->id);
         self::assertEquals('riri', $new_ref->additional_badges[0]->label);
+    }
+
+    public function testWithCreationMetadata(): void
+    {
+        $a_ref = new CrossReferencePresenter(
+            1,
+            'type',
+            'title',
+            'url',
+            'delete_url',
+            1,
+            'whatever',
+            null,
+            [],
+            null,
+        );
+
+        $new_ref = $a_ref->withCreationMetadata(
+            new CreatedByPresenter("John Doe", false, ''),
+            new TlpRelativeDatePresenter("la date", "absolute", "right", "absolute", "en_US"),
+        );
+
+        self::assertEquals(1, $new_ref->id);
+        self::assertEquals('John Doe', $new_ref->creation_metadata->created_by->display_name);
+        self::assertEquals('la date', $new_ref->creation_metadata->created_on->date);
     }
 }
