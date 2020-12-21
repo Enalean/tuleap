@@ -48,4 +48,24 @@ class CommitTuleapReferenceDAO extends DataAccessObject
             $commit_author_email
         );
     }
+
+    /**
+     * @psalm-return array{gitlab_repository_id: int, commit_sha1: string, commit_date: int, commit_title: string, author_name: string, author_email: string}
+     */
+    public function searchCommitInRepositoryWithSha1(int $repository_id, string $commit_sha1): ?array
+    {
+        $sql = "
+            SELECT gitlab_repository_id,
+                   LOWER(HEX(commit_sha1)) as commit_sha1,
+                   commit_date,
+                   commit_title,
+                   author_name,
+                   author_email
+            FROM plugin_gitlab_commit_info
+            WHERE gitlab_repository_id = ?
+                AND commit_sha1 = UNHEX(?)
+        ";
+
+        return $this->getDB()->row($sql, $repository_id, $commit_sha1);
+    }
 }
