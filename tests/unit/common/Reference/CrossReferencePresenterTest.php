@@ -29,9 +29,19 @@ class CrossReferencePresenterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testWithTitle()
+    public function testWithTitle(): void
     {
-        $a_ref = new CrossReferencePresenter(1, 'type', 'title', 'url', 'delete_url', 1, 'whatever', null);
+        $a_ref = new CrossReferencePresenter(
+            1,
+            'type',
+            'title',
+            'url',
+            'delete_url',
+            1,
+            'whatever',
+            null,
+            [],
+        );
 
         $new_ref = $a_ref->withTitle('New title', null);
 
@@ -40,9 +50,19 @@ class CrossReferencePresenterTest extends TestCase
         self::assertNull($new_ref->title_badge);
     }
 
-    public function testWithTitleBadge()
+    public function testWithTitleBadge(): void
     {
-        $a_ref = new CrossReferencePresenter(1, 'type', 'title', 'url', 'delete_url', 1, 'whatever', null);
+        $a_ref = new CrossReferencePresenter(
+            1,
+            'type',
+            'title',
+            'url',
+            'delete_url',
+            1,
+            'whatever',
+            null,
+            [],
+        );
 
         $new_ref = $a_ref->withTitle('New title', new TitleBadgePresenter('badge', 'color'));
 
@@ -50,5 +70,25 @@ class CrossReferencePresenterTest extends TestCase
         self::assertEquals('New title', $new_ref->title);
         self::assertEquals('badge', $new_ref->title_badge->label);
         self::assertEquals('color', $new_ref->title_badge->color);
+    }
+
+    public function testWithAdditionalBadges(): void
+    {
+        $a_ref = new CrossReferencePresenter(
+            1,
+            'type',
+            'title',
+            'url',
+            'delete_url',
+            1,
+            'whatever',
+            null,
+            [],
+        );
+
+        $new_ref = $a_ref->withAdditionalBadges([new AdditionalBadgePresenter('riri')]);
+
+        self::assertEquals(1, $new_ref->id);
+        self::assertEquals('riri', $new_ref->additional_badges[0]->label);
     }
 }

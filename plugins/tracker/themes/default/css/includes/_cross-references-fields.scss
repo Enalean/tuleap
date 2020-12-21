@@ -39,6 +39,14 @@
     transition: color 150ms linear;
 }
 
+.tracker-cross-reference-title {
+    flex-grow: 1;
+}
+
 .tracker-cross-reference-title-badge {
     margin: 0 4px 0 0;
+}
+
+.tracker-cross-reference-additional-badge {
+    margin: 0 0 0 4px;
 }

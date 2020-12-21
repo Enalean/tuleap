@@ -99,9 +99,11 @@ class Git_ReferenceManagerTest extends TestCase
             ->once()
             ->andReturn($this->repository);
 
-        self::assertEquals(
-            $this->repository,
-            $this->git_reference_manager->getRepositoryFromCrossReferenceValue($this->project, 'rantanplan/469eaa9')
+        $commit_info = $this->git_reference_manager->getCommitInfoFromReferenceValue(
+            $this->project,
+            'rantanplan/469eaa9'
         );
+        self::assertEquals($this->repository, $commit_info->getRepository());
+        self::assertEquals('469eaa9', $commit_info->getSha1());
     }
 }

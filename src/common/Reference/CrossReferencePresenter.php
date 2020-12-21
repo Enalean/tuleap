@@ -59,7 +59,14 @@ final class CrossReferencePresenter
      * @var TitleBadgePresenter|null
      */
     public $title_badge;
+    /**
+     * @var AdditionalBadgePresenter[]
+     */
+    public $additional_badges;
 
+    /**
+     * @param AdditionalBadgePresenter[] $additional_badges
+     */
     public function __construct(
         int $id,
         string $type,
@@ -68,16 +75,18 @@ final class CrossReferencePresenter
         string $delete_url,
         int $project_id,
         string $value,
-        ?TitleBadgePresenter $title_badge
+        ?TitleBadgePresenter $title_badge,
+        array $additional_badges
     ) {
-        $this->id           = $id;
-        $this->type         = $type;
-        $this->title        = $title;
-        $this->url          = $url;
-        $this->delete_url   = $delete_url;
-        $this->target_gid   = $project_id;
-        $this->target_value = $value;
-        $this->title_badge  = $title_badge;
+        $this->id                = $id;
+        $this->type              = $type;
+        $this->title             = $title;
+        $this->url               = $url;
+        $this->delete_url        = $delete_url;
+        $this->target_gid        = $project_id;
+        $this->target_value      = $value;
+        $this->title_badge       = $title_badge;
+        $this->additional_badges = $additional_badges;
     }
 
     public function withTitle(string $title, ?TitleBadgePresenter $title_badge): self
@@ -91,6 +100,25 @@ final class CrossReferencePresenter
             $this->target_gid,
             $this->target_value,
             $title_badge,
+            $this->additional_badges,
+        );
+    }
+
+    /**
+     * @param AdditionalBadgePresenter[] $additional_badges
+     */
+    public function withAdditionalBadges(array $additional_badges): self
+    {
+        return new self(
+            $this->id,
+            $this->type,
+            $this->title,
+            $this->url,
+            $this->delete_url,
+            $this->target_gid,
+            $this->target_value,
+            $this->title_badge,
+            $additional_badges,
         );
     }
 }

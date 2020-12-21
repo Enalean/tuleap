@@ -193,6 +193,17 @@
             color: $main;
         }
     }
+
+    .tracker-cross-reference-card.tlp-card-selectable {
+        display: flex;
+        align-items: baseline;
+    }
+
+    .tracker-cross-reference-card-deletable.tlp-card-selectable {
+        $room-for-trash-icon: $tlp-medium-spacing + 12px;
+
+        padding: $tlp-medium-spacing ($tlp-medium-spacing + $room-for-trash-icon) $tlp-medium-spacing $tlp-medium-spacing;
+    }
 }
 
 body {

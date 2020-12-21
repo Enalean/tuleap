@@ -57,6 +57,7 @@ class CrossReferencePresenterFactory
                 (int) $row['target_gid'],
                 $row['target_id'],
                 null,
+                [],
             );
         }
 
@@ -68,9 +69,9 @@ class CrossReferencePresenterFactory
      */
     public function getSourcesOfEntity(string $entity_id, string $entity_type, int $entity_project_id): array
     {
-        $targets = [];
+        $sources = [];
         foreach ($this->dao->searchSourcesOfEntity($entity_id, $entity_type, $entity_project_id) as $row) {
-            $targets[] = new CrossReferencePresenter(
+            $sources[] = new CrossReferencePresenter(
                 (int) $row['id'],
                 $row['source_type'],
                 $row['source_keyword'] . ' #' . $row['source_id'],
@@ -79,10 +80,11 @@ class CrossReferencePresenterFactory
                 (int) $row['source_gid'],
                 $row['source_id'],
                 null,
+                [],
             );
         }
 
-        return $targets;
+        return $sources;
     }
 
     private function getUrl(string $keyword, string $id, int $project_id): string

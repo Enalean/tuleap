@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Reference\CommitInfoFromReferenceValue;
+
 /**
  * I'm able to understand cross reference grammar related to git commits and to
  * create Reference objects that correspond to a literal reference.
@@ -51,13 +53,12 @@ class Git_ReferenceManager
      */
     public function getReference(Project $project, $keyword, $value): ?Reference
     {
-        $repository = $this->getRepositoryFromCrossReferenceValue($project, $value);
-        if (! $repository) {
+        $commit_info = $this->getCommitInfoFromReferenceValue($project, $value);
+        if (! $commit_info->getRepository()) {
             return null;
         }
 
-        [, $sha1] = $this->splitRepositoryAndSha1($value);
-        $args = [$repository->getId(), $sha1];
+        $args = [$commit_info->getRepository()->getId(), $commit_info->getSha1()];
         $reference = $this->reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $project->getID(), count($args), $value);
         if ($reference) {
             $reference->replaceLink($args);
@@ -66,11 +67,14 @@ class Git_ReferenceManager
         return $reference;
     }
 
-    public function getRepositoryFromCrossReferenceValue(Project $project, string $value): ?GitRepository
+    public function getCommitInfoFromReferenceValue(Project $project, string $value): CommitInfoFromReferenceValue
     {
-        [$repository_name] = $this->splitRepositoryAndSha1($value);
+        [$repository_name, $sha1] = $this->splitRepositoryAndSha1($value);
 
-        return $this->repository_factory->getRepositoryByPath($project->getId(), $project->getUnixName() . '/' . $repository_name . '.git');
+        $repository = $this->repository_factory
+            ->getRepositoryByPath($project->getId(), $project->getUnixName() . '/' . $repository_name . '.git');
+
+        return new CommitInfoFromReferenceValue($repository, $sha1);
     }
 
     private function splitRepositoryAndSha1($value)

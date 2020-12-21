@@ -31,8 +31,28 @@ class CrossReferenceSectionPresenterTest extends TestCase
 
     public function testWithAdditionalCrossReference(): void
     {
-        $a_ref       = new CrossReferencePresenter(1, "type", "title", "url", "delete_url", 1, "whatever", null);
-        $another_ref = new CrossReferencePresenter(2, "type", "reference", "url", "delete_url", 1, "whatever", null);
+        $a_ref       = new CrossReferencePresenter(
+            1,
+            "type",
+            "title",
+            "url",
+            "delete_url",
+            1,
+            "whatever",
+            null,
+            [],
+        );
+        $another_ref = new CrossReferencePresenter(
+            2,
+            "type",
+            "reference",
+            "url",
+            "delete_url",
+            1,
+            "whatever",
+            null,
+            [],
+        );
 
         $section = new CrossReferenceSectionPresenter("my section", [$a_ref]);
         $new_section = $section->withAdditionalCrossReference($another_ref);
