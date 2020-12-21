@@ -343,8 +343,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
             if ($node instanceof WebDAVDocmanFolder) {
                 echo "<td>{$size}</td>";
                 echo "<td>{$lastmodified}</td>";
-                $docmanPermissionManager = $node->getUtils()->getDocmanPermissionsManager($node->getProject());
-                if ($node->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($node->getUser(), $node->getItem()->getId())) {
+                if ($node->userCanWrite()) {
                     $this->deleteForm($file);
                     $this->renameForm($file);
                 }
@@ -374,7 +373,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
                 </form>';
             }
             if ($node instanceof WebDAVDocmanFolder) {
-                if ($node->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($node->getUser(), $node->getItem()->getId())) {
+                if ($node->userCanWrite()) {
                     echo '<h4>Create a new folder :</h4>';
                     $this->mkcolForm();
                     echo '<h4>' . $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "upload_file")) . ' :</h4>

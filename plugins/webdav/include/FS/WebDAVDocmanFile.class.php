@@ -24,22 +24,37 @@ use Tuleap\WebDAV\Docman\DocumentDownloader;
 /**
  * This class Represents Docman files & embedded files in WebDAV
  */
-class WebDAVDocmanFile extends WebDAVDocmanDocument
+class WebDAVDocmanFile extends Sabre_DAV_File
 {
+    /**
+     * @var PFUser
+     */
+    private $user;
+    /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var Docman_File
+     */
+    private $item;
+    /**
+     * @var DocumentDownloader
+     */
+    private $document_downloader;
 
-    public function __construct($user, $project, $item, DocumentDownloader $document_downloader)
+    public function __construct(PFUser $user, Project $project, Docman_File $item, DocumentDownloader $document_downloader)
     {
-        parent::__construct($user, $project, $item, $document_downloader);
+        $this->user = $user;
+        $this->project = $project;
+        $this->item = $item;
+        $this->document_downloader = $document_downloader;
     }
 
     /**
      * This method is used to download the file
-     *
-     * @return void
-     *
-     * @see plugins/webdav/include/FS/WebDAVDocmanDocument::get()
      */
-    public function get()
+    public function get(): void
     {
         $item = $this->getItem();
         $version = $item->getCurrentVersion();
@@ -61,12 +76,8 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
 
     /**
      * Returns the name of the file
-     *
-     * @return String
-     *
-     * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getName()
      */
-    public function getName()
+    public function getName(): string
     {
         switch (get_class($this->getItem())) {
             case Docman_File::class:
@@ -77,17 +88,15 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
             case Docman_EmbeddedFile::class:
                 return $this->getItem()->getTitle();
         }
+        throw new RuntimeException('Invalid Item type in ' . self::class . ': ' . get_class($this->getItem()));
     }
 
     /**
      * Returns mime-type of the file
      *
-     * @return string
-     *
-     * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getContentType()
      * @psalm-suppress ImplementedReturnTypeMismatch Return type of the library is incorrect
      */
-    public function getContentType()
+    public function getContentType(): string
     {
         $item = $this->getItem();
         $version = $item->getCurrentVersion();
@@ -96,12 +105,8 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
 
     /**
      * Returns the file size
-     *
-     * @return int
-     *
-     * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getSize()
      */
-    public function getSize()
+    public function getSize(): int
     {
         $item = $this->getItem();
         $version = $item->getCurrentVersion();
@@ -110,51 +115,73 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
 
     /**
      * Returns a unique identifier of the file
-     *
-     * @return String
      */
-    public function getETag()
+    public function getETag(): string
     {
         $item = $this->getItem();
         $version = $item->getCurrentVersion();
         return '"' . $this->getUtils()->getIncomingFileMd5Sum($version->getPath()) . '"';
     }
 
-    /**
-     * Returns the max file size
-     *
-     * @return int
-     */
-    public function getMaxFileSize()
+    public function getMaxFileSize(): int
     {
         return (int) ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
     }
 
-    /**
-     * Downloads the file
-     *
-     * @param Docman_Version $version
-     *
-     * @return void
-     */
-    public function download($version, $filesize = '', $path = '')
+    public function getLastModified(): int
+    {
+        return $this->getItem()->getUpdateDate();
+    }
+
+    private function getProject(): Project
+    {
+        return $this->project;
+    }
+
+    private function getUser(): PFUser
+    {
+        return $this->user;
+    }
+
+    private function getItem(): Docman_File
+    {
+        return $this->item;
+    }
+
+    protected function getUtils(): WebDAVUtils
+    {
+        return WebDAVUtils::getInstance();
+    }
+
+    public function delete(): void
+    {
+        if ($this->getUtils()->isWriteEnabled()) {
+            // Request
+            $params['action']   = 'delete';
+            $params['group_id'] = $this->getProject()->getID();
+            $params['confirm']  = true;
+            $params['id']       = $this->getItem()->getId();
+            $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
+        }
+    }
+
+    private function download(Docman_Version $version): void
     {
         $version->preDownload($this->getItem(), $this->getUser());
         // Download the file
-        parent::download($version->getFiletype(), $version->getFilesize(), $version->getPath());
+        $this->document_downloader->downloadDocument($this->getName(), $version->getFiletype(), $version->getFilesize(), $version->getPath());
     }
 
     /**
      * Create a new version of the file
-     *
-     * @param $data
-     *
-     * @return void
      */
-    public function put($data)
+    public function put($data): void
     {
         if ($this->getUtils()->isWriteEnabled()) {
             // Request
+            $params = [];
             $params['action']   = 'new_version';
             $params['group_id'] = $this->getProject()->getID();
             $params['confirm']  = true;
@@ -175,6 +202,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
 
     /**
      * Rename an embedded file
+     *
      * We don't allow renaming files
      *
      * Even if rename is forbidden some silly WebDAV clients (ie : Micro$oft's one)
@@ -182,19 +210,40 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
      * then upload another one with the same content and a new name
      * Which is very different from just renaming the file
      *
-     * @param String $name New name of the document
-     *
-     * @return void
+     * @param string $name New name of the document
      */
-    public function setName($name)
+    public function setName($name): void
     {
         switch (get_class($this->getItem())) {
             case Docman_File::class:
                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
                 break;
             case Docman_EmbeddedFile::class:
-                parent::setName($name);
+                $this->rename($name);
                 break;
+        }
+    }
+
+    private function rename(string $name): void
+    {
+        if ($this->getUtils()->isWriteEnabled()) {
+            try {
+                // Request
+                $params = [];
+                $params['action']   = 'update';
+                $params['group_id'] = $this->getProject()->getID();
+                $params['confirm']  = true;
+
+                // Item details
+                $params['item']['id']    = $this->getItem()->getId();
+                $params['item']['title'] = $name;
+
+                $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
+            } catch (Exception $e) {
+                throw new Sabre_DAV_Exception_MethodNotAllowed($e->getMessage());
+            }
+        } else {
+            throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
         }
     }
 }

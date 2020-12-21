@@ -88,8 +88,7 @@ class WebDAVDocmanFileTest extends TestCase
     {
         EventManager::clearInstance();
         Docman_ItemFactory::clearInstance(102);
-
-        parent::tearDown();
+        \WebDAVUtils::clearInstance();
     }
 
     /**
@@ -196,7 +195,7 @@ class WebDAVDocmanFileTest extends TestCase
 
     public function testPutBigFile(): void
     {
-        $item = \Mockery::spy(\Docman_Item::class);
+        $item = new \Docman_EmbeddedFile(['title' => 'foo']);
 
         $this->docman_item_factory->shouldReceive('getItemFromDb')->andReturn($item);
 
@@ -221,7 +220,7 @@ class WebDAVDocmanFileTest extends TestCase
 
     public function testPutSucceed(): void
     {
-        $item = \Mockery::spy(\Docman_Item::class);
+        $item = new \Docman_EmbeddedFile(['title' => 'foo']);
 
         $this->docman_item_factory->shouldReceive('getItemFromDb')->andReturn($item);
 
@@ -241,6 +240,19 @@ class WebDAVDocmanFileTest extends TestCase
 
         $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
         $webDAVDocmanFile->put($data);
+    }
+
+    public function testSetNameNoWriteEnabled(): void
+    {
+        $webDAVDocmanDocument = new \WebDAVDocmanFile($this->user, $this->project, new Docman_File(), $this->document_download);
+
+        $utils = Mockery::mock(\WebDAVUtils::class);
+        $utils->shouldReceive('isWriteEnabled')->andReturnFalse();
+        \WebDAVUtils::setInstance($utils);
+
+        $this->expectException(Sabre_DAV_Exception_MethodNotAllowed::class);
+
+        $webDAVDocmanDocument->setName('newName');
     }
 
     public function testSetNameFile(): void
@@ -279,5 +291,30 @@ class WebDAVDocmanFileTest extends TestCase
         $webDAVDocmanFile->shouldReceive('getUtils')->andReturns($utils);
 
         $webDAVDocmanFile->setName('newName');
+    }
+
+    public function testDeleteNoWriteEnabled(): void
+    {
+        $webDAVDocmanDocument = new \WebDAVDocmanFile($this->user, $this->project, new Docman_File(), $this->document_download);
+
+        $utils = Mockery::mock(\WebDAVUtils::class);
+        $utils->shouldReceive('isWriteEnabled')->andReturnFalse();
+        \WebDAVUtils::setInstance($utils);
+
+        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
+
+        $webDAVDocmanDocument->delete();
+    }
+
+    public function testDeleteSuccess(): void
+    {
+        $webDAVDocmanDocument = new \WebDAVDocmanFile($this->user, $this->project, new Docman_File(), $this->document_download);
+
+        $utils = Mockery::mock(\WebDAVUtils::class);
+        $utils->shouldReceive('isWriteEnabled')->andReturnTrue();
+        $utils->shouldReceive('processDocmanRequest')->once();
+        \WebDAVUtils::setInstance($utils);
+
+        $webDAVDocmanDocument->delete();
     }
 }
