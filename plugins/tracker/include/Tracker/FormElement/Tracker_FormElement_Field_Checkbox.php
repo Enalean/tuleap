@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox
 {
     private const NOT_INDICATED_VALUE = '0';
@@ -43,6 +44,40 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         $html .= '<input type="checkbox" ' . $name . ' value="' . $id . '" id=cb_' . $id . ' ' . $checked . ' valign="middle" />';
         $html .= $this->getBind()->formatChangesetValueWithoutLink($value) . '</label>';
 
+        return $html;
+    }
+
+    protected function fetchArtifactValueReadOnlyForMail(Artifact $artifact, Tracker_Artifact_ChangesetValue $value): string
+    {
+        return parent::fetchArtifactValueReadOnly($artifact, $value);
+    }
+
+    /**
+     * Fetch the html code to display the field value in artifact in read only mode
+     */
+    public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
+    {
+        $selected_values_ids  = ($value && $value instanceof Tracker_Artifact_ChangesetValue_List)
+            ? array_keys($value->getListValues())
+            : [];
+        $visible_values = $this->getBind()->getAllVisibleValues();
+        if (empty($visible_values)) {
+            return $this->getNoValueLabel();
+        }
+        if (count($visible_values) === 1 && isset($visible_values[Tracker_FormElement_Field_List_Bind::NONE_VALUE])) {
+            return $this->getNoValueLabel();
+        }
+        $html = '<ul class="tracker-read-only-checkbox-list">';
+        foreach ($visible_values as $bind_id => $bind_value) {
+            if ($bind_id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+                continue;
+            }
+            $checked = in_array($bind_id, $selected_values_ids);
+            $html .= '<li>';
+            $html .= '<span class="tracker-read-only-checkbox-list-item">' . ($checked ? "[x]" : "[ ]") . '</span> ' . $this->getBind()->formatChangesetValueWithoutLink($bind_value);
+            $html .= '</li>';
+        }
+        $html .= '</ul>';
         return $html;
     }
 
