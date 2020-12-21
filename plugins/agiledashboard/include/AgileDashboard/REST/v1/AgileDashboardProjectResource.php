@@ -31,6 +31,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Milestone\ProjectMilestonesResource;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -381,7 +383,8 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
             $scrum_mono_milestone_checker,
             $parent_tracker_retriever,
             $sub_milestone_finder,
-            $planning_factory
+            $planning_factory,
+            new ProjectBackgroundConfiguration(new ProjectBackgroundDao()),
         );
         $request_refiner = new FilteringQueryParser();
         return new ProjectMilestonesResource($request_refiner, $milestone_factory, $milestone_representation_builder);

@@ -45,6 +45,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -156,7 +158,7 @@ class ProjectBacklogResource
         }
 
         $backlog_item_representations        = [];
-        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
+        $backlog_item_representation_factory = new BacklogItemRepresentationFactory(new ProjectBackgroundConfiguration(new ProjectBackgroundDao()));
 
         foreach ($backlog_items as $backlog_item) {
             $backlog_item_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);

@@ -19,6 +19,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\REST\JsonCast;
 use Tuleap\REST\ResourceReference;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -56,12 +57,12 @@ class BacklogItemParentReference
         $this->tracker = $tracker;
     }
 
-    public static function build(Artifact $backlog_item): self
+    public static function build(Artifact $backlog_item, ProjectBackgroundConfiguration $project_background_configuration): self
     {
         return new self(
             JsonCast::toInt($backlog_item->getId()),
             $backlog_item->getTitle() ?? '',
-            TrackerReference::build($backlog_item->getTracker())
+            TrackerReference::buildWithExtendedProjectReference($backlog_item->getTracker(), $project_background_configuration)
         );
     }
 }

@@ -20,8 +20,8 @@
 namespace Tuleap\Tracker\REST;
 
 use Tracker;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\REST\ProjectReference;
-use Tuleap\REST\JsonCast;
 
 /**
  * @psalm-immutable
@@ -45,26 +45,32 @@ class TrackerReference
     public $label;
 
     /**
-     * @var ProjectReference {@type Tuleap\Tracker\REST\ProjectReference} {@required false}
+     * @var ProjectReference {@required false}
      */
     public $project;
 
-    private function __construct(int $id, string $label, \Project $project)
+    private function __construct(Tracker $tracker, ProjectReference $project)
     {
-        $this->id    = $id;
-        $this->uri   = CompleteTrackerRepresentation::ROUTE . '/' . $id;
-        $this->label = $label;
+        $this->id    = $tracker->getId();
+        $this->uri   = CompleteTrackerRepresentation::ROUTE . '/' . $this->id;
+        $this->label = $tracker->getName();
 
-        $project_reference = new ProjectReference($project);
-        $this->project = $project_reference;
+        $this->project = $project;
     }
 
     public static function build(Tracker $tracker): self
     {
         return new self(
-            JsonCast::toInt($tracker->getId()),
-            $tracker->getName(),
-            $tracker->getProject(),
+            $tracker,
+            new ProjectReference($tracker->getProject()),
+        );
+    }
+
+    public static function buildWithExtendedProjectReference(Tracker $tracker, ProjectBackgroundConfiguration $project_background_configuration): self
+    {
+        return new self(
+            $tracker,
+            ProjectReferenceWithBackground::fromProject($tracker->getProject(), $project_background_configuration),
         );
     }
 }

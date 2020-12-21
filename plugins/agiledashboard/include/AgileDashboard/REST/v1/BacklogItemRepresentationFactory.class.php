@@ -24,6 +24,7 @@ use Cardwall_Semantic_CardFields;
 use EventManager;
 use PFUser;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Tracker\Artifact\Artifact;
 use UserManager;
 
@@ -37,15 +38,21 @@ class BacklogItemRepresentationFactory
 
     /** @var EventManager */
     private $event_manager;
+    /**
+     * @var ProjectBackgroundConfiguration
+     */
+    private $project_background_configuration;
 
     public function __construct(
         BackgroundColorBuilder $background_color_builder,
         UserManager $user_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
+        ProjectBackgroundConfiguration $project_background_configuration
     ) {
-        $this->background_color_builder = $background_color_builder;
-        $this->user_manager             = $user_manager;
-        $this->event_manager            = $event_manager;
+        $this->background_color_builder         = $background_color_builder;
+        $this->user_manager                     = $user_manager;
+        $this->event_manager                    = $event_manager;
+        $this->project_background_configuration = $project_background_configuration;
     }
 
     public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item)
@@ -64,7 +71,8 @@ class BacklogItemRepresentationFactory
         $backlog_item_representation->build(
             $backlog_item,
             $card_fields,
-            $background_color
+            $background_color,
+            $this->project_background_configuration
         );
 
         return $backlog_item_representation;

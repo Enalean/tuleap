@@ -20,6 +20,7 @@
 namespace Tuleap\AgileDashboard\REST\v2;
 
 use Tuleap\AgileDashboard\REST\v1\BacklogItemParentReference;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\REST\JsonCast;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -126,11 +127,14 @@ class BacklogItemRepresentation
         $this->card_fields    = $card_fields;
     }
 
-    public static function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, array $card_fields): self
-    {
+    public static function build(
+        \AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
+        array $card_fields,
+        ProjectBackgroundConfiguration $project_background_configuration
+    ): self {
         $parent = null;
         if ($backlog_item->getParent()) {
-            $parent = BacklogItemParentReference::build($backlog_item->getParent());
+            $parent = BacklogItemParentReference::build($backlog_item->getParent(), $project_background_configuration);
         }
 
         return new self(

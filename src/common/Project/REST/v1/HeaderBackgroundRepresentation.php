@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
+use Tuleap\Project\ProjectBackground\ProjectBackgroundName;
+
 /**
  * @psalm-immutable
  * @psalm-import-type ValidProjectBackgroundName from \Tuleap\Project\ProjectBackground\ProjectBackgroundName
@@ -34,7 +36,16 @@ final class HeaderBackgroundRepresentation
      */
     public $identifier;
 
-    private function __construct()
+    /**
+     * @psalm-param ValidProjectBackgroundName $identifier
+     */
+    private function __construct(string $identifier)
     {
+        $this->identifier = $identifier;
+    }
+
+    public static function fromBackgroundName(ProjectBackgroundName $background_name): self
+    {
+        return new self($background_name->getIdentifier());
     }
 }

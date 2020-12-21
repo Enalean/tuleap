@@ -40,6 +40,8 @@ use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem\InitialEffortSemanticUpdater;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -428,7 +430,8 @@ class BacklogItemResource extends AuthenticatedResource
         return new BacklogItemRepresentationFactory(
             $color_builder,
             $this->user_manager,
-            EventManager::instance()
+            EventManager::instance(),
+            new ProjectBackgroundConfiguration(new ProjectBackgroundDao())
         );
     }
 }

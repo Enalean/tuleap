@@ -52,7 +52,7 @@ final class ProjectBackgroundRetrieverTest extends TestCase
         $project = Mockery::mock(\Project::class);
 
         $configuration = Mockery::mock(ProjectBackgroundConfiguration::class);
-        $configuration->shouldReceive(['getBackground' => 'beach-daytime']);
+        $configuration->shouldReceive(['getBackground' => ProjectBackgroundName::fromIdentifier('beach-daytime')]);
 
         $retriever = new ProjectBackgroundRetriever($configuration);
         $backgrounds = $retriever->getBackgrounds($project);

@@ -61,6 +61,8 @@ use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ItemListedTwiceException;
@@ -194,7 +196,8 @@ class ProjectBacklogResource
         $item_factory  = new BacklogItemRepresentationFactory(
             $color_builder,
             $user_manager,
-            $event_manager
+            $event_manager,
+            new ProjectBackgroundConfiguration(new ProjectBackgroundDao())
         );
 
         $this->paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(

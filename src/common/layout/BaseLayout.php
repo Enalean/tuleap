@@ -417,7 +417,7 @@ abstract class BaseLayout extends Response
         $this->addCSSAsset(
             new CssAssetWithoutVariantDeclinaisons(
                 new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core'),
-                "project-background/$background"
+                "project-background/" . $background->getIdentifier()
             )
         );
     }

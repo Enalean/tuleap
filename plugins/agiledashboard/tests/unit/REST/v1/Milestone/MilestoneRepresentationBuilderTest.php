@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\TrackerColor;
 
@@ -85,7 +86,8 @@ final class MilestoneRepresentationBuilderTest extends TestCase
             $this->mono_milestone_checker,
             $this->parent_tracker_retriever,
             $this->sub_milestone_finder,
-            $this->planning_factory
+            $this->planning_factory,
+            \Mockery::mock(ProjectBackgroundConfiguration::class)
         );
     }
 
