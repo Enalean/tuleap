@@ -80,8 +80,8 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCurrentUser'     => $user,
-                    'getCrossReferences' => [
+                    'getCurrentUser'              => $user,
+                    'getCrossReferencePresenters' => [
                         $this->buildCrossReferencePresenter('nature_1', 1),
                         $this->buildCrossReferencePresenter('nature_2', 2),
                         $this->buildCrossReferencePresenter('nature_3', 3),
@@ -125,8 +125,8 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCurrentUser'     => $user,
-                    'getCrossReferences' => [$a_ref],
+                    'getCurrentUser'              => $user,
+                    'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
 
@@ -173,8 +173,8 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCurrentUser'     => $user,
-                    'getCrossReferences' => [$a_ref],
+                    'getCurrentUser'              => $user,
+                    'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
 
@@ -238,8 +238,8 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCurrentUser'     => $user,
-                    'getCrossReferences' => [$a_ref],
+                    'getCurrentUser'              => $user,
+                    'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
 
@@ -364,8 +364,8 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCurrentUser'     => $user,
-                    'getCrossReferences' => [$a_ref, $another_ref],
+                    'getCurrentUser'              => $user,
+                    'getCrossReferencePresenters' => [$a_ref, $another_ref],
                 ]
             )->getMock();
 

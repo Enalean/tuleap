@@ -31,7 +31,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
     /**
      * @var CrossReferencePresenter[]
      */
-    private $cross_references;
+    private $cross_reference_presenters;
     /**
      * @var array<string, CrossReferenceNaturePresenter>
      */
@@ -46,14 +46,14 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
     private $current_user;
 
     /**
-     * @param CrossReferencePresenter[] $cross_references
+     * @param CrossReferencePresenter[] $cross_reference_presenters
      * @param array<string, Nature> $available_natures
      */
-    public function __construct(array $cross_references, array $available_natures, \PFUser $current_user)
+    public function __construct(array $cross_reference_presenters, array $available_natures, \PFUser $current_user)
     {
-        $this->cross_references  = $cross_references;
-        $this->available_natures = $available_natures;
-        $this->current_user      = $current_user;
+        $this->cross_reference_presenters = $cross_reference_presenters;
+        $this->available_natures          = $available_natures;
+        $this->current_user               = $current_user;
 
         $this->natures = [];
     }
@@ -61,51 +61,51 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
     /**
      * @return CrossReferencePresenter[]
      */
-    public function getCrossReferences(): array
+    public function getCrossReferencePresenters(): array
     {
-        return $this->cross_references;
+        return $this->cross_reference_presenters;
     }
 
-    public function removeUnreadableCrossReference(CrossReferencePresenter $cross_reference_to_remove): void
+    public function removeUnreadableCrossReference(CrossReferencePresenter $cross_ref_presenter_to_remove): void
     {
-        foreach ($this->cross_references as $index => $cross_reference) {
-            if ($cross_reference === $cross_reference_to_remove) {
-                unset($this->cross_references[$index]);
+        foreach ($this->cross_reference_presenters as $index => $cross_reference_presenter) {
+            if ($cross_reference_presenter === $cross_ref_presenter_to_remove) {
+                unset($this->cross_reference_presenters[$index]);
                 break;
             }
         }
 
-        $this->cross_references = array_values($this->cross_references);
+        $this->cross_reference_presenters = array_values($this->cross_reference_presenters);
     }
 
     public function moveCrossReferenceToSection(
-        CrossReferencePresenter $cross_reference,
+        CrossReferencePresenter $cross_reference_presenter,
         string $section_label
     ): void {
-        foreach ($this->cross_references as $key => $xref) {
-            if ($xref->id !== $cross_reference->id) {
+        foreach ($this->cross_reference_presenters as $key => $xref) {
+            if ($xref->id !== $cross_reference_presenter->id) {
                 continue;
             }
 
-            unset($this->cross_references[$key]);
+            unset($this->cross_reference_presenters[$key]);
 
-            $nature_identifier = $cross_reference->type;
+            $nature_identifier = $cross_reference_presenter->type;
             if ($this->doWeAlreadyHaveNaturePresenter($nature_identifier)) {
                 $this->addCrossReferencePresenterToExistingNaturePresenter(
                     $nature_identifier,
-                    $cross_reference,
+                    $cross_reference_presenter,
                     $section_label
                 );
             } else {
                 $this->addCrossReferencePresenterToNewNaturePresenter(
                     $nature_identifier,
-                    $cross_reference,
+                    $cross_reference_presenter,
                     $section_label
                 );
             }
         }
 
-        $this->cross_references = array_values($this->cross_references);
+        $this->cross_reference_presenters = array_values($this->cross_reference_presenters);
     }
 
     private function doWeAlreadyHaveNaturePresenter(string $nature_identifier): bool
@@ -120,7 +120,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
     ): void {
         $this->setNature(
             $nature_identifier,
-            $this->natures[$nature_identifier]->withAdditionalCrossReference(
+            $this->natures[$nature_identifier]->withAdditionalCrossReferencePresenter(
                 $section_label,
                 $cross_reference_presenter
             )
@@ -167,7 +167,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
 
     public function organizeRemainingCrossReferences(): void
     {
-        foreach ($this->cross_references as $cross_reference) {
+        foreach ($this->cross_reference_presenters as $cross_reference) {
             $this->moveCrossReferenceToSection($cross_reference, CrossReferenceSectionPresenter::UNLABELLED);
         }
     }

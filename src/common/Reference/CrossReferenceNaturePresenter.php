@@ -50,7 +50,7 @@ final class CrossReferenceNaturePresenter
         $this->sections = $this->sortCrossReferencesSection($sections);
     }
 
-    public function withAdditionalCrossReference(string $section_label, CrossReferencePresenter $cross_reference): self
+    public function withAdditionalCrossReferencePresenter(string $section_label, CrossReferencePresenter $cross_reference_presenter): self
     {
         foreach ($this->sections as $index => $matching_section) {
             if ($matching_section->label !== $section_label) {
@@ -62,7 +62,7 @@ final class CrossReferenceNaturePresenter
                 $new_sections,
                 $index,
                 1,
-                [$matching_section->withAdditionalCrossReference($cross_reference)]
+                [$matching_section->withAdditionalCrossReference($cross_reference_presenter)]
             );
 
             return new self($this->label, $this->icon, $new_sections);
@@ -73,7 +73,7 @@ final class CrossReferenceNaturePresenter
             $this->icon,
             array_merge(
                 $this->sections,
-                [new CrossReferenceSectionPresenter($section_label, [$cross_reference])]
+                [new CrossReferenceSectionPresenter($section_label, [$cross_reference_presenter])]
             )
         );
     }

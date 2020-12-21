@@ -78,7 +78,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             ->shouldReceive(
                 [
                     'getCurrentUser'     => $user,
-                    'getCrossReferences' => [
+                    'getCrossReferencePresenters' => [
                         new CrossReferencePresenter(
                             1,
                             "git",
@@ -130,7 +130,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             ->shouldReceive(
                 [
                     'getCurrentUser'     => $user,
-                    'getCrossReferences' => [
+                    'getCrossReferencePresenters' => [
                         $a_ref,
                     ]
                 ]
@@ -180,7 +180,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             ->shouldReceive(
                 [
                     'getCurrentUser'     => $user,
-                    'getCrossReferences' => [$a_ref],
+                    'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
 
@@ -242,7 +242,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             ->shouldReceive(
                 [
                     'getCurrentUser'     => $user,
-                    'getCrossReferences' => [$a_ref],
+                    'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
 
@@ -316,7 +316,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             ->shouldReceive(
                 [
                     'getCurrentUser'     => $user,
-                    'getCrossReferences' => [$a_ref],
+                    'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
 

@@ -60,30 +60,30 @@ class GitlabCrossReferenceOrganizer
 
     public function organizeGitLabReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
     {
-        foreach ($by_nature_organizer->getCrossReferences() as $cross_reference) {
-            if ($cross_reference->type !== 'plugin_gitlab_commit') {
+        foreach ($by_nature_organizer->getCrossReferencePresenters() as $cross_reference_presenter) {
+            if ($cross_reference_presenter->type !== 'plugin_gitlab_commit') {
                 continue;
             }
 
-            $this->moveGitlabCrossReferenceToRepositorySection($by_nature_organizer, $cross_reference);
+            $this->moveGitlabCrossReferenceToRepositorySection($by_nature_organizer, $cross_reference_presenter);
         }
     }
 
     private function moveGitlabCrossReferenceToRepositorySection(
         CrossReferenceByNatureOrganizer $by_nature_organizer,
-        CrossReferencePresenter $cross_reference
+        CrossReferencePresenter $cross_reference_presenter
     ): void {
         $user    = $by_nature_organizer->getCurrentUser();
-        $project = $this->project_manager->getProject($cross_reference->target_gid);
+        $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (\Project_AccessException $e) {
-            $by_nature_organizer->removeUnreadableCrossReference($cross_reference);
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
             return;
         }
 
-        [$repository_name, $sha1] = GitlabCommitReferenceExtractor::splitRepositoryAndSha1($cross_reference->target_value);
+        [$repository_name, $sha1] = GitlabCommitReferenceExtractor::splitRepositoryAndSha1($cross_reference_presenter->target_value);
 
         $repository = $this->gitlab_repository_factory->getGitlabRepositoryByNameInProject(
             $project,
@@ -91,7 +91,7 @@ class GitlabCrossReferenceOrganizer
         );
 
         if ($repository === null) {
-            $by_nature_organizer->removeUnreadableCrossReference($cross_reference);
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
             return;
         }
 
@@ -101,12 +101,12 @@ class GitlabCrossReferenceOrganizer
         );
 
         if ($commit_info === null) {
-            $by_nature_organizer->removeUnreadableCrossReference($cross_reference);
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
             return;
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $cross_reference
+            $cross_reference_presenter
                 ->withAdditionalBadges(
                     [
                         new AdditionalBadgePresenter(
