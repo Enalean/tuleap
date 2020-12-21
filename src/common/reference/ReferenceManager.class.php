@@ -205,9 +205,11 @@ class ReferenceManager
         return $natures;
     }
 
-    public function getReferencesByGroupId($group_id)
+    /**
+     * @return Reference[]
+     */
+    public function getReferencesByGroupId(string $group_id): array
     {
-        $p = false;
         if (isset($this->referencesByProject[$group_id])) {
             $p = $this->referencesByProject[$group_id];
         } else {

@@ -38,11 +38,16 @@ class ReferenceAdministrationViews extends Views
      */
     private $natures;
 
+    /**
+     * @var ReferenceManager
+     */
+    private $reference_manager;
+
     public function __construct($controler, $view = null)
     {
         $this->View($controler, $view);
-        $referenceManager = ReferenceManager::instance();
-        $this->natures = $referenceManager->getAvailableNatures();
+        $this->reference_manager = ReferenceManager::instance();
+        $this->natures = $this->reference_manager->getAvailableNatures();
     }
 
     public function header()
@@ -87,8 +92,7 @@ class ReferenceAdministrationViews extends Views
         /*
          Show the references that this project is using
         */
-        $referenceManager = ReferenceManager::instance();
-        $references = $referenceManager->getReferencesByGroupId($request->get('group_id')); // References are sorted by scope first
+        $references = $this->reference_manager->getReferencesByGroupId($request->get('group_id')); // References are sorted by scope first
 
         echo '
 <HR>
@@ -133,6 +137,8 @@ class ReferenceAdministrationViews extends Views
             $current_scope = $ref->getScope();
             $this->displayReferenceRow($ref);
         }
+
+        $this->displayCustomReferencesWarningsIfAny($references);
 
         echo '
 </TABLE>
@@ -343,8 +349,7 @@ class ReferenceAdministrationViews extends Views
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('project_reference', 'missing_parameter'));
         }
 
-        $referenceManager = ReferenceManager::instance();
-        $ref = $referenceManager->loadReference($refid, $group_id);
+        $ref = $this->reference_manager->loadReference($refid, $group_id);
 
         if (! $ref) {
             echo '<p class="alert alert-error"> ' . _('This reference does not exist') . '</p>';
@@ -483,5 +488,26 @@ class ReferenceAdministrationViews extends Views
         if (! $ro) {
             echo '<p>' . $star . ': ' . $GLOBALS['Language']->getText('project_reference', 'fields_required') . '</p>';
         }
+    }
+
+    /**
+     * @param Reference[] $references
+     */
+    private function displayCustomReferencesWarningsIfAny(array $references): void
+    {
+        $warnings_collector_event = new ReferenceAdministrationWarningsCollectorEvent($references);
+        $event_manager = EventManager::instance();
+        $event_manager->dispatch($warnings_collector_event);
+        $warning_messages = $warnings_collector_event->getWarningMessages();
+
+        if (empty($warning_messages)) {
+            return;
+        }
+
+        print '<div class="alert">';
+        foreach ($warning_messages as $warning_message) {
+            print $warning_message . '<br>';
+        }
+        print '<div/>';
     }
 }

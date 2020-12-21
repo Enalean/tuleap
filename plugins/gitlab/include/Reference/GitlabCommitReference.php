@@ -26,6 +26,8 @@ use Tuleap\Gitlab\Repository\GitlabRepository;
 
 class GitlabCommitReference extends \Reference
 {
+    public const REFERENCE_NAME = 'gitlab_commit';
+
     public function __construct(
         GitlabRepository $gitlab_repository,
         Project $project,
@@ -33,7 +35,7 @@ class GitlabCommitReference extends \Reference
     ) {
         parent::__construct(
             0,
-            'gitlab_commit',
+            self::REFERENCE_NAME,
             dgettext('tuleap-gitlab', 'GitLab commit'),
             $gitlab_repository->getFullUrl() . '/-/commit/' . $sha1,
             'S',
