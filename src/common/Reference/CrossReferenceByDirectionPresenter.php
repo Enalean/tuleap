@@ -50,10 +50,25 @@ final class CrossReferenceByDirectionPresenter
      */
     public function __construct(array $sources_by_nature, array $targets_by_nature)
     {
-        $this->sources_by_nature = $sources_by_nature;
-        $this->targets_by_nature = $targets_by_nature;
+        $this->sources_by_nature = $this->sortCrossReferencesNature($sources_by_nature);
+        $this->targets_by_nature = $this->sortCrossReferencesNature($targets_by_nature);
 
         $this->has_source = ! empty($sources_by_nature);
         $this->has_target = ! empty($targets_by_nature);
+    }
+
+    /**
+     * @param CrossReferenceNaturePresenter[] $cross_references_nature
+     * @return CrossReferenceNaturePresenter[]
+     */
+    private function sortCrossReferencesNature(array $cross_references_nature): array
+    {
+        usort(
+            $cross_references_nature,
+            function (CrossReferenceNaturePresenter $a, CrossReferenceNaturePresenter $b) {
+                return strnatcasecmp($a->label, $b->label);
+            }
+        );
+        return $cross_references_nature;
     }
 }

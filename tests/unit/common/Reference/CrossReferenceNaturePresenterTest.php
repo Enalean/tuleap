@@ -22,37 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 class CrossReferenceNaturePresenterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testWithAdditionalCrossReference(): void
     {
-        $a_ref       = new CrossReferencePresenter(
-            1,
-            "type",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-        );
-        $another_ref = new CrossReferencePresenter(
-            2,
-            "type",
-            "reference",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-        );
+        $a_ref       = $this->getCrossReferencePresenter(1);
+        $another_ref = $this->getCrossReferencePresenter(2);
 
         $section = new CrossReferenceSectionPresenter("my section", [$a_ref]);
         $nature  = new CrossReferenceNaturePresenter("My Nature", "fas fa-candy-cane", [$section]);
@@ -63,5 +40,41 @@ class CrossReferenceNaturePresenterTest extends TestCase
         self::assertCount(1, $new_nature->sections);
         self::assertEquals("my section", $new_nature->sections[0]->label);
         self::assertEquals([$a_ref, $another_ref], $new_nature->sections[0]->cross_references);
+    }
+
+    public function testSortSectionAlphabetically(): void
+    {
+        $a_ref = $this->getCrossReferencePresenter(1);
+        $b_ref = $this->getCrossReferencePresenter(2);
+        $c_ref = $this->getCrossReferencePresenter(3);
+
+        $c_section = new CrossReferenceSectionPresenter("C Section", [$c_ref]);
+        $a_section = new CrossReferenceSectionPresenter("A Section", [$a_ref]);
+        $nature  = new CrossReferenceNaturePresenter("My Nature", "fas fa-candy-cane", [$c_section, $a_section]);
+        $nature = $nature->withAdditionalCrossReference("b Section", $b_ref);
+
+        self::assertEquals("My Nature", $nature->label);
+        self::assertCount(3, $nature->sections);
+        self::assertEquals("A Section", $nature->sections[0]->label);
+        self::assertEquals("b Section", $nature->sections[1]->label);
+        self::assertEquals("C Section", $nature->sections[2]->label);
+        self::assertEquals([$a_ref], $nature->sections[0]->cross_references);
+        self::assertEquals([$b_ref], $nature->sections[1]->cross_references);
+        self::assertEquals([$c_ref], $nature->sections[2]->cross_references);
+    }
+
+    private function getCrossReferencePresenter(int $id): CrossReferencePresenter
+    {
+        return new CrossReferencePresenter(
+            $id,
+            "type",
+            "reference",
+            "url",
+            "delete_url",
+            1,
+            "whatever",
+            null,
+            [],
+        );
     }
 }

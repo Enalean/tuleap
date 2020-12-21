@@ -45,9 +45,9 @@ final class CrossReferenceNaturePresenter
      */
     public function __construct(string $label, string $icon, array $sections)
     {
-        $this->label = $label;
-        $this->icon = $icon;
-        $this->sections = $sections;
+        $this->label    = $label;
+        $this->icon     = $icon;
+        $this->sections = $this->sortCrossReferencesSection($sections);
     }
 
     public function withAdditionalCrossReference(string $section_label, CrossReferencePresenter $cross_reference): self
@@ -76,5 +76,20 @@ final class CrossReferenceNaturePresenter
                 [new CrossReferenceSectionPresenter($section_label, [$cross_reference])]
             )
         );
+    }
+
+    /**
+     * @param CrossReferenceSectionPresenter[] $cross_references_nature
+     * @return CrossReferenceSectionPresenter[]
+     */
+    private function sortCrossReferencesSection(array $cross_references_nature): array
+    {
+        usort(
+            $cross_references_nature,
+            function (CrossReferenceSectionPresenter $a, CrossReferenceSectionPresenter $b) {
+                return strnatcasecmp($a->label, $b->label);
+            }
+        );
+        return $cross_references_nature;
     }
 }
