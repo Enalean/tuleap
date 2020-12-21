@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "dompurify": "^2.2.4",
+    "dompurify": "^2.2.6",
     "fscreen": "^1.1.0",
     "mustache": "^4.1.0",
     "p-retry": "^4.2.0",
