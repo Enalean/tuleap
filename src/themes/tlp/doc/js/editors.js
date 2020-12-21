@@ -184,11 +184,17 @@ import { createListPicker } from "@tuleap/list-picker";
                 createListPicker(document.querySelector("#list-picker-sb-avatars"), {
                     placeholder: "Choose a GoT character",
                     is_filterable: true,
-                    items_template_formatter: (value_id, option_label) => {
+                    items_template_formatter: (html, value_id, option_label) => {
                         if (value_id === "103" || value_id === "108") {
-                            return `<i class="fas fa-fw fa-user-slash"></i> ${option_label}`;
+                            return html`
+                                <i class="fas fa-fw fa-user-slash"></i>
+                                ${option_label}
+                            `;
                         }
-                        return `<i class="fas fa-fw fa-user"></i> ${option_label}`;
+                        return html`
+                            <i class="fas fa-fw fa-user"></i>
+                            ${option_label}
+                        `;
                     },
                 });
             }
@@ -213,11 +219,17 @@ import { createListPicker } from "@tuleap/list-picker";
                 createListPicker(document.querySelector("#list-picker-msb-avatars"), {
                     placeholder: "Choose GoT characters",
                     is_filterable: true,
-                    items_template_formatter: (value_id, option_label) => {
+                    items_template_formatter: (html, value_id, option_label) => {
                         if (value_id === "103" || value_id === "108") {
-                            return `<i class="fas fa-fw fa-user-slash"></i> ${option_label}`;
+                            return html`
+                                <i class="fas fa-fw fa-user-slash"></i>
+                                ${option_label}
+                            `;
                         }
-                        return `<i class="fas fa-fw fa-user"></i> ${option_label}`;
+                        return html`
+                            <i class="fas fa-fw fa-user"></i>
+                            ${option_label}
+                        `;
                     },
                 });
             }

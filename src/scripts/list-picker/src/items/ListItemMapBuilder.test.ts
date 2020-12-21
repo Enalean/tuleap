@@ -247,11 +247,11 @@ describe("ListItemBuilder", () => {
             await builder.buildListPickerItemsMap();
 
             expect(itemsTemplateFormatter).toHaveBeenCalledTimes(5);
-            expect(itemsTemplateFormatter.mock.calls[0]).toEqual(["100", "None"]);
-            expect(itemsTemplateFormatter.mock.calls[1]).toEqual(["value_0", "Value 0"]);
-            expect(itemsTemplateFormatter.mock.calls[2]).toEqual(["value_1", "Value 1"]);
-            expect(itemsTemplateFormatter.mock.calls[3]).toEqual(["value_2", "Value 2"]);
-            expect(itemsTemplateFormatter.mock.calls[4]).toEqual(["value_3", "Value 3"]);
+            expect(itemsTemplateFormatter.mock.calls[0]).toEqual([html, "100", "None"]);
+            expect(itemsTemplateFormatter.mock.calls[1]).toEqual([html, "value_0", "Value 0"]);
+            expect(itemsTemplateFormatter.mock.calls[2]).toEqual([html, "value_1", "Value 1"]);
+            expect(itemsTemplateFormatter.mock.calls[3]).toEqual([html, "value_2", "Value 2"]);
+            expect(itemsTemplateFormatter.mock.calls[4]).toEqual([html, "value_3", "Value 3"]);
 
             await builder.buildListPickerItemsMap();
             expect(itemsTemplateFormatter).toHaveBeenCalledTimes(5);
