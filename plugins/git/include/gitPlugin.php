@@ -173,6 +173,7 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\PasswordVerifier;
+use Tuleap\Reference\NatureCollection;
 
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -219,7 +220,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(Event::JAVASCRIPT, 'javascript', false);
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass', false);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, 'getReferenceKeywords', false);
-        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'getReferenceNatures', false);
+        $this->addHook(NatureCollection::NAME);
         $this->addHook(GetReferenceEvent::NAME);
         $this->addHook('SystemEvent_PROJECT_IS_PRIVATE', 'changeProjectRepositoriesAccess', false);
         $this->addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename', false);
@@ -686,17 +687,15 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $params['keywords'][] = Git::REFERENCE_KEYWORD;
     }
 
-    public function getReferenceNatures($params)
+    public function getAvailableReferenceNatures(NatureCollection $natures): void
     {
-        $params['natures'] = array_merge(
-            $params['natures'],
-            [
-                Git::REFERENCE_NATURE => new Nature(
-                    Git::REFERENCE_KEYWORD,
-                    'fas fa-tlp-versioning-git',
-                    dgettext('tuleap-git', 'Git commit')
-                )
-            ]
+        $natures->addNature(
+            Git::REFERENCE_NATURE,
+            new Nature(
+                Git::REFERENCE_KEYWORD,
+                'fas fa-tlp-versioning-git',
+                dgettext('tuleap-git', 'Git commit')
+            )
         );
     }
 

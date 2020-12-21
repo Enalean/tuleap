@@ -38,6 +38,7 @@ use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Reference\NatureCollection;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -52,7 +53,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
 
         $this->addHook(SiteAdministrationAddOption::NAME);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
-        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
+        $this->addHook(NatureCollection::NAME);
         $this->addHook(Event::POST_REFERENCE_EXTRACTED);
         $this->addHook(Event::REMOVE_CROSS_REFERENCE);
         $this->addHook(Event::GET_REFERENCE_ADMIN_CAPABILITIES);
@@ -116,14 +117,16 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         }
     }
 
-    public function get_available_reference_natures($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function getAvailableReferenceNatures(NatureCollection $natures): void
     {
-        $params['natures']['bugzilla'] =
+        $natures->addNature(
+            'bugzilla',
             new Nature(
                 'bugzilla',
                 Nature::NO_ICON,
                 dgettext('tuleap-bugzilla_reference', 'Bugzilla')
-            );
+            )
+        );
     }
 
     /**

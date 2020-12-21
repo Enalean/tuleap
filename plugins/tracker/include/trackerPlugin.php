@@ -216,6 +216,7 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetPublicAreas;
+use Tuleap\Reference\NatureCollection;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -241,7 +242,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $this->addHook('javascript_file');
         $this->addHook('cssfile', 'cssFile', false);
-        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures', false);
+        $this->addHook(NatureCollection::NAME);
         $this->addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, 'get_artifact_reference_group_id', false);
         $this->addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
         $this->addHook(Event::BUILD_REFERENCE, 'build_reference', false);
@@ -773,12 +774,12 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
     }
 
-    public function get_available_reference_natures($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function getAvailableReferenceNatures(NatureCollection $natures): void
     {
-        $natures = [
-            Artifact::REFERENCE_NATURE => new Nature('artifact', 'fas fa-list-ol', 'Artifact Tracker v5'),
-        ];
-        $params['natures'] = array_merge($params['natures'], $natures);
+        $natures->addNature(
+            Artifact::REFERENCE_NATURE,
+            new Nature('artifact', 'fas fa-list-ol', 'Artifact Tracker v5')
+        );
     }
 
     public function get_artifact_reference_group_id($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

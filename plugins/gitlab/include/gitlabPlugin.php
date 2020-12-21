@@ -46,6 +46,7 @@ use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Reference\NatureCollection;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
@@ -84,7 +85,7 @@ class gitlabPlugin extends Plugin
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_REFERENCE_ADMIN_CAPABILITIES);
         $this->addHook(Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE);
-        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
+        $this->addHook(NatureCollection::NAME);
         $this->addHook(ReferenceAdministrationWarningsCollectorEvent::NAME);
 
         return parent::getHooksAndCallbacks();
@@ -228,14 +229,16 @@ class gitlabPlugin extends Plugin
         );
     }
 
-    public function get_available_reference_natures(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function getAvailableReferenceNatures(NatureCollection $natures): void
     {
-        $params['natures']['plugin_gitlab_commit'] =
+        $natures->addNature(
+            'plugin_gitlab_commit',
             new Nature(
                 GitlabCommitReference::REFERENCE_NAME,
                 'fab fa-gitlab',
                 dgettext('tuleap-gitlab', 'GitLab commit')
-            );
+            )
+        );
     }
 
     public function referenceAdministrationWarningsCollectorEvent(ReferenceAdministrationWarningsCollectorEvent $event): void
