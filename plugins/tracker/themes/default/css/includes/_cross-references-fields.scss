@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
+@use '../../../../../../src/themes/tlp/src/scss/variables/colors/swatch-colors';
 @import '../../../../../../src/themes/tlp/src/scss/variables/density';
 @import '../../../../../../src/themes/tlp/src/scss/variables/margins';
 
@@ -59,4 +60,21 @@
 
 .tracker-cross-reference-additional-badge {
     margin: 0 0 0 4px;
+}
+
+.tracker-cross-reference-title-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin: 0 4px 0 0;
+    border-radius: 50%;
+    font-size: .8125rem;
+}
+
+@each $color-name, $colors in swatch-colors.$tlp-swatch-color-map {
+    .tracker-cross-reference-title-icon-#{$color-name} {
+        background: map-get($colors, 'primary');
+    }
 }

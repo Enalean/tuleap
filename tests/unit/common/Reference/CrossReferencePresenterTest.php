@@ -68,7 +68,7 @@ class CrossReferencePresenterTest extends TestCase
             null,
         );
 
-        $new_ref = $a_ref->withTitle('New title', new TitleBadgePresenter('badge', 'color'));
+        $new_ref = $a_ref->withTitle('New title', TitleBadgePresenter::buildLabelBadge('badge', 'color'));
 
         self::assertEquals(1, $new_ref->id);
         self::assertEquals('New title', $new_ref->title);

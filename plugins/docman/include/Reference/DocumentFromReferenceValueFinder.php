@@ -20,40 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Reference;
+namespace Tuleap\Docman\Reference;
 
-/**
- * @psalm-immutable
- */
-final class TitleBadgePresenter
+use Docman_ItemFactory;
+use Docman_PermissionsManager;
+
+class DocumentFromReferenceValueFinder
 {
-    /**
-     * @var string
-     */
-    public $label;
-    /**
-     * @var string
-     */
-    public $color;
-    /**
-     * @var string
-     */
-    public $icon;
-
-    private function __construct(string $label, string $color, string $icon)
+    public function findItem(\Project $project, \PFUser $user, string $reference_value): ?\Docman_Item
     {
-        $this->label = $label;
-        $this->color = $color;
-        $this->icon  = $icon;
+        $item_factory = $this->getItemFactory((int) $project->getID());
+
+        $item = $item_factory->getItemFromDb((int) $reference_value);
+        if (! $item) {
+            return null;
+        }
+
+        $permissions_manager = Docman_PermissionsManager::instance((int) $project->getID());
+        if (! $permissions_manager->userCanAccess($user, $item->getId())) {
+            return null;
+        }
+
+        return $item;
     }
 
-    public static function buildLabelBadge(string $label, string $color): self
+    private function getItemFactory(int $project_id): Docman_ItemFactory
     {
-        return new self($label, $color, '');
-    }
-
-    public static function buildIconBadge(string $icon, string $color): self
-    {
-        return new self('', $color, $icon);
+        return new Docman_ItemFactory($project_id);
     }
 }

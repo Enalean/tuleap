@@ -22,38 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-/**
- * @psalm-immutable
- */
-final class TitleBadgePresenter
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class TitleBadgePresenterTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    public $label;
-    /**
-     * @var string
-     */
-    public $color;
-    /**
-     * @var string
-     */
-    public $icon;
+    use MockeryPHPUnitIntegration;
 
-    private function __construct(string $label, string $color, string $icon)
+    public function testItBuildsABadgeWithALabel(): void
     {
-        $this->label = $label;
-        $this->color = $color;
-        $this->icon  = $icon;
+        $presenter = TitleBadgePresenter::buildLabelBadge('Lorem ipsum', 'fiesta-red');
+
+        self::assertEquals('Lorem ipsum', $presenter->label);
+        self::assertEquals('fiesta-red', $presenter->color);
+        self::assertEquals('', $presenter->icon);
     }
 
-    public static function buildLabelBadge(string $label, string $color): self
+    public function testItBuildsABadgeWithAnIcon(): void
     {
-        return new self($label, $color, '');
-    }
+        $presenter = TitleBadgePresenter::buildIconBadge('fas fa-ambulance', 'fiesta-red');
 
-    public static function buildIconBadge(string $icon, string $color): self
-    {
-        return new self('', $color, $icon);
+        self::assertEquals('', $presenter->label);
+        self::assertEquals('fiesta-red', $presenter->color);
+        self::assertEquals('fas fa-ambulance', $presenter->icon);
     }
 }

@@ -20,40 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Reference;
+namespace Tuleap\Docman\Reference;
 
 /**
  * @psalm-immutable
  */
-final class TitleBadgePresenter
+final class DocumentIconPresenter
 {
     /**
      * @var string
      */
-    public $label;
+    public $icon;
     /**
      * @var string
      */
     public $color;
-    /**
-     * @var string
-     */
-    public $icon;
 
-    private function __construct(string $label, string $color, string $icon)
+    public function __construct(string $icon, string $color)
     {
-        $this->label = $label;
-        $this->color = $color;
         $this->icon  = $icon;
-    }
-
-    public static function buildLabelBadge(string $label, string $color): self
-    {
-        return new self($label, $color, '');
-    }
-
-    public static function buildIconBadge(string $icon, string $color): self
-    {
-        return new self('', $color, $icon);
+        $this->color = $color;
     }
 }

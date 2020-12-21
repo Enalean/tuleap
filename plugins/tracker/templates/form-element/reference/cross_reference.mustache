@@ -21,9 +21,16 @@
                         >
                             <div class="tracker-cross-reference-card-main">
                                 {{# title_badge }}
-                                    <span class="tlp-badge-{{ color }} tlp-badge-outline tracker-cross-reference-title-badge">
-                                        {{ label }}
-                                    </span>
+                                    {{# icon }}
+                                        <span class="tracker-cross-reference-title-icon tracker-cross-reference-title-icon-{{ color }}">
+                                            <i class="{{ . }}" aria-hidden="true"></i>
+                                        </span>
+                                    {{/ icon }}
+                                    {{^ icon }}
+                                        <span class="tlp-badge-{{ color }} tlp-badge-outline tracker-cross-reference-title-badge">
+                                            {{ label }}
+                                        </span>
+                                    {{/ icon }}
                                 {{/ title_badge }}
 
                                 <span class="tracker-cross-reference-title">
