@@ -70,12 +70,12 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
                         $item = $docmanItemFactory->getItemFromDb($node->getId());
                         assert($item instanceof Docman_File);
                         $version = $item->getCurrentVersion();
-                        $this->appendChildren($children, $version->getFilename(), new WebDAVDocmanFile($this->user, $this->getProject(), $item, new DocumentDownloader()));
+                        $this->appendChildren($children, $version->getFilename(), new WebDAVDocmanFile($this->user, $this->getProject(), $item, new DocumentDownloader(), $this->getUtils()));
                         break;
                     case Docman_EmbeddedFile::class:
                         $item = $docmanItemFactory->getItemFromDb($node->getId());
                         assert($item instanceof Docman_EmbeddedFile);
-                        $this->appendChildren($children, $node->getTitle(), new WebDAVDocmanFile($this->user, $this->getProject(), $item, new DocumentDownloader()));
+                        $this->appendChildren($children, $node->getTitle(), new WebDAVDocmanFile($this->user, $this->getProject(), $item, new DocumentDownloader(), $this->getUtils()));
                         break;
                     case Docman_Empty::class:
                     case Docman_Wiki::class:
