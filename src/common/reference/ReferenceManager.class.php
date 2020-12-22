@@ -249,7 +249,7 @@ class ReferenceManager
     /**
      * @return Reference[]
      */
-    public function getReferencesByGroupId(string $group_id): array
+    public function getReferencesByGroupId(int $group_id): array
     {
         if (isset($this->referencesByProject[$group_id])) {
             $p = $this->referencesByProject[$group_id];

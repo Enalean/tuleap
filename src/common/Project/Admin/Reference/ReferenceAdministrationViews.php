@@ -92,7 +92,7 @@ class ReferenceAdministrationViews extends Views
         /*
          Show the references that this project is using
         */
-        $references = $this->reference_manager->getReferencesByGroupId($request->get('group_id')); // References are sorted by scope first
+        $references = $this->reference_manager->getReferencesByGroupId((int) $request->get('group_id')); // References are sorted by scope first
 
         echo '
 <HR>
