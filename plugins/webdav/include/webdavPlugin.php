@@ -41,7 +41,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class WebDAVPlugin extends Plugin
 {
-    public function __construct(int $id)
+    public function __construct(?int $id)
     {
         parent::__construct($id);
         bindtextdomain('tuleap-webdav', __DIR__ . '/../site-content');
