@@ -39,7 +39,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      */
     public const HTML_CONTENT = 'html';
 
-    public const MARKDOWN_CONTENT = 'markdown';
+    public const COMMONMARK_CONTENT = 'commonmark';
 
     private static $MAX_LENGTH_FOR_DIFF = 20000;
 
@@ -84,7 +84,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         }
 
         // consider markdown format to be similar to text one for now
-        if ($this->format === self::MARKDOWN_CONTENT) {
+        if ($this->format === self::COMMONMARK_CONTENT) {
             return self::TEXT_CONTENT;
         }
 
@@ -103,7 +103,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     protected function getFullRESTRepresentation($value)
     {
-        if ($this->format === self::MARKDOWN_CONTENT) {
+        if ($this->format === self::COMMONMARK_CONTENT) {
             $text_field_value = $this->interpretMarkdownContent($value);
             $commonmark_value = $value;
             return new ArtifactFieldValueCommonmarkRepresentation(
@@ -135,7 +135,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
         if ($this->isInHTMLFormat()) {
             return $hp->purifyHTMLWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
-        } elseif ($this->format === self::MARKDOWN_CONTENT) {
+        } elseif ($this->format === self::COMMONMARK_CONTENT) {
             return $this->interpretMarkdownContent($this->getText());
         }
         return $hp->purifyTextWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
