@@ -53,11 +53,24 @@ class StartTestManagementPresenter
      * @var CSRFSynchronizerToken
      */
     public $csrf_token;
+    /**
+     * @var string | null
+     */
+    public $ttm_admin_url;
 
-    public function __construct(bool $is_user_admin, CSRFSynchronizerToken $csrf_token)
+    public function __construct(bool $is_user_admin, CSRFSynchronizerToken $csrf_token, int $project_id)
     {
         $this->is_user_admin = $is_user_admin;
         $this->csrf_token    = $csrf_token;
+        $this->ttm_admin_url = null;
+        if ($this->is_user_admin) {
+            $this->ttm_admin_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query(
+                [
+                        'group_id' => $project_id,
+                        'action'   => 'admin',
+                    ]
+            );
+        }
 
         $this->config_is_not_fully_set_up = dgettext(
             'tuleap-testmanagement',

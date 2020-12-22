@@ -78,6 +78,9 @@ msgstr "Résultat d'exécution d'une étape"
 msgid "Expected results"
 msgstr "Résultats attendus"
 
+msgid "Go to administration"
+msgstr "Aller à l'administration"
+
 msgid "Issue Tracker"
 msgstr "Outil de suivi des bugs"
 
