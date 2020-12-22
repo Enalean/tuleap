@@ -179,7 +179,8 @@ class gitlabPlugin extends Plugin
             ),
             $logger,
             HTTPFactoryBuilder::responseFactory(),
-            new SapiEmitter()
+            new SapiEmitter(),
+            new \Tuleap\Http\Server\ServiceInstrumentationMiddleware(self::SERVICE_NAME)
         );
     }
 
