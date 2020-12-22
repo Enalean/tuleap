@@ -53,29 +53,28 @@ class CrossReferenceByDirectionPresenterBuilder
         int $entity_project_id,
         \PFUser $current_user
     ): CrossReferenceByDirectionPresenter {
-        $available_natures = $this->reference_manager->getAvailableNatures();
-        $source_presenters = $this->factory->getSourcesOfEntity($entity_id, $entity_type, $entity_project_id);
-        $target_presenters = $this->factory->getTargetsOfEntity($entity_id, $entity_type, $entity_project_id);
+        $available_nature_collection = $this->reference_manager->getAvailableNatures();
+        $source_presenters           = $this->factory->getSourcesOfEntity($entity_id, $entity_type, $entity_project_id);
+        $target_presenters           = $this->factory->getTargetsOfEntity($entity_id, $entity_type, $entity_project_id);
 
         return new CrossReferenceByDirectionPresenter(
-            $this->getNaturesFromCrossReferences($source_presenters, $available_natures, $current_user),
-            $this->getNaturesFromCrossReferences($target_presenters, $available_natures, $current_user),
+            $this->getNaturesFromCrossReferences($source_presenters, $available_nature_collection, $current_user),
+            $this->getNaturesFromCrossReferences($target_presenters, $available_nature_collection, $current_user),
         );
     }
 
     /**
      * @param CrossReferencePresenter[] $cross_references
-     * @param array<string, Nature> $available_natures
      *
      * @return CrossReferenceNaturePresenter[]
      */
     private function getNaturesFromCrossReferences(
         array $cross_references,
-        array $available_natures,
+        NatureCollection $available_nature_collection,
         \PFUser $current_user
     ): array {
         $organizer = $this->event_dispatcher->dispatch(
-            new CrossReferenceByNatureOrganizer($cross_references, $available_natures, $current_user)
+            new CrossReferenceByNatureOrganizer($cross_references, $available_nature_collection, $current_user)
         );
         assert($organizer instanceof CrossReferenceByNatureOrganizer);
 

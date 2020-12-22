@@ -35,12 +35,13 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git')->build();
 
+        $nature_collection = new NatureCollection();
+        $nature_collection->addNature('git', new Nature('git', 'fas fa-tlp-versioning-git', 'Git', true));
+        $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
+
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
-            [
-                'git'   => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
-                'other' => new Nature('other', '', 'Other'),
-            ],
+            $nature_collection,
             \Mockery::mock(\PFUser::class),
         );
 
@@ -66,12 +67,13 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git')->build();
 
+        $nature_collection = new NatureCollection();
+        $nature_collection->addNature('git', new Nature('git', 'fas fa-tlp-versioning-git', 'Git', true));
+        $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
+
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
-            [
-                'git'   => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
-                'other' => new Nature('other', '', 'Other'),
-            ],
+            $nature_collection,
             \Mockery::mock(\PFUser::class),
         );
 
@@ -101,12 +103,13 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git')->build();
 
+        $nature_collection = new NatureCollection();
+        $nature_collection->addNature('git', new Nature('git', 'fas fa-tlp-versioning-git', 'Git', true));
+        $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
+
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
-            [
-                'git'   => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
-                'other' => new Nature('other', '', 'Other'),
-            ],
+            $nature_collection,
             \Mockery::mock(\PFUser::class),
         );
 
@@ -133,12 +136,13 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git')->build();
 
+        $nature_collection = new NatureCollection();
+        $nature_collection->addNature('git', new Nature('git', 'fas fa-tlp-versioning-git', 'Git', true));
+        $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
+
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
-            [
-                'git'   => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
-                'other' => new Nature('other', '', 'Other'),
-            ],
+            $nature_collection,
             \Mockery::mock(\PFUser::class),
         );
 
@@ -166,13 +170,14 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->withType('tracker')->build();
 
+        $nature_collection = new NatureCollection();
+        $nature_collection->addNature('git', new Nature('git', 'fas fa-tlp-versioning-git', 'Git', true));
+        $nature_collection->addNature('tracker', new Nature('tracker', 'fas fa-list-ol', 'Trackers', true));
+        $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
+
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
-            [
-                'git'     => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
-                'tracker' => new Nature('tracker', 'fas fa-list-ol', 'Trackers'),
-                'other'   => new Nature('other', '', 'Other'),
-            ],
+            $nature_collection,
             \Mockery::mock(\PFUser::class),
         );
 
@@ -205,11 +210,12 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
     {
         $a_ref = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
 
+        $nature_collection = new NatureCollection();
+        $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
+
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref],
-            [
-                'other' => new Nature('other', '', 'Other'),
-            ],
+            $nature_collection,
             \Mockery::mock(\PFUser::class),
         );
 
@@ -224,13 +230,14 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
         $another_ref = CrossReferencePresenterBuilder::get(2)->withType('wiki')->build();
 
+        $nature_collection = new NatureCollection();
+        $nature_collection->addNature('git', new Nature('git', 'fas fa-tlp-versioning-git', 'Git', true));
+        $nature_collection->addNature('wiki', new Nature('wiki', 'fas fa-wiki', 'Wiki', true));
+        $nature_collection->addNature('other', new Nature('other', '', 'Other', true));
+
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
-            [
-                'git'   => new Nature('git', 'fas fa-tlp-versioning-git', 'Git'),
-                'wiki'  => new Nature('wiki', 'fas fa-wiki', 'Wiki'),
-                'other' => new Nature('other', '', 'Other'),
-            ],
+            $nature_collection,
             \Mockery::mock(\PFUser::class),
         );
 
@@ -266,7 +273,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
-            [],
+            new NatureCollection(),
             \Mockery::mock(\PFUser::class),
         );
 

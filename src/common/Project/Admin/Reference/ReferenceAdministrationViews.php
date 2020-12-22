@@ -30,13 +30,14 @@ use Reference;
 use ReferenceManager;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Views;
+use Tuleap\Reference\NatureCollection;
 
 class ReferenceAdministrationViews extends Views
 {
     /**
-     * @var \Tuleap\Reference\Nature[]
+     * @var NatureCollection
      */
-    private $natures;
+    private $nature_collection;
 
     /**
      * @var ReferenceManager
@@ -47,7 +48,7 @@ class ReferenceAdministrationViews extends Views
     {
         $this->View($controler, $view);
         $this->reference_manager = ReferenceManager::instance();
-        $this->natures = $this->reference_manager->getAvailableNatures();
+        $this->nature_collection = $this->reference_manager->getAvailableNatures();
     }
 
     public function header()
@@ -188,8 +189,9 @@ class ReferenceAdministrationViews extends Views
 
         $description = $purifier->purify($this->getReferenceDescription($ref));
 
-        if (array_key_exists($ref->getNature(), $this->natures)) {
-            $nature_desc = $purifier->purify($this->natures[$ref->getNature()]->label);
+        $available_nature = $this->nature_collection->getNatureFromIdentifier($ref->getNature());
+        if ($available_nature) {
+            $nature_desc = $purifier->purify($available_nature->label);
         } else {
             $nature_desc = $purifier->purify($ref->getNature());
         }
@@ -265,16 +267,8 @@ class ReferenceAdministrationViews extends Views
 <td>';
         echo '<select name="nature" >';
 
-        foreach ($this->natures as $nature_key => $nature_desc) {
-            $can_create = true;
-            EventManager::instance()->processEvent(
-                Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE,
-                [
-                    'nature'     => $nature_key,
-                    'can_create' => &$can_create
-                ]
-            );
-            if ($can_create) {
+        foreach ($this->nature_collection->getNatures() as $nature_key => $nature_desc) {
+            if ($nature_desc->user_can_create_ref_with_nature) {
                 echo '<option value="' . $purifier->purify($nature_key) . '">' . $purifier->purify($nature_desc->label) . '</option>';
             }
         }
@@ -415,16 +409,8 @@ class ReferenceAdministrationViews extends Views
             echo $purifier->purify($ref->getNature());
         } else {
             echo '<select name="nature" >';
-            foreach ($this->natures as $nature_key => $nature_desc) {
-                $can_create = true;
-                EventManager::instance()->processEvent(
-                    Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE,
-                    [
-                        'nature'     => $nature_key,
-                        'can_create' => &$can_create
-                    ]
-                );
-                if ($can_create) {
+            foreach ($this->nature_collection->getNatures() as $nature_key => $nature_desc) {
+                if ($nature_desc->user_can_create_ref_with_nature) {
                     if ($ref->getNature() == $nature_key) {
                         $selected = 'selected="selected"';
                     } else {

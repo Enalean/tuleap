@@ -136,10 +136,7 @@ class ReferenceManager
         return self::$instance;
     }
 
-    /**
-     * @return array<string, Nature>
-     */
-    public function getAvailableNatures(): array
+    public function getAvailableNatures(): NatureCollection
     {
         $natures_collection = $this->event_manager->dispatch(new NatureCollection());
         assert($natures_collection instanceof NatureCollection);
@@ -150,6 +147,7 @@ class ReferenceManager
                 'art',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_artifact_nature_key'),
+                true
             )
         );
 
@@ -159,6 +157,7 @@ class ReferenceManager
                 'doc',
                 'fas fa-folder-open',
                 $GLOBALS['Language']->getText('project_reference', 'reference_document_nature_key'),
+                true
             )
         );
 
@@ -168,6 +167,7 @@ class ReferenceManager
                 'cvs',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_cvs_commit_nature_key'),
+                true
             )
         );
 
@@ -177,6 +177,7 @@ class ReferenceManager
                 'svn',
                 'fas fa-tlp-versioning-svn',
                 $GLOBALS['Language']->getText('project_reference', 'reference_svn_revision_nature_key'),
+                true
             )
         );
 
@@ -186,6 +187,7 @@ class ReferenceManager
                 'file',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_file_nature_key'),
+                true
             )
         );
 
@@ -195,6 +197,7 @@ class ReferenceManager
                 'release',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_release_nature_key'),
+                true
             )
         );
 
@@ -204,6 +207,7 @@ class ReferenceManager
                 'forum',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_forum_nature_key'),
+                true
             )
         );
 
@@ -213,6 +217,7 @@ class ReferenceManager
                 'msg',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_forum_message_nature_key'),
+                true
             )
         );
 
@@ -222,6 +227,7 @@ class ReferenceManager
                 'news',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_news_nature_key'),
+                true
             )
         );
 
@@ -231,6 +237,7 @@ class ReferenceManager
                 'wiki',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_wiki_page_nature_key'),
+                true
             )
         );
 
@@ -240,10 +247,11 @@ class ReferenceManager
                 'other',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_other_nature_key'),
+                true
             )
         );
 
-        return $natures_collection->getNatures();
+        return $natures_collection;
     }
 
     /**
@@ -901,10 +909,16 @@ class ReferenceManager
             if ($source_type == self::REFERENCE_NATURE_ARTIFACT) {
                 $source_key = $this->getArtifactKeyword($source_id, $source_gid);
                 if (! $source_key) {
-                    $source_key = $available_natures[$source_type]->keyword;
+                    $nature = $available_natures->getNatureFromIdentifier($source_type);
+                    if ($nature) {
+                        $source_key = $nature->keyword;
+                    }
                 }
             } else {
-                $source_key = $available_natures[$source_type]->keyword;
+                $nature = $available_natures->getNatureFromIdentifier($source_type);
+                if ($nature) {
+                    $source_key = $nature->keyword;
+                }
             }
         }
 

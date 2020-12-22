@@ -778,7 +778,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $natures->addNature(
             Artifact::REFERENCE_NATURE,
-            new Nature('artifact', 'fas fa-list-ol', 'Artifact Tracker v5')
+            new Nature('artifact', 'fas fa-list-ol', 'Artifact Tracker v5', true)
         );
     }
 

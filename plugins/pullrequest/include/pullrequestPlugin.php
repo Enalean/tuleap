@@ -450,7 +450,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     {
         $natures->addNature(
             self::REFERENCE_NATURE,
-            new Nature('pullrequest', 'fas fa-tlp-versioning-git', 'Git Pull Request')
+            new Nature('pullrequest', 'fas fa-tlp-versioning-git', 'Git Pull Request', true)
         );
     }
 

@@ -37,9 +37,9 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
      */
     private $natures;
     /**
-     * @var array<string, Nature>
+     * @var NatureCollection
      */
-    private $available_natures;
+    private $available_nature_collection;
     /**
      * @var \PFUser
      */
@@ -47,13 +47,15 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
 
     /**
      * @param CrossReferencePresenter[] $cross_reference_presenters
-     * @param array<string, Nature> $available_natures
      */
-    public function __construct(array $cross_reference_presenters, array $available_natures, \PFUser $current_user)
-    {
-        $this->cross_reference_presenters = $cross_reference_presenters;
-        $this->available_natures          = $available_natures;
-        $this->current_user               = $current_user;
+    public function __construct(
+        array $cross_reference_presenters,
+        NatureCollection $available_nature_collection,
+        \PFUser $current_user
+    ) {
+        $this->cross_reference_presenters  = $cross_reference_presenters;
+        $this->available_nature_collection = $available_nature_collection;
+        $this->current_user                = $current_user;
 
         $this->natures = [];
     }
@@ -132,10 +134,11 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
         CrossReferencePresenter $cross_reference_presenter,
         string $section_label
     ): void {
-        if (! isset($this->available_natures[$nature_identifier])) {
+        $available_nature = $this->available_nature_collection->getNatureFromIdentifier($nature_identifier);
+
+        if (! $available_nature) {
             return;
         }
-        $available_nature = $this->available_natures[$nature_identifier];
 
         $this->setNature(
             $nature_identifier,

@@ -89,7 +89,6 @@ class gitlabPlugin extends Plugin
 
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_REFERENCE_ADMIN_CAPABILITIES);
-        $this->addHook(Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE);
         $this->addHook(NatureCollection::NAME);
         $this->addHook(ReferenceAdministrationWarningsCollectorEvent::NAME);
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
@@ -221,14 +220,6 @@ class gitlabPlugin extends Plugin
         }
     }
 
-    /** @see \Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE */
-    public function can_user_create_reference_with_this_nature(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($params['nature'] === GitlabCommitReference::NATURE_NAME) {
-            $params['can_create'] = false;
-        }
-    }
-
     private function getGitlabRepositoryFactory(): GitlabRepositoryFactory
     {
         return new GitlabRepositoryFactory(
@@ -243,7 +234,8 @@ class gitlabPlugin extends Plugin
             new Nature(
                 GitlabCommitReference::REFERENCE_NAME,
                 'fab fa-gitlab',
-                dgettext('tuleap-gitlab', 'GitLab commit')
+                dgettext('tuleap-gitlab', 'GitLab commit'),
+                false
             )
         );
     }

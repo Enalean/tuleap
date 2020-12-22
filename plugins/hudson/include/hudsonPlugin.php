@@ -248,6 +248,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                 'build',
                 Nature::NO_ICON,
                 dgettext('tuleap-hudson', 'Jenkins Build'),
+                true
             )
         );
         $natures->addNature(
@@ -256,6 +257,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                 'job',
                 Nature::NO_ICON,
                 dgettext('tuleap-hudson', 'Jenkins Job'),
+                true
             )
         );
     }
