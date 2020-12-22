@@ -27,6 +27,7 @@ use Tuleap\Hudson\HudsonJobBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Reference\Nature;
+use Tuleap\Reference\NatureCollection;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
@@ -52,7 +53,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
 
-        $this->addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
+        $this->addHook(NatureCollection::NAME);
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
         $this->addHook('statistics_collector', 'statistics_collector', false);
@@ -239,21 +240,24 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         ]);
     }
 
-    public function getAvailableReferenceNatures($params)
+    public function getAvailableReferenceNatures(NatureCollection $natures): void
     {
-        $hudson_plugin_reference_natures = [
-            'hudson_build' => new Nature(
+        $natures->addNature(
+            'hudson_build',
+            new Nature(
                 'build',
                 Nature::NO_ICON,
                 dgettext('tuleap-hudson', 'Jenkins Build'),
-            ),
-            'hudson_job'   => new Nature(
+            )
+        );
+        $natures->addNature(
+            'hudson_job',
+            new Nature(
                 'job',
                 Nature::NO_ICON,
                 dgettext('tuleap-hudson', 'Jenkins Job'),
-            ),
-        ];
-        $params['natures'] = array_merge($params['natures'], $hudson_plugin_reference_natures);
+            )
+        );
     }
 
     public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)

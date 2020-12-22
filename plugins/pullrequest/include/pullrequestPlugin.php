@@ -98,6 +98,7 @@ use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Request\CollectRoutesEvent;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Reference\NatureCollection;
 
 class pullrequestPlugin extends Plugin // phpcs:ignore
 {
@@ -117,7 +118,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(GetReferenceEvent::NAME);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
-        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
+        $this->addHook(NatureCollection::NAME);
         $this->addHook('codendi_daily_start', 'dailyExecution');
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(CollectionOfLabelableDao::NAME);
@@ -445,13 +446,12 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function get_available_reference_natures($params) // phpcs:ignore
+    public function getAvailableReferenceNatures(NatureCollection $natures): void
     {
-        $nature = [
-            self::REFERENCE_NATURE => new Nature('pullrequest', 'fas fa-tlp-versioning-git', 'Git Pull Request'),
-        ];
-
-        $params['natures'] = array_merge($params['natures'], $nature);
+        $natures->addNature(
+            self::REFERENCE_NATURE,
+            new Nature('pullrequest', 'fas fa-tlp-versioning-git', 'Git Pull Request')
+        );
     }
 
     public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)

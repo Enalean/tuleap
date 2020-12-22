@@ -24,6 +24,7 @@ use Tuleap\Reference\Nature;
 use Tuleap\Reference\ReferenceDescriptionTranslation;
 use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
+use Tuleap\Reference\NatureCollection;
 
 /**
  * Reference Manager
@@ -78,7 +79,7 @@ class ReferenceManager
     /**
      * @var EventManager
      */
-    private $eventManager;
+    private $event_manager;
 
     /**
      * Hold an instance of the class
@@ -111,14 +112,14 @@ class ReferenceManager
 
     public function __construct()
     {
-        $this->eventManager = EventManager::instance();
+        $this->event_manager = EventManager::instance();
         $this->loadExtraFormats();
     }
 
     protected function loadExtraFormats()
     {
         $this->additional_references = [];
-        $this->eventManager->processEvent(Event::GET_PLUGINS_EXTRA_REFERENCES, [
+        $this->event_manager->processEvent(Event::GET_PLUGINS_EXTRA_REFERENCES, [
             'reference_manager' => $this,
             'refs'              => &$this->additional_references
         ]);
@@ -140,69 +141,109 @@ class ReferenceManager
      */
     public function getAvailableNatures(): array
     {
-        $core_natures = [
-            self::REFERENCE_NATURE_ARTIFACT     => new Nature(
+        $natures_collection = $this->event_manager->dispatch(new NatureCollection());
+        assert($natures_collection instanceof NatureCollection);
+
+        $natures_collection->addNature(
+            self::REFERENCE_NATURE_ARTIFACT,
+            new Nature(
                 'art',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_artifact_nature_key'),
-            ),
-            self::REFERENCE_NATURE_DOCUMENT     => new Nature(
+            )
+        );
+
+        $natures_collection->addNature(
+            self::REFERENCE_NATURE_DOCUMENT,
+            new Nature(
                 'doc',
                 'fas fa-folder-open',
                 $GLOBALS['Language']->getText('project_reference', 'reference_document_nature_key'),
-            ),
-            self::REFERENCE_NATURE_CVSCOMMIT    => new Nature(
+            )
+        );
+
+        $natures_collection->addNature(
+            self::REFERENCE_NATURE_CVSCOMMIT,
+            new Nature(
                 'cvs',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_cvs_commit_nature_key'),
-            ),
-            self::REFERENCE_NATURE_SVNREVISION  => new Nature(
+            )
+        );
+
+        $natures_collection->addNature(
+            self::REFERENCE_NATURE_SVNREVISION,
+            new Nature(
                 'svn',
                 'fas fa-tlp-versioning-svn',
                 $GLOBALS['Language']->getText('project_reference', 'reference_svn_revision_nature_key'),
-            ),
-            self::REFERENCE_NATURE_FILE         => new Nature(
+            )
+        );
+
+        $natures_collection->addNature(
+            self::REFERENCE_NATURE_FILE,
+            new Nature(
                 'file',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_file_nature_key'),
-            ),
-            self::REFERENCE_NATURE_RELEASE      => new Nature(
+            )
+        );
+
+        $natures_collection->addNature(
+            self::REFERENCE_NATURE_RELEASE,
+            new Nature(
                 'release',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_release_nature_key'),
-            ),
-            self::REFERENCE_NATURE_FORUM        => new Nature(
+            )
+        );
+
+        $natures_collection->addNature(
+            self::REFERENCE_NATURE_FORUM,
+            new Nature(
                 'forum',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_forum_nature_key'),
-            ),
-            self::REFERENCE_NATURE_FORUMMESSAGE => new Nature(
+            )
+        );
+
+        $natures_collection->addNature(
+            self::REFERENCE_NATURE_FORUMMESSAGE,
+            new Nature(
                 'msg',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_forum_message_nature_key'),
-            ),
-            self::REFERENCE_NATURE_NEWS         => new Nature(
+            )
+        );
+
+        $natures_collection->addNature(
+            self::REFERENCE_NATURE_NEWS,
+            new Nature(
                 'news',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_news_nature_key'),
-            ),
-            self::REFERENCE_NATURE_WIKIPAGE     => new Nature(
+            )
+        );
+
+        $natures_collection->addNature(
+            self::REFERENCE_NATURE_WIKIPAGE,
+            new Nature(
                 'wiki',
                 Nature::NO_ICON,
                 $GLOBALS['Language']->getText('project_reference', 'reference_wiki_page_nature_key'),
-            ),
-        ];
-
-        $plugins_natures = [];
-        $this->eventManager->processEvent('get_available_reference_natures', ['natures' => &$plugins_natures]);
-
-        $natures = array_merge($core_natures, $plugins_natures);
-        $natures[self::REFERENCE_NATURE_OTHER] = new Nature(
-            'other',
-            Nature::NO_ICON,
-            $GLOBALS['Language']->getText('project_reference', 'reference_other_nature_key'),
+            )
         );
-        return $natures;
+
+        $natures_collection->addNature(
+            self::REFERENCE_NATURE_OTHER,
+            new Nature(
+                'other',
+                Nature::NO_ICON,
+                $GLOBALS['Language']->getText('project_reference', 'reference_other_nature_key'),
+            )
+        );
+
+        return $natures_collection->getNatures();
     }
 
     /**
@@ -575,7 +616,7 @@ class ReferenceManager
 
         if ($this->isAnArtifactKeyword($row['keyword'])) {
             if (! $this->getGroupIdFromArtifactId($val)) {
-                $this->eventManager->processEvent(
+                $this->event_manager->processEvent(
                     Event::BUILD_REFERENCE,
                     ['row' => $row, 'ref_id' => $refid, 'ref' => &$reference]
                 );
@@ -989,7 +1030,7 @@ class ReferenceManager
     {
         $group_id = $this->getGroupIdFromArtifactId($artifact_id);
         if ($group_id === false) {
-            $this->eventManager->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, ['artifact_id' => $artifact_id, 'group_id' => &$group_id]);
+            $this->event_manager->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, ['artifact_id' => $artifact_id, 'group_id' => &$group_id]);
         }
         return $group_id;
     }
@@ -1161,7 +1202,7 @@ class ReferenceManager
             $value
         );
 
-        $this->eventManager->dispatch($event);
+        $this->event_manager->dispatch($event);
 
         $reference = $event->getReference();
         if ($reference === null) {
@@ -1320,7 +1361,7 @@ class ReferenceManager
 
     private function getReservedKeywordsRetriever()
     {
-        return new ReservedKeywordsRetriever($this->eventManager);
+        return new ReservedKeywordsRetriever($this->event_manager);
     }
 
     public function getCrossReferenceByKeyword(string $keyword): array
