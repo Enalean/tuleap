@@ -25,6 +25,7 @@ use CrossReference;
 use Project;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
+use Tuleap\Gitlab\Reference\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
@@ -151,8 +152,8 @@ class PostPushWebhookActionProcessor
             $cross_reference = new CrossReference(
                 $gitlab_repository->getName() . '/' . $commit_webhook_data->getSha1(),
                 $project->getID(),
-                'plugin_gitlab_commit',
-                'gitlab_commit',
+                GitlabCommitReference::NATURE_NAME,
+                GitlabCommitReference::REFERENCE_NAME,
                 $tuleap_reference->getId(),
                 $external_reference->getGroupId(),
                 $external_reference->getNature(),
