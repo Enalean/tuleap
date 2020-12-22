@@ -53,11 +53,45 @@ final class Tracker_HierarchyFactoryTest extends \PHPUnit\Framework\TestCase //p
         $child_1 = Mockery::mock(Tracker::class);
         $child_2 = Mockery::mock(Tracker::class);
 
+        $child_1->shouldReceive('isDeleted')->andReturnFalse();
+        $child_2->shouldReceive('isDeleted')->andReturnFalse();
+
         $hierarchy_dao->shouldReceive('searchChildTrackerIds')->with($tracker_id)->andReturn($child_ids);
         $tracker_factory->shouldReceive('getTrackerById')->with(11)->andReturn($child_1);
         $tracker_factory->shouldReceive('getTrackerById')->with(12)->andReturn($child_2);
 
         $expected_children = [$child_1, $child_2];
+        $actual_children   = $hierarchy_factory->getChildren($tracker_id);
+
+        $this->assertEquals($expected_children, $actual_children);
+    }
+
+    public function testItRetrievesTheChildrenOfAGivenTrackerThatAreNotDeleted(): void
+    {
+        $hierarchy_dao        = Mockery::mock(HierarchyDAO::class);
+        $tracker_factory      = Mockery::mock(TrackerFactory::class);
+        $child_link_retriever = Mockery::mock(NatureIsChildLinkRetriever::class);
+        $hierarchy_factory    = new Tracker_HierarchyFactory(
+            $hierarchy_dao,
+            $tracker_factory,
+            Mockery::mock(Tracker_ArtifactFactory::class),
+            $child_link_retriever
+        );
+
+        $tracker_id = 1;
+        $child_ids  = [['id' => 11], ['id' => 12]];
+
+        $child_1 = Mockery::mock(Tracker::class);
+        $child_2 = Mockery::mock(Tracker::class);
+
+        $child_1->shouldReceive('isDeleted')->andReturnFalse();
+        $child_2->shouldReceive('isDeleted')->andReturnTrue();
+
+        $hierarchy_dao->shouldReceive('searchChildTrackerIds')->with($tracker_id)->andReturn($child_ids);
+        $tracker_factory->shouldReceive('getTrackerById')->with(11)->andReturn($child_1);
+        $tracker_factory->shouldReceive('getTrackerById')->with(12)->andReturn($child_2);
+
+        $expected_children = [$child_1];
         $actual_children   = $hierarchy_factory->getChildren($tracker_id);
 
         $this->assertEquals($expected_children, $actual_children);

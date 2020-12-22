@@ -104,7 +104,8 @@ class Dao extends DataAccessObject
                         tracker_semantic_title AS ST
                         INNER JOIN tracker_changeset_value AS CV ON (CV.field_id = ST.field_id)
                         INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id = CVT.changeset_value_id)
-                    ) ON (A.tracker_id = ST.tracker_id AND CV.changeset_id = A.last_changeset_id)";
+                    ) ON (A.tracker_id = ST.tracker_id AND CV.changeset_id = A.last_changeset_id)
+                WHERE T.deletion_date IS NULL";
 
         return $this->retrieve($sql);
     }

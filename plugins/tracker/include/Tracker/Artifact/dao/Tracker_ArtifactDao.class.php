@@ -565,14 +565,18 @@ class Tracker_ArtifactDao extends DataAccessObject
     {
         $escaped_id = $this->da->escapeInt($artifact_id);
         $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
-        $sql = "SELECT child_art.*, parent_art.id as parent_id " .
-               "FROM tracker_artifact parent_art " .
-               "INNER JOIN tracker_field AS f ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1) " .
-               "INNER JOIN tracker_changeset_value AS cv ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id) " .
-               "INNER JOIN tracker_changeset_value_artifactlink AS artlink ON (artlink.changeset_value_id = cv.id) " .
-               "INNER JOIN tracker_artifact AS child_art ON (child_art.id = artlink.artifact_id) " .
-               "WHERE artlink.nature=$is_child_shortname " .
-               "AND parent_art.id=$escaped_id";
+
+        $sql = "SELECT child_art.*, parent_art.id as parent_id
+                FROM tracker_artifact parent_art
+                    INNER JOIN tracker_field AS f ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value AS cv ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink AS artlink ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact AS child_art ON (child_art.id = artlink.artifact_id)
+                    INNER JOIN tracker AS child_tracker ON (child_art.tracker_id = child_tracker.id)
+               WHERE artlink.nature=$is_child_shortname
+                    AND child_tracker.deletion_date IS NULL
+               AND parent_art.id=$escaped_id";
+
         return $this->retrieve($sql);
     }
 
@@ -1220,7 +1224,9 @@ class Tracker_ArtifactDao extends DataAccessObject
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id $exclude)
-                WHERE parent_art.id IN ($artifact_ids)";
+                    INNER JOIN tracker                              linked_tracker ON (linked_art.tracker_id = linked_tracker.id)
+                WHERE parent_art.id IN ($artifact_ids)
+                    AND linked_tracker.deletion_date IS NULL";
 
         return $this->retrieve($sql);
     }
@@ -1235,7 +1241,9 @@ class Tracker_ArtifactDao extends DataAccessObject
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
+                    INNER JOIN tracker                              linked_tracker ON (linked_art.tracker_id = linked_tracker.id)
                 WHERE parent_art.id = $artifact_id
+                    AND linked_tracker.deletion_date IS NULL
                 AND nature = $nature";
 
         return $this->retrieve($sql);

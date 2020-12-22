@@ -71,12 +71,15 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
                     INNER JOIN tracker_artifact AS submilestones ON (
                         submilestones.id = cva.artifact_id
                     )
+                    INNER JOIN tracker AS submilestones_tracker ON (
+                        submilestones_tracker.id = submilestones.tracker_id
+                    )
                     INNER JOIN plugin_agiledashboard_planning AS planning ON (
                         planning.planning_tracker_id = submilestones.tracker_id
                     )
                     $from_status_statement
 
-                WHERE 1
+                WHERE submilestones_tracker.deletion_date IS NULL
                   AND $where_status_statement
 
                 ORDER BY submilestones.id $order
@@ -212,11 +215,13 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
+                    INNER JOIN tracker                              child_tracker ON (child_art.tracker_id = child_tracker.id)
                 ) ON (submilestones.id = child_art.id AND artlink.nature = $nature)
                 " . $built_sql['from_statement'] . "
                 WHERE submilestones.tracker_id = $milestone_tracker_id
                     AND " . $built_sql['where_status_statement'] . "
                     AND child_art.id IS NULL
+                    AND child_tracker.deletion_date IS NULL
                 ORDER BY submilestone_id " . $built_sql['order'] . "
                 " . $built_sql['limit_statement'];
 
@@ -296,9 +301,13 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
                     INNER JOIN tracker_artifact AS submilestones ON (
                         submilestones.id = cva.artifact_id
                     )
+                    INNER JOIN tracker AS submilestones_tracker ON (
+                        submilestones_tracker.id = submilestones.tracker_id
+                    )
                     INNER JOIN plugin_agiledashboard_planning AS planning ON (
                         planning.planning_tracker_id = submilestones.tracker_id
                     )
+                WHERE submilestones_tracker.deletion_date IS NULL
                 ORDER BY submilestones.id ASC";
 
         return $this->retrieve($sql);
@@ -388,7 +397,10 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
                 INNER JOIN tracker_hierarchy AS hierarchy
                     ON planning.planning_tracker_id = hierarchy.parent_id
                 INNER JOIN tracker_artifact AS artifact
-                    ON hierarchy.parent_id = artifact.tracker_id';
+                    ON hierarchy.parent_id = artifact.tracker_id
+                INNER JOIN tracker
+                    ON artifact.tracker_id = tracker.id
+                WHERE tracker.deletion_date IS NULL';
 
         $res = $this->retrieveFirstRow($sql);
 
@@ -403,7 +415,10 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
                     ON planning.planning_tracker_id = hierarchy.parent_id
                 INNER JOIN tracker_artifact AS artifact
                     ON hierarchy.parent_id = artifact.tracker_id
-                    AND artifact.submitted_on > ' . $this->da->escapeInt($timestamp);
+                    AND artifact.submitted_on > ' . $this->da->escapeInt($timestamp) . '
+                INNER JOIN tracker
+                    ON artifact.tracker_id = tracker.id
+                WHERE tracker.deletion_date IS NULL';
 
         $res = $this->retrieveFirstRow($sql);
 

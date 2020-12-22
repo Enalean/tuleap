@@ -112,13 +112,13 @@ class Tracker_HierarchyFactory
      * @param int $tracker_id
      * @return Tracker[]
      */
-    public function getChildren($tracker_id)
+    public function getChildren($tracker_id): array
     {
         if (! isset($this->cache_children_of_tracker[$tracker_id])) {
             $this->cache_children_of_tracker[$tracker_id] = [];
             foreach ($this->hierarchy_dao->searchChildTrackerIds($tracker_id) as $row) {
                 $tracker = $this->tracker_factory->getTrackerById($row['id']);
-                if ($tracker !== null) {
+                if ($tracker !== null && ! $tracker->isDeleted()) {
                     $this->cache_children_of_tracker[$tracker_id][] = $tracker;
                 }
             }
@@ -298,9 +298,9 @@ class Tracker_HierarchyFactory
         $search_tracker_ids      = array_values(array_diff($added_relationships_ids, $processed_tracker_ids));
     }
 
-    private function addRelationships(Tracker_Hierarchy $hierarchy, $search_tracker_ids)
+    private function addRelationships(Tracker_Hierarchy $hierarchy, $search_tracker_ids): array
     {
-        $hierarchy_dar     = $this->hierarchy_dao->searchTrackerHierarchy($search_tracker_ids);
+        $hierarchy_dar = $this->hierarchy_dao->searchTrackerHierarchy($search_tracker_ids);
 
         $relationships_ids = [];
         foreach ($hierarchy_dar as $row) {

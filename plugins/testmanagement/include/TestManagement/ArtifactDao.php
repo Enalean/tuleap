@@ -59,6 +59,7 @@ class ArtifactDao extends DataAccessObject
                     OR
                     CVL2.bindvalue_id = SS.open_value_id
                 )
+                    AND T.deletion_date is NULL
                 ORDER BY A.id DESC
                 LIMIT ? OFFSET ?";
 
@@ -77,6 +78,7 @@ class ArtifactDao extends DataAccessObject
                     INNER JOIN tracker_changeset AS tc ON (tc.artifact_id = A.id)
                     LEFT JOIN tracker_semantic_status AS open_values ON (cvl.bindvalue_id = open_values.open_value_id AND open_values.tracker_id = t.id)
                 $milestone_filter open_values.open_value_id IS NULL AND t.id = ?
+                    AND t.deletion_date is NULL
                 GROUP BY A.id
                 ORDER BY A.id DESC
                 LIMIT ? OFFSET ?";
@@ -125,6 +127,7 @@ class ArtifactDao extends DataAccessObject
                     INNER JOIN tracker_artifact                     AS linked_art ON (linked_art.id = artlink.artifact_id)
                     INNER JOIN tracker                              AS t          ON (linked_art.tracker_id = t.id AND t.id = ?)
                 WHERE $where_statement
+                    AND t.deletion_date IS NULL
                 LIMIT ?
                 OFFSET ?";
 
@@ -138,11 +141,15 @@ class ArtifactDao extends DataAccessObject
     {
         $sql = "SELECT parent_art.*
                 FROM tracker_artifact parent_art
+                    INNER JOIN tracker                              parent_tracker ON (parent_art.tracker_id = parent_tracker.id)
                     INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
+                    INNER JOIN tracker                              linked_tracker ON (linked_art.tracker_id = linked_tracker.id)
                 WHERE parent_art.tracker_id = ?
+                  AND parent_tracker.deletion_date IS NULL
+                  AND linked_tracker.deletion_date IS NULL
                   AND linked_art.id = ?";
 
         return $this->getDB()->row($sql, $campaign_tracker_id, $execution_artifact_id);
@@ -156,11 +163,15 @@ class ArtifactDao extends DataAccessObject
     ): array {
         $sql = "SELECT DISTINCT SQL_CALC_FOUND_ROWS linked_art.*
                 FROM tracker_artifact parent_art
+                    INNER JOIN tracker                              parent_tracker ON (parent_art.tracker_id = parent_tracker.id)
                     INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
+                    INNER JOIN tracker                              linked_tracker ON (linked_art.tracker_id = linked_tracker.id)
                 WHERE parent_art.id = ?
+                  AND parent_tracker.deletion_date IS NULL
+                  AND linked_tracker.deletion_date IS NULL
                   AND linked_art.tracker_id = ?
                 LIMIT ?
                 OFFSET ?";
@@ -174,11 +185,15 @@ class ArtifactDao extends DataAccessObject
     ): array {
         $sql = "SELECT DISTINCT linked_art.*
                 FROM tracker_artifact parent_art
+                    INNER JOIN tracker                              parent_tracker ON (parent_art.tracker_id = parent_tracker.id)
                     INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
+                    INNER JOIN tracker                              linked_tracker ON (linked_art.tracker_id = linked_tracker.id)
                 WHERE parent_art.id = ?
+                  AND parent_tracker.deletion_date IS NULL
+                  AND linked_tracker.deletion_date IS NULL
                   AND linked_art.tracker_id = ?";
 
         return $this->getDB()->run($sql, $campaign_artifact_id, $execution_tracker_id);
@@ -197,6 +212,7 @@ class ArtifactDao extends DataAccessObject
                 WHERE artlink.artifact_id = ?
                   AND artlink.nature = ?
                   AND t.id != ?
+                  AND t.deletion_date IS NULL
                 ORDER BY a.id ASC
                 LIMIT 1";
 

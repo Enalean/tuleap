@@ -204,7 +204,13 @@ class HierarchyDAO extends DataAccessObject
 
     public function getChildren($tracker_id): array
     {
-        return $this->getDB()->column('SELECT child_id FROM tracker_hierarchy WHERE parent_id = ?', [$tracker_id]);
+        $sql = 'SELECT child_id
+                FROM tracker_hierarchy
+                    INNER JOIN tracker ON (child_id = tracker.id)
+                WHERE parent_id = ?
+                    AND tracker.deletion_date IS NULL';
+
+        return $this->getDB()->column($sql, [$tracker_id]);
     }
 
     public function searchTrackerHierarchy(array $tracker_ids): array
@@ -217,7 +223,9 @@ class HierarchyDAO extends DataAccessObject
             ->orIn('child_id IN (?*)', $tracker_ids);
         $sql = "SELECT parent_id, child_id
                 FROM tracker_hierarchy
-                WHERE $condition";
+                    INNER JOIN tracker ON (parent_id = tracker.id OR child_id = tracker.id)
+                WHERE $condition
+                    AND tracker.deletion_date IS NULL";
 
         return (array) $this->getDB()->safeQuery($sql, $condition->values());
     }
@@ -227,7 +235,8 @@ class HierarchyDAO extends DataAccessObject
         $sql = 'SELECT h.*
                 FROM       tracker_hierarchy AS h
                 INNER JOIN tracker           AS t ON (t.id = h.parent_id)
-                WHERE t.group_id = ?';
+                WHERE t.group_id = ?
+                    AND t.deletion_date IS NULL';
 
         return $this->getDB()->run($sql, $group_id);
     }
@@ -277,20 +286,11 @@ class HierarchyDAO extends DataAccessObject
                     INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
                     INNER JOIN tracker_changeset_value              cv         ON (cv.id = artlink.changeset_value_id)
                     INNER JOIN tracker_artifact                     parent_art ON (parent_art.last_changeset_id = cv.changeset_id)
+                    INNER JOIN tracker                              parent_tracker ON (parent_art.tracker_id = parent_tracker.id)
                     INNER JOIN tracker_hierarchy                    hierarchy  ON (hierarchy.parent_id = parent_art.tracker_id AND hierarchy.child_id = child_art.tracker_id)
-                WHERE artlink.artifact_id = ?";
+                WHERE artlink.artifact_id = ?
+                    AND parent_tracker.deletion_date IS NULL";
 
         return $this->getDB()->run($sql, $artifact_id);
-    }
-
-    public function isProjectUsingTrackerHierarchy(int $project_id): bool
-    {
-        $sql = "SELECT NULL
-                FROM tracker_hierarchy
-                    INNER JOIN tracker ON (parent_id = tracker.id OR child_id = tracker.id)
-                WHERE tracker.group_id = ?
-                LIMIT 1";
-
-        return count($this->getDB()->run($sql, $project_id)) > 0;
     }
 }

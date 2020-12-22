@@ -89,11 +89,13 @@ class MonoMilestoneBacklogItemDao extends DataAccessObject
                         INNER JOIN tracker_changeset_value              cv_parent      ON (cv_parent.changeset_id = parent_art.last_changeset_id AND cv_parent.field_id = parent_field.id)
                         INNER JOIN tracker_changeset_value_artifactlink artlink_parent ON (artlink_parent.changeset_value_id = cv_parent.id AND artlink_parent.nature = $type_is_child)
                         INNER JOIN tracker_artifact                     child_art      ON (child_art.id = artlink_parent.artifact_id)
+                        INNER JOIN tracker                              child_tracker  ON (child_art.tracker_id = child_tracker.id)
                     ) ON (art_1.id = child_art.id )
                 WHERE art_1.tracker_id IN ($backlog_tracker_ids)
                     $filter
                     AND content_art.id IS NULL
                     AND child_art.id IS NULL
+                    AND child_tracker.deletion_date IS NULL
                 ORDER BY tracker_artifact_priority_rank.rank ASC
                 LIMIT $limit OFFSET $offset";
 

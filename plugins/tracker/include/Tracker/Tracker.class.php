@@ -3097,10 +3097,8 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     /**
      * Return parent tracker of current tracker (if any)
-     *
-     * @return Tracker|null
      */
-    public function getParent()
+    public function getParent(): ?Tracker
     {
         if ($this->parent === false) {
             $parent_tracker_id = $this->getParentId();
