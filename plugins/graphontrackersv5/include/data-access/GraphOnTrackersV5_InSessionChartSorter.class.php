@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -72,6 +72,9 @@ class GraphOnTrackersV5_InSessionChartSorter
         GraphOnTrackersV5_Chart $edited_chart,
         $wanted_position
     ) {
+        if ($wanted_position === 0 || $wanted_position === '0') {
+            $wanted_position = self::BEGINNING;
+        }
         switch ($wanted_position) {
             case self::BEGINNING:
                 array_unshift($charts, $edited_chart);
