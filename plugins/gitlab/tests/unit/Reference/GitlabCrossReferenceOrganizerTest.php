@@ -120,6 +120,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             'john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3',
             null,
             [],
+            null
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -168,6 +169,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             'john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3',
             null,
             [],
+            null
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -233,6 +235,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             'john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3',
             null,
             [],
+            null
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -347,6 +350,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             'john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3',
             null,
             [],
+            null
         );
 
         $another_ref = new CrossReferencePresenter(
@@ -359,6 +363,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             'samwell-tarly/winter-is-coming/be35d127acb88876ee4fdbf02188d372dc61e98d',
             null,
             [],
+            null
         );
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
@@ -409,6 +414,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             '',
             null,
             [],
+            null
         );
     }
 }
