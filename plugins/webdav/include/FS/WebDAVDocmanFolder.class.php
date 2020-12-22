@@ -26,19 +26,24 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
     private const DUPLICATE                                 = 'duplicate';
     private const ITEM_EXISTS_BUT_NOT_DISPLAYABLE_IN_WEBDAV = 'exists-not-displayed';
 
-    private $user;
-    private $project;
-    protected $item;
     /**
-     * @var WebDAVUtils|null
+     * @var PFUser
+     */
+    private $user;
+    /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var Docman_Folder
+     */
+    private $item;
+    /**
+     * @var WebDAVUtils
      */
     private $utils;
 
-    /**
-     * @param PFUser $user
-     * @param Docman_Folder $item
-     */
-    public function __construct($user, Project $project, $item, ?WebDAVUtils $utils = null)
+    public function __construct(PFUser $user, Project $project, Docman_Folder $item, WebDAVUtils $utils)
     {
         $this->user = $user;
         $this->project = $project;
@@ -46,7 +51,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
         $this->utils = $utils;
     }
 
-    protected function getMaxFileSize(): int
+    private function getMaxFileSize(): int
     {
         return (int) ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
     }
@@ -58,24 +63,24 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
     public function getChildList(): array
     {
         $children = [];
-        $docmanItemFactory = $this->getUtils()->getDocmanItemFactory();
-        $nodes = $docmanItemFactory->getChildrenFromParent($this->getItem());
-        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
+        $docmanItemFactory = $this->utils->getDocmanItemFactory();
+        $nodes = $docmanItemFactory->getChildrenFromParent($this->item);
+        $docmanPermissionManager = $this->utils->getDocmanPermissionsManager($this->project);
 
         foreach ($nodes as $node) {
-            if ($docmanPermissionManager->userCanAccess($this->getUser(), $node->getId())) {
+            if ($docmanPermissionManager->userCanAccess($this->user, $node->getId())) {
                 $class = get_class($node);
                 switch ($class) {
                     case Docman_File::class:
                         $item = $docmanItemFactory->getItemFromDb($node->getId());
                         assert($item instanceof Docman_File);
                         $version = $item->getCurrentVersion();
-                        $this->appendChildren($children, $version->getFilename(), new WebDAVDocmanFile($this->user, $this->getProject(), $item, new DocumentDownloader(), $this->getUtils()));
+                        $this->appendChildren($children, $version->getFilename(), new WebDAVDocmanFile($this->user, $this->project, $item, new DocumentDownloader(), $this->utils));
                         break;
                     case Docman_EmbeddedFile::class:
                         $item = $docmanItemFactory->getItemFromDb($node->getId());
                         assert($item instanceof Docman_EmbeddedFile);
-                        $this->appendChildren($children, $node->getTitle(), new WebDAVDocmanFile($this->user, $this->getProject(), $item, new DocumentDownloader(), $this->getUtils()));
+                        $this->appendChildren($children, $node->getTitle(), new WebDAVDocmanFile($this->user, $this->project, $item, new DocumentDownloader(), $this->utils));
                         break;
                     case Docman_Empty::class:
                     case Docman_Wiki::class:
@@ -83,7 +88,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
                         $this->appendChildren($children, $node->getTitle(), self::ITEM_EXISTS_BUT_NOT_DISPLAYABLE_IN_WEBDAV);
                         break;
                     default:
-                        $this->appendChildren($children, $node->getTitle(), new WebDAVDocmanFolder($this->user, $this->getProject(), $node));
+                        $this->appendChildren($children, $node->getTitle(), new WebDAVDocmanFolder($this->user, $this->project, $node, $this->utils));
                         break;
                 }
             }
@@ -128,7 +133,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
      */
     public function getChild($name): Sabre_DAV_INode
     {
-        $name = $this->getUtils()->retrieveName($name);
+        $name = $this->utils->retrieveName($name);
         $children = $this->getChildList();
 
         if (! isset($children[$name])) {
@@ -155,50 +160,17 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
             // case of the root
             return 'Documents';
         }
-        $utils = $this->getUtils();
-        return $utils->unconvertHTMLSpecialChars($this->getItem()->getTitle());
+        return $this->utils->unconvertHTMLSpecialChars($this->item->getTitle());
     }
 
     public function getLastModified(): int
     {
-        return $this->getItem()->getUpdateDate();
-    }
-
-    /**
-     * @return Docman_Folder
-     */
-    protected function getItem()
-    {
-        return $this->item;
-    }
-
-    /**
-     * @return Project
-     */
-    protected function getProject()
-    {
-        return $this->project;
-    }
-
-    /**
-     * @return PFUser
-     */
-    protected function getUser()
-    {
-        return $this->user;
-    }
-
-    protected function getUtils(): WebDAVUtils
-    {
-        if ($this->utils) {
-            return $this->utils;
-        }
-        return WebDAVUtils::getInstance();
+        return $this->item->getUpdateDate();
     }
 
     private function isDocmanRoot(): bool
     {
-        return ! $this->getItem()->getParentId();
+        return ! $this->item->getParentId();
     }
 
     /**
@@ -208,19 +180,19 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
      */
     public function createDirectory($name): void
     {
-        if ($this->getUtils()->isWriteEnabled()) {
+        if ($this->utils->isWriteEnabled()) {
             // Request
             $params['action']   = 'createItem';
-            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['group_id'] = $this->project->getGroupId();
             $params['ordering'] = 'beginning';
             $params['confirm']  = true;
 
             // Item details
             $params['item']['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
-            $params['item']['parent_id'] = $this->getItem()->getId();
+            $params['item']['parent_id'] = $this->item->getId();
             $params['item']['title']     = $name;
 
-            $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
+            $this->utils->processDocmanRequest(new WebDAV_Request($params));
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_create'));
         }
@@ -234,11 +206,11 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
      */
     public function createFile($name, $data = null): void
     {
-        if ($this->getUtils()->isWriteEnabled()) {
+        if ($this->utils->isWriteEnabled()) {
             // Request
             $params = [];
             $params['action']   = 'createItem';
-            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['group_id'] = $this->project->getGroupId();
             $params['ordering'] = 'beginning';
             $params['confirm']  = true;
 
@@ -247,10 +219,10 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
             $params['upload_content'] = $data === null ? '' : stream_get_contents($data);
             if (strlen($params['upload_content']) <= $this->getMaxFileSize()) {
                 $params['item']['item_type']      = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
-                $params['item']['parent_id']      = $this->getItem()->getId();
+                $params['item']['parent_id']      = $this->item->getId();
                 $params['item']['title']          = $name;
 
-                $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
+                $this->utils->processDocmanRequest(new WebDAV_Request($params));
             } else {
                 throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
@@ -271,18 +243,18 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
      */
     public function setName($name): void
     {
-        if ($this->getUtils()->isWriteEnabled()) {
+        if ($this->utils->isWriteEnabled()) {
             // Request
             $params = [];
             $params['action']   = 'update';
-            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['group_id'] = $this->project->getGroupId();
             $params['confirm']  = true;
 
             // Item details
-            $params['item']['id']    = $this->getItem()->getId();
+            $params['item']['id']    = $this->item->getId();
             $params['item']['title'] = $name;
 
-            $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
+            $this->utils->processDocmanRequest(new WebDAV_Request($params));
         } else {
             throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_rename'));
         }
@@ -290,14 +262,14 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
 
     public function delete(): void
     {
-        if ($this->getUtils()->isWriteEnabled()) {
+        if ($this->utils->isWriteEnabled()) {
             // Request
             $params = [];
             $params['action']   = 'delete';
-            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['group_id'] = $this->project->getGroupId();
             $params['confirm']  = true;
-            $params['id']       = $this->getItem()->getId();
-            $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
+            $params['id']       = $this->item->getId();
+            $this->utils->processDocmanRequest(new WebDAV_Request($params));
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
@@ -305,7 +277,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
 
     public function userCanWrite(): bool
     {
-        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->project);
-        return $this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->user, $this->item->getId());
+        $docmanPermissionManager = $this->utils->getDocmanPermissionsManager($this->project);
+        return $this->utils->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->user, $this->item->getId());
     }
 }

@@ -30,6 +30,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\WebDAV\Docman\DocumentDownloader;
 use WebDAVDocmanFolder;
 use WebDAVFRSFile;
 use WebDAVFRSPackage;
@@ -259,10 +260,8 @@ final class WebDAVTreeTest extends TestCase
 
     public function testCopyNotTheSameProject(): void
     {
-        $sourceItem = \Mockery::spy(\Docman_Item::class);
-        $sourceItem->shouldReceive('getGroupId')->andReturns(1);
-        $destinationItem = \Mockery::spy(\Docman_Item::class);
-        $destinationItem->shouldReceive('getGroupId')->andReturns(2);
+        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $destinationItem = new \Docman_Folder(['group_id' => 2]);
 
         $tree = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
@@ -279,10 +278,8 @@ final class WebDAVTreeTest extends TestCase
 
     public function testCopyNoReadOnSource(): void
     {
-        $sourceItem = \Mockery::spy(\Docman_Item::class);
-        $sourceItem->shouldReceive('getGroupId')->andReturns(1);
-        $destinationItem = \Mockery::spy(\Docman_Item::class);
-        $destinationItem->shouldReceive('getGroupId')->andReturns(1);
+        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $destinationItem = new \Docman_Folder(['group_id' => 2]);
 
         $tree = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
@@ -304,10 +301,8 @@ final class WebDAVTreeTest extends TestCase
 
     public function testCopyNoWriteOnDestination(): void
     {
-        $sourceItem = \Mockery::spy(\Docman_Item::class);
-        $sourceItem->shouldReceive('getGroupId')->andReturns(1);
-        $destinationItem = \Mockery::spy(\Docman_Item::class);
-        $destinationItem->shouldReceive('getGroupId')->andReturns(1);
+        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $destinationItem = new \Docman_Folder(['group_id' => 2]);
 
         $tree = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
@@ -329,10 +324,8 @@ final class WebDAVTreeTest extends TestCase
 
     public function testCopySucceede(): void
     {
-        $sourceItem = \Mockery::spy(\Docman_Item::class);
-        $sourceItem->shouldReceive('getGroupId')->andReturns(1);
-        $destinationItem = \Mockery::spy(\Docman_Item::class);
-        $destinationItem->shouldReceive('getGroupId')->andReturns(1);
+        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $destinationItem = new \Docman_Folder(['group_id' => 1]);
 
         $tree = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
@@ -357,12 +350,8 @@ final class WebDAVTreeTest extends TestCase
 
     public function testMoveDocmanSucceed(): void
     {
-        $sourceItem = \Mockery::spy(\Docman_Item::class);
-        $sourceItem->shouldReceive('getGroupId')->andReturns(1);
-        $sourceItem->shouldReceive('getId')->andReturns(128);
-        $destinationItem = \Mockery::spy(\Docman_Item::class);
-        $destinationItem->shouldReceive('getGroupId')->andReturns(1);
-        $destinationItem->shouldReceive('getId')->andReturns(256);
+        $sourceItem = new \Docman_Folder(['item_id' => 128, 'group_id' => 1]);
+        $destinationItem = new \Docman_Folder(['item_id' => 256, 'group_id' => 1]);
 
         $tree = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
@@ -391,9 +380,9 @@ final class WebDAVTreeTest extends TestCase
 
     public function testMoveDocmanNoWriteOnSubItems(): void
     {
-        $sourceItem = \Mockery::spy(\Docman_Item::class);
+        $sourceItem = \Mockery::spy(\Docman_Folder::class);
         $sourceItem->shouldReceive('getGroupId')->andReturns(1);
-        $destinationItem = \Mockery::spy(\Docman_Item::class);
+        $destinationItem = \Mockery::spy(\Docman_Folder::class);
         $destinationItem->shouldReceive('getGroupId')->andReturns(1);
 
         $tree = $this->getTestTree();
@@ -433,10 +422,8 @@ final class WebDAVTreeTest extends TestCase
 
     public function testMoveDocmanNotTheSameProject(): void
     {
-        $sourceItem = \Mockery::spy(\Docman_Item::class);
-        $sourceItem->shouldReceive('getGroupId')->andReturns(1);
-        $destinationItem = \Mockery::spy(\Docman_Item::class);
-        $destinationItem->shouldReceive('getGroupId')->andReturns(11);
+        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $destinationItem = new \Docman_Folder(['group_id' => 11]);
 
         $tree = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
@@ -454,10 +441,8 @@ final class WebDAVTreeTest extends TestCase
 
     public function testMoveDocmanNoReadOnSource(): void
     {
-        $sourceItem = \Mockery::spy(\Docman_Item::class);
-        $sourceItem->shouldReceive('getGroupId')->andReturns(1);
-        $destinationItem = \Mockery::spy(\Docman_Item::class);
-        $destinationItem->shouldReceive('getGroupId')->andReturns(1);
+        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $destinationItem = new \Docman_Folder(['group_id' => 1]);
 
         $tree = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
@@ -480,10 +465,8 @@ final class WebDAVTreeTest extends TestCase
 
     public function testMoveDocmanNoWriteOnDestination(): void
     {
-        $sourceItem = \Mockery::spy(\Docman_Item::class);
-        $sourceItem->shouldReceive('getGroupId')->andReturns(1);
-        $destinationItem = \Mockery::spy(\Docman_Item::class);
-        $destinationItem->shouldReceive('getGroupId')->andReturns(1);
+        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $destinationItem = new \Docman_Folder(['group_id' => 1]);
 
         $tree = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
@@ -506,14 +489,13 @@ final class WebDAVTreeTest extends TestCase
 
     public function testMoveDocmanWrongDestinationItemType(): void
     {
-        $sourceItem = \Mockery::spy(\Docman_Item::class);
-        $destinationItem = \Mockery::spy(\Docman_Item::class);
+        $sourceItem = new \Docman_Folder(['group_id' => 1]);
 
         $tree = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
-        $destination = $this->getTestFolder($destinationItem);
+        $destination = new \WebDAVDocmanFile($this->user, $this->project, new \Docman_File(), Mockery::mock(DocumentDownloader::class), $utils);
         $tree->shouldReceive('getNodeForPath')->with('destination')->andReturns($destination);
         $source = $this->getTestFolder($sourceItem);
         $tree->shouldReceive('getNodeForPath')->with('source')->andReturns($source);
@@ -571,16 +553,9 @@ final class WebDAVTreeTest extends TestCase
         return $release;
     }
 
-    private function getTestFolder($item)
+    private function getTestFolder(\Docman_Folder $item)
     {
-        $folder = Mockery::mock(
-            WebDAVDocmanFolder::class,
-            [$this->user, $this->project, $item]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        return $folder;
+        return new WebDAVDocmanFolder($this->user, $this->project, $item, \WebDAVUtils::getInstance());
     }
 
     private function getTestPackage()
