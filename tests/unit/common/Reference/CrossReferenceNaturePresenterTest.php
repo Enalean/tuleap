@@ -75,6 +75,7 @@ class CrossReferenceNaturePresenterTest extends TestCase
             "whatever",
             null,
             [],
+            null
         );
     }
 }

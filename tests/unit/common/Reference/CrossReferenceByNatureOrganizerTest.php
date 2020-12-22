@@ -41,6 +41,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
         $another_ref = new CrossReferencePresenter(
             2,
@@ -52,6 +53,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
 
         $organizer = new CrossReferenceByNatureOrganizer(
@@ -92,6 +94,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
         $another_ref = new CrossReferencePresenter(
             2,
@@ -103,6 +106,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
 
         $organizer = new CrossReferenceByNatureOrganizer(
@@ -147,6 +151,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
         $another_ref = new CrossReferencePresenter(
             2,
@@ -158,6 +163,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
 
         $organizer = new CrossReferenceByNatureOrganizer(
@@ -199,6 +205,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
         $another_ref = new CrossReferencePresenter(
             2,
@@ -210,6 +217,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
 
         $organizer = new CrossReferenceByNatureOrganizer(
@@ -252,6 +260,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
         $another_ref = new CrossReferencePresenter(
             2,
@@ -263,6 +272,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
 
         $organizer = new CrossReferenceByNatureOrganizer(
@@ -312,6 +322,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
 
         $organizer = new CrossReferenceByNatureOrganizer(
@@ -340,6 +351,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
         $another_ref = new CrossReferencePresenter(
             2,
@@ -351,6 +363,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
 
         $organizer = new CrossReferenceByNatureOrganizer(
@@ -400,6 +413,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
         $another_ref = new CrossReferencePresenter(
             2,
@@ -411,6 +425,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             "whatever",
             null,
             [],
+            null,
         );
 
         $organizer = new CrossReferenceByNatureOrganizer(

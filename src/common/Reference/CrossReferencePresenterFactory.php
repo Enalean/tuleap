@@ -58,6 +58,7 @@ class CrossReferencePresenterFactory
                 $row['target_id'],
                 null,
                 [],
+                null,
             );
         }
 
@@ -81,6 +82,7 @@ class CrossReferencePresenterFactory
                 $row['source_id'],
                 null,
                 [],
+                null,
             );
         }
 

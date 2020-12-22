@@ -24,11 +24,10 @@ namespace Tuleap\Git\Reference;
 
 use Git;
 use Tuleap\Project\ProjectAccessChecker;
-use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 
-class CrossReferenceGitOrganizer
+final class CrossReferenceGitOrganizer
 {
     /**
      * @var \ProjectManager
@@ -42,15 +41,27 @@ class CrossReferenceGitOrganizer
      * @var ProjectAccessChecker
      */
     private $project_access_checker;
+    /**
+     * @var CrossReferenceGitEnhancer
+     */
+    private $cross_reference_git_enhancer;
+    /**
+     * @var CommitProvider
+     */
+    private $commit_provider;
 
     public function __construct(
         \ProjectManager $project_manager,
         \Git_ReferenceManager $git_reference_manager,
-        ProjectAccessChecker $project_access_checker
+        ProjectAccessChecker $project_access_checker,
+        CommitProvider $commit_provider,
+        CrossReferenceGitEnhancer $cross_reference_git_filler
     ) {
-        $this->project_manager        = $project_manager;
-        $this->git_reference_manager  = $git_reference_manager;
-        $this->project_access_checker = $project_access_checker;
+        $this->project_manager            = $project_manager;
+        $this->git_reference_manager      = $git_reference_manager;
+        $this->project_access_checker     = $project_access_checker;
+        $this->cross_reference_git_enhancer = $cross_reference_git_filler;
+        $this->commit_provider            = $commit_provider;
     }
 
     public function organizeGitReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -87,18 +98,24 @@ class CrossReferenceGitOrganizer
 
         if (! $repository || ! $repository->userCanRead($user)) {
             $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+
+            return;
+        }
+
+        $commit = $this->commit_provider->getCommit($repository, $commit_info->getSha1());
+        if (! $commit) {
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+
             return;
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $cross_reference_presenter
-                ->withAdditionalBadges(
-                    [
-                        new AdditionalBadgePresenter(
-                            substr($commit_info->getSha1(), 0, 10)
-                        )
-                    ]
-                ),
+            $this->cross_reference_git_enhancer->getCrossReferencePresenterWithCommitInformation(
+                $cross_reference_presenter,
+                $commit,
+                $repository,
+                $user
+            ),
             $project->getUnixNameLowerCase() . '/' . $repository->getFullName()
         );
     }

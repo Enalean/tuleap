@@ -29,6 +29,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\Account\AccountGerritController;
@@ -40,6 +41,9 @@ use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
+use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
+use Tuleap\Git\CommitStatus\CommitStatusDAO;
+use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\CreateRepositoryController;
 use Tuleap\Git\DefaultSettings\DefaultSettingsRouter;
 use Tuleap\Git\DefaultSettings\IndexController;
@@ -107,6 +111,8 @@ use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupController;
 use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupGitSectionBuilder;
 use Tuleap\Git\PermissionsPerGroup\RepositoryFineGrainedRepresentationBuilder;
 use Tuleap\Git\PermissionsPerGroup\RepositorySimpleRepresentationBuilder;
+use Tuleap\Git\Reference\CommitProvider;
+use Tuleap\Git\Reference\CrossReferenceGitEnhancer;
 use Tuleap\Git\Reference\CrossReferenceGitOrganizer;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
@@ -2813,6 +2819,15 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
+            ),
+            new CommitProvider(),
+            new CrossReferenceGitEnhancer(
+                new CommitMetadataRetriever(
+                    new CommitStatusRetriever(new CommitStatusDAO()),
+                    UserManager::instance()
+                ),
+                UserHelper::instance(),
+                new TlpRelativeDatePresenterBuilder(),
             )
         );
 

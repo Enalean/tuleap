@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
+use Tuleap\Date\TlpRelativeDatePresenter;
+use Tuleap\Reference\Metadata\CreatedByPresenter;
+
 /**
  * @psalm-immutable
  */
@@ -63,6 +66,10 @@ final class CrossReferencePresenter
      * @var AdditionalBadgePresenter[]
      */
     public $additional_badges;
+    /**
+     * @var CreationMetadataPresenter|null
+     */
+    public $creation_metadata;
 
     /**
      * @param AdditionalBadgePresenter[] $additional_badges
@@ -76,7 +83,8 @@ final class CrossReferencePresenter
         int $project_id,
         string $value,
         ?TitleBadgePresenter $title_badge,
-        array $additional_badges
+        array $additional_badges,
+        ?CreationMetadataPresenter $creation_metadata
     ) {
         $this->id                = $id;
         $this->type              = $type;
@@ -87,6 +95,7 @@ final class CrossReferencePresenter
         $this->target_value      = $value;
         $this->title_badge       = $title_badge;
         $this->additional_badges = $additional_badges;
+        $this->creation_metadata = $creation_metadata;
     }
 
     public function withTitle(string $title, ?TitleBadgePresenter $title_badge): self
@@ -101,6 +110,7 @@ final class CrossReferencePresenter
             $this->target_value,
             $title_badge,
             $this->additional_badges,
+            $this->creation_metadata,
         );
     }
 
@@ -119,6 +129,23 @@ final class CrossReferencePresenter
             $this->target_value,
             $this->title_badge,
             $additional_badges,
+            $this->creation_metadata,
+        );
+    }
+
+    public function withCreationMetadata(CreatedByPresenter $created_by, TlpRelativeDatePresenter $created_on): self
+    {
+        return new self(
+            $this->id,
+            $this->type,
+            $this->title,
+            $this->url,
+            $this->delete_url,
+            $this->target_gid,
+            $this->target_value,
+            $this->title_badge,
+            $this->additional_badges,
+            new CreationMetadataPresenter($created_by, $created_on),
         );
     }
 }

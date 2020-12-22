@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
  * Copyright (c) Enalean, 2017 - present. All rights reserved
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\date\DefaultRelativeDatesDisplayPreferenceRetriever;
+use Tuleap\Date\TlpRelativeDatePresenter;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 
 class DateHelper
 {
@@ -54,51 +55,36 @@ class DateHelper
         return $str;
     }
 
-    /**
-     * @param "top" | "right" $position
-     */
-    private static function relativeDate(int $time, PFUser $current_user, string $position): string
+    private static function relativeDate(TlpRelativeDatePresenter $presenter): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        switch ($current_user->getPreference(self::PREFERENCE_NAME)) {
-            case self::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN:
-                $preference = "absolute";
-                $placement = $position;
-                break;
-            case self::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP:
-                $preference = "absolute";
-                $placement = "tooltip";
-                break;
-            case self::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN:
-                $preference = "relative";
-                $placement = $position;
-                break;
-            case self::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP:
-                $preference = "relative";
-                $placement = "tooltip";
-                break;
-            default:
-                $default_display = DefaultRelativeDatesDisplayPreferenceRetriever::getDefaultPlacementAndPreference($position);
-                $preference      = $default_display->getPreference();
-                $placement       = $default_display->getPlacement();
-        }
 
         return '<tlp-relative-date
-            date="' . $purifier->purify(date('c', $time)) . '"
-            absolute-date="' . $purifier->purify(date($GLOBALS['Language']->getText('system', 'datefmt'), $time)) . '"
-            preference="' . $purifier->purify($preference) . '"
-            locale="' . $purifier->purify($current_user->getLocale()) . '"
-            placement="' . $purifier->purify($placement) . '"></tlp-relative-date>';
+            date="' . $purifier->purify($presenter->date) . '"
+            absolute-date="' . $purifier->purify($presenter->absolute_date) . '"
+            preference="' . $purifier->purify($presenter->preference) . '"
+            locale="' . $purifier->purify($presenter->locale) . '"
+            placement="' . $purifier->purify($presenter->placement) . '"></tlp-relative-date>';
     }
 
     public static function relativeDateBlockContext(int $time, PFUser $current_user): string
     {
-        return self::relativeDate($time, $current_user, "top");
+        $presenter = (new TlpRelativeDatePresenterBuilder())->getTlpRelativeDatePresenterInBlockContext(
+            (new DateTimeImmutable())->setTimestamp($time),
+            $current_user
+        );
+
+        return self::relativeDate($presenter);
     }
 
     public static function relativeDateInlineContext(int $time, PFUser $current_user): string
     {
-        return self::relativeDate($time, $current_user, "right");
+        $presenter = (new TlpRelativeDatePresenterBuilder())->getTlpRelativeDatePresenterInInlineContext(
+            (new DateTimeImmutable())->setTimestamp($time),
+            $current_user
+        );
+
+        return self::relativeDate($presenter);
     }
 
     /**
