@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,20 +15,23 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact;
 
+use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\REST\JsonCast;
 
 /**
  * @psalm-immutable
  */
-final class ArtifactFieldValueTextRepresentation implements ArtifactTextFieldValueRepresentation
+final class ArtifactFieldValueCommonmarkRepresentation implements ArtifactTextFieldValueRepresentation
 {
+
     /**
      * @var int ID of the field
      */
@@ -53,18 +56,23 @@ final class ArtifactFieldValueTextRepresentation implements ArtifactTextFieldVal
      * @var string
      */
     public $format;
+    /**
+     * @var string
+     */
+    public $commonmark;
 
     public function __construct(
         int $id,
         string $type,
         string $label,
         string $value,
-        string $format
+        string $commonmark
     ) {
         $this->field_id   = JsonCast::toInt($id);
         $this->type       = $type;
         $this->label      = $label;
         $this->value      = $value;
-        $this->format     = $format;
+        $this->format     = Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT;
+        $this->commonmark = $commonmark;
     }
 }

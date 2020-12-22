@@ -22,6 +22,7 @@
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\FollowUpPresenter;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueCommonmarkRepresentation;
 
 /**
  * Manage values in changeset for string fields
@@ -102,16 +103,25 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     protected function getFullRESTRepresentation($value)
     {
-        $artifact_field_value_full_representation = new ArtifactFieldValueTextRepresentation();
-        $artifact_field_value_full_representation->build(
+        if ($this->format === self::MARKDOWN_CONTENT) {
+            $text_field_value = $this->interpretMarkdownContent($value);
+            $commonmark_value = $value;
+            return new ArtifactFieldValueCommonmarkRepresentation(
+                $this->field->getId(),
+                Tracker_FormElementFactory::instance()->getType($this->field),
+                $this->field->getLabel(),
+                $text_field_value,
+                $commonmark_value
+            );
+        }
+
+        return new ArtifactFieldValueTextRepresentation(
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
             $value,
             $this->getFormat()
         );
-
-        return $artifact_field_value_full_representation;
     }
 
     /**
@@ -126,9 +136,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         if ($this->isInHTMLFormat()) {
             return $hp->purifyHTMLWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
         } elseif ($this->format === self::MARKDOWN_CONTENT) {
-            $content_interpretor = CommonMarkInterpreter::build($hp);
-
-            return $content_interpretor->getInterpretedContent($this->getText());
+            return $this->interpretMarkdownContent($this->getText());
         }
         return $hp->purifyTextWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
     }
@@ -273,6 +281,13 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
     private function isInHTMLFormat(): bool
     {
-        return $this->getFormat() === self::HTML_CONTENT;
+        return $this->format === self::HTML_CONTENT;
+    }
+
+    private function interpretMarkdownContent(string $text): string
+    {
+        $content_interpreter = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
+
+        return $content_interpreter->getInterpretedContent($text);
     }
 }
