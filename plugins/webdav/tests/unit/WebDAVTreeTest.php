@@ -30,6 +30,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\WebDAV\Docman\DocumentDownloader;
 use WebDAVDocmanFolder;
 use WebDAVFRSFile;
@@ -146,12 +147,7 @@ final class WebDAVTreeTest extends TestCase
 
     public function testCanBeMovedSucceedeSourceFileDestinationRelease(): void
     {
-        $source = Mockery::mock(
-            WebDAVFRSFile::class,
-            [$this->user, $this->project, $this->package, $this->release, $this->file]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $source = new WebDAVFRSFile($this->user, $this->project, $this->file, Mockery::mock(\WebDAVUtils::class));
 
         $this->project->shouldReceive('getGroupId')->andReturns(1);
 
@@ -513,14 +509,14 @@ final class WebDAVTreeTest extends TestCase
         return $tree;
     }
 
-    private function getTestFile()
+    private function getTestFile(): WebDAVFRSFile
     {
-        $file = Mockery::mock(WebDAVFRSFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $project = \Mockery::spy(\Project::class);
-        $project->shouldReceive('getGroupId')->andReturns(1);
-        $file->shouldReceive('getProject')->andReturn($project);
-
-        return $file;
+        return new WebDAVFRSFile(
+            $this->user,
+            ProjectTestBuilder::aProject()->withId(1)->build(),
+            new \FRSFile([]),
+            Mockery::mock(\WebDAVUtils::class)
+        );
     }
 
     private function getTestRelease()

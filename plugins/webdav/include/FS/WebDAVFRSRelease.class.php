@@ -83,12 +83,12 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
     public function getChild($fileName)
     {
         $fileId = $this->getFileIdFromName($fileName);
-        $file = $this->getWebDAVFRSFile($this->getFRSFileFromId($fileId));
+        $file = $this->getFRSFileFromId($fileId);
 
         // Check for errors
 
         // Check if the file is not null and is not deleted
-        if (! $file->getFile() || $file->getFile()->isDeleted()) {
+        if (! $file || $file->isDeleted()) {
             // File not found error
             throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
         }
@@ -118,12 +118,13 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
         }
 
         // Check the maximum file size limit
-        $fileSize = $file->getSize();
+        $fileSize = $file->getFileSize();
         if ($fileSize > $this->getMaxFileSize()) {
             // File size error
             throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
         }
-        return $file;
+
+        return $this->getWebDAVFRSFile($file);
     }
 
     /**
@@ -260,7 +261,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getWebDAVFRSFile($file)
     {
-        return new WebDAVFRSFile($this->getUser(), $this->getProject(), $file);
+        return new WebDAVFRSFile($this->getUser(), $this->getProject(), $file, $this->getUtils());
     }
 
     /**

@@ -24,110 +24,93 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
-/**
- * This class is used to maniplulate files through WebDAV
- *
- * It's an implementation of the abstract class Sabre_DAV_File methods
- *
- */
 class WebDAVFRSFile extends Sabre_DAV_File
 {
-
-    private $user;
-    private $project;
-    private $file;
-
     /**
-     * @param PFUser $user
-     * @param Project $project
-     * @param FRSFile $file
+     * @var PFUser
      */
-    public function __construct($user, $project, $file)
+    private $user;
+    /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var FRSFile
+     */
+    private $file;
+    /**
+     * @var WebDAVUtils
+     */
+    private $utils;
+
+    public function __construct(PFUser $user, Project $project, FRSFile $file, WebDAVUtils $utils)
     {
         $this->user = $user;
         $this->project = $project;
         $this->file = $file;
+        $this->utils = $utils;
     }
 
     /**
      * This method is used to download the file
-     *
      */
-    public function get()
+    public function get(): void
     {
         // Log the download in the Log system
-        $this->logDownload($this->getUser());
+        $this->file->LogDownload((int) $this->user->getId());
 
         // Start download
         $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
         $response         = $response_builder->fromFilePath(
             ServerRequest::fromGlobals(),
-            $this->getFileLocation(),
+            $this->file->getFileLocation(),
             $this->getName(),
             $this->getContentType() ?? 'application/octet-stream'
         )
             ->withHeader('ETag', $this->getETag())
-            ->withHeader('Last-Modified', $this->getLastModified());
+            ->withHeader('Last-Modified', (string) $this->getLastModified());
         (new SapiStreamEmitter())->emit($response);
         exit();
     }
 
-    public function put($data)
+    public function put($data): void
     {
-        if (! file_put_contents($this->getFileLocation(), $data)) {
+        if (! file_put_contents($this->file->getFileLocation(), $data)) {
             throw new Sabre_DAV_Exception_Forbidden('Permission denied to change data');
         }
 
         $frs_file_factory = new FRSFileFactory();
         $frs_file_factory->update([
             'file_id'      => $this->file->getFileId(),
-            'file_size'    => filesize($this->getFileLocation()),
-            'computed_md5' => $this->getUtils()->getIncomingFileMd5Sum($this->getFileLocation())
+            'file_size'    => filesize($this->file->getFileLocation()),
+            'computed_md5' => $this->utils->getIncomingFileMd5Sum($this->file->getFileLocation())
         ]);
     }
 
-    /**
-     * Returns the name of the file
-     *
-     * @return String
-     */
-    public function getName()
+    public function getName(): string
     {
         /* The file name is preceded by its id to keep
          *  the client able to request the file from its id
          */
-        $basename = basename($this->getFile()->getFileName());
-        return $basename;
+        return basename($this->file->getFileName());
     }
 
-    /**
-     * Returns the last modification date
-     *
-     * @return date
-     */
-    public function getLastModified()
+    public function getLastModified(): int
     {
-        return $this->getFile()->getPostDate();
+        return $this->file->getPostDate();
     }
 
-    /**
-     * Returns the file size
-     *
-     * @return int
-     */
-    public function getSize()
+    public function getSize(): int
     {
-        return $this->getFile()->getFileSize();
+        return $this->file->getFileSize();
     }
 
     /**
      * Returns a unique identifier of the file
-     *
-     * @return String
      */
-    public function getETag()
+    public function getETag(): string
     {
-        return '"' . $this->getUtils()->getIncomingFileMd5Sum($this->getFileLocation()) . '"';
+        return '"' . $this->utils->getIncomingFileMd5Sum($this->file->getFileLocation()) . '"';
     }
 
     /**
@@ -141,178 +124,27 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getContentType()
     {
-        if (file_exists($this->getFileLocation()) && filesize($this->getFileLocation())) {
+        if (file_exists($this->file->getFileLocation()) && filesize($this->file->getFileLocation())) {
             $mime = MIME::instance();
-            return $mime->type($this->getFileLocation());
+            return $mime->type($this->file->getFileLocation());
         }
         return null;
     }
 
-    /**
-     * Returns the file location
-     *
-     * @return String
-     */
-    public function getFileLocation()
-    {
-        return $this->getFile()->getFileLocation();
-    }
-
-    /**
-     * Returns the file as an object instance of FRSFile
-     *
-     * @return FRSFile
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
-
-    /**
-     * Returns the file Id
-     *
-     * @return int
-     */
-    public function getFileId()
-    {
-        return $this->getFile()->getFileID();
-    }
-
-    /**
-     * Returns the Id of the release that file belongs to
-     *
-     * @return int
-     */
-    public function getReleaseId()
-    {
-        return $this->getFile()->getReleaseID();
-    }
-
-    /**
-     * Returns the Id of the package that file belongs to
-     *
-     * @return int
-     */
-    public function getPackageId()
-    {
-        return $this->getFile()->getPackageID();
-    }
-
-    /**
-     * Returns the project
-     *
-     * @return Project
-     */
-    public function getProject()
+    public function getProject(): Project
     {
         return $this->project;
     }
 
-    /**
-     * Returns the user
-     *
-     * @return PFUser
-     */
-    public function getUser()
+    public function delete(): void
     {
-        return $this->user;
-    }
-
-    /**
-     * Returns an instance of WebDAVUtils
-     *
-     * @return WebDAVUtils
-     */
-    public function getUtils()
-    {
-        return WebDAVUtils::getInstance();
-    }
-
-    /**
-     * Tests whether the file is active or not
-     *
-     * @return bool
-     */
-    public function isActive()
-    {
-        return $this->getFile()->isActive();
-    }
-
-    /**
-     * Checks whether the user can download the file or not
-     *
-     *
-     * @return bool
-     */
-    public function userCanDownload(PFUser $user)
-    {
-        return $this->getFile()->userCanDownload($user);
-    }
-
-    /**
-     * Tests whether the file exists in the file system or not
-     *
-     * @return bool
-     */
-
-    public function fileExists()
-    {
-        return $this->getFile()->fileExists();
-    }
-
-    /**
-     * Logs the download in the Log system
-     *
-     * @param PFUser $user
-     *
-     * @return bool
-     */
-    public function logDownload($user)
-    {
-        return $this->getFile()->LogDownload($user->getId());
-    }
-
-    /**
-     * Returns if the user is superuser or File release admin
-     *
-     * @return bool
-     */
-    public function userCanWrite()
-    {
-        $utils = $this->getUtils();
-        return $utils->userCanWrite($this->getUser(), $this->getProject()->getGroupId());
-    }
-
-    /**
-     * Deletes the file
-     *
-     * @return void
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#delete()
-     */
-    public function delete()
-    {
-        if ($this->userCanWrite()) {
-            $utils = $this->getUtils();
-            $result = $utils->getFileFactory()->delete_file($this->getProject()->getGroupId(), $this->getFileId());
+        if ($this->utils->userCanWrite($this->user, $this->getProject()->getGroupId())) {
+            $result = $this->utils->getFileFactory()->delete_file($this->getProject()->getGroupId(), $this->file->getFileID());
             if ($result == 0) {
                 throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
             }
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
-    }
-
-    /**
-     * A wrapper to copy
-     *
-     * @param String $source
-     * @param String $destination
-     *
-     * @return bool
-     */
-    public function copyFile($source, $destination)
-    {
-        return copy($source, $destination);
     }
 }

@@ -30,26 +30,39 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Sabre_DAV_Exception_Forbidden;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use WebDAVFRSFile;
 use WebDAVUtils;
 
-require_once __DIR__ . '/bootstrap.php';
-
-/**
- * This is the unit test of WebDAVFRSFile
- */
 final class WebDAVFRSFileTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     /**
+     * @var \PFUser
+     */
+    private $user;
+    /**
+     * @var Project
+     */
+    private $project;
+
+    protected function setUp(): void
+    {
+        $this->user = UserTestBuilder::aUser()->build();
+        $this->project = ProjectTestBuilder::aProject()->build();
+    }
+
+    /**
      * Testing delete when user is not admin
      */
     public function testDeleteFailWithUserNotAdmin(): void
     {
-        $webDAVFile = Mockery::mock(WebDAVFRSFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFile->shouldReceive('userCanWrite')->andReturnFalse();
+        $utils = Mockery::mock(WebDAVUtils::class);
+        $utils->shouldReceive('userCanWrite')->with($this->user, $this->project->getID())->once()->andReturnFalse();
+        $webDAVFile = new WebDAVFRSFile($this->user, $this->project, new \FRSFile(['file_id' => 4]), $utils);
 
         $this->expectException(Sabre_DAV_Exception_Forbidden::class);
 
@@ -61,18 +74,15 @@ final class WebDAVFRSFileTest extends TestCase
      */
     public function testDeleteFileNotExist(): void
     {
-        $webDAVFile = Mockery::mock(WebDAVFRSFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFile->shouldReceive('userCanWrite')->andReturnTrue();
-
         $frsff = \Mockery::mock(FRSFileFactory::class);
         $frsff->shouldReceive('delete_file')->andReturn(0);
         $utils = Mockery::mock(WebDAVUtils::class);
         $utils->shouldReceive('getFileFactory')->andReturn($frsff);
+        $utils->shouldReceive('userCanWrite')->with($this->user, $this->project->getID())->once()->andReturnTrue();
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getGroupId')->andReturn(102);
-        $webDAVFile->shouldReceive('getProject')->andReturn($project);
-        $webDAVFile->shouldReceive('getUtils')->andReturn($utils);
-        $webDAVFile->shouldReceive('getFileID')->andReturn(4);
+
+        $webDAVFile = new WebDAVFRSFile($this->user, $this->project, new \FRSFile(['file_id' => 4]), $utils);
 
         $this->expectException(Sabre_DAV_Exception_Forbidden::class);
 
@@ -84,18 +94,15 @@ final class WebDAVFRSFileTest extends TestCase
      */
     public function testDeleteSucceede(): void
     {
-        $webDAVFile = Mockery::mock(WebDAVFRSFile::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFile->shouldReceive('userCanWrite')->andReturnTrue();
-
         $frsff = \Mockery::mock(FRSFileFactory::class);
         $frsff->shouldReceive('delete_file')->andReturn(1);
         $utils = Mockery::mock(WebDAVUtils::class);
         $utils->shouldReceive('getFileFactory')->andReturn($frsff);
+        $utils->shouldReceive('userCanWrite')->with($this->user, $this->project->getID())->once()->andReturnTrue();
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getGroupId')->andReturn(102);
-        $webDAVFile->shouldReceive('getProject')->andReturn($project);
-        $webDAVFile->shouldReceive('getUtils')->andReturn($utils);
-        $webDAVFile->shouldReceive('getFileID')->andReturn(4);
+
+        $webDAVFile = new WebDAVFRSFile($this->user, $this->project, new \FRSFile(['file_id' => 4]), $utils);
 
         $webDAVFile->delete();
     }
