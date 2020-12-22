@@ -266,7 +266,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
     public function testNonExistingValueOfArrayIsNotAPossibleValue(): void
     {
         $this->bind->shouldReceive('isExistingValue')->andReturnFalse();
-        $this->assertTrue($this->list_field->isPossibleValue(["invalid"]));
+        self::assertFalse($this->list_field->isPossibleValue(["invalid"]));
     }
 
     public function testExistingStringIsAPossibleValue(): void
@@ -278,7 +278,19 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
     public function testNonExistingStringIsNotAPossibleValue(): void
     {
         $this->bind->shouldReceive('isExistingValue')->andReturnFalse();
-        $this->assertTrue($this->list_field->isPossibleValue("invalid"));
+        self::assertFalse($this->list_field->isPossibleValue("invalid"));
+    }
+
+    public function testNullIsAPossibleValue(): void
+    {
+        $this->bind->shouldReceive('isExistingValue')->andReturnFalse();
+        self::assertTrue($this->list_field->isPossibleValue(null));
+    }
+
+    public function testNoneIsAPossibleValue(): void
+    {
+        $this->bind->shouldReceive('isExistingValue')->andReturnFalse();
+        self::assertTrue($this->list_field->isPossibleValue('100'));
     }
 
     public function testValidateIsOkWhenNoWorkflowIsSet(): void
