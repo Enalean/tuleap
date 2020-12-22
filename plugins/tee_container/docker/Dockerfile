@@ -92,4 +92,4 @@ ENV TLP_SYSTEMCTL=docker-centos7
 
 COPY --from=0 / /
 
-CMD [ "/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run" ]
+ENTRYPOINT [ "/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run" ]

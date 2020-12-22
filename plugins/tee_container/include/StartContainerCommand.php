@@ -23,12 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\TEEContainer;
 
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use TuleapCfg\Command\Docker\DataPersistence;
@@ -58,6 +61,9 @@ final class StartContainerCommand extends Command
         '/var/lib/tuleap',
     ];
 
+    private const OPTION_NO_SUPERVISORD  = 'no-supervisord';
+    private const OPTION_EXEC            = 'exec';
+
     /**
      * @var ProcessFactory
      */
@@ -79,7 +85,9 @@ final class StartContainerCommand extends Command
     {
         $this
             ->setName('run')
-            ->setDescription('Run Tuleap Enterprise Edition Docker container');
+            ->setDescription('Run Tuleap Enterprise Edition Docker container')
+            ->addOption(self::OPTION_NO_SUPERVISORD, '', InputOption::VALUE_NONE, 'Do not run supervisord at the end of the setup')
+            ->addOption(self::OPTION_EXEC, '', InputOption::VALUE_REQUIRED, 'Select a command to run inside the container, before supervisord (if any)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -122,15 +130,22 @@ final class StartContainerCommand extends Command
                 Supervisord::UNIT_HTTPD,
                 Supervisord::UNIT_FPM
             );
-            $supervisord->run($output);
+            $supervisord->configure($output);
+
+            $option_exec = $input->getOption(self::OPTION_EXEC);
+            if ($option_exec !== null && is_string($option_exec)) {
+                $this->exec($console_logger, $option_exec);
+            }
+
+            if ($input->getOption(self::OPTION_NO_SUPERVISORD) !== true) {
+                $supervisord->run($output);
+            }
             return 0;
         } catch (\Exception $exception) {
             $output->writeln(sprintf('<error>%s</error>', OutputFormatter::escape($exception->getMessage())));
             $output->writeln('Something went wrong, here is a shell to debug: ');
-            $return = pcntl_exec('/bin/bash');
-            if ($return !== null) {
-                throw new \RuntimeException('Exec of /usr/bin/supervisord failed');
-            }
+            pcntl_exec('/bin/bash');
+            $output->writeln('exec of bash failed');
         }
         return 1;
     }
@@ -157,5 +172,19 @@ final class StartContainerCommand extends Command
             return $value;
         }
         return '';
+    }
+
+    private function exec(LoggerInterface $logger, string $command): void
+    {
+        $logger->info("Execute command `$command`");
+        $process = Process::fromShellCommandline($command);
+        $process->setTimeout(0);
+        $process->mustRun(function (string $type, string $cmd_output) use ($logger) {
+            if ($type == Process::ERR) {
+                $logger->error($cmd_output);
+            } else {
+                $logger->info($cmd_output);
+            }
+        });
     }
 }
