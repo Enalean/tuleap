@@ -379,4 +379,10 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
     }
+
+    public function userCanWrite(): bool
+    {
+        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->project);
+        return $this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->user, $this->item->getId());
+    }
 }

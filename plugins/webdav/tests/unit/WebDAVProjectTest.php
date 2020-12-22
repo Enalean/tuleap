@@ -28,36 +28,52 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Project_AccessPrivateException;
 use Sabre_DAV_Exception_FileNotFound;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Test\Builders\UserTestBuilder;
 use WebDAVProject;
 
-require_once __DIR__ . '/bootstrap.php';
-
-/**
- * This is the unit test of WebDAVProject
- */
 final class WebDAVProjectTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
+
+    private $utils;
+    private $webdav_project;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
+     */
+    private $project;
+    /**
+     * @var PFUser
+     */
+    private $user;
+
+    protected function setUp(): void
+    {
+        $this->user = UserTestBuilder::aUser()->build();
+        $this->utils = Mockery::mock(\WebDAVUtils::class);
+        $this->project = Mockery::mock(\Project::class);
+        $this->project->shouldReceive('usesFile')->andReturnTrue()->byDefault();
+
+        $this->webdav_project = new WebDAVProject(
+            $this->user,
+            $this->project,
+            12,
+            $this->utils
+        );
+    }
 
     /**
      * Testing when The project have no active services
      */
     public function testGetChildrenNoServices(): void
     {
-        $webDAVProject = Mockery::mock(WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->utils->shouldReceive('getEventManager')->andReturns(new \EventManager());
 
-        $utils = Mockery::spy(\WebDAVUtils::class);
-        $webDAVProject->shouldReceive('getUtils')->andReturns($utils);
-        $em = Mockery::spy(\EventManager::class);
-        $utils->shouldReceive('getEventManager')->andReturns($em);
+        $this->project->shouldReceive('usesFile')->andReturnFalse();
 
-        $webDAVProject->shouldReceive('usesFile')->andReturns(false);
-        $this->assertSame([], $webDAVProject->getChildren());
+        self::assertSame([], $this->webdav_project->getChildren());
     }
 
     /**
@@ -65,59 +81,12 @@ final class WebDAVProjectTest extends TestCase
      */
     public function testGetChildFailWithNotExist(): void
     {
-        $webDAVProject = Mockery::mock(WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->utils->shouldReceive('getEventManager')->andReturns(new \EventManager());
 
-        $utils = Mockery::spy(\WebDAVUtils::class);
-        $webDAVProject->shouldReceive('getUtils')->andReturns($utils);
-        $em = Mockery::spy(\EventManager::class);
-        $utils->shouldReceive('getEventManager')->andReturns($em);
+        $this->project->shouldReceive('usesFile')->andReturnFalse();
 
-        $webDAVProject->shouldReceive('usesFile')->andReturns(false);
         $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
-        $webDAVProject->getChild('Files');
-    }
 
-    public function testUserCanReadWithAccessCheckerSuccessfull(): void
-    {
-        $user =  Mockery::spy(PFUser::class);
-        $project = Mockery::spy(Project::class);
-
-        $access_checker = Mockery::mock(ProjectAccessChecker::class);
-
-        $webDAVProject = Mockery::mock(
-            WebDAVProject::class,
-            [
-                $user,
-                $project,
-                0,
-                $access_checker
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
-
-        $access_checker->shouldReceive('checkUserCanAccessProject')->with($user, $project)->once();
-
-        $this->assertTrue($webDAVProject->userCanRead());
-    }
-
-    public function testUserCanReadWithAccessCheckerThrowingException(): void
-    {
-        $user =  Mockery::spy(PFUser::class);
-        $project = Mockery::spy(Project::class);
-
-        $access_checker = Mockery::mock(ProjectAccessChecker::class);
-
-        $webDAVProject = Mockery::mock(
-            WebDAVProject::class,
-            [
-                $user,
-                $project,
-                0,
-                $access_checker
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
-
-        $access_checker->shouldReceive('checkUserCanAccessProject')->with($user, $project)->andThrow(new Project_AccessPrivateException());
-
-        $this->assertFalse($webDAVProject->userCanRead());
+        $this->webdav_project->getChild('Files');
     }
 }

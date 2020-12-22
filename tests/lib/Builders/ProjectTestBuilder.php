@@ -67,4 +67,10 @@ final class ProjectTestBuilder
         $this->data['group_name'] = $name;
         return $this;
     }
+
+    public function withStatusDeleted(): self
+    {
+        $this->data['status'] = Project::STATUS_DELETED;
+        return $this;
+    }
 }

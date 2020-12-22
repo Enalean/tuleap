@@ -23,23 +23,19 @@ declare(strict_types=1);
 
 namespace Tuleap\WebDAV;
 
-use DataAccessResult;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Plugin;
-use ProjectDao;
+use Project_AccessPrivateException;
+use ProjectManager;
 use Sabre_DAV_Exception_FileNotFound;
 use Sabre_DAV_Exception_Forbidden;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use WebDAVRoot;
 
-require_once __DIR__ . '/bootstrap.php';
-
-/**
- * This is the unit test of WebDAVRoot
- */
 final class WebDAVRootTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -56,26 +52,44 @@ final class WebDAVRootTest extends TestCase
     private $user;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectDao
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
      */
-    private $project_dao;
+    private $project_manager;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\WebDAVUtils
+     */
+    private $utils;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PluginManager
+     */
+    private $plugin_manager;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\WebDAVPlugin
+     */
+    private $plugin;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAccessChecker
+     */
+    private $project_access_checker;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->plugin                 = Mockery::mock(\WebDAVPlugin::class, ['getId' => 999]);
+        $this->user                   = Mockery::mock(PFUser::class, ['isAnonymous' => false]);
+        $this->project_manager        = Mockery::mock(\ProjectManager::class);
+        $this->utils                  = Mockery::mock(\WebDAVUtils::class, ['getEventManager' => new \EventManager()]);
+        $this->plugin_manager         = Mockery::mock(\PluginManager::class);
+        $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
 
-        $plugin            = Mockery::mock(Plugin::class);
-        $this->user        = Mockery::spy(PFUser::class);
-        $this->project_dao = Mockery::mock(ProjectDao::class);
-
-        $this->webDAVRoot = \Mockery::mock(
-            WebDAVRoot::class,
-            [$plugin, $this->user, 1000000, $this->project_dao]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $plugin->shouldReceive('getId')->andReturn(999);
+        $this->webDAVRoot = new WebDAVRoot(
+            $this->plugin,
+            $this->user,
+            1000000,
+            $this->project_manager,
+            $this->utils,
+            $this->plugin_manager,
+            $this->project_access_checker,
+        );
     }
 
     /**
@@ -95,11 +109,9 @@ final class WebDAVRootTest extends TestCase
      */
     public function testGetChildrenNoUserProjects(): void
     {
-        $this->user->shouldReceive('isAnonymous')->andReturns(false);
+        $this->user->shouldReceive('getProjects')->andReturn([]);
 
-
-        $this->webDAVRoot->shouldReceive('getUserProjectList')->andReturns([]);
-        $this->assertEquals($this->webDAVRoot->getChildren(), []);
+        self::assertEquals([], $this->webDAVRoot->getChildren());
     }
 
     /**
@@ -107,17 +119,15 @@ final class WebDAVRootTest extends TestCase
      */
     public function testGetChildrenUserHaveNoProjectsWithWebDAVActivated(): void
     {
-        $this->user->shouldReceive('isAnonymous')->andReturns(false);
         $this->user->shouldReceive('getProjects')->andReturns([
-            101
+            '101'
         ]);
 
-        $webDAVProject = \Mockery::spy(\WebDAVProject::class);
+        $this->project_manager->shouldReceive('getProject')->with(101)->andReturn(ProjectTestBuilder::aProject()->withId(101)->build());
 
-        $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($webDAVProject);
-        $this->webDAVRoot->shouldReceive('isWebDAVAllowedForProject')->with(101)->andReturnFalse();
+        $this->plugin_manager->shouldReceive('isPluginAllowedForProject')->with($this->plugin, 101)->andReturnFalse();
 
-        $this->assertEquals($this->webDAVRoot->getChildren(), []);
+        self::assertEquals([], $this->webDAVRoot->getChildren());
     }
 
     /**
@@ -125,14 +135,19 @@ final class WebDAVRootTest extends TestCase
      */
     public function testGetChildrenUserHaveProjects(): void
     {
-        $this->user->shouldReceive('isAnonymous')->andReturns(false);
+        $this->user->shouldReceive('getProjects')->andReturns([
+            '101'
+        ]);
 
-        $webDAVProject = \Mockery::spy(\WebDAVProject::class);
+        $this->project_manager->shouldReceive('getProject')->with(101)->andReturn(ProjectTestBuilder::aProject()->withId(101)->withUnixName('FooBar')->build());
 
-        $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($webDAVProject);
-        $this->webDAVRoot->shouldReceive('getUserProjectList')->andReturns([$webDAVProject]);
+        $this->plugin_manager->shouldReceive('isPluginAllowedForProject')->with($this->plugin, 101)->andReturnTrue();
 
-        $this->assertEquals($this->webDAVRoot->getChildren(), [$webDAVProject]);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->once();
+
+        $children = $this->webDAVRoot->getChildren();
+        self::assertCount(1, $children);
+        self::assertEquals('foobar', $children[0]->getName());
     }
 
     /**
@@ -140,13 +155,11 @@ final class WebDAVRootTest extends TestCase
      */
     public function testGetChildFailWithWebDAVNotActivated(): void
     {
-        $this->webDAVRoot->shouldReceive('isWebDAVAllowedForProject')->andReturns(false);
+        $this->plugin_manager->shouldReceive('isPluginAllowedForProject')->with($this->plugin, 101)->andReturnFalse();
+
+        $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn(ProjectTestBuilder::aProject()->withId(101)->withUnixName('project1')->build());
 
         $this->expectException(Sabre_DAV_Exception_Forbidden::class);
-
-        $dar = Mockery::spy(DataAccessResult::class);
-        $dar->shouldReceive('getRow')->andReturn(['group_id' => 101]);
-        $this->project_dao->shouldReceive('searchByUnixGroupName')->with('project1')->andReturn($dar);
 
         $this->webDAVRoot->getChild('project1');
     }
@@ -156,15 +169,7 @@ final class WebDAVRootTest extends TestCase
      */
     public function testGetChildFailWithNotExist(): void
     {
-        $this->webDAVRoot->shouldReceive('isWebDAVAllowedForProject')->andReturns(true);
-        $project = \Mockery::spy(\WebDAVProject::class);
-        $project->shouldReceive('exist')->andReturns(false);
-
-        $dar = Mockery::spy(DataAccessResult::class);
-        $dar->shouldReceive('getRow')->andReturn(['group_id' => 101]);
-        $this->project_dao->shouldReceive('searchByUnixGroupName')->with('project1')->andReturn($dar);
-
-        $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($project);
+        $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn(null);
 
         $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
 
@@ -176,16 +181,7 @@ final class WebDAVRootTest extends TestCase
      */
     public function testGetChildFailWithNotActive(): void
     {
-        $this->webDAVRoot->shouldReceive('isWebDAVAllowedForProject')->andReturns(true);
-        $project = \Mockery::spy(\WebDAVProject::class);
-        $project->shouldReceive('exist')->andReturns(true);
-        $project->shouldReceive('isActive')->andReturns(false);
-
-        $dar = Mockery::spy(DataAccessResult::class);
-        $dar->shouldReceive('getRow')->andReturn(['group_id' => 101]);
-        $this->project_dao->shouldReceive('searchByUnixGroupName')->with('project1')->andReturn($dar);
-
-        $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($project);
+        $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn(ProjectTestBuilder::aProject()->withStatusDeleted()->build());
 
         $this->expectException(Sabre_DAV_Exception_Forbidden::class);
 
@@ -197,17 +193,12 @@ final class WebDAVRootTest extends TestCase
      */
     public function testGetChildFailWithUserCanNotRead(): void
     {
-        $this->webDAVRoot->shouldReceive('isWebDAVAllowedForProject')->andReturns(true);
-        $project = \Mockery::spy(\WebDAVProject::class);
-        $project->shouldReceive('exist')->andReturns(true);
-        $project->shouldReceive('isActive')->andReturns(true);
-        $project->shouldReceive('userCanRead')->andReturns(false);
+        $project = ProjectTestBuilder::aProject()->withId(101)->withUnixName('project1')->build();
+        $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn($project);
 
-        $dar = Mockery::spy(DataAccessResult::class);
-        $dar->shouldReceive('getRow')->andReturn(['group_id' => 101]);
-        $this->project_dao->shouldReceive('searchByUnixGroupName')->with('project1')->andReturn($dar);
+        $this->plugin_manager->shouldReceive('isPluginAllowedForProject')->with($this->plugin, 101)->andReturnTrue();
 
-        $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($project);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->with($this->user, $project)->andThrow(new Project_AccessPrivateException());
 
         $this->expectException(Sabre_DAV_Exception_Forbidden::class);
 
@@ -219,19 +210,13 @@ final class WebDAVRootTest extends TestCase
      */
     public function testSucceedGetChild(): void
     {
-        $this->webDAVRoot->shouldReceive('isWebDAVAllowedForProject')->andReturns(true);
-        $project = \Mockery::spy(\WebDAVProject::class);
-        $project->shouldReceive('exist')->andReturns(true);
-        $project->shouldReceive('isActive')->andReturns(true);
+        $project = ProjectTestBuilder::aProject()->withId(101)->withUnixName('project1')->build();
+        $this->project_manager->shouldReceive('getProjectByUnixName')->with('project1')->andReturn($project);
 
-        $dar = Mockery::spy(DataAccessResult::class);
-        $dar->shouldReceive('getRow')->andReturn(['group_id' => 101]);
-        $this->project_dao->shouldReceive('searchByUnixGroupName')->with('project1')->andReturn($dar);
+        $this->plugin_manager->shouldReceive('isPluginAllowedForProject')->with($this->plugin, 101)->andReturnTrue();
 
-        $project->shouldReceive('userCanRead')->andReturns(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->with($this->user, $project)->once();
 
-        $this->webDAVRoot->shouldReceive('getWebDAVProject')->andReturns($project);
-
-        $this->assertEquals($this->webDAVRoot->getChild('project1'), $project);
+        self::assertEquals('project1', $this->webDAVRoot->getChild('project1')->getName());
     }
 }
