@@ -31,7 +31,7 @@ use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusUnknown;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Reference\CrossReferencePresenter;
+use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
 class CrossReferenceGitEnhancerTest extends TestCase
 {
@@ -103,18 +103,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
 
     public function testItDisplaysCommitTitleAsXRefTitle(): void
     {
-        $ref = new CrossReferencePresenter(
-            1,
-            "git",
-            "git #1a2b3c4d5e6f7g8h9i",
-            "url",
-            "delete_url",
-            1,
-            "1a2b3c4d5e6f7g8h9i",
-            null,
-            [],
-            null
-        );
+        $ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $this->commit_metadata_retriever
             ->shouldReceive('getMetadataByRepositoryAndCommits')
@@ -135,18 +124,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
 
     public function testItDisplaysCommitSha1AsAdditionalBadge(): void
     {
-        $ref = new CrossReferencePresenter(
-            1,
-            "git",
-            "git #1a2b3c4d5e6f7g8h9i",
-            "url",
-            "delete_url",
-            1,
-            "1a2b3c4d5e6f7g8h9i",
-            null,
-            [],
-            null
-        );
+        $ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $this->commit_metadata_retriever
             ->shouldReceive('getMetadataByRepositoryAndCommits')
@@ -168,18 +146,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
 
     public function testItDoesNotAddCreationMetadataIfTheyCannotBeFound(): void
     {
-        $ref = new CrossReferencePresenter(
-            1,
-            "git",
-            "git #1a2b3c4d5e6f7g8h9i",
-            "url",
-            "delete_url",
-            1,
-            "1a2b3c4d5e6f7g8h9i",
-            null,
-            [],
-            null
-        );
+        $ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $this->commit_metadata_retriever
             ->shouldReceive('getMetadataByRepositoryAndCommits')
@@ -197,18 +164,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
 
     public function testItAddCreationDateAsMetadata(): void
     {
-        $ref = new CrossReferencePresenter(
-            1,
-            "git",
-            "git #1a2b3c4d5e6f7g8h9i",
-            "url",
-            "delete_url",
-            1,
-            "1a2b3c4d5e6f7g8h9i",
-            null,
-            [],
-            null
-        );
+        $ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $author = Mockery::mock(\PFUser::class)
             ->shouldReceive(
@@ -248,18 +204,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
 
     public function testItUsesTuleapUserInformationForAuthor(): void
     {
-        $ref = new CrossReferencePresenter(
-            1,
-            "git",
-            "git #1a2b3c4d5e6f7g8h9i",
-            "url",
-            "delete_url",
-            1,
-            "1a2b3c4d5e6f7g8h9i",
-            null,
-            [],
-            null
-        );
+        $ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $author = Mockery::mock(\PFUser::class)
             ->shouldReceive(
@@ -297,18 +242,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
 
     public function testItUsesCommitAuthorWhenMetadataDoesNotContainTuleapUser(): void
     {
-        $ref = new CrossReferencePresenter(
-            1,
-            "git",
-            "git #1a2b3c4d5e6f7g8h9i",
-            "url",
-            "delete_url",
-            1,
-            "1a2b3c4d5e6f7g8h9i",
-            null,
-            [],
-            null
-        );
+        $ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $this->commit
             ->shouldReceive('GetAuthorName')

@@ -29,7 +29,7 @@ use Project;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
-use Tuleap\Reference\CrossReferencePresenter;
+use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
 class CrossReferenceGitOrganizerTest extends TestCase
 {
@@ -86,18 +86,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
                 [
                     'getCurrentUser'     => $user,
                     'getCrossReferencePresenters' => [
-                        new CrossReferencePresenter(
-                            1,
-                            "tracker",
-                            "another_title",
-                            "url",
-                            "delete_url",
-                            1,
-                            "whatever",
-                            null,
-                            [],
-                            null
-                        ),
+                        CrossReferencePresenterBuilder::get(1)->withType('tracker')->build(),
                     ]
                 ]
             )->getMock();
@@ -126,18 +115,10 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->with($project, 'cloudy/stable/1a2b3c4d5e')
             ->andReturn(new CommitInfoFromReferenceValue(null, '1a2b3c4d5e'));
 
-        $a_ref = new CrossReferencePresenter(
-            1,
-            "git_commit",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            'cloudy/stable/1a2b3c4d5e',
-            null,
-            [],
-            null
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('git_commit')
+            ->withValue('cloudy/stable/1a2b3c4d5e')
+            ->build();
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
@@ -171,18 +152,10 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->once()
             ->andThrow(Mockery::mock(\Project_AccessException::class));
 
-        $a_ref = new CrossReferencePresenter(
-            1,
-            "git_commit",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            'cloudy/stable/1a2b3c4d5e',
-            null,
-            [],
-            null
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('git_commit')
+            ->withValue('cloudy/stable/1a2b3c4d5e')
+            ->build();
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
@@ -248,31 +221,17 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->with($another_project, 'tuleap/stable/e5d4c3b2a1')
             ->andReturn(new CommitInfoFromReferenceValue($another_repository, 'e5d4c3b2a1'));
 
-        $a_ref = new CrossReferencePresenter(
-            1,
-            "git_commit",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            'cloudy/stable/1a2b3c4d5e',
-            null,
-            [],
-            null
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('git_commit')
+            ->withValue('cloudy/stable/1a2b3c4d5e')
+            ->withProjectId(1)
+            ->build();
 
-        $another_ref = new CrossReferencePresenter(
-            2,
-            "git_commit",
-            "title",
-            "url",
-            "delete_url",
-            2,
-            'tuleap/stable/e5d4c3b2a1',
-            null,
-            [],
-            null
-        );
+        $another_ref = CrossReferencePresenterBuilder::get(2)
+            ->withType('git_commit')
+            ->withValue('tuleap/stable/e5d4c3b2a1')
+            ->withProjectId(2)
+            ->build();
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
@@ -347,18 +306,11 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->with($another_project, 'tuleap/stable/e5d4c3b2a1')
             ->andReturn(new CommitInfoFromReferenceValue($another_repository, 'e5d4c3b2a1'));
 
-        $another_ref = new CrossReferencePresenter(
-            2,
-            "git_commit",
-            "title",
-            "url",
-            "delete_url",
-            2,
-            'tuleap/stable/e5d4c3b2a1',
-            null,
-            [],
-            null
-        );
+        $another_ref = CrossReferencePresenterBuilder::get(2)
+            ->withType('git_commit')
+            ->withValue('tuleap/stable/e5d4c3b2a1')
+            ->withProjectId(2)
+            ->build();
 
         $commit = Mockery::mock(Commit::class);
         $this->commit_provider
