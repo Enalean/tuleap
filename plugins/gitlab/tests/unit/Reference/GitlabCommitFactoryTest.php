@@ -55,6 +55,7 @@ class GitlabCommitFactoryTest extends TestCase
                 'gitlab_repository_id' => 2,
                 'commit_sha1' => '11645a413d7af2995cd92e40bf387e39d06d0e61',
                 'commit_date' => 1608555618,
+                'commit_branch' => "master",
                 'commit_title' => 'TULEAP-1234 Improve the README',
                 'author_name' => 'John Snow',
                 'author_email' => 'john-snow@the-wall.com',
@@ -71,6 +72,7 @@ class GitlabCommitFactoryTest extends TestCase
         $this->assertEquals('11645a413d7af2995cd92e40bf387e39d06d0e61', $commit_info->getCommitSha1());
         $this->assertEquals(1608555618, $commit_info->getCommitDate());
         $this->assertEquals('TULEAP-1234 Improve the README', $commit_info->getCommitTitle());
+        $this->assertEquals('master', $commit_info->getCommitBranchName());
         $this->assertEquals('John Snow', $commit_info->getCommitAuthorName());
         $this->assertEquals('john-snow@the-wall.com', $commit_info->getCommitAuthorEmail());
     }

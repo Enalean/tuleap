@@ -44,6 +44,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
             'feff4ced04b237abb8b4a50b4160099313152c3c',
             'artifact TULEAP-123 01 (TULEAP-234,tuleap-345)',
             'artifact TULEAP-123 01 (TULEAP-234,tuleap-345)',
+            "master",
             1608110510,
             'john-snow@the-wall.com',
             'John Snow'
@@ -64,6 +65,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
             'feff4ced04b237abb8b4a50b4160099313152c3c',
             'artifact TULEAP-12a3 01',
             'artifact TULEAP-12a3 01',
+            "master",
             1608110510,
             'john-snow@the-wall.com',
             'John Snow'
@@ -82,6 +84,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
             'feff4ced04b237abb8b4a50b4160099313152c3c',
             "aaaaaaaaaaaaaaaaaaaaaaaasqsdfsdfsdfsfd TULEAP-123qsqsdqsdqsdqd TULEAP-254\n\nsdfsfhsudfTULEAP-aaaa\n\n\nTULEAP-898",
             "aaaaaaaaaaaaaaaaaaaaaaaasqsdfsdfsdfsfd TULEAP-123qsqsdqsdqsdqd TULEAP-254\n\nsdfsfhsudfTULEAP-aaaa\n\n\nTULEAP-898",
+            "master",
             1608110510,
             'john-snow@the-wall.com',
             'John Snow'
@@ -102,6 +105,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
             'feff4ced04b237abb8b4a50b4160099313152c3c',
             "aaaaaaaaaaaaaaaaaaaaaaaasqsdfsdfsdfsfd TULEAP-123qsqsdqsdqsdqd TULEAP-254\n\nsdfsfhsudfTULEAP-aaaa\n\n\nTULEAP-123",
             "aaaaaaaaaaaaaaaaaaaaaaaasqsdfsdfsdfsfd TULEAP-123qsqsdqsdqsdqd TULEAP-254\n\nsdfsfhsudfTULEAP-aaaa\n\n\nTULEAP-123",
+            "master",
             1608110510,
             'john-snow@the-wall.com',
             'John Snow'
@@ -121,6 +125,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
             'feff4ced04b237abb8b4a50b4160099313152c3c',
             'artifact tuleap-123 01',
             'artifact tuleap-123 01',
+            "master",
             1608110510,
             'john-snow@the-wall.com',
             'John Snow'
@@ -139,6 +144,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
             'feff4ced04b237abb8b4a50b4160099313152c3c',
             'artifact TULEAP-abc 01',
             'artifact TULEAP-abc 01',
+            "master",
             1608110510,
             'john-snow@the-wall.com',
             'John Snow'
@@ -171,6 +177,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
             'feff4ced04b237abb8b4a50b4160099313152c3c',
             $char . 'TULEAP-123',
             $char . 'TULEAP-123',
+            "master",
             1608110510,
             'john-snow@the-wall.com',
             'John Snow'
@@ -200,6 +207,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
             'feff4ced04b237abb8b4a50b4160099313152c3c',
             $char . 'TULEAP-123',
             $char . 'TULEAP-123',
+            "master",
             1608110510,
             'john-snow@the-wall.com',
             'John Snow'

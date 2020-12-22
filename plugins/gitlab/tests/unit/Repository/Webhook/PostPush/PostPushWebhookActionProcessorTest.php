@@ -112,6 +112,7 @@ final class PostPushWebhookActionProcessorTest extends TestCase
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'A commit with three references, two bad, one good',
                     'A commit with three references: TULEAP-666 TULEAP-777 TULEAP-123',
+                    "master",
                     1608110510,
                     "john-snow@the-wall.com",
                     "John Snow"
@@ -194,6 +195,7 @@ final class PostPushWebhookActionProcessorTest extends TestCase
                 'feff4ced04b237abb8b4a50b4160099313152c3c',
                 1608110510,
                 'A commit with three references, two bad, one good',
+                "master",
                 'John Snow',
                 'john-snow@the-wall.com'
             );
@@ -221,6 +223,7 @@ final class PostPushWebhookActionProcessorTest extends TestCase
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'commit TULEAP-123 01',
                     'commit TULEAP-123 01',
+                    "master",
                     1608110510,
                     "john-snow@the-wall.com",
                     "John Snow"
@@ -281,6 +284,7 @@ final class PostPushWebhookActionProcessorTest extends TestCase
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'commit TULEAP-123 01',
                     'commit TULEAP-123 01',
+                    "master",
                     1608110510,
                     "john-snow@the-wall.com",
                     "John Snow"

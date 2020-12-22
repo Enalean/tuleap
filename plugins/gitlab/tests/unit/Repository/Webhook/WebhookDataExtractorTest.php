@@ -120,12 +120,30 @@ class WebhookDataExtractorTest extends TestCase
         );
     }
 
+    public function testItThrowsAnExceptionIfRefKeyIsMissing(): void
+    {
+        $request = (new NullServerRequest())->withBody(
+            HTTPFactoryBuilder::streamFactory()->createStream(
+                '{"event_name": "push",
+                "project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
+                "commits": []}'
+            )
+        );
+
+        $this->expectException(MissingKeyException::class);
+
+        $this->extractor->retrieveWebhookData(
+            $request
+        );
+    }
+
     public function testItRetrievesPostPushWebhookData(): void
     {
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
                 '{"event_name": "push",
                   "project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
+                  "ref": "refs/heads/master",
                   "commits": [
                       {
                           "id": "feff4ced04b237abb8b4a50b4160099313152c3c",

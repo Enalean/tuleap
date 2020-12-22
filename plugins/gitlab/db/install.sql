@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_commit_info (
     commit_sha1 BINARY(20) NOT NULL,
     commit_date INT(11) NOT NULL,
     commit_title TEXT NOT NULL,
+    commit_branch VARCHAR(255) NOT NULL,
     author_name TEXT NOT NULL,
     author_email TEXT NOT NULL
 ) ENGINE=InnoDB;
