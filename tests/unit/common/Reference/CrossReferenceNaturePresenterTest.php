@@ -34,7 +34,7 @@ class CrossReferenceNaturePresenterTest extends TestCase
         $section = new CrossReferenceSectionPresenter("my section", [$a_ref]);
         $nature  = new CrossReferenceNaturePresenter("My Nature", "fas fa-candy-cane", [$section]);
 
-        $new_nature = $nature->withAdditionalCrossReference("my section", $another_ref);
+        $new_nature = $nature->withAdditionalCrossReferencePresenter("my section", $another_ref);
 
         self::assertEquals("My Nature", $new_nature->label);
         self::assertCount(1, $new_nature->sections);
@@ -51,7 +51,7 @@ class CrossReferenceNaturePresenterTest extends TestCase
         $c_section = new CrossReferenceSectionPresenter("C Section", [$c_ref]);
         $a_section = new CrossReferenceSectionPresenter("A Section", [$a_ref]);
         $nature  = new CrossReferenceNaturePresenter("My Nature", "fas fa-candy-cane", [$c_section, $a_section]);
-        $nature = $nature->withAdditionalCrossReference("b Section", $b_ref);
+        $nature = $nature->withAdditionalCrossReferencePresenter("b Section", $b_ref);
 
         self::assertEquals("My Nature", $nature->label);
         self::assertCount(3, $nature->sections);

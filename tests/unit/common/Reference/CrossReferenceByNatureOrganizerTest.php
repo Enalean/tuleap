@@ -65,7 +65,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
 
-        self::assertEquals([$another_ref], $organizer->getCrossReferences());
+        self::assertEquals([$another_ref], $organizer->getCrossReferencePresenters());
         self::assertEquals(
             [
                 new CrossReferenceNaturePresenter(
@@ -120,7 +120,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             'cloudy/stable'
         );
 
-        self::assertEquals([$another_ref], $organizer->getCrossReferences());
+        self::assertEquals([$another_ref], $organizer->getCrossReferencePresenters());
         self::assertEquals(
             [
                 new CrossReferenceNaturePresenter(
@@ -172,7 +172,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
         $organizer->moveCrossReferenceToSection($another_ref, 'cloudy/stable');
 
-        self::assertEquals([], $organizer->getCrossReferences());
+        self::assertEquals([], $organizer->getCrossReferencePresenters());
         self::assertEquals(
             [
                 new CrossReferenceNaturePresenter(
@@ -224,7 +224,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
         $organizer->moveCrossReferenceToSection($another_ref, 'tuleap/stable');
 
-        self::assertEquals([], $organizer->getCrossReferences());
+        self::assertEquals([], $organizer->getCrossReferencePresenters());
         self::assertEquals(
             [
                 new CrossReferenceNaturePresenter(
@@ -278,7 +278,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
         $organizer->moveCrossReferenceToSection($another_ref, "");
 
-        self::assertEquals([], $organizer->getCrossReferences());
+        self::assertEquals([], $organizer->getCrossReferencePresenters());
         self::assertEquals(
             [
                 new CrossReferenceNaturePresenter(
@@ -324,7 +324,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
 
-        self::assertEquals([], $organizer->getCrossReferences());
+        self::assertEquals([], $organizer->getCrossReferencePresenters());
         self::assertEquals([], $organizer->getNatures());
     }
 
@@ -366,7 +366,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
         $organizer->moveCrossReferenceToSection($a_ref, 'cloudy/stable');
         $organizer->organizeRemainingCrossReferences();
 
-        self::assertEquals([], $organizer->getCrossReferences());
+        self::assertEquals([], $organizer->getCrossReferencePresenters());
         self::assertEquals(
             [
                 new CrossReferenceNaturePresenter(
@@ -423,7 +423,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
         self::assertEquals(
             [$another_ref],
-            $organizer->getCrossReferences(),
+            $organizer->getCrossReferencePresenters(),
         );
     }
 }

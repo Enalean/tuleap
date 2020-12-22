@@ -72,7 +72,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->shouldReceive(
                 [
                     'getCurrentUser'     => $user,
-                    'getCrossReferences' => [
+                    'getCrossReferencePresenters' => [
                         new CrossReferencePresenter(
                             1,
                             "tracker",
@@ -128,7 +128,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->shouldReceive(
                 [
                     'getCurrentUser'     => $user,
-                    'getCrossReferences' => [$a_ref],
+                    'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
 
@@ -172,7 +172,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->shouldReceive(
                 [
                     'getCurrentUser'     => $user,
-                    'getCrossReferences' => [
+                    'getCrossReferencePresenters' => [
                         $a_ref,
                     ]
                 ]
@@ -259,7 +259,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCrossReferences' => [$a_ref, $another_ref],
+                    'getCrossReferencePresenters' => [$a_ref, $another_ref],
                     'getCurrentUser'     => $user,
                 ]
             )->getMock();
@@ -358,7 +358,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCrossReferences' => [$a_ref, $another_ref],
+                    'getCrossReferencePresenters' => [$a_ref, $another_ref],
                     'getCurrentUser'     => $user,
                 ]
             )->getMock();

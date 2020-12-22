@@ -55,43 +55,43 @@ class CrossReferenceGitOrganizer
 
     public function organizeGitReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
     {
-        foreach ($by_nature_organizer->getCrossReferences() as $cross_reference) {
-            if ($cross_reference->type !== Git::REFERENCE_NATURE) {
+        foreach ($by_nature_organizer->getCrossReferencePresenters() as $cross_reference_presenter) {
+            if ($cross_reference_presenter->type !== Git::REFERENCE_NATURE) {
                 continue;
             }
 
-            $this->moveGitCrossReferenceToRepositorySection($by_nature_organizer, $cross_reference);
+            $this->moveGitCrossReferenceToRepositorySection($by_nature_organizer, $cross_reference_presenter);
         }
     }
 
     private function moveGitCrossReferenceToRepositorySection(
         CrossReferenceByNatureOrganizer $by_nature_organizer,
-        CrossReferencePresenter $cross_reference
+        CrossReferencePresenter $cross_reference_presenter
     ): void {
         $user = $by_nature_organizer->getCurrentUser();
 
-        $project = $this->project_manager->getProject($cross_reference->target_gid);
+        $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (\Project_AccessException $e) {
-            $by_nature_organizer->removeUnreadableCrossReference($cross_reference);
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
             return;
         }
 
         $commit_info = $this->git_reference_manager->getCommitInfoFromReferenceValue(
             $project,
-            $cross_reference->target_value
+            $cross_reference_presenter->target_value
         );
 
         $repository = $commit_info->getRepository();
 
         if (! $repository || ! $repository->userCanRead($user)) {
-            $by_nature_organizer->removeUnreadableCrossReference($cross_reference);
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
             return;
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $cross_reference
+            $cross_reference_presenter
                 ->withAdditionalBadges(
                     [
                         new AdditionalBadgePresenter(

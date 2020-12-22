@@ -56,7 +56,7 @@ class CrossReferenceArtifactOrganizer
 
     public function organizeArtifactReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
     {
-        foreach ($by_nature_organizer->getCrossReferences() as $cross_reference_presenter) {
+        foreach ($by_nature_organizer->getCrossReferencePresenters() as $cross_reference_presenter) {
             if ($cross_reference_presenter->type !== Artifact::REFERENCE_NATURE) {
                 continue;
             }
