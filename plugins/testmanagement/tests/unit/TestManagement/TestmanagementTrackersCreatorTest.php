@@ -104,6 +104,20 @@ class TestmanagementTrackersCreatorTest extends TestCase
         $this->logger->shouldReceive('error')->once();
         $this->expectException(TrackerNotCreatedException::class);
 
-        $this->tracker_creator->createTrackerFromXML($this->project, "bug");
+        $this->tracker_creator->createTrackerFromXML($this->project, "campaign");
+    }
+
+    // Bug tracker shouldn't raise exception because it's not mandatory for Testmanagement administration
+    public function testCreateTrackerFromXmlDoesntStopIfBugTrackerCreationFail(): void
+    {
+        $expected_path = (string) realpath(__DIR__ . '/../broken_path.xml');
+        $this->project->shouldReceive('getId')->andReturn(111);
+
+        $this->xml_import->shouldReceive("createFromXMLFile")
+            ->withArgs([$this->project, $expected_path]);
+
+        $this->logger->shouldReceive('error')->once();
+
+        $this->assertNull($this->tracker_creator->createTrackerFromXML($this->project, "bug"));
     }
 }

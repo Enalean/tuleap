@@ -19,6 +19,8 @@
  */
 
 use FastRoute\RouteCollector;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -326,18 +328,28 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             return;
         }
 
-        $logger = BackendLogger::getDefaultLogger();
+        $logger               = BackendLogger::getDefaultLogger();
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+
 
         $config_creator = new FirstConfigCreator(
             $config,
             TrackerFactory::instance(),
             $this->getTrackerChecker(),
             new TestmanagementTrackersConfigurator(new TestmanagementTrackersConfiguration()),
-            new TestmanagementTrackersCreator(TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())), $logger)
+            new TestmanagementTrackersCreator(
+                TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
+                $logger
+            )
         );
 
         try {
-            $config_creator->createConfigForProjectFromTemplate($to_project, $from_project, $params['tracker_mapping']);
+            $tracker_mapping = $params['tracker_mapping'];
+            $transaction_executor->execute(
+                function () use ($to_project, $from_project, $tracker_mapping, $config_creator): void {
+                    $config_creator->createConfigForProjectFromTemplate($to_project, $from_project, $tracker_mapping);
+                }
+            );
         } catch (TrackerComesFromLegacyEngineException | TrackerNotCreatedException $exception) {
             $logger->error('TTM configuration for project #' . $to_project->getID() . ' not duplicated.');
         }

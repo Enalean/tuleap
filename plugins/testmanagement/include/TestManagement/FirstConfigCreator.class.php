@@ -61,11 +61,13 @@ class FirstConfigCreator
     }
 
     /**
+     * @throws Administration\TrackerDoesntExistException
+     * @throws Administration\TrackerHasAtLeastOneHiddenFieldsetsPostActionException
+     * @throws Administration\TrackerIsDeletedException
      * @throws TrackerComesFromLegacyEngineException
-     * @throws TrackerNotCreatedException
      * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
+     * @throws TrackerNotCreatedException
      * @throws TrackerNotInProjectException
-     *
      */
     public function createConfigForProjectFromTemplate(
         Project $project,

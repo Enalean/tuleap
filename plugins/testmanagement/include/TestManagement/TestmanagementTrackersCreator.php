@@ -44,7 +44,7 @@ class TestmanagementTrackersCreator
     /**
      * @throws TrackerNotCreatedException
      */
-    public function createTrackerFromXML(Project $project, string $tracker_itemname): Tracker
+    public function createTrackerFromXML(Project $project, string $tracker_itemname): ?Tracker
     {
         $template_path = TESTMANAGEMENT_RESOURCE_DIR . '/Tracker_' . $tracker_itemname . '.xml';
         if ($tracker_itemname === ISSUE_TRACKER_SHORTNAME) {
@@ -52,7 +52,7 @@ class TestmanagementTrackersCreator
         }
 
         $tracker = $this->importTrackerStructure($project, $template_path);
-        if (! $tracker) {
+        if (! $tracker && $tracker_itemname !== ISSUE_TRACKER_SHORTNAME) {
             throw new TrackerNotCreatedException();
         }
 
