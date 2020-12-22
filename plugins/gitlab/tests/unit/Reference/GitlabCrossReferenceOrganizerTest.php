@@ -112,7 +112,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
 
         $a_ref = new CrossReferencePresenter(
             1,
-            "plugin_gitlab_commit",
+            GitlabCommitReference::NATURE_NAME,
             "title",
             "url",
             "delete_url",
@@ -160,7 +160,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
 
         $a_ref = new CrossReferencePresenter(
             1,
-            "plugin_gitlab_commit",
+            GitlabCommitReference::NATURE_NAME,
             "title",
             "url",
             "delete_url",
@@ -225,7 +225,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
 
         $a_ref = new CrossReferencePresenter(
             1,
-            "plugin_gitlab_commit",
+            GitlabCommitReference::NATURE_NAME,
             "title",
             "url",
             "delete_url",
@@ -339,7 +339,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
 
         $a_ref = new CrossReferencePresenter(
             1,
-            "plugin_gitlab_commit",
+            GitlabCommitReference::NATURE_NAME,
             "title",
             "url",
             "delete_url",
@@ -351,7 +351,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
 
         $another_ref = new CrossReferencePresenter(
             2,
-            "plugin_gitlab_commit",
+            GitlabCommitReference::NATURE_NAME,
             "title",
             "url",
             "delete_url",

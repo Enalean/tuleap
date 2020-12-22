@@ -214,7 +214,7 @@ class gitlabPlugin extends Plugin
         $reference = $params['reference'];
         \assert($reference instanceof Reference);
 
-        if ($reference->getNature() === 'plugin_gitlab_commit') {
+        if ($reference->getNature() === GitlabCommitReference::NATURE_NAME) {
             $params['can_be_deleted'] = false;
             $params['can_be_edited']  = false;
         }
@@ -223,7 +223,7 @@ class gitlabPlugin extends Plugin
     /** @see \Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE */
     public function can_user_create_reference_with_this_nature(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if ($params['nature'] === 'plugin_gitlab_commit') {
+        if ($params['nature'] === GitlabCommitReference::NATURE_NAME) {
             $params['can_create'] = false;
         }
     }
@@ -238,7 +238,7 @@ class gitlabPlugin extends Plugin
     public function getAvailableReferenceNatures(NatureCollection $natures): void
     {
         $natures->addNature(
-            'plugin_gitlab_commit',
+            GitlabCommitReference::NATURE_NAME,
             new Nature(
                 GitlabCommitReference::REFERENCE_NAME,
                 'fab fa-gitlab',

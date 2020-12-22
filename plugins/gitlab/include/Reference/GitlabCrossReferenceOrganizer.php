@@ -61,7 +61,7 @@ class GitlabCrossReferenceOrganizer
     public function organizeGitLabReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
     {
         foreach ($by_nature_organizer->getCrossReferencePresenters() as $cross_reference_presenter) {
-            if ($cross_reference_presenter->type !== 'plugin_gitlab_commit') {
+            if ($cross_reference_presenter->type !== GitlabCommitReference::NATURE_NAME) {
                 continue;
             }
 
