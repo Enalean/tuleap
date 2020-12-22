@@ -21,5 +21,9 @@ msgstr ""
 msgid "Anonymous access to webdav is forbidden"
 msgstr "L'accès aux anonymes n'est pas autorisé"
 
+msgid "Item exists but cannot be displayed over webdav (link, wiki, empty)"
+msgstr ""
+"L'item existe mais ne peut pas être affiché via WebDAV (lien, wiki, empty)"
+
 msgid "WebDAV"
 msgstr "WebDAV"
