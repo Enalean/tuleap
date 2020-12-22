@@ -23,7 +23,9 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
 use Tuleap\Gitlab\Reference\GitlabCommitReference;
+use Tuleap\Gitlab\Reference\GitlabCommitFactory;
 use Tuleap\Gitlab\Reference\GitlabCommitReferenceBuilder;
+use Tuleap\Gitlab\Reference\GitlabCrossReferenceOrganizer;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
@@ -43,6 +45,9 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Request\CollectRoutesEvent;
@@ -86,6 +91,7 @@ class gitlabPlugin extends Plugin
         $this->addHook(Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
         $this->addHook(ReferenceAdministrationWarningsCollectorEvent::NAME);
+        $this->addHook(CrossReferenceByNatureOrganizer::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -241,5 +247,21 @@ class gitlabPlugin extends Plugin
     public function referenceAdministrationWarningsCollectorEvent(ReferenceAdministrationWarningsCollectorEvent $event): void
     {
         (new ReferenceAdministrationWarningsCollectorEventHandler())->handle($event);
+    }
+
+    public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $organizer): void
+    {
+        $gitlab_repository_dao = new GitlabRepositoryDao();
+        $gitlab_organizer      = new GitlabCrossReferenceOrganizer(
+            new GitlabRepositoryFactory($gitlab_repository_dao),
+            new GitlabCommitFactory(new CommitTuleapReferenceDAO()),
+            ProjectManager::instance(),
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            )
+        );
+        $gitlab_organizer->organizeGitLabReferences($organizer);
     }
 }

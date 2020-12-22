@@ -54,7 +54,7 @@ class GitlabCommitReferenceBuilder
             return null;
         }
 
-        list($repository_name, $sha1) = $this->splitRepositoryAndSha1($value);
+        list($repository_name, $sha1) = GitlabCommitReferenceExtractor::splitRepositoryAndSha1($value);
 
         if ($repository_name === null || $sha1 === null) {
             return null;
@@ -74,19 +74,5 @@ class GitlabCommitReferenceBuilder
             $project,
             $sha1
         );
-    }
-
-    private function splitRepositoryAndSha1(string $value): array
-    {
-        $repository_name = null;
-        $sha1            = null;
-
-        $last_slash_position  = strrpos($value, '/');
-        if ($last_slash_position !== false) {
-            $repository_name      = substr($value, 0, $last_slash_position);
-            $sha1                 = substr($value, $last_slash_position + 1);
-        }
-
-        return [$repository_name, $sha1];
     }
 }
