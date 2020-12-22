@@ -172,6 +172,7 @@ class PostPushWebhookActionProcessor
             $commit_sha1,
             $commit_webhook_data->getCommitDate(),
             $commit_webhook_data->getTitle(),
+            $commit_webhook_data->getBranchName(),
             $commit_webhook_data->getAuthorName(),
             $commit_webhook_data->getAuthorEmail()
         );

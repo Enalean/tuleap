@@ -57,6 +57,7 @@ class GitlabCommitFactory
             $row['commit_sha1'],
             $row['commit_date'],
             $row['commit_title'],
+            $row['commit_branch'],
             $row['author_name'],
             $row['author_email']
         );

@@ -93,6 +93,7 @@ final class WebhookActionsTest extends TestCase
                     'feff4ced04b237abb8b4a50b4160099313152c3c',
                     'commit TULEAP-123 01',
                     'commit TULEAP-123 01',
+                    "master",
                     1608110510,
                     'john-snow@the-wall.com',
                     'John Snow'

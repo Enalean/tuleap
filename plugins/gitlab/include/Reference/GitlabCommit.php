@@ -46,6 +46,10 @@ class GitlabCommit
     /**
      * @var string
      */
+    private $commit_branch_name;
+    /**
+     * @var string
+     */
     private $commit_author_name;
     /**
      * @var string
@@ -57,6 +61,7 @@ class GitlabCommit
         string $commit_sha1,
         int $commit_date,
         string $commit_title,
+        string $commit_branch_name,
         string $commit_author_name,
         string $commit_author_email
     ) {
@@ -64,6 +69,7 @@ class GitlabCommit
         $this->commit_sha1          = $commit_sha1;
         $this->commit_date          = $commit_date;
         $this->commit_title         = $commit_title;
+        $this->commit_branch_name   = $commit_branch_name;
         $this->commit_author_name   = $commit_author_name;
         $this->commit_author_email  = $commit_author_email;
     }
@@ -86,6 +92,11 @@ class GitlabCommit
     public function getCommitTitle(): string
     {
         return $this->commit_title;
+    }
+
+    public function getCommitBranchName(): string
+    {
+        return $this->commit_branch_name;
     }
 
     public function getCommitAuthorName(): string

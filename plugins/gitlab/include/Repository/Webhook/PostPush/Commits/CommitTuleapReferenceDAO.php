@@ -30,12 +30,22 @@ class CommitTuleapReferenceDAO extends DataAccessObject
         string $commit_sha1,
         int $commit_date,
         string $commit_title,
+        string $commit_branch_name,
         string $commit_author_name,
         string $commit_author_email
     ): void {
         $sql = '
-            INSERT INTO plugin_gitlab_commit_info(gitlab_repository_id, commit_sha1, commit_date, commit_title, author_name, author_email)
-            VALUES (?, UNHEX(?), ?, ?, ?, ?)
+            INSERT INTO plugin_gitlab_commit_info
+                (
+                     gitlab_repository_id,
+                     commit_sha1,
+                     commit_date,
+                     commit_title,
+                     commit_branch,
+                     author_name,
+                     author_email
+                 )
+            VALUES (?, UNHEX(?), ?, ?, ?, ?, ?)
         ';
 
         $this->getDB()->run(
@@ -44,6 +54,7 @@ class CommitTuleapReferenceDAO extends DataAccessObject
             $commit_sha1,
             $commit_date,
             $commit_title,
+            $commit_branch_name,
             $commit_author_name,
             $commit_author_email
         );
@@ -59,6 +70,7 @@ class CommitTuleapReferenceDAO extends DataAccessObject
                    LOWER(HEX(commit_sha1)) as commit_sha1,
                    commit_date,
                    commit_title,
+                   commit_branch,
                    author_name,
                    author_email
             FROM plugin_gitlab_commit_info

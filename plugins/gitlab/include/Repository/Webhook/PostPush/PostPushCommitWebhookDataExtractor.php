@@ -51,7 +51,7 @@ class PostPushCommitWebhookDataExtractor
      *
      * @throws MissingKeyException
      */
-    public function retrieveWebhookCommitsData(array $webhook_content): array
+    public function retrieveWebhookCommitsData(array $webhook_content, string $branch_name): array
     {
         if (! isset($webhook_content[self::COMMIT_KEY])) {
             throw new MissingKeyException(self::COMMIT_KEY);
@@ -59,7 +59,7 @@ class PostPushCommitWebhookDataExtractor
 
         $commits = [];
         foreach ($webhook_content[self::COMMIT_KEY] as $commit_content) {
-            $commits[] = $this->retrieveCommitData($commit_content);
+            $commits[] = $this->retrieveCommitData($commit_content, $branch_name);
         }
 
         return $commits;
@@ -68,7 +68,7 @@ class PostPushCommitWebhookDataExtractor
     /**
      * @throws MissingKeyException
      */
-    private function retrieveCommitData(array $commit_content): PostPushCommitWebhookData
+    private function retrieveCommitData(array $commit_content, string $branch_name): PostPushCommitWebhookData
     {
         $this->checkNoMissingKeyInCommitData($commit_content);
 
@@ -83,12 +83,14 @@ class PostPushCommitWebhookDataExtractor
 
         $this->logger->debug("Webhook commit with sha1 $sha1 retrieved.");
         $this->logger->debug("  |_ It has been created by: $author_name ($author_email)");
+        $this->logger->debug("  |_ Its branch is: $branch_name");
         $this->logger->debug("  |_ Its commit message is: $message");
 
         return new PostPushCommitWebhookData(
             $sha1,
             $title,
             $message,
+            $branch_name,
             $commit_date,
             $author_email,
             $author_name

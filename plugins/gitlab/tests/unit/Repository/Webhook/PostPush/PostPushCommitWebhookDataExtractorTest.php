@@ -47,7 +47,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
         $this->expectExceptionMessage("key commits is missing");
 
         $webhook_content = [];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content);
+        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
     }
 
     public function testItThrowsAnExceptionIfACommitHasIdKeyIsMissing(): void
@@ -60,7 +60,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ['message' => "commit 01"]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content);
+        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
     }
 
     public function testItThrowsAnExceptionIfACommitHasTitleKeyMissing(): void
@@ -76,7 +76,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content);
+        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
     }
 
     public function testItThrowsAnExceptionIfACommitHasMessageKeyIsMissing(): void
@@ -92,7 +92,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content);
+        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
     }
 
     public function testItThrowsAnExceptionWhenCommitDateKeyIsMissing(): void
@@ -113,7 +113,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content);
+        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
     }
 
     public function testItThrowsAnExceptionWhenCommitAuthorKeyIsMissing(): void
@@ -131,7 +131,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content);
+        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
     }
 
     public function testItThrowsAnExceptionWhenCommitAuthorNameKeyIsMissing(): void
@@ -152,7 +152,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content);
+        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
     }
 
     public function testItThrowsAnExceptionWhenCommitAuthorEmailKeyIsMissing(): void
@@ -173,7 +173,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content);
+        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
     }
 
     public function testItExtractsCommitData(): void
@@ -203,13 +203,14 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
             ]
         ];
 
-        $commits_data = $this->extractor->retrieveWebhookCommitsData($webhook_content);
+        $commits_data = $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
         $this->assertCount(2, $commits_data);
 
         $first_commit  = $commits_data[0];
         $this->assertSame("feff4ced04b237abb8b4a50b4160099313152c3c", $first_commit->getSha1());
         $this->assertSame("commit 01", $first_commit->getTitle());
         $this->assertSame("commit 01", $first_commit->getMessage());
+        $this->assertSame("master", $first_commit->getBranchName());
         $this->assertSame(1608110510, $first_commit->getCommitDate());
         $this->assertSame('John Snow', $first_commit->getAuthorName());
         $this->assertSame('john-snow@the-wall.com', $first_commit->getAuthorEmail());
@@ -218,6 +219,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
         $this->assertSame("08596fb6360bcc951a06471c616f8bc77800d4f4", $second_commit->getSha1());
         $this->assertSame("commit 02", $second_commit->getTitle());
         $this->assertSame("commit 02", $second_commit->getMessage());
+        $this->assertSame("master", $first_commit->getBranchName());
         $this->assertSame(1608110510, $second_commit->getCommitDate());
         $this->assertSame('The Night King', $second_commit->getAuthorName());
         $this->assertSame('the-night-king@the-wall.com', $second_commit->getAuthorEmail());

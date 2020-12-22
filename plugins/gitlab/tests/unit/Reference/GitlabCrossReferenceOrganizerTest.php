@@ -325,6 +325,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
                 '14a9b6c0c0c965977cf2af2199f93df82afcdea3',
                 1608555618,
                 'Increase blankets stocks for winter',
+                "master",
                 'John Snow',
                 'john-snow@the-wall.com',
             ));
@@ -336,6 +337,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
                 'be35d127acb88876ee4fdbf02188d372dc61e98d',
                 1608555618,
                 'Increase hot chocolate stocks for winter',
+                "master",
                 'Samwell Tarly',
                 'samwell-tarly@the-wall.com',
             ));

@@ -55,11 +55,16 @@ class PostPushCommitWebhookData
      * @var string
      */
     private $author_name;
+    /**
+     * @var string
+     */
+    private $branch_name;
 
     public function __construct(
         string $sha1,
         string $title,
         string $message,
+        string $branch_name,
         int $commit_date,
         string $author_email,
         string $author_name
@@ -67,6 +72,7 @@ class PostPushCommitWebhookData
         $this->sha1         = $sha1;
         $this->title        = $title;
         $this->message      = $message;
+        $this->branch_name  = $branch_name;
         $this->commit_date  = $commit_date;
         $this->author_email = $author_email;
         $this->author_name  = $author_name;
@@ -100,5 +106,10 @@ class PostPushCommitWebhookData
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function getBranchName(): string
+    {
+        return $this->branch_name;
     }
 }

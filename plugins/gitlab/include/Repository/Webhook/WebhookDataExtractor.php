@@ -27,11 +27,12 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 
 class WebhookDataExtractor
 {
-    private const EVENT_NAME_KEY = 'event_name';
-    private const PROJECT_KEY = 'project';
-    private const PROJECT_ID_KEY = 'id';
-    private const PROJECT_URL_KEY = 'web_url';
-    private const PUSH_EVENT = 'push';
+    private const EVENT_NAME_KEY     = 'event_name';
+    private const PROJECT_KEY        = 'project';
+    private const PROJECT_ID_KEY     = 'id';
+    private const PROJECT_URL_KEY    = 'web_url';
+    private const PUSH_EVENT         = 'push';
+    private const COMMITS_BRANCH_KEY = 'ref';
 
     /**
      * @var PostPushCommitWebhookDataExtractor
@@ -46,6 +47,7 @@ class WebhookDataExtractor
     /**
      * @throws MissingKeyException
      * @throws EventNotAllowedException
+     * @throws EmptyBranchNameException
      */
     public function retrieveWebhookData(ServerRequestInterface $request): WebhookData
     {
@@ -57,7 +59,8 @@ class WebhookDataExtractor
             $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
             $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
             $this->post_push_commit_webhook_data_extractor->retrieveWebhookCommitsData(
-                $webhook_content
+                $webhook_content,
+                WebhookDataBranchNameExtractor::extractBranchName($webhook_content[self::COMMITS_BRANCH_KEY])
             )
         );
     }
@@ -86,6 +89,9 @@ class WebhookDataExtractor
 
         if (! isset($webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY])) {
             throw new MissingKeyException(self::PROJECT_KEY . " > " . self::PROJECT_URL_KEY);
+        }
+        if (! isset($webhook_content[self::COMMITS_BRANCH_KEY])) {
+            throw new MissingKeyException(self::COMMITS_BRANCH_KEY);
         }
     }
 }
