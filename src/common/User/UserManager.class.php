@@ -320,16 +320,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return new PaginatedUserCollection($users, $this->getDao()->foundRows());
     }
 
-    /**
-     * Returns the user that have the given email address.
-     * Returns null if no account is found.
-     * Throws an exception if several accounts share the same email address.
-     *
-     * @param String $email mail address of the user to retrieve
-     *
-     * @return PFUser or null if no user found
-     */
-    public function getUserByEmail($email)
+    public function getUserByEmail(string $email): ?PFUser
     {
         return $this->getUserCollectionByEmails([$email])->getUserByEmail($email);
     }

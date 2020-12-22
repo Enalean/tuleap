@@ -20,11 +20,13 @@
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
 use Tuleap\Gitlab\Reference\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\GitlabCommitFactory;
 use Tuleap\Gitlab\Reference\GitlabCommitReferenceBuilder;
+use Tuleap\Gitlab\Reference\GitlabCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\GitlabCrossReferenceOrganizer;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
@@ -259,6 +261,11 @@ class gitlabPlugin extends Plugin
         $gitlab_organizer      = new GitlabCrossReferenceOrganizer(
             new GitlabRepositoryFactory($gitlab_repository_dao),
             new GitlabCommitFactory(new CommitTuleapReferenceDAO()),
+            new GitlabCrossReferenceEnhancer(
+                \UserManager::instance(),
+                \UserHelper::instance(),
+                new TlpRelativeDatePresenterBuilder()
+            ),
             ProjectManager::instance(),
             new ProjectAccessChecker(
                 PermissionsOverrider_PermissionsOverriderManager::instance(),

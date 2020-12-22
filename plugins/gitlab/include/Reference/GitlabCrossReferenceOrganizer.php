@@ -23,7 +23,6 @@ namespace Tuleap\Gitlab\Reference;
 
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Project\ProjectAccessChecker;
-use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 
@@ -45,17 +44,23 @@ class GitlabCrossReferenceOrganizer
      * @var GitlabCommitFactory
      */
     private $gitlab_commit_factory;
+    /**
+     * @var GitlabCrossReferenceEnhancer
+     */
+    private $gitlab_cross_reference_enhancer;
 
     public function __construct(
         GitlabRepositoryFactory $gitlab_repository_factory,
         GitlabCommitFactory $gitlab_commit_factory,
+        GitlabCrossReferenceEnhancer $gitlab_cross_reference_enhancer,
         \ProjectManager $project_manager,
         ProjectAccessChecker $project_access_checker
     ) {
-        $this->gitlab_repository_factory = $gitlab_repository_factory;
-        $this->gitlab_commit_factory     = $gitlab_commit_factory;
-        $this->project_manager           = $project_manager;
-        $this->project_access_checker    = $project_access_checker;
+        $this->gitlab_repository_factory       = $gitlab_repository_factory;
+        $this->gitlab_commit_factory           = $gitlab_commit_factory;
+        $this->gitlab_cross_reference_enhancer = $gitlab_cross_reference_enhancer;
+        $this->project_manager                 = $project_manager;
+        $this->project_access_checker          = $project_access_checker;
     }
 
     public function organizeGitLabReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -106,14 +111,11 @@ class GitlabCrossReferenceOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $cross_reference_presenter
-                ->withAdditionalBadges(
-                    [
-                        new AdditionalBadgePresenter(
-                            substr($commit_info->getCommitSha1(), 0, 10)
-                        )
-                    ]
-                ),
+            $this->gitlab_cross_reference_enhancer->getCrossReferencePresenterWithCommitInformation(
+                $cross_reference_presenter,
+                $commit_info,
+                $user
+            ),
             $project->getUnixNameLowerCase() . '/' . $repository->getName()
         );
     }
