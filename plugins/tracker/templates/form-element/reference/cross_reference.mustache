@@ -38,7 +38,10 @@
                                 </span>
 
                                 {{# additional_badges }}
-                                    <span class="tlp-badge-secondary tlp-badge-outline tracker-cross-reference-additional-badge">
+                                    <span class="tlp-badge-{{# is_primary }}primary{{/ is_primary }}{{^ is_primary }}secondary{{/ is_primary }}
+                                        {{^ is_plain }}tlp-badge-outline{{/ is_plain }}
+                                        tracker-cross-reference-additional-badge"
+                                    >
                                         {{ label }}
                                     </span>
                                 {{/ additional_badges }}

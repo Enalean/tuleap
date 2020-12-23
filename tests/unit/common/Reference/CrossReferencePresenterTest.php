@@ -59,7 +59,11 @@ class CrossReferencePresenterTest extends TestCase
     {
         $a_ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $new_ref = $a_ref->withAdditionalBadges([new AdditionalBadgePresenter('riri')]);
+        $new_ref = $a_ref->withAdditionalBadges(
+            [
+                new AdditionalBadgePresenter('riri', false, false),
+            ]
+        );
 
         self::assertEquals(1, $new_ref->id);
         self::assertEquals('riri', $new_ref->additional_badges[0]->label);

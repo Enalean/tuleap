@@ -62,7 +62,9 @@ class GitlabCrossReferenceEnhancer
             ->withAdditionalBadges(
                 [
                     new AdditionalBadgePresenter(
-                        substr($gitlab_commit->getCommitSha1(), 0, 10)
+                        substr($gitlab_commit->getCommitSha1(), 0, 10),
+                        false,
+                        false
                     )
                 ]
             )->withCreationMetadata(

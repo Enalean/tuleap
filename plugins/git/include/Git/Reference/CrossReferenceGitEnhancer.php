@@ -65,13 +65,7 @@ class CrossReferenceGitEnhancer
     ): CrossReferencePresenter {
         $git_commit_reference = $basic_cross_reference_presenter
             ->withTitle($commit->GetTitle(), null)
-            ->withAdditionalBadges(
-                [
-                    new AdditionalBadgePresenter(
-                        substr($commit->GetHash(), 0, 10)
-                    )
-                ]
-            );
+            ->withAdditionalBadges($this->getAdditionalBadgesPresenters($commit));
 
         return $this->addCreationMetadata($git_commit_reference, $repository, $commit, $user);
     }
@@ -124,5 +118,44 @@ class CrossReferenceGitEnhancer
             (new \DateTimeImmutable())->setTimestamp($time),
             $user,
         );
+    }
+
+    /**
+     * @return AdditionalBadgePresenter[]
+     */
+    private function getAdditionalBadgesPresenters(Commit $commit): array
+    {
+        return array_merge(
+            $this->getBadgePresentersForBranchOrTag($commit),
+            [
+                new AdditionalBadgePresenter(
+                    substr($commit->GetHash(), 0, 10),
+                    false,
+                    false,
+                )
+            ]
+        );
+    }
+
+    /**
+     * @return AdditionalBadgePresenter[]
+     */
+    private function getBadgePresentersForBranchOrTag(Commit $commit): array
+    {
+        $branches = $commit->GetHeads();
+        if (! empty($branches)) {
+            return [
+                new AdditionalBadgePresenter($branches[0]->GetName(), true, false)
+            ];
+        }
+
+        $tags = $commit->GetTags();
+        if (! empty($tags)) {
+            return [
+                new AdditionalBadgePresenter($tags[0]->GetName(), true, true)
+            ];
+        }
+
+        return [];
     }
 }
