@@ -31,9 +31,19 @@ final class AdditionalBadgePresenter
      * @var string
      */
     public $label;
+    /**
+     * @var bool
+     */
+    public $is_primary;
+    /**
+     * @var bool
+     */
+    public $is_plain;
 
-    public function __construct(string $label)
+    public function __construct(string $label, bool $is_primary, bool $is_plain)
     {
-        $this->label = $label;
+        $this->label      = $label;
+        $this->is_primary = $is_primary;
+        $this->is_plain   = $is_plain;
     }
 }

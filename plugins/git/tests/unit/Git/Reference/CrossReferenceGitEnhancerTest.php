@@ -30,6 +30,7 @@ use Tuleap\Git\CommitMetadata\CommitMetadata;
 use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusUnknown;
 use Tuleap\Git\GitPHP\Commit;
+use Tuleap\Git\GitPHP\Head;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
@@ -109,6 +110,14 @@ class CrossReferenceGitEnhancerTest extends TestCase
             ->shouldReceive('getMetadataByRepositoryAndCommits')
             ->andReturn([]);
 
+        $this->commit
+            ->shouldReceive('GetHeads')
+            ->andReturn([]);
+
+        $this->commit
+            ->shouldReceive('GetTags')
+            ->andReturn([]);
+
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
             $this->commit,
@@ -122,12 +131,20 @@ class CrossReferenceGitEnhancerTest extends TestCase
         );
     }
 
-    public function testItDisplaysCommitSha1AsAdditionalBadge(): void
+    public function testItDisplaysOnlyCommitSha1AsAdditionalBadgeWhenThereIsNoBranchNorTag(): void
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $this->commit_metadata_retriever
             ->shouldReceive('getMetadataByRepositoryAndCommits')
+            ->andReturn([]);
+
+        $this->commit
+            ->shouldReceive('GetHeads')
+            ->andReturn([]);
+
+        $this->commit
+            ->shouldReceive('GetTags')
             ->andReturn([]);
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
@@ -138,10 +155,83 @@ class CrossReferenceGitEnhancerTest extends TestCase
         );
 
         self::assertCount(1, $new_ref->additional_badges);
-        self::assertEquals(
-            '1a2b3c4d5e',
-            $new_ref->additional_badges[0]->label,
+        self::assertEquals('1a2b3c4d5e', $new_ref->additional_badges[0]->label);
+        self::assertFalse($new_ref->additional_badges[0]->is_plain);
+        self::assertFalse($new_ref->additional_badges[0]->is_primary);
+    }
+
+    public function testItDisplaysCommitSha1AndFirstBranchAsAdditionalBadges(): void
+    {
+        $ref = CrossReferencePresenterBuilder::get(1)->build();
+
+        $this->commit_metadata_retriever
+            ->shouldReceive('getMetadataByRepositoryAndCommits')
+            ->andReturn([]);
+
+        $this->commit
+            ->shouldReceive('GetHeads')
+            ->andReturn([
+                Mockery::mock(Head::class)->shouldReceive(['GetName' => 'dev-feature'])->getMock(),
+            ]);
+
+        $this->commit
+            ->shouldReceive('GetTags')
+            ->andReturn([
+                Mockery::mock(Head::class)->shouldReceive(['GetName' => 'v1.2.0'])->getMock(),
+            ]);
+
+        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
+            $ref,
+            $this->commit,
+            $this->repository,
+            $this->user
         );
+
+        self::assertCount(2, $new_ref->additional_badges);
+
+        self::assertEquals('dev-feature', $new_ref->additional_badges[0]->label);
+        self::assertFalse($new_ref->additional_badges[0]->is_plain);
+        self::assertTrue($new_ref->additional_badges[0]->is_primary);
+
+        self::assertEquals('1a2b3c4d5e', $new_ref->additional_badges[1]->label);
+        self::assertFalse($new_ref->additional_badges[1]->is_plain);
+        self::assertFalse($new_ref->additional_badges[1]->is_primary);
+    }
+
+    public function testItDisplaysCommitSha1AndFirstTagAsAdditionalBadgesWhenThereIsNoBranch(): void
+    {
+        $ref = CrossReferencePresenterBuilder::get(1)->build();
+
+        $this->commit_metadata_retriever
+            ->shouldReceive('getMetadataByRepositoryAndCommits')
+            ->andReturn([]);
+
+        $this->commit
+            ->shouldReceive('GetHeads')
+            ->andReturn([]);
+
+        $this->commit
+            ->shouldReceive('GetTags')
+            ->andReturn([
+                Mockery::mock(Head::class)->shouldReceive(['GetName' => 'v1.2.0'])->getMock(),
+            ]);
+
+        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
+            $ref,
+            $this->commit,
+            $this->repository,
+            $this->user
+        );
+
+        self::assertCount(2, $new_ref->additional_badges);
+
+        self::assertEquals('v1.2.0', $new_ref->additional_badges[0]->label);
+        self::assertTrue($new_ref->additional_badges[0]->is_plain);
+        self::assertTrue($new_ref->additional_badges[0]->is_primary);
+
+        self::assertEquals('1a2b3c4d5e', $new_ref->additional_badges[1]->label);
+        self::assertFalse($new_ref->additional_badges[1]->is_plain);
+        self::assertFalse($new_ref->additional_badges[1]->is_primary);
     }
 
     public function testItDoesNotAddCreationMetadataIfTheyCannotBeFound(): void
@@ -150,6 +240,14 @@ class CrossReferenceGitEnhancerTest extends TestCase
 
         $this->commit_metadata_retriever
             ->shouldReceive('getMetadataByRepositoryAndCommits')
+            ->andReturn([]);
+
+        $this->commit
+            ->shouldReceive('GetHeads')
+            ->andReturn([]);
+
+        $this->commit
+            ->shouldReceive('GetTags')
             ->andReturn([]);
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
@@ -187,6 +285,14 @@ class CrossReferenceGitEnhancerTest extends TestCase
                     new CommitMetadata(new CommitStatusUnknown(), $author, $author),
                 ]
             );
+
+        $this->commit
+            ->shouldReceive('GetHeads')
+            ->andReturn([]);
+
+        $this->commit
+            ->shouldReceive('GetTags')
+            ->andReturn([]);
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
@@ -228,6 +334,14 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 ]
             );
 
+        $this->commit
+            ->shouldReceive('GetHeads')
+            ->andReturn([]);
+
+        $this->commit
+            ->shouldReceive('GetTags')
+            ->andReturn([]);
+
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
             $this->commit,
@@ -255,6 +369,14 @@ class CrossReferenceGitEnhancerTest extends TestCase
                     new CommitMetadata(new CommitStatusUnknown(), null, null),
                 ]
             );
+
+        $this->commit
+            ->shouldReceive('GetHeads')
+            ->andReturn([]);
+
+        $this->commit
+            ->shouldReceive('GetTags')
+            ->andReturn([]);
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
