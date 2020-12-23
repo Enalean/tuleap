@@ -33,6 +33,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
+use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\TrackerColor;
 
@@ -79,18 +80,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
                 [
                     'getCurrentUser'     => $user,
                     'getCrossReferencePresenters' => [
-                        new CrossReferencePresenter(
-                            1,
-                            "git",
-                            "another_title",
-                            "url",
-                            "delete_url",
-                            1,
-                            "whatever",
-                            null,
-                            [],
-                            null,
-                        ),
+                        CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
                     ]
                 ]
             )->getMock();
@@ -115,18 +105,10 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             ->once()
             ->andThrow(Mockery::mock(Project_AccessException::class));
 
-        $a_ref = new CrossReferencePresenter(
-            1,
-            "plugin_tracker_artifact",
-            "bug #123",
-            "url",
-            "delete_url",
-            1,
-            '123',
-            null,
-            [],
-            null,
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_tracker_artifact')
+            ->withValue('123')
+            ->build();
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
@@ -161,18 +143,10 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             ->with($user, $project)
             ->once();
 
-        $a_ref = new CrossReferencePresenter(
-            1,
-            "plugin_tracker_artifact",
-            "bug #123",
-            "url",
-            "delete_url",
-            1,
-            '123',
-            null,
-            [],
-            null,
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_tracker_artifact')
+            ->withValue('123')
+            ->build();
 
         $this->artifact_factory
             ->shouldReceive('getArtifactByIdUserCanView')
@@ -210,18 +184,10 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             ->with($user, $project)
             ->once();
 
-        $a_ref = new CrossReferencePresenter(
-            1,
-            "plugin_tracker_artifact",
-            "bug #123",
-            "url",
-            "delete_url",
-            1,
-            '123',
-            null,
-            [],
-            null,
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_tracker_artifact')
+            ->withValue('123')
+            ->build();
 
         $this->artifact_factory
             ->shouldReceive('getArtifactByIdUserCanView')
@@ -285,18 +251,10 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
             ->with($user, $project)
             ->once();
 
-        $a_ref = new CrossReferencePresenter(
-            1,
-            "plugin_tracker_artifact",
-            "bug #123",
-            "url",
-            "delete_url",
-            1,
-            '123',
-            null,
-            [],
-            null,
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_tracker_artifact')
+            ->withValue('123')
+            ->build();
 
         $this->artifact_factory
             ->shouldReceive('getArtifactByIdUserCanView')

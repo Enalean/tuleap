@@ -24,6 +24,7 @@ namespace Tuleap\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
 class CrossReferenceSectionPresenterTest extends TestCase
 {
@@ -31,30 +32,8 @@ class CrossReferenceSectionPresenterTest extends TestCase
 
     public function testWithAdditionalCrossReference(): void
     {
-        $a_ref       = new CrossReferencePresenter(
-            1,
-            "type",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
-        $another_ref = new CrossReferencePresenter(
-            2,
-            "type",
-            "reference",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
+        $a_ref       = CrossReferencePresenterBuilder::get(1)->build();
+        $another_ref = CrossReferencePresenterBuilder::get(2)->build();
 
         $section = new CrossReferenceSectionPresenter("my section", [$a_ref]);
         $new_section = $section->withAdditionalCrossReference($another_ref);

@@ -23,13 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Reference;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
 class CrossReferenceNaturePresenterTest extends TestCase
 {
     public function testWithAdditionalCrossReference(): void
     {
-        $a_ref       = $this->getCrossReferencePresenter(1);
-        $another_ref = $this->getCrossReferencePresenter(2);
+        $a_ref       = CrossReferencePresenterBuilder::get(1)->build();
+        $another_ref = CrossReferencePresenterBuilder::get(2)->build();
 
         $section = new CrossReferenceSectionPresenter("my section", [$a_ref]);
         $nature  = new CrossReferenceNaturePresenter("My Nature", "fas fa-candy-cane", [$section]);
@@ -44,9 +45,9 @@ class CrossReferenceNaturePresenterTest extends TestCase
 
     public function testSortSectionAlphabetically(): void
     {
-        $a_ref = $this->getCrossReferencePresenter(1);
-        $b_ref = $this->getCrossReferencePresenter(2);
-        $c_ref = $this->getCrossReferencePresenter(3);
+        $a_ref = CrossReferencePresenterBuilder::get(1)->build();
+        $b_ref = CrossReferencePresenterBuilder::get(2)->build();
+        $c_ref = CrossReferencePresenterBuilder::get(3)->build();
 
         $c_section = new CrossReferenceSectionPresenter("C Section", [$c_ref]);
         $a_section = new CrossReferenceSectionPresenter("A Section", [$a_ref]);
@@ -61,21 +62,5 @@ class CrossReferenceNaturePresenterTest extends TestCase
         self::assertEquals([$a_ref], $nature->sections[0]->cross_references);
         self::assertEquals([$b_ref], $nature->sections[1]->cross_references);
         self::assertEquals([$c_ref], $nature->sections[2]->cross_references);
-    }
-
-    private function getCrossReferencePresenter(int $id): CrossReferencePresenter
-    {
-        return new CrossReferencePresenter(
-            $id,
-            "type",
-            "reference",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null
-        );
     }
 }

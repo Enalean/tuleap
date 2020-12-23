@@ -34,6 +34,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
+use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
 class GitlabCrossReferenceOrganizerTest extends TestCase
 {
@@ -82,9 +83,9 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
                 [
                     'getCurrentUser'              => $user,
                     'getCrossReferencePresenters' => [
-                        $this->buildCrossReferencePresenter('nature_1', 1),
-                        $this->buildCrossReferencePresenter('nature_2', 2),
-                        $this->buildCrossReferencePresenter('nature_3', 3),
+                        CrossReferencePresenterBuilder::get(1)->withType('nature_1')->build(),
+                        CrossReferencePresenterBuilder::get(2)->withType('nature_2')->build(),
+                        CrossReferencePresenterBuilder::get(3)->withType('nature_3')->build(),
                     ]
                 ]
             )->getMock();
@@ -95,7 +96,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }
 
-    public function testItDoesNotOrganizeGitCrossReferencesIfProjectCannotBeAccessedByCurrentUser(): void
+    public function testItDoesNotOrganizeGitlabCrossReferencesIfProjectCannotBeAccessedByCurrentUser(): void
     {
         $user    = Mockery::mock(PFUser::class);
         $project = Mockery::mock(Project::class);
@@ -110,18 +111,9 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->once()
             ->andThrow(Mockery::mock(Project_AccessException::class));
 
-        $a_ref = new CrossReferencePresenter(
-            1,
-            GitlabCommitReference::NATURE_NAME,
-            "title",
-            "url",
-            "delete_url",
-            1,
-            'john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3',
-            null,
-            [],
-            null
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_gitlab_commit')
+            ->build();
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
@@ -140,7 +132,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }
 
-    public function testItDoesNotOrganizeGitCrossReferencesIfRepositoryCannotBeFound(): void
+    public function testItDoesNotOrganizeGitlabCrossReferencesIfRepositoryCannotBeFound(): void
     {
         $user    = Mockery::mock(PFUser::class);
         $project = Mockery::mock(Project::class);
@@ -159,18 +151,10 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->with($project, 'john-snow/winter-is-coming')
             ->andReturn(null);
 
-        $a_ref = new CrossReferencePresenter(
-            1,
-            GitlabCommitReference::NATURE_NAME,
-            "title",
-            "url",
-            "delete_url",
-            1,
-            'john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3',
-            null,
-            [],
-            null
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_gitlab_commit')
+            ->withValue('john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3')
+            ->build();
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
@@ -189,7 +173,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }
 
-    public function testItDoesNotOrganizeGitCrossReferencesIfCommitDataCannotBeFound(): void
+    public function testItDoesNotOrganizeGitlabCrossReferencesIfCommitDataCannotBeFound(): void
     {
         $user    = Mockery::mock(PFUser::class);
         $project = Mockery::mock(Project::class)
@@ -225,18 +209,10 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->with($repository, '14a9b6c0c0c965977cf2af2199f93df82afcdea3')
             ->andReturn(null);
 
-        $a_ref = new CrossReferencePresenter(
-            1,
-            GitlabCommitReference::NATURE_NAME,
-            "title",
-            "url",
-            "delete_url",
-            1,
-            'john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3',
-            null,
-            [],
-            null
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_gitlab_commit')
+            ->withValue('john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3')
+            ->build();
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
@@ -342,31 +318,17 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
                 'samwell-tarly@the-wall.com',
             ));
 
-        $a_ref = new CrossReferencePresenter(
-            1,
-            GitlabCommitReference::NATURE_NAME,
-            "title",
-            "url",
-            "delete_url",
-            1,
-            'john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3',
-            null,
-            [],
-            null
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)
+            ->withType('plugin_gitlab_commit')
+            ->withValue('john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3')
+            ->withProjectId(1)
+            ->build();
 
-        $another_ref = new CrossReferencePresenter(
-            2,
-            GitlabCommitReference::NATURE_NAME,
-            "title",
-            "url",
-            "delete_url",
-            2,
-            'samwell-tarly/winter-is-coming/be35d127acb88876ee4fdbf02188d372dc61e98d',
-            null,
-            [],
-            null
-        );
+        $another_ref = CrossReferencePresenterBuilder::get(2)
+            ->withType('plugin_gitlab_commit')
+            ->withValue('samwell-tarly/winter-is-coming/be35d127acb88876ee4fdbf02188d372dc61e98d')
+            ->withProjectId(2)
+            ->build();
 
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
@@ -400,23 +362,5 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->once();
 
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
-    }
-
-    private function buildCrossReferencePresenter(
-        string $nature_name,
-        int $id
-    ): CrossReferencePresenter {
-        return new CrossReferencePresenter(
-            $id,
-            $nature_name,
-            '',
-            'some_url',
-            'a-delete-url',
-            1000,
-            '',
-            null,
-            [],
-            null
-        );
     }
 }

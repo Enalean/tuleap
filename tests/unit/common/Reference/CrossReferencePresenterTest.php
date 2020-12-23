@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Reference\Metadata\CreatedByPresenter;
+use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
 class CrossReferencePresenterTest extends TestCase
 {
@@ -33,18 +34,7 @@ class CrossReferencePresenterTest extends TestCase
 
     public function testWithTitle(): void
     {
-        $a_ref = new CrossReferencePresenter(
-            1,
-            'type',
-            'title',
-            'url',
-            'delete_url',
-            1,
-            'whatever',
-            null,
-            [],
-            null,
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $new_ref = $a_ref->withTitle('New title', null);
 
@@ -55,18 +45,7 @@ class CrossReferencePresenterTest extends TestCase
 
     public function testWithTitleBadge(): void
     {
-        $a_ref = new CrossReferencePresenter(
-            1,
-            'type',
-            'title',
-            'url',
-            'delete_url',
-            1,
-            'whatever',
-            null,
-            [],
-            null,
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $new_ref = $a_ref->withTitle('New title', new TitleBadgePresenter('badge', 'color'));
 
@@ -78,18 +57,7 @@ class CrossReferencePresenterTest extends TestCase
 
     public function testWithAdditionalBadges(): void
     {
-        $a_ref = new CrossReferencePresenter(
-            1,
-            'type',
-            'title',
-            'url',
-            'delete_url',
-            1,
-            'whatever',
-            null,
-            [],
-            null,
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $new_ref = $a_ref->withAdditionalBadges([new AdditionalBadgePresenter('riri')]);
 
@@ -99,18 +67,7 @@ class CrossReferencePresenterTest extends TestCase
 
     public function testWithCreationMetadata(): void
     {
-        $a_ref = new CrossReferencePresenter(
-            1,
-            'type',
-            'title',
-            'url',
-            'delete_url',
-            1,
-            'whatever',
-            null,
-            [],
-            null,
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)->build();
 
         $new_ref = $a_ref->withCreationMetadata(
             new CreatedByPresenter("John Doe", false, ''),

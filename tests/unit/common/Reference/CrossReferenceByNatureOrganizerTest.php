@@ -24,6 +24,7 @@ namespace Tuleap\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
 class CrossReferenceByNatureOrganizerTest extends TestCase
 {
@@ -31,30 +32,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItMovesOneCrossReferenceToASection(): void
     {
-        $a_ref       = new CrossReferencePresenter(
-            1,
-            "git",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
-        $another_ref = new CrossReferencePresenter(
-            2,
-            "git",
-            "another_title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
+        $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
+        $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git')->build();
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
@@ -84,30 +63,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItMoveCrossReferenceEvenIfItHasBeenPimped(): void
     {
-        $a_ref       = new CrossReferencePresenter(
-            1,
-            "git",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
-        $another_ref = new CrossReferencePresenter(
-            2,
-            "git",
-            "another_title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
+        $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
+        $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git')->build();
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
@@ -141,30 +98,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItMovesTwoCrossReferencesToSameSection(): void
     {
-        $a_ref       = new CrossReferencePresenter(
-            1,
-            "git",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
-        $another_ref = new CrossReferencePresenter(
-            2,
-            "git",
-            "another_title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
+        $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
+        $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git')->build();
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
@@ -195,30 +130,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItMovesTwoCrossReferencesToDifferentSections(): void
     {
-        $a_ref       = new CrossReferencePresenter(
-            1,
-            "git",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
-        $another_ref = new CrossReferencePresenter(
-            2,
-            "git",
-            "another_title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
+        $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
+        $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git')->build();
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
@@ -250,30 +163,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItMovesTwoCrossReferencesToDifferentNatures(): void
     {
-        $a_ref       = new CrossReferencePresenter(
-            1,
-            "git",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
-        $another_ref = new CrossReferencePresenter(
-            2,
-            "tracker",
-            "another_title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
+        $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
+        $another_ref = CrossReferencePresenterBuilder::get(2)->withType('tracker')->build();
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
@@ -312,18 +203,7 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItIgnoresCrossReferenceIfRequestedNatureIsNotFound(): void
     {
-        $a_ref = new CrossReferencePresenter(
-            1,
-            "git",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
+        $a_ref = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref],
@@ -341,30 +221,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testItOrganiseRemainingCrossReferences(): void
     {
-        $a_ref       = new CrossReferencePresenter(
-            1,
-            "git",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
-        $another_ref = new CrossReferencePresenter(
-            2,
-            "wiki",
-            "another_title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
+        $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
+        $another_ref = CrossReferencePresenterBuilder::get(2)->withType('wiki')->build();
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
@@ -403,30 +261,8 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
 
     public function testRemoveUnreadableCrossReference(): void
     {
-        $a_ref       = new CrossReferencePresenter(
-            1,
-            "git",
-            "title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
-        $another_ref = new CrossReferencePresenter(
-            2,
-            "wiki",
-            "another_title",
-            "url",
-            "delete_url",
-            1,
-            "whatever",
-            null,
-            [],
-            null,
-        );
+        $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
+        $another_ref = CrossReferencePresenterBuilder::get(2)->withType('wiki')->build();
 
         $organizer = new CrossReferenceByNatureOrganizer(
             [$a_ref, $another_ref],
