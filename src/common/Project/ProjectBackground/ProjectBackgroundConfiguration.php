@@ -34,17 +34,17 @@ class ProjectBackgroundConfiguration
         $this->dao = $dao;
     }
 
-    public function getBackground(\Project $project): ?string
+    public function getBackground(\Project $project): ?ProjectBackgroundName
     {
         $background = $this->dao->getBackground((int) $project->getID());
         if (! $background) {
             return null;
         }
 
-        if (! ProjectBackgroundSelection::isAllowed($background)) {
+        if (! array_key_exists($background, ProjectBackgroundSelection::ALLOWED)) {
             return null;
         }
 
-        return $background;
+        return ProjectBackgroundName::fromIdentifier($background);
     }
 }

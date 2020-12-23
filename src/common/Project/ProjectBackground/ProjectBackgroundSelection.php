@@ -53,9 +53,4 @@ final class ProjectBackgroundSelection
         'wooden-surface'  => 'Ian Dziuk',
         'white-sheep'     => 'Will Bolding',
     ];
-
-    public static function isAllowed(string $identifier): bool
-    {
-        return in_array($identifier, array_keys(self::ALLOWED), true);
-    }
 }

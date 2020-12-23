@@ -23,11 +23,12 @@ use AgileDashboard_MilestonesCardwallRepresentation;
 use Planning_Milestone;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
-use Tuleap\Project\REST\MinimalProjectRepresentation;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
+use Tuleap\Tracker\REST\ProjectReferenceWithBackground;
 use Tuleap\Tracker\REST\TrackerReference;
 
 /**
@@ -192,7 +193,7 @@ class MilestoneRepresentation
         'additional_panes' => [],
     ];
     /**
-     * @var MinimalProjectRepresentation | null
+     * @var ProjectReferenceWithBackground | null
      */
     public $original_project_provider;
 
@@ -221,7 +222,7 @@ class MilestoneRepresentation
         ?string $last_modified_date,
         ?array $status_count,
         array $resources,
-        ?MinimalProjectRepresentation $original_project_provider
+        ?ProjectReferenceWithBackground $original_project_provider
     ) {
         $this->id                                  = $id;
         $this->uri                                 = $uri;
@@ -263,7 +264,8 @@ class MilestoneRepresentation
         ?\Planning $sub_planning,
         PaneInfoCollector $pane_info_collector,
         ?\Tracker $sub_milestone_tracker,
-        OriginalProjectCollector $original_project_collector
+        OriginalProjectCollector $original_project_collector,
+        ProjectBackgroundConfiguration $project_background_configuration
     ): self {
         $artifact_id = $milestone->getArtifactId();
         $uri         = self::ROUTE . '/' . $artifact_id;
@@ -297,7 +299,7 @@ class MilestoneRepresentation
         $original_project_provider = null;
         $original_project = $original_project_collector->getOriginalProject();
         if ($original_project) {
-            $original_project_provider = new MinimalProjectRepresentation($original_project);
+            $original_project_provider = ProjectReferenceWithBackground::fromProject($original_project, $project_background_configuration);
         }
 
         $status_count_ref = null;

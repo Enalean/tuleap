@@ -44,13 +44,13 @@ class ProjectBackgroundRetriever
      */
     public function getBackgrounds(Project $project): array
     {
-        $current_background_identifier = $this->configuration->getBackground($project);
+        $current_background = $this->configuration->getBackground($project);
 
         $backgrounds = [
-            ProjectBackground::buildNoBackground($current_background_identifier === null),
+            ProjectBackground::buildNoBackground($current_background === null),
         ];
         foreach (ProjectBackgroundSelection::ALLOWED as $identifier => $author) {
-            $backgrounds[] = $this->instantiateBackground($identifier, $author, $current_background_identifier);
+            $backgrounds[] = $this->instantiateBackground($identifier, $author, $current_background);
         }
 
         return $backgrounds;
@@ -62,8 +62,11 @@ class ProjectBackgroundRetriever
     private function instantiateBackground(
         string $identifier,
         string $author,
-        ?string $current_background_identifier
+        ?ProjectBackgroundName $current_background
     ): ProjectBackground {
-        return ProjectBackground::buildFromIdentifier($identifier, $author, $current_background_identifier === $identifier);
+        if ($current_background === null) {
+            return ProjectBackground::buildFromIdentifier($identifier, $author, $identifier === null);
+        }
+        return ProjectBackground::buildFromIdentifier($identifier, $author, $current_background->getIdentifier() === $identifier);
     }
 }

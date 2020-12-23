@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 
 class MilestoneRepresentationBuilder
 {
@@ -55,6 +56,10 @@ class MilestoneRepresentationBuilder
      * @var \PlanningFactory
      */
     private $planning_factory;
+    /**
+     * @var ProjectBackgroundConfiguration
+     */
+    private $project_background_configuration;
 
     public function __construct(
         \Planning_MilestoneFactory $milestone_factory,
@@ -63,7 +68,8 @@ class MilestoneRepresentationBuilder
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ParentTrackerRetriever $parent_tracker_retriever,
         \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $sub_milestone_finder,
-        \PlanningFactory $planning_factory
+        \PlanningFactory $planning_factory,
+        ProjectBackgroundConfiguration $project_background_configuration
     ) {
         $this->milestone_factory = $milestone_factory;
         $this->backlog_factory = $backlog_factory;
@@ -72,6 +78,7 @@ class MilestoneRepresentationBuilder
         $this->parent_tracker_retriever = $parent_tracker_retriever;
         $this->sub_milestone_finder = $sub_milestone_finder;
         $this->planning_factory = $planning_factory;
+        $this->project_background_configuration = $project_background_configuration;
     }
 
     public function getMilestoneRepresentation(
@@ -115,7 +122,8 @@ class MilestoneRepresentationBuilder
             $this->getSubPlanning($milestone, $is_scrum_mono_milestone_enabled),
             $pane_info_collector,
             $submilestone_tracker,
-            $original_project_collector
+            $original_project_collector,
+            $this->project_background_configuration
         );
 
         $milestone_representation_reference_holder = new class

@@ -20,15 +20,25 @@
 namespace Tuleap\AgileDashboard\REST\v2;
 
 use AgileDashboard_Milestone_Backlog_IBacklogItem;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use UserManager;
 use EventManager;
 
 class BacklogItemRepresentationFactory
 {
+    /**
+     * @var ProjectBackgroundConfiguration
+     */
+    private $project_background_configuration;
+
+    public function __construct(ProjectBackgroundConfiguration $project_background_configuration)
+    {
+        $this->project_background_configuration = $project_background_configuration;
+    }
 
     public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item)
     {
-        return BacklogItemRepresentation::build($backlog_item, $this->getBacklogItemCardFields($backlog_item));
+        return BacklogItemRepresentation::build($backlog_item, $this->getBacklogItemCardFields($backlog_item), $this->project_background_configuration);
     }
 
     private function getBacklogItemCardFields($backlog_item)

@@ -20,6 +20,7 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\REST\JsonCast;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -109,7 +110,8 @@ class BacklogItemRepresentation
     public function build(
         \AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
         array $card_fields,
-        BackgroundColor $background_color
+        BackgroundColor $background_color,
+        ProjectBackgroundConfiguration $project_background_configuration
     ) {
         $this->id               = JsonCast::toInt($backlog_item->id());
         $this->label            = $backlog_item->title();
@@ -126,7 +128,7 @@ class BacklogItemRepresentation
 
         $this->parent = null;
         if ($backlog_item->getParent()) {
-            $this->parent = BacklogItemParentReference::build($backlog_item->getParent());
+            $this->parent = BacklogItemParentReference::build($backlog_item->getParent(), $project_background_configuration);
         }
 
         $this->has_children = $backlog_item->hasChildren();

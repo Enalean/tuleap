@@ -64,6 +64,8 @@ use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
+use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -227,7 +229,8 @@ class MilestoneResource extends AuthenticatedResource
             $scrum_for_mono_milestone_checker,
             $parent_tracker_retriever,
             $sub_milestone_finder,
-            $planning_factory
+            $planning_factory,
+            new ProjectBackgroundConfiguration(new ProjectBackgroundDao())
         );
 
         $this->query_to_criterion_converter = new QueryToCriterionStatusConverter();
@@ -1249,7 +1252,8 @@ class MilestoneResource extends AuthenticatedResource
         return new BacklogItemRepresentationFactory(
             $color_builder,
             UserManager::instance(),
-            $this->event_manager
+            $this->event_manager,
+            new ProjectBackgroundConfiguration(new ProjectBackgroundDao())
         );
     }
 

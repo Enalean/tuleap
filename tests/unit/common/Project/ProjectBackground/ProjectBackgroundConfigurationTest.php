@@ -38,7 +38,7 @@ final class ProjectBackgroundConfigurationTest extends TestCase
 
         $configuration = new ProjectBackgroundConfiguration($dao);
 
-        self::assertEquals('beach-daytime', $configuration->getBackground($project));
+        self::assertEquals('beach-daytime', $configuration->getBackground($project)->getIdentifier());
     }
 
     public function testItReturnsNullIfProjectDoesNotHaveABackground(): void
