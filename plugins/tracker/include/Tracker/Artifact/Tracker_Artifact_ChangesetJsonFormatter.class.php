@@ -32,7 +32,7 @@ class Tracker_Artifact_ChangesetJsonFormatter
         return [
             'id'           => $changeset->getId(),
             'submitted_by' => $changeset->getSubmittedBy(),
-            'submitted_on' => date('c', $changeset->getSubmittedOn()),
+            'submitted_on' => date('c', (int) $changeset->getSubmittedOn()),
             'email'        => $changeset->getEmail(),
             'html'         => $this->getChangeContentForJson($changeset, $current_user),
         ];

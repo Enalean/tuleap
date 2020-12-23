@@ -224,7 +224,7 @@ class RecipientsManager
      */
     private function hasArtifactStatusChange(Tracker_Artifact_Changeset $changeset)
     {
-        $previous_changeset = $changeset->getArtifact()->getPreviousChangeset($changeset->getId());
+        $previous_changeset = $changeset->getArtifact()->getPreviousChangeset((int) $changeset->getId());
 
         if (! $previous_changeset) {
             return true;

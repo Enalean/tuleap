@@ -554,7 +554,7 @@ class Tracker_Artifact_XMLImport
         );
 
         if ($changeset && (string) $xml_changeset['id']) {
-            $changeset_id_mapping->add((string) $xml_changeset['id'], $changeset->getId());
+            $changeset_id_mapping->add((string) $xml_changeset['id'], (int) $changeset->getId());
         }
 
         return $changeset;
@@ -584,7 +584,7 @@ class Tracker_Artifact_XMLImport
         );
 
         if ($changeset && (string) $xml_changeset['id']) {
-            $changeset_id_mapping->add((string) $xml_changeset['id'], $changeset->getId());
+            $changeset_id_mapping->add((string) $xml_changeset['id'], (int) $changeset->getId());
         }
 
         return $changeset;
@@ -625,7 +625,7 @@ class Tracker_Artifact_XMLImport
         );
         if ($changeset) {
             if ((string) $xml_changeset['id']) {
-                $changeset_id_mapping->add((string) $xml_changeset['id'], $changeset->getId());
+                $changeset_id_mapping->add((string) $xml_changeset['id'], (int) $changeset->getId());
             }
             $this->updateComments($changeset, $xml_changeset);
         } else {

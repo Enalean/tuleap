@@ -58,7 +58,7 @@ class Tracker_ArtifactLinkInfo
         $changeset_id   = 0;
         $last_changeset = $artifact->getLastChangeset();
         if ($last_changeset) {
-            $changeset_id = $last_changeset->getId();
+            $changeset_id = (int) $last_changeset->getId();
         }
 
         return (

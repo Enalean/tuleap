@@ -106,7 +106,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * Returns the submission date of this changeset (timestamp)
      *
-     * @return int The submission date of this changeset (timestamp)
+     * @return string The submission date of this changeset (timestamp)
      */
     public function getSubmittedOn()
     {
@@ -116,7 +116,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * Returns the author of this changeset
      *
-     * @return int The user id or 0/null if anonymous
+     * @return string The user id or 0/null if anonymous
      */
     public function getSubmittedBy()
     {
@@ -643,7 +643,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     ) {
         $result             = '';
         $factory            = $this->getFormElementFactory();
-        $previous_changeset = $this->getArtifact()->getPreviousChangeset($this->getId());
+        $previous_changeset = $this->getArtifact()->getPreviousChangeset((int) $this->getId());
 
         if (! $previous_changeset) {
             return $result;
@@ -730,7 +730,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
             return $previous_item->getValue($field);
         }
 
-        $previous_changeset = $this->getArtifact()->getPreviousChangeset($this->getId());
+        $previous_changeset = $this->getArtifact()->getPreviousChangeset((int) $this->getId());
         if ($previous_changeset !== null) {
             return $previous_changeset->getValue($field);
         }
@@ -795,7 +795,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     /**
      * Returns the Id of this changeset
      *
-     * @return int The Id of this changeset
+     * @return string The Id of this changeset
      *
      * @psalm-mutation-free
      */

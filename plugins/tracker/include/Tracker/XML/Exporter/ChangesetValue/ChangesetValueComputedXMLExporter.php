@@ -130,7 +130,7 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
         Tracker_Artifact_ChangesetValue $changeset_value,
         $number_of_changeset
     ) {
-        $previous_changeset = $artifact->getPreviousChangeset($changeset_value->getChangeset()->getId());
+        $previous_changeset = $artifact->getPreviousChangeset((int) $changeset_value->getChangeset()->getId());
 
         if (! $previous_changeset) {
             return true;

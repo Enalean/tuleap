@@ -364,7 +364,7 @@ final class EmailNotificationTask implements PostCreationTask
         $output .= PHP_EOL;
         $output .= dgettext('tuleap-tracker', 'last edited by:');
         $output .= ' ' . $this->user_helper->getDisplayNameFromUserId($changeset->getSubmittedBy());
-        $output .= ' on ' . \DateHelper::formatForLanguage($language, $changeset->getSubmittedOn());
+        $output .= ' on ' . \DateHelper::formatForLanguage($language, (int) $changeset->getSubmittedOn());
         if ($comment = $changeset->getComment()) {
             $output .= PHP_EOL;
             $output .= $comment->fetchMailFollowUp($format);
