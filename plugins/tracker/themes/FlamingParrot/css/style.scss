@@ -20,7 +20,7 @@
 @import '../../default/css/style';
 @import './tracker-creation';
 
-@mixin definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal) {
+@mixin definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white) {
     /* stylelint-disable-next-line selector-class-pattern,selector-id-pattern */
     .widget_content #tracker_report_table > thead > tr > th {
         border-bottom-color: #b2b2b2;
@@ -226,12 +226,16 @@
             vertical-align: top;
         }
     }
+
+    .tracker-cross-reference-title-icon {
+        color: $tlp-ui-white;
+    }
 }
 
 body {
     &.FlamingParrot_Orange { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
@@ -241,7 +245,7 @@ body {
 
     &.FlamingParrot_Blue { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
@@ -251,7 +255,7 @@ body {
 
     &.FlamingParrot_Green { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
@@ -261,7 +265,7 @@ body {
 
     &.FlamingParrot_BlueGrey { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
@@ -271,7 +275,7 @@ body {
 
     &.FlamingParrot_Purple { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';
@@ -281,7 +285,7 @@ body {
 
     &.FlamingParrot_Red { /* stylelint-disable-line selector-no-qualifying-type, selector-class-pattern */
         @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
-        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal);
+        @include definitions($main, $main-background, $tlp-ui-danger, $tlp-ui-warning, $tlp-ui-info, $tlp-ui-dimmed, $tlp-ui-border-normal, $tlp-ui-white);
         @import '../../../../../src/themes/tlp/src/scss/variables/shadows';
         @import '../../../../../src/themes/tlp/src/scss/components/switch';
         @import '../../../../../src/themes/tlp/src/scss/components/panes';

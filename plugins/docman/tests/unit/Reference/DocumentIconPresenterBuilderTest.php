@@ -20,40 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Reference;
+namespace Tuleap\Docman\Reference;
 
-/**
- * @psalm-immutable
- */
-final class TitleBadgePresenter
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class DocumentIconPresenterBuilderTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    public $label;
-    /**
-     * @var string
-     */
-    public $color;
-    /**
-     * @var string
-     */
-    public $icon;
+    use MockeryPHPUnitIntegration;
 
-    private function __construct(string $label, string $color, string $icon)
+    public function testBuildForItem(): void
     {
-        $this->label = $label;
-        $this->color = $color;
-        $this->icon  = $icon;
-    }
+        $builder = new DocumentIconPresenterBuilder();
 
-    public static function buildLabelBadge(string $label, string $color): self
-    {
-        return new self($label, $color, '');
-    }
+        $folder_icon = $builder->buildForItem(new \Docman_Folder());
+        self::assertEquals('fa fa-folder', $folder_icon->icon);
+        self::assertEquals('inca-silver', $folder_icon->color);
 
-    public static function buildIconBadge(string $icon, string $color): self
-    {
-        return new self('', $color, $icon);
+        $link_icon = $builder->buildForItem(new \Docman_Link());
+        self::assertEquals('fa fa-link', $link_icon->icon);
+        self::assertEquals('flamingo-pink', $link_icon->color);
     }
 }

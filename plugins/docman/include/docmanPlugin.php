@@ -62,6 +62,9 @@ use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder;
+use Tuleap\Docman\Reference\CrossReferenceDocmanOrganizer;
+use Tuleap\Docman\Reference\DocumentFromReferenceValueFinder;
+use Tuleap\Docman\Reference\DocumentIconPresenterBuilder;
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\Upload\UploadPathAllocatorBuilder;
@@ -101,6 +104,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\REST\BasicAuthentication;
@@ -232,6 +236,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->addHook(ExportXmlProject::NAME);
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook(PendingDocumentsRetriever::NAME);
+        $this->addHook(CrossReferenceByNatureOrganizer::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -548,42 +553,39 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             return;
         }
 
-        $item_factory = $this->getItemFactory($event->getProject()->getID());
-        $item = $item_factory->getItemFromDb((int) $event->getValue());
-
+        $finder = new DocumentFromReferenceValueFinder();
+        $item = $finder->findItem($event->getProject(), $event->getUser(), $event->getValue());
         if (! $item) {
             return;
         }
 
-        $permissions_manager = Docman_PermissionsManager::instance($event->getProject()->getID());
-        if (! $permissions_manager->userCanAccess($event->getUser(), $item->getId())) {
-            return;
-        }
-
-        $docman_icons = new Docman_Icons('');
-        $icon = substr($docman_icons->getIconForItem($item), 0, -4); //remove .png extension
+        $icon_presenter_builder = new DocumentIconPresenterBuilder();
 
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__);
         $tooltip_json = new \Tuleap\Layout\TooltipJSON(
             $renderer->renderToString('tooltip-title', [
-                'is_folder' => $icon === 'folder',
-                'is_empty' => $icon === 'empty',
-                'is_link' => $icon === 'link',
-                'is_audio' => $icon === 'audio',
-                'is_video' => $icon === 'video',
-                'is_image' => $icon === 'image',
-                'is_text' => $icon === 'text',
-                'is_code' => $icon === 'code',
-                'is_archive' => $icon === 'archive',
-                'is_pdf' => $icon === 'pdf',
-                'is_document' => $icon === 'document',
-                'is_presentation' => $icon === 'presentation',
-                'is_spreadsheet' => $icon === 'spreadsheet',
+                'icon'  => $icon_presenter_builder->buildForItem($item),
                 'title' => $item->getTitle()
             ]),
             $item->getDescription(),
         );
         $event->setOutput($tooltip_json);
+    }
+
+    public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $by_nature_organizer): void
+    {
+        $tracker_organizer = new CrossReferenceDocmanOrganizer(
+            ProjectManager::instance(),
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            ),
+            new DocumentFromReferenceValueFinder(),
+            new DocumentIconPresenterBuilder(),
+        );
+
+        $tracker_organizer->organizeDocumentReferences($by_nature_organizer);
     }
 
     public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
