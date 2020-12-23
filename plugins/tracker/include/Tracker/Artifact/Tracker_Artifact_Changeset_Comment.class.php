@@ -54,7 +54,13 @@ class Tracker_Artifact_Changeset_Comment
     public $canned_response_id;
     public $submitted_by;
     public $submitted_on;
+    /**
+     * @var string
+     */
     public $body;
+    /**
+     * @var string
+     */
     public $bodyFormat;
     public $parent_id;
 
@@ -141,7 +147,7 @@ class Tracker_Artifact_Changeset_Comment
     {
         return $this->getPurifier()->purifyHTMLWithReferences(
             $this->body,
-            $this->changeset->artifact->getTracker()->getGroupId()
+            (int) $this->changeset->getArtifact()->getTracker()->getGroupId()
         );
     }
 

@@ -24,7 +24,7 @@ use PFUser;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\REST\ChangesetRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 

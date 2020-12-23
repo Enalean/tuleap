@@ -89,7 +89,9 @@ use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\Followup\NewChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
@@ -188,10 +190,16 @@ class ArtifactsResource extends AuthenticatedResource
         $this->tracker_factory     = TrackerFactory::instance();
         $this->formelement_factory = Tracker_FormElementFactory::instance();
         $this->artifact_factory    = Tracker_ArtifactFactory::instance();
+        $this->user_manager        = UserManager::instance();
         $this->builder             = new ArtifactRepresentationBuilder(
             $this->formelement_factory,
             $this->artifact_factory,
-            new NatureDao()
+            new NatureDao(),
+            new ChangesetRepresentationBuilder(
+                $this->user_manager,
+                $this->formelement_factory,
+                new CommentRepresentationBuilder()
+            )
         );
         $this->moved_value_builder = new MovedArtifactValueBuilder();
 
@@ -208,7 +216,6 @@ class ArtifactsResource extends AuthenticatedResource
         );
 
         $this->event_manager = EventManager::instance();
-        $this->user_manager  = UserManager::instance();
 
         $this->post_move_action = new PostMoveArticfactRESTAction(
             new FeedbackDao()

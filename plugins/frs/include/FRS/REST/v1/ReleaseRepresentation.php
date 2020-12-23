@@ -32,11 +32,13 @@ use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 
 /**
  * @psalm-immutable
  */
-class ReleaseRepresentation
+final class ReleaseRepresentation
 {
     public const ROUTE = 'frs_release';
 
@@ -166,10 +168,16 @@ class ReleaseRepresentation
             return null;
         }
 
-        $tracker_artifact_builder = new ArtifactRepresentationBuilder(
-            Tracker_FormElementFactory::instance(),
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $tracker_artifact_builder     = new ArtifactRepresentationBuilder(
+            $form_element_factory,
             Tracker_ArtifactFactory::instance(),
-            new NatureDao()
+            new NatureDao(),
+            new ChangesetRepresentationBuilder(
+                \UserManager::instance(),
+                $form_element_factory,
+                new CommentRepresentationBuilder()
+            )
         );
 
         $tracker_factory = Tracker_ArtifactFactory::instance();

@@ -31,7 +31,9 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
-use Tuleap\Tracker\REST\ChangesetRepresentationCollection;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationCollection;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
 
@@ -50,14 +52,21 @@ class ArtifactRepresentationBuilder
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
+    /**
+     * @var ChangesetRepresentationBuilder
+     */
+    private $changeset_representation_builder;
+
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
         Tracker_ArtifactFactory $artifact_factory,
-        NatureDao $nature_dao
+        NatureDao $nature_dao,
+        ChangesetRepresentationBuilder $changeset_representation_builder
     ) {
-        $this->formelement_factory = $formelement_factory;
-        $this->artifact_factory    = $artifact_factory;
-        $this->nature_dao          = $nature_dao;
+        $this->formelement_factory              = $formelement_factory;
+        $this->artifact_factory                 = $artifact_factory;
+        $this->nature_dao                       = $nature_dao;
+        $this->changeset_representation_builder = $changeset_representation_builder;
     }
 
     /**
@@ -193,21 +202,15 @@ class ArtifactRepresentationBuilder
 
     /**
      * Returns REST representation of artifact history
-     *
-     * @param string           $fields
-     * @param int              $offset
-     * @param int              $limit
-     *
-     * @return ChangesetRepresentationCollection
      */
     public function getArtifactChangesetsRepresentation(
         PFUser $user,
         Artifact $artifact,
-        $fields,
-        $offset,
-        $limit,
-        $reverse_order
-    ) {
+        string $fields,
+        int $offset,
+        int $limit,
+        bool $reverse_order
+    ): ChangesetRepresentationCollection {
         $all_changesets = $artifact->getChangesets();
 
         if ($reverse_order) {
@@ -219,8 +222,8 @@ class ArtifactRepresentationBuilder
                 $all_changesets,
                 $offset,
                 $limit,
-                function (Tracker_Artifact_Changeset $changeset) use ($user, $fields) {
-                    return $changeset->getRESTValue($user, $fields);
+                function (Tracker_Artifact_Changeset $changeset) use ($user, $fields): ?ChangesetRepresentation {
+                    return $this->changeset_representation_builder->buildWithFields($changeset, $fields, $user);
                 }
             ),
             count($all_changesets)

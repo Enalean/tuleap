@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Webhook;
-
-use Tuleap\Webhook\Payload;
+namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 
 /**
  * @psalm-immutable
  */
-final class ArtifactPayload implements Payload
+final class NewChangesetCommentRepresentation
 {
     /**
-     * @var array
+     * @var string Content of the comment {@required false}
      */
-    private $payload;
-
-    public function __construct(array $payload)
-    {
-        $this->payload = $payload;
-    }
+    public $body = '';
 
     /**
-     * @return array
+     * @var string Type of the comment (text|html)
      */
-    public function getPayload(): array
+    public $format;
+
+    public function __construct(string $body, string $format)
     {
-        return $this->payload;
+        $this->body   = $body;
+        $this->format = $format;
     }
 }

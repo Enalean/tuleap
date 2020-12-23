@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Tracker_Artifact_Changeset;
-use Tuleap\Webhook\Emitter as WebhookEmitter;
+use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Webhook\Emitter as WebhookEmitter;
 
 final class WebhookNotificationTask implements PostCreationTask
 {
@@ -38,22 +41,31 @@ final class WebhookNotificationTask implements PostCreationTask
      * @var WebhookFactory
      */
     private $webhook_factory;
+    /**
+     * @var ArtifactPayloadBuilder
+     */
+    private $payload_builder;
 
-    public function __construct(\Psr\Log\LoggerInterface $logger, WebhookEmitter $webhook_emitter, WebhookFactory $webhook_factory)
-    {
-        $this->logger          = $logger;
+    public function __construct(
+        \Psr\Log\LoggerInterface $logger,
+        WebhookEmitter $webhook_emitter,
+        WebhookFactory $webhook_factory,
+        ArtifactPayloadBuilder $payload_builder
+    ) {
+        $this->logger = $logger;
         $this->webhook_emitter = $webhook_emitter;
         $this->webhook_factory = $webhook_factory;
+        $this->payload_builder = $payload_builder;
     }
 
-    public function execute(Tracker_Artifact_Changeset $changeset)
+    public function execute(Tracker_Artifact_Changeset $changeset): void
     {
         $tracker  = $changeset->getTracker();
         $webhooks = $this->webhook_factory->getWebhooksForTracker($tracker);
 
         $this->logger->debug('Start processing of ' . count($webhooks) . ' webhook(s) for changeset #' . $changeset->getId());
 
-        $payload = new \Tuleap\Tracker\Webhook\ArtifactPayload($changeset);
+        $payload = $this->payload_builder->buildPayload($changeset);
         $this->webhook_emitter->emit($payload, ...$webhooks);
 
         $this->logger->debug('All webhooks for changeset #' . $changeset->getId() . 'has been been processed');

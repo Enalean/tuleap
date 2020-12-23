@@ -63,7 +63,7 @@ use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
-use Tuleap\Tracker\REST\Artifact\Followup\NewChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;

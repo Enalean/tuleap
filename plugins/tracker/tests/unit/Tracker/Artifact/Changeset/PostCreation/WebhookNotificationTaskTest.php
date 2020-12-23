@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,17 +23,16 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Webhook\ArtifactPayload;
+use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Webhook\Webhook;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Webhook\Emitter;
 
-require_once __DIR__ . '/../../../../bootstrap.php';
-
-class WebhookNotificationTaskTest extends TestCase
+final class WebhookNotificationTaskTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testConfiguredWebhooksAreSent()
+    public function testConfiguredWebhooksAreSent(): void
     {
         $logger  = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $emitter = \Mockery::mock(Emitter::class);
@@ -50,7 +49,10 @@ class WebhookNotificationTaskTest extends TestCase
         $webhook_2 = \Mockery::mock(Webhook::class);
         $factory->shouldReceive('getWebhooksForTracker')->andReturns([$webhook_1, $webhook_2]);
 
-        $webhook_notification_task = new WebhookNotificationTask($logger, $emitter, $factory);
+        $builder = \Mockery::mock(ArtifactPayloadBuilder::class);
+        $builder->shouldReceive('buildPayload')->andReturn(new ArtifactPayload([]));
+
+        $webhook_notification_task = new WebhookNotificationTask($logger, $emitter, $factory, $builder);
 
         $emitter->shouldReceive('emit')
             ->with(\Mockery::type(ArtifactPayload::class), $webhook_1, $webhook_2)->once();

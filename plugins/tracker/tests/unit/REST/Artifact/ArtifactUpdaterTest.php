@@ -26,7 +26,7 @@ use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\REST\Artifact\Followup\NewChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 
 final class ArtifactUpdaterTest extends \PHPUnit\Framework\TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,38 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Webhook;
+namespace Tuleap\Tracker\REST\Artifact\Changeset;
 
-use Tuleap\Webhook\Payload;
-
-/**
- * @psalm-immutable
- */
-final class ArtifactPayload implements Payload
+final class ChangesetRepresentationCollection
 {
     /**
-     * @var array
+     * @var ChangesetRepresentation[]
      */
-    private $payload;
+    private $collection;
+    /**
+     * @var int
+     */
+    private $total_count;
 
-    public function __construct(array $payload)
+    /**
+     * @param ChangesetRepresentation[] $collection
+     */
+    public function __construct(array $collection, int $total_count)
     {
-        $this->payload = $payload;
+        $this->collection  = $collection;
+        $this->total_count = $total_count;
     }
 
     /**
-     * @return array
+     * @return ChangesetRepresentation[]
      */
-    public function getPayload(): array
+    public function toArray(): array
     {
-        return $this->payload;
+        return $this->collection;
+    }
+
+    public function totalCount(): int
+    {
+        return $this->total_count;
     }
 }

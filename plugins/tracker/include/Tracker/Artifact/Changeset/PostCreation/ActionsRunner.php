@@ -37,13 +37,16 @@ use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
-use Tuleap\Tracker\Notifications\InvolvedNotificationDao;
-use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
+use Tuleap\Tracker\Notifications\InvolvedNotificationDao;
+use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
+use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Webhook\WebhookStatusLogger;
@@ -83,9 +86,11 @@ class ActionsRunner
         $this->post_creation_tasks = $post_creation_tasks;
     }
 
-    public static function build(LoggerInterface $logger)
+    public static function build(LoggerInterface $logger): self
     {
-        $webhook_dao = new WebhookDao();
+        $webhook_dao          = new WebhookDao();
+        $user_manager         = UserManager::instance();
+        $form_element_factory = Tracker_FormElementFactory::instance();
 
         return new ActionsRunner(
             $logger,
@@ -96,8 +101,8 @@ class ActionsRunner
                 new MailLogger(),
                 UserHelper::instance(),
                 new RecipientsManager(
-                    Tracker_FormElementFactory::instance(),
-                    UserManager::instance(),
+                    $form_element_factory,
+                    $user_manager,
                     new UnsubscribersNotificationDAO(),
                     new UserNotificationSettingsRetriever(
                         new Tracker_GlobalNotificationDao(),
@@ -123,7 +128,14 @@ class ActionsRunner
                     HttpClientFactory::createAsyncClient(),
                     new WebhookStatusLogger($webhook_dao)
                 ),
-                new WebhookFactory($webhook_dao)
+                new WebhookFactory($webhook_dao),
+                new ArtifactPayloadBuilder(
+                    new ChangesetRepresentationBuilder(
+                        $user_manager,
+                        $form_element_factory,
+                        new CommentRepresentationBuilder()
+                    )
+                )
             )
         );
     }

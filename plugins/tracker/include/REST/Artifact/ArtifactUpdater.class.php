@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\REST\Artifact\Followup\NewChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_REST_Artifact_ArtifactUpdater
