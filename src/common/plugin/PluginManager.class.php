@@ -20,6 +20,7 @@
  */
 
 use Tuleap\DAO\DBTablesDao;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\ContentInterpretor;
 
 /**
@@ -30,7 +31,7 @@ class PluginManager
     /**
      * @var ContentInterpretor
      */
-    private $markdown_content_interpretor;
+    private $commonmark_content_interpretor;
 
     /** @var PluginFactory */
     private $plugin_factory;
@@ -50,12 +51,12 @@ class PluginManager
         PluginFactory $plugin_factory,
         SiteCache $site_cache,
         ForgeUpgradeConfig $forgeupgrade_config,
-        ContentInterpretor $markdown_content_interpretor
+        ContentInterpretor $commonmark_content_interpretor
     ) {
-        $this->plugin_factory               = $plugin_factory;
-        $this->site_cache                   = $site_cache;
-        $this->forgeupgrade_config          = $forgeupgrade_config;
-        $this->markdown_content_interpretor = $markdown_content_interpretor;
+        $this->plugin_factory                 = $plugin_factory;
+        $this->site_cache                     = $site_cache;
+        $this->forgeupgrade_config            = $forgeupgrade_config;
+        $this->commonmark_content_interpretor = $commonmark_content_interpretor;
     }
 
     /**
@@ -70,7 +71,7 @@ class PluginManager
                 new ForgeUpgradeConfig(
                     new System_Command()
                 ),
-                \Tuleap\Markdown\CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
+                CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
             );
         }
 
@@ -194,7 +195,7 @@ class PluginManager
         if (is_file("$file.mkd")) {
             $content = file_get_contents("$file.mkd");
 
-            return $this->markdown_content_interpretor->getInterpretedContent($content);
+            return $this->commonmark_content_interpretor->getInterpretedContent($content);
         }
 
         if (is_file("$file.txt")) {

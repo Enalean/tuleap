@@ -34,7 +34,7 @@ class Tracker_Artifact_Changeset_Comment
      */
     public const HTML_COMMENT = 'html';
 
-    public const MARKDOWN_COMMENT = 'markdown';
+    public const COMMONMARK_COMMENT = 'commonmark';
 
     /**
     * @const Changeset available comment formats
@@ -168,7 +168,7 @@ class Tracker_Artifact_Changeset_Comment
         if (! empty($this->body)) {
             // consider markdown format to be similar to text one for now
             $considered_body_format = $this->bodyFormat;
-            if ($considered_body_format === self::MARKDOWN_COMMENT) {
+            if ($considered_body_format === self::COMMONMARK_COMMENT) {
                 $considered_body_format = self::TEXT_COMMENT;
             }
             $html        .= '<input type="hidden"
@@ -178,7 +178,7 @@ class Tracker_Artifact_Changeset_Comment
             $html        .= '<div class="tracker_artifact_followup_comment_body">';
             if ($this->parent_id && ! trim($this->body)) {
                 $html .= '<em>' . dgettext('tuleap-tracker', 'Comment has been cleared') . '</em>';
-            } elseif ($this->bodyFormat === self::MARKDOWN_COMMENT) {
+            } elseif ($this->bodyFormat === self::COMMONMARK_COMMENT) {
                 $content_interpretor = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
                 $html .= $content_interpretor->getInterpretedContent($this->body);
             } else {

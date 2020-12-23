@@ -154,7 +154,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
             $field,
             false,
             'Problems with my code: **example**',
-            Tracker_Artifact_ChangesetValue_Text::MARKDOWN_CONTENT
+            Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
         );
         $this->assertEquals("<p>Problems with my code: <strong>example</strong></p>\n", $text->getValue());
     }
@@ -168,7 +168,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
             $field,
             false,
             'Problems with my code: **example**',
-            Tracker_Artifact_ChangesetValue_Text::MARKDOWN_CONTENT
+            Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
         );
 
         $this->assertEquals(Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT, $text->getFormat());
@@ -185,7 +185,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
             $field,
             false,
             $text,
-            Tracker_Artifact_ChangesetValue_Text::MARKDOWN_CONTENT
+            Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
         );
 
         $representation = $changeset_value_text->getRESTValue($user);
