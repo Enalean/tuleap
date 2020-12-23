@@ -33,6 +33,6 @@ $psalm_command_launcher = new PsalmCommandLauncherWithIgnoreDirectory(
     new ShellPassthroughUsingPassthruFunction()
 );
 
-$exit_code = $psalm_command_launcher->execute($_SERVER['_'], ...$argv);
+$exit_code = $psalm_command_launcher->execute($_SERVER['_'] ?? 'php', ...$argv);
 
 exit($exit_code);

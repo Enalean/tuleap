@@ -1,18 +1,5 @@
 #!/usr/bin/env groovy
 
-def prepareSources(def credentialsIdNexus, def credentialsIdComposerGitHub) {
-    withCredentials([
-        usernamePassword(
-            credentialsId: credentialsIdNexus,
-            passwordVariable: 'NPM_PASSWORD',
-            usernameVariable: 'NPM_USER'
-        ),
-        string(credentialsId: credentialsIdComposerGitHub, variable: 'COMPOSER_GITHUB_AUTH')
-    ]) {
-        sh 'docker run --rm -e NPM_REGISTRY="$NPM_REGISTRY" -e NPM_USER="$NPM_USER" -e NPM_PASSWORD="$NPM_PASSWORD" -e NPM_EMAIL="$NPM_EMAIL" -e COMPOSER_GITHUB_AUTH="$COMPOSER_GITHUB_AUTH" -v "$WORKSPACE/sources/":/tuleap -v "$WORKSPACE/sources/":/output --tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only $DOCKER_REGISTRY/tuleap-generated-files-builder dev'
-    }
-}
-
 def runFilesStatusChangesDetection(String repository_to_inspect, String name_of_verified_files, String verified_files) {
     dir ('sources') {
         sh "tests/files_status_checker/verify.sh '${repository_to_inspect}' '${name_of_verified_files}' ${verified_files}"

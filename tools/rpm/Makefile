@@ -1,6 +1,6 @@
 RPM_TMP=$(HOME)/rpmbuild
 BASE_DIR=$(shell cd ../..; pwd)
-SHELL=/bin/bash -euo pipefail
+SHELL=/usr/bin/env bash -euo pipefail -c
 
 version=$(shell LANG=C cat $(BASE_DIR)/VERSION)
 

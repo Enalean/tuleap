@@ -3,7 +3,7 @@
 set -ex
 
 # Basic usage of this script: `./tools/rpm/build_and_run_packages.sh --src-dir="$(pwd)"`
-# Two environnements variables can be set for additional behaviors:
+# Two environments variables can be set for additional behaviors:
 #  * `ENTERPRISE=1` to build Tuleap Enterprise packages
 #  * `EXPERIMENTAL_BUILD=1` to build experimental parts (e.g. a Tuleap Enterprise package not yet ready to be included in a major release)
 
@@ -33,10 +33,7 @@ if [ -z "$OS" ]; then
     exit 1
 fi
 
-docker image inspect tuleap-generated-files-builder > /dev/null 2>&1 || \
-    (echo 'You should build tuleap-generated-files-builder from the sources https://tuleap.net/plugins/git/tuleap/docker/tuleap-generated-files-builder' && \
-    exit 1)
-
+docker build -t tuleap-generated-files-builder -f "$SRC_DIR"/tools/utils/nix/build-tools.dockerfile "$SRC_DIR"/tools/utils/nix/
 
 clean_tuleap_sources="$(mktemp -d)"
 
@@ -59,7 +56,7 @@ if [ "$ENTERPRISE" == "1" ]; then
     touch "$clean_tuleap_sources/ENTERPRISE_BUILD"
 fi
 
-docker run -i --rm -v "$clean_tuleap_sources":/tuleap -v "$clean_tuleap_sources":/output tuleap-generated-files-builder
+docker run -i --rm -v "$clean_tuleap_sources":/tuleap -w /tuleap -u "$(id -u):$(id -g)" --tmpfs /tmp/tuleap_build:rw,noexec,nosuid tuleap-generated-files-builder tools/utils/scripts/generated-files-builder.sh prod
 
 docker run -i --name rpm-builder -e "EXPERIMENTAL_BUILD=${EXPERIMENTAL_BUILD:-0}" -v "$clean_tuleap_sources":/tuleap:ro enalean/tuleap-buildrpms:"$OS"-without-srpms
 
