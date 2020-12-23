@@ -27,11 +27,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Project_AccessException;
 use ProjectManager;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
-use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
@@ -52,10 +50,6 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
      */
     private $project_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAccessChecker
-     */
-    private $project_access_checker;
-    /**
      * @var GitlabCrossReferenceOrganizer
      */
     private $organizer;
@@ -71,14 +65,12 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $this->gitlab_commit_factory           = Mockery::mock(GitlabCommitFactory::class);
         $this->gitlab_cross_reference_enhancer = Mockery::mock(GitlabCrossReferenceEnhancer::class);
         $this->project_manager                 = Mockery::mock(ProjectManager::class);
-        $this->project_access_checker          = Mockery::mock(ProjectAccessChecker::class);
 
         $this->organizer = new GitlabCrossReferenceOrganizer(
             $this->gitlab_repository_factory,
             $this->gitlab_commit_factory,
             $this->gitlab_cross_reference_enhancer,
             $this->project_manager,
-            $this->project_access_checker,
         );
     }
 
@@ -103,42 +95,6 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $this->organizer->organizeGitLabReferences($by_nature_organizer);
     }
 
-    public function testItDoesNotOrganizeGitlabCrossReferencesIfProjectCannotBeAccessedByCurrentUser(): void
-    {
-        $user    = Mockery::mock(PFUser::class);
-        $project = Mockery::mock(Project::class);
-
-        $this->project_manager
-            ->shouldReceive(['getProject' => $project])
-            ->getMock();
-
-        $this->project_access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $project)
-            ->once()
-            ->andThrow(Mockery::mock(Project_AccessException::class));
-
-        $a_ref = CrossReferencePresenterBuilder::get(1)
-            ->withType('plugin_gitlab_commit')
-            ->build();
-
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [$a_ref],
-                ]
-            )->getMock();
-
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
-        $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($a_ref)
-            ->once();
-
-        $this->organizer->organizeGitLabReferences($by_nature_organizer);
-    }
-
     public function testItDoesNotOrganizeGitlabCrossReferencesIfRepositoryCannotBeFound(): void
     {
         $user    = Mockery::mock(PFUser::class);
@@ -147,11 +103,6 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $this->project_manager
             ->shouldReceive(['getProject' => $project])
             ->getMock();
-
-        $this->project_access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $project)
-            ->once();
 
         $this->gitlab_repository_factory
             ->shouldReceive('getGitlabRepositoryByNameInProject')
@@ -192,11 +143,6 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->shouldReceive('getProject')
             ->with(1)
             ->andReturn($project);
-
-        $this->project_access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $project)
-            ->once();
 
         $repository = new GitlabRepository(
             1,
@@ -262,16 +208,6 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->shouldReceive('getProject')
             ->with(2)
             ->andReturn($another_project);
-
-        $this->project_access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $project)
-            ->once();
-
-        $this->project_access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $another_project)
-            ->once();
 
         $repository = new GitlabRepository(
             1,
@@ -361,6 +297,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
+                $project,
                 $a_ref,
                 'thenightwatch/winter-is-coming'
             )
@@ -369,6 +306,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
+                $another_project,
                 $another_ref,
                 'foodstocks/winter-is-coming'
             )

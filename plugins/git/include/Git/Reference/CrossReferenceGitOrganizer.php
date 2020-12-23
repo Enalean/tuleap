@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Git\Reference;
 
 use Git;
-use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 
@@ -38,10 +37,6 @@ final class CrossReferenceGitOrganizer
      */
     private $git_reference_manager;
     /**
-     * @var ProjectAccessChecker
-     */
-    private $project_access_checker;
-    /**
      * @var CrossReferenceGitEnhancer
      */
     private $cross_reference_git_enhancer;
@@ -53,15 +48,13 @@ final class CrossReferenceGitOrganizer
     public function __construct(
         \ProjectManager $project_manager,
         \Git_ReferenceManager $git_reference_manager,
-        ProjectAccessChecker $project_access_checker,
         CommitProvider $commit_provider,
         CrossReferenceGitEnhancer $cross_reference_git_filler
     ) {
-        $this->project_manager            = $project_manager;
-        $this->git_reference_manager      = $git_reference_manager;
-        $this->project_access_checker     = $project_access_checker;
+        $this->project_manager              = $project_manager;
+        $this->git_reference_manager        = $git_reference_manager;
         $this->cross_reference_git_enhancer = $cross_reference_git_filler;
-        $this->commit_provider            = $commit_provider;
+        $this->commit_provider              = $commit_provider;
     }
 
     public function organizeGitReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -82,12 +75,6 @@ final class CrossReferenceGitOrganizer
         $user = $by_nature_organizer->getCurrentUser();
 
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
-        try {
-            $this->project_access_checker->checkUserCanAccessProject($user, $project);
-        } catch (\Project_AccessException $e) {
-            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
-            return;
-        }
 
         $commit_info = $this->git_reference_manager->getCommitInfoFromReferenceValue(
             $project,
@@ -110,6 +97,7 @@ final class CrossReferenceGitOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
+            $project,
             $this->cross_reference_git_enhancer->getCrossReferencePresenterWithCommitInformation(
                 $cross_reference_presenter,
                 $commit,

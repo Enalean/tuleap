@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\CrossReference;
 
-use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Reference\CrossReferenceSectionPresenter;
@@ -39,19 +38,13 @@ class CrossReferenceArtifactOrganizer
      * @var \Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    /**
-     * @var ProjectAccessChecker
-     */
-    private $project_access_checker;
 
     public function __construct(
         \ProjectManager $project_manager,
-        ProjectAccessChecker $project_access_checker,
         \Tracker_ArtifactFactory $artifact_factory
     ) {
-        $this->project_manager        = $project_manager;
-        $this->artifact_factory       = $artifact_factory;
-        $this->project_access_checker = $project_access_checker;
+        $this->project_manager  = $project_manager;
+        $this->artifact_factory = $artifact_factory;
     }
 
     public function organizeArtifactReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -63,28 +56,28 @@ class CrossReferenceArtifactOrganizer
 
             $user    = $by_nature_organizer->getCurrentUser();
             $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
-            try {
-                $this->project_access_checker->checkUserCanAccessProject($user, $project);
-            } catch (\Project_AccessException $e) {
-                $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
-                continue;
-            }
 
-            $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, (int) $cross_reference_presenter->target_value);
+            $artifact = $this->artifact_factory->getArtifactByIdUserCanView(
+                $user,
+                (int) $cross_reference_presenter->target_value
+            );
             if (! $artifact) {
                 $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
                 continue;
             }
 
             $by_nature_organizer->moveCrossReferenceToSection(
+                $project,
                 $this->addTitleBadgeOnCrossReference($cross_reference_presenter, $artifact),
                 CrossReferenceSectionPresenter::UNLABELLED
             );
         }
     }
 
-    private function addTitleBadgeOnCrossReference(CrossReferencePresenter $cross_reference_presenter, Artifact $artifact): CrossReferencePresenter
-    {
+    private function addTitleBadgeOnCrossReference(
+        CrossReferencePresenter $cross_reference_presenter,
+        Artifact $artifact
+    ): CrossReferencePresenter {
         return $cross_reference_presenter
             ->withTitle(
                 (string) $artifact->getTitle(),

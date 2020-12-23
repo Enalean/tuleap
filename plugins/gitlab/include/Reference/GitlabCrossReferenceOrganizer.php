@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Reference;
 
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
-use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 
@@ -32,10 +31,6 @@ class GitlabCrossReferenceOrganizer
      * @var \ProjectManager
      */
     private $project_manager;
-    /**
-     * @var ProjectAccessChecker
-     */
-    private $project_access_checker;
     /**
      * @var GitlabRepositoryFactory
      */
@@ -53,14 +48,12 @@ class GitlabCrossReferenceOrganizer
         GitlabRepositoryFactory $gitlab_repository_factory,
         GitlabCommitFactory $gitlab_commit_factory,
         GitlabCrossReferenceEnhancer $gitlab_cross_reference_enhancer,
-        \ProjectManager $project_manager,
-        ProjectAccessChecker $project_access_checker
+        \ProjectManager $project_manager
     ) {
         $this->gitlab_repository_factory       = $gitlab_repository_factory;
         $this->gitlab_commit_factory           = $gitlab_commit_factory;
         $this->gitlab_cross_reference_enhancer = $gitlab_cross_reference_enhancer;
         $this->project_manager                 = $project_manager;
-        $this->project_access_checker          = $project_access_checker;
     }
 
     public function organizeGitLabReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -80,13 +73,6 @@ class GitlabCrossReferenceOrganizer
     ): void {
         $user    = $by_nature_organizer->getCurrentUser();
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
-
-        try {
-            $this->project_access_checker->checkUserCanAccessProject($user, $project);
-        } catch (\Project_AccessException $e) {
-            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
-            return;
-        }
 
         [$repository_name, $sha1] = GitlabCommitReferenceExtractor::splitRepositoryAndSha1($cross_reference_presenter->target_value);
 
@@ -111,6 +97,7 @@ class GitlabCrossReferenceOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
+            $project,
             $this->gitlab_cross_reference_enhancer->getCrossReferencePresenterWithCommitInformation(
                 $cross_reference_presenter,
                 $commit_info,

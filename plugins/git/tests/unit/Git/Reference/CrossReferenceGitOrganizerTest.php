@@ -27,7 +27,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Git\GitPHP\Commit;
-use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
@@ -43,10 +42,6 @@ class CrossReferenceGitOrganizerTest extends TestCase
      * @var \Git_ReferenceManager|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $git_reference_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAccessChecker
-     */
-    private $access_checker;
     /**
      * @var CrossReferenceGitOrganizer
      */
@@ -64,14 +59,12 @@ class CrossReferenceGitOrganizerTest extends TestCase
     {
         $this->project_manager       = Mockery::mock(\ProjectManager::class);
         $this->git_reference_manager = Mockery::mock(\Git_ReferenceManager::class);
-        $this->access_checker        = Mockery::mock(ProjectAccessChecker::class);
         $this->commit_provider       = Mockery::mock(CommitProvider::class);
         $this->filler                = Mockery::mock(CrossReferenceGitEnhancer::class);
 
         $this->organizer = new CrossReferenceGitOrganizer(
             $this->project_manager,
             $this->git_reference_manager,
-            $this->access_checker,
             $this->commit_provider,
             $this->filler,
         );
@@ -105,11 +98,6 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->shouldReceive(['getProject' => $project])
             ->getMock();
 
-        $this->access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $project)
-            ->once();
-
         $this->git_reference_manager
             ->shouldReceive('getCommitInfoFromReferenceValue')
             ->with($project, 'cloudy/stable/1a2b3c4d5e')
@@ -125,45 +113,6 @@ class CrossReferenceGitOrganizerTest extends TestCase
                 [
                     'getCurrentUser'     => $user,
                     'getCrossReferencePresenters' => [$a_ref],
-                ]
-            )->getMock();
-
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
-        $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($a_ref)
-            ->once();
-
-        $this->organizer->organizeGitReferences($by_nature_organizer);
-    }
-
-    public function testItDoesNotOrganizeGitCrossReferencesIfProjectCannotBeAccessedByCurrentUser(): void
-    {
-        $user    = Mockery::mock(\PFUser::class);
-        $project = Mockery::mock(Project::class);
-
-        $this->project_manager
-            ->shouldReceive(['getProject' => $project])
-            ->getMock();
-
-        $this->access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $project)
-            ->once()
-            ->andThrow(Mockery::mock(\Project_AccessException::class));
-
-        $a_ref = CrossReferencePresenterBuilder::get(1)
-            ->withType('git_commit')
-            ->withValue('cloudy/stable/1a2b3c4d5e')
-            ->build();
-
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'     => $user,
-                    'getCrossReferencePresenters' => [
-                        $a_ref,
-                    ]
                 ]
             )->getMock();
 
@@ -195,15 +144,6 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->shouldReceive('getProject')
             ->with(2)
             ->andReturn($another_project);
-
-        $this->access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $project)
-            ->once();
-        $this->access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $another_project)
-            ->once();
 
         $repository         = Mockery::mock(\GitRepository::class)
             ->shouldReceive(['getFullName' => 'cloudy/stable', 'userCanRead' => true])
@@ -262,11 +202,11 @@ class CrossReferenceGitOrganizerTest extends TestCase
 
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($augmented_a_ref, 'acme/cloudy/stable')
+            ->with($project, $augmented_a_ref, 'acme/cloudy/stable')
             ->once();
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($augmented_another_ref, 'foobar/tuleap/stable')
+            ->with($another_project, $augmented_another_ref, 'foobar/tuleap/stable')
             ->once();
 
         $this->organizer->organizeGitReferences($by_nature_organizer);
@@ -291,11 +231,6 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->shouldReceive('getProject')
             ->with(2)
             ->andReturn($another_project);
-
-        $this->access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $another_project)
-            ->once();
 
         $another_repository = Mockery::mock(\GitRepository::class)
             ->shouldReceive(['getFullName' => 'tuleap/stable', 'userCanRead' => false])
@@ -333,7 +268,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
 
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($augmented_another_ref, 'foobar/tuleap/stable')
+            ->with($another_project, $augmented_another_ref, 'foobar/tuleap/stable')
             ->never();
 
         $by_nature_organizer

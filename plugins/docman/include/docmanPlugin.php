@@ -576,11 +576,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         $tracker_organizer = new CrossReferenceDocmanOrganizer(
             ProjectManager::instance(),
-            new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
-                new RestrictedUserCanAccessProjectVerifier(),
-                EventManager::instance()
-            ),
             new DocumentFromReferenceValueFinder(),
             new DocumentIconPresenterBuilder(),
         );
