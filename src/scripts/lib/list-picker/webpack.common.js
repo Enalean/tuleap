@@ -18,9 +18,9 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
-const FixStyleOnlyEntriesPlugin = require("../../../node_modules/webpack-fix-style-only-entries");
-const MiniCssExtractPlugin = require("../../../node_modules/mini-css-extract-plugin");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
+const FixStyleOnlyEntriesPlugin = require("../../../../node_modules/webpack-fix-style-only-entries");
+const MiniCssExtractPlugin = require("../../../../node_modules/mini-css-extract-plugin");
 
 const context = __dirname;
 

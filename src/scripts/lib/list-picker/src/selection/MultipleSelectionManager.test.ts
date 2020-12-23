@@ -22,7 +22,7 @@ import { ListPickerItem } from "../type";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { MultipleSelectionManager } from "./MultipleSelectionManager";
-import { GetText } from "../../../tuleap/gettext/gettext-init";
+import { GetText } from "../../../../tuleap/gettext/gettext-init";
 import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";

@@ -20,8 +20,8 @@
     },
     "gettext-ts": {
         "list-picker": {
-            "src": "src/scripts/list-picker",
-            "po": "src/scripts/list-picker/po"
+            "src": "src/scripts/lib/list-picker/src",
+            "po": "src/scripts/lib/list-picker/po"
         }
     },
     "gettext-vue": {

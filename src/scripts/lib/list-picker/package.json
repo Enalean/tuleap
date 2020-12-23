@@ -6,7 +6,7 @@
   "private": true,
   "version": "0.0.0",
   "main": "dist/list-picker.js",
-  "types": "dist/list-picker/src/index.d.ts",
+  "types": "dist/lib/list-picker/src/index.d.ts",
   "style": "dist/list-picker-style.css",
   "dependencies": {
     "lit-html": "^1.3.0"
@@ -15,7 +15,7 @@
     "@types/resize-observer-browser": "^0.1.4"
   },
   "config": {
-    "bin": "../../../node_modules/.bin"
+    "bin": "../../../../node_modules/.bin"
   },
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",

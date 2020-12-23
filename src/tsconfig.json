@@ -6,7 +6,6 @@
     "include": [
         "scripts/account/**/*",
         "scripts/browser-deprecation/**/*",
-        "scripts/list-picker/src/**/*",
         "scripts/platform/banner/admin/**/*",
         "scripts/project/admin/banner/**/*",
         "scripts/project/admin/header-background/**/*",
@@ -16,5 +15,6 @@
         "scripts/tuleap/**/*",
         "scripts/vue-components/breadcrumb-privacy/**/*",
         "themes/tlp/src/**/*"
-    ]
+    ],
+    "exclude": ["node_modules", "scripts/lib"]
 }

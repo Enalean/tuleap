@@ -21,7 +21,7 @@ import { KeyboardNavigationManager } from "./KeyboardNavigationManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { appendGroupedOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
-import { GetText } from "../../../tuleap/gettext/gettext-init";
+import { GetText } from "../../../../tuleap/gettext/gettext-init";
 import { ListItemHighlighter } from "./ListItemHighlighter";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
