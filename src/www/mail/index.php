@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\MailingList\MailingListPresenterCollectionBuilder;
+use Tuleap\Request\ProjectRetriever;
+
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../mail/mail_utils.php';
 
@@ -32,10 +35,10 @@ function display_ml_details($group_id, $list_server, $result, $i)
     $html_a = '';
     $em = EventManager::instance();
     $em->processEvent('browse_archives', ['html' => &$html_a,
-                                               'group_list_id' => db_result($result, $i, 'group_list_id')
+                                               'list_id' => db_result($result, $i, 'group_list_id')
                                             ]);
     if ($html_a) {
-        echo $html_a;
+        echo ' <a href="' . $html_a . '">' . _('Archives') . '</a>';
     } else {
         if ($list_is_public) {
             echo ' <A HREF="?group_id=' . $group_id . '&amp;action=pipermail&amp;id=' . db_result($result, $i, 'group_list_id') . '">' . _('Archives') . '</A>';
@@ -65,7 +68,6 @@ if ($group_id) {
     $params = ['title' => sprintf(_('Mailing Lists for %1$s'), $pm->getProject($group_id)->getPublicName()),
               'help' => 'collaboration.html#mailing-lists',
                   'pv'   => isset($pv) ? $pv : false];
-    mail_header($params, $request->getCurrentUser());
 
     if (user_isloggedin() && user_ismember($group_id)) {
         $public_flag = '0,1';
@@ -73,6 +75,7 @@ if ($group_id) {
         $public_flag = '1';
     }
     if ($request->exist('action')) {
+        mail_header($params, $request->getCurrentUser());
         if ($request->exist('id')) {
             $sql = "SELECT * FROM mail_group_list WHERE group_id='$group_id' AND is_public IN ($public_flag) AND group_list_id = " . (int) $request->get('id');
             $result = db_query($sql);
@@ -96,49 +99,17 @@ if ($group_id) {
                 }
             }
         }
+        mail_footer(['pv' => $pv]);
     } else {
-        $sql = "SELECT * FROM mail_group_list WHERE group_id='$group_id' AND is_public IN ($public_flag)";
-
-        $result = db_query($sql);
-
-        $rows = db_numrows($result);
-
-
-        if (! $result || $rows < 1) {
-            $pm = ProjectManager::instance();
-            echo '
-                <H1>' . sprintf(_('No Lists found for %1$s'), $hp->purify($pm->getProject($group_id)->getPublicName())) . '</H1>';
-            echo '
-                <P>' . _('Project administrators use the admin link to request mailing lists.');
-                    mail_footer(['pv'   => isset($pv) ? $pv : false]);
-            exit;
-        }
-
-        if ($Language->hasText('mail_index', 'mail_list_via_gnu')) {
-            echo '<p>' . $Language->getOverridableText('mail_index', 'mail_list_via_gnu') . '</p>';
-        }
-
-        if ($pv) {
-            echo "<P>" . _('Choose a list to browse, search, and post messages.') . "<P>\n";
-        } else {
-            echo "<TABLE width='100%'><TR><TD>";
-            echo "<P>" . _('Choose a list to browse, search, and post messages.') . "<P>\n";
-            echo "</TD>";
-            echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
-            echo "</TR></TABLE>";
-        }
-
-        /*
-            Put the result set (list of mailing lists for this group) into a column with folders
-        */
-
-        echo "<table WIDTH=\"100%\" border=0>\n" .
-            "<TR><TD VALIGN=\"TOP\">\n";
-
-        for ($j = 0; $j < $rows; $j++) {
-            display_ml_details($group_id, $list_server, $result, $j);
-        }
-        echo '</TD></TR></TABLE>';
+        $controller = new \Tuleap\MailingList\MailingListHomepageController(
+            new ProjectRetriever(\ProjectManager::instance()),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/lists'),
+            new \MailingListDao(),
+            new MailingListPresenterCollectionBuilder(EventManager::instance()),
+            $GLOBALS['Language'],
+        );
+        $controller->process($request, $GLOBALS['Response'], ['id' => (string) $group_id]);
+        return;
     }
 } else {
     $params = ['title' => _('Choose a Group First'),
@@ -147,5 +118,5 @@ if ($group_id) {
     mail_header($params, $request->getCurrentUser());
     echo '
 		<H1>' . _('Error - choose a group first') . '</H1>';
+    mail_footer(['pv'   => $pv]);
 }
-mail_footer(['pv'   => $pv]);

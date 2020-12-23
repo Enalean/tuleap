@@ -266,6 +266,7 @@ const webpack_config_for_burning_parrot_code = {
         "project/header-background-admin":
             "./scripts/project/admin/header-background/admin-index.ts",
         "mailing-lists-administration": "./scripts/project/admin/mailing-list/administration.ts",
+        "mailing-lists-homepage": "./scripts/project/admin/mailing-list/homepage.ts",
     },
     context,
     output,

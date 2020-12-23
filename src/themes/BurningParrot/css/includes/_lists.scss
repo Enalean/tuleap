@@ -21,3 +21,49 @@
 .mailing-list-title {
     white-space: nowrap;
 }
+
+.mailing-list-homepage {
+    width: 50%;
+
+    @media screen and (max-width: 1200px) {
+        width: 100%;
+    }
+}
+
+.mailing-list-container {
+    position: relative;
+    margin: 0 0 $tlp-medium-spacing;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.mailing-list-dropdown {
+    position: absolute;
+    top: $tlp-medium-spacing;
+    right: $tlp-medium-spacing;
+}
+
+.mailing-list-dropdown-trigger {
+    transition: color 150ms ease-in-out;
+    color: $tlp-ui-dimmed;
+    cursor: pointer;
+
+    &:focus,
+    &:hover {
+        color: $tlp-theme-color;
+    }
+}
+
+
+.mailing-list-card-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.mailing-list-card-description {
+    display: block;
+    margin: $tlp-medium-spacing 0 0;
+    font-size: .875rem;
+}

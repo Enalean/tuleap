@@ -103,7 +103,13 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $request  = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
         if ($this->isAllowed($group_id)) {
-            $params['html'] = '<A href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $params['group_list_id'] . '"> ' . dgettext('tuleap-forumml', 'Archives') . '</A>';
+            $params['html'] = '/plugins/forumml/message.php?'
+                . http_build_query(
+                    [
+                        'group_id' => $group_id,
+                        'list' => $params['list_id']
+                    ]
+                );
         }
     }
 
