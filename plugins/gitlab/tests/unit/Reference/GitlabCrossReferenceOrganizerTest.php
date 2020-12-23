@@ -33,7 +33,6 @@ use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
-use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
 class GitlabCrossReferenceOrganizerTest extends TestCase
@@ -61,15 +60,23 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
      */
     private $organizer;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabCrossReferenceEnhancer
+     */
+    private $gitlab_cross_reference_enhancer;
+
     protected function setUp(): void
     {
-        $this->gitlab_repository_factory = Mockery::mock(GitlabRepositoryFactory::class);
-        $this->gitlab_commit_factory = Mockery::mock(GitlabCommitFactory::class);
-        $this->project_manager = Mockery::mock(ProjectManager::class);
-        $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
+        $this->gitlab_repository_factory       = Mockery::mock(GitlabRepositoryFactory::class);
+        $this->gitlab_commit_factory           = Mockery::mock(GitlabCommitFactory::class);
+        $this->gitlab_cross_reference_enhancer = Mockery::mock(GitlabCrossReferenceEnhancer::class);
+        $this->project_manager                 = Mockery::mock(ProjectManager::class);
+        $this->project_access_checker          = Mockery::mock(ProjectAccessChecker::class);
+
         $this->organizer = new GitlabCrossReferenceOrganizer(
             $this->gitlab_repository_factory,
             $this->gitlab_commit_factory,
+            $this->gitlab_cross_reference_enhancer,
             $this->project_manager,
             $this->project_access_checker,
         );
@@ -294,29 +301,33 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->with($another_project, 'samwell-tarly/winter-is-coming')
             ->andReturn($another_repository);
 
+        $john_snow_commit = new GitlabCommit(
+            2,
+            '14a9b6c0c0c965977cf2af2199f93df82afcdea3',
+            1608555618,
+            'Increase blankets stocks for winter',
+            "master",
+            'John Snow',
+            'john-snow@the-wall.com',
+        );
+
+        $samwell_tarly_commit = new GitlabCommit(
+            3,
+            'be35d127acb88876ee4fdbf02188d372dc61e98d',
+            1608555618,
+            'Increase hot chocolate stocks for winter',
+            "master",
+            'Samwell Tarly',
+            'samwell-tarly@the-wall.com',
+        );
+
         $this->gitlab_commit_factory->shouldReceive('getGitlabCommitInRepositoryWithSha1')
             ->with($repository, '14a9b6c0c0c965977cf2af2199f93df82afcdea3')
-            ->andReturn(new GitlabCommit(
-                2,
-                '14a9b6c0c0c965977cf2af2199f93df82afcdea3',
-                1608555618,
-                'Increase blankets stocks for winter',
-                "master",
-                'John Snow',
-                'john-snow@the-wall.com',
-            ));
+            ->andReturn($john_snow_commit);
 
         $this->gitlab_commit_factory->shouldReceive('getGitlabCommitInRepositoryWithSha1')
             ->with($another_repository, 'be35d127acb88876ee4fdbf02188d372dc61e98d')
-            ->andReturn(new GitlabCommit(
-                3,
-                'be35d127acb88876ee4fdbf02188d372dc61e98d',
-                1608555618,
-                'Increase hot chocolate stocks for winter',
-                "master",
-                'Samwell Tarly',
-                'samwell-tarly@the-wall.com',
-            ));
+            ->andReturn($samwell_tarly_commit);
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_gitlab_commit')
@@ -330,6 +341,14 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->withProjectId(2)
             ->build();
 
+        $this->gitlab_cross_reference_enhancer->shouldReceive('getCrossReferencePresenterWithCommitInformation')
+            ->with($a_ref, $john_snow_commit, $user)
+            ->andReturn($a_ref);
+
+        $this->gitlab_cross_reference_enhancer->shouldReceive('getCrossReferencePresenterWithCommitInformation')
+            ->with($another_ref, $samwell_tarly_commit, $user)
+            ->andReturn($another_ref);
+
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
@@ -342,10 +361,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
-                Mockery::on(function (CrossReferencePresenter $ref) {
-                    return $ref->id === 1
-                        && $ref->additional_badges[0]->label === '14a9b6c0c0';
-                }),
+                $a_ref,
                 'thenightwatch/winter-is-coming'
             )
             ->once();
@@ -353,10 +369,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
-                Mockery::on(function (CrossReferencePresenter $ref) {
-                    return $ref->id === 2
-                        && $ref->additional_badges[0]->label === 'be35d127ac';
-                }),
+                $another_ref,
                 'foodstocks/winter-is-coming'
             )
             ->once();
