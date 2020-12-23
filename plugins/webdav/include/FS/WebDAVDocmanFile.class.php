@@ -42,13 +42,18 @@ class WebDAVDocmanFile extends Sabre_DAV_File
      * @var DocumentDownloader
      */
     private $document_downloader;
+    /**
+     * @var WebDAVUtils
+     */
+    private $utils;
 
-    public function __construct(PFUser $user, Project $project, Docman_File $item, DocumentDownloader $document_downloader)
+    public function __construct(PFUser $user, Project $project, Docman_File $item, DocumentDownloader $document_downloader, WebDAVUtils $utils)
     {
         $this->user = $user;
         $this->project = $project;
         $this->item = $item;
         $this->document_downloader = $document_downloader;
+        $this->utils = $utils;
     }
 
     /**
@@ -56,8 +61,7 @@ class WebDAVDocmanFile extends Sabre_DAV_File
      */
     public function get(): void
     {
-        $item = $this->getItem();
-        $version = $item->getCurrentVersion();
+        $version = $this->item->getCurrentVersion();
 
         if (file_exists($version->getPath())) {
             if ($this->getSize() <= $this->getMaxFileSize()) {
@@ -79,16 +83,15 @@ class WebDAVDocmanFile extends Sabre_DAV_File
      */
     public function getName(): string
     {
-        switch (get_class($this->getItem())) {
+        switch (get_class($this->item)) {
             case Docman_File::class:
-                $item = $this->getItem();
-                $version = $item->getCurrentVersion();
+                $version = $this->item->getCurrentVersion();
                 return $version->getFilename();
                 break;
             case Docman_EmbeddedFile::class:
-                return $this->getItem()->getTitle();
+                return $this->item->getTitle();
         }
-        throw new RuntimeException('Invalid Item type in ' . self::class . ': ' . get_class($this->getItem()));
+        throw new RuntimeException('Invalid Item type in ' . self::class . ': ' . get_class($this->item));
     }
 
     /**
@@ -98,8 +101,7 @@ class WebDAVDocmanFile extends Sabre_DAV_File
      */
     public function getContentType(): string
     {
-        $item = $this->getItem();
-        $version = $item->getCurrentVersion();
+        $version = $this->item->getCurrentVersion();
         return $version->getFiletype();
     }
 
@@ -108,8 +110,7 @@ class WebDAVDocmanFile extends Sabre_DAV_File
      */
     public function getSize(): int
     {
-        $item = $this->getItem();
-        $version = $item->getCurrentVersion();
+        $version = $this->item->getCurrentVersion();
         return $version->getFilesize();
     }
 
@@ -118,9 +119,8 @@ class WebDAVDocmanFile extends Sabre_DAV_File
      */
     public function getETag(): string
     {
-        $item = $this->getItem();
-        $version = $item->getCurrentVersion();
-        return '"' . $this->getUtils()->getIncomingFileMd5Sum($version->getPath()) . '"';
+        $version = $this->item->getCurrentVersion();
+        return '"' . $this->utils->getIncomingFileMd5Sum($version->getPath()) . '"';
     }
 
     public function getMaxFileSize(): int
@@ -130,38 +130,18 @@ class WebDAVDocmanFile extends Sabre_DAV_File
 
     public function getLastModified(): int
     {
-        return $this->getItem()->getUpdateDate();
-    }
-
-    private function getProject(): Project
-    {
-        return $this->project;
-    }
-
-    private function getUser(): PFUser
-    {
-        return $this->user;
-    }
-
-    private function getItem(): Docman_File
-    {
-        return $this->item;
-    }
-
-    protected function getUtils(): WebDAVUtils
-    {
-        return WebDAVUtils::getInstance();
+        return $this->item->getUpdateDate();
     }
 
     public function delete(): void
     {
-        if ($this->getUtils()->isWriteEnabled()) {
+        if ($this->utils->isWriteEnabled()) {
             // Request
             $params['action']   = 'delete';
-            $params['group_id'] = $this->getProject()->getID();
+            $params['group_id'] = $this->project->getID();
             $params['confirm']  = true;
-            $params['id']       = $this->getItem()->getId();
-            $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
+            $params['id']       = $this->item->getId();
+            $this->utils->processDocmanRequest(new WebDAV_Request($params));
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
@@ -169,7 +149,7 @@ class WebDAVDocmanFile extends Sabre_DAV_File
 
     private function download(Docman_Version $version): void
     {
-        $version->preDownload($this->getItem(), $this->getUser());
+        $version->preDownload($this->item, $this->user);
         // Download the file
         $this->document_downloader->downloadDocument($this->getName(), $version->getFiletype(), $version->getFilesize(), $version->getPath());
     }
@@ -179,19 +159,19 @@ class WebDAVDocmanFile extends Sabre_DAV_File
      */
     public function put($data): void
     {
-        if ($this->getUtils()->isWriteEnabled()) {
+        if ($this->utils->isWriteEnabled()) {
             // Request
             $params = [];
             $params['action']   = 'new_version';
-            $params['group_id'] = $this->getProject()->getID();
+            $params['group_id'] = $this->project->getID();
             $params['confirm']  = true;
 
             // File stuff
-            $params['id']             = $this->getItem()->getId();
+            $params['id']             = $this->item->getId();
             $params['file_name']      = $this->getName();
             $params['upload_content'] = stream_get_contents($data);
             if (strlen($params['upload_content']) <= $this->getMaxFileSize()) {
-                $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
+                $this->utils->processDocmanRequest(new WebDAV_Request($params));
             } else {
                 throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
@@ -214,7 +194,7 @@ class WebDAVDocmanFile extends Sabre_DAV_File
      */
     public function setName($name): void
     {
-        switch (get_class($this->getItem())) {
+        switch (get_class($this->item)) {
             case Docman_File::class:
                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
                 break;
@@ -226,19 +206,19 @@ class WebDAVDocmanFile extends Sabre_DAV_File
 
     private function rename(string $name): void
     {
-        if ($this->getUtils()->isWriteEnabled()) {
+        if ($this->utils->isWriteEnabled()) {
             try {
                 // Request
                 $params = [];
                 $params['action']   = 'update';
-                $params['group_id'] = $this->getProject()->getID();
+                $params['group_id'] = $this->project->getID();
                 $params['confirm']  = true;
 
                 // Item details
-                $params['item']['id']    = $this->getItem()->getId();
+                $params['item']['id']    = $this->item->getId();
                 $params['item']['title'] = $name;
 
-                $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
+                $this->utils->processDocmanRequest(new WebDAV_Request($params));
             } catch (Exception $e) {
                 throw new Sabre_DAV_Exception_MethodNotAllowed($e->getMessage());
             }
