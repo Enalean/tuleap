@@ -24,7 +24,7 @@ use ReferenceManager;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
-use Tuleap\reference\ReferenceValidator;
+use Tuleap\Reference\ReferenceValidator;
 use Valid_HTTPURI;
 
 class ReferenceSaver

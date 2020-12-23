@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\reference;
+namespace Tuleap\Reference;
 
 use Generator;
 
@@ -34,7 +34,7 @@ class CrossReferenceByNatureCollection
     /**
      * @psalm-param array<string, array{both?: \CrossReference[], target?: \CrossReference[], source?: \CrossReference[]}> $cross_reference_by_nature
      */
-    public function __construct(array $cross_reference_by_nature, \Tuleap\Reference\NatureCollection $available_nature_collection)
+    public function __construct(array $cross_reference_by_nature, NatureCollection $available_nature_collection)
     {
         foreach ($cross_reference_by_nature as $nature => $cross_reference_by_key) {
             $available_nature = $available_nature_collection->getNatureFromIdentifier($nature);

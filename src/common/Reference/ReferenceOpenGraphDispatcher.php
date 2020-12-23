@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,8 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 namespace Tuleap\Reference;
@@ -53,7 +52,7 @@ class ReferenceOpenGraphDispatcher implements DispatcherInterface
         try {
             $response = $this->http_client->sendRequest($request);
         } catch (ClientExceptionInterface $e) {
-            return new Response($url, $url, 500, null, null, []);
+            return new Response($url, $url, 500, null, "", []);
         }
 
         return new Response(

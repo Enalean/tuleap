@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -16,14 +16,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\ReferenceDescriptionTranslation;
-use Tuleap\reference\ReferenceValidator;
-use Tuleap\reference\ReservedKeywordsRetriever;
+use Tuleap\Reference\ReferenceValidator;
+use Tuleap\Reference\ReservedKeywordsRetriever;
 use Tuleap\Reference\NatureCollection;
 
 /**

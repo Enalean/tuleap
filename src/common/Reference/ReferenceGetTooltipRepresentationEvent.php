@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,17 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 namespace Tuleap\Reference;
 
 use Tuleap\Event\Dispatchable;
+use Tuleap\Layout\TooltipJSON;
 
-class ReferenceGetTooltipContentEvent implements Dispatchable
+class ReferenceGetTooltipRepresentationEvent implements Dispatchable
 {
-    public const NAME = 'referenceGetTooltipContentEvent';
+    public const NAME = 'referenceGetTooltipRepresentationEvent';
 
     /**
      * @var \Reference
@@ -44,7 +44,7 @@ class ReferenceGetTooltipContentEvent implements Dispatchable
      */
     private $value;
     /**
-     * @var string
+     * @var TooltipJSON|null
      */
     private $output;
     /**
@@ -52,11 +52,7 @@ class ReferenceGetTooltipContentEvent implements Dispatchable
      */
     private $user;
 
-    /**
-     * @param string $keyword
-     * @param string $value
-     */
-    public function __construct(\Reference $reference, \Project $project, \PFUser $user, $keyword, $value)
+    public function __construct(\Reference $reference, \Project $project, \PFUser $user, string $keyword, string $value)
     {
         $this->reference = $reference;
         $this->project   = $project;
@@ -65,52 +61,37 @@ class ReferenceGetTooltipContentEvent implements Dispatchable
         $this->value     = $value;
     }
 
-    /**
-     * @return \Reference
-     */
-    public function getReference()
+    public function getReference(): \Reference
     {
         return $this->reference;
     }
 
-    /**
-     * @return \Project
-     */
-    public function getProject()
+    public function getProject(): \Project
     {
         return $this->project;
     }
 
-    /**
-     * @return string
-     */
-    public function getKeyword()
+    public function getKeyword(): string
     {
         return $this->keyword;
     }
 
-    /**
-     * @return string
-     */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
 
-    /**
-     * @return \PFUser
-     */
-    public function getUser()
+    public function getUser(): \PFUser
     {
         return $this->user;
     }
 
-    public function setOutput($output)
+    public function setOutput(TooltipJSON $output): void
     {
         $this->output = $output;
     }
 
-    public function getOutput()
+    public function getOutput(): ?TooltipJSON
     {
         return $this->output;
     }

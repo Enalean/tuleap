@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,10 +15,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-namespace Tuleap\reference;
+namespace Tuleap\Reference;
 
 use Event;
 
@@ -34,7 +34,7 @@ class ReservedKeywordsRetriever
         $this->event_manager = $event_manager;
     }
 
-    private function getReservedKeyWords()
+    private function getReservedKeyWords(): array
     {
         return [
             "art",
@@ -66,7 +66,7 @@ class ReservedKeywordsRetriever
         ];
     }
 
-    public function loadReservedKeywords()
+    public function loadReservedKeywords(): array
     {
         $additional_reserved_keywords = [];
 

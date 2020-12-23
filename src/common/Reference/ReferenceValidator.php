@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,10 +15,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-namespace Tuleap\reference;
+namespace Tuleap\Reference;
 
 use ReferenceDao;
 
@@ -40,17 +40,17 @@ class ReferenceValidator
         $this->reserved_keyword_retriever = $reserved_keyword_retriever;
     }
 
-    public function isValidKeyword($keyword): bool
+    public function isValidKeyword(string $keyword): bool
     {
         return preg_match('/' . self::REFERENCE_PATTERN . '/', $keyword) === 1;
     }
 
-    public function isReservedKeyword($keyword)
+    public function isReservedKeyword(string $keyword): bool
     {
         return in_array($keyword, $this->reserved_keyword_retriever->loadReservedKeywords());
     }
 
-    public function isSystemKeyword($keyword)
+    public function isSystemKeyword(string $keyword): bool
     {
         $dar = $this->reference_dao->searchByScope('S');
         while ($row = $dar->getRow()) {

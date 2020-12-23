@@ -20,54 +20,42 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\reference\Presenters;
+namespace Tuleap\Reference\Presenters;
 
 /**
  * @psalm-immutable
  */
-class CrossReferenceLinkPresenter
+class CrossReferenceLinkListPresenter
 {
     /**
      * @var string
      */
-    public $id;
+    public $classes_key;
     /**
      * @var string
      */
-    public $ref;
+    public $image;
+    /**
+     * @var CrossReferenceLinkPresenter[]
+     */
+    public $cross_ref_link_collection = [];
     /**
      * @var string
      */
-    public $url;
-    /**
-     * @var null|string
-     */
-    public $params;
+    public $icon_message;
     /**
      * @var string
      */
-    public $message_to_delete;
-    /**
-     * @var string
-     */
-    public $icon_to_delete;
-    /**
-     * @var bool
-     */
-    public $display_comma;
-    /**
-     * @var string
-     */
-    public $icon_to_delete_message;
+    public $icon_path;
 
-    public function __construct(string $id, string $ref, string $url, ?string $params, bool $display_comma)
+    /**
+     * @param CrossReferenceLinkPresenter[] $cross_ref_link_collection
+     */
+    public function __construct(string $classes_key, string $icon_message, string $icon_path, array $cross_ref_link_collection)
     {
-        $this->id                     = $id;
-        $this->ref                    = $ref;
-        $this->url                    = $url;
-        $this->params                 = $params;
-        $this->display_comma          = $display_comma;
-        $this->message_to_delete      = addslashes($GLOBALS['Language']->getText('cross_ref_fact_include', 'confirm_delete'));
-        $this->icon_to_delete_message = $GLOBALS['Language']->getText('cross_ref_fact_include', 'delete');
+        $this->classes_key               = $classes_key;
+        $this->cross_ref_link_collection = $cross_ref_link_collection;
+        $this->icon_message              = $icon_message;
+        $this->icon_path                 = $icon_path;
     }
 }

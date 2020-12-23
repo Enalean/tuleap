@@ -21,7 +21,7 @@
 namespace Tuleap\Bugzilla\Administration;
 
 use Codendi_HTMLPurifier;
-use Tuleap\reference\ReferenceValidator;
+use Tuleap\Reference\ReferenceValidator;
 
 class Presenter
 {

@@ -15,25 +15,32 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use EventManager;
+use ReferenceManager;
 
-class ReferenceGetTooltipChainLegacy extends ReferenceGetTooltipChain
+class ReferenceGetTooltipChainOpenGraph extends ReferenceGetTooltipChain
 {
     /**
-     * @var EventManager
+     * @var \Codendi_HTMLPurifier
      */
-    private $event_manager;
+    private $html_purifier;
+    /**
+     * @var ReferenceOpenGraphDispatcher
+     */
+    private $open_graph_dispatcher;
 
-    public function __construct(EventManager $event_manager)
-    {
-        $this->event_manager = $event_manager;
+    public function __construct(
+        \Codendi_HTMLPurifier $html_purifier,
+        ReferenceOpenGraphDispatcher $open_graph_dispatcher
+    ) {
+        $this->html_purifier         = $html_purifier;
+        $this->open_graph_dispatcher = $open_graph_dispatcher;
     }
 
     public function process(
@@ -43,11 +50,13 @@ class ReferenceGetTooltipChainLegacy extends ReferenceGetTooltipChain
         string $keyword,
         string $value
     ): void {
-        $event = new ReferenceGetTooltipContentEvent($reference, $project, $user, $keyword, $value);
-        $this->event_manager->processEvent($event);
-        $output = $event->getOutput();
-        if ($output) {
-            echo $output;
+        if ($reference->getNature() === ReferenceManager::REFERENCE_NATURE_OTHER) {
+            $reference_open_graph = new ReferenceOpenGraph(
+                $this->html_purifier,
+                $reference,
+                $this->open_graph_dispatcher
+            );
+            echo $reference_open_graph->getContent();
         } else {
             parent::process($reference, $project, $user, $keyword, $value);
         }

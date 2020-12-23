@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,8 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 namespace Tuleap\Reference;
@@ -81,7 +80,7 @@ class ReferenceOpenGraph
         return $html;
     }
 
-    private function isHTTPUrl($url)
+    private function isHTTPUrl(string $url): bool
     {
         return strpos(strtolower($url), 'http') !== false;
     }
