@@ -190,10 +190,10 @@ class CrossReferenceFactory
 
     public function getHTMLCrossRefsForMail()
     {
-        $html              = '';
-        $cross_refs        = $this->getCrossReferences();
-        $reference_manager = ReferenceManager::instance();
-        $available_natures = $reference_manager->getAvailableNatures();
+        $html                        = '';
+        $cross_refs                  = $this->getCrossReferences();
+        $reference_manager           = ReferenceManager::instance();
+        $available_nature_collection = $reference_manager->getAvailableNatures();
 
         foreach ($cross_refs as $nature => $references_by_destination) {
             $html .= '<div>';
@@ -207,7 +207,11 @@ class CrossReferenceFactory
                         $ref = $reference->getRefTargetKey() . " #" . $reference->getRefTargetId();
                         $url = $reference->getRefTargetUrl();
                     }
-                    $title = $available_natures[$nature]->label;
+                    $available_nature = $available_nature_collection->getNatureFromIdentifier($nature);
+                    if (! $available_nature) {
+                        continue;
+                    }
+                    $title = $available_nature->label;
                     $refs[] = '<a title="' . $title . '" href="' . $url . '">' . $ref . '</a>';
                 }
             }

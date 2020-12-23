@@ -959,15 +959,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const GET_REFERENCE_ADMIN_CAPABILITIES = 'get_reference_admin_capabilities';
 
     /**
-     * All natures cannot be used by users
-     *
-     * Parameters
-     *  - nature         => string (IN) The name of the nature
-     *  - can_be_created => bool (OUT)
-     */
-    public const CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE = 'can_user_create_reference_with_this_nature';
-
-    /**
      * Clear the user's history
      *
      * Parameters

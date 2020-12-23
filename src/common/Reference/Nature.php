@@ -41,11 +41,16 @@ final class Nature
      * @var string
      */
     public $label;
+    /**
+     * @var bool
+     */
+    public $user_can_create_ref_with_nature;
 
-    public function __construct(string $keyword, string $icon, string $label)
+    public function __construct(string $keyword, string $icon, string $label, bool $user_can_create_reference)
     {
-        $this->keyword = $keyword;
-        $this->icon    = $icon;
-        $this->label   = $label;
+        $this->keyword                         = $keyword;
+        $this->icon                            = $icon;
+        $this->label                           = $label;
+        $this->user_can_create_ref_with_nature = $user_can_create_reference;
     }
 }

@@ -700,7 +700,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             new Nature(
                 Git::REFERENCE_KEYWORD,
                 'fas fa-tlp-versioning-git',
-                dgettext('tuleap-git', 'Git commit')
+                dgettext('tuleap-git', 'Git commit'),
+                true
             )
         );
     }

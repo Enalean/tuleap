@@ -45,4 +45,9 @@ class NatureCollection implements Dispatchable
     {
         return $this->natures;
     }
+
+    public function getNatureFromIdentifier(string $identifier): ?Nature
+    {
+        return $this->natures[$identifier] ?? null;
+    }
 }

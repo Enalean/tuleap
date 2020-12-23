@@ -57,7 +57,6 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         $this->addHook(Event::POST_REFERENCE_EXTRACTED);
         $this->addHook(Event::REMOVE_CROSS_REFERENCE);
         $this->addHook(Event::GET_REFERENCE_ADMIN_CAPABILITIES);
-        $this->addHook(Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE);
         $this->addHook(CollectRoutesEvent::NAME);
     }
 
@@ -124,7 +123,8 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
             new Nature(
                 'bugzilla',
                 Nature::NO_ICON,
-                dgettext('tuleap-bugzilla_reference', 'Bugzilla')
+                dgettext('tuleap-bugzilla_reference', 'Bugzilla'),
+                false
             )
         );
     }
@@ -199,14 +199,6 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         if ($reference->getNature() === 'bugzilla') {
             $params['can_be_deleted'] = false;
             $params['can_be_edited']  = false;
-        }
-    }
-
-    /** @see \Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE */
-    public function can_user_create_reference_with_this_nature(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if ($params['nature'] === 'bugzilla') {
-            $params['can_create'] = false;
         }
     }
 
