@@ -60,17 +60,46 @@ class GitlabCrossReferenceEnhancer
         return $basic_cross_reference_presenter
             ->withTitle($gitlab_commit->getCommitTitle(), null)
             ->withAdditionalBadges(
-                [
-                    new AdditionalBadgePresenter(
-                        substr($gitlab_commit->getCommitSha1(), 0, 10),
-                        false,
-                        false
-                    )
-                ]
+                $this->getAdditionalBadgesPresenters($gitlab_commit)
             )->withCreationMetadata(
                 $this->getCreatedByPresenter($gitlab_commit),
                 $this->getCreatedOnPresenter($gitlab_commit, $user)
             );
+    }
+
+    /**
+     * @return AdditionalBadgePresenter[]
+     */
+    private function getAdditionalBadgesPresenters(GitlabCommit $gitlab_commit): array
+    {
+        $branch_badge = $this->getBadgePresenterForBranch($gitlab_commit);
+        $commit_badge = new AdditionalBadgePresenter(
+            substr($gitlab_commit->getCommitSha1(), 0, 10),
+            false,
+            false
+        );
+
+        if ($branch_badge === null) {
+            return [$commit_badge];
+        }
+
+        return [
+            $branch_badge,
+            $commit_badge
+        ];
+    }
+
+    private function getBadgePresenterForBranch(GitlabCommit $gitlab_commit): ?AdditionalBadgePresenter
+    {
+        if ($gitlab_commit->getCommitBranchName() === '') {
+            return null;
+        }
+
+        return new AdditionalBadgePresenter(
+            $gitlab_commit->getCommitBranchName(),
+            true,
+            false
+        );
     }
 
     private function getCreatedOnPresenter(GitlabCommit $gitlab_commit, \PFUser $user): TlpRelativeDatePresenter

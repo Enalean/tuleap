@@ -76,7 +76,11 @@ class GitlabCrossReferenceEnhancerTest extends TestCase
             ])
             ->getMock();
 
-        $commit = $this->buildGitlabCommit('John Snow', 'john-snow@the-wall.com');
+        $commit = $this->buildGitlabCommit(
+            'John Snow',
+            'john-snow@the-wall.com',
+            'dev/feature'
+        );
 
         $this->user_manager->shouldReceive('getUserByEmail')->andReturn($committer);
         $this->user_helper->shouldReceive('getDisplayNameFromUser')
@@ -93,8 +97,9 @@ class GitlabCrossReferenceEnhancerTest extends TestCase
 
         $this->assertEquals('Increase blankets stocks for winter', $enhanced_reference->title);
 
-        $this->assertCount(1, $enhanced_reference->additional_badges);
-        $this->assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[0]->label);
+        $this->assertCount(2, $enhanced_reference->additional_badges);
+        $this->assertEquals('dev/feature', $enhanced_reference->additional_badges[0]->label);
+        $this->assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[1]->label);
 
         $this->assertEquals('2020-12-21T14:00:18+01:00', $enhanced_reference->creation_metadata->created_on->date);
         $this->assertEquals('21/12/2020 14:00', $enhanced_reference->creation_metadata->created_on->absolute_date);
@@ -113,7 +118,7 @@ class GitlabCrossReferenceEnhancerTest extends TestCase
         $user->shouldReceive('getPreference')->andReturn("relative_first-absolute_tooltip");
         $user->shouldReceive('getLocale')->andReturn("en_US");
 
-        $commit = $this->buildGitlabCommit('The Night King', 'knight-king@is-comming.com');
+        $commit = $this->buildGitlabCommit('The Night King', 'knight-king@is-comming.com', 'dev/feature');
 
         $this->user_manager->shouldReceive('getUserByEmail')->andReturn(null);
         $this->user_helper->shouldReceive('getDisplayNameFromUser')->never();
@@ -128,8 +133,9 @@ class GitlabCrossReferenceEnhancerTest extends TestCase
 
         $this->assertEquals('Increase blankets stocks for winter', $enhanced_reference->title);
 
-        $this->assertCount(1, $enhanced_reference->additional_badges);
-        $this->assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[0]->label);
+        $this->assertCount(2, $enhanced_reference->additional_badges);
+        $this->assertEquals('dev/feature', $enhanced_reference->additional_badges[0]->label);
+        $this->assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[1]->label);
 
         $this->assertEquals('2020-12-21T14:00:18+01:00', $enhanced_reference->creation_metadata->created_on->date);
         $this->assertEquals('21/12/2020 14:00', $enhanced_reference->creation_metadata->created_on->absolute_date);
@@ -142,14 +148,52 @@ class GitlabCrossReferenceEnhancerTest extends TestCase
         $this->assertEquals('', $enhanced_reference->creation_metadata->created_by->avatar_url);
     }
 
-    private function buildGitlabCommit(string $committer_name, string $committer_email): GitlabCommit
+    public function testItDoesNotDisplayTheBranchNameBadgeIfCommitBranchIsUnknown(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getPreference')->andReturn("relative_first-absolute_tooltip");
+        $user->shouldReceive('getLocale')->andReturn("en_US");
+
+        $committer = Mockery::mock(\PFUser::class)
+            ->shouldReceive([
+                'hasAvatar' => true,
+                'getAvatarUrl' => "john_snow_avatar_url.png"
+            ])
+            ->getMock();
+
+        $commit = $this->buildGitlabCommit(
+            'John Snow',
+            'john-snow@the-wall.com',
+            ''
+        );
+
+        $this->user_manager->shouldReceive('getUserByEmail')->andReturn($committer);
+        $this->user_helper->shouldReceive('getDisplayNameFromUser')
+            ->with($committer)
+            ->andReturn("John Snow (jsnow)");
+
+        $reference = $this->getCrossReferencePresenter();
+
+        $enhanced_reference = $this->gitlab_cross_reference_enhancer->getCrossReferencePresenterWithCommitInformation(
+            $reference,
+            $commit,
+            $user
+        );
+
+        $this->assertEquals('Increase blankets stocks for winter', $enhanced_reference->title);
+
+        $this->assertCount(1, $enhanced_reference->additional_badges);
+        $this->assertEquals('14a9b6c0c0', $enhanced_reference->additional_badges[0]->label);
+    }
+
+    private function buildGitlabCommit(string $committer_name, string $committer_email, string $branch_name): GitlabCommit
     {
         return new GitlabCommit(
             2,
             '14a9b6c0c0c965977cf2af2199f93df82afcdea3',
             1608555618,
             'Increase blankets stocks for winter',
-            "master",
+            $branch_name,
             $committer_name,
             $committer_email,
         );
