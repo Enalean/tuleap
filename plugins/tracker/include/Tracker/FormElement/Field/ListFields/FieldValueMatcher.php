@@ -75,6 +75,6 @@ class FieldValueMatcher
     {
         $user = $this->user_finder->getUser($value);
 
-        return ! $user->isAnonymous() && $target_contributor_field->checkValueExists($user->getId());
+        return ! $user->isAnonymous() && $target_contributor_field->checkValueExists((string) $user->getId());
     }
 }

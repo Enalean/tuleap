@@ -32,8 +32,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable
 {
 
-    public const NONE_VALUE          = 100;
-    public const NOT_INDICATED_VALUE = 0;
+    public const NONE_VALUE = 100;
 
     protected $bind;
 
@@ -1533,14 +1532,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $is_possible_value;
     }
 
-    /**
-     * @return bool
-     */
-    public function checkValueExists($value_id)
+    public function checkValueExists(?string $value_id): bool
     {
         return $this->getBind()->isExistingValue($value_id) ||
-               $value_id == Tracker_FormElement_Field_List::NONE_VALUE ||
-               $value_id == Tracker_FormElement_Field_List::NOT_INDICATED_VALUE;
+               $value_id === (string) self::NONE_VALUE ||
+               $value_id === null;
     }
 
     /**
