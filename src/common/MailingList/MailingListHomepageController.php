@@ -31,7 +31,6 @@ use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Request\ProjectRetriever;
 
 class MailingListHomepageController implements DispatchableWithBurningParrot, DispatchableWithRequest
 {
@@ -44,10 +43,6 @@ class MailingListHomepageController implements DispatchableWithBurningParrot, Di
      */
     private $dao;
     /**
-     * @var ProjectRetriever
-     */
-    private $project_retriever;
-    /**
      * @var MailingListPresenterCollectionBuilder
      */
     private $presenter_collection_builder;
@@ -57,7 +52,6 @@ class MailingListHomepageController implements DispatchableWithBurningParrot, Di
     private $base_language;
 
     public function __construct(
-        ProjectRetriever $project_retriever,
         \TemplateRenderer $renderer,
         MailingListDao $dao,
         MailingListPresenterCollectionBuilder $presenter_collection_builder,
@@ -65,14 +59,16 @@ class MailingListHomepageController implements DispatchableWithBurningParrot, Di
     ) {
         $this->renderer                     = $renderer;
         $this->dao                          = $dao;
-        $this->project_retriever            = $project_retriever;
         $this->presenter_collection_builder = $presenter_collection_builder;
         $this->base_language                = $base_language;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project = $this->project_retriever->getProjectFromId($variables['id']);
+        $project = $request->getProject();
+        if ($project->isError()) {
+            throw new NotFoundException();
+        }
         if (! $project->usesMail()) {
             throw new NotFoundException();
         }

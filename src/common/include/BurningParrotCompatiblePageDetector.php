@@ -59,8 +59,7 @@ class BurningParrotCompatiblePageDetector
             || $this->isInHelp()
             || $this->isInBurningParrotCompatiblePage()
             || $this->isSoftwareMap()
-            || $this->isTos()
-            || $this->isInMailingLists();
+            || $this->isTos();
     }
 
     private function isManagingLabels()
@@ -133,18 +132,5 @@ class BurningParrotCompatiblePageDetector
         EventManager::instance()->processEvent($burning_parrot_compatible_event);
 
         return $burning_parrot_compatible_event->isInBurningParrotCompatiblePage();
-    }
-
-    private function isInMailingLists(): bool
-    {
-        if (strpos($_SERVER['REQUEST_URI'], '/mail/') !== 0) {
-            return false;
-        }
-
-        parse_str($_SERVER['QUERY_STRING'], $output);
-        $array_keys = array_keys($output);
-        sort($array_keys);
-
-        return $array_keys === ['group_id'];
     }
 }

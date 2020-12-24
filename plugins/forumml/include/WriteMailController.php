@@ -54,7 +54,7 @@ class WriteMailController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         include_once __DIR__ . '/forumml_utils.php';
-        include_once __DIR__ . '/../../../src/www/mail/mail_utils.php';
+        include_once __DIR__ . '/../../../src/www/include/mail_utils.php';
 
         if ($request->valid(new Valid_UInt('group_id'))) {
             $group_id = $request->get('group_id');

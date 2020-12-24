@@ -78012,7 +78012,7 @@
       <code>$iframe_url</code>
     </PossiblyUndefinedGlobalVariable>
   </file>
-  <file src="src/www/mail/mail_utils.php">
+  <file src="src/www/include/mail_utils.php">
     <DeprecatedFunction occurrences="10">
       <code>db_ei($list)</code>
       <code>db_ei($list)</code>

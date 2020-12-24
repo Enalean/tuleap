@@ -58,7 +58,7 @@ class OutputAttachmentController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        include_once __DIR__ . '/../../../src/www/mail/mail_utils.php';
+        include_once __DIR__ . '/../../../src/www/include/mail_utils.php';
 
         $groupId = $request->getValidated('group_id', 'UInt', 0);
 

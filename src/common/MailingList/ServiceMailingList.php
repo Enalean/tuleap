@@ -33,6 +33,8 @@ class ServiceMailingList extends \Service
 {
     public function displayMailingListHeader(\PFUser $user, string $title): void
     {
+        \Tuleap\Project\ServiceInstrumentation::increment('mailinglists');
+
         $breadcrumbs = $this->getBreadcrumbs($user);
 
         $this->displayHeader($title, $breadcrumbs, [], []);
