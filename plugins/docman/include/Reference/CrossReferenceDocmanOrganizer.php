@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Reference;
 
-use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Reference\CrossReferenceSectionPresenter;
@@ -35,10 +34,6 @@ class CrossReferenceDocmanOrganizer
      */
     private $project_manager;
     /**
-     * @var ProjectAccessChecker
-     */
-    private $project_access_checker;
-    /**
      * @var DocumentFromReferenceValueFinder
      */
     private $finder;
@@ -49,12 +44,10 @@ class CrossReferenceDocmanOrganizer
 
     public function __construct(
         \ProjectManager $project_manager,
-        ProjectAccessChecker $project_access_checker,
         DocumentFromReferenceValueFinder $finder,
         DocumentIconPresenterBuilder $icon_presenter_builder
     ) {
         $this->project_manager        = $project_manager;
-        $this->project_access_checker = $project_access_checker;
         $this->finder                 = $finder;
         $this->icon_presenter_builder = $icon_presenter_builder;
     }
@@ -68,12 +61,6 @@ class CrossReferenceDocmanOrganizer
 
             $user    = $by_nature_organizer->getCurrentUser();
             $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
-            try {
-                $this->project_access_checker->checkUserCanAccessProject($user, $project);
-            } catch (\Project_AccessException $e) {
-                $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
-                continue;
-            }
 
             $item = $this->finder->findItem($project, $user, $cross_reference_presenter->target_value);
             if (! $item) {
@@ -82,6 +69,7 @@ class CrossReferenceDocmanOrganizer
             }
 
             $by_nature_organizer->moveCrossReferenceToSection(
+                $project,
                 $this->addTitleBadgeOnCrossReference($cross_reference_presenter, $item),
                 CrossReferenceSectionPresenter::UNLABELLED
             );

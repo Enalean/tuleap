@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
+use Project;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Project\ProjectAccessChecker;
 
 class CrossReferenceByNatureOrganizer implements Dispatchable
 {
@@ -44,15 +46,21 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
      * @var \PFUser
      */
     private $current_user;
+    /**
+     * @var ProjectAccessChecker
+     */
+    private $project_access_checker;
 
     /**
      * @param CrossReferencePresenter[] $cross_reference_presenters
      */
     public function __construct(
+        ProjectAccessChecker $project_access_checker,
         array $cross_reference_presenters,
         NatureCollection $available_nature_collection,
         \PFUser $current_user
     ) {
+        $this->project_access_checker      = $project_access_checker;
         $this->cross_reference_presenters  = $cross_reference_presenters;
         $this->available_nature_collection = $available_nature_collection;
         $this->current_user                = $current_user;
@@ -81,30 +89,24 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
     }
 
     public function moveCrossReferenceToSection(
+        Project $project,
         CrossReferencePresenter $cross_reference_presenter,
         string $section_label
     ): void {
+        try {
+            $this->project_access_checker->checkUserCanAccessProject($this->getCurrentUser(), $project);
+        } catch (\Project_AccessException $e) {
+            $this->removeUnreadableCrossReference($cross_reference_presenter);
+            return;
+        }
+
         foreach ($this->cross_reference_presenters as $key => $xref) {
             if ($xref->id !== $cross_reference_presenter->id) {
                 continue;
             }
 
             unset($this->cross_reference_presenters[$key]);
-
-            $nature_identifier = $cross_reference_presenter->type;
-            if ($this->doWeAlreadyHaveNaturePresenter($nature_identifier)) {
-                $this->addCrossReferencePresenterToExistingNaturePresenter(
-                    $nature_identifier,
-                    $cross_reference_presenter,
-                    $section_label
-                );
-            } else {
-                $this->addCrossReferencePresenterToNewNaturePresenter(
-                    $nature_identifier,
-                    $cross_reference_presenter,
-                    $section_label
-                );
-            }
+            $this->addCrossReferenceToItsNature($cross_reference_presenter, $section_label);
         }
 
         $this->cross_reference_presenters = array_values($this->cross_reference_presenters);
@@ -170,13 +172,34 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
 
     public function organizeRemainingCrossReferences(): void
     {
-        foreach ($this->cross_reference_presenters as $cross_reference) {
-            $this->moveCrossReferenceToSection($cross_reference, CrossReferenceSectionPresenter::UNLABELLED);
+        foreach ($this->cross_reference_presenters as $key => $cross_reference_presenter) {
+            unset($this->cross_reference_presenters[$key]);
+            $this->addCrossReferenceToItsNature($cross_reference_presenter, CrossReferenceSectionPresenter::UNLABELLED);
         }
     }
 
     public function getCurrentUser(): \PFUser
     {
         return $this->current_user;
+    }
+
+    private function addCrossReferenceToItsNature(
+        CrossReferencePresenter $cross_reference_presenter,
+        string $section_label
+    ): void {
+        $nature_identifier = $cross_reference_presenter->type;
+        if ($this->doWeAlreadyHaveNaturePresenter($nature_identifier)) {
+            $this->addCrossReferencePresenterToExistingNaturePresenter(
+                $nature_identifier,
+                $cross_reference_presenter,
+                $section_label
+            );
+        } else {
+            $this->addCrossReferencePresenterToNewNaturePresenter(
+                $nature_identifier,
+                $cross_reference_presenter,
+                $section_label
+            );
+        }
     }
 }

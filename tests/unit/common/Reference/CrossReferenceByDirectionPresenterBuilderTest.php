@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Project\ProjectAccessChecker;
 
 class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
 {
@@ -58,6 +59,7 @@ class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
             $this->event_dispatcher,
             $this->reference_manager,
             $this->factory,
+            Mockery::mock(ProjectAccessChecker::class),
         );
     }
 

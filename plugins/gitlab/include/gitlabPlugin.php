@@ -47,8 +47,6 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
-use Tuleap\Project\ProjectAccessChecker;
-use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
@@ -259,11 +257,6 @@ class gitlabPlugin extends Plugin
                 new TlpRelativeDatePresenterBuilder()
             ),
             ProjectManager::instance(),
-            new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
-                new RestrictedUserCanAccessProjectVerifier(),
-                EventManager::instance()
-            )
         );
         $gitlab_organizer->organizeGitLabReferences($organizer);
     }

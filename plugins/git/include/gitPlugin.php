@@ -2816,11 +2816,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $this->getRepositoryFactory(),
                 ReferenceManager::instance(),
             ),
-            new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
-                new RestrictedUserCanAccessProjectVerifier(),
-                EventManager::instance()
-            ),
             new CommitProvider(),
             new CrossReferenceGitEnhancer(
                 new CommitMetadataRetriever(

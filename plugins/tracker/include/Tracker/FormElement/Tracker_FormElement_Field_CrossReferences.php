@@ -20,6 +20,8 @@
  */
 
 use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Reference\CrossReferenceByDirectionPresenterBuilder;
 use Tuleap\Reference\CrossReferencePresenterFactory;
 use Tuleap\Reference\CrossReferencesDao;
@@ -341,7 +343,12 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 new CrossReferencePresenterFactory(
                     new CrossReferencesDao(),
                     new InstanceBaseURLBuilder()
-                )
+                ),
+                new ProjectAccessChecker(
+                    PermissionsOverrider_PermissionsOverriderManager::instance(),
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                ),
             )
         );
 

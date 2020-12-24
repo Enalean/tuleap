@@ -21,6 +21,7 @@
 namespace Tuleap\Reference;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Project\ProjectAccessChecker;
 
 class CrossReferenceByDirectionPresenterBuilder
 {
@@ -36,15 +37,21 @@ class CrossReferenceByDirectionPresenterBuilder
      * @var CrossReferencePresenterFactory
      */
     private $factory;
+    /**
+     * @var ProjectAccessChecker
+     */
+    private $project_access_checker;
 
     public function __construct(
         EventDispatcherInterface $event_dispatcher,
         \ReferenceManager $reference_manager,
-        CrossReferencePresenterFactory $factory
+        CrossReferencePresenterFactory $factory,
+        ProjectAccessChecker $project_access_checker
     ) {
-        $this->event_dispatcher  = $event_dispatcher;
-        $this->reference_manager = $reference_manager;
-        $this->factory           = $factory;
+        $this->event_dispatcher       = $event_dispatcher;
+        $this->reference_manager      = $reference_manager;
+        $this->factory                = $factory;
+        $this->project_access_checker = $project_access_checker;
     }
 
     public function build(
@@ -74,7 +81,12 @@ class CrossReferenceByDirectionPresenterBuilder
         \PFUser $current_user
     ): array {
         $organizer = $this->event_dispatcher->dispatch(
-            new CrossReferenceByNatureOrganizer($cross_references, $available_nature_collection, $current_user)
+            new CrossReferenceByNatureOrganizer(
+                $this->project_access_checker,
+                $cross_references,
+                $available_nature_collection,
+                $current_user
+            )
         );
         assert($organizer instanceof CrossReferenceByNatureOrganizer);
 

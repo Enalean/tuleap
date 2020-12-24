@@ -27,9 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Project_AccessException;
 use ProjectManager;
-use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 
@@ -42,10 +40,6 @@ class CrossReferenceDocmanOrganizerTest extends TestCase
      */
     private $project_manager;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAccessChecker
-     */
-    private $access_checker;
-    /**
      * @var CrossReferenceDocmanOrganizer
      */
     private $organizer;
@@ -53,23 +47,16 @@ class CrossReferenceDocmanOrganizerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DocumentFromReferenceValueFinder
      */
     private $finder;
-    /**
-     * @var DocumentIconPresenterBuilder
-     */
-    private $icon_builder;
 
     protected function setUp(): void
     {
         $this->project_manager = Mockery::mock(ProjectManager::class);
-        $this->access_checker  = Mockery::mock(ProjectAccessChecker::class);
         $this->finder          = Mockery::mock(DocumentFromReferenceValueFinder::class);
-        $this->icon_builder    = new DocumentIconPresenterBuilder();
 
         $this->organizer = new CrossReferenceDocmanOrganizer(
             $this->project_manager,
-            $this->access_checker,
             $this->finder,
-            $this->icon_builder
+            new DocumentIconPresenterBuilder()
         );
     }
 
@@ -103,53 +90,6 @@ class CrossReferenceDocmanOrganizerTest extends TestCase
         $this->organizer->organizeDocumentReferences($by_nature_organizer);
     }
 
-    public function testItDoesNotOrganizeArtifactCrossReferencesIfProjectCannotBeAccessedByCurrentUser(): void
-    {
-        $user    = Mockery::mock(PFUser::class);
-        $project = Mockery::mock(Project::class);
-
-        $this->project_manager
-            ->shouldReceive(['getProject' => $project])
-            ->getMock();
-
-        $this->access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $project)
-            ->once()
-            ->andThrow(Mockery::mock(Project_AccessException::class));
-
-        $a_ref = new CrossReferencePresenter(
-            1,
-            "document",
-            "doc #123",
-            "url",
-            "delete_url",
-            1,
-            '123',
-            null,
-            [],
-            null,
-        );
-
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [
-                        $a_ref,
-                    ]
-                ]
-            )->getMock();
-
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
-        $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($a_ref)
-            ->once();
-
-        $this->organizer->organizeDocumentReferences($by_nature_organizer);
-    }
-
     public function testItDoesNotOrganizeArtifactCrossReferencesIfArtifactCannotBeFound(): void
     {
         $user    = Mockery::mock(PFUser::class);
@@ -158,12 +98,6 @@ class CrossReferenceDocmanOrganizerTest extends TestCase
         $this->project_manager
             ->shouldReceive(['getProject' => $project])
             ->getMock();
-
-        $this->access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $project)
-            ->once();
-
         $a_ref = new CrossReferencePresenter(
             1,
             "document",
@@ -208,11 +142,6 @@ class CrossReferenceDocmanOrganizerTest extends TestCase
             ->shouldReceive(['getProject' => $project])
             ->getMock();
 
-        $this->access_checker
-            ->shouldReceive('checkUserCanAccessProject')
-            ->with($user, $project)
-            ->once();
-
         $a_ref = new CrossReferencePresenter(
             1,
             "document",
@@ -242,6 +171,7 @@ class CrossReferenceDocmanOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
+                $project,
                 Mockery::on(
                     function (CrossReferencePresenter $presenter) {
                         return $presenter->id === 1

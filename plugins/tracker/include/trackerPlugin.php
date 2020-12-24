@@ -2435,11 +2435,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $tracker_organizer = new CrossReferenceArtifactOrganizer(
             ProjectManager::instance(),
-            new ProjectAccessChecker(
-                PermissionsOverrider_PermissionsOverriderManager::instance(),
-                new RestrictedUserCanAccessProjectVerifier(),
-                EventManager::instance()
-            ),
             Tracker_ArtifactFactory::instance(),
         );
 
