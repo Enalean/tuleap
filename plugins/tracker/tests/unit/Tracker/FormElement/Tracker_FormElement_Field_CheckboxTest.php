@@ -94,6 +94,12 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
         );
     }
 
+    public function testAcceptValueOfNonSelectedCheckbox(): void
+    {
+        $field = $this->getCheckboxField();
+        self::assertTrue($field->checkValueExists('0'));
+    }
+
     protected function getCheckboxField(): Tracker_FormElement_Field_Checkbox
     {
         return new Tracker_FormElement_Field_Checkbox(
