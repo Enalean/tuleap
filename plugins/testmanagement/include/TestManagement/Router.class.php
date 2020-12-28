@@ -28,6 +28,8 @@ use PFUser;
 use Project;
 use TrackerFactory;
 use TrackerXmlImport;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
@@ -334,9 +336,12 @@ class Router
             new XMLImportHelper(UserManager::instance())
         );
 
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+
         return new StartTestManagementController(
             $this->artifact_links_usage_updater,
             $csrf_token,
+            $transaction_executor,
             new FirstConfigCreator(
                 $this->config,
                 $this->tracker_factory,

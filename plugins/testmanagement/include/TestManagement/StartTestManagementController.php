@@ -23,6 +23,7 @@ namespace Tuleap\TestManagement;
 use Feedback;
 use HTTPRequest;
 use Project;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\TestManagement\Breadcrumbs\NoCrumb;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 
@@ -40,15 +41,21 @@ class StartTestManagementController
      * @var FirstConfigCreator
      */
     private $config_creator;
+    /**
+     * @var DBTransactionExecutorWithConnection
+     */
+    private $transaction_executor;
 
     public function __construct(
         ArtifactLinksUsageUpdater $artifact_link_usage_updater,
         \CSRFSynchronizerToken $csrf_token,
+        DBTransactionExecutorWithConnection $transaction_executor,
         FirstConfigCreator $config_creator
     ) {
         $this->artifact_link_usage_updater = $artifact_link_usage_updater;
         $this->csrf_token                  = $csrf_token;
         $this->config_creator              = $config_creator;
+        $this->transaction_executor              = $transaction_executor;
     }
 
     public function misconfiguration(HTTPRequest $request): string
@@ -72,8 +79,11 @@ class StartTestManagementController
         $project = $request->getProject();
 
         try {
-            $this->config_creator->createConfigForProjectFromXML($project);
-
+            $this->transaction_executor->execute(
+                function () use ($project): void {
+                    $this->config_creator->createConfigForProjectFromXML($project);
+                }
+            );
             $this->allowProjectToUseNature(
                 $project,
                 $project
