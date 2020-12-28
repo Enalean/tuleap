@@ -360,4 +360,28 @@ class CrossReferenceByNatureOrganizerTest extends TestCase
             $organizer->getCrossReferencePresenters(),
         );
     }
+
+    public function testRemoveUnreadableCrossReferenceEvenIfItHasBeenEnhanced(): void
+    {
+        $a_ref       = CrossReferencePresenterBuilder::get(1)->withType('git')->build();
+        $another_ref = CrossReferencePresenterBuilder::get(2)->withType('wiki')->build();
+
+        $project_access_checker = Mockery::mock(ProjectAccessChecker::class)
+            ->shouldReceive('checkUserCanAccessProject')
+            ->getMock();
+
+        $organizer = new CrossReferenceByNatureOrganizer(
+            $project_access_checker,
+            [$a_ref, $another_ref],
+            new NatureCollection(),
+            Mockery::mock(PFUser::class),
+        );
+
+        $organizer->removeUnreadableCrossReference($a_ref->withTitle("New title", null));
+
+        self::assertEquals(
+            [$another_ref],
+            $organizer->getCrossReferencePresenters(),
+        );
+    }
 }
