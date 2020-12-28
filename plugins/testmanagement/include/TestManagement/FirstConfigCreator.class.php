@@ -108,7 +108,10 @@ class FirstConfigCreator
      * @throws Administration\TrackerDoesntExistException
      * @throws Administration\TrackerHasAtLeastOneHiddenFieldsetsPostActionException
      * @throws Administration\TrackerIsDeletedException
+     * @throws MissingArtifactLinkException
      * @throws TrackerComesFromLegacyEngineException
+     * @throws TrackerDefinitionNotValidException
+     * @throws TrackerExecutionNotValidException
      * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
      * @throws TrackerNotCreatedException
      * @throws TrackerNotInProjectException
@@ -146,6 +149,9 @@ class FirstConfigCreator
      * @throws Administration\TrackerDoesntExistException
      * @throws Administration\TrackerHasAtLeastOneHiddenFieldsetsPostActionException
      * @throws Administration\TrackerIsDeletedException
+     * @throws MissingArtifactLinkException
+     * @throws TrackerDefinitionNotValidException
+     * @throws TrackerExecutionNotValidException
      * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
      * @throws TrackerNotInProjectException
      */

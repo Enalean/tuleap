@@ -479,6 +479,11 @@
           <name><![CDATA[artifact_link]]></name>
           <label><![CDATA[Artifact Link]]></label>
         </formElement>
+        <externalField type="ttmstepdef" ID="F1746" rank="2">
+          <name>steps</name>
+          <label><![CDATA[Steps definition]]></label>
+          <description><![CDATA[Definition of the test's steps]]></description>
+        </externalField>
         <formElement type="fieldset" ID="F1729" rank="1940" id="1729" tracker_id="72" parent_id="0" required="1">
           <name><![CDATA[fieldset_1]]></name>
           <label><![CDATA[Description]]></label>
@@ -627,6 +632,9 @@
         <permission scope="field" REF="F1813" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F1813" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F1813" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F1746" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F1746" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F1746" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F1730" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F1730" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F1730" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>

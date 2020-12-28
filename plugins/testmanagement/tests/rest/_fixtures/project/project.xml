@@ -269,6 +269,11 @@
                                 </formElement>
                             </formElements>
                         </formElement>
+                        <externalField type="ttmstepdef" ID="F12746" rank="2">
+                            <name>steps</name>
+                            <label><![CDATA[Steps definition]]></label>
+                            <description><![CDATA[Definition of the test's steps]]></description>
+                        </externalField>
                         <formElement type="column" ID="F11027" rank="2">
                             <name>col3</name>
                             <label><![CDATA[col3]]></label>
@@ -397,6 +402,9 @@
                 <permission scope="field" REF="F11032" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F11032" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F11032" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F12746" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F12746" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F12746" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F11033" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F11033" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F11033" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
@@ -469,6 +477,11 @@
                     <name>creation_details</name>
                     <label><![CDATA[Creation Details]]></label>
                     <formElements>
+                        <formElement type="ttmstepexec" ID="F12766" rank="0">
+                            <name>steps_results</name>
+                            <label><![CDATA[Steps results]]></label>
+                            <description><![CDATA[Result of the steps' executions.]]></description>
+                        </formElement>
                         <formElement type="column" ID="F11038" rank="0">
                             <name>col1</name>
                             <label><![CDATA[col1]]></label>
@@ -638,6 +651,9 @@
                 <permission scope="tracker" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
                 <permission scope="field" REF="F11039" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F11041" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F12766" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F12766" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F12766" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F11043" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F11045" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F11048" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>

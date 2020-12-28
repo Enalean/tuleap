@@ -20,12 +20,13 @@
 
 namespace Tuleap\TestManagement\Administration;
 
+use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 
-class StepFieldUsageDetector
+class FieldUsageDetector
 {
     /** @var TrackerFactory */
     private $tracker_factory;
@@ -49,13 +50,12 @@ class StepFieldUsageDetector
         return $this->isFieldUsed($tracker_id, StepExecution::TYPE);
     }
 
-    /**
-     * @param int    $tracker_id
-     * @param string $type
-     *
-     * @return bool
-     */
-    private function isFieldUsed($tracker_id, $type)
+    public function isArtifactLinksFieldUsed(int $tracker_id): bool
+    {
+        return $this->isFieldUsed($tracker_id, Tracker_FormElement_Field_ArtifactLink::TYPE);
+    }
+
+    private function isFieldUsed(int $tracker_id, string $type): bool
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if ($tracker === null) {
