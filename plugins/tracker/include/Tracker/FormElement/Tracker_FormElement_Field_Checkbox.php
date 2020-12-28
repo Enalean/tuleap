@@ -23,6 +23,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox
 {
+    private const NOT_INDICATED_VALUE = '0';
 
     protected function fetchFieldContainerStart(string $id, string $name, string $data_target_fields_ids): string
     {
@@ -107,5 +108,10 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitCheckbox($this);
+    }
+
+    public function checkValueExists(?string $value_id): bool
+    {
+        return $value_id === self::NOT_INDICATED_VALUE || parent::checkValueExists($value_id);
     }
 }
