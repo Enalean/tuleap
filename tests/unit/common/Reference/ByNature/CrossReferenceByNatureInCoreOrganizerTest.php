@@ -29,6 +29,7 @@ use Tuleap\Reference\ByNature\ConcurrentVersionsSystem\CrossReferenceCvsOrganize
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
 
 class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
 {
@@ -50,16 +51,22 @@ class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceByNatureOrganizer
      */
     private $by_nature_organizer;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceFRSOrganizer
+     */
+    private $frs_organizer;
 
     public function setUp(): void
     {
         $this->by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
         $this->wiki_organizer      = Mockery::mock(CrossReferenceWikiOrganizer::class);
         $this->cvs_organizer       = Mockery::mock(CrossReferenceCvsOrganizer::class);
+        $this->frs_organizer       = Mockery::mock(CrossReferenceFRSOrganizer::class);
 
         $this->core_organizer = new CrossReferenceByNatureInCoreOrganizer(
             $this->wiki_organizer,
             $this->cvs_organizer,
+            $this->frs_organizer
         );
     }
 
@@ -100,6 +107,26 @@ class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
         $this->cvs_organizer
             ->shouldReceive('organizeCvsReference')
             ->with($cvs_ref, $this->by_nature_organizer)
+            ->once();
+
+        $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);
+    }
+
+    public function testItOrganizesFRSReleaseReferences(): void
+    {
+        $release_ref = CrossReferencePresenterBuilder::get(1)->withType('release')->build();
+         $this->by_nature_organizer->shouldReceive(
+             [
+                 'getCrossReferencePresenters' => [
+                     CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
+                     $release_ref,
+                 ],
+             ]
+         );
+
+         $this->frs_organizer
+            ->shouldReceive('organizeFRSReleaseReference')
+            ->with($release_ref, $this->by_nature_organizer)
             ->once();
 
         $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);

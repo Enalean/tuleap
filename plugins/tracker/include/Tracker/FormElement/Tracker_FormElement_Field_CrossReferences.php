@@ -36,6 +36,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\CrossReference\CrossReferenceFieldRenderer;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceFieldPresenterBuilder;
+use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
@@ -366,6 +367,11 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                         new TlpRelativeDatePresenterBuilder(),
                         UserManager::instance(),
                         UserHelper::instance(),
+                    ),
+                    new CrossReferenceFRSOrganizer(
+                        new FRSPackageFactory(),
+                        new FRSReleaseFactory(),
+                        ProjectManager::instance()
                     )
                 ),
             )
