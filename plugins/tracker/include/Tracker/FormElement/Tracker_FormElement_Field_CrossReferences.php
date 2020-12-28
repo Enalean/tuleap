@@ -20,16 +20,19 @@
  */
 
 use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Reference\ByNature\CrossReferenceByNatureInCoreOrganizer;
+use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
+use Tuleap\Reference\ByNature\Wiki\WikiPageFromReferenceValueRetriever;
 use Tuleap\Reference\CrossReferenceByDirectionPresenterBuilder;
 use Tuleap\Reference\CrossReferencePresenterFactory;
 use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\CrossReference\CrossReferenceFieldRenderer;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceFieldPresenterBuilder;
-use Tuleap\Layout\IncludeAssets;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
@@ -348,6 +351,12 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                     PermissionsOverrider_PermissionsOverriderManager::instance(),
                     new RestrictedUserCanAccessProjectVerifier(),
                     EventManager::instance()
+                ),
+                new CrossReferenceByNatureInCoreOrganizer(
+                    new CrossReferenceWikiOrganizer(
+                        ProjectManager::instance(),
+                        new WikiPageFromReferenceValueRetriever(),
+                    ),
                 ),
             )
         );

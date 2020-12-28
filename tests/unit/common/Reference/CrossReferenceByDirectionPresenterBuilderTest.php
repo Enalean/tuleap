@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Reference\ByNature\CrossReferenceByNatureInCoreOrganizer;
 
 class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
 {
@@ -45,6 +46,10 @@ class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
      */
     private $factory;
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceByNatureInCoreOrganizer
+     */
+    private $core_organizer;
+    /**
      * @var CrossReferenceByDirectionPresenterBuilder
      */
     private $builder;
@@ -54,12 +59,14 @@ class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
         $this->event_dispatcher  = Mockery::mock(EventDispatcherInterface::class);
         $this->reference_manager = Mockery::mock(\ReferenceManager::class);
         $this->factory           = Mockery::mock(CrossReferencePresenterFactory::class);
+        $this->core_organizer    = Mockery::mock(CrossReferenceByNatureInCoreOrganizer::class);
 
         $this->builder = new CrossReferenceByDirectionPresenterBuilder(
             $this->event_dispatcher,
             $this->reference_manager,
             $this->factory,
             Mockery::mock(ProjectAccessChecker::class),
+            $this->core_organizer,
         );
     }
 
@@ -86,16 +93,18 @@ class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
             ->shouldReceive('getAvailableNatures')
             ->andReturn($available_natures);
 
-        $organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
 
         $this->event_dispatcher
             ->shouldReceive('dispatch')
             ->with(Mockery::type(CrossReferenceByNatureOrganizer::class))
-            ->andReturn($organizer);
+            ->andReturn($by_nature_organizer);
 
-        $organizer->shouldReceive('organizeRemainingCrossReferences')->twice();
+        $this->core_organizer->shouldReceive('organizeCoreReferences')->twice();
+        $by_nature_organizer->shouldReceive('organizeRemainingCrossReferences')->twice();
 
-        $organizer->shouldReceive('getNatures')->twice()->andReturn([]);
+        $by_nature_organizer->shouldReceive('getNatures')->twice()->andReturn([]);
+
 
         $presenter = $this->builder->build("PageName", "wiki", 102, $user);
 
