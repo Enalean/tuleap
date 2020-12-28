@@ -697,9 +697,6 @@ msgstr "Checkin -"
 msgid "Child projects"
 msgstr "Projets enfants"
 
-msgid "Choose a Group First"
-msgstr "Choisissez d'abord un groupe (projet)"
-
 msgid "Choose a category…"
 msgstr "Choisissez une catégorie…"
 
@@ -1113,9 +1110,6 @@ msgstr "Entrer l'identifiant (ID) du message"
 
 msgid "Error - choose a forum first"
 msgstr "Erreur - Veuillez d'abord choisir un forum"
-
-msgid "Error - choose a group first"
-msgstr "Erreur - Choisissez d'abord un groupe (projet)"
 
 msgid "Error - this news item was not found"
 msgstr "Erreur - cette annonce est introuvable"
@@ -1598,10 +1592,6 @@ msgstr "Administration de la liste"
 
 msgid "Mail To"
 msgstr "Envoyer à"
-
-#, php-format
-msgid "Mailing Lists for %1$s"
-msgstr "Liste De Diffusions for %1$s"
 
 msgid "Mailing list name"
 msgstr "Nom de la liste de diffusion"
@@ -3915,14 +3905,8 @@ msgstr "Forum sous surveillance"
 msgid "permissions"
 msgstr "permissions"
 
-msgid "private"
-msgstr "privée"
-
 msgid "private repository"
 msgstr "dépôt privé"
-
-msgid "public"
-msgstr "publique"
 
 msgid "reply"
 msgstr "répondre"
