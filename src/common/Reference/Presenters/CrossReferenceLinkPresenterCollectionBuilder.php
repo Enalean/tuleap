@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\reference\Presenters;
+namespace Tuleap\Reference\Presenters;
 
 class CrossReferenceLinkPresenterCollectionBuilder
 {

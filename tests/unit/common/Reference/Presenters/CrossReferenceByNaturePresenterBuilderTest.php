@@ -20,10 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\reference\Presenters;
+namespace Tuleap\Reference\Presenters;
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\reference\CrossReferenceCollection;
+use Tuleap\Reference\CrossReferenceCollection;
 
 class CrossReferenceByNaturePresenterBuilderTest extends TestCase
 {

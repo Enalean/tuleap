@@ -20,22 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\reference;
+namespace Tuleap\Reference;
 
-class CrossReferenceNatureIcon
+abstract class ReferenceGetTooltipChain
 {
     /**
-     * @var string
+     * @var ReferenceGetTooltipChain|null
      */
-    private $icon_name;
+    private $next;
 
-    public function __construct(string $icon_name)
+    /**
+     * @return ReferenceGetTooltipChain
+     */
+    public function chain(ReferenceGetTooltipChain $next)
     {
-        $this->icon_name = $icon_name;
+        $this->next = $next;
+
+        return $next;
     }
 
-    public function getIconName(): string
-    {
-        return $this->icon_name;
+    public function process(
+        \Reference $reference,
+        \Project $project,
+        \PFUser $user,
+        string $keyword,
+        string $value
+    ): void {
+        if ($this->next) {
+            $this->next->process($reference, $project, $user, $keyword, $value);
+        }
     }
 }

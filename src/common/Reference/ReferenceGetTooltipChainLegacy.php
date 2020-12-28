@@ -15,28 +15,25 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-abstract class ReferenceGetTooltipChain
+use EventManager;
+
+class ReferenceGetTooltipChainLegacy extends ReferenceGetTooltipChain
 {
     /**
-     * @var ReferenceGetTooltipChain|null
+     * @var EventManager
      */
-    private $next;
+    private $event_manager;
 
-    /**
-     * @return ReferenceGetTooltipChain
-     */
-    public function chain(ReferenceGetTooltipChain $next)
+    public function __construct(EventManager $event_manager)
     {
-        $this->next = $next;
-
-        return $next;
+        $this->event_manager = $event_manager;
     }
 
     public function process(
@@ -46,8 +43,13 @@ abstract class ReferenceGetTooltipChain
         string $keyword,
         string $value
     ): void {
-        if ($this->next) {
-            $this->next->process($reference, $project, $user, $keyword, $value);
+        $event = new ReferenceGetTooltipContentEvent($reference, $project, $user, $keyword, $value);
+        $this->event_manager->processEvent($event);
+        $output = $event->getOutput();
+        if ($output) {
+            echo $output;
+        } else {
+            parent::process($reference, $project, $user, $keyword, $value);
         }
     }
 }

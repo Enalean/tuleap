@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-namespace Tuleap\reference\Presenters;
+namespace Tuleap\Reference\Presenters;
 
-use Tuleap\reference\CrossReferenceCollection;
+use Tuleap\Reference\CrossReferenceCollection;
 
 class CrossReferenceByNaturePresenterBuilder
 {

@@ -55,7 +55,7 @@ class FileReference extends \Reference
         $this->reference_value = $reference_value;
     }
 
-    public function getLink()
+    public function getLink(): string
     {
         if (! $this->reference_value) {
             throw new NotFoundException(self::class . ': no reference value found for ' . $this->reference_value);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,18 +15,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 namespace Tuleap\Reference;
 
 use Tuleap\Event\Dispatchable;
-use Tuleap\Layout\TooltipJSON;
 
-class ReferenceGetTooltipRepresentationEvent implements Dispatchable
+class ReferenceGetTooltipContentEvent implements Dispatchable
 {
-    public const NAME = 'referenceGetTooltipRepresentationEvent';
+    public const NAME = 'referenceGetTooltipContentEvent';
 
     /**
      * @var \Reference
@@ -45,7 +43,7 @@ class ReferenceGetTooltipRepresentationEvent implements Dispatchable
      */
     private $value;
     /**
-     * @var TooltipJSON|null
+     * @var ?string
      */
     private $output;
     /**
@@ -87,12 +85,12 @@ class ReferenceGetTooltipRepresentationEvent implements Dispatchable
         return $this->user;
     }
 
-    public function setOutput(TooltipJSON $output): void
+    public function setOutput(string $output): void
     {
         $this->output = $output;
     }
 
-    public function getOutput(): ?TooltipJSON
+    public function getOutput(): ?string
     {
         return $this->output;
     }

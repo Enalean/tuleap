@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +19,11 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-use Tuleap\reference\Presenters\CrossReferenceFieldPresenter;
-use Tuleap\reference\Presenters\CrossReferenceByNaturePresenterBuilder;
-use Tuleap\reference\Presenters\CrossReferenceLinkListPresenterBuilder;
-use Tuleap\reference\Presenters\CrossReferenceLinkPresenterCollectionBuilder;
-use Tuleap\reference\CrossReferenceByNatureCollection;
+use Tuleap\Reference\Presenters\CrossReferenceFieldPresenter;
+use Tuleap\Reference\Presenters\CrossReferenceByNaturePresenterBuilder;
+use Tuleap\Reference\Presenters\CrossReferenceLinkListPresenterBuilder;
+use Tuleap\Reference\Presenters\CrossReferenceLinkPresenterCollectionBuilder;
+use Tuleap\Reference\CrossReferenceByNatureCollection;
 
 class CrossReferenceFactory
 {
