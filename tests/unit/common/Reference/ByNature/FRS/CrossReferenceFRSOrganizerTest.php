@@ -58,11 +58,16 @@ class CrossReferenceFRSOrganizerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
      */
     private $project;
+    /**
+     * @var \FRSFileFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $file_factory;
 
     protected function setUp(): void
     {
         $this->package_factory = Mockery::mock(\FRSPackageFactory::class);
         $this->release_factory = Mockery::mock(\FRSReleaseFactory::class);
+        $this->file_factory    = Mockery::mock(\FRSFileFactory::class);
         $this->project         = Mockery::mock(\Project::class);
         $this->project_manager = Mockery::mock(ProjectManager::class, ['getProject' => $this->project]);
         $this->user            = Mockery::mock(PFUser::class, ['getId' => 115]);
@@ -70,6 +75,7 @@ class CrossReferenceFRSOrganizerTest extends TestCase
         $this->organizer = new CrossReferenceFRSOrganizer(
             $this->package_factory,
             $this->release_factory,
+            $this->file_factory,
             $this->project_manager
         );
     }
@@ -269,5 +275,70 @@ class CrossReferenceFRSOrganizerTest extends TestCase
             );
 
         $this->organizer->organizeFRSReleaseReference($cross_reference, $by_nature_organizer);
+    }
+
+    public function testRemoveCrossReferenceIfFileDoesNotExist(): void
+    {
+        $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
+
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
+            ->shouldReceive(['getCurrentUser' => $this->user])
+            ->getMock();
+
+        $this->file_factory->shouldReceive("getFRSFileFromDb")->with(1)->andReturnNull();
+        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->once()->with($cross_reference);
+        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+
+        $this->organizer->organizeFRSFileReference($cross_reference, $by_nature_organizer);
+    }
+
+    public function testRemoveCrossReferenceIfUserCanNotDownloadFile(): void
+    {
+        $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
+
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
+            ->shouldReceive(['getCurrentUser' => $this->user])
+            ->getMock();
+
+        $file = Mockery::mock(\FRSFile::class)
+            ->shouldReceive("userCanDownload")
+            ->with($this->user)
+            ->andReturn(false)
+            ->getMock();
+
+        $this->file_factory->shouldReceive("getFRSFileFromDb")->with(1)->andReturn($file);
+        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->once()->with($cross_reference);
+        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+
+        $this->organizer->organizeFRSFileReference($cross_reference, $by_nature_organizer);
+    }
+
+    public function testMoveFRSFileCrossReferenceInUnlabelledSection(): void
+    {
+        $cross_reference = CrossReferencePresenterBuilder::get(1)->withType('release')->withValue("1")->withProjectId(101)->build();
+
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
+            ->shouldReceive(['getCurrentUser' => $this->user])
+            ->getMock();
+
+        $file = Mockery::mock(\FRSFile::class)
+            ->shouldReceive("userCanDownload")
+            ->with($this->user)
+            ->andReturn(true)
+            ->getMock();
+
+        $this->file_factory->shouldReceive("getFRSFileFromDb")->with(1)->andReturn($file);
+
+        $by_nature_organizer->shouldReceive('removeUnreadableCrossReference')->never();
+        $by_nature_organizer
+            ->shouldReceive('moveCrossReferenceToSection')
+            ->once()
+            ->with(
+                $this->project,
+                $cross_reference,
+                ""
+            );
+
+        $this->organizer->organizeFRSFileReference($cross_reference, $by_nature_organizer);
     }
 }

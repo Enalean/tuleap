@@ -371,6 +371,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                     new CrossReferenceFRSOrganizer(
                         new FRSPackageFactory(),
                         new FRSReleaseFactory(),
+                        new FRSFileFactory(),
                         ProjectManager::instance()
                     )
                 ),
