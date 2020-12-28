@@ -1390,7 +1390,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         $last_changeset = $this->getLastChangeset();
         if ($last_changeset) {
-            return $last_changeset->getSubmittedOn();
+            return (int) $last_changeset->getSubmittedOn();
         }
 
         return -1;

@@ -65,7 +65,7 @@ class ChangesetsForDiffRetriever
             throw new ForbiddenException(dgettext("tuleap-tracker", 'Only text fields are supported for diff.'));
         }
 
-        $previous_changeset = $artifact->getPreviousChangeset($next_changeset->getId());
+        $previous_changeset = $artifact->getPreviousChangeset((int) $next_changeset->getId());
 
         return new ChangesetsForDiff($next_changeset, $field, $previous_changeset);
     }

@@ -358,7 +358,7 @@ class ExecutionRepresentationBuilder
         $has_been_run_at_least_once = ! $execution->isFirstChangeset($last_changeset);
 
         return new PreviousResultRepresentation(
-            $last_changeset->getSubmittedOn(),
+            (int) $last_changeset->getSubmittedOn(),
             $user_representation,
             $execution->getStatusForChangeset($last_changeset),
             $this->getExecutionResult($user, $execution),

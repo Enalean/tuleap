@@ -368,7 +368,7 @@ class ExecutionsResource
         if ($body->force_use_latest_definition_version && $last_changeset) {
             $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(
                 $id,
-                $last_changeset->getId()
+                (int) $last_changeset->getId()
             );
         }
 

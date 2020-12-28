@@ -28,8 +28,8 @@ class Tracker_Artifact_Changeset_CommentNull extends Tracker_Artifact_Changeset_
             $changeset,
             0,
             0,
-            $changeset->getSubmittedBy(),
-            $changeset->getSubmittedOn(),
+            (int) $changeset->getSubmittedBy(),
+            (int) $changeset->getSubmittedOn(),
             '',
             Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
             -1

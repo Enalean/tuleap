@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable
 {
 
@@ -979,7 +980,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    protected function _fetchField(string $id, string $name, $selected_values, $submitted_values_for_this_list = [])
+    protected function _fetchField(string $id, string $name, $selected_values, $submitted_values_for_this_list = []) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html     = '';
         $purifier = Codendi_HTMLPurifier::instance();
@@ -1102,7 +1103,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
 
-    protected function _fetchFieldMasschange($id, $name, $selected_values)
+    protected function _fetchFieldMasschange($id, $name, $selected_values) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $purifier  = Codendi_HTMLPurifier::instance();
         $html      = '';
@@ -1175,7 +1176,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html           = '';
         $last_changeset = $artifact->getLastChangeset();
         if ($value && $last_changeset !== null) {
-            $html .= $this->fetchChangesetValue($artifact->id, $last_changeset->getId(), $value);
+            $html .= $this->fetchChangesetValue($artifact->id, (int) $last_changeset->getId(), $value);
         }
         return $html;
     }
@@ -1439,7 +1440,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return false;
     }
 
-    protected function permission_is_authorized($type, $transition_id, $user_id, $group_id)
+    protected function permission_is_authorized($type, $transition_id, $user_id, $group_id) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         include_once __DIR__ . '/../../../../../src/www/project/admin/permissions.php';
 

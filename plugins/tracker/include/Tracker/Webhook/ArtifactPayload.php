@@ -46,7 +46,7 @@ class ArtifactPayload implements Payload
     private function buildPayload(Tracker_Artifact_Changeset $last_changeset)
     {
         $user               = $last_changeset->getSubmitter();
-        $previous_changeset = $last_changeset->getArtifact()->getPreviousChangeset($last_changeset->getId());
+        $previous_changeset = $last_changeset->getArtifact()->getPreviousChangeset((int) $last_changeset->getId());
 
         $last_changeset_content     = $last_changeset->getFullRESTValue($user);
         $previous_changeset_content = null;

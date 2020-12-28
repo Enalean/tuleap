@@ -209,7 +209,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             }
 
             if ($send_notification) {
-                $artifact->getChangeset($new_changeset->getId())->executePostCreationActions();
+                $artifact->getChangeset((int) $new_changeset->getId())->executePostCreationActions();
             }
 
             $this->event_manager->processEvent(new ArtifactUpdated($artifact, $submitter));

@@ -83,7 +83,7 @@ class ExecutionCreator
         if ($last_changeset) {
             $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(
                 $execution->getArtifact()->getId(),
-                $last_changeset->getId()
+                (int) $last_changeset->getId()
             );
         }
 

@@ -49,7 +49,7 @@ class Tracker_XML_Exporter_ChangesetXMLExporter
         $cdata->insertWithAttributes(
             $changeset_xml,
             'submitted_on',
-            date('c', $changeset->getSubmittedOn()),
+            date('c', (int) $changeset->getSubmittedOn()),
             ['format' => 'ISO8601']
         );
 
@@ -77,7 +77,7 @@ class Tracker_XML_Exporter_ChangesetXMLExporter
             );
         }
 
-        $submitted_on = $changeset_xml->addChild('submitted_on', date('c', $changeset->getSubmittedOn()));
+        $submitted_on = $changeset_xml->addChild('submitted_on', date('c', (int) $changeset->getSubmittedOn()));
         $submitted_on->addAttribute('format', 'ISO8601');
 
         $comments_node = $changeset_xml->addChild('comments');
