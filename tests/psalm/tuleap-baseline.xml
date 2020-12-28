@@ -67846,7 +67846,7 @@
       <code>$sender_uuid</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/reference/CrossReference.class.php">
+  <file src="src/common/Reference/CrossReference.php">
     <MissingParamType occurrences="9">
       <code>$refSourceGid</code>
       <code>$refSourceId</code>
@@ -67893,7 +67893,7 @@
       <code>getUserId</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/reference/CrossReferenceFactory.class.php">
+  <file src="src/common/Reference/CrossReferenceFactory.php">
     <DeprecatedFunction occurrences="9">
       <code>db_ei($this-&gt;entity_gid)</code>
       <code>db_ei($this-&gt;entity_gid)</code>
@@ -67928,12 +67928,12 @@
       <code>getRefTarget</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/reference/CrossReferenceManager.class.php">
+  <file src="src/common/Reference/CrossReferenceManager.php">
     <MissingPropertyType occurrences="1">
       <code>$dao</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/reference/Reference.class.php">
+  <file src="src/common/Reference/Reference.php">
     <InvalidScalarArgument occurrences="1">
       <code>$this-&gt;group_id</code>
     </InvalidScalarArgument>
@@ -67990,7 +67990,7 @@
       <code>setOutput</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/reference/ReferenceInstance.class.php">
+  <file src="src/common/Reference/ReferenceInstance.php">
     <MissingParamType occurrences="6">
       <code>$group_id</code>
       <code>$keyword</code>
@@ -68012,7 +68012,7 @@
       <code>getValue</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/reference/ReferenceManager.class.php">
+  <file src="src/common/Reference/ReferenceManager.php">
     <DeprecatedFunction occurrences="6">
       <code>db_ei($artifact_id)</code>
       <code>db_fetch_array($result)</code>
