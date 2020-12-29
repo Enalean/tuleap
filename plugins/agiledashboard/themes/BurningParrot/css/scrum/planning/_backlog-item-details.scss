@@ -47,11 +47,15 @@
                 color: map-get($colors, 'text');
             }
 
-            .backlog-item-details-effort-container-content-no-initial-effort,
-            .backlog-item-details-parent {
+            .backlog-item-details-effort-container-content-no-initial-effort {
                 $background-color-no-initial-effort: darken(map-get($colors, 'secondary'), 5%);
                 border-color: $background-color-no-initial-effort;
                 background: $background-color-no-initial-effort;
+            }
+
+            .backlog-item-details-parent {
+                border-color: transparent;
+                background: transparent;
             }
         }
     }
