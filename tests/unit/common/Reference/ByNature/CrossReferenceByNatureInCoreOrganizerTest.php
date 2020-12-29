@@ -25,6 +25,7 @@ namespace Tuleap\Reference\ByNature;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Reference\ByNature\ConcurrentVersionsSystem\CrossReferenceCvsOrganizer;
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
@@ -38,6 +39,10 @@ class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
      */
     private $wiki_organizer;
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceCvsOrganizer
+     */
+    private $cvs_organizer;
+    /**
      * @var CrossReferenceByNatureInCoreOrganizer
      */
     private $core_organizer;
@@ -50,9 +55,11 @@ class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
     {
         $this->by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
         $this->wiki_organizer      = Mockery::mock(CrossReferenceWikiOrganizer::class);
+        $this->cvs_organizer       = Mockery::mock(CrossReferenceCvsOrganizer::class);
 
         $this->core_organizer = new CrossReferenceByNatureInCoreOrganizer(
             $this->wiki_organizer,
+            $this->cvs_organizer,
         );
     }
 
@@ -72,6 +79,27 @@ class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
         $this->wiki_organizer
             ->shouldReceive('organizeWikiReference')
             ->with($wiki_ref, $this->by_nature_organizer)
+            ->once();
+
+        $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);
+    }
+
+    public function testItOrganizeCvsReferences(): void
+    {
+        $cvs_ref = CrossReferencePresenterBuilder::get(1)->withType('cvs_commit')->build();
+
+        $this->by_nature_organizer->shouldReceive(
+            [
+                'getCrossReferencePresenters' => [
+                    CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
+                    $cvs_ref,
+                ],
+            ]
+        );
+
+        $this->cvs_organizer
+            ->shouldReceive('organizeCvsReference')
+            ->with($cvs_ref, $this->by_nature_organizer)
             ->once();
 
         $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);

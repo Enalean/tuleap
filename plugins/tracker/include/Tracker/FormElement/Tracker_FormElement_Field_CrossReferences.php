@@ -19,10 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\ConcurrentVersionsSystem\CvsDao;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Reference\ByNature\ConcurrentVersionsSystem\CrossReferenceCvsOrganizer;
 use Tuleap\Reference\ByNature\CrossReferenceByNatureInCoreOrganizer;
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\ByNature\Wiki\WikiPageFromReferenceValueRetriever;
@@ -357,6 +360,13 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                         ProjectManager::instance(),
                         new WikiPageFromReferenceValueRetriever(),
                     ),
+                    new CrossReferenceCvsOrganizer(
+                        ProjectManager::instance(),
+                        new CvsDao(),
+                        new TlpRelativeDatePresenterBuilder(),
+                        UserManager::instance(),
+                        UserHelper::instance(),
+                    )
                 ),
             )
         );

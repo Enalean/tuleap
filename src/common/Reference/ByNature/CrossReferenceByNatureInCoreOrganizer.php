@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\ByNature;
 
+use Tuleap\Reference\ByNature\ConcurrentVersionsSystem\CrossReferenceCvsOrganizer;
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 
@@ -31,18 +32,32 @@ class CrossReferenceByNatureInCoreOrganizer
      * @var CrossReferenceWikiOrganizer
      */
     private $wiki_organizer;
+    /**
+     * @var CrossReferenceCvsOrganizer
+     */
+    private $cvs_organizer;
 
     public function __construct(
-        CrossReferenceWikiOrganizer $wiki_organizer
+        CrossReferenceWikiOrganizer $wiki_organizer,
+        CrossReferenceCvsOrganizer $cvs_organizer
     ) {
         $this->wiki_organizer = $wiki_organizer;
+        $this->cvs_organizer = $cvs_organizer;
     }
 
     public function organizeCoreReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
     {
         foreach ($by_nature_organizer->getCrossReferencePresenters() as $cross_reference_presenter) {
-            if ($cross_reference_presenter->type === \ReferenceManager::REFERENCE_NATURE_WIKIPAGE) {
-                $this->wiki_organizer->organizeWikiReference($cross_reference_presenter, $by_nature_organizer);
+            switch ($cross_reference_presenter->type) {
+                case \ReferenceManager::REFERENCE_NATURE_WIKIPAGE:
+                    $this->wiki_organizer->organizeWikiReference($cross_reference_presenter, $by_nature_organizer);
+                    break;
+                case \ReferenceManager::REFERENCE_NATURE_CVSCOMMIT:
+                    $this->cvs_organizer->organizeCvsReference($cross_reference_presenter, $by_nature_organizer);
+                    break;
+                default:
+                    // ignore "unknown" references
+                    break;
             }
         }
     }

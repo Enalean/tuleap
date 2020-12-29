@@ -165,7 +165,7 @@ class ReferenceManager
             self::REFERENCE_NATURE_CVSCOMMIT,
             new Nature(
                 'cvs',
-                Nature::NO_ICON,
+                'fas fa-tlp-versioning-cvs',
                 $GLOBALS['Language']->getText('project_reference', 'reference_cvs_commit_nature_key'),
                 true
             )

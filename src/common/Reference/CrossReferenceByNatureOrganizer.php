@@ -79,7 +79,7 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
     public function removeUnreadableCrossReference(CrossReferencePresenter $cross_ref_presenter_to_remove): void
     {
         foreach ($this->cross_reference_presenters as $index => $cross_reference_presenter) {
-            if ($cross_reference_presenter === $cross_ref_presenter_to_remove) {
+            if ($cross_reference_presenter->id === $cross_ref_presenter_to_remove->id) {
                 unset($this->cross_reference_presenters[$index]);
                 break;
             }
