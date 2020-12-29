@@ -1,4 +1,4 @@
-<a data-nodrag="true" ng-href="{{ url }}" class="backlog-item-details-parent tlp-badge-secondary">
+<a data-nodrag="true" ng-href="{{ url }}" class="backlog-item-details-parent tlp-badge-secondary" ng-class="getColorClass(parent_project_color_name, parent_project_id, project_id)">
     <span ng-if="parent_project_id !== project_id" ng-bind-html="parent_project_label | tuleapHighlight:filter_terms" class="backlog-item-details-parent-project"></span>
     <span>
         <i ng-if="parent_project_id === project_id" class="fas fa-fw fa-level-up-alt" aria-hidden="true"></i>

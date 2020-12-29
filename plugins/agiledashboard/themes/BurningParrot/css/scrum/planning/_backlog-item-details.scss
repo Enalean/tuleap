@@ -17,8 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'sass:color';
+@use '../../../../../../../src/themes/common/css/project-background/background';
 @import '../../card-fields';
 @import 'backlog-item-moves';
+
+@each $project-color-name, $project-color-properties in background.$definitions {
+    .project-color-#{$project-color-name} {
+        --project-color: #{background.get-color($project-color-name)};
+        --project-color-background: linear-gradient(90deg, #{color.scale(background.get-color($project-color-name), $lightness: 60%)} 0%, #{color.scale(background.get-color($project-color-name), $lightness: 85%)} 100%);
+    }
+}
 
 .backlog-item-details {
     display: flex;
@@ -213,6 +222,9 @@
     line-height: 18px;
 }
 
+$backlog-item-details-parent-color: var(--project-color, darken($tlp-ui-dimmed, 10%));
+$backlog-item-details-parent-background: var(--project-color-background, $tlp-ui-border-normal);
+
 .backlog-item-details-parent {
     display: flex;
     position: relative;
@@ -223,8 +235,11 @@
     margin: 0 5px 0 13px;
     padding: 3px 5px;
     transition: transform 100ms ease-in-out 500ms;
+    border: 1px solid $backlog-item-details-parent-background;
     border-radius: 3px;
-    fill: darken($tlp-ui-dimmed, 10%);
+    background: $backlog-item-details-parent-background;
+    fill: $backlog-item-details-parent-color;
+    color: $backlog-item-details-parent-color;
     font-size: 12px;
 
     &:hover,
@@ -238,7 +253,7 @@
 }
 
 .backlog-item-details-parent-link {
-    color: darken($tlp-ui-dimmed, 10%);
+    color: $backlog-item-details-parent-color;
 
     &:hover {
         text-decoration: none;
