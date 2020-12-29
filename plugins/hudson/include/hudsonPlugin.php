@@ -246,7 +246,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
             'hudson_build',
             new Nature(
                 'build',
-                Nature::NO_ICON,
+                'fas fa-sync-alt',
                 dgettext('tuleap-hudson', 'Jenkins Build'),
                 true
             )
@@ -255,7 +255,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
             'hudson_job',
             new Nature(
                 'job',
-                Nature::NO_ICON,
+                'fas fa-sync-alt',
                 dgettext('tuleap-hudson', 'Jenkins Job'),
                 true
             )
