@@ -25,6 +25,7 @@ namespace Tuleap\Reference\ByNature;
 use Tuleap\Reference\ByNature\ConcurrentVersionsSystem\CrossReferenceCvsOrganizer;
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
+use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
 
 class CrossReferenceByNatureInCoreOrganizer
 {
@@ -37,12 +38,19 @@ class CrossReferenceByNatureInCoreOrganizer
      */
     private $cvs_organizer;
 
+    /**
+     * @var CrossReferenceFRSOrganizer
+     */
+    private $frs_organizer;
+
     public function __construct(
         CrossReferenceWikiOrganizer $wiki_organizer,
-        CrossReferenceCvsOrganizer $cvs_organizer
+        CrossReferenceCvsOrganizer $cvs_organizer,
+        CrossReferenceFRSOrganizer $frs_organizer
     ) {
         $this->wiki_organizer = $wiki_organizer;
-        $this->cvs_organizer = $cvs_organizer;
+        $this->cvs_organizer  = $cvs_organizer;
+        $this->frs_organizer  = $frs_organizer;
     }
 
     public function organizeCoreReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -54,6 +62,9 @@ class CrossReferenceByNatureInCoreOrganizer
                     break;
                 case \ReferenceManager::REFERENCE_NATURE_CVSCOMMIT:
                     $this->cvs_organizer->organizeCvsReference($cross_reference_presenter, $by_nature_organizer);
+                    break;
+                case \ReferenceManager::REFERENCE_NATURE_RELEASE:
+                    $this->frs_organizer->organizeFRSReleaseReference($cross_reference_presenter, $by_nature_organizer);
                     break;
                 default:
                     // ignore "unknown" references
