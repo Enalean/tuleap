@@ -79,6 +79,9 @@ class CrossReferenceByNatureInCoreOrganizer
                 case \ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE:
                     $this->forum_organizer->organizeMessageReference($cross_reference_presenter, $by_nature_organizer);
                     break;
+                case \ReferenceManager::REFERENCE_NATURE_FORUM:
+                    $this->forum_organizer->organizeForumReference($cross_reference_presenter, $by_nature_organizer);
+                    break;
                 default:
                     // ignore "unknown" references
                     break;

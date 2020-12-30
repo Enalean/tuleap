@@ -181,4 +181,25 @@ class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
 
         $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);
     }
+
+    public function testItOrganizesForumReferences(): void
+    {
+        $ref = CrossReferencePresenterBuilder::get(1)->withType('forum')->build();
+
+        $this->by_nature_organizer->shouldReceive(
+            [
+                'getCrossReferencePresenters' => [
+                    CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
+                    $ref,
+                ],
+            ]
+        );
+
+        $this->forum_organizer
+            ->shouldReceive('organizeForumReference')
+            ->with($ref, $this->by_nature_organizer)
+            ->once();
+
+        $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);
+    }
 }

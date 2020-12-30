@@ -21,6 +21,8 @@
 
 use Tuleap\ConcurrentVersionsSystem\CvsDao;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\Forum\ForumDao;
+use Tuleap\Forum\ForumRetriever;
 use Tuleap\Forum\MessageRetriever;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Layout\IncludeAssets;
@@ -379,6 +381,9 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                     new CrossReferenceForumOrganizer(
                         ProjectManager::instance(),
                         new MessageRetriever(),
+                        new ForumRetriever(
+                            new ForumDao(),
+                        )
                     )
                 ),
             )

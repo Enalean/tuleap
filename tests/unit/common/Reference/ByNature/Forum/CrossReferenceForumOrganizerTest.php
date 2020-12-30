@@ -24,8 +24,11 @@ namespace Tuleap\Reference\ByNature\Forum;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use ProjectManager;
+use Tuleap\Forum\Forum;
+use Tuleap\Forum\ForumRetriever;
 use Tuleap\Forum\Message;
 use Tuleap\Forum\MessageNotFoundException;
 use Tuleap\Forum\MessageRetriever;
@@ -43,6 +46,10 @@ class CrossReferenceForumOrganizerTest extends TestCase
      */
     private $message_retriever;
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ForumRetriever
+     */
+    private $forum_retriever;
+    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
      */
     private $project;
@@ -53,13 +60,15 @@ class CrossReferenceForumOrganizerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->message_retriever = Mockery::mock(MessageRetriever::class);
         $this->project           = Mockery::mock(\Project::class);
-        $project_manager        = Mockery::mock(ProjectManager::class, ['getProject' => $this->project]);
+        $project_manager         = Mockery::mock(ProjectManager::class, ['getProject' => $this->project]);
+        $this->message_retriever = Mockery::mock(MessageRetriever::class);
+        $this->forum_retriever   = Mockery::mock(ForumRetriever::class);
 
         $this->organizer = new CrossReferenceForumOrganizer(
             $project_manager,
             $this->message_retriever,
+            $this->forum_retriever,
         );
     }
 
@@ -141,5 +150,59 @@ class CrossReferenceForumOrganizerTest extends TestCase
             ->once();
 
         $this->organizer->organizeMessageReference($ref, $by_nature_organizer);
+    }
+
+    public function testItRemovesCrossReferenceIfForumCannotBeFound(): void
+    {
+        $user = Mockery::mock(PFUser::class);
+
+        $ref = CrossReferencePresenterBuilder::get(1)
+            ->withValue("123")
+            ->build();
+
+        $this->forum_retriever
+            ->shouldReceive('getForumUserCanView')
+            ->with(123, $this->project, $user)
+            ->andReturnNull();
+
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class, ['getCurrentUser' => $user]);
+        $by_nature_organizer
+            ->shouldReceive('removeUnreadableCrossReference')
+            ->with($ref)
+            ->once();
+
+        $this->organizer->organizeForumReference($ref, $by_nature_organizer);
+    }
+
+    public function testItOrganizesForumCrossReferenceToUnlabelledSection(): void
+    {
+        $user = Mockery::mock(PFUser::class);
+
+        $ref = CrossReferencePresenterBuilder::get(1)
+            ->withValue("123")
+            ->build();
+
+        $this->forum_retriever
+            ->shouldReceive('getForumUserCanView')
+            ->with(123, $this->project, $user)
+            ->andReturn(new Forum('Open Discussions'));
+
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class, ['getCurrentUser' => $user]);
+
+        $by_nature_organizer
+            ->shouldReceive('moveCrossReferenceToSection')
+            ->with(
+                $this->project,
+                Mockery::on(
+                    function (CrossReferencePresenter $presenter): bool {
+                        return $presenter->id === 1
+                            && $presenter->title === 'Open Discussions';
+                    }
+                ),
+                ''
+            )
+            ->once();
+
+        $this->organizer->organizeForumReference($ref, $by_nature_organizer);
     }
 }

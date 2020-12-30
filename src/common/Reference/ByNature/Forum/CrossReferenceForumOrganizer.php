@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Reference\ByNature\Forum;
 
 use ProjectManager;
+use Tuleap\Forum\ForumRetriever;
 use Tuleap\Forum\MessageNotFoundException;
 use Tuleap\Forum\MessageRetriever;
 use Tuleap\Forum\PermissionToAccessForumException;
@@ -40,13 +41,19 @@ class CrossReferenceForumOrganizer
      * @var MessageRetriever
      */
     private $message_retriever;
+    /**
+     * @var ForumRetriever
+     */
+    private $forum_retriever;
 
     public function __construct(
         ProjectManager $project_manager,
-        MessageRetriever $message_retriever
+        MessageRetriever $message_retriever,
+        ForumRetriever $forum_retriever
     ) {
         $this->project_manager   = $project_manager;
         $this->message_retriever = $message_retriever;
+        $this->forum_retriever   = $forum_retriever;
     }
 
     public function organizeMessageReference(
@@ -66,6 +73,30 @@ class CrossReferenceForumOrganizer
         $by_nature_organizer->moveCrossReferenceToSection(
             $project,
             $cross_reference_presenter->withTitle($message->getSubject(), null),
+            CrossReferenceSectionPresenter::UNLABELLED,
+        );
+    }
+
+    public function organizeForumReference(
+        CrossReferencePresenter $cross_reference_presenter,
+        CrossReferenceByNatureOrganizer $by_nature_organizer
+    ): void {
+        $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
+
+        $forum = $this->forum_retriever->getForumUserCanView(
+            (int) $cross_reference_presenter->target_value,
+            $project,
+            $by_nature_organizer->getCurrentUser()
+        );
+        if (! $forum) {
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+
+            return;
+        }
+
+        $by_nature_organizer->moveCrossReferenceToSection(
+            $project,
+            $cross_reference_presenter->withTitle($forum->getName(), null),
             CrossReferenceSectionPresenter::UNLABELLED,
         );
     }
