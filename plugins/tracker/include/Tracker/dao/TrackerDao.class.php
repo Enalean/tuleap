@@ -23,17 +23,11 @@ use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 class TrackerDao extends DataAccessObject
 {
-    public function __construct()
-    {
-        parent::__construct();
-        $this->table_name = 'tracker';
-    }
-
     public function searchById($id)
     {
         $id      = $this->da->escapeInt($id);
         $sql = "SELECT *
-                FROM $this->table_name
+                FROM tracker
                 WHERE id = $id ";
         return $this->retrieve($sql);
     }
@@ -42,7 +36,7 @@ class TrackerDao extends DataAccessObject
     {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT *
-                FROM $this->table_name
+                FROM tracker
                 WHERE group_id = $group_id
                   AND deletion_date IS NULL
                 ORDER BY name";
@@ -60,7 +54,7 @@ class TrackerDao extends DataAccessObject
         // TODO: escape $excluded_tracker_ids ?
 
         $sql = "SELECT *
-                FROM $this->table_name
+                FROM tracker
                 WHERE group_id = $group_id
                   AND deletion_date IS NULL
                   $excluded_clause
@@ -91,7 +85,7 @@ class TrackerDao extends DataAccessObject
         }
 
         $sql = "SELECT item_name
-                FROM $this->table_name
+                FROM tracker
                 WHERE item_name = $item_name
                   AND group_id = $group_id
                   AND deletion_date IS NULL
@@ -111,7 +105,7 @@ class TrackerDao extends DataAccessObject
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT *
-                FROM $this->table_name
+                FROM tracker
                 WHERE item_name = $item_name
                   AND group_id = $project_id
                   AND deletion_date IS NULL";
@@ -132,17 +126,19 @@ class TrackerDao extends DataAccessObject
         return $res && count($res) > 0;
     }
 
-    public function markAsDeleted($id)
+    public function markAsDeleted(int $tracker_id): bool
     {
-        $id = $this->da->escapeInt($id);
-        $deletion_date = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
-        $sql = "UPDATE $this->table_name
+        $current_date  = new DateTimeImmutable();
+        $tracker_id    = $this->da->escapeInt($tracker_id);
+        $deletion_date = $this->da->escapeInt($current_date->getTimestamp());
+
+        $sql = "UPDATE tracker
                 SET deletion_date = $deletion_date
-                WHERE id = $id";
+                WHERE id = $tracker_id";
 
         if ($this->update($sql)) {
             $hierarchy_dao = new HierarchyDAO();
-            $hierarchy_dao->deleteParentChildAssociationsForTracker($id);
+            $hierarchy_dao->deleteParentChildAssociationsForTracker($tracker_id);
             return true;
         } else {
             return false;
@@ -259,7 +255,7 @@ class TrackerDao extends DataAccessObject
 
         $id_sharing = new TrackerIdSharingDao();
         if ($id = $id_sharing->generateTrackerId()) {
-            $sql = "INSERT INTO $this->table_name
+            $sql = "INSERT INTO tracker
                     (id,
                         group_id,
                         name,
@@ -314,7 +310,7 @@ class TrackerDao extends DataAccessObject
         $instantiate_for_new_projects = $this->da->quoteSmart($tracker->instantiate_for_new_projects);
         $log_priority_changes         = $this->da->quoteSmart($tracker->log_priority_changes);
         $notifications_level          = $this->da->escapeInt($tracker->getNotificationsLevel());
-        $sql = "UPDATE $this->table_name SET
+        $sql = "UPDATE tracker SET
                    group_id                     = $group_id,
                    name                         = $name,
                    description                  = $description,
@@ -335,7 +331,7 @@ class TrackerDao extends DataAccessObject
 
     public function delete($id)
     {
-        $sql = "DELETE FROM $this->table_name WHERE id = " . $this->da->escapeInt($id);
+        $sql = "DELETE FROM tracker WHERE id = " . $this->da->escapeInt($id);
         return $this->update($sql);
     }
 
@@ -344,7 +340,7 @@ class TrackerDao extends DataAccessObject
         $group_id = $this->da->quoteSmart($group_id);
         $itemname = $this->da->quoteSmart($itemname);
         $oldItemname = $this->da->quoteSmart($oldItemname);
-        $sql = "UPDATE $this->table_name SET
+        $sql = "UPDATE tracker SET
 			item_name=$itemname
             WHERE item_name=$oldItemname AND group_id=$group_id";
         return $this->update($sql);
@@ -386,7 +382,7 @@ class TrackerDao extends DataAccessObject
     public function restoreTrackerMarkAsDeleted($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql        = "UPDATE $this->table_name SET
+        $sql        = "UPDATE tracker SET
                           deletion_date = NULL
                       WHERE id = $tracker_id";
         return $this->update($sql);
