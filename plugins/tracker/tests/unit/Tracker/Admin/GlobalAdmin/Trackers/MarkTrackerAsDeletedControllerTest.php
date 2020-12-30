@@ -39,6 +39,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
+use Tuleap\Tracker\FormElement\Field\FieldDao;
 
 class MarkTrackerAsDeletedControllerTest extends TestCase
 {
@@ -78,6 +79,11 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
      */
     private $permissions_checker;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldDao
+     */
+    private $field_dao;
+
     protected function setUp(): void
     {
         $token_provider            = Mockery::mock(CSRFSynchronizerTokenProvider::class);
@@ -85,6 +91,7 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
         $this->event_manager       = Mockery::mock(EventManager::class);
         $this->reference_manager   = Mockery::mock(ReferenceManager::class);
         $this->permissions_checker = Mockery::mock(GlobalAdminPermissionsChecker::class);
+        $this->field_dao           = Mockery::mock(FieldDao::class);
 
         $this->controller = new MarkTrackerAsDeletedController(
             $this->tracker_factory,
@@ -92,6 +99,7 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
             $token_provider,
             $this->event_manager,
             $this->reference_manager,
+            $this->field_dao
         );
 
         $this->user    = Mockery::mock(PFUser::class);
@@ -167,7 +175,7 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
         );
     }
 
-    public function testItThrowsExceptionIfTrackerCannotBeDeleted(): void
+    public function testItThrowsExceptionIfTrackerCannotBeDeletedUsedInAnotherService(): void
     {
         $tracker = Mockery::mock(Tracker::class)
             ->shouldReceive(
@@ -195,6 +203,50 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
         $this->csrf
             ->shouldReceive('check')
             ->once();
+
+        $this->expectException(ForbiddenException::class);
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->build(),
+            Mockery::mock(BaseLayout::class),
+            ['id' => '102']
+        );
+    }
+
+    public function testItThrowsExceptionIfTrackerCannotBeDeletedSourceOfSharedField(): void
+    {
+        $tracker = Mockery::mock(Tracker::class)
+            ->shouldReceive(
+                [
+                    'getId'                                      => 102,
+                    'getName'                                    => 'User story',
+                    'isDeleted'                                  => false,
+                    'getProject'                                 => $this->project,
+                    'getInformationsFromOtherServicesAboutUsage' => [
+                        'can_be_deleted' => true,
+                    ]
+                ]
+            )->getMock();
+
+        $this->permissions_checker
+            ->shouldReceive('doesUserHaveTrackerGlobalAdminRightsOnProject')
+            ->with($this->project, $this->user)
+            ->once()
+            ->andReturnTrue();
+
+        $this->tracker_factory
+            ->shouldReceive('getTrackerById')
+            ->once()
+            ->andReturn($tracker);
+
+        $this->csrf
+            ->shouldReceive('check')
+            ->once();
+
+        $this->field_dao->shouldReceive('doesTrackerHaveSourceSharedFields')
+            ->once()
+            ->with(102)
+            ->andReturnTrue();
 
         $this->expectException(ForbiddenException::class);
 
@@ -234,6 +286,11 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
         $this->csrf
             ->shouldReceive('check')
             ->once();
+
+        $this->field_dao->shouldReceive('doesTrackerHaveSourceSharedFields')
+            ->once()
+            ->with(102)
+            ->andReturnFalse();
 
         $this->tracker_factory
             ->shouldReceive('markAsDeleted')
@@ -284,6 +341,11 @@ class MarkTrackerAsDeletedControllerTest extends TestCase
         $this->csrf
             ->shouldReceive('check')
             ->once();
+
+        $this->field_dao->shouldReceive('doesTrackerHaveSourceSharedFields')
+            ->once()
+            ->with(102)
+            ->andReturnFalse();
 
         $this->tracker_factory
             ->shouldReceive('markAsDeleted')

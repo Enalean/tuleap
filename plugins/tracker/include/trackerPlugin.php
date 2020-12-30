@@ -144,6 +144,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownFieldDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
+use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentController;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileUploadCleaner;
@@ -2045,7 +2046,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             new CSRFSynchronizerTokenProvider(),
             EventManager::instance(),
-            ReferenceManager::instance()
+            ReferenceManager::instance(),
+            new FieldDao()
         );
     }
 
@@ -2079,6 +2081,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             TemplateRendererFactory::build(),
             new TrackerInNewDropdownDao(),
             new CSRFSynchronizerTokenProvider(),
+            new FieldDao()
         );
     }
 
