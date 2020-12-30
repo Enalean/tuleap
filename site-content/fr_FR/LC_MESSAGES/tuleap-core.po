@@ -2641,7 +2641,7 @@ msgstr "Mis à jour avec succès."
 msgid "Summary"
 msgstr "Résumé"
 
-msgid "Switch to new tracker creation flow"
+msgid "Switch to new project creation flow"
 msgstr "Basculer sur la nouvelle interface de création de projet"
 
 msgid "Switch to..."
