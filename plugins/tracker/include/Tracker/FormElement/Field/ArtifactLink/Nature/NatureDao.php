@@ -210,6 +210,7 @@ class NatureDao extends DataAccessObject
                     INNER JOIN tracker                              AS t          ON (t.id = linked_art.tracker_id)
                     INNER JOIN groups ON (groups.group_id = t.group_id)
                 WHERE parent_art.id  = $artifact_id
+                    AND t.deletion_date IS NULL
                     AND groups.status = 'A'
                     AND IFNULL(artlink.nature, '') = $nature
                 LIMIT $limit
@@ -234,6 +235,7 @@ class NatureDao extends DataAccessObject
                     INNER JOIN tracker                              AS t          ON (t.id = parent_art.tracker_id)
                     INNER JOIN groups ON (groups.group_id = t.group_id)
                 WHERE linked_art.id  = $artifact_id
+                    AND t.deletion_date IS NULL
                     AND groups.status = 'A'
                     AND IFNULL(artlink.nature, '') = $nature
                 LIMIT $limit

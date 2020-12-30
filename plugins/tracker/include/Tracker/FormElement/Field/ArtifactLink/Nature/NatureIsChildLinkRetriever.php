@@ -89,7 +89,7 @@ class NatureIsChildLinkRetriever
     /**
      * @return Artifact[]
      */
-    public function getDirectParents(Artifact $artifact)
+    public function getDirectParents(Artifact $artifact): array
     {
         $parents = [];
         foreach ($this->artifact_link_dao->searchIsChildReverseLinksById($artifact->getId()) as $row) {
