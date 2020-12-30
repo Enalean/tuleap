@@ -66,6 +66,9 @@ class CrossReferenceByNatureInCoreOrganizer
                 case \ReferenceManager::REFERENCE_NATURE_RELEASE:
                     $this->frs_organizer->organizeFRSReleaseReference($cross_reference_presenter, $by_nature_organizer);
                     break;
+                case \ReferenceManager::REFERENCE_NATURE_FILE:
+                    $this->frs_organizer->organizeFRSFileReference($cross_reference_presenter, $by_nature_organizer);
+                    break;
                 default:
                     // ignore "unknown" references
                     break;

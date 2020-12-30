@@ -41,15 +41,21 @@ class CrossReferenceFRSOrganizer
      * @var \FRSReleaseFactory
      */
     private $release_factory;
+    /**
+     * @var \FRSFileFactory
+     */
+    private $file_factory;
 
     public function __construct(
         \FRSPackageFactory $package_factory,
         \FRSReleaseFactory $release_factory,
+        \FRSFileFactory $file_factory,
         ProjectManager $project_manager
     ) {
         $this->package_factory = $package_factory;
         $this->project_manager = $project_manager;
         $this->release_factory = $release_factory;
+        $this->file_factory    = $file_factory;
     }
 
     public function organizeFRSReleaseReference(
@@ -92,6 +98,26 @@ class CrossReferenceFRSOrganizer
             $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
             return;
         }
+
+        $by_nature_organizer->moveCrossReferenceToSection(
+            $project,
+            $cross_reference_presenter,
+            CrossReferenceSectionPresenter::UNLABELLED
+        );
+    }
+
+    public function organizeFRSFileReference(
+        CrossReferencePresenter $cross_reference_presenter,
+        CrossReferenceByNatureOrganizer $by_nature_organizer
+    ): void {
+        $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
+        $file    = $this->file_factory->getFRSFileFromDb($cross_reference_presenter->target_value);
+
+        if (! $file || ! $file->userCanDownload($by_nature_organizer->getCurrentUser())) {
+            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+            return;
+        }
+
         $by_nature_organizer->moveCrossReferenceToSection(
             $project,
             $cross_reference_presenter,

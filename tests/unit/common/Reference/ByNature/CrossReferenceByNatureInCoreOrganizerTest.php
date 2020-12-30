@@ -131,4 +131,25 @@ class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
 
         $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);
     }
+
+    public function testItOrganizesFRSFileReferences(): void
+    {
+        $release_ref = CrossReferencePresenterBuilder::get(1)->withType('file')->build();
+
+        $this->by_nature_organizer->shouldReceive(
+            [
+                'getCrossReferencePresenters' => [
+                    CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
+                    $release_ref,
+                ],
+            ]
+        );
+
+        $this->frs_organizer
+            ->shouldReceive('organizeFRSFileReference')
+            ->with($release_ref, $this->by_nature_organizer)
+            ->once();
+
+        $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);
+    }
 }
