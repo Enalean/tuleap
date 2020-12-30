@@ -7,7 +7,7 @@
     "classmap": ["include/"]
   },
   "require": {
-    "phpseclib/phpseclib": "^2.0"
+    "phpseclib/phpseclib": "^3.0"
   },
   "config": {
     "sort-packages": true

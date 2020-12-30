@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017-2020. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2016. All Rights Reserved.
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use phpseclib3\Exception\NoKeyLoadedException;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
 class Tracker_Key
@@ -80,9 +81,13 @@ class Tracker_Key
     {
         preg_match('/-----BEGIN PUBLIC KEY-----(.*)-----END PUBLIC KEY-----$/s', $key, $match);
         if (! empty($match)) {
-            $rsa = new \phpseclib\Crypt\RSA();
-            $rsa->loadKey($key);
-            if ($rsa->getSize() < 2048 || $rsa->getSize() > 8192) {
+            try {
+                $rsa = \phpseclib3\Crypt\RSA\PublicKey::load($key);
+                assert($rsa instanceof \phpseclib3\Crypt\RSA\PublicKey);
+            } catch (NoKeyLoadedException $exception) {
+                return false;
+            }
+            if ($rsa->getLength() < 2048 || $rsa->getLength() > 8192) {
                 return false;
             }
             return true;
@@ -104,8 +109,15 @@ class Tracker_Key
      */
     public function getFieldSize($key)
     {
-        $rsa = new \phpseclib\Crypt\RSA();
-        $rsa->loadKey($key);
-        return (($rsa->getSize() / 8) - (2 * Encryption_Manager::HLEN) - 2);
+        if ($key === '') {
+            return 0;
+        }
+        try {
+            $rsa = \phpseclib3\Crypt\RSA\PublicKey::load($key);
+            assert($rsa instanceof \phpseclib3\Crypt\RSA\PublicKey);
+        } catch (NoKeyLoadedException $exception) {
+            return 0;
+        }
+        return ($rsa->getLength() - 2 * $rsa->getHash()->getLength() - 16) >> 3;
     }
 }
