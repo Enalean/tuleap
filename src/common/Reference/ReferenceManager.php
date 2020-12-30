@@ -30,7 +30,7 @@ use Tuleap\Reference\NatureCollection;
  * Reference Manager
  * Performs all operations on references, including DB access (through ReferenceDAO)
  */
-class ReferenceManager
+class ReferenceManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     /**
@@ -165,7 +165,7 @@ class ReferenceManager
             self::REFERENCE_NATURE_CVSCOMMIT,
             new Nature(
                 'cvs',
-                'fas fa-tlp-versioning-cvs',
+                'fas ' . Service::ICONS[Service::CVS],
                 $GLOBALS['Language']->getText('project_reference', 'reference_cvs_commit_nature_key'),
                 true
             )
@@ -185,7 +185,7 @@ class ReferenceManager
             self::REFERENCE_NATURE_FILE,
             new Nature(
                 'file',
-                Nature::NO_ICON,
+                'far fa-copy',
                 $GLOBALS['Language']->getText('project_reference', 'reference_file_nature_key'),
                 true
             )
@@ -195,7 +195,7 @@ class ReferenceManager
             self::REFERENCE_NATURE_RELEASE,
             new Nature(
                 'release',
-                Nature::NO_ICON,
+                'far fa-copy',
                 $GLOBALS['Language']->getText('project_reference', 'reference_release_nature_key'),
                 true
             )
@@ -205,7 +205,7 @@ class ReferenceManager
             self::REFERENCE_NATURE_FORUM,
             new Nature(
                 'forum',
-                Nature::NO_ICON,
+                'fas ' . Service::ICONS[Service::FORUM],
                 $GLOBALS['Language']->getText('project_reference', 'reference_forum_nature_key'),
                 true
             )
@@ -215,7 +215,7 @@ class ReferenceManager
             self::REFERENCE_NATURE_FORUMMESSAGE,
             new Nature(
                 'msg',
-                Nature::NO_ICON,
+                'fas ' . Service::ICONS[Service::FORUM],
                 $GLOBALS['Language']->getText('project_reference', 'reference_forum_message_nature_key'),
                 true
             )
@@ -225,7 +225,7 @@ class ReferenceManager
             self::REFERENCE_NATURE_NEWS,
             new Nature(
                 'news',
-                Nature::NO_ICON,
+                'fas ' . Service::ICONS[Service::NEWS],
                 $GLOBALS['Language']->getText('project_reference', 'reference_news_nature_key'),
                 true
             )
@@ -235,7 +235,7 @@ class ReferenceManager
             self::REFERENCE_NATURE_WIKIPAGE,
             new Nature(
                 'wiki',
-                Nature::NO_ICON,
+                'fas ' . Service::ICONS[Service::WIKI],
                 $GLOBALS['Language']->getText('project_reference', 'reference_wiki_page_nature_key'),
                 true
             )
@@ -587,7 +587,7 @@ class ReferenceManager
             || $keyword == self::KEYWORD_ARTIFACT_SHORT;
     }
 
-    protected function _buildReference($row, $val = null)
+    protected function _buildReference($row, $val = null) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (isset($row['reference_id'])) {
             $refid = $row['reference_id'];
@@ -649,7 +649,7 @@ class ReferenceManager
      * the regexp used to find a reference
      * @return string $exp the string which may the regexp
      */
-    public function _getExpForRef()
+    public function _getExpForRef() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $exp = "`
             (?P<key>\w+)
@@ -781,7 +781,7 @@ class ReferenceManager
      * @param input text $html
      * @return array of matches
      */
-    public function _extractAllMatches($html)
+    public function _extractAllMatches($html) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return $this->_extractMatches($html, $this->_getExpForRef());
     }
@@ -789,7 +789,7 @@ class ReferenceManager
     /**
      * Extract matches from input text according to the regexp
      */
-    private function _extractMatches($html, $regexp)
+    private function _extractMatches($html, $regexp) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $locale = setlocale(LC_CTYPE, "0");
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
@@ -1188,7 +1188,7 @@ class ReferenceManager
 
     // Get a Reference object from a matching pattern
     // if it is not a reference (e.g. wrong keyword) return null;
-    private function _getReferenceInstanceFromMatch($match)
+    private function _getReferenceInstanceFromMatch($match) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         // Analyse match
         $key   = strtolower($match['key']);
@@ -1230,7 +1230,7 @@ class ReferenceManager
     /**
      * @return Reference
      */
-    public function _getReferenceFromKeywordAndNumArgs($keyword, $group_id, $num_args)
+    public function _getReferenceFromKeywordAndNumArgs($keyword, $group_id, $num_args) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $this->_initProjectReferences($group_id);
         $refs = $this->activeReferencesByProject[$group_id];
@@ -1247,7 +1247,7 @@ class ReferenceManager
         return null;
     }
 
-    public function _initProjectReferences($group_id)
+    public function _initProjectReferences($group_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! isset($this->activeReferencesByProject[$group_id])) {
             $p = [];
@@ -1286,7 +1286,7 @@ class ReferenceManager
         return $this->groupIdByName[$lowercase_name];
     }
 
-    public function _referenceNotUsed($refid)
+    public function _referenceNotUsed($refid) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchById($refid);
@@ -1297,7 +1297,7 @@ class ReferenceManager
         }
     }
 
-    public function _isKeywordExists($keyword, $group_id)
+    public function _isKeywordExists($keyword, $group_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchByKeywordAndGroupId($keyword, $group_id);
@@ -1321,7 +1321,7 @@ class ReferenceManager
             return true;
     }
 
-    public function _keywordAndNumArgsExists($keyword, $num_args, $group_id)
+    public function _keywordAndNumArgsExists($keyword, $num_args, $group_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchByKeywordAndGroupId($keyword, $group_id);
@@ -1337,7 +1337,7 @@ class ReferenceManager
     /**
      * @return ReferenceDao
      */
-    public function _getReferenceDao()
+    public function _getReferenceDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! is_a($this->referenceDao, 'ReferenceDao')) {
             $this->referenceDao = new ReferenceDao(CodendiDataAccess::instance());
@@ -1345,7 +1345,7 @@ class ReferenceManager
         return $this->referenceDao;
     }
 
-    public function _getCrossReferenceDao()
+    public function _getCrossReferenceDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! is_a($this->cross_reference_dao, 'CrossReferenceDao')) {
             $this->cross_reference_dao = new CrossReferenceDao();

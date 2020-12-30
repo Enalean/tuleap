@@ -36,7 +36,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const SCOPE_SYSTEM  = 'system';
     public const SCOPE_PROJECT = 'project';
 
-    private const ICONS = [
+    public const ICONS = [
         self::ADMIN     => 'fa-cogs',
         self::FORUM     => 'fa-users',
         self::HOMEPAGE  => 'fa-home',
