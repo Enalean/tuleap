@@ -22,6 +22,8 @@
     <div class="document-new-item-type-selector">
         <div
             class="document-new-item-type"
+            tabindex="0"
+            data-modal-focus
             v-for="type of supported_types"
             v-bind:key="type.identifier"
             v-bind:class="{ 'document-new-item-type-checked': type.is_checked }"
