@@ -56,7 +56,7 @@ class HierarchyDAO extends DataAccessObject
      * As you can see, Sprint is not anymore child of Release, we
      * must remove corresponding nature _is_child.
      *
-     * Furthermore, Taskhas a new parent which is Release instead
+     * Furthermore, Task has a new parent which is Release instead
      * of UserStory, we must remove corresponding nature _is_child.
      */
     private function removeExistingIsChildNatures(int $parent_id, array $child_ids): void
@@ -255,6 +255,8 @@ class HierarchyDAO extends DataAccessObject
                 OR    h.child_id  = ?';
 
         $this->getDB()->run($sql, $tracker_id, $tracker_id);
+
+        $this->removeExistingIsChildNatures($tracker_id, []);
     }
 
     public function duplicate(int $parent_id, int $child_id, array $tracker_mapping): void
