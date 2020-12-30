@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -59,7 +59,7 @@ export default {
     },
     methods: {
         removeTime() {
-            this.$store.dispatch("delete-time", this.timeId);
+            this.$store.dispatch("deleteTime", this.timeId);
         },
     },
 };
