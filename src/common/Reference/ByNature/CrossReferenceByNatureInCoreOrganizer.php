@@ -23,9 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Reference\ByNature;
 
 use Tuleap\Reference\ByNature\ConcurrentVersionsSystem\CrossReferenceCvsOrganizer;
+use Tuleap\Reference\ByNature\Forum\CrossReferenceForumOrganizer;
+use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
-use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
 
 class CrossReferenceByNatureInCoreOrganizer
 {
@@ -42,15 +43,21 @@ class CrossReferenceByNatureInCoreOrganizer
      * @var CrossReferenceFRSOrganizer
      */
     private $frs_organizer;
+    /**
+     * @var CrossReferenceForumOrganizer
+     */
+    private $forum_organizer;
 
     public function __construct(
         CrossReferenceWikiOrganizer $wiki_organizer,
         CrossReferenceCvsOrganizer $cvs_organizer,
-        CrossReferenceFRSOrganizer $frs_organizer
+        CrossReferenceFRSOrganizer $frs_organizer,
+        CrossReferenceForumOrganizer $forum_organizer
     ) {
-        $this->wiki_organizer = $wiki_organizer;
-        $this->cvs_organizer  = $cvs_organizer;
-        $this->frs_organizer  = $frs_organizer;
+        $this->wiki_organizer  = $wiki_organizer;
+        $this->cvs_organizer   = $cvs_organizer;
+        $this->frs_organizer   = $frs_organizer;
+        $this->forum_organizer = $forum_organizer;
     }
 
     public function organizeCoreReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -68,6 +75,9 @@ class CrossReferenceByNatureInCoreOrganizer
                     break;
                 case \ReferenceManager::REFERENCE_NATURE_FILE:
                     $this->frs_organizer->organizeFRSFileReference($cross_reference_presenter, $by_nature_organizer);
+                    break;
+                case \ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE:
+                    $this->forum_organizer->organizeMessageReference($cross_reference_presenter, $by_nature_organizer);
                     break;
                 default:
                     // ignore "unknown" references

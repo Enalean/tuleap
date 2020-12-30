@@ -55048,6 +55048,25 @@
       <code>$given_access_value</code>
     </MissingParamType>
   </file>
+  <file src="src/common/Forum/MessageRetriever.php">
+    <DeprecatedFunction occurrences="17">
+      <code>db_ei($forum_id)</code>
+      <code>db_ei($id)</code>
+      <code>db_ei($id)</code>
+      <code>db_numrows($res)</code>
+      <code>db_numrows($result)</code>
+      <code>db_query($qry)</code>
+      <code>db_query($sql)</code>
+      <code>db_result($result, 0, 'body')</code>
+      <code>db_result($result, 0, 'date')</code>
+      <code>db_result($result, 0, 'forum_name')</code>
+      <code>db_result($result, 0, 'group_forum_id')</code>
+      <code>db_result($result, 0, 'group_id')</code>
+      <code>db_result($result, 0, 'subject')</code>
+      <code>db_result($result, 0, 'thread_id')</code>
+      <code>db_result($result, 0, 'user_name')</code>
+    </DeprecatedFunction>
+  </file>
   <file src="src/common/Glyph/Glyph.php">
     <MissingParamType occurrences="1">
       <code>$svg_content</code>
@@ -76702,30 +76721,6 @@
       <code>db_result($result, $j, 'group_forum_id')</code>
       <code>db_result($result, $j, 'total')</code>
       <code>db_result($result, $j, 'total')</code>
-    </DeprecatedFunction>
-  </file>
-  <file src="src/www/forum/message.php">
-    <DeprecatedFunction occurrences="21">
-      <code>db_ei($forum_id)</code>
-      <code>db_ei($msg_id)</code>
-      <code>db_ei($msg_id)</code>
-      <code>db_numrows($res)</code>
-      <code>db_numrows($result)</code>
-      <code>db_query($qry)</code>
-      <code>db_query($sql)</code>
-      <code>db_result($result, 0, "date")</code>
-      <code>db_result($result, 0, "subject")</code>
-      <code>db_result($result, 0, "user_name")</code>
-      <code>db_result($result, 0, 'body')</code>
-      <code>db_result($result, 0, 'forum_name')</code>
-      <code>db_result($result, 0, 'group_forum_id')</code>
-      <code>db_result($result, 0, 'group_forum_id')</code>
-      <code>db_result($result, 0, 'group_id')</code>
-      <code>db_result($result, 0, 'subject')</code>
-      <code>db_result($result, 0, 'subject')</code>
-      <code>db_result($result, 0, 'thread_id')</code>
-      <code>db_result($result, 0, 'thread_id')</code>
-      <code>db_result($result, 0, 'thread_id')</code>
     </DeprecatedFunction>
   </file>
   <file src="src/www/forum/monitor.php">

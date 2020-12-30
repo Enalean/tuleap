@@ -20,6 +20,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Forum\MessageNotFoundException;
+use Tuleap\Forum\MessageRetriever;
+use Tuleap\Forum\PermissionToAccessForumException;
+
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../forum/forum_utils.php';
 
@@ -38,48 +42,24 @@ if ($request->valid($vMsg)) {
         $pv = 0;
     }
 
-    /*
-        Figure out which group this message is in, for the sake of the admin links
-    */
-    $result = db_query("SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id " .
-    "FROM forum_group_list,forum WHERE forum_group_list.group_forum_id=forum.group_forum_id AND forum.msg_id=" . db_ei($msg_id));
-
-    $group_id = db_result($result, 0, 'group_id');
-    $forum_id = db_result($result, 0, 'group_forum_id');
-    $thread_id = db_result($result, 0, 'thread_id');
-    $forum_name = db_result($result, 0, 'forum_name');
-
-        // Check permissions
-    if (! forum_utils_access_allowed($forum_id)) {
-        exit_error($Language->getText('global', 'error'), _('Forum is restricted'));
+    $message_retriever = new MessageRetriever();
+    try {
+        $message = $message_retriever->getMessage($msg_id);
+    } catch (PermissionToAccessForumException | MessageNotFoundException $e) {
+        exit_error($Language->getText('global', 'error'), $e->getMessage());
     }
 
-    //check if the message is a comment on a piece of news.  If so, check permissions on this news
-    $qry = "SELECT * FROM news_bytes WHERE forum_id=" . db_ei($forum_id);
-    $res = db_query($qry);
-    if (db_numrows($res) > 0) {
-        if (! forum_utils_news_access($forum_id)) {
-            exit_error($Language->getText('global', 'error'), $Language->getText('news_admin_index', 'permission_denied'));
-        }
-    }
+    $group_id   = $message->getProjectId();
+    $forum_name = $message->getForumName();
+    $forum_id   = $message->getForumId();
 
-    $params = ['title' => db_result($result, 0, 'subject'),
-                      'pv'   => isset($pv) ? $pv : false];
+    $params = [
+        'title' => $message->getSubject(),
+        'pv'    => isset($pv) ? $pv : false
+    ];
     forum_header($params);
 
     echo "<P>";
-
-    $sql = "SELECT user.user_name,forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body " .
-    "FROM forum,user WHERE user.user_id=forum.posted_by AND forum.msg_id=" . db_ei($msg_id);
-
-    $result = db_query($sql);
-
-    if (! $result || db_numrows($result) < 1) {
-     /*
-      Message not found
-     */
-        return 'message not found.\n';
-    }
 
     $title_arr = [];
     $title_arr[] = 'Message: ' . $msg_id;
@@ -87,12 +67,12 @@ if ($request->valid($vMsg)) {
     echo html_build_list_table_top($title_arr);
 
     $purifier = Codendi_HTMLPurifier::instance();
-    $poster   = UserManager::instance()->getUserByUserName(db_result($result, 0, "user_name"));
+    $poster   = UserManager::instance()->getUserByUserName($message->getUserName());
     echo "<TR><TD class=\"threadmsg\">\n";
     echo _('By') . ": " . UserHelper::instance()->getLinkOnUser($poster) . "<BR>";
-    echo _('Date') . ": " . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, "date")) . "<BR>";
-    echo _('Subject') . ": " . db_result($result, 0, "subject") . "<P>";
-    echo $purifier->purify(db_result($result, 0, 'body'), CODENDI_PURIFIER_BASIC, $group_id);
+    echo _('Date') . ": " . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $message->getDate()) . "<BR>";
+    echo _('Subject') . ": " . $message->getSubject() . "<P>";
+    echo $purifier->purify($message->getBody(), CODENDI_PURIFIER_BASIC, $group_id);
     echo "</TD></TR>";
 
     $crossref_fact = new CrossReferenceFactory($msg_id, ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $group_id);
@@ -116,7 +96,7 @@ if ($request->valid($vMsg)) {
 
         //highlight the current message in the thread list
         $current_message = $msg_id;
-        echo show_thread(db_result($result, 0, 'thread_id'));
+        echo show_thread($message->getThreadId());
 
     /*
      Show post followup form
@@ -125,7 +105,7 @@ if ($request->valid($vMsg)) {
         echo '<P>&nbsp;<P>';
         echo '<CENTER><h3>' . _('Post a followup to this message') . '</h3></CENTER>';
 
-        show_post_form(db_result($result, 0, 'group_forum_id'), db_result($result, 0, 'thread_id'), $msg_id, db_result($result, 0, 'subject'));
+        show_post_form($forum_id, $message->getThreadId(), $msg_id, $message->getSubject());
     }
 } else {
     exit_error($Language->getText('global', 'error'), _('Must choose a message first'));
