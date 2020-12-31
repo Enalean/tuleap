@@ -26,11 +26,14 @@ use Tuleap\Forum\ForumRetriever;
 use Tuleap\Forum\MessageRetriever;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\News\NewsDao;
+use Tuleap\News\NewsRetriever;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Reference\ByNature\ConcurrentVersionsSystem\CrossReferenceCvsOrganizer;
 use Tuleap\Reference\ByNature\CrossReferenceByNatureInCoreOrganizer;
 use Tuleap\Reference\ByNature\Forum\CrossReferenceForumOrganizer;
+use Tuleap\Reference\ByNature\News\CrossReferenceNewsOrganizer;
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\ByNature\Wiki\WikiPageFromReferenceValueRetriever;
 use Tuleap\Reference\CrossReferenceByDirectionPresenterBuilder;
@@ -383,6 +386,12 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                         new MessageRetriever(),
                         new ForumRetriever(
                             new ForumDao(),
+                        )
+                    ),
+                    new CrossReferenceNewsOrganizer(
+                        ProjectManager::instance(),
+                        new NewsRetriever(
+                            new NewsDao(),
                         )
                     )
                 ),

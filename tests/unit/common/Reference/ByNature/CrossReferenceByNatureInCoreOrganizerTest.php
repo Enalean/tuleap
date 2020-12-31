@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Reference\ByNature\ConcurrentVersionsSystem\CrossReferenceCvsOrganizer;
 use Tuleap\Reference\ByNature\Forum\CrossReferenceForumOrganizer;
 use Tuleap\Reference\ByNature\FRS\CrossReferenceFRSOrganizer;
+use Tuleap\Reference\ByNature\News\CrossReferenceNewsOrganizer;
 use Tuleap\Reference\ByNature\Wiki\CrossReferenceWikiOrganizer;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
@@ -60,6 +61,10 @@ class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceForumOrganizer
      */
     private $forum_organizer;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceNewsOrganizer
+     */
+    private $news_organizer;
 
     public function setUp(): void
     {
@@ -68,12 +73,14 @@ class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
         $this->cvs_organizer       = Mockery::mock(CrossReferenceCvsOrganizer::class);
         $this->frs_organizer       = Mockery::mock(CrossReferenceFRSOrganizer::class);
         $this->forum_organizer     = Mockery::mock(CrossReferenceForumOrganizer::class);
+        $this->news_organizer      = Mockery::mock(CrossReferenceNewsOrganizer::class);
 
         $this->core_organizer = new CrossReferenceByNatureInCoreOrganizer(
             $this->wiki_organizer,
             $this->cvs_organizer,
             $this->frs_organizer,
             $this->forum_organizer,
+            $this->news_organizer
         );
     }
 
@@ -197,6 +204,27 @@ class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
 
         $this->forum_organizer
             ->shouldReceive('organizeForumReference')
+            ->with($ref, $this->by_nature_organizer)
+            ->once();
+
+        $this->core_organizer->organizeCoreReferences($this->by_nature_organizer);
+    }
+
+    public function testItOrganizesNewsReferences(): void
+    {
+        $ref = CrossReferencePresenterBuilder::get(2)->withType(\ReferenceManager::REFERENCE_NATURE_NEWS)->build();
+
+        $this->by_nature_organizer->shouldReceive(
+            [
+                'getCrossReferencePresenters' => [
+                    CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
+                    $ref,
+                ],
+            ]
+        );
+
+        $this->news_organizer
+            ->shouldReceive('organizeNewsReference')
             ->with($ref, $this->by_nature_organizer)
             ->once();
 
