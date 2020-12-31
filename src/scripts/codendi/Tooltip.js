@@ -183,7 +183,8 @@ function tooltipModule($, codendi) {
 
                 for (var href in data) {
                     sparkline_hrefs[href].each(function (a) {
-                        $(a).prepend(
+                        const img_container = a.querySelector(".cross-reference-title") || a;
+                        $(img_container).prepend(
                             $("<img>")
                                 .attr("src", data[href])
                                 .css("vertical-align", "middle")
