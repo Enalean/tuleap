@@ -36,6 +36,7 @@ use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
+use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\NewDropdown\TrackerInNewDropdownDao;
 
 class TrackersDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
@@ -69,6 +70,11 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
      */
     private $permissions_checker;
 
+    /**
+     * @var FieldDao
+     */
+    private $field_dao;
+
     public function __construct(
         ProjectManager $project_manager,
         TrackerManager $tracker_manager,
@@ -76,7 +82,8 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
         TrackerFactory $tracker_factory,
         TemplateRendererFactory $renderer_factory,
         TrackerInNewDropdownDao $in_new_dropdown_dao,
-        CSRFSynchronizerTokenProvider $token_provider
+        CSRFSynchronizerTokenProvider $token_provider,
+        FieldDao $field_dao
     ) {
         $this->project_manager     = $project_manager;
         $this->tracker_manager     = $tracker_manager;
@@ -85,6 +92,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
         $this->in_new_dropdown_dao = $in_new_dropdown_dao;
         $this->token_provider      = $token_provider;
         $this->permissions_checker = $permissions_checker;
+        $this->field_dao           = $field_dao;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -96,24 +104,31 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
 
         $trackers = [];
         foreach ($this->tracker_factory->getTrackersByGroupId($project->getID()) as $tracker) {
-            $used_in_other_services_infos = $tracker->getInformationsFromOtherServicesAboutUsage();
+            $tracker_id            = $tracker->getId();
+            $can_be_deleted        = true;
+            $cannot_delete_message = '';
 
-            $cannot_delete_message = $used_in_other_services_infos['can_be_deleted']
-                ? ""
-                : sprintf(
+            $used_in_other_services_infos = $tracker->getInformationsFromOtherServicesAboutUsage();
+            if (isset($used_in_other_services_infos['can_be_deleted']) && $used_in_other_services_infos['can_be_deleted'] === false) {
+                $can_be_deleted = false;
+                $cannot_delete_message = sprintf(
                     dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'),
                     $used_in_other_services_infos['message']
                 );
+            } elseif ($this->field_dao->doesTrackerHaveSourceSharedFields($tracker_id) === true) {
+                $can_be_deleted = false;
+                $cannot_delete_message = dgettext('tuleap-tracker', 'You can\'t delete this tracker because it has at least one source shared field.');
+            }
 
             $trackers[] = new TrackerPresenter(
-                $tracker->getId(),
+                $tracker_id,
                 $tracker->getItemName(),
                 $tracker->getName(),
                 $tracker->getDescription(),
                 $this->in_new_dropdown_dao->isContaining($tracker->getId()),
                 $tracker->getAdministrationUrl(),
                 MarkTrackerAsDeletedController::getURL($tracker),
-                (bool) $used_in_other_services_infos['can_be_deleted'],
+                $can_be_deleted,
                 $cannot_delete_message,
             );
         }

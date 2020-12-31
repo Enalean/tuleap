@@ -1909,7 +1909,8 @@ msgid "Migrate a Tracker v3 content for test"
 msgstr "Tester la migration de contenu d'un outil de suivi v3"
 
 msgid "Migrate a Tracker v3 content keeping original ids"
-msgstr "Migrer le contenu d'un outil de suivi v3 en conservant les ids d'origine"
+msgstr ""
+"Migrer le contenu d'un outil de suivi v3 en conservant les ids d'origine"
 
 msgid "Minimum"
 msgstr "Minimum"
@@ -4075,9 +4076,16 @@ msgstr ""
 "Vous ne pouvez pas choisir votre mode de notification pour cet outil de "
 "suivi parce que l'administrateur a suspendu toutes les notifications."
 
+msgid ""
+"You can't delete this tracker because it has at least one source shared "
+"field."
+msgstr ""
+"Cet outil de suivi ne peut pas être supprimé car il définit au moins un champ "
+"source de champ partagé."
+
 #, php-format
 msgid "You can't delete this tracker because it is used in: %1$s"
-msgstr "Ce tracker ne peut pas être supprimé car il est utilisé dans: %1$s"
+msgstr "Cet outil de suivi ne peut pas être supprimé car il est utilisé dans: %1$s"
 
 msgid ""
 "You can't hide this value since it is used in a semantic, in workflow or in "

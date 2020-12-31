@@ -34,6 +34,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
+use Tuleap\Tracker\FormElement\Field\FieldDao;
 
 class MarkTrackerAsDeletedController implements DispatchableWithRequest
 {
@@ -59,18 +60,25 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
      */
     private $permissions_checker;
 
+    /**
+     * @var FieldDao
+     */
+    private $field_dao;
+
     public function __construct(
         TrackerFactory $tracker_factory,
         GlobalAdminPermissionsChecker $permissions_checker,
         CSRFSynchronizerTokenProvider $token_provider,
         EventManager $event_manager,
-        ReferenceManager $reference_manager
+        ReferenceManager $reference_manager,
+        FieldDao $field_dao
     ) {
         $this->tracker_factory     = $tracker_factory;
         $this->token_provider      = $token_provider;
         $this->event_manager       = $event_manager;
         $this->reference_manager   = $reference_manager;
         $this->permissions_checker = $permissions_checker;
+        $this->field_dao           = $field_dao;
     }
 
     public static function getURL(Tracker $tracker): string
@@ -100,6 +108,10 @@ class MarkTrackerAsDeletedController implements DispatchableWithRequest
                     dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'),
                     $service_usage_for_tracker['message']
                 )
+            );
+        } elseif ($this->field_dao->doesTrackerHaveSourceSharedFields($tracker->getId()) === true) {
+            throw new ForbiddenException(
+                dgettext('tuleap-tracker', 'You can\'t delete this tracker because it has at least one source shared field.')
             );
         }
 

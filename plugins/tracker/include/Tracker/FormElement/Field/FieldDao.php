@@ -28,18 +28,12 @@ use DataAccessResult;
 class FieldDao extends DataAccessObject
 {
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->table_name = 'tracker_field';
-    }
-
     public function searchByTrackerIdAndName($tracker_id, $name)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $name       = $this->da->quoteSmart($name);
         $sql        = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field
                 WHERE tracker_id = $tracker_id
                   AND name = $name";
         return $this->retrieve($sql);
@@ -50,7 +44,7 @@ class FieldDao extends DataAccessObject
         $tracker_id = $this->da->escapeInt($tracker_id);
         $name       = $this->da->quoteSmart($name);
         $sql        = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field
                 WHERE tracker_id = $tracker_id
                   AND name = $name
                   AND use_it = 1";
@@ -61,7 +55,7 @@ class FieldDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql        = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field
                 WHERE tracker_id = $tracker_id
                   AND use_it = 0
                 ORDER BY parent_id, rank";
@@ -72,7 +66,7 @@ class FieldDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql        = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field
                 WHERE tracker_id = $tracker_id
                   AND parent_id = 0
                   AND use_it = 1
@@ -91,7 +85,7 @@ class FieldDao extends DataAccessObject
             $type_stm = " = $type";
         }
         $sql = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field
                 WHERE tracker_id = $tracker_id
                   AND id = $field_id
                   AND use_it = 1
@@ -104,7 +98,7 @@ class FieldDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql        = "SELECT *
-                FROM $this->table_name f, tracker_field_list_bind_users lbu
+                FROM tracker_field f, tracker_field_list_bind_users lbu
                 WHERE f.tracker_id = $tracker_id
                   AND use_it = 1
                   AND f.id = lbu.field_id
@@ -117,7 +111,7 @@ class FieldDao extends DataAccessObject
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_id   = $this->da->escapeInt($field_id);
         $sql        = "SELECT *
-                FROM $this->table_name f, tracker_field_list_bind_users lbu
+                FROM tracker_field f, tracker_field_list_bind_users lbu
                 WHERE f.tracker_id = $tracker_id
                   AND f.id = $field_id
                   AND use_it = 1
@@ -146,7 +140,7 @@ class FieldDao extends DataAccessObject
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_id   = $this->da->escapeInt($field_id);
         $sql        = "SELECT *
-                FROM $this->table_name f, tracker_field_list_bind_users lbu
+                FROM tracker_field f, tracker_field_list_bind_users lbu
                 WHERE f.tracker_id = $tracker_id
                   AND f.id = $field_id
                   AND use_it = 1
@@ -160,7 +154,7 @@ class FieldDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql        = "SELECT f.*
-                FROM $this->table_name f
+                FROM tracker_field f
                   INNER JOIN tracker_field_list fl ON (fl.field_id = f.id AND fl.bind_type = 'static')
                 WHERE f.tracker_id = $tracker_id
                   AND use_it = 1
@@ -173,7 +167,7 @@ class FieldDao extends DataAccessObject
     {
         $parent_id = $this->da->escapeInt($parent_id);
         $sql       = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field
                 WHERE parent_id = $parent_id
                 ORDER BY rank";
         return $this->retrieve($sql);
@@ -183,7 +177,7 @@ class FieldDao extends DataAccessObject
     {
         $parent_id = $this->da->escapeInt($parent_id);
         $sql       = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field
                 WHERE parent_id = $parent_id
                   AND use_it = 1
                 ORDER BY rank";
@@ -201,7 +195,7 @@ class FieldDao extends DataAccessObject
         }
 
         $sql = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field
                 WHERE tracker_id = $tracker_id
                   AND formElement_type $type_stm";
         if ($used) {
@@ -221,7 +215,7 @@ class FieldDao extends DataAccessObject
             $type_stm = " = $type";
         }
         $sql = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field
                 WHERE tracker_id = $tracker_id
                   AND formElement_type $type_stm
                 ORDER BY rank";
@@ -283,7 +277,7 @@ class FieldDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql        = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field
                 WHERE tracker_id = $tracker_id
                 ORDER BY parent_id, rank";
         return $this->retrieve($sql);
@@ -294,9 +288,9 @@ class FieldDao extends DataAccessObject
         //TODO: duplicate tracker_id
         $from_field_id = $this->da->escapeInt($from_field_id);
         $to_tracker_id = $this->da->escapeInt($to_tracker_id);
-        $sql           = "INSERT INTO $this->table_name (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id)
+        $sql           = "INSERT INTO tracker_field (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id)
                 SELECT $to_tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id
-                FROM $this->table_name
+                FROM tracker_field
                 WHERE id = $from_field_id";
         return $this->updateAndGetLastId($sql);
     }
@@ -309,7 +303,7 @@ class FieldDao extends DataAccessObject
             $cases .= ' WHEN ' . $map['from'] . ' THEN ' . $map['to'] . PHP_EOL;
         }
         if ($cases) {
-            $sql = "UPDATE $this->table_name
+            $sql = "UPDATE tracker_field
                     SET parent_id = CASE parent_id
                                     $cases
                                     END
@@ -333,7 +327,7 @@ class FieldDao extends DataAccessObject
             (int) $field->tracker_id
         );
 
-        $sql = "UPDATE $this->table_name
+        $sql = "UPDATE tracker_field
                 SET parent_id         = " . $this->da->escapeInt($field->parent_id) . ",
                     label             = " . $this->da->quoteSmart($field->label) . ",
                     name              = " . $this->da->quoteSmart($field->name) . ",
@@ -354,7 +348,7 @@ class FieldDao extends DataAccessObject
 
     public function setType($field, $type)
     {
-        $sql = "UPDATE $this->table_name
+        $sql = "UPDATE tracker_field
                 SET formElement_type = " . $this->da->quoteSmart($type) . "
                 WHERE id = " . $this->da->escapeInt($field->id);
         if ($this->update($sql)) {
@@ -365,7 +359,7 @@ class FieldDao extends DataAccessObject
 
     public function delete($field)
     {
-        $sql = "DELETE FROM $this->table_name
+        $sql = "DELETE FROM tracker_field
                 WHERE id = " . $this->da->escapeInt($field->id);
         return $this->update($sql);
     }
@@ -375,6 +369,21 @@ class FieldDao extends DataAccessObject
         $id  = $this->da->escapeInt($id);
         $sql = "SELECT * FROM tracker_field WHERE original_field_id = $id";
         return $this->retrieve($sql);
+    }
+
+    public function doesTrackerHaveSourceSharedFields(int $tracker_id): bool
+    {
+        $tracker_id  = $this->da->escapeInt($tracker_id);
+
+        $sql = "SELECT NULL
+                FROM tracker_field AS target_field
+                    INNER JOIN tracker_field AS original_field ON (target_field.original_field_id = original_field.id)
+                    INNER JOIN tracker ON (tracker.id = original_field.tracker_id)
+                WHERE tracker.id = $tracker_id
+                    AND target_field.original_field_id > 0";
+
+        $result = $this->retrieve($sql);
+        return ($result instanceof \Countable) && count($result) > 0;
     }
 
     /**
@@ -545,7 +554,7 @@ class FieldDao extends DataAccessObject
         }
         $original_field_id = $this->da->escapeInt($original_field_id);
 
-        $sql = "INSERT INTO $this->table_name (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id) ";
+        $sql = "INSERT INTO tracker_field (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id) ";
         if ($name) {
             $name = $this->da->quoteSmart($name);
             $sql  .= "
@@ -566,7 +575,7 @@ class FieldDao extends DataAccessObject
         $id                = $this->da->escapeInt($id);
 
         $sql = "
-            UPDATE $this->table_name
+            UPDATE tracker_field
             SET   original_field_id = $original_field_id
             WHERE id                = $id
         ";
