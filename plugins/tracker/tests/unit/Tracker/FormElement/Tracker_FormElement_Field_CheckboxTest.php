@@ -80,9 +80,36 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
         $method     = $reflection->getMethod('fetchFieldValue');
         $method->setAccessible(true);
 
-        $html =  $method->invokeArgs($field, $parameters);
+        $html = $method->invokeArgs($field, $parameters);
 
         $this->assertMatchesRegularExpression('/<input type="hidden" lename/', $html);
+    }
+
+    public function testItPresentsReadOnlyViewAsAList(): void
+    {
+        $artifact   = Mockery::mock(Artifact::class);
+        $value      = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
+        $bind       = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind_value = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $bind_value_2 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $bind_value_3 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $bind_value->shouldReceive('getId')->andReturn(523);
+        $bind_value_2->shouldReceive('getId')->andReturn(524);
+        $bind_value_3->shouldReceive('getId')->andReturn(525);
+        $bind->shouldReceive('getAllVisibleValues')->andReturn([523 => $bind_value, 524 => $bind_value_2, 525 => $bind_value_3]);
+        $value->shouldReceive('getListValues')->andReturn([523 => $bind_value, 525 => $bind_value_3]);
+
+        $bind->shouldReceive('formatChangesetValueWithoutLink')->with($bind_value)->andReturn('Value_1');
+        $bind->shouldReceive('formatChangesetValueWithoutLink')->with($bind_value_2)->andReturn('Value_2');
+        $bind->shouldReceive('formatChangesetValueWithoutLink')->with($bind_value_3)->andReturn('Value_3');
+
+        $field = $this->getCheckboxField();
+        $field->setBind($bind);
+        $html = $field->fetchArtifactValueReadOnly($artifact, $value);
+
+        $this->assertStringContainsString('<li><span class="tracker-read-only-checkbox-list-item">[x]</span> Value_1</li>', $html);
+        $this->assertStringContainsString('<li><span class="tracker-read-only-checkbox-list-item">[ ]</span> Value_2</li>', $html);
+        $this->assertStringContainsString('<li><span class="tracker-read-only-checkbox-list-item">[x]</span> Value_3</li>', $html);
     }
 
     public function testItReplaceCSVNullValueByNone(): void

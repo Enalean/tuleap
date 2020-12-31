@@ -1442,6 +1442,15 @@ div.tracker-admin-field-controls {
     }
 }
 
+.tracker-read-only-checkbox-list {
+    margin-left: 0;
+    list-style: none;
+}
+
+.tracker-read-only-checkbox-list-item {
+    font-family: monospace;
+}
+
 .empty_value {
     color: #bbbbbb;
     font-style: italic;

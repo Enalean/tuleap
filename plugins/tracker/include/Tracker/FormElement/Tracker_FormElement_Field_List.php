@@ -721,7 +721,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 if (empty($value) || ! $value->getListValues()) {
                     return '-';
                 }
-                $output = $this->fetchArtifactValueReadOnly($artifact, $value);
+                $output = $this->fetchArtifactValueReadOnlyForMail($artifact, $value);
                 break;
             default:
                 $tablo = [];
@@ -733,6 +733,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 break;
         }
         return $output;
+    }
+
+    protected function fetchArtifactValueReadOnlyForMail(Artifact $artifact, Tracker_Artifact_ChangesetValue $value): string
+    {
+        return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
     /**
