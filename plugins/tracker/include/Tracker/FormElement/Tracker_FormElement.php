@@ -20,11 +20,15 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\FormElementTypeUpdateErrorException;
+use Tuleap\Tracker\FormElement\FormElementTypeUpdater;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 /**
  * Base class for all fields in trackers, from fieldsets to selectboxes
  */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_IProvideFactoryButtonInformation, Tracker_IProvideJsonFormatOfMyself
 {
     public const PERMISSION_READ   = 'PLUGIN_TRACKER_FIELD_READ';
@@ -294,11 +298,15 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
                 }
             }
         } elseif ($request->get('change-type')) {
-            if (Tracker_FormElementFactory::instance()->changeFormElementType($this, $request->get('change-type'))) {
-                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field type successfully changed'));
-            } else {
-                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Field type could not be changed'));
+            try {
+                $this->updateFormElementType($request->get('change-type'));
+            } catch (FormElementTypeUpdateErrorException $exception) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $exception->getMessage()
+                );
             }
+
             $redirect = true;
         }
         if ($redirect) {
@@ -307,9 +315,29 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
+     * @throws FormElementTypeUpdateErrorException
+     */
+    private function updateFormElementType(string $new_type): void
+    {
+        $db_transaction = new \Tuleap\DB\DBTransactionExecutorWithConnection(
+            \Tuleap\DB\DBFactory::getMainTuleapDBConnection()
+        );
+
+        $updater = new FormElementTypeUpdater(
+            $db_transaction,
+            Tracker_FormElementFactory::instance()
+        );
+
+        $updater->updateFormElementType(
+            $this,
+            $new_type
+        );
+    }
+
+    /**
      * Return the tracker of this formElement
      *
-     * @return Tracker|null
+     * @return Tracker
      */
     public function getTracker()
     {
@@ -1124,9 +1152,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Returns FormElements that are a copy of the current FormElement
      *
-     * @return Array of FormElement
+     * @return Tracker_FormElement[]
      */
-    public function getSharedTargets()
+    public function getSharedTargets(): array
     {
         return $this->getFormElementFactory()->getSharedTargets($this);
     }

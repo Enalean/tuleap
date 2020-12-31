@@ -1116,9 +1116,9 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      *
      * @param array $rows
      *
-     * @return Array of Tracker_FormElement
+     * @return Tracker_FormElement[]
      */
-    private function getCachedInstancesFromRows($rows)
+    private function getCachedInstancesFromRows($rows): array
     {
         $fields = [];
         foreach ($rows as $row) {
@@ -1215,9 +1215,9 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      * Returns the FormElements that are a copy of given element
      *
      *
-     * @return Array of Tracker_FormElement
+     * @return Tracker_FormElement[]
      */
-    public function getSharedTargets(Tracker_FormElement $element)
+    public function getSharedTargets(Tracker_FormElement $element): array
     {
         $dar = $this->getDao()->searchSharedTargets($element->getId());
         return $this->getCachedInstancesFromRows($dar);
@@ -1368,10 +1368,10 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     /**
      * Change formElement type
+     *
      * @param mixed $type the new formElement type
-     * @return bool true on success
      */
-    public function changeFormElementType($form_element, $type)
+    public function changeFormElementType(Tracker_FormElement $form_element, $type): bool
     {
         $success = false;
         if ($form_element->changeType($type)) {
@@ -1384,8 +1384,6 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         }
         return $success;
     }
-
-
 
     /**
      * Unuse the formElement
