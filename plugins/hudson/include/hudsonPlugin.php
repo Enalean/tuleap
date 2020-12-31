@@ -28,6 +28,8 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Reference\Nature;
 use Tuleap\Reference\NatureCollection;
+use Tuleap\Reference\CrossReferenceByNatureOrganizer;
+use Tuleap\Hudson\Reference\HudsonCrossReferenceOrganizer;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
@@ -35,6 +37,8 @@ require_once __DIR__ . '/constants.php';
 class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const ICONS_PATH = '/plugins/hudson/themes/default/images/ic/';
+    public const HUDSON_JOB_NATURE = 'hudson_job';
+    public const HUDSON_BUILD_NATURE = 'hudson_build';
 
     public function __construct($id)
     {
@@ -57,6 +61,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
         $this->addHook('statistics_collector', 'statistics_collector', false);
+        $this->addHook(CrossReferenceByNatureOrganizer::NAME);
 
         $this->listenToCollectRouteEventWithDefaultController();
     }
@@ -243,7 +248,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
     public function getAvailableReferenceNatures(NatureCollection $natures): void
     {
         $natures->addNature(
-            'hudson_build',
+            self::HUDSON_BUILD_NATURE,
             new Nature(
                 'build',
                 'fas fa-sync-alt',
@@ -252,7 +257,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
             )
         );
         $natures->addNature(
-            'hudson_job',
+            self::HUDSON_JOB_NATURE,
             new Nature(
                 'job',
                 'fas fa-sync-alt',
@@ -267,7 +272,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         $html_purifier = Codendi_HTMLPurifier::instance();
 
         switch ($event->getReference()->getNature()) {
-            case 'hudson_build':
+            case self::HUDSON_BUILD_NATURE:
                 $val = $event->getValue();
                 $group_id = $event->getProject()->getID();
                 $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
@@ -298,7 +303,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                     $event->setOutput('<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>');
                 }
                 break;
-            case 'hudson_job':
+            case self::HUDSON_JOB_NATURE:
                 $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
                 $job_name = $event->getValue();
                 $group_id = $event->getProject()->getID();
@@ -439,5 +444,11 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
             echo $formatter->getCsvContent();
             $formatter->clearContent();
         }
+    }
+
+    public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $organizer): void
+    {
+        $hudson_organizer = new HudsonCrossReferenceOrganizer(ProjectManager::instance());
+        $hudson_organizer->organizeHudsonReferences($organizer);
     }
 }
