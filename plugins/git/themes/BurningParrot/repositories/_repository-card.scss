@@ -21,7 +21,8 @@
     transition: border 200ms;
     cursor: pointer;
 
-    &:hover {
+    &:hover,
+    &:focus-within {
         border: 1px solid $tlp-theme-color;
     }
 }
@@ -51,7 +52,8 @@
     flex: 1 1 auto;
     flex-direction: column;
 
-    &:hover {
+    &:hover,
+    &:focus {
         text-decoration: none;
     }
 
@@ -105,7 +107,8 @@
     transition: opacity 100ms;
     color: $tlp-ui-white;
 
-    &:hover {
+    &:hover,
+    &:focus {
         opacity: .7;
     }
 }
@@ -117,7 +120,8 @@
     color: $tlp-ui-border-dark;
     font-size: .75rem;
 
-    &:hover {
+    &:hover,
+    &:focus {
         color: $tlp-theme-color;
     }
 }
