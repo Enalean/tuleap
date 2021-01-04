@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Webdav;
 
-use Mockery;
+use DocmanPlugin;
+use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
@@ -32,27 +33,37 @@ use Sabre_DAV_Exception_FileNotFound;
 use Sabre_DAV_Exception_Forbidden;
 use Sabre_DAV_Exception_MethodNotAllowed;
 use Sabre_DAV_Exception_RequestedRangeNotSatisfiable;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-require_once __DIR__ . '/bootstrap.php';
-
-/**
- * This is the unit test of WebDAVDocmanFolder
- */
 class WebDAVDocmanFolderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
+    use ForgeConfigSandbox;
+
+    /**
+     * @var \PFUser
+     */
+    private $user;
+    /**
+     * @var Project
+     */
+    private $project;
+
+    protected function setUp(): void
+    {
+        $this->user = UserTestBuilder::aUser()->build();
+        $this->project = ProjectTestBuilder::aProject()->build();
+    }
 
     /**
      * Testing when the folder have no childrens
      */
     public function testGetChildListNoChildrens(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
@@ -60,7 +71,8 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
         $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([]);
         $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $this->assertSame([], $webDAVDocmanFolder->getChildList());
     }
@@ -70,8 +82,6 @@ class WebDAVDocmanFolderTest extends TestCase
      */
     public function testGetChildListUserCanNotAccess(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $item = \Mockery::spy(\Docman_Item::class);
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
         $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item]);
@@ -81,7 +91,8 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(false);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
         $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $this->assertEquals([], $webDAVDocmanFolder->getChildList());
     }
@@ -91,9 +102,6 @@ class WebDAVDocmanFolderTest extends TestCase
      */
     public function testGetChildListDuplicateName(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVDocmanFolder->shouldReceive('getProject')->andReturns(Mockery::spy(Project::class));
-
         $item1 = \Mockery::spy(\Docman_Folder::class);
         $item1->shouldReceive('getTitle')->andReturns('SameName');
         $item2 = \Mockery::spy(\Docman_Folder::class);
@@ -106,7 +114,8 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
         $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $children = $webDAVDocmanFolder->getChildList();
 
@@ -120,9 +129,6 @@ class WebDAVDocmanFolderTest extends TestCase
      */
     public function testGetChildListFilled(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVDocmanFolder->shouldReceive('getProject')->andReturns(Mockery::spy(Project::class));
-
         $item1 = \Mockery::spy(\Docman_Folder::class);
         $item1->shouldReceive('getTitle')->andReturns('SameName');
         $item2 = \Mockery::spy(\Docman_Folder::class);
@@ -135,7 +141,8 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
         $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $children = $webDAVDocmanFolder->getChildList();
 
@@ -146,19 +153,18 @@ class WebDAVDocmanFolderTest extends TestCase
 
     public function testGetChildrenDoesntListLinksWiki(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVDocmanFolder->shouldReceive('getProject')->andReturns(Mockery::spy(Project::class));
-
         $item1 = new \Docman_Folder(['title' => 'leFolder', 'parent_id' => '115']);
         $item2 = new \Docman_Link(['title' => 'leLink', 'link_url' => 'https://example.com']);
         $docmanItemFactory = \Mockery::mock(\Docman_ItemFactory::class, ['getChildrenFromParent' => [$item1, $item2]]);
 
-        $utils = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $utils = new \WebDAVUtils();
+        $utils->setDocmanPermissionsManager($this->project, $docmanPermissionManager);
+        $utils->setDocmanItemFactory($docmanItemFactory);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $children = $webDAVDocmanFolder->getChildren();
 
@@ -195,9 +201,6 @@ class WebDAVDocmanFolderTest extends TestCase
      */
     public function testGetChildrenFilled(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVDocmanFolder->shouldReceive('getProject')->andReturns(Mockery::spy(Project::class));
-
         $item1 = \Mockery::spy(\Docman_Folder::class);
         $item1->shouldReceive('getTitle')->andReturns('SameName');
         $item2 = \Mockery::spy(\Docman_Folder::class);
@@ -210,7 +213,8 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
         $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $children = $webDAVDocmanFolder->getChildren();
 
@@ -224,8 +228,6 @@ class WebDAVDocmanFolderTest extends TestCase
      */
     public function testGetChildNotFound(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
@@ -233,7 +235,8 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
         $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([]);
         $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
         $webDAVDocmanFolder->getChild('whatever');
@@ -244,9 +247,6 @@ class WebDAVDocmanFolderTest extends TestCase
      */
     public function testGetChildDuplicatedSameCase(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVDocmanFolder->shouldReceive('getProject')->andReturns(Mockery::spy(Project::class));
-
         $item1 = \Mockery::spy(\Docman_Folder::class);
         $item1->shouldReceive('getTitle')->andReturns('SameName');
         $item2 = \Mockery::spy(\Docman_Folder::class);
@@ -260,7 +260,8 @@ class WebDAVDocmanFolderTest extends TestCase
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
         $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
         $utils->shouldReceive('retrieveName')->andReturns('SameName');
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $this->expectException(Sabre_DAV_Exception_Conflict::class);
         $webDAVDocmanFolder->getChild('SameName');
@@ -271,9 +272,6 @@ class WebDAVDocmanFolderTest extends TestCase
      */
     public function testGetChildDuplicatedDifferentCase(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVDocmanFolder->shouldReceive('getProject')->andReturns(Mockery::spy(Project::class));
-
         $item1 = \Mockery::spy(\Docman_Folder::class);
         $item1->shouldReceive('getTitle')->andReturns('SameName');
         $item2 = \Mockery::spy(\Docman_Folder::class);
@@ -287,7 +285,8 @@ class WebDAVDocmanFolderTest extends TestCase
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
         $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
         $utils->shouldReceive('retrieveName')->andReturns('SameName');
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $this->expectException(Sabre_DAV_Exception_Conflict::class);
         $webDAVDocmanFolder->getChild('SameName');
@@ -322,35 +321,33 @@ class WebDAVDocmanFolderTest extends TestCase
      */
     public function testGetChildSuccess(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-        $project = ProjectTestBuilder::aProject()->build();
         $base_folder = new \Docman_Folder(['title' => 'leFolder', 'parent_id' => 121]);
 
         $item = \Mockery::spy(\Docman_Folder::class);
         $item->shouldReceive('getTitle')->andReturns('SomeName');
 
-        $expected_folder = new \WebDAVDocmanFolder($user, $project, $item);
-
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
         $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item]);
 
-        $utils = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
-        $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
-        $utils->shouldReceive('getDocmanItemFactory')->andReturns($docmanItemFactory);
-        $utils->shouldReceive('retrieveName')->andReturns('SomeName');
 
-        $webDAVDocmanFolder = new \WebDAVDocmanFolder($user, $project, $base_folder, $utils);
+        $utils = new \WebDAVUtils();
+        $utils->setDocmanPermissionsManager($this->project, $docmanPermissionManager);
+        $utils->setDocmanItemFactory($docmanItemFactory);
+
+        $expected_folder = new \WebDAVDocmanFolder($this->user, $this->project, $item, $utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, $base_folder, $utils);
         self::assertEquals($expected_folder, $webDAVDocmanFolder->getChild('SomeName'));
     }
 
     public function testCreateDirectoryNoWriteEnabled(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(false);
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $this->expectException(Sabre_DAV_Exception_Forbidden::class);
         $webDAVDocmanFolder->createDirectory('name');
@@ -358,28 +355,21 @@ class WebDAVDocmanFolderTest extends TestCase
 
     public function testCreateDirectorySuccess(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $utils->shouldReceive('processDocmanRequest')->once();
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
 
-        $project = \Mockery::spy(\Project::class);
-        $webDAVDocmanFolder->shouldReceive('getProject')->andReturns($project);
-
-        $item = \Mockery::spy(\Docman_Item::class);
-        $webDAVDocmanFolder->shouldReceive('getItem')->andReturns($item);
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $webDAVDocmanFolder->createDirectory('name');
     }
 
     public function testDeleteDirectoryNoWriteEnabled(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(false);
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $this->expectException(Sabre_DAV_Exception_Forbidden::class);
         $webDAVDocmanFolder->delete();
@@ -387,10 +377,10 @@ class WebDAVDocmanFolderTest extends TestCase
 
     public function testSetNameNoWriteEnabled(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(false);
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $this->expectException(Sabre_DAV_Exception_MethodNotAllowed::class);
         $webDAVDocmanFolder->setName('newName');
@@ -398,28 +388,21 @@ class WebDAVDocmanFolderTest extends TestCase
 
     public function testSetNameSuccess(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $utils->shouldReceive('processDocmanRequest')->once();
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
 
-        $project = \Mockery::spy(\Project::class);
-        $webDAVDocmanFolder->shouldReceive('getProject')->andReturns($project);
-
-        $item = \Mockery::spy(\Docman_Item::class);
-        $webDAVDocmanFolder->shouldReceive('getItem')->andReturns($item);
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $webDAVDocmanFolder->setName('newName');
     }
 
     public function testCreateFileNoWriteEnabled(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(false);
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
         $this->expectException(Sabre_DAV_Exception_Forbidden::class);
         $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
@@ -428,44 +411,31 @@ class WebDAVDocmanFolderTest extends TestCase
 
     public function testCreateFileBigFile(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $utils->shouldReceive('processDocmanRequest')->never();
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
 
-        $project = \Mockery::spy(\Project::class);
-        $webDAVDocmanFolder->shouldReceive('getProject')->andReturns($project);
-
-        $item = \Mockery::spy(\Docman_Item::class);
-        $webDAVDocmanFolder->shouldReceive('getItem')->andReturns($item);
-
-        $webDAVDocmanFolder->shouldReceive('getMaxFileSize')->andReturns(23);
+        ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, 23);
 
         $this->expectException(Sabre_DAV_Exception_RequestedRangeNotSatisfiable::class);
-        $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
+
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
+
+        $data = fopen(__DIR__ . '/_fixtures/test.txt', 'r');
         $webDAVDocmanFolder->createFile('name', $data);
     }
 
     public function testCreateFileSucceed(): void
     {
-        $webDAVDocmanFolder = \Mockery::mock(\WebDAVDocmanFolder::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $utils->shouldReceive('processDocmanRequest')->once();
-        $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
 
-        $project = \Mockery::spy(\Project::class);
-        $webDAVDocmanFolder->shouldReceive('getProject')->andReturns($project);
+        ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, 2000);
 
-        $item = \Mockery::spy(\Docman_Item::class);
-        $webDAVDocmanFolder->shouldReceive('getItem')->andReturns($item);
+        $webDAVDocmanFolder = new \WebDAVDocmanFolder($this->user, $this->project, new \Docman_Folder(), $utils);
 
-        $webDAVDocmanFolder->shouldReceive('getMaxFileSize')->andReturns(2000);
-
-        $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
+        $data = fopen(__DIR__ . '/_fixtures/test.txt', 'r');
         $webDAVDocmanFolder->createFile('name', $data);
     }
 }

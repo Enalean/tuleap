@@ -36,13 +36,13 @@ class WebDAVUtils
     protected $docmanPlugin;
 
     /**
-     * We don't permit an explicit call of the constructor! (like $utils = new WebDAVUtils())
-     *
-     * @return void
+     * @var Docman_PermissionsManager[]
      */
-    private function __construct()
-    {
-    }
+    private $docman_permission_manager = [];
+    /**
+     * @var Docman_ItemFactory
+     */
+    private $docman_item_factory;
 
     /**
      * We don't permit cloning the singleton (like $webdavutils = clone $utils)
@@ -205,8 +205,7 @@ class WebDAVUtils
      */
     public function getPermissionsManager()
     {
-        $pm = & PermissionsManager::instance();
-        return $pm;
+        return PermissionsManager::instance();
     }
 
     /**
@@ -229,16 +228,14 @@ class WebDAVUtils
         return PHP_BigFile::getMd5Sum($file);
     }
 
-    /**
-     * Returns an instance of PermissionsManager
-     *
-     * @param Project $project Used project
-     *
-     * @return Docman_PermissionsManager
-     */
-    public function getDocmanPermissionsManager($project)
+    public function getDocmanPermissionsManager(Project $project): Docman_PermissionsManager
     {
-        return Docman_PermissionsManager::instance($project->getGroupId());
+        return $this->docman_permission_manager[$project->getID()] ?? Docman_PermissionsManager::instance($project->getGroupId());
+    }
+
+    public function setDocmanPermissionsManager(\Project $project, Docman_PermissionsManager $permissions_manager): void
+    {
+        $this->docman_permission_manager[$project->getID()] = $permissions_manager;
     }
 
     /**
@@ -248,7 +245,15 @@ class WebDAVUtils
      */
     public function getDocmanItemFactory()
     {
+        if ($this->docman_item_factory) {
+            return $this->docman_item_factory;
+        }
         return new Docman_ItemFactory();
+    }
+
+    public function setDocmanItemFactory(Docman_ItemFactory $factory): void
+    {
+        $this->docman_item_factory = $factory;
     }
 
     /**
