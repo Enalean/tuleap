@@ -23,9 +23,10 @@ namespace Tuleap\Configuration\Setup;
 use Psr\Log\LoggerInterface;
 use Tuleap\Configuration\Apache\LogrotateDeployer;
 use Tuleap\Configuration\Etc;
-use Tuleap\Configuration\Nginx;
 use Tuleap\Configuration\Apache;
+use Tuleap\Configuration\Logger\Wrapper;
 use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
+use TuleapCfg\Command\SiteDeploy\Nginx\SiteDeployNginx;
 
 class PHP73CentOS
 {
@@ -93,8 +94,8 @@ class PHP73CentOS
             $configs[] = SiteDeployFPM::buildForPHP73($this->logger, $variables->getApplicationUser(), $for_development);
         }
         if (in_array('nginx', $modules, true)) {
-            $configs[] = new Nginx\TuleapWeb(
-                $this->logger,
+            $configs[] = new SiteDeployNginx(
+                new Wrapper($this->logger, 'nginx'),
                 $variables->getApplicationBaseDir(),
                 '/etc/nginx',
                 $variables->getServerName(),
