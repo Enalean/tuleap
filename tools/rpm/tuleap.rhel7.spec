@@ -342,6 +342,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-embed
 %{summary}.
 
+%package plugin-gitlab
+Summary: Provides an integration GitLab to Tuleap.
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-git
+%description plugin-gitlab
+%{summary}.
+
 %if %{with enterprise}
 
 %package plugin-crosstracker
@@ -356,13 +363,6 @@ Summary: Document UI
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-docman
 %description plugin-document
-%{summary}.
-
-%package plugin-gitlab
-Summary: Provides an integration GitLab to Tuleap.
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-git
-%description plugin-gitlab
 %{summary}.
 
 %package plugin-dynamic-credentials
@@ -539,7 +539,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/gitlab
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/textualreport
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/dynamic_credentials
@@ -811,15 +810,17 @@ done
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
 
+# Plugin GitLab
+%{__install} plugins/gitlab/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
+
 %if %{with enterprise}
+
 # Plugin oauth2_server
 %{__install} plugins/oauth2_server/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
 
-# Plugin GitLab
-%{__install} plugins/gitlab/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_gitlab
 %endif
 
 %if %{with experimental}
@@ -1351,6 +1352,12 @@ fi
 %{APP_DIR}/plugins/embed
 %{APP_DIR}/src/www/assets/embed
 
+%files plugin-gitlab
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/gitlab
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_gitlab
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_gitlab
+
 %if %{with enterprise}
 
 %files plugin-crosstracker
@@ -1362,12 +1369,6 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/document
 %{APP_DIR}/src/www/assets/document
-
-%files plugin-gitlab
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/gitlab
-%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_gitlab
-%config(noreplace) /etc/logrotate.d/%{APP_NAME}_gitlab
 
 %files plugin-dynamic-credentials
 %defattr(-,root,root,-)
