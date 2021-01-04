@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DataPieChart } from "./type";
+import { ChartPropsWhithRadius, DataPieChart } from "./type";
 
 interface StatisticsPieChartData {
     id: string;
@@ -40,4 +40,5 @@ export class StatisticsPieChart {
         general_prefix,
     }: StatisticsPieChartData);
     init(): void;
+    redraw(sizes: ChartPropsWhithRadius): void;
 }
