@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'project-colors';
 @import '../../../../../tracker/scripts/angular-artifact-modal/index';
 @import '../../../../scripts/planning-v2/node_modules/dragular/dist/dragular';
 @import '../../../../scripts/planning-v2/node_modules/animate.css/animate';
@@ -91,4 +92,15 @@
 
 .planning-success.tlp-alert-success {
     margin: 0 0 $tlp-medium-spacing;
+}
+
+.source-project-info-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: $tlp-medium-spacing;
+    padding: $tlp-small-spacing;
+    border-radius: 4px;
+    background: var(--project-color, $tlp-ui-dimmed);
+    color: $tlp-ui-white;
 }

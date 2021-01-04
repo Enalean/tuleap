@@ -17,17 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'sass:color';
-@use '../../../../../../../src/themes/common/css/project-background/background';
 @import '../../card-fields';
 @import 'backlog-item-moves';
-
-@each $project-color-name, $project-color-properties in background.$definitions {
-    .project-color-#{$project-color-name} {
-        --project-color: #{background.get-color($project-color-name)};
-        --project-color-background: #{color.change(background.get-color($project-color-name), $alpha: .07)};
-    }
-}
 
 .backlog-item-details {
     display: flex;
