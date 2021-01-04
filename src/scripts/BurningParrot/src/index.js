@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { init as initNavbarDropdown } from "./navbar-dropdown.js";
+import { init as initNavbarDropdown } from "./navbar-dropdown.ts";
 import { initSidebarPosition } from "../../tuleap/sidebar-position.ts";
 import { initMainPosition } from "../../tuleap/main-position.ts";
 import { initHeaderPosition } from "../../tuleap/header-position.ts";

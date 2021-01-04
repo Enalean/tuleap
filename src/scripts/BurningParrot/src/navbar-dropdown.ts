@@ -19,18 +19,20 @@
 
 import { createPopover } from "tlp";
 
-export function init() {
+export function init(): void {
     const user_dropdown = document.getElementById("nav-dropdown-user");
-    if (user_dropdown) {
-        createPopover(user_dropdown, document.getElementById("nav-dropdown-user-content"), {
+    const user_content = document.getElementById("nav-dropdown-user-content");
+    if (user_dropdown && user_content) {
+        createPopover(user_dropdown, user_content, {
             trigger: "click",
             placement: "bottom-end",
         });
     }
 
     const new_dropdown = document.getElementById("nav-dropdown-new");
-    if (new_dropdown) {
-        createPopover(new_dropdown, document.getElementById("nav-dropdown-new-content"), {
+    const new_dropdown_content = document.getElementById("nav-dropdown-new-content");
+    if (new_dropdown && new_dropdown_content) {
+        createPopover(new_dropdown, new_dropdown_content, {
             trigger: "click",
             placement: "bottom-end",
         });
