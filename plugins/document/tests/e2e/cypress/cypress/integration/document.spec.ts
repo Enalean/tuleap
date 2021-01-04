@@ -42,7 +42,7 @@ describe("Document new UI", () => {
         cy.get("[data-test=docman-new-item-button]");
     });
 
-    context("Docman items", () => {
+    context("Item manipulation", () => {
         before(() => {
             cy.visitProjectService("document-project", "Documents");
         });
@@ -299,5 +299,60 @@ describe("Document new UI", () => {
             });
             cy.get("[data-test=document-confirm-deletion-button]").click();
         });
+
+        it("user can navigate and manipulate items using keyboard shortcuts", () => {
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").as("body");
+
+            testNewFolderShortcut();
+            testNewItemShortcut();
+            testNavigationShortcuts();
+            deleteItems();
+        });
     });
 });
+
+function testNewFolderShortcut(): void {
+    cy.get("@body").type("b");
+    cy.get("[data-test=document-new-folder-modal]")
+        .should("be.visible")
+        .within(() => {
+            cy.focused()
+                .should("have.attr", "data-test", "document-new-item-title")
+                .type("First item");
+            cy.get("[data-test=document-modal-submit-button]").click();
+        });
+    cy.get("[data-test=document-tree-content]").contains("tr", "First item");
+}
+
+function testNewItemShortcut(): void {
+    cy.get("@body").type("n");
+    cy.get("[data-test=document-new-item-modal]")
+        .should("be.visible")
+        .within(() => {
+            cy.focused()
+                .should("have.attr", "data-test", "document-new-item-title")
+                .type("Last item");
+            cy.get("[data-test=empty]").click();
+            cy.get("[data-test=document-modal-submit-button]").click();
+        });
+    cy.get("[data-test=document-tree-content]").contains("tr", "Last item");
+}
+
+function testNavigationShortcuts(): void {
+    cy.get("@body").type("{ctrl}{uparrow}");
+    cy.focused().should("contain", "First item");
+
+    cy.get("@body").type("{downarrow}");
+    cy.focused().should("contain", "Last item");
+}
+
+function deleteItems(): void {
+    cy.get("@body").type("{del}");
+    cy.get("[data-test=document-confirm-deletion-button]").click();
+
+    cy.get("@body").type("{ctrl}{uparrow}").type("{del}");
+    cy.get("[data-test=document-confirm-deletion-button]").click();
+
+    cy.get("[data-test=document-tree-content]").should("not.exist");
+}
