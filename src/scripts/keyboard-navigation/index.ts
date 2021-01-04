@@ -22,31 +22,26 @@ import { handleCreateShortcut } from "./handle-create-shortcut";
 import { handleSearchShortcut } from "./handle-search-shortcut";
 import { handleDashboardShortcut } from "./handle-dashboard-shortcut";
 import { handleHelpShortcut } from "./handle-help-shortcut";
-import { closeExistingModal } from "./close-existing-modal";
+import { HOTKEYS_SCOPE_NO_MODAL } from "./handle-modals-events";
 
-hotkeys("c", () => {
-    closeExistingModal(document);
+hotkeys("c", HOTKEYS_SCOPE_NO_MODAL, () => {
     handleCreateShortcut();
 });
 
-hotkeys("/,s", (event: KeyboardEvent) => {
-    closeExistingModal(document);
+hotkeys("/,s", HOTKEYS_SCOPE_NO_MODAL, (event: KeyboardEvent) => {
     handleSearchShortcut(event);
 });
 
-hotkeys("d", () => {
-    closeExistingModal(document);
+hotkeys("d", HOTKEYS_SCOPE_NO_MODAL, () => {
     handleDashboardShortcut();
 });
 
-hotkeys("*", function (event): void {
+hotkeys("*", HOTKEYS_SCOPE_NO_MODAL, (event) => {
     // Should be hotkeys("?", …),
     // however for unknown reason it does not work (maybe due to shift key?),
     // therefore we're using wildcard as a workaround
     if (event.key !== "?") {
         return;
     }
-
-    closeExistingModal(document);
     handleHelpShortcut();
 });

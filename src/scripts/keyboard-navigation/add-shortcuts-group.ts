@@ -18,7 +18,7 @@
  */
 
 import hotkeys from "hotkeys-js";
-import { closeExistingModal } from "./close-existing-modal";
+import { HOTKEYS_SCOPE_NO_MODAL } from "./handle-modals-events";
 import { createShortcutsGroupInHelpModal } from "./add-to-help-modal";
 import { Shortcut, ShortcutsGroup } from "./type";
 
@@ -26,9 +26,8 @@ export { Shortcut, ShortcutsGroup };
 
 export function addShortcutsGroup(doc: Document, shortcuts_group: ShortcutsGroup): void {
     shortcuts_group.shortcuts.forEach((shortcut) => {
-        hotkeys(shortcut.keyboard_inputs, (event) => {
+        hotkeys(shortcut.keyboard_inputs, HOTKEYS_SCOPE_NO_MODAL, (event) => {
             event.preventDefault();
-            closeExistingModal(doc);
             shortcut.handle(event);
         });
     });

@@ -87,6 +87,7 @@ export class Modal {
         this.bringFocusInsideModal();
         this.addBackdrop();
         this.dispatchEvent(this.shown_event);
+        this.doc.dispatchEvent(this.shown_event);
     }
 
     private bringFocusInsideModal(): void {
@@ -127,6 +128,7 @@ export class Modal {
             this.is_shown = false;
 
             this.dispatchEvent(this.hidden_event);
+            this.doc.dispatchEvent(this.hidden_event);
         }, TRANSITION_DURATION);
     }
 
