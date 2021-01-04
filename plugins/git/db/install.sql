@@ -313,3 +313,15 @@ CREATE TABLE IF NOT EXISTS plugin_git_commit_status (
 CREATE TABLE IF NOT EXISTS plugin_git_big_object_authorized_project (
   project_id INT(11) UNSIGNED NOT NULL PRIMARY KEY
 );
+
+CREATE TABLE IF NOT EXISTS plugin_git_commit_details_cache (
+    repository_id INT(10) UNSIGNED NOT NULL,
+    commit_sha1 BINARY(20) NOT NULL,
+    title TEXT NOT NULL,
+    author_name TEXT NOT NULL,
+    author_email TEXT NOT NULL,
+    author_epoch INT(11) NOT NULL,
+    first_branch TEXT NOT NULL,
+    first_tag TEXT NOT NULL,
+    INDEX idx(repository_id, commit_sha1)
+) ENGINE=InnoDB;
