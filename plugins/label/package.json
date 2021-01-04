@@ -8,7 +8,7 @@
         "mustache": "^4.1.0",
         "vue": "^2.6.12",
         "vue-dompurify-html": "^2.3.0",
-        "vue-gettext": "^2.1.11"
+        "vue-gettext": "^2.1.12"
     },
     "devDependencies": {},
     "config": {

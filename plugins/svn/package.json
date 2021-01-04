@@ -6,7 +6,7 @@
     "private": true,
     "dependencies": {
         "vue": "^2.6.12",
-        "vue-gettext": "^2.1.11"
+        "vue-gettext": "^2.1.12"
     },
     "devDependencies": {},
     "config": {
