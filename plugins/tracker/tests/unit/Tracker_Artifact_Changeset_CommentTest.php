@@ -22,7 +22,8 @@ declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
 
-class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;
@@ -43,8 +44,6 @@ class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $user            = Mockery::mock(PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
         $user->shouldReceive('getLdapId')->andReturn("ldap_01");
@@ -186,18 +185,13 @@ class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\TestCase
 
     public function testItDisplayStandardComment(): void
     {
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
-        $artifact                      = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $this->getPurifier($artifact);
-
+        $changeset = $this->buildChangeset();
         $body    = 'See art #290';
         $comment = Mockery::mock(
             Tracker_Artifact_Changeset_Comment::class,
             [
                 1,
-                $this->changeset,
+                $changeset,
                 0,
                 0,
                 101,
@@ -220,18 +214,13 @@ class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\TestCase
 
     public function testItDisplayEditedComment(): void
     {
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(101);
-        $artifact                      = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-
-        $this->changeset->artifact = $artifact;
+        $changeset = $this->buildChangeset();
         $body                      = 'See art #290';
         $comment                   = Mockery::mock(
             Tracker_Artifact_Changeset_Comment::class,
             [
                 1,
-                $this->changeset,
+                $changeset,
                 0,
                 0,
                 101,
@@ -264,11 +253,18 @@ class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\TestCase
         return $user;
     }
 
-    /**
-     * @param $artifact
-     */
-    private function getPurifier($artifact): void
+    private function buildChangeset(): \Tracker_Artifact_Changeset
     {
-        $this->changeset->artifact = $artifact;
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getGroupId')->andReturn(101);
+        $artifact                      = Mockery::mock(Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        return new \Tracker_Artifact_Changeset(
+            1001,
+            $artifact,
+            110,
+            1234567890,
+            null
+        );
     }
 }

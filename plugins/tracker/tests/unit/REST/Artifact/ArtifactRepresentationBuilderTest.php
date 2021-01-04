@@ -28,8 +28,11 @@ use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\REST\ChangesetRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\ChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\TrackerColor;
@@ -43,20 +46,20 @@ final class ArtifactRepresentationBuilderTest extends TestCase
     private $builder;
     /** @var Mockery\MockInterface */
     private $form_element_factory;
-    /** @var Mockery\MockInterface */
-    private $artifact_factory;
-    /** @var Mockery\MockInterface */
-    private $nature_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ChangesetRepresentationBuilder
+     */
+    private $changeset_representation_builder;
 
     public function setUp(): void
     {
-        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->artifact_factory     = Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->nature_dao           = Mockery::mock(NatureDao::class);
-        $this->builder              = new ArtifactRepresentationBuilder(
+        $this->form_element_factory             = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->changeset_representation_builder = Mockery::mock(ChangesetRepresentationBuilder::class);
+        $this->builder                          = new ArtifactRepresentationBuilder(
             $this->form_element_factory,
-            $this->artifact_factory,
-            $this->nature_dao
+            Mockery::mock(\Tracker_ArtifactFactory::class),
+            Mockery::mock(NatureDao::class),
+            $this->changeset_representation_builder
         );
     }
 
@@ -291,13 +294,17 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $this->assertSame([], $representation->toArray());
     }
 
-    public function testGetArtifactChangesetsRepresentationBuildsHistoryOutOfChangeset()
+    public function testGetArtifactChangesetsRepresentationBuildsHistoryOutOfChangeset(): void
     {
         $current_user = Mockery::mock(\PFUser::class);
         $changeset1   = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset1->shouldReceive('getRESTValue')->with($current_user, Tracker_Artifact_Changeset::FIELDS_ALL)->once();
-        $artifact = $this->buildBasicArtifactMock();
+        $artifact     = $this->buildBasicArtifactMock();
         $artifact->shouldReceive('getChangesets')->andReturn([$changeset1]);
+
+        $this->changeset_representation_builder->shouldReceive('buildWithFields')
+            ->once()
+            ->with($changeset1, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user)
+            ->andReturn($this->buildChangesetRepresentation());
 
         $this->builder->getArtifactChangesetsRepresentation(
             $current_user,
@@ -309,16 +316,24 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         )->toArray();
     }
 
-    public function testGetArtifactChangesetsRepresentationDoesntExportEmptyChanges()
+    public function testGetArtifactChangesetsRepresentationDoesntExportEmptyChanges(): void
     {
-        $changeset1 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset2 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset1->shouldReceive('getRESTValue')->andReturnNull();
-        $changeset2->shouldReceive('getRESTValue')->andReturn('whatever');
+        $current_user = Mockery::mock(\PFUser::class);
+        $changeset1   = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $changeset2   = Mockery::mock(Tracker_Artifact_Changeset::class);
 
         $artifact = $this->buildBasicArtifactMock();
         $artifact->shouldReceive('getChangesets')->andReturn([$changeset1, $changeset2]);
-        $current_user = Mockery::mock(\PFUser::class);
+
+        $changeset_representation1 = $this->buildChangesetRepresentation();
+        $this->changeset_representation_builder->shouldReceive('buildWithFields')
+            ->once()
+            ->with($changeset1, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user)
+            ->andReturn($changeset_representation1);
+        $this->changeset_representation_builder->shouldReceive('buildWithFields')
+            ->once()
+            ->with($changeset2, \Tracker_Artifact_Changeset::FIELDS_ALL, $current_user)
+            ->andReturnNull();
 
         $representation = $this->builder->getArtifactChangesetsRepresentation(
             $current_user,
@@ -329,19 +344,26 @@ final class ArtifactRepresentationBuilderTest extends TestCase
             false
         );
 
-        $this->assertEquals(['whatever'], $representation->toArray());
+        self::assertEquals([$changeset_representation1], $representation->toArray());
     }
 
-    public function testGetArtifactChangesetsRepresentationPaginatesResults()
+    public function testGetArtifactChangesetsRepresentationPaginatesResults(): void
     {
-        $changeset1 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset2 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset1->shouldReceive('getRESTValue')->andReturn('result 1');
-        $changeset2->shouldReceive('getRESTValue')->andReturn('result 2');
+        $changeset1 = $this->buildChangeset(1001);
+        $changeset2 = $this->buildChangeset(1002);
 
         $artifact = $this->buildBasicArtifactMock();
         $artifact->shouldReceive('getChangesets')->andReturn([$changeset1, $changeset2]);
         $current_user = Mockery::mock(\PFUser::class);
+
+        $first_representation  = $this->buildChangesetRepresentation(1001);
+        $second_representation = $this->buildChangesetRepresentation(1002);
+        $this->changeset_representation_builder->shouldReceive('buildWithFields')
+            ->andReturnUsing(
+                function (\Tracker_Artifact_Changeset $changeset, string $mode, \PFUser $user) use ($first_representation, $second_representation) {
+                    return ($changeset->getId() === 1001) ? $first_representation : $second_representation;
+                }
+            );
 
         $representation = $this->builder->getArtifactChangesetsRepresentation(
             $current_user,
@@ -352,42 +374,27 @@ final class ArtifactRepresentationBuilderTest extends TestCase
             false
         );
 
-        $this->assertEquals(['result 2'], $representation->toArray());
+        self::assertEquals([$second_representation], $representation->toArray());
+        self::assertSame(2, $representation->totalCount());
     }
 
-    public function testGetArtifactChangesetsRepresentationReturnsTheTotalCountOfResults()
+    public function testGetArtifactChangesetsRepresentationReturnsTheChangesetsInReverseOrder(): void
     {
-        $changeset1 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset2 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset1->shouldReceive('getRESTValue')->andReturn('result 1');
-        $changeset2->shouldReceive('getRESTValue')->andReturn('result 2');
+        $changeset1 = $this->buildChangeset(1001);
+        $changeset2 = $this->buildChangeset(1002);
 
         $artifact = $this->buildBasicArtifactMock();
         $artifact->shouldReceive('getChangesets')->andReturn([$changeset1, $changeset2]);
         $current_user = Mockery::mock(\PFUser::class);
 
-        $representation = $this->builder->getArtifactChangesetsRepresentation(
-            $current_user,
-            $artifact,
-            Tracker_Artifact_Changeset::FIELDS_ALL,
-            1,
-            10,
-            false
-        );
-
-        $this->assertSame(2, $representation->totalCount());
-    }
-
-    public function testGetArtifactChangesetsRepresentationReturnsTheChangesetsInReverseOrder()
-    {
-        $changeset1 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset2 = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $changeset1->shouldReceive('getRESTValue')->andReturn('result 1');
-        $changeset2->shouldReceive('getRESTValue')->andReturn('result 2');
-
-        $artifact = $this->buildBasicArtifactMock();
-        $artifact->shouldReceive('getChangesets')->andReturn([$changeset1, $changeset2]);
-        $current_user = Mockery::mock(\PFUser::class);
+        $first_representation  = $this->buildChangesetRepresentation(1001);
+        $second_representation = $this->buildChangesetRepresentation(1002);
+        $this->changeset_representation_builder->shouldReceive('buildWithFields')
+            ->andReturnUsing(
+                function (\Tracker_Artifact_Changeset $changeset, string $mode, \PFUser $user) use ($first_representation, $second_representation) {
+                    return ($changeset->getId() === 1001) ? $first_representation : $second_representation;
+                }
+            );
 
         $representation = $this->builder->getArtifactChangesetsRepresentation(
             $current_user,
@@ -398,7 +405,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
             true
         );
 
-        $this->assertEquals(['result 2', 'result 1'], $representation->toArray());
+        self::assertEquals([$second_representation, $first_representation], $representation->toArray());
     }
 
     /**
@@ -460,5 +467,45 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $tracker->shouldReceive('getProject')->andReturn(Mockery::spy(\Project::class));
 
         return MinimalTrackerRepresentation::build($tracker);
+    }
+
+    private function buildChangesetRepresentation(int $changeset_id = 1001): ChangesetRepresentation
+    {
+        $comment_representation = new ChangesetCommentRepresentation('Irrelevant', 'Irrelevant', 'text');
+        return new ChangesetRepresentation(
+            $changeset_id,
+            110,
+            null,
+            1234567890,
+            null,
+            $comment_representation,
+            [],
+            null,
+            1234567890
+        );
+    }
+
+    private function buildChangeset(int $changeset_id = 1001): \Tracker_Artifact_Changeset
+    {
+        $changeset = new \Tracker_Artifact_Changeset(
+            $changeset_id,
+            \Mockery::mock(Artifact::class),
+            110,
+            1234567890,
+            null
+        );
+        $comment   = new \Tracker_Artifact_Changeset_Comment(
+            201,
+            $changeset,
+            null,
+            null,
+            110,
+            1234567890,
+            'A text comment',
+            'text',
+            0
+        );
+        $changeset->setLatestComment($comment);
+        return $changeset;
     }
 }

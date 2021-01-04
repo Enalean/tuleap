@@ -23,7 +23,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
 use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDisplayer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
-use Tuleap\Tracker\REST\ChangesetRepresentation;
 
 require_once __DIR__ . '/../../../../../src/www/include/utils.php';
 
@@ -802,75 +801,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getRESTValue(PFUser $user, $fields)
-    {
-        $comment = $this->getComment();
-        if (! $comment) {
-            $comment = new Tracker_Artifact_Changeset_CommentNull($this);
-        }
-        if ($fields == self::FIELDS_COMMENTS && $comment->hasEmptyBody()) {
-            return null;
-        }
-
-        $changeset_representation = new ChangesetRepresentation();
-        $changeset_representation->build(
-            $this,
-            $comment,
-            $fields  == self::FIELDS_COMMENTS  ? [] : $this->getRESTFieldValues($user)
-        );
-        return $changeset_representation;
-    }
-
-    private function getRESTFieldValues(PFUser $user)
-    {
-        $values = [];
-        $factory = $this->getFormElementFactory();
-
-        foreach ($factory->getUsedFieldsForREST($this->getTracker()) as $field) {
-            if ($field && $field->userCanRead($user)) {
-                $values[] = $field->getRESTValue($user, $this);
-            }
-        }
-        return array_filter($values);
-    }
-
-    /**
-     * Returns a REST representation with all fields content.
-     * This does not check permissions so use it with caution.
-     *
-     * "A great power comes with a great responsibility"
-     *
-     * @return \Tuleap\Tracker\REST\ChangesetRepresentation
-     */
-    public function getFullRESTValue(PFUser $user)
-    {
-        $comment = $this->getComment();
-        if (! $comment) {
-            $comment = new Tracker_Artifact_Changeset_CommentNull($this);
-        }
-
-        $changeset_representation = new Tuleap\Tracker\REST\ChangesetRepresentation();
-        $changeset_representation->build(
-            $this,
-            $comment,
-            $this->getFullRESTFieldValuesWithoutPermissions($user)
-        );
-
-        return $changeset_representation;
-    }
-
-    private function getFullRESTFieldValuesWithoutPermissions(PFUser $user)
-    {
-        $values = [];
-        $factory = $this->getFormElementFactory();
-
-        foreach ($factory->getUsedFieldsForREST($this->getTracker()) as $field) {
-            $values[] = $field->getRESTValue($user, $this);
-        }
-
-        return array_values(array_filter($values));
     }
 
     /**

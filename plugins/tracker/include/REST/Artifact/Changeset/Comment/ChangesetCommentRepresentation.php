@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,31 +13,39 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\REST\Artifact\Followup;
+namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 
 /**
  * @psalm-immutable
  */
-final class NewChangesetCommentRepresentation
+final class ChangesetCommentRepresentation
 {
+
     /**
      * @var string Content of the comment {@required false}
      */
     public $body = '';
 
     /**
+     * @var string Content of the comment with interpreted cross-references {@required false}
+     */
+    public $post_processed_body = '';
+
+    /**
      * @var string Type of the comment (text|html)
      */
     public $format;
 
-    public function __construct(string $body, string $format)
+    public function __construct(string $body, string $post_processed_body, string $format)
     {
-        $this->body   = $body;
-        $this->format = $format;
+        $this->body                = $body;
+        $this->post_processed_body = $post_processed_body;
+        $this->format              = $format;
     }
 }

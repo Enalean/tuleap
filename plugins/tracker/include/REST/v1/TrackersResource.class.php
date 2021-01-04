@@ -56,6 +56,8 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
@@ -108,7 +110,7 @@ class TrackersResource extends AuthenticatedResource
     /** @var PermissionsManager */
     private $permission_manager;
 
-    /** @var Tracker_Factory */
+    /** @var TrackerFactory */
     private $tracker_factory;
 
     /** @var Tracker_ArtifactFactory */
@@ -466,7 +468,12 @@ class TrackersResource extends AuthenticatedResource
         $builder = new ArtifactRepresentationBuilder(
             $this->formelement_factory,
             $this->tracker_artifact_factory,
-            new NatureDao()
+            new NatureDao(),
+            new ChangesetRepresentationBuilder(
+                $this->user_manager,
+                $this->formelement_factory,
+                new CommentRepresentationBuilder()
+            )
         );
 
         $build_artifact_representation = function (?Artifact $artifact) use (

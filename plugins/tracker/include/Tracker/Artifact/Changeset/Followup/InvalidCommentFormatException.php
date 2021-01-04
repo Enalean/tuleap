@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\REST;
+declare(strict_types=1);
 
-class ChangesetRepresentationCollection
+namespace Tuleap\Tracker\Artifact\Changeset\Followup;
+
+final class InvalidCommentFormatException extends \Exception
 {
-
-    private $collection;
-    private $total_count;
-
-    public function __construct(array $collection, $total_count)
+    public function __construct(string $format)
     {
-        $this->collection  = $collection;
-        $this->total_count = $total_count;
-    }
-
-    public function toArray()
-    {
-        return $this->collection;
-    }
-
-    public function totalCount()
-    {
-        return $this->total_count;
+        parent::__construct(sprintf("Invalid comment format: %s passed. Valid formats are 'html' or 'text'", $format));
     }
 }

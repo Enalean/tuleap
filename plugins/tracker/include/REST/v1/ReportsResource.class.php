@@ -34,6 +34,8 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use UserManager;
@@ -49,20 +51,12 @@ class ReportsResource extends AuthenticatedResource
     public const DEFAULT_VALUES = null;
     public const ALL_VALUES     = 'all';
 
-    /** @var ArtifactRepresentationBuilder */
-    private $builder;
-
     /** @var ReportArtifactFactory */
     private $report_artifact_factory;
 
     public function __construct()
     {
         $artifact_factory = Tracker_ArtifactFactory::instance();
-        $this->builder    = new ArtifactRepresentationBuilder(
-            Tracker_FormElementFactory::instance(),
-            $artifact_factory,
-            new NatureDao()
-        );
         $this->report_artifact_factory = new ReportArtifactFactory(
             $artifact_factory
         );
@@ -193,7 +187,17 @@ class ReportsResource extends AuthenticatedResource
      */
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values)
     {
-        $builder = $this->builder;
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $builder = new ArtifactRepresentationBuilder(
+            $form_element_factory,
+            Tracker_ArtifactFactory::instance(),
+            new NatureDao(),
+            new ChangesetRepresentationBuilder(
+                UserManager::instance(),
+                $form_element_factory,
+                new CommentRepresentationBuilder()
+            )
+        );
 
         $build_artifact_representation = function (?Artifact $artifact) use (
             $builder,
