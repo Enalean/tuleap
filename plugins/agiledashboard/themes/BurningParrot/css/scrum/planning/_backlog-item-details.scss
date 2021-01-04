@@ -25,7 +25,7 @@
 @each $project-color-name, $project-color-properties in background.$definitions {
     .project-color-#{$project-color-name} {
         --project-color: #{background.get-color($project-color-name)};
-        --project-color-background: linear-gradient(90deg, #{color.scale(background.get-color($project-color-name), $lightness: 60%)} 0%, #{color.scale(background.get-color($project-color-name), $lightness: 85%)} 100%);
+        --project-color-background: #{color.change(background.get-color($project-color-name), $alpha: .07)};
     }
 }
 
@@ -235,7 +235,7 @@ $backlog-item-details-parent-background: var(--project-color-background, $tlp-ui
     margin: 0 5px 0 13px;
     padding: 3px 5px;
     transition: transform 100ms ease-in-out 500ms;
-    border: 1px solid $backlog-item-details-parent-background;
+    border: 1px hidden;
     border-radius: 3px;
     background: $backlog-item-details-parent-background;
     fill: $backlog-item-details-parent-color;
