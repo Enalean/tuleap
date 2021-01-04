@@ -25,8 +25,6 @@ namespace Tuleap\Git\Reference;
 use GitRepository;
 use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
-use Tuleap\Git\CommitMetadata\CommitMetadata;
-use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CrossReferencePresenter;
@@ -35,10 +33,6 @@ use Tuleap\Reference\Metadata\CreatedByPresenter;
 class CrossReferenceGitEnhancer
 {
     /**
-     * @var CommitMetadataRetriever
-     */
-    private $commit_metadata_retriever;
-    /**
      * @var \UserHelper
      */
     private $user_helper;
@@ -46,15 +40,19 @@ class CrossReferenceGitEnhancer
      * @var TlpRelativeDatePresenterBuilder
      */
     private $relative_date_builder;
+    /**
+     * @var CommitDetailsRetriever
+     */
+    private $commit_details_retriever;
 
     public function __construct(
-        CommitMetadataRetriever $commit_metadata_retriever,
+        CommitDetailsRetriever $commit_details_retriever,
         \UserHelper $user_helper,
         TlpRelativeDatePresenterBuilder $relative_date_builder
     ) {
-        $this->commit_metadata_retriever = $commit_metadata_retriever;
-        $this->user_helper               = $user_helper;
-        $this->relative_date_builder     = $relative_date_builder;
+        $this->commit_details_retriever = $commit_details_retriever;
+        $this->user_helper              = $user_helper;
+        $this->relative_date_builder    = $relative_date_builder;
     }
 
     public function getCrossReferencePresenterWithCommitInformation(
@@ -63,36 +61,21 @@ class CrossReferenceGitEnhancer
         GitRepository $repository,
         \PFUser $user
     ): CrossReferencePresenter {
+        $commit_details = $this->commit_details_retriever->retrieveCommitDetails($repository, $commit);
+
         $git_commit_reference = $basic_cross_reference_presenter
-            ->withTitle($commit->GetTitle(), null)
-            ->withAdditionalBadges($this->getAdditionalBadgesPresenters($commit));
+            ->withTitle($commit_details->getTitle(), null)
+            ->withAdditionalBadges($this->getAdditionalBadgesPresenters($commit_details));
 
-        return $this->addCreationMetadata($git_commit_reference, $repository, $commit, $user);
-    }
-
-    private function addCreationMetadata(
-        CrossReferencePresenter $git_commit_reference,
-        GitRepository $repository,
-        Commit $commit,
-        \PFUser $user
-    ): CrossReferencePresenter {
-        $commit_metadata = $this->commit_metadata_retriever->getMetadataByRepositoryAndCommits(
-            $repository,
-            $commit,
+        return $git_commit_reference->withCreationMetadata(
+            $this->getCreatedByPresenter($commit_details),
+            $this->getCreatedOnPresenter($commit_details, $user)
         );
-        if (isset($commit_metadata[0])) {
-            $git_commit_reference = $git_commit_reference->withCreationMetadata(
-                $this->getCreatedByPresenter($commit_metadata[0], $commit),
-                $this->getCreatedOnPresenter($commit, $user)
-            );
-        }
-
-        return $git_commit_reference;
     }
 
-    private function getCreatedByPresenter(CommitMetadata $commit_metadata, Commit $commit): CreatedByPresenter
+    private function getCreatedByPresenter(CommitDetails $commit_details): CreatedByPresenter
     {
-        $author = $commit_metadata->getAuthor();
+        $author = $commit_details->getAuthor();
         if ($author) {
             $created_by = new CreatedByPresenter(
                 trim($this->user_helper->getDisplayNameFromUser($author) ?? ''),
@@ -101,7 +84,7 @@ class CrossReferenceGitEnhancer
             );
         } else {
             $created_by = new CreatedByPresenter(
-                $commit->GetAuthorName(),
+                $commit_details->getAuthorName(),
                 false,
                 '',
             );
@@ -110,12 +93,10 @@ class CrossReferenceGitEnhancer
         return $created_by;
     }
 
-    private function getCreatedOnPresenter(Commit $commit, \PFUser $user): TlpRelativeDatePresenter
+    private function getCreatedOnPresenter(CommitDetails $commit_details, \PFUser $user): TlpRelativeDatePresenter
     {
-        $time = (int) $commit->GetAuthorEpoch();
-
         return $this->relative_date_builder->getTlpRelativeDatePresenterInInlineContext(
-            (new \DateTimeImmutable())->setTimestamp($time),
+            new \DateTimeImmutable('@' . $commit_details->getAuthorEpoch()),
             $user,
         );
     }
@@ -123,13 +104,13 @@ class CrossReferenceGitEnhancer
     /**
      * @return AdditionalBadgePresenter[]
      */
-    private function getAdditionalBadgesPresenters(Commit $commit): array
+    private function getAdditionalBadgesPresenters(CommitDetails $commit_details): array
     {
         return array_merge(
-            $this->getBadgePresentersForBranchOrTag($commit),
+            $this->getBadgePresentersForBranchOrTag($commit_details),
             [
                 new AdditionalBadgePresenter(
-                    substr($commit->GetHash(), 0, 10),
+                    substr($commit_details->getHash(), 0, 10),
                     false,
                     false,
                 )
@@ -140,19 +121,19 @@ class CrossReferenceGitEnhancer
     /**
      * @return AdditionalBadgePresenter[]
      */
-    private function getBadgePresentersForBranchOrTag(Commit $commit): array
+    private function getBadgePresentersForBranchOrTag(CommitDetails $commit_details): array
     {
-        $branches = $commit->GetHeads();
-        if (! empty($branches)) {
+        $first_branch = $commit_details->getFirstBranch();
+        if (! empty($first_branch)) {
             return [
-                new AdditionalBadgePresenter($branches[0]->GetName(), true, false)
+                new AdditionalBadgePresenter($first_branch, true, false)
             ];
         }
 
-        $tags = $commit->GetTags();
-        if (! empty($tags)) {
+        $first_tag = $commit_details->getFirstTag();
+        if (! empty($first_tag)) {
             return [
-                new AdditionalBadgePresenter($tags[0]->GetName(), true, true)
+                new AdditionalBadgePresenter($first_tag, true, true)
             ];
         }
 

@@ -41,9 +41,6 @@ use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
-use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
-use Tuleap\Git\CommitStatus\CommitStatusDAO;
-use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\CreateRepositoryController;
 use Tuleap\Git\DefaultSettings\DefaultSettingsRouter;
 use Tuleap\Git\DefaultSettings\IndexController;
@@ -111,6 +108,8 @@ use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupController;
 use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupGitSectionBuilder;
 use Tuleap\Git\PermissionsPerGroup\RepositoryFineGrainedRepresentationBuilder;
 use Tuleap\Git\PermissionsPerGroup\RepositorySimpleRepresentationBuilder;
+use Tuleap\Git\Reference\CommitDetailsCacheDao;
+use Tuleap\Git\Reference\CommitDetailsRetriever;
 use Tuleap\Git\Reference\CommitProvider;
 use Tuleap\Git\Reference\CrossReferenceGitEnhancer;
 use Tuleap\Git\Reference\CrossReferenceGitOrganizer;
@@ -2818,8 +2817,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             ),
             new CommitProvider(),
             new CrossReferenceGitEnhancer(
-                new CommitMetadataRetriever(
-                    new CommitStatusRetriever(new CommitStatusDAO()),
+                new CommitDetailsRetriever(
+                    new CommitDetailsCacheDao(),
                     UserManager::instance()
                 ),
                 UserHelper::instance(),

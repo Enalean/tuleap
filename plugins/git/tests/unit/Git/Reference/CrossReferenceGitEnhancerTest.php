@@ -26,11 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
-use Tuleap\Git\CommitMetadata\CommitMetadata;
-use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
-use Tuleap\Git\CommitStatus\CommitStatusUnknown;
 use Tuleap\Git\GitPHP\Commit;
-use Tuleap\Git\GitPHP\Head;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
@@ -40,9 +36,9 @@ class CrossReferenceGitEnhancerTest extends TestCase
     use GlobalLanguageMock;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitMetadataRetriever
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitDetailsRetriever
      */
-    private $commit_metadata_retriever;
+    private $commit_details_retriever;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserHelper
      */
@@ -66,11 +62,11 @@ class CrossReferenceGitEnhancerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->commit_metadata_retriever = Mockery::mock(CommitMetadataRetriever::class);
-        $this->user_helper               = Mockery::mock(\UserHelper::class);
+        $this->commit_details_retriever = Mockery::mock(CommitDetailsRetriever::class);
+        $this->user_helper              = Mockery::mock(\UserHelper::class);
 
         $this->enhancer = new CrossReferenceGitEnhancer(
-            $this->commit_metadata_retriever,
+            $this->commit_details_retriever,
             $this->user_helper,
             new TlpRelativeDatePresenterBuilder(),
         );
@@ -86,15 +82,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
             )
             ->getMock();
 
-        $this->commit = Mockery::mock(Commit::class)
-            ->shouldReceive(
-                [
-                    'GetTitle'       => 'Add foo to stuff',
-                    'GetHash'        => '1a2b3c4d5e6f7g8h9i',
-                    'GetAuthorEpoch' => 1234567890,
-                ]
-            )
-            ->getMock();
+        $this->commit = Mockery::mock(Commit::class);
 
         $GLOBALS['Language']
             ->shouldReceive('getText')
@@ -106,17 +94,17 @@ class CrossReferenceGitEnhancerTest extends TestCase
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $this->commit_metadata_retriever
-            ->shouldReceive('getMetadataByRepositoryAndCommits')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetHeads')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetTags')
-            ->andReturn([]);
+        $this->commit_details_retriever
+            ->shouldReceive('retrieveCommitDetails')
+            ->andReturn(new CommitDetails(
+                '1a2b3c4d5e6f7g8h9i',
+                'Add foo to stuff',
+                '',
+                '',
+                null,
+                'John Doe',
+                1234567890
+            ));
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
@@ -135,17 +123,17 @@ class CrossReferenceGitEnhancerTest extends TestCase
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $this->commit_metadata_retriever
-            ->shouldReceive('getMetadataByRepositoryAndCommits')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetHeads')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetTags')
-            ->andReturn([]);
+        $this->commit_details_retriever
+            ->shouldReceive('retrieveCommitDetails')
+            ->andReturn(new CommitDetails(
+                '1a2b3c4d5e6f7g8h9i',
+                'Add foo to stuff',
+                '',
+                '',
+                null,
+                'John Doe',
+                1234567890
+            ));
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
@@ -164,21 +152,17 @@ class CrossReferenceGitEnhancerTest extends TestCase
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $this->commit_metadata_retriever
-            ->shouldReceive('getMetadataByRepositoryAndCommits')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetHeads')
-            ->andReturn([
-                Mockery::mock(Head::class)->shouldReceive(['GetName' => 'dev-feature'])->getMock(),
-            ]);
-
-        $this->commit
-            ->shouldReceive('GetTags')
-            ->andReturn([
-                Mockery::mock(Head::class)->shouldReceive(['GetName' => 'v1.2.0'])->getMock(),
-            ]);
+        $this->commit_details_retriever
+            ->shouldReceive('retrieveCommitDetails')
+            ->andReturn(new CommitDetails(
+                '1a2b3c4d5e6f7g8h9i',
+                'Add foo to stuff',
+                'dev-feature',
+                'v1.2.0',
+                null,
+                'John Doe',
+                1234567890
+            ));
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
@@ -202,19 +186,17 @@ class CrossReferenceGitEnhancerTest extends TestCase
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $this->commit_metadata_retriever
-            ->shouldReceive('getMetadataByRepositoryAndCommits')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetHeads')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetTags')
-            ->andReturn([
-                Mockery::mock(Head::class)->shouldReceive(['GetName' => 'v1.2.0'])->getMock(),
-            ]);
+        $this->commit_details_retriever
+            ->shouldReceive('retrieveCommitDetails')
+            ->andReturn(new CommitDetails(
+                '1a2b3c4d5e6f7g8h9i',
+                'Add foo to stuff',
+                '',
+                'v1.2.0',
+                null,
+                'John Doe',
+                1234567890
+            ));
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
@@ -232,32 +214,6 @@ class CrossReferenceGitEnhancerTest extends TestCase
         self::assertEquals('1a2b3c4d5e', $new_ref->additional_badges[1]->label);
         self::assertFalse($new_ref->additional_badges[1]->is_plain);
         self::assertFalse($new_ref->additional_badges[1]->is_primary);
-    }
-
-    public function testItDoesNotAddCreationMetadataIfTheyCannotBeFound(): void
-    {
-        $ref = CrossReferencePresenterBuilder::get(1)->build();
-
-        $this->commit_metadata_retriever
-            ->shouldReceive('getMetadataByRepositoryAndCommits')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetHeads')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetTags')
-            ->andReturn([]);
-
-        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
-            $ref,
-            $this->commit,
-            $this->repository,
-            $this->user
-        );
-
-        self::assertNull($new_ref->creation_metadata);
     }
 
     public function testItAddCreationDateAsMetadata(): void
@@ -278,21 +234,17 @@ class CrossReferenceGitEnhancerTest extends TestCase
             ->with($author)
             ->andReturn('John Doe');
 
-        $this->commit_metadata_retriever
-            ->shouldReceive('getMetadataByRepositoryAndCommits')
-            ->andReturn(
-                [
-                    new CommitMetadata(new CommitStatusUnknown(), $author, $author),
-                ]
-            );
-
-        $this->commit
-            ->shouldReceive('GetHeads')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetTags')
-            ->andReturn([]);
+        $this->commit_details_retriever
+            ->shouldReceive('retrieveCommitDetails')
+            ->andReturn(new CommitDetails(
+                '1a2b3c4d5e6f7g8h9i',
+                'Add foo to stuff',
+                '',
+                '',
+                $author,
+                'John Doe',
+                1234567890
+            ));
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
@@ -326,21 +278,17 @@ class CrossReferenceGitEnhancerTest extends TestCase
             ->with($author)
             ->andReturn('John Doe');
 
-        $this->commit_metadata_retriever
-            ->shouldReceive('getMetadataByRepositoryAndCommits')
-            ->andReturn(
-                [
-                    new CommitMetadata(new CommitStatusUnknown(), $author, $author),
-                ]
-            );
-
-        $this->commit
-            ->shouldReceive('GetHeads')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetTags')
-            ->andReturn([]);
+        $this->commit_details_retriever
+            ->shouldReceive('retrieveCommitDetails')
+            ->andReturn(new CommitDetails(
+                '1a2b3c4d5e6f7g8h9i',
+                'Add foo to stuff',
+                '',
+                '',
+                $author,
+                'John Doe',
+                1234567890
+            ));
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
@@ -362,21 +310,17 @@ class CrossReferenceGitEnhancerTest extends TestCase
             ->shouldReceive('GetAuthorName')
             ->andReturn('Korben Dallas');
 
-        $this->commit_metadata_retriever
-            ->shouldReceive('getMetadataByRepositoryAndCommits')
-            ->andReturn(
-                [
-                    new CommitMetadata(new CommitStatusUnknown(), null, null),
-                ]
-            );
-
-        $this->commit
-            ->shouldReceive('GetHeads')
-            ->andReturn([]);
-
-        $this->commit
-            ->shouldReceive('GetTags')
-            ->andReturn([]);
+        $this->commit_details_retriever
+            ->shouldReceive('retrieveCommitDetails')
+            ->andReturn(new CommitDetails(
+                '1a2b3c4d5e6f7g8h9i',
+                'Add foo to stuff',
+                '',
+                '',
+                null,
+                'Korben Dallas',
+                1234567890
+            ));
 
         $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
             $ref,
