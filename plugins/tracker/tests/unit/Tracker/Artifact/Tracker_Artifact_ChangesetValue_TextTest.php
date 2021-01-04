@@ -147,15 +147,22 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
 
     public function testItReturnsTheMarkdownValue(): void
     {
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getGroupId')->andReturn(101);
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('getTracker')->andReturn($tracker);
+
         $field = $this->getTextFieldWithProject();
-        $text = new Tracker_Artifact_ChangesetValue_Text(
+        $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
-            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            $changeset,
             $field,
             false,
             'Problems with my code: **example**',
             Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT
         );
+
+
         $this->assertEquals("<p>Problems with my code: <strong>example</strong></p>\n", $text->getValue());
     }
 
@@ -176,12 +183,17 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
 
     public function testItBuildTheMarkdownTextValueRepresentation(): void
     {
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getGroupId')->andReturn(101);
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('getTracker')->andReturn($tracker);
+
         $user                 = Mockery::mock(PFUser::class);
         $text                 = 'Problems with my code: **example**';
         $field                = $this->getTextFieldWithProject();
         $changeset_value_text = new Tracker_Artifact_ChangesetValue_Text(
             111,
-            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            $changeset,
             $field,
             false,
             $text,
