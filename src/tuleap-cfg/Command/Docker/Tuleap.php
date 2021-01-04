@@ -61,7 +61,6 @@ final class Tuleap
                 '--mysql-password=' . $db_admin_password,
             ]
         )->mustRun();
-        $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->mustRun();
         $this->regenerateConfigurations($output);
     }
 
@@ -74,6 +73,9 @@ final class Tuleap
 
     private function regenerateConfigurations(OutputInterface $output): void
     {
+        $output->writeln('<info>Ensure Tuleap knows it\'s under supervisord control</info>');
+        $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->mustRun();
+
         $output->writeln('<info>Regenerate configurations for nginx</info>');
         $this->process_factory->getProcess([__DIR__ . '/../../../../tools/utils/php73/run.php', '--module=nginx'])->mustRun();
 
