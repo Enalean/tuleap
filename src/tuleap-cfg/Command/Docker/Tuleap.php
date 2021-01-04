@@ -30,8 +30,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\System\ServiceControl;
 use TuleapCfg\Command\Configure\ConfigureApache;
 use TuleapCfg\Command\ProcessFactory;
-use TuleapCfg\Command\SiteDeploy\SiteDeployFPM;
-use TuleapCfg\Command\SiteDeploy\SiteDeployGitolite3;
+use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
+use TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3;
 
 final class Tuleap
 {

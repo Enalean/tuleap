@@ -33,7 +33,7 @@ $application->add(new \TuleapCfg\Command\DockerAioRunCommand(new ProcessFactory(
 $application->add(new \TuleapCfg\Command\SetupMysqlCommand());
 $application->add(new \TuleapCfg\Command\SetupMysqlInitCommand(new \TuleapCfg\Command\SetupMysql\ConnectionManager()));
 $application->add(new \TuleapCfg\Command\SiteDeploy\SiteDeployCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\SiteDeployImagesCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\SiteDeployFPMCommand());
-$application->add(new \TuleapCfg\Command\SiteDeploy\SiteDeployGitolite3Command());
+$application->add(new \TuleapCfg\Command\SiteDeploy\Images\SiteDeployImagesCommand());
+$application->add(new \TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPMCommand());
+$application->add(new \TuleapCfg\Command\SiteDeploy\Gitolite3\SiteDeployGitolite3Command());
 $application->run();

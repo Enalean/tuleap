@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace TuleapCfg\Command\SiteDeploy;
+namespace TuleapCfg\Command\SiteDeploy\FPM;
 
 use Psr\Log\LoggerInterface;
 

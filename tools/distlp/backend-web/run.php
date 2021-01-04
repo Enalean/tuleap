@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use TuleapCfg\Command\SiteDeploy\FPMSessionRedis;
-use TuleapCfg\Command\SiteDeploy\SiteDeployFPM;
+use TuleapCfg\Command\SiteDeploy\FPM\FPMSessionRedis;
+use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
 
 require_once __DIR__ . '/../../Configuration/vendor/autoload.php';
 require_once __DIR__ . '/../../../src/vendor/autoload.php';
