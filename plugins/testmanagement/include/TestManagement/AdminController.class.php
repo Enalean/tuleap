@@ -25,7 +25,7 @@ use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
 use Tuleap\TestManagement\Administration\InvalidTrackerIdProvidedException;
-use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
+use Tuleap\TestManagement\Administration\FieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerDoesntExistException;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
@@ -44,9 +44,9 @@ class AdminController extends TestManagementController
     private $csrf_token;
 
     /**
-     * @var StepFieldUsageDetector
+     * @var FieldUsageDetector
      */
-    private $step_field_usage_detector;
+    private $field_usage_detector;
 
     /**
      * @var TrackerChecker
@@ -63,26 +63,26 @@ class AdminController extends TestManagementController
         Config $config,
         EventManager $event_manager,
         CSRFSynchronizerToken $csrf_token,
-        StepFieldUsageDetector $step_field_usage_detector,
+        FieldUsageDetector $field_usage_detector,
         TrackerChecker $tracker_checker,
         Valid_UInt $int_validator
     ) {
         parent::__construct($request, $config, $event_manager);
-        $this->csrf_token                = $csrf_token;
-        $this->step_field_usage_detector = $step_field_usage_detector;
-        $this->tracker_checker           = $tracker_checker;
-        $this->int_validator             = $int_validator;
+        $this->csrf_token           = $csrf_token;
+        $this->field_usage_detector = $field_usage_detector;
+        $this->tracker_checker      = $tracker_checker;
+        $this->int_validator        = $int_validator;
     }
 
     public function admin(): string
     {
         $test_definition_tracker_id = (int) $this->config->getTestDefinitionTrackerId($this->project);
-        $is_definition_disabled = $this->step_field_usage_detector->isStepDefinitionFieldUsed(
+        $is_definition_disabled = $this->field_usage_detector->isStepDefinitionFieldUsed(
             $test_definition_tracker_id
         );
 
         $test_execution_tracker_id = (int) $this->config->getTestExecutionTrackerId($this->project);
-        $is_execution_disabled = $this->step_field_usage_detector->isStepExecutionFieldUsed(
+        $is_execution_disabled = $this->field_usage_detector->isStepExecutionFieldUsed(
             $test_execution_tracker_id
         );
 
@@ -107,7 +107,7 @@ class AdminController extends TestManagementController
         $campaign_tracker_id = $this->checkTrackerIdForProject(
             $this->request->get('campaign_tracker_id'),
             $this->config->getCampaignTrackerId($this->project),
-            false
+            TestmanagementTrackersConfigurator::CAMPAIGN_TRACKER_NAME
         );
 
         $definition_tracker_id = $this->getValidDefinitionTrackerId();
@@ -115,13 +115,13 @@ class AdminController extends TestManagementController
         $execution_tracker_id = $this->checkTrackerIdForProject(
             $this->request->get('test_execution_tracker_id'),
             $this->config->getTestExecutionTrackerId($this->project),
-            true
+            TestmanagementTrackersConfigurator::EXECUTION_TRACKER_NAME
         );
 
         $issue_tracker_id = $this->checkIssueTrackerIdForProject(
             $this->request->get('issue_tracker_id'),
             (string) $this->config->getIssueTrackerId($this->project),
-            false
+            TestmanagementTrackersConfigurator::ISSUE_TRACKER_NAME
         );
 
         if (
@@ -159,14 +159,14 @@ class AdminController extends TestManagementController
 
         // If StepDefinition field is used, we cannot change the Definition tracker
         // Form input is disabled so we should not get there, but never trust the user's data!
-        if ($this->step_field_usage_detector->isStepDefinitionFieldUsed((int) $current_tracker_id)) {
+        if ($this->field_usage_detector->isStepDefinitionFieldUsed((int) $current_tracker_id)) {
             return $current_tracker_id;
         }
 
         return $this->checkTrackerIdForProject(
             $this->request->get('test_definition_tracker_id'),
             $current_tracker_id,
-            true
+            TestmanagementTrackersConfigurator::DEFINITION_TRACKER_NAME
         );
     }
 
@@ -176,13 +176,13 @@ class AdminController extends TestManagementController
     private function checkIssueTrackerIdForProject(
         ?string $submitted_id,
         ?string $original_id,
-        bool $must_check_frozen_fields
+        string $tracker_type
     ) {
         if ($submitted_id === '') {
             return null;
         }
 
-        return $this->checkTrackerIdForProject($submitted_id, $original_id, $must_check_frozen_fields);
+        return $this->checkTrackerIdForProject($submitted_id, $original_id, $tracker_type);
     }
 
     /**
@@ -190,19 +190,21 @@ class AdminController extends TestManagementController
      *
      * @return false|int|null|string
      */
-    private function checkTrackerIdForProject(?string $submitted_id, $original_id, bool $must_check_frozen_fields)
+    private function checkTrackerIdForProject(?string $submitted_id, $original_id, string $tracker_type)
     {
         try {
             $this->checkIdProvidedValidity($submitted_id);
 
-            if (! $submitted_id) {
+            if (! $submitted_id || (int) $submitted_id === $original_id) {
                 return $original_id;
             }
 
-            if ($must_check_frozen_fields) {
-                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, (int) $submitted_id);
+            if ($tracker_type === TestmanagementTrackersConfigurator::DEFINITION_TRACKER_NAME) {
+                $this->tracker_checker->checkSubmittedDefinitionTrackerCanBeUsed($this->project, (int) $submitted_id);
+            } elseif ($tracker_type === TestmanagementTrackersConfigurator::EXECUTION_TRACKER_NAME) {
+                $this->tracker_checker->checkSubmittedExecutionTrackerCanBeUsed($this->project, (int) $submitted_id);
             } else {
-                $this->tracker_checker->checkTrackerIsInProject($this->project, (int) $submitted_id);
+                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, (int) $submitted_id);
             }
             return $submitted_id;
         } catch (TrackerNotInProjectException $exception) {
@@ -210,6 +212,36 @@ class AdminController extends TestManagementController
                 Feedback::WARN,
                 sprintf(
                     dgettext('tuleap-testmanagement', 'The tracker id %1$s is not part of this project'),
+                    (string) $submitted_id
+                )
+            );
+
+            return $original_id;
+        } catch (MissingArtifactLinkException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext('tuleap-testmanagement', 'The tracker id %1$s does not have artifact links field'),
+                    (string) $submitted_id
+                )
+            );
+
+            return $original_id;
+        } catch (TrackerDefinitionNotValidException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext('tuleap-testmanagement', 'The tracker id %1$s does not have step definition field'),
+                    (string) $submitted_id
+                )
+            );
+
+            return $original_id;
+        } catch (TrackerExecutionNotValidException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext('tuleap-testmanagement', 'The tracker id %1$s does not have step execution field'),
                     (string) $submitted_id
                 )
             );

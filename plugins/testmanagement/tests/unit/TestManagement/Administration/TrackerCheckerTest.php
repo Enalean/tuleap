@@ -28,6 +28,9 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use TrackerFactory;
+use Tuleap\TestManagement\MissingArtifactLinkException;
+use Tuleap\TestManagement\TrackerDefinitionNotValidException;
+use Tuleap\TestManagement\TrackerExecutionNotValidException;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 
@@ -77,6 +80,10 @@ class TrackerCheckerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
      */
     private $deleted_tracker;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldUsageDetector
+     */
+    private $ttm_field_usage_detector;
 
     protected function setUp(): void
     {
@@ -121,11 +128,13 @@ class TrackerCheckerTest extends TestCase
 
         $this->frozen_field_dao    = Mockery::mock(FrozenFieldsDao::class);
         $this->hidden_fieldset_dao = Mockery::mock(HiddenFieldsetsDao::class);
+        $this->ttm_field_usage_detector = Mockery::mock(FieldUsageDetector::class);
 
         $this->tracker_checker = new TrackerChecker(
             $this->tracker_factory,
             $this->frozen_field_dao,
-            $this->hidden_fieldset_dao
+            $this->hidden_fieldset_dao,
+            $this->ttm_field_usage_detector
         );
     }
 
@@ -133,19 +142,79 @@ class TrackerCheckerTest extends TestCase
     {
         $submitted_id = 1;
 
-        $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
+        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
 
         $this->addToAssertionCount(1);
     }
 
-    public function testItDoesNotThrowExceptionIfProvidedTrackerIdCanBeUsed()
+    public function testItDoesThrowExceptionIfProvidedTrackerIdIsInProjectButNoArtifactLinkInTracker()
     {
         $submitted_id = 1;
+
+        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(false);
+        $this->expectException(MissingArtifactLinkException::class);
+
+        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
+    }
+
+    public function testItDoesNotThrowExceptionIfProvidedDefinitionTrackerIdCanBeUsed()
+    {
+        $submitted_id = 1;
+
+        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+
+        $this->ttm_field_usage_detector->shouldReceive("isStepDefinitionFieldUsed")->andReturn(true);
+        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(false);
+        $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->with(1)->andReturn(false);
+
+        $this->tracker_checker->checkSubmittedDefinitionTrackerCanBeUsed($this->project, $submitted_id);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testItDoesThrowExceptionIfProvidedDefinitionHaveNoStepDefinitionField()
+    {
+        $submitted_id = 1;
+
+        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+
+        $this->ttm_field_usage_detector->shouldReceive("isStepDefinitionFieldUsed")->andReturn(false);
+        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->never();
+        $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->never();
+
+        $this->expectException(TrackerDefinitionNotValidException::class);
+
+        $this->tracker_checker->checkSubmittedDefinitionTrackerCanBeUsed($this->project, $submitted_id);
+    }
+
+    public function testItDoesThrowExceptionIfProvidedExecutionHaveNoStepDefinitionField()
+    {
+        $submitted_id = 1;
+
+        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+
+        $this->ttm_field_usage_detector->shouldReceive("isStepExecutionFieldUsed")->andReturn(false);
+
+        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->never();
+        $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->never();
+
+        $this->expectException(TrackerExecutionNotValidException::class);
+
+        $this->tracker_checker->checkSubmittedExecutionTrackerCanBeUsed($this->project, $submitted_id);
+    }
+
+    public function testItDoesNotThrowExceptionIfProvidedExecutionTrackerIdCanBeUsed()
+    {
+        $submitted_id = 1;
+
+        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+        $this->ttm_field_usage_detector->shouldReceive("isStepExecutionFieldUsed")->andReturn(true);
 
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(false);
         $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->with(1)->andReturn(false);
 
-        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
+        $this->tracker_checker->checkSubmittedExecutionTrackerCanBeUsed($this->project, $submitted_id);
 
         $this->addToAssertionCount(1);
     }
@@ -154,11 +223,6 @@ class TrackerCheckerTest extends TestCase
     {
         $submitted_id = 5;
         $this->tracker_factory->shouldReceive('getTrackerById')->with(5);
-
-        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->never();
-
-        $this->expectException(TrackerNotInProjectException::class);
-        $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
 
         $this->expectException(TrackerNotInProjectException::class);
         $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
@@ -169,11 +233,6 @@ class TrackerCheckerTest extends TestCase
         $submitted_id = 7;
         $this->tracker_factory->shouldReceive('getTrackerById')->with(7);
 
-        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->never();
-
-        $this->expectException(TrackerDoesntExistException::class);
-        $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
-
         $this->expectException(TrackerDoesntExistException::class);
         $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
     }
@@ -183,11 +242,6 @@ class TrackerCheckerTest extends TestCase
         $submitted_id = 6;
         $this->tracker_factory->shouldReceive('getTrackerById')->with(6);
 
-        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->never();
-
-        $this->expectException(TrackerIsDeletedException::class);
-        $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
-
         $this->expectException(TrackerIsDeletedException::class);
         $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
     }
@@ -196,22 +250,29 @@ class TrackerCheckerTest extends TestCase
     {
         $submitted_id = 1;
 
+        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+
+        $this->ttm_field_usage_detector->shouldReceive("isStepDefinitionFieldUsed")->andReturn(true);
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(true);
 
         $this->expectException(TrackerHasAtLeastOneFrozenFieldsPostActionException::class);
 
-        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
+        $this->tracker_checker->checkSubmittedDefinitionTrackerCanBeUsed($this->project, $submitted_id);
     }
 
     public function testItThrowsAnExceptionIfProvidedTrackerHasAHiddenFieldsetPostAction()
     {
         $submitted_id = 1;
 
+        $this->ttm_field_usage_detector->shouldReceive("isArtifactLinksFieldUsed")->andReturn(true);
+
+        $this->ttm_field_usage_detector->shouldReceive("isStepDefinitionFieldUsed")->andReturn(true);
+
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(false);
         $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->with(1)->andReturn(true);
 
         $this->expectException(TrackerHasAtLeastOneHiddenFieldsetsPostActionException::class);
 
-        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
+        $this->tracker_checker->checkSubmittedDefinitionTrackerCanBeUsed($this->project, $submitted_id);
     }
 }

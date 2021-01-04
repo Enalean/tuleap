@@ -31,6 +31,9 @@ use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneHiddenFieldsetsPost
 use Tuleap\TestManagement\Administration\TrackerNotInProjectException;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\MissingArtifactLinkException;
+use Tuleap\TestManagement\TrackerDefinitionNotValidException;
+use Tuleap\TestManagement\TrackerExecutionNotValidException;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 use XML_RNGValidator;
 
@@ -95,13 +98,13 @@ class XMLImport
             $issue_tracker_id      = $this->getXMLRef($xml, $tracker_mapping, self::ISSUES);
 
             if ($issue_tracker_id !== '') {
-                $this->tracker_checker->checkTrackerIsInProject($project, $issue_tracker_id);
+                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $issue_tracker_id);
             }
 
             if ($campaign_tracker_id !== '' && $definition_tracker_id !== '' && $execution_tracker_id !== '') {
-                $this->tracker_checker->checkTrackerIsInProject($project, $campaign_tracker_id);
-                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $definition_tracker_id);
-                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $execution_tracker_id);
+                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $campaign_tracker_id);
+                $this->tracker_checker->checkSubmittedDefinitionTrackerCanBeUsed($project, $definition_tracker_id);
+                $this->tracker_checker->checkSubmittedExecutionTrackerCanBeUsed($project, $execution_tracker_id);
 
                 $this->config->setProjectConfiguration(
                     $project,
@@ -112,6 +115,9 @@ class XMLImport
                 );
             }
         } catch (
+            MissingArtifactLinkException |
+            TrackerDefinitionNotValidException |
+            TrackerExecutionNotValidException |
             TrackerNotInProjectException |
             TrackerHasAtLeastOneFrozenFieldsPostActionException |
             TrackerHasAtLeastOneHiddenFieldsetsPostActionException $exception

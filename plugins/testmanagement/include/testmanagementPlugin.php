@@ -31,7 +31,7 @@ use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
-use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
+use Tuleap\TestManagement\Administration\FieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
@@ -407,15 +407,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     {
         $config               = $this->getConfig();
         $tracker_factory      = TrackerFactory::instance();
-        $project_manager      = ProjectManager::instance();
         $user_manager         = UserManager::instance();
         $event_manager        = EventManager::instance();
-        $form_element_factory = Tracker_FormElementFactory::instance();
-
-        $step_field_usage_detector = new StepFieldUsageDetector(
-            $tracker_factory,
-            $form_element_factory
-        );
 
         $router = new Tuleap\TestManagement\Router(
             $config,
@@ -423,7 +416,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $user_manager,
             $event_manager,
             $this->getArtifactLinksUsageUpdater(),
-            $step_field_usage_detector,
+            $this->getTestmanagementFieldUsageDetector(),
             $this->getTrackerChecker(),
             new VisitRecorder(new RecentlyVisitedDao()),
             new Valid_UInt(),
@@ -445,7 +438,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         return new TrackerChecker(
             TrackerFactory::instance(),
             new FrozenFieldsDao(),
-            new HiddenFieldsetsDao()
+            new HiddenFieldsetsDao(),
+            $this->getTestmanagementFieldUsageDetector()
         );
     }
 
@@ -620,15 +614,12 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     public function displayAdminFormElementsWarningsEvent(DisplayAdminFormElementsWarningsEvent $event): void
     {
-        $step_field_usage = new StepFieldUsageDetector(
-            TrackerFactory::instance(),
-            Tracker_FormElementFactory::instance()
-        );
+        $field_usage = $this->getTestmanagementFieldUsageDetector();
 
         $tracker  = $event->getTracker();
         $response = $event->getResponse();
-        $this->displayStepDefinitionBadUsageWarnings($step_field_usage, $tracker, $response);
-        $this->displayStepExecutionBadUsageWarnings($step_field_usage, $tracker, $response);
+        $this->displayStepDefinitionBadUsageWarnings($field_usage, $tracker, $response);
+        $this->displayStepExecutionBadUsageWarnings($field_usage, $tracker, $response);
     }
 
     private function getConfig(): Config
@@ -637,11 +628,11 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     }
 
     private function displayStepDefinitionBadUsageWarnings(
-        StepFieldUsageDetector $step_field_usage,
+        FieldUsageDetector $field_usage,
         Tracker $tracker,
         Response $response
     ): void {
-        if (! $step_field_usage->isStepDefinitionFieldUsed($tracker->getId())) {
+        if (! $field_usage->isStepDefinitionFieldUsed($tracker->getId())) {
             return;
         }
 
@@ -670,11 +661,11 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     }
 
     private function displayStepExecutionBadUsageWarnings(
-        StepFieldUsageDetector $step_field_usage,
+        FieldUsageDetector $field_usage,
         Tracker $tracker,
         Response $response
     ): void {
-        if (! $step_field_usage->isStepExecutionFieldUsed($tracker->getId())) {
+        if (! $field_usage->isStepExecutionFieldUsed($tracker->getId())) {
             return;
         }
 
@@ -881,5 +872,13 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     {
         $collector = LatestHeartbeatsCollector::build();
         $collector->collect($collection);
+    }
+
+    private function getTestmanagementFieldUsageDetector(): FieldUsageDetector
+    {
+        return new FieldUsageDetector(
+            TrackerFactory::instance(),
+            Tracker_FormElementFactory::instance()
+        );
     }
 }

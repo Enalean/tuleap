@@ -31,7 +31,7 @@ use TrackerXmlImport;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
-use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
+use Tuleap\TestManagement\Administration\FieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -70,9 +70,9 @@ class Router
     private $artifact_links_usage_updater;
 
     /**
-     * @var StepFieldUsageDetector
+     * @var FieldUsageDetector
      */
-    private $step_field_usage_detector;
+    private $field_usage_detector;
     /**
      * @var TrackerChecker
      */
@@ -96,7 +96,7 @@ class Router
         UserManager $user_manager,
         EventManager $event_manager,
         ArtifactLinksUsageUpdater $artifact_links_usage_updater,
-        StepFieldUsageDetector $step_field_usage_detector,
+        FieldUsageDetector $field_usage_detector,
         TrackerChecker $tracker_checker,
         VisitRecorder $visit_recorder,
         Valid_UInt $int_validator,
@@ -107,7 +107,7 @@ class Router
         $this->user_manager                 = $user_manager;
         $this->event_manager                = $event_manager;
         $this->artifact_links_usage_updater = $artifact_links_usage_updater;
-        $this->step_field_usage_detector    = $step_field_usage_detector;
+        $this->field_usage_detector    = $field_usage_detector;
         $this->tracker_checker              = $tracker_checker;
         $this->visit_recorder               = $visit_recorder;
         $this->int_validator               = $int_validator;
@@ -127,7 +127,7 @@ class Router
                     $this->config,
                     $this->event_manager,
                     $csrf_token,
-                    $this->step_field_usage_detector,
+                    $this->field_usage_detector,
                     $this->tracker_checker,
                     $this->int_validator
                 );
@@ -140,7 +140,7 @@ class Router
                     $this->config,
                     $this->event_manager,
                     $csrf_token,
-                    $this->step_field_usage_detector,
+                    $this->field_usage_detector,
                     $this->tracker_checker,
                     $this->int_validator
                 );

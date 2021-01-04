@@ -28,8 +28,10 @@ use Project;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
+use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneHiddenFieldsetsPostActionException;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\MissingArtifactLinkException;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 
 final class XMLImportTest extends TestCase
@@ -87,8 +89,9 @@ final class XMLImportTest extends TestCase
             'T4' => 104
         ];
 
-        $tracker_checker->shouldReceive('checkTrackerIsInProject')->times(2);
         $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
+        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->once();
+        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->once();
 
         $config->shouldReceive('setProjectConfiguration')
             ->with($project, 102, 103, 104, 101)
@@ -123,8 +126,9 @@ final class XMLImportTest extends TestCase
         $extraction_path = __DIR__ . '/_fixtures';
         $tracker_mapping = [];
 
-        $tracker_checker->shouldReceive('checkTrackerIsInProject')->never();
         $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->never();
+        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->never();
+        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->never();
         $config->shouldReceive('setProjectConfiguration')->never();
 
         $xml_import->import(
@@ -150,8 +154,9 @@ final class XMLImportTest extends TestCase
             'T3' => 103
         ];
 
-        $tracker_checker->shouldReceive('checkTrackerIsInProject')->never();
         $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->never();
+        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->never();
+        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->never();
 
         $config->shouldReceive('setProjectConfiguration')->never();
 
@@ -180,10 +185,150 @@ final class XMLImportTest extends TestCase
             'T4' => 104
         ];
 
-        $tracker_checker->shouldReceive('checkTrackerIsInProject')->times(2);
-        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')
+        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
+        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')
             ->with($project, 103)
             ->andThrow(TrackerHasAtLeastOneFrozenFieldsPostActionException::class);
+
+        $this->expectException(\Exception::class);
+
+        $config->shouldReceive('setProjectConfiguration')->never();
+
+        $xml_import->import(
+            $project,
+            $extraction_path,
+            $tracker_mapping,
+            Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            Mockery::spy(ImportedChangesetMapping::class)
+        );
+    }
+
+    public function testItThrowsAnExceptionIfTrackerHasHiddenFieldPostAction(): void
+    {
+        $config          = Mockery::mock(Config::class);
+        $tracker_checker = Mockery::mock(TrackerChecker::class);
+
+        $xml_import = new XMLImport($config, $tracker_checker, Mockery::mock(ExecutionDao::class));
+
+        $project         = Mockery::mock(Project::class);
+        $extraction_path = __DIR__ . '/_fixtures';
+        $tracker_mapping = [
+            'T1' => 101,
+            'T2' => 102,
+            'T3' => 103,
+            'T4' => 104
+        ];
+
+        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
+        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->once();
+        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')
+            ->with($project, 103)
+            ->andThrow(TrackerHasAtLeastOneHiddenFieldsetsPostActionException::class);
+
+        $this->expectException(\Exception::class);
+
+        $config->shouldReceive('setProjectConfiguration')->never();
+
+        $xml_import->import(
+            $project,
+            $extraction_path,
+            $tracker_mapping,
+            Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            Mockery::spy(ImportedChangesetMapping::class)
+        );
+    }
+
+    public function testItThrowsAnExceptionIfATrackerHasArtifactLinkField(): void
+    {
+        $config          = Mockery::mock(Config::class);
+        $tracker_checker = Mockery::mock(TrackerChecker::class);
+
+        $xml_import = new XMLImport($config, $tracker_checker, Mockery::mock(ExecutionDao::class));
+
+        $project         = Mockery::mock(Project::class);
+        $extraction_path = __DIR__ . '/_fixtures';
+        $tracker_mapping = [
+            'T1' => 101,
+            'T2' => 102,
+            'T3' => 103,
+            'T4' => 104
+        ];
+
+        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')
+            ->andThrow(MissingArtifactLinkException::class)
+            ->once();
+        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->never();
+        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')->never();
+
+        $this->expectException(\Exception::class);
+
+        $config->shouldReceive('setProjectConfiguration')->never();
+
+        $xml_import->import(
+            $project,
+            $extraction_path,
+            $tracker_mapping,
+            Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            Mockery::spy(ImportedChangesetMapping::class)
+        );
+    }
+
+    public function testItThrowsAnExceptionIfDefinitionTrackerHasNotStepDefinitionField(): void
+    {
+        $config          = Mockery::mock(Config::class);
+        $tracker_checker = Mockery::mock(TrackerChecker::class);
+
+        $xml_import = new XMLImport($config, $tracker_checker, Mockery::mock(ExecutionDao::class));
+
+        $project         = Mockery::mock(Project::class);
+        $extraction_path = __DIR__ . '/_fixtures';
+        $tracker_mapping = [
+            'T1' => 101,
+            'T2' => 102,
+            'T3' => 103,
+            'T4' => 104
+        ];
+
+        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
+        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->once();
+        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')
+            ->with($project, 103)
+            ->andThrow(TrackerHasAtLeastOneHiddenFieldsetsPostActionException::class);
+
+        $this->expectException(\Exception::class);
+
+        $config->shouldReceive('setProjectConfiguration')->never();
+
+        $xml_import->import(
+            $project,
+            $extraction_path,
+            $tracker_mapping,
+            Mockery::spy(Tracker_XML_Importer_ArtifactImportedMapping::class),
+            Mockery::spy(ImportedChangesetMapping::class)
+        );
+    }
+
+    public function testItThrowsAnExceptionIfExecutionTrackerHasNotStepExecutionField(): void
+    {
+        $config          = Mockery::mock(Config::class);
+        $tracker_checker = Mockery::mock(TrackerChecker::class);
+
+        $xml_import = new XMLImport($config, $tracker_checker, Mockery::mock(ExecutionDao::class));
+
+        $project         = Mockery::mock(Project::class);
+        $extraction_path = __DIR__ . '/_fixtures';
+        $tracker_mapping = [
+            'T1' => 101,
+            'T2' => 102,
+            'T3' => 103,
+            'T4' => 104
+        ];
+
+        $tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
+        $tracker_checker->shouldReceive('checkSubmittedDefinitionTrackerCanBeUsed')->once();
+        $tracker_checker->shouldReceive('checkSubmittedExecutionTrackerCanBeUsed')
+            ->with($project, 103)
+            ->andThrow(TrackerHasAtLeastOneHiddenFieldsetsPostActionException::class);
 
         $this->expectException(\Exception::class);
 

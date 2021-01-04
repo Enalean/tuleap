@@ -115,8 +115,12 @@ class StepsResultsRepresentationBuilder
         if (! $results_field) {
             return null;
         }
-
         $value = $execution->getValue($results_field);
+
+        if ($value === null) {
+            return null;
+        }
+
         assert($value instanceof StepDefinitionChangesetValue || $value instanceof StepExecutionChangesetValue);
 
         return $value;
