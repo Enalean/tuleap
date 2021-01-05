@@ -2303,11 +2303,11 @@
               <name><![CDATA[descc1]]></name>
               <label><![CDATA[Desc::C1]]></label>
               <formElements>
-                <formElement type="ttmstepexec" ID="F428" rank="0" id="428" tracker_id="18" parent_id="427">
+                <externalField type="ttmstepexec" ID="F428" rank="0" id="428" tracker_id="18" parent_id="427">
                   <name><![CDATA[steps_results]]></name>
                   <label><![CDATA[Steps results]]></label>
                   <description><![CDATA[Result of the steps' executions.]]></description>
-                </formElement>
+                </externalField>
                 <formElement type="text" ID="F429" rank="1" id="429" tracker_id="18" parent_id="427">
                   <name><![CDATA[results]]></name>
                   <label><![CDATA[Results]]></label>

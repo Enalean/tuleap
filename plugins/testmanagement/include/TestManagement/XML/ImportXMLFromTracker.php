@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\XML;
 
 use SimpleXMLElement;
+use Tracker_FormElement_Field;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use XML_RNGValidator;
 
 class ImportXMLFromTracker
@@ -55,13 +57,14 @@ class ImportXMLFromTracker
         );
     }
 
-    public function getInstanceFromXML(SimpleXMLElement $testmanagement, \Project $project, \Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector $feedback_collector): StepDefinition
+    public function getInstanceFromXML(SimpleXMLElement $testmanagement): ?Tracker_FormElement_Field
     {
         $att = $testmanagement->attributes();
         assert($att !== null);
         $row            = [
             'name'              => (string) $testmanagement->name,
             'label'             => (string) $testmanagement->label,
+            'type'              => (string) $att['type'],
             'rank'              => (int) $att['rank'],
             'use_it'            => isset($att['use_it']) ? (int) $att['use_it'] : 1,
             'scope'             => isset($att['scope']) ? (string) $att['scope'] : 'P',
@@ -73,9 +76,27 @@ class ImportXMLFromTracker
             'parent_id'         => 0,
             'original_field_id' => null,
         ];
-        $original_field = null;
 
-        $step_def = new StepDefinition(
+        return $this->createStepFormElement($row);
+    }
+
+    /**
+     * @return StepDefinition | StepExecution
+     */
+    private function createStepFormElement(array $row): ?Tracker_FormElement_Field
+    {
+        switch ($row['type']) {
+            case StepDefinition::TYPE:
+                return $this->createStepDefinition($row);
+            case StepExecution::TYPE:
+                return $this->createStepExecution($row);
+        }
+        return null;
+    }
+
+    private function createStepDefinition(array $row): StepDefinition
+    {
+        return new StepDefinition(
             $row['id'],
             $row['tracker_id'],
             $row['parent_id'],
@@ -87,9 +108,25 @@ class ImportXMLFromTracker
             (bool) $row['required'],
             $row['notifications'],
             $row['rank'],
-            $original_field
+            $row['original_field_id']
         );
+    }
 
-        return $step_def;
+    private function createStepExecution(array $row): StepExecution
+    {
+        return new StepExecution(
+            $row['id'],
+            $row['tracker_id'],
+            $row['parent_id'],
+            $row['name'],
+            $row['label'],
+            $row['description'],
+            (bool) $row['use_it'],
+            $row['scope'],
+            (bool) $row['required'],
+            $row['notifications'],
+            $row['rank'],
+            $row['original_field_id']
+        );
     }
 }

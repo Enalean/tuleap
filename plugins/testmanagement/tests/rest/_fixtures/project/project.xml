@@ -477,11 +477,11 @@
                     <name>creation_details</name>
                     <label><![CDATA[Creation Details]]></label>
                     <formElements>
-                        <formElement type="ttmstepexec" ID="F12766" rank="0">
+                        <externalField type="ttmstepexec" ID="F12766" rank="0">
                             <name>steps_results</name>
                             <label><![CDATA[Steps results]]></label>
                             <description><![CDATA[Result of the steps' executions.]]></description>
-                        </formElement>
+                        </externalField>
                         <formElement type="column" ID="F11038" rank="0">
                             <name>col1</name>
                             <label><![CDATA[col1]]></label>
