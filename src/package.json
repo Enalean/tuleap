@@ -6,6 +6,7 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
+    "@tuleap/tlp-fetch": "file://./scripts/lib/tlp-fetch",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@juggle/resize-observer": "^3.2.0",
     "@tuleap/date-helper": "file://./scripts/lib/date-helper",

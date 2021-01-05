@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { allowToHideAndShowPlatformBanner } from "./platform-banner-show-hide";
-import { patch } from "@tuleap/tlp-fetch";
-import { allowUnclampingPlatformBannerMessage } from "./platform-banner-clamp";
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-document.addEventListener("DOMContentLoaded", () => {
-    allowUnclampingPlatformBannerMessage(document);
-    allowToHideAndShowPlatformBanner(document, patch);
-});
+module.exports = webpack_configurator.extendProdConfiguration(common);

@@ -22,13 +22,12 @@ import { sendNotifications } from "./send-notifications";
 import * as spinner from "./spinner-activation";
 import * as feedback from "./feedback-display";
 import * as error from "./handle-error";
-import * as tlp from "../../themes/tlp/src/js/fetch-wrapper";
-import { mockFetchError, mockFetchSuccess } from "../../themes/tlp/mocks/tlp-fetch-mock-helper";
+import * as tlp from "@tuleap/tlp-fetch";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 jest.mock("./spinner-activation");
 jest.mock("./feedback-display");
 jest.mock("./handle-error");
-jest.mock("tlp");
 
 describe("send-notifications", () => {
     describe("sendNotifactions", () => {

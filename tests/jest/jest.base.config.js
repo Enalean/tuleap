@@ -28,7 +28,11 @@ module.exports = {
     moduleNameMapper: {
         "^.+\\.po$": "identity-obj-proxy",
         "^tlp$": path.resolve(__dirname, "../../src/themes/tlp/src/js/index.ts"),
-        "^tlp-fetch$": path.resolve(__dirname, "../../src/themes/tlp/src/js/fetch-wrapper.ts"),
+        // alias to the source TS file to avoid running into "regeneratorRuntime" not defined errors in tests
+        "^@tuleap/tlp-fetch$": path.resolve(
+            __dirname,
+            "../../src/scripts/lib/tlp-fetch/src/fetch-wrapper.ts"
+        ),
     },
     setupFiles: [path.resolve(__dirname, "./fail-unhandled-promise-rejection.js")],
     setupFilesAfterEnv: [path.resolve(__dirname, "./fail-console-error-warning.js")],

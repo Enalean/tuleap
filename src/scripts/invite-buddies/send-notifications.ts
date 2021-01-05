@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post } from "../../themes/tlp/src/js/fetch-wrapper";
+import { post } from "@tuleap/tlp-fetch";
 import { activateSpinner, deactivateSpinner } from "./spinner-activation";
 import { handleError } from "./handle-error";
 import { displaySuccess } from "./feedback-display";

@@ -19,7 +19,7 @@
 
 import { ActionContext } from "vuex";
 import * as actions from "./actions";
-import { mockFetchError } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
+import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import {
     TrackerAgileDashboard,
     MilestoneData,

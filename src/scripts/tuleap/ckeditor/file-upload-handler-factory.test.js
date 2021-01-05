@@ -18,19 +18,15 @@
  */
 
 import * as TUS from "tus-js-client";
-import {
-    mockFetchSuccess,
-    mockFetchError,
-} from "../../../themes/tlp/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchSuccess, mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import * as gettext_factory from "../gettext/gettext-factory.js";
 import {
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
     UploadError,
 } from "./file-upload-handler-factory.js";
-import * as tlp_fetch from "tlp-fetch";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 
-jest.mock("tlp-fetch");
 jest.mock("tus-js-client");
 
 describe(`file-upload-handler-factory`, () => {

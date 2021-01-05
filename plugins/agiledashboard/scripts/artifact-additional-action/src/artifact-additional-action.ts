@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch } from "../../../../../src/themes/tlp/src/js/fetch-wrapper";
+import { patch } from "@tuleap/tlp-fetch";
 import {
     getPOFileFromLocale,
     initGettext,
@@ -97,7 +97,6 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                 action_button_title.textContent = gettext_provider.gettext(
                     "Remove from top backlog"
                 );
-                // eslint-disable-next-line require-atomic-updates
                 action = "remove";
             } else if (action === "remove") {
                 try {
@@ -126,7 +125,6 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                 action_button_icon.classList.remove("fa-tlp-remove-from-backlog");
                 action_button_icon.classList.add("fa-tlp-add-to-backlog");
                 action_button_title.textContent = gettext_provider.gettext("Add to top backlog");
-                // eslint-disable-next-line require-atomic-updates
                 action = "add";
             }
         }

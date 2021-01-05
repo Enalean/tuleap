@@ -20,7 +20,7 @@
 import * as lock_rest_querier from "../../api/lock-rest-querier";
 import * as rest_querier from "../../api/rest-querier";
 import { TYPE_EMBEDDED, TYPE_FILE } from "../../constants";
-import { mockFetchError } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
+import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { lockDocument, unlockDocument } from "./lock-actions";
 
 describe("lock", () => {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Enalean. All rights reserved
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -10,16 +10,16 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import codendi from "codendi";
 import CodeMirror from "codemirror";
-import { post } from "tlp-fetch";
+import { post } from "@tuleap/tlp-fetch";
 import { buildModeDefinition, TQL_autocomplete_keywords } from "./TQL-CodeMirror/configuration.js";
 import { insertAllowedFieldInCodeMirror } from "./TQL-CodeMirror/allowed-field-inserter.js";
 import { initializeTQLMode, codeMirrorify } from "./TQL-CodeMirror/builder.js";

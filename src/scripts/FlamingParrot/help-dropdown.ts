@@ -19,7 +19,7 @@
 
 import { Dropdown, createDropdown } from "../../themes/tlp/src/js/dropdowns";
 import { manageUserPreferences } from "../user/user-patch-release-note-preference";
-import { patch } from "../../themes/tlp/src/js/fetch-wrapper";
+import { patch } from "@tuleap/tlp-fetch";
 
 document.addEventListener("DOMContentLoaded", () => {
     // We need CustomEvent to work properly to use the tlp dropdown

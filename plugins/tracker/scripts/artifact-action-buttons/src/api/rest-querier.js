@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch, recursiveGet } from "tlp-fetch";
+import { patch, recursiveGet } from "@tuleap/tlp-fetch";
 
 export { getProjectList, getTrackerList, moveDryRunArtifact, moveArtifact };
 

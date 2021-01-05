@@ -18,7 +18,7 @@
  */
 
 import * as wrapper from "./fetch-wrapper";
-import { mockFetchSuccess } from "../../mocks/tlp-fetch-mock-helper";
+import { mockFetchSuccess } from "../mocks/tlp-fetch-mock-helper";
 
 describe(`fetch-wrapper`, () => {
     let globalFetch: jest.SpyInstance;

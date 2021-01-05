@@ -18,7 +18,7 @@
  */
 
 import * as tlp from "tlp";
-import { mockFetchSuccess } from "../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { getGitPermissions } from "./rest-querier";
 import { RepositoryFineGrainedPermissions } from "./type";
 

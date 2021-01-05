@@ -19,7 +19,7 @@
 
 import { ActionContext } from "vuex";
 import { FocusFromHistoryPayload, FocusFromProjectPayload, State } from "./type";
-import { get } from "../../../../themes/tlp/src/js/fetch-wrapper";
+import { get } from "@tuleap/tlp-fetch";
 import { Project, UserHistory, UserHistoryEntry } from "../type";
 
 export async function loadHistory(context: ActionContext<State, State>): Promise<void> {

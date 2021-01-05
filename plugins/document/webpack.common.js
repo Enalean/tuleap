@@ -44,7 +44,6 @@ module.exports = [
             tlp: "tlp",
         },
         resolve: {
-            alias: webpack_configurator.tlp_fetch_alias,
             extensions: [".ts", ".js"],
         },
         module: {

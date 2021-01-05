@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchSuccess } from "../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import { toggleIcon, toggleDiffContent, shouldLoadSomeContent } from "./text-follow-up";
-import * as tlp_fetch from "../../../../src/themes/tlp/src/js/fetch-wrapper";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 
-jest.mock("tlp-fetch");
+jest.mock("@tuleap/tlp-fetch");
 
 describe("Text follow up", () => {
     let get: jest.SpyInstance<Promise<Response>>;

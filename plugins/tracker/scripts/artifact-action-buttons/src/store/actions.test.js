@@ -17,10 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    mockFetchError,
-    mockFetchSuccess,
-} from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import { loadProjectList, loadTrackerList, move, moveDryRun } from "./actions.js";
 import * as rest_querier from "../api/rest-querier.js";
 import * as window_helper from "../window-helper.js";

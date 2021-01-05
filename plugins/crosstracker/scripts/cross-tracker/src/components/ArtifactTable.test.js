@@ -19,10 +19,7 @@
 
 import { localVue } from "../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
-import {
-    mockFetchError,
-    mockFetchSuccess,
-} from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { createStore } from "../store/index.js";
 import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report.js";
