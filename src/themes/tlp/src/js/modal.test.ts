@@ -73,18 +73,6 @@ describe(`Modal`, () => {
             }
             expect(backdrop.classList.contains(BACKDROP_SHOWN_CLASS_NAME)).toBe(true);
         });
-
-        it(`will autofocus the first input in the modal`, () => {
-            const input = doc.createElement("input");
-            input.type = "text";
-            modal_element.appendChild(input);
-
-            const focus = jest.spyOn(input, "focus");
-
-            modal.show();
-
-            expect(focus).toHaveBeenCalled();
-        });
     });
 
     describe(`hide()`, () => {
@@ -196,6 +184,49 @@ describe(`Modal`, () => {
             modal.toggle();
 
             expectTheModalToBeHidden(modal_element);
+        });
+    });
+
+    describe(`bringFocusInsideModal()`, () => {
+        let modal: Modal;
+        beforeEach(() => {
+            modal = createModal(doc, modal_element);
+        });
+        afterEach(() => {
+            modal.destroy();
+        });
+
+        it(`focuses the element with a data-modal-focus attribute in priority when modal opens`, () => {
+            const form_element = doc.createElement("input");
+            const data_modal_focus_element = doc.createElement("div");
+            data_modal_focus_element.setAttribute("data-modal-focus", "");
+            modal_element.append(form_element, data_modal_focus_element);
+            const focus = jest.spyOn(data_modal_focus_element, "focus");
+
+            modal.show();
+
+            expect(focus).toHaveBeenCalled();
+        });
+
+        it(`focuses the first form element when modal opens`, () => {
+            const form_element = doc.createElement("input");
+            modal_element.appendChild(form_element);
+            const focus = jest.spyOn(form_element, "focus");
+
+            modal.show();
+
+            expect(focus).toHaveBeenCalled();
+        });
+
+        it(`focuses the first data-dismiss element if no other form element was found when modal opens`, () => {
+            const data_dismiss_element = doc.createElement("div");
+            data_dismiss_element.setAttribute("data-dismiss", "modal");
+            modal_element.appendChild(data_dismiss_element);
+            const focus = jest.spyOn(data_dismiss_element, "focus");
+
+            modal.show();
+
+            expect(focus).toHaveBeenCalled();
         });
     });
 

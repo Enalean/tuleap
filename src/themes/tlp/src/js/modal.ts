@@ -27,6 +27,7 @@ export const BACKDROP_ID = "tlp-modal-backdrop";
 export const BACKDROP_SHOWN_CLASS_NAME = "tlp-modal-backdrop-shown";
 export const MODAL_DISPLAY_CLASS_NAME = "tlp-modal-display";
 export const MODAL_SHOWN_CLASS_NAME = "tlp-modal-shown";
+const DISMISS_SELECTOR = '[data-dismiss="modal"]';
 
 export interface ModalOptions {
     keyboard?: boolean;
@@ -83,14 +84,34 @@ export class Modal {
         this.element.classList.add(MODAL_SHOWN_CLASS_NAME);
         this.is_shown = true;
 
-        const input = this.element.querySelector("input");
-        if (input) {
-            input.focus();
+        this.bringFocusInsideModal();
+        this.addBackdrop();
+        this.dispatchEvent(this.shown_event);
+    }
+
+    private bringFocusInsideModal(): void {
+        const custom_focused_element = this.element.querySelector("[data-modal-focus]");
+        if (custom_focused_element instanceof HTMLElement) {
+            custom_focused_element.focus();
+            return;
         }
 
-        this.addBackdrop();
+        const first_form_element = this.element.querySelector(
+            `input:enabled:not([type='hidden']),
+            textarea:enabled:not([type='hidden']),
+            select:enabled:not([type='hidden']),
+            button:enabled,
+            [href]`
+        );
+        if (first_form_element instanceof HTMLElement) {
+            first_form_element.focus();
+            return;
+        }
 
-        this.dispatchEvent(this.shown_event);
+        const dismiss_button = this.element.querySelector(DISMISS_SELECTOR);
+        if (dismiss_button instanceof HTMLElement) {
+            dismiss_button.focus();
+        }
     }
 
     hide(): void {
@@ -174,7 +195,7 @@ export class Modal {
     }
 
     get close_elements(): Element[] {
-        const children = this.element.querySelectorAll('[data-dismiss="modal"]');
+        const children = this.element.querySelectorAll(DISMISS_SELECTOR);
         return [...children];
     }
 }
