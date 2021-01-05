@@ -7,7 +7,7 @@
 
 <div class="tuleap-modal-loading" ng-if="planning.loading_modal.loading"></div>
 
-<div class="tlp-alert-info" ng-if="planning.hasOriginalProject()">
+<div class="source-project-info-message" ng-if="planning.hasOriginalProject()" ng-class="['project-color-'+planning.backlog.original_project.background.identifier]">
     <span translate>You are in the context of the Program {{ planning.backlog.original_project.label }}</span>
 </div>
 
