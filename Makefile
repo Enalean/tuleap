@@ -69,6 +69,8 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 build:
 	cd /build/src && CYPRESS_INSTALL_BINARY=0 npm install --no-audit && \
 	cd /build/src/src/ && npm install --no-audit && \
+	cd /build/src/src/scripts/lib/date-helper && npm install --no-audit && npm run build && \
+	cd /build/src/src/scripts/lib/filter-table && npm install --no-audit && npm run build && \
 	cd /build/src/src/scripts/list-picker/ && npm install --no-audit && npm run build && \
 	cd /build/src/src/themes/BurningParrot/ && npm install --no-audit && \
 	cd /build/src/src/themes/tlp/ && npm install --no-audit && \
