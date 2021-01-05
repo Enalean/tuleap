@@ -21,8 +21,8 @@ import { get } from "tlp";
 import { render } from "mustache";
 import { sanitize } from "dompurify";
 import moment from "moment";
-import phptomoment from "phptomoment";
 import { loadTooltips } from "../../../codendi/Tooltip.js";
+import { formatFromPhpToMoment } from "@tuleap/date-helper";
 
 export default init;
 
@@ -74,8 +74,8 @@ function getGroupedEntries(widget_content, entries) {
     const today = moment(),
         yesterday = moment().subtract(1, "day");
 
-    const datetime_format = phptomoment(widget_content.dataset.dateTimeFormat);
-    const date_format = phptomoment(widget_content.dataset.dateFormat);
+    const datetime_format = formatFromPhpToMoment(widget_content.dataset.dateTimeFormat);
+    const date_format = formatFromPhpToMoment(widget_content.dataset.dateFormat);
 
     entries.forEach((entry) => {
         const updated_at = moment(entry.updated_at);

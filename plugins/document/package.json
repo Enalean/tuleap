@@ -6,9 +6,9 @@
   "private": true,
   "dependencies": {
     "@tuleap/core": "file:../../src",
+    "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.31",
-    "phptomoment": "0.0.2",
     "pretty-bytes-es5": "^5.1.9",
     "pretty-kibibytes": "^4.0.4",
     "sprintf-js": "^1.1.2",
