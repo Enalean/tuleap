@@ -186,7 +186,10 @@ class Tracker_Artifact_Changeset_Comment
                 $html .= '<em>' . dgettext('tuleap-tracker', 'Comment has been cleared') . '</em>';
             } elseif ($this->bodyFormat === self::COMMONMARK_COMMENT) {
                 $content_interpretor = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
-                $html .= $content_interpretor->getInterpretedContent($this->body);
+                $html                .= $content_interpretor->getInterpretedContentWithReferences(
+                    $this->body,
+                    (int) $this->changeset->getTracker()->getGroupId()
+                );
             } else {
                 $html .= $this->getPurifiedBodyForHTML();
             }

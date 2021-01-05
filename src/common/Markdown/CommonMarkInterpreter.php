@@ -61,4 +61,9 @@ final class CommonMarkInterpreter implements ContentInterpretor
             CODENDI_PURIFIER_FULL
         );
     }
+
+    public function getInterpretedContentWithReferences(string $content, int $project_id): string
+    {
+        return $this->html_purifier->purifyHTMLWithReferences($this->converter->convertToHtml($content), $project_id);
+    }
 }

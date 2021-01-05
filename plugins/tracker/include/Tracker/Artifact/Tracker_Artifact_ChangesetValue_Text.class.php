@@ -21,8 +21,8 @@
 
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\FollowUpPresenter;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueCommonmarkRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 
 /**
  * Manage values in changeset for string fields
@@ -288,6 +288,9 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     {
         $content_interpreter = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
 
-        return $content_interpreter->getInterpretedContent($text);
+        return $content_interpreter->getInterpretedContentWithReferences(
+            $text,
+            (int) $this->changeset->getTracker()->getGroupId()
+        );
     }
 }
