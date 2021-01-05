@@ -27,6 +27,7 @@ use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Reference\Metadata\CreatedByPresenter;
+use Tuleap\User\UserEmailCollection;
 
 class CrossReferenceGitEnhancer
 {
@@ -50,21 +51,22 @@ class CrossReferenceGitEnhancer
     public function getCrossReferencePresenterWithCommitInformation(
         CrossReferencePresenter $basic_cross_reference_presenter,
         CommitDetails $commit_details,
-        \PFUser $user
+        \PFUser $user,
+        UserEmailCollection $user_email_collection
     ): CrossReferencePresenter {
         $git_commit_reference = $basic_cross_reference_presenter
             ->withTitle($commit_details->getTitle(), null)
             ->withAdditionalBadges($this->getAdditionalBadgesPresenters($commit_details));
 
         return $git_commit_reference->withCreationMetadata(
-            $this->getCreatedByPresenter($commit_details),
+            $this->getCreatedByPresenter($commit_details, $user_email_collection),
             $this->getCreatedOnPresenter($commit_details, $user)
         );
     }
 
-    private function getCreatedByPresenter(CommitDetails $commit_details): CreatedByPresenter
+    private function getCreatedByPresenter(CommitDetails $commit_details, UserEmailCollection $user_email_collection): CreatedByPresenter
     {
-        $author = $commit_details->getAuthor();
+        $author = $user_email_collection->getUserByEmail($commit_details->getAuthorEmail());
         if ($author) {
             $created_by = new CreatedByPresenter(
                 trim($this->user_helper->getDisplayNameFromUser($author) ?? ''),

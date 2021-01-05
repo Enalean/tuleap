@@ -109,10 +109,12 @@ use Tuleap\Git\PermissionsPerGroup\PermissionPerGroupGitSectionBuilder;
 use Tuleap\Git\PermissionsPerGroup\RepositoryFineGrainedRepresentationBuilder;
 use Tuleap\Git\PermissionsPerGroup\RepositorySimpleRepresentationBuilder;
 use Tuleap\Git\Reference\CommitDetailsCacheDao;
+use Tuleap\Git\Reference\CommitDetailsCrossReferenceInformationBuilder;
 use Tuleap\Git\Reference\CommitDetailsRetriever;
 use Tuleap\Git\Reference\CommitProvider;
 use Tuleap\Git\Reference\CrossReferenceGitEnhancer;
 use Tuleap\Git\Reference\CrossReferenceGitOrganizer;
+use Tuleap\Git\Reference\OrganizeableGitCrossReferencesAndTheContributorsCollector;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Git\Repository\DescriptionUpdater;
@@ -2810,19 +2812,23 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $organizer): void
     {
         $git_organizer = new CrossReferenceGitOrganizer(
-            ProjectManager::instance(),
-            new Git_ReferenceManager(
-                $this->getRepositoryFactory(),
-                ReferenceManager::instance(),
+            new OrganizeableGitCrossReferencesAndTheContributorsCollector(
+                new CommitDetailsCrossReferenceInformationBuilder(
+                    ProjectManager::instance(),
+                    new Git_ReferenceManager(
+                        $this->getRepositoryFactory(),
+                        ReferenceManager::instance(),
+                    ),
+                    new CommitProvider(),
+                    new CommitDetailsRetriever(
+                        new CommitDetailsCacheDao(),
+                    ),
+                ),
+                UserManager::instance(),
             ),
-            new CommitProvider(),
             new CrossReferenceGitEnhancer(
                 UserHelper::instance(),
                 new TlpRelativeDatePresenterBuilder(),
-            ),
-            new CommitDetailsRetriever(
-                new CommitDetailsCacheDao(),
-                UserManager::instance()
             ),
         );
 

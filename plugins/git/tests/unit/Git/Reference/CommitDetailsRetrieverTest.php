@@ -69,7 +69,7 @@ class CommitDetailsRetrieverTest extends TestCase
         self::assertEquals('Add foo to stuff', $commit_details->getTitle());
         self::assertEquals('dev-feature', $commit_details->getFirstBranch());
         self::assertEquals('v1.2.0', $commit_details->getFirstTag());
-        self::assertEquals($john_doe, $commit_details->getAuthor());
+        self::assertEquals('jdoe@example.com', $commit_details->getAuthorEmail());
         self::assertEquals('John Doe', $commit_details->getAuthorName());
         self::assertEquals(1234567890, $commit_details->getCommitterEpoch());
     }
@@ -135,7 +135,7 @@ class CommitDetailsRetrieverTest extends TestCase
         self::assertEquals('Add foo to stuff', $commit_details->getTitle());
         self::assertEquals('dev-feature', $commit_details->getFirstBranch());
         self::assertEquals('v1.2.0', $commit_details->getFirstTag());
-        self::assertEquals($john_doe, $commit_details->getAuthor());
+        self::assertEquals('jdoe@example.com', $commit_details->getAuthorEmail());
         self::assertEquals('John Doe', $commit_details->getAuthorName());
         self::assertEquals(1234567890, $commit_details->getCommitterEpoch());
     }

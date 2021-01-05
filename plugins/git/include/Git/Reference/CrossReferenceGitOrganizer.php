@@ -22,95 +22,45 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Reference;
 
-use Git;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
-use Tuleap\Reference\CrossReferencePresenter;
 
 final class CrossReferenceGitOrganizer
 {
-    /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \Git_ReferenceManager
-     */
-    private $git_reference_manager;
     /**
      * @var CrossReferenceGitEnhancer
      */
     private $cross_reference_git_enhancer;
     /**
-     * @var CommitProvider
+     * @var OrganizeableGitCrossReferencesAndTheContributorsCollector
      */
-    private $commit_provider;
-    /**
-     * @var CommitDetailsRetriever
-     */
-    private $commit_details_retriever;
+    private $collector;
 
     public function __construct(
-        \ProjectManager $project_manager,
-        \Git_ReferenceManager $git_reference_manager,
-        CommitProvider $commit_provider,
-        CrossReferenceGitEnhancer $cross_reference_git_filler,
-        CommitDetailsRetriever $commit_details_retriever
+        OrganizeableGitCrossReferencesAndTheContributorsCollector $collector,
+        CrossReferenceGitEnhancer $cross_reference_git_filler
     ) {
-        $this->project_manager              = $project_manager;
-        $this->git_reference_manager        = $git_reference_manager;
+        $this->collector = $collector;
         $this->cross_reference_git_enhancer = $cross_reference_git_filler;
-        $this->commit_provider              = $commit_provider;
-        $this->commit_details_retriever     = $commit_details_retriever;
     }
 
     public function organizeGitReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
     {
-        foreach ($by_nature_organizer->getCrossReferencePresenters() as $cross_reference_presenter) {
-            if ($cross_reference_presenter->type !== Git::REFERENCE_NATURE) {
-                continue;
-            }
-
-            $this->moveGitCrossReferenceToRepositorySection($by_nature_organizer, $cross_reference_presenter);
-        }
-    }
-
-    private function moveGitCrossReferenceToRepositorySection(
-        CrossReferenceByNatureOrganizer $by_nature_organizer,
-        CrossReferencePresenter $cross_reference_presenter
-    ): void {
-        $user = $by_nature_organizer->getCurrentUser();
-
-        $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
-
-        $commit_info = $this->git_reference_manager->getCommitInfoFromReferenceValue(
-            $project,
-            $cross_reference_presenter->target_value
+        $collection = $this->collector->collectOrganizeableGitCrossReferencesAndTheContributorsCollection(
+            $by_nature_organizer
         );
 
-        $repository = $commit_info->getRepository();
+        $contributors_email_collection = $collection->getContributorsEmailCollection();
 
-        if (! $repository || ! $repository->userCanRead($user)) {
-            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
-
-            return;
+        foreach ($collection->getOrganizeableCrossReferencesInformationCollection() as $information) {
+            $by_nature_organizer->moveCrossReferenceToSection(
+                $this->cross_reference_git_enhancer->getCrossReferencePresenterWithCommitInformation(
+                    $information->getCrossReferencePresenter(),
+                    $information->getCommitDetails(),
+                    $by_nature_organizer->getCurrentUser(),
+                    $contributors_email_collection
+                ),
+                $information->getSectionLabel(),
+            );
         }
-
-        $commit = $this->commit_provider->getCommit($repository, $commit_info->getSha1());
-        if (! $commit) {
-            $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
-
-            return;
-        }
-
-        $commit_details = $this->commit_details_retriever->retrieveCommitDetails($repository, $commit);
-
-        $by_nature_organizer->moveCrossReferenceToSection(
-            $this->cross_reference_git_enhancer->getCrossReferencePresenterWithCommitInformation(
-                $cross_reference_presenter,
-                $commit_details,
-                $user
-            ),
-            $project->getUnixNameLowerCase() . '/' . $repository->getFullName()
-        );
     }
 }
