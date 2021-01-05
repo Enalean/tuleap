@@ -37,11 +37,6 @@ class CrossReferenceNewsOrganizerTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectManager
-     */
-    private $project_manager;
-
-    /**
      * @var CrossReferenceNewsOrganizer
      */
     private $organizer;
@@ -49,28 +44,17 @@ class CrossReferenceNewsOrganizerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|NewsRetriever
      */
     private $news_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
-     */
-    private $project;
 
     protected function setUp(): void
     {
-        $this->project         = Mockery::mock(\Project::class);
-        $this->project_manager = Mockery::mock(\ProjectManager::class);
         $this->news_retriever  = Mockery::mock(NewsRetriever::class);
         $this->organizer       = new CrossReferenceNewsOrganizer(
-            $this->project_manager,
             $this->news_retriever
         );
     }
 
     public function testItRemovesTheReferenceWhenForumIsNotFound(): void
     {
-        $this->project_manager->shouldReceive('getProject')
-            ->with(104)
-            ->andReturn($this->project);
-
         $a_ref               = $this->buildReference();
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
 
@@ -91,10 +75,6 @@ class CrossReferenceNewsOrganizerTest extends TestCase
 
     public function testItRemovesTheReferenceWhenUserHasNotThePermissionToAccessTheForum(): void
     {
-        $this->project_manager->shouldReceive('getProject')
-            ->with(104)
-            ->andReturn($this->project);
-
         $a_ref               = $this->buildReference();
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
 
@@ -115,10 +95,6 @@ class CrossReferenceNewsOrganizerTest extends TestCase
 
     public function testItMovesTheCrossReferenceToUnlabelledSection(): void
     {
-        $this->project_manager->shouldReceive('getProject')
-            ->with(104)
-            ->andReturn($this->project);
-
         $a_ref               = $this->buildReference();
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class);
 
@@ -135,7 +111,6 @@ class CrossReferenceNewsOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
-                $this->project,
                 Mockery::on(
                     function (CrossReferencePresenter $presenter): bool {
                         return $presenter->id === 5

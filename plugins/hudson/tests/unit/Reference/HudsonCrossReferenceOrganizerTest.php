@@ -141,12 +141,12 @@ class HudsonCrossReferenceOrganizerTest extends TestCase
 
         $this->organizer_by_nature
             ->shouldReceive("moveCrossReferenceToSection")
-            ->with($this->project, $ref_build, "")
+            ->with($ref_build, "")
             ->once();
 
         $this->organizer_by_nature
             ->shouldReceive("moveCrossReferenceToSection")
-            ->with($this->project, $ref_job, "")
+            ->with($ref_job, "")
             ->once();
 
         $this->organizer->organizeHudsonReferences($this->organizer_by_nature);

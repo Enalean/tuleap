@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference\ByNature\News;
 
-use ProjectManager;
 use Tuleap\News\Exceptions\NewsNotFoundException;
 use Tuleap\News\Exceptions\RestrictedNewsAccessException;
 use Tuleap\News\NewsRetriever;
@@ -32,31 +31,22 @@ use Tuleap\Reference\CrossReferenceSectionPresenter;
 class CrossReferenceNewsOrganizer
 {
     /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
      * @var NewsRetriever
      */
     private $news_retriever;
 
-    public function __construct(
-        ProjectManager $project_manager,
-        NewsRetriever $news_retriever
-    ) {
-        $this->project_manager = $project_manager;
-        $this->news_retriever  = $news_retriever;
+    public function __construct(NewsRetriever $news_retriever)
+    {
+        $this->news_retriever = $news_retriever;
     }
 
     public function organizeNewsReference(
         CrossReferencePresenter $cross_reference_presenter,
         CrossReferenceByNatureOrganizer $by_nature_organizer
     ): void {
-        $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
         try {
             $news = $this->news_retriever->getNewsUserCanView((int) $cross_reference_presenter->target_value);
             $by_nature_organizer->moveCrossReferenceToSection(
-                $project,
                 $cross_reference_presenter->withTitle($news->getSummary(), null),
                 CrossReferenceSectionPresenter::UNLABELLED,
             );

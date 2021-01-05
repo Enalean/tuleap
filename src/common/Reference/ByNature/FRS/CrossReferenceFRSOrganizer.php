@@ -24,7 +24,6 @@ namespace Tuleap\Reference\ByNature\FRS;
 
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
-use ProjectManager;
 use Tuleap\Reference\CrossReferenceSectionPresenter;
 
 class CrossReferenceFRSOrganizer
@@ -33,10 +32,6 @@ class CrossReferenceFRSOrganizer
      * @var \FRSPackageFactory
      */
     private $package_factory;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
     /**
      * @var \FRSReleaseFactory
      */
@@ -49,11 +44,9 @@ class CrossReferenceFRSOrganizer
     public function __construct(
         \FRSPackageFactory $package_factory,
         \FRSReleaseFactory $release_factory,
-        \FRSFileFactory $file_factory,
-        ProjectManager $project_manager
+        \FRSFileFactory $file_factory
     ) {
         $this->package_factory = $package_factory;
-        $this->project_manager = $project_manager;
         $this->release_factory = $release_factory;
         $this->file_factory    = $file_factory;
     }
@@ -62,17 +55,18 @@ class CrossReferenceFRSOrganizer
         CrossReferencePresenter $cross_reference_presenter,
         CrossReferenceByNatureOrganizer $by_nature_organizer
     ): void {
-        $project    = $this->project_manager->getProject($cross_reference_presenter->target_gid);
         $release_id = (int) $cross_reference_presenter->target_value;
         $release    = $this->release_factory->getFRSReleaseFromDb($release_id);
 
         if (! $release) {
             $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+
             return;
         }
 
         if ($release->isHidden() || $release->getPackage()->isHidden()) {
             $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+
             return;
         }
 
@@ -84,6 +78,7 @@ class CrossReferenceFRSOrganizer
 
         if (! $user_can_read_package) {
             $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+
             return;
         }
 
@@ -96,11 +91,11 @@ class CrossReferenceFRSOrganizer
 
         if (! $user_can_read_release) {
             $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+
             return;
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $project,
             $cross_reference_presenter,
             CrossReferenceSectionPresenter::UNLABELLED
         );
@@ -110,16 +105,15 @@ class CrossReferenceFRSOrganizer
         CrossReferencePresenter $cross_reference_presenter,
         CrossReferenceByNatureOrganizer $by_nature_organizer
     ): void {
-        $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
-        $file    = $this->file_factory->getFRSFileFromDb($cross_reference_presenter->target_value);
+        $file = $this->file_factory->getFRSFileFromDb($cross_reference_presenter->target_value);
 
         if (! $file || ! $file->userCanDownload($by_nature_organizer->getCurrentUser())) {
             $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+
             return;
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $project,
             $cross_reference_presenter,
             CrossReferenceSectionPresenter::UNLABELLED
         );

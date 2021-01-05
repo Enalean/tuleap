@@ -26,8 +26,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Project;
-use ProjectManager;
 use Tracker_ArtifactFactory;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
@@ -40,10 +38,6 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-    /**
      * @var CrossReferenceArtifactOrganizer
      */
     private $organizer;
@@ -54,11 +48,9 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->project_manager  = Mockery::mock(ProjectManager::class);
         $this->artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
 
         $this->organizer = new CrossReferenceArtifactOrganizer(
-            $this->project_manager,
             $this->artifact_factory,
         );
     }
@@ -70,7 +62,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCurrentUser'     => $user,
+                    'getCurrentUser'              => $user,
                     'getCrossReferencePresenters' => [
                         CrossReferencePresenterBuilder::get(1)->withType('git')->build(),
                     ]
@@ -84,12 +76,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
 
     public function testItDoesNotOrganizeArtifactCrossReferencesIfArtifactCannotBeFound(): void
     {
-        $user    = Mockery::mock(PFUser::class);
-        $project = Mockery::mock(Project::class);
-
-        $this->project_manager
-            ->shouldReceive(['getProject' => $project])
-            ->getMock();
+        $user = Mockery::mock(PFUser::class);
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_tracker_artifact')
@@ -104,7 +91,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCurrentUser'     => $user,
+                    'getCurrentUser'              => $user,
                     'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
@@ -120,12 +107,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
 
     public function testItMovesArtifactCrossReferenceToAnUnlabelledSectionWithATitleBadge(): void
     {
-        $user    = Mockery::mock(PFUser::class);
-        $project = Mockery::mock(Project::class);
-
-        $this->project_manager
-            ->shouldReceive(['getProject' => $project])
-            ->getMock();
+        $user = Mockery::mock(PFUser::class);
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_tracker_artifact')
@@ -154,7 +136,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCurrentUser'     => $user,
+                    'getCurrentUser'              => $user,
                     'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
@@ -162,7 +144,6 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
-                $project,
                 Mockery::on(
                     function (CrossReferencePresenter $presenter) {
                         return $presenter->id === 1
@@ -183,12 +164,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
 
     public function testItMovesArtifactCrossReferenceWithEmptyStringInsteadOfNullTitle(): void
     {
-        $user    = Mockery::mock(PFUser::class);
-        $project = Mockery::mock(Project::class);
-
-        $this->project_manager
-            ->shouldReceive(['getProject' => $project])
-            ->getMock();
+        $user = Mockery::mock(PFUser::class);
 
         $a_ref = CrossReferencePresenterBuilder::get(1)
             ->withType('plugin_tracker_artifact')
@@ -217,7 +193,7 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCurrentUser'     => $user,
+                    'getCurrentUser'              => $user,
                     'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
@@ -225,7 +201,6 @@ class CrossReferenceArtifactOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
-                $project,
                 Mockery::on(
                     function (CrossReferencePresenter $presenter) {
                         return $presenter->id === 1

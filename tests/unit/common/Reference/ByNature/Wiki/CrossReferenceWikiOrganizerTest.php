@@ -111,7 +111,7 @@ class CrossReferenceWikiOrganizerTest extends TestCase
 
         $this->by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($this->project, $wiki_ref, '')
+            ->with($wiki_ref, '')
             ->once();
 
         $this->wiki_organizer->organizeWikiReference($wiki_ref, $this->by_nature_organizer);

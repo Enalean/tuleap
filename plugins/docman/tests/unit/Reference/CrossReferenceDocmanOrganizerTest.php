@@ -171,7 +171,6 @@ class CrossReferenceDocmanOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
-                $project,
                 Mockery::on(
                     function (CrossReferencePresenter $presenter) {
                         return $presenter->id === 1

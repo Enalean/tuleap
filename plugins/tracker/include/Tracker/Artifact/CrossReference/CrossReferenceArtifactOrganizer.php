@@ -31,19 +31,12 @@ use Tuleap\Tracker\Artifact\Artifact;
 class CrossReferenceArtifactOrganizer
 {
     /**
-     * @var \ProjectManager
-     */
-    private $project_manager;
-    /**
      * @var \Tracker_ArtifactFactory
      */
     private $artifact_factory;
 
-    public function __construct(
-        \ProjectManager $project_manager,
-        \Tracker_ArtifactFactory $artifact_factory
-    ) {
-        $this->project_manager  = $project_manager;
+    public function __construct(\Tracker_ArtifactFactory $artifact_factory)
+    {
         $this->artifact_factory = $artifact_factory;
     }
 
@@ -54,8 +47,7 @@ class CrossReferenceArtifactOrganizer
                 continue;
             }
 
-            $user    = $by_nature_organizer->getCurrentUser();
-            $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
+            $user = $by_nature_organizer->getCurrentUser();
 
             $artifact = $this->artifact_factory->getArtifactByIdUserCanView(
                 $user,
@@ -67,7 +59,6 @@ class CrossReferenceArtifactOrganizer
             }
 
             $by_nature_organizer->moveCrossReferenceToSection(
-                $project,
                 $this->addTitleBadgeOnCrossReference($cross_reference_presenter, $artifact),
                 CrossReferenceSectionPresenter::UNLABELLED
             );

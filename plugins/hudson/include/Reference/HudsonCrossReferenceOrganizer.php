@@ -62,7 +62,6 @@ class HudsonCrossReferenceOrganizer
         }
 
         $organizer_by_nature->moveCrossReferenceToSection(
-            $project,
             $cross_reference_presenter,
             CrossReferenceSectionPresenter::UNLABELLED,
         );

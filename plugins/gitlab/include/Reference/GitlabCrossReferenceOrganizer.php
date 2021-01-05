@@ -97,7 +97,6 @@ class GitlabCrossReferenceOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $project,
             $this->gitlab_cross_reference_enhancer->getCrossReferencePresenterWithCommitInformation(
                 $cross_reference_presenter,
                 $commit_info,

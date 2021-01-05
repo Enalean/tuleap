@@ -168,7 +168,6 @@ class CrossReferenceCvsOrganizerTest extends TestCase
         $this->by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
-                $this->project,
                 Mockery::on(
                     function (CrossReferencePresenter $presenter): bool {
                         return $presenter->id === 1

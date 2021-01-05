@@ -25,7 +25,6 @@ namespace Tuleap\Reference\ByNature\FRS;
 use PHPUnit\Framework\TestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery;
-use ProjectManager;
 use PFUser;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
@@ -43,10 +42,6 @@ class CrossReferenceFRSOrganizerTest extends TestCase
      */
     private $release_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-    /**
      * @var CrossReferenceFRSOrganizer
      */
     private $organizer;
@@ -54,10 +49,6 @@ class CrossReferenceFRSOrganizerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
      */
     private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Project
-     */
-    private $project;
     /**
      * @var \FRSFileFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
@@ -68,15 +59,12 @@ class CrossReferenceFRSOrganizerTest extends TestCase
         $this->package_factory = Mockery::mock(\FRSPackageFactory::class);
         $this->release_factory = Mockery::mock(\FRSReleaseFactory::class);
         $this->file_factory    = Mockery::mock(\FRSFileFactory::class);
-        $this->project         = Mockery::mock(\Project::class);
-        $this->project_manager = Mockery::mock(ProjectManager::class, ['getProject' => $this->project]);
         $this->user            = Mockery::mock(PFUser::class, ['getId' => 115]);
 
         $this->organizer = new CrossReferenceFRSOrganizer(
             $this->package_factory,
             $this->release_factory,
-            $this->file_factory,
-            $this->project_manager
+            $this->file_factory
         );
     }
 
@@ -269,7 +257,6 @@ class CrossReferenceFRSOrganizerTest extends TestCase
             ->shouldReceive('moveCrossReferenceToSection')
             ->once()
             ->with(
-                $this->project,
                 $cross_reference,
                 ""
             );
@@ -334,7 +321,6 @@ class CrossReferenceFRSOrganizerTest extends TestCase
             ->shouldReceive('moveCrossReferenceToSection')
             ->once()
             ->with(
-                $this->project,
                 $cross_reference,
                 ""
             );

@@ -202,11 +202,11 @@ class CrossReferenceGitOrganizerTest extends TestCase
 
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($project, $augmented_a_ref, 'acme/cloudy/stable')
+            ->with($augmented_a_ref, 'acme/cloudy/stable')
             ->once();
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($another_project, $augmented_another_ref, 'foobar/tuleap/stable')
+            ->with($augmented_another_ref, 'foobar/tuleap/stable')
             ->once();
 
         $this->organizer->organizeGitReferences($by_nature_organizer);
@@ -268,7 +268,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
 
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($another_project, $augmented_another_ref, 'foobar/tuleap/stable')
+            ->with($augmented_another_ref, 'foobar/tuleap/stable')
             ->never();
 
         $by_nature_organizer
