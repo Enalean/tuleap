@@ -21,8 +21,15 @@
 @use '../../../../../../src/themes/common/css/project-background/background';
 
 @each $project-color-name, $project-color-properties in background.$definitions {
+    $project-color: background.get-color($project-color-name);
+
     .project-color-#{$project-color-name} {
-        --project-color: #{background.get-color($project-color-name)};
-        --project-color-background: #{color.change(background.get-color($project-color-name), $alpha: .07)};
+        --project-color: #{$project-color};
+        --project-color-background: #{color.change($project-color, $alpha: .07)};
+        --project-color-background-gradient: linear-gradient(#{transparentize($project-color, .97), transparentize($project-color, .97)}), linear-gradient($tlp-ui-white, $tlp-ui-white);
+        --project-color-background-gradient-light: linear-gradient(#{transparentize($project-color, .95), transparentize($project-color, .95)}), linear-gradient($tlp-ui-white, $tlp-ui-white);
+        --project-color-background-gradient-light-hover: linear-gradient(#{darken(transparentize($project-color, .95), 2%), darken(transparentize($project-color, .95), 2%)}), linear-gradient(darken($tlp-ui-white, 2%), darken($tlp-ui-white, 2%));
+        --project-color-border: #{transparentize($project-color, .9)};
+        --project-color-border-light: #{transparentize($project-color, .8)};
     }
 }

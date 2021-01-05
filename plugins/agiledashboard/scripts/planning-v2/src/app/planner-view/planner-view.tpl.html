@@ -116,7 +116,7 @@
         </div>
         <section class="tlp-pane milestone"
                  ng-repeat="milestone in planning.getOpenMilestones() track by milestone.id"
-                 ng-class="{ collapsed: milestone.collapsed }"
+                 ng-class="['project-color-'+milestone.original_project_provider.background.identifier, milestone.collapsed ? 'collapsed' : '']"
                  milestone
         ></section>
 
@@ -144,7 +144,7 @@
         <section class="tlp-pane milestone"
                  ng-if="planning.thereAreClosedMilestonesLoaded()"
                  ng-repeat="milestone in planning.getClosedMilestones() track by milestone.id"
-                 ng-class="{ collapsed: milestone.collapsed }"
+                 ng-class="['project-color-'+milestone.original_project_provider.background.identifier, milestone.collapsed ? 'collapsed' : '']"
                  milestone
         ></section>
 
