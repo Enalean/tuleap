@@ -266,6 +266,11 @@ if (ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL) == 1) {
     ');
 }
 
+$site_admin_warnings = new \Tuleap\Admin\SiteAdminWarnings(
+    EventManager::instance(),
+    new ForgeUpgradeConfig(new System_Command()),
+);
+
 // Start output
 $siteadmin = new \Tuleap\Admin\AdminPageRenderer();
 $siteadmin->header($Language->getText('admin_main', 'title'));
@@ -273,7 +278,7 @@ $siteadmin->header($Language->getText('admin_main', 'title'));
 global $feedback;
 echo html_feedback_top($feedback);
 
-echo site_admin_warnings($nb_users_by_status);
+echo $site_admin_warnings->getAdminHomeWarningsWithUsersByStatus($nb_users_by_status);
 
 echo '<div id="siteadmin-homepage-container">';
 echo '<div class="siteadmin-homepage-column">';

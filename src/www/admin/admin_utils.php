@@ -33,25 +33,3 @@ function site_admin_footer($vals = 0)
     echo html_feedback_bottom($GLOBALS['feedback']);
     $HTML->footer([]);
 }
-
-function site_admin_warnings(Tuleap\Admin\Homepage\NbUsersByStatus $nb_users_by_status)
-{
-    $warnings = [];
-    EventManager::instance()->processEvent(
-        Event::GET_SITEADMIN_WARNINGS,
-        [
-            'nb_users_by_status' => $nb_users_by_status,
-            'warnings'           => &$warnings
-        ]
-    );
-
-    if (! ForgeConfig::get('disable_forge_upgrade_warnings')) {
-        $forgeupgrade_config = new ForgeUpgradeConfig(new System_Command());
-        $forgeupgrade_config->loadDefaults();
-        if (! $forgeupgrade_config->isSystemUpToDate()) {
-            $warnings[] = '<div class="tlp-alert-warning alert alert-warning alert-block">' . $GLOBALS['Language']->getText('admin_main', 'forgeupgrade') . '</div>';
-        }
-    }
-
-    return implode('', $warnings);
-}

@@ -29,8 +29,7 @@ class PermissionsOverrider_PermissionsOverriderManager
     public const PERMISSIONS_OVERRIDER_FILE      = "PermissionsOverrider.php";
 
     /**
-     * Holds an instance of the class
-     * @var EventManager
+     * @var PermissionsOverrider_PermissionsOverriderManager|null
      */
     private static $instance;
 
@@ -44,7 +43,6 @@ class PermissionsOverrider_PermissionsOverriderManager
 
     /**
      * Set current instance of singleton.  DO NOT USE IT IN PRODUCTION CODE!
-     * @param EventManager $instance
      */
     public static function setInstance(PermissionsOverrider_PermissionsOverriderManager $instance)
     {
@@ -53,10 +51,8 @@ class PermissionsOverrider_PermissionsOverriderManager
 
     /**
      * The singleton method
-     *
-     * @return PermissionsOverrider_PermissionsOverriderManager
      */
-    public static function instance()
+    public static function instance(): self
     {
         if (! self::$instance) {
             self::$instance = new PermissionsOverrider_PermissionsOverriderManager();
@@ -110,22 +106,26 @@ class PermissionsOverrider_PermissionsOverriderManager
 
     private function getPermissionsOverrider()
     {
-        if (! is_dir($this->getPermissionsOverriderDirectory())) {
-            return;
-        }
-
-        if (! is_file($this->getPermissionsOverriderFilePath())) {
+        if (! $this->hasOverrider()) {
             return;
         }
 
         require_once($this->getPermissionsOverriderFilePath());
+        if (! class_exists('PermissionsOverrider')) {
+            throw new RuntimeException($this->getPermissionsOverriderFilePath() . ' exists but do not contains `PermissionsOverrider` class');
+        }
 
         $permissions_overrider = new PermissionsOverrider();
 
         if (! $permissions_overrider instanceof PermissionsOverrider_IOverridePermissions) {
-            return;
+            throw new RuntimeException('`PermissionsOverrider` class defined in ' . $this->getPermissionsOverriderFilePath() . ' do not implement `PermissionsOverrider_IOverridePermissions` interface');
         }
 
         return $permissions_overrider;
+    }
+
+    public function hasOverrider(): bool
+    {
+        return is_dir($this->getPermissionsOverriderDirectory()) && is_file($this->getPermissionsOverriderFilePath());
     }
 }
