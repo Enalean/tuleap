@@ -43,7 +43,6 @@
             .backlog-item-details-effort-container-content-no-initial-effort,
             .backlog-item-details-parent,
             .backlog-item-details-parent-link {
-                fill: map-get($colors, 'text');
                 color: map-get($colors, 'text');
             }
 

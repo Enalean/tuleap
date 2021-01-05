@@ -2,9 +2,7 @@
     <span ng-if="parent_project_id !== project_id" ng-bind-html="parent_project_label | tuleapHighlight:filter_terms" class="backlog-item-details-parent-project"></span>
     <span>
         <i ng-if="parent_project_id === project_id" class="fas fa-fw fa-level-up-alt" aria-hidden="true"></i>
-        <svg ng-if="parent_project_id !== project_id" width="8" height="8" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M1 .043v6.6H4.594v-1.2H2.2v-5.4H1zm3.75 4.104L7.462 5.96a.1.1 0 010 .167L4.75 7.94a.1.1 0 01-.155-.084V4.231a.1.1 0 01.155-.084z"/>
-        </svg>
+        <span ng-if="parent_project_id !== project_id">↳</span>
         <span class="backlog-item-details-parent-link" ng-bind-html="text | tuleapHighlight:filter_terms"></span>
     </span>
 </a>
