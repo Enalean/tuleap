@@ -27,14 +27,14 @@ use Tuleap\DB\DataAccessObject;
 class CommitDetailsCacheDao extends DataAccessObject
 {
     /**
-     * @psalm-return array{"title": string, "author_name": string, "author_email": string, "author_epoch": int, "first_branch": string, "first_tag": string} | null
+     * @psalm-return array{"title": string, "author_name": string, "author_email": string, "committer_epoch": int, "first_branch": string, "first_tag": string} | null
      */
     public function searchCommitDetails(int $repository_id, string $commit_sha1): ?array
     {
         $sql = "SELECT title,
                     author_name,
                     author_email,
-                    author_epoch,
+                    committer_epoch,
                     first_branch,
                     first_tag
                 FROM plugin_git_commit_details_cache
@@ -51,6 +51,9 @@ class CommitDetailsCacheDao extends DataAccessObject
         string $author_email,
         string $author_name,
         int $author_epoch,
+        string $committer_email,
+        string $committer_name,
+        int $committer_epoch,
         string $first_branch,
         string $first_tag
     ): void {
@@ -63,10 +66,13 @@ class CommitDetailsCacheDao extends DataAccessObject
                     author_name,
                     author_email,
                     author_epoch,
+                    committer_name,
+                    committer_email,
+                    committer_epoch,
                     first_branch,
                     first_tag
                  )
-            VALUES (?, UNHEX(?), ?, ?, ?, ?, ?, ?)
+            VALUES (?, UNHEX(?), ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ';
 
         $this->getDB()->run(
@@ -77,6 +83,9 @@ class CommitDetailsCacheDao extends DataAccessObject
             $author_name,
             $author_email,
             $author_epoch,
+            $committer_name,
+            $committer_email,
+            $committer_epoch,
             $first_branch,
             $first_tag
         );
