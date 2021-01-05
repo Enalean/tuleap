@@ -56,7 +56,7 @@ final class CommitDetails
     /**
      * @var int
      */
-    private $author_epoch;
+    private $committer_epoch;
 
     public function __construct(
         string $hash,
@@ -65,15 +65,15 @@ final class CommitDetails
         string $first_tag,
         ?PFUser $author,
         string $author_name,
-        int $author_epoch
+        int $committer_epoch
     ) {
-        $this->hash         = $hash;
-        $this->title        = $title;
-        $this->first_branch = $first_branch;
-        $this->first_tag    = $first_tag;
-        $this->author       = $author;
-        $this->author_name  = $author_name;
-        $this->author_epoch = $author_epoch;
+        $this->hash            = $hash;
+        $this->title           = $title;
+        $this->first_branch    = $first_branch;
+        $this->first_tag       = $first_tag;
+        $this->author          = $author;
+        $this->author_name     = $author_name;
+        $this->committer_epoch = $committer_epoch;
     }
 
     public function getHash(): string
@@ -106,8 +106,8 @@ final class CommitDetails
         return $this->author_name;
     }
 
-    public function getAuthorEpoch(): int
+    public function getCommitterEpoch(): int
     {
-        return $this->author_epoch;
+        return $this->committer_epoch;
     }
 }

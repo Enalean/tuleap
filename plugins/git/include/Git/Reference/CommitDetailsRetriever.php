@@ -63,7 +63,7 @@ class CommitDetailsRetriever
             $row_cache['first_tag'],
             $this->getAuthorByEmail($row_cache['author_email']),
             $row_cache['author_name'],
-            $row_cache['author_epoch'],
+            $row_cache['committer_epoch'],
         );
     }
 
@@ -82,10 +82,13 @@ class CommitDetailsRetriever
         $tags      = $commit->GetTags();
         $first_tag = empty($tags) ? '' : $tags[0]->GetName();
 
-        $title        = $commit->GetTitle();
-        $author_email = $commit->GetAuthorEmail();
-        $author_name  = $commit->GetAuthorName();
-        $author_epoch = (int) $commit->GetAuthorEpoch();
+        $title           = $commit->GetTitle();
+        $author_email    = $commit->GetAuthorEmail();
+        $author_name     = $commit->GetAuthorName();
+        $author_epoch    = (int) $commit->GetAuthorEpoch();
+        $committer_email = $commit->GetCommitterEmail();
+        $committer_name  = $commit->GetCommitterName();
+        $committer_epoch = (int) $commit->GetCommitterEpoch();
 
         $this->dao->saveCommitDetails(
             (int) $repository->getId(),
@@ -94,6 +97,9 @@ class CommitDetailsRetriever
             $author_email,
             $author_name,
             $author_epoch,
+            $committer_email,
+            $committer_name,
+            $committer_epoch,
             $first_branch,
             $first_tag,
         );
@@ -105,7 +111,7 @@ class CommitDetailsRetriever
             $first_tag,
             $this->getAuthorByEmail($author_email),
             $author_name,
-            $author_epoch,
+            $committer_epoch,
         );
     }
 }

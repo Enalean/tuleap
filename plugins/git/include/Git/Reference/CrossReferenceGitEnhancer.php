@@ -96,7 +96,7 @@ class CrossReferenceGitEnhancer
     private function getCreatedOnPresenter(CommitDetails $commit_details, \PFUser $user): TlpRelativeDatePresenter
     {
         return $this->relative_date_builder->getTlpRelativeDatePresenterInInlineContext(
-            new \DateTimeImmutable('@' . $commit_details->getAuthorEpoch()),
+            new \DateTimeImmutable('@' . $commit_details->getCommitterEpoch()),
             $user,
         );
     }

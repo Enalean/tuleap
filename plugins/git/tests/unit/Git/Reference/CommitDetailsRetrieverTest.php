@@ -41,12 +41,12 @@ class CommitDetailsRetrieverTest extends TestCase
             CommitDetailsCacheDao::class,
             [
                 'searchCommitDetails' => [
-                    'title'        => 'Add foo to stuff',
-                    'first_branch' => 'dev-feature',
-                    'first_tag'    => 'v1.2.0',
-                    'author_email' => 'jdoe@example.com',
-                    'author_name'  => 'John Doe',
-                    'author_epoch' => 1234567890,
+                    'title'           => 'Add foo to stuff',
+                    'first_branch'    => 'dev-feature',
+                    'first_tag'       => 'v1.2.0',
+                    'author_email'    => 'jdoe@example.com',
+                    'author_name'     => 'John Doe',
+                    'committer_epoch' => 1234567890,
                 ],
             ],
         );
@@ -71,7 +71,7 @@ class CommitDetailsRetrieverTest extends TestCase
         self::assertEquals('v1.2.0', $commit_details->getFirstTag());
         self::assertEquals($john_doe, $commit_details->getAuthor());
         self::assertEquals('John Doe', $commit_details->getAuthorName());
-        self::assertEquals(1234567890, $commit_details->getAuthorEpoch());
+        self::assertEquals(1234567890, $commit_details->getCommitterEpoch());
     }
 
     public function testIfNotFoundInDbItReturnsCommitDetailsFromCommitAndCacheTheInformationInDb(): void
@@ -89,6 +89,9 @@ class CommitDetailsRetrieverTest extends TestCase
                 'Add foo to stuff',
                 'jdoe@example.com',
                 'John Doe',
+                1023456789,
+                'neo@example.com',
+                'Thomas A. Anderson',
                 1234567890,
                 'dev-feature',
                 'v1.2.0',
@@ -110,15 +113,18 @@ class CommitDetailsRetrieverTest extends TestCase
             Mockery::mock(
                 Commit::class,
                 [
-                    'GetHash'        => '1a2b3c4d5e6f7g8h9i',
-                    'GetTitle'       => 'Add foo to stuff',
-                    'GetAuthorEmail' => 'jdoe@example.com',
-                    'GetAuthorName'  => 'John Doe',
-                    'GetAuthorEpoch' => '1234567890',
-                    'GetHeads'       => [
+                    'GetHash'           => '1a2b3c4d5e6f7g8h9i',
+                    'GetTitle'          => 'Add foo to stuff',
+                    'GetAuthorEmail'    => 'jdoe@example.com',
+                    'GetAuthorName'     => 'John Doe',
+                    'GetAuthorEpoch'    => '1023456789',
+                    'GetCommitterEmail' => 'neo@example.com',
+                    'GetCommitterName'  => 'Thomas A. Anderson',
+                    'GetCommitterEpoch' => '1234567890',
+                    'GetHeads'          => [
                         Mockery::mock(Head::class)->shouldReceive(['GetName' => 'dev-feature'])->getMock(),
                     ],
-                    'GetTags'        => [
+                    'GetTags'           => [
                         Mockery::mock(Tag::class)->shouldReceive(['GetName' => 'v1.2.0'])->getMock(),
                     ],
 
@@ -131,6 +137,6 @@ class CommitDetailsRetrieverTest extends TestCase
         self::assertEquals('v1.2.0', $commit_details->getFirstTag());
         self::assertEquals($john_doe, $commit_details->getAuthor());
         self::assertEquals('John Doe', $commit_details->getAuthorName());
-        self::assertEquals(1234567890, $commit_details->getAuthorEpoch());
+        self::assertEquals(1234567890, $commit_details->getCommitterEpoch());
     }
 }

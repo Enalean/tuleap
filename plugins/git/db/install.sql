@@ -321,6 +321,9 @@ CREATE TABLE IF NOT EXISTS plugin_git_commit_details_cache (
     author_name TEXT NOT NULL,
     author_email TEXT NOT NULL,
     author_epoch INT(11) NOT NULL,
+    committer_name TEXT NOT NULL,
+    committer_email TEXT NOT NULL,
+    committer_epoch INT(11) NOT NULL,
     first_branch TEXT NOT NULL,
     first_tag TEXT NOT NULL,
     INDEX idx(repository_id, commit_sha1)
