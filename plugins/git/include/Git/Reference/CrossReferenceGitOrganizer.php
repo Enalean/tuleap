@@ -44,17 +44,23 @@ final class CrossReferenceGitOrganizer
      * @var CommitProvider
      */
     private $commit_provider;
+    /**
+     * @var CommitDetailsRetriever
+     */
+    private $commit_details_retriever;
 
     public function __construct(
         \ProjectManager $project_manager,
         \Git_ReferenceManager $git_reference_manager,
         CommitProvider $commit_provider,
-        CrossReferenceGitEnhancer $cross_reference_git_filler
+        CrossReferenceGitEnhancer $cross_reference_git_filler,
+        CommitDetailsRetriever $commit_details_retriever
     ) {
         $this->project_manager              = $project_manager;
         $this->git_reference_manager        = $git_reference_manager;
         $this->cross_reference_git_enhancer = $cross_reference_git_filler;
         $this->commit_provider              = $commit_provider;
+        $this->commit_details_retriever     = $commit_details_retriever;
     }
 
     public function organizeGitReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -96,11 +102,12 @@ final class CrossReferenceGitOrganizer
             return;
         }
 
+        $commit_details = $this->commit_details_retriever->retrieveCommitDetails($repository, $commit);
+
         $by_nature_organizer->moveCrossReferenceToSection(
             $this->cross_reference_git_enhancer->getCrossReferencePresenterWithCommitInformation(
                 $cross_reference_presenter,
-                $commit,
-                $repository,
+                $commit_details,
                 $user
             ),
             $project->getUnixNameLowerCase() . '/' . $repository->getFullName()

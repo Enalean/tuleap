@@ -36,10 +36,6 @@ class CrossReferenceGitEnhancerTest extends TestCase
     use GlobalLanguageMock;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitDetailsRetriever
-     */
-    private $commit_details_retriever;
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\UserHelper
      */
     private $user_helper;
@@ -47,10 +43,6 @@ class CrossReferenceGitEnhancerTest extends TestCase
      * @var CrossReferenceGitEnhancer
      */
     private $enhancer;
-    /**
-     * @var \GitRepository|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $repository;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
      */
@@ -62,16 +54,12 @@ class CrossReferenceGitEnhancerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->commit_details_retriever = Mockery::mock(CommitDetailsRetriever::class);
-        $this->user_helper              = Mockery::mock(\UserHelper::class);
+        $this->user_helper = Mockery::mock(\UserHelper::class);
 
         $this->enhancer = new CrossReferenceGitEnhancer(
-            $this->commit_details_retriever,
             $this->user_helper,
             new TlpRelativeDatePresenterBuilder(),
         );
-
-        $this->repository = Mockery::mock(\GitRepository::class);
 
         $this->user = Mockery::mock(\PFUser::class)
             ->shouldReceive(
@@ -94,9 +82,9 @@ class CrossReferenceGitEnhancerTest extends TestCase
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $this->commit_details_retriever
-            ->shouldReceive('retrieveCommitDetails')
-            ->andReturn(new CommitDetails(
+        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
+            $ref,
+            new CommitDetails(
                 '1a2b3c4d5e6f7g8h9i',
                 'Add foo to stuff',
                 '',
@@ -104,12 +92,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 null,
                 'John Doe',
                 1234567890
-            ));
-
-        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
-            $ref,
-            $this->commit,
-            $this->repository,
+            ),
             $this->user
         );
 
@@ -123,9 +106,9 @@ class CrossReferenceGitEnhancerTest extends TestCase
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $this->commit_details_retriever
-            ->shouldReceive('retrieveCommitDetails')
-            ->andReturn(new CommitDetails(
+        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
+            $ref,
+            new CommitDetails(
                 '1a2b3c4d5e6f7g8h9i',
                 'Add foo to stuff',
                 '',
@@ -133,12 +116,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 null,
                 'John Doe',
                 1234567890
-            ));
-
-        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
-            $ref,
-            $this->commit,
-            $this->repository,
+            ),
             $this->user
         );
 
@@ -152,9 +130,9 @@ class CrossReferenceGitEnhancerTest extends TestCase
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $this->commit_details_retriever
-            ->shouldReceive('retrieveCommitDetails')
-            ->andReturn(new CommitDetails(
+        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
+            $ref,
+            new CommitDetails(
                 '1a2b3c4d5e6f7g8h9i',
                 'Add foo to stuff',
                 'dev-feature',
@@ -162,12 +140,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 null,
                 'John Doe',
                 1234567890
-            ));
-
-        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
-            $ref,
-            $this->commit,
-            $this->repository,
+            ),
             $this->user
         );
 
@@ -186,9 +159,9 @@ class CrossReferenceGitEnhancerTest extends TestCase
     {
         $ref = CrossReferencePresenterBuilder::get(1)->build();
 
-        $this->commit_details_retriever
-            ->shouldReceive('retrieveCommitDetails')
-            ->andReturn(new CommitDetails(
+        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
+            $ref,
+            new CommitDetails(
                 '1a2b3c4d5e6f7g8h9i',
                 'Add foo to stuff',
                 '',
@@ -196,12 +169,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 null,
                 'John Doe',
                 1234567890
-            ));
-
-        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
-            $ref,
-            $this->commit,
-            $this->repository,
+            ),
             $this->user
         );
 
@@ -234,9 +202,9 @@ class CrossReferenceGitEnhancerTest extends TestCase
             ->with($author)
             ->andReturn('John Doe');
 
-        $this->commit_details_retriever
-            ->shouldReceive('retrieveCommitDetails')
-            ->andReturn(new CommitDetails(
+        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
+            $ref,
+            new CommitDetails(
                 '1a2b3c4d5e6f7g8h9i',
                 'Add foo to stuff',
                 '',
@@ -244,12 +212,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 $author,
                 'John Doe',
                 1234567890
-            ));
-
-        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
-            $ref,
-            $this->commit,
-            $this->repository,
+            ),
             $this->user
         );
 
@@ -278,9 +241,9 @@ class CrossReferenceGitEnhancerTest extends TestCase
             ->with($author)
             ->andReturn('John Doe');
 
-        $this->commit_details_retriever
-            ->shouldReceive('retrieveCommitDetails')
-            ->andReturn(new CommitDetails(
+        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
+            $ref,
+            new CommitDetails(
                 '1a2b3c4d5e6f7g8h9i',
                 'Add foo to stuff',
                 '',
@@ -288,12 +251,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 $author,
                 'John Doe',
                 1234567890
-            ));
-
-        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
-            $ref,
-            $this->commit,
-            $this->repository,
+            ),
             $this->user
         );
 
@@ -310,9 +268,9 @@ class CrossReferenceGitEnhancerTest extends TestCase
             ->shouldReceive('GetAuthorName')
             ->andReturn('Korben Dallas');
 
-        $this->commit_details_retriever
-            ->shouldReceive('retrieveCommitDetails')
-            ->andReturn(new CommitDetails(
+        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
+            $ref,
+            new CommitDetails(
                 '1a2b3c4d5e6f7g8h9i',
                 'Add foo to stuff',
                 '',
@@ -320,12 +278,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 null,
                 'Korben Dallas',
                 1234567890
-            ));
-
-        $new_ref = $this->enhancer->getCrossReferencePresenterWithCommitInformation(
-            $ref,
-            $this->commit,
-            $this->repository,
+            ),
             $this->user
         );
 

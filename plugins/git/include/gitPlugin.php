@@ -2817,13 +2817,13 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             ),
             new CommitProvider(),
             new CrossReferenceGitEnhancer(
-                new CommitDetailsRetriever(
-                    new CommitDetailsCacheDao(),
-                    UserManager::instance()
-                ),
                 UserHelper::instance(),
                 new TlpRelativeDatePresenterBuilder(),
-            )
+            ),
+            new CommitDetailsRetriever(
+                new CommitDetailsCacheDao(),
+                UserManager::instance()
+            ),
         );
 
         $git_organizer->organizeGitReferences($organizer);
