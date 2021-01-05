@@ -21,3 +21,11 @@
     margin: 0;
     padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
 }
+
+.first-testmanagament-administration {
+    display: flex;
+
+    > a {
+        margin-right: $tlp-medium-spacing;
+    }
+}

@@ -61,14 +61,15 @@ class StartTestManagementController
     public function misconfiguration(HTTPRequest $request): string
     {
         $current_user   = $request->getCurrentUser();
-        $project_id     = $request->getProject()->getID();
+        $project_id     = (int) $request->getProject()->getID();
         $is_user_admin  = $current_user->isAdmin($project_id);
 
         return $this->getRenderer()->renderToString(
             'misconfiguration',
             new StartTestManagementPresenter(
                 $is_user_admin,
-                $this->csrf_token
+                $this->csrf_token,
+                $project_id
             )
         );
     }
