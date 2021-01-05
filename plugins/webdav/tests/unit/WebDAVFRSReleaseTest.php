@@ -31,8 +31,13 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Sabre_DAV_Exception_FileNotFound;
+use Sabre_DAV_Exception_Forbidden;
+use Sabre_DAV_Exception_RequestedRangeNotSatisfiable;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 /**
  * This is the unit test of WebDAVFRSRelease
@@ -43,11 +48,26 @@ class WebDAVFRSReleaseTest extends TestCase
     use GlobalLanguageMock;
     use ForgeConfigSandbox;
 
+    /**
+     * @var PFUser
+     */
+    private $user;
+    /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\WebDAVUtils
+     */
+    private $utils;
+
     protected function setUp(): void
     {
-        parent::setUp();
-
         \ForgeConfig::set('ftp_incoming_dir', __DIR__ . '/_fixtures/incoming');
+
+        $this->user = UserTestBuilder::aUser()->build();
+        $this->project = ProjectTestBuilder::aProject()->build();
+        $this->utils = Mockery::mock(\WebDAVUtils::class);
     }
 
     /**
@@ -84,14 +104,11 @@ class WebDAVFRSReleaseTest extends TestCase
     public function testGetChildFailureWithFileNull(): void
     {
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFile = \Mockery::spy(\WebDAVFRSFile::class);
 
-        $webDAVFile->shouldReceive('getFile')->andReturns(null);
-        $webDAVFRSRelease->shouldReceive('getWebDAVFRSFile')->andReturns($webDAVFile);
         $webDAVFRSRelease->shouldReceive('getFileIdFromName')->with('fileName')->andReturns(0);
         $webDAVFRSRelease->shouldReceive('getFRSFileFromId')->andReturnNull();
 
-        $this->expectException('Sabre_DAV_Exception_FileNotFound');
+        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -102,17 +119,13 @@ class WebDAVFRSReleaseTest extends TestCase
     public function testGetChildFailureWithNotActive(): void
     {
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFile = \Mockery::spy(\WebDAVFRSFile::class);
         $file = \Mockery::spy(\FRSFile::class);
 
-        $webDAVFile->shouldReceive('getFile')->andReturns($file);
-
-        $webDAVFile->shouldReceive('isActive')->andReturns(false);
-        $webDAVFRSRelease->shouldReceive('getWebDAVFRSFile')->andReturns($webDAVFile);
+        $file->shouldReceive('isActive')->andReturns(false);
         $webDAVFRSRelease->shouldReceive('getFileIdFromName')->with('fileName')->andReturns(1);
         $webDAVFRSRelease->shouldReceive('getFRSFileFromId')->andReturn($file);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -123,22 +136,17 @@ class WebDAVFRSReleaseTest extends TestCase
     public function testGetChildFailureWithUserCanNotDownload(): void
     {
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFile = \Mockery::spy(\WebDAVFRSFile::class);
         $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('isActive')->andReturns(true);
+        $file->shouldReceive('userCanDownload')->andReturns(false);
 
-        $webDAVFile->shouldReceive('getFile')->andReturns($file);
-
-        $webDAVFile->shouldReceive('isActive')->andReturns(true);
-
-        $webDAVFile->shouldReceive('userCanDownload')->andReturns(false);
-        $webDAVFRSRelease->shouldReceive('getWebDAVFRSFile')->andReturns($webDAVFile);
         $webDAVFRSRelease->shouldReceive('getFileIdFromName')->with('fileName')->andReturns(1);
         $webDAVFRSRelease->shouldReceive('getFRSFileFromId')->andReturn($file);
 
         $user = Mockery::mock(PFUser::class);
         $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException(Sabre_DAV_Exception_Forbidden::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -149,24 +157,18 @@ class WebDAVFRSReleaseTest extends TestCase
     public function testGetChildFailureWithNotExist(): void
     {
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFile = \Mockery::spy(\WebDAVFRSFile::class);
         $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('isActive')->andReturns(true);
+        $file->shouldReceive('userCanDownload')->andReturns(true);
+        $file->shouldReceive('fileExists')->andReturns(false);
 
-        $webDAVFile->shouldReceive('getFile')->andReturns($file);
-
-        $webDAVFile->shouldReceive('isActive')->andReturns(true);
-
-        $webDAVFile->shouldReceive('userCanDownload')->andReturns(true);
-
-        $webDAVFile->shouldReceive('fileExists')->andReturns(false);
-        $webDAVFRSRelease->shouldReceive('getWebDAVFRSFile')->andReturns($webDAVFile);
         $webDAVFRSRelease->shouldReceive('getFileIdFromName')->with('fileName')->andReturns(1);
         $webDAVFRSRelease->shouldReceive('getFRSFileFromId')->andReturn($file);
 
         $user = Mockery::mock(PFUser::class);
         $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
 
-        $this->expectException('Sabre_DAV_Exception_FileNotFound');
+        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -177,31 +179,26 @@ class WebDAVFRSReleaseTest extends TestCase
     public function testGetChildFailureWithNotBelongToPackage(): void
     {
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFile = \Mockery::spy(\WebDAVFRSFile::class);
+
         $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFile')->andReturns($file);
+        $file->shouldReceive('isActive')->andReturns(true);
+        $file->shouldReceive('userCanDownload')->andReturns(true);
+        $file->shouldReceive('fileExists')->andReturns(true);
+        $file->shouldReceive('getPackageId')->andReturns(1);
+        $file->shouldReceive('getReleaseId')->andReturns(3);
 
-        $webDAVFile->shouldReceive('getFile')->andReturns($file);
-
-        $webDAVFile->shouldReceive('isActive')->andReturns(true);
-
-        $webDAVFile->shouldReceive('userCanDownload')->andReturns(true);
-
-        $webDAVFile->shouldReceive('fileExists')->andReturns(true);
-
-        $webDAVFile->shouldReceive('getPackageId')->andReturns(1);
-        $webDAVFile->shouldReceive('getReleaseId')->andReturns(3);
         $package = \Mockery::spy(\WebDAVFRSPackage::class);
         $package->shouldReceive('getPackageID')->andReturns(2);
         $webDAVFRSRelease->shouldReceive('getPackage')->andReturns($package);
         $webDAVFRSRelease->shouldReceive('getReleaseId')->andReturns(3);
-        $webDAVFRSRelease->shouldReceive('getWebDAVFRSFile')->andReturns($webDAVFile);
         $webDAVFRSRelease->shouldReceive('getFileIdFromName')->with('fileName')->andReturns(1);
         $webDAVFRSRelease->shouldReceive('getFRSFileFromId')->andReturn($file);
 
         $user = Mockery::mock(PFUser::class);
         $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
 
-        $this->expectException('Sabre_DAV_Exception_FileNotFound');
+        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -212,30 +209,25 @@ class WebDAVFRSReleaseTest extends TestCase
     public function testGetChildFailureWithNotBelongToRelease(): void
     {
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFile = \Mockery::spy(\WebDAVFRSFile::class);
+
         $file = \Mockery::spy(\FRSFile::class);
-        $webDAVFile->shouldReceive('getFile')->andReturns($file);
+        $file->shouldReceive('isActive')->andReturns(true);
+        $file->shouldReceive('userCanDownload')->andReturns(true);
+        $file->shouldReceive('fileExists')->andReturns(true);
+        $file->shouldReceive('getPackageId')->andReturns(1);
+        $file->shouldReceive('getReleaseId')->andReturns(2);
 
-        $webDAVFile->shouldReceive('isActive')->andReturns(true);
-
-        $webDAVFile->shouldReceive('userCanDownload')->andReturns(true);
-
-        $webDAVFile->shouldReceive('fileExists')->andReturns(true);
-
-        $webDAVFile->shouldReceive('getPackageId')->andReturns(1);
-        $webDAVFile->shouldReceive('getReleaseId')->andReturns(2);
         $package = \Mockery::spy(\WebDAVFRSPackage::class);
         $package->shouldReceive('getPackageID')->andReturns(1);
         $webDAVFRSRelease->shouldReceive('getPackage')->andReturns($package);
         $webDAVFRSRelease->shouldReceive('getReleaseId')->andReturns(3);
-        $webDAVFRSRelease->shouldReceive('getWebDAVFRSFile')->andReturns($webDAVFile);
         $webDAVFRSRelease->shouldReceive('getFileIdFromName')->with('fileName')->andReturns(1);
         $webDAVFRSRelease->shouldReceive('getFRSFileFromId')->andReturn($file);
 
         $user = Mockery::mock(PFUser::class);
         $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
 
-        $this->expectException('Sabre_DAV_Exception_FileNotFound');
+        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
@@ -246,69 +238,59 @@ class WebDAVFRSReleaseTest extends TestCase
     public function testGetChildFailureWithBigFile(): void
     {
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFile = \Mockery::spy(\WebDAVFRSFile::class);
+
         $file = \Mockery::spy(\FRSFile::class);
-        $webDAVFile->shouldReceive('getFile')->andReturns($file);
+        $file->shouldReceive('getFile')->andReturns($file);
+        $file->shouldReceive('isActive')->andReturns(true);
+        $file->shouldReceive('userCanDownload')->andReturns(true);
+        $file->shouldReceive('fileExists')->andReturns(true);
+        $file->shouldReceive('getPackageId')->andReturns(1);
+        $file->shouldReceive('getReleaseId')->andReturns(2);
+        $file->shouldReceive('getFileSize')->andReturns(65);
 
-        $webDAVFile->shouldReceive('isActive')->andReturns(true);
-
-        $webDAVFile->shouldReceive('userCanDownload')->andReturns(true);
-
-        $webDAVFile->shouldReceive('fileExists')->andReturns(true);
-
-        $webDAVFile->shouldReceive('getPackageId')->andReturns(1);
-        $webDAVFile->shouldReceive('getReleaseId')->andReturns(2);
         $package = \Mockery::spy(\WebDAVFRSPackage::class);
         $package->shouldReceive('getPackageID')->andReturns(1);
         $webDAVFRSRelease->shouldReceive('getPackage')->andReturns($package);
         $webDAVFRSRelease->shouldReceive('getReleaseId')->andReturns(2);
 
-        $webDAVFile->shouldReceive('getSize')->andReturns(65);
         $webDAVFRSRelease->shouldReceive('getMaxFileSize')->andReturns(64);
-        $webDAVFRSRelease->shouldReceive('getWebDAVFRSFile')->andReturns($webDAVFile);
         $webDAVFRSRelease->shouldReceive('getFileIdFromName')->with('fileName')->andReturns(1);
         $webDAVFRSRelease->shouldReceive('getFRSFileFromId')->andReturn($file);
 
         $user = Mockery::mock(PFUser::class);
         $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
 
-        $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
+        $this->expectException(Sabre_DAV_Exception_RequestedRangeNotSatisfiable::class);
 
         $webDAVFRSRelease->getChild('fileName');
     }
 
     /**
-     * Testing when GetChild succeede
+     * Testing when GetChild succeed
      */
-    public function testGetChildSucceede(): void
+    public function testGetChildSucceed(): void
     {
-        $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFile = \Mockery::spy(\WebDAVFRSFile::class);
+        $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class, [$this->user, $this->project, null, null, 1000])->makePartial()->shouldAllowMockingProtectedMethods();
+
         $file = \Mockery::spy(\FRSFile::class);
-        $webDAVFile->shouldReceive('getFile')->andReturns($file);
+        $file->shouldReceive('isActive')->andReturns(true);
+        $file->shouldReceive('userCanDownload')->andReturns(true);
+        $file->shouldReceive('fileExists')->andReturns(true);
+        $file->shouldReceive('getPackageId')->andReturns(1);
+        $file->shouldReceive('getReleaseId')->andReturns(2);
+        $file->shouldReceive('getFileSize')->andReturns(64);
 
-        $webDAVFile->shouldReceive('isActive')->andReturns(true);
-
-        $webDAVFile->shouldReceive('userCanDownload')->andReturns(true);
-
-        $webDAVFile->shouldReceive('fileExists')->andReturns(true);
-
-        $webDAVFile->shouldReceive('getPackageId')->andReturns(1);
-        $webDAVFile->shouldReceive('getReleaseId')->andReturns(2);
         $package = \Mockery::spy(\WebDAVFRSPackage::class);
         $package->shouldReceive('getPackageID')->andReturns(1);
         $webDAVFRSRelease->shouldReceive('getPackage')->andReturns($package);
         $webDAVFRSRelease->shouldReceive('getReleaseId')->andReturns(2);
 
-        $webDAVFile->shouldReceive('getSize')->andReturns(64);
-        $webDAVFRSRelease->shouldReceive('getMaxFileSize')->andReturns(64);
-        $webDAVFRSRelease->shouldReceive('getWebDAVFRSFile')->andReturns($webDAVFile);
         $webDAVFRSRelease->shouldReceive('getFileIdFromName')->with('fileName')->andReturns(1);
         $webDAVFRSRelease->shouldReceive('getFRSFileFromId')->andReturn($file);
 
-        $user = Mockery::mock(PFUser::class);
-        $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
+        $webDAVFRSRelease->shouldReceive('getUtils')->andReturn($this->utils);
 
+        $webDAVFile = new \WebDAVFRSFile($this->user, $this->project, $file, $this->utils);
         $this->assertEquals($webDAVFile, $webDAVFRSRelease->getChild('fileName'));
     }
 
