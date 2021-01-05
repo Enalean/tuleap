@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`blackfire insertBlackfire insert an iframe 1`] = `
+<body>
+  <a
+    href="https://blackfire-url.example.com/graph"
+  />
+  <br />
+  <iframe
+    allowfullscreen=""
+    height="650"
+    referrerpolicy="same-origin"
+    sandbox="allow-scripts allow-same-origin"
+    src="https://blackfire-url.example.com/embed"
+    width="100%"
+  />
+</body>
+`;
