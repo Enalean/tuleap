@@ -69,7 +69,6 @@ class CrossReferenceDocmanOrganizer
             }
 
             $by_nature_organizer->moveCrossReferenceToSection(
-                $project,
                 $this->addTitleBadgeOnCrossReference($cross_reference_presenter, $item),
                 CrossReferenceSectionPresenter::UNLABELLED
             );

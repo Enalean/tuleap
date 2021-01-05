@@ -64,7 +64,6 @@ class CrossReferenceWikiOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $project,
             $cross_reference_presenter,
             CrossReferenceSectionPresenter::UNLABELLED,
         );

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Reference;
 
-use Project;
+use ProjectManager;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Project\ProjectAccessChecker;
 
@@ -50,16 +50,22 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
      * @var ProjectAccessChecker
      */
     private $project_access_checker;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
 
     /**
      * @param CrossReferencePresenter[] $cross_reference_presenters
      */
     public function __construct(
+        ProjectManager $project_manager,
         ProjectAccessChecker $project_access_checker,
         array $cross_reference_presenters,
         NatureCollection $available_nature_collection,
         \PFUser $current_user
     ) {
+        $this->project_manager             = $project_manager;
         $this->project_access_checker      = $project_access_checker;
         $this->cross_reference_presenters  = $cross_reference_presenters;
         $this->available_nature_collection = $available_nature_collection;
@@ -89,17 +95,9 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
     }
 
     public function moveCrossReferenceToSection(
-        Project $project,
         CrossReferencePresenter $cross_reference_presenter,
         string $section_label
     ): void {
-        try {
-            $this->project_access_checker->checkUserCanAccessProject($this->getCurrentUser(), $project);
-        } catch (\Project_AccessException $e) {
-            $this->removeUnreadableCrossReference($cross_reference_presenter);
-            return;
-        }
-
         foreach ($this->cross_reference_presenters as $key => $xref) {
             if ($xref->id !== $cross_reference_presenter->id) {
                 continue;
@@ -187,6 +185,13 @@ class CrossReferenceByNatureOrganizer implements Dispatchable
         CrossReferencePresenter $cross_reference_presenter,
         string $section_label
     ): void {
+        $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
+        try {
+            $this->project_access_checker->checkUserCanAccessProject($this->getCurrentUser(), $project);
+        } catch (\Project_AccessException $e) {
+            return;
+        }
+
         $nature_identifier = $cross_reference_presenter->type;
         if ($this->doWeAlreadyHaveNaturePresenter($nature_identifier)) {
             $this->addCrossReferencePresenterToExistingNaturePresenter(

@@ -86,7 +86,6 @@ class CrossReferenceCvsOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $project,
             $this->getCvsCrossReferencePresenter(
                 $cross_reference_presenter,
                 $commit_row,

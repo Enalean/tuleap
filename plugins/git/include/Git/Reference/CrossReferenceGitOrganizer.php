@@ -97,7 +97,6 @@ final class CrossReferenceGitOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $project,
             $this->cross_reference_git_enhancer->getCrossReferencePresenterWithCommitInformation(
                 $cross_reference_presenter,
                 $commit,

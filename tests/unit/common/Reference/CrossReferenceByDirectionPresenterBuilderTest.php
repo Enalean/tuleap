@@ -60,11 +60,13 @@ class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
         $this->reference_manager = Mockery::mock(\ReferenceManager::class);
         $this->factory           = Mockery::mock(CrossReferencePresenterFactory::class);
         $this->core_organizer    = Mockery::mock(CrossReferenceByNatureInCoreOrganizer::class);
+        $project_manager         = Mockery::mock(\ProjectManager::class);
 
         $this->builder = new CrossReferenceByDirectionPresenterBuilder(
             $this->event_dispatcher,
             $this->reference_manager,
             $this->factory,
+            $project_manager,
             Mockery::mock(ProjectAccessChecker::class),
             $this->core_organizer,
         );

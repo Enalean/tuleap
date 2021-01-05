@@ -358,6 +358,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                     new CrossReferencesDao(),
                     new InstanceBaseURLBuilder()
                 ),
+                ProjectManager::instance(),
                 new ProjectAccessChecker(
                     PermissionsOverrider_PermissionsOverriderManager::instance(),
                     new RestrictedUserCanAccessProjectVerifier(),
@@ -378,8 +379,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                     new CrossReferenceFRSOrganizer(
                         new FRSPackageFactory(),
                         new FRSReleaseFactory(),
-                        new FRSFileFactory(),
-                        ProjectManager::instance()
+                        new FRSFileFactory()
                     ),
                     new CrossReferenceForumOrganizer(
                         ProjectManager::instance(),
@@ -389,7 +389,6 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                         )
                     ),
                     new CrossReferenceNewsOrganizer(
-                        ProjectManager::instance(),
                         new NewsRetriever(
                             new NewsDao(),
                         )

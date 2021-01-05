@@ -2437,7 +2437,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $by_nature_organizer): void
     {
         $tracker_organizer = new CrossReferenceArtifactOrganizer(
-            ProjectManager::instance(),
             Tracker_ArtifactFactory::instance(),
         );
 

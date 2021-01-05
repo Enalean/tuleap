@@ -46,17 +46,23 @@ class CrossReferenceByDirectionPresenterBuilder
      * @var CrossReferenceByNatureInCoreOrganizer
      */
     private $in_core_organizer;
+    /**
+     * @var \ProjectManager
+     */
+    private $project_manager;
 
     public function __construct(
         EventDispatcherInterface $event_dispatcher,
         \ReferenceManager $reference_manager,
         CrossReferencePresenterFactory $factory,
+        \ProjectManager $project_manager,
         ProjectAccessChecker $project_access_checker,
         CrossReferenceByNatureInCoreOrganizer $in_core_organizer
     ) {
         $this->event_dispatcher       = $event_dispatcher;
         $this->reference_manager      = $reference_manager;
         $this->factory                = $factory;
+        $this->project_manager        = $project_manager;
         $this->project_access_checker = $project_access_checker;
         $this->in_core_organizer      = $in_core_organizer;
     }
@@ -89,6 +95,7 @@ class CrossReferenceByDirectionPresenterBuilder
     ): array {
         $organizer = $this->event_dispatcher->dispatch(
             new CrossReferenceByNatureOrganizer(
+                $this->project_manager,
                 $this->project_access_checker,
                 $cross_references,
                 $available_nature_collection,

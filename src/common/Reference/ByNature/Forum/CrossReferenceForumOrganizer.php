@@ -60,8 +60,6 @@ class CrossReferenceForumOrganizer
         CrossReferencePresenter $cross_reference_presenter,
         CrossReferenceByNatureOrganizer $by_nature_organizer
     ): void {
-        $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
-
         try {
             $message = $this->message_retriever->getMessage((int) $cross_reference_presenter->target_value);
         } catch (PermissionToAccessForumException | MessageNotFoundException $e) {
@@ -71,7 +69,6 @@ class CrossReferenceForumOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $project,
             $cross_reference_presenter->withTitle($message->getSubject(), null),
             CrossReferenceSectionPresenter::UNLABELLED,
         );
@@ -95,7 +92,6 @@ class CrossReferenceForumOrganizer
         }
 
         $by_nature_organizer->moveCrossReferenceToSection(
-            $project,
             $cross_reference_presenter->withTitle($forum->getName(), null),
             CrossReferenceSectionPresenter::UNLABELLED,
         );

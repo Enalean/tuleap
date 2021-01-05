@@ -297,7 +297,6 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
-                $project,
                 $a_ref,
                 'thenightwatch/winter-is-coming'
             )
@@ -306,7 +305,6 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
             ->with(
-                $another_project,
                 $another_ref,
                 'foodstocks/winter-is-coming'
             )
