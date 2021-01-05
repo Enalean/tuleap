@@ -23,6 +23,7 @@ namespace Tuleap\TestManagement\Step;
 use Codendi_HTMLPurifier;
 use Project;
 use Tracker_Artifact_ChangesetValue_Text;
+use Tuleap\Markdown\CommonMarkInterpreter;
 
 class StepPresenter
 {
@@ -82,8 +83,12 @@ class StepPresenter
     private function getPurifiedText(string $text, string $format, Project $project): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
+
         if ($format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
             return $purifier->purifyHTMLWithReferences($text, $project->getID());
+        } elseif ($format === Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT) {
+            $content_interpreter = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
+            return $content_interpreter->getInterpretedContentWithReferences($text, (int) $project->getGroupId());
         }
 
         return $purifier->purifyTextWithReferences($text, $project->getID());
