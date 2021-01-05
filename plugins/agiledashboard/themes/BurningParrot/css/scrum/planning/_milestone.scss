@@ -19,7 +19,11 @@
 
 .milestone {
     margin: 0 0 $tlp-small-spacing;
+    border: 1px solid var(--project-color-border, $tlp-ui-border-normal);
+    background: var(--project-color-background-gradient-light, $tlp-ui-white);
 }
+
+$border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-white, 2%));
 
 .milestone-header {
     display: flex;
@@ -28,19 +32,23 @@
     top: 44px;
     align-items: center;
     transition: background .1s linear;
-    border-bottom: 1px solid darken($tlp-ui-white, 2%);
-    background: $tlp-ui-white;
-    color: $tlp-ui-dimmed;
+    border-bottom: $border-element-separator;
+    color: var(--project-color, $tlp-ui-dimmed);
     cursor: pointer;
 
     &:hover {
         transition: background .1s linear;
-        background: darken($tlp-ui-white, 2%);
+        background: var(--project-color-background-gradient-light-hover, darken($tlp-ui-white, 2%));
     }
+}
+
+.collapsed .milestone-header {
+    border-bottom: 0;
 }
 
 .milestone-header-label {
     flex: 0 0 auto;
+    color: var(--project-color, $tlp-ui-dimmed);
 }
 
 .milestone-action-button {
@@ -61,7 +69,7 @@
 }
 
 .milestone-header-dates {
-    color: $tlp-ui-dimmed;
+    color: var(--project-color, $tlp-ui-dimmed);
     font-size: 12px;
 }
 
@@ -73,7 +81,8 @@
     display: flex;
     align-items: center;
     padding: $tlp-small-spacing $tlp-medium-spacing;
-    background: darken($tlp-ui-white, 2%);
+    border-bottom: $border-element-separator;
+    background: var(--project-color-background-gradient, darken($tlp-ui-white, 2%));
 }
 
 .milestone-info-badge {
@@ -111,6 +120,7 @@
 
 .milestone-content {
     position: relative;
+    background: var(--project-color-background-gradient, $tlp-ui-white);
 }
 
 .milestone-backlog-items {
@@ -131,10 +141,6 @@
 
 .milestone-content-loading {
     @extend %loader;
-}
-
-.external-milestone-pane {
-    border: 1px dashed rgba($tlp-ui-dimmed, .6);
 }
 
 .external-milestone {
