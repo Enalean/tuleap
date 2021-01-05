@@ -53,20 +53,26 @@ class CrossReferenceGitOrganizerTest extends TestCase
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceGitEnhancer
      */
-    private $filler;
+    private $enhancer;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitDetailsRetriever
+     */
+    private $details_retriever;
 
     protected function setUp(): void
     {
         $this->project_manager       = Mockery::mock(\ProjectManager::class);
         $this->git_reference_manager = Mockery::mock(\Git_ReferenceManager::class);
         $this->commit_provider       = Mockery::mock(CommitProvider::class);
-        $this->filler                = Mockery::mock(CrossReferenceGitEnhancer::class);
+        $this->enhancer              = Mockery::mock(CrossReferenceGitEnhancer::class);
+        $this->details_retriever     = Mockery::mock(CommitDetailsRetriever::class);
 
         $this->organizer = new CrossReferenceGitOrganizer(
             $this->project_manager,
             $this->git_reference_manager,
             $this->commit_provider,
-            $this->filler,
+            $this->enhancer,
+            $this->details_retriever,
         );
     }
 
@@ -77,7 +83,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCurrentUser'     => $user,
+                    'getCurrentUser'              => $user,
                     'getCrossReferencePresenters' => [
                         CrossReferencePresenterBuilder::get(1)->withType('tracker')->build(),
                     ]
@@ -111,7 +117,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
-                    'getCurrentUser'     => $user,
+                    'getCurrentUser'              => $user,
                     'getCrossReferencePresenters' => [$a_ref],
                 ]
             )->getMock();
@@ -177,26 +183,61 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->shouldReceive(
                 [
                     'getCrossReferencePresenters' => [$a_ref, $another_ref],
-                    'getCurrentUser'     => $user,
+                    'getCurrentUser'              => $user,
                 ]
             )->getMock();
 
-        $commit = Mockery::mock(Commit::class);
+        $a_commit = Mockery::mock(Commit::class);
         $this->commit_provider
             ->shouldReceive('getCommit')
-            ->andReturn($commit);
+            ->with($repository, '1a2b3c4d5e')
+            ->andReturn($a_commit);
+
+        $another_commit = Mockery::mock(Commit::class);
+        $this->commit_provider
+            ->shouldReceive('getCommit')
+            ->with($another_repository, 'e5d4c3b2a1')
+            ->andReturn($another_commit);
+
+        $a_commit_details = new CommitDetails(
+            '1a2b3c4d5e6f7g8h9i',
+            'Add foo to stuff',
+            '',
+            '',
+            null,
+            'John Doe',
+            1234567890
+        );
+        $this->details_retriever
+            ->shouldReceive('retrieveCommitDetails')
+            ->with($repository, $a_commit)
+            ->andReturn($a_commit_details);
+
+        $another_commit_details = new CommitDetails(
+            'e5d4c3b2a16f7g8h9i',
+            'Another bites the dust',
+            '',
+            '',
+            null,
+            'John Doe',
+            1234567890
+        );
+        $this->details_retriever
+            ->shouldReceive('retrieveCommitDetails')
+            ->with($another_repository, $another_commit)
+            ->andReturn($another_commit_details);
 
         $augmented_a_ref = $a_ref->withTitle("A ref", null);
-        $this->filler
+        $this->enhancer
             ->shouldReceive('getCrossReferencePresenterWithCommitInformation')
-            ->with($a_ref, $commit, $repository, $user)
+            ->with($a_ref, $a_commit_details, $user)
             ->once()
             ->andReturn($augmented_a_ref);
 
         $augmented_another_ref = $another_ref->withTitle("Another ref", null);
-        $this->filler
+        $this->enhancer
             ->shouldReceive('getCrossReferencePresenterWithCommitInformation')
-            ->with($another_ref, $commit, $another_repository, $user)
+            ->with($another_ref, $another_commit_details, $user)
             ->once()
             ->andReturn($augmented_another_ref);
 
@@ -253,7 +294,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->andReturn($commit);
 
         $augmented_another_ref = $another_ref->withTitle("Another ref", null);
-        $this->filler
+        $this->enhancer
             ->shouldReceive('getCrossReferencePresenterWithCommitInformation')
             ->with($another_ref, $commit, $another_repository, $user)
             ->never();
@@ -262,7 +303,7 @@ class CrossReferenceGitOrganizerTest extends TestCase
             ->shouldReceive(
                 [
                     'getCrossReferencePresenters' => [$another_ref],
-                    'getCurrentUser'     => $user,
+                    'getCurrentUser'              => $user,
                 ]
             )->getMock();
 

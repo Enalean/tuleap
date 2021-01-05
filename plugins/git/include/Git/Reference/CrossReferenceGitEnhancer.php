@@ -22,10 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Reference;
 
-use GitRepository;
 use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
-use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Reference\Metadata\CreatedByPresenter;
@@ -40,29 +38,20 @@ class CrossReferenceGitEnhancer
      * @var TlpRelativeDatePresenterBuilder
      */
     private $relative_date_builder;
-    /**
-     * @var CommitDetailsRetriever
-     */
-    private $commit_details_retriever;
 
     public function __construct(
-        CommitDetailsRetriever $commit_details_retriever,
         \UserHelper $user_helper,
         TlpRelativeDatePresenterBuilder $relative_date_builder
     ) {
-        $this->commit_details_retriever = $commit_details_retriever;
-        $this->user_helper              = $user_helper;
-        $this->relative_date_builder    = $relative_date_builder;
+        $this->user_helper           = $user_helper;
+        $this->relative_date_builder = $relative_date_builder;
     }
 
     public function getCrossReferencePresenterWithCommitInformation(
         CrossReferencePresenter $basic_cross_reference_presenter,
-        Commit $commit,
-        GitRepository $repository,
+        CommitDetails $commit_details,
         \PFUser $user
     ): CrossReferencePresenter {
-        $commit_details = $this->commit_details_retriever->retrieveCommitDetails($repository, $commit);
-
         $git_commit_reference = $basic_cross_reference_presenter
             ->withTitle($commit_details->getTitle(), null)
             ->withAdditionalBadges($this->getAdditionalBadgesPresenters($commit_details));
