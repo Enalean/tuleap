@@ -26,6 +26,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
 use Tracker_URLVerification;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -195,7 +196,9 @@ class ReportsResource extends AuthenticatedResource
             new ChangesetRepresentationBuilder(
                 UserManager::instance(),
                 $form_element_factory,
-                new CommentRepresentationBuilder()
+                new CommentRepresentationBuilder(
+                    CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
+                )
             )
         );
 

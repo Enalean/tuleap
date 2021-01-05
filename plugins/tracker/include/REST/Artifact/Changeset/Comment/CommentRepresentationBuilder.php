@@ -22,21 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 
+use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Tracker\Artifact\Changeset\Followup\InvalidCommentFormatException;
 
 class CommentRepresentationBuilder
 {
     /**
+     * @var ContentInterpretor
+     */
+    private $interpreter;
+
+    public function __construct(ContentInterpretor $interpreter)
+    {
+        $this->interpreter = $interpreter;
+    }
+
+    /**
      * @throws InvalidCommentFormatException
      */
-    public function buildRepresentation(\Tracker_Artifact_Changeset_Comment $comment): ChangesetCommentRepresentation
+    public function buildRepresentation(\Tracker_Artifact_Changeset_Comment $comment): CommentRepresentation
     {
         $format = $comment->bodyFormat;
         if (
             $format === \Tracker_Artifact_Changeset_Comment::HTML_COMMENT
             || $format === \Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
         ) {
-            return new ChangesetCommentRepresentation($comment->body, $comment->getPurifiedBodyForHTML(), $format);
+            return new HTMLOrTextCommentRepresentation($comment->body, $comment->getPurifiedBodyForHTML(), $format);
+        }
+        if ($format === \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT) {
+            $interpreted = $this->interpreter->getInterpretedContentWithReferences(
+                $comment->body,
+                (int) $comment->changeset->getArtifact()->getTracker()->getGroupId()
+            );
+            return new CommonMarkCommentRepresentation($interpreted, $comment->body);
         }
 
         throw new InvalidCommentFormatException($format);
