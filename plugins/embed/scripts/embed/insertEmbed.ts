@@ -18,9 +18,12 @@
  */
 
 import { insertFigma, figma_pattern } from "./widget/figma";
+import { blackfire_pattern, insertBlackfire } from "./widget/blackfire";
 
 export default function insertEmbed(link: HTMLAnchorElement): void {
     if (link.href.match(figma_pattern)) {
         insertFigma(link);
+    } else if (link.href.match(blackfire_pattern)) {
+        insertBlackfire(link);
     }
 }
