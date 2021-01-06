@@ -175,7 +175,7 @@ class Tracker_FormElement_View_Admin
                 'This field is shared from tracker <a href="%s">%s</a> from project %s'
             ),
             $originalEditUrl,
-            $originalTrackerName,
+            $hp->purify($originalTrackerName),
             $hp->purify($originalProjectName)
         );
         $html .= '</span>';
@@ -335,9 +335,10 @@ class Tracker_FormElement_View_Admin
 
     public function fetchAdminButton($name)
     {
+        $purifier = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= '<p>';
-        $html .= '<input type="submit" name="' . $name . '" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+        $html .= '<input type="submit" name="' . $purifier->purify($name) . '" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
         $html .= '</p>';
         return $html;
     }
@@ -365,7 +366,7 @@ class Tracker_FormElement_View_Admin
         return $html;
     }
 
-    public function fetchSharedUsage()
+    public function fetchSharedUsage(): string
     {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -374,7 +375,7 @@ class Tracker_FormElement_View_Admin
             $trackers = [];
             foreach ($fields as $field) {
                 $t = $field->getTracker();
-                $trackers[$t->getId()] = '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $t->getId() . '&func=admin-formElements">' . $t->getName() . ' (' . $hp->purify($t->getProject()->getPublicName()) . ')</a>';
+                $trackers[$t->getId()] = '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $hp->purify(urlencode((string) $t->getId())) . '&func=admin-formElements">' . $hp->purify($t->getName()) . ' (' . $hp->purify($t->getProject()->getPublicName()) . ')</a>';
             }
             $html .= dgettext('tuleap-tracker', 'This field is used by the following trackers:');
             $html .= '<ul><li>';
