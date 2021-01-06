@@ -152,9 +152,6 @@ msgstr "Démarrer un nouveau projet"
 msgid "Start my project"
 msgstr "Créer mon projet"
 
-msgid "Switch to legacy UI"
-msgstr "Basculer sur l'ancienne interface"
-
 msgid ""
 "The project template you will select provides pre-configured tools. Don’t "
 "worry,\n"

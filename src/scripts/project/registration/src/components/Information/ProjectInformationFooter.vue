@@ -21,7 +21,6 @@
 <template>
     <div class="project-registration-button-container">
         <div class="project-registration-content">
-            <back-to-legacy />
             <div>
                 <router-link
                     to="/new"
@@ -50,9 +49,8 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
-import BackToLegacy from "../Layout/BackToLegacy.vue";
 
-@Component({ components: { BackToLegacy } })
+@Component({})
 export default class ProjectInformationFooter extends Vue {
     @State
     is_creating_project!: boolean;
