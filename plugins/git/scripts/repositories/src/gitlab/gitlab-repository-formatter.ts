@@ -16,29 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
+import { GitLabRepository, FormattedGitLabRepository } from "../type";
 
-export function formatRepository(repository) {
-    let repository_formatted = {};
-
+export function formatRepository(repository: GitLabRepository): FormattedGitLabRepository {
     const label = extractLabelFromName(repository.name);
 
-    repository_formatted.id = "gitlab_" + repository.id;
-    repository_formatted.integration_id = repository.id;
-    repository_formatted.description = repository.description;
-    repository_formatted.label = label;
-    repository_formatted.last_update_date = repository.last_push_date;
-    repository_formatted.normalized_path = repository.name;
-    repository_formatted.additional_information = [];
-    repository_formatted.path_without_project = extractPathWithoutProject(repository.name, label);
-    repository_formatted.gitlab_data = {
-        full_url: repository.full_url,
-        gitlab_id: repository.gitlab_id,
+    return {
+        id: "gitlab_" + repository.id,
+        integration_id: repository.id,
+        description: repository.description,
+        label: label,
+        last_update_date: repository.last_push_date,
+        normalized_path: repository.name,
+        additional_information: [],
+        path_without_project: extractPathWithoutProject(repository.name, label),
+        gitlab_data: {
+            full_url: repository.full_url,
+            gitlab_id: repository.gitlab_id,
+        },
     };
-
-    return repository_formatted;
 }
 
-function extractLabelFromName(repository_name) {
+function extractLabelFromName(repository_name: string): string {
     if (repository_name.lastIndexOf("/") === -1) {
         return repository_name;
     }
@@ -46,7 +45,7 @@ function extractLabelFromName(repository_name) {
     return repository_name.substr(repository_name.lastIndexOf("/") + 1);
 }
 
-function extractPathWithoutProject(repository_name, label) {
+function extractPathWithoutProject(repository_name: string, label: string): string {
     if (repository_name === label) {
         return "";
     }
