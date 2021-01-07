@@ -71,7 +71,7 @@ build:
 	cd /build/src/src/ && npm install --no-audit && \
 	cd /build/src/src/scripts/lib/date-helper && npm install --no-audit && npm run build && \
 	cd /build/src/src/scripts/lib/filter-table && npm install --no-audit && npm run build && \
-	cd /build/src/src/scripts/list-picker/ && npm install --no-audit && npm run build && \
+	cd /build/src/src/scripts/lib/list-picker/ && npm install --no-audit && npm run build && \
 	cd /build/src/src/themes/BurningParrot/ && npm install --no-audit && \
 	cd /build/src/src/themes/tlp/ && npm install --no-audit && \
 	cd /build/src/src/ && npm run build && \
