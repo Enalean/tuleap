@@ -17,3 +17,6 @@ msgstr "Affiche la feuille de route du projet en tant que widget"
 
 msgid "Roadmap"
 msgstr "Feuille de route"
+
+msgid "Tracker id"
+msgstr "Identifiant de l'outil de suivi"
