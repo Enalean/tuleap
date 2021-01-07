@@ -53,10 +53,11 @@ if (user_isloggedin() && user_ismember($group_id)) {
     $public_flag = '=1';
 }
 
-$sql = "SELECT g.group_forum_id,g.forum_name, g.description, famc.count as total
-    FROM forum_group_list g
-    LEFT JOIN forum_agg_msg_count famc USING (group_forum_id)
-    WHERE g.group_id='" . db_ei($group_id) . "' AND g.is_public $public_flag;";
+$sql = "SELECT forum_group_list.group_forum_id, forum_group_list.forum_name, forum_group_list.description, COUNT(forum.msg_id) as total
+    FROM forum_group_list
+    LEFT JOIN forum ON forum_group_list.group_forum_id = forum.group_forum_id
+    WHERE forum_group_list.group_id='" . db_ei($group_id) . "' AND forum_group_list.is_public $public_flag
+    GROUP BY forum_group_list.group_forum_id;";
 
 $result = db_query($sql);
 
@@ -94,7 +95,8 @@ for ($j = 0; $j < $rows; $j++) {
         '&nbsp;' .
         $purifier->purify(html_entity_decode(db_result($result, $j, 'forum_name'))) . '</A> ';
     //message count
-    echo '(' . $purifier->purify((db_result($result, $j, 'total')) ? db_result($result, $j, 'total') : '0') . ' msgs)';
+    $total_msg = (int) db_result($result, $j, 'total');
+    echo '(' . $purifier->purify(sprintf(dngettext('tuleap-core', '%d message', '%d messages', $total_msg), $total_msg)) . ')';
     echo "<BR>\n";
     echo $purifier->purify(html_entity_decode(db_result($result, $j, 'description'))) . '<P>';
 }

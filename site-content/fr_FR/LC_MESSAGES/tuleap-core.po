@@ -38,6 +38,12 @@ msgstr[0] "%d membre"
 msgstr[1] "%d membres"
 
 #, php-format
+msgid "%d message"
+msgid_plural "%d messages"
+msgstr[0] "%d message"
+msgstr[1] "%d messages"
+
+#, php-format
 msgid "%s (opens in a new tab)"
 msgstr "%s (s'ouvre dans un nouvel onglet)"
 
