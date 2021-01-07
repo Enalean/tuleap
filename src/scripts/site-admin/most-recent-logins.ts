@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -22,7 +22,7 @@ import { filterInlineTable } from "@tuleap/filter-inline-table";
 document.addEventListener("DOMContentLoaded", () => {
     const filter = document.getElementById("most-recent-logins-filter");
 
-    if (filter) {
+    if (filter && filter instanceof HTMLInputElement) {
         filterInlineTable(filter);
     }
 });
