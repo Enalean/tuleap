@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { get, post } from "../../../src/themes/tlp/src/js/fetch-wrapper";
+import { get, post } from "@tuleap/tlp-fetch";
 import { setupContactSupportModalFlamingParrot } from "./setup-contact-support-modal";
 import { contactSupportModalShown } from "./modal";
 

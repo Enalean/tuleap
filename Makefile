@@ -44,6 +44,7 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 .PHONY: build
 build:
 	cd /build/src && CYPRESS_INSTALL_BINARY=0 npm install --no-audit && \
+	cd /build/src/src/scripts/lib/tlp-fetch/ && npm install --no-audit && npm run build && \
 	cd /build/src/plugins/mytuleap_contact_support && npm install && npm run build && \
 	cd /build/src/plugins/mytuleap_contact_support && scl enable php73 'composer install --classmap-authoritative --no-dev --no-interaction --no-scripts'
 
