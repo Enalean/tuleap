@@ -19,9 +19,9 @@
  */
 
 import moment from "moment";
-import phptomoment from "phptomoment";
 import "moment-timezone";
 import "moment/locale/fr";
+import { formatFromPhpToMoment } from "@tuleap/date-helper";
 
 let time_zone = "CET";
 let format = "d/m/Y H:i";
@@ -31,7 +31,7 @@ export default {
         const locale = preferences.user_locale.replace(/_/g, "-");
         moment.locale(locale);
         time_zone = preferences.user_timezone;
-        format = phptomoment(preferences.format);
+        format = formatFromPhpToMoment(preferences.format);
     },
 
     format(date) {
