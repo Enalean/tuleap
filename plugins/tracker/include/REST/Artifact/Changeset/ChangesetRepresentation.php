@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\Changeset;
 
 use Tuleap\REST\JsonCast;
-use Tuleap\Tracker\REST\Artifact\Changeset\Comment\ChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
@@ -59,7 +59,7 @@ final class ChangesetRepresentation
     public $email;
 
     /**
-     * @var ChangesetCommentRepresentation | null Comment set by submitter (last version of the comment if several)
+     * @var CommentRepresentation | null Comment set by submitter (last version of the comment if several)
      */
     public $last_comment;
 
@@ -84,7 +84,7 @@ final class ChangesetRepresentation
         ?MinimalUserRepresentation $submitted_by_details,
         int $submitted_on,
         ?string $email,
-        ChangesetCommentRepresentation $last_comment,
+        CommentRepresentation $last_comment,
         array $values,
         ?MinimalUserRepresentation $last_modified_by,
         int $last_modified_date

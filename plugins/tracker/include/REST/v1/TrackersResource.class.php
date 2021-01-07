@@ -37,6 +37,7 @@ use TrackerFactory;
 use TransitionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -472,7 +473,9 @@ class TrackersResource extends AuthenticatedResource
             new ChangesetRepresentationBuilder(
                 $this->user_manager,
                 $this->formelement_factory,
-                new CommentRepresentationBuilder()
+                new CommentRepresentationBuilder(
+                    CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
+                )
             )
         );
 

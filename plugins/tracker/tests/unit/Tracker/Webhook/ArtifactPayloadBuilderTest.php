@@ -24,7 +24,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
-use Tuleap\Tracker\REST\Artifact\Changeset\Comment\ChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\Artifact\Changeset\Comment\HTMLOrTextCommentRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class ArtifactPayloadBuilderTest extends TestCase
@@ -81,7 +81,7 @@ final class ArtifactPayloadBuilderTest extends TestCase
 
     private function buildChangesetRepresentation(\PFUser $user): ChangesetRepresentation
     {
-        $comment_representation = new ChangesetCommentRepresentation('last comment', 'last comment', 'text');
+        $comment_representation = new HTMLOrTextCommentRepresentation('last comment', 'last comment', 'text');
         return new ChangesetRepresentation(
             98,
             101,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2016-Present. All rights reserved
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Markdown;
+namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 
-interface ContentInterpretor
+interface CommentRepresentation
 {
-    public function getInterpretedContent(string $content): string;
-
-    public function getInterpretedContentWithReferences(string $content, int $project_id): string;
 }

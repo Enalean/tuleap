@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\Changeset;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
@@ -53,7 +54,9 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
         $this->builder              = new ChangesetRepresentationBuilder(
             $this->user_manager,
             $this->form_element_factory,
-            new CommentRepresentationBuilder()
+            new CommentRepresentationBuilder(
+                \Mockery::spy(ContentInterpretor::class)
+            )
         );
 
         \UserHelper::setInstance(\Mockery::spy(\UserHelper::class));

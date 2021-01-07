@@ -27,6 +27,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\UploadedLinksRetriever;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -176,7 +177,9 @@ final class ReleaseRepresentation
             new ChangesetRepresentationBuilder(
                 \UserManager::instance(),
                 $form_element_factory,
-                new CommentRepresentationBuilder()
+                new CommentRepresentationBuilder(
+                    CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
+                )
             )
         );
 

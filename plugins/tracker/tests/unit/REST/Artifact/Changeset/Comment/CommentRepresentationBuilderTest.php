@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact\Changeset\Comment;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Followup\InvalidCommentFormatException;
 
@@ -34,10 +35,15 @@ final class CommentRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
      * @var CommentRepresentationBuilder
      */
     private $builder;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ContentInterpretor
+     */
+    private $interpreter;
 
     protected function setUp(): void
     {
-        $this->builder = new CommentRepresentationBuilder();
+        $this->interpreter = \Mockery::spy(ContentInterpretor::class);
+        $this->builder     = new CommentRepresentationBuilder($this->interpreter);
     }
 
     public function testItBuildsTextCommentRepresentation(): void
@@ -58,6 +64,19 @@ final class CommentRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         self::assertSame('html', $representation->format);
         self::assertSame('<p>An HTML comment</p>', $representation->body);
         self::assertNotEmpty($representation->post_processed_body);
+    }
+
+    public function testItBuildsCommonMarkCommentRepresentation(): void
+    {
+        $this->interpreter->shouldReceive('getInterpretedContentWithReferences')
+            ->andReturn('<p>A <strong>CommonMark</strong> comment');
+
+        $representation = $this->builder->buildRepresentation(
+            $this->buildComment('A **CommonMark** comment', \Tracker_Artifact_Changeset_Comment::COMMONMARK_COMMENT)
+        );
+        self::assertSame('html', $representation->format);
+        self::assertSame('<p>A <strong>CommonMark</strong> comment', $representation->body);
+        self::assertSame($representation->body, $representation->post_processed_body);
     }
 
     public function testItThrowsWhenFormatIsUnknown(): void

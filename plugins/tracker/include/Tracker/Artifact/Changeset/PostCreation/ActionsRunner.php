@@ -33,6 +33,7 @@ use Tracker_GlobalNotificationDao;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
@@ -133,7 +134,9 @@ class ActionsRunner
                     new ChangesetRepresentationBuilder(
                         $user_manager,
                         $form_element_factory,
-                        new CommentRepresentationBuilder()
+                        new CommentRepresentationBuilder(
+                            CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
+                        )
                     )
                 )
             )

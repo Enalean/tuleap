@@ -52,6 +52,7 @@ use TrackerFactory;
 use TransitionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -198,7 +199,9 @@ class ArtifactsResource extends AuthenticatedResource
             new ChangesetRepresentationBuilder(
                 $this->user_manager,
                 $this->formelement_factory,
-                new CommentRepresentationBuilder()
+                new CommentRepresentationBuilder(
+                    CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
+                )
             )
         );
         $this->moved_value_builder = new MovedArtifactValueBuilder();
