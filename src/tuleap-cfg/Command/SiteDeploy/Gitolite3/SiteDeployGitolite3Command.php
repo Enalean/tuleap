@@ -21,16 +21,17 @@
 
 declare(strict_types=1);
 
-namespace TuleapCfg\Command\SiteDeploy;
+namespace TuleapCfg\Command\SiteDeploy\Gitolite3;
 
-use ForgeConfig;
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class SiteDeployImagesCommand extends Command
+final class SiteDeployGitolite3Command extends Command
 {
-    public const NAME = 'site-deploy:images';
+    public const NAME = 'site-deploy:gitolite3-config';
 
     public function __construct()
     {
@@ -39,13 +40,15 @@ final class SiteDeployImagesCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Deploy images such as logos');
+        $this->setDescription('Deploy Gitolite3 configuration files');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        ForgeConfig::loadLocalInc();
-        (new SiteDeployImages())->deploy($output);
+        (new SiteDeployGitolite3())->deploy(
+            new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL])
+        );
+
         return 0;
     }
 }

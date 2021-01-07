@@ -25,7 +25,7 @@ use Tuleap\Configuration\Apache\LogrotateDeployer;
 use Tuleap\Configuration\Etc;
 use Tuleap\Configuration\Nginx;
 use Tuleap\Configuration\Apache;
-use TuleapCfg\Command\SiteDeploy\SiteDeployFPM;
+use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPM;
 
 class PHP74CentOS
 {

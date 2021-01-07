@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace TuleapCfg\Command\SiteDeploy;
+namespace TuleapCfg\Command\SiteDeploy\Images;
 
 use ForgeConfig;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -34,9 +34,9 @@ final class SiteDeployImages
         'organization_logo_mail.png',
     ];
 
-    private const BURNING_PARROT_IMAGES_PATH = __DIR__ . '/../../../www/themes/BurningParrot/images';
+    private const BURNING_PARROT_IMAGES_PATH = __DIR__ . '/../../../../www/themes/BurningParrot/images';
 
-    private const COMMON_IMAGES_PATH = __DIR__ . '/../../../www/themes/common/images';
+    private const COMMON_IMAGES_PATH = __DIR__ . '/../../../../www/themes/common/images';
 
     /**
      * @var string

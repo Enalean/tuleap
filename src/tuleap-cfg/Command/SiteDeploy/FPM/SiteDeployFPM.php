@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace TuleapCfg\Command\SiteDeploy;
+namespace TuleapCfg\Command\SiteDeploy\FPM;
 
 use Psr\Log\LoggerInterface;
 use TuleapCfg\Command\TemplateHelper;
@@ -29,9 +29,9 @@ use TuleapCfg\Command\TemplateHelper;
 final class SiteDeployFPM
 {
     public const PHP73_DST_CONF_DIR = '/etc/opt/remi/php73';
-    public const PHP73_SRC_CONF_DIR = __DIR__ . '/../../../etc/fpm73';
+    public const PHP73_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm73';
     public const PHP74_DST_CONF_DIR = '/etc/opt/remi/php74';
-    public const PHP74_SRC_CONF_DIR = __DIR__ . '/../../../etc/fpm74';
+    public const PHP74_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm74';
 
     private const FPM_PART_ERRORS      = 'tuleap_errors.part';
     private const FPM_PART_ERRORS_PROD = 'tuleap_errors_prod.part';

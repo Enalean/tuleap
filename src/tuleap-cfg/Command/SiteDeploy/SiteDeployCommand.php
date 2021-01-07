@@ -28,6 +28,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use TuleapCfg\Command\SiteDeploy\FPM\SiteDeployFPMCommand;
 
 final class SiteDeployCommand extends Command
 {

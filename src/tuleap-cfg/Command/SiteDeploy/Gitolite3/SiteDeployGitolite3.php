@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace TuleapCfg\Command\SiteDeploy;
+namespace TuleapCfg\Command\SiteDeploy\Gitolite3;
 
 use Psr\Log\LoggerInterface;
 use Webimpress\SafeWriter\FileWriter;
@@ -72,7 +72,7 @@ final class SiteDeployGitolite3
 
     private function hasGitPlugin(): bool
     {
-        return is_dir(__DIR__ . '/../../../../plugins/git/');
+        return is_dir(__DIR__ . '/../../../../../plugins/git/');
     }
 
     private function hasGit218(): bool
@@ -82,7 +82,7 @@ final class SiteDeployGitolite3
 
     private function getExpectedGitolite3ConfigContent(): string
     {
-        $config = file_get_contents(__DIR__ . '/../../../../plugins/git/etc/gitolite3.rc.dist');
+        $config = file_get_contents(__DIR__ . '/../../../../../plugins/git/etc/gitolite3.rc.dist');
 
         $config = str_replace(
             ['# GROUPLIST_PGM', "'ssh-authkeys',"],
