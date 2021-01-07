@@ -49,13 +49,20 @@ module.exports = [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
+                ...webpack_configurator.configureTypescriptRules(
+                    webpack_configurator.babel_options_ie11
+                ),
             ],
+        },
+        resolve: {
+            extensions: [".ts", ".js"],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
+            webpack_configurator.getTypescriptCheckerPlugin(true),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {

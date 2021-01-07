@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  */
 
 import { get, put, recursiveGet } from "tlp";
+import { ArtifactsCollection, Report, Project, Tracker } from "../type";
 
 export {
     getReport,
@@ -29,12 +30,16 @@ export {
     getCSVReport,
 };
 
-async function getReport(report_id) {
+async function getReport(report_id: number): Promise<Report> {
     const response = await get("/api/v1/cross_tracker_reports/" + report_id);
     return response.json();
 }
 
-async function getReportContent(report_id, limit, offset) {
+async function getReportContent(
+    report_id: number,
+    limit: number,
+    offset: number
+): Promise<ArtifactsCollection> {
     const response = await get("/api/v1/cross_tracker_reports/" + report_id + "/content", {
         params: {
             limit,
@@ -43,10 +48,20 @@ async function getReportContent(report_id, limit, offset) {
     });
     const total = response.headers.get("X-PAGINATION-SIZE");
     const { artifacts } = await response.json();
+
+    if (!total) {
+        throw new Error("can not get report content, pagination size is not sent in headers");
+    }
     return { artifacts, total };
 }
 
-async function getQueryResult(report_id, trackers_id, expert_query, limit, offset) {
+async function getQueryResult(
+    report_id: number,
+    trackers_id: Array<number>,
+    expert_query: string,
+    limit: number,
+    offset: number
+): Promise<ArtifactsCollection> {
     const response = await get("/api/v1/cross_tracker_reports/" + report_id + "/content", {
         params: {
             limit,
@@ -55,12 +70,20 @@ async function getQueryResult(report_id, trackers_id, expert_query, limit, offse
         },
     });
     const total = response.headers.get("X-PAGINATION-SIZE");
+    if (!total) {
+        throw new Error("can not get query result, pagination size is not sent in headers");
+    }
+
     const { artifacts } = await response.json();
 
     return { artifacts, total };
 }
 
-async function updateReport(report_id, trackers_id, expert_query) {
+async function updateReport(
+    report_id: number,
+    trackers_id: Array<number>,
+    expert_query: string
+): Promise<Report> {
     const response = await put("/api/v1/cross_tracker_reports/" + report_id, {
         headers: {
             "Content-Type": "application/json",
@@ -70,18 +93,20 @@ async function updateReport(report_id, trackers_id, expert_query) {
     return response.json();
 }
 
-async function getSortedProjectsIAmMemberOf() {
-    const json = await recursiveGet("/api/v1/projects", {
+async function getSortedProjectsIAmMemberOf(): Promise<Array<Project>> {
+    const json = await recursiveGet<Array<unknown>, Project>("/api/v1/projects", {
         params: {
             limit: 50,
             query: JSON.stringify({ is_member_of: true }),
         },
     });
 
-    return json.sort(({ label: label_a }, { label: label_b }) => label_a.localeCompare(label_b));
+    return json.sort(({ label: label_a }, { label: label_b }) => {
+        return label_a.localeCompare(label_b);
+    });
 }
 
-function getTrackersOfProject(project_id) {
+function getTrackersOfProject(project_id: number): Promise<Array<Tracker>> {
     return recursiveGet("/api/v1/projects/" + project_id + "/trackers", {
         params: {
             limit: 50,
@@ -90,13 +115,17 @@ function getTrackersOfProject(project_id) {
     });
 }
 
-function getCSVReport(report_id) {
+function getCSVReport(report_id: number): Promise<string> {
     return recursiveGetCSV("/plugins/crosstracker/csv_export/" + report_id, {
         limit: 50,
+        offset: 0,
     });
 }
 
-async function recursiveGetCSV(route, params) {
+async function recursiveGetCSV(
+    route: string,
+    params: { limit: number; offset: number }
+): Promise<string> {
     const { limit = 50, offset = 0 } = params;
     const response = await get(route, {
         params: {
@@ -106,7 +135,12 @@ async function recursiveGetCSV(route, params) {
         },
     });
     const results = await response.text();
-    const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);
+    const size = response.headers.get("X-PAGINATION-SIZE");
+    if (!size) {
+        throw new Error("can not get query result, pagination size is not sent in headers");
+    }
+
+    const total = Number.parseInt(size, 10);
     const new_offset = offset + limit;
 
     if (new_offset >= total) {

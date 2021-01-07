@@ -24,7 +24,7 @@ import { createStoreMock } from "../../../../../../src/scripts/vue-components/st
 import { createStore } from "../store/index.js";
 import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report.js";
 import ArtifactTable from "./ArtifactTable.vue";
-import * as rest_querier from "../api/rest-querier.js";
+import * as rest_querier from "../api/rest-querier";
 
 describe("ArtifactTable", () => {
     let writingCrossTrackerReport, getReportContent, getQueryResult;

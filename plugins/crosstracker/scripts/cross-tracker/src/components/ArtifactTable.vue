@@ -73,7 +73,7 @@ import { mapState } from "vuex";
 import moment from "moment";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import ExportButton from "./ExportCSVButton.vue";
-import { getReportContent, getQueryResult } from "../api/rest-querier.js";
+import { getReportContent, getQueryResult } from "../api/rest-querier";
 import { getUserPreferredDateFormat } from "../user-service.js";
 
 export default {

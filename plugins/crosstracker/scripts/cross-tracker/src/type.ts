@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,25 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getSortedProjectsIAmMemberOf as getProjects } from "../api/rest-querier";
-
-export { getSortedProjectsIAmMemberOf };
-
-let cached_projects = [];
-
-async function getSortedProjectsIAmMemberOf() {
-    if (cached_projects.length > 0) {
-        return cached_projects;
-    }
-
-    await fetchProjects();
-
-    return cached_projects;
+export interface State {
+    error_message: string | null;
+    success_message: string | null;
+    invalid_trackers: Array<Tracker>;
+    reading_mode: boolean;
+    is_report_saved: boolean;
 }
 
-async function fetchProjects() {
-    const projects = await getProjects();
-    cached_projects = projects.map(({ id, label }) => {
-        return { id, label };
-    });
+export interface Tracker {
+    id: number;
+    label: string;
+}
+
+export interface Project {
+    label: string;
+}
+
+export interface Report {
+    trackers: Array<Tracker>;
+    expert_query: string;
+    invalid_trackers: Array<Tracker>;
+}
+
+export interface ArtifactsCollection {
+    artifacts: Artifact[];
+    total: string;
+}
+
+export interface Artifact {
+    id: number;
 }

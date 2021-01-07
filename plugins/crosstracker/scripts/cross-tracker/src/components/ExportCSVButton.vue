@@ -36,7 +36,7 @@
 import { mapState, mapGetters } from "vuex";
 import { download } from "../helpers/download-helper.js";
 import { addBOM } from "../helpers/bom-helper.js";
-import { getCSVReport } from "../api/rest-querier.js";
+import { getCSVReport } from "../api/rest-querier";
 
 export default {
     name: "ExportCSVButton",
