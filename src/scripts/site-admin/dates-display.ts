@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RelativeDateElement } from "../../themes/tlp/src/js/custom-elements/relative-date/relative-date-element";
+import { RelativeDateElement } from "../tuleap/custom-elements/relative-date/relative-date-element";
 import {
     relativeDatePlacement,
     relativeDatePreference,
-} from "../../themes/tlp/src/js/custom-elements/relative-date/relative-date-helper";
+} from "../tuleap/custom-elements/relative-date/relative-date-helper";
 
 document.addEventListener("DOMContentLoaded", () => {
     listenToPreferenceChange(document);

@@ -34,7 +34,7 @@ import { uploadAllTemporaryFiles } from "./tuleap-artifact-modal-fields/file-fie
 import {
     relativeDatePlacement,
     relativeDatePreference,
-} from "../../../../../src/themes/tlp/src/js/custom-elements/relative-date/relative-date-helper";
+} from "../../../../../src/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
 import moment from "moment";
 import { formatFromPhpToMoment } from "@tuleap/date-helper";
 
