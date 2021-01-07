@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,11 +14,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { StatisticsPieChart } from "../charts-builders/statistics-pie-chart.js";
+import { ChartPropsWhithRadius } from "../charts-builders/type";
 
 document.addEventListener("DOMContentLoaded", () => {
     const PIE_CHART_MAX_HEIGHT = 250;
@@ -27,11 +27,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initializePieCharts();
 
-    function initializePieCharts() {
+    function initializePieCharts(): void {
         const pie_chart_elements = document.getElementsByClassName("siteadmin-homepage-pie-chart");
 
-        [].forEach.call(pie_chart_elements, function (pie_chart_element) {
+        [].forEach.call(pie_chart_elements, function (pie_chart_element: HTMLElement) {
             const pie_chart_element_sizes = getSizes(pie_chart_element);
+
+            if (!pie_chart_element.dataset.statistics) {
+                throw new Error(
+                    `Pie chart ${pie_chart_element.id} does not have a statistics dataset attribute`
+                );
+            }
 
             const pie_chart = new StatisticsPieChart({
                 id: pie_chart_element.id,
@@ -54,13 +60,13 @@ document.addEventListener("DOMContentLoaded", () => {
         initializePieChartsLegendSize();
     }
 
-    function initializePieChartsLegendSize() {
+    function initializePieChartsLegendSize(): void {
         let legend_max_width = 0;
         const legend_li_elements = document.querySelectorAll(
             ".siteadmin-homepage-pie-chart-legend > li"
         );
 
-        [].forEach.call(legend_li_elements, function (li_element) {
+        [].forEach.call(legend_li_elements, function (li_element: HTMLElement) {
             const li_width = li_element.getBoundingClientRect().width;
 
             if (li_width > legend_max_width) {
@@ -68,12 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        [].forEach.call(legend_li_elements, function (legend_li_element) {
+        [].forEach.call(legend_li_elements, function (legend_li_element: HTMLElement) {
             legend_li_element.style.width = legend_max_width + PIE_CHART_LEGEND_MARGIN + "px";
         });
     }
 
-    function getSizes(element) {
+    function getSizes(element: HTMLElement): ChartPropsWhithRadius {
         const client_rect_width = element.getBoundingClientRect().width,
             width = client_rect_width / 2,
             height =
