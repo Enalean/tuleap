@@ -185,9 +185,9 @@ class Tracker_ArtifactFactory
      * @param PFUser $user       User who want to access to artifacts
      * @param int  $tracker_id the id of the tracker
      *
-     * @return array of Tracker_Artifact identified by id (array() if not found)
+     * @return Artifact[] identified by id (array() if not found)
      */
-    public function getArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id)
+    public function getArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id): array
     {
         $artifacts = [];
         foreach ($this->getDao()->searchByTrackerId($tracker_id) as $row) {

@@ -49,6 +49,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-document \
     tuleap-plugin-dynamic-credentials \
     tuleap-plugin-frs \
+    tuleap-plugin-roadmap \
     tuleap-plugin-git \
     tuleap-plugin-gitlab \
     tuleap-plugin-gitlfs \
