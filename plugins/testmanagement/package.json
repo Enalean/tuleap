@@ -5,7 +5,8 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@tuleap/plugin-tracker": "file:../tracker",
+    "@tuleap/plugin-tracker": "file://../tracker",
+    "@tuleap/filter-inline-table": "file://../../src/scripts/lib/filter-table",
     "@types/unist": "^2.0.3",
     "angular": "^1.8.2",
     "angular-breadcrumb": "^0.5.0",

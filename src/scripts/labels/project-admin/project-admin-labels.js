@@ -19,7 +19,7 @@
 
 import { createModal, select2 } from "tlp";
 import { sprintf } from "sprintf-js";
-import { filterInlineTable } from "../../tuleap/tables/filter-inline-table";
+import { filterInlineTable } from "@tuleap/filter-inline-table";
 
 document.addEventListener("DOMContentLoaded", () => {
     const labels_table = document.getElementById("project-labels-table");

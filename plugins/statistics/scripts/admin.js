@@ -18,7 +18,7 @@
  */
 
 import { datePicker, createModal } from "tlp";
-import { filterInlineTable } from "../../../src/scripts/tuleap/tables/filter-inline-table";
+import { filterInlineTable } from "@tuleap/filter-inline-table";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
 

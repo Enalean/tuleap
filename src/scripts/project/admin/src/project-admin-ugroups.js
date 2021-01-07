@@ -18,7 +18,7 @@
  */
 
 import { get, createModal } from "tlp";
-import { filterInlineTable } from "../../../tuleap/tables/filter-inline-table";
+import { filterInlineTable } from "@tuleap/filter-inline-table";
 import { sanitize } from "dompurify";
 import Gettext from "node-gettext";
 import { sprintf } from "sprintf-js";
@@ -210,7 +210,7 @@ function initBindingDependencies() {
         }
 
         for (const ugroup of JSON.parse(selected_option.dataset.ugroups)) {
-            ugroup_selectbox.options.add(new Option(ugroup["name"], ugroup["id"]));
+            ugroup_selectbox.options.add(new Option(ugroup.name, ugroup.id));
         }
     }
 }

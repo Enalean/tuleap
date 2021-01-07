@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { filterInlineTable } from "@tuleap/core/scripts/tuleap/tables/filter-inline-table";
 import { autocomplete_projects_for_select2 } from "@tuleap/core/scripts/tuleap/autocomplete-for-select2";
+import { filterInlineTable } from "@tuleap/filter-inline-table";
 
 document.addEventListener("DOMContentLoaded", () => {
     const bindProjectSelectors = (): void => {
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const bindFilter = (): void => {
         const filter = document.getElementById("filter-projects");
-        if (filter) {
+        if (filter && filter instanceof HTMLInputElement) {
             filterInlineTable(filter);
         }
     };

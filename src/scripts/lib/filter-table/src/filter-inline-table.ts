@@ -19,7 +19,7 @@
 
 const reset_search_term = "";
 
-const isEscapeKeyForInternetExplorer11 = (key) => key === "Esc";
+const isEscapeKeyForInternetExplorer11 = (key: string): boolean => key === "Esc";
 
 export const EMPTY_STATE_CLASS_NAME = "tlp-table-empty-filter";
 export const EMPTY_STATE_SHOWN_CLASS_NAME = "tlp-table-empty-filter-shown";
@@ -29,7 +29,7 @@ export const HIDDEN_ROW_CLASS_NAME = "tlp-table-row-hidden";
 export const LAST_SHOWN_ROW_CLASS_NAME = "tlp-table-last-row";
 export const HIDDEN_SECTION_CLASS_NAME = "tlp-table-tbody-hidden";
 
-export function filterInlineTable(filter) {
+export function filterInlineTable(filter: HTMLInputElement): { filterTable: () => void } {
     const target_table = getTargetTable(filter);
 
     filter.addEventListener("keyup", handleEscape);
@@ -39,7 +39,7 @@ export function filterInlineTable(filter) {
         filterTable: filterTable,
     };
 
-    function handleEscape(event) {
+    function handleEscape(event: KeyboardEvent): void {
         if (event.key !== "Escape" && !isEscapeKeyForInternetExplorer11(event.key)) {
             return;
         }
@@ -47,8 +47,8 @@ export function filterInlineTable(filter) {
         filterTable();
     }
 
-    function filterTable() {
-        let nb_displayed;
+    function filterTable(): void {
+        let nb_displayed: number;
 
         const search = filter.value.toUpperCase(),
             has_section = target_table.querySelector("." + TABLE_SECTION_CLASS_NAME);
@@ -62,12 +62,12 @@ export function filterInlineTable(filter) {
         toggleEmptyState(nb_displayed);
     }
 
-    function toggleLinesWithSections(search) {
+    function toggleLinesWithSections(search: string): number {
         const tbodies = target_table.querySelectorAll("tbody");
 
         let nb_total_displayed = 0,
-            current_section,
-            should_force_current_section_to_be_displayed;
+            current_section: HTMLTableSectionElement | null = null,
+            should_force_current_section_to_be_displayed = false;
 
         for (const tbody of tbodies) {
             const is_section = tbody.querySelector("." + TABLE_SECTION_CLASS_NAME);
@@ -92,7 +92,7 @@ export function filterInlineTable(filter) {
         return nb_total_displayed;
     }
 
-    function toggleLinesWithoutSections(search) {
+    function toggleLinesWithoutSections(search: string): number {
         const lines = target_table.querySelectorAll(
             "tbody > tr:not(." + EMPTY_STATE_CLASS_NAME + ")"
         );
@@ -100,7 +100,7 @@ export function filterInlineTable(filter) {
         return toggleLines(lines, search);
     }
 
-    function toggleEmptyState(nb_displayed) {
+    function toggleEmptyState(nb_displayed: number): void {
         const empty_state = target_table.querySelector("tbody > tr." + EMPTY_STATE_CLASS_NAME);
 
         if (empty_state) {
@@ -114,11 +114,11 @@ export function filterInlineTable(filter) {
 }
 
 function toggleLineInSection(
-    tbody,
-    should_force_current_section_to_be_displayed,
-    search,
-    current_section
-) {
+    tbody: HTMLTableSectionElement,
+    should_force_current_section_to_be_displayed: boolean,
+    search: string,
+    current_section: HTMLTableSectionElement | null
+): number {
     const lines = tbody.querySelectorAll("tr:not(." + EMPTY_STATE_CLASS_NAME + ")"),
         search_term = should_force_current_section_to_be_displayed ? reset_search_term : search,
         nb_lines_displayed = toggleLines(lines, search_term);
@@ -134,10 +134,10 @@ function toggleLineInSection(
     return nb_lines_displayed;
 }
 
-function toggleSection(current_section, search) {
+function toggleSection(current_section: HTMLTableSectionElement, search: string): boolean {
     const is_filterable = current_section.querySelector("." + FILTERABLE_CELL_CLASS_NAME);
 
-    let should_force_current_section_to_be_displayed;
+    let should_force_current_section_to_be_displayed: boolean;
 
     if (is_filterable) {
         should_force_current_section_to_be_displayed = shouldTheLineBeDisplayed(
@@ -155,8 +155,8 @@ function toggleSection(current_section, search) {
 }
 
 /** @return int Number of lines that are displayed */
-function toggleLines(lines, search) {
-    let last_line_displayed = null,
+function toggleLines(lines: NodeListOf<Element>, search: string): number {
+    let last_line_displayed: Element | null = null,
         nb_displayed = lines.length;
 
     for (const line of lines) {
@@ -174,39 +174,38 @@ function toggleLines(lines, search) {
         }
     }
 
-    if (last_line_displayed) {
+    if (last_line_displayed instanceof HTMLElement) {
         last_line_displayed.classList.add(LAST_SHOWN_ROW_CLASS_NAME);
     }
 
     return nb_displayed;
 }
 
-function shouldTheLineBeDisplayed(line, search) {
+function shouldTheLineBeDisplayed(line: Element, search: string): boolean {
     let should_be_displayed = false;
 
     const filterable_cells = line.querySelectorAll("." + FILTERABLE_CELL_CLASS_NAME);
 
     for (const cell of filterable_cells) {
-        const cell_content = cell.textContent.toUpperCase();
-        if (cell_content.indexOf(search) !== -1) {
-            should_be_displayed = true;
-            break;
+        if (cell.textContent) {
+            const cell_content = cell.textContent.toUpperCase();
+            if (cell_content.indexOf(search) !== -1) {
+                should_be_displayed = true;
+            }
         }
     }
 
     return should_be_displayed;
 }
 
-function getTargetTable(filter) {
-    let target_table_id, target_table;
-
-    target_table_id = filter.dataset.targetTableId;
+function getTargetTable(filter: HTMLElement): HTMLTableElement {
+    const target_table_id = filter.dataset.targetTableId;
     if (!target_table_id) {
         throw new Error("Filter input does not have data-target-table-id attribute");
     }
 
-    target_table = document.getElementById(target_table_id);
-    if (!target_table) {
+    const target_table = document.getElementById(target_table_id);
+    if (!target_table || !(target_table instanceof HTMLTableElement)) {
         throw new Error(
             'Filter input attribute references an unknown table "' + target_table_id + '"'
         );

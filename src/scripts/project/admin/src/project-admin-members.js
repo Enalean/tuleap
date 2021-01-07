@@ -22,7 +22,7 @@
  */
 
 import { createModal } from "tlp";
-import { filterInlineTable } from "../../../tuleap/tables/filter-inline-table";
+import { filterInlineTable } from "@tuleap/filter-inline-table";
 
 import { escaper } from "../../../tuleap/escaper.js";
 import { sanitize } from "dompurify";
