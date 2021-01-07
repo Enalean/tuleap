@@ -6,9 +6,9 @@
   "private": true,
   "dependencies": {
     "@tuleap/plugin-tracker": "file:../tracker",
+    "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
     "extendable-error": "^0.1.5",
     "moment": "^2.29.1",
-    "phptomoment": "0.0.2",
     "vue": "^2.6.12",
     "vue-gettext": "^2.1.12",
     "vuex": "^3.6.0"

@@ -7,6 +7,7 @@
   "version": "0.0.0",
   "dependencies": {
     "@tuleap/list-picker": "file:../../src/scripts/list-picker",
+    "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
     "angular": "^1.8.2",
     "angular-filter": "^0.5.16",
     "angular-gettext": "^2.4.2",
@@ -24,7 +25,6 @@
     "mustache": "^4.1.0",
     "ngVue": "^1.7.8",
     "node-gettext": "^3.0.0",
-    "phptomoment": "0.0.2",
     "pretty-kibibytes": "^4.0.4",
     "pump": "^3.0.0",
     "readable-stream": "^2.3.6",

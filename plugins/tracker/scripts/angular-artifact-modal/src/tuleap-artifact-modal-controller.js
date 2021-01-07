@@ -36,7 +36,7 @@ import {
     relativeDatePreference,
 } from "../../../../../src/themes/tlp/src/js/custom-elements/relative-date/relative-date-helper";
 import moment from "moment";
-import phptomoment from "phptomoment";
+import { formatFromPhpToMoment } from "@tuleap/date-helper";
 
 export default ArtifactModalController;
 
@@ -111,7 +111,7 @@ function ArtifactModalController(
         relativeDatePlacement: () =>
             relativeDatePlacement(modal_model.relative_dates_display, "right"),
         formatDateUsingPreferredUserFormat: (date) =>
-            moment(date).format(phptomoment(document.body.dataset.dateTimeFormat)),
+            moment(date).format(formatFromPhpToMoment(document.body.dataset.dateTimeFormat)),
         user_locale: document.body.dataset.userLocale,
     });
 

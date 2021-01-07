@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,10 @@
  */
 
 import moment from "moment";
-import phptomoment from "phptomoment";
+import { formatFromPhpToMoment } from "@tuleap/date-helper";
 
 export function formatDateUsingPreferredUserFormat(date, user_preferred_format) {
-    return moment(date).format(phptomoment(user_preferred_format));
+    return moment(date).format(formatFromPhpToMoment(user_preferred_format));
 }
 
 export function getElapsedTimeFromNow(date) {
