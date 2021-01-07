@@ -30,6 +30,8 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use MailingListDao;
 use MailManager;
+use PermissionsOverrider_PermissionsOverriderManager;
+use ReferenceManager;
 use SVN_TokenHandler;
 use TemplateRendererFactory;
 use ThemeVariant;
@@ -101,21 +103,26 @@ use Tuleap\Platform\Banner\BannerDao;
 use Tuleap\Platform\Banner\BannerRetriever;
 use Tuleap\Platform\Banner\PlatformBannerAdministrationController;
 use Tuleap\Project\Admin\Categories;
+use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
+use Tuleap\Project\Admin\Reference\Browse\LegacyReferenceAdministrationBrowsingRenderer;
+use Tuleap\Project\Admin\Reference\Browse\ReferenceAdministrationBrowseController;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\Banner\BannerAdministrationController;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Home;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundAdministrationController;
 use Tuleap\Project\Registration\ProjectRegistrationController;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\DeleteController;
 use Tuleap\Project\Service\EditController;
@@ -805,6 +812,24 @@ class RouteCollector
         );
     }
 
+    public function getReferencesController(): ReferenceAdministrationBrowseController
+    {
+        return new ReferenceAdministrationBrowseController(
+            \ProjectManager::instance(),
+            new LegacyReferenceAdministrationBrowsingRenderer(
+                Codendi_HTMLPurifier::instance(),
+                EventManager::instance(),
+                ReferenceManager::instance()
+            ),
+            new HeaderNavigationDisplayer(),
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            )
+        );
+    }
+
     private function getLegacyControllerHandler(string $path): array
     {
         return [
@@ -848,6 +873,8 @@ class RouteCollector
             $r->post('/mailing-lists/add', [self::class, 'getMailingListsDoCreateController']);
             $r->post('/mailing-lists/update/{list-id:\d+}', [self::class, 'getMailingListUpdateController']);
             $r->post('/mailing-lists/delete/{list-id:\d+}', [self::class, 'getMailingListDeleteController']);
+
+            $r->get('/references', [self::class, 'getReferencesController']);
         });
 
         $r->get('/mail/', [self::class, 'getMailingListsHomepageController']);
