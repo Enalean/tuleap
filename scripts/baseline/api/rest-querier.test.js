@@ -18,7 +18,7 @@
  */
 
 import * as tlp_fetch from "tlp";
-import { mockFetchSuccess } from "../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import {
     getOpenMilestones,
     getBaselines,
