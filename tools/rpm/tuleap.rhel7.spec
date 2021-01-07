@@ -581,6 +581,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/document
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/project_ownership
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/roadmap
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/taskboard
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/testmanagement
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/testplan
@@ -1412,6 +1413,7 @@ fi
 %files plugin-roadmap
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/roadmap
+%{APP_DIR}/plugins/roadmap/assets
 
 %files plugin-oauth2-server
 %defattr(-,root,root,-)

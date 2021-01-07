@@ -1,0 +1,9 @@
+{
+    "name": "roadmap",
+    "gettext-vue": {
+        "roadmap-widget": {
+            "src": "scripts/roadmap-widget",
+            "po": "scripts/roadmap-widget/po"
+        }
+    }
+}

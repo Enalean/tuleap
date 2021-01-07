@@ -27,6 +27,9 @@ use Project;
 use TemplateRenderer;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\MappingRegistry;
 
 final class RoadmapProjectWidget extends \Widget
@@ -78,7 +81,7 @@ final class RoadmapProjectWidget extends \Widget
             'Total number of display of roadmap project widget',
         );
 
-        return $this->renderer->renderToString('widget-roadmap-under-construction', []);
+        return $this->renderer->renderToString('widget-roadmap', []);
     }
 
     public function isAjax(): bool
@@ -278,5 +281,27 @@ final class RoadmapProjectWidget extends \Widget
     public function destroy($id): void
     {
         $this->dao->delete((int) $id, (int) $this->owner_id, (string) $this->owner_type);
+    }
+
+    public function getJavascriptDependencies(): array
+    {
+        return [
+            [
+                'file' => $this->getAssets()->getFileURL('widget-script.js'),
+            ]
+        ];
+    }
+
+    public function getStylesheetDependencies(): CssAssetCollection
+    {
+        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($this->getAssets(), 'widget-style')]);
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../../src/www/assets/roadmap',
+            '/assets/roadmap'
+        );
     }
 }
