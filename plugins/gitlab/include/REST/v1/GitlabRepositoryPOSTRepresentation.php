@@ -21,8 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\REST\v1;
 
-use Tuleap\REST\JsonCast;
-
 /**
  * @psalm-immutable
  */
@@ -41,22 +39,10 @@ class GitlabRepositoryPOSTRepresentation
     /**
      * @var string
      */
-    public $gitlab_user_api_token;
+    public $gitlab_bot_api_token;
 
     /**
      * @var int
      */
     public $gitlab_internal_id;
-
-    public function __construct(
-        int $project_id,
-        string $gitlab_server_url,
-        string $gitlab_user_api_token,
-        int $gitlab_internal_id
-    ) {
-        $this->project_id            = JsonCast::toInt($project_id);
-        $this->gitlab_server_url     = $gitlab_server_url;
-        $this->gitlab_user_api_token = $gitlab_user_api_token;
-        $this->gitlab_internal_id    = JsonCast::toInt($gitlab_internal_id);
-    }
 }

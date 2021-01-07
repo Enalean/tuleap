@@ -173,7 +173,7 @@ export default {
             type: Array,
             default: () => [],
         },
-        user_token: {
+        gitlab_project_token: {
             type: String,
             default: () => "",
         },
@@ -213,7 +213,7 @@ export default {
             try {
                 await this.postIntegrationGitlab({
                     gitlab_internal_id: this.selected_repository.id,
-                    gitlab_user_api_token: this.user_token,
+                    gitlab_bot_api_token: this.gitlab_project_token,
                     gitlab_server_url: this.server_url,
                     project_id: getProjectId(),
                 });

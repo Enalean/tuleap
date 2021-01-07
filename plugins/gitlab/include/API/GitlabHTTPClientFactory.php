@@ -43,7 +43,7 @@ class GitlabHTTPClientFactory
             $this->client,
             [
                 new AuthenticationPlugin(
-                    new Bearer($gitlab_credentials->getUserApiToken()->getString())
+                    new Bearer($gitlab_credentials->getBotApiToken()->getString())
                 )
             ]
         );
