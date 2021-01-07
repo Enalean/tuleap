@@ -125,16 +125,6 @@ CREATE TABLE forum (
 );
 
 #
-# Table structure for table 'forum_agg_msg_count'
-#
-
-CREATE TABLE forum_agg_msg_count (
-  group_forum_id int(11) NOT NULL default '0',
-  count int(11) NOT NULL default '0',
-  PRIMARY KEY  (group_forum_id)
-);
-
-#
 # Table structure for table 'forum_group_list'
 #
 
