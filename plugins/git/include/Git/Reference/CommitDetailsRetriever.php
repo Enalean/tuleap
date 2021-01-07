@@ -28,18 +28,13 @@ use Tuleap\Git\GitPHP\Commit;
 class CommitDetailsRetriever
 {
     /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
      * @var CommitDetailsCacheDao
      */
     private $dao;
 
-    public function __construct(CommitDetailsCacheDao $dao, \UserManager $user_manager)
+    public function __construct(CommitDetailsCacheDao $dao)
     {
-        $this->dao          = $dao;
-        $this->user_manager = $user_manager;
+        $this->dao = $dao;
     }
 
     public function retrieveCommitDetails(GitRepository $repository, Commit $commit): CommitDetails
@@ -61,17 +56,10 @@ class CommitDetailsRetriever
             $row_cache['title'],
             $row_cache['first_branch'],
             $row_cache['first_tag'],
-            $this->getAuthorByEmail($row_cache['author_email']),
+            $row_cache['author_email'],
             $row_cache['author_name'],
             $row_cache['committer_epoch'],
         );
-    }
-
-    private function getAuthorByEmail(string $author_email): ?\PFUser
-    {
-        return $this->user_manager
-            ->getUserCollectionByEmails([$author_email])
-            ->getUserByEmail($author_email);
     }
 
     private function retrieveCommitDetailsFromCommit(Commit $commit, GitRepository $repository): CommitDetails
@@ -109,7 +97,7 @@ class CommitDetailsRetriever
             $title,
             $first_branch,
             $first_tag,
-            $this->getAuthorByEmail($author_email),
+            $author_email,
             $author_name,
             $committer_epoch,
         );

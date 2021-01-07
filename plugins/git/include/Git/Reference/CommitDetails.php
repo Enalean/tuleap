@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Reference;
 
-use PFUser;
 
 /**
  * @psalm-immutable
@@ -46,9 +45,9 @@ final class CommitDetails
      */
     private $first_tag;
     /**
-     * @var PFUser|null
+     * @var string
      */
-    private $author;
+    private $author_email;
     /**
      * @var string
      */
@@ -63,7 +62,7 @@ final class CommitDetails
         string $title,
         string $first_branch,
         string $first_tag,
-        ?PFUser $author,
+        string $author_email,
         string $author_name,
         int $committer_epoch
     ) {
@@ -71,7 +70,7 @@ final class CommitDetails
         $this->title           = $title;
         $this->first_branch    = $first_branch;
         $this->first_tag       = $first_tag;
-        $this->author          = $author;
+        $this->author_email    = $author_email;
         $this->author_name     = $author_name;
         $this->committer_epoch = $committer_epoch;
     }
@@ -96,9 +95,9 @@ final class CommitDetails
         return $this->first_tag;
     }
 
-    public function getAuthor(): ?PFUser
+    public function getAuthorEmail(): string
     {
-        return $this->author;
+        return $this->author_email;
     }
 
     public function getAuthorName(): string

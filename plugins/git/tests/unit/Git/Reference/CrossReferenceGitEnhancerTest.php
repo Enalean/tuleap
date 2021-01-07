@@ -29,6 +29,7 @@ use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\User\UserEmailCollection;
 
 class CrossReferenceGitEnhancerTest extends TestCase
 {
@@ -89,11 +90,12 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 'Add foo to stuff',
                 '',
                 '',
-                null,
+                'jdoe@example.com',
                 'John Doe',
                 1234567890
             ),
-            $this->user
+            $this->user,
+            new UserEmailCollection(),
         );
 
         self::assertEquals(
@@ -113,11 +115,12 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 'Add foo to stuff',
                 '',
                 '',
-                null,
+                'jdoe@example.com',
                 'John Doe',
                 1234567890
             ),
-            $this->user
+            $this->user,
+            new UserEmailCollection(),
         );
 
         self::assertCount(1, $new_ref->additional_badges);
@@ -137,11 +140,12 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 'Add foo to stuff',
                 'dev-feature',
                 'v1.2.0',
-                null,
+                'jdoe@example.com',
                 'John Doe',
                 1234567890
             ),
-            $this->user
+            $this->user,
+            new UserEmailCollection(),
         );
 
         self::assertCount(2, $new_ref->additional_badges);
@@ -166,11 +170,12 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 'Add foo to stuff',
                 '',
                 'v1.2.0',
-                null,
+                'jdoe@example.com',
                 'John Doe',
                 1234567890
             ),
-            $this->user
+            $this->user,
+            new UserEmailCollection(),
         );
 
         self::assertCount(2, $new_ref->additional_badges);
@@ -191,6 +196,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
         $author = Mockery::mock(\PFUser::class)
             ->shouldReceive(
                 [
+                    'getEmail'     => 'jdoe@example.com',
                     'hasAvatar'    => true,
                     'getAvatarUrl' => '/path/to/avatar',
                 ]
@@ -209,11 +215,12 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 'Add foo to stuff',
                 '',
                 '',
-                $author,
+                'jdoe@example.com',
                 'John Doe',
                 1234567890
             ),
-            $this->user
+            $this->user,
+            new UserEmailCollection($author),
         );
 
         self::assertEquals('2009-02-14T00:31:30+01:00', $new_ref->creation_metadata->created_on->date);
@@ -230,6 +237,7 @@ class CrossReferenceGitEnhancerTest extends TestCase
         $author = Mockery::mock(\PFUser::class)
             ->shouldReceive(
                 [
+                    'getEmail'     => 'jdoe@example.com',
                     'hasAvatar'    => true,
                     'getAvatarUrl' => '/path/to/avatar',
                 ]
@@ -248,11 +256,12 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 'Add foo to stuff',
                 '',
                 '',
-                $author,
+                'jdoe@example.com',
                 'John Doe',
                 1234567890
             ),
-            $this->user
+            $this->user,
+            new UserEmailCollection($author),
         );
 
         self::assertEquals('John Doe', $new_ref->creation_metadata->created_by->display_name);
@@ -275,11 +284,12 @@ class CrossReferenceGitEnhancerTest extends TestCase
                 'Add foo to stuff',
                 '',
                 '',
-                null,
+                'korben@example.com',
                 'Korben Dallas',
                 1234567890
             ),
-            $this->user
+            $this->user,
+            new UserEmailCollection(),
         );
 
         self::assertEquals('Korben Dallas', $new_ref->creation_metadata->created_by->display_name);

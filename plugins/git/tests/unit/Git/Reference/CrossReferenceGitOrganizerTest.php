@@ -25,298 +25,91 @@ namespace Tuleap\Git\Reference;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Project;
-use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
+use Tuleap\User\UserEmailCollection;
 
 class CrossReferenceGitOrganizerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var \Git_ReferenceManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $git_reference_manager;
-    /**
-     * @var CrossReferenceGitOrganizer
-     */
-    private $organizer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitProvider
-     */
-    private $commit_provider;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CrossReferenceGitEnhancer
-     */
-    private $enhancer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitDetailsRetriever
-     */
-    private $details_retriever;
-
-    protected function setUp(): void
+    public function testItCollectsOrganizeableGitCrossReferencesToMoveThemInTheirSection(): void
     {
-        $this->project_manager       = Mockery::mock(\ProjectManager::class);
-        $this->git_reference_manager = Mockery::mock(\Git_ReferenceManager::class);
-        $this->commit_provider       = Mockery::mock(CommitProvider::class);
-        $this->enhancer              = Mockery::mock(CrossReferenceGitEnhancer::class);
-        $this->details_retriever     = Mockery::mock(CommitDetailsRetriever::class);
+        $collector = Mockery::mock(OrganizeableGitCrossReferencesAndTheContributorsCollector::class);
+        $enhancer  = Mockery::mock(CrossReferenceGitEnhancer::class);
 
-        $this->organizer = new CrossReferenceGitOrganizer(
-            $this->project_manager,
-            $this->git_reference_manager,
-            $this->commit_provider,
-            $this->enhancer,
-            $this->details_retriever,
-        );
-    }
+        $ref         = CrossReferencePresenterBuilder::get(1)->withType('git_commit')->build();
+        $another_ref = CrossReferencePresenterBuilder::get(2)->withType('git_commit')->build();
 
-    public function testItDoesNotOrganizeCrossReferencesItDoesNotKnow(): void
-    {
-        $user = Mockery::mock(\PFUser::class);
+        $user                = Mockery::mock(\PFUser::class);
+        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class, ['getCurrentUser' => $user]);
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [
-                        CrossReferencePresenterBuilder::get(1)->withType('tracker')->build(),
-                    ]
-                ]
-            )->getMock();
+        $contributors_email_collection = new UserEmailCollection();
 
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
-
-        $this->organizer->organizeGitReferences($by_nature_organizer);
-    }
-
-    public function testItDoesNotOrganizeGitCrossReferencesIfRepositoryCannotBeFound(): void
-    {
-        $user    = Mockery::mock(\PFUser::class);
-        $project = Mockery::mock(Project::class);
-
-        $this->project_manager
-            ->shouldReceive(['getProject' => $project])
-            ->getMock();
-
-        $this->git_reference_manager
-            ->shouldReceive('getCommitInfoFromReferenceValue')
-            ->with($project, 'cloudy/stable/1a2b3c4d5e')
-            ->andReturn(new CommitInfoFromReferenceValue(null, '1a2b3c4d5e'));
-
-        $a_ref = CrossReferencePresenterBuilder::get(1)
-            ->withType('git_commit')
-            ->withValue('cloudy/stable/1a2b3c4d5e')
-            ->build();
-
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [$a_ref],
-                ]
-            )->getMock();
-
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
-        $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($a_ref)
-            ->once();
-
-        $this->organizer->organizeGitReferences($by_nature_organizer);
-    }
-
-    public function testItOrganizesGitCrossReferencesInTheirRespectiveRepositorySection(): void
-    {
-        $user    = Mockery::mock(\PFUser::class);
-        $project = Mockery::mock(Project::class)
-            ->shouldReceive(['getUnixNameLowerCase' => 'acme'])
-            ->getMock();
-
-        $another_project = Mockery::mock(Project::class)
-            ->shouldReceive(['getUnixNameLowerCase' => 'foobar'])
-            ->getMock();
-
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(1)
-            ->andReturn($project);
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(2)
-            ->andReturn($another_project);
-
-        $repository         = Mockery::mock(\GitRepository::class)
-            ->shouldReceive(['getFullName' => 'cloudy/stable', 'userCanRead' => true])
-            ->getMock();
-        $another_repository = Mockery::mock(\GitRepository::class)
-            ->shouldReceive(['getFullName' => 'tuleap/stable', 'userCanRead' => true])
-            ->getMock();
-
-        $this->git_reference_manager
-            ->shouldReceive('getCommitInfoFromReferenceValue')
-            ->with($project, 'cloudy/stable/1a2b3c4d5e')
-            ->andReturn(new CommitInfoFromReferenceValue($repository, '1a2b3c4d5e'));
-        $this->git_reference_manager
-            ->shouldReceive('getCommitInfoFromReferenceValue')
-            ->with($another_project, 'tuleap/stable/e5d4c3b2a1')
-            ->andReturn(new CommitInfoFromReferenceValue($another_repository, 'e5d4c3b2a1'));
-
-        $a_ref = CrossReferencePresenterBuilder::get(1)
-            ->withType('git_commit')
-            ->withValue('cloudy/stable/1a2b3c4d5e')
-            ->withProjectId(1)
-            ->build();
-
-        $another_ref = CrossReferencePresenterBuilder::get(2)
-            ->withType('git_commit')
-            ->withValue('tuleap/stable/e5d4c3b2a1')
-            ->withProjectId(2)
-            ->build();
-
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCrossReferencePresenters' => [$a_ref, $another_ref],
-                    'getCurrentUser'              => $user,
-                ]
-            )->getMock();
-
-        $a_commit = Mockery::mock(Commit::class);
-        $this->commit_provider
-            ->shouldReceive('getCommit')
-            ->with($repository, '1a2b3c4d5e')
-            ->andReturn($a_commit);
-
-        $another_commit = Mockery::mock(Commit::class);
-        $this->commit_provider
-            ->shouldReceive('getCommit')
-            ->with($another_repository, 'e5d4c3b2a1')
-            ->andReturn($another_commit);
-
-        $a_commit_details = new CommitDetails(
+        $commit_details_for_ref         = new CommitDetails(
             '1a2b3c4d5e6f7g8h9i',
-            'Add foo to stuff',
+            'Another bites to dust',
             '',
             '',
-            null,
-            'John Doe',
-            1234567890
+            'korben@example.com',
+            'Korben Dallas',
+            1234567890,
         );
-        $this->details_retriever
-            ->shouldReceive('retrieveCommitDetails')
-            ->with($repository, $a_commit)
-            ->andReturn($a_commit_details);
-
-        $another_commit_details = new CommitDetails(
-            'e5d4c3b2a16f7g8h9i',
-            'Another bites the dust',
+        $commit_details_for_another_ref = new CommitDetails(
+            'a2b3c4d5e6f7g8h9i1',
+            'Everything you create, you use to destroy',
             '',
             '',
-            null,
-            'John Doe',
-            1234567890
+            'leeloo@example.com',
+            'Leeloominaï Lekatariba Lamina-Tchaï Ekbat De Sebat',
+            1234567890,
         );
-        $this->details_retriever
-            ->shouldReceive('retrieveCommitDetails')
-            ->with($another_repository, $another_commit)
-            ->andReturn($another_commit_details);
-
-        $augmented_a_ref = $a_ref->withTitle("A ref", null);
-        $this->enhancer
-            ->shouldReceive('getCrossReferencePresenterWithCommitInformation')
-            ->with($a_ref, $a_commit_details, $user)
+        $collector
+            ->shouldReceive('collectOrganizeableGitCrossReferencesAndTheContributorsCollection')
+            ->with($by_nature_organizer)
             ->once()
-            ->andReturn($augmented_a_ref);
+            ->andReturn(
+                new OrganizeableGitCrossReferencesAndTheContributors(
+                    [
+                        new CommitDetailsCrossReferenceInformation($commit_details_for_ref, $ref, 'a'),
+                        new CommitDetailsCrossReferenceInformation($commit_details_for_another_ref, $another_ref, 'b'),
+                    ],
+                    $contributors_email_collection,
+                )
+            );
 
-        $augmented_another_ref = $another_ref->withTitle("Another ref", null);
-        $this->enhancer
+        $enhanced_ref = $ref->withTitle('Another bites to dust', null);
+        $enhancer
             ->shouldReceive('getCrossReferencePresenterWithCommitInformation')
-            ->with($another_ref, $another_commit_details, $user)
-            ->once()
-            ->andReturn($augmented_another_ref);
+            ->with(
+                $ref,
+                $commit_details_for_ref,
+                $user,
+                $contributors_email_collection
+            )
+            ->andReturn($enhanced_ref);
 
-        $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
-            ->with($augmented_a_ref, 'acme/cloudy/stable')
-            ->once();
-        $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
-            ->with($augmented_another_ref, 'foobar/tuleap/stable')
-            ->once();
-
-        $this->organizer->organizeGitReferences($by_nature_organizer);
-    }
-
-    public function testItIgnoresRepositoriesUserCannotRead(): void
-    {
-        $user    = Mockery::mock(\PFUser::class);
-        $project = Mockery::mock(Project::class)
-            ->shouldReceive(['getUnixNameLowerCase' => 'acme'])
-            ->getMock();
-
-        $another_project = Mockery::mock(Project::class)
-            ->shouldReceive(['getUnixNameLowerCase' => 'foobar'])
-            ->getMock();
-
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(1)
-            ->andReturn($project);
-        $this->project_manager
-            ->shouldReceive('getProject')
-            ->with(2)
-            ->andReturn($another_project);
-
-        $another_repository = Mockery::mock(\GitRepository::class)
-            ->shouldReceive(['getFullName' => 'tuleap/stable', 'userCanRead' => false])
-            ->getMock();
-
-        $this->git_reference_manager
-            ->shouldReceive('getCommitInfoFromReferenceValue')
-            ->with($another_project, 'tuleap/stable/e5d4c3b2a1')
-            ->andReturn(new CommitInfoFromReferenceValue($another_repository, 'e5d4c3b2a1'));
-
-        $another_ref = CrossReferencePresenterBuilder::get(2)
-            ->withType('git_commit')
-            ->withValue('tuleap/stable/e5d4c3b2a1')
-            ->withProjectId(2)
-            ->build();
-
-        $commit = Mockery::mock(Commit::class);
-        $this->commit_provider
-            ->shouldReceive('getCommit')
-            ->andReturn($commit);
-
-        $augmented_another_ref = $another_ref->withTitle("Another ref", null);
-        $this->enhancer
+        $enhanced_another_ref = $another_ref->withTitle('Everything you create, you use to destroy', null);
+        $enhancer
             ->shouldReceive('getCrossReferencePresenterWithCommitInformation')
-            ->with($another_ref, $commit, $another_repository, $user)
-            ->never();
-
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCrossReferencePresenters' => [$another_ref],
-                    'getCurrentUser'              => $user,
-                ]
-            )->getMock();
+            ->with(
+                $another_ref,
+                $commit_details_for_another_ref,
+                $user,
+                $contributors_email_collection
+            )
+            ->andReturn($enhanced_another_ref);
 
         $by_nature_organizer
             ->shouldReceive('moveCrossReferenceToSection')
-            ->with($augmented_another_ref, 'foobar/tuleap/stable')
-            ->never();
-
+            ->with($enhanced_ref, 'a')
+            ->once();
         $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($another_ref)
+            ->shouldReceive('moveCrossReferenceToSection')
+            ->with($enhanced_another_ref, 'b')
             ->once();
 
-        $this->organizer->organizeGitReferences($by_nature_organizer);
+        $organizer = new CrossReferenceGitOrganizer($collector, $enhancer);
+        $organizer->organizeGitReferences($by_nature_organizer);
     }
 }
