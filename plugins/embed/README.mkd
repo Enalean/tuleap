@@ -17,4 +17,4 @@ Limitations
 -----------
 
 * 0nly artifacts are supported.
-* Only Figma service is supported. It is planned to support other services later (like Codepen, Giphy, …). Please get in touch with us to express your interest.
+* Only Figma and Blackfire URLs are supported. Please get in touch with us to express your interest for other integrations.
