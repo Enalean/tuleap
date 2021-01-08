@@ -36,7 +36,7 @@ describe("User dashboards", function () {
         cy.get("[data-test=dashboard-confirm-delete-button]").click();
 
         cy.get("[data-test=dashboard-add-button]").click();
-        cy.get("[data-test=dashboard-add-input-name]").type("My basic dashboard");
+        cy.get("[data-test=dashboard-add-input-name]").type("My Dashboard");
         cy.get("[data-test=dashboard-add-button-submit]").click();
 
         // widget image

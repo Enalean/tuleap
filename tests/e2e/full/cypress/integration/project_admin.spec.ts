@@ -29,7 +29,8 @@ describe("Project admin", function () {
 
     context("project basic administration", function () {
         it("should be able to create a new public project", function () {
-            cy.visit("/project/new");
+            cy.get("[data-test=new-button]").click();
+            cy.get("[data-test=create-new-item]").click();
 
             cy.get(
                 "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]"
