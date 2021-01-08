@@ -16,28 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
-export { credentialsAreEmpty, serverUrlIsValid, formatUrl };
+import { Repository } from "../type";
 
-function credentialsAreEmpty(credentials) {
+export function isGitlabRepository(repository: Repository): boolean {
     return (
-        credentials.token === undefined ||
-        credentials.token === "" ||
-        credentials.server_url === undefined ||
-        credentials.server_url === ""
+        Object.prototype.hasOwnProperty.call(repository, "gitlab_data") &&
+        repository.gitlab_data !== null &&
+        repository.gitlab_data !== undefined &&
+        Object.prototype.hasOwnProperty.call(repository.gitlab_data, "full_url") &&
+        Object.prototype.hasOwnProperty.call(repository.gitlab_data, "gitlab_id")
     );
-}
-
-function serverUrlIsValid(server_url) {
-    const reg_exp = new RegExp("^(http://|https://|\\?)");
-
-    return reg_exp.test(server_url);
-}
-
-function formatUrl(server_url) {
-    let url = server_url;
-    if (server_url.slice(-1) === "/") {
-        url = server_url.slice(0, -1);
-    }
-
-    return url + "/api/v4/projects?membership=true&per_page=20&min_access_level=40";
 }

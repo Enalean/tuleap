@@ -17,12 +17,27 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-export { getAsyncGitlabRepositoryList };
+import { getAsyncGitlabRepositoryList } from "./gitlab-api-querier";
+import * as tlp from "tlp";
 
-function getAsyncGitlabRepositoryList(credentials) {
-    let headers = new Headers();
-    headers.append("Authorization", "Bearer " + credentials.token);
+jest.mock("tlp");
 
-    const params = { method: "GET", headers, mode: "cors", cache: "default" };
-    return fetch(credentials.server_url, params);
-}
+describe("Gitlab Api Querier", () => {
+    it("When api is called, Then the request with correct headers is sent", async () => {
+        const credentials = {
+            server_url: "https://example.com",
+            token: "azerty1234",
+        };
+
+        const headers = new Headers();
+        headers.append("Authorization", "Bearer " + credentials.token);
+
+        await getAsyncGitlabRepositoryList(credentials);
+
+        expect(tlp.get).toHaveBeenCalledWith("https://example.com", {
+            cache: "default",
+            headers,
+            mode: "cors",
+        });
+    });
+});

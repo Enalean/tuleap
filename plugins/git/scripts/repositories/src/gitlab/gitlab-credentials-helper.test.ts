@@ -18,47 +18,60 @@
  */
 
 import { credentialsAreEmpty, serverUrlIsValid, formatUrl } from "./gitlab-credentials-helper";
+import { GitLabCredentials } from "../type";
 
 describe("Gitlab Credentials Helper", () => {
     describe("credentialsAreNotEmpty", () => {
         it("testReturnFalseWhenNoTokenKey", () => {
-            const credentials = { server_url: "https://example.com" };
+            const credentials = { server_url: "https://example.com" } as GitLabCredentials;
 
             expect(credentialsAreEmpty(credentials)).toBeTruthy();
         });
 
         it("testReturnFalseWhenNoServerUrlKey", () => {
-            const credentials = { token: "azerty1234" };
+            const credentials = { token: "azerty1234" } as GitLabCredentials;
 
             expect(credentialsAreEmpty(credentials)).toBeTruthy();
         });
 
         it("testReturnFalseWhenTokenIsEmpty", () => {
-            const credentials = { token: "", server_url: "https://example.com" };
+            const credentials = {
+                token: "",
+                server_url: "https://example.com",
+            } as GitLabCredentials;
 
             expect(credentialsAreEmpty(credentials)).toBeTruthy();
         });
 
         it("testReturnFalseWhenServerUrlIsEmpty", () => {
-            const credentials = { token: "azerty1234", server_url: "" };
+            const credentials = { token: "azerty1234", server_url: "" } as GitLabCredentials;
 
             expect(credentialsAreEmpty(credentials)).toBeTruthy();
         });
 
         it("testReturnTrueWhenCredentialsAreValid", () => {
-            const credentials = { token: "azerty1234", server_url: "https://example.com" };
+            const credentials = {
+                token: "azerty1234",
+                server_url: "https://example.com",
+            } as GitLabCredentials;
 
             expect(credentialsAreEmpty(credentials)).toBeFalsy();
         });
     });
     describe("serverUrlIsValid", () => {
         it("testThrowErrorWhenServerUrlIsInvalid", () => {
-            const credentials = { token: "azerty1234", server_url: "hts:/examplecom" };
+            const credentials = {
+                token: "azerty1234",
+                server_url: "hts:/examplecom",
+            } as GitLabCredentials;
             expect(serverUrlIsValid(credentials.server_url)).toBeFalsy();
         });
 
         it("testDontThrowErrorWhenCredentialsAreValid", () => {
-            const credentials = { token: "azerty1234", server_url: "https://example.com" };
+            const credentials = {
+                token: "azerty1234",
+                server_url: "https://example.com",
+            } as GitLabCredentials;
             expect(serverUrlIsValid(credentials.server_url)).toBeTruthy();
         });
     });

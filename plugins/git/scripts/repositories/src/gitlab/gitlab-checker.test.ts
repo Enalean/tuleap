@@ -18,30 +18,33 @@
  */
 
 import { isGitlabRepository } from "./gitlab-checker";
+import { Repository } from "../type";
 
 describe("gitlabChecker", () => {
     describe("isGitlabRepository", () => {
         it("When repository hasn't gitlab_data, Then return false", () => {
-            expect(isGitlabRepository({})).toBeFalsy();
+            expect(isGitlabRepository({} as Repository)).toBeFalsy();
         });
         it("When repository has gitlab_data but null, Then return false", () => {
-            const repo = { gitlab_data: null };
+            const repo = { gitlab_data: null } as Repository;
             expect(isGitlabRepository(repo)).toBeFalsy();
         });
         it("When repository has gitlab_data but empty, Then return false", () => {
-            const repo = { gitlab_data: {} };
+            const repo = { gitlab_data: {} } as Repository;
             expect(isGitlabRepository(repo)).toBeFalsy();
         });
         it("When repository has gitlab_data but only full_url, Then return false", () => {
-            const repo = { gitlab_data: { full_url: "example.com" } };
+            const repo = { gitlab_data: { full_url: "example.com" } } as Repository;
             expect(isGitlabRepository(repo)).toBeFalsy();
         });
         it("When repository has gitlab_data but only gitlab_id, Then return false", () => {
-            const repo = { gitlab_data: { gitlab_id: 14589 } };
+            const repo = { gitlab_data: { gitlab_id: 14589 } } as Repository;
             expect(isGitlabRepository(repo)).toBeFalsy();
         });
         it("When repository has gitlab_data, Then return true", () => {
-            const repo = { gitlab_data: { gitlab_id: 14589, full_url: "example.com" } };
+            const repo = {
+                gitlab_data: { gitlab_id: 14589, full_url: "example.com" },
+            } as Repository;
             expect(isGitlabRepository(repo)).toBeTruthy();
         });
     });

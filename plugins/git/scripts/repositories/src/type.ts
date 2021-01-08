@@ -38,9 +38,11 @@ export interface State {
 
 export interface Repository {
     id: string | number;
+    integration_id: string | number;
     description: string;
     label: string;
     last_update_date: string;
+    last_push_date: string;
     additional_information: [];
     normalized_path?: string;
     path_without_project: string;
@@ -69,11 +71,36 @@ export interface PermissionsRepository {
 export interface GitLabData {
     full_url: string;
     gitlab_id: number;
-    integration_id: number;
 }
 
 export interface Folder {
     is_folder: boolean;
     label: string;
     children: Map<string, Folder | Repository> | Array<Folder | Repository>;
+}
+
+export interface GitLabCredentials {
+    token: string;
+    server_url: string;
+}
+
+export interface GitLabRepository {
+    description: string;
+    full_url: string;
+    gitlab_id: number;
+    id: number;
+    last_push_date: string;
+    name: string;
+}
+
+export interface FormattedGitLabRepository {
+    id: string | number;
+    integration_id: string | number;
+    description: string;
+    label: string;
+    last_update_date: string;
+    additional_information: [];
+    normalized_path?: string;
+    path_without_project: string;
+    gitlab_data?: null | GitLabData;
 }
