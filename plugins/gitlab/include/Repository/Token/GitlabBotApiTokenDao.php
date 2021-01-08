@@ -36,6 +36,14 @@ class GitlabBotApiTokenDao extends DataAccessObject
         );
     }
 
+    public function getBotAPIToken(int $gitlab_repository_id): ?array
+    {
+        $sql = 'SELECT *
+                FROM plugin_gitlab_bot_api_token
+                WHERE gitlab_repository_id = ?';
+        return $this->getDB()->row($sql, $gitlab_repository_id);
+    }
+
     public function deleteGitlabBotToken(int $gitlab_repository_id): void
     {
         $this->getDB()->delete(

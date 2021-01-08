@@ -1,0 +1,7 @@
+{{# has_only_one_reference }}This commit references: {{# references }}[{{ label }}]({{ url }}){{/ references }}.{{/ has_only_one_reference }}
+{{^ has_only_one_reference }}
+This commit references:
+{{# references }}
+ * [{{ label }}]({{ url }})
+{{/ references }}
+{{/ has_only_one_reference }}
