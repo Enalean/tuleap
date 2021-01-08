@@ -19,7 +19,7 @@
  */
 
 import { getSortedProjectsIAmMemberOf as getProjects } from "./projects-cache.js";
-import * as rest_querier from "../api/rest-querier.js";
+import * as rest_querier from "../api/rest-querier";
 
 describe("getSortedProjectsIAmMemberOf", () => {
     it("Returns the projects I'm member of", async () => {

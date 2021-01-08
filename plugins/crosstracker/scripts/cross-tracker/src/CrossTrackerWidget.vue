@@ -54,7 +54,7 @@ import ReadingMode from "./reading-mode/ReadingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
 import ErrorInactiveProjectMessage from "./components/ErrorInactiveProjectMessage.vue";
-import { getReport } from "./api/rest-querier.js";
+import { getReport } from "./api/rest-querier";
 
 export default {
     name: "CrossTrackerWidget",

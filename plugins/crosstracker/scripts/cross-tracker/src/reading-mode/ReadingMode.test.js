@@ -24,7 +24,7 @@ import { createStore } from "../store/index.js";
 import ReadingMode from "./ReadingMode.vue";
 import BackendCrossTrackerReport from "../backend-cross-tracker-report.js";
 import ReadingCrossTrackerReport from "./reading-cross-tracker-report.js";
-import * as rest_querier from "../api/rest-querier.js";
+import * as rest_querier from "../api/rest-querier";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 describe("ReadingMode", () => {

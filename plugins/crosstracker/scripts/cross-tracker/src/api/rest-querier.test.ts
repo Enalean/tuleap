@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ import {
     getSortedProjectsIAmMemberOf,
     getTrackersOfProject,
     getCSVReport,
-} from "./rest-querier.js";
+} from "./rest-querier";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import * as tlp from "tlp";
 
@@ -54,10 +54,10 @@ describe("rest-querier", () => {
         it("the artifacts and the total number of artifacts will be returned", async () => {
             const tlpGet = jest.spyOn(tlp, "get");
             const artifacts = [{ id: 100 }, { id: 33 }];
-            const total = 91;
+            const total = "91";
             const headers = {
                 /** 'X-PAGINATION-SIZE' */
-                get: () => total,
+                get: (): string => total,
             };
             mockFetchSuccess(tlpGet, {
                 headers,
@@ -79,10 +79,10 @@ describe("rest-querier", () => {
         it("the tracker ids and the expert query will be submitted to the REST API, and the artifacts and the total number of artifacts will be returned", async () => {
             const tlpGet = jest.spyOn(tlp, "get");
             const artifacts = [{ id: 26 }, { id: 89 }];
-            const total = 69;
+            const total = "69";
             const headers = {
                 /** 'X-PAGINATION-SIZE' */
-                get: () => total,
+                get: (): string => total,
             };
             mockFetchSuccess(tlpGet, {
                 headers,
@@ -135,7 +135,7 @@ describe("rest-querier", () => {
                     { id: 239, label: "spur" },
                     { id: 487, label: "castellano" },
                 ];
-                tlpRecursiveGet.mockReturnValue(projects);
+                tlpRecursiveGet.mockResolvedValue(projects);
 
                 const result = await getSortedProjectsIAmMemberOf();
 
@@ -161,7 +161,7 @@ describe("rest-querier", () => {
             it("the REST API will be queried and the list of trackers returned", async () => {
                 const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
                 const trackers = [{ id: 28 }, { id: 50 }];
-                tlp.recursiveGet.mockReturnValue(trackers);
+                tlpRecursiveGet.mockResolvedValue(trackers);
 
                 const result = await getTrackersOfProject(444);
 
@@ -185,13 +185,15 @@ describe("rest-querier", () => {
                 const csv = `"id"\r\n65\r\n88\r\n`;
 
                 tlpGet.mockReturnValue(
-                    Promise.resolve({
+                    Promise.resolve(({
                         headers: {
                             /** 'X-PAGINATION-SIZE' */
-                            get: () => "2",
+                            get: (): string => "2",
                         },
-                        text: () => Promise.resolve(csv),
-                    })
+                        text() {
+                            return Promise.resolve(csv);
+                        },
+                    } as unknown) as Response)
                 );
 
                 const results = await getCSVReport(72);
@@ -209,14 +211,17 @@ describe("rest-querier", () => {
             it("When there are two pages, then it will drop the header line of the second request, concat the two requests and return them", async () => {
                 const tlpGet = jest.spyOn(tlp, "get");
                 const csv = `"id"\r\n61\r\n26\r\n`;
+
                 tlpGet.mockReturnValue(
-                    Promise.resolve({
+                    Promise.resolve(({
                         headers: {
                             /** 'X-PAGINATION-SIZE' */
-                            get: () => "70",
+                            get: (): string => "70",
                         },
-                        text: () => Promise.resolve(csv),
-                    })
+                        text() {
+                            return Promise.resolve(csv);
+                        },
+                    } as unknown) as Response)
                 );
 
                 const results = await getCSVReport(81);

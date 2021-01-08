@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -22,8 +22,8 @@ import { localVue } from "../helpers/local-vue";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { createStore } from "../store/index.js";
 import ExportCSVButton from "./ExportCSVButton.vue";
-import * as rest_querier from "../api/rest-querier.js";
-import * as download_helper from "../helpers/download-helper.js";
+import * as rest_querier from "../api/rest-querier";
+import * as download_helper from "../helpers/download-helper";
 import * as bom_helper from "../helpers/bom-helper.js";
 
 describe("ExportCSVButton", () => {

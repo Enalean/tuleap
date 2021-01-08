@@ -56,7 +56,7 @@
 <script>
 import { mapState } from "vuex";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
-import { updateReport } from "../api/rest-querier.js";
+import { updateReport } from "../api/rest-querier";
 
 export default {
     components: { TrackerListReadingMode },
