@@ -4,22 +4,6 @@
 
 - You need webpack or a module-loader that can understand ES2015 `import`s.
 - You need a sass build that can use `@import`.
-- In `webpack.config.js`, add the following:
-    ```js
-    resolve: {
-    //...
-        alias: webpack_configurator.extendAliases(
-            {
-                // We force webpack to resolve angular in this app's node_modules,
-                // otherwise angular-artifact-modal makes us include it twice
-                webpack_configurator.angular_tlp_alias,
-                {
-                    angular$: path.resolve(__dirname, "node_modules/angular")
-                }
-            }
-        )
-    }
-    ```
 - In your main `app.js`, add the following:
     ```js
     import angular_artifact_modal from 'angular-artifact-modal';

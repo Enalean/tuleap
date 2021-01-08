@@ -2,10 +2,7 @@ import angular from "angular";
 import "angular-mocks";
 import * as tlp from "tlp";
 import angular_tlp_module from "./index.js";
-import { createAngularPromiseWrapper } from "../../../../tests/jest/angular-promise-wrapper.js";
-
-/* eslint-env jest */
-jest.mock("tlp");
+import { createAngularPromiseWrapper } from "../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("TlpModalService -", function () {
     let wrapPromise, TlpModalService, $templateCache, $document, $rootScope, $q;
@@ -130,7 +127,7 @@ describe("TlpModalService -", function () {
             });
 
             afterEach(function () {
-                $document.find(".tlp-modal").remove();
+                document.querySelector(".tlp-modal")?.remove();
             });
 
             it(`when I open a new modal,
@@ -143,7 +140,7 @@ describe("TlpModalService -", function () {
                 });
 
                 expect(await wrapPromise(promise)).toEqual(fake_modal_object);
-                expect($document.find(".tlp-modal").length).toBe(1);
+                expect(document.querySelector(".tlp-modal")).toBeDefined();
                 expect(tlp_modal).toHaveBeenCalledWith(expect.any(Node), {});
                 expect(fake_modal_object.show).toHaveBeenCalled();
                 expect(fake_modal_object.addEventListener).toHaveBeenCalled();
@@ -181,9 +178,8 @@ describe("TlpModalService -", function () {
                 expect(tlp_modal).toHaveBeenCalledWith(expect.any(Node), tlp_modal_options);
             });
 
-            it(`and a resolve object,
-                when I open a new modal,
-                then the modal_instance and the resolve functions will be injected in the modal's controller`, async (done) => {
+            // eslint-disable-next-line prettier/prettier
+            it(`and a resolve object, when I open a new modal, then the modal_instance and the resolve functions will be injected in the modal's controller`, async (done) => { // eslint-disable-line jest/no-done-callback
                 var first_resolve_function = function () {};
                 var second_resolve_function = function () {};
                 var controller = function (modal_instance, noology, incoagulable) {

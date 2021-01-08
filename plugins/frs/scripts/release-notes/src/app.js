@@ -20,7 +20,7 @@
 import angular from "angular";
 import ui_router from "angular-ui-router";
 import ng_sanitize from "angular-sanitize";
-import angular_tlp_module from "angular-tlp";
+import angular_tlp_module from "@tuleap/angular-tlp";
 
 import "angular-gettext";
 import "angular-filter";

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const path = require("path");
 const webpack = require("webpack");
 const { merge } = require("webpack-merge");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
@@ -31,7 +32,6 @@ const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
 const { SuppressNullNamedEntryPlugin } = require("./webpack-custom-plugins.js");
 
 const rule_configurations = require("./webpack-rule-configs.js");
-const aliases = require("./webpack-aliases.js");
 
 function getManifestPlugin() {
     return new WebpackAssetsManifest({
@@ -150,6 +150,10 @@ function extendProdConfiguration(webpack_configs) {
     );
 }
 
+const easygettext_loader_alias = {
+    "easygettext-loader": path.resolve(__dirname, "./easygettext-loader.js"),
+};
+
 const configurator = {
     configureOutput,
     getCopyPlugin,
@@ -162,7 +166,8 @@ const configurator = {
     getLegacyConcatenatedScriptsPlugins,
     extendDevConfiguration,
     extendProdConfiguration,
+    easygettext_loader_alias,
 };
-Object.assign(configurator, rule_configurations, aliases);
+Object.assign(configurator, rule_configurations);
 
 module.exports = configurator;

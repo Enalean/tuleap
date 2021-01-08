@@ -2,7 +2,7 @@ import angular from "angular";
 import ui_router from "angular-ui-router";
 import shared_properties_module from "../shared-properties/shared-properties.js";
 import definition_module from "../definition/definition.js";
-import angular_tlp_module from "angular-tlp";
+import angular_tlp_module from "@tuleap/angular-tlp";
 
 import "angular-gettext";
 

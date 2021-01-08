@@ -25,7 +25,7 @@ import angular_moment from "angular-moment";
 import "angular-gettext";
 import translations from "../../po/fr.po";
 
-import angular_tlp from "angular-tlp";
+import angular_tlp from "@tuleap/angular-tlp";
 
 import MainController from "./app-controller.js";
 

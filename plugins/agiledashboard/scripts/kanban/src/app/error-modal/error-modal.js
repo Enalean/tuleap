@@ -1,5 +1,5 @@
 import angular from "angular";
-import angular_tlp from "angular-tlp";
+import angular_tlp from "@tuleap/angular-tlp";
 
 import RestErrorService from "./rest-error-service.js";
 
