@@ -25,8 +25,8 @@ import time_ago_french from "javascript-time-ago/locale/fr";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import french_translations from "../po/fr.po";
 import App from "./components/App.vue";
-import { setBreadcrumbSettings } from "./breadcrumb-presenter.js";
-import { build as buildRepositoryListPresenter } from "./repository-list-presenter.js";
+import { setBreadcrumbSettings } from "./breadcrumb-presenter";
+import { build as buildRepositoryListPresenter } from "./repository-list-presenter";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(VueDOMPurifyHTML);

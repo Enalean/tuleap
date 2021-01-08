@@ -49,7 +49,7 @@ import ListFilter from "./ActionBar/ListFilter.vue";
 import SelectOwner from "./ActionBar/SelectOwner.vue";
 import DisplayModeSwitcher from "./ActionBar/DisplayModeSwitcher.vue";
 import DropdownActionButton from "./DropdownActionButton.vue";
-import { getUserIsAdmin } from "../repository-list-presenter.js";
+import { getUserIsAdmin } from "../repository-list-presenter";
 
 export default {
     name: "ActionBar",

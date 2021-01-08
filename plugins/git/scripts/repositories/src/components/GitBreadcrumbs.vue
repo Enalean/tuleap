@@ -76,8 +76,8 @@ import {
     getProjectPublicName,
     getPrivacy,
     getProjectFlags,
-} from "../breadcrumb-presenter.js";
-import { getUserIsAdmin } from "../repository-list-presenter.js";
+} from "../breadcrumb-presenter";
+import { getUserIsAdmin } from "../repository-list-presenter";
 import BreadcrumbPrivacy from "@tuleap/core/scripts/vue-components/breadcrumb-privacy/dist/breadcrumb-privacy";
 
 export default {

@@ -25,7 +25,7 @@ import {
     getGitlabRepositoryList as getGitlabRepository,
     postGitlabRepository,
 } from "../api/rest-querier.js";
-import { getProjectId, getUserId } from "../repository-list-presenter.js";
+import { getProjectId, getUserId } from "../repository-list-presenter";
 import {
     ERROR_TYPE_UNKNOWN_ERROR,
     ERROR_TYPE_NO_GIT,

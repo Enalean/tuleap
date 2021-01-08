@@ -107,9 +107,9 @@ const DEFAULT_DESCRIPTION = "-- Default description --";
 import { isGitlabRepository } from "../gitlab/gitlab-checker";
 import { mapActions, mapGetters } from "vuex";
 import TimeAgo from "javascript-time-ago";
-import { getDashCasedLocale, getProjectId, getUserIsAdmin } from "../repository-list-presenter.js";
+import { getDashCasedLocale, getProjectId, getUserIsAdmin } from "../repository-list-presenter";
 import PullRequestBadge from "./PullRequestBadge.vue";
-import { getRepositoryListUrl } from "../breadcrumb-presenter.js";
+import { getRepositoryListUrl } from "../breadcrumb-presenter";
 
 export default {
     name: "GitRepository",

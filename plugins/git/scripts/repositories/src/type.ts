@@ -104,3 +104,12 @@ export interface FormattedGitLabRepository {
     path_without_project: string;
     gitlab_data?: null | GitLabData;
 }
+
+export interface RepositoryOwner {
+    display_name: string;
+}
+
+export interface ExternalPlugins {
+    plugin_name: string;
+    data: Array<unknown>;
+}
