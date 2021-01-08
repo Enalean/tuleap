@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ExternalPlugins, RepositoryOwner } from "./type";
+
 export {
     build,
     getUserId,
@@ -27,21 +29,21 @@ export {
     getExternalPlugins,
 };
 
-let current_user_id;
-let current_project_id;
+let current_user_id: number;
+let current_project_id: number;
 let is_administrator = false;
-let locale;
-let repositories_owners = [];
-let external_plugins = [];
+let locale: string;
+let repositories_owners: Array<RepositoryOwner> = [];
+let external_plugins: Array<ExternalPlugins> = [];
 
 function build(
-    user_id,
-    project_id,
-    is_user_administrator,
-    user_locale,
-    owners,
-    external_plugins_enabled
-) {
+    user_id: number,
+    project_id: number,
+    is_user_administrator: boolean,
+    user_locale: string,
+    owners: Array<RepositoryOwner>,
+    external_plugins_enabled: Array<ExternalPlugins>
+): void {
     current_user_id = user_id;
     current_project_id = project_id;
     is_administrator = Boolean(is_user_administrator);
@@ -50,26 +52,26 @@ function build(
     external_plugins = external_plugins_enabled;
 }
 
-function getUserId() {
+function getUserId(): number {
     return current_user_id;
 }
 
-function getProjectId() {
+function getProjectId(): number {
     return current_project_id;
 }
 
-function getUserIsAdmin() {
+function getUserIsAdmin(): boolean {
     return is_administrator;
 }
 
-function getDashCasedLocale() {
+function getDashCasedLocale(): string {
     return locale.replace(/_/g, "-");
 }
 
-function getRepositoriesOwners() {
+function getRepositoriesOwners(): Array<RepositoryOwner> {
     return repositories_owners;
 }
 
-function getExternalPlugins() {
+function getExternalPlugins(): Array<ExternalPlugins> {
     return external_plugins;
 }

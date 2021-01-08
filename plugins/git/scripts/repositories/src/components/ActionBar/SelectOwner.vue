@@ -43,7 +43,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import { getRepositoriesOwners } from "../../repository-list-presenter.js";
+import { getRepositoriesOwners } from "../../repository-list-presenter";
 import { PROJECT_KEY } from "../../constants";
 
 export default {

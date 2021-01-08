@@ -32,7 +32,7 @@ import {
     changeRepositories,
     getGitlabRepositoryList,
 } from "./actions.js";
-import * as repository_list_presenter from "../repository-list-presenter.js";
+import * as repository_list_presenter from "../repository-list-presenter";
 import * as rest_querier from "../api/rest-querier.js";
 import * as gitlab_querier from "../gitlab/gitlab-api-querier";
 

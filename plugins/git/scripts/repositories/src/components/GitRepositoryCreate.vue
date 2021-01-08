@@ -102,7 +102,7 @@
 </template>
 <script>
 import { postRepository } from "../api/rest-querier.js";
-import { getProjectId } from "../repository-list-presenter.js";
+import { getProjectId } from "../repository-list-presenter";
 import { createModal } from "tlp";
 
 export default {

@@ -97,6 +97,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import {
     getProjectPrivacyIcon,
+    ProjectFlag,
     ProjectPrivacy,
 } from "../../project/privacy/project-privacy-helper";
 import { createPopover } from "tlp";
@@ -104,7 +105,7 @@ import { createPopover } from "tlp";
 @Component
 export default class BreadcrumbPrivacy extends Vue {
     @Prop({ required: true })
-    readonly project_flags!: { label: string }[];
+    readonly project_flags!: Array<ProjectFlag>;
 
     @Prop({ required: true })
     readonly privacy!: ProjectPrivacy;

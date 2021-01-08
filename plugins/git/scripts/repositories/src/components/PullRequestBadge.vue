@@ -34,7 +34,7 @@
     </a>
 </template>
 <script>
-import { getProjectId } from "../repository-list-presenter.js";
+import { getProjectId } from "../repository-list-presenter";
 
 export default {
     name: "PullRequestBadge",

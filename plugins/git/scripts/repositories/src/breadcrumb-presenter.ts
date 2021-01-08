@@ -17,6 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+    ProjectPrivacy,
+    ProjectFlag,
+} from "@tuleap/core/scripts/project/privacy/project-privacy-helper";
+
 export {
     setBreadcrumbSettings,
     getAdministrationUrl,
@@ -28,23 +33,23 @@ export {
     getProjectFlags,
 };
 
-let administration_url,
-    repository_list_url,
-    fork_repositories_url,
-    project_public_name,
-    project_url,
-    privacy,
-    project_flags;
+let administration_url: string,
+    repository_list_url: string,
+    fork_repositories_url: string,
+    project_public_name: string,
+    project_url: string,
+    privacy: ProjectPrivacy,
+    project_flags: Array<ProjectFlag>;
 
 function setBreadcrumbSettings(
-    admin_url,
-    repositories_url,
-    fork_url,
-    proj_public_name,
-    proj_url,
-    proj_privacy,
-    proj_flags
-) {
+    admin_url: string,
+    repositories_url: string,
+    fork_url: string,
+    proj_public_name: string,
+    proj_url: string,
+    proj_privacy: ProjectPrivacy,
+    proj_flags: Array<ProjectFlag>
+): void {
     administration_url = admin_url;
     repository_list_url = repositories_url;
     fork_repositories_url = fork_url;
@@ -54,30 +59,30 @@ function setBreadcrumbSettings(
     project_flags = proj_flags;
 }
 
-function getAdministrationUrl() {
+function getAdministrationUrl(): string {
     return administration_url;
 }
 
-function getRepositoryListUrl() {
+function getRepositoryListUrl(): string {
     return repository_list_url;
 }
 
-function getForkRepositoriesUrl() {
+function getForkRepositoriesUrl(): string {
     return fork_repositories_url;
 }
 
-function getProjectPublicName() {
+function getProjectPublicName(): string {
     return project_public_name;
 }
 
-function getProjectUrl() {
+function getProjectUrl(): string {
     return project_url;
 }
 
-function getPrivacy() {
+function getPrivacy(): ProjectPrivacy {
     return privacy;
 }
 
-function getProjectFlags() {
+function getProjectFlags(): Array<ProjectFlag> {
     return project_flags;
 }

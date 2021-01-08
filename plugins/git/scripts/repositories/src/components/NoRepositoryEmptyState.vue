@@ -97,7 +97,7 @@
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { getUserIsAdmin } from "../repository-list-presenter.js";
+import { getUserIsAdmin } from "../repository-list-presenter";
 import DropdownActionButton from "./DropdownActionButton.vue";
 
 export default {
