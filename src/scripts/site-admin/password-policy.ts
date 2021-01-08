@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const blockBreachedPasswordCheckbox = document.getElementById(
         "block-breached-password-checkbox"
     );
-    if (blockBreachedPasswordCheckbox) {
+
+    const formBreachedPassword = document.getElementById("form-breached-password");
+    if (
+        blockBreachedPasswordCheckbox &&
+        formBreachedPassword &&
+        formBreachedPassword instanceof HTMLFormElement
+    ) {
         blockBreachedPasswordCheckbox.addEventListener("change", () => {
-            document.getElementById("form-breached-password").submit();
+            formBreachedPassword.submit();
         });
     }
 });
