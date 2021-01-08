@@ -7,17 +7,13 @@
   "types": "./src/index.d.ts",
   "private": true,
   "dependencies": {
-    "@tuleap/filter-inline-table": "file://../../scripts/lib/filter-table",
     "@tuleap/tlp-fetch": "file://../../scripts/lib/tlp-fetch",
     "flatpickr": "^4.6.6",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
     "select2": "^4.0.13"
   },
-  "devDependencies": {
-    "codemirror": "^5.57.0",
-    "dompurify": "^2.2.6"
-  },
+  "devDependencies": {},
   "config": {
     "bin": "../../../node_modules/.bin"
   },
