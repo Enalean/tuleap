@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+$milestone-background: var(--project-color-background-gradient-light, $tlp-ui-white);
+
 .milestone {
     margin: 0 0 $tlp-small-spacing;
     border: 1px solid var(--project-color-border, $tlp-ui-border-normal);
-    background: var(--project-color-background-gradient-light, $tlp-ui-white);
+    background: $milestone-background;
 }
 
 $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-white, 2%));
@@ -33,6 +35,7 @@ $border-element-separator: 1px solid var(--project-color-border, darken($tlp-ui-
     align-items: center;
     transition: background .1s linear;
     border-bottom: $border-element-separator;
+    background: $milestone-background;
     color: var(--project-color, $tlp-ui-dimmed);
     cursor: pointer;
 
