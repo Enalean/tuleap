@@ -23,8 +23,8 @@ import dragular from "dragular";
 import angular_artifact_modal from "../../../../../tracker/scripts/angular-artifact-modal/index.js";
 import angular_moment from "angular-moment";
 
-import angular_tlp from "angular-tlp/index";
-import angular_async from "angular-tlp/angular-async";
+import angular_tlp from "@tuleap/angular-tlp";
+import angular_async from "@tuleap/angular-async";
 
 import "angular-locker";
 import "angular-gettext";

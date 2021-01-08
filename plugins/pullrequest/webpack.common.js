@@ -35,16 +35,6 @@ const webpack_config_main_angular_app = {
         jquery: "jQuery",
         tlp: "tlp",
     },
-    resolve: {
-        alias: webpack_configurator.extendAliases(
-            {
-                ...webpack_configurator.angular_tlp_alias,
-                // angular-tlp
-                angular$: path.resolve(__dirname, "node_modules/angular"),
-            },
-            webpack_configurator.angular_tlp_alias
-        ),
-    },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
@@ -94,9 +84,7 @@ module.exports = [
             webpack_configurator.getVueLoaderPlugin(),
         ],
         resolveLoader: {
-            alias: webpack_configurator.extendAliases(
-                webpack_configurator.easygettext_loader_alias
-            ),
+            alias: webpack_configurator.easygettext_loader_alias,
         },
     },
 ];

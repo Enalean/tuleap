@@ -5,6 +5,8 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@tuleap/angular-async": "file://../../../../src/scripts/lib/angular-async",
+    "@tuleap/angular-tlp": "file://../../../../src/scripts/lib/angular-tlp",
     "angular": "^1.8.2",
     "angular-gettext": "^2.4.2",
     "angular-jwt": "^0.1.11",
@@ -21,5 +23,8 @@
   "devDependencies": {
     "angular-mocks": "^1.8.2",
     "jquery": "^3.5.1"
+  },
+  "scripts": {
+    "postshrinkwrap": "php ../../../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }

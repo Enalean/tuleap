@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/angular-tlp": "file://../../src/scripts/lib/angular-tlp",
     "@tuleap/plugin-tracker": "file://../tracker",
     "@tuleap/filter-inline-table": "file://../../src/scripts/lib/filter-table",
     "@types/unist": "^2.0.3",

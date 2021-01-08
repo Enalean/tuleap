@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,28 @@
  */
 
 const path = require("path");
-const path_to_tlp = path.join(__dirname, "../../../src/themes/tlp/");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-const angular_tlp_alias = {
-    "angular-tlp": path.join(path_to_tlp, "angular-tlp/index.js"),
+const context = __dirname;
+
+const webpack_config = {
+    entry: {
+        "angular-tlp": "./src/index.js",
+    },
+    context,
+    output: {
+        path: path.join(context, "./dist/"),
+        library: "AngularTlp",
+        libraryTarget: "umd",
+    },
+    externals: {
+        tlp: "tlp",
+        angular: "angular",
+    },
+    module: {
+        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)],
+    },
+    plugins: [webpack_configurator.getCleanWebpackPlugin()],
 };
 
-const easygettext_loader_alias = {
-    "easygettext-loader": path.resolve(__dirname, "./easygettext-loader.js"),
-};
-
-function extendAliases(...aliases) {
-    return Object.assign({}, ...aliases);
-}
-
-module.exports = {
-    extendAliases,
-    angular_tlp_alias,
-    easygettext_loader_alias,
-};
+module.exports = [webpack_config];

@@ -29,7 +29,7 @@ import "ngVue/build/plugins.js";
 import Vue from "vue";
 import "./vue-initializer.js";
 
-import angular_tlp from "angular-tlp";
+import angular_tlp from "@tuleap/angular-tlp";
 
 import FieldDependenciesService from "./field-dependencies-service.js";
 import ValidateService from "./validate-service.js";

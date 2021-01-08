@@ -148,7 +148,6 @@ const webpack_config_for_kanban = {
     },
     resolve: {
         alias: {
-            "angular-tlp": path.resolve(__dirname, "../../src/themes/tlp/angular-tlp"),
             // cumulative-flow-chart
             d3$: path.resolve(__dirname, "node_modules/d3"),
             lodash$: path.resolve(__dirname, "./scripts/kanban/node_modules/lodash"),
@@ -203,7 +202,7 @@ const webpack_config_for_planning_v2 = {
         ckeditor4: "CKEDITOR",
     },
     resolve: {
-        alias: webpack_configurator.extendAliases(webpack_configurator.angular_tlp_alias, {
+        alias: {
             // card-fields dependencies
             angular$: path.resolve(__dirname, "./scripts/planning-v2/node_modules/angular"),
             "angular-sanitize$": path.resolve(
@@ -214,7 +213,7 @@ const webpack_config_for_planning_v2 = {
             he$: path.resolve(__dirname, "node_modules/he"),
             striptags$: path.resolve(__dirname, "node_modules/striptags"),
             "escape-string-regexp$": path.resolve(__dirname, "node_modules/escape-string-regexp"),
-        }),
+        },
         extensions: [".ts", ".js"],
     },
     module: {

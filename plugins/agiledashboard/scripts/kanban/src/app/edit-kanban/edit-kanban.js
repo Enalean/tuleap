@@ -1,4 +1,4 @@
-import { directive, template } from "angular-tlp/angular-async.js";
+import { directive, template } from "@tuleap/angular-async";
 import edit_template from "./edit-kanban.tpl.html";
 
 import EditModalController from "./edit-kanban-controller.js";

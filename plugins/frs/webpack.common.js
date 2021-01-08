@@ -43,12 +43,6 @@ module.exports = [
         externals: {
             tlp: "tlp",
         },
-        resolve: {
-            alias: webpack_configurator.extendAliases(webpack_configurator.angular_tlp_alias, {
-                // angular-tlp
-                angular$: path.resolve(__dirname, "node_modules/angular"),
-            }),
-        },
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
