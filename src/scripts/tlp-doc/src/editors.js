@@ -22,11 +22,8 @@ import CodeMirror from "codemirror";
 import "codemirror/mode/htmlmixed/htmlmixed";
 import "codemirror/addon/scroll/simplescrollbars";
 import { sanitize } from "dompurify";
-import "../../../../scripts/tuleap/custom-elements/relative-date";
+import "../../tuleap/custom-elements/relative-date";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
-// I am disabling this check because I don't want to create a circular dependency between TLP and list-picker.
-// tlp's doc should be a separate package from TLP given its dependencies.
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { createListPicker } from "@tuleap/list-picker";
 
 (function loadCodeMirrorEditors() {

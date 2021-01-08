@@ -120,8 +120,8 @@ const webpack_config_for_tlp = {
 
 const webpack_config_for_tlp_doc = {
     entry: {
-        style: "./themes/tlp/doc/css/main.scss",
-        script: "./themes/tlp/doc/js/index.js",
+        style: "./scripts/tlp-doc/css/main.scss",
+        script: "./scripts/tlp-doc/src/index.js",
     },
     context,
     // This one does NOT go in www/assets/core because we do not deliver it in production, only in dev environment

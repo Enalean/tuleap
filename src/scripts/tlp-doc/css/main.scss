@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../src/scss/variables/colors/common-colors';
+@import '../../../themes/tlp/src/scss/variables/colors/common-colors';
 @import '~@tuleap/list-picker';
 
 $nav-width: 150px;
@@ -242,7 +242,7 @@ body {
     min-height: 100vh;
 
     &.orange {
-        @import '../../src/scss/variables/variables-orange';
+        @import '../../../themes/tlp/src/scss/variables/variables-orange';
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
@@ -262,7 +262,7 @@ body {
     }
 
     &.blue {
-        @import '../../src/scss/variables/variables-blue';
+        @import '../../../themes/tlp/src/scss/variables/variables-blue';
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
@@ -282,7 +282,7 @@ body {
     }
 
     &.green {
-        @import '../../src/scss/variables/variables-green';
+        @import '../../../themes/tlp/src/scss/variables/variables-green';
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
@@ -302,7 +302,7 @@ body {
     }
 
     &.grey {
-        @import '../../src/scss/variables/variables-grey';
+        @import '../../../themes/tlp/src/scss/variables/variables-grey';
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
@@ -322,7 +322,7 @@ body {
     }
 
     &.purple {
-        @import '../../src/scss/variables/variables-purple';
+        @import '../../../themes/tlp/src/scss/variables/variables-purple';
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
@@ -342,7 +342,7 @@ body {
     }
 
     &.red {
-        @import '../../src/scss/variables/variables-red';
+        @import '../../../themes/tlp/src/scss/variables/variables-red';
         @include themable(
             $tlp-theme-color,
             $tlp-theme-background-color,
@@ -370,6 +370,6 @@ body {
 @import './nav';
 @import './sections';
 @import './javascript-sections';
-@import '../../node_modules/codemirror/lib/codemirror';
-@import '../../node_modules/codemirror/theme/mdn-like';
-@import '../../node_modules/codemirror/addon/scroll/simplescrollbars';
+@import '~codemirror/lib/codemirror';
+@import '~codemirror/theme/mdn-like';
+@import '~codemirror/addon/scroll/simplescrollbars';
