@@ -12,7 +12,7 @@
                 <section class="tlp-pane-section">
                     <p>{{ project_creation_description }}</p>
                     <div class="tlp-table-actions">
-                        <button class="add-modal-button tlp-button-primary project-webhook-modal" data-modal-id="add-project-webhook">
+                        <button class="add-modal-button tlp-button-primary project-webhook-modal" data-target-modal-id="add-project-webhook">
                             <i class="fa fa-plus tlp-button-icon"></i> {{ add_webhook }}
                         </button>
                     </div>
@@ -80,7 +80,7 @@
                                                 </div>
                                             </div>
                                         {{/ lastStatus }}
-                                        <button class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="edit-modal-{{ id }}">
+                                        <button class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small project-webhook-modal" data-target-modal-id="edit-modal-{{ id }}">
                                             <i class="fas fa-pencil-alt tlp-button-icon"></i> {{ button_edit }}
                                         </button>
                                         <form id="edit-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="edit-modal-label-{{ id }}" method="post">
@@ -110,7 +110,7 @@
                                                 {{> csrf_token_input }}
                                             {{/ csrf_token }}
                                         </form>
-                                        <button class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small project-webhook-modal" data-modal-id="delete-modal-{{ id }}">
+                                        <button class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small project-webhook-modal" data-target-modal-id="delete-modal-{{ id }}">
                                             <i class="far fa-trash-alt tlp-button-icon"></i> {{ button_delete }}
                                         </button>
                                         <form id="delete-modal-{{ id }}" class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="delete-modal-label-{{ id }}" method="post">
