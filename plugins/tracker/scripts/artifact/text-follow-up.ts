@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "../../../../src/themes/tlp/src/js/fetch-wrapper";
+import { get } from "@tuleap/tlp-fetch";
 import { sanitize } from "dompurify";
 
 document.addEventListener("DOMContentLoaded", () => {

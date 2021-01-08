@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchSuccess } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import {
     getProjectList,
     getTrackerList,
     moveArtifact,
     moveDryRunArtifact,
 } from "./rest-querier.js";
-import * as tlp_fetch from "tlp-fetch";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
 
-jest.mock("tlp-fetch");
+jest.mock("@tuleap/tlp-fetch");
 
 describe("API querier", () => {
     let recursiveGet, patch;

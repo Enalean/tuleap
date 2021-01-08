@@ -18,12 +18,9 @@
  */
 
 import { initArtifactAdditionalAction } from "./artifact-additional-action";
-import * as fetch_wrapper from "../../../../../src/themes/tlp/src/js/fetch-wrapper";
+import * as fetch_wrapper from "@tuleap/tlp-fetch";
 import * as feedbacks from "../../../../../src/scripts/tuleap/feedback";
-import {
-    mockFetchError,
-    mockFetchSuccess,
-} from "../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("Artifact additional action", () => {
     it("Does not crash when action can not be found", () => {

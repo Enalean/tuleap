@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { localVue } from "../helpers/local-vue";
-import { mockFetchError } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import { createStore } from "../store/index.js";
 import ReadingMode from "./ReadingMode.vue";
 import BackendCrossTrackerReport from "../backend-cross-tracker-report.js";

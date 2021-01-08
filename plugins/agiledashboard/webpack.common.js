@@ -147,7 +147,7 @@ const webpack_config_for_kanban = {
         ckeditor4: "CKEDITOR",
     },
     resolve: {
-        alias: webpack_configurator.extendAliases(webpack_configurator.tlp_fetch_alias, {
+        alias: {
             "angular-tlp": path.resolve(__dirname, "../../src/themes/tlp/angular-tlp"),
             // cumulative-flow-chart
             d3$: path.resolve(__dirname, "node_modules/d3"),
@@ -162,7 +162,7 @@ const webpack_config_for_kanban = {
             he$: path.resolve(__dirname, "node_modules/he"),
             striptags$: path.resolve(__dirname, "node_modules/striptags"),
             "escape-string-regexp$": path.resolve(__dirname, "node_modules/escape-string-regexp"),
-        }),
+        },
         extensions: [".ts", ".js"],
     },
     module: {
@@ -203,25 +203,18 @@ const webpack_config_for_planning_v2 = {
         ckeditor4: "CKEDITOR",
     },
     resolve: {
-        alias: webpack_configurator.extendAliases(
-            webpack_configurator.tlp_fetch_alias,
-            webpack_configurator.angular_tlp_alias,
-            {
-                // card-fields dependencies
-                angular$: path.resolve(__dirname, "./scripts/planning-v2/node_modules/angular"),
-                "angular-sanitize$": path.resolve(
-                    __dirname,
-                    "./scripts/planning-v2/node_modules/angular-sanitize"
-                ),
-                moment$: path.resolve(__dirname, "node_modules/moment"),
-                he$: path.resolve(__dirname, "node_modules/he"),
-                striptags$: path.resolve(__dirname, "node_modules/striptags"),
-                "escape-string-regexp$": path.resolve(
-                    __dirname,
-                    "node_modules/escape-string-regexp"
-                ),
-            }
-        ),
+        alias: webpack_configurator.extendAliases(webpack_configurator.angular_tlp_alias, {
+            // card-fields dependencies
+            angular$: path.resolve(__dirname, "./scripts/planning-v2/node_modules/angular"),
+            "angular-sanitize$": path.resolve(
+                __dirname,
+                "./scripts/planning-v2/node_modules/angular-sanitize"
+            ),
+            moment$: path.resolve(__dirname, "node_modules/moment"),
+            he$: path.resolve(__dirname, "node_modules/he"),
+            striptags$: path.resolve(__dirname, "node_modules/striptags"),
+            "escape-string-regexp$": path.resolve(__dirname, "node_modules/escape-string-regexp"),
+        }),
         extensions: [".ts", ".js"],
     },
     module: {

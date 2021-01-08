@@ -103,7 +103,6 @@ const webpack_config_for_vue = {
         tlp: "tlp",
     },
     resolve: {
-        alias: webpack_configurator.tlp_fetch_alias,
         extensions: [".js", ".ts", ".vue"],
     },
     module: {

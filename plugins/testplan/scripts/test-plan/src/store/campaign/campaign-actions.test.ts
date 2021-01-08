@@ -23,7 +23,7 @@ import { RootState } from "../type";
 import * as tlp from "tlp";
 import { createCampaign, loadCampaigns, refreshCampaign } from "./campaign-actions";
 import { Campaign } from "../../type";
-import { mockFetchSuccess } from "../../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import { CampaignInitialTests } from "../../helpers/Campaigns/campaign-initial-tests";
 
 jest.mock("tlp");

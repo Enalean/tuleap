@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post } from "tlp-fetch";
+import { post } from "@tuleap/tlp-fetch";
 import { Upload } from "tus-js-client";
 
 export function buildFileUploadHandler(options) {

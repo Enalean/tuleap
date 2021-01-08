@@ -167,10 +167,6 @@ const webpack_config_for_flaming_parrot_code = {
         tuleap: "tuleap",
     },
     resolve: {
-        alias: webpack_configurator.extendAliases(
-            // because TLP is not included in FlamingParrot
-            webpack_configurator.tlp_fetch_alias
-        ),
         extensions: [".ts", ".js"],
     },
     module: {
@@ -193,9 +189,6 @@ const webpack_config_for_rich_text_editor = {
     externals: {
         ckeditor4: "CKEDITOR",
         tuleap: "tuleap",
-    },
-    resolve: {
-        alias: webpack_configurator.tlp_fetch_alias,
     },
     module: {
         rules: [

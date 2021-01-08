@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/tlp-fetch": "file://../../src/scripts/lib/tlp-fetch",
     "d3-array": "^2.9.1",
     "d3-axis": "^2.0.0",
     "d3-collection": "^1.0.7",
@@ -23,6 +24,7 @@
   },
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }

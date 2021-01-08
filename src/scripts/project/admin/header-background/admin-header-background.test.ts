@@ -19,7 +19,7 @@
 
 import { setupFormSubmission } from "./admin-header-background";
 import * as tlp from "tlp";
-import { mockFetchSuccess } from "../../../../themes/tlp/mocks/tlp-fetch-mock-helper";
+import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 jest.mock("tlp");
 

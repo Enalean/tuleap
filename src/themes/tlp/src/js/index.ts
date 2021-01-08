@@ -29,7 +29,7 @@ import {
 } from "./dropdowns";
 import { createPopover as createPopoverImplementation, Popover, PopoverOptions } from "./popovers";
 
-export * from "./fetch-wrapper";
+export * from "@tuleap/tlp-fetch";
 
 export { default as locale } from "./default_locale";
 

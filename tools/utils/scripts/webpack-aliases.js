@@ -20,10 +20,6 @@
 const path = require("path");
 const path_to_tlp = path.join(__dirname, "../../../src/themes/tlp/");
 
-const tlp_fetch_alias = {
-    "tlp-fetch": path.join(path_to_tlp, "src/js/fetch-wrapper.ts"),
-};
-
 const angular_tlp_alias = {
     "angular-tlp": path.join(path_to_tlp, "angular-tlp/index.js"),
 };
@@ -40,5 +36,4 @@ module.exports = {
     extendAliases,
     angular_tlp_alias,
     easygettext_loader_alias,
-    tlp_fetch_alias,
 };

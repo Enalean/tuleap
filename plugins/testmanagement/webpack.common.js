@@ -38,14 +38,10 @@ const webpack_config_for_angular = {
         ckeditor4: "CKEDITOR",
     },
     resolve: {
-        alias: webpack_configurator.extendAliases(
-            webpack_configurator.tlp_fetch_alias,
-            webpack_configurator.angular_tlp_alias,
-            {
-                // angular-tlp
-                angular$: path.resolve(__dirname, "node_modules/angular"),
-            }
-        ),
+        alias: webpack_configurator.extendAliases(webpack_configurator.angular_tlp_alias, {
+            // angular-tlp
+            angular$: path.resolve(__dirname, "node_modules/angular"),
+        }),
         extensions: [".ts", ".js"],
     },
     module: {

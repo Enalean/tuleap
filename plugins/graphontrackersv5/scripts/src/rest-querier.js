@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "tlp-fetch";
+import { get } from "@tuleap/tlp-fetch";
 
 export async function getChartData(report_id, renderer_id, chart_id) {
     const response = await get(

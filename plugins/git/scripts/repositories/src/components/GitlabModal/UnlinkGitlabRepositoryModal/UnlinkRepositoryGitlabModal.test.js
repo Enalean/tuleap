@@ -23,10 +23,7 @@ import UnlinkRepositoryGitlabModal from "./UnlinkRepositoryGitlabModal.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import * as api from "../../../api/rest-querier";
-import {
-    mockFetchError,
-    mockFetchSuccess,
-} from "../../../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 
 describe("UnlinkRepositoryGitlabModal", () => {
     let store_options, store, propsData, localVue;

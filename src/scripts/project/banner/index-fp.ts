@@ -19,7 +19,7 @@
 
 import { allowUnclampingProjectBannerMessage } from "./project-banner-clamp";
 import { allowToHideAndShowProjectBanner } from "./project-banner-show-hide";
-import { patch } from "../../../themes/tlp/src/js/fetch-wrapper";
+import { patch } from "@tuleap/tlp-fetch";
 
 document.addEventListener("DOMContentLoaded", () => {
     allowUnclampingProjectBannerMessage(document);

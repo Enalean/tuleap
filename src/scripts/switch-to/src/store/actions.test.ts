@@ -19,15 +19,10 @@
 
 import * as actions from "./actions";
 import { State } from "./type";
-import {
-    mockFetchError,
-    mockFetchSuccess,
-} from "../../../../themes/tlp/mocks/tlp-fetch-mock-helper";
-import * as tlp from "../../../../themes/tlp/src/js/fetch-wrapper";
+import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import * as tlp from "@tuleap/tlp-fetch";
 import { ActionContext } from "vuex";
 import { Project, UserHistory, UserHistoryEntry } from "../type";
-
-jest.mock("tlp");
 
 describe("SwitchTo actions", () => {
     describe("loadHistory", () => {

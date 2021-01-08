@@ -34,9 +34,6 @@ module.exports = [
         },
         context,
         output,
-        resolve: {
-            alias: webpack_configurator.tlp_fetch_alias,
-        },
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(
