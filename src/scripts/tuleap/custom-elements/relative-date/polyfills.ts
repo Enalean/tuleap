@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { loadCustomElementsPolyfillWhenNeeded } from "../../../../../../scripts/tuleap/custom-elements/custom-elements-polyfill-ie11";
+import { loadCustomElementsPolyfillWhenNeeded } from "../custom-elements-polyfill-ie11";
 
 export async function loadPolyfillsWhenNeeded(): Promise<void> {
     await Promise.all([

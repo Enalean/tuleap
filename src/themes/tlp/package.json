@@ -7,12 +7,8 @@
   "types": "./src/index.d.ts",
   "private": true,
   "dependencies": {
-    "@formatjs/intl-getcanonicallocales": "^1.5.3",
-    "@formatjs/intl-pluralrules": "^4.0.1",
-    "@formatjs/intl-relativetimeformat": "^8.0.1",
     "@tuleap/filter-inline-table": "file://../../scripts/lib/filter-table",
     "@tuleap/tlp-fetch": "file://../../scripts/lib/tlp-fetch",
-    "@webcomponents/custom-elements": "^1.4.2",
     "flatpickr": "^4.6.6",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",

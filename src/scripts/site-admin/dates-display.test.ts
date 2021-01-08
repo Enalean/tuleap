@@ -18,7 +18,7 @@
  */
 
 import { listenToPreferenceChange } from "./dates-display";
-import { RelativeDateElement } from "../../themes/tlp/src/js/custom-elements/relative-date/relative-date-element";
+import { RelativeDateElement } from "../tuleap/custom-elements/relative-date/relative-date-element";
 
 function appendTheDisplayPreferencesSelect(doc: HTMLDocument): HTMLSelectElement {
     const select = document.createElement("select");
@@ -45,7 +45,6 @@ function appendTheDisplayPreferencesSelect(doc: HTMLDocument): HTMLSelectElement
 function appendTheTlpRelativeDateElement(doc: HTMLDocument): RelativeDateElement {
     const container = document.createElement("div");
 
-    // eslint-disable-next-line no-unsanitized/property
     container.innerHTML = `<tlp-relative-date
         date="2020/08/04"
         absolute-date="2020/08/04"

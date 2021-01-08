@@ -39,7 +39,7 @@ import ArtifactModalController from "./tuleap-artifact-modal-controller.js";
 import TextField from "./tuleap-artifact-modal-fields/text-field/TextField.vue";
 import FollowupEditor from "./followups/FollowupEditor.vue";
 import NgVueConfig from "./ng-vue-config.js";
-import "../../../../../src/themes/tlp/src/js/custom-elements/relative-date";
+import "../../../../../src/scripts/tuleap/custom-elements/relative-date";
 import ComputedFieldDirective from "./tuleap-artifact-modal-fields/computed-field/computed-field-directive.js";
 import DateFieldDirective from "./tuleap-artifact-modal-fields/date-field/date-field-directive.js";
 import FileFieldDirective from "./tuleap-artifact-modal-fields/file-field/file-field-directive.js";

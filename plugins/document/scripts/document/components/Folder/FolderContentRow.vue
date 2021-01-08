@@ -121,7 +121,7 @@ import DropDownMenuTreeView from "./DropDown/DropDownMenuTreeView.vue";
 import {
     relativeDatePlacement,
     relativeDatePreference,
-} from "../../../../../../src/themes/tlp/src/js/custom-elements/relative-date/relative-date-helper";
+} from "../../../../../../src/scripts/tuleap/custom-elements/relative-date/relative-date-helper";
 
 export default {
     name: "FolderContentRow",
