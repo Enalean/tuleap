@@ -17,7 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const common = require("./webpack.common.js");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+import french_translations from "../po/fr_FR.po";
+import { ListPicker, ListPickerOptions } from "./type";
+import { initGettextSync } from "../../../tuleap/gettext/gettext-sync";
+import * as creator from "./list-picker";
 
-module.exports = webpack_configurator.extendProdConfiguration(common);
+export { ListPicker, ListPickerOptions };
+export function createListPicker(
+    source_select_box: HTMLSelectElement,
+    options: ListPickerOptions
+): Promise<ListPicker> {
+    const gettext_provider = initGettextSync(
+        "tuleap-list-picker",
+        french_translations,
+        options.locale
+    );
+    return creator.createListPicker(source_select_box, gettext_provider, options);
+}

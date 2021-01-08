@@ -8,9 +8,9 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@juggle/resize-observer": "^3.2.0",
-    "@tuleap/filter-inline-table": "file://./scripts/lib/filter-table",
-    "@tuleap/list-picker": "file://./scripts/list-picker",
     "@tuleap/date-helper": "file://./scripts/lib/date-helper",
+    "@tuleap/filter-inline-table": "file://./scripts/lib/filter-table",
+    "@tuleap/list-picker": "file://./scripts/lib/list-picker",
     "@webcomponents/custom-elements": "^1.4.1",
     "ckeditor4": "^4.14.1",
     "core-js": "^3.6.5",

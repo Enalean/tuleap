@@ -20,7 +20,7 @@
 import { ListPickerItem, ListPickerSelectionStateMultiple, SelectionManager } from "../type";
 import { DropdownManager } from "../dropdown/DropdownManager";
 import { ItemsMapManager } from "../items/ItemsMapManager";
-import { GettextProvider } from "../../../tuleap/gettext/gettext-sync";
+import { GettextProvider } from "../../../../tuleap/gettext/gettext-sync";
 import { render } from "lit-html";
 import { createItemBadgeTemplate } from "../helpers/templates/list-picker-element-badge-creator";
 
