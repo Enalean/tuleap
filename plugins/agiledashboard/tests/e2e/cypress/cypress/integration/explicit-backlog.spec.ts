@@ -22,6 +22,10 @@ describe(`Planning view Explicit Backlog`, function () {
         cy.clearCookie("__Host-TULEAP_session_hash");
 
         cy.projectMemberLogin();
+    });
+
+    beforeEach(function () {
+        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
         cy.visitProjectService("explicit-backlog", "Agile Dashboard");
     });
 
@@ -58,5 +62,39 @@ describe(`Planning view Explicit Backlog`, function () {
         // load closed sprints
         cy.get("[data-test=load-closed-milestones-button]").click();
         cy.contains("[data-test=milestone]", "Timely Electron");
+    });
+
+    context("+New", () => {
+        it("redirects to previous A.D pane", function () {
+            cy.get("[data-test=go-to-top-backlog]").click();
+
+            // Browse the sprint planning
+            cy.contains("[data-test=milestone]", "Summer Swift").within(() => {
+                cy.get("[data-test=expand-collapse-milestone]").click();
+                cy.get("[data-test=go-to-submilestone-planning]").click();
+            });
+
+            cy.get("[data-test=tab-details]").click();
+            cy.get("[data-test=new-button]").click();
+            cy.get("[data-test=create-new-item]").first().click();
+
+            cy.get("[data-test=summary]").type("New Art");
+            cy.get("[data-test=artifact-submit-button]").click();
+
+            cy.location().should((loc) => {
+                expect(loc.href).contains("pane=details");
+            });
+
+            cy.get("[data-test=feedback]").contains("Artifact Successfully Created");
+        });
+
+        it("open the pv2 modal", function () {
+            cy.get("[data-test=go-to-top-backlog]").click();
+
+            cy.get("[data-test=new-button]").click();
+            cy.get("[data-test=create-new-item]").first().click();
+
+            cy.get("[data-test=artifact-modal-form]").contains("Create a new");
+        });
     });
 });
