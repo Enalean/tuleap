@@ -16,7 +16,7 @@
     }
   },
   "require": {
-    "cocur/slugify": "^3.1",
+    "cocur/slugify": "^4.0",
     "php-mime-mail-parser/php-mime-mail-parser": "^6.0"
   },
   "config": {
