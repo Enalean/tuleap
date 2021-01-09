@@ -157,6 +157,31 @@ describe("Kanban for the Agile Dashboard service", () => {
                 }
             );
         });
+        it(`I can change the value of the WIP`, function () {
+            cy.get("[data-test=kanban-column-header-wip-limit]").should(
+                "not.have.class",
+                "tlp-badge-warning"
+            );
+            cy.get("[data-test=kanban-column-header-wip-warning]").should(
+                "not.exist",
+                "kanban-column-header-wip-warning"
+            );
+
+            cy.get("[data-test=kanban-column-header-wip-limit]").first().click();
+            cy.get("[data-test=wip-limit-form]")
+                .first()
+                .within(function () {
+                    cy.get("[data-test=wip-limit-input]").clear();
+                    cy.get("[data-test=wip-limit-input]").type("4");
+                    cy.root().submit();
+                });
+
+            // Close The WIP limit dropdown
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").click();
+
+            cy.get("[data-test=kanban-column-header-wip-limit]").contains("4");
+        });
     });
     context("As Project member", function () {
         beforeEach(function () {
@@ -164,7 +189,7 @@ describe("Kanban for the Agile Dashboard service", () => {
             cy.visit(this.kanban_url);
         });
 
-        it(`I can manipulate cards`, function () {
+        it(`I can create cards`, function () {
             cy.get("[data-test=kanban-column-to_be_done]")
                 .first()
                 .within(() => {
@@ -286,6 +311,60 @@ describe("Kanban for the Agile Dashboard service", () => {
             cy.get("[data-test=kanban-item-content-expand-collapse-icon]").should(
                 "have.class",
                 "fa-angle-down"
+            );
+        });
+
+        it("I can move card and the WIP warning is displayed", function () {
+            cy.get("[data-test=kanban-column-header-wip-count]").contains("3");
+            cy.get("[data-test=kanban-column-header-wip-limit]").contains("4");
+
+            cy.get("[data-test=kanban-column-to_be_done]")
+                .first()
+                .within(() => {
+                    cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
+
+                    cy.get("[data-test=add-in-place-button]").click();
+                    cy.get("[data-test=add-in-place-label-input]").clear().type("Miata");
+                    cy.get("[data-test=add-in-place-submit]").first().click();
+                });
+
+            // Close the Add to column form
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").type("{esc}");
+
+            cy.get("[data-test=kanban-column-header-wip-count]").contains("4");
+            cy.get("[data-test=kanban-column-header-wip-limit]").should(
+                "not.have.class",
+                "tlp-badge-warning"
+            );
+            cy.get("[data-test=kanban-column-header-wip-warning]").should(
+                "not.exist",
+                "kanban-column-header-wip-warning"
+            );
+
+            cy.get("[data-test=kanban-column-in_progress]")
+                .first()
+                .within(() => {
+                    cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
+
+                    cy.get("[data-test=add-in-place-button]").click();
+                    cy.get("[data-test=add-in-place-label-input]").clear().type("Stratos");
+                    cy.get("[data-test=add-in-place-submit]").first().click();
+                });
+
+            cy.dragAndDrop(
+                "[data-test=kanban-item-content-stratos]",
+                "[data-test=kanban-item-content-miata]",
+                "top"
+            );
+            cy.get("[data-test=kanban-column-header-wip-count]").contains("5");
+            cy.get("[data-test=kanban-column-header-wip-limit]").should(
+                "have.class",
+                "tlp-badge-warning"
+            );
+            cy.get("[data-test=kanban-column-header-wip-warning]").should(
+                "have.class",
+                "kanban-column-header-wip-warning"
             );
         });
     });

@@ -3,7 +3,7 @@
      class="bottom wip-limit-form"
      ng-class="{'in': column.wip_in_edit}"
 >
-    <form novalidate ng-submit="setWipLimit(column)" class="wip-limit-form-content">
+    <form novalidate ng-submit="setWipLimit(column)" class="wip-limit-form-content" data-test="wip-limit-form">
         <label class="tlp-label" for="wip-limit-input-{{ column.id }}" translate>Define max:</label>
         <div class="tlp-form-element tlp-form-element-append">
             <input type="number"
@@ -13,6 +13,7 @@
                    min="0"
                    ng-value="column.limit"
                    placeholder="∞"
+                   data-test="wip-limit-input"
             >
 
             <button class="tlp-append tlp-append-small tlp-button-primary tlp-button-small" type="submit">
