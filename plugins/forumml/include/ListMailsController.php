@@ -29,6 +29,7 @@ use DataAccessObject;
 use ForumML_MessageManager;
 use HTTPRequest;
 use ProjectManager;
+use Tuleap\ForumML\Threads\ThreadsController;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -188,7 +189,7 @@ class ListMailsController implements DispatchableWithRequest
             }
         }
 
-        $list_link = '<a href="/plugins/forumml/message.php?group_id=' . $hp->purify(urlencode((string) $group_id)) . '&list=' . $hp->purify(urlencode((string) $list_id)) . '">' . $hp->purify($list_name) . '</a>';
+        $list_link = '<a href="' . ThreadsController::getUrl((int) $list_id) . '">' . $hp->purify($list_name) . '</a>';
         $title     = sprintf(dgettext('tuleap-forumml', 'Mailing-List \'%1$s\''), $list_link);
         if ($topic) {
             $fmlMessageMgr = new ForumML_MessageManager();
@@ -211,7 +212,7 @@ class ListMailsController implements DispatchableWithRequest
 
             echo "<td align='left'>";
             if ($topic) {
-                echo '<a href="/plugins/forumml/message.php?group_id=' . $hp->purify(urlencode((string) $group_id)) . '&list=' . $hp->purify(urlencode((string) $list_id)) . '">[' . dgettext('tuleap-forumml', 'Back to the list') . ']</a>';
+                echo '<a href="' . ThreadsController::getUrl((int) $list_id) . '">[' . dgettext('tuleap-forumml', 'Back to the list') . ']</a>';
             } else {
                 echo "		<a href='/plugins/forumml/index.php?group_id=" . $hp->purify(urlencode((string) $group_id)) . "&list=" . $hp->purify(urlencode((string) $list_id)) . "'>
 					[" . dgettext('tuleap-forumml', 'Post a new Thread') . "]
@@ -232,25 +233,12 @@ class ListMailsController implements DispatchableWithRequest
         $vSrch = new Valid_String('search');
         $vSrch->required();
         if (! $request->valid($vSrch)) {
-            // Check if there are archives to browse
-            $qry = sprintf(
-                'SELECT NULL' .
-                ' FROM plugin_forumml_message' .
-                ' WHERE id_list = %d' .
-                '        LIMIT 1',
-                db_ei($list_id)
-            );
-            $res = db_query($qry);
-            if (db_numrows($res) > 0) {
-                // Call to show_thread() function to display the archives
-                if (isset($topic) && $topic != 0) {
-                    // specific thread
-                    plugin_forumml_show_thread($this->plugin, $list_id, $topic, $purgeCache, $user);
-                } else {
-                    plugin_forumml_show_all_threads($this->plugin, $list_id, $list_name, $offset);
-                }
+            // Call to show_thread() function to display the archives
+            if (isset($topic) && $topic != 0) {
+                // specific thread
+                plugin_forumml_show_thread($this->plugin, $list_id, $topic, $purgeCache, $user);
             } else {
-                echo "<H2>" . dgettext('tuleap-forumml', 'Empty Archives') . "</H2>";
+                $GLOBALS['Response']->redirect(ThreadsController::getUrl((int) $list_id));
             }
         } else {
             // search archives

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Tuleap\ForumML;
 
 use HTTPRequest;
+use Tuleap\ForumML\Threads\ThreadsController;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -122,6 +123,6 @@ class SendMailController implements DispatchableWithRequest
                 dgettext('tuleap-forumml', 'Check carefully your post before submitting. The message is sent without confirmation.')
             );
         }
-        $layout->redirect($this->plugin->getPluginPath() . '/message.php?group_id=' . $group_id . '&list=' . $list_id);
+        $layout->redirect(ThreadsController::getUrl((int) $list_id));
     }
 }
