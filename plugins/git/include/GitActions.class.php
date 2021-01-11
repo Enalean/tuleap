@@ -343,7 +343,7 @@ class GitActions extends PluginActions
         $url                     = $gerrit_server->getCloneSSHUrl($git_repo_name_on_gerrit);
 
         try {
-            echo $this->project_creator->getGerritConfig($gerrit_server, $url);
+            $GLOBALS['Response']->sendJSON($this->project_creator->getGerritConfig($gerrit_server, $url));
         } catch (Git_Driver_Gerrit_Exception $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Cannot access Gerrit ' . $e->getTraceAsString());
             $GLOBALS['Response']->sendStatusCode(500);
@@ -429,7 +429,7 @@ class GitActions extends PluginActions
             return;
         }
 
-        echo $template->getContent();
+        $GLOBALS['Response']->sendJSON($template->getContent());
     }
 
     /**

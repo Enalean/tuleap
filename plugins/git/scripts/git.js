@@ -211,7 +211,7 @@ document.observe("dom:loaded", function () {
                         alert(codendi.locales["git"].cannot_get_gerrit_config);
                     },
                     onSuccess: function (transport) {
-                        $("git_admin_config_data").value = transport.responseText;
+                        $("git_admin_config_data").value = JSON.parse(transport.responseText);
                         $("git_admin_config_edit_area").show();
                     },
                 });
@@ -240,7 +240,7 @@ document.observe("dom:loaded", function () {
                         alert(codendi.locales["git"].cannot_get_template);
                     },
                     onSuccess: function (transport) {
-                        $("git_admin_config_data").value = transport.responseText;
+                        $("git_admin_config_data").value = JSON.parse(transport.responseText);
                     },
                 });
             });
@@ -282,7 +282,7 @@ document.observe("dom:loaded", function () {
                         alert(codendi.locales["git"].cannot_get_template);
                     },
                     onSuccess: function (transport) {
-                        $("git_admin_config_data").value = transport.responseText;
+                        $("git_admin_config_data").value = JSON.parse(transport.responseText);
                         $("git_admin_config_templates_list").hide();
                         $("git_admin_config_btn_create").hide();
                         $("git_admin_file_name").hide();
@@ -321,7 +321,7 @@ document.observe("dom:loaded", function () {
                         alert(codendi.locales["git"].cannot_get_template);
                     },
                     onSuccess: function (transport) {
-                        $("git_admin_config_data").value = transport.responseText;
+                        $("git_admin_config_data").value = JSON.parse(transport.responseText);
                         $("git_admin_config_templates_list").hide();
                         $("git_admin_config_btn_create").hide();
                         $("git_admin_file_name").hide();
