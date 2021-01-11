@@ -2,7 +2,7 @@
 <nav id="user-nav">
     {{# is_user_logged_in }}
         <div id="nav-dropdown-user">
-            <div class="tlp-avatar" data-shortcut-mydashboard>
+            <div class="tlp-avatar" data-shortcut-mydashboard data-test="my-dashboard">
                 {{# user_has_avatar }}
                     <img src="{{ user_avatar_url }}" alt="{{ user_avatar_alt }}">
                 {{/ user_has_avatar }}
@@ -26,6 +26,7 @@
                         <a href="/my/"
                         class="nav-dropdown-item nav-dropdown-item-unique-dashboard"
                         data-shortcut-mydashboard-option
+                        data-test="my-dashboard-option"
                         >
                             {{# gettext }}My dashboard{{/ gettext }}
                         </a>
@@ -39,6 +40,7 @@
                                 <a href="/my/?dashboard_id={{ getId }}"
                                     class="nav-dropdown-item {{# has_one_dashboard }}nav-dropdown-item-unique-dashboard{{/ has_one_dashboard }}"
                                     data-shortcut-mydashboard-option
+                                    data-test="my-dashboard-option"
                                 >
                                     {{ getName }}
                                 </a>
