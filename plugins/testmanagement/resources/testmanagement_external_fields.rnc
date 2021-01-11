@@ -2,7 +2,7 @@ namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
 
 element externalField {
-    attribute type { 'ttmstepdef' },
+    attribute type { 'ttmstepdef' | "ttmstepexec" },
     attribute ID { xsd:ID },
     attribute rank { xsd:int },
     attribute id { xsd:long }?,

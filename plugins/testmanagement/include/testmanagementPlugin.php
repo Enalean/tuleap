@@ -507,7 +507,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     {
         $xml = $validate_external_fields->getXml();
         $attributes = $xml->attributes();
-        if ($attributes && isset($attributes['type']) && (string) $attributes['type'] === 'ttmstepdef') {
+        if ($this->isStepField($attributes)) {
             $validator = $this->getImportXmlFromTracker();
             $validator->validateXMLImport($xml);
         }
@@ -515,13 +515,14 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     public function importExternalElement(ImportExternalElement $event): void
     {
-        $xml = $event->getXml();
+        $xml        = $event->getXml();
         $attributes = $xml->attributes();
-        if ($attributes && isset($attributes['type']) && (string) $attributes['type'] === 'ttmstepdef') {
+        if ($this->isStepField($attributes)) {
             $validator = $this->getImportXmlFromTracker();
-            $event->setFormElement(
-                $validator->getInstanceFromXML($xml, $event->getProject(), $event->getFeedbackCollector())
-            );
+            $field     = $validator->getInstanceFromXML($xml);
+            if ($field !== null) {
+                $event->setFormElement($field);
+            }
         }
     }
     public function importValidateChangesetExternalField(ImportValidateChangesetExternalField $validate_external_fields): void
@@ -880,5 +881,10 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             TrackerFactory::instance(),
             Tracker_FormElementFactory::instance()
         );
+    }
+
+    private function isStepField(?SimpleXMLElement $attributes): bool
+    {
+        return $attributes && isset($attributes['type']) && ((string) $attributes['type'] === StepDefinition::TYPE || (string) $attributes['type'] === StepExecution::TYPE);
     }
 }

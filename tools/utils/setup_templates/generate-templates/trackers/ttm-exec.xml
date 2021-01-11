@@ -14,11 +14,11 @@
           <name>descc1</name>
           <label><![CDATA[Desc::C1]]></label>
           <formElements>
-            <formElement type="ttmstepexec" ID="F12766" rank="0">
+            <externalField type="ttmstepexec" ID="F12766" rank="0">
               <name>steps_results</name>
               <label><![CDATA[Steps results]]></label>
               <description><![CDATA[Result of the steps' executions.]]></description>
-            </formElement>
+            </externalField>
             <formElement type="text" ID="F12767" rank="1">
               <name>results</name>
               <label><![CDATA[Results]]></label>

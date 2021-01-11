@@ -1,6 +1,9 @@
 <element xmlns="http://relaxng.org/ns/structure/1.0" name="externalField">
   <attribute name="type">
-    <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ttmstepdef</value>
+    <choice>
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ttmstepdef</value>
+      <value datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">ttmstepexec</value>
+    </choice>
   </attribute>
   <attribute name="ID">
     <data type="ID" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"/>

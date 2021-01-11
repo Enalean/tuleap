@@ -22,13 +22,13 @@ namespace Tuleap\TestManagement\XML;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Project;
 use SimpleXMLElement;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use XML_RNGValidator;
 
-final class TrackerXMLImportTest extends TestCase
+final class ImportXMLFromTrackerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -123,7 +123,7 @@ final class TrackerXMLImportTest extends TestCase
         $this->xml_validator->validateChangesetXMLImport($xml_input);
     }
 
-    public function testGetInstanceFromXML()
+    public function testGetInstanceFromXMLReturnsStepDefinition()
     {
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -136,8 +136,6 @@ final class TrackerXMLImportTest extends TestCase
 
         $feedback_collector = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
         $feedback_collector->shouldReceive('addWarnings');
-
-        $project     = Mockery::mock(Project::class);
 
         $step_def = new StepDefinition(
             0,
@@ -154,8 +152,58 @@ final class TrackerXMLImportTest extends TestCase
             null
         );
 
-        $result = $this->xml_validator->getInstanceFromXML($xml_input, $project, $feedback_collector);
+        $result = $this->xml_validator->getInstanceFromXML($xml_input);
 
         $this->assertEquals($step_def, $result);
+    }
+    public function testGetInstanceFromXMLReturnsStepExecution()
+    {
+        $xml_input = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+             <externalField type="ttmstepexec" ID="F1602" rank="2">
+                  <name>steps</name>
+                  <label>Steps Execution</label>
+                  <description>Execution of the test\'s steps</description>
+             </externalField>'
+        );
+
+        $feedback_collector = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
+        $feedback_collector->shouldReceive('addWarnings');
+
+        $step_def = new StepExecution(
+            0,
+            0,
+            0,
+            "steps",
+            "Steps Execution",
+            "Execution of the test's steps",
+            1,
+            'P',
+            0,
+            0,
+            2,
+            null
+        );
+
+        $result = $this->xml_validator->getInstanceFromXML($xml_input);
+
+        $this->assertEquals($step_def, $result);
+    }
+
+    public function testGetInstanceFromXMLReturnsNullIfWrongType()
+    {
+        $xml_input = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+             <externalField type="notttmstepexec" ID="F1602" rank="2">
+                  <name>steps</name>
+                  <label>Steps Execution</label>
+                  <description>Execution of the test\'s steps</description>
+             </externalField>'
+        );
+
+        $feedback_collector = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
+        $feedback_collector->shouldReceive('addWarnings');
+
+        $this->assertNull($this->xml_validator->getInstanceFromXML($xml_input));
     }
 }
