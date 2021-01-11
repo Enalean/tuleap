@@ -25,10 +25,7 @@ module.exports = {
     moduleNameMapper: {
         ...base_config.moduleNameMapper,
         "^.+\\.html$": "identity-obj-proxy",
-        // angular-mocks is imported by card fields tests
-        "^angular-mocks$": "<rootDir>/node_modules/angular-mocks/angular-mocks.js",
+        // angular is imported by the artifact modal
         "^angular$": "<rootDir>/node_modules/angular/index.js",
-        "^angular-sanitize$": "<rootDir>/node_modules/angular-sanitize/index.js",
-        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js",
     },
 };

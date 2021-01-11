@@ -9,7 +9,6 @@ import "angular-mocks";
 
 import card_fields_module from "./index.js";
 
-/* eslint-env jest */
 describe("tuleapHighlight", () => {
     let highlightFilter, test_phrase;
 
