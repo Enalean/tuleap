@@ -55,11 +55,11 @@ export default {
         );
         this.$store.commit("updateCurrentlyPreviewedItem", this.embedded_file);
         const preference = await this.$store.dispatch(
-            "getEmbeddedFileDisplayPreference",
+            "preferencies/getEmbeddedFileDisplayPreference",
             this.embedded_file
         );
         this.$store.commit(
-            "shouldDisplayEmbeddedInLargeMode",
+            "preferencies/shouldDisplayEmbeddedInLargeMode",
             preference && preference.value === false
         );
         this.is_loading = false;

@@ -152,10 +152,10 @@ describe("FolderCellTitle", () => {
                 item,
                 false,
             ]);
-            expect(store.dispatch).toHaveBeenCalledWith("setUserPreferenciesForFolder", [
-                item.id,
-                false,
-            ]);
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "preferencies/setUserPreferenciesForFolder",
+                [item.id, false]
+            );
         });
 
         it(`Given folder is expanded
@@ -174,10 +174,10 @@ describe("FolderCellTitle", () => {
                 item,
                 undefined,
             ]);
-            expect(store.dispatch).toHaveBeenCalledWith("setUserPreferenciesForFolder", [
-                item.id,
-                true,
-            ]);
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "preferencies/setUserPreferenciesForFolder",
+                [item.id, true]
+            );
         });
 
         it(`Given folder is closed and given its children have been loaded
@@ -249,10 +249,10 @@ describe("FolderCellTitle", () => {
                 item,
                 { parent_id: 42, progress: 34 },
             ]);
-            expect(store.dispatch).toHaveBeenCalledWith("setUserPreferenciesForFolder", [
-                item.id,
-                true,
-            ]);
+            expect(store.dispatch).toHaveBeenCalledWith(
+                "preferencies/setUserPreferenciesForFolder",
+                [item.id, true]
+            );
         });
     });
 

@@ -138,7 +138,10 @@ export default {
                 this.is_closed = true;
             }
 
-            this.$store.dispatch("setUserPreferenciesForFolder", [this.item.id, this.is_closed]);
+            this.$store.dispatch("preferencies/setUserPreferenciesForFolder", [
+                this.item.id,
+                this.is_closed,
+            ]);
         },
     },
 };

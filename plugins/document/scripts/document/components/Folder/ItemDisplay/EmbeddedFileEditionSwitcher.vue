@@ -64,7 +64,8 @@
 import { mapState } from "vuex";
 export default {
     computed: {
-        ...mapState(["currently_previewed_item", "is_embedded_in_large_view"]),
+        ...mapState(["currently_previewed_item"]),
+        ...mapState("preferencies", ["is_embedded_in_large_view"]),
         narrow_view_title() {
             return this.$gettext("Narrow view");
         },
@@ -74,10 +75,16 @@ export default {
     },
     methods: {
         switchToLargeView() {
-            this.$store.dispatch("displayEmbeddedInLargeMode", this.currently_previewed_item);
+            this.$store.dispatch(
+                "preferencies/displayEmbeddedInLargeMode",
+                this.currently_previewed_item
+            );
         },
         switchToNarrowView() {
-            this.$store.dispatch("displayEmbeddedInNarrowMode", this.currently_previewed_item);
+            this.$store.dispatch(
+                "preferencies/displayEmbeddedInNarrowMode",
+                this.currently_previewed_item
+            );
         },
     },
 };

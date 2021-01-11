@@ -48,6 +48,9 @@ describe("DisplayEmbeddedContent", () => {
                 content: "My content",
             },
         };
+        store.state.preferencies = {
+            is_embedded_in_large_view: false,
+        };
         const wrapper = factory({
             isInLargeView: false,
         });
@@ -65,6 +68,9 @@ describe("DisplayEmbeddedContent", () => {
                 content: "My content",
             },
         };
+        store.state.preferencies = {
+            is_embedded_in_large_view: true,
+        };
         const wrapper = factory({
             isInLargeView: true,
         });
@@ -78,6 +84,9 @@ describe("DisplayEmbeddedContent", () => {
         store.state.currently_previewed_item = {
             id: 42,
             title: "My embedded content",
+        };
+        store.state.preferencies = {
+            is_embedded_in_large_view: true,
         };
         const wrapper = factory({
             isInLargeView: true,

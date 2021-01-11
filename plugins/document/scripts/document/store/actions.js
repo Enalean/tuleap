@@ -24,7 +24,6 @@ import {
     addNewFile,
     addNewLink,
     addNewWiki,
-    addUserLegacyUIPreferency,
     cancelUpload,
     createNewVersion,
     deleteEmbeddedFile,
@@ -32,15 +31,12 @@ import {
     deleteFile,
     deleteFolder,
     deleteLink,
-    deleteUserPreferenciesForFolderInProject,
     deleteWiki,
     getDocumentManagerServiceInformation,
     getFolderContent,
     getItem,
     getItemsReferencingSameWikiPage,
     getParents,
-    getPreferenceForEmbeddedDisplay,
-    patchUserPreferenciesForFolderInProject,
     postEmbeddedFile,
     postLinkVersion,
     postNewEmbeddedFileVersionFromEmpty,
@@ -53,8 +49,6 @@ import {
     putFolderPermissions,
     putLinkPermissions,
     putWikiPermissions,
-    removeUserPreferenceForEmbeddedDisplay,
-    setNarrowModeForEmbeddedDisplay,
 } from "../api/rest-querier.js";
 
 import {
@@ -419,30 +413,6 @@ function uploadVersionAndAssignUploader(item, context, uploaded_file, new_versio
     item.uploader = uploadVersion(context, uploaded_file, item, new_version);
 }
 
-export const setUserPreferenciesForFolder = (context, [folder_id, should_be_closed]) => {
-    if (context.state.user_id === 0) {
-        return;
-    }
-
-    try {
-        if (should_be_closed) {
-            return deleteUserPreferenciesForFolderInProject(
-                context.state.user_id,
-                context.state.project_id,
-                folder_id
-            );
-        }
-
-        return patchUserPreferenciesForFolderInProject(
-            context.state.user_id,
-            context.state.project_id,
-            folder_id
-        );
-    } catch (exception) {
-        return handleErrors(context, exception);
-    }
-};
-
 async function createNewFile(
     context,
     { title, description, file_properties, status, obsolescence_date, metadata },
@@ -566,14 +536,6 @@ export const cancelAllFileUploads = (context) => {
     );
 };
 
-export const setUserPreferenciesForUI = async (context) => {
-    try {
-        return await addUserLegacyUIPreferency(context.state.user_id, context.state.project_id);
-    } catch (exception) {
-        return handleErrors(context, exception);
-    }
-};
-
 export const deleteItem = async (context, [item, additional_options]) => {
     try {
         switch (item.type) {
@@ -618,44 +580,6 @@ export const getWikisReferencingSameWikiPage = async (context, item) => {
         );
     } catch (exception) {
         return USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE;
-    }
-};
-
-export const displayEmbeddedInNarrowMode = async (context, item) => {
-    try {
-        await setNarrowModeForEmbeddedDisplay(
-            context.state.user_id,
-            context.state.project_id,
-            item.id
-        );
-        context.commit("shouldDisplayEmbeddedInLargeMode", false);
-    } catch (exception) {
-        return handleErrors(context, exception);
-    }
-};
-
-export const displayEmbeddedInLargeMode = async (context, item) => {
-    try {
-        await removeUserPreferenceForEmbeddedDisplay(
-            context.state.user_id,
-            context.state.project_id,
-            item.id
-        );
-        context.commit("shouldDisplayEmbeddedInLargeMode", true);
-    } catch (exception) {
-        return handleErrors(context, exception);
-    }
-};
-
-export const getEmbeddedFileDisplayPreference = async (context, item) => {
-    try {
-        return await getPreferenceForEmbeddedDisplay(
-            context.state.user_id,
-            context.state.project_id,
-            item.id
-        );
-    } catch (exception) {
-        return handleErrors(context, exception);
     }
 };
 
