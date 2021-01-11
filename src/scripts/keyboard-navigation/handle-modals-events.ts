@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function closeExistingModal(doc: Document): void {
-    const backdrop = doc.querySelector("#tlp-modal-backdrop, .modal-backdrop");
-    if (backdrop instanceof HTMLElement) {
-        backdrop.click();
-    }
-}
+import hotkeys from "hotkeys-js";
+import { EVENT_TLP_MODAL_SHOWN, EVENT_TLP_MODAL_HIDDEN } from "../../themes/tlp/src/js/modal";
+
+export const HOTKEYS_SCOPE_NO_MODAL = "scope-no-modal";
+const HOTKEYS_SCOPE_MODAL_SHOWN = "scope-modal-shown";
+
+hotkeys.setScope(HOTKEYS_SCOPE_NO_MODAL);
+
+document.addEventListener(EVENT_TLP_MODAL_SHOWN, () => {
+    hotkeys.setScope(HOTKEYS_SCOPE_MODAL_SHOWN);
+});
+
+document.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
+    hotkeys.setScope(HOTKEYS_SCOPE_NO_MODAL);
+});

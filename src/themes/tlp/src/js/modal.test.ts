@@ -55,9 +55,18 @@ describe(`Modal`, () => {
             expectTheModalToBeShown(modal_element);
         });
 
-        it(`will dispatch the "shown" event`, () => {
+        it(`will dispatch the "shown" event on modal`, () => {
             let event_dispatched = false;
             modal.addEventListener(EVENT_TLP_MODAL_SHOWN, () => {
+                event_dispatched = true;
+            });
+            modal.show();
+            expect(event_dispatched).toBe(true);
+        });
+
+        it(`will dispatch the "shown" event on Document`, () => {
+            let event_dispatched = false;
+            doc.addEventListener(EVENT_TLP_MODAL_SHOWN, () => {
                 event_dispatched = true;
             });
             modal.show();
@@ -119,10 +128,22 @@ describe(`Modal`, () => {
                 expect(modal_element.classList.contains(MODAL_DISPLAY_CLASS_NAME)).toBe(false);
             });
 
-            it(`will dispatch the "hidden" event after a delay`, () => {
+            it(`will dispatch the "hidden" event on modal after a delay`, () => {
                 modal.show();
                 let event_dispatched = false;
                 modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
+                    event_dispatched = true;
+                });
+
+                modal.hide();
+                jest.runAllTimers();
+                expect(event_dispatched).toBe(true);
+            });
+
+            it(`will dispatch the "hidden" event on Document after a delay`, () => {
+                modal.show();
+                let event_dispatched = false;
+                doc.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
                     event_dispatched = true;
                 });
 
