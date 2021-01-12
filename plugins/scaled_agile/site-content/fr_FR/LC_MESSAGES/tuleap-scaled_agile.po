@@ -32,5 +32,14 @@ msgstr ""
 "La modification de l'outil de suivi de jalons de cette planification est "
 "interdite parce que ce projet fait partie d'un backlog d'agilité à l'échelle."
 
+msgid "Scaled Agile"
+msgstr "Agilité à l'échelle"
+
 msgid "Scaled Agile Backlog"
 msgstr "Backlog d'agilité à l'échelle"
+
+msgid "Scaled Agile Program"
+msgstr "Programe agilité à l'échelle"
+
+msgid "Scaled agile service is disabled."
+msgstr "Le service d'agilité à l'échelle est désactivé."

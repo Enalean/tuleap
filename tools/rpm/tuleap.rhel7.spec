@@ -565,6 +565,7 @@ done
 %if %{with experimental}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/scaled_agile
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/scaled_agile
 %endif
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
@@ -1440,6 +1441,7 @@ fi
 %files plugin-scaled_agile
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/scaled_agile
+%{APP_DIR}/src/www/assets/scaled_agile
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_scaled_agile
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_scaled_agile
 
