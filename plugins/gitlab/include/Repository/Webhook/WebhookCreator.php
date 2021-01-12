@@ -69,6 +69,7 @@ class WebhookCreator
             'url'   => "https://" . ForgeConfig::get('sys_https_host') . "/plugins/gitlab/repository/webhook",
             'token' => $secret->getString(),
             'push_events' => true,
+            'merge_requests_events' => true,
             'enable_ssl_verification' => true
         ];
     }

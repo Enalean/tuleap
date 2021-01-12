@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
+use Tuleap\Gitlab\Repository\Webhook\WebhookDataBranchNameExtractor;
 
 class PostPushCommitWebhookDataExtractor
 {
@@ -35,6 +36,7 @@ class PostPushCommitWebhookDataExtractor
     private const COMMIT_AUTHOR_KEY       = 'author';
     private const COMMIT_AUTHOR_EMAIL_KEY = 'email';
     private const COMMIT_AUTHOR_NAME_KEY  = 'name';
+    private const COMMITS_BRANCH_KEY      = 'ref';
 
     /**
      * @var LoggerInterface
@@ -51,13 +53,19 @@ class PostPushCommitWebhookDataExtractor
      *
      * @throws MissingKeyException
      */
-    public function retrieveWebhookCommitsData(array $webhook_content, string $branch_name): array
+    public function retrieveWebhookCommitsData(array $webhook_content): array
     {
+        if (! isset($webhook_content[self::COMMITS_BRANCH_KEY])) {
+            throw new MissingKeyException(self::COMMITS_BRANCH_KEY);
+        }
+
         if (! isset($webhook_content[self::COMMIT_KEY])) {
             throw new MissingKeyException(self::COMMIT_KEY);
         }
 
-        $commits = [];
+        $branch_name = WebhookDataBranchNameExtractor::extractBranchName($webhook_content[self::COMMITS_BRANCH_KEY]);
+        $commits     = [];
+
         foreach ($webhook_content[self::COMMIT_KEY] as $commit_content) {
             $commits[] = $this->retrieveCommitData($commit_content, $branch_name);
         }
