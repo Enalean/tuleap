@@ -12,8 +12,17 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Program Increment"
+msgstr "Programme Incrément"
+
 msgid "Scaled Agile"
 msgstr "Agilité à l'échelle"
 
+msgid "There are iterations yet"
+msgstr "Il n'y a pas d'itération pour l'instant"
+
 msgid "There is nothing to plan"
 msgstr "Il n'y a rien à planifier"
+
+msgid "To Be Planned"
+msgstr "A planifier"

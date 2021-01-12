@@ -18,13 +18,13 @@
  */
 
 import { shallowMount, ShallowMountOptions } from "@vue/test-utils";
-import App from "./App.vue";
-import { createScaledAgileLocalVue } from "../helpers/local-vue-for-test";
+import EmptyState from "./EmptyState.vue";
+import { createScaledAgileLocalVue } from "../../../helpers/local-vue-for-test";
 
-describe("App", () => {
-    let component_options: ShallowMountOptions<App>;
+describe("EmptyState", () => {
+    let component_options: ShallowMountOptions<EmptyState>;
 
-    it("Displays the empty state", async () => {
+    it("Displays the empty state for Backlog unplanned section", async () => {
         component_options = {
             propsData: {
                 project_public_name: "Public name",
@@ -33,7 +33,7 @@ describe("App", () => {
             localVue: await createScaledAgileLocalVue(),
         };
 
-        const wrapper = shallowMount(App, component_options);
-        expect(wrapper.find("[data-test=backlog-section]").exists()).toBe(true);
+        const wrapper = shallowMount(EmptyState, component_options);
+        expect(wrapper.element).toMatchSnapshot();
     });
 });
