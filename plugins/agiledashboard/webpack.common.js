@@ -148,19 +148,17 @@ const webpack_config_for_kanban = {
     },
     resolve: {
         alias: {
-            // cumulative-flow-chart
-            d3$: path.resolve(__dirname, "node_modules/d3"),
-            lodash$: path.resolve(__dirname, "./scripts/kanban/node_modules/lodash"),
-            moment$: path.resolve(__dirname, "node_modules/moment"),
-            // card-fields dependencies
+            // angular alias for angular-async (symlinks and peerDependencies don't play well together)
+            // and for the artifact modal
             angular$: path.resolve(__dirname, "./scripts/kanban/node_modules/angular"),
             "angular-sanitize$": path.resolve(
                 __dirname,
                 "./scripts/kanban/node_modules/angular-sanitize"
             ),
-            he$: path.resolve(__dirname, "node_modules/he"),
-            striptags$: path.resolve(__dirname, "node_modules/striptags"),
-            "escape-string-regexp$": path.resolve(__dirname, "node_modules/escape-string-regexp"),
+            // cumulative-flow-chart
+            d3$: path.resolve(__dirname, "node_modules/d3"),
+            lodash$: path.resolve(__dirname, "./scripts/kanban/node_modules/lodash"),
+            moment$: path.resolve(__dirname, "node_modules/moment"),
         },
         extensions: [".ts", ".js"],
     },
@@ -203,16 +201,12 @@ const webpack_config_for_planning_v2 = {
     },
     resolve: {
         alias: {
-            // card-fields dependencies
+            // Aliases for the artifact modal
             angular$: path.resolve(__dirname, "./scripts/planning-v2/node_modules/angular"),
             "angular-sanitize$": path.resolve(
                 __dirname,
                 "./scripts/planning-v2/node_modules/angular-sanitize"
             ),
-            moment$: path.resolve(__dirname, "node_modules/moment"),
-            he$: path.resolve(__dirname, "node_modules/he"),
-            striptags$: path.resolve(__dirname, "node_modules/striptags"),
-            "escape-string-regexp$": path.resolve(__dirname, "node_modules/escape-string-regexp"),
         },
         extensions: [".ts", ".js"],
     },
