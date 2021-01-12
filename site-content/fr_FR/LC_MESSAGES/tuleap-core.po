@@ -2562,6 +2562,9 @@ msgstr "Page d'accueil"
 msgid "Site news"
 msgstr "News du site"
 
+msgid "Skip to main content"
+msgstr "Aller au contenu principal"
+
 msgid "Some mandatory categories are missing"
 msgstr "Des catégories sont manquantes"
 
