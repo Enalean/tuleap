@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
@@ -27,6 +28,7 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\CreateProgramIncrementsRunner;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\PendingArtifactCreationDao;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\AsynchronousCreation\TaskBuilder;
@@ -45,6 +47,7 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TimeFrameFieldsA
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\TitleFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Hierarchy\ScaledAgileHierarchyDAO;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\ConfigurationUserCanNotSeeProgramException;
@@ -54,6 +57,7 @@ use Tuleap\ScaledAgile\Adapter\Program\PlanningCheck\UserCanNotAccessToProgramEx
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
 use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
+use Tuleap\ScaledAgile\DisplayProgramBacklogController;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ArtifactCreatorChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ProgramIncrementArtifactCreatorChecker;
@@ -63,8 +67,9 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Source\Fields\Synchroniz
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\Team\TeamProjectsCollectionBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\TrackerCollectionFactory;
 use Tuleap\ScaledAgile\REST\ResourcesInjector;
-use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
+use Tuleap\ScaledAgile\ScaledAgileService;
 use Tuleap\ScaledAgile\ScaledAgileTracker;
+use Tuleap\ScaledAgile\Team\RootPlanning\RootPlanningEditionHandler;
 use Tuleap\ScaledAgile\Workspace\ComponentInvolvedVerifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -79,6 +84,8 @@ require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class scaled_agilePlugin extends Plugin
 {
+    public const SERVICE_SHORTNAME = 'plugin_scaled_agile';
+
     public function __construct(?int $id)
     {
         parent::__construct($id);
@@ -103,6 +110,9 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook(ConfigurationCheckDelegation::NAME);
         $this->addHook(TrackerHierarchyDelegation::NAME);
         $this->addHook(OriginalProjectCollector::NAME);
+        $this->addHook(Event::SERVICE_CLASSNAMES);
+        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+        $this->addHook(CollectRoutesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -110,6 +120,16 @@ final class scaled_agilePlugin extends Plugin
     public function getDependencies(): array
     {
         return ['tracker', 'agiledashboard'];
+    }
+
+    public function service_classnames(array &$params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    {
+        $params['classnames'][$this->getServiceShortname()] = ScaledAgileService::class;
+    }
+
+    public function getServiceShortname(): string
+    {
+        return self::SERVICE_SHORTNAME;
     }
 
     public function getPluginInfo(): PluginInfo
@@ -126,6 +146,29 @@ final class scaled_agilePlugin extends Plugin
             $this->pluginInfo = $pluginInfo;
         }
         return $this->pluginInfo;
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
+    {
+        $event->getRouteCollector()->addGroup(
+            '/scaled_agile',
+            function (FastRoute\RouteCollector $r) {
+                $r->get('/{project_name:[A-z0-9-]+}[/]', $this->getRouteHandler('routeGetScaledAgile'));
+            }
+        );
+    }
+
+    public function routeGetScaledAgile(): DisplayProgramBacklogController
+    {
+        return new DisplayProgramBacklogController(
+            ProjectManager::instance(),
+            new ProgramAdapter(
+                ProjectManager::instance(),
+                new ProgramDao(),
+                new ExplicitBacklogDao()
+            ),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates")
+        );
     }
 
     public function rootPlanningEditionEvent(RootPlanningEditionEvent $event): void

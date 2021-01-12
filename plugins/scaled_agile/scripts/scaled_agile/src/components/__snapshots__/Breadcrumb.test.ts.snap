@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Breadcrumb Displays the breadcrumb state 1`] = `
+<div
+  class="breadcrumb-container scaled-agile-breadcrumb"
+>
+  <nav
+    class="breadcrumb"
+  >
+    <div
+      class="breadcrumb-item breadcrumb-project"
+    >
+      <a
+        class="breadcrumb-link"
+        href="/projects/short-name"
+      >
+        
+                Public name
+            
+      </a>
+    </div>
+     
+    <div
+      class="breadcrumb-item"
+    >
+      <a
+        class="breadcrumb-link"
+        data-current-language="en_US"
+        data-msgid="Scaled Agile"
+        href="/scaled_agile/short-name"
+      >
+        Scaled Agile
+      </a>
+    </div>
+  </nav>
+   
+  <h1
+    class="scaled-agile-title-header"
+    data-current-language="en_US"
+    data-msgid="Scaled Agile"
+  >
+    Scaled Agile
+  </h1>
+</div>
+`;
