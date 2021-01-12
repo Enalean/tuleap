@@ -238,7 +238,7 @@ const webpack_config_for_burning_parrot_code = {
         "site-admin-permission-delegation": "./scripts/site-admin/permission-delegation.js",
         "site-admin-project-configuration": "./scripts/site-admin/project-configuration.ts",
         "site-admin-project-history": "./scripts/site-admin/project-history.js",
-        "site-admin-project-list": "./scripts/site-admin/project-list.js",
+        "site-admin-project-list": "./scripts/site-admin/project-list.ts",
         "site-admin-project-widgets": "./scripts/site-admin/project-widgets-configuration/index.ts",
         "site-admin-system-events": "./scripts/site-admin/system-events.js",
         "site-admin-system-events-admin-homepage":
