@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,33 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.test-administration-title {
-    margin: 0;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
-}
+declare(strict_types=1);
 
-.first-testmanagament-administration {
-    display: flex;
+namespace Tuleap\TestManagement\Administration;
 
-    > a {
-        margin-right: $tlp-medium-spacing;
-    }
-}
+/**
+ * @psalm-immutable
+ */
+final class ListOfAdminTrackersPresenter
+{
+    /**
+     * @var null | AdminTrackerPresenter
+     */
+    public $selected_tracker;
 
-.testmanagement-administration {
-    width: 25%;
+    /**
+     * @var array
+     */
+    public $available_trackers;
 
-    .list-picker-sb {
-        margin: $tlp-small-spacing 0 0;
-    }
-
-    .tlp-form-element-disabled {
-        margin: 0;
-    }
-
-    .tlp-text-info {
-        margin: 0 0 $tlp-small-spacing 0;
-        font-size: .8125rem;
-        line-height: 18px;
+    public function __construct(?AdminTrackerPresenter $selected_tracker, array $available_trackers)
+    {
+        $this->selected_tracker   = $selected_tracker;
+        $this->available_trackers = $available_trackers;
     }
 }

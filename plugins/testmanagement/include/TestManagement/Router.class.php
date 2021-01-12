@@ -31,6 +31,8 @@ use TrackerXmlImport;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\TestManagement\Administration\AdminController;
+use Tuleap\TestManagement\Administration\AdminTrackersRetriever;
 use Tuleap\TestManagement\Administration\FieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
@@ -89,6 +91,10 @@ class Router
      * @var ProjectFlagsBuilder
      */
     private $project_flags_builder;
+    /**
+     * @var AdminTrackersRetriever
+     */
+    private $tracker_retriever;
 
     public function __construct(
         Config $config,
@@ -100,18 +106,20 @@ class Router
         TrackerChecker $tracker_checker,
         VisitRecorder $visit_recorder,
         Valid_UInt $int_validator,
-        ProjectFlagsBuilder $project_flags_builder
+        ProjectFlagsBuilder $project_flags_builder,
+        AdminTrackersRetriever $tracker_retriever
     ) {
         $this->config                       = $config;
         $this->tracker_factory              = $tracker_factory;
         $this->user_manager                 = $user_manager;
         $this->event_manager                = $event_manager;
         $this->artifact_links_usage_updater = $artifact_links_usage_updater;
-        $this->field_usage_detector    = $field_usage_detector;
+        $this->field_usage_detector         = $field_usage_detector;
         $this->tracker_checker              = $tracker_checker;
         $this->visit_recorder               = $visit_recorder;
-        $this->int_validator               = $int_validator;
-        $this->project_flags_builder = $project_flags_builder;
+        $this->int_validator                = $int_validator;
+        $this->project_flags_builder        = $project_flags_builder;
+        $this->tracker_retriever            = $tracker_retriever;
     }
 
     public function route(Codendi_Request $request): void
@@ -129,7 +137,8 @@ class Router
                     $csrf_token,
                     $this->field_usage_detector,
                     $this->tracker_checker,
-                    $this->int_validator
+                    $this->int_validator,
+                    $this->tracker_retriever
                 );
                 $this->renderAction($controller, 'admin', $request, false);
                 break;
@@ -142,7 +151,8 @@ class Router
                     $csrf_token,
                     $this->field_usage_detector,
                     $this->tracker_checker,
-                    $this->int_validator
+                    $this->int_validator,
+                    $this->tracker_retriever
                 );
                 $this->executeAction($controller, 'update');
                 if ($this->config->isConfigNeeded($request->getProject())) {
