@@ -25,6 +25,7 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Markdown\ContentInterpretor;
 
 class DefinitionRepresentationTest extends TestCase
 {
@@ -68,8 +69,14 @@ class DefinitionRepresentationTest extends TestCase
 
         $purifier = \Mockery::mock(\Codendi_HTMLPurifier::class);
         $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn("description")->once();
-
-        $representation = new DefinitionRepresentation($purifier, $artifact, $this->form_element_factory, $user);
+        $commonmark_interpreter = \Mockery::mock(ContentInterpretor::class);
+        $representation         = new DefinitionRepresentation(
+            $purifier,
+            $commonmark_interpreter,
+            $artifact,
+            $this->form_element_factory,
+            $user
+        );
 
         $this->assertEquals("description", $representation->description);
         $this->assertEquals([], $representation->steps);

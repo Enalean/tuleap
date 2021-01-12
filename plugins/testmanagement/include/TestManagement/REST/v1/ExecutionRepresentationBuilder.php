@@ -23,6 +23,7 @@ namespace Tuleap\TestManagement\REST\v1;
 use PFUser;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionNotFoundException;
@@ -92,6 +93,10 @@ class ExecutionRepresentationBuilder
      * @var FileUploadDataProvider
      */
     private $file_upload_data_provider;
+    /**
+     * @var ContentInterpretor
+     */
+    private $interpreter;
 
     public function __construct(
         UserManager $user_manager,
@@ -105,20 +110,22 @@ class ExecutionRepresentationBuilder
         ExecutionDao $execution_dao,
         StepsResultsRepresentationBuilder $steps_results_representation_builder,
         \Codendi_HTMLPurifier $purifier,
-        FileUploadDataProvider $file_upload_data_provider
+        FileUploadDataProvider $file_upload_data_provider,
+        ContentInterpretor $interpreter
     ) {
-        $this->user_manager                                 = $user_manager;
-        $this->tracker_form_element_factory                 = $tracker_form_element_factory;
-        $this->conformance_validator                        = $conformance_validator;
-        $this->assigned_to_representation_builder           = $assigned_to_representation_builder;
-        $this->artifact_dao                                 = $artifact_dao;
-        $this->artifact_factory                             = $artifact_factory;
-        $this->requirement_retriever                        = $requirement_retriever;
-        $this->definition_retriever                         = $definition_retriever;
-        $this->execution_dao                                = $execution_dao;
-        $this->steps_results_representation_builder         = $steps_results_representation_builder;
-        $this->purifier                                     = $purifier;
-        $this->file_upload_data_provider                    = $file_upload_data_provider;
+        $this->user_manager                         = $user_manager;
+        $this->tracker_form_element_factory         = $tracker_form_element_factory;
+        $this->conformance_validator                = $conformance_validator;
+        $this->assigned_to_representation_builder   = $assigned_to_representation_builder;
+        $this->artifact_dao                         = $artifact_dao;
+        $this->artifact_factory                     = $artifact_factory;
+        $this->requirement_retriever                = $requirement_retriever;
+        $this->definition_retriever                 = $definition_retriever;
+        $this->execution_dao                        = $execution_dao;
+        $this->steps_results_representation_builder = $steps_results_representation_builder;
+        $this->purifier                             = $purifier;
+        $this->file_upload_data_provider            = $file_upload_data_provider;
+        $this->interpreter                          = $interpreter;
     }
 
     /**
@@ -272,6 +279,7 @@ class ExecutionRepresentationBuilder
     ): DefinitionRepresentation {
         return new DefinitionRepresentation(
             $this->purifier,
+            $this->interpreter,
             $definition,
             $this->tracker_form_element_factory,
             $user,

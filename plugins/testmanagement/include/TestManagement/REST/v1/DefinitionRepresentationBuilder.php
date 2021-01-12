@@ -22,6 +22,7 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
 use Tracker_FormElementFactory;
+use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -46,17 +47,24 @@ class DefinitionRepresentationBuilder
      * @var \Codendi_HTMLPurifier
      */
     private $purifier;
+    /**
+     * @var ContentInterpretor
+     */
+    private $interpreter;
+
 
     public function __construct(
         Tracker_FormElementFactory $tracker_form_element_factory,
         ConfigConformanceValidator $conformance_validator,
         RequirementRetriever $requirement_retriever,
-        \Codendi_HTMLPurifier $purifier
+        \Codendi_HTMLPurifier $purifier,
+        ContentInterpretor $interpreter
     ) {
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->conformance_validator        = $conformance_validator;
         $this->requirement_retriever        = $requirement_retriever;
         $this->purifier                     = $purifier;
+        $this->interpreter                  = $interpreter;
     }
 
     public function getDefinitionRepresentation(PFUser $user, Artifact $definition_artifact): ?DefinitionRepresentation
@@ -70,11 +78,12 @@ class DefinitionRepresentationBuilder
 
         return new DefinitionRepresentation(
             $this->purifier,
+            $this->interpreter,
             $definition_artifact,
             $this->tracker_form_element_factory,
             $user,
             $changeset,
-            $requirement
+            $requirement,
         );
     }
 

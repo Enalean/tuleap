@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use BackendLogger;
+use Codendi_HTMLPurifier;
 use EventManager;
 use Http\Client\Common\Plugin\CookiePlugin;
 use Http\Message\CookieJar;
@@ -57,6 +58,7 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -207,6 +209,7 @@ class CampaignsResource
             $this->formelement_factory,
             new StepsResultsFilter()
         );
+        $purifier =  Codendi_HTMLPurifier::instance();
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
@@ -218,8 +221,9 @@ class CampaignsResource
             $definition_retriever,
             $this->execution_dao,
             $steps_results_representation_builder,
-            \Codendi_HTMLPurifier::instance(),
-            new FileUploadDataProvider($this->getFrozenFieldDetector(), $this->formelement_factory)
+            $purifier,
+            new FileUploadDataProvider($this->getFrozenFieldDetector(), $this->formelement_factory),
+            CommonMarkInterpreter::build($purifier)
         );
 
         $campaign_dao = new CampaignDao();

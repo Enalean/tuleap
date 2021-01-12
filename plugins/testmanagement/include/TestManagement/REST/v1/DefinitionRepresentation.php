@@ -24,6 +24,9 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElementFactory;
+use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionFormatNotFoundException;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionRepresentationBuilder;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
@@ -52,8 +55,12 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
      */
     public $requirement;
 
+    /**
+     * @throws StepDefinitionFormatNotFoundException
+     */
     public function __construct(
         \Codendi_HTMLPurifier $purifier,
+        ContentInterpretor $interpreter,
         Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
@@ -96,7 +103,7 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         }
 
         foreach ($value->getValue() as $step) {
-            $representation = StepDefinitionRepresentation::build($step, $purifier, $artifact);
+            $representation = StepDefinitionRepresentationBuilder::build($step, $artifact, $purifier, $interpreter);
 
             $this->steps[] = $representation;
         }
