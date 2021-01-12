@@ -20,7 +20,7 @@
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.2.1",
-    "core-js": "^3.6.5",
+    "core-js": "^3.8.2",
     "css-loader": "^5.0.0",
     "css-minimizer-webpack-plugin": "^1.1.5",
     "cypress": "^6.2.1",
