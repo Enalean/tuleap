@@ -21,9 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference;
 
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencedArtifactNotFoundException;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceNotFoundException;
-
 class TuleapReferenceRetriever
 {
     /**
@@ -44,8 +41,8 @@ class TuleapReferenceRetriever
     }
 
     /**
-     * @throws CommitTuleapReferencedArtifactNotFoundException
-     * @throws CommitTuleapReferenceNotFoundException
+     * @throws TuleapReferencedArtifactNotFoundException
+     * @throws TuleapReferenceNotFoundException
      */
     public function retrieveTuleapReference(int $artifact_id): \Reference
     {
@@ -56,7 +53,7 @@ class TuleapReferenceRetriever
         );
 
         if (! $external_reference) {
-            throw new CommitTuleapReferenceNotFoundException();
+            throw new TuleapReferenceNotFoundException();
         }
 
         // Set group_id otherwise it is always 100 (#legacycode)
@@ -66,7 +63,7 @@ class TuleapReferenceRetriever
     }
 
     /**
-     * @throws CommitTuleapReferencedArtifactNotFoundException
+     * @throws TuleapReferencedArtifactNotFoundException
      */
     private function getArtifactProjectId(int $artifact_id): string
     {
@@ -80,7 +77,7 @@ class TuleapReferenceRetriever
         );
 
         if ($artifact_project_id === null) {
-            throw new CommitTuleapReferencedArtifactNotFoundException(
+            throw new TuleapReferencedArtifactNotFoundException(
                 $artifact_id
             );
         }

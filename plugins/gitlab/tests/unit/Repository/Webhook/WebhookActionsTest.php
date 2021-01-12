@@ -32,6 +32,8 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
 
 final class WebhookActionsTest extends TestCase
 {
@@ -57,18 +59,24 @@ final class WebhookActionsTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushWebhookActionProcessor
      */
     private $post_push_webhook_action_processor;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostMergeRequestWebhookActionProcessor
+     */
+    private $post_merge_request_webhook_action_processor;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->gitlab_repository_dao              = Mockery::mock(GitlabRepositoryDao::class);
-        $this->post_push_webhook_action_processor = Mockery::mock(PostPushWebhookActionProcessor::class);
-        $this->logger                             = Mockery::mock(LoggerInterface::class);
+        $this->gitlab_repository_dao                       = Mockery::mock(GitlabRepositoryDao::class);
+        $this->post_push_webhook_action_processor          = Mockery::mock(PostPushWebhookActionProcessor::class);
+        $this->post_merge_request_webhook_action_processor = Mockery::mock(PostMergeRequestWebhookActionProcessor::class);
+        $this->logger                                      = Mockery::mock(LoggerInterface::class);
 
         $this->actions = new WebhookActions(
             $this->gitlab_repository_dao,
             $this->post_push_webhook_action_processor,
+            $this->post_merge_request_webhook_action_processor,
             $this->logger
         );
 
@@ -121,6 +129,48 @@ final class WebhookActionsTest extends TestCase
         $this->actions->performActions(
             $this->gitlab_repository,
             $webhook_data,
+            $now
+        );
+    }
+
+    public function testItDelegatesProcessingForPostMergeRequestWebhook(): void
+    {
+        $merge_request_webhook_data = new PostMergeRequestWebhookData(
+            'merge_request',
+            123,
+            'https://example.com',
+            2,
+            'TULEAP-123',
+            "",
+            'closed',
+            1610465599,
+            'john-snow@the-wall.com',
+            'John Snow'
+        );
+
+        $now = new DateTimeImmutable();
+
+        $this->gitlab_repository_dao->shouldReceive('updateLastPushDateForRepository')
+            ->once()
+            ->with(1, $now->getTimestamp());
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Last update date successfully updated for GitLab repository #1')
+            ->once();
+        $this->logger->shouldNotReceive('error');
+
+        $this->post_push_webhook_action_processor
+            ->shouldNotReceive('process');
+
+        $this->post_merge_request_webhook_action_processor
+            ->shouldReceive('process')
+            ->with($merge_request_webhook_data)
+            ->once();
+
+        $this->actions->performActions(
+            $this->gitlab_repository,
+            $merge_request_webhook_data,
             $now
         );
     }

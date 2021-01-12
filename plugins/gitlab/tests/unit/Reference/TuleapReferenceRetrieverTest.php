@@ -26,8 +26,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use ReferenceManager;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencedArtifactNotFoundException;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceNotFoundException;
 
 class TuleapReferenceRetrieverTest extends TestCase
 {
@@ -58,7 +56,7 @@ class TuleapReferenceRetrieverTest extends TestCase
 
     public function testItThrowsAnErrorWhenTheArtifactCantBeFound(): void
     {
-        $this->expectException(CommitTuleapReferencedArtifactNotFoundException::class);
+        $this->expectException(TuleapReferencedArtifactNotFoundException::class);
         $this->event_manager->shouldReceive('processEvent')
             ->once()
             ->with(
@@ -75,7 +73,7 @@ class TuleapReferenceRetrieverTest extends TestCase
 
     public function testItThrowsAnErrorWhenTheArtifactReferenceCantBeFound(): void
     {
-        $this->expectException(CommitTuleapReferenceNotFoundException::class);
+        $this->expectException(TuleapReferenceNotFoundException::class);
         $this->event_manager->shouldReceive('processEvent')
             ->once()
             ->with(

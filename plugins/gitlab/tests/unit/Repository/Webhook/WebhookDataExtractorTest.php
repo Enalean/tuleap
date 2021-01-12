@@ -30,6 +30,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
 use Psr\Log\LoggerInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 
 class WebhookDataExtractorTest extends TestCase
 {
@@ -56,6 +57,7 @@ class WebhookDataExtractorTest extends TestCase
 
         $this->extractor = new WebhookDataExtractor(
             $this->post_push_commit_webhook_data_extractor,
+            new PostMergeRequestWebhookDataBuilder(new \Psr\Log\NullLogger()),
             $this->logger
         );
     }
@@ -267,8 +269,19 @@ class WebhookDataExtractorTest extends TestCase
         $request = (new NullServerRequest())->withBody(
             HTTPFactoryBuilder::streamFactory()->createStream(
                 '{"event_type": "merge_request",
-                  "project":{"id": 123456, "web_url": "https://example.com/path/repo01"}
-                  }'
+                  "project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
+                  "object_attributes":{
+                    "id": 2,
+                    "updated_at": "2021-01-12 13:49:35 UTC",
+                    "title": "My Title",
+                    "description": "My Description",
+                    "state": "opened"
+                  },
+                  "user": {
+                    "name": "John Snow",
+                    "email": "jsnow@AtTheWall.fr"
+                  }
+                }'
             )
         );
 
@@ -280,5 +293,8 @@ class WebhookDataExtractorTest extends TestCase
         $this->assertSame(123456, $webhook_data->getGitlabProjectId());
         $this->assertSame("https://example.com/path/repo01", $webhook_data->getGitlabWebUrl());
         $this->assertInstanceOf(PostMergeRequestWebhookData::class, $webhook_data);
+        $this->assertSame(2, $webhook_data->getMergeRequestId());
+        $this->assertSame("My Title", $webhook_data->getTitle());
+        $this->assertSame("My Description", $webhook_data->getDescription());
     }
 }

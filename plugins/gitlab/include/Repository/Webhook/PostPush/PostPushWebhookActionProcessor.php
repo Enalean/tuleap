@@ -31,9 +31,9 @@ use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencedArtifactNotFoundException;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
+use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 
 class PostPushWebhookActionProcessor
 {
@@ -126,7 +126,7 @@ class PostPushWebhookActionProcessor
                     $external_reference,
                     $projects
                 );
-            } catch (CommitTuleapReferencedArtifactNotFoundException | CommitTuleapReferenceNotFoundException $reference_exception) {
+            } catch (TuleapReferencedArtifactNotFoundException | TuleapReferenceNotFoundException $reference_exception) {
                 $this->logger->error($reference_exception->getMessage());
                 $nb_bad_references++;
             }

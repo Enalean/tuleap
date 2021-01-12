@@ -1,0 +1,143 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ */
+
+namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
+
+use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery;
+use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
+use Psr\Log\LoggerInterface;
+use Reference;
+use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
+use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
+use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+
+class PostMergeRequestWebhookActionProcessorTest extends TestCase
+{
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @var PostMergeRequestWebhookActionProcessor
+     */
+    private $processor;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TuleapReferenceRetriever
+     */
+    private $tuleap_reference_retriever;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->tuleap_reference_retriever            = Mockery::mock(TuleapReferenceRetriever::class);
+        $this->logger                                = Mockery::mock(LoggerInterface::class);
+
+        $this->processor = new PostMergeRequestWebhookActionProcessor(
+            new WebhookTuleapReferencesParser(),
+            $this->tuleap_reference_retriever,
+            $this->logger
+        );
+    }
+
+    public function testItProcessesActionsForPostMergeRequestWebhook(): void
+    {
+        $merge_request_webhook_data = new PostMergeRequestWebhookData(
+            'merge_request',
+            123,
+            'https://example.com',
+            2,
+            "My Title TULEAP-58",
+            'TULEAP-666 TULEAP-45',
+        );
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('3 Tuleap references found in merge request 2')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Reference to Tuleap artifact #58 found.')
+            ->once();
+
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Reference to Tuleap artifact #666 found.')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('|_ Reference to Tuleap artifact #45 found.')
+            ->once();
+
+        $this->tuleap_reference_retriever
+            ->shouldReceive('retrieveTuleapReference')
+            ->with(58)
+            ->andThrow(new TuleapReferencedArtifactNotFoundException(58))
+            ->once();
+
+        $this->tuleap_reference_retriever
+            ->shouldReceive('retrieveTuleapReference')
+            ->with(666)
+            ->andThrow(new TuleapReferenceNotFoundException())
+            ->once();
+
+        $this->tuleap_reference_retriever
+            ->shouldReceive('retrieveTuleapReference')
+            ->with(45)
+            ->andReturn(
+                new Reference(
+                    43,
+                    'key',
+                    'desc',
+                    'link',
+                    'P',
+                    'service_short_name',
+                    'nature',
+                    1,
+                    100
+                )
+            )
+            ->once();
+
+        $this->logger
+            ->shouldReceive("error")
+            ->with('Tuleap artifact #58 not found, no cross-reference will be added.')
+            ->once();
+
+        $this->logger
+            ->shouldReceive("error")
+            ->with('No reference found with the keyword \'art\', and this must not happen. If you read this, this is really bad.')
+            ->once();
+
+        $this->logger
+            ->shouldReceive("info")
+            ->with('|  |_ Tuleap artifact #45 found')
+            ->once();
+
+        $this->processor->process($merge_request_webhook_data);
+    }
+}

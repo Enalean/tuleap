@@ -19,9 +19,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Commits;
+namespace Tuleap\Gitlab\Reference;
 
-class CommitTuleapReferenceNotFoundException extends \Exception
+class TuleapReferenceNotFoundException extends \Exception
 {
     public function __construct()
     {
