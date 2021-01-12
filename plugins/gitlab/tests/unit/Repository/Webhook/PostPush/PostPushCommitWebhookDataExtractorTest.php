@@ -46,8 +46,23 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
         $this->expectException(MissingKeyException::class);
         $this->expectExceptionMessage("key commits is missing");
 
-        $webhook_content = [];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
+        $webhook_content = [
+            'ref' => 'master'
+        ];
+        $this->extractor->retrieveWebhookCommitsData($webhook_content);
+    }
+
+    public function testItThrowsAnExceptionIfRefKeyIsMissing(): void
+    {
+        $this->expectException(MissingKeyException::class);
+        $this->expectExceptionMessage('key ref is missing');
+
+        $webhook_content = [
+            'commits' => [
+                ['message' => "commit 01"]
+            ]
+        ];
+        $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
 
     public function testItThrowsAnExceptionIfACommitHasIdKeyIsMissing(): void
@@ -56,11 +71,12 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
         $this->expectExceptionMessage('key id is missing');
 
         $webhook_content = [
+            'ref' => 'master',
             'commits' => [
                 ['message' => "commit 01"]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
+        $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
 
     public function testItThrowsAnExceptionIfACommitHasTitleKeyMissing(): void
@@ -69,6 +85,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
         $this->expectExceptionMessage('key title is missing');
 
         $webhook_content = [
+            'ref' => 'master',
             'commits' => [
                 [
                     'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
@@ -76,7 +93,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
+        $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
 
     public function testItThrowsAnExceptionIfACommitHasMessageKeyIsMissing(): void
@@ -85,6 +102,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
         $this->expectExceptionMessage('key message is missing');
 
         $webhook_content = [
+            'ref' => 'master',
             'commits' => [
                 [
                     'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
@@ -92,7 +110,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
+        $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
 
     public function testItThrowsAnExceptionWhenCommitDateKeyIsMissing(): void
@@ -101,6 +119,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
         $this->expectExceptionMessage("key timestamp is missing");
 
         $webhook_content = [
+            'ref' => 'master',
             'commits' => [
                 [
                     'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
@@ -113,7 +132,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
+        $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
 
     public function testItThrowsAnExceptionWhenCommitAuthorKeyIsMissing(): void
@@ -122,6 +141,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
         $this->expectExceptionMessage("key author is missing");
 
         $webhook_content = [
+            'ref' => 'master',
             'commits' => [
                 [
                     'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
@@ -131,7 +151,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
+        $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
 
     public function testItThrowsAnExceptionWhenCommitAuthorNameKeyIsMissing(): void
@@ -140,6 +160,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
         $this->expectExceptionMessage("key name in author is missing");
 
         $webhook_content = [
+            'ref' => 'master',
             'commits' => [
                 [
                     'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
@@ -152,7 +173,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
+        $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
 
     public function testItThrowsAnExceptionWhenCommitAuthorEmailKeyIsMissing(): void
@@ -161,6 +182,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
         $this->expectExceptionMessage("key email in author is missing");
 
         $webhook_content = [
+            'ref' => 'master',
             'commits' => [
                 [
                     'id' => "feff4ced04b237abb8b4a50b4160099313152c3c",
@@ -173,12 +195,13 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
                 ]
             ]
         ];
-        $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
+        $this->extractor->retrieveWebhookCommitsData($webhook_content);
     }
 
     public function testItExtractsCommitData(): void
     {
         $webhook_content = [
+            'ref' => 'master',
             'commits' => [
                 [
                     'id' => 'feff4ced04b237abb8b4a50b4160099313152c3c',
@@ -203,7 +226,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
             ]
         ];
 
-        $commits_data = $this->extractor->retrieveWebhookCommitsData($webhook_content, "master");
+        $commits_data = $this->extractor->retrieveWebhookCommitsData($webhook_content);
         $this->assertCount(2, $commits_data);
 
         $first_commit  = $commits_data[0];

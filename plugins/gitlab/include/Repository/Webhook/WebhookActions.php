@@ -28,6 +28,7 @@ use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
 
 class WebhookActions
 {
@@ -86,6 +87,10 @@ class WebhookActions
     private function checkWebhookDataIsSupported(WebhookData $webhook_data): void
     {
         if ($webhook_data instanceof PostPushWebhookData) {
+            return;
+        }
+
+        if ($webhook_data instanceof PostMergeRequestWebhookData) {
             return;
         }
 

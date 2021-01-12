@@ -41,6 +41,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Gitlab\Repository\Webhook\EmptyBranchNameException;
+use Tuleap\Gitlab\Repository\Webhook\MissingEventKeysException;
 
 class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
@@ -129,7 +130,8 @@ class GitlabRepositoryWebhookController extends DispatchablePSR15Compatible impl
             SecretHeaderNotFoundException |
             SecretNotDefinedException |
             EmptyBranchNameException |
-            SecretHeaderNotMatchingException $exception
+            SecretHeaderNotMatchingException |
+            MissingEventKeysException $exception
         ) {
             $this->logger->error($exception->getMessage());
             return $this->response_factory->createResponse(400);

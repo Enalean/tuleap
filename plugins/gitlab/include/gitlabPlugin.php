@@ -147,7 +147,8 @@ class gitlabPlugin extends Plugin
             new WebhookDataExtractor(
                 new PostPushCommitWebhookDataExtractor(
                     $logger
-                )
+                ),
+                $logger
             ),
             new WebhookRepositoryRetriever(
                 $this->getGitlabRepositoryFactory()
