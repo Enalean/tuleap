@@ -38,6 +38,11 @@ const webpack_config_for_angular = {
         ckeditor4: "CKEDITOR",
     },
     resolve: {
+        alias: {
+            // Aliases for the artifact modal
+            angular$: path.resolve(__dirname, "./node_modules/angular"),
+            "angular-sanitize$": path.resolve(__dirname, "./node_modules/angular-sanitize"),
+        },
         extensions: [".ts", ".js"],
     },
     module: {
