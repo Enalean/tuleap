@@ -476,10 +476,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
-        $changeset = $artifact->getLastChangesetWithFieldValue($this);
-        $value     = $this->getComputedValue($user, $changeset->getArtifact(), $changeset->getSubmittedOn());
+        $changeset      = $artifact->getLastChangesetWithFieldValue($this);
+        $computed_value = null;
+        if ($changeset !== null) {
+            $computed_value = $this->getComputedValue($user, $changeset->getArtifact(), $changeset->getSubmittedOn());
+        }
 
-        return ($value !== null) ? $value : "-";
+        return (string) ($computed_value ?? "-");
     }
 
     /**
@@ -490,11 +493,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $current_user = UserManager::instance()->getCurrentUser();
-        $changeset    = $artifact->getLastChangesetWithFieldValue($this);
-        $value        = $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
+        $changeset      = $artifact->getLastChangesetWithFieldValue($this);
+        $computed_value = null;
+        if ($changeset !== null) {
+            $current_user   = UserManager::instance()->getCurrentUser();
+            $computed_value = $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
+        }
 
-        return ($value !== null) ? $value : "-";
+        return (string) ($computed_value ?? "-");
     }
 
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
