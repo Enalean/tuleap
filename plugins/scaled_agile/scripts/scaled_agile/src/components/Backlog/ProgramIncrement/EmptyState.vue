@@ -21,7 +21,7 @@
     <div class="program-increment-empty-state">
         <empty-svg />
         <p v-translate class="empty-page-text" data-test="scaled-empty-state">
-            There are iterations yet
+            There are no iterations yet
         </p>
     </div>
 </template>
