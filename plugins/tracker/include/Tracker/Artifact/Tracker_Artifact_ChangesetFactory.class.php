@@ -93,20 +93,21 @@ class Tracker_Artifact_ChangesetFactory
         return null;
     }
 
-    /**
-     * @return \Tracker_Artifact_Changeset|null
-     */
-    public function getLastChangesetWithFieldValue(Artifact $artifact, Tracker_FormElement_Field $field)
+    public function getLastChangesetWithFieldValue(Artifact $artifact, Tracker_FormElement_Field $field): ?Tracker_Artifact_Changeset
     {
         $dar = $this->dao->searchLastChangesetAndValueForArtifactField($artifact->getId(), $field->getId());
-        if ($dar) {
-            $row       = $dar->getRow();
-            $changeset = $this->getChangesetFromRow($artifact, $row);
-            $value     = $field->getChangesetValue($changeset, $row['value_id'], $row['has_changed']);
-            $changeset->setFieldValue($field, $value);
-            return $changeset;
+        if ($dar === false) {
+            return null;
         }
-        return null;
+        $row = $dar->getRow();
+        if ($row === false) {
+            return null;
+        }
+
+        $changeset = $this->getChangesetFromRow($artifact, $row);
+        $value     = $field->getChangesetValue($changeset, $row['value_id'], $row['has_changed']);
+        $changeset->setFieldValue($field, $value);
+        return $changeset;
     }
 
     /**
