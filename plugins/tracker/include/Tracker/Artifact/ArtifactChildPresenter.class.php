@@ -70,11 +70,11 @@ class Tracker_ArtifactChildPresenter
         $this->has_children = $this->hasChildren($artifact, $retriever);
     }
 
-    private function hasChildren(Artifact $artifact, $retriever)
+    private function hasChildren(Artifact $artifact, NatureIsChildLinkRetriever $retriever): bool
     {
         if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
             $artifact_links = $retriever->getChildren($artifact);
-            return $artifact_links->count() > 0;
+            return count($artifact_links) > 0;
         } else {
             return $artifact->hasChildren();
         }

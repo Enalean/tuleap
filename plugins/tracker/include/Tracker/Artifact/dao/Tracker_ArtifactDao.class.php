@@ -530,24 +530,47 @@ class Tracker_ArtifactDao extends DataAccessObject
     /**
      * It does not check permissions
      */
-    public function getChildren($artifact_id)
+    public function getChildren(int $artifact_id)
     {
-        return $this->getChildrenForArtifacts([$artifact_id]);
+        $escaped_id         = $this->da->escapeInt($artifact_id);
+        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+
+        $sql = "SELECT child_art.*, parent_art.id as parent_id
+                FROM tracker_artifact parent_art
+                    INNER JOIN tracker_field AS f ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value AS cv ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink AS artlink ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact AS child_art ON (child_art.id = artlink.artifact_id)
+                    INNER JOIN tracker AS child_tracker ON (child_art.tracker_id = child_tracker.id)
+               WHERE artlink.nature=$is_child_shortname
+                    AND child_tracker.deletion_date IS NULL
+                    AND parent_art.id=$escaped_id";
+
+        return $this->retrieve($sql);
     }
 
     /**
      * Return the number of children for each artifact.
      *
-     * @param array $artifact_ids
+     * @param int[] $artifact_ids
      *
+     * @psalm-return array{id:int, nb:int}
      * @return array
      */
-    public function getChildrenCount(array $artifact_ids)
+    public function getChildrenCount(array $artifact_ids): array
     {
-        $sql = "SELECT parent_art.id, count(*) AS nb" .
-               $this->getFromStatementForChildrenOfArtifacts() .
-               "WHERE parent_art.id IN (" . $this->da->escapeIntImplode($artifact_ids) . ")
-                GROUP BY parent_art.id";
+        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+
+        $sql = "SELECT parent_art.id, count(*) AS nb
+                FROM tracker_artifact parent_art
+                     INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                     INNER JOIN tracker_changeset_value              AS cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                     INNER JOIN tracker_changeset_value_artifactlink AS artlink    ON (artlink.changeset_value_id = cv.id)
+                     INNER JOIN tracker_artifact                     AS child_art  ON (child_art.id = artlink.artifact_id)
+                     INNER JOIN tracker                              AS child_tracker ON (child_art.tracker_id = child_tracker.id)
+                WHERE parent_art.id IN (" . $this->da->escapeIntImplode($artifact_ids) . ")
+                    AND artlink.nature=$is_child_shortname
+                    AND child_tracker.deletion_date IS NULL";
 
         $children_count = [];
         foreach ($this->retrieve($sql) as $row) {
@@ -561,94 +584,75 @@ class Tracker_ArtifactDao extends DataAccessObject
         return $children_count;
     }
 
-    public function getChildrenNatureMode($artifact_id)
-    {
-        $escaped_id = $this->da->escapeInt($artifact_id);
-        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
-
-        $sql = "SELECT child_art.*, parent_art.id as parent_id
-                FROM tracker_artifact parent_art
-                    INNER JOIN tracker_field AS f ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
-                    INNER JOIN tracker_changeset_value AS cv ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
-                    INNER JOIN tracker_changeset_value_artifactlink AS artlink ON (artlink.changeset_value_id = cv.id)
-                    INNER JOIN tracker_artifact AS child_art ON (child_art.id = artlink.artifact_id)
-                    INNER JOIN tracker AS child_tracker ON (child_art.tracker_id = child_tracker.id)
-               WHERE artlink.nature=$is_child_shortname
-                    AND child_tracker.deletion_date IS NULL
-               AND parent_art.id=$escaped_id";
-
-        return $this->retrieve($sql);
-    }
-
     /**
      * It does not check permissions
      */
-    public function getPaginatedChildren($artifact_id, $limit, $offset)
+    public function getPaginatedChildren(int $artifact_id, int $limit, int $offset)
     {
-        return $this->getPaginatedChildrenForArtifacts([$artifact_id], $limit, $offset);
+        $artifact_ids = $this->da->escapeIntImplode([$artifact_id]);
+        $limit        = $this->da->escapeInt($limit);
+        $offset       = $this->da->escapeInt($offset);
+
+        $sql  = "SELECT SQL_CALC_FOUND_ROWS child_art.*, parent_art.id as parent_id, tracker_artifact_priority_rank.rank as rank" .
+            $this->getSortedFromStatementForChildrenOfArtifacts($artifact_ids) .
+            "LIMIT $limit
+             OFFSET $offset";
+
+        return $this->retrieve($sql);
     }
 
     public function getChildrenForArtifacts(array $artifact_ids)
     {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
 
-        $sql = "SELECT child_art.*, parent_art.id as parent_id" .
+        $sql = "SELECT child_art.*, parent_art.id as parent_id " .
                $this->getSortedFromStatementForChildrenOfArtifacts($artifact_ids);
+
         return $this->retrieve($sql);
     }
 
-    private function getPaginatedChildrenForArtifacts(array $artifact_ids, $limit, $offset)
+    private function getSortedFromStatementForChildrenOfArtifacts(string $artifact_ids): string
     {
-        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-        $limit        = $this->da->escapeInt($limit);
-        $offset       = $this->da->escapeInt($offset);
+        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
 
-        $sql  = "SELECT SQL_CALC_FOUND_ROWS child_art.*, parent_art.id as parent_id, tracker_artifact_priority_rank.rank as rank" .
-                $this->getSortedFromStatementForChildrenOfArtifacts($artifact_ids) .
-                "LIMIT $limit
-                 OFFSET $offset";
-        return $this->retrieve($sql);
-    }
-
-    private function getSortedFromStatementForChildrenOfArtifacts($artifact_ids)
-    {
-        return $this->getFromStatementForChildrenOfArtifacts() .
-                "INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = child_art.id)
-                 WHERE parent_art.id IN ($artifact_ids)
-                 ORDER BY tracker_artifact_priority_rank.rank ASC ";
-    }
-
-    private function getFromStatementForChildrenOfArtifacts()
-    {
         return " FROM tracker_artifact parent_art
                      INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                      INNER JOIN tracker_changeset_value              AS cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                      INNER JOIN tracker_changeset_value_artifactlink AS artlink    ON (artlink.changeset_value_id = cv.id)
                      INNER JOIN tracker_artifact                     AS child_art  ON (child_art.id = artlink.artifact_id)
-                     INNER JOIN tracker_hierarchy                    AS hierarchy  ON (hierarchy.child_id = child_art.tracker_id AND hierarchy.parent_id = parent_art.tracker_id) ";
+                     INNER JOIN tracker                              AS child_tracker ON (child_art.tracker_id = child_tracker.id)
+                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = child_art.id)
+                WHERE parent_art.id IN ($artifact_ids)
+                    AND child_tracker.deletion_date IS NULL
+                    AND artlink.nature=$is_child_shortname
+                ORDER BY tracker_artifact_priority_rank.rank ASC ";
     }
 
     public function getParents(array $artifact_ids)
     {
-        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $artifact_ids       = $this->da->escapeIntImplode($artifact_ids);
+        $is_child_shortname = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+
         $sql = "SELECT child_art.id child_id, parent_art.*
                 FROM tracker_artifact parent_art
+                    INNER JOIN tracker                              AS parent_tracker ON (parent_tracker.id = parent_art.tracker_id)
                     INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
-                    INNER JOIN tracker_hierarchy                    hierarchy  ON (hierarchy.child_id = child_art.tracker_id AND hierarchy.parent_id = parent_art.tracker_id)
-                WHERE child_art.id IN ($artifact_ids)";
+                WHERE child_art.id IN ($artifact_ids)
+                    AND artlink.nature=$is_child_shortname
+                    AND parent_tracker.deletion_date IS NULL";
+
         return $this->retrieve($sql);
     }
-
 
     public function getSiblings($artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $sql = "SELECT art_sibling.*
                 FROM tracker_artifact parent_art
-
+                    /* This query is only used for triggers so we still use hierarchy table here */
                     /* connect parent to its children (see getChildren) */
                     INNER JOIN tracker_field                        f_sibling            ON (f_sibling.tracker_id = parent_art.tracker_id AND f_sibling.formElement_type = 'art_link' AND f_sibling.use_it = 1)
                     INNER JOIN tracker_changeset_value              cv_sibling           ON (cv_sibling.changeset_id = parent_art.last_changeset_id AND cv_sibling.field_id = f_sibling.id)
@@ -1227,24 +1231,6 @@ class Tracker_ArtifactDao extends DataAccessObject
                     INNER JOIN tracker                              linked_tracker ON (linked_art.tracker_id = linked_tracker.id)
                 WHERE parent_art.id IN ($artifact_ids)
                     AND linked_tracker.deletion_date IS NULL";
-
-        return $this->retrieve($sql);
-    }
-
-    public function searchIsChildLinkedArtifactsById($artifact_id)
-    {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-        $nature      = $this->da->quoteSmart(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
-        $sql = "SELECT linked_art.*
-                FROM tracker_artifact parent_art
-                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
-                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
-                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
-                    INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
-                    INNER JOIN tracker                              linked_tracker ON (linked_art.tracker_id = linked_tracker.id)
-                WHERE parent_art.id = $artifact_id
-                    AND linked_tracker.deletion_date IS NULL
-                AND nature = $nature";
 
         return $this->retrieve($sql);
     }

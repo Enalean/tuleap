@@ -81,9 +81,9 @@ class NatureIsChildLinkRetriever
     }
 
     /** @return Artifact[] */
-    public function getChildren(Artifact $artifact)
+    public function getChildren(Artifact $artifact): array
     {
-        return $this->factory->getIsChildLinkedArtifactsById($artifact);
+        return $this->factory->getChildren($artifact);
     }
 
     /**

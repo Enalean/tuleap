@@ -183,7 +183,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
         if ($this->artifact->getTracker()->isProjectAllowedToUseNature()) {
             $artifact_links = $this->retriever->getChildren($this->artifact);
-            if ($artifact_links->count() > 0) {
+            if (count($artifact_links) > 0) {
                 $view_collection->add(new Nature($this->artifact, $request, $user));
             }
         } else {
