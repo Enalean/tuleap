@@ -35,7 +35,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencesParser;
+use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
@@ -162,7 +162,7 @@ class gitlabPlugin extends Plugin
             new WebhookActions(
                 new GitlabRepositoryDao(),
                 new PostPushWebhookActionProcessor(
-                    new CommitTuleapReferencesParser(),
+                    new WebhookTuleapReferencesParser(),
                     new GitlabRepositoryProjectRetriever(
                         new GitlabRepositoryProjectDao(),
                         ProjectManager::instance()

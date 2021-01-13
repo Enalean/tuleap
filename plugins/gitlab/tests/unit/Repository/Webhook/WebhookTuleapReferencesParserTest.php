@@ -22,12 +22,12 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Commits;
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookData;
+use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
-final class CommitTuleapReferencesParserTest extends TestCase
+final class WebhookTuleapReferencesParserTest extends TestCase
 {
     /**
-     * @var CommitTuleapReferencesParser
+     * @var WebhookTuleapReferencesParser
      */
     private $parser;
 
@@ -35,22 +35,12 @@ final class CommitTuleapReferencesParserTest extends TestCase
     {
         parent::setUp();
 
-        $this->parser = new CommitTuleapReferencesParser();
+        $this->parser = new WebhookTuleapReferencesParser();
     }
 
     public function testItRetrievesTuleapReferencesInSingleLineMessage(): void
     {
-        $commit_webhook_data = new PostPushCommitWebhookData(
-            'feff4ced04b237abb8b4a50b4160099313152c3c',
-            'artifact TULEAP-123 01 (TULEAP-234,tuleap-345)',
-            'artifact TULEAP-123 01 (TULEAP-234,tuleap-345)',
-            "master",
-            1608110510,
-            'john-snow@the-wall.com',
-            'John Snow'
-        );
-
-        $references_collection = $this->parser->extractCollectionOfTuleapReferences($commit_webhook_data);
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences('artifact TULEAP-123 01 (TULEAP-234,tuleap-345)');
         $references            = $references_collection->getTuleapReferences();
 
         $this->assertCount(3, $references);
@@ -61,17 +51,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
 
     public function testItRetrievesTuleapReferencesWithMixedCharsInSingleLineMessage(): void
     {
-        $commit_webhook_data = new PostPushCommitWebhookData(
-            'feff4ced04b237abb8b4a50b4160099313152c3c',
-            'artifact TULEAP-12a3 01',
-            'artifact TULEAP-12a3 01',
-            "master",
-            1608110510,
-            'john-snow@the-wall.com',
-            'John Snow'
-        );
-
-        $references_collection = $this->parser->extractCollectionOfTuleapReferences($commit_webhook_data);
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences('artifact TULEAP-12a3 01');
         $references            = $references_collection->getTuleapReferences();
 
         $this->assertCount(1, $references);
@@ -80,17 +60,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
 
     public function testItRetrievesTuleapReferencesInMultipleLinesMessage(): void
     {
-        $commit_webhook_data = new PostPushCommitWebhookData(
-            'feff4ced04b237abb8b4a50b4160099313152c3c',
-            "aaaaaaaaaaaaaaaaaaaaaaaasqsdfsdfsdfsfd TULEAP-123qsqsdqsdqsdqd TULEAP-254\n\nsdfsfhsudfTULEAP-aaaa\n\n\nTULEAP-898",
-            "aaaaaaaaaaaaaaaaaaaaaaaasqsdfsdfsdfsfd TULEAP-123qsqsdqsdqsdqd TULEAP-254\n\nsdfsfhsudfTULEAP-aaaa\n\n\nTULEAP-898",
-            "master",
-            1608110510,
-            'john-snow@the-wall.com',
-            'John Snow'
-        );
-
-        $references_collection = $this->parser->extractCollectionOfTuleapReferences($commit_webhook_data);
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences("aaaaaaaaaaaaaaaaaaaaaaaasqsdfsdfsdfsfd TULEAP-123qsqsdqsdqsdqd TULEAP-254\n\nsdfsfhsudfTULEAP-aaaa\n\n\nTULEAP-898");
         $references            = $references_collection->getTuleapReferences();
 
         $this->assertCount(3, $references);
@@ -101,17 +71,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
 
     public function testItRetrievesTuleapReferencesOnlyOnce(): void
     {
-        $commit_webhook_data = new PostPushCommitWebhookData(
-            'feff4ced04b237abb8b4a50b4160099313152c3c',
-            "aaaaaaaaaaaaaaaaaaaaaaaasqsdfsdfsdfsfd TULEAP-123qsqsdqsdqsdqd TULEAP-254\n\nsdfsfhsudfTULEAP-aaaa\n\n\nTULEAP-123",
-            "aaaaaaaaaaaaaaaaaaaaaaaasqsdfsdfsdfsfd TULEAP-123qsqsdqsdqsdqd TULEAP-254\n\nsdfsfhsudfTULEAP-aaaa\n\n\nTULEAP-123",
-            "master",
-            1608110510,
-            'john-snow@the-wall.com',
-            'John Snow'
-        );
-
-        $references_collection = $this->parser->extractCollectionOfTuleapReferences($commit_webhook_data);
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences("aaaaaaaaaaaaaaaaaaaaaaaasqsdfsdfsdfsfd TULEAP-123qsqsdqsdqsdqd TULEAP-254\n\nsdfsfhsudfTULEAP-aaaa\n\n\nTULEAP-123");
         $references            = $references_collection->getTuleapReferences();
 
         $this->assertCount(2, $references);
@@ -121,17 +81,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
 
     public function testItRetrievesTuleapReferencesCaseInsensitive(): void
     {
-        $commit_webhook_data = new PostPushCommitWebhookData(
-            'feff4ced04b237abb8b4a50b4160099313152c3c',
-            'artifact tuleap-123 01',
-            'artifact tuleap-123 01',
-            "master",
-            1608110510,
-            'john-snow@the-wall.com',
-            'John Snow'
-        );
-
-        $references_collection = $this->parser->extractCollectionOfTuleapReferences($commit_webhook_data);
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences('artifact tuleap-123 01');
         $references            = $references_collection->getTuleapReferences();
 
         $this->assertCount(1, $references);
@@ -140,17 +90,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
 
     public function testItDoesNotRetrievesTuleapReferenceThatDoesNotReferenceIntegerIds(): void
     {
-        $commit_webhook_data = new PostPushCommitWebhookData(
-            'feff4ced04b237abb8b4a50b4160099313152c3c',
-            'artifact TULEAP-abc 01',
-            'artifact TULEAP-abc 01',
-            "master",
-            1608110510,
-            'john-snow@the-wall.com',
-            'John Snow'
-        );
-
-        $references_collection = $this->parser->extractCollectionOfTuleapReferences($commit_webhook_data);
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences('artifact TULEAP-abc 01');
         $references            = $references_collection->getTuleapReferences();
 
         $this->assertEmpty($references);
@@ -173,17 +113,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
      */
     public function testItAcceptsALimitedListOfCharactersForReferenceBoundary(string $char): void
     {
-        $commit_webhook_data = new PostPushCommitWebhookData(
-            'feff4ced04b237abb8b4a50b4160099313152c3c',
-            $char . 'TULEAP-123',
-            $char . 'TULEAP-123',
-            "master",
-            1608110510,
-            'john-snow@the-wall.com',
-            'John Snow'
-        );
-
-        $references_collection = $this->parser->extractCollectionOfTuleapReferences($commit_webhook_data);
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences($char . 'TULEAP-123');
         $references            = $references_collection->getTuleapReferences();
 
         $this->assertCount(1, $references, "${char}TULEAP-123 should be parsed");
@@ -203,17 +133,7 @@ final class CommitTuleapReferencesParserTest extends TestCase
      */
     public function testItRejectsInvalidReferenceBoundary(string $char): void
     {
-        $commit_webhook_data = new PostPushCommitWebhookData(
-            'feff4ced04b237abb8b4a50b4160099313152c3c',
-            $char . 'TULEAP-123',
-            $char . 'TULEAP-123',
-            "master",
-            1608110510,
-            'john-snow@the-wall.com',
-            'John Snow'
-        );
-
-        $references_collection = $this->parser->extractCollectionOfTuleapReferences($commit_webhook_data);
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences($char . 'TULEAP-123');
         $references            = $references_collection->getTuleapReferences();
 
         $this->assertEmpty($references, "${char}TULEAP-123 should not be parsed");

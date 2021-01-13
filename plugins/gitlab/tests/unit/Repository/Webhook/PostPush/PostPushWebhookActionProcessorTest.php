@@ -35,7 +35,7 @@ use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceNotFoundException;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencesParser;
+use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
 final class PostPushWebhookActionProcessorTest extends TestCase
 {
@@ -83,7 +83,7 @@ final class PostPushWebhookActionProcessorTest extends TestCase
         $this->tuleap_reference_retriever          = Mockery::mock(TuleapReferenceRetriever::class);
 
         $this->processor = new PostPushWebhookActionProcessor(
-            new CommitTuleapReferencesParser(),
+            new WebhookTuleapReferencesParser(),
             $this->gitlab_repository_project_retriever,
             $this->commit_tuleap_reference_dao,
             $this->reference_manager,

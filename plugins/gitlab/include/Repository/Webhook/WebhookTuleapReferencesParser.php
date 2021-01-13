@@ -19,28 +19,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Commits;
+namespace Tuleap\Gitlab\Repository\Webhook;
 
-/**
- * @psalm-immutable
- */
-class CommitTuleapReferenceCollection
+class WebhookTuleapReferencesParser
 {
-    /**
-     * @var CommitTuleapReference[]
-     */
-    private $tuleap_references;
+    public function extractCollectionOfTuleapReferences(
+        string $message
+    ): WebhookTuleapReferenceCollection {
+        $matches = [];
+        $pattern = '/(?:^|\s|[' . preg_quote('.,;:[](){}|\'"', '/') . '])tuleap-(\d+)/i';
+        preg_match_all($pattern, $message, $matches);
 
-    public function __construct(array $collection)
-    {
-        $this->tuleap_references = $collection;
-    }
+        $parsed_tuleap_references = [];
+        if (isset($matches[1])) {
+            foreach ($matches[1] as $id) {
+                $parsed_tuleap_references[] = new WebhookTuleapReference((int) $id);
+            }
+        }
 
-    /**
-     * @return CommitTuleapReference[]
-     */
-    public function getTuleapReferences(): array
-    {
-        return $this->tuleap_references;
+        return new WebhookTuleapReferenceCollection(
+            array_unique($parsed_tuleap_references, SORT_REGULAR)
+        );
     }
 }
