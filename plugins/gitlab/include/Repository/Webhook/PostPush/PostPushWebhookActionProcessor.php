@@ -29,16 +29,16 @@ use Tuleap\Gitlab\Reference\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReference;
+use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceNotFoundException;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencesParser;
+use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
 class PostPushWebhookActionProcessor
 {
     /**
-     * @var CommitTuleapReferencesParser
+     * @var WebhookTuleapReferencesParser
      */
     private $commit_tuleap_references_parser;
 
@@ -68,7 +68,7 @@ class PostPushWebhookActionProcessor
     private $tuleap_reference_retriever;
 
     public function __construct(
-        CommitTuleapReferencesParser $commit_tuleap_references_parser,
+        WebhookTuleapReferencesParser $commit_tuleap_references_parser,
         GitlabRepositoryProjectRetriever $gitlab_repository_project_retriever,
         CommitTuleapReferenceDAO $commit_tuleap_reference_dao,
         ReferenceManager $reference_manager,
@@ -95,7 +95,7 @@ class PostPushWebhookActionProcessor
         PostPushCommitWebhookData $commit_webhook_data
     ): void {
         $references_collection = $this->commit_tuleap_references_parser->extractCollectionOfTuleapReferences(
-            $commit_webhook_data
+            $commit_webhook_data->getMessage()
         );
 
         $projects = $this->gitlab_repository_project_retriever->getProjectsGitlabRepositoryIsIntegratedIn(
@@ -143,7 +143,7 @@ class PostPushWebhookActionProcessor
      */
     private function saveReferenceInEachIntegratedProject(
         GitlabRepository $gitlab_repository,
-        CommitTuleapReference $tuleap_reference,
+        WebhookTuleapReference $tuleap_reference,
         PostPushCommitWebhookData $commit_webhook_data,
         \Reference $external_reference,
         array $projects

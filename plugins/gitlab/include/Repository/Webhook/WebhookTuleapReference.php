@@ -19,12 +19,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Commits;
+namespace Tuleap\Gitlab\Repository\Webhook;
 
 /**
  * @psalm-immutable
  */
-class CommitTuleapReference
+class WebhookTuleapReference
 {
     /**
      * @var int
