@@ -744,6 +744,7 @@ class RouteCollector
             new SapiEmitter(),
             HTTPFactoryBuilder::responseFactory(),
             \BackendLogger::getDefaultLogger('csp_violation'),
+            new SessionWriteCloseMiddleware(),
         );
     }
 
