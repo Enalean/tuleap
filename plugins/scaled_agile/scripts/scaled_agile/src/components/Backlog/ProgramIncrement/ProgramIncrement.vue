@@ -18,35 +18,19 @@
   -->
 
 <template>
-    <div class="scaled-agile-app">
-        <breadcrumb
-            v-bind:project_public_name="projectPublicName()"
-            v-bind:project_short_name="projectShortName()"
-        />
-        <div class="program-backlog" data-test="backlog-section">
-            <to-be-planned class="to-be-planned" />
-            <program-increment class="program-increment" />
-        </div>
+    <div>
+        <h2 v-translate>Program Increment</h2>
+        <empty-state />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import Breadcrumb from "./Breadcrumb.vue";
-import { getProjectPublicName, projectShortName } from "../configuration";
-import ProgramIncrement from "./Backlog/ProgramIncrement/ProgramIncrement.vue";
-import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
+import EmptyState from "./EmptyState.vue";
 
 @Component({
-    components: { ToBePlanned, ProgramIncrement, Breadcrumb },
+    components: { EmptyState },
 })
-export default class App extends Vue {
-    public projectPublicName(): string {
-        return getProjectPublicName();
-    }
-    public projectShortName(): string {
-        return projectShortName();
-    }
-}
+export default class ProgramIncrement extends Vue {}
 </script>

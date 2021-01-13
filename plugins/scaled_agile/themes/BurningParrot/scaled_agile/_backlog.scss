@@ -17,23 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, ShallowMountOptions } from "@vue/test-utils";
-import App from "./App.vue";
-import { createScaledAgileLocalVue } from "../helpers/local-vue-for-test";
+.program-backlog {
+    display: flex;
+    margin: $tlp-large-spacing 0 0 0;
+}
 
-describe("App", () => {
-    let component_options: ShallowMountOptions<App>;
+.to-be-planned {
+    flex: 1 1 50%;
+}
 
-    it("Displays the empty state", async () => {
-        component_options = {
-            propsData: {
-                project_public_name: "Public name",
-                project_short_name: "short-name",
-            },
-            localVue: await createScaledAgileLocalVue(),
-        };
+.program-increment {
+    flex: 1 1 50%;
+}
 
-        const wrapper = shallowMount(App, component_options);
-        expect(wrapper.find("[data-test=backlog-section]").exists()).toBe(true);
-    });
-});
+.program-increment-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0 $tlp-medium-spacing;
+    color: transparentize($tlp-theme-color, .7);
+    font-size: 14px;
+    text-align: center;
+}
+
+.program-to-be-planned-title {
+    margin: 0 0 0 $tlp-medium-spacing;
+}
