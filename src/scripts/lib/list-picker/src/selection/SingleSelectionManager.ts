@@ -184,6 +184,10 @@ export class SingleSelectionManager implements SelectionManager {
         remove_value_button.classList.add("list-picker-selected-value-remove-button");
         remove_value_button.innerText = "×";
 
+        if (this.source_select_box.disabled) {
+            return remove_value_button;
+        }
+
         remove_value_button.addEventListener("pointerdown", (event: Event) => {
             event.preventDefault();
             event.cancelBubble = true;

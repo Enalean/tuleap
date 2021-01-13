@@ -171,6 +171,24 @@ describe("SingleSelectionManager", () => {
 
             expectChangeEventToHaveBeenFiredOnSourceSelectBox(source_select_box, 3);
         });
+
+        it("should not remove the current selection when the source <select> is disabled", () => {
+            source_select_box.disabled = true;
+
+            manager.processSelection(item_1.element);
+            const remove_item_button = selection_container.querySelector(
+                ".list-picker-selected-value-remove-button"
+            );
+            if (!(remove_item_button instanceof Element)) {
+                throw new Error("No remove button found, something has gone wrong");
+            }
+            remove_item_button.dispatchEvent(new MouseEvent("pointerdown"));
+            expect(item_1.is_selected).toBe(true);
+            expect(item_1.element.getAttribute("aria-selected")).toEqual("true");
+            expect(item_1.target_option.hasAttribute("selected")).toBe(true);
+            expect(selection_container.contains(placeholder)).toBe(false);
+            expect(dropdown_manager.openListPicker).not.toHaveBeenCalled();
+        });
     });
 
     describe("resetAfterDependenciesUpdate", () => {

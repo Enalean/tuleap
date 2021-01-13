@@ -97,7 +97,6 @@
     font-size: 18px;
     line-height: 17px;
     white-space: nowrap;
-    cursor: pointer;
 }
 
 .list-picker-selected-value {
@@ -146,6 +145,7 @@
 
 
 .list-picker:not(.list-picker-disabled) {
+    .list-picker-selected-value-remove-button:hover,
     .list-picker-value-remove-button:hover {
         opacity: .5;
         cursor: pointer;
