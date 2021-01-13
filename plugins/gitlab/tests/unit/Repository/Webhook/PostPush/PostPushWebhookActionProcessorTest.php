@@ -70,6 +70,10 @@ final class PostPushWebhookActionProcessorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TuleapReferenceRetriever
      */
     private $tuleap_reference_retriever;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushCommitBotCommenter
+     */
+    private $commenter;
 
     protected function setUp(): void
     {
@@ -81,6 +85,7 @@ final class PostPushWebhookActionProcessorTest extends TestCase
         $this->commit_tuleap_reference_dao         = Mockery::mock(CommitTuleapReferenceDAO::class);
         $this->reference_manager                   = Mockery::mock(ReferenceManager::class);
         $this->tuleap_reference_retriever          = Mockery::mock(TuleapReferenceRetriever::class);
+        $this->commenter                           = Mockery::mock(PostPushCommitBotCommenter::class);
 
         $this->processor = new PostPushWebhookActionProcessor(
             new WebhookTuleapReferencesParser(),
@@ -88,7 +93,8 @@ final class PostPushWebhookActionProcessorTest extends TestCase
             $this->commit_tuleap_reference_dao,
             $this->reference_manager,
             $this->tuleap_reference_retriever,
-            $this->logger
+            $this->logger,
+            $this->commenter
         );
     }
 
@@ -200,6 +206,10 @@ final class PostPushWebhookActionProcessorTest extends TestCase
                 'john-snow@the-wall.com'
             );
 
+        $this->commenter
+            ->shouldReceive('addCommentOnCommit')
+            ->once();
+
         $this->processor->process($gitlab_repository, $webhook_data);
     }
 
@@ -258,6 +268,10 @@ final class PostPushWebhookActionProcessorTest extends TestCase
             ->shouldReceive('error')
             ->with("Tuleap artifact #123 not found, no cross-reference will be added.")
             ->once();
+
+        $this->commenter
+            ->shouldReceive('addCommentOnCommit')
+            ->never();
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');
 
@@ -319,6 +333,10 @@ final class PostPushWebhookActionProcessorTest extends TestCase
             ->shouldReceive('error')
             ->with("No reference found with the keyword 'art', and this must not happen. If you read this, this is really bad.")
             ->once();
+
+        $this->commenter
+            ->shouldReceive('addCommentOnCommit')
+            ->never();
 
         $this->reference_manager->shouldNotReceive('insertCrossReference');
 

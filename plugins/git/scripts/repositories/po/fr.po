@@ -84,6 +84,13 @@ msgstr "Le plugin Git est désactivé"
 msgid "Git repositories"
 msgstr "Dépôts Git"
 
+msgid "GitLab project token"
+msgstr "Jeton du projet GitLab"
+
+msgid "GitLab project token scope must contain at least: api."
+msgstr ""
+"La portée du jeton du projet GitLab doit contenir au moins : api."
+
 msgid ""
 "GitLab repository <strong>%{ label }</strong> has been successfully "
 "integrated!"
@@ -98,13 +105,6 @@ msgstr ""
 
 msgid "GitLab server URL"
 msgstr "URL du serveur GitLab"
-
-msgid "GitLab user token"
-msgstr "Jeton de l'utilisateur GitLab"
-
-msgid "GitLab user token scope must contain at least: api."
-msgstr ""
-"La portée du jeton de l'utilisateur GitLab doit contenir au moins : api."
 
 msgid "Go to repository administration"
 msgstr "Aller à l'administration du dépôt"

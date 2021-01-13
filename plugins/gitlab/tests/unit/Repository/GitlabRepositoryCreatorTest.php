@@ -32,6 +32,7 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 
 class GitlabRepositoryCreatorTest extends TestCase
 {
@@ -75,6 +76,10 @@ class GitlabRepositoryCreatorTest extends TestCase
      * @var Credentials
      */
     private $credentials;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabBotApiTokenInserter
+     */
+    private $token_inserter;
 
     protected function setUp(): void
     {
@@ -84,6 +89,7 @@ class GitlabRepositoryCreatorTest extends TestCase
         $this->gitlab_repository_dao         = Mockery::mock(GitlabRepositoryDao::class);
         $this->gitlab_repository_project_dao = Mockery::mock(GitlabRepositoryProjectDao::class);
         $this->webhook_creator               = Mockery::mock(WebhookCreator::class);
+        $this->token_inserter                = Mockery::mock(GitlabBotApiTokenInserter::class);
         $this->credentials                   = new Credentials("https://example.com", new ConcealedString("azert123"));
 
         $this->creator = new GitlabRepositoryCreator(
@@ -92,6 +98,7 @@ class GitlabRepositoryCreatorTest extends TestCase
             $this->gitlab_repository_dao,
             $this->gitlab_repository_project_dao,
             $this->webhook_creator,
+            $this->token_inserter
         );
 
         $this->gitlab_project = new GitlabProject(
@@ -134,12 +141,12 @@ class GitlabRepositoryCreatorTest extends TestCase
             ->once()
             ->andReturnFalse();
 
+        $gitlab_repository = $this->buildGitlabRepository();
+
         $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
             ->once()
             ->with(12569, 'https://example.com/root/project01')
-            ->andReturn(
-                $this->buildGitlabRepository()
-            );
+            ->andReturn($gitlab_repository);
 
         $this->gitlab_repository_project_dao->shouldReceive('isGitlabRepositoryIntegratedInProject')
             ->once()
@@ -152,7 +159,6 @@ class GitlabRepositoryCreatorTest extends TestCase
         $this->gitlab_repository_factory->shouldNotReceive('getGitlabRepositoryByGitlabProjectAndIntegrationId');
         $this->gitlab_repository_project_dao->shouldNotReceive('addGitlabRepositoryIntegrationInProject');
         $this->webhook_creator->shouldNotReceive('addWebhookInGitlabProject');
-
         $this->creator->integrateGitlabRepositoryInProject(
             $this->credentials,
             $this->gitlab_project,
@@ -225,6 +231,11 @@ class GitlabRepositoryCreatorTest extends TestCase
         $this->webhook_creator->shouldReceive('addWebhookInGitlabProject')
             ->once()
             ->with($this->credentials, $gitlab_repository);
+
+        $this->token_inserter
+            ->shouldReceive('insertToken')
+            ->with($gitlab_repository, $this->credentials->getBotApiToken())
+            ->once();
 
         $result = $this->creator->integrateGitlabRepositoryInProject(
             $this->credentials,

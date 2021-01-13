@@ -27,6 +27,7 @@ use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\API\Credentials;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 
 class GitlabRepositoryCreator
 {
@@ -54,19 +55,25 @@ class GitlabRepositoryCreator
      * @var WebhookCreator
      */
     private $webhook_creator;
+    /**
+     * @var GitlabBotApiTokenInserter
+     */
+    private $token_inserter;
 
     public function __construct(
         DBTransactionExecutor $db_transaction_executor,
         GitlabRepositoryFactory $gitlab_repository_factory,
         GitlabRepositoryDao $gitlab_repository_dao,
         GitlabRepositoryProjectDao $gitlab_repository_project_dao,
-        WebhookCreator $webhook_creator
+        WebhookCreator $webhook_creator,
+        GitlabBotApiTokenInserter $token_inserter
     ) {
         $this->db_transaction_executor       = $db_transaction_executor;
         $this->gitlab_repository_factory     = $gitlab_repository_factory;
         $this->gitlab_repository_dao         = $gitlab_repository_dao;
         $this->gitlab_repository_project_dao = $gitlab_repository_project_dao;
         $this->webhook_creator               = $webhook_creator;
+        $this->token_inserter                = $token_inserter;
     }
 
     /**
@@ -169,6 +176,8 @@ class GitlabRepositoryCreator
         );
 
         $this->webhook_creator->addWebhookInGitlabProject($credentials, $gitlab_repository);
+
+        $this->token_inserter->insertToken($gitlab_repository, $credentials->getBotApiToken());
 
         return $gitlab_repository;
     }

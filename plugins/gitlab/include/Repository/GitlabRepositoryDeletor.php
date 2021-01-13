@@ -28,6 +28,7 @@ use Project;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 
 class GitlabRepositoryDeletor
 {
@@ -52,19 +53,25 @@ class GitlabRepositoryDeletor
      * @var GitlabRepositoryDao
      */
     private $gitlab_repository_dao;
+    /**
+     * @var GitlabBotApiTokenDao
+     */
+    private $gitlab_bot_api_token_dao;
 
     public function __construct(
         GitPermissionsManager $git_permissions_manager,
         DBTransactionExecutor $db_transaction_executor,
         GitlabRepositoryProjectDao $gitlab_repository_project_dao,
         SecretDao $secret_dao,
-        GitlabRepositoryDao $gitlab_repository_dao
+        GitlabRepositoryDao $gitlab_repository_dao,
+        GitlabBotApiTokenDao $gitlab_bot_api_token_dao
     ) {
         $this->git_permissions_manager       = $git_permissions_manager;
         $this->db_transaction_executor       = $db_transaction_executor;
         $this->gitlab_repository_project_dao = $gitlab_repository_project_dao;
         $this->secret_dao                    = $secret_dao;
         $this->gitlab_repository_dao         = $gitlab_repository_dao;
+        $this->gitlab_bot_api_token_dao      = $gitlab_bot_api_token_dao;
     }
 
     /**
@@ -105,6 +112,7 @@ class GitlabRepositoryDeletor
                     $gitlab_repository_id,
                     $project_id
                 );
+                $this->gitlab_bot_api_token_dao->deleteGitlabBotToken($gitlab_repository_id);
                 $this->gitlab_repository_dao->deleteGitlabRepository($gitlab_repository_id);
             }
         });

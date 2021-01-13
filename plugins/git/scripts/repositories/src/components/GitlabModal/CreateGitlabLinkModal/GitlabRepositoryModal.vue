@@ -45,13 +45,13 @@
             v-on:on-get-gitlab-repositories="getGitlabRepositories"
             v-on:on-close-modal="onCloseModal"
             ref="credentialsForm"
-            v-bind:user_token="user_token"
+            v-bind:gitlab_project_token="gitlab_project_token"
             v-bind:server_url="server_url"
         />
         <list-repositories-modal
             v-else
             v-bind:repositories="gitlab_repositories"
-            v-bind:user_token="user_token"
+            v-bind:gitlab_project_token="gitlab_project_token"
             v-bind:server_url="server_url"
             v-on:to-back-button="clickBackButton"
             v-on:on-success-close-modal="onSuccessCloseModal"
@@ -73,7 +73,7 @@ export default {
             gitlab_repositories: null,
             back_button_clicked: false,
             modal: null,
-            user_token: "",
+            gitlab_project_token: "",
             server_url: "",
         };
     },
@@ -95,7 +95,7 @@ export default {
         getGitlabRepositories({ repositories, token, server_url }) {
             this.back_button_clicked = false;
             this.gitlab_repositories = repositories;
-            this.user_token = token;
+            this.gitlab_project_token = token;
             this.server_url = server_url;
         },
         onCloseModal() {
@@ -125,7 +125,7 @@ export default {
             }
             this.gitlab_repositories = null;
             this.back_button_clicked = false;
-            this.user_token = "";
+            this.gitlab_project_token = "";
             this.server_url = "";
         },
     },

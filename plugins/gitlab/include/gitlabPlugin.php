@@ -55,6 +55,15 @@ use Tuleap\Reference\NatureCollection;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
+use Tuleap\Gitlab\API\ClientWrapper;
+use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitCredentialsRetriever;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Presenters\PostPushCommitBotCommentReferencePresenterBuilder;
+use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
@@ -146,6 +155,11 @@ class gitlabPlugin extends Plugin
         $logger            = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
         $reference_manager = ReferenceManager::instance();
 
+        $request_factory       = HTTPFactoryBuilder::requestFactory();
+        $stream_factory        = HTTPFactoryBuilder::streamFactory();
+        $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
+        $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
+
         return new GitlabRepositoryWebhookController(
             new WebhookDataExtractor(
                 new PostPushWebhookDataBuilder(
@@ -180,6 +194,13 @@ class gitlabPlugin extends Plugin
                         $reference_manager
                     ),
                     $logger,
+                    new PostPushCommitBotCommenter(
+                        $gitlab_api_client,
+                        new PostPushCommitCredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+                        $logger,
+                        new PostPushCommitBotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
+                        TemplateRendererFactory::build()
+                    )
                 ),
                 new PostMergeRequestWebhookActionProcessor(
                     new WebhookTuleapReferencesParser(),

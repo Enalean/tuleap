@@ -29,3 +29,8 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_commit_info (
     author_name TEXT NOT NULL,
     author_email TEXT NOT NULL
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_gitlab_bot_api_token (
+    gitlab_repository_id INT(11) NOT NULL PRIMARY KEY,
+    token BLOB NOT NULL
+) ENGINE=InnoDB;

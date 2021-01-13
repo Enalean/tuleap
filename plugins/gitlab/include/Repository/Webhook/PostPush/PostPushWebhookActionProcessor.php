@@ -66,6 +66,10 @@ class PostPushWebhookActionProcessor
      * @var TuleapReferenceRetriever
      */
     private $tuleap_reference_retriever;
+    /**
+     * @var PostPushCommitBotCommenter
+     */
+    private $commenter;
 
     public function __construct(
         WebhookTuleapReferencesParser $commit_tuleap_references_parser,
@@ -73,7 +77,8 @@ class PostPushWebhookActionProcessor
         CommitTuleapReferenceDAO $commit_tuleap_reference_dao,
         ReferenceManager $reference_manager,
         TuleapReferenceRetriever $tuleap_reference_retriever,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        PostPushCommitBotCommenter $commenter
     ) {
         $this->commit_tuleap_references_parser     = $commit_tuleap_references_parser;
         $this->gitlab_repository_project_retriever = $gitlab_repository_project_retriever;
@@ -81,6 +86,7 @@ class PostPushWebhookActionProcessor
         $this->reference_manager                   = $reference_manager;
         $this->tuleap_reference_retriever          = $tuleap_reference_retriever;
         $this->logger                              = $logger;
+        $this->commenter                           = $commenter;
     }
 
     public function process(GitlabRepository $gitlab_repository, PostPushWebhookData $webhook_data): void
@@ -102,10 +108,9 @@ class PostPushWebhookActionProcessor
             $gitlab_repository
         );
 
-        $nb_bad_references   = 0;
-        $nb_found_references = count($references_collection->getTuleapReferences());
+        $good_references = [];
 
-        $this->logger->info($nb_found_references . " Tuleap references found in commit " . $commit_webhook_data->getSha1());
+        $this->logger->info(count($references_collection->getTuleapReferences()) . " Tuleap references found in commit " . $commit_webhook_data->getSha1());
 
         foreach ($references_collection->getTuleapReferences() as $tuleap_reference) {
             $this->logger->info("|_ Reference to Tuleap artifact #" . $tuleap_reference->getId() . " found.");
@@ -126,15 +131,17 @@ class PostPushWebhookActionProcessor
                     $external_reference,
                     $projects
                 );
+
+                $good_references[] = $tuleap_reference;
             } catch (TuleapReferencedArtifactNotFoundException | TuleapReferenceNotFoundException $reference_exception) {
                 $this->logger->error($reference_exception->getMessage());
-                $nb_bad_references++;
             }
         }
 
-        if ($nb_bad_references < $nb_found_references) {
+        if (! empty($good_references)) {
             // Save commit data if there is at least 1 good artifact reference in the commit message
             $this->saveCommitData($gitlab_repository, $commit_webhook_data);
+            $this->commenter->addCommentOnCommit($commit_webhook_data, $gitlab_repository, $good_references);
         }
     }
 

@@ -160,7 +160,7 @@ describe("API querier", () => {
         it("Given project id and repository, token and server url, Then api is queried to create new integration", async () => {
             const project_id = 101;
             const gitlab_internal_id = 10;
-            const gitlab_user_api_token = "AzRT785";
+            const gitlab_bot_api_token = "AzRT785";
             const gitlab_server_url = "https://example.com";
 
             const headers = {
@@ -171,7 +171,7 @@ describe("API querier", () => {
                 project_id,
                 gitlab_internal_id,
                 gitlab_server_url,
-                gitlab_user_api_token,
+                gitlab_bot_api_token,
             });
 
             const tlpPost = jest.spyOn(tlp, "post");
@@ -181,7 +181,7 @@ describe("API querier", () => {
                 project_id,
                 gitlab_internal_id,
                 gitlab_server_url,
-                gitlab_user_api_token,
+                gitlab_bot_api_token,
             });
 
             expect(tlpPost).toHaveBeenCalledWith("/api/gitlab_repositories", {

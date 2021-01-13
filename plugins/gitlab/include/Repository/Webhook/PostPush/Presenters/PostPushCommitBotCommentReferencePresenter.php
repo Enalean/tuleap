@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,36 +15,30 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\REST\v1;
+namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Presenters;
 
 /**
  * @psalm-immutable
  */
-class GitlabRepositoryPOSTRepresentation
+class PostPushCommitBotCommentReferencePresenter
 {
     /**
-     * @var int
+     * @var string
      */
-    public $project_id;
-
+    public $label;
     /**
      * @var string
      */
-    public $gitlab_server_url;
+    public $url;
 
-    /**
-     * @var string
-     */
-    public $gitlab_bot_api_token;
-
-    /**
-     * @var int
-     */
-    public $gitlab_internal_id;
+    public function __construct(int $id, string $url)
+    {
+        $this->label = "TULEAP-" . $id;
+        $this->url   = $url;
+    }
 }

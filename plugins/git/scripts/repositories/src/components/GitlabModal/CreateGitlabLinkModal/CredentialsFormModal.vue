@@ -53,22 +53,22 @@
             </div>
 
             <div class="tlp-form-element">
-                <label class="tlp-label" for="gitlab_token_user">
-                    <translate>GitLab user token</translate>
+                <label class="tlp-label" for="gitlab_project_token">
+                    <translate>GitLab project token</translate>
                     <i class="fas fa-asterisk"></i>
                 </label>
                 <input
                     type="text"
                     class="tlp-input"
-                    id="gitlab_token_user"
+                    id="gitlab_project_token"
                     required
-                    v-model="gitlab_token_user"
+                    v-model="gitlab_project_token"
                     maxlength="255"
-                    data-test="add_gitlab_token_user"
+                    data-test="add_gitlab_project_token"
                 />
                 <p class="tlp-text-info">
                     <i class="fas fa-info-circle"></i>
-                    <translate>GitLab user token scope must contain at least: api.</translate>
+                    <translate>GitLab project token scope must contain at least: api.</translate>
                 </p>
             </div>
         </div>
@@ -120,7 +120,7 @@ export default {
     data() {
         return {
             gitlab_server: this.server_url,
-            gitlab_token_user: this.user_token,
+            gitlab_project_token: this.user_token,
             is_loading: false,
             error_message: "",
             empty_message: "",
@@ -129,14 +129,14 @@ export default {
     },
     computed: {
         disabled_button() {
-            return this.gitlab_server === "" || this.gitlab_token_user === "" || this.is_loading;
+            return this.gitlab_server === "" || this.gitlab_project_token === "" || this.is_loading;
         },
     },
     methods: {
         ...mapActions(["getGitlabRepositoryList"]),
         reset() {
             this.gitlab_server = "";
-            this.gitlab_token_user = "";
+            this.gitlab_project_token = "";
             this.is_loading = false;
             this.gitlab_repositories = null;
             this.resetMessages();
@@ -157,7 +157,7 @@ export default {
 
             const credentials = {
                 server_url: this.gitlab_server,
-                token: this.gitlab_token_user,
+                token: this.gitlab_project_token,
             };
 
             if (credentialsAreEmpty(credentials)) {
@@ -185,7 +185,7 @@ export default {
 
                 this.$emit("on-get-gitlab-repositories", {
                     repositories: this.gitlab_repositories,
-                    token: this.gitlab_token_user,
+                    token: this.gitlab_project_token,
                     server_url: this.gitlab_server,
                 });
             } catch (e) {

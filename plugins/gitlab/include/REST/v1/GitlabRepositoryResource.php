@@ -59,6 +59,8 @@ use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryAlreadyIntegratedInProjectException;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 
 final class GitlabRepositoryResource
 {
@@ -85,10 +87,11 @@ final class GitlabRepositoryResource
      * {<br>
      *   &nbsp;"project_id": 122,<br>
      *   &nbsp;"gitlab_server_url" : "https://example.com",<br>
-     *   &nbsp;"gitlab_user_api_token" : "my_token",<br>
+     *   &nbsp;"gitlab_bot_api_token" : "project_bot_token",<br>
      *   &nbsp;"gitlab_internal_id" : 145896<br>
      *  }<br>
      * </pre>
+     *
      *
      * @url POST
      * @access protected
@@ -108,12 +111,12 @@ final class GitlabRepositoryResource
         $this->options();
 
         $gitlab_server_url  = $gitlab_repository->gitlab_server_url;
-        $user_api_token     = new ConcealedString($gitlab_repository->gitlab_user_api_token);
+        $bot_api_token     = new ConcealedString($gitlab_repository->gitlab_bot_api_token);
         $project_id         = $gitlab_repository->project_id;
         $gitlab_internal_id = $gitlab_repository->gitlab_internal_id;
 
         $project     = $this->getProjectById($project_id);
-        $credentials = new Credentials($gitlab_server_url, $user_api_token);
+        $credentials = new Credentials($gitlab_server_url, $bot_api_token);
 
         $request_factory = HTTPFactoryBuilder::requestFactory();
         $stream_factory  = HTTPFactoryBuilder::streamFactory();
@@ -146,7 +149,8 @@ final class GitlabRepositoryResource
                         new SecretDao()
                     ),
                     $gitlab_api_client
-                )
+                ),
+                new GitlabBotApiTokenInserter(new GitlabBotApiTokenDao(), new KeyFactory())
             );
 
             $integrated_gitlab_repository = $gitlab_repository_creator->integrateGitlabRepositoryInProject(
@@ -224,7 +228,8 @@ final class GitlabRepositoryResource
             ),
             new GitlabRepositoryProjectDao(),
             new SecretDao(),
-            new GitlabRepositoryDao()
+            new GitlabRepositoryDao(),
+            new GitlabBotApiTokenDao()
         );
 
         try {

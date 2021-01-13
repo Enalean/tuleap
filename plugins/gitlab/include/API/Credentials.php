@@ -33,12 +33,12 @@ class Credentials
     /**
      * @var ConcealedString
      */
-    private $user_api_token;
+    private $bot_api_token;
 
-    public function __construct(string $gitlab_server_url, ConcealedString $user_api_token)
+    public function __construct(string $gitlab_server_url, ConcealedString $bot_api_token)
     {
         $this->gitlab_server_url = $gitlab_server_url;
-        $this->user_api_token    = $user_api_token;
+        $this->bot_api_token     = $bot_api_token;
     }
 
     public function getGitlabServerUrl(): string
@@ -46,8 +46,8 @@ class Credentials
         return $this->gitlab_server_url;
     }
 
-    public function getUserApiToken(): ConcealedString
+    public function getBotApiToken(): ConcealedString
     {
-        return $this->user_api_token;
+        return $this->bot_api_token;
     }
 }

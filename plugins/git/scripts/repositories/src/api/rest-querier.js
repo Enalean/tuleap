@@ -137,7 +137,7 @@ function postGitlabRepository({
     project_id,
     gitlab_internal_id,
     gitlab_server_url,
-    gitlab_user_api_token,
+    gitlab_bot_api_token,
 }) {
     const headers = {
         "content-type": "application/json",
@@ -147,7 +147,7 @@ function postGitlabRepository({
         project_id,
         gitlab_internal_id,
         gitlab_server_url,
-        gitlab_user_api_token,
+        gitlab_bot_api_token,
     });
 
     return post("/api/gitlab_repositories", {

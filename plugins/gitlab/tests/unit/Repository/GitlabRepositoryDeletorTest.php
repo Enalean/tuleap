@@ -32,6 +32,7 @@ use Project;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 
 class GitlabRepositoryDeletorTest extends TestCase
 {
@@ -81,6 +82,10 @@ class GitlabRepositoryDeletorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
      */
     private $user;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabBotApiTokenDao
+     */
+    private $gitlab_bot_api_token_dao;
 
     protected function setUp(): void
     {
@@ -91,13 +96,15 @@ class GitlabRepositoryDeletorTest extends TestCase
         $this->gitlab_repository_project_dao = Mockery::mock(GitlabRepositoryProjectDao::class);
         $this->secret_dao                    = Mockery::mock(SecretDao::class);
         $this->gitlab_repository_dao         = Mockery::mock(GitlabRepositoryDao::class);
+        $this->gitlab_bot_api_token_dao      = Mockery::mock(GitlabBotApiTokenDao::class);
 
         $this->deletor = new GitlabRepositoryDeletor(
             $this->git_permissions_manager,
             $this->db_transaction_executor,
             $this->gitlab_repository_project_dao,
             $this->secret_dao,
-            $this->gitlab_repository_dao
+            $this->gitlab_repository_dao,
+            $this->gitlab_bot_api_token_dao
         );
 
         $this->gitlab_repository = new GitlabRepository(
@@ -210,6 +217,7 @@ class GitlabRepositoryDeletorTest extends TestCase
             ->once();
         $this->secret_dao->shouldReceive('deleteGitlabRepositoryWebhookSecret')->once();
         $this->gitlab_repository_dao->shouldReceive('deleteGitlabRepository')->once();
+        $this->gitlab_bot_api_token_dao->shouldReceive('deleteGitlabBotToken')->once();
 
         $this->deletor->deleteRepositoryInProject(
             $this->gitlab_repository,
