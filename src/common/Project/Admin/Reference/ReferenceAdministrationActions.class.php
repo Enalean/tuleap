@@ -42,7 +42,6 @@ class ReferenceAdministrationActions extends Actions
     // Create a new reference
     public function do_create() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        global $feedback;
         $request = HTTPRequest::instance();
         // Sanity check
         if (
@@ -90,7 +89,10 @@ class ReferenceAdministrationActions extends Actions
                     $GLOBALS['Language']->getText('project_reference', 'create_fail')
                 );
             } else {
-                $feedback .= " " . $GLOBALS['Language']->getText('project_reference', 'system_r_create_success');
+                $GLOBALS['HTML']->addFeedback(
+                    \Feedback::INFO,
+                    $GLOBALS['Language']->getText('project_reference', 'system_r_create_success')
+                );
             }
         } else {
             $result = $reference_manager->createReference($ref, $force);
@@ -100,7 +102,10 @@ class ReferenceAdministrationActions extends Actions
                     $GLOBALS['Language']->getText('project_reference', 'create_fail')
                 );
             } else {
-                $feedback .= " " . $GLOBALS['Language']->getText('project_reference', 'r_create_success') . " ";
+                $GLOBALS['HTML']->addFeedback(
+                    \Feedback::INFO,
+                    $GLOBALS['Language']->getText('project_reference', 'r_create_success')
+                );
             }
         }
     }
@@ -211,7 +216,6 @@ class ReferenceAdministrationActions extends Actions
     // WARNING: If it is a system reference, delete all occurences of the reference!
     public function do_delete() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        global $feedback;
         $request = HTTPRequest::instance();
         // Sanity check
         if (
@@ -240,12 +244,18 @@ class ReferenceAdministrationActions extends Actions
         if ($ref->isSystemReference()) {
             $result = $reference_manager->deleteSystemReference($ref);
             if ($result) {
-                $feedback .= " " . $GLOBALS['Language']->getText('project_reference', 'sr_deleted') . " ";
+                $GLOBALS['HTML']->addFeedback(
+                    \Feedback::INFO,
+                    $GLOBALS['Language']->getText('project_reference', 'sr_deleted')
+                );
             }
         } else {
             $result = $reference_manager->deleteReference($ref);
             if ($result) {
-                $feedback .= " " . $GLOBALS['Language']->getText('project_reference', 'r_deleted') . " ";
+                $GLOBALS['HTML']->addFeedback(
+                    \Feedback::INFO,
+                    $GLOBALS['Language']->getText('project_reference', 'r_deleted')
+                );
             }
         }
         if (! $result) {

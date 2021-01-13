@@ -1050,6 +1050,9 @@ msgstr "Éditer les paramètres"
 msgid "Edit widget"
 msgstr "Éditer le widget"
 
+msgid "Editing reference patterns"
+msgstr "Éditer les modèles de référence"
+
 msgid "Edition & CSV"
 msgstr "Édition & CSV"
 

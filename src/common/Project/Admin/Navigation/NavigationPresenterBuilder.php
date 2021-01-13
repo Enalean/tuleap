@@ -161,7 +161,7 @@ class NavigationPresenterBuilder
             ),
             new NavigationDropdownItemPresenter(
                 _('References'),
-                '/project/admin/reference.php?' . http_build_query(['group_id' => $project_id]),
+                '/project/' . urlencode((string) $project_id) . '/admin/references',
                 'references'
             ),
             new NavigationDropdownItemPresenter(

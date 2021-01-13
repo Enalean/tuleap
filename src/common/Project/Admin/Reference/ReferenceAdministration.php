@@ -26,12 +26,12 @@ use HTTPRequest;
 
 class ReferenceAdministration extends Controler
 {
-
-    public function request()
+    public function process(): void
     {
         $request = HTTPRequest::instance();
+        $project = $request->getProject();
 
-        session_require(['group' => $request->get('group_id'), 'admin_flags' => 'A']);
+        session_require(['group' => $project->getID(), 'admin_flags' => 'A']);
 
         if ($request->exist('view')) {
             switch ($request->get('view')) {
@@ -42,11 +42,8 @@ class ReferenceAdministration extends Controler
                     $this->view = 'edit';
                     break;
                 default:
-                    $this->view = 'browse';
                     break;
             }
-        } else {
-            $this->view = 'browse';
         }
 
         if ($request->exist('action')) {
@@ -64,5 +61,21 @@ class ReferenceAdministration extends Controler
                     break;
             }
         }
+
+        if ($this->action) {
+            $this->actionsManagement();
+        }
+
+        if ($this->view) {
+            $this->viewsManagement();
+            return;
+        }
+
+        $this->redirectToBrowsingUI($project);
+    }
+
+    private function redirectToBrowsingUI(\Project $project): void
+    {
+        $GLOBALS['Response']->redirect('/project/' . urlencode((string) $project->getID()) . '/admin/references');
     }
 }
