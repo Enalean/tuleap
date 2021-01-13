@@ -22,8 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Log\NullLogger;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
@@ -31,6 +29,9 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDat
 use Psr\Log\LoggerInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
+use Psr\Log\NullLogger;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 
 class WebhookDataExtractorTest extends TestCase
 {
@@ -49,14 +50,16 @@ class WebhookDataExtractorTest extends TestCase
     {
         parent::setUp();
 
-        $this->post_push_commit_webhook_data_extractor = new PostPushCommitWebhookDataExtractor(
-            new NullLogger()
+        $post_push_webhook_data_builder = new PostPushWebhookDataBuilder(
+            new PostPushCommitWebhookDataExtractor(
+                new NullLogger()
+            )
         );
 
         $this->logger = \Mockery::mock(LoggerInterface::class);
 
         $this->extractor = new WebhookDataExtractor(
-            $this->post_push_commit_webhook_data_extractor,
+            $post_push_webhook_data_builder,
             new PostMergeRequestWebhookDataBuilder(new \Psr\Log\NullLogger()),
             $this->logger
         );

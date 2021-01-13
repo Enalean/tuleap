@@ -22,25 +22,20 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 
 class WebhookDataExtractor
 {
-    private const EVENT_NAME_KEY      = 'event_name';
-    private const EVENT_TYPE_KEY      = 'event_type';
-    private const PROJECT_KEY         = 'project';
-    private const PROJECT_ID_KEY      = 'id';
-    private const PROJECT_URL_KEY     = 'web_url';
-    private const PUSH_EVENT          = 'push';
+    private const EVENT_NAME_KEY = 'event_name';
+    private const EVENT_TYPE_KEY = 'event_type';
+    private const PROJECT_KEY = 'project';
+    private const PROJECT_ID_KEY = 'id';
+    private const PROJECT_URL_KEY = 'web_url';
+    private const PUSH_EVENT = 'push';
     private const MERGE_REQUEST_EVENT = 'merge_request';
 
-    /**
-     * @var PostPushCommitWebhookDataExtractor
-     */
-    private $post_push_commit_webhook_data_extractor;
     /**
      * @var LoggerInterface
      */
@@ -49,13 +44,17 @@ class WebhookDataExtractor
      * @var PostMergeRequestWebhookDataBuilder
      */
     private $post_merge_request_webhook_data_builder;
+    /**
+     * @var PostPushWebhookDataBuilder
+     */
+    private $post_push_webhook_data_builder;
 
     public function __construct(
-        PostPushCommitWebhookDataExtractor $post_push_commit_webhook_data_extractor,
+        PostPushWebhookDataBuilder $post_push_webhook_data_builder,
         PostMergeRequestWebhookDataBuilder $post_merge_request_webhook_data_builder,
         LoggerInterface $logger
     ) {
-        $this->post_push_commit_webhook_data_extractor = $post_push_commit_webhook_data_extractor;
+        $this->post_push_webhook_data_builder          = $post_push_webhook_data_builder;
         $this->post_merge_request_webhook_data_builder = $post_merge_request_webhook_data_builder;
         $this->logger                                  = $logger;
     }
@@ -73,11 +72,11 @@ class WebhookDataExtractor
 
         if ($this->isPostPushEvent($webhook_content)) {
             $this->logger->info("|_ Webhook of type {$webhook_content[self::EVENT_NAME_KEY]} received.");
-            return new PostPushWebhookData(
+            return $this->post_push_webhook_data_builder->build(
                 $webhook_content[self::EVENT_NAME_KEY],
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
                 $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
-                $this->post_push_commit_webhook_data_extractor->retrieveWebhookCommitsData($webhook_content)
+                $webhook_content
             );
         }
 
