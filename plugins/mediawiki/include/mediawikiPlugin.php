@@ -26,6 +26,7 @@ use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB;
 use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Mediawiki\Maintenance\CleanUnused;
@@ -74,7 +75,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
 
-        $this->addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
         $this->addHook(Event::RENAME_PROJECT, 'rename_project');
         $this->addHook('project_is_deleted');
 
@@ -100,6 +100,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->addHook('plugin_statistics_service_usage');
 
         $this->addHook(Event::SERVICE_CLASSNAMES);
+        $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
 
         // Stats plugin
@@ -362,16 +363,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $this->pluginInfo;
     }
 
-    public function service_replace_template_name_in_link($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $params['link'] = preg_replace(
-            '#/plugins/mediawiki/wiki/' . preg_quote($params['template']['name'], '#') . '(/|$)#',
-            '/plugins/mediawiki/wiki/' . $params['project']->getUnixName() . '$1',
-            $params['link']
-        );
-    }
-
-
     public function register_project_creation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (
@@ -603,16 +594,18 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $params['classnames'][$this->getServiceShortname()] = ServiceMediawiki::class;
     }
 
+    public function serviceUrlCollector(ServiceUrlCollector $collector): void
+    {
+        if ($collector->getServiceShortname() === $this->getServiceShortname()) {
+            $collector->setUrl(
+                sprintf('/plugins/mediawiki/wiki/%s', urlencode($collector->getProject()->getUnixName()))
+            );
+        }
+    }
+
     public function rename_project($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $project         = $params['project'];
-        $project_manager = ProjectManager::instance();
-        $new_link        = '/plugins/mediawiki/wiki/' . $params['new_name'];
-
-        if (! $project_manager->renameProjectPluginServiceLink($project->getID(), self::SERVICE_SHORTNAME, $new_link)) {
-            $params['success'] = false;
-            return;
-        }
 
         $this->updateMediawikiDirectory($project);
         $this->clearMediawikiCache($project);

@@ -146,7 +146,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if ($url) {
             return $url;
         }
-        return $this->data['link'];
+        return $this->data['link'] ?? '#';
     }
 
     public function getScope(): string
