@@ -28,6 +28,7 @@ use Project;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 
@@ -62,6 +63,10 @@ class GitlabRepositoryDeletor
      * @var CommitTuleapReferenceDao
      */
     private $commit_tuleap_reference_dao;
+    /**
+     * @var MergeRequestTuleapReferenceDao
+     */
+    private $merge_request_dao;
 
     public function __construct(
         GitPermissionsManager $git_permissions_manager,
@@ -70,7 +75,8 @@ class GitlabRepositoryDeletor
         SecretDao $secret_dao,
         GitlabRepositoryDao $gitlab_repository_dao,
         GitlabBotApiTokenDao $gitlab_bot_api_token_dao,
-        CommitTuleapReferenceDao $commit_tuleap_reference_dao
+        CommitTuleapReferenceDao $commit_tuleap_reference_dao,
+        MergeRequestTuleapReferenceDao $merge_request_dao
     ) {
         $this->git_permissions_manager       = $git_permissions_manager;
         $this->db_transaction_executor       = $db_transaction_executor;
@@ -79,6 +85,7 @@ class GitlabRepositoryDeletor
         $this->gitlab_repository_dao         = $gitlab_repository_dao;
         $this->gitlab_bot_api_token_dao      = $gitlab_bot_api_token_dao;
         $this->commit_tuleap_reference_dao   = $commit_tuleap_reference_dao;
+        $this->merge_request_dao             = $merge_request_dao;
     }
 
     /**
@@ -121,6 +128,7 @@ class GitlabRepositoryDeletor
                 );
                 $this->gitlab_bot_api_token_dao->deleteGitlabBotToken($repository_id);
                 $this->commit_tuleap_reference_dao->deleteCommitsInGitlabRepository($repository_id);
+                $this->merge_request_dao->deleteAllMergeRequestWithRepositoryId($repository_id);
                 $this->gitlab_repository_dao->deleteGitlabRepository($repository_id);
             }
         });

@@ -24,9 +24,9 @@ use CrossReference;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
-use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
+use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
@@ -51,6 +51,10 @@ class PostMergeRequestWebhookActionProcessor
      */
     private $reference_manager;
     /**
+     * @var MergeRequestTuleapReferenceDao
+     */
+    private $merge_request_reference_dao;
+    /**
      * @var GitlabRepositoryProjectRetriever
      */
     private $gitlab_repository_project_retriever;
@@ -59,12 +63,14 @@ class PostMergeRequestWebhookActionProcessor
         WebhookTuleapReferencesParser $reference_parser,
         TuleapReferenceRetriever $tuleap_reference_retriever,
         \ReferenceManager $reference_manager,
+        MergeRequestTuleapReferenceDao $merge_request_reference_dao,
         GitlabRepositoryProjectRetriever $gitlab_repository_project_retriever,
         LoggerInterface $logger
     ) {
         $this->reference_parser                    = $reference_parser;
         $this->tuleap_reference_retriever          = $tuleap_reference_retriever;
         $this->reference_manager                   = $reference_manager;
+        $this->merge_request_reference_dao         = $merge_request_reference_dao;
         $this->gitlab_repository_project_retriever = $gitlab_repository_project_retriever;
         $this->logger                              = $logger;
     }
@@ -78,6 +84,8 @@ class PostMergeRequestWebhookActionProcessor
         $projects = $this->gitlab_repository_project_retriever->getProjectsGitlabRepositoryIsIntegratedIn(
             $gitlab_repository
         );
+
+        $good_references = [];
 
         $nb_found_references = count($references_collection->getTuleapReferences());
 
@@ -102,9 +110,16 @@ class PostMergeRequestWebhookActionProcessor
                     $external_reference,
                     $projects
                 );
+
+                $good_references[] = $tuleap_reference;
             } catch (TuleapReferencedArtifactNotFoundException | TuleapReferenceNotFoundException $reference_exception) {
                 $this->logger->error($reference_exception->getMessage());
             }
+        }
+
+        if (! empty($good_references)) {
+            // Save merge request data if there is at least 1 good artifact reference in the merge request description and title
+            $this->saveMergeRequestData($gitlab_repository, $webhook_data);
         }
     }
 
@@ -114,13 +129,13 @@ class PostMergeRequestWebhookActionProcessor
     private function saveReferenceInEachIntegratedProject(
         GitlabRepository $gitlab_repository,
         WebhookTuleapReference $tuleap_reference,
-        PostMergeRequestWebhookData $commit_webhook_data,
+        PostMergeRequestWebhookData $merge_request_webhook_data,
         \Reference $external_reference,
         array $projects
     ): void {
         foreach ($projects as $project) {
             $cross_reference = new CrossReference(
-                $gitlab_repository->getName() . '/' . $commit_webhook_data->getMergeRequestId(),
+                $this->getGitlabMergeRequestReferenceId($gitlab_repository, $merge_request_webhook_data),
                 $project->getID(),
                 GitlabMergeRequestReference::NATURE_NAME,
                 GitlabMergeRequestReference::REFERENCE_NAME,
@@ -133,5 +148,23 @@ class PostMergeRequestWebhookActionProcessor
 
             $this->reference_manager->insertCrossReference($cross_reference);
         }
+    }
+
+    private function saveMergeRequestData(GitlabRepository $gitlab_repository, PostMergeRequestWebhookData $merge_request_webhook_data): void
+    {
+        $merge_request_id = $merge_request_webhook_data->getMergeRequestId();
+
+        $this->merge_request_reference_dao->saveGitlabMergeRequestInfo(
+            $gitlab_repository->getId(),
+            $merge_request_id,
+            $merge_request_webhook_data->getTitle()
+        );
+
+        $this->logger->info("Merge request data for $merge_request_id saved in database");
+    }
+
+    private function getGitlabMergeRequestReferenceId(GitlabRepository $gitlab_repository, PostMergeRequestWebhookData $merge_request_webhook_data): string
+    {
+        return $gitlab_repository->getName() . '/' . $merge_request_webhook_data->getMergeRequestId();
     }
 }

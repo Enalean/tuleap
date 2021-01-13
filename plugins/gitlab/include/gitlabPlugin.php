@@ -25,12 +25,13 @@ use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
-use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
-use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
-use Tuleap\Gitlab\Reference\GitlabReferenceBuilder;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\GitlabCrossReferenceOrganizer;
+use Tuleap\Gitlab\Reference\GitlabReferenceBuilder;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
+use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
@@ -39,6 +40,7 @@ use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
@@ -213,7 +215,8 @@ class gitlabPlugin extends Plugin
                         EventManager::instance(),
                         $reference_manager
                     ),
-                    \ReferenceManager::instance(),
+                    ReferenceManager::instance(),
+                    new MergeRequestTuleapReferenceDao(),
                     new GitlabRepositoryProjectRetriever(
                         new GitlabRepositoryProjectDao(),
                         ProjectManager::instance()
@@ -316,6 +319,7 @@ class gitlabPlugin extends Plugin
                 \UserHelper::instance(),
                 new TlpRelativeDatePresenterBuilder()
             ),
+            new GitlabMergeRequestReferenceRetriever(new MergeRequestTuleapReferenceDao()),
             ProjectManager::instance(),
         );
         $gitlab_organizer->organizeGitLabReferences($organizer);
