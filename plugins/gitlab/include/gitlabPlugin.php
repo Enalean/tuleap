@@ -54,6 +54,7 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Reference\NatureCollection;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
@@ -147,8 +148,10 @@ class gitlabPlugin extends Plugin
 
         return new GitlabRepositoryWebhookController(
             new WebhookDataExtractor(
-                new PostPushCommitWebhookDataExtractor(
-                    $logger
+                new PostPushWebhookDataBuilder(
+                    new PostPushCommitWebhookDataExtractor(
+                        $logger
+                    )
                 ),
                 new PostMergeRequestWebhookDataBuilder($logger),
                 $logger
