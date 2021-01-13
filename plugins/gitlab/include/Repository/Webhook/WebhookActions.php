@@ -29,6 +29,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
 
 class WebhookActions
 {
@@ -44,15 +45,21 @@ class WebhookActions
      * @var PostPushWebhookActionProcessor
      */
     private $post_push_webhook_action_processor;
+    /**
+     * @var PostMergeRequestWebhookActionProcessor
+     */
+    private $post_merge_request_action_processor;
 
     public function __construct(
         GitlabRepositoryDao $gitlab_repository_dao,
         PostPushWebhookActionProcessor $post_push_webhook_action_processor,
+        PostMergeRequestWebhookActionProcessor $post_merge_request_action_processor,
         LoggerInterface $logger
     ) {
-        $this->gitlab_repository_dao              = $gitlab_repository_dao;
-        $this->logger                             = $logger;
-        $this->post_push_webhook_action_processor = $post_push_webhook_action_processor;
+        $this->gitlab_repository_dao               = $gitlab_repository_dao;
+        $this->post_push_webhook_action_processor  = $post_push_webhook_action_processor;
+        $this->post_merge_request_action_processor = $post_merge_request_action_processor;
+        $this->logger                              = $logger;
     }
 
     /**
@@ -68,6 +75,10 @@ class WebhookActions
 
         if ($webhook_data instanceof PostPushWebhookData) {
             $this->post_push_webhook_action_processor->process($gitlab_repository, $webhook_data);
+        }
+
+        if ($webhook_data instanceof PostMergeRequestWebhookData) {
+            $this->post_merge_request_action_processor->process($webhook_data);
         }
     }
 

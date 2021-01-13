@@ -24,8 +24,8 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookData;
-use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookData;
 use Psr\Log\LoggerInterface;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 
 class WebhookDataExtractor
 {
@@ -45,12 +45,18 @@ class WebhookDataExtractor
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var PostMergeRequestWebhookDataBuilder
+     */
+    private $post_merge_request_webhook_data_builder;
 
     public function __construct(
         PostPushCommitWebhookDataExtractor $post_push_commit_webhook_data_extractor,
+        PostMergeRequestWebhookDataBuilder $post_merge_request_webhook_data_builder,
         LoggerInterface $logger
     ) {
         $this->post_push_commit_webhook_data_extractor = $post_push_commit_webhook_data_extractor;
+        $this->post_merge_request_webhook_data_builder = $post_merge_request_webhook_data_builder;
         $this->logger                                  = $logger;
     }
 
@@ -77,10 +83,11 @@ class WebhookDataExtractor
 
         $this->logger->info("|_ Webhook of type {$webhook_content[self::EVENT_TYPE_KEY]} received.");
 
-        return new PostMergeRequestWebhookData(
+        return $this->post_merge_request_webhook_data_builder->build(
             $webhook_content[self::EVENT_TYPE_KEY],
             $webhook_content[self::PROJECT_KEY][self::PROJECT_ID_KEY],
             $webhook_content[self::PROJECT_KEY][self::PROJECT_URL_KEY],
+            $webhook_content
         );
     }
 

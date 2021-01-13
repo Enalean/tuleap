@@ -1,0 +1,112 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ */
+
+namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
+
+use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Psr\Log\LoggerInterface;
+use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
+
+class PostMergeRequestWebhookDataBuilderTest extends TestCase
+{
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @var PostMergeRequestWebhookDataBuilder
+     */
+    private $builder;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->logger = \Mockery::mock(LoggerInterface::class);
+
+        $this->builder = new PostMergeRequestWebhookDataBuilder(
+            $this->logger
+        );
+    }
+
+    public function testItThrowsAnExceptionIfObjectAttributesKeyIsMissing(): void
+    {
+        $this->expectException(MissingKeyException::class);
+        $this->expectExceptionMessage("key object_attributes is missing");
+
+        $webhook_content = [];
+        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+    }
+
+    public function testItThrowsAnExceptionIfMergeRequestIdKeyIsMissing(): void
+    {
+        $this->expectException(MissingKeyException::class);
+        $this->expectExceptionMessage("key id in object_attributes is missing");
+
+        $webhook_content = ['object_attributes' => []];
+        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+    }
+
+    public function testItThrowsAnExceptionIfMergeRequestTitleKeyIsMissing(): void
+    {
+        $this->expectException(MissingKeyException::class);
+        $this->expectExceptionMessage("key title in object_attributes is missing");
+
+        $webhook_content = ['object_attributes' => ["id" => 1]];
+        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+    }
+
+    public function testItThrowsAnExceptionIfMergeRequestDescriptionKeyIsMissing(): void
+    {
+        $this->expectException(MissingKeyException::class);
+        $this->expectExceptionMessage("key description in object_attributes is missing");
+
+        $webhook_content = ['object_attributes' => ["id" => 1, "title" => "My Title"]];
+        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+    }
+
+    public function testItReturnsPostMergeRequestWebhookData(): void
+    {
+        $webhook_content = [
+            'object_attributes' => ["id" => 1, "title" => "My Title", "description" => "My description", "state" => "closed", "updated_at" => "2021-01-12 13:49:35 UTC"],
+            'user' => ['email' => 'daenerys@onHerDragon.com', "name" => "Daenerys Targaryen"]
+        ];
+
+        $this->logger
+            ->shouldReceive('debug')
+            ->with("Webhook merge request with id 1 retrieved.")
+            ->once();
+
+        $this->logger
+            ->shouldReceive('debug')
+            ->with("|_ Its title is: My Title")
+            ->once();
+
+        $this->logger
+            ->shouldReceive('debug')
+            ->with("|_ Its description is: My description")
+            ->once();
+
+        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+    }
+}

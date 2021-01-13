@@ -33,9 +33,9 @@ use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferencedArtifactNotFoundException;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceNotFoundException;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
+use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
 
 final class PostPushWebhookActionProcessorTest extends TestCase
 {
@@ -130,12 +130,12 @@ final class PostPushWebhookActionProcessorTest extends TestCase
         $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
             ->once()
             ->with(666)
-            ->andThrow(new CommitTuleapReferencedArtifactNotFoundException(666));
+            ->andThrow(new TuleapReferencedArtifactNotFoundException(666));
 
         $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
             ->once()
             ->with(777)
-            ->andThrow(new CommitTuleapReferenceNotFoundException());
+            ->andThrow(new TuleapReferenceNotFoundException());
 
         $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
             ->once()
@@ -234,7 +234,7 @@ final class PostPushWebhookActionProcessorTest extends TestCase
         $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
             ->once()
             ->with(123)
-            ->andThrow(new CommitTuleapReferencedArtifactNotFoundException(123));
+            ->andThrow(new TuleapReferencedArtifactNotFoundException(123));
 
         $this->gitlab_repository_project_retriever->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
             ->once()
@@ -295,7 +295,7 @@ final class PostPushWebhookActionProcessorTest extends TestCase
         $this->tuleap_reference_retriever->shouldReceive('retrieveTuleapReference')
             ->once()
             ->with(123)
-            ->andThrow(new CommitTuleapReferenceNotFoundException());
+            ->andThrow(new TuleapReferenceNotFoundException());
 
         $this->gitlab_repository_project_retriever->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
             ->once()
