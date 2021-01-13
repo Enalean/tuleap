@@ -26,6 +26,7 @@ use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
 use Tuleap\AgileDashboard\Planning\RootPlanning\DisplayTopPlanningAppEvent;
 use Tuleap\AgileDashboard\Planning\RootPlanning\RootPlanningEditionEvent;
 use Tuleap\AgileDashboard\REST\v1\Milestone\OriginalProjectCollector;
+use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
@@ -112,6 +113,7 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook(OriginalProjectCollector::NAME);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+        $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
@@ -130,6 +132,15 @@ final class scaled_agilePlugin extends Plugin
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
+    }
+
+    public function serviceUrlCollector(ServiceUrlCollector $collector): void
+    {
+        if ($collector->getServiceShortname() === $this->getServiceShortname()) {
+            $collector->setUrl(
+                sprintf('/scaled_agile/%s', urlencode($collector->getProject()->getUnixNameLowerCase()))
+            );
+        }
     }
 
     public function getPluginInfo(): PluginInfo
