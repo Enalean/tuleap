@@ -240,7 +240,7 @@ const webpack_config_for_burning_parrot_code = {
         "site-admin-project-history": "./scripts/site-admin/project-history.js",
         "site-admin-project-list": "./scripts/site-admin/project-list.ts",
         "site-admin-project-widgets": "./scripts/site-admin/project-widgets-configuration/index.ts",
-        "site-admin-system-events": "./scripts/site-admin/system-events.js",
+        "site-admin-system-events": "./scripts/site-admin/system-events.ts",
         "site-admin-system-events-admin-homepage":
             "./scripts/site-admin/system-events-admin-homepage.ts",
         "site-admin-system-events-notifications":
