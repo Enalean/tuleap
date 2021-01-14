@@ -33,6 +33,7 @@ use Tracker_Workflow_Trigger_RulesProcessor;
 use Tracker_Workflow_Trigger_TriggerRule;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 final class WorkflowTriggerRulesProcessorTest extends TestCase
@@ -44,6 +45,7 @@ final class WorkflowTriggerRulesProcessorTest extends TestCase
         $workflow_user = Mockery::mock(Tracker_Workflow_WorkflowUser::class);
         $processor     = new Tracker_Workflow_Trigger_RulesProcessor(
             $workflow_user,
+            Mockery::mock(SiblingsRetriever::class),
             new WorkflowBackendLogger(new \Psr\Log\NullLogger(), \Psr\Log\LogLevel::ERROR)
         );
 
@@ -106,6 +108,7 @@ final class WorkflowTriggerRulesProcessorTest extends TestCase
         $workflow_user = Mockery::mock(Tracker_Workflow_WorkflowUser::class);
         $processor     = new Tracker_Workflow_Trigger_RulesProcessor(
             $workflow_user,
+            Mockery::mock(SiblingsRetriever::class),
             new WorkflowBackendLogger(new \Psr\Log\NullLogger(), \Psr\Log\LogLevel::ERROR)
         );
 

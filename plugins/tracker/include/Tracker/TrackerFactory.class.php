@@ -28,6 +28,8 @@ use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsDao;
+use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
@@ -570,6 +572,10 @@ class TrackerFactory
         $workflow_backend_logger = new WorkflowBackendLogger(BackendLogger::getDefaultLogger(), ForgeConfig::get('sys_logger_level'));
         $rules_processor         = new Tracker_Workflow_Trigger_RulesProcessor(
             new Tracker_Workflow_WorkflowUser(),
+            new SiblingsRetriever(
+                new SiblingsDao(),
+                Tracker_ArtifactFactory::instance()
+            ),
             $workflow_backend_logger
         );
 

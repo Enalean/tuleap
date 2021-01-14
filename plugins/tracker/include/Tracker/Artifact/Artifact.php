@@ -210,9 +210,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var Artifact[] */
-    private $siblings_without_permission_checking;
-
     /** @var Artifact */
     private $parent_without_permission_checking;
 
@@ -2073,27 +2070,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function setParentWithoutPermissionChecking($parent)
     {
         $this->parent_without_permission_checking = $parent;
-    }
-
-    /**
-     * Get all sista & bro regartheless if user can access them
-     *
-     * @return Artifact[]
-     */
-    public function getSiblingsWithoutPermissionChecking()
-    {
-        if (! isset($this->siblings_without_permission_checking)) {
-            $this->siblings_without_permission_checking = $this->getDao()->getSiblings($this->getId())->instanciateWith(
-                [$this->getArtifactFactory(), 'getInstanceFromRow']
-            );
-        }
-
-        return $this->siblings_without_permission_checking;
-    }
-
-    public function setSiblingsWithoutPermissionChecking($siblings)
-    {
-        $this->siblings_without_permission_checking = $siblings;
     }
 
     /**

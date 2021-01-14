@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -55,6 +56,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \PHPUnit
             \Tracker_Workflow_Trigger_RulesProcessor::class . '[getRuleStrategy]',
             [
                 new Tracker_Workflow_WorkflowUser(),
+                Mockery::mock(SiblingsRetriever::class),
                 new WorkflowBackendLogger(new \Psr\Log\NullLogger(), \Psr\Log\LogLevel::DEBUG)
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
