@@ -38,7 +38,7 @@ class GitlabMergeRequestReference extends \Reference
         parent::__construct(
             0,
             self::REFERENCE_NAME,
-            dgettext('tuleap-gitlab', 'GitLab Merge Request'),
+            dgettext('tuleap-gitlab', 'GitLab merge request'),
             $gitlab_repository->getFullUrl() . '/-/merge_requests/' . $id,
             'S',
             'plugin_gitlab',

@@ -309,7 +309,7 @@ class gitlabPlugin extends Plugin
             new Nature(
                 GitlabMergeRequestReference::REFERENCE_NAME,
                 'fab fa-gitlab',
-                dgettext('tuleap-gitlab', 'GitLab Merge Request'),
+                dgettext('tuleap-gitlab', 'GitLab merge request'),
                 false
             )
         );
@@ -343,6 +343,13 @@ class gitlabPlugin extends Plugin
                 GitlabCommitReference::REFERENCE_NAME,
                 dgettext('tuleap-gitlab', 'Reference to a GitLab commit'),
                 dgettext('tuleap-gitlab', 'GitLab commit'),
+            )
+        );
+        $collector->add(
+            new ExternalSystemReferencePresenter(
+                GitlabMergeRequestReference::REFERENCE_NAME,
+                dgettext('tuleap-gitlab', 'Reference to a GitLab merge request'),
+                dgettext('tuleap-gitlab', 'GitLab merge request'),
             )
         );
     }

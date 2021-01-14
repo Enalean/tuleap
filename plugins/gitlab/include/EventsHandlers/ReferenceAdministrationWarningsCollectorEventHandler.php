@@ -22,18 +22,28 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\EventsHandlers;
 
 use Tuleap\Gitlab\Reference\GitlabCommitReference;
+use Tuleap\Gitlab\Reference\GitlabMergeRequestReference;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
 
 final class ReferenceAdministrationWarningsCollectorEventHandler
 {
     public function handle(ReferenceAdministrationWarningsCollectorEvent $event): void
     {
+        $this->addWarningMessageForReference(GitlabCommitReference::REFERENCE_NAME, $event);
+        $this->addWarningMessageForReference(GitlabMergeRequestReference::REFERENCE_NAME, $event);
+    }
+
+    private function addWarningMessageForReference(
+        string $keyword,
+        ReferenceAdministrationWarningsCollectorEvent $event
+    ): void {
         $does_keyword_gitlab_commit_exists = array_search(
-            GitlabCommitReference::REFERENCE_NAME,
+            $keyword,
             array_column(
                 $event->getProjectReferences(),
                 'keyword'
-            )
+            ),
+            true,
         );
 
         if ($does_keyword_gitlab_commit_exists === false) {
@@ -41,7 +51,13 @@ final class ReferenceAdministrationWarningsCollectorEventHandler
         }
 
         $event->addWarningMessage(
-            dgettext('tuleap-gitlab', "The project reference based on the keyword 'gitlab_commit' is overriding the system reference used by the GitLab plugin.")
+            sprintf(
+                dgettext(
+                    'tuleap-gitlab',
+                    "The project reference based on the keyword '%s' is overriding the system reference used by the GitLab plugin."
+                ),
+                $keyword
+            )
         );
     }
 }
