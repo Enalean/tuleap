@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <div class="breadcrumb-container scaled-agile-breadcrumb">
+    <div class="breadcrumb-container">
+        <breadcrumb-privacy
+            v-bind:project_flags="project_flags"
+            v-bind:privacy="project_privacy"
+            v-bind:project_public_name="project_public_name"
+        />
         <nav class="breadcrumb">
             <div class="breadcrumb-item breadcrumb-project">
                 <a v-bind:href="projectUrl()" class="breadcrumb-link">
@@ -29,21 +34,31 @@
                 <a v-bind:href="pluginUrl()" class="breadcrumb-link" v-translate>Scaled Agile</a>
             </div>
         </nav>
-        <h1 class="scaled-agile-title-header" v-translate>Scaled Agile</h1>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
+import BreadcrumbPrivacy from "@tuleap/core/scripts/vue-components/breadcrumb-privacy/BreadcrumbPrivacy.vue";
+import {
+    ProjectFlag,
+    ProjectPrivacy,
+} from "@tuleap/core/scripts/project/privacy/project-privacy-helper";
 
-@Component({})
+@Component({ components: { BreadcrumbPrivacy } })
 export default class Breadcrumb extends Vue {
     @Prop({ required: true })
     readonly project_public_name!: string;
 
     @Prop({ required: true })
     readonly project_short_name!: string;
+
+    @Prop({ required: true })
+    readonly project_privacy!: ProjectPrivacy;
+
+    @Prop({ required: true })
+    readonly project_flags!: Array<ProjectFlag>;
 
     public projectUrl(): string {
         return `/projects/${this.project_short_name}`;

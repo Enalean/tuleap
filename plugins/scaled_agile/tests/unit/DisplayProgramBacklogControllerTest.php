@@ -25,6 +25,7 @@ namespace unit;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
@@ -57,15 +58,21 @@ final class DisplayProgramBacklogControllerTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectManager
      */
     private $project_manager;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectFlagsBuilder
+     */
+    private $project_flags_builder;
 
     protected function setUp(): void
     {
         $this->project_manager       = \Mockery::mock(\ProjectManager::class);
+        $this->project_flags_builder = \Mockery::mock(ProjectFlagsBuilder::class);
         $this->build_program         = \Mockery::mock(BuildProgram::class);
         $this->template_renderer     = \Mockery::mock(\TemplateRenderer::class);
 
         $this->controller = new DisplayProgramBacklogController(
             $this->project_manager,
+            $this->project_flags_builder,
             $this->build_program,
             $this->template_renderer
         );
@@ -108,9 +115,11 @@ final class DisplayProgramBacklogControllerTest extends TestCase
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('usesService')->once()->with(\scaled_agilePlugin::SERVICE_SHORTNAME)->andReturnTrue();
         $project->shouldReceive('getId')->andReturn(101);
+        $project->shouldReceive('isPublic')->andReturn(true);
         $project->shouldReceive('getPublicName')->andReturn('test_project');
         $project->shouldReceive('getUnixNameLowerCase')->andReturn('test_project');
         $this->project_manager->shouldReceive('getProjectByUnixName')->andReturn($project);
+        $this->project_flags_builder->shouldReceive('buildProjectFlags')->andReturn([]);
 
         $request   = \Mockery::mock(\HTTPRequest::class);
         $user      = UserTestBuilder::aUser()->build();

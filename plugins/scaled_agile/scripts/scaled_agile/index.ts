@@ -41,7 +41,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const project_short_name = vue_mount_point.dataset.projectShortName;
 
-    build(project_name, project_short_name);
+    if (!vue_mount_point.dataset.projectPrivacy) {
+        throw new Error("Missing projectPrivacy dataset");
+    }
+    const project_privacy = JSON.parse(vue_mount_point.dataset.projectPrivacy);
+
+    if (!vue_mount_point.dataset.projectFlags) {
+        throw new Error("Missing projectFlags dataset");
+    }
+    const project_flags = JSON.parse(vue_mount_point.dataset.projectFlags);
+
+    build(project_name, project_short_name, project_privacy, project_flags);
 
     await initVueGettext(
         Vue,
