@@ -23,21 +23,30 @@ namespace Tuleap\Gitlab\Reference;
 
 use PHPUnit\Framework\TestCase;
 
-class GitlabCommitReferenceExtractorTest extends TestCase
+class GitlabReferenceExtractorTest extends TestCase
 {
     public function testItReturnsANullRepositoryNameAndANullSha1WhenTheStringDoesNotContainAPath(): void
     {
-        [$repository_name, $sha1] = GitlabCommitReferenceExtractor::splitRepositoryAndSha1("a_string_with_no_path");
+        [$repository_name, $sha1] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId("a_string_with_no_path");
         $this->assertEquals(null, $repository_name);
         $this->assertEquals(null, $sha1);
     }
 
     public function testItReturnsTheRepositoryNameAndTheCommitSha1(): void
     {
-        [$repository_name, $sha1] = GitlabCommitReferenceExtractor::splitRepositoryAndSha1(
+        [$repository_name, $sha1] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
             'john-snow/winter-is-coming/14a9b6c0c0c965977cf2af2199f93df82afcdea3'
         );
         $this->assertEquals('john-snow/winter-is-coming', $repository_name);
         $this->assertEquals('14a9b6c0c0c965977cf2af2199f93df82afcdea3', $sha1);
+    }
+
+    public function testItReturnsTheRepositoryNameAndTheMergeRequestId(): void
+    {
+        [$repository_name, $id] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
+            'john-snow/winter-is-coming/25'
+        );
+        $this->assertEquals('john-snow/winter-is-coming', $repository_name);
+        $this->assertEquals('25', $id);
     }
 }

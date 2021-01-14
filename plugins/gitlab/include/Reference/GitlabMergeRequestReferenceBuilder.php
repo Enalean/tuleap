@@ -25,7 +25,7 @@ use Project;
 use Reference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 
-class GitlabCommitReferenceBuilder
+class GitlabMergeRequestReferenceBuilder
 {
     /**
      * @var ReferenceDao
@@ -43,9 +43,9 @@ class GitlabCommitReferenceBuilder
         $this->gitlab_repository_factory = $gitlab_repository_factory;
     }
 
-    public function buildGitlabCommitReference(Project $project, string $keyword, string $value): ?Reference
+    public function buildGitlabMergeRequestReference(Project $project, string $keyword, string $value): ?Reference
     {
-        if ($keyword !== 'gitlab_commit') {
+        if ($keyword !== GitlabMergeRequestReference::REFERENCE_NAME) {
             return null;
         }
 
@@ -54,9 +54,9 @@ class GitlabCommitReferenceBuilder
             return null;
         }
 
-        list($repository_name, $sha1) = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId($value);
+        list($repository_name, $id) = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId($value);
 
-        if (! $repository_name || ! $sha1) {
+        if (! $repository_name || ! $id) {
             return null;
         }
 
@@ -69,10 +69,10 @@ class GitlabCommitReferenceBuilder
             return null;
         }
 
-        return new GitlabCommitReference(
+        return new GitlabMergeRequestReference(
             $repository,
             $project,
-            $sha1
+            (int) $id
         );
     }
 }

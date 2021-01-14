@@ -21,19 +21,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference;
 
-final class GitlabCommitReferenceExtractor
+final class GitlabReferenceExtractor
 {
-    public static function splitRepositoryAndSha1(string $value): array
+    /**
+     * @psalm-return array{string|false|null, string|false|null}
+     */
+    public static function splitRepositoryNameAndReferencedItemId(string $value): array
     {
         $repository_name = null;
-        $sha1            = null;
+        $reference       = null;
 
-        $last_slash_position  = strrpos($value, '/');
+        $last_slash_position = strrpos($value, '/');
         if ($last_slash_position !== false) {
-            $repository_name      = substr($value, 0, $last_slash_position);
-            $sha1                 = substr($value, $last_slash_position + 1);
+            $repository_name = substr($value, 0, $last_slash_position);
+            $reference       = substr($value, $last_slash_position + 1);
         }
 
-        return [$repository_name, $sha1];
+        return [$repository_name, $reference];
     }
 }

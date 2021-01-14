@@ -28,6 +28,8 @@ use Tuleap\Gitlab\Reference\GitlabCommitFactory;
 use Tuleap\Gitlab\Reference\GitlabCommitReferenceBuilder;
 use Tuleap\Gitlab\Reference\GitlabCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\GitlabCrossReferenceOrganizer;
+use Tuleap\Gitlab\Reference\GitlabMergeRequestReference;
+use Tuleap\Gitlab\Reference\GitlabMergeRequestReferenceBuilder;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
@@ -208,6 +210,11 @@ class gitlabPlugin extends Plugin
                         EventManager::instance(),
                         $reference_manager
                     ),
+                    \ReferenceManager::instance(),
+                    new GitlabRepositoryProjectRetriever(
+                        new GitlabRepositoryProjectDao(),
+                        ProjectManager::instance()
+                    ),
                     $logger,
                 ),
                 $logger,
@@ -237,11 +244,29 @@ class gitlabPlugin extends Plugin
                 $event->setReference($reference);
             }
         }
+
+        if ($event->getKeyword() === GitlabMergeRequestReference::REFERENCE_NAME) {
+            $builder = new GitlabMergeRequestReferenceBuilder(
+                new \Tuleap\Gitlab\Reference\ReferenceDao(),
+                $this->getGitlabRepositoryFactory()
+            );
+
+            $reference = $builder->buildGitlabMergeRequestReference(
+                $event->getProject(),
+                $event->getKeyword(),
+                $event->getValue()
+            );
+
+            if ($reference !== null) {
+                $event->setReference($reference);
+            }
+        }
     }
 
     public function get_plugins_available_keywords_references(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['keywords'][] = GitlabCommitReference::REFERENCE_NAME;
+        $params['keywords'][] = GitlabMergeRequestReference::REFERENCE_NAME;
     }
 
     /** @see \Event::GET_REFERENCE_ADMIN_CAPABILITIES */
@@ -271,6 +296,16 @@ class gitlabPlugin extends Plugin
                 GitlabCommitReference::REFERENCE_NAME,
                 'fab fa-gitlab',
                 dgettext('tuleap-gitlab', 'GitLab commit'),
+                false
+            )
+        );
+
+        $natures->addNature(
+            GitlabMergeRequestReference::NATURE_NAME,
+            new Nature(
+                GitlabMergeRequestReference::REFERENCE_NAME,
+                'fab fa-gitlab',
+                dgettext('tuleap-gitlab', 'GitLab Merge Request'),
                 false
             )
         );
