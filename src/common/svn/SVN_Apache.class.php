@@ -43,7 +43,6 @@ abstract class SVN_Apache
         $conf .= "<Location " . $repository->getURLPath() . ">\n";
         $conf .= "    DAV svn\n";
         $conf .= "    SVNPath " . $repository->getFilesystemPath() . "\n";
-        $conf .= "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n";
         $conf .= $this->getRepositoryAuthorization($repository);
         $conf .= $this->getProjectAuthentication($repository->getProject());
         $conf .= "</Location>\n\n";
