@@ -24,6 +24,8 @@ use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsDao;
+use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
@@ -106,6 +108,10 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
                 $formelement_factory,
                 new Tracker_Workflow_Trigger_RulesProcessor(
                     UserManager::instance()->getUserById(Tracker_Workflow_WorkflowUser::ID),
+                    new SiblingsRetriever(
+                        new SiblingsDao(),
+                        Tracker_ArtifactFactory::instance()
+                    ),
                     $logger
                 ),
                 $logger,

@@ -48,6 +48,8 @@ use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsDao;
+use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 use UserManager;
@@ -80,7 +82,14 @@ class ArchiveAndDeleteArtifactTaskBuilder
                     new Tracker_Workflow_Trigger_RulesManager(
                         new Tracker_Workflow_Trigger_RulesDao(),
                         $formelement_factory,
-                        new Tracker_Workflow_Trigger_RulesProcessor(new \Tracker_Workflow_WorkflowUser(), $workflow_logger),
+                        new Tracker_Workflow_Trigger_RulesProcessor(
+                            new \Tracker_Workflow_WorkflowUser(),
+                            new SiblingsRetriever(
+                                new SiblingsDao(),
+                                $tracker_artifact_factory
+                            ),
+                            $workflow_logger
+                        ),
                         $workflow_logger,
                         new Tracker_Workflow_Trigger_RulesBuilderFactory($formelement_factory),
                         new WorkflowRulesManagerLoopSafeGuard($workflow_logger)

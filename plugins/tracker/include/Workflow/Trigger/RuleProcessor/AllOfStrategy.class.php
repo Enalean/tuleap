@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 
 /**
  * Verify that all of siblings artifacts meet rule trigger conditions
@@ -32,10 +33,16 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy implements Tracker_W
     /** @var Tracker_Workflow_Trigger_TriggerRule */
     private $rule;
 
-    public function __construct(Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule)
+    /**
+     * @var SiblingsRetriever
+     */
+    private $siblings_retriever;
+
+    public function __construct(Artifact $artifact, Tracker_Workflow_Trigger_TriggerRule $rule, SiblingsRetriever $siblings_retriever)
     {
-        $this->artifact = $artifact;
-        $this->rule     = $rule;
+        $this->artifact           = $artifact;
+        $this->rule               = $rule;
+        $this->siblings_retriever = $siblings_retriever;
     }
 
     /**
@@ -44,32 +51,32 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy implements Tracker_W
      */
     public function allPrecondtionsAreMet()
     {
-        $siblings = $this->artifact->getSiblingsWithoutPermissionChecking();
+        $siblings = $this->siblings_retriever->getSiblingsWithoutPermissionChecking($this->artifact);
         if (count($siblings)) {
-            return $this->allOfSiblingsHaveTriggeringValue($siblings, $this->rule);
+            return $this->allOfSiblingsHaveTriggeringValue($siblings);
         }
         return true;
     }
 
-    private function allOfSiblingsHaveTriggeringValue(Iterator $siblings)
+    private function allOfSiblingsHaveTriggeringValue(array $siblings): bool
     {
         $update_parent = true;
         foreach ($siblings as $sibling) {
-            $update_parent &= $this->artifactMatchRulesValue($sibling);
+            $update_parent = $update_parent && $this->artifactMatchRulesValue($sibling);
         }
         return $update_parent;
     }
 
-    private function artifactMatchRulesValue(Artifact $sibling)
+    private function artifactMatchRulesValue(Artifact $sibling): bool
     {
         $update_parent = true;
         foreach ($this->rule->getTriggers() as $trigger) {
-            $update_parent &= $this->artifactMatchTriggerValue($sibling, $trigger);
+            $update_parent = $update_parent && $this->artifactMatchTriggerValue($sibling, $trigger);
         }
         return $update_parent;
     }
 
-    private function artifactMatchTriggerValue(Artifact $sibling, Tracker_Workflow_Trigger_FieldValue $trigger)
+    private function artifactMatchTriggerValue(Artifact $sibling, Tracker_Workflow_Trigger_FieldValue $trigger): bool
     {
         if ($trigger->getField()->getTracker() == $sibling->getTracker()) {
             return $trigger->isSetForArtifact($sibling);

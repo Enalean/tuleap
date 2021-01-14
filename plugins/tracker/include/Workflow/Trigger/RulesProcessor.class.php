@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 /**
@@ -38,10 +39,19 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
      */
     private $artifacts_visited_in_processing = [];
 
-    public function __construct(Tracker_Workflow_WorkflowUser $workflow_user, WorkflowBackendLogger $logger)
-    {
-        $this->workflow_user = $workflow_user;
-        $this->logger        = $logger;
+    /**
+     * @var SiblingsRetriever
+     */
+    private $siblings_retriever;
+
+    public function __construct(
+        Tracker_Workflow_WorkflowUser $workflow_user,
+        SiblingsRetriever $siblings_retriever,
+        WorkflowBackendLogger $logger
+    ) {
+        $this->workflow_user      = $workflow_user;
+        $this->logger             = $logger;
+        $this->siblings_retriever = $siblings_retriever;
     }
 
     /**
@@ -124,7 +134,11 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
         if ($rule->getCondition() == Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE) {
             return new Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategy();
         } else {
-            return new Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy($artifact, $rule);
+            return new Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy(
+                $artifact,
+                $rule,
+                $this->siblings_retriever
+            );
         }
     }
 }
