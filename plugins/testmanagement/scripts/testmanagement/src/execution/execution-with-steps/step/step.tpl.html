@@ -56,27 +56,27 @@
             </button>
         </div>
         <div class="tlp-dropdown-menu tlp-dropdown-menu-right steps-step-action-dropdown" role="menu">
-            <a class="tlp-dropdown-menu-item steps-step-action-fail"
+            <button class="tlp-dropdown-menu-item steps-step-action-fail"
                 ng-class="{ 'steps-step-action-disabled': $ctrl.saving }"
                 role="menuitem"
                 ng-click="$ctrl.setToFailed()"
             >
                 <i class="fa fa-fw fa-times-circle"></i> {{::'Failed' | translate }}
-            </a>
-            <a class="tlp-dropdown-menu-item steps-step-action-block"
+            </button>
+            <button class="tlp-dropdown-menu-item steps-step-action-block"
                 ng-class="{ 'steps-step-action-disabled': $ctrl.saving }"
                 role="menuitem"
                 ng-click="$ctrl.setToBlocked()"
             >
                 <i class="fa fa-fw fa-exclamation-circle"></i> {{::'Blocked' | translate }}
-            </a>
-            <a class="tlp-dropdown-menu-item steps-step-action-notrun"
+            </button>
+            <button class="tlp-dropdown-menu-item steps-step-action-notrun"
                 ng-class="{ 'steps-step-action-disabled': $ctrl.saving }"
                 role="menuitem"
                 ng-click="$ctrl.setToNotRun()"
             >
                 <i class="fa fa-fw fa-question-circle"></i> {{::'Not run' | translate }}
-            </a>
+            </button>
         </div>
     </div>
 </div>

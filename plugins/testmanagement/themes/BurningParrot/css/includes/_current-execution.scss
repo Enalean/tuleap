@@ -108,9 +108,7 @@
 .current-test-header {
     display: flex;
     flex: 0 0 auto;
-    align-items: baseline;
     justify-content: space-between;
-    color: $tlp-ui-white;
 }
 
 .current-test-status {
@@ -172,14 +170,23 @@
 .current-test-header-actions {
     display: flex;
     flex: 0 0 auto;
-    justify-content: space-between;
-    font-size: 20px;
 }
 
 .current-test-header-action {
-    margin: 0 0 0 $tlp-medium-spacing;
+    width: 40px;
+    margin: 0 0 0 $tlp-small-spacing;
+    border: 0;
+    border-radius: 50%;
+    background-color: transparent;
+    box-shadow: none;
     color: $tlp-ui-white;
-    cursor: pointer;
+    font-size: 20px;
+
+    &:hover,
+    &:focus {
+        background: transparentize($tlp-ui-white, .9);
+        box-shadow: $tlp-button-shadow-hover;
+    }
 }
 
 .current-test-latest-result {
