@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const TRANSITION_DURATION = 300;
-
 export const EVENT_TLP_MODAL_SHOWN = "tlp-modal-shown";
 export const EVENT_TLP_MODAL_HIDDEN = "tlp-modal-hidden";
 type ModalEventType = "tlp-modal-shown" | "tlp-modal-hidden";
@@ -123,13 +121,11 @@ export class Modal {
             this.destroy();
         }
 
-        setTimeout(() => {
-            this.element.classList.remove(MODAL_DISPLAY_CLASS_NAME);
-            this.is_shown = false;
+        this.element.classList.remove(MODAL_DISPLAY_CLASS_NAME);
+        this.is_shown = false;
 
-            this.dispatchEvent(this.hidden_event);
-            this.doc.dispatchEvent(this.hidden_event);
-        }, TRANSITION_DURATION);
+        this.dispatchEvent(this.hidden_event);
+        this.doc.dispatchEvent(this.hidden_event);
     }
 
     addBackdrop(): void {
@@ -146,9 +142,7 @@ export class Modal {
     removeBackdrop(): void {
         this.backdrop_element?.classList.remove(BACKDROP_SHOWN_CLASS_NAME);
 
-        setTimeout(() => {
-            this.backdrop_element?.remove();
-        }, TRANSITION_DURATION);
+        this.backdrop_element?.remove();
     }
 
     listenCloseEvents(): void {

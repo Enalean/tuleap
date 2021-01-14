@@ -303,6 +303,7 @@ describe("Document new UI", () => {
         it("user can navigate and manipulate items using keyboard shortcuts", () => {
             // eslint-disable-next-line cypress/require-data-selectors
             cy.get("body").as("body");
+            cy.get("[data-test=document-header-actions]").should("be.visible");
 
             testNewFolderShortcut();
             testNewItemShortcut();
@@ -322,7 +323,8 @@ function testNewFolderShortcut(): void {
                 .type("First item");
             cy.get("[data-test=document-modal-submit-button]").click();
         });
-    cy.get("[data-test=document-tree-content]").contains("tr", "First item");
+    cy.get("[data-test=document-new-folder-modal]").should("not.be.visible");
+    cy.get("[data-test=folder-title]").contains("First item");
 }
 
 function testNewItemShortcut(): void {
@@ -336,7 +338,8 @@ function testNewItemShortcut(): void {
             cy.get("[data-test=empty]").click();
             cy.get("[data-test=document-modal-submit-button]").click();
         });
-    cy.get("[data-test=document-tree-content]").contains("tr", "Last item");
+    cy.get("[data-test=document-new-item-modal]").should("not.be.visible");
+    cy.get("[data-test=empty-file-title]").contains("Last item");
 }
 
 function testNavigationShortcuts(): void {
@@ -350,9 +353,11 @@ function testNavigationShortcuts(): void {
 function deleteItems(): void {
     cy.get("@body").type("{del}");
     cy.get("[data-test=document-confirm-deletion-button]").click();
+    cy.get("[data-test=document-delete-item-modal]").should("not.exist");
 
     cy.get("@body").type("{ctrl}{uparrow}").type("{del}");
     cy.get("[data-test=document-confirm-deletion-button]").click();
+    cy.get("[data-test=document-delete-item-modal]").should("not.exist");
 
     cy.get("[data-test=document-tree-content]").should("not.exist");
 }

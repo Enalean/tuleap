@@ -33,7 +33,6 @@
                 role="button"
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
-                v-on:click="close()"
             >
                 ×
             </div>
@@ -61,7 +60,6 @@
                 type="button"
                 class="tlp-button-danger tlp-button-primary tlp-modal-action"
                 data-dismiss="modal"
-                v-on:click="close()"
                 data-test="close-max-archive-size-threshold-exceeded-modal"
                 v-translate
             >
