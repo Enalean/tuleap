@@ -24,6 +24,7 @@ namespace Tuleap\Gitlab\EventsHandlers;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Reference\GitlabCommitReference;
+use Tuleap\Gitlab\Reference\GitlabMergeRequestReference;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
 
 class ReferenceAdministrationWarningsCollectorEventHandlerTest extends TestCase
@@ -40,7 +41,7 @@ class ReferenceAdministrationWarningsCollectorEventHandlerTest extends TestCase
         $this->handler = new ReferenceAdministrationWarningsCollectorEventHandler();
     }
 
-    public function testItSendsAWarningWhenTheReferenceIsUsedInProjectReferences(): void
+    public function testItSendsAWarningWhenTheCommitReferenceIsUsedInProjectReferences(): void
     {
         $event = new ReferenceAdministrationWarningsCollectorEvent([
             $this->buildReferenceWithKeyword('activity'),
@@ -53,6 +54,23 @@ class ReferenceAdministrationWarningsCollectorEventHandlerTest extends TestCase
         $this->handler->handle($event);
         $this->assertContains(
             "The project reference based on the keyword 'gitlab_commit' is overriding the system reference used by the GitLab plugin.",
+            $event->getWarningMessages()
+        );
+    }
+
+    public function testItSendsAWarningWhenTheMergeRequestReferenceIsUsedInProjectReferences(): void
+    {
+        $event = new ReferenceAdministrationWarningsCollectorEvent([
+            $this->buildReferenceWithKeyword('activity'),
+            $this->buildReferenceWithKeyword('bugs'),
+            $this->buildReferenceWithKeyword(GitlabMergeRequestReference::REFERENCE_NAME),
+            $this->buildReferenceWithKeyword('stuff'),
+        ]);
+
+
+        $this->handler->handle($event);
+        $this->assertContains(
+            "The project reference based on the keyword 'gitlab_mr' is overriding the system reference used by the GitLab plugin.",
             $event->getWarningMessages()
         );
     }
