@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,18 +23,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-/**
- * @psalm-immutable
- */
-interface FieldMapping
+final class FieldAndValueIDGenerator implements IDGenerator
 {
-    public function getJiraFieldId(): string;
+    /**
+     * @var int
+     */
+    private $id = 0;
 
-    public function getXMLId(): string;
-
-    public function getFieldName(): string;
-
-    public function getType(): string;
-
-    public function getBindType(): ?string;
+    public function getNextId(): int
+    {
+        $this->id++;
+        return $this->id;
+    }
 }

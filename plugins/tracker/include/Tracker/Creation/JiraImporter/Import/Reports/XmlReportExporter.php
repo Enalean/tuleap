@@ -26,12 +26,14 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 
 class XmlReportExporter
 {
     public function exportReports(
         SimpleXMLElement $trackers_node,
         FieldMappingCollection $field_mapping_collection,
+        StatusValuesCollection $status_values_collection,
         XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
         XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
         XmlReportDoneIssuesExporter $xml_report_done_issues_exporter,
@@ -50,6 +52,7 @@ class XmlReportExporter
 
         $xml_report_all_issues_exporter->exportJiraLikeReport(
             $reports_node,
+            $status_values_collection,
             $summary_field,
             $description_field,
             $status_field,
@@ -61,6 +64,7 @@ class XmlReportExporter
 
         $xml_report_open_issues_exporter->exportJiraLikeReport(
             $reports_node,
+            $status_values_collection,
             $summary_field,
             $description_field,
             $status_field,
@@ -72,6 +76,7 @@ class XmlReportExporter
 
         $xml_report_done_issues_exporter->exportJiraLikeReport(
             $reports_node,
+            $status_values_collection,
             $summary_field,
             $description_field,
             $status_field,
@@ -83,6 +88,7 @@ class XmlReportExporter
 
         $xml_report_created_recently_exporter->exportJiraLikeReport(
             $reports_node,
+            $status_values_collection,
             $summary_field,
             $description_field,
             $status_field,
@@ -94,6 +100,7 @@ class XmlReportExporter
 
         $xml_report_updated_recently_exporter->exportJiraLikeReport(
             $reports_node,
+            $status_values_collection,
             $summary_field,
             $description_field,
             $status_field,

@@ -78,7 +78,8 @@ final class JiraFieldRetrieverTest extends TestCase
 
         $result = $field_retriever->getAllJiraFields(
             $this->jira_project_id,
-            $this->jira_issue_type_name
+            $this->jira_issue_type_name,
+            new FieldAndValueIDGenerator(),
         );
 
         $this->assertCount(2, $result);
@@ -107,7 +108,8 @@ final class JiraFieldRetrieverTest extends TestCase
 
         $result = $field_retriever->getAllJiraFields(
             $this->jira_project_id,
-            $this->jira_issue_type_name
+            $this->jira_issue_type_name,
+            new FieldAndValueIDGenerator(),
         );
 
         $this->assertEquals([], $result);

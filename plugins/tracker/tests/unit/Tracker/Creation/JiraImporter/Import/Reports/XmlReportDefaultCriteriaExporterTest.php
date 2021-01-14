@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 
 final class XmlReportDefaultCriteriaExporterTest extends TestCase
 {
@@ -38,20 +38,22 @@ final class XmlReportDefaultCriteriaExporterTest extends TestCase
                 </criteria>
             </criterias>
         ');
-        $status_field_mapping = new FieldMapping(
+        $status_field_mapping = new ListFieldMapping(
             'status',
             'Fstatus',
             'status',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
         );
 
-        $priority_field_mapping = new FieldMapping(
+        $priority_field_mapping = new ListFieldMapping(
             'priority',
             'Fpriority',
             'priority',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
         );
 
         $criteria_exporter = new XmlReportDefaultCriteriaExporter();

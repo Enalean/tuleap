@@ -60,10 +60,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectio
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
@@ -96,12 +96,6 @@ class JiraXmlExporter
      * @var XmlReportExporter
      */
     private $report_exporter;
-
-    /**
-     * @var FieldMappingCollection
-     */
-    private $jira_field_mapping_collection;
-
     /**
      * @var PermissionsXMLExporter
      */
@@ -116,12 +110,6 @@ class JiraXmlExporter
      * @var SemanticsXMLExporter
      */
     private $semantics_xml_exporter;
-
-    /**
-     * @var StatusValuesCollection
-     */
-    private $status_values_collection;
-
     /**
      * @var ContainersXMLCollectionBuilder
      */
@@ -160,18 +148,21 @@ class JiraXmlExporter
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var ClientWrapper
+     */
+    private $wrapper;
 
     public function __construct(
         LoggerInterface $logger,
+        ClientWrapper $wrapper,
         ErrorCollector $error_collector,
         JiraFieldRetriever $jira_field_retriever,
         JiraToTuleapFieldTypeMapper $field_type_mapper,
         XmlReportExporter $report_exporter,
-        FieldMappingCollection $field_mapping_collection,
         PermissionsXMLExporter $permissions_xml_exporter,
         ArtifactsXMLExporter $artifacts_xml_exporter,
         SemanticsXMLExporter $semantics_xml_exporter,
-        StatusValuesCollection $status_values_collection,
         ContainersXMLCollectionBuilder $containers_xml_collection_builder,
         AlwaysThereFieldsExporter $always_there_fields_exporter,
         XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
@@ -181,15 +172,14 @@ class JiraXmlExporter
         XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter
     ) {
         $this->logger                               = $logger;
+        $this->wrapper                              = $wrapper;
         $this->error_collector                      = $error_collector;
         $this->jira_field_retriever                 = $jira_field_retriever;
         $this->field_type_mapper                    = $field_type_mapper;
         $this->report_exporter                      = $report_exporter;
-        $this->jira_field_mapping_collection        = $field_mapping_collection;
         $this->permissions_xml_exporter             = $permissions_xml_exporter;
         $this->artifacts_xml_exporter               = $artifacts_xml_exporter;
         $this->semantics_xml_exporter               = $semantics_xml_exporter;
-        $this->status_values_collection             = $status_values_collection;
         $this->containers_xml_collection_builder    = $containers_xml_collection_builder;
         $this->always_there_fields_exporter         = $always_there_fields_exporter;
         $this->xml_report_all_issues_exporter       = $xml_report_all_issues_exporter;
@@ -221,10 +211,6 @@ class JiraXmlExporter
         $jira_field_mapper         = new JiraToTuleapFieldTypeMapper($field_xml_exporter, $error_collector, $logger);
         $report_table_exporter     = new XmlReportTableExporter($cdata_factory);
         $default_criteria_exporter = new XmlReportDefaultCriteriaExporter();
-        $status_values_collection  = new StatusValuesCollection(
-            $wrapper,
-            $logger
-        );
 
         $tql_report_exporter = new XmlTQLReportExporter(
             $default_criteria_exporter,
@@ -253,11 +239,11 @@ class JiraXmlExporter
 
         return new self(
             $logger,
+            $wrapper,
             $error_collector,
             new JiraFieldRetriever($wrapper),
             $jira_field_mapper,
             new XmlReportExporter(),
-            new FieldMappingCollection(),
             new PermissionsXMLExporter(),
             new ArtifactsXMLExporter(
                 $wrapper,
@@ -282,7 +268,6 @@ class JiraXmlExporter
                             UserXMLExporter::build()
                         ),
                         new FieldChangeFileBuilder(),
-                        new StatusValuesTransformer()
                     ),
                     new IssueSnapshotCollectionBuilder(
                         new ChangelogEntriesBuilder(
@@ -327,7 +312,6 @@ class JiraXmlExporter
                 $logger
             ),
             new SemanticsXMLExporter(),
-            $status_values_collection,
             new ContainersXMLCollectionBuilder(
                 new XML_SimpleXMLCDATAFactory()
             ),
@@ -343,13 +327,11 @@ class JiraXmlExporter
                 $default_criteria_exporter,
                 $cdata_factory,
                 $report_table_exporter,
-                $status_values_collection
             ),
             new XmlReportDoneIssuesExporter(
                 $default_criteria_exporter,
                 $cdata_factory,
                 $report_table_exporter,
-                $status_values_collection
             ),
             new XmlReportCreatedRecentlyExporter($tql_report_exporter),
             new XmlReportUpdatedRecentlyExporter($tql_report_exporter)
@@ -363,32 +345,45 @@ class JiraXmlExporter
         SimpleXMLElement $node_tracker,
         string $jira_base_url,
         string $jira_project_key,
-        string $jira_issue_type_name
+        string $jira_issue_type_name,
+        IDGenerator $field_id_generator
     ): void {
-        $this->logger->debug("Start export Jira to XML");
+        $this->logger->debug("Start export Jira to XML: " . $jira_issue_type_name);
 
         $this->logger->debug("Add root formelement");
         $root_form_elements = $node_tracker->addChild('formElements');
-        $containers_collection = $this->containers_xml_collection_builder->buildCollectionOfJiraContainersXML(
-            $root_form_elements
+
+        $containers_collection = new ContainersXMLCollection($field_id_generator);
+        $jira_field_mapping_collection = new FieldMappingCollection($field_id_generator);
+        $status_values_collection  = new StatusValuesCollection(
+            $this->wrapper,
+            $this->logger
+        );
+
+        $this->containers_xml_collection_builder->buildCollectionOfJiraContainersXML(
+            $root_form_elements,
+            $containers_collection,
         );
 
         $this->logger->debug("Handle status");
-        $this->status_values_collection->initCollectionForProjectAndIssueType(
+        $status_values_collection->initCollectionForProjectAndIssueType(
             $jira_project_key,
-            $jira_issue_type_name
+            $jira_issue_type_name,
+            $field_id_generator,
         );
 
         $this->logger->debug("Export always there jira fields");
         $this->always_there_fields_exporter->exportFields(
             $containers_collection,
-            $this->jira_field_mapping_collection,
-            $this->status_values_collection
+            $jira_field_mapping_collection,
+            $status_values_collection
         );
 
         $this->logger->debug("Export custom jira fields");
         $this->exportJiraField(
             $containers_collection,
+            $jira_field_mapping_collection,
+            $field_id_generator,
             $jira_project_key,
             $jira_issue_type_name
         );
@@ -396,8 +391,8 @@ class JiraXmlExporter
         $this->logger->debug("Export semantics");
         $this->semantics_xml_exporter->exportSemantics(
             $node_tracker,
-            $this->jira_field_mapping_collection,
-            $this->status_values_collection
+            $jira_field_mapping_collection,
+            $status_values_collection
         );
 
         $node_tracker->addChild('rules');
@@ -405,7 +400,8 @@ class JiraXmlExporter
         $this->logger->debug("Export reports");
         $this->report_exporter->exportReports(
             $node_tracker,
-            $this->jira_field_mapping_collection,
+            $jira_field_mapping_collection,
+            $status_values_collection,
             $this->xml_report_all_issues_exporter,
             $this->xml_report_open_issues_exporter,
             $this->xml_report_done_issues_exporter,
@@ -417,13 +413,13 @@ class JiraXmlExporter
         $this->logger->debug("Export permissions");
         $this->permissions_xml_exporter->exportFieldsPermissions(
             $node_tracker,
-            $this->jira_field_mapping_collection
+            $jira_field_mapping_collection
         );
 
         $this->logger->debug("Export artifact");
         $this->artifacts_xml_exporter->exportArtifacts(
             $node_tracker,
-            $this->jira_field_mapping_collection,
+            $jira_field_mapping_collection,
             $jira_base_url,
             $jira_project_key,
             $jira_issue_type_name
@@ -438,16 +434,18 @@ class JiraXmlExporter
 
     private function exportJiraField(
         ContainersXMLCollection $containers_collection,
+        FieldMappingCollection $jira_field_mapping_collection,
+        IDGenerator $id_generator,
         string $jira_project_id,
         string $jira_issue_type_name
     ): void {
-        $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $jira_issue_type_name);
+        $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $jira_issue_type_name, $id_generator);
         $this->logger->debug("Start exporting jira field structure ...");
         foreach ($fields as $key => $field) {
             $this->field_type_mapper->exportFieldToXml(
                 $field,
                 $containers_collection,
-                $this->jira_field_mapping_collection
+                $jira_field_mapping_collection
             );
         }
         $this->logger->debug("Field structure exported successfully");

@@ -22,13 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 
 final class XmlReportCreatedRecentlyExporterTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var XmlReportCreatedRecentlyExporter
      */
@@ -71,52 +79,50 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->summary_field_mapping = new FieldMapping(
+        $this->summary_field_mapping = new ScalarFieldMapping(
             'summary',
             'Fsummary',
             'summary',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
-            null
         );
 
-        $this->description_field_mapping = new FieldMapping(
+        $this->description_field_mapping = new ScalarFieldMapping(
             'description',
             'Fdescription',
             'description',
             Tracker_FormElementFactory::FIELD_TEXT_TYPE,
-            null
         );
 
-        $this->status_field_mapping = new FieldMapping(
+        $this->status_field_mapping = new ListFieldMapping(
             'status',
             'Fstatus',
             'status',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
         );
 
-        $this->priority_field_mapping = new FieldMapping(
+        $this->priority_field_mapping = new ListFieldMapping(
             'priority',
             'Fpriority',
             'priority',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
         );
 
-        $this->jira_issue_url_field_mapping = new FieldMapping(
+        $this->jira_issue_url_field_mapping = new ScalarFieldMapping(
             'jira_issue_url',
             'Fjira_issue_url',
             'jira_issue_url',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
-            null
         );
 
-        $this->created_field_mapping = new FieldMapping(
+        $this->created_field_mapping = new ScalarFieldMapping(
             'created',
             'Fcreated',
             'created',
             Tracker_FormElementFactory::FIELD_DATE_TYPE,
-            null
         );
 
         $tracker_node       = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
@@ -135,6 +141,7 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
     {
         $this->report_export->exportJiraLikeReport(
             $this->reports_node,
+            new StatusValuesCollection(\Mockery::mock(ClientWrapper::class), new NullLogger()),
             $this->summary_field_mapping,
             $this->description_field_mapping,
             $this->status_field_mapping,
@@ -152,6 +159,7 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
     {
         $this->report_export->exportJiraLikeReport(
             $this->reports_node,
+            new StatusValuesCollection(\Mockery::mock(ClientWrapper::class), new NullLogger()),
             $this->summary_field_mapping,
             $this->description_field_mapping,
             $this->status_field_mapping,

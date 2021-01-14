@@ -31,6 +31,15 @@ class ContainersXMLCollection
      * @var array<string, SimpleXMLElement>
      */
     private $containers = [];
+    /**
+     * @var IDGenerator
+     */
+    private $field_id_generator;
+
+    public function __construct(IDGenerator $field_id_generator)
+    {
+        $this->field_id_generator = $field_id_generator;
+    }
 
     public function addContainerInCollection(string $name, SimpleXMLElement $node): void
     {
@@ -47,5 +56,10 @@ class ContainersXMLCollection
         }
 
         return $this->containers[$name];
+    }
+
+    public function getNextId(): int
+    {
+        return $this->field_id_generator->getNextId();
     }
 }

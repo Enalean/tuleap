@@ -26,12 +26,17 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 
 final class XmlReportDoneIssuesExporterTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var SimpleXMLElement
      */
@@ -84,44 +89,43 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->summary_field_mapping = new FieldMapping(
+        $this->summary_field_mapping = new ScalarFieldMapping(
             'summary',
             'Fsummary',
             'summary',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
-            null
         );
 
-        $this->description_field_mapping = new FieldMapping(
+        $this->description_field_mapping = new ScalarFieldMapping(
             'description',
             'Fdescription',
             'description',
             Tracker_FormElementFactory::FIELD_TEXT_TYPE,
-            null
         );
 
-        $this->status_field_mapping = new FieldMapping(
+        $this->status_field_mapping = new ListFieldMapping(
             'status',
             'Fstatus',
             'status',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
         );
 
-        $this->priority_field_mapping = new FieldMapping(
+        $this->priority_field_mapping = new ListFieldMapping(
             'priority',
             'Fpriority',
             'priority',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [],
         );
 
-        $this->jira_issue_url_field_mapping = new FieldMapping(
+        $this->jira_issue_url_field_mapping = new ScalarFieldMapping(
             'jira_issue_url',
             'Fjira_issue_url',
             'jira_issue_url',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
-            null
         );
 
         $tracker_node = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
@@ -133,22 +137,17 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
         $this->report_table_exporter     = new XmlReportTableExporter($this->cdata_factory);
     }
 
-    protected function tearDown(): void
-    {
-        Mockery::close();
-    }
-
     public function testItDoesNothingWhenNoStatusField(): void
     {
         $report_export = new XmlReportDoneIssuesExporter(
             $this->default_criteria_exporter,
             $this->cdata_factory,
             $this->report_table_exporter,
-            $this->status_values_collection,
         );
 
         $report_export->exportJiraLikeReport(
             $this->reports_node,
+            $this->status_values_collection,
             $this->summary_field_mapping,
             $this->description_field_mapping,
             null,
@@ -170,11 +169,11 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
             $this->default_criteria_exporter,
             $this->cdata_factory,
             $this->report_table_exporter,
-            $this->status_values_collection
         );
 
         $report_export->exportJiraLikeReport(
             $this->reports_node,
+            $this->status_values_collection,
             $this->summary_field_mapping,
             $this->description_field_mapping,
             $this->status_field_mapping,
@@ -192,7 +191,7 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
     {
         $this->status_values_collection->shouldReceive('getClosedValues')->andReturn(
             [
-                new JiraFieldAPIAllowedValueRepresentation(125, 'Closed')
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(125, new FieldAndValueIDGenerator()),
             ]
         );
 
@@ -200,11 +199,11 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
             $this->default_criteria_exporter,
             $this->cdata_factory,
             $this->report_table_exporter,
-            $this->status_values_collection
         );
 
         $report_export->exportJiraLikeReport(
             $this->reports_node,
+            $this->status_values_collection,
             $this->summary_field_mapping,
             $this->description_field_mapping,
             $this->status_field_mapping,
@@ -237,7 +236,7 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
         $this->assertSame("1", (string) $criterion_01['is_advanced']);
         $this->assertEquals(1, $criterion_01->criteria_value->count());
         $this->assertSame("list", (string) $criterion_01->criteria_value['type']);
-        $this->assertSame("V125", (string) $criterion_01->criteria_value->selected_value[0]['REF']);
+        $this->assertSame("V1", (string) $criterion_01->criteria_value->selected_value[0]['REF']);
 
         $criterion_02 = $criterias->criteria[1];
         $this->assertSame("Fsummary", (string) $criterion_02->field['REF']);

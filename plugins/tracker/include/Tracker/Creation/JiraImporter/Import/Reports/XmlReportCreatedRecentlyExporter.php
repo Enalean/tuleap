@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 
 class XmlReportCreatedRecentlyExporter implements IExportJiraLikeXmlReport
 {
@@ -39,6 +40,7 @@ class XmlReportCreatedRecentlyExporter implements IExportJiraLikeXmlReport
 
     public function exportJiraLikeReport(
         SimpleXMLElement $reports_node,
+        StatusValuesCollection $status_values_collection,
         ?FieldMapping $summary_field,
         ?FieldMapping $description_field,
         ?FieldMapping $status_field,

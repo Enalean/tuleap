@@ -29,9 +29,11 @@ use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 
 class SemanticsXMLExporterTest extends TestCase
@@ -41,55 +43,49 @@ class SemanticsXMLExporterTest extends TestCase
     public function testExportsTheSemantics(): void
     {
         $tracker_node = new SimpleXMLElement('<tracker/>');
-        $mapping = new FieldMappingCollection();
+        $mapping = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $mapping->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 'summary',
                 'Fsummary',
                 'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                null
             )
         );
         $mapping->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 'description',
                 'Fdescription',
                 'description',
                 Tracker_FormElementFactory::FIELD_TEXT_TYPE,
-                null
             )
         );
         $mapping->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 'status',
                 'Fstatus',
                 'status',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                [],
             )
         );
         $mapping->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 'assignee',
                 'Fassignee',
                 'Assignee',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                [],
             )
         );
 
         $collection = Mockery::mock(StatusValuesCollection::class);
 
         $collection->shouldReceive('getOpenValues')->andReturn([
-            new JiraFieldAPIAllowedValueRepresentation(
-                9010001,
-                'To Do'
-            ),
-            new JiraFieldAPIAllowedValueRepresentation(
-                9000003,
-                'In Progress'
-            ),
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(10001, new FieldAndValueIDGenerator()),
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(3, new FieldAndValueIDGenerator()),
         ]);
 
         $exporter = new SemanticsXMLExporter();
@@ -123,7 +119,7 @@ class SemanticsXMLExporterTest extends TestCase
     public function testItDoesNotExportSemanticTitleIfSummaryFieldNotfoundInMapping(): void
     {
         $tracker_node = new SimpleXMLElement('<tracker/>');
-        $mapping = new FieldMappingCollection();
+        $mapping = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $exporter = new SemanticsXMLExporter();
         $exporter->exportSemantics(

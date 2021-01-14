@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,19 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Values;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-class StatusValuesTransformer
+interface IDGenerator
 {
-    private const START_OF_STATUS_INDEX = 9000000;
-
-    /**
-     * Jira statuses IDs and Jira list field values IDs are not unique.
-     * These are 2 different concepts in Jira that will be both transformed as a static list value.
-     * To ensure that IDs will be unique in XML, we will transform the status IDs by adding a large int to it.
-     */
-    public function transformJiraStatusValue(int $base_jira_status_id): int
-    {
-        return self::START_OF_STATUS_INDEX + $base_jira_status_id;
-    }
+    public function getNextId(): int;
 }

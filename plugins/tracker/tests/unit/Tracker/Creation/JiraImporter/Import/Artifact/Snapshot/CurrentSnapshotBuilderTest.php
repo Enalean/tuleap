@@ -31,8 +31,10 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 
 class CurrentSnapshotBuilderTest extends TestCase
 {
@@ -135,41 +137,43 @@ class CurrentSnapshotBuilderTest extends TestCase
 
     private function buildFieldMappingCollection(): FieldMappingCollection
     {
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 'summary',
                 'Fsummary',
                 'Summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                null
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 'issuetype',
                 'Fissuetype',
                 'Issue Type',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                [],
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 'assignee',
                 'Fassignee',
                 'Assignee',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                [],
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 'homies',
                 'Fhomies',
                 'Homies',
                 Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                [],
             )
         );
 

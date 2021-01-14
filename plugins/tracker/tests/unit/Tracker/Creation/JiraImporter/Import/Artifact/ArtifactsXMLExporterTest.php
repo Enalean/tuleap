@@ -50,9 +50,9 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapsho
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
@@ -137,7 +137,6 @@ class ArtifactsXMLExporterTest extends TestCase
                         UserXMLExporter::build()
                     ),
                     new FieldChangeFileBuilder(),
-                    new StatusValuesTransformer()
                 ),
                 new IssueSnapshotCollectionBuilder(
                     new ChangelogEntriesBuilder(
@@ -197,23 +196,21 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
 
         $tracker_node       = new SimpleXMLElement('<tracker/>');
-        $mapping_collection = new FieldMappingCollection();
+        $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $mapping_collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 'summary',
                 'Fsummary',
                 'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                null
             )
         );
         $mapping_collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 "jira_issue_url",
                 "Fjira_issue_url",
                 "Link to original issue",
                 "string",
-                null
             ),
         );
         $jira_project_id = 'project';
@@ -311,23 +308,21 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
 
         $tracker_node       = new SimpleXMLElement('<tracker/>');
-        $mapping_collection = new FieldMappingCollection();
+        $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $mapping_collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 'summary',
                 'Fsummary',
                 'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                null
             )
         );
         $mapping_collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 "jira_issue_url",
                 "Fjira_issue_url",
                 "Link to original issue",
                 "string",
-                null
             ),
         );
         $jira_project_id = 'project';

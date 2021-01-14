@@ -30,7 +30,9 @@ use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
@@ -80,11 +82,15 @@ class AlwaysThereFieldsExporterTest extends TestCase
             $this->field_xml_exporter
         );
 
-        $root_form_elements = new SimpleXMLElement("<formElements/>");
-        $this->containers_collection = (new ContainersXMLCollectionBuilder(new XML_SimpleXMLCDATAFactory()))
-            ->buildCollectionOfJiraContainersXML($root_form_elements);
+        $field_id_generator = new FieldAndValueIDGenerator();
 
-        $this->field_mapping_collection = new FieldMappingCollection();
+        $root_form_elements = new SimpleXMLElement("<formElements/>");
+        $this->containers_collection = new ContainersXMLCollection($field_id_generator);
+
+        (new ContainersXMLCollectionBuilder(new XML_SimpleXMLCDATAFactory()))
+            ->buildCollectionOfJiraContainersXML($root_form_elements, $this->containers_collection);
+
+        $this->field_mapping_collection = new FieldMappingCollection($field_id_generator);
 
         $wrapper = Mockery::mock(ClientWrapper::class);
         $wrapper->shouldReceive('getUrl')->with("project/TEST/statuses")->once()->andReturn(
@@ -100,7 +106,8 @@ class AlwaysThereFieldsExporterTest extends TestCase
 
         $this->status_values_collection->initCollectionForProjectAndIssueType(
             'TEST',
-            'Story'
+            'Story',
+            $field_id_generator
         );
     }
 
@@ -231,7 +238,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 Mockery::on(function (array $statuses) {
                     $status = $statuses[0];
                     assert($status instanceof JiraFieldAPIAllowedValueRepresentation);
-                    return $status->getId() === 9000003 && $status->getName() === "In Progress";
+                    return $status->getId() === 3 && $status->getName() === "In Progress";
                 }),
                 $this->field_mapping_collection,
                 \Tracker_FormElement_Field_List_Bind_Static::TYPE

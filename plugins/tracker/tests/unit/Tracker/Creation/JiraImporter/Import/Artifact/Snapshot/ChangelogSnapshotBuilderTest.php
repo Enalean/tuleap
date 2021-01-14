@@ -33,8 +33,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCo
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 
 class ChangelogSnapshotBuilderTest extends TestCase
 {
@@ -152,34 +154,31 @@ class ChangelogSnapshotBuilderTest extends TestCase
             new DateTimeImmutable("2020-03-25T14:10:10.823+0100"),
             [
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "description",
                         "Fdescription",
                         "Description",
                         "text",
-                        null
                     ),
                     "*aaaaaaaaa*",
                     "<p>aaaaaaaaa</p>"
                 ),
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "textfield",
                         "Ftextfield",
                         "Text Field",
                         "text",
-                        null
                     ),
                     "*text area v2*",
                     "<p>text area v2</p>"
                 ),
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "attachment",
                         "Fattachment",
                         "Attachments",
                         "file",
-                        null
                     ),
                     [
                         [
@@ -189,23 +188,25 @@ class ChangelogSnapshotBuilderTest extends TestCase
                     null
                 ),
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ListFieldMapping(
                         'assignee',
                         'Fassignee',
                         'Assignee',
                         'sb',
-                        \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                        \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                        [],
                     ),
                     ['id' => '105'],
                     null
                 ),
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ListFieldMapping(
                         'homies',
                         'Fhomies',
                         'Homies',
                         'msb',
-                        \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                        \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                        [],
                     ),
                     [
                         ['id' => '105'],
@@ -301,86 +302,85 @@ class ChangelogSnapshotBuilderTest extends TestCase
 
     private function buildFieldMappingCollection(): FieldMappingCollection
     {
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 "customfield_10036",
                 "Fcustomfield_10036",
                 "Field 01",
                 "float",
-                null
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 "status",
                 "Fstatus",
                 "status",
                 "sb",
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                [],
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 "customfield_10040",
                 "Fcustomfield_10040",
                 "Field 02",
                 "msb",
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                []
             ),
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 "description",
                 "Fdescription",
                 "Description",
                 "text",
-                null
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 "textfield",
                 "Ftextfield",
                 "Text Field",
                 "text",
-                null
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 "attachment",
                 "Fattachment",
                 "Attachments",
                 "file",
-                null
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 "assignee",
                 "Fassignee",
                 "Assignee",
                 "sb",
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                [],
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 "homies",
                 "Fhomies",
                 "Homies",
                 "msb",
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                [],
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 "datepicker",
                 "Fdatepicker",
                 "Date picker",
                 "date",
-                null
             ),
         );
 

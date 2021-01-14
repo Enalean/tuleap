@@ -102,7 +102,7 @@ class SemanticsXMLExporter
 
         foreach ($status_values_collection->getOpenValues() as $allowed_value_representation) {
             $open_value_node = $open_values_node->addChild('open_value');
-            $open_value_node->addAttribute("REF", "V" . $allowed_value_representation->getId());
+            $open_value_node->addAttribute("REF", $allowed_value_representation->getXMLId());
         }
     }
 

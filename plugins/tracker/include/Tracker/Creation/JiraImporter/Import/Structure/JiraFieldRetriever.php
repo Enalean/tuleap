@@ -40,7 +40,7 @@ class JiraFieldRetriever
     /**
      * @return JiraFieldAPIRepresentation[]
      */
-    public function getAllJiraFields(string $jira_project_key, string $jira_issue_type_name): array
+    public function getAllJiraFields(string $jira_project_key, string $jira_issue_type_name, IDGenerator $id_generator): array
     {
         $meta_url = "issue/createmeta?projectKeys=" . urlencode($jira_project_key) .
             "&issuetypeNames=" . urlencode($jira_issue_type_name) . "&expand=projects.issuetypes.fields";
@@ -56,7 +56,8 @@ class JiraFieldRetriever
         foreach ($jira_fields as $jira_field_id => $jira_field) {
             $jira_field_api_representation = JiraFieldAPIRepresentation::buildFromAPIResponseAndID(
                 $jira_field_id,
-                $jira_field
+                $jira_field,
+                $id_generator
             );
 
             $fields_by_id[$jira_field_api_representation->getId()] = $jira_field_api_representation;

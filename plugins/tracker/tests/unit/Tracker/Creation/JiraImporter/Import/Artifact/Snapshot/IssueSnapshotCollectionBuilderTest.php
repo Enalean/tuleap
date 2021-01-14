@@ -36,8 +36,9 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBu
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 
 class IssueSnapshotCollectionBuilderTest extends TestCase
 {
@@ -138,7 +139,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             []
         );
 
-        $this->jira_field_mapping_collection = new FieldMappingCollection();
+        $this->jira_field_mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $this->jira_base_url                 = 'URL';
         $this->attachment_collection         = new AttachmentCollection([]);
     }
@@ -313,7 +314,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             new DateTimeImmutable("2020-03-25T14:09:10.823+0100"),
             [
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "description",
                         "Fdescription",
                         "Description",
@@ -335,23 +336,21 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             new DateTimeImmutable("2020-03-25T14:11:10.823+0100"),
             [
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "description",
                         "Fdescription",
                         "Description",
                         "text",
-                        null
                     ),
                     'aaaaaaaa',
                     'aaaaaaaa'
                 ),
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
                         "float",
-                        null
                     ),
                     '11',
                     null
@@ -368,23 +367,21 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             new DateTimeImmutable("2020-03-25T14:11:10.823+0100"),
             [
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "description",
                         "Fdescription",
                         "Description",
                         "text",
-                        null
                     ),
                     'aaaaaaaa',
                     'aaaaaaaa'
                 ),
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
                         "float",
-                        null
                     ),
                     '9',
                     null
@@ -401,12 +398,11 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             new DateTimeImmutable("2020-03-25T14:10:10.823+0100"),
             [
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
                         "float",
-                        null
                     ),
                     '9',
                     null
@@ -423,12 +419,11 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             new DateTimeImmutable("2020-03-25T14:11:10.823+0100"),
             [
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
                         "float",
-                        null
                     ),
                     '11',
                     null

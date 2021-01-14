@@ -83,8 +83,10 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         );
 
         $form_elements = new SimpleXMLElement("<formElements/>");
-        $this->containers_collection = (new ContainersXMLCollectionBuilder(new XML_SimpleXMLCDATAFactory()))->buildCollectionOfJiraContainersXML(
-            $form_elements
+        $this->containers_collection = new ContainersXMLCollection(new FieldAndValueIDGenerator());
+        (new ContainersXMLCollectionBuilder(new XML_SimpleXMLCDATAFactory()))->buildCollectionOfJiraContainersXML(
+            $form_elements,
+            $this->containers_collection,
         );
 
         $this->left_column     = $this->containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LEFT_COLUMN_NAME);
@@ -102,7 +104,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             []
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -137,7 +139,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             []
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -172,7 +174,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             []
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -207,7 +209,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             []
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -242,7 +244,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             []
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -277,7 +279,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             []
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -314,7 +316,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             []
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -344,14 +346,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
     public function testJiraPriorityFieldIsMappedToSelectBoxField(): void
     {
         $bound_values = [
-            new JiraFieldAPIAllowedValueRepresentation(
-                1,
-                'value01'
-            ),
-            new JiraFieldAPIAllowedValueRepresentation(
-                2,
-                'value02'
-            )
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(1, new FieldAndValueIDGenerator()),
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(2, new FieldAndValueIDGenerator()),
         ];
 
         $jira_field = new JiraFieldAPIRepresentation(
@@ -362,7 +358,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             $bound_values
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -390,14 +386,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
     public function testJiraRadioButtonsFieldIsMappedToRadioButtonField(): void
     {
         $bound_values = [
-            new JiraFieldAPIAllowedValueRepresentation(
-                1,
-                'value01'
-            ),
-            new JiraFieldAPIAllowedValueRepresentation(
-                2,
-                'value02'
-            )
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(1, new FieldAndValueIDGenerator()),
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(2, new FieldAndValueIDGenerator()),
         ];
 
         $jira_field = new JiraFieldAPIRepresentation(
@@ -408,7 +398,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             $bound_values
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -436,14 +426,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
     public function testJiraMultiSelectFieldIsMappedToMultiSelectBoxField(): void
     {
         $bound_values = [
-            new JiraFieldAPIAllowedValueRepresentation(
-                1,
-                'value01'
-            ),
-            new JiraFieldAPIAllowedValueRepresentation(
-                2,
-                'value02'
-            )
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(1, new FieldAndValueIDGenerator()),
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(2, new FieldAndValueIDGenerator()),
         ];
 
         $jira_field = new JiraFieldAPIRepresentation(
@@ -454,7 +438,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             $bound_values
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -482,14 +466,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
     public function testJiraSelectFieldIsMappedToSelectBoxField(): void
     {
         $bound_values = [
-            new JiraFieldAPIAllowedValueRepresentation(
-                1,
-                'value01'
-            ),
-            new JiraFieldAPIAllowedValueRepresentation(
-                2,
-                'value02'
-            )
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(1, new FieldAndValueIDGenerator()),
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(2, new FieldAndValueIDGenerator()),
         ];
 
         $jira_field = new JiraFieldAPIRepresentation(
@@ -500,7 +478,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             $bound_values
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -528,14 +506,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
     public function testJiraMultiUserPickerFieldIsMappedToMultiSelectBoxField(): void
     {
         $bound_values = [
-            new JiraFieldAPIAllowedValueRepresentation(
-                1,
-                'value01'
-            ),
-            new JiraFieldAPIAllowedValueRepresentation(
-                2,
-                'value02'
-            )
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(1, new FieldAndValueIDGenerator()),
+            JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(2, new FieldAndValueIDGenerator()),
         ];
 
         $jira_field = new JiraFieldAPIRepresentation(
@@ -546,7 +518,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             $bound_values
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -581,7 +553,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             []
         );
 
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->logger->shouldReceive('debug')->with(" |_ Field votes_id (votes) ignored ")->once();
 

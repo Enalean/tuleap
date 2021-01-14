@@ -27,11 +27,13 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\IDGenerator;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use UserManager;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\FieldSnapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
@@ -86,18 +88,16 @@ class FieldChangeXMLExporterTest extends TestCase
                 )
             ),
             new FieldChangeFileBuilder(),
-            new StatusValuesTransformer()
         );
     }
 
     public function testItExportsTheRenderedValueOfTextFieldsAsHTMLFormat(): void
     {
-        $mapping = new FieldMapping(
+        $mapping = new ScalarFieldMapping(
             'description',
             'Fdescription',
             'Description',
             'text',
-            null
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -130,12 +130,21 @@ class FieldChangeXMLExporterTest extends TestCase
 
     public function testItExportsTheSelectedValueInASelectBoxField(): void
     {
-        $mapping = new FieldMapping(
+        $jira_value_id = 3;
+        $generated_tuleap_id = 15;
+
+        $mapping = new ListFieldMapping(
             'sb',
             'Fsb',
             'Select Box',
             'sb',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
+                    $jira_value_id,
+                    $this->getPreWiredIDGenerator($generated_tuleap_id)
+                ),
+            ],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -149,7 +158,7 @@ class FieldChangeXMLExporterTest extends TestCase
                         'self' => 'URL/rest/api/2/priority/3',
                         'iconUrl' => 'URL/images/icons/priorities/medium.svg',
                         'name' => 'Medium',
-                        'id' => '3',
+                        'id' => (string) $jira_value_id,
                     ],
                     null
                 )
@@ -164,17 +173,26 @@ class FieldChangeXMLExporterTest extends TestCase
         $field_change_node = $changeset_node->field_change;
         $this->assertSame("list", (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
-        $this->assertSame("3", (string) $field_change_node->value[0]);
+        $this->assertSame((string) $generated_tuleap_id, (string) $field_change_node->value[0]);
     }
 
     public function testItExportsTheSelectedValueInARadioButtonField(): void
     {
-        $mapping = new FieldMapping(
+        $jira_value_id = 10005;
+        $generated_tuleap_id = 15;
+
+        $mapping = new ListFieldMapping(
             'rb',
             'Frb',
             'Radio Buttons',
             'rb',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
+                    $jira_value_id,
+                    $this->getPreWiredIDGenerator($generated_tuleap_id)
+                ),
+            ],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -187,7 +205,7 @@ class FieldChangeXMLExporterTest extends TestCase
                     [
                         'self' => 'URL/rest/api/2/customFieldOption/10005',
                         'value' => 'test',
-                        'id' => '10005'
+                        'id' => (string) $jira_value_id,
                     ],
                     null
                 )
@@ -205,17 +223,32 @@ class FieldChangeXMLExporterTest extends TestCase
         $field_change_node = $changeset_node->field_change;
         $this->assertSame("list", (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
-        $this->assertSame("10005", (string) $field_change_node->value[0]);
+        $this->assertSame((string) $generated_tuleap_id, (string) $field_change_node->value[0]);
     }
 
     public function testItExportsTheSelectedValuesInAMultiSelectboxField(): void
     {
-        $mapping = new FieldMapping(
+        $jira_value_id_1 = 10009;
+        $jira_value_id_2 = 10010;
+        $generated_tuleap_id_1 = 15;
+        $generated_tuleap_id_2 = 16;
+
+        $mapping = new ListFieldMapping(
             'msb',
             'Fmsb',
             'Multi Select Box',
             'msb',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
+                    $jira_value_id_1,
+                    $this->getPreWiredIDGenerator($generated_tuleap_id_1)
+                ),
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
+                    $jira_value_id_2,
+                    $this->getPreWiredIDGenerator($generated_tuleap_id_2)
+                ),
+            ],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -229,12 +262,12 @@ class FieldChangeXMLExporterTest extends TestCase
                         [
                             'self' => 'URL/rest/api/2/customFieldOption/10009',
                             'value' => 'multi1',
-                            'id' => '10009'
+                            'id' => (string) $jira_value_id_1,
                         ],
                         [
                             'self' => 'URL/rest/api/2/customFieldOption/10010',
                             'value' => 'multi2',
-                            'id' => '10010'
+                            'id' => (string) $jira_value_id_2,
                         ]
 
                     ],
@@ -251,18 +284,27 @@ class FieldChangeXMLExporterTest extends TestCase
         $field_change_node = $changeset_node->field_change;
         $this->assertSame("list", (string) $field_change_node['type']);
         $this->assertCount(2, $field_change_node->value);
-        $this->assertSame("10009", (string) $field_change_node->value[0]);
-        $this->assertSame("10010", (string) $field_change_node->value[1]);
+        $this->assertSame((string) $generated_tuleap_id_1, (string) $field_change_node->value[0]);
+        $this->assertSame((string) $generated_tuleap_id_2, (string) $field_change_node->value[1]);
     }
 
     public function testItExportsTheStatusValuesInASelectboxFieldWithTransformedIDs(): void
     {
-        $mapping = new FieldMapping(
+        $jira_value_id = 10001;
+        $generated_tuleap_id = 15;
+
+        $mapping = new ListFieldMapping(
             'status',
             'Fstatus',
             'status',
             'sb',
-            \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+            [
+                JiraFieldAPIAllowedValueRepresentation::buildWithJiraIdOnly(
+                    $jira_value_id,
+                    $this->getPreWiredIDGenerator($generated_tuleap_id)
+                ),
+            ],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -277,7 +319,7 @@ class FieldChangeXMLExporterTest extends TestCase
                         'description' =>  '',
                         'iconUrl' => 'URL',
                         'name' => 'Done',
-                        'id' => '10001',
+                        'id' => (string) $jira_value_id,
                         'statusCategory' =>
                             [
                                 'self' => 'URL/rest/api/2/statuscategory/3',
@@ -300,17 +342,18 @@ class FieldChangeXMLExporterTest extends TestCase
         $field_change_node = $changeset_node->field_change;
         $this->assertSame("list", (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
-        $this->assertSame("9010001", (string) $field_change_node->value);
+        $this->assertSame((string) $generated_tuleap_id, (string) $field_change_node->value);
     }
 
     public function testItExportsTheUsersInASelectboxField(): void
     {
-        $mapping = new FieldMapping(
+        $mapping = new ListFieldMapping(
             'assignee',
             'Fassignee',
             'assignee',
             'sb',
-            \Tracker_FormElement_Field_List_Bind_Users::TYPE
+            \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+            [],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -346,12 +389,13 @@ class FieldChangeXMLExporterTest extends TestCase
 
     public function testItExportsTheUsersInAMultiSelectboxField(): void
     {
-        $mapping = new FieldMapping(
+        $mapping = new ListFieldMapping(
             'homies',
             'Fhomies',
             'homies',
             'msb',
-            \Tracker_FormElement_Field_List_Bind_Users::TYPE
+            \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+            [],
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -392,5 +436,20 @@ class FieldChangeXMLExporterTest extends TestCase
         $this->assertCount(2, $field_change_node->value);
         $this->assertSame('105', (string) $field_change_node->value[0]);
         $this->assertSame('106', (string) $field_change_node->value[1]);
+    }
+
+    private function getPreWiredIDGenerator(int $pre_defined_id): IDGenerator
+    {
+        $id_generator = new class implements IDGenerator {
+            /** @var int */
+            public $id;
+
+            public function getNextId(): int
+            {
+                return $this->id;
+            }
+        };
+        $id_generator->id = $pre_defined_id;
+        return $id_generator;
     }
 }
