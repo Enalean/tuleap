@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Psalm\CodeLocation;
 use Psalm\Context;
 use Psalm\IssueBuffer;
+use Psalm\Plugin\EventHandler\Event\MethodReturnTypeProviderEvent;
 use Psalm\StatementsSource;
 use Tuleap\Cryptography\ConcealedString;
 
@@ -41,18 +42,20 @@ final class PreventConcealedStringMisusesTest extends TestCase
 
     public function testMarksUnwrappedConcealedStringWithASpecialType(): void
     {
-        $this->assertSame([ConcealedString::class], PreventConcealedStringMisuses::getClassLikeNames());
+        self::assertSame([ConcealedString::class], PreventConcealedStringMisuses::getClassLikeNames());
         $return_type = PreventConcealedStringMisuses::getMethodReturnType(
-            \Mockery::mock(StatementsSource::class),
-            ConcealedString::class,
-            'getstring',
-            [],
-            new Context(),
-            \Mockery::mock(CodeLocation::class)
+            new MethodReturnTypeProviderEvent(
+                \Mockery::mock(StatementsSource::class),
+                ConcealedString::class,
+                'getstring',
+                [],
+                new Context(),
+                \Mockery::mock(CodeLocation::class)
+            )
         );
 
         $types = $return_type->getAtomicTypes();
-        $this->assertTrue(isset($types['string']));
-        $this->assertInstanceOf(TUnwrappedConcealedString::class, $types['string']);
+        self::assertTrue(isset($types['string']));
+        self::assertInstanceOf(TUnwrappedConcealedString::class, $types['string']);
     }
 }
