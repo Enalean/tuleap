@@ -22,9 +22,11 @@ use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
+use Tuleap\Gitlab\API\ClientWrapper;
+use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
-use Tuleap\Gitlab\Reference\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\GitlabCommitFactory;
+use Tuleap\Gitlab\Reference\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\GitlabCommitReferenceBuilder;
 use Tuleap\Gitlab\Reference\GitlabCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\GitlabCrossReferenceOrganizer;
@@ -34,36 +36,36 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWebhookController;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
-use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitCredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Presenters\PostPushCommitBotCommentReferencePresenterBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookActions;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
+use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Gitlab\REST\ResourcesInjector;
+use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresenter;
+use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresentersCollector;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
-use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Reference\NatureCollection;
-use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
-use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
-use Tuleap\Gitlab\API\ClientWrapper;
-use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
-use Tuleap\Http\HttpClientFactory;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitCredentialsRetriever;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Presenters\PostPushCommitBotCommentReferencePresenterBuilder;
-use Tuleap\InstanceBaseURLBuilder;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
+use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
@@ -104,6 +106,8 @@ class gitlabPlugin extends Plugin
         $this->addHook(NatureCollection::NAME);
         $this->addHook(ReferenceAdministrationWarningsCollectorEvent::NAME);
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
+
+        $this->addHook(ExternalSystemReferencePresentersCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -295,5 +299,16 @@ class gitlabPlugin extends Plugin
             ProjectManager::instance(),
         );
         $gitlab_organizer->organizeGitLabReferences($organizer);
+    }
+
+    public function externalSystemReferencePresentersCollector(ExternalSystemReferencePresentersCollector $collector): void
+    {
+        $collector->add(
+            new ExternalSystemReferencePresenter(
+                GitlabCommitReference::REFERENCE_NAME,
+                dgettext('tuleap-gitlab', 'Reference to a GitLab commit'),
+                dgettext('tuleap-gitlab', 'GitLab commit'),
+            )
+        );
     }
 }

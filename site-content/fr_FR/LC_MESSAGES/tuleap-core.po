@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -1160,6 +1160,9 @@ msgstr "Expire le"
 msgid "Export"
 msgstr "Exporter"
 
+msgid "External system references"
+msgstr "Références systèmes externes"
+
 msgid "FRS"
 msgstr "FRS"
 
@@ -1498,6 +1501,9 @@ msgstr "Clefs et Tokens"
 msgid "Keys & tokens"
 msgstr "Clefs et jetons"
 
+msgid "Keyword"
+msgstr "Mot clé"
+
 msgid "Keywords in log messages"
 msgstr "Mots-clés dans les messages de log"
 
@@ -1745,6 +1751,9 @@ msgstr "Nom ou description"
 
 msgid "Name, type..."
 msgstr "Nom, type …"
+
+msgid "Nature"
+msgstr "Nature"
 
 msgid "Nb maximum of allowed values"
 msgstr "Nb maximum de valeurs autorisées"

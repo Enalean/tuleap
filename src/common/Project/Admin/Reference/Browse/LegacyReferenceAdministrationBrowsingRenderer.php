@@ -69,21 +69,17 @@ class LegacyReferenceAdministrationBrowsingRenderer
             <P>
             <H3>' . $GLOBALS['Language']->getText('project_reference', 'new_s') . '</H3>
             <a href="/project/admin/reference.php?view=creation&group_id=' . urlencode($this->purifier->purify($project_id)) . '">' . $GLOBALS['Language']->getText('project_reference', 'create_s') . '</a>
-            <p>
+            <p>';
 
+        $this->displayExternalSystemReferences();
 
-            <H3>' . $GLOBALS['Language']->getText('project_reference', 'manage_sys_r') . '</H3>
+        echo '<H3>' . $GLOBALS['Language']->getText('project_reference', 'manage_sys_r') . '</H3>
             <P>
         ';
         /*
          Show the references that this project is using
         */
         $references = $this->reference_manager->getReferencesByGroupId((int) $project_id); // References are sorted by scope first
-
-        echo '
-            <HR>
-            <TABLE width="100%" cellspacing=0 cellpadding=3 border=0>
-        ';
 
         $title_arr = [];
         if ($is_template_project) {
@@ -105,7 +101,6 @@ class LegacyReferenceAdministrationBrowsingRenderer
             if ($ref->getScope() != $current_scope) {
                 //changing from system to project
                 echo '</TABLE><H3>' . $GLOBALS['Language']->getText('project_reference', 'manage_proj_r') . '</H3><P>';
-                echo '<TABLE width="100%" cellspacing=0 cellpadding=3 border=0>';
                 $title_arr_project = [];
                 if ($is_template_project) {
                     $title_arr_project[] = $GLOBALS['Language']->getText('project_reference', 'id');
@@ -229,5 +224,26 @@ class LegacyReferenceAdministrationBrowsingRenderer
             print $warning_message . '<br>';
         }
         print '<div/>';
+    }
+
+    private function displayExternalSystemReferences(): void
+    {
+        $collector = $this->event_manager->dispatch(new ExternalSystemReferencePresentersCollector());
+        assert($collector instanceof ExternalSystemReferencePresentersCollector);
+
+        $presenters = $collector->getExternalSystemReferencePresenters();
+        if (! $presenters) {
+            return;
+        }
+
+        $renderer = \TemplateRendererFactory::build()->getRenderer(
+            __DIR__ . '/../../../../../templates/project/admin/references'
+        );
+        $renderer->renderToPage(
+            'external-system-references',
+            [
+                'external_system_references' => $presenters
+            ]
+        );
     }
 }
