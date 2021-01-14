@@ -28,6 +28,7 @@ use scaled_agilePlugin;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -43,6 +44,10 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
      */
     private $project_manager;
     /**
+     * @var ProjectFlagsBuilder
+     */
+    private $project_flags_builder;
+    /**
      * @var BuildProgram
      */
     private $build_program;
@@ -53,10 +58,12 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
 
     public function __construct(
         \ProjectManager $project_manager,
+        ProjectFlagsBuilder $project_flags_builder,
         BuildProgram $build_program,
         \TemplateRenderer $template_renderer
     ) {
         $this->project_manager       = $project_manager;
+        $this->project_flags_builder = $project_flags_builder;
         $this->build_program         = $build_program;
         $this->template_renderer     = $template_renderer;
     }
@@ -97,7 +104,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
 
         $this->template_renderer->renderToPage(
             'program-backlog',
-            new ProgramBacklogPresenter($project)
+            new ProgramBacklogPresenter($project, $this->project_flags_builder->buildProjectFlags($project))
         );
 
         $layout->footer([]);

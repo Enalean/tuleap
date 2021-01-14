@@ -2,8 +2,14 @@
 
 exports[`Breadcrumb Displays the breadcrumb state 1`] = `
 <div
-  class="breadcrumb-container scaled-agile-breadcrumb"
+  class="breadcrumb-container"
 >
+  <breadcrumb-privacy-stub
+    privacy="[object Object]"
+    project_flags=""
+    project_public_name="Public name"
+  />
+   
   <nav
     class="breadcrumb"
   >
@@ -33,13 +39,5 @@ exports[`Breadcrumb Displays the breadcrumb state 1`] = `
       </a>
     </div>
   </nav>
-   
-  <h1
-    class="scaled-agile-title-header"
-    data-current-language="en_US"
-    data-msgid="Scaled Agile"
-  >
-    Scaled Agile
-  </h1>
 </div>
 `;

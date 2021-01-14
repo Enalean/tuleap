@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile;
 
+use Tuleap\Project\Flags\ProjectFlagPresenter;
+use Tuleap\Project\ProjectPrivacyPresenter;
+
 /**
  * @psalm-immutable
  */
@@ -35,10 +38,23 @@ final class ProgramBacklogPresenter
      * @var string
      */
     public $project_short_name;
+    /**
+     * @var string
+     */
+    public $project_privacy;
+    /**
+     * @var string
+     */
+    public $project_flags;
 
-    public function __construct(\Project $project)
+    /**
+     * @param ProjectFlagPresenter[] $project_flags
+     */
+    public function __construct(\Project $project, array $project_flags)
     {
         $this->project_name       = $project->getPublicName();
         $this->project_short_name = $project->getUnixNameLowerCase();
+        $this->project_privacy    = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
+        $this->project_flags      = json_encode($project_flags, JSON_THROW_ON_ERROR);
     }
 }

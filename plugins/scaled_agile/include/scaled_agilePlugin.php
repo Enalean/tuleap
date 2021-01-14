@@ -173,6 +173,7 @@ final class scaled_agilePlugin extends Plugin
     {
         return new DisplayProgramBacklogController(
             ProjectManager::instance(),
+            new \Tuleap\Project\Flags\ProjectFlagsBuilder(new \Tuleap\Project\Flags\ProjectFlagsDao()),
             new ProgramAdapter(
                 ProjectManager::instance(),
                 new ProgramDao(),

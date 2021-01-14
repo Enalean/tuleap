@@ -22,7 +22,10 @@
         <breadcrumb
             v-bind:project_public_name="projectPublicName()"
             v-bind:project_short_name="projectShortName()"
+            v-bind:project_privacy="projectPrivacy()"
+            v-bind:project_flags="projectFlags()"
         />
+        <h1 class="scaled-agile-title-header" v-translate>Backlog</h1>
         <div class="program-backlog" data-test="backlog-section">
             <to-be-planned class="to-be-planned" />
             <program-increment class="program-increment" />
@@ -34,9 +37,18 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import Breadcrumb from "./Breadcrumb.vue";
-import { getProjectPublicName, projectShortName } from "../configuration";
+import {
+    getProjectPublicName,
+    projectShortName,
+    projectPrivacy,
+    projectFlags,
+} from "../configuration";
 import ProgramIncrement from "./Backlog/ProgramIncrement/ProgramIncrement.vue";
 import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
+import {
+    ProjectFlag,
+    ProjectPrivacy,
+} from "@tuleap/core/scripts/project/privacy/project-privacy-helper";
 
 @Component({
     components: { ToBePlanned, ProgramIncrement, Breadcrumb },
@@ -47,6 +59,12 @@ export default class App extends Vue {
     }
     public projectShortName(): string {
         return projectShortName();
+    }
+    public projectPrivacy(): ProjectPrivacy {
+        return projectPrivacy();
+    }
+    public projectFlags(): Array<ProjectFlag> {
+        return projectFlags();
     }
 }
 </script>

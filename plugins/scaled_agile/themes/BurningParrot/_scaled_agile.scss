@@ -21,12 +21,5 @@
 
 .scaled-agile-title-header {
     margin: 0;
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0 0;
-}
-
-.scaled-agile-breadcrumb {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding-bottom: $tlp-large-spacing;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
 }

@@ -29,6 +29,8 @@ describe("Breadcrumb", () => {
             propsData: {
                 project_public_name: "Public name",
                 project_short_name: "short-name",
+                project_privacy: {},
+                project_flags: [],
             },
             localVue: await createScaledAgileLocalVue(),
         };
