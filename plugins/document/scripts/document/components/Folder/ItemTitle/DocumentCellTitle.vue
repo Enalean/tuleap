@@ -20,7 +20,7 @@
   -->
 
 <template>
-    <div>
+    <div data-test="empty-file-title">
         <fake-caret v-bind:item="item" />
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
         <span tabindex="0" class="document-folder-subitem-link">

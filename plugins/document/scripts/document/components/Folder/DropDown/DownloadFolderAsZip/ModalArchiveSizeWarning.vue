@@ -33,7 +33,6 @@
                 role="button"
                 data-dismiss="modal"
                 v-bind:aria-label="$gettext('Close')"
-                v-on:click="close()"
             >
                 ×
             </div>
@@ -84,7 +83,6 @@
                 type="button"
                 class="tlp-button-warning tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
-                v-on:click="close()"
                 data-test="close-archive-size-warning"
                 v-translate
             >
@@ -96,7 +94,6 @@
                 v-bind:href="folderHref"
                 class="tlp-button-warning tlp-button-primary tlp-modal-action"
                 data-dismiss="modal"
-                v-on:click="close()"
                 data-test="confirm-download-archive-button-despite-size-warning"
                 v-translate
             >

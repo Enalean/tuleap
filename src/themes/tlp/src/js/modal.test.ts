@@ -28,8 +28,6 @@ import {
     MODAL_SHOWN_CLASS_NAME,
 } from "./modal";
 
-jest.useFakeTimers();
-
 describe(`Modal`, () => {
     let modal_element: HTMLElement;
     let doc: Document;
@@ -111,24 +109,22 @@ describe(`Modal`, () => {
                 expect(backdrop.classList.contains(BACKDROP_SHOWN_CLASS_NAME)).toBe(false);
             });
 
-            it(`will remove the backdrop element after a delay`, () => {
+            it(`will remove the backdrop element`, () => {
                 modal.show();
                 modal.hide();
-                jest.runAllTimers();
 
                 const backdrop = doc.querySelector("#" + BACKDROP_ID);
                 expect(backdrop).toBeNull();
             });
 
-            it(`will remove the "display" CSS class after a delay`, () => {
+            it(`will remove the "display" CSS class`, () => {
                 modal.show();
                 modal.hide();
-                jest.runAllTimers();
 
                 expect(modal_element.classList.contains(MODAL_DISPLAY_CLASS_NAME)).toBe(false);
             });
 
-            it(`will dispatch the "hidden" event on modal after a delay`, () => {
+            it(`will dispatch the "hidden" event on modal`, () => {
                 modal.show();
                 let event_dispatched = false;
                 modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
@@ -136,11 +132,10 @@ describe(`Modal`, () => {
                 });
 
                 modal.hide();
-                jest.runAllTimers();
                 expect(event_dispatched).toBe(true);
             });
 
-            it(`will dispatch the "hidden" event on Document after a delay`, () => {
+            it(`will dispatch the "hidden" event on Document`, () => {
                 modal.show();
                 let event_dispatched = false;
                 doc.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
@@ -148,14 +143,12 @@ describe(`Modal`, () => {
                 });
 
                 modal.hide();
-                jest.runAllTimers();
                 expect(event_dispatched).toBe(true);
             });
 
             it(`when I hide a modal that was never "shown" first, it will not crash`, () => {
                 expect(() => {
                     modal.hide();
-                    jest.runAllTimers();
                 }).not.toThrow();
             });
         });
