@@ -24,6 +24,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentation;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;

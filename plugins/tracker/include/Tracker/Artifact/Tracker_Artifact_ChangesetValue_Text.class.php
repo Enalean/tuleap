@@ -91,6 +91,18 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->format;
     }
 
+    /**
+     * We need the distinction between 'text' format and 'commonmark' format in REST API
+     * This method can be removed when the commonmark format will be a dedicated format and not considered as a 'text' format in artifact view
+     */
+    public function getFormatForRESTRepresentation(): string
+    {
+        if ($this->format == null) {
+            return self::TEXT_CONTENT;
+        }
+        return $this->format;
+    }
+
     public function getRESTValue(PFUser $user)
     {
         return $this->getFullRESTValue($user);

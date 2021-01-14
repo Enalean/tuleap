@@ -28,6 +28,8 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentation;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentationBuilder;
 use UserManager;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\ConfigConformanceValidator;
@@ -45,11 +47,15 @@ class DefinitionsResource
 
     /** @var DefinitionRepresentationBuilder */
     private $definition_representation_builder;
+    /**
+     * @var ConfigConformanceValidator
+     */
+    private $conformance_validator;
 
     public function __construct()
     {
         $config                = new Config(new Dao(), \TrackerFactory::instance());
-        $conformance_validator = new ConfigConformanceValidator($config);
+        $this->conformance_validator = new ConfigConformanceValidator($config);
         $artifact_dao          = new ArtifactDao();
         $artifact_factory      = Tracker_ArtifactFactory::instance();
 
@@ -65,7 +71,7 @@ class DefinitionsResource
         $purifier = Codendi_HTMLPurifier::instance();
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             Tracker_FormElementFactory::instance(),
-            $conformance_validator,
+            $this->conformance_validator,
             $retriever,
             $purifier,
             CommonMarkInterpreter::build($purifier)
@@ -110,10 +116,13 @@ class DefinitionsResource
             $definition->getTracker()->getProject()
         );
 
-        $representation = $this->definition_representation_builder->getDefinitionRepresentation($user, $definition);
-        if ($representation === null) {
+        $changeset = $definition->getLastChangeset();
+
+        if (! $this->conformance_validator->isArtifactADefinition($definition)) {
             throw new RestException(400);
         }
+
+        $representation = $this->definition_representation_builder->getDefinitionRepresentation($user, $definition, $changeset);
         return $representation;
     }
 }

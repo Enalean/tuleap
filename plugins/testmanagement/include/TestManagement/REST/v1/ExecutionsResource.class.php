@@ -60,6 +60,7 @@ use Tuleap\TestManagement\REST\FormattedChangesetValueForFileFieldRetriever;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForIntFieldRetriever;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForListFieldRetriever;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForTextFieldRetriever;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentationBuilder;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -149,6 +150,7 @@ class ExecutionsResource
             new StepsResultsFilter()
         );
         $purifier = Codendi_HTMLPurifier::instance();
+        $commonmark_interpreter = CommonMarkInterpreter::build($purifier);
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
@@ -156,13 +158,17 @@ class ExecutionsResource
             $assigned_to_representation_builder,
             new ArtifactDao(),
             $this->artifact_factory,
-            $requirement_retriever,
             $this->definition_retriever,
             $this->execution_dao,
             $steps_results_representation_builder,
-            $purifier,
             $this->getFileUploadDataProvider(),
-            CommonMarkInterpreter::build($purifier)
+            new DefinitionRepresentationBuilder(
+                $this->formelement_factory,
+                $conformance_validator,
+                $requirement_retriever,
+                $purifier,
+                $commonmark_interpreter
+            )
         );
 
         $node_js_client          = new NodeJSClient(

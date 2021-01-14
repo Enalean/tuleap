@@ -24,6 +24,7 @@ use PFUser;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class ExecutionWithAutomatedTestDataProvider
@@ -58,7 +59,7 @@ class ExecutionWithAutomatedTestDataProvider
 
         $field = $this->form_element_factory->getUsedFieldByNameForUser(
             $definition->getTrackerId(),
-            MinimalDefinitionRepresentation::FIELD_AUTOMATED_TESTS,
+            DefinitionRepresentation::FIELD_AUTOMATED_TESTS,
             $user
         );
 

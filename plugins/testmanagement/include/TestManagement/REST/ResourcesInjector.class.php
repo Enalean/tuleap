@@ -24,7 +24,7 @@ use Project;
 use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\TestManagement\REST\v1\CampaignRepresentation;
 use Tuleap\TestManagement\REST\v1\CampaignsResource;
-use Tuleap\TestManagement\REST\v1\DefinitionRepresentation;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentation;
 use Tuleap\TestManagement\REST\v1\DefinitionsResource;
 use Tuleap\TestManagement\REST\v1\ExecutionsResource;
 use Tuleap\TestManagement\REST\v1\NodeReferenceRepresentation;

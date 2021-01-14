@@ -43,6 +43,7 @@ use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\MalformedQueryParameterException;
 use Tuleap\TestManagement\QueryToCriterionConverter;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentationBuilder;
 use UserManager;
 
 class ProjectResource

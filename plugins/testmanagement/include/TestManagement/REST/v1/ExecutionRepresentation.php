@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use Tuleap\REST\JsonCast;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentation;
 use Tuleap\Tracker\Artifact\FileUploadData;
 use Tuleap\User\REST\UserRepresentation;
 

@@ -21,16 +21,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TestManagement\REST\v1\StepDefinitionRepresentations;
+namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Markdown\ContentInterpretor;
-use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionFormatNotFoundException;
-use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionRepresentation;
-use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionRepresentationBuilder;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
 
