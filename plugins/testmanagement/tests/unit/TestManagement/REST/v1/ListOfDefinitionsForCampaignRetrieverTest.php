@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -108,12 +108,17 @@ class ListOfDefinitionsForCampaignRetrieverTest extends TestCase
 
     public function testGetDefinitionListForCampaign(): void
     {
-        $this->artifact_dao->shouldReceive("searchExecutionArtifactsForCampaign")->withArgs([12, 666])->andReturn(
-            [1, 2, 3]
-        );
-        $this->artifact_factory->shouldReceive("getInstanceFromRow")->withArgs([1])->andReturn($this->execution1);
-        $this->artifact_factory->shouldReceive("getInstanceFromRow")->withArgs([2])->andReturn($this->execution2);
-        $this->artifact_factory->shouldReceive("getInstanceFromRow")->withArgs([3])->andReturn($this->execution3);
+        $this->artifact_dao->shouldReceive("searchExecutionArtifactsForCampaign")
+            ->with(12, 666)
+            ->andReturn([
+                ['id' => 1],
+                ['id' => 2],
+                ['id' => 3]
+            ]);
+
+        $this->artifact_factory->shouldReceive("getInstanceFromRow")->with(['id' => 1])->andReturn($this->execution1);
+        $this->artifact_factory->shouldReceive("getInstanceFromRow")->with(['id' => 2])->andReturn($this->execution2);
+        $this->artifact_factory->shouldReceive("getInstanceFromRow")->with(['id' => 3])->andReturn($this->execution3);
 
         $this->definition_retriever->shouldReceive("getDefinitionRepresentationForExecution")
             ->withArgs([$this->user, $this->execution1])->andReturn($this->def1);

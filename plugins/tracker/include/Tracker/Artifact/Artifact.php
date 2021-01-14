@@ -800,11 +800,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         switch ($request->get('func')) {
             case 'get-children':
-                if ($this->getTracker()->isProjectAllowedToUseNature()) {
-                    $children = $this->getChildNaturePresenterCollection($request->get('aid'));
-                } else {
-                    $children = $this->getChildPresenterCollection($current_user);
-                }
+                $children = $this->getChildPresenterCollection($current_user);
                 $GLOBALS['Response']->sendJSON($children);
                 exit;
                 break;
@@ -1080,7 +1076,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     }
 
     /** @return Artifact[] */
-    public function getChildrenForUser(PFUser $current_user)
+    public function getChildrenForUser(PFUser $current_user): array
     {
         $children = [];
         foreach ($this->getArtifactFactory()->getChildren($this) as $child) {
@@ -1102,26 +1098,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
             $presenters[] = new Tracker_ArtifactChildPresenter(
                 $child,
-                $this,
-                $semantics,
-                $this->getNatureIsChildLinkRetriever()
-            );
-        }
-
-        return $presenters;
-    }
-
-    private function getChildNaturePresenterCollection()
-    {
-        $presenters = [];
-        $artifacts  = $this->getNatureIsChildLinkRetriever()->getChildren($this);
-
-        foreach ($artifacts as $artifact) {
-            $tracker   = $artifact->getTracker();
-            $semantics = Tracker_Semantic_Status::load($tracker);
-
-            $presenters[] = new Tracker_ArtifactChildPresenter(
-                $artifact,
                 $this,
                 $semantics,
                 $this->getNatureIsChildLinkRetriever()

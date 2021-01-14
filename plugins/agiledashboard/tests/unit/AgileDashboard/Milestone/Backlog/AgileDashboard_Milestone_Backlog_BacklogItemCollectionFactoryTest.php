@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -263,7 +263,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $this->milestone_factory->shouldReceive('getSubMilestoneIds')->once()->andReturn($all_possible_artifacts);
 
         $this->artifact_factory->shouldReceive('getParents')->once()->andReturn([]);
-        $this->artifact_factory->shouldReceive('getChildrenCount')->once()->andReturn(0);
+        $this->artifact_factory->shouldReceive('getChildrenCount')->once()->andReturn([
+            9 => 0
+        ]);
         $this->dao->shouldReceive('getArtifactsSemantics')->once()->andReturn([]);
 
         $top_backlog_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();

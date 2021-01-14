@@ -297,13 +297,11 @@ class Tracker_ArtifactFactory
     }
 
     /**
-     * Buil an instance of artifact
+     * Build an instance of artifact
      *
      * @param array $row the value of the artifact form the db
-     *
-     * @return Artifact
      */
-    public function getInstanceFromRow($row)
+    public function getInstanceFromRow(array $row): Artifact
     {
         $artifact = new Artifact(
             $row['id'],
@@ -312,9 +310,11 @@ class Tracker_ArtifactFactory
             $row['submitted_on'],
             $row['use_artifact_permissions']
         );
+
         if (isset($row['title'])) {
             $artifact->setTitle($this->getTitleFromRowAsText($row));
         }
+
         return $artifact;
     }
 
@@ -386,33 +386,30 @@ class Tracker_ArtifactFactory
         return $this->getDao()->getLinkedArtifacts($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
     }
 
-    public function getIsChildLinkedArtifactsById(Artifact $artifact)
-    {
-        return $this->getDao()->searchIsChildLinkedArtifactsById($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
-    }
-
     /**
      * @return Artifact[]
      */
-    public function getChildren(Artifact $artifact)
+    public function getChildren(Artifact $artifact): array
     {
-        if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
-            return $this->getDao()->getChildrenNatureMode($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
-        } else {
-            return $this->getDao()->getChildren($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
+        $childrens     = [];
+        $children_rows = $this->getDao()->getChildren($artifact->getId());
+        foreach ($children_rows as $row) {
+            $childrens[] = $this->getInstanceFromRow($row);
         }
+
+        return $childrens;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasChildren(Artifact $artifact)
+    public function hasChildren(Artifact $artifact): bool
     {
-        $children_count = $this->getDao()->getChildrenCount([$artifact->getId()]);
+        $children_count = $this->getChildrenCount([$artifact->getId()]);
         return $children_count[$artifact->getId()] > 0;
     }
 
-    public function getChildrenCount(array $artifact_ids)
+    /**
+     * @param int[] $artifact_ids
+     */
+    public function getChildrenCount(array $artifact_ids): array
     {
         return $this->getDao()->getChildrenCount($artifact_ids);
     }
@@ -486,9 +483,9 @@ class Tracker_ArtifactFactory
      *
      * @return Artifact[]
      */
-    public function getParents(array $artifact_ids)
+    public function getParents(array $artifact_ids): array
     {
-        if (! $artifact_ids) {
+        if (empty($artifact_ids)) {
             return [];
         }
 
@@ -496,6 +493,7 @@ class Tracker_ArtifactFactory
         foreach ($this->getDao()->getParents($artifact_ids) as $row) {
             $parents[$row['child_id']] = $this->getInstanceFromRow($row);
         }
+
         return $parents;
     }
 
