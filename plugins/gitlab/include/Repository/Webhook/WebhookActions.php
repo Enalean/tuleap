@@ -78,7 +78,7 @@ class WebhookActions
         }
 
         if ($webhook_data instanceof PostMergeRequestWebhookData) {
-            $this->post_merge_request_action_processor->process($webhook_data);
+            $this->post_merge_request_action_processor->process($gitlab_repository, $webhook_data);
         }
     }
 

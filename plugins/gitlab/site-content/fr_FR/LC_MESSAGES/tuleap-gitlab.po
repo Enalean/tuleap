@@ -15,6 +15,9 @@ msgstr ""
 msgid "GitLab"
 msgstr "GitLab"
 
+msgid "GitLab Merge Request"
+msgstr "Merge Request GitLab"
+
 msgid "GitLab commit"
 msgstr "Commit GitLab"
 

@@ -74,7 +74,11 @@ class GitlabCrossReferenceOrganizer
         $user    = $by_nature_organizer->getCurrentUser();
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 
-        [$repository_name, $sha1] = GitlabCommitReferenceExtractor::splitRepositoryAndSha1($cross_reference_presenter->target_value);
+        [$repository_name, $sha1] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId($cross_reference_presenter->target_value);
+
+        if (! $repository_name || ! $sha1) {
+            return;
+        }
 
         $repository = $this->gitlab_repository_factory->getGitlabRepositoryByNameInProject(
             $project,

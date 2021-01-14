@@ -142,10 +142,6 @@ final class WebhookActionsTest extends TestCase
             2,
             'TULEAP-123',
             "",
-            'closed',
-            1610465599,
-            'john-snow@the-wall.com',
-            'John Snow'
         );
 
         $now = new DateTimeImmutable();
@@ -165,7 +161,7 @@ final class WebhookActionsTest extends TestCase
 
         $this->post_merge_request_webhook_action_processor
             ->shouldReceive('process')
-            ->with($merge_request_webhook_data)
+            ->with($this->gitlab_repository, $merge_request_webhook_data)
             ->once();
 
         $this->actions->performActions(
