@@ -43,3 +43,9 @@ msgstr "Programe agilité à l'échelle"
 
 msgid "Scaled agile service is disabled."
 msgstr "Le service d'agilité à l'échelle est désactivé."
+
+msgid ""
+"The scaled agile service can only be used in a project defined as a program."
+msgstr ""
+"Le service d'agilité à l'échelle peut seulement être utilisé dans un projet défini"
+"en tant que programme."

@@ -21,7 +21,9 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementArtifactLinkType;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class scaled_agilePluginTest extends TestCase
@@ -64,5 +66,21 @@ final class scaled_agilePluginTest extends TestCase
         $plugin->trackerAddSystemNatures($params);
 
         self::assertEquals([ProgramIncrementArtifactLinkType::ART_LINK_SHORT_NAME], $natures);
+    }
+
+    public function testSetsItsServiceURL(): void
+    {
+        $plugin    = new scaled_agilePlugin(1);
+        $collector = new ServiceUrlCollector(ProjectTestBuilder::aProject()->withUnixName('Foo')->build(), 'plugin_scaled_agile');
+        $plugin->serviceUrlCollector($collector);
+        self::assertEquals('/scaled_agile/foo', $collector->getUrl());
+    }
+
+    public function testDoesNotTouchURLOfOthersServices(): void
+    {
+        $plugin    = new scaled_agilePlugin(1);
+        $collector = new ServiceUrlCollector(ProjectTestBuilder::aProject()->withUnixName('bar')->build(), 'plugin_doingsomething');
+        $plugin->serviceUrlCollector($collector);
+        self::assertFalse($collector->hasUrl());
     }
 }

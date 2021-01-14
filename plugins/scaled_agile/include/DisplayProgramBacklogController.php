@@ -31,10 +31,12 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
 
-class DisplayProgramBacklogController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
+final class DisplayProgramBacklogController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
     /**
      * @var \ProjectManager
@@ -69,14 +71,18 @@ class DisplayProgramBacklogController implements DispatchableWithRequest, Dispat
         return $project;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
         if (! $project->usesService(scaled_agilePlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(dgettext("tuleap-scaled_agile", "Scaled agile service is disabled."));
         }
 
-        $this->build_program->buildExistingProgramProject((int) $project->getID(), $request->getCurrentUser());
+        try {
+            $this->build_program->buildExistingProgramProject((int) $project->getID(), $request->getCurrentUser());
+        } catch (ProjectIsNotAProgramException $exception) {
+            throw new ForbiddenException(dgettext('tuleap-scaled_agile', 'The scaled agile service can only be used in a project defined as a program.'));
+        }
 
         \Tuleap\Project\ServiceInstrumentation::increment('scaled_agile');
 
@@ -103,7 +109,7 @@ class DisplayProgramBacklogController implements DispatchableWithRequest, Dispat
             [
                 'title'                          => dgettext('tuleap-scaled_agile', "Scaled Agile Program"),
                 'group'                          => $project->getID(),
-                'toptab'                         => 'scaled_agile',
+                'toptab'                         => 'plugin_scaled_agile',
                 'main_classes'                   => [],
                 'without-project-in-breadcrumbs' => true,
             ]

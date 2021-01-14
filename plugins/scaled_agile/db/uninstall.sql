@@ -20,3 +20,5 @@
 DROP TABLE IF EXISTS plugin_scaled_agile_team_projects;
 DROP TABLE IF EXISTS plugin_scaled_agile_pending_mirrors;
 DROP TABLE IF EXISTS plugin_scaled_agile_plan;
+
+DELETE FROM service WHERE short_name = 'plugin_scaled_agile';
