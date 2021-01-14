@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use BackendLogger;
+use Codendi_HTMLPurifier;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_ArtifactFactory;
@@ -40,6 +41,7 @@ use TrackerFactory;
 use TransitionFactory;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -146,6 +148,7 @@ class ExecutionsResource
             $this->formelement_factory,
             new StepsResultsFilter()
         );
+        $purifier = Codendi_HTMLPurifier::instance();
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
@@ -157,8 +160,9 @@ class ExecutionsResource
             $this->definition_retriever,
             $this->execution_dao,
             $steps_results_representation_builder,
-            \Codendi_HTMLPurifier::instance(),
+            $purifier,
             $this->getFileUploadDataProvider(),
+            CommonMarkInterpreter::build($purifier)
         );
 
         $node_js_client          = new NodeJSClient(

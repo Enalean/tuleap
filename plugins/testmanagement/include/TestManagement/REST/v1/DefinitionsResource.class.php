@@ -20,8 +20,10 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\TestManagement\ArtifactDao;
@@ -60,11 +62,13 @@ class DefinitionsResource
 
         $retriever = new RequirementRetriever($artifact_factory, $artifact_dao, $config);
 
+        $purifier = Codendi_HTMLPurifier::instance();
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             Tracker_FormElementFactory::instance(),
             $conformance_validator,
             $retriever,
-            \Codendi_HTMLPurifier::instance()
+            $purifier,
+            CommonMarkInterpreter::build($purifier)
         );
     }
 

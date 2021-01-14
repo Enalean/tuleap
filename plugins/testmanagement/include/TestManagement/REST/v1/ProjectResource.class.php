@@ -29,6 +29,7 @@ use Tracker_ReportFactory;
 use Tracker_URLVerification;
 use TrackerFactory;
 use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -93,11 +94,13 @@ class ProjectResource
 
         $retriever = new RequirementRetriever($artifact_factory, $artifact_dao, $this->config);
 
+        $purifier =  \Codendi_HTMLPurifier::instance();
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             $tracker_form_element_factory,
             $conformance_validator,
             $retriever,
-            \Codendi_HTMLPurifier::instance()
+            $purifier,
+            CommonMarkInterpreter::build($purifier)
         );
 
         $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao(), new KeyFactory());
