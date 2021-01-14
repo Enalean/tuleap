@@ -28,6 +28,9 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommit;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
@@ -55,7 +58,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
     private $organizer;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabCrossReferenceEnhancer
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabCommitCrossReferenceEnhancer
      */
     private $gitlab_cross_reference_enhancer;
 
@@ -63,7 +66,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
     {
         $this->gitlab_repository_factory       = Mockery::mock(GitlabRepositoryFactory::class);
         $this->gitlab_commit_factory           = Mockery::mock(GitlabCommitFactory::class);
-        $this->gitlab_cross_reference_enhancer = Mockery::mock(GitlabCrossReferenceEnhancer::class);
+        $this->gitlab_cross_reference_enhancer = Mockery::mock(GitlabCommitCrossReferenceEnhancer::class);
         $this->project_manager                 = Mockery::mock(ProjectManager::class);
 
         $this->organizer = new GitlabCrossReferenceOrganizer(

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Reference;
+namespace Tuleap\Gitlab\Reference\MergeRequest;
 
 use Project;
 use Tuleap\Gitlab\Repository\GitlabRepository;

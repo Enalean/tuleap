@@ -23,7 +23,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 use CrossReference;
 use Project;
 use Psr\Log\LoggerInterface;
-use Tuleap\Gitlab\Reference\GitlabMergeRequestReference;
+use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;

@@ -23,9 +23,11 @@ namespace Tuleap\Gitlab\Reference;
 
 use Project;
 use Reference;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
+use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 
-class GitlabCommitReferenceBuilder
+class GitlabReferenceBuilder
 {
     /**
      * @var ReferenceDao
@@ -43,9 +45,12 @@ class GitlabCommitReferenceBuilder
         $this->gitlab_repository_factory = $gitlab_repository_factory;
     }
 
-    public function buildGitlabCommitReference(Project $project, string $keyword, string $value): ?Reference
+    public function buildGitlabReference(Project $project, string $keyword, string $value): ?Reference
     {
-        if ($keyword !== 'gitlab_commit') {
+        if (
+            $keyword !== GitlabCommitReference::REFERENCE_NAME &&
+            $keyword !== GitlabMergeRequestReference::REFERENCE_NAME
+        ) {
             return null;
         }
 
@@ -54,9 +59,9 @@ class GitlabCommitReferenceBuilder
             return null;
         }
 
-        list($repository_name, $sha1) = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId($value);
+        list($repository_name, $item_id) = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId($value);
 
-        if (! $repository_name || ! $sha1) {
+        if (! $repository_name || ! $item_id) {
             return null;
         }
 
@@ -69,10 +74,18 @@ class GitlabCommitReferenceBuilder
             return null;
         }
 
-        return new GitlabCommitReference(
+        if ($keyword === GitlabCommitReference::REFERENCE_NAME) {
+            return new GitlabCommitReference(
+                $repository,
+                $project,
+                $item_id
+            );
+        }
+
+        return new GitlabMergeRequestReference(
             $repository,
             $project,
-            $sha1
+            (int) $item_id
         );
     }
 }

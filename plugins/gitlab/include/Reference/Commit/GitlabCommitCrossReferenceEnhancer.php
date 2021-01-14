@@ -19,7 +19,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Reference;
+namespace Tuleap\Gitlab\Reference\Commit;
 
 use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
@@ -27,7 +27,7 @@ use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Reference\Metadata\CreatedByPresenter;
 
-class GitlabCrossReferenceEnhancer
+class GitlabCommitCrossReferenceEnhancer
 {
     /**
      * @var \UserManager

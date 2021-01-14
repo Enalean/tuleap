@@ -29,12 +29,12 @@ use Project;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 
-class GitlabCommitReferenceBuilderTest extends TestCase
+class GitlabReferenceBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var GitlabCommitReferenceBuilder
+     * @var GitlabReferenceBuilder
      */
     private $builder;
 
@@ -55,7 +55,7 @@ class GitlabCommitReferenceBuilderTest extends TestCase
         $this->reference_dao             = Mockery::mock(ReferenceDao::class);
         $this->gitlab_repository_factory = Mockery::mock(GitlabRepositoryFactory::class);
 
-        $this->builder = new GitlabCommitReferenceBuilder(
+        $this->builder = new GitlabReferenceBuilder(
             $this->reference_dao,
             $this->gitlab_repository_factory
         );
@@ -64,7 +64,7 @@ class GitlabCommitReferenceBuilderTest extends TestCase
     public function testItReturnsNullIfKeywordIsNotKnown(): void
     {
         $this->assertNull(
-            $this->builder->buildGitlabCommitReference(
+            $this->builder->buildGitlabReference(
                 Project::buildForTest(),
                 'whatever',
                 'root/project01/10ee559cb0'
@@ -80,7 +80,7 @@ class GitlabCommitReferenceBuilderTest extends TestCase
             ->andReturnTrue();
 
         $this->assertNull(
-            $this->builder->buildGitlabCommitReference(
+            $this->builder->buildGitlabReference(
                 Project::buildForTest(),
                 'gitlab_commit',
                 'root/project01/10ee559cb0'
@@ -96,7 +96,7 @@ class GitlabCommitReferenceBuilderTest extends TestCase
             ->andReturnFalse();
 
         $this->assertNull(
-            $this->builder->buildGitlabCommitReference(
+            $this->builder->buildGitlabReference(
                 Project::buildForTest(),
                 'gitlab_commit',
                 'root10ee559cb0'
@@ -122,7 +122,7 @@ class GitlabCommitReferenceBuilderTest extends TestCase
             ->andReturnNull();
 
         $this->assertNull(
-            $this->builder->buildGitlabCommitReference(
+            $this->builder->buildGitlabReference(
                 $project,
                 'gitlab_commit',
                 'root/project01/10ee559cb0'
@@ -130,7 +130,7 @@ class GitlabCommitReferenceBuilderTest extends TestCase
         );
     }
 
-    public function testItReturnsTheReference(): void
+    public function testItReturnsTheCommitReference(): void
     {
         $project = Project::buildForTest();
 
@@ -156,7 +156,7 @@ class GitlabCommitReferenceBuilderTest extends TestCase
                 )
             );
 
-        $reference = $this->builder->buildGitlabCommitReference(
+        $reference = $this->builder->buildGitlabReference(
             $project,
             'gitlab_commit',
             'root/project01/10ee559cb0'
@@ -165,6 +165,44 @@ class GitlabCommitReferenceBuilderTest extends TestCase
         $this->assertSame('gitlab_commit', $reference->getKeyword());
         $this->assertSame('plugin_gitlab', $reference->getNature());
         $this->assertSame('https://example.com/root/project01/-/commit/10ee559cb0', $reference->getLink());
+        $this->assertSame(101, $reference->getGroupId());
+    }
+
+    public function testItReturnsTheMergeRequestReference(): void
+    {
+        $project = Project::buildForTest();
+
+        $this->reference_dao->shouldReceive('isAProjectReferenceExisting')
+            ->once()
+            ->with('gitlab_mr', 101)
+            ->andReturnFalse();
+
+        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByNameInProject')
+            ->once()
+            ->with(
+                $project,
+                'root/project01'
+            )
+            ->andReturn(
+                new GitlabRepository(
+                    1,
+                    123456,
+                    'root/project01',
+                    '',
+                    'https://example.com/root/project01',
+                    new DateTimeImmutable()
+                )
+            );
+
+        $reference = $this->builder->buildGitlabReference(
+            $project,
+            'gitlab_mr',
+            'root/project01/123'
+        );
+
+        $this->assertSame('gitlab_mr', $reference->getKeyword());
+        $this->assertSame('plugin_gitlab', $reference->getNature());
+        $this->assertSame('https://example.com/root/project01/-/merge_requests/123', $reference->getLink());
         $this->assertSame(101, $reference->getGroupId());
     }
 }

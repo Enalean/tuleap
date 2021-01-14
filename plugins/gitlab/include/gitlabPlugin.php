@@ -25,13 +25,12 @@ use Tuleap\Git\Events\GetExternalUsedServiceEvent;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\EventsHandlers\ReferenceAdministrationWarningsCollectorEventHandler;
-use Tuleap\Gitlab\Reference\GitlabCommitFactory;
-use Tuleap\Gitlab\Reference\GitlabCommitReference;
-use Tuleap\Gitlab\Reference\GitlabCommitReferenceBuilder;
-use Tuleap\Gitlab\Reference\GitlabCrossReferenceEnhancer;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
+use Tuleap\Gitlab\Reference\GitlabReferenceBuilder;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\GitlabCrossReferenceOrganizer;
-use Tuleap\Gitlab\Reference\GitlabMergeRequestReference;
-use Tuleap\Gitlab\Reference\GitlabMergeRequestReferenceBuilder;
+use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
@@ -121,8 +120,8 @@ class gitlabPlugin extends Plugin
 
     public function getExternalUsedServiceEvent(GetExternalUsedServiceEvent $event): void
     {
-        $project = $event->getProject();
-        $is_gitlab_used  = $this->isAllowed((int) $project->getGroupId());
+        $project        = $event->getProject();
+        $is_gitlab_used = $this->isAllowed((int) $project->getGroupId());
 
         if (! $is_gitlab_used) {
             return;
@@ -232,30 +231,16 @@ class gitlabPlugin extends Plugin
 
     public function getReference(GetReferenceEvent $event): void
     {
-        if ($event->getKeyword() === GitlabCommitReference::REFERENCE_NAME) {
-            $builder = new GitlabCommitReferenceBuilder(
+        if (
+            $event->getKeyword() === GitlabCommitReference::REFERENCE_NAME ||
+            $event->getKeyword() === GitlabMergeRequestReference::REFERENCE_NAME
+        ) {
+            $builder = new GitlabReferenceBuilder(
                 new \Tuleap\Gitlab\Reference\ReferenceDao(),
                 $this->getGitlabRepositoryFactory()
             );
 
-            $reference = $builder->buildGitlabCommitReference(
-                $event->getProject(),
-                $event->getKeyword(),
-                $event->getValue()
-            );
-
-            if ($reference !== null) {
-                $event->setReference($reference);
-            }
-        }
-
-        if ($event->getKeyword() === GitlabMergeRequestReference::REFERENCE_NAME) {
-            $builder = new GitlabMergeRequestReferenceBuilder(
-                new \Tuleap\Gitlab\Reference\ReferenceDao(),
-                $this->getGitlabRepositoryFactory()
-            );
-
-            $reference = $builder->buildGitlabMergeRequestReference(
+            $reference = $builder->buildGitlabReference(
                 $event->getProject(),
                 $event->getKeyword(),
                 $event->getValue()
@@ -326,7 +311,7 @@ class gitlabPlugin extends Plugin
         $gitlab_organizer      = new GitlabCrossReferenceOrganizer(
             new GitlabRepositoryFactory($gitlab_repository_dao),
             new GitlabCommitFactory(new CommitTuleapReferenceDAO()),
-            new GitlabCrossReferenceEnhancer(
+            new GitlabCommitCrossReferenceEnhancer(
                 \UserManager::instance(),
                 \UserHelper::instance(),
                 new TlpRelativeDatePresenterBuilder()

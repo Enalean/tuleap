@@ -19,7 +19,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Reference;
+namespace Tuleap\Gitlab\Reference\Commit;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -29,13 +29,13 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
-class GitlabCrossReferenceEnhancerTest extends TestCase
+class GitlabCommitCrossReferenceEnhancerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     /**
-     * @var GitlabCrossReferenceEnhancer
+     * @var GitlabCommitCrossReferenceEnhancer
      */
     private $gitlab_cross_reference_enhancer;
     /**
@@ -51,7 +51,7 @@ class GitlabCrossReferenceEnhancerTest extends TestCase
     {
         $this->user_manager = Mockery::mock(\UserManager::class);
         $this->user_helper = Mockery::mock(\UserHelper::class);
-        $this->gitlab_cross_reference_enhancer = new GitlabCrossReferenceEnhancer(
+        $this->gitlab_cross_reference_enhancer = new GitlabCommitCrossReferenceEnhancer(
             $this->user_manager,
             $this->user_helper,
             new TlpRelativeDatePresenterBuilder()

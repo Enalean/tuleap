@@ -25,7 +25,7 @@ use CrossReference;
 use Project;
 use Psr\Log\LoggerInterface;
 use ReferenceManager;
-use Tuleap\Gitlab\Reference\GitlabCommitReference;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
