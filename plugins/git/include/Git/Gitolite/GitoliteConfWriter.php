@@ -286,7 +286,7 @@ class Git_Gitolite_GitoliteConfWriter
 
     private function getConfFolderForHostname($hostname)
     {
-        return 'conf/' . $hostname;
+        return 'conf/' . self::getHostnameToUseAsPartOfAFileName($hostname);
     }
 
     private function writeGitConfig($config_file, $config_datas, Git_Gitolite_GitModifications $git_modifications)
@@ -443,7 +443,7 @@ class Git_Gitolite_GitoliteConfWriter
     private function getFullConfigFilePathFromHostname($hostname)
     {
         if ($hostname) {
-            return dirname($this->getGitoliteConfFilePath()) . '/' . $hostname . '.conf';
+            return dirname($this->getGitoliteConfFilePath()) . '/' . self::getHostnameToUseAsPartOfAFileName($hostname) . '.conf';
         }
 
         return $this->getGitoliteConfFilePath();
@@ -451,7 +451,15 @@ class Git_Gitolite_GitoliteConfWriter
 
     private function getRelativeConfigFilePathFromHostname($hostname)
     {
-        return 'conf/' . $hostname . '.conf';
+        return 'conf/' . self::getHostnameToUseAsPartOfAFileName($hostname) . '.conf';
+    }
+
+    /**
+     * @psalm-taint-escape file
+     */
+    private static function getHostnameToUseAsPartOfAFileName(string $hostname): string
+    {
+        return str_replace('/', '', $hostname);
     }
 
     private function getProjectList()

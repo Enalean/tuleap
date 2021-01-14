@@ -251,6 +251,8 @@ class Archive
      *
      * @access public
      * @return string filename
+     *
+     * @psalm-taint-escape header
      */
     public function GetFilename() // @codingStandardsIgnoreLine
     {
