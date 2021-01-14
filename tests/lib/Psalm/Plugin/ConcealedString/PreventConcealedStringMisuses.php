@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Test\Psalm\Plugin\ConcealedString;
 
 use PhpParser\Node\Stmt;
-use Psalm\Codebase;
 use Psalm\CodeLocation;
-use Psalm\Context;
-use Psalm\Plugin\Hook\AfterStatementAnalysisInterface;
-use Psalm\Plugin\Hook\MethodReturnTypeProviderInterface;
-use Psalm\StatementsSource;
+use Psalm\Plugin\EventHandler\AfterStatementAnalysisInterface;
+use Psalm\Plugin\EventHandler\Event\AfterStatementAnalysisEvent;
+use Psalm\Plugin\EventHandler\Event\MethodReturnTypeProviderEvent;
+use Psalm\Plugin\EventHandler\MethodReturnTypeProviderInterface;
+use Psalm\Type;
 use Psalm\Type\Union;
 use Tuleap\Cryptography\ConcealedString;
 
@@ -39,36 +39,24 @@ final class PreventConcealedStringMisuses implements MethodReturnTypeProviderInt
         return [ConcealedString::class];
     }
 
-    public static function getMethodReturnType(
-        StatementsSource $source,
-        string $fq_classlike_name,
-        string $method_name_lowercase,
-        array $call_args,
-        Context $context,
-        CodeLocation $code_location,
-        ?array $template_type_parameters = null,
-        ?string $called_fq_classlike_name = null,
-        ?string $called_method_name_lowercase = null
-    ): ?Union {
-        if ($method_name_lowercase === 'getstring') {
+    public static function getMethodReturnType(MethodReturnTypeProviderEvent $event): ?Type\Union
+    {
+        if ($event->getMethodNameLowercase() === 'getstring') {
             return new Union([new TUnwrappedConcealedString()]);
         }
 
         return null;
     }
 
-    public static function afterStatementAnalysis(
-        Stmt $stmt,
-        Context $context,
-        StatementsSource $statements_source,
-        Codebase $codebase,
-        array &$file_replacements = []
-    ): ?bool {
+    public static function afterStatementAnalysis(AfterStatementAnalysisEvent $event): ?bool
+    {
+        $stmt = $event->getStmt();
         if (! $stmt instanceof Stmt\Return_ || $stmt->expr === null) {
             return null;
         }
 
-        $return = $statements_source->getNodeTypeProvider()->getType($stmt->expr);
+        $statements_source = $event->getStatementsSource();
+        $return            = $statements_source->getNodeTypeProvider()->getType($stmt->expr);
         if ($return === null) {
             return null;
         }

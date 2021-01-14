@@ -22,31 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Test\Psalm\Plugin\NoWritableRESTRepresentation;
 
-use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod;
 use Psalm\Codebase;
 use Psalm\IssueBuffer;
-use Psalm\Plugin\Hook\AfterClassLikeAnalysisInterface;
+use Psalm\Plugin\EventHandler\AfterClassLikeAnalysisInterface;
+use Psalm\Plugin\EventHandler\Event\AfterClassLikeAnalysisEvent;
 use Psalm\StatementsSource;
-use Psalm\Storage\ClassLikeStorage;
 use Psalm\Type\Atomic\TArray;
 use Psalm\Type\Atomic\TNamedObject;
 use Psalm\Type\Union;
 
 final class DoNotAllowWritableRESTRepresentation implements AfterClassLikeAnalysisInterface
 {
-    public static function afterStatementAnalysis(
-        Node\Stmt\ClassLike $stmt,
-        ClassLikeStorage $classlike_storage,
-        StatementsSource $statements_source,
-        Codebase $codebase,
-        array &$file_replacements = []
-    ): void {
+    public static function afterStatementAnalysis(AfterClassLikeAnalysisEvent $event): void
+    {
+        $statements_source = $event->getStatementsSource();
         if (! self::mightBeARESTResource($statements_source)) {
             return;
         }
 
-        foreach ($classlike_storage->methods as $method_name => $method_storage) {
+        $stmt     = $event->getStmt();
+        $codebase = $event->getCodebase();
+        foreach ($event->getClasslikeStorage()->methods as $method_name => $method_storage) {
             $method = $stmt->getMethod($method_name);
             if (! self::isARESTEndpointMethod($method)) {
                 continue;
