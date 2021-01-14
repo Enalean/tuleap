@@ -205,6 +205,9 @@ msgstr "Aucun test"
 msgid "Not run"
 msgstr "Non exécuté"
 
+msgid "Open bug options dropdown"
+msgstr "Ouvrir les options de bugs"
+
 msgid "Passed"
 msgstr "Succès"
 
@@ -225,6 +228,9 @@ msgstr "Enregistrer les changements"
 
 msgid "Show dependencies graph for this test"
 msgstr "Afficher le graphe de dépendances"
+
+msgid "Show test campaign scores"
+msgstr "Afficher les scores pour la campagne"
 
 msgid "Summary"
 msgstr "Résumé"
@@ -277,6 +283,9 @@ msgstr "Ceci est un test automatisé."
 
 msgid "This test has no description. Please edit it."
 msgstr "Ce test n'a pas de description. Veuillez l'éditer."
+
+msgid "Toggle filters dropdown"
+msgstr "Ouvrir ou fermer la liste de filtres"
 
 msgid "Unable to upload the image"
 msgstr "Impossible d'inserer l'image"

@@ -31,7 +31,11 @@
 
             <div class="current-test-header-actions">
                 <div class="tlp-dropdown" ng-if="linkMenuIsVisible">
-                    <button class="current-test-header-action tlp-button-secondary" id="dropdown-link-bug" open-tlp-dropdown>
+                    <button class="current-test-header-action tlp-button-secondary"
+                            id="dropdown-link-bug"
+                            title="{{ 'Open bug options dropdown' | translate }}"
+                            open-tlp-dropdown
+                    >
                         <i class="fa fa-fw fa-bug"></i>
                     </button>
                     <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
