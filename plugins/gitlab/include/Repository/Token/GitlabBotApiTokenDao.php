@@ -27,11 +27,14 @@ class GitlabBotApiTokenDao extends DataAccessObject
 
     public function storeToken(int $gitlab_repository_id, string $encrypted_token): void
     {
-        $this->getDB()->insert(
+        $this->getDB()->insertOnDuplicateKeyUpdate(
             'plugin_gitlab_bot_api_token',
             [
-                'gitlab_repository_id'    => $gitlab_repository_id,
-                'token' => $encrypted_token
+                'gitlab_repository_id' => $gitlab_repository_id,
+                'token'                => $encrypted_token
+            ],
+            [
+                'token'
             ]
         );
     }
@@ -41,6 +44,7 @@ class GitlabBotApiTokenDao extends DataAccessObject
         $sql = 'SELECT *
                 FROM plugin_gitlab_bot_api_token
                 WHERE gitlab_repository_id = ?';
+
         return $this->getDB()->row($sql, $gitlab_repository_id);
     }
 

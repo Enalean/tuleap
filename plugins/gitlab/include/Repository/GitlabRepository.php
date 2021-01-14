@@ -99,6 +99,11 @@ class GitlabRepository
         return $this->full_url;
     }
 
+    public function getGitlabServerUrl(): string
+    {
+        return str_replace($this->name, "", $this->full_url);
+    }
+
     public function getLastPushDate(): DateTimeImmutable
     {
         return $this->last_push_date;

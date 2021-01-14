@@ -44,8 +44,6 @@ class PostPushCommitCredentialsRetriever
             return null;
         }
 
-        $url = str_replace($repository->getName(), "", $repository->getFullUrl());
-
-        return new Credentials($url, $token);
+        return new Credentials($repository->getGitlabServerUrl(), $token);
     }
 }

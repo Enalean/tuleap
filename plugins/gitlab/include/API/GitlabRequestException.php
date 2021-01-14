@@ -31,10 +31,16 @@ class GitlabRequestException extends \Exception
      * @var int
      */
     private $error_code;
+    /**
+     * @var string
+     */
+    private $gitlab_server_message;
 
     public function __construct(int $error_code, string $message, ?ClientExceptionInterface $previous = null)
     {
         parent::__construct("Error returned by the GitLab server: $message", $error_code, $previous);
+
+        $this->gitlab_server_message = $message;
 
         $this->error_code = $error_code;
     }
@@ -42,5 +48,10 @@ class GitlabRequestException extends \Exception
     public function getErrorCode(): int
     {
         return $this->error_code;
+    }
+
+    public function getGitlabServerMessage(): string
+    {
+        return $this->gitlab_server_message;
     }
 }
