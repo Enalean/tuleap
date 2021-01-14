@@ -26,15 +26,21 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 class JiraProjectCollection
 {
     /**
-     * @var array
+     * @var array<array{id: string, label: string}>
      */
     private $jira_projects = [];
 
+    /**
+     * @param array{id: string, label: string} $project
+     */
     public function addProject(array $project): void
     {
         $this->jira_projects[] = $project;
     }
 
+    /**
+     * @return array<array{id: string, label: string}>
+     */
     public function getJiraProjects(): array
     {
         return $this->jira_projects;

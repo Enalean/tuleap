@@ -27,6 +27,7 @@ class JiraTrackerBuilder
 {
     /**
      * @throws JiraConnectionException
+     * @return array<array{id: string, name: string}>
      */
     public function build(ClientWrapper $wrapper, string $project_key): array
     {
@@ -42,8 +43,8 @@ class JiraTrackerBuilder
                 throw new \LogicException('Tracker does not have an id or a name');
             }
             $tracker_list[] = [
-                "id"   => $tracker['id'],
-                "name" => $tracker['name']
+                "id"   => (string) $tracker['id'],
+                "name" => (string) $tracker['name']
             ];
         }
 
