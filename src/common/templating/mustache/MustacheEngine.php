@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,8 +28,9 @@ class MustacheEngine extends \Mustache_Engine
 {
     public function __construct(\Mustache_Loader $loader, TemplateCacheInterface $cache, $escape_callback = null)
     {
-        $gettext_helper = new GettextHelper(new GettextSectionContentTransformer());
-        $glyph_helper   = new GlyphHelper(new GlyphFinder(EventManager::instance()));
+        $gettext_helper    = new GettextHelper(new GettextSectionContentTransformer());
+        $glyph_helper      = new GlyphHelper(new GlyphFinder(EventManager::instance()));
+        $line_break_helper = new LineBreakHelper();
 
         parent::__construct(
             [
@@ -54,6 +55,9 @@ class MustacheEngine extends \Mustache_Engine
                     },
                     GlyphHelper::GLYPH => function ($text) use ($glyph_helper) {
                         return $glyph_helper->glyph($text);
+                    },
+                    LineBreakHelper::NL2BR => function (string $text, \Mustache_LambdaHelper $helper) use ($line_break_helper): string {
+                        return $line_break_helper->nl2br($text, $helper);
                     },
                 ]
             ]

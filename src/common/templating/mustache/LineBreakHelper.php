@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,26 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Templating\Mustache;
 
-final class MustacheEngineTest extends \PHPUnit\Framework\TestCase
+final class LineBreakHelper
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    public const NL2BR = 'nl2br';
 
-    public function testItContainsGettextHelpersToDoI18nDirectlyInTemplates(): void
+    public function nl2br(string $in, \Mustache_LambdaHelper $helper): string
     {
-        $engine = new MustacheEngine(
-            \Mockery::mock(\Mustache_Loader::class),
-            \Mockery::spy(\Tuleap\Templating\TemplateCache::class)
-        );
-
-        $engine->getHelper('gettext');
-        $engine->getHelper('ngettext');
-        $engine->getHelper('dgettext');
-        $engine->getHelper('dngettext');
-        $engine->getHelper('glyph');
-        $engine->getHelper('nl2br');
-
-        $this->expectNotToPerformAssertions();
+        return \nl2br($helper->render($in));
     }
 }
