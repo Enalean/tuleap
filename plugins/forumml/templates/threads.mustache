@@ -1,0 +1,67 @@
+<h1 class="project-administration-title">
+    {{ list_name }}
+</h1>
+
+<div class="tlp-framed">
+    {{^ nb_threads }}
+        {{> threads-empty-state }}
+    {{/ nb_threads }}
+
+    {{# nb_threads }}
+        <div class="forumml-thread-list">
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title">
+                            <i class="fas fa-comments tlp-pane-title-icon" aria-hidden="true"></i>
+                            {{# dgettext }}tuleap-forumml | Threads{{/dgettext}}
+                        </h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <a href="{{ post_thread_url }}" class="tlp-button-primary">
+                            <i class="fas fa-plus tlp-button-icon"></i>
+                            {{# dgettext }}tuleap-forumml | Post a new thread{{/ dgettext }}
+                        </a>
+                    </section>
+                    <section class="tlp-pane-section-for-cards">
+                        {{# threads }}
+                            <a class="tlp-card tlp-card-selectable" href="{{ url }}">
+                                <div class="forumml-thread-list-entry-main">
+                                    <span class="forumml-thread-list-entry-title">
+                                        {{ subject }}
+                                    </span>
+                                    <span class="tlp-badge-primary tlp-badge-outline forumml-thread-list-entry-nb-replies"
+                                          title="{{# dgettext }}tuleap-forumml | %s replies | {{ nb_replies }}{{/dgettext}}"
+                                    >{{ nb_replies }}</span>
+                                </div>
+                                <div class="forumml-thread-list-entry-metadata">
+                                    <span class="tlp-avatar-mini forumml-thread-list-entry-metadata-avatar">
+                                        {{# has_avatar }}
+                                            <img src="{{ avatar_url }}" alt="{{# gettext }}User avatar{{/ gettext }}">
+                                        {{/ has_avatar }}
+                                    </span>
+                                    <span>
+                                        {{ sender }},
+                                        {{# created_on }}
+                                            <tlp-relative-date
+                                                date="{{ date }}"
+                                                absolute-date="{{ absolute_date }}"
+                                                placement="{{ placement }}"
+                                                preference="{{ preference }}"
+                                                locale="{{ locale }}"
+                                            ></tlp-relative-date>
+                                        {{/ created_on }}
+                                    </span>
+                                </div>
+                            </a>
+                        {{/ threads }}
+                    </section>
+                </div>
+            </section>
+
+            {{# pagination }}
+                {{> pagination }}
+            {{/ pagination }}
+        </div>
+    {{/ nb_threads }}
+</div>

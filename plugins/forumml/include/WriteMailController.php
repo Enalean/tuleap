@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Tuleap\ForumML;
 
 use HTTPRequest;
+use Tuleap\ForumML\Threads\ThreadsController;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -96,9 +97,9 @@ class WriteMailController implements DispatchableWithRequest
 
         $purifier = \Codendi_HTMLPurifier::instance();
 
-        $list_link = '<a href="/plugins/forumml/message.php?group_id=' . $purifier->purify(urlencode((string) $group_id)) . '&list=' . $purifier->purify(urlencode($list_id)) . '">' . mail_get_listname_from_list_id($list_id) . '</a>';
+        $list_link = '<a href="' . ThreadsController::getUrl((int) $list_id) . '">' . mail_get_listname_from_list_id($list_id) . '</a>';
         echo '<H2><b>' . sprintf(dgettext('tuleap-forumml', 'Mailing-List \'%1$s\' - New Thread'), $list_link) . '</b></H2>
-	<a href="/plugins/forumml/message.php?group_id=' . $purifier->purify(urlencode((string) $group_id)) . '&list=' . $purifier->purify(urlencode($list_id)) . '">[' . dgettext('tuleap-forumml', 'Browse Archives') . ']</a><br><br>
+	<a href="' . ThreadsController::getUrl((int) $list_id) . '">[' . dgettext('tuleap-forumml', 'Browse Archives') . ']</a><br><br>
 	<H3><b>' . dgettext('tuleap-forumml', 'Submit a new Thread:') . '</b></H3>';
 
         $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../src/www/assets/forumml', '/assets/forumml');

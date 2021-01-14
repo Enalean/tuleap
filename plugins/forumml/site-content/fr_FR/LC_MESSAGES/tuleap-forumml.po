@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid "%s replies"
+msgstr "%s réponses"
+
 msgid "Add cc"
 msgstr "Ajouter Cc"
 
@@ -43,22 +46,13 @@ msgstr ""
 "Veuillez bien vérifier votre message avant de l'envoyer. Le message va être "
 "envoyé sans confirmation."
 
-msgid "Empty Archives"
-msgstr "Archives vides"
-
 msgid "Erase"
 msgstr "Effacer"
-
-msgid "First messages"
-msgstr "Premiers fils"
 
 msgid "ForumML provide a nice view of GNU Mailman archives."
 msgstr ""
 "ForumML fournit une interface plus conviviale pour naviger dans des archives "
 "Mailman."
-
-msgid "Last messages"
-msgstr "Derniers fils"
 
 msgid "Mail Sent successfully."
 msgstr "E-mail envoyé avec succès."
@@ -80,16 +74,11 @@ msgstr "Message:"
 msgid "Missing 'date' and/or 'filename' parameters."
 msgstr "Les paramètres 'date' et/ou 'filename' sont manquants."
 
-#, php-format
-msgid "Next %1$s messages"
-msgstr "Les %1$s fils suivants"
-
 msgid "Post a new Thread"
 msgstr "Soumettre un nouveau fil de discussion"
 
-#, php-format
-msgid "Previous %1$s messages"
-msgstr "Les %1$s fils précédents"
+msgid "Post a new thread"
+msgstr "Soumettre un nouveau fil de discussion"
 
 msgid "Reply"
 msgstr "Répondre"
@@ -128,6 +117,9 @@ msgstr ""
 "ne voyez pas votre message, merci de rafraichir la page dans quelques "
 "instants."
 
+msgid "There isn't any thread yet."
+msgstr "Il n'y a pas de fil de discussion pour l'instant."
+
 msgid "Thread"
 msgstr "Fil de discussion"
 
@@ -136,6 +128,9 @@ msgstr "Fils"
 
 msgid "Toggle font familly (typewriter/normal)"
 msgstr "Changer la police (courier/normal)"
+
+msgid "You are not allowed to access the archives of this list"
+msgstr "Vous n'êtes pas autorisé à accéder aux archives de cette liste"
 
 msgid "You must specify the mailing-list id."
 msgstr "Vous devez spécifier l'identificateur (id) de la mailing-liste."

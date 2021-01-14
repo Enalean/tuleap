@@ -20,10 +20,11 @@
  */
 
 use FastRoute\RouteCollector;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\ForumML;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\ForumML;
 use Tuleap\SystemEvent\RootDailyStartEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -68,48 +69,44 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return $this->pluginInfo;
     }
 
-    /**
-     * Return true if current project has the right to use this plugin.
-     */
-    public function isAllowed($group_id)
-    {
-        $request  = HTTPRequest::instance();
-        $group_id = (int) $request->get('group_id');
-        if (! isset($this->allowedForProject[$group_id])) {
-            $pM = PluginManager::instance();
-            $this->allowedForProject[$group_id] = $pM->isPluginAllowedForProject($this, $group_id);
-        }
-        return $this->allowedForProject[$group_id];
-    }
-
     public function layout_search_entry($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = HTTPRequest::instance();
-        $group_id = (int) $request->get('group_id');
-        if ($group_id && $request->exist('list')) {
+        $group_id = null;
+        $list_id  = null;
+
+        preg_match('%/plugins/forumml/list/(?P<list_id>\d+)/%', $_SERVER['REQUEST_URI'], $matches);
+        if (isset($matches['list_id'])) {
+            $row = (new ForumML\Threads\ThreadsDao())->searchActiveList((int) $matches['list_id']);
+            if ($row) {
+                $group_id = $row['group_id'];
+                $list_id  = $matches['list_id'];
+            }
+        } else {
+            $request  = HTTPRequest::instance();
+            $group_id = (int) $request->get('group_id');
+            $list_id  = (int) $request->get('list');
+        }
+
+        if ($group_id && $list_id) {
             $params['search_entries'][] = [
-                'value' => 'mail',
+                'value'    => 'mail',
                 'selected' => true,
             ];
-            $params['hidden_fields'][] = [
+            $params['hidden_fields'][]  = [
                 'name'  => 'list',
-                'value' => $request->getValidated('list', 'uint'),
+                'value' => $list_id,
+            ];
+            $params['hidden_fields'][]  = [
+                'name'  => 'group_id',
+                'value' => $group_id,
             ];
         }
     }
 
     public function forumml_browse_archives($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request  = HTTPRequest::instance();
-        $group_id = (int) $request->get('group_id');
-        if ($this->isAllowed($group_id)) {
-            $params['html'] = '/plugins/forumml/message.php?'
-                . http_build_query(
-                    [
-                        'group_id' => $group_id,
-                        'list' => $params['list_id']
-                    ]
-                );
+        if ($this->isAllowed((int) $params['project']->getID())) {
+            $params['html'] = ForumML\Threads\ThreadsController::getUrl((int) $params['list_id']);
         }
     }
 
@@ -255,9 +252,29 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return new ForumML\OutputAttachmentController($this);
     }
 
+    public function routeThreads(): ForumML\Threads\ThreadsController
+    {
+        return new ForumML\Threads\ThreadsController(
+            $this,
+            ProjectManager::instance(),
+            new ForumML\Threads\ThreadsDao(),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
+            new IncludeAssets(__DIR__ . '/../../../src/www/assets/forumml', '/assets/forumml'),
+            new ForumML\Threads\ThreadsPresenterBuilder(
+                new ForumML\Threads\ThreadsDao(),
+                new TlpRelativeDatePresenterBuilder(),
+                UserManager::instance(),
+                UserHelper::instance(),
+            ),
+            new System_Command(),
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->get('/list/{id:\d+}/threads', $this->getRouteHandler('routeThreads'));
+
             $r->get('/message.php', $this->getRouteHandler('routeGetMessages'));
             $r->get('/upload.php', $this->getRouteHandler('routeOutputAttachment'));
             $r->get('/index.php', $this->getRouteHandler('routeWriteMail'));

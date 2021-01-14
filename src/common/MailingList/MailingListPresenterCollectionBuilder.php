@@ -53,7 +53,7 @@ class MailingListPresenterCollectionBuilder
             $id        = (int) $row['group_list_id'];
             $list_name = $row['list_name'];
 
-            $default_browse_url = $this->getDefaultBrowseUrl($id);
+            $default_browse_url = $this->getDefaultBrowseUrl($project, $id);
 
             $mailing_list_presenters[] = new MailingListPresenter(
                 $id,
@@ -140,7 +140,7 @@ class MailingListPresenterCollectionBuilder
         ];
     }
 
-    private function getDefaultBrowseUrl(int $id): string
+    private function getDefaultBrowseUrl(Project $project, int $id): string
     {
         $list_url = '';
         $this->event_manager->processEvent(
@@ -148,6 +148,7 @@ class MailingListPresenterCollectionBuilder
             [
                 'html'    => &$list_url,
                 'list_id' => $id,
+                'project' => $project,
             ]
         );
 

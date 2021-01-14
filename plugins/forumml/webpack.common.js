@@ -20,15 +20,26 @@
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
+const entry = {
+    style: "./themes/css/style.scss",
+    null: "null_entry",
+};
+
+const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
+for (const color of colors_burning_parrot) {
+    entry[`style-forumml-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
+    entry[
+        `style-forumml-${color}-condensed`
+    ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
+}
+
 module.exports = [
     {
-        entry: {
-            style: "./themes/css/style.scss",
-            null: "null_entry",
-        },
+        entry,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/forumml/")
+            path.resolve(__dirname, "../../src/www/assets/forumml/"),
+            "/assets/forumml/"
         ),
         module: {
             rules: [webpack_configurator.rule_scss_loader],
