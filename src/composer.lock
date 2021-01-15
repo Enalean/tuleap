@@ -7826,16 +7826,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "ef4afd72bca50a0aff61599d3e433c9ee64287ac"
+                "reference": "9fd7a7d885b3a216cff8dec9d8c21a132f275224"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/ef4afd72bca50a0aff61599d3e433c9ee64287ac",
-                "reference": "ef4afd72bca50a0aff61599d3e433c9ee64287ac",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/9fd7a7d885b3a216cff8dec9d8c21a132f275224",
+                "reference": "9fd7a7d885b3a216cff8dec9d8c21a132f275224",
                 "shasum": ""
             },
             "require": {
@@ -7924,9 +7924,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vimeo/psalm/issues",
-                "source": "https://github.com/vimeo/psalm/tree/4.4.0"
+                "source": "https://github.com/vimeo/psalm/tree/4.4.1"
             },
-            "time": "2021-01-13T23:10:59+00:00"
+            "time": "2021-01-14T21:44:29+00:00"
         },
         {
             "name": "webmozart/path-util",
