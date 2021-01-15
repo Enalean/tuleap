@@ -162,52 +162,8 @@ project_admin_permissions	override	La permission $1 selectionnée pour $2 a ét�
 #-----------------------------------------------
 # Script: SF/www/project/admin/reference.php
 #
-project_reference	create_fail	Echec lors de la création du modèle de référence : le mot clé choisi est invalide (réservé, ou déjà affecté)
 project_reference	create_for_tracker_fail	Modèle de référence associé au tracker non créé : le nom court du tracker n'est pas valide (réservé, ou déjà affecté). Vous pourrez néanmoins référencer les artefacts de ce tracker avec le mot clé 'art'
-project_reference	create_s	Créer un nouveau modèle de référence.
-project_reference	del?	Détruire ?
-project_reference	del_fail	- Echec de la destruction ! $1
-project_reference	del_r	Détruire ce modèle de référence ?
-project_reference	disabled	<i>Inactif</i>
-project_reference	edit_fail	Echec lors de l'édition du modèle de référence&nbsp;: le mot clé choisi est invalide (réservé, ou déjà affecté)
-project_reference	edit_r	Editer le modèle de référence
-project_reference	edit_reference	Edition des modèles de référence
-project_reference	edit_s_for	Edition des modèles de référence de <B>$1</B>
-project_reference	edit_system_s	Edition des modèles de référence système
-project_reference	enabled	Actif
-project_reference	enabled_desc	Extrait automatiquement ce mot-clé ?
-project_reference	force	Ignore les filtres <em>(Administrateurs Site seulement)</em>&nbsp;:
-project_reference	force_desc	Force la création du modèle de la référence
-project_reference	fields_required	champs obligatoires
-project_reference	id	Identifiant
-project_reference	keyword	Mot Clé
-project_reference	manage_sys_r	Gestion des modèles de référence système
-project_reference	manage_proj_r	Gestion des modèles de référence projet
-project_reference	missing_parameter	Il manque un paramètre. Merci de revenir en arrière et de compléter le formulaire
-project_reference	new_s	Nouveau modèle de référence
-project_reference	project	projet
-project_reference	r_create_success	Modèle de référence créé avec succès
-project_reference	r_creation	Créer un nouveau modèle de référence
-project_reference	r_deleted	Modèle de référence détruit
-project_reference	r_desc	Description
-project_reference	r_desc_in_tooltip	La description sera affichée dans une bulle lorsque le pointeur est au dessus d'une référence extraite.
-project_reference	r_keyword	Mot clé
-project_reference	r_keyword_desc	Mot clé qui déclenche la création d'une référence
-project_reference	r_link	Lien
-project_reference	r_scope	Portée du modèle de référence&nbsp;: projet seulement ou système
-project_reference	r_service	Lié au service
-project_reference	r_service_desc	Si le modèle de référence est spécifique à un service, le spécifier ici
-project_reference	r_nature	Nature
-project_reference	r_nature_desc	Spécifiez la nature de la référence, ou Autre sinon.
-project_reference	ref_scope_P	Projet
-project_reference	ref_scope_S	Système
-project_reference	scope	Portée
-project_reference	sr_deleted	Modèle de référence système détruit
-project_reference	system	système
-project_reference	system_r_create_success	Modèle de référence système créé avec succès, et ajouté à tous les projets
 project_reference	t_r_deleted	Modèle de référence correspondant détruit
-project_reference	url	URL pointée par la référence
-project_reference	warning_del_r	*********** ATTENTION ***********  Voulez-vous détruire ce modèle de référence ? Cela supprimera le modèle de référence ($1) de TOUS les projets de ce serveur. Etes-vous SUR de vouloir continuer ?
 project_reference	extract_syntax	Paramètres :\n  group_id : projet qui définit les modèles de référence\n  text     : texte en entrée
 project_reference	insert_syntax	<p>Param&egrave;tres :<br>- group_id ou group_name : projet qui définit les modèles de référence<br>- text : texte en entr&eacute;e
 ## Description value here for each reference pattern name (system or project wide) that should be localised

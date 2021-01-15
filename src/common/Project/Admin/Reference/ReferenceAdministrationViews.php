@@ -54,7 +54,7 @@ class ReferenceAdministrationViews extends Views
     {
         project_admin_header(
             [
-                'title' => $GLOBALS['Language']->getText('project_reference', 'edit_reference'),
+                'title' => _('Editing reference patterns'),
                 'group' => $GLOBALS['group_id'],
                 'help'  => 'project-admin.html#reference-pattern-configuration'
             ],
@@ -80,7 +80,7 @@ class ReferenceAdministrationViews extends Views
             $su = true;
         }
         echo '
-<h3>' . $GLOBALS['Language']->getText('project_reference', 'r_creation') . '</h3>
+<h3>' . _('Create a new reference pattern') . '</h3>
 <form name="form_create" method="post" action="' . $url . '">
 <input type="hidden" name="action" VALUE="do_create">
 ' . $csrf_token->fetchHTMLInput() . '
@@ -88,13 +88,13 @@ class ReferenceAdministrationViews extends Views
 <input type="hidden" name="group_id" VALUE="' . $purifier->purify($group_id) . '">
 
 <table width="100%" cellspacing=0 cellpadding=3 border=0>
-<tr><td width="10%"><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_keyword_desc') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_keyword') . ':</a>&nbsp;<font color="red">*</font></td>
+<tr><td width="10%"><a href="#" title="' . _('Keyword that will trigger a reference creation') . '">' . _('Keyword') . ':</a>&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="keyword" size="25" maxlength="25"></td></tr>';
         echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_desc_in_tooltip') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_desc') . '</a>:&nbsp;</td>
+<tr><td><a href="#" title="' . _('This description will be displayed in a tooltip above reference.') . '">' . _('Description') . '</a>:&nbsp;</td>
 <td><input type="text" name="description" size="70" maxlength="255"></td></tr>';
         echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_nature_desc') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_nature') . '</a>:&nbsp;</td>
+<tr><td><a href="#" title="' . _('Specify the nature of the reference, or Other if any.') . '">' . _('Nature') . '</a>:&nbsp;</td>
 <td>';
         echo '<select name="nature" >';
 
@@ -109,13 +109,13 @@ class ReferenceAdministrationViews extends Views
         echo '
 </td></tr>';
         echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'url') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_link') . '</a>:&nbsp;<font color="red">*</font></td>
+<tr><td><a href="#" title="' . _('URL pointed by the reference') . '">' . _('Link') . '</a>:&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="link" size="70" maxlength="255"> ';
             echo help_button('project-admin.html#reference-pattern-configuration');
             echo '</td></tr>';
         if (($group_id == 100) && ($su)) {
             echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_service_desc') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_service') . '</a>:</td>
+<tr><td><a href="#" title="' . _('If the reference pattern is specific to one service, select it here') . '">' . _('Bound to service') . '</a>:</td>
 <td>';
 // Get list of services
             $result = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
@@ -132,8 +132,8 @@ class ReferenceAdministrationViews extends Views
             echo html_build_select_box_from_arrays($serv_short_name, $serv_label, "service_short_name");
             echo '</td></tr>';
             echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_scope') . '">' . $GLOBALS['Language']->getText('project_reference', 'scope') . ':</a></td>
-<td><FONT size="-1">' . $GLOBALS['Language']->getText('project_reference', 'system') . '
+<tr><td><a href="#" title="' . _('Scope of the reference pattern: project only or system-wide') . '">' . _('Scope') . ':</a></td>
+<td><FONT size="-1">' . _('system') . '
         </FONT></td></tr>';
             echo '<input type="hidden" name="scope" VALUE="S">';
         } else {
@@ -141,16 +141,16 @@ class ReferenceAdministrationViews extends Views
             echo '<input type="hidden" name="scope" VALUE="P">';
         }
         echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'enabled_desc') . '">' . $GLOBALS['Language']->getText('project_reference', 'enabled') . ':</a> </td>
+<tr><td><a href="#" title="' . _('Automatically extract this keyword?') . '">' . _('Enabled') . ':</a> </td>
 <td><input type="CHECKBOX" NAME="is_used" VALUE="1" CHECKED></td></tr>';
         if ($su) {
-            echo '<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'force_desc') . '">' . $GLOBALS['Language']->getText('project_reference', 'force') . '</a> </td><td><input type="CHECKBOX" NAME="force"></td></tr>';
+            echo '<tr><td><a href="#" title="' . _('Force reference pattern creation') . '">' . _('Bypass filters <em>(Site administrators only)</em>:') . '</a> </td><td><input type="CHECKBOX" NAME="force"></td></tr>';
         }
         echo '
 </table>
-<P><INPUT type="submit" name="Create" value="' . $GLOBALS['Language']->getText('global', 'btn_create') . '">
+<P><INPUT type="submit" name="Create" value="' . _('Create') . '">
 </form>
-<p><font color="red">*</font>: ' . $GLOBALS['Language']->getText('project_reference', 'fields_required') . '</p>
+<p><font color="red">*</font>: ' . _('fields required') . '</p>
 ';
     }
 
@@ -171,7 +171,10 @@ class ReferenceAdministrationViews extends Views
         $refid = $request->get('reference_id');
 
         if (! $refid) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('project_reference', 'missing_parameter'));
+            exit_error(
+                _('Error'),
+                _('A parameter is missing, please press the "Back" button and complete the form')
+            );
         }
 
         $ref = $this->reference_manager->loadReference($refid, $group_id);
@@ -203,7 +206,7 @@ class ReferenceAdministrationViews extends Views
         }
 
         echo '
-<h3>' . $GLOBALS['Language']->getText('project_reference', 'edit_r') . '</h3>
+<h3>' . _('Edit reference pattern') . '</h3>
 <form name="form_create" method="post" action="' . $url . '">
 <input type="hidden" name="action" VALUE="do_edit">
 ' . $csrf_token->fetchHTMLInput() . '
@@ -212,7 +215,7 @@ class ReferenceAdministrationViews extends Views
 <input type="hidden" name="reference_id" VALUE="' . $purifier->purify($refid) . '">
 
 <table width="100%" cellspacing=0 cellpadding=3 border=0>
-<tr><td width="10%"><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_keyword_desc') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_keyword') . ':</a>' . $star . '</td>
+<tr><td width="10%"><a href="#" title="' . _('Keyword that will trigger a reference creation') . '">' . _('Keyword') . ':</a>' . $star . '</td>
 <td>';
         if ($ro) {
             echo $purifier->purify($ref->getKeyWord());
@@ -221,7 +224,7 @@ class ReferenceAdministrationViews extends Views
         }
         echo '</td></tr>';
         echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_desc_in_tooltip') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_desc') . '</a>:&nbsp;</td>
+<tr><td><a href="#" title="' . _('This description will be displayed in a tooltip above reference.') . '">' . _('Description') . '</a>:&nbsp;</td>
 <td>';
         if ($ro) {
             if ($ref->getDescription() == "reference_" . $ref->getKeyWord() . "_desc_key") {
@@ -234,7 +237,7 @@ class ReferenceAdministrationViews extends Views
         }
         echo '</td></tr>';
         echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_nature_desc') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_nature') . '</a>:&nbsp;</td>
+<tr><td><a href="#" title="' . _('Specify the nature of the reference, or Other if any.') . '">' . _('Nature') . '</a>:&nbsp;</td>
 <td>';
         if ($ro) {
             echo $purifier->purify($ref->getNature());
@@ -254,7 +257,7 @@ class ReferenceAdministrationViews extends Views
         }
         echo '</td></tr>';
         echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'url') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_link') . '</a>:' . $star . '</td>
+<tr><td><a href="#" title="' . _('URL pointed by the reference') . '">' . _('Link') . '</a>:' . $star . '</td>
 <td>';
         if ($ro) {
             echo $purifier->purify($ref->getLink());
@@ -265,7 +268,7 @@ class ReferenceAdministrationViews extends Views
         echo '</td></tr>';
         if ($group_id == 100) {
             echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_service_desc') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_service') . '</a>:</td>
+<tr><td><a href="#" title="' . _('If the reference pattern is specific to one service, select it here') . '">' . _('Bound to service') . '</a>:</td>
 <td>';
             // Get list of services
             $result = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
@@ -286,24 +289,24 @@ class ReferenceAdministrationViews extends Views
             }
             echo '</td></tr>';
             echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_scope') . '">' . $GLOBALS['Language']->getText('project_reference', 'scope') . ':</a></td>
-<td><FONT size="-1">' . ($ref->getScope() == 'S' ? $GLOBALS['Language']->getText('project_reference', 'system') : $GLOBALS['Language']->getText('project_reference', 'project')) . '</FONT></td></tr>';
+<tr><td><a href="#" title="' . _('Scope of the reference pattern: project only or system-wide') . '">' . _('Scope') . ':</a></td>
+<td><FONT size="-1">' . ($ref->getScope() == 'S' ? _('system') : _('project')) . '</FONT></td></tr>';
         }
         echo '
-<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'enabled_desc') . '">' . $GLOBALS['Language']->getText('project_reference', 'enabled') . ':</a> </td>
+<tr><td><a href="#" title="' . _('Automatically extract this keyword?') . '">' . _('Enabled') . ':</a> </td>
 <td><input type="CHECKBOX" NAME="is_used" VALUE="1"' . ($ref->isActive() ? " CHECKED" : '') . '></td></tr>';
         if ($su) {
-            echo '<tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'force_desc') . '">'
-                      . $GLOBALS['Language']->getText('project_reference', 'force') . '</a> </td>
+            echo '<tr><td><a href="#" title="' . _('Force reference pattern creation') . '">'
+                      . _('Bypass filters <em>(Site administrators only)</em>:') . '</a> </td>
                        <td><input type="CHECKBOX" NAME="force"></td></tr>';
         }
         echo '
 </table>
 
-<P><INPUT type="submit" name="Create" value="' . $GLOBALS['Language']->getText('global', 'btn_update') . '">
+<P><INPUT type="submit" name="Create" value="' . _('Update') . '">
 </form>';
         if (! $ro) {
-            echo '<p>' . $star . ': ' . $GLOBALS['Language']->getText('project_reference', 'fields_required') . '</p>';
+            echo '<p>' . $star . ': ' . _('fields required') . '</p>';
         }
     }
 }

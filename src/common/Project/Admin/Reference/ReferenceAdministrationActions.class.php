@@ -51,8 +51,8 @@ class ReferenceAdministrationActions extends Actions
             || ! $request->isPost()
         ) {
             exit_error(
-                $GLOBALS['Language']->getText('global', 'error'),
-                $GLOBALS['Language']->getText('project_reference', 'missing_parameter')
+                _('Error'),
+                _('A parameter is missing, please press the "Back" button and complete the form')
             );
         }
 
@@ -85,26 +85,26 @@ class ReferenceAdministrationActions extends Actions
             $result = $reference_manager->createSystemReference($ref, $force);
             if (! $result) {
                 exit_error(
-                    $GLOBALS['Language']->getText('global', 'error'),
-                    $GLOBALS['Language']->getText('project_reference', 'create_fail')
+                    _('Error'),
+                    _('Reference pattern creation failed: the selected keyword is invalid (reserved, or already exists)')
                 );
             } else {
                 $GLOBALS['HTML']->addFeedback(
                     \Feedback::INFO,
-                    $GLOBALS['Language']->getText('project_reference', 'system_r_create_success')
+                    _('Successfully created system reference pattern - reference pattern added to all projects')
                 );
             }
         } else {
             $result = $reference_manager->createReference($ref, $force);
             if (! $result) {
                 exit_error(
-                    $GLOBALS['Language']->getText('global', 'error'),
-                    $GLOBALS['Language']->getText('project_reference', 'create_fail')
+                    _('Error'),
+                    _('Reference pattern creation failed: the selected keyword is invalid (reserved, or already exists)')
                 );
             } else {
                 $GLOBALS['HTML']->addFeedback(
                     \Feedback::INFO,
-                    $GLOBALS['Language']->getText('project_reference', 'r_create_success')
+                    _('Successfully created reference pattern')
                 );
             }
         }
@@ -121,8 +121,8 @@ class ReferenceAdministrationActions extends Actions
             || ! $request->isPost()
         ) {
             exit_error(
-                $GLOBALS['Language']->getText('global', 'error'),
-                $GLOBALS['Language']->getText('project_reference', 'missing_parameter')
+                _('Error'),
+                _('A parameter is missing, please press the "Back" button and complete the form')
             );
         }
 
@@ -181,8 +181,8 @@ class ReferenceAdministrationActions extends Actions
 
             if (! $result) {
                 exit_error(
-                    $GLOBALS['Language']->getText('global', 'error'),
-                    $GLOBALS['Language']->getText('project_reference', 'edit_fail', db_error())
+                    _('Error'),
+                    _('Reference pattern edition failed: the selected keyword is invalid (reserved, or already exists)')
                 );
             } else {
                 if ($old_keyword != $request->get('keyword')) {
@@ -224,8 +224,8 @@ class ReferenceAdministrationActions extends Actions
             || ! $request->isPost()
         ) {
             exit_error(
-                $GLOBALS['Language']->getText('global', 'error'),
-                $GLOBALS['Language']->getText('project_reference', 'missing_parameter')
+                _('Error'),
+                _('A parameter is missing, please press the "Back" button and complete the form')
             );
         }
 
@@ -246,7 +246,7 @@ class ReferenceAdministrationActions extends Actions
             if ($result) {
                 $GLOBALS['HTML']->addFeedback(
                     \Feedback::INFO,
-                    $GLOBALS['Language']->getText('project_reference', 'sr_deleted')
+                    _('System reference pattern deleted')
                 );
             }
         } else {
@@ -254,14 +254,14 @@ class ReferenceAdministrationActions extends Actions
             if ($result) {
                 $GLOBALS['HTML']->addFeedback(
                     \Feedback::INFO,
-                    $GLOBALS['Language']->getText('project_reference', 'r_deleted')
+                    _('Reference pattern deleted')
                 );
             }
         }
         if (! $result) {
             exit_error(
-                $GLOBALS['Language']->getText('global', 'error'),
-                $GLOBALS['Language']->getText('project_reference', 'del_fail', db_error())
+                _('Error'),
+                _('DELETE FAILED!')
             );
         }
     }
