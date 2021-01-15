@@ -158,23 +158,23 @@ class DiffExe
         if ($this->unified) {
             if (is_numeric($this->unified)) {
                 $args[] = '-U';
-                $args[] = $this->unified;
+                $args[] = escapeshellarg((string) $this->unified);
             } else {
                 $args[] = '-u';
             }
 
             $args[] = '-L';
             if (empty($fromName)) {
-                $args[] = '"' . $fromFile . '"';
+                $args[] = escapeshellarg($fromFile);
             } else {
-                $args[] = '"' . $fromName . '"';
+                $args[] = escapeshellarg($fromName);
             }
 
             $args[] = '-L';
             if (empty($toName)) {
-                $args[] = '"' . $toFile . '"';
+                $args[] = escapeshellarg($toFile);
             } else {
-                $args[] = '"' . $toName . '"';
+                $args[] = escapeshellarg($toName);
             }
         }
         if ($this->showFunction) {

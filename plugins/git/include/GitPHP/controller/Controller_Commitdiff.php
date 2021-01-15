@@ -108,8 +108,12 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
         parent::LoadHeaders();
 
         if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
-            $this->headers[] = 'Content-disposition: attachment; filename="git-' . $this->params['hash'] . '.patch"';
-            $this->headers[] = 'X-Content-Type-Options: nosniff';
+            /**
+             * @psalm-taint-escape header
+             */
+            $content_disposition_header = 'Content-disposition: attachment; filename="git-' . $this->params['hash'] . '.patch"';
+            $this->headers[]            = $content_disposition_header;
+            $this->headers[]            = 'X-Content-Type-Options: nosniff';
         }
     }
 

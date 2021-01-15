@@ -1265,7 +1265,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         if ($this->isObsolete()) {
-            header('X-Codendi-Tracker-Report-IsObsolete: ' . $this->getLastUpdaterUserName());
+            /**
+             * @psalm-taint-escape header
+             */
+            $is_obsolete_header = 'X-Codendi-Tracker-Report-IsObsolete: ' . $this->getLastUpdaterUserName();
+            header($is_obsolete_header);
         }
         $hp      = Codendi_HTMLPurifier::instance();
         $tracker = $this->getTracker();
