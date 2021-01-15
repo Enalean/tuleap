@@ -26,7 +26,7 @@ use Tuleap\DB\DataAccessObject;
 class GitlabRepositoryDao extends DataAccessObject
 {
     /**
-     * @psalm-return list<array{id:int, gitlab_id:int, name:string, description:string, full_url:string, last_push_date:int}>
+     * @psalm-return list<array{id:int, gitlab_repository_id:int, name:string, description:string, full_url:string, last_push_date:int}>
      */
     public function getGitlabRepositoriesForProject(int $project_id): array
     {
@@ -40,7 +40,7 @@ class GitlabRepositoryDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array{id:int, gitlab_id:int, name:string, description:string, full_url:string, last_push_date:int}
+     * @psalm-return array{id:int, gitlab_repository_id:int, name:string, description:string, full_url:string, last_push_date:int}
      */
     public function getGitlabRepositoryByNameInProject(string $name, int $project_id): ?array
     {
@@ -54,9 +54,9 @@ class GitlabRepositoryDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array{id:int, gitlab_id:int, name:string, description:string, full_url:string, last_push_date:int}
+     * @psalm-return array{id:int, gitlab_repository_id:int, name:string, description:string, full_url:string, last_push_date:int}
      */
-    public function getGitlabRepositoryByIntegrationId(int $id): ?array
+    public function searchGitlabRepositoryById(int $id): ?array
     {
         $sql = 'SELECT *
                 FROM plugin_gitlab_repository
@@ -66,16 +66,16 @@ class GitlabRepositoryDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array{id:int, gitlab_id:int, name:string, description:string, full_url:string, last_push_date:int}
+     * @psalm-return array{id:int, gitlab_repository_id:int, name:string, description:string, full_url:string, last_push_date:int}
      */
-    public function getGitlabRepositorByInternalIdAndPath(int $gitlab_id, string $http_path): ?array
+    public function searchGitlabRepositoryByGitlabRepositoryIdAndPath(int $gitlab_repository_id, string $http_path): ?array
     {
         $sql = 'SELECT *
                 FROM plugin_gitlab_repository
-                WHERE gitlab_id = ?
+                WHERE gitlab_repository_id = ?
                     AND full_url = ?';
 
-        return $this->getDB()->row($sql, $gitlab_id, $http_path);
+        return $this->getDB()->row($sql, $gitlab_repository_id, $http_path);
     }
 
     public function updateLastPushDateForRepository(int $repository_id, int $last_update_date): void
@@ -96,7 +96,7 @@ class GitlabRepositoryDao extends DataAccessObject
     }
 
     public function createGitlabRepository(
-        int $gitlab_id,
+        int $gitlab_repository_id,
         string $name,
         string $description,
         string $full_url,
@@ -105,17 +105,20 @@ class GitlabRepositoryDao extends DataAccessObject
         return (int) $this->getDB()->insertReturnId(
             'plugin_gitlab_repository',
             [
-                'gitlab_id'      => $gitlab_id,
-                'name'           => $name,
-                'description'    => $description,
-                'full_url'       => $full_url,
-                'last_push_date' => $last_push_date,
+                'gitlab_repository_id' => $gitlab_repository_id,
+                'name'                 => $name,
+                'description'          => $description,
+                'full_url'             => $full_url,
+                'last_push_date'       => $last_push_date,
             ]
         );
     }
 
-    public function isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject(string $name, string $web_url, int $project_id): bool
-    {
+    public function isAGitlabRepositoryWithSameNameAlreadyIntegratedInProject(
+        string $name,
+        string $web_url,
+        int $project_id
+    ): bool {
         $sql = "SELECT NULL
                 FROM plugin_gitlab_repository
                     INNER JOIN plugin_gitlab_repository_project ON (plugin_gitlab_repository.id = plugin_gitlab_repository_project.id)

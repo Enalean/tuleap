@@ -37,13 +37,13 @@ describe("gitlabChecker", () => {
             const repo = { gitlab_data: { full_url: "example.com" } } as Repository;
             expect(isGitlabRepository(repo)).toBeFalsy();
         });
-        it("When repository has gitlab_data but only gitlab_id, Then return false", () => {
-            const repo = { gitlab_data: { gitlab_id: 14589 } } as Repository;
+        it("When repository has gitlab_data but only gitlab_repository_id, Then return false", () => {
+            const repo = { gitlab_data: { gitlab_repository_id: 14589 } } as Repository;
             expect(isGitlabRepository(repo)).toBeFalsy();
         });
         it("When repository has gitlab_data, Then return true", () => {
             const repo = {
-                gitlab_data: { gitlab_id: 14589, full_url: "example.com" },
+                gitlab_data: { gitlab_repository_id: 14589, full_url: "example.com" },
             } as Repository;
             expect(isGitlabRepository(repo)).toBeTruthy();
         });

@@ -68,7 +68,6 @@ class GitlabCommitFactoryTest extends TestCase
         );
 
         $this->assertNotNull($commit_info);
-        $this->assertEquals(2, $commit_info->getGitlabRepositoryId());
         $this->assertEquals('11645a413d7af2995cd92e40bf387e39d06d0e61', $commit_info->getCommitSha1());
         $this->assertEquals(1608555618, $commit_info->getCommitDate());
         $this->assertEquals('TULEAP-1234 Improve the README', $commit_info->getCommitTitle());

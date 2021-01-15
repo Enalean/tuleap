@@ -25,13 +25,13 @@ use Tuleap\DB\DataAccessObject;
 class GitlabBotApiTokenDao extends DataAccessObject
 {
 
-    public function storeToken(int $gitlab_repository_id, string $encrypted_token): void
+    public function storeToken(int $repository_id, string $encrypted_token): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(
             'plugin_gitlab_bot_api_token',
             [
-                'gitlab_repository_id' => $gitlab_repository_id,
-                'token'                => $encrypted_token
+                'repository_id' => $repository_id,
+                'token'         => $encrypted_token
             ],
             [
                 'token'
@@ -39,20 +39,20 @@ class GitlabBotApiTokenDao extends DataAccessObject
         );
     }
 
-    public function getBotAPIToken(int $gitlab_repository_id): ?array
+    public function getBotAPIToken(int $repository_id): ?array
     {
         $sql = 'SELECT *
                 FROM plugin_gitlab_bot_api_token
-                WHERE gitlab_repository_id = ?';
+                WHERE repository_id = ?';
 
-        return $this->getDB()->row($sql, $gitlab_repository_id);
+        return $this->getDB()->row($sql, $repository_id);
     }
 
-    public function deleteGitlabBotToken(int $gitlab_repository_id): void
+    public function deleteGitlabBotToken(int $repository_id): void
     {
         $this->getDB()->delete(
             'plugin_gitlab_bot_api_token',
-            ['gitlab_repository_id' => $gitlab_repository_id]
+            ['repository_id' => $repository_id]
         );
     }
 }

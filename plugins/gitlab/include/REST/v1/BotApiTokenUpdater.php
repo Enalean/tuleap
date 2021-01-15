@@ -75,8 +75,8 @@ class BotApiTokenUpdater
 
     public function update(ConcealedBotApiTokenPatchRepresentation $patch_representation, \PFUser $current_user): void
     {
-        $repository = $this->repository_factory->getGitlabRepositoryByInternalIdAndPath(
-            $patch_representation->gitlab_internal_id,
+        $repository = $this->repository_factory->getGitlabRepositoryByGitlabRepositoryIdAndPath(
+            $patch_representation->gitlab_repository_id,
             $patch_representation->full_url,
         );
         if (! $repository) {
@@ -90,7 +90,7 @@ class BotApiTokenUpdater
         $credentials = new Credentials($repository->getGitlabServerUrl(), $patch_representation->gitlab_bot_api_token);
 
         try {
-            $this->project_builder->getProjectFromGitlabAPI($credentials, $repository->getGitlabId());
+            $this->project_builder->getProjectFromGitlabAPI($credentials, $repository->getGitlabRepositoryId());
             $this->bot_api_token_inserter->insertToken($repository, $patch_representation->gitlab_bot_api_token);
         } catch (GitlabRequestException $e) {
             throw new I18NRestException(

@@ -189,7 +189,6 @@ class GitlabCommitCrossReferenceEnhancerTest extends TestCase
     private function buildGitlabCommit(string $committer_name, string $committer_email, string $branch_name): GitlabCommit
     {
         return new GitlabCommit(
-            2,
             '14a9b6c0c0c965977cf2af2199f93df82afcdea3',
             1608555618,
             'Increase blankets stocks for winter',

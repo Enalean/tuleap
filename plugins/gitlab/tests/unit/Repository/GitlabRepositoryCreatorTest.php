@@ -118,7 +118,7 @@ class GitlabRepositoryCreatorTest extends TestCase
             ->once()
             ->andReturnTrue();
 
-        $this->gitlab_repository_factory->shouldNotReceive('getGitlabRepositoryByInternalIdAndPath');
+        $this->gitlab_repository_factory->shouldNotReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath');
         $this->gitlab_repository_project_dao->shouldNotReceive('isGitlabRepositoryIntegratedInProject');
         $this->gitlab_repository_project_dao->shouldNotReceive('addGitlabRepositoryIntegrationInProject');
         $this->gitlab_repository_dao->shouldNotReceive('createGitlabRepository');
@@ -143,7 +143,7 @@ class GitlabRepositoryCreatorTest extends TestCase
 
         $gitlab_repository = $this->buildGitlabRepository();
 
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
+        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
             ->once()
             ->with(12569, 'https://example.com/root/project01')
             ->andReturn($gitlab_repository);
@@ -172,7 +172,7 @@ class GitlabRepositoryCreatorTest extends TestCase
             ->once()
             ->andReturnFalse();
 
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
+        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
             ->once()
             ->with(12569, 'https://example.com/root/project01')
             ->andReturn(
@@ -205,7 +205,7 @@ class GitlabRepositoryCreatorTest extends TestCase
             ->once()
             ->andReturnFalse();
 
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
+        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
             ->once()
             ->with(12569, 'https://example.com/root/project01')
             ->andReturn(null);
@@ -219,7 +219,7 @@ class GitlabRepositoryCreatorTest extends TestCase
             ->andReturn(1);
 
         $gitlab_repository = $this->buildGitlabRepository();
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByGitlabProjectAndIntegrationId')
+        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByGitlabProjectAndId')
             ->once()
             ->with($this->gitlab_project, 1)
             ->andReturn($gitlab_repository);

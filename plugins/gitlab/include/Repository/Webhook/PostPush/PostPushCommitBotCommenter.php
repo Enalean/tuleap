@@ -92,7 +92,7 @@ class PostPushCommitBotCommenter
         $comment  = $renderer->renderToString("gitlab-bot-comment", new PostPushCommitBotCommentPresenter($reference_presenters));
 
         try {
-            $url = "/projects/{$gitlab_repository->getGitlabId()}/repository/commits/{$commit->getSha1()}/comments";
+            $url = "/projects/{$gitlab_repository->getGitlabRepositoryId()}/repository/commits/{$commit->getSha1()}/comments";
             $this->gitlab_api_client->postUrl(
                 $credentials,
                 $url,

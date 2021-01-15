@@ -62,7 +62,7 @@ describe("GitRepository", () => {
                 additional_information: [],
                 gitlab_data: {
                     full_url: "https://example.com/MyPath/MyRepo",
-                    gitlab_id: 1,
+                    gitlab_repository_id: 1,
                 },
             },
         };
@@ -86,7 +86,7 @@ describe("GitRepository", () => {
                 additional_information: [],
                 gitlab_data: {
                     full_url: "https://example.com/MyPath/MyRepo",
-                    gitlab_id: 1,
+                    gitlab_repository_id: 1,
                 },
             },
         };
@@ -135,7 +135,7 @@ describe("GitRepository", () => {
                 },
                 gitlab_data: {
                     full_url: "https://example.com/MyPath/MyRepo",
-                    gitlab_id: 1,
+                    gitlab_repository_id: 1,
                 },
             },
         };
@@ -177,7 +177,7 @@ describe("GitRepository", () => {
                 },
                 gitlab_data: {
                     full_url: "https://example.com/MyPath/MyRepo",
-                    gitlab_id: 1,
+                    gitlab_repository_id: 1,
                 },
             },
         };

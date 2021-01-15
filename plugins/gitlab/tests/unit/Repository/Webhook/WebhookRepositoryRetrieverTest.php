@@ -80,7 +80,7 @@ class WebhookRepositoryRetrieverTest extends TestCase
 
     public function testItThrowsAnExceptionIfRepositoryNotFound(): void
     {
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdandPath')
+        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
             ->once()
             ->with(123456, 'https://example.com/path/repo01')
             ->andReturnNull();
@@ -94,7 +94,7 @@ class WebhookRepositoryRetrieverTest extends TestCase
 
     public function testItReturnsTheGitlabRepository(): void
     {
-        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByInternalIdandPath')
+        $this->gitlab_repository_factory->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
             ->once()
             ->with(123456, 'https://example.com/path/repo01')
             ->andReturn($this->gitlab_repository);

@@ -32,7 +32,7 @@ export function formatRepository(repository: GitLabRepository): FormattedGitLabR
         path_without_project: extractPathWithoutProject(repository.name, label),
         gitlab_data: {
             full_url: repository.full_url,
-            gitlab_id: repository.gitlab_id,
+            gitlab_repository_id: repository.gitlab_repository_id,
         },
     };
 }

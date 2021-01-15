@@ -24,6 +24,6 @@ export function isGitlabRepository(repository: Repository): boolean {
         repository.gitlab_data !== null &&
         repository.gitlab_data !== undefined &&
         Object.prototype.hasOwnProperty.call(repository.gitlab_data, "full_url") &&
-        Object.prototype.hasOwnProperty.call(repository.gitlab_data, "gitlab_id")
+        Object.prototype.hasOwnProperty.call(repository.gitlab_data, "gitlab_repository_id")
     );
 }

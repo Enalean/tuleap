@@ -70,7 +70,7 @@ export interface PermissionsRepository {
 
 export interface GitLabData {
     full_url: string;
-    gitlab_id: number;
+    gitlab_repository_id: number;
 }
 
 export interface Folder {
@@ -87,7 +87,7 @@ export interface GitLabCredentials {
 export interface GitLabRepository {
     description: string;
     full_url: string;
-    gitlab_id: number;
+    gitlab_repository_id: number;
     id: number;
     last_push_date: string;
     name: string;

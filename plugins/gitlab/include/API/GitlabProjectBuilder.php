@@ -41,9 +41,9 @@ class GitlabProjectBuilder
      * @throws GitlabResponseAPIException
      * @throws GitlabRequestException
      */
-    public function getProjectFromGitlabAPI(Credentials $credentials, int $gitlab_internal_id): GitlabProject
+    public function getProjectFromGitlabAPI(Credentials $credentials, int $gitlab_repository_id): GitlabProject
     {
-        $gitlab_project_data = $this->gitlab_api_client->getUrl($credentials, "/projects/$gitlab_internal_id");
+        $gitlab_project_data = $this->gitlab_api_client->getUrl($credentials, "/projects/$gitlab_repository_id");
 
         if (! $gitlab_project_data) {
             throw new GitlabResponseAPIException(

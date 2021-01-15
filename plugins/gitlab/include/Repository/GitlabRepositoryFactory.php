@@ -59,9 +59,9 @@ class GitlabRepositoryFactory
         return $this->getInstanceFromRow($row);
     }
 
-    public function getGitlabRepositoryByIntegrationId(int $integration_id): ?GitlabRepository
+    public function getGitlabRepositoryById(int $id): ?GitlabRepository
     {
-        $row = $this->dao->getGitlabRepositoryByIntegrationId($integration_id);
+        $row = $this->dao->searchGitlabRepositoryById($id);
         if ($row === null) {
             return null;
         }
@@ -69,9 +69,9 @@ class GitlabRepositoryFactory
         return $this->getInstanceFromRow($row);
     }
 
-    public function getGitlabRepositoryByInternalIdAndPath(int $gitlab_id, string $http_path): ?GitlabRepository
+    public function getGitlabRepositoryByGitlabRepositoryIdAndPath(int $gitlab_repository_id, string $http_path): ?GitlabRepository
     {
-        $row = $this->dao->getGitlabRepositorByInternalIdAndPath($gitlab_id, $http_path);
+        $row = $this->dao->searchGitlabRepositoryByGitlabRepositoryIdAndPath($gitlab_repository_id, $http_path);
         if ($row === null) {
             return null;
         }
@@ -79,12 +79,12 @@ class GitlabRepositoryFactory
         return $this->getInstanceFromRow($row);
     }
 
-    public function getGitlabRepositoryByGitlabProjectAndIntegrationId(
+    public function getGitlabRepositoryByGitlabProjectAndId(
         GitlabProject $gitlab_project,
-        int $integration_id
+        int $id
     ): GitlabRepository {
         return new GitlabRepository(
-            $integration_id,
+            $id,
             $gitlab_project->getId(),
             $gitlab_project->getPathWithNamespace(),
             $gitlab_project->getDescription(),
@@ -94,13 +94,13 @@ class GitlabRepositoryFactory
     }
 
     /**
-     * @param array{id:int, gitlab_id:int, name:string, description:string, full_url:string, last_push_date:int} $row
+     * @param array{id:int, gitlab_repository_id:int, name:string, description:string, full_url:string, last_push_date:int} $row
      */
     private function getInstanceFromRow(array $row): GitlabRepository
     {
         return new GitlabRepository(
             $row['id'],
-            $row['gitlab_id'],
+            $row['gitlab_repository_id'],
             $row['name'],
             (string) $row['description'],
             $row['full_url'],

@@ -22,11 +22,11 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Repository\Webhook;
 
 use ForgeConfig;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\API\ClientWrapper;
+use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretGenerator;
-use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Cryptography\ConcealedString;
 
 class WebhookCreator
 {
@@ -48,15 +48,14 @@ class WebhookCreator
 
     public function addWebhookInGitlabProject(Credentials $credentials, GitlabRepository $gitlab_repository): void
     {
-        $gitlab_repository_id = $gitlab_repository->getId();
-        $internal_gitlab_id   = $gitlab_repository->getGitlabId();
-
-        $secret = $this->secret_generator->generateSecretForGitlabRepository($gitlab_repository_id);
+        $secret = $this->secret_generator->generateSecretForGitlabRepository($gitlab_repository->getId());
 
         $webhook_configuration_content = $this->generateWebhookConfiguration($secret);
+
+        $gitlab_repository_id = $gitlab_repository->getGitlabRepositoryId();
         $this->gitlab_api_client->postUrl(
             $credentials,
-            "/projects/$internal_gitlab_id/hooks",
+            "/projects/$gitlab_repository_id/hooks",
             $webhook_configuration_content
         );
 
