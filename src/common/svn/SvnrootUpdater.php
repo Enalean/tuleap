@@ -24,6 +24,7 @@ namespace Tuleap\Svn;
 use Backend;
 use ForgeConfig;
 use Psr\Log\LoggerInterface;
+use Tuleap\DB\DBConnection;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
@@ -45,11 +46,16 @@ class SvnrootUpdater
      * @var \Tuleap\Queue\PersistentQueue
      */
     private $queue;
+    /**
+     * @var DBConnection
+     */
+    private $db_connection;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, DBConnection $db_connection)
     {
-        $this->logger = new WrapperLogger($logger, 'svnroot_updater');
-        $this->queue  = (new QueueFactory($this->logger))->getPersistentQueue(self::QUEUE_PREFIX);
+        $this->logger        = new WrapperLogger($logger, 'svnroot_updater');
+        $this->queue         = (new QueueFactory($this->logger))->getPersistentQueue(self::QUEUE_PREFIX);
+        $this->db_connection = $db_connection;
     }
 
     public function push()
@@ -66,7 +72,8 @@ class SvnrootUpdater
     {
         $this->logger->info("Wait for messages on " . get_class($this->queue));
 
-        $generate = static function (): void {
+        $generate = function (): void {
+            $this->db_connection->reconnectAfterALongRunningProcess();
             ForgeConfig::set('svn_root_file', '/etc/httpd/conf.d/svnroot.conf');
 
             $apache_conf_generator = new ApacheConfGenerator(

@@ -31,6 +31,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use TruncateLevelLogger;
 use Tuleap\CLI\ConsoleLogger;
+use Tuleap\DB\DBFactory;
 use Tuleap\Svn\SvnrootUpdater;
 use Tuleap\System\DaemonLocker;
 
@@ -66,7 +67,7 @@ class WorkerSVNRootUpdateCommand extends Command
 
         $logger->info("Start service");
 
-        $updater = new SvnrootUpdater($logger);
+        $updater = new SvnrootUpdater($logger, DBFactory::getMainTuleapDBConnection());
         $updater->listen('backend-svn-1');
 
         $logger->info("Service terminated");

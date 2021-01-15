@@ -39,6 +39,7 @@ use SystemEventDao;
 use SystemEventManager;
 use SystemEventProcessor_Root;
 use SystemEventProcessRootDefaultQueue;
+use Tuleap\DB\DBConnection;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Svn\ApacheConfGenerator;
 
@@ -80,6 +81,7 @@ class SystemEventProcessorRootTest extends TestCase
                 M::spy(BackendSystem::class),
                 $this->site_cache,
                 M::spy(ApacheConfGenerator::class),
+                M::mock(DBConnection::class),
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 

@@ -21,5 +21,5 @@
 
 require_once __DIR__ . '/../../www/include/pre.php';
 
-$updater = new Tuleap\Svn\SvnrootUpdater(new Log_ConsoleLogger());
+$updater = new Tuleap\Svn\SvnrootUpdater(new Log_ConsoleLogger(), \Tuleap\DB\DBFactory::getMainTuleapDBConnection());
 $updater->push();
