@@ -20,26 +20,28 @@
 
 declare(strict_types=1);
 
-namespace unit;
+namespace Tuleap\ScaledAgile;
 
+use ForgeAccess;
+use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ScaledAgile\DisplayProgramBacklogController;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
 use Tuleap\ScaledAgile\Program\Program;
-use Tuleap\ScaledAgile\ProgramBacklogPresenter;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DisplayProgramBacklogControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\TemplateRenderer
@@ -112,6 +114,8 @@ final class DisplayProgramBacklogControllerTest extends TestCase
 
     public function testItDisplayProgramBacklog(): void
     {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('usesService')->once()->with(\scaled_agilePlugin::SERVICE_SHORTNAME)->andReturnTrue();
         $project->shouldReceive('getId')->andReturn(101);

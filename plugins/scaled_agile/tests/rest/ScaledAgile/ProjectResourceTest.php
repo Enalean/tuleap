@@ -73,6 +73,26 @@ class ProjectResourceTest extends \RestBase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    /**
+     * @depends testPUTTeam
+     */
+    public function getToBePlannedElements(): void
+    {
+        $project_id = $this->getProgramProjectId();
+
+        $response = $this->getResponse(
+            $this->client->get('projects/' . $project_id . '/scaled_agile_backlog'),
+            REST_TestDataBuilder::TEST_USER_1_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $to_be_planned = $response->json();
+        $this->assertCount(2, $to_be_planned);
+        $this->assertEquals(["tracker_name" => "bug", "artifact_id" => 1, "artifact_title" => "My bug"], $to_be_planned[0]);
+        $this->assertEquals(["tracker_name" => "user story", "artifact_id" => 2, "artifact_title" => "My story"], $to_be_planned[1]);
+    }
+
     private function getProgramProjectId(): int
     {
         return $this->getProjectId('program');
