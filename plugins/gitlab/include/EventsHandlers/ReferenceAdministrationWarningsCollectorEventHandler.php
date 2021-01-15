@@ -21,8 +21,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\EventsHandlers;
 
-use Tuleap\Gitlab\Reference\GitlabCommitReference;
-use Tuleap\Gitlab\Reference\GitlabMergeRequestReference;
+use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
 
 final class ReferenceAdministrationWarningsCollectorEventHandler

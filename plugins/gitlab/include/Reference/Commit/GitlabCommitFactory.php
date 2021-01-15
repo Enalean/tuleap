@@ -19,7 +19,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Reference;
+namespace Tuleap\Gitlab\Reference\Commit;
 
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;

@@ -21,6 +21,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference;
 
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
+use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
@@ -40,14 +43,14 @@ class GitlabCrossReferenceOrganizer
      */
     private $gitlab_commit_factory;
     /**
-     * @var GitlabCrossReferenceEnhancer
+     * @var GitlabCommitCrossReferenceEnhancer
      */
     private $gitlab_cross_reference_enhancer;
 
     public function __construct(
         GitlabRepositoryFactory $gitlab_repository_factory,
         GitlabCommitFactory $gitlab_commit_factory,
-        GitlabCrossReferenceEnhancer $gitlab_cross_reference_enhancer,
+        GitlabCommitCrossReferenceEnhancer $gitlab_cross_reference_enhancer,
         \ProjectManager $project_manager
     ) {
         $this->gitlab_repository_factory       = $gitlab_repository_factory;

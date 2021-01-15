@@ -19,7 +19,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Reference;
+namespace Tuleap\Gitlab\Reference\Commit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
