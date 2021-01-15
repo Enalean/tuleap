@@ -20,13 +20,10 @@
 
 declare(strict_types=1);
 
-namespace unit\TestManagement;
+namespace Tuleap\TestManagement;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Tuleap\TestManagement\TestmanagementConfigTracker;
-use Tuleap\TestManagement\TestmanagementTrackersConfiguration;
-use Tuleap\TestManagement\TestmanagementTrackersConfigurator;
 
 class TestmanagementTrackersConfiguratorTest extends TestCase
 {

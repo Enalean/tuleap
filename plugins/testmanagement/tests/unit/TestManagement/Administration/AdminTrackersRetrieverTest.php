@@ -20,17 +20,13 @@
 
 declare(strict_types=1);
 
-namespace unit\TestManagement\Administration;
+namespace Tuleap\TestManagement\Administration;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use TrackerFactory;
-use Tuleap\TestManagement\Administration\AdminTrackerPresenter;
-use Tuleap\TestManagement\Administration\AdminTrackersRetriever;
-use Tuleap\TestManagement\Administration\ListOfAdminTrackersPresenter;
-use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\MissingArtifactLinkException;
 use Tuleap\TestManagement\TrackerDefinitionNotValidException;
