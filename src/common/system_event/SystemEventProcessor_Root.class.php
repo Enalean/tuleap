@@ -57,6 +57,10 @@ class SystemEventProcessor_Root extends SystemEventProcessor
      * @var ApacheConfGenerator
      */
     protected $generator;
+    /**
+     * @var \Tuleap\DB\DBConnection
+     */
+    private $db_connection;
 
     public function __construct(
         SystemEventProcess $process,
@@ -68,7 +72,8 @@ class SystemEventProcessor_Root extends SystemEventProcessor
         BackendSVN $backend_svn,
         BackendSystem $backend_system,
         SiteCache $site_cache,
-        ApacheConfGenerator $generator
+        ApacheConfGenerator $generator,
+        \Tuleap\DB\DBConnection $db_connection
     ) {
         parent::__construct($process, $system_event_manager, $dao, $logger);
         $this->backend_aliases      = $backend_aliases;
@@ -77,6 +82,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor
         $this->backend_system       = $backend_system;
         $this->site_cache           = $site_cache;
         $this->generator            = $generator;
+        $this->db_connection        = $db_connection;
     }
 
     public function getOwner()
@@ -101,7 +107,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor
         // Update SVN root definition for Apache once everything else is processed
         if ($this->backend_svn->getSVNApacheConfNeedUpdate()) {
             $this->generator->generate();
-            $updater = new SvnrootUpdater($this->logger);
+            $updater = new SvnrootUpdater($this->logger, $this->db_connection);
             $updater->push();
         }
 

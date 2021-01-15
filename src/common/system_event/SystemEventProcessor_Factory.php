@@ -95,7 +95,8 @@ class SystemEventProcessor_Factory
             Backend::instanceSVN(),
             Backend::instance('System'),
             new SiteCache($this->logger),
-            ApacheConfGenerator::build()
+            ApacheConfGenerator::build(),
+            \Tuleap\DB\DBFactory::getMainTuleapDBConnection()
         );
     }
 }
