@@ -21,6 +21,9 @@ msgstr "Programme Incrément"
 msgid "Scaled Agile"
 msgstr "Agilité à l'échelle"
 
+msgid "The retrieval of the elements to be planned in program has failed"
+msgstr "La récupération des éléments à planifier dans le programme a échoué"
+
 msgid "There are no iterations yet"
 msgstr "Il n'y a pas d'itération pour l'instant"
 

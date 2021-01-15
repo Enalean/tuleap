@@ -20,17 +20,64 @@
 <template>
     <div>
         <h2 v-translate class="program-to-be-planned-title">To Be Planned</h2>
-        <empty-state />
+        <empty-state
+            v-if="to_be_planned_elements.length === 0 && !is_loading && !has_error"
+            data-test="empty-state"
+        />
+        <to-be-planned-card
+            v-for="element in to_be_planned_elements"
+            v-bind:key="element.artifact_id"
+            v-bind:element="element"
+            data-test="to-be-planned-elements"
+        />
+
+        <div
+            id="to-be-planned-backlog-error"
+            class="tlp-alert-danger"
+            v-if="has_error"
+            data-test="to-be-planned-error"
+        >
+            {{ error_message }}
+        </div>
+
+        <to-be-planned-skeleton v-if="is_loading" data-test="to-be-planned-skeleton" />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import { programId } from "../../../configuration";
+import {
+    getToBePlannedElements,
+    ToBePlannedElement,
+} from "../../../helpers/ToBePlanned/element-to-plan-retriver";
 import EmptyState from "./EmptyState.vue";
+import ToBePlannedCard from "./ToBePlannedCard.vue";
+import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";
 
 @Component({
-    components: { EmptyState },
+    components: { ToBePlannedSkeleton, ToBePlannedCard, EmptyState },
 })
-export default class ToBePlanned extends Vue {}
+export default class ToBePlanned extends Vue {
+    private error_message = "";
+    private has_error = false;
+    private to_be_planned_elements: Array<ToBePlannedElement> = [];
+    private is_loading = false;
+
+    async mounted(): Promise<void> {
+        try {
+            this.is_loading = true;
+            this.to_be_planned_elements = await getToBePlannedElements(programId());
+        } catch (e) {
+            this.has_error = true;
+            this.error_message = this.$gettext(
+                "The retrieval of the elements to be planned in program has failed"
+            );
+            throw e;
+        } finally {
+            this.is_loading = false;
+        }
+    }
+}
 </script>

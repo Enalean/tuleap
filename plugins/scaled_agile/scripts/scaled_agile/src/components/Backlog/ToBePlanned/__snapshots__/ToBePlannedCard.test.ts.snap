@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ToBePlannedCard Displays the empty state for Backlog unplanned section 1`] = `
+<div
+  class="element-card"
+>
+  <div
+    class="element-card-content"
+  >
+    <div
+      class="element-card-xref-label"
+    >
+      <a
+        class="element-card-xref"
+        href="/plugins/tracker/?aid=100"
+      >
+        
+                bug #100
+            
+      </a>
+       
+      <span
+        class="element-card-label"
+      >
+        My artifact
+      </span>
+    </div>
+  </div>
+</div>
+`;

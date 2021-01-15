@@ -46,6 +46,10 @@ final class ProgramBacklogPresenter
      * @var string
      */
     public $project_flags;
+    /**
+     * @var int|null
+     */
+    public $program_id;
 
     /**
      * @param ProjectFlagPresenter[] $project_flags
@@ -56,5 +60,6 @@ final class ProgramBacklogPresenter
         $this->project_short_name = $project->getUnixNameLowerCase();
         $this->project_privacy    = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
         $this->project_flags      = json_encode($project_flags, JSON_THROW_ON_ERROR);
+        $this->program_id         = (int) $project->getID();
     }
 }
