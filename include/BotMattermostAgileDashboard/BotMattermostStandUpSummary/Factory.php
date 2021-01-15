@@ -124,7 +124,7 @@ class Factory
                     $this->logger->info('No channels found');
                 }
                 $bots_mattermost_stand_up_summary[] = new BotMattermostStandUpSummary(
-                    $this->bot_factory->getBotById($row['id']),
+                    $this->bot_factory->getBotById($row['bot_id']),
                     $channels,
                     $project_id,
                     $row['send_time']
