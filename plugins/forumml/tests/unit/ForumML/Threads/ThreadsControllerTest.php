@@ -28,6 +28,8 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use System_Command;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\ForumML\CurrentListBreadcrumbCollectionBuilder;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\MailingList\ServiceMailingList;
@@ -73,16 +75,21 @@ class ThreadsControllerTest extends TestCase
      * @var ThreadsController
      */
     private $controller;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CurrentListBreadcrumbCollectionBuilder
+     */
+    private $breadcrumb_builder;
 
     protected function setUp(): void
     {
-        $this->plugin            = Mockery::mock(\ForumMLPlugin::class);
-        $this->project_manager   = Mockery::mock(\ProjectManager::class);
-        $this->dao               = Mockery::mock(ThreadsDao::class);
-        $this->renderer          = Mockery::mock(\TemplateRenderer::class);
-        $this->include_assets    = Mockery::mock(IncludeAssets::class);
-        $this->presenter_builder = Mockery::mock(ThreadsPresenterBuilder::class);
-        $this->command           = Mockery::mock(System_Command::class);
+        $this->plugin             = Mockery::mock(\ForumMLPlugin::class);
+        $this->project_manager    = Mockery::mock(\ProjectManager::class);
+        $this->dao                = Mockery::mock(ThreadsDao::class);
+        $this->renderer           = Mockery::mock(\TemplateRenderer::class);
+        $this->include_assets     = Mockery::mock(IncludeAssets::class);
+        $this->presenter_builder  = Mockery::mock(ThreadsPresenterBuilder::class);
+        $this->command            = Mockery::mock(System_Command::class);
+        $this->breadcrumb_builder = Mockery::mock(CurrentListBreadcrumbCollectionBuilder::class);
 
         $this->controller = new ThreadsController(
             $this->plugin,
@@ -92,6 +99,7 @@ class ThreadsControllerTest extends TestCase
             $this->include_assets,
             $this->presenter_builder,
             $this->command,
+            $this->breadcrumb_builder,
         );
 
         \ForgeConfig::set('mailman_bin_dir', '/mailman');
@@ -388,7 +396,7 @@ class ThreadsControllerTest extends TestCase
             ->andReturn('/whatever');
 
         $service
-            ->shouldReceive('displayMailingListHeader')
+            ->shouldReceive('displayMailingListHeaderWithAdditionalBreadcrumbs')
             ->once();
         $service
             ->shouldReceive('displayFooter')
@@ -397,6 +405,10 @@ class ThreadsControllerTest extends TestCase
         $this->renderer
             ->shouldReceive('renderToPage')
             ->once();
+
+        $this->breadcrumb_builder
+            ->shouldReceive('getCurrentListBreadcrumbCollectionFromRow')
+            ->andReturn(Mockery::mock(BreadCrumbCollection::class));
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->build(),
@@ -452,7 +464,7 @@ class ThreadsControllerTest extends TestCase
             ->andReturn('/whatever');
 
         $service
-            ->shouldReceive('displayMailingListHeader')
+            ->shouldReceive('displayMailingListHeaderWithAdditionalBreadcrumbs')
             ->once();
         $service
             ->shouldReceive('displayFooter')
@@ -461,6 +473,10 @@ class ThreadsControllerTest extends TestCase
         $this->renderer
             ->shouldReceive('renderToPage')
             ->once();
+
+        $this->breadcrumb_builder
+            ->shouldReceive('getCurrentListBreadcrumbCollectionFromRow')
+            ->andReturn(Mockery::mock(BreadCrumbCollection::class));
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->build(),

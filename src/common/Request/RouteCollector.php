@@ -90,6 +90,7 @@ use Tuleap\MailingList\MailingListDeleteController;
 use Tuleap\MailingList\MailingListDoCreateController;
 use Tuleap\MailingList\MailingListDomainBuilder;
 use Tuleap\MailingList\MailingListHomepageController;
+use Tuleap\MailingList\MailingListPresenterBuilder;
 use Tuleap\MailingList\MailingListPresenterCollectionBuilder;
 use Tuleap\MailingList\MailingListUpdateController;
 use Tuleap\News\NewsDao;
@@ -754,7 +755,7 @@ class RouteCollector
             new ProjectAdministratorChecker(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/lists'),
             new \MailingListDao(),
-            new MailingListPresenterCollectionBuilder(EventManager::instance()),
+            new MailingListPresenterCollectionBuilder(new MailingListPresenterBuilder(EventManager::instance())),
         );
     }
 
@@ -807,7 +808,7 @@ class RouteCollector
         return new MailingListHomepageController(
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/lists'),
             new \MailingListDao(),
-            new MailingListPresenterCollectionBuilder(EventManager::instance()),
+            new MailingListPresenterCollectionBuilder(new MailingListPresenterBuilder(EventManager::instance())),
             $GLOBALS['Language'],
         );
     }

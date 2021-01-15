@@ -22,7 +22,9 @@
 use FastRoute\RouteCollector;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\ForumML;
+use Tuleap\ForumML\CurrentListBreadcrumbCollectionBuilder;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\MailingList\MailingListPresenterBuilder;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\SystemEvent\RootDailyStartEvent;
@@ -267,6 +269,9 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 UserHelper::instance(),
             ),
             new System_Command(),
+            new CurrentListBreadcrumbCollectionBuilder(
+                new MailingListPresenterBuilder(EventManager::instance()),
+            ),
         );
     }
 
