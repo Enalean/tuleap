@@ -29,6 +29,7 @@ const manifest_plugin = webpack_configurator.getManifestPlugin();
 const webpack_config_for_angular = {
     entry: {
         testmanagement: "./scripts/testmanagement/src/app.js",
+        "testmanagement-admin": "./scripts/testmanagement/src/admin/testmanagement-admin.ts",
     },
     context,
     output,

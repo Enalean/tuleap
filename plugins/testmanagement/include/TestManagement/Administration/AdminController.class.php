@@ -18,22 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement;
+namespace Tuleap\TestManagement\Administration;
 
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
-use Tuleap\TestManagement\Administration\InvalidTrackerIdProvidedException;
-use Tuleap\TestManagement\Administration\FieldUsageDetector;
-use Tuleap\TestManagement\Administration\TrackerChecker;
-use Tuleap\TestManagement\Administration\TrackerDoesntExistException;
-use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
-use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneHiddenFieldsetsPostActionException;
-use Tuleap\TestManagement\Administration\TrackerIsDeletedException;
-use Tuleap\TestManagement\Administration\TrackerNotInProjectException;
 use Tuleap\TestManagement\Breadcrumbs\AdmininistrationBreadcrumbs;
 use Tuleap\TestManagement\Breadcrumbs\Breadcrumbs;
+use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\MissingArtifactLinkException;
+use Tuleap\TestManagement\TestManagementController;
+use Tuleap\TestManagement\TestmanagementTrackersConfigurator;
+use Tuleap\TestManagement\TrackerDefinitionNotValidException;
+use Tuleap\TestManagement\TrackerExecutionNotValidException;
 use Valid_UInt;
 
 class AdminController extends TestManagementController
@@ -57,6 +55,10 @@ class AdminController extends TestManagementController
      * @var Valid_UInt
      */
     private $int_validator;
+    /**
+     * @var AdminTrackersRetriever
+     */
+    private $tracker_retriever;
 
     public function __construct(
         Codendi_Request $request,
@@ -65,34 +67,41 @@ class AdminController extends TestManagementController
         CSRFSynchronizerToken $csrf_token,
         FieldUsageDetector $field_usage_detector,
         TrackerChecker $tracker_checker,
-        Valid_UInt $int_validator
+        Valid_UInt $int_validator,
+        AdminTrackersRetriever $tracker_retriever
     ) {
         parent::__construct($request, $config, $event_manager);
         $this->csrf_token           = $csrf_token;
         $this->field_usage_detector = $field_usage_detector;
         $this->tracker_checker      = $tracker_checker;
         $this->int_validator        = $int_validator;
+        $this->tracker_retriever    = $tracker_retriever;
     }
 
     public function admin(): string
     {
-        $test_definition_tracker_id = (int) $this->config->getTestDefinitionTrackerId($this->project);
-        $is_definition_disabled = $this->field_usage_detector->isStepDefinitionFieldUsed(
-            $test_definition_tracker_id
-        );
+        $campaign_trackers        = $this->tracker_retriever->retrieveAvailableTrackersForCampaign($this->project);
+        $issue_trackers           = $this->tracker_retriever->retrieveAvailableTrackersForIssue($this->project);
+        $test_definition_trackers = $this->tracker_retriever->retrieveAvailableTrackersForDefinition($this->project);
+        $test_execution_trackers  = $this->tracker_retriever->retrieveAvailableTrackersForExecution($this->project);
 
-        $test_execution_tracker_id = (int) $this->config->getTestExecutionTrackerId($this->project);
-        $is_execution_disabled = $this->field_usage_detector->isStepExecutionFieldUsed(
-            $test_execution_tracker_id
-        );
+        $is_definition_disabled = $test_definition_trackers->selected_tracker !== null
+            && $this->field_usage_detector->isStepDefinitionFieldUsed(
+                $test_definition_trackers->selected_tracker->tracker_id
+            );
+
+        $is_execution_disabled = $test_execution_trackers->selected_tracker !== null
+            && $this->field_usage_detector->isStepExecutionFieldUsed(
+                $test_execution_trackers->selected_tracker->tracker_id
+            );
 
         return $this->renderToString(
             'admin',
             new AdminPresenter(
-                (int) $this->config->getCampaignTrackerId($this->project),
-                $test_definition_tracker_id,
-                $test_execution_tracker_id,
-                $this->config->getIssueTrackerId($this->project),
+                $campaign_trackers,
+                $test_definition_trackers,
+                $test_execution_trackers,
+                $issue_trackers,
                 $this->csrf_token,
                 $is_definition_disabled,
                 $is_execution_disabled

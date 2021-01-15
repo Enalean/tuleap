@@ -59,6 +59,7 @@ final class LegacyRoutingController implements DispatchableWithRequest, Dispatch
     {
         $layout->includeFooterJavascriptFile($this->include_core_js_assets->getFileURL('ckeditor.js'));
         $layout->includeFooterJavascriptFile($this->testmanagement_assets->getFileURL('testmanagement.js'));
+        $layout->includeFooterJavascriptFile($this->testmanagement_assets->getFileURL('testmanagement-admin.js'));
         $layout->addCssAsset(new CssAsset($this->testmanagement_assets, 'burningparrot'));
 
         try {

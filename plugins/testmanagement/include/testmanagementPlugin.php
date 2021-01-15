@@ -31,6 +31,7 @@ use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\TestManagement\Administration\AdminTrackersRetriever;
 use Tuleap\TestManagement\Administration\FieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
@@ -421,6 +422,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             new VisitRecorder(new RecentlyVisitedDao()),
             new Valid_UInt(),
             new ProjectFlagsBuilder(new ProjectFlagsDao()),
+            new AdminTrackersRetriever($tracker_factory, $this->getTrackerChecker(), $config)
         );
 
         return new LegacyRoutingController(

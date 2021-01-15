@@ -18,16 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement;
+namespace Tuleap\TestManagement\Administration;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project;
 use Tuleap\GlobalResponseMock;
-use Tuleap\TestManagement\Administration\FieldUsageDetector;
-use Tuleap\TestManagement\Administration\TrackerChecker;
-use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
+use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Event\GetMilestone;
+use Tuleap\TestManagement\MissingArtifactLinkException;
+use Tuleap\TestManagement\TrackerDefinitionNotValidException;
+use Tuleap\TestManagement\TrackerExecutionNotValidException;
 use Valid_UInt;
 
 class AdminControllerTest extends TestCase
@@ -61,6 +63,10 @@ class AdminControllerTest extends TestCase
     public const NEW_DEFINITION_TRACKER_ID      = 536;
     public const NEW_EXECUTION_TRACKER_ID       = 537;
     public const NEW_ISSUE_TRACKER_ID           = 538;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AdminTrackersRetriever
+     */
+    private $tracker_retriever;
 
     public function setUp(): void
     {
@@ -77,7 +83,8 @@ class AdminControllerTest extends TestCase
 
         $this->csrf_token = Mockery::mock(\CSRFSynchronizerToken::class);
 
-        $this->tracker_checker = Mockery::mock(TrackerChecker::class);
+        $this->tracker_checker   = Mockery::mock(TrackerChecker::class);
+        $this->tracker_retriever = Mockery::mock(AdminTrackersRetriever::class);
 
         $this->admin_controller = new AdminController(
             $this->request,
@@ -86,7 +93,8 @@ class AdminControllerTest extends TestCase
             $this->csrf_token,
             $this->field_usage_detector,
             $this->tracker_checker,
-            new Valid_UInt()
+            new Valid_UInt(),
+            $this->tracker_retriever
         );
     }
 

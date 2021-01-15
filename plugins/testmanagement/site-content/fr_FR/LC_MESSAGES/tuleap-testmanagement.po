@@ -23,6 +23,9 @@ msgstr "%s a été mis à jour"
 msgid "%s has been updated by %s"
 msgstr "%s a été mis à jour par %s"
 
+msgid "Administration"
+msgstr "Administration"
+
 msgid "Campaigns"
 msgstr "Campagnes"
 
@@ -110,6 +113,9 @@ msgstr "Définition d'étapes"
 msgid "Step execution"
 msgstr "Exécution d'étapes"
 
+msgid "Submit"
+msgstr "Valider"
+
 msgid "Test Campaigns Tracker"
 msgstr "Outil de suivi des campagnes de tests"
 
@@ -149,7 +155,8 @@ msgstr "La configuration envoyée n'est pas valide."
 
 #, php-format
 msgid "The tracker id %1$s does not have artifact links field"
-msgstr "L'id de l'outil de suivi %1$s n'a pas de champs Liens vers des artéfacts"
+msgstr ""
+"L'id de l'outil de suivi %1$s n'a pas de champs Liens vers des artéfacts"
 
 #, php-format
 msgid "The tracker id %1$s does not have step definition field"
@@ -207,8 +214,8 @@ msgstr ""
 
 msgid ""
 "This tracker uses the Step definition field, which can only be used with\n"
-"                        TestManagement. Please <a href=\"%s\">remove the "
-"field</a> before choosing another tracker."
+"          TestManagement. Please <a href=\"%s\">remove the field</a> before "
+"choosing another tracker."
 msgstr ""
 "Cet outil de suivi utilise le champ 'Définition d'étapes', qui ne peut être "
 "utilisé qu'avec TestManagement. Veuillez s'il vous plaît <a href=\"%s"
@@ -216,8 +223,8 @@ msgstr ""
 
 msgid ""
 "This tracker uses the Step execution field, which can only be used with\n"
-"                        TestManagement. Please <a href=\"%s\">remove the "
-"field</a> before choosing another tracker."
+"          TestManagement. Please <a href=\"%s\">remove the field</a> before "
+"choosing another tracker."
 msgstr ""
 "Cet outil de suivi utilise le champ 'Exécution d'étapes', qui ne peut être "
 "utilisé qu'avec TestManagement. Veuillez s'il vous plaît <a href=\"%s"
