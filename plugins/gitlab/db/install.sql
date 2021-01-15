@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_commit_info (
     commit_title TEXT NOT NULL,
     commit_branch VARCHAR(255) NOT NULL,
     author_name TEXT NOT NULL,
-    author_email TEXT NOT NULL
+    author_email TEXT NOT NULL,
+    INDEX commit_id(gitlab_repository_id, commit_sha1(10))
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS plugin_gitlab_bot_api_token (
