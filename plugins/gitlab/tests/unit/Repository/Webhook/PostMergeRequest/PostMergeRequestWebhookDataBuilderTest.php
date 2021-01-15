@@ -61,7 +61,7 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
     public function testItThrowsAnExceptionIfMergeRequestIdKeyIsMissing(): void
     {
         $this->expectException(MissingKeyException::class);
-        $this->expectExceptionMessage("key id in object_attributes is missing");
+        $this->expectExceptionMessage("key iid in object_attributes is missing");
 
         $webhook_content = ['object_attributes' => []];
         $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
@@ -72,7 +72,7 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
         $this->expectException(MissingKeyException::class);
         $this->expectExceptionMessage("key title in object_attributes is missing");
 
-        $webhook_content = ['object_attributes' => ["id" => 1]];
+        $webhook_content = ['object_attributes' => ["iid" => 1]];
         $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
     }
 
@@ -81,14 +81,14 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
         $this->expectException(MissingKeyException::class);
         $this->expectExceptionMessage("key description in object_attributes is missing");
 
-        $webhook_content = ['object_attributes' => ["id" => 1, "title" => "My Title"]];
+        $webhook_content = ['object_attributes' => ["iid" => 1, "title" => "My Title"]];
         $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
     }
 
     public function testItReturnsPostMergeRequestWebhookData(): void
     {
         $webhook_content = [
-            'object_attributes' => ["id" => 1, "title" => "My Title", "description" => "My description", "state" => "closed", "updated_at" => "2021-01-12 13:49:35 UTC"],
+            'object_attributes' => ["iid" => 1, "title" => "My Title", "description" => "My description", "state" => "closed", "updated_at" => "2021-01-12 13:49:35 UTC"],
             'user' => ['email' => 'daenerys@onHerDragon.com', "name" => "Daenerys Targaryen"]
         ];
 

@@ -274,7 +274,7 @@ class WebhookDataExtractorTest extends TestCase
                 '{"event_type": "merge_request",
                   "project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
                   "object_attributes":{
-                    "id": 2,
+                    "iid": 2,
                     "updated_at": "2021-01-12 13:49:35 UTC",
                     "title": "My Title",
                     "description": "My Description",

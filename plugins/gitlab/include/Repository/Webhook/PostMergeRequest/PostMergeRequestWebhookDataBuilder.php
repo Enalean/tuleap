@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 class PostMergeRequestWebhookDataBuilder
 {
     private const OBJECT_ATTRIBUTES_KEY         = "object_attributes";
-    private const MERGE_REQUEST_ID_KEY          = "id";
+    private const MERGE_REQUEST_ID_KEY          = "iid";
     private const MERGE_REQUEST_TITLE_KEY       = "title";
     private const MERGE_REQUEST_DESCRIPTION_KEY = "description";
     /**
