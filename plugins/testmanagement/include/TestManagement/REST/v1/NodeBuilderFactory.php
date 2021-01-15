@@ -34,10 +34,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class NodeBuilderFactory
 {
-
-    /** @var TestManagementDao */
-    private $dao;
-
     /** @var ArtifactFactory */
     private $testmanagement_artifact_factory;
 
@@ -46,8 +42,8 @@ class NodeBuilderFactory
 
     public function __construct()
     {
-        $this->dao = new TestManagementDao();
-        $config    = new Config($this->dao, \TrackerFactory::instance());
+        $dao       = new TestManagementDao();
+        $config    = new Config($dao, \TrackerFactory::instance());
 
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $config,

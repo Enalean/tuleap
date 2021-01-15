@@ -4927,7 +4927,6 @@ class LinearScale
     private $gracetop = 0;
     private $gracebottom = 0;
 
-    // phpcs:ignore SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedProperty
     private $_world_size; // Plot area size in world coordinates, used by the magic methods
 
     public function __construct($aMin = 0, $aMax = 0, $aType = 'y')

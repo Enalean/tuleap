@@ -51,7 +51,12 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
             return false;
         }
 
-        $repository         = $this->repository_factory->getDeletedRepository($repository_id);
+        $repository = $this->repository_factory->getDeletedRepository($repository_id);
+        if ($repository === null) {
+            $this->error('Cannot find deleted repository #' . $repository_id);
+            return false;
+        }
+
         $active_repository  = $this->repository_factory->getRepositoryByPath($repository->getProject()->getId(), $repository->getPath());
 
         if ($active_repository instanceof GitRepository) {

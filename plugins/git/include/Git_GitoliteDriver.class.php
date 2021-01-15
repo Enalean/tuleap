@@ -46,38 +46,16 @@ class Git_GitoliteDriver
     private $logger;
 
     /**
-     * @var Git_SystemEventManager
-     */
-    private $git_system_event_manager;
-
-    /**
      * @var Git_Exec
      */
     private $gitExec;
-
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $repository_factory;
 
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
 
-    /** @var Git_GitRepositoryUrlManager */
-    private $url_manager;
-
-    /** Git_Gitolite_ConfigPermissionsSerializer */
-    private $permissions_serializer;
-
-    /** @var Git_Gitolite_ProjectSerializer */
-    private $project_serializer;
-
     /** @var Git_Gitolite_GitoliteConfWriter  */
     private $gitolite_conf_writer;
-
-    /** @var ProjectManager */
-    private $project_manager;
 
     /** @var Git_Mirror_MirrorDataMapper */
     private $mirror_data_mapper;
@@ -118,18 +96,16 @@ class Git_GitoliteDriver
         VersionDetector $version_detector
     ) {
         $this->git_dao = $git_dao;
-        $this->logger                   = $logger;
-        $this->git_system_event_manager = $git_system_event_manager;
-        $adminPath = ForgeConfig::get('sys_data_dir') . '/gitolite/admin';
+        $this->logger  = $logger;
+        $adminPath     = ForgeConfig::get('sys_data_dir') . '/gitolite/admin';
         $this->setAdminPath($adminPath);
-        $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
-        $this->repository_factory = $repository_factory ? $repository_factory : new GitRepositoryFactory(
+        $this->gitExec      = $gitExec ?: new Git_Exec($adminPath);
+        $repository_factory = $repository_factory ?: new GitRepositoryFactory(
             $this->getDao(),
             ProjectManager::instance()
         );
 
-        $this->project_manager        = $project_manager ? $project_manager : ProjectManager::instance();
-        $this->url_manager            = $url_manager;
+        $project_manager = $project_manager ?: ProjectManager::instance();
 
         if (empty($mirror_data_mapper)) {
             $this->mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
@@ -139,8 +115,8 @@ class Git_GitoliteDriver
                     $this->getDao(),
                     ProjectManager::instance()
                 ),
-                $this->project_manager,
-                $this->git_system_event_manager,
+                $project_manager,
+                $git_system_event_manager,
                 new Git_Gitolite_GitoliteRCReader(new VersionDetector()),
                 new DefaultProjectMirrorDao()
             );
@@ -148,8 +124,8 @@ class Git_GitoliteDriver
             $this->mirror_data_mapper = $mirror_data_mapper;
         }
 
-        if (empty($permissions_serializer)) {
-            $this->permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+        if ($permissions_serializer === null) {
+            $permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
                 $this->mirror_data_mapper,
                 new Git_Driver_Gerrit_ProjectCreatorStatus(
                     new Git_Driver_Gerrit_ProjectCreatorStatusDao()
@@ -160,26 +136,24 @@ class Git_GitoliteDriver
                 $git_plugin->getRegexpFineGrainedRetriever(),
                 EventManager::instance()
             );
-        } else {
-            $this->permissions_serializer = $permissions_serializer;
         }
 
-        $this->project_serializer = new Git_Gitolite_ProjectSerializer(
+        $project_serializer = new Git_Gitolite_ProjectSerializer(
             $this->logger,
-            $this->repository_factory,
-            $this->permissions_serializer,
-            $this->url_manager,
+            $repository_factory,
+            $permissions_serializer,
+            $url_manager,
             $big_object_authorization_manager,
             $version_detector
         );
 
         $this->gitolite_conf_writer = $gitolite_conf_writer ? $gitolite_conf_writer : new Git_Gitolite_GitoliteConfWriter(
-            $this->permissions_serializer,
-            $this->project_serializer,
+            $permissions_serializer,
+            $project_serializer,
             new Git_Gitolite_GitoliteRCReader(new VersionDetector()),
             $this->mirror_data_mapper,
             $this->logger,
-            $this->project_manager,
+            $project_manager,
             $adminPath
         );
     }

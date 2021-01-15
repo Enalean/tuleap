@@ -28,7 +28,6 @@ use Tuleap\PluginsAdministration\AvailablePluginsPresenter;
 use Tuleap\PluginsAdministration\PluginDisablerVerifier;
 use Tuleap\PluginsAdministration\PluginPropertiesPresenter;
 
-// phpcs:ignore SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedMethod
 class PluginsAdministrationViews extends Views
 {
 

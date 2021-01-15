@@ -119,6 +119,25 @@ pipeline {
                     }
                     post { always { junit 'results/db/*/db_tests.xml' } }
                 }
+                stage('Psalm static analysis (unused code)') {
+                    agent {
+                        docker {
+                            image 'enalean/tuleap-test-phpunit:c7-php73'
+                            reuseNode true
+                            args '--network none'
+                        }
+                    }
+                    steps {
+                        script {
+                            actions.runPsalmUnusedCodeDetection('tests/psalm/psalm.xml', '.')
+                        }
+                    }
+                    post {
+                        always {
+                            recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(id: 'checkstyle_psalm', pattern: 'results/psalm/checkstyle.xml')]
+                        }
+                    }
+                }
             }
             post {
                 always {

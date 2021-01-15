@@ -56,10 +56,6 @@ class DocmanItemsResource extends AuthenticatedResource
      */
     private $item_dao;
     /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
      * @var DocmanItemsRequestBuilder
      */
     private $request_builder;
@@ -71,9 +67,8 @@ class DocmanItemsResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->user_manager    = UserManager::instance();
         $this->item_dao        = new Docman_ItemDao();
-        $this->request_builder = new DocmanItemsRequestBuilder($this->user_manager, ProjectManager::instance());
+        $this->request_builder = new DocmanItemsRequestBuilder(UserManager::instance(), ProjectManager::instance());
         $this->event_manager   = EventManager::instance();
     }
 

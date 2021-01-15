@@ -137,6 +137,7 @@ class TrackerForceNotificationsLevelCommand extends Command
     {
         $project_list = [];
         $project_ids  = $input->getArgument('project_id');
+        assert(is_array($project_ids));
         foreach ($project_ids as $project_id) {
             $project = $this->project_manager->getProject($project_id);
             if (! $project->getGroupId()) {

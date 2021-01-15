@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use BaseLanguage;
-use BaseLanguageFactory;
 use ForgeConfig;
 use Tuleap\User\UserGroup\NameTranslator;
 
@@ -32,10 +31,6 @@ class UgroupLabelConverter
      */
     private $bind_value_normalizer;
     /**
-     * @var BaseLanguageFactory
-     */
-    private $base_language_factory;
-    /**
      * @var array
      */
     private $index;
@@ -43,11 +38,10 @@ class UgroupLabelConverter
     public function __construct(ListFieldBindValueNormalizer $bind_value_normalizer, $base_language_factory)
     {
         $this->bind_value_normalizer = $bind_value_normalizer;
-        $this->base_language_factory = $base_language_factory;
 
         $this->index = [];
         foreach ($this->getAvailableLanguages() as $language) {
-            $base_language = $this->base_language_factory->getBaseLanguage($language);
+            $base_language = $base_language_factory->getBaseLanguage($language);
 
             $this->buildDynamicUgroupLabelsIndexForLanguage($base_language);
         }
