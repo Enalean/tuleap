@@ -37,3 +37,18 @@ msgid ""
 msgstr ""
 "La référence de projet basée sur le mot-clé '%s' surcharge la référence "
 "système utilisée par le plugin GitLab."
+
+#, php-format
+msgid ""
+"Unable to contact the server with the provided token. GitLab server error: %s"
+msgstr ""
+"Impossible de contacter le serveur avec le token fourni. Erreur du serveur "
+"GitLab : %s"
+
+msgid ""
+"We managed to contact the server, but couldn't parse the response. We are "
+"not confident enough to update the token."
+msgstr ""
+"Nous avons réussi à contacter le serveur, mais n'avons pu analyser sa "
+"réponse. Aussi, nous ne sommes pas assez confiants pour mettre à jour le "
+"jeton."

@@ -55,12 +55,8 @@ class PostPushCommitCredentialsRetrieverTest extends TestCase
     {
         $gitlab_repository = Mockery::mock(GitlabRepository::class);
         $gitlab_repository
-            ->shouldReceive('getName')
-            ->andReturn("MyProject/MyRepo")
-            ->once();
-        $gitlab_repository
-            ->shouldReceive('getFullUrl')
-            ->andReturn("https://www.example.com/MyProject/MyRepo")
+            ->shouldReceive('getGitlabServerUrl')
+            ->andReturn("https://www.example.com/")
             ->once();
 
         $token = new ConcealedString("My_Token123");
@@ -77,10 +73,7 @@ class PostPushCommitCredentialsRetrieverTest extends TestCase
     {
         $gitlab_repository = Mockery::mock(GitlabRepository::class);
         $gitlab_repository
-            ->shouldReceive('getName')
-            ->never();
-        $gitlab_repository
-            ->shouldReceive('getFullUrl')
+            ->shouldReceive('getGitlabServerUrl')
             ->never();
 
         $this->token_retriever->shouldReceive("getBotAPIToken")->with($gitlab_repository)->andReturnNull();

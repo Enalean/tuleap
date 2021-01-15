@@ -39,8 +39,11 @@ use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\API\GitlabRequestException;
+use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
+use Tuleap\Gitlab\API\GitlabRequestException;
+use Tuleap\Gitlab\API\GitlabResponseAPIException;
+use Tuleap\Gitlab\Repository\GitlabRepositoryAlreadyIntegratedInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryCreator;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDao;
 use Tuleap\Gitlab\Repository\GitlabRepositoryDeletor;
@@ -49,18 +52,16 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryNotInProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryNotIntegratedInAnyProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
+use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretGenerator;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\REST\Header;
 use UserManager;
-use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Gitlab\API\GitlabHTTPClientFactory;
-use Tuleap\Http\HttpClientFactory;
-use Tuleap\Gitlab\API\GitlabResponseAPIException;
-use Tuleap\Gitlab\Repository\GitlabRepositoryAlreadyIntegratedInProjectException;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 
 final class GitlabRepositoryResource
 {
@@ -69,7 +70,7 @@ final class GitlabRepositoryResource
      */
     public function options(): void
     {
-        Header::allowOptionsPost();
+        Header::allowOptionsPostPatch();
     }
 
     /**
@@ -172,6 +173,59 @@ final class GitlabRepositoryResource
                 $exception->getMessage()
             );
         }
+    }
+
+    /**
+     * Update GitLab integration
+     *
+     * Currently this allows to update the bot api token used for the integration.
+     * <br>
+     * <pre>
+     * {<br>
+     *   &nbsp;"update_bot_api_token": {<br>
+     *   &nbsp;&nbsp;&nbsp;"gitlab_bot_api_token" : "The new token",<br>
+     *   &nbsp;&nbsp;&nbsp;"gitlab_internal_id" : 145896<br>
+     *   &nbsp;&nbsp;&nbsp;"full_url" : "https://example.com/project/url",<br>
+     *   &nbsp;}<br>
+     *  }<br>
+     * </pre>
+     *
+     * @url PATCH
+     * @access protected
+     *
+     * @param GitlabRepositoryPatchRepresentation $patch_representation {@from body}
+     */
+    protected function patch(GitlabRepositoryPatchRepresentation $patch_representation): void
+    {
+        $request_factory = HTTPFactoryBuilder::requestFactory();
+        $stream_factory  = HTTPFactoryBuilder::streamFactory();
+        $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
+        $gitlab_api_client = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
+
+        $bot_api_token_updater = new BotApiTokenUpdater(
+            new GitlabRepositoryFactory(
+                new GitlabRepositoryDao()
+            ),
+            new GitlabProjectBuilder($gitlab_api_client),
+            new GitlabRepositoryProjectRetriever(
+                new GitlabRepositoryProjectDao(),
+                ProjectManager::instance()
+            ),
+            $this->getGitPermissionsManager(),
+            new GitlabBotApiTokenInserter(
+                new GitlabBotApiTokenDao(),
+                new KeyFactory()
+            )
+        );
+
+        $bot_api_token_updater->update(
+            new ConcealedBotApiTokenPatchRepresentation(
+                $patch_representation->update_bot_api_token->gitlab_internal_id,
+                $patch_representation->update_bot_api_token->full_url,
+                new ConcealedString($patch_representation->update_bot_api_token->gitlab_bot_api_token),
+            ),
+            UserManager::instance()->getCurrentUser(),
+        );
     }
 
     /**
