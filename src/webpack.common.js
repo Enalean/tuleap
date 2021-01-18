@@ -244,7 +244,7 @@ const webpack_config_for_burning_parrot_code = {
         "site-admin-system-events-admin-homepage":
             "./scripts/site-admin/system-events-admin-homepage.ts",
         "site-admin-system-events-notifications":
-            "./scripts/site-admin/system-events-notifications.js",
+            "./scripts/site-admin/system-events-notifications.ts",
         "site-admin-trackers-pending-removal": "./scripts/site-admin/trackers-pending-removal.js",
         "site-admin-user-details": "./scripts/site-admin/userdetails.js",
         "site-admin/dates-display": "./scripts/site-admin/dates-display.ts",
