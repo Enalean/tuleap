@@ -51,7 +51,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const project_flags = JSON.parse(vue_mount_point.dataset.projectFlags);
 
-    build(project_name, project_short_name, project_privacy, project_flags);
+    if (!vue_mount_point.dataset.programId) {
+        throw new Error("Missing program_id dataset");
+    }
+    const program_id = parseInt(vue_mount_point.dataset.programId, 10);
+
+    build(project_name, project_short_name, project_privacy, project_flags, program_id);
 
     await initVueGettext(
         Vue,

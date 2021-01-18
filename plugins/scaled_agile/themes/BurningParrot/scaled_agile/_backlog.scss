@@ -17,6 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#to-be-planned-backlog-error {
+    margin: $tlp-large-spacing;
+}
+
 .program-backlog {
     display: flex;
     margin: $tlp-large-spacing 0 0 0;
@@ -41,5 +45,5 @@
 }
 
 .program-to-be-planned-title {
-    margin: 0 0 0 $tlp-medium-spacing;
+    margin: 0 0 $tlp-large-spacing $tlp-medium-spacing;
 }

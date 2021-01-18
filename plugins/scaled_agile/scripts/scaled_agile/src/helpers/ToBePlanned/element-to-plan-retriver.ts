@@ -16,11 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import 'scaled_agile/project-header-background';
-@import 'scaled_agile/backlog';
-@import 'scaled_agile/element';
 
-.scaled-agile-title-header {
-    margin: 0;
-    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-title-spacing;
+import { recursiveGet } from "tlp";
+
+export interface ToBePlannedElement {
+    artifact_id: number;
+    tracker_name: string;
+    artifact_title: string;
+}
+
+export function getToBePlannedElements(program_id: number): Promise<ToBePlannedElement[]> {
+    return recursiveGet(`/api/v1/projects/${encodeURIComponent(program_id)}/scaled_agile_backlog`, {
+        params: {
+            limit: 50,
+            offset: 0,
+        },
+    });
 }
