@@ -23,8 +23,8 @@ namespace Tuleap\Gitlab\Repository\Webhook\Secret;
 
 class SecretNotDefinedException extends \RuntimeException
 {
-    public function __construct(int $gitlab_repository_id)
+    public function __construct(int $repository_id)
     {
-        parent::__construct("No webhook secret for GitLab repository #$gitlab_repository_id");
+        parent::__construct("No webhook secret for GitLab repository #$repository_id");
     }
 }

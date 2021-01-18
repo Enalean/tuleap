@@ -330,7 +330,7 @@ describe("Store getters", () => {
                 last_update_date: "2020-10-28T15:13:13+01:00",
                 gitlab_data: {
                     full_url: "https://example.com/MyPath/MyRepo",
-                    gitlab_id: 1,
+                    gitlab_repository_id: 1,
                 },
                 additional_information: [],
             };

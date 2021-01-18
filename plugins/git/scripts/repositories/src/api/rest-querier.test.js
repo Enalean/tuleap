@@ -159,7 +159,7 @@ describe("API querier", () => {
     describe("postGitlabRepository", () => {
         it("Given project id and repository, token and server url, Then api is queried to create new integration", async () => {
             const project_id = 101;
-            const gitlab_internal_id = 10;
+            const gitlab_repository_id = 10;
             const gitlab_bot_api_token = "AzRT785";
             const gitlab_server_url = "https://example.com";
 
@@ -169,7 +169,7 @@ describe("API querier", () => {
 
             const body = JSON.stringify({
                 project_id,
-                gitlab_internal_id,
+                gitlab_repository_id,
                 gitlab_server_url,
                 gitlab_bot_api_token,
             });
@@ -179,7 +179,7 @@ describe("API querier", () => {
 
             await postGitlabRepository({
                 project_id,
-                gitlab_internal_id,
+                gitlab_repository_id,
                 gitlab_server_url,
                 gitlab_bot_api_token,
             });

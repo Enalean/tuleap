@@ -43,7 +43,7 @@ class SecretGenerator
         $this->dao         = $dao;
     }
 
-    public function generateSecretForGitlabRepository(int $generated_gitlab_repository_id): ConcealedString
+    public function generateSecretForGitlabRepository(int $repository_id): ConcealedString
     {
         $secret = new ConcealedString(\sodium_bin2hex(\random_bytes(32)));
 
@@ -52,10 +52,7 @@ class SecretGenerator
             $this->key_factory->getEncryptionKey()
         );
 
-        $this->dao->storeGitlabRepositoryWebhookSecret(
-            $generated_gitlab_repository_id,
-            $encrypted_secret
-        );
+        $this->dao->storeGitlabRepositoryWebhookSecret($repository_id, $encrypted_secret);
 
         return $secret;
     }

@@ -25,7 +25,7 @@ describe("gitlabRepositoryFormatter", () => {
         it("Given a repo GitLab, Then it is formatted to be displayed in git", () => {
             const repo = {
                 id: 1,
-                gitlab_id: 1,
+                gitlab_repository_id: 1,
                 name: "MyPath/MyRepo",
                 description: "This is my description.",
                 full_url: "https://example.com/MyPath/MyRepo",
@@ -45,7 +45,7 @@ describe("gitlabRepositoryFormatter", () => {
                 additional_information: [],
                 gitlab_data: {
                     full_url: "https://example.com/MyPath/MyRepo",
-                    gitlab_id: 1,
+                    gitlab_repository_id: 1,
                 },
             });
         });
@@ -53,7 +53,7 @@ describe("gitlabRepositoryFormatter", () => {
         it("Given a repo GitLab without path, Then the path without project is empty", () => {
             const repo = {
                 id: 1,
-                gitlab_id: 1,
+                gitlab_repository_id: 1,
                 name: "MyRepo",
                 description: "This is my description.",
                 full_url: "https://example.com/MyRepo",
@@ -73,7 +73,7 @@ describe("gitlabRepositoryFormatter", () => {
                 additional_information: [],
                 gitlab_data: {
                     full_url: "https://example.com/MyRepo",
-                    gitlab_id: 1,
+                    gitlab_repository_id: 1,
                 },
             });
         });

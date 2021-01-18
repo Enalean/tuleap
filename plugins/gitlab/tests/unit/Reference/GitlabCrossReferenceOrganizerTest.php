@@ -241,7 +241,6 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->andReturn($another_repository);
 
         $john_snow_commit = new GitlabCommit(
-            2,
             '14a9b6c0c0c965977cf2af2199f93df82afcdea3',
             1608555618,
             'Increase blankets stocks for winter',
@@ -251,7 +250,6 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         );
 
         $samwell_tarly_commit = new GitlabCommit(
-            3,
             'be35d127acb88876ee4fdbf02188d372dc61e98d',
             1608555618,
             'Increase hot chocolate stocks for winter',

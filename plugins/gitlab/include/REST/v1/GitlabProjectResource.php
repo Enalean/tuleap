@@ -86,8 +86,13 @@ final class GitlabProjectResource extends AuthenticatedResource
         $gitlab_repositories = $gitlab_repository_factory->getGitlabRepositoriesForProject($project);
         $gitlab_repositories_representations = [];
         foreach ($gitlab_repositories as $gitlab_repository) {
-            $gitlab_repositories_representations[] = GitlabRepositoryRepresentation::buildFromGitlabRepository(
-                $gitlab_repository
+            $gitlab_repositories_representations[] = new GitlabRepositoryRepresentation(
+                $gitlab_repository->getId(),
+                $gitlab_repository->getGitlabRepositoryId(),
+                $gitlab_repository->getName(),
+                $gitlab_repository->getDescription(),
+                $gitlab_repository->getFullUrl(),
+                $gitlab_repository->getLastPushDate()->getTimestamp(),
             );
         }
 

@@ -28,10 +28,6 @@ namespace Tuleap\Gitlab\Reference\Commit;
 class GitlabCommit
 {
     /**
-     * @var int
-     */
-    private $gitlab_repository_id;
-    /**
      * @var string
      */
     private $commit_sha1;
@@ -57,7 +53,6 @@ class GitlabCommit
     private $commit_author_email;
 
     public function __construct(
-        int $gitlab_repository_id,
         string $commit_sha1,
         int $commit_date,
         string $commit_title,
@@ -65,18 +60,12 @@ class GitlabCommit
         string $commit_author_name,
         string $commit_author_email
     ) {
-        $this->gitlab_repository_id = $gitlab_repository_id;
-        $this->commit_sha1          = $commit_sha1;
-        $this->commit_date          = $commit_date;
-        $this->commit_title         = $commit_title;
-        $this->commit_branch_name   = $commit_branch_name;
-        $this->commit_author_name   = $commit_author_name;
-        $this->commit_author_email  = $commit_author_email;
-    }
-
-    public function getGitlabRepositoryId(): int
-    {
-        return $this->gitlab_repository_id;
+        $this->commit_sha1         = $commit_sha1;
+        $this->commit_date         = $commit_date;
+        $this->commit_title        = $commit_title;
+        $this->commit_branch_name  = $commit_branch_name;
+        $this->commit_author_name  = $commit_author_name;
+        $this->commit_author_email = $commit_author_email;
     }
 
     public function getCommitSha1(): string

@@ -139,7 +139,7 @@ class PostPushCommitBotCommenterTest extends TestCase
             ->twice();
 
         $this->gitlab_repository
-            ->shouldReceive('getGitlabId')
+            ->shouldReceive('getGitlabRepositoryId')
             ->andReturn(4)
             ->once();
 
@@ -200,7 +200,7 @@ class PostPushCommitBotCommenterTest extends TestCase
             ->twice();
 
         $this->gitlab_repository
-            ->shouldReceive('getGitlabId')
+            ->shouldReceive('getGitlabRepositoryId')
             ->andReturn(4)
             ->once();
 

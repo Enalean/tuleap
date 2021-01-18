@@ -44,5 +44,5 @@ class GitlabRepositoryPOSTRepresentation
     /**
      * @var int
      */
-    public $gitlab_internal_id;
+    public $gitlab_repository_id;
 }

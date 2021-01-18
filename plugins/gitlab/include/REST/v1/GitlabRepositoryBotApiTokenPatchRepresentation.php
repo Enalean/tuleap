@@ -30,7 +30,7 @@ final class GitlabRepositoryBotApiTokenPatchRepresentation
     /**
      * @var int {@required true}
      */
-    public $gitlab_internal_id;
+    public $gitlab_repository_id;
 
     /**
      * @var string {@required true}

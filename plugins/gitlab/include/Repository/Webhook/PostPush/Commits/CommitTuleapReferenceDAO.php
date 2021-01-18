@@ -26,7 +26,7 @@ use Tuleap\DB\DataAccessObject;
 class CommitTuleapReferenceDAO extends DataAccessObject
 {
     public function saveGitlabCommitInfo(
-        int $gitlab_repository_id,
+        int $repository_id,
         string $commit_sha1,
         int $commit_date,
         string $commit_title,
@@ -37,7 +37,7 @@ class CommitTuleapReferenceDAO extends DataAccessObject
         $sql = '
             INSERT INTO plugin_gitlab_commit_info
                 (
-                     gitlab_repository_id,
+                     repository_id,
                      commit_sha1,
                      commit_date,
                      commit_title,
@@ -50,7 +50,7 @@ class CommitTuleapReferenceDAO extends DataAccessObject
 
         $this->getDB()->run(
             $sql,
-            $gitlab_repository_id,
+            $repository_id,
             $commit_sha1,
             $commit_date,
             $commit_title,
@@ -61,20 +61,19 @@ class CommitTuleapReferenceDAO extends DataAccessObject
     }
 
     /**
-     * @psalm-return array{gitlab_repository_id: int, commit_sha1: string, commit_date: int, commit_title: string, author_name: string, author_email: string}
+     * @psalm-return array{commit_sha1: string, commit_date: int, commit_title: string, author_name: string, author_email: string}
      */
     public function searchCommitInRepositoryWithSha1(int $repository_id, string $commit_sha1): ?array
     {
         $sql = "
-            SELECT gitlab_repository_id,
-                   LOWER(HEX(commit_sha1)) as commit_sha1,
+            SELECT LOWER(HEX(commit_sha1)) as commit_sha1,
                    commit_date,
                    commit_title,
                    commit_branch,
                    author_name,
                    author_email
             FROM plugin_gitlab_commit_info
-            WHERE gitlab_repository_id = ?
+            WHERE repository_id = ?
                 AND commit_sha1 = UNHEX(?)
         ";
 

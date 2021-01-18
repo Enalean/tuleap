@@ -212,7 +212,7 @@ export default {
             this.is_loading = true;
             try {
                 await this.postIntegrationGitlab({
-                    gitlab_internal_id: this.selected_repository.id,
+                    gitlab_repository_id: this.selected_repository.id,
                     gitlab_bot_api_token: this.gitlab_project_token,
                     gitlab_server_url: this.server_url,
                     project_id: getProjectId(),
@@ -255,7 +255,7 @@ export default {
         isRepositoryAlreadyIntegrated(repository) {
             return this.getGitlabRepositoriesIntegrated.find((repository_integrated) => {
                 return (
-                    repository_integrated.gitlab_data.gitlab_id === repository.id &&
+                    repository_integrated.gitlab_data.gitlab_repository_id === repository.id &&
                     repository_integrated.gitlab_data.full_url === repository.web_url
                 );
             });

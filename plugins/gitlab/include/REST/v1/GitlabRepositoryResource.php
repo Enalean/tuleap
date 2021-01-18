@@ -89,12 +89,12 @@ final class GitlabRepositoryResource
      *   &nbsp;"project_id": 122,<br>
      *   &nbsp;"gitlab_server_url" : "https://example.com",<br>
      *   &nbsp;"gitlab_bot_api_token" : "project_bot_token",<br>
-     *   &nbsp;"gitlab_internal_id" : 145896<br>
+     *   &nbsp;"gitlab_repository_id" : 145896<br>
      *  }<br>
      * </pre>
      *
      *
-     * @url POST
+     * @url    POST
      * @access protected
      *
      * @param GitlabRepositoryPOSTRepresentation $gitlab_repository {@from body}
@@ -111,18 +111,18 @@ final class GitlabRepositoryResource
     {
         $this->options();
 
-        $gitlab_server_url  = $gitlab_repository->gitlab_server_url;
-        $bot_api_token     = new ConcealedString($gitlab_repository->gitlab_bot_api_token);
-        $project_id         = $gitlab_repository->project_id;
-        $gitlab_internal_id = $gitlab_repository->gitlab_internal_id;
+        $gitlab_server_url    = $gitlab_repository->gitlab_server_url;
+        $bot_api_token        = new ConcealedString($gitlab_repository->gitlab_bot_api_token);
+        $project_id           = $gitlab_repository->project_id;
+        $gitlab_repository_id = $gitlab_repository->gitlab_repository_id;
 
         $project     = $this->getProjectById($project_id);
         $credentials = new Credentials($gitlab_server_url, $bot_api_token);
 
-        $request_factory = HTTPFactoryBuilder::requestFactory();
-        $stream_factory  = HTTPFactoryBuilder::streamFactory();
+        $request_factory       = HTTPFactoryBuilder::requestFactory();
+        $stream_factory        = HTTPFactoryBuilder::streamFactory();
         $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
-        $gitlab_api_client = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
+        $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
 
         $current_user = UserManager::instance()->getCurrentUser();
         if (! $this->getGitPermissionsManager()->userIsGitAdmin($current_user, $project)) {
@@ -132,7 +132,7 @@ final class GitlabRepositoryResource
         try {
             $gitlab_api_project = (new GitlabProjectBuilder($gitlab_api_client))->getProjectFromGitlabAPI(
                 $credentials,
-                $gitlab_internal_id
+                $gitlab_repository_id
             );
 
             $gitlab_repository_creator = new GitlabRepositoryCreator(
@@ -160,7 +160,14 @@ final class GitlabRepositoryResource
                 $project
             );
 
-            return GitlabRepositoryRepresentation::buildFromGitlabRepository($integrated_gitlab_repository);
+            return new GitlabRepositoryRepresentation(
+                $integrated_gitlab_repository->getId(),
+                $integrated_gitlab_repository->getGitlabRepositoryId(),
+                $integrated_gitlab_repository->getName(),
+                $integrated_gitlab_repository->getDescription(),
+                $integrated_gitlab_repository->getFullUrl(),
+                $integrated_gitlab_repository->getLastPushDate()->getTimestamp(),
+            );
         } catch (
             GitlabResponseAPIException |
             GitlabRepositoryAlreadyIntegratedInProjectException |
@@ -184,23 +191,23 @@ final class GitlabRepositoryResource
      * {<br>
      *   &nbsp;"update_bot_api_token": {<br>
      *   &nbsp;&nbsp;&nbsp;"gitlab_bot_api_token" : "The new token",<br>
-     *   &nbsp;&nbsp;&nbsp;"gitlab_internal_id" : 145896<br>
+     *   &nbsp;&nbsp;&nbsp;"gitlab_repository_id" : 145896<br>
      *   &nbsp;&nbsp;&nbsp;"full_url" : "https://example.com/project/url",<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
      *
-     * @url PATCH
+     * @url    PATCH
      * @access protected
      *
      * @param GitlabRepositoryPatchRepresentation $patch_representation {@from body}
      */
     protected function patch(GitlabRepositoryPatchRepresentation $patch_representation): void
     {
-        $request_factory = HTTPFactoryBuilder::requestFactory();
-        $stream_factory  = HTTPFactoryBuilder::streamFactory();
+        $request_factory       = HTTPFactoryBuilder::requestFactory();
+        $stream_factory        = HTTPFactoryBuilder::streamFactory();
         $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
-        $gitlab_api_client = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
+        $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
 
         $bot_api_token_updater = new BotApiTokenUpdater(
             new GitlabRepositoryFactory(
@@ -220,7 +227,7 @@ final class GitlabRepositoryResource
 
         $bot_api_token_updater->update(
             new ConcealedBotApiTokenPatchRepresentation(
-                $patch_representation->update_bot_api_token->gitlab_internal_id,
+                $patch_representation->update_bot_api_token->gitlab_repository_id,
                 $patch_representation->update_bot_api_token->full_url,
                 new ConcealedString($patch_representation->update_bot_api_token->gitlab_bot_api_token),
             ),
@@ -265,7 +272,7 @@ final class GitlabRepositoryResource
             new GitlabRepositoryDao()
         );
 
-        $gitlab_repository = $repository_factory->getGitlabRepositoryByIntegrationId($id);
+        $gitlab_repository = $repository_factory->getGitlabRepositoryById($id);
 
         if ($gitlab_repository === null) {
             throw new RestException(404, "Repository #$id not found.");

@@ -86,34 +86,34 @@ class GitlabRepositoryDeletor
         }
 
         $this->db_transaction_executor->execute(function () use ($gitlab_repository, $project) {
-            $gitlab_repository_id = $gitlab_repository->getId();
-            $project_id           = (int) $project->getID();
+            $repository_id = $gitlab_repository->getId();
+            $project_id    = (int) $project->getID();
 
             $project_ids = $this->gitlab_repository_project_dao->searchProjectsTheGitlabRepositoryIsIntegratedIn(
-                $gitlab_repository_id
+                $repository_id
             );
 
             if (count($project_ids) === 0) {
-                throw new GitlabRepositoryNotIntegratedInAnyProjectException($gitlab_repository_id);
+                throw new GitlabRepositoryNotIntegratedInAnyProjectException($repository_id);
             }
 
             if (! in_array($project_id, $project_ids, true)) {
-                throw new GitlabRepositoryNotInProjectException($gitlab_repository_id, $project_id);
+                throw new GitlabRepositoryNotInProjectException($repository_id, $project_id);
             }
 
             if (count($project_ids) > 1) {
                 $this->gitlab_repository_project_dao->removeGitlabRepositoryIntegrationInProject(
-                    $gitlab_repository_id,
+                    $repository_id,
                     $project_id
                 );
             } else {
-                $this->secret_dao->deleteGitlabRepositoryWebhookSecret($gitlab_repository_id);
+                $this->secret_dao->deleteGitlabRepositoryWebhookSecret($repository_id);
                 $this->gitlab_repository_project_dao->removeGitlabRepositoryIntegrationInProject(
-                    $gitlab_repository_id,
+                    $repository_id,
                     $project_id
                 );
-                $this->gitlab_bot_api_token_dao->deleteGitlabBotToken($gitlab_repository_id);
-                $this->gitlab_repository_dao->deleteGitlabRepository($gitlab_repository_id);
+                $this->gitlab_bot_api_token_dao->deleteGitlabBotToken($repository_id);
+                $this->gitlab_repository_dao->deleteGitlabRepository($repository_id);
             }
         });
     }

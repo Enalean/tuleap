@@ -56,7 +56,7 @@ class WebhookRepositoryRetriever
 
     private function getRepositoryObject(WebhookData $webhook_data): ?GitlabRepository
     {
-        return $this->gitlab_repository_factory->getGitlabRepositoryByInternalIdAndPath(
+        return $this->gitlab_repository_factory->getGitlabRepositoryByGitlabRepositoryIdAndPath(
             $webhook_data->getGitlabProjectId(),
             $webhook_data->getGitlabWebUrl()
         );

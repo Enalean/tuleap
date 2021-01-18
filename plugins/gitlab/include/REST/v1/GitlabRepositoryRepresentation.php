@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\REST\v1;
 
-use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\REST\JsonCast;
 
 /**
@@ -39,7 +38,7 @@ class GitlabRepositoryRepresentation
     /**
      * @var int
      */
-    public $gitlab_id;
+    public $gitlab_repository_id;
 
     /**
      * @var string
@@ -61,31 +60,19 @@ class GitlabRepositoryRepresentation
      */
     public $last_push_date;
 
-    private function __construct(
+    public function __construct(
         int $id,
-        int $gitlab_id,
+        int $gitlab_repository_id,
         string $name,
         string $description,
         string $full_url,
         int $last_push_date_timestamp
     ) {
-        $this->id             = JsonCast::toInt($id);
-        $this->gitlab_id      = JsonCast::toInt($gitlab_id);
-        $this->name           = $name;
-        $this->description    = $description;
-        $this->full_url       = $full_url;
-        $this->last_push_date = JsonCast::toDate($last_push_date_timestamp);
-    }
-
-    public static function buildFromGitlabRepository(GitlabRepository $gitlab_repository): self
-    {
-        return new self(
-            $gitlab_repository->getId(),
-            $gitlab_repository->getGitlabId(),
-            $gitlab_repository->getName(),
-            $gitlab_repository->getDescription(),
-            $gitlab_repository->getFullUrl(),
-            $gitlab_repository->getLastPushDate()->getTimestamp(),
-        );
+        $this->id                   = JsonCast::toInt($id);
+        $this->gitlab_repository_id = JsonCast::toInt($gitlab_repository_id);
+        $this->name                 = $name;
+        $this->description          = $description;
+        $this->full_url             = $full_url;
+        $this->last_push_date       = JsonCast::toDate($last_push_date_timestamp);
     }
 }

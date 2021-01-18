@@ -53,7 +53,6 @@ class GitlabCommitFactory
     private function getInstanceFromRow(array $row): GitlabCommit
     {
         return new GitlabCommit(
-            $row['gitlab_repository_id'],
             $row['commit_sha1'],
             $row['commit_date'],
             $row['commit_title'],

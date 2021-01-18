@@ -135,7 +135,7 @@ async function postRepository(project_id, repository_name) {
 
 function postGitlabRepository({
     project_id,
-    gitlab_internal_id,
+    gitlab_repository_id,
     gitlab_server_url,
     gitlab_bot_api_token,
 }) {
@@ -145,7 +145,7 @@ function postGitlabRepository({
 
     const body = JSON.stringify({
         project_id,
-        gitlab_internal_id,
+        gitlab_repository_id,
         gitlab_server_url,
         gitlab_bot_api_token,
     });

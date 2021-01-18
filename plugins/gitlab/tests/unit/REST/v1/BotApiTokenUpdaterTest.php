@@ -94,7 +94,7 @@ class BotApiTokenUpdaterTest extends TestCase
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
+            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
             ->with(123, "https://gitlab.example.com/repo/full_url")
             ->andReturnNull();
 
@@ -117,7 +117,7 @@ class BotApiTokenUpdaterTest extends TestCase
         $repository = Mockery::mock(GitlabRepository::class);
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
+            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
             ->with(123, "https://gitlab.example.com/repo/full_url")
             ->andReturn($repository);
 
@@ -164,13 +164,13 @@ class BotApiTokenUpdaterTest extends TestCase
         $repository = Mockery::mock(
             GitlabRepository::class,
             [
-                'getGitlabId'        => 123,
-                'getGitlabServerUrl' => 'https://gitlab.example.com',
+                'getGitlabRepositoryId' => 123,
+                'getGitlabServerUrl'    => 'https://gitlab.example.com',
             ]
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
+            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
             ->with(123, "https://gitlab.example.com/repo/full_url")
             ->andReturn($repository);
 
@@ -230,13 +230,13 @@ class BotApiTokenUpdaterTest extends TestCase
         $repository = Mockery::mock(
             GitlabRepository::class,
             [
-                'getGitlabId'        => 123,
-                'getGitlabServerUrl' => 'https://gitlab.example.com',
+                'getGitlabRepositoryId' => 123,
+                'getGitlabServerUrl'    => 'https://gitlab.example.com',
             ]
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
+            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
             ->with(123, "https://gitlab.example.com/repo/full_url")
             ->andReturn($repository);
 
@@ -296,13 +296,13 @@ class BotApiTokenUpdaterTest extends TestCase
         $repository = Mockery::mock(
             GitlabRepository::class,
             [
-                'getGitlabId'        => 123,
-                'getGitlabServerUrl' => 'https://gitlab.example.com',
+                'getGitlabRepositoryId' => 123,
+                'getGitlabServerUrl'    => 'https://gitlab.example.com',
             ]
         );
 
         $this->repository_factory
-            ->shouldReceive('getGitlabRepositoryByInternalIdAndPath')
+            ->shouldReceive('getGitlabRepositoryByGitlabRepositoryIdAndPath')
             ->with(123, "https://gitlab.example.com/repo/full_url")
             ->andReturn($repository);
 
