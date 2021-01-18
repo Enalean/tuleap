@@ -24,6 +24,7 @@ namespace Tuleap\ScaledAgile\Adapter\Program\ToBePlaned;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project;
 use Tracker_ArtifactFactory;
 use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\ToBePlannedElementsStore;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
@@ -31,6 +32,8 @@ use Tuleap\ScaledAgile\Program\Program;
 use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementCollectionRepresentation;
 use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementRepresentation;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Tracker\TrackerColor;
 
 class ToBePlannedElementRetrieverTest extends TestCase
 {
@@ -95,15 +98,27 @@ class ToBePlannedElementRetrieverTest extends TestCase
         $artifact_one = \Mockery::mock(\Artifact::class);
         $artifact_one->shouldReceive('userCanView')->with($user)->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact_one);
+        $tracker_one = \Mockery::mock(\Tracker::class);
+        $tracker_one->shouldReceive("getColor")->andReturn(TrackerColor::fromName("lake-placid-blue"));
+        $tracker_one->shouldReceive("getId")->andReturn(1);
+        $tracker_one->shouldReceive("getName")->andReturn("bug");
+        $tracker_one->shouldReceive("getProject")->andReturn(new Project(['group_id' => 101, 'group_name' => "My project"]));
+        $artifact_one->shouldReceive('getTracker')->once()->andReturn($tracker_one);
 
         $artifact_two = \Mockery::mock(\Artifact::class);
         $artifact_two->shouldReceive('userCanView')->with($user)->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(2)->andReturn($artifact_two);
+        $tracker_two = \Mockery::mock(\Tracker::class);
+        $tracker_two->shouldReceive("getColor")->andReturn(TrackerColor::fromName("deep-blue"));
+        $tracker_two->shouldReceive("getId")->andReturn(2);
+        $tracker_two->shouldReceive("getName")->andReturn("user stories");
+        $tracker_two->shouldReceive("getProject")->andReturn(new Project(['group_id' => 101, 'group_name' => "My project"]));
+        $artifact_two->shouldReceive('getTracker')->once()->andReturn($tracker_two);
 
         $collection = new ToBePlannedElementCollectionRepresentation(
             [
-                new ToBePlannedElementRepresentation('User stories', 1, 'Artifact 1'),
-                new ToBePlannedElementRepresentation('Features', 2, 'Artifact 2'),
+                new ToBePlannedElementRepresentation(1, 'Artifact 1', MinimalTrackerRepresentation::build($tracker_one)),
+                new ToBePlannedElementRepresentation(2, 'Artifact 2', MinimalTrackerRepresentation::build($tracker_two)),
             ]
         );
 

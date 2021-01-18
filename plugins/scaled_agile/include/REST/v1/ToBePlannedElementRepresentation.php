@@ -22,15 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\REST\v1;
 
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+
 /**
  * @psalm-immutable
  */
 final class ToBePlannedElementRepresentation
 {
-    /**
-     * @var string
-     */
-    public $tracker_name;
     /**
      * @var int
      */
@@ -39,26 +37,18 @@ final class ToBePlannedElementRepresentation
      * @var string
      */
     public $artifact_title;
+    /**
+     * @var MinimalTrackerRepresentation
+     */
+    public $tracker;
 
-    public function __construct(string $tracker_name, int $artifact_id, string $artifact_title)
-    {
-        $this->tracker_name = $tracker_name;
-        $this->artifact_id = $artifact_id;
+    public function __construct(
+        int $artifact_id,
+        string $artifact_title,
+        MinimalTrackerRepresentation $minimal_tracker_representation
+    ) {
+        $this->artifact_id    = $artifact_id;
         $this->artifact_title = $artifact_title;
-    }
-
-    public function getTrackerName(): string
-    {
-        return $this->tracker_name;
-    }
-
-    public function getArtifactId(): int
-    {
-        return $this->artifact_id;
-    }
-
-    public function getArtifactTitle(): string
-    {
-        return $this->artifact_title;
+        $this->tracker        = $minimal_tracker_representation;
     }
 }

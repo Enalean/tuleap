@@ -66,12 +66,16 @@ describe("ToBePlanned", () => {
         const element_one = {
             artifact_id: 1,
             artifact_title: "My artifact",
-            tracker_name: "bug",
+            tracker: {
+                label: "bug",
+            },
         } as ToBePlannedElement;
         const element_two = {
             artifact_id: 2,
             artifact_title: "My user story",
-            tracker_name: "user_stories",
+            tracker: {
+                label: "user_stories",
+            },
         } as ToBePlannedElement;
 
         jest.spyOn(retriever, "getToBePlannedElements").mockResolvedValue([
