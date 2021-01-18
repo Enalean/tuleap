@@ -88,8 +88,7 @@ msgid "GitLab project token"
 msgstr "Jeton du projet GitLab"
 
 msgid "GitLab project token scope must contain at least: api."
-msgstr ""
-"La portée du jeton du projet GitLab doit contenir au moins : api."
+msgstr "La portée du jeton du projet GitLab doit contenir au moins : api."
 
 msgid ""
 "GitLab repository <strong>%{ label }</strong> has been successfully "
@@ -114,6 +113,9 @@ msgstr "Intégrer le dépôt sélectionné"
 
 msgid "Jenkins servers"
 msgstr "Serveurs Jenkins"
+
+msgid "Manage the repository"
+msgstr "Gérer le dépôt"
 
 msgid "New repository"
 msgstr "Nouveau dépôt"
