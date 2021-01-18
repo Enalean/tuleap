@@ -39,7 +39,7 @@ class GitlabMergeRequestReference extends \Reference
             0,
             self::REFERENCE_NAME,
             dgettext('tuleap-gitlab', 'GitLab merge request'),
-            $gitlab_repository->getFullUrl() . '/-/merge_requests/' . $id,
+            $gitlab_repository->getGitlabRepositoryUrl() . '/-/merge_requests/' . $id,
             'S',
             'plugin_gitlab',
             'plugin_gitlab',

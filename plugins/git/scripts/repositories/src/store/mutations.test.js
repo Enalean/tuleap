@@ -165,7 +165,7 @@ describe("Store mutations", () => {
                     gitlab_repository_id: 1,
                     name: "MyPath/MyRepo",
                     description: "This is my description.",
-                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     last_push_date: "2020-10-28T15:13:13+01:00",
                 },
             ];
@@ -186,7 +186,7 @@ describe("Store mutations", () => {
                 label: "MyRepo",
                 last_update_date: "2020-10-28T15:13:13+01:00",
                 gitlab_data: {
-                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     gitlab_repository_id: 1,
                 },
                 additional_information: [],
@@ -200,7 +200,7 @@ describe("Store mutations", () => {
                     gitlab_repository_id: 1,
                     name: "MyPath/MyRepo",
                     description: "This is my description.",
-                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     last_push_date: "2020-10-28T15:13:13+01:00",
                 },
             ];
@@ -240,7 +240,7 @@ describe("Store mutations", () => {
                         label: "MyRepo",
                         last_update_date: "2020-10-28T15:13:13+01:00",
                         gitlab_data: {
-                            full_url: "https://example.com/MyPath/MyRepo",
+                            gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                             gitlab_repository_id: 1,
                         },
                         additional_information: [],
@@ -260,7 +260,7 @@ describe("Store mutations", () => {
                 label: "MyRepo",
                 last_update_date: "2020-10-28T15:13:13+01:00",
                 gitlab_data: {
-                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     gitlab_repository_id: 1,
                 },
                 additional_information: [],

@@ -35,7 +35,7 @@ final class GitlabRepositoryBotApiTokenPatchRepresentation
     /**
      * @var string {@required true}
      */
-    public $full_url;
+    public $gitlab_repository_url;
 
     /**
      * @var string {@required true}

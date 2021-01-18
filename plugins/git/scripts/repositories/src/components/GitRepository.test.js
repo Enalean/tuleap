@@ -61,7 +61,7 @@ describe("GitRepository", () => {
                 last_update_date: "2020-10-28T15:13:13+01:00",
                 additional_information: [],
                 gitlab_data: {
-                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     gitlab_repository_id: 1,
                 },
             },
@@ -85,7 +85,7 @@ describe("GitRepository", () => {
                 last_update_date: "2020-10-28T15:13:13+01:00",
                 additional_information: [],
                 gitlab_data: {
-                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     gitlab_repository_id: 1,
                 },
             },
@@ -134,7 +134,7 @@ describe("GitRepository", () => {
                     opened_pull_requests: 2,
                 },
                 gitlab_data: {
-                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     gitlab_repository_id: 1,
                 },
             },
@@ -163,7 +163,7 @@ describe("GitRepository", () => {
         expect(wrapper.findComponent(PullRequestBadge).exists()).toBeTruthy();
     });
 
-    it("When repository is GitLab, Then full_url of gitlab is displayed", () => {
+    it("When repository is GitLab, Then gitlab_repository_url of gitlab is displayed", () => {
         propsData = {
             repository: {
                 id: 1,
@@ -176,7 +176,7 @@ describe("GitRepository", () => {
                     opened_pull_requests: 2,
                 },
                 gitlab_data: {
-                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     gitlab_repository_id: 1,
                 },
             },

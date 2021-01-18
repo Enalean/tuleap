@@ -33,8 +33,8 @@ describe("gitlabChecker", () => {
             const repo = { gitlab_data: {} } as Repository;
             expect(isGitlabRepository(repo)).toBeFalsy();
         });
-        it("When repository has gitlab_data but only full_url, Then return false", () => {
-            const repo = { gitlab_data: { full_url: "example.com" } } as Repository;
+        it("When repository has gitlab_data but only gitlab_repository_url, Then return false", () => {
+            const repo = { gitlab_data: { gitlab_repository_url: "example.com" } } as Repository;
             expect(isGitlabRepository(repo)).toBeFalsy();
         });
         it("When repository has gitlab_data but only gitlab_repository_id, Then return false", () => {
@@ -43,7 +43,7 @@ describe("gitlabChecker", () => {
         });
         it("When repository has gitlab_data, Then return true", () => {
             const repo = {
-                gitlab_data: { gitlab_repository_id: 14589, full_url: "example.com" },
+                gitlab_data: { gitlab_repository_id: 14589, gitlab_repository_url: "example.com" },
             } as Repository;
             expect(isGitlabRepository(repo)).toBeTruthy();
         });

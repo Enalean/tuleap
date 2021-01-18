@@ -165,7 +165,7 @@ final class GitlabRepositoryResource
                 $integrated_gitlab_repository->getGitlabRepositoryId(),
                 $integrated_gitlab_repository->getName(),
                 $integrated_gitlab_repository->getDescription(),
-                $integrated_gitlab_repository->getFullUrl(),
+                $integrated_gitlab_repository->getGitlabRepositoryUrl(),
                 $integrated_gitlab_repository->getLastPushDate()->getTimestamp(),
             );
         } catch (
@@ -192,7 +192,7 @@ final class GitlabRepositoryResource
      *   &nbsp;"update_bot_api_token": {<br>
      *   &nbsp;&nbsp;&nbsp;"gitlab_bot_api_token" : "The new token",<br>
      *   &nbsp;&nbsp;&nbsp;"gitlab_repository_id" : 145896<br>
-     *   &nbsp;&nbsp;&nbsp;"full_url" : "https://example.com/project/url",<br>
+     *   &nbsp;&nbsp;&nbsp;"gitlab_repository_url" : "https://example.com/project/url",<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
@@ -228,7 +228,7 @@ final class GitlabRepositoryResource
         $bot_api_token_updater->update(
             new ConcealedBotApiTokenPatchRepresentation(
                 $patch_representation->update_bot_api_token->gitlab_repository_id,
-                $patch_representation->update_bot_api_token->full_url,
+                $patch_representation->update_bot_api_token->gitlab_repository_url,
                 new ConcealedString($patch_representation->update_bot_api_token->gitlab_bot_api_token),
             ),
             UserManager::instance()->getCurrentUser(),

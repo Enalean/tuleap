@@ -94,7 +94,7 @@ class GitlabRepositoryFactory
     }
 
     /**
-     * @param array{id:int, gitlab_repository_id:int, name:string, description:string, full_url:string, last_push_date:int} $row
+     * @param array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int} $row
      */
     private function getInstanceFromRow(array $row): GitlabRepository
     {
@@ -103,7 +103,7 @@ class GitlabRepositoryFactory
             $row['gitlab_repository_id'],
             $row['name'],
             (string) $row['description'],
-            $row['full_url'],
+            $row['gitlab_repository_url'],
             (new DateTimeImmutable())->setTimestamp($row['last_push_date'])
         );
     }

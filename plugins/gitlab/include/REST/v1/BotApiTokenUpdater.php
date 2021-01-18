@@ -77,7 +77,7 @@ class BotApiTokenUpdater
     {
         $repository = $this->repository_factory->getGitlabRepositoryByGitlabRepositoryIdAndPath(
             $patch_representation->gitlab_repository_id,
-            $patch_representation->full_url,
+            $patch_representation->gitlab_repository_url,
         );
         if (! $repository) {
             throw new RestException(404);

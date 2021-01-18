@@ -53,7 +53,7 @@ class GitlabRepositoryRepresentation
     /**
      * @var string
      */
-    public $full_url;
+    public $gitlab_repository_url;
 
     /**
      * @var string
@@ -65,14 +65,14 @@ class GitlabRepositoryRepresentation
         int $gitlab_repository_id,
         string $name,
         string $description,
-        string $full_url,
+        string $gitlab_repository_url,
         int $last_push_date_timestamp
     ) {
-        $this->id                   = JsonCast::toInt($id);
-        $this->gitlab_repository_id = JsonCast::toInt($gitlab_repository_id);
-        $this->name                 = $name;
-        $this->description          = $description;
-        $this->full_url             = $full_url;
-        $this->last_push_date       = JsonCast::toDate($last_push_date_timestamp);
+        $this->id                    = JsonCast::toInt($id);
+        $this->gitlab_repository_id  = JsonCast::toInt($gitlab_repository_id);
+        $this->name                  = $name;
+        $this->description           = $description;
+        $this->gitlab_repository_url = $gitlab_repository_url;
+        $this->last_push_date        = JsonCast::toDate($last_push_date_timestamp);
     }
 }

@@ -186,7 +186,10 @@ describe("ListRepositoriesModal", () => {
     it("When repository is already integrated, Then button is disabled", () => {
         store_options.getters.getGitlabRepositoriesIntegrated = [
             {
-                gitlab_data: { gitlab_repository_id: 1, full_url: "https://example.com/MyPath/1" },
+                gitlab_data: {
+                    gitlab_repository_id: 1,
+                    gitlab_repository_url: "https://example.com/MyPath/1",
+                },
                 normalized_path: "My Path / Repository",
             },
         ];
@@ -236,7 +239,7 @@ describe("ListRepositoriesModal", () => {
             {
                 gitlab_data: {
                     gitlab_repository_id: 152,
-                    full_url: "https://example.com/MyPath/152",
+                    gitlab_repository_url: "https://example.com/MyPath/152",
                 },
                 normalized_path: "my-path/repository",
             },

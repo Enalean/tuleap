@@ -38,7 +38,7 @@ class GitlabCommitReference extends \Reference
             0,
             self::REFERENCE_NAME,
             dgettext('tuleap-gitlab', 'GitLab commit'),
-            $gitlab_repository->getFullUrl() . '/-/commit/' . $sha1,
+            $gitlab_repository->getGitlabRepositoryUrl() . '/-/commit/' . $sha1,
             'S',
             'plugin_gitlab',
             'plugin_gitlab',

@@ -51,7 +51,7 @@ class GitlabRepository
     /**
      * @var string
      */
-    private $full_url;
+    private $gitlab_repository_url;
 
     /**
      * @var DateTimeImmutable
@@ -63,15 +63,15 @@ class GitlabRepository
         int $gitlab_repository_id,
         string $name,
         string $description,
-        string $full_url,
+        string $gitlab_repository_url,
         DateTimeImmutable $last_push_date
     ) {
-        $this->id                   = $id;
-        $this->gitlab_repository_id = $gitlab_repository_id;
-        $this->name                 = $name;
-        $this->description          = $description;
-        $this->full_url             = $full_url;
-        $this->last_push_date       = $last_push_date;
+        $this->id                    = $id;
+        $this->gitlab_repository_id  = $gitlab_repository_id;
+        $this->name                  = $name;
+        $this->description           = $description;
+        $this->gitlab_repository_url = $gitlab_repository_url;
+        $this->last_push_date        = $last_push_date;
     }
 
     public function getId(): int
@@ -94,14 +94,14 @@ class GitlabRepository
         return $this->description;
     }
 
-    public function getFullUrl(): string
+    public function getGitlabRepositoryUrl(): string
     {
-        return $this->full_url;
+        return $this->gitlab_repository_url;
     }
 
     public function getGitlabServerUrl(): string
     {
-        return str_replace($this->name, "", $this->full_url);
+        return str_replace($this->name, "", $this->gitlab_repository_url);
     }
 
     public function getLastPushDate(): DateTimeImmutable
