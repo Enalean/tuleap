@@ -143,8 +143,8 @@ if (! IS_SCRIPT) {
     );
     $csp_whitelist_script_scr  = implode(' ', $whitelist_scripts);
     $csp_whitelist_script_scr .= ' ' . ForgeConfig::get('sys_csp_script_scr_whitelist');
-    $csp_rules                .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' $csp_whitelist_script_scr; ";
-    $csp_rules                .= "style-src 'self' 'unsafe-inline'; ";
+    $csp_rules                .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'report-sample' $csp_whitelist_script_scr ; ";
+    $csp_rules                .= "style-src 'self' 'unsafe-inline' 'report-sample'; ";
     $csp_rules                .= "font-src 'self'; ";
     $csp_rules                .= "form-action 'self'; ";
     $csp_rules                .= "manifest-src 'self'; ";
@@ -154,7 +154,7 @@ if (! IS_SCRIPT) {
     $csp_rules                .= "upgrade-insecure-requests; ";
     $csp_rules                .= "report-uri /csp-violation; ";
 
-    header("Content-Security-Policy: default-src 'none'; base-uri 'self'; $csp_rules");
+    header("Content-Security-Policy: default-src 'none' 'report-sample'; base-uri 'self'; $csp_rules");
 }
 
 $feedback = ''; // Initialize global var
