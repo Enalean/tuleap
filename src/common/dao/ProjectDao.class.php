@@ -278,20 +278,6 @@ class ProjectDao extends DataAccessObject
         return false;
     }
 
-    public function renameProjectPluginServiceLink($project_id, $plugin_name, $new_link)
-    {
-        $plugin_name = $this->da->quoteSmart($plugin_name);
-        $new_link    = $this->da->quoteSmart($new_link);
-        $project_id  = $this->da->escapeInt($project_id);
-
-        $sql = "UPDATE service
-           SET link = $new_link
-           WHERE short_name = $plugin_name
-           AND group_id = $project_id";
-
-        return $this->update($sql);
-    }
-
     /**
      * Return all projects matching given parameters
      *

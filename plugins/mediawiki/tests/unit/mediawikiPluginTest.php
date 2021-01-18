@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,31 +21,29 @@
 namespace Tuleap\Mediawiki;
 
 use MediaWikiPlugin;
-use Mockery;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Layout\ServiceUrlCollector;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 
-require_once 'bootstrap.php';
-
-class mediawikiPluginTest extends TestCase //phpcs:ignore
+final class mediawikiPluginTest extends TestCase //phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function testItReplacesTheTemplateNameInUrlByTheProjectName()
+    public function testSetsItsServiceURL(): void
     {
-        $template =  ['name' => 'toto'];
-        $link     = 'example.com/plugins/mediawiki/wiki/toto';
-        $project  = Mockery::spy(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturn('yaya');
-
-        $params = [
-            'template' => $template,
-            'project'  => $project,
-            'link'     => &$link
-        ];
-
         $mediawiki_plugin = new MediaWikiPlugin();
-        $mediawiki_plugin->service_replace_template_name_in_link($params);
 
-        $this->assertSame('example.com/plugins/mediawiki/wiki/yaya', $link);
+        $collector = new ServiceUrlCollector(ProjectTestBuilder::aProject()->withUnixName('foo')->build(), 'plugin_mediawiki');
+        $mediawiki_plugin->serviceUrlCollector($collector);
+
+        self::assertEquals('/plugins/mediawiki/wiki/foo', $collector->getUrl());
+    }
+
+    public function testDoesNotTouchURLOfOthersServices(): void
+    {
+        $mediawiki_plugin = new MediaWikiPlugin();
+
+        $collector = new ServiceUrlCollector(ProjectTestBuilder::aProject()->withUnixName('bar')->build(), 'plugin_doingsomething');
+        $mediawiki_plugin->serviceUrlCollector($collector);
+
+        self::assertFalse($collector->hasUrl());
     }
 }

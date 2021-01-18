@@ -515,17 +515,6 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     }
 
     /**
-     * @param int $project_id
-     * @param string $plugin_name
-     * @param string $new_link
-     * @return bool
-     */
-    public function renameProjectPluginServiceLink($project_id, $plugin_name, $new_link)
-    {
-        return $this->_getDao()->renameProjectPluginServiceLink($project_id, $plugin_name, $new_link);
-    }
-
-    /**
      * Return true if project id is cached
      *
      * @param int $group_id
