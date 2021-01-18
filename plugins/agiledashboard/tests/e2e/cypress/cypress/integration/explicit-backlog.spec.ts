@@ -91,6 +91,9 @@ describe(`Planning view Explicit Backlog`, function () {
         it("open the pv2 modal", function () {
             cy.get("[data-test=go-to-top-backlog]").click();
 
+            //wait for the page to be loaded
+            cy.get("[data-test=backlog-fully-loaded]");
+
             cy.get("[data-test=new-button]").click();
             cy.get("[data-test=create-new-item]").first().click();
 
