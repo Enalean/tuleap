@@ -19,9 +19,9 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ToBePlanned from "./ToBePlanned.vue";
-import * as retriever from "../../../helpers/ToBePlanned/element-to-plan-retriver";
+import * as retriever from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import * as configuration from "../../../configuration";
-import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriver";
+import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import { createScaledAgileLocalVue } from "../../../helpers/local-vue-for-test";
 import { DefaultData } from "vue/types/options";
 
