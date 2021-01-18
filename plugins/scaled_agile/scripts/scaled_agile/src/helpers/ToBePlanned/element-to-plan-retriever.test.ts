@@ -18,7 +18,7 @@
  */
 
 import * as tlp from "tlp";
-import { getToBePlannedElements, ToBePlannedElement } from "./element-to-plan-retriver";
+import { getToBePlannedElements, ToBePlannedElement } from "./element-to-plan-retriever";
 
 jest.mock("tlp");
 

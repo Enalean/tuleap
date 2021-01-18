@@ -51,7 +51,7 @@ import { programId } from "../../../configuration";
 import {
     getToBePlannedElements,
     ToBePlannedElement,
-} from "../../../helpers/ToBePlanned/element-to-plan-retriver";
+} from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import EmptyState from "./EmptyState.vue";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
 import ToBePlannedSkeleton from "./ToBePlannedSkeleton.vue";

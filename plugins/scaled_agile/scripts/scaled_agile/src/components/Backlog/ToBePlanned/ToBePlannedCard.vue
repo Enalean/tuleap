@@ -37,7 +37,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import EmptyState from "./EmptyState.vue";
-import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriver";
+import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 
 @Component({
     components: { EmptyState },

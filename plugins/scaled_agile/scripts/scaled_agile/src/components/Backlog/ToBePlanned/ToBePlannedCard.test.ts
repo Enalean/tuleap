@@ -20,7 +20,7 @@
 import { shallowMount, ShallowMountOptions } from "@vue/test-utils";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
 import { createScaledAgileLocalVue } from "../../../helpers/local-vue-for-test";
-import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriver";
+import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 
 describe("ToBePlannedCard", () => {
     let component_options: ShallowMountOptions<ToBePlannedCard>;
