@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace unit\TestManagement;
+namespace Tuleap\TestManagement;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -28,8 +28,6 @@ use Project;
 use Psr\Log\LoggerInterface;
 use Tracker;
 use TrackerXmlImport;
-use Tuleap\TestManagement\TestmanagementTrackersCreator;
-use Tuleap\TestManagement\TrackerNotCreatedException;
 
 class TestmanagementTrackersCreatorTest extends TestCase
 {
