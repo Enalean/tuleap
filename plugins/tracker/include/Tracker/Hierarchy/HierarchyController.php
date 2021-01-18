@@ -138,9 +138,9 @@ class HierarchyController
 
     private function isIsChildTypeDisabledForProject(Project $project): bool
     {
-        return $this->artifact_links_usage_dao->isProjectUsingArtifactLinkTypes($project->getID()) &&
+        return $this->artifact_links_usage_dao->isProjectUsingArtifactLinkTypes((int) $project->getID()) &&
             $this->artifact_links_usage_dao->isTypeDisabledInProject(
-                $project->getID(),
+                (int) $project->getID(),
                 Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
             );
     }

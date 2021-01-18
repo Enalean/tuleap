@@ -733,7 +733,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $type_is_used = isset($used[$column_id]);
 
             if (
-                $this->getArtifactLinksUsageDao()->isTypeDisabledInProject($project->getID(), $type->shortname) &&
+                $this->getArtifactLinksUsageDao()->isTypeDisabledInProject((int) $project->getID(), $type->shortname) &&
                 ! $type_is_used
             ) {
                 continue;

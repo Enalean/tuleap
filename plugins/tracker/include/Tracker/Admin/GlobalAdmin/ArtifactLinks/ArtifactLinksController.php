@@ -153,7 +153,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         $presenter = new ArtifactLinksPresenter(
             $project,
             $this->getCSRF($project),
-            (bool) $this->dao->isProjectUsingArtifactLinkTypes($project->getID()),
+            $this->dao->isProjectUsingArtifactLinkTypes((int) $project->getID()),
             $formatted_types,
             $this->hasAtLeastOneDisabledType($formatted_types)
         );
@@ -189,7 +189,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
             return;
         }
 
-        if ($this->dao->isTypeDisabledInProject($project->getID(), $type_shortname)) {
+        if ($this->dao->isTypeDisabledInProject((int) $project->getID(), $type_shortname)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
                 sprintf(
@@ -198,7 +198,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
                 )
             );
 
-            $this->dao->enableTypeInProject($project->getID(), $type_shortname);
+            $this->dao->enableTypeInProject((int) $project->getID(), $type_shortname);
 
             return;
         }
@@ -212,7 +212,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
                 )
             );
 
-            $this->dao->disableTypeInProject($project->getID(), $type_shortname);
+            $this->dao->disableTypeInProject((int) $project->getID(), $type_shortname);
 
             return;
         }
@@ -265,7 +265,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
 
     private function isTypeDisabledInProject(Project $project, NaturePresenter $type): bool
     {
-        return $this->dao->isTypeDisabledInProject($project->getID(), $type->shortname);
+        return $this->dao->isTypeDisabledInProject((int) $project->getID(), $type->shortname);
     }
 
     private function artifactLinkTypeCanBeUnused(Project $project, NaturePresenter $type): bool
@@ -282,7 +282,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         }
 
         if ($type->shortname === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
-            return ! $this->hierarchy_dao->isAHierarchySetInProject($project->getID());
+            return ! $this->hierarchy_dao->isAHierarchySetInProject((int) $project->getID());
         }
 
         return false;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,15 +35,15 @@ class ArtifactLinksUsageDuplicator
         $this->dao = $dao;
     }
 
-    public function duplicate(Project $template, Project $project)
+    public function duplicate(Project $template, Project $project): void
     {
         if (
-            $this->dao->isProjectUsingArtifactLinkTypes($template->getID()) ||
+            $this->dao->isProjectUsingArtifactLinkTypes((int) $template->getID()) ||
             (! $template->usesService(trackerPlugin::SERVICE_SHORTNAME) &&
                 $project->usesService(trackerPlugin::SERVICE_SHORTNAME)
             )
         ) {
-            $this->dao->duplicate($template->getID(), $project->getID());
+            $this->dao->duplicate((int) $template->getID(), (int) $project->getID());
         }
     }
 }

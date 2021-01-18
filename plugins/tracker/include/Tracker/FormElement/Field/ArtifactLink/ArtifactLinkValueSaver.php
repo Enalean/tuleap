@@ -162,7 +162,7 @@ class ArtifactLinkValueSaver
         if ($is_child) {
             if (
                 $this->artifact_links_usage_dao->isTypeDisabledInProject(
-                    $from_tracker->getProject()->getID(),
+                    (int) $from_tracker->getProject()->getID(),
                     Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
                 )
             ) {

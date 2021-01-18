@@ -631,7 +631,7 @@ class TrackerXmlImport
             if (in_array($tracker_shortname, $extra_configuration->getValue())) {
                 $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId(
                     $tracker_shortname,
-                    $project->getID()
+                    (int) $project->getID()
                 );
 
                 if ($tracker_existing) {
@@ -651,7 +651,7 @@ class TrackerXmlImport
      */
     public function updateFromXML(Project $project, SimpleXMLElement $xml_tracker)
     {
-        $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId((string) $xml_tracker->item_name, $project->getID());
+        $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId((string) $xml_tracker->item_name, (int) $project->getID());
 
         if (! $tracker_existing) {
             throw new TrackerFromXmlImportCannotBeUpdatedException((string) $xml_tracker->name);
