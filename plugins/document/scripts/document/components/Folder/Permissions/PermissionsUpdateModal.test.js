@@ -33,7 +33,7 @@ describe("PermissionsUpdateModal", () => {
     let factory, store;
 
     beforeEach(() => {
-        store = createStoreMock({}, { project_ugroups: null, error: {} });
+        store = createStoreMock({}, { permissions: { project_ugroups: null }, error: {} });
 
         factory = (props = {}) => {
             return shallowMount(PermissionsUpdateModal, {
@@ -70,8 +70,10 @@ describe("PermissionsUpdateModal", () => {
 
     it("When the modal is first opened the project user groups are loaded and the content populated", async () => {
         store.dispatch.mockImplementation((name) => {
-            if (name === "loadProjectUserGroupsIfNeeded") {
-                store.state.project_ugroups = [{ id: "102_3", label: "Project members" }];
+            if (name === "permissions/loadProjectUserGroupsIfNeeded") {
+                store.state.permissions.project_ugroups = [
+                    { id: "102_3", label: "Project members" },
+                ];
             }
         });
 
@@ -178,10 +180,10 @@ describe("PermissionsUpdateModal", () => {
             },
         };
 
-        store.state.project_ugroups = [];
+        store.state.permissions.project_ugroups = [];
         const wrapper = factory({ item: item_to_update });
 
-        const expectedActionName = "updatePermissions";
+        const expectedActionName = "permissions/updatePermissions";
         store.dispatch.mockImplementation(function (actionName) {
             if (actionName !== expectedActionName) {
                 return;

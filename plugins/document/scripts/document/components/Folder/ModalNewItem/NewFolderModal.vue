@@ -86,8 +86,9 @@ export default {
         };
     },
     computed: {
-        ...mapState(["current_folder", "project_ugroups"]),
+        ...mapState(["current_folder", "project_id"]),
         ...mapState("error", ["has_modal_error"]),
+        ...mapState("permissions", ["project_ugroups"]),
         submit_button_label() {
             return this.$gettext("Create folder");
         },
@@ -133,7 +134,10 @@ export default {
             this.is_displayed = true;
             this.modal.show();
             try {
-                await this.$store.dispatch("loadProjectUserGroupsIfNeeded");
+                await this.$store.dispatch(
+                    "permissions/loadProjectUserGroupsIfNeeded",
+                    this.project_id
+                );
             } catch (e) {
                 await handleErrors(this.$store, e);
                 this.modal.hide();

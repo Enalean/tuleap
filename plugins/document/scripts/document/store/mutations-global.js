@@ -31,7 +31,6 @@ export {
     showPostDeletionNotification,
     hidePostDeletionNotification,
     replaceCurrentFolder,
-    setProjectUserGroups,
     toggleQuickLook,
     beginLoadingCurrentlyPreviewedItem,
     stopLoadingCurrentlyPreviewedItem,
@@ -170,10 +169,6 @@ function showPostDeletionNotification(state) {
 
 function hidePostDeletionNotification(state) {
     state.show_post_deletion_notification = false;
-}
-
-function setProjectUserGroups(state, project_ugroups) {
-    state.project_ugroups = project_ugroups;
 }
 
 function toggleQuickLook(state, toogle) {

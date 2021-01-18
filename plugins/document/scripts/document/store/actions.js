@@ -43,12 +43,6 @@ import {
     postNewFileVersionFromEmpty,
     postNewLinkVersionFromEmpty,
     postWiki,
-    putEmbeddedFilePermissions,
-    putEmptyDocumentPermissions,
-    putFilePermissions,
-    putFolderPermissions,
-    putLinkPermissions,
-    putWikiPermissions,
 } from "../api/rest-querier.js";
 
 import {
@@ -78,7 +72,6 @@ import {
     USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE,
 } from "../constants";
 import { addNewFolder } from "../api/rest-querier";
-import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../helpers/permissions/ugroups.js";
 
 export const loadRootFolder = async (context) => {
     try {
@@ -581,58 +574,6 @@ export const getWikisReferencingSameWikiPage = async (context, item) => {
     } catch (exception) {
         return USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE;
     }
-};
-
-export const updatePermissions = async (context, [item, updated_permissions]) => {
-    try {
-        switch (item.type) {
-            case TYPE_FILE:
-                await putFilePermissions(item.id, updated_permissions);
-                break;
-            case TYPE_EMBEDDED:
-                await putEmbeddedFilePermissions(item.id, updated_permissions);
-                break;
-            case TYPE_LINK:
-                await putLinkPermissions(item.id, updated_permissions);
-                break;
-            case TYPE_WIKI:
-                await putWikiPermissions(item.id, updated_permissions);
-                break;
-            case TYPE_EMPTY:
-                await putEmptyDocumentPermissions(item.id, updated_permissions);
-                break;
-            case TYPE_FOLDER:
-                await putFolderPermissions(item.id, updated_permissions);
-                break;
-            default:
-                break;
-        }
-        const updated_item = await getItem(item.id);
-
-        if (item.id === context.state.current_folder.id) {
-            context.commit("replaceCurrentFolder", updated_item);
-            await context.dispatch("loadFolder", item.id);
-        } else {
-            Vue.set(updated_item, "updated", true);
-            context.commit("removeItemFromFolderContent", updated_item);
-            context.commit("addJustCreatedItemToFolderContent", updated_item);
-            context.commit("updateCurrentItemForQuickLokDisplay", updated_item);
-        }
-    } catch (exception) {
-        await handleErrorsForModal(context, exception);
-    }
-};
-
-export const loadProjectUserGroupsIfNeeded = async (context) => {
-    if (context.state.project_ugroups !== null) {
-        return;
-    }
-
-    const project_ugroups = await getProjectUserGroupsWithoutServiceSpecialUGroups(
-        context.state.project_id
-    );
-
-    context.commit("setProjectUserGroups", project_ugroups);
 };
 
 export const toggleQuickLook = async (context, item_id) => {
