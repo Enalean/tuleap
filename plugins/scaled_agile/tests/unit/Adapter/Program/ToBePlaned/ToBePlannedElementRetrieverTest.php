@@ -31,6 +31,7 @@ use Tuleap\ScaledAgile\Program\Program;
 use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementCollectionRepresentation;
 use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementRepresentation;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\TrackerColor;
 
 class ToBePlannedElementRetrieverTest extends TestCase
 {
@@ -95,15 +96,21 @@ class ToBePlannedElementRetrieverTest extends TestCase
         $artifact_one = \Mockery::mock(\Artifact::class);
         $artifact_one->shouldReceive('userCanView')->with($user)->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact_one);
+        $tracker = \Mockery::mock(\Tracker::class);
+        $tracker->shouldReceive("getColor")->andReturn(TrackerColor::fromName("lake-placid-blue"));
+        $artifact_one->shouldReceive('getTracker')->once()->andReturn($tracker);
 
         $artifact_two = \Mockery::mock(\Artifact::class);
         $artifact_two->shouldReceive('userCanView')->with($user)->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(2)->andReturn($artifact_two);
+        $tracker = \Mockery::mock(\Tracker::class);
+        $tracker->shouldReceive("getColor")->andReturn(TrackerColor::fromName("deep-blue"));
+        $artifact_two->shouldReceive('getTracker')->once()->andReturn($tracker);
 
         $collection = new ToBePlannedElementCollectionRepresentation(
             [
-                new ToBePlannedElementRepresentation('User stories', 1, 'Artifact 1'),
-                new ToBePlannedElementRepresentation('Features', 2, 'Artifact 2'),
+                new ToBePlannedElementRepresentation('User stories', 1, 'Artifact 1', "lake-placid-blue"),
+                new ToBePlannedElementRepresentation('Features', 2, 'Artifact 2', "deep-blue"),
             ]
         );
 
