@@ -27,6 +27,7 @@ use Project;
 use System_Command;
 use Tuleap\date\RelativeDatesAssetsRetriever;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\ForumML\CurrentListBreadcrumbCollectionBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
@@ -69,6 +70,10 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
      * @var System_Command
      */
     private $command;
+    /**
+     * @var CurrentListBreadcrumbCollectionBuilder
+     */
+    private $breadcrumb_collection_builder;
 
     public function __construct(
         \ForumMLPlugin $plugin,
@@ -77,15 +82,17 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
         \TemplateRenderer $renderer,
         IncludeAssets $include_assets,
         ThreadsPresenterBuilder $presenter_builder,
-        System_Command $command
+        System_Command $command,
+        CurrentListBreadcrumbCollectionBuilder $breadcrumb_collection_builder
     ) {
-        $this->plugin            = $plugin;
-        $this->dao               = $dao;
-        $this->project_manager   = $project_manager;
-        $this->renderer          = $renderer;
-        $this->include_assets    = $include_assets;
-        $this->presenter_builder = $presenter_builder;
-        $this->command           = $command;
+        $this->plugin                 = $plugin;
+        $this->dao                    = $dao;
+        $this->project_manager        = $project_manager;
+        $this->renderer               = $renderer;
+        $this->include_assets         = $include_assets;
+        $this->presenter_builder      = $presenter_builder;
+        $this->command                = $command;
+        $this->breadcrumb_collection_builder = $breadcrumb_collection_builder;
     }
 
     public function getProject(array $variables): Project
@@ -137,7 +144,11 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
         $layout->addCssAsset(new CssAsset($this->include_assets, 'style-forumml'));
         $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
 
-        $service->displayMailingListHeader($user, $list_name);
+        $service->displayMailingListHeaderWithAdditionalBreadcrumbs(
+            $user,
+            $list_name,
+            $this->breadcrumb_collection_builder->getCurrentListBreadcrumbCollectionFromRow($row, $project, $request, $list_name)
+        );
         $this->renderer->renderToPage(
             'threads',
             $threads_presenter

@@ -33,16 +33,31 @@ class ServiceMailingList extends \Service
 {
     public function displayMailingListHeader(\PFUser $user, string $title): void
     {
+        $this->displayMailingListHeaderWithAdditionalBreadcrumbs(
+            $user,
+            $title,
+            new BreadCrumbCollection(),
+        );
+    }
+
+    public function displayMailingListHeaderWithAdditionalBreadcrumbs(
+        \PFUser $user,
+        string $title,
+        BreadCrumbCollection $additional_breadcrumbs
+    ): void {
         \Tuleap\Project\ServiceInstrumentation::increment('mailinglists');
 
         $breadcrumbs = $this->getBreadcrumbs($user);
+        foreach ($additional_breadcrumbs->getBreadcrumbs() as $breadcrumb) {
+            $breadcrumbs->addBreadCrumb($breadcrumb);
+        }
 
         $this->displayHeader($title, $breadcrumbs, [], []);
     }
 
     private function getBreadcrumbs(\PFUser $user): BreadCrumbCollection
     {
-        $list_breadcrumb = new BreadCrumb(
+        $lists_breadcrumb = new BreadCrumb(
             new BreadCrumbLink(
                 _('Lists'),
                 '/mail/?' . http_build_query(
@@ -54,7 +69,7 @@ class ServiceMailingList extends \Service
         );
 
         $breadcrumbs = new BreadCrumbCollection();
-        $breadcrumbs->addBreadCrumb($list_breadcrumb);
+        $breadcrumbs->addBreadCrumb($lists_breadcrumb);
 
         if ($user->isAdmin((int) $this->project->getID())) {
             $sub_items = new BreadCrumbSubItems();
@@ -70,7 +85,7 @@ class ServiceMailingList extends \Service
                     )
                 )
             );
-            $list_breadcrumb->setSubItems($sub_items);
+            $lists_breadcrumb->setSubItems($sub_items);
         }
 
         return $breadcrumbs;
