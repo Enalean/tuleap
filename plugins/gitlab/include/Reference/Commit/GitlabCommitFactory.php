@@ -22,16 +22,16 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Reference\Commit;
 
 use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 
 class GitlabCommitFactory
 {
     /**
-     * @var CommitTuleapReferenceDAO
+     * @var CommitTuleapReferenceDao
      */
     private $gitlab_commit_dao;
 
-    public function __construct(CommitTuleapReferenceDAO $gitlab_commit_dao)
+    public function __construct(CommitTuleapReferenceDao $gitlab_commit_dao)
     {
         $this->gitlab_commit_dao = $gitlab_commit_dao;
     }

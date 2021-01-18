@@ -23,7 +23,7 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Commits;
 
 use Tuleap\DB\DataAccessObject;
 
-class CommitTuleapReferenceDAO extends DataAccessObject
+class CommitTuleapReferenceDao extends DataAccessObject
 {
     public function saveGitlabCommitInfo(
         int $repository_id,
@@ -78,5 +78,15 @@ class CommitTuleapReferenceDAO extends DataAccessObject
         ";
 
         return $this->getDB()->row($sql, $repository_id, $commit_sha1);
+    }
+
+    public function deleteCommitsInGitlabRepository(int $repository_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_gitlab_commit_info',
+            [
+                'repository_id' => $repository_id,
+            ]
+        );
     }
 }

@@ -41,7 +41,7 @@ use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitCredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
@@ -192,7 +192,7 @@ class gitlabPlugin extends Plugin
                         new GitlabRepositoryProjectDao(),
                         ProjectManager::instance()
                     ),
-                    new CommitTuleapReferenceDAO(),
+                    new CommitTuleapReferenceDao(),
                     $reference_manager,
                     new TuleapReferenceRetriever(
                         EventManager::instance(),
@@ -310,7 +310,7 @@ class gitlabPlugin extends Plugin
         $gitlab_repository_dao = new GitlabRepositoryDao();
         $gitlab_organizer      = new GitlabCrossReferenceOrganizer(
             new GitlabRepositoryFactory($gitlab_repository_dao),
-            new GitlabCommitFactory(new CommitTuleapReferenceDAO()),
+            new GitlabCommitFactory(new CommitTuleapReferenceDao()),
             new GitlabCommitCrossReferenceEnhancer(
                 \UserManager::instance(),
                 \UserHelper::instance(),

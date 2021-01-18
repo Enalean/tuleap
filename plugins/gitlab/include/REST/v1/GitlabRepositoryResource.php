@@ -55,6 +55,7 @@ use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretGenerator;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
@@ -290,7 +291,8 @@ final class GitlabRepositoryResource
             new GitlabRepositoryProjectDao(),
             new SecretDao(),
             new GitlabRepositoryDao(),
-            new GitlabBotApiTokenDao()
+            new GitlabBotApiTokenDao(),
+            new CommitTuleapReferenceDao(),
         );
 
         try {
