@@ -93,6 +93,23 @@ class ProjectResourceTest extends \RestBase
         $this->assertEquals(["tracker_name" => "user story", "artifact_id" => 2, "artifact_title" => "My story"], $to_be_planned[1]);
     }
 
+    /**
+     * @depends testPUTTeam
+     */
+    public function testGetProgramIncrements(): void
+    {
+        $project_id = $this->getProgramProjectId();
+
+        $response = $this->getResponse(
+            $this->client->get('projects/' . urlencode((string) $project_id) . '/program_increments')
+        );
+
+        self::assertEquals(200, $response->getStatusCode());
+        $program_increments = $response->json();
+        self::assertCount(1, $program_increments);
+        self::assertEquals([['title' => '1.0.0']], $program_increments);
+    }
+
     private function getProgramProjectId(): int
     {
         return $this->getProjectId('program');

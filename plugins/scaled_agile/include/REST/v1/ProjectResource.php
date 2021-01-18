@@ -26,6 +26,8 @@ use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsRetriever;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanDao;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\PlanTrackerException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException;
@@ -40,6 +42,7 @@ use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ScaledAgile\Adapter\Team\TeamAdapter;
 use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
 use Tuleap\ScaledAgile\Adapter\Team\TeamException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
 use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\RetrieveToBePlannedElements;
 use Tuleap\ScaledAgile\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ScaledAgile\Program\Plan\CreatePlan;
@@ -66,6 +69,10 @@ final class ProjectResource extends AuthenticatedResource
      * @var \UserManager
      */
     private $user_manager;
+    /**
+     * @var ProgramIncrementBuilder
+     */
+    private $program_increments_builder;
 
     public function __construct()
     {
@@ -75,18 +82,26 @@ final class ProjectResource extends AuthenticatedResource
         $project_manager      = \ProjectManager::instance();
         $program_dao          = new ProgramDao();
         $explicit_backlog_dao = new ExplicitBacklogDao();
-        $project_adapter      = new ProgramAdapter($project_manager, $program_dao, $explicit_backlog_dao);
-        $this->plan_creator   = new PlanCreator($project_adapter, $tracker_adapter, $plan_dao);
+        $build_program        = new ProgramAdapter($project_manager, $program_dao, $explicit_backlog_dao);
+        $this->plan_creator   = new PlanCreator($build_program, $tracker_adapter, $plan_dao);
 
         $team_adapter       = new TeamAdapter($project_manager, $program_dao, $explicit_backlog_dao);
         $team_dao           = new TeamDao();
-        $this->team_creator = new TeamCreator($project_adapter, $team_adapter, $team_dao);
+        $this->team_creator = new TeamCreator($build_program, $team_adapter, $team_dao);
 
+        $artifact_factory              = \Tracker_ArtifactFactory::instance();
         $this->to_be_planned_retriever = new ToBePlannedElementsRetriever(
-            $project_adapter,
+            $build_program,
             new ToBePlannedElementsDao(),
-            \Tracker_ArtifactFactory::instance(),
+            $artifact_factory,
             \Tracker_FormElementFactory::instance()
+        );
+        $this->program_increments_builder = new ProgramIncrementBuilder(
+            $build_program,
+            new ProgramIncrementsRetriever(
+                new ProgramIncrementsDAO(),
+                $artifact_factory
+            )
         );
     }
 
@@ -188,7 +203,7 @@ final class ProjectResource extends AuthenticatedResource
 
             return array_slice($elements->to_be_planned_elements, $offset, $limit);
         } catch (\Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException $e) {
-            throw new RestException(401, $e->getMessage());
+            throw new RestException(404, $e->getMessage());
         } catch (\Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException $e) {
             throw new RestException(400, $e->getMessage());
         }
@@ -202,5 +217,50 @@ final class ProjectResource extends AuthenticatedResource
     public function optionsBacklog(int $id): void
     {
         Header::allowOptionsGet();
+    }
+
+    /**
+     * @url OPTIONS {id}/program_increments
+     *
+     * @param int $id ID of the program
+     */
+    public function optionsProgramIncrements(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get program increments
+     *
+     * @url GET {id}/program_increments
+     * @access hybrid
+     *
+     * @param int $id ID of the program
+     * @param int $limit Number of elements displayed per page {@min 1} {@max 50}
+     * @param int $offset Position of the first element to display {@min 0}
+     *
+     * @return ProgramIncrementRepresentation[]
+     *
+     * @throws RestException 401
+     * @throws RestException 400
+     */
+    public function getProgramIncrements(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    {
+        $user = $this->user_manager->getCurrentUser();
+        try {
+            $program_increments = $this->program_increments_builder->buildOpenProgramIncrements($id, $user);
+        } catch (\Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException $e) {
+            throw new RestException(404, $e->getMessage());
+        } catch (\Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException $e) {
+            throw new RestException(400, $e->getMessage());
+        }
+
+        Header::sendPaginationHeaders($limit, $offset, count($program_increments), self::MAX_LIMIT);
+
+        $representations = [];
+        foreach (array_slice($program_increments, $offset, $limit) as $program_increment) {
+            $representations[] = ProgramIncrementRepresentation::fromProgramIncrement($program_increment);
+        }
+        return $representations;
     }
 }
