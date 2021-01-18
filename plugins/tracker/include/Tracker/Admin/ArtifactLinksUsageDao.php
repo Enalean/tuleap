@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,82 +20,66 @@
 
 namespace Tuleap\Tracker\Admin;
 
-use DataAccessObject;
+use PDOException;
+use Tuleap\DB\DataAccessObject;
 
 class ArtifactLinksUsageDao extends DataAccessObject
 {
-    public function isProjectUsingArtifactLinkTypes($project_id)
+    public function isProjectUsingArtifactLinkTypes(int $project_id): bool
     {
-        $project_id = $this->da->escapeInt($project_id);
-
         $sql = "SELECT NULL
                 FROM plugin_tracker_projects_use_artifactlink_types
-                WHERE project_id = $project_id";
+                WHERE project_id = ?";
 
-        $this->retrieve($sql);
+        $rows = $this->getDB()->run($sql, $project_id);
 
-        return $this->foundRows() > 0;
+        return count($rows) > 0;
     }
 
-    public function activateForProject($project_id)
+    public function activateForProject(int $project_id): bool
     {
-        $project_id = $this->da->escapeInt($project_id);
-
         $sql = "REPLACE INTO plugin_tracker_projects_use_artifactlink_types
-                VALUES ($project_id)";
+                VALUES (?)";
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $project_id);
+        } catch (PDOException $ex) {
+            return false;
+        }
+
+        return true;
     }
 
-    public function deactivateForProject($project_id)
+    public function isTypeDisabledInProject(int $project_id, string $type_shortname): bool
     {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "DELETE FROM plugin_tracker_projects_use_artifactlink_types
-                WHERE project_id = $project_id";
-
-        return $this->update($sql);
-    }
-
-    public function isTypeDisabledInProject($project_id, $type_shortname)
-    {
-        $project_id     = $this->da->escapeInt($project_id);
-        $type_shortname = $this->da->quoteSmart($type_shortname);
-
         $sql = "SELECT NULL
                 FROM plugin_tracker_projects_unused_artifactlink_types
-                WHERE project_id = $project_id
-                  AND type_shortname = $type_shortname";
+                WHERE project_id = ?
+                  AND type_shortname = ?";
 
-        $this->retrieve($sql);
+        $rows = $this->getDB()->run($sql, $project_id, $type_shortname);
 
-        return $this->foundRows() > 0;
+        return count($rows) > 0;
     }
 
-    public function disableTypeInProject($project_id, $type_shortname)
+    public function disableTypeInProject(int $project_id, string $type_shortname): void
     {
-        $project_id     = $this->da->escapeInt($project_id);
-        $type_shortname = $this->da->quoteSmart($type_shortname);
-
         $sql = "REPLACE INTO plugin_tracker_projects_unused_artifactlink_types (project_id, type_shortname)
-                VALUES ($project_id, $type_shortname)";
+                VALUES (?, ?)";
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id, $type_shortname);
     }
 
-    public function enableTypeInProject($project_id, $type_shortname)
+    public function enableTypeInProject(int $project_id, string $type_shortname): void
     {
-        $project_id     = $this->da->escapeInt($project_id);
-        $type_shortname = $this->da->quoteSmart($type_shortname);
-
         $sql = "DELETE FROM plugin_tracker_projects_unused_artifactlink_types
-                WHERE project_id = $project_id
-                  AND type_shortname = $type_shortname";
+                WHERE project_id = ?
+                  AND type_shortname = ?";
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id, $type_shortname);
     }
 
-    public function duplicate($template_id, $project_id)
+    public function duplicate(int $template_id, int $project_id): bool
     {
         if (
             ! $this->activateForProject($project_id) ||
@@ -106,16 +90,19 @@ class ArtifactLinksUsageDao extends DataAccessObject
         return true;
     }
 
-    private function duplicateTypesUsageInProject($template_id, $project_id)
+    private function duplicateTypesUsageInProject(int $template_id, int $project_id): bool
     {
-        $template_id = $this->da->escapeInt($template_id);
-        $project_id  = $this->da->escapeInt($project_id);
-
         $sql = "INSERT INTO plugin_tracker_projects_unused_artifactlink_types (project_id, type_shortname)
-                SELECT $project_id, type_shortname
+                SELECT ?, type_shortname
                 FROM plugin_tracker_projects_unused_artifactlink_types
-                WHERE project_id = $template_id";
+                WHERE project_id = ?";
 
-        return $this->update($sql);
+        try {
+            $this->getDB()->run($sql, $project_id, $template_id);
+        } catch (PDOException $ex) {
+            return false;
+        }
+
+        return true;
     }
 }

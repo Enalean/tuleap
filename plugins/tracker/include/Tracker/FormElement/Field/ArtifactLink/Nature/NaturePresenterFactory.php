@@ -84,7 +84,7 @@ class NaturePresenterFactory
     {
         $types = $this->getAllTypesEditableInProject($project);
         foreach ($types as $key => $type) {
-            if ($this->artifact_links_usage_dao->isTypeDisabledInProject($project->getID(), $type->shortname)) {
+            if ($this->artifact_links_usage_dao->isTypeDisabledInProject((int) $project->getID(), $type->shortname)) {
                 unset($types[$key]);
             }
         }
@@ -178,7 +178,7 @@ class NaturePresenterFactory
 
     public function getTypeEnabledInProjectFromShortname(Project $project, string $shortname): ?NaturePresenter
     {
-        if ($this->artifact_links_usage_dao->isTypeDisabledInProject($project->getID(), $shortname)) {
+        if ($this->artifact_links_usage_dao->isTypeDisabledInProject((int) $project->getID(), $shortname)) {
             return null;
         }
 
