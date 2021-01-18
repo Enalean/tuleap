@@ -92,7 +92,7 @@ def runPsalm(String configPath, String filesToAnalyze, String root='.') {
             if (filesToAnalyze == '' || filesToAnalyze == '.') {
                 sh """
                 mkdir -p ../results/psalm/
-                scl enable php73 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --root='${root}' --report=../results/psalm/checkstyle.xml"
+                scl enable php73 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
                 """
             } else {
                 sh """
@@ -108,7 +108,7 @@ def runPsalmTaintAnalysis(String configPath, String root='.') {
         dir ('sources') {
             sh """
             mkdir -p ../results/psalm/
-            scl enable php73 "src/vendor/bin/psalm --taint-analysis --config='${configPath}' --root='${root}' --report=../results/psalm/checkstyle.xml"
+            scl enable php73 "src/vendor/bin/psalm --taint-analysis --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
             """
         }
     }
