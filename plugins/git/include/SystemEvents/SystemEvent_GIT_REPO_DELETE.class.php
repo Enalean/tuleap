@@ -84,6 +84,10 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
         }
 
         $repository = $this->repository_factory->getDeletedRepository($repositoryId);
+        if ($repository === null) {
+            $this->error('Cannot find deleted repository #' . $repositoryId);
+            return false;
+        }
         if ($repository->getProjectId() != $projectId) {
             $this->error('Bad project id');
             return false;

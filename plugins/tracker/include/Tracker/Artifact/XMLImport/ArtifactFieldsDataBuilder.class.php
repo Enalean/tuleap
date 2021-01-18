@@ -48,12 +48,6 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     /** @var Tracker */
     private $tracker;
 
-    /** @var Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact */
-    private $files_importer;
-
-    /** @var string */
-    private $extraction_path;
-
     /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategy[] */
     private $strategies;
 
@@ -75,15 +69,13 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     ) {
         $this->formelement_factory  = $formelement_factory;
         $this->tracker              = $tracker;
-        $this->files_importer       = $files_importer;
-        $this->extraction_path      = $extraction_path;
         $this->logger               = $logger;
         $alphanum_strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric();
         $this->strategies  = [
             self::FIELDTYPE_PERMS_ON_ARTIFACT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact(),
             self::FIELDTYPE_ATTACHEMENT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment(
-                $this->extraction_path,
-                $this->files_importer,
+                $extraction_path,
+                $files_importer,
                 $this->logger
             ),
             self::FIELDTYPE_OPENLIST => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,9 +25,6 @@ use CSRFSynchronizerToken;
 
 class UserChangePasswordPresenter
 {
-    /** @var PFUser */
-    private $user;
-
     /** @var CSRFSynchronizerToken */
     public $csrf_token;
     /** @var array */
@@ -47,12 +44,11 @@ class UserChangePasswordPresenter
         array $additional_password_messages,
         array $passwords_validators
     ) {
-        $this->user                         = $user;
         $this->csrf_token                   = $csrf_token;
         $this->additional_password_messages = $additional_password_messages;
         $this->passwords_validators         = $passwords_validators;
 
-        $this->user_id                      = $this->user->getId();
+        $this->user_id                      = $user->getId();
         $this->modal_title                  = $GLOBALS['Language']->getText('admin_user_changepw', 'header');
         $this->modal_save                   = $GLOBALS['Language']->getText('admin_user_changepw', 'save');
         $this->modal_cancel                 = $GLOBALS['Language']->getText('admin_user_changepw', 'cancel');

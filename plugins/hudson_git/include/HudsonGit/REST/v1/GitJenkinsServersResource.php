@@ -54,14 +54,6 @@ final class GitJenkinsServersResource extends AuthenticatedResource
      */
     private $project_manager;
     /**
-     * @var GitRepositoryFactory
-     */
-    private $repository_factory;
-    /**
-     * @var Git_SystemEventManager
-     */
-    private $git_system_event_manager;
-    /**
      * @var GitPermissionsManager
      */
     private $git_permission_manager;
@@ -78,14 +70,14 @@ final class GitJenkinsServersResource extends AuthenticatedResource
         $this->project_manager = ProjectManager::instance();
         $this->user_manager    = UserManager::instance();
 
-        $this->repository_factory = new GitRepositoryFactory(
+        $repository_factory = new GitRepositoryFactory(
             $git_dao,
             $this->project_manager
         );
 
-        $this->git_system_event_manager = new Git_SystemEventManager(
+        $git_system_event_manager = new Git_SystemEventManager(
             SystemEventManager::instance(),
-            $this->repository_factory
+            $repository_factory
         );
 
         $fine_grained_dao       = new FineGrainedDao();
@@ -93,7 +85,7 @@ final class GitJenkinsServersResource extends AuthenticatedResource
 
         $this->git_permission_manager = new GitPermissionsManager(
             new Git_PermissionsDao(),
-            $this->git_system_event_manager,
+            $git_system_event_manager,
             $fine_grained_dao,
             $fine_grained_retriever
         );

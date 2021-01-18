@@ -55,7 +55,11 @@ class VisitRetriever
      */
     public function getMostRecentlySeenArtifacts(\PFUser $user, $nb_maximum_artifacts)
     {
-        $recently_visited_rows = $this->dao->searchVisitByUserId($user->getId(), $nb_maximum_artifacts);
+        $user_id               = $user->getId();
+        $recently_visited_rows = $this->dao->searchVisitByUserId($user_id, $nb_maximum_artifacts);
+        if ($recently_visited_rows === false) {
+            throw new \RuntimeException(sprintf('Could not search tracker visits for user #%d', $user_id));
+        }
         $artifacts_id = [];
         foreach ($recently_visited_rows as $recently_visited_row) {
             $artifacts_id[] = $recently_visited_row['artifact_id'];
@@ -69,10 +73,14 @@ class VisitRetriever
      */
     public function getVisitHistory(HistoryEntryCollection $entry_collection, int $max_length_history): void
     {
+        $user_id               = $entry_collection->getUser()->getId();
         $recently_visited_rows = $this->dao->searchVisitByUserId(
-            $entry_collection->getUser()->getId(),
+            $user_id,
             $max_length_history
         );
+        if ($recently_visited_rows === false) {
+            throw new \RuntimeException(sprintf('Could not search tracker visits for user #%d', $user_id));
+        }
 
         foreach ($recently_visited_rows as $recently_visited_row) {
             $artifact = $this->artifact_factory->getArtifactById($recently_visited_row['artifact_id']);

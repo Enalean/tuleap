@@ -80,10 +80,8 @@ class Git_Driver_Gerrit_Template_Template
 
     /**
      * @param int $group_id
-     *
-     * @return True if this template belongs to the given project
      */
-    public function belongsToProject($group_id)
+    public function belongsToProject($group_id): bool
     {
         return $this->group_id == $group_id;
     }

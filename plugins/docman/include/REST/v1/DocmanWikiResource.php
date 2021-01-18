@@ -59,10 +59,6 @@ use UserManager;
 class DocmanWikiResource extends AuthenticatedResource
 {
     /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
      * @var \EventManager
      */
     private $event_manager;
@@ -78,8 +74,7 @@ class DocmanWikiResource extends AuthenticatedResource
     public function __construct()
     {
         $this->user_manager    = UserManager::instance();
-        $this->project_manager = ProjectManager::instance();
-        $this->request_builder = new DocmanItemsRequestBuilder($this->user_manager, $this->project_manager);
+        $this->request_builder = new DocmanItemsRequestBuilder($this->user_manager, ProjectManager::instance());
         $this->event_manager   = \EventManager::instance();
     }
 

@@ -60,5 +60,25 @@
         <RedundantConditionGivenDocblockType errorLevel="info" />
 
         <UnresolvableInclude errorLevel="info" />
+
+        <!-- Unused code detection -->
+        <UnusedMethodCall errorLevel="suppress" />
+        <UnusedFunctionCall errorLevel="suppress" />
+        <UnusedParam errorLevel="suppress" />
+        <UnusedVariable errorLevel="suppress" />
+        <InvalidCast errorLevel="suppress" />
+        <UnusedClass errorLevel="suppress" />
+        <UnnecessaryVarAnnotation errorLevel="suppress" />
+        <UnnecessaryVarAnnotation errorLevel="suppress" />
+        <PossiblyUnusedMethod errorLevel="suppress" />
+        <UnusedMethod errorLevel="suppress" />
+        <PossiblyUnusedProperty errorLevel="suppress" />
+        <UnusedConstructor errorLevel="suppress" />
+        <UnevaluatedCode errorLevel="suppress" />
+        <UnusedProperty>
+            <errorLevel type="suppress">
+                <file name="plugins/git/include/GitActions.class.php"/>
+            </errorLevel>
+        </UnusedProperty>
     </issueHandlers>
 </psalm>

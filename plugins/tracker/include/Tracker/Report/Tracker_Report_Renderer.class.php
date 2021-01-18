@@ -31,6 +31,9 @@ use Tuleap\Widget\WidgetFactory;
 abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
 {
 
+    /**
+     * @var mixed
+     */
     public $id;
 
     /**

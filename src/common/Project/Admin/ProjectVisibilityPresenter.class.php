@@ -45,10 +45,6 @@ class ProjectVisibilityPresenter
      */
     public $purified_term_of_service_message;
 
-    /**
-     * @var BaseLanguage
-     */
-    private $language;
     public $can_configure_visibility;
     public $project_visibility_label;
     public $accept_tos_message;
@@ -64,18 +60,17 @@ class ProjectVisibilityPresenter
         int $number_of_restricted_users_in_project,
         ProjectVisibilityOptionsForPresenterGenerator $project_visibility_options_generator
     ) {
-        $this->language                         = $language;
         $this->platform_allows_restricted       = (bool) $platform_allows_restricted;
-        $this->restricted_warning_message       = $this->language->getText(
+        $this->restricted_warning_message       = $language->getText(
             'project_admin_editgroupinfo',
             'restricted_warning'
         );
-        $this->general_warning_message          = $this->language->getText(
+        $this->general_warning_message          = $language->getText(
             'project_admin_editgroupinfo',
             'general_warning'
         );
         $this->purified_term_of_service_message = Codendi_HTMLPurifier::instance()->purify(
-            $this->language->getOverridableText('project_admin_editgroupinfo', 'term_of_service'),
+            $language->getOverridableText('project_admin_editgroupinfo', 'term_of_service'),
             CODENDI_PURIFIER_LIGHT
         );
 

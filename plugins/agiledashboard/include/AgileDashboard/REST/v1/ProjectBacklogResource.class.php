@@ -83,12 +83,6 @@ class ProjectBacklogResource
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
-    /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
-    private $backlog_factory;
-
-    /** @var \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
-    private $backlog_item_collection_factory;
-
     /** @var ArtifactLinkUpdater */
     private $artifactlink_updater;
 
@@ -147,7 +141,7 @@ class ProjectBacklogResource
             new MilestoneBurndownFieldChecker($tracker_form_element_factory)
         );
 
-        $this->backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
+        $backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
             new AgileDashboard_BacklogItemDao(),
             $tracker_artifact_factory,
             $this->planning_factory,
@@ -155,7 +149,7 @@ class ProjectBacklogResource
             $mono_milestone_items_finder
         );
 
-        $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+        $backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $tracker_artifact_factory,
             $this->milestone_factory,
@@ -171,9 +165,9 @@ class ProjectBacklogResource
         $this->milestone_validator = new MilestoneResourceValidator(
             $this->planning_factory,
             $tracker_artifact_factory,
-            $this->backlog_factory,
+            $backlog_factory,
             $this->milestone_factory,
-            $this->backlog_item_collection_factory,
+            $backlog_item_collection_factory,
             $scrum_mono_milestone_checker
         );
 
@@ -185,7 +179,6 @@ class ProjectBacklogResource
         );
 
         $this->artifactlink_updater      = new ArtifactLinkUpdater($priority_manager);
-        $this->milestone_content_updater = new MilestoneContentUpdater($this->artifactlink_updater);
         $this->resources_patcher         = new ResourcesPatcher(
             $this->artifactlink_updater,
             $tracker_artifact_factory,
@@ -202,8 +195,8 @@ class ProjectBacklogResource
 
         $this->paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             $item_factory,
-            $this->backlog_item_collection_factory,
-            $this->backlog_factory,
+            $backlog_item_collection_factory,
+            $backlog_factory,
             new \Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao()
         );
     }

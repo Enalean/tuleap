@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,15 +27,13 @@ class ZipArchive implements ArchiveInterface
 
     /** @var \ZipArchive */
     private $archive;
-    private $archive_path;
     private $extraction_path;
 
     public function __construct($archive_path, $tmpdir)
     {
-        $this->archive_path    = $archive_path;
         $this->extraction_path = $this->tempdir($tmpdir);
         $this->archive         = new \ZipArchive();
-        if ($this->archive->open($this->archive_path) !== true) {
+        if ($this->archive->open($archive_path) !== true) {
             throw new ArchiveException('Cannot open zip archive: ' . $archive_path);
         }
     }

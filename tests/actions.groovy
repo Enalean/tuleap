@@ -114,6 +114,17 @@ def runPsalmTaintAnalysis(String configPath, String root='.') {
     }
 }
 
+def runPsalmUnusedCodeDetection(String configPath, String root='.') {
+    withEnv(['XDG_CACHE_HOME=/tmp/psalm_cache/']) {
+        dir ('sources') {
+            sh """
+            mkdir -p ../results/psalm/
+            scl enable php73 "src/vendor/bin/psalm --find-unused-code --config='${configPath}' --root='${root}' --report=../results/psalm/checkstyle.xml"
+            """
+        }
+    }
+}
+
 def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAnalyze) {
     if (filesToAnalyze == '') {
         return;

@@ -46,9 +46,6 @@ class PreCommit
     /** @var Repository */
     private $repository;
 
-    /** @var RepositoryManager */
-    private $repository_manager;
-
     private $transaction;
     /**
      * @var Svnlook
@@ -74,14 +71,13 @@ class PreCommit
         LoggerInterface $logger,
         HookConfigRetriever $hook_config_retriever
     ) {
-        $this->repository_manager      = $repository_manager;
         $this->immutable_tag_factory   = $immutable_tag_factory;
         $this->logger                  = $logger;
         $this->transaction             = $transaction;
         $this->commit_info_enhancer    = $commit_info_enhancer;
         $this->svnlook                 = $svnlook;
         $this->sha1_collision_detector = $sha1_collision_detector;
-        $this->repository              = $this->repository_manager->getRepositoryFromSystemPath($repository_path);
+        $this->repository              = $repository_manager->getRepositoryFromSystemPath($repository_path);
         $this->hook_config_retriever   = $hook_config_retriever;
 
         $this->commit_info_enhancer->enhanceWithTransaction($this->repository, $transaction);

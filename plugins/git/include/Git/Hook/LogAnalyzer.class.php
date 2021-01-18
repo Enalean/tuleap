@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -43,15 +43,9 @@ class Git_Hook_LogAnalyzer
     }
 
     /**
-     *
      * Behaviour extracted from official email hook prep_for_email() function
-     *
-     * @param type $oldrev
-     * @param type $newrev
-     * @param type $refname
-     * @return Git_Hook_PushDetails
      */
-    public function getPushDetails(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
+    public function getPushDetails(GitRepository $repository, PFUser $user, string $oldrev, string $newrev, string $refname): Git_Hook_PushDetails
     {
         $change_type   = Git_Hook_PushDetails::ACTION_ERROR;
         $revision_list = [];
