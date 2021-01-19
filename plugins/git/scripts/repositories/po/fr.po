@@ -63,11 +63,17 @@ msgstr ""
 "Impossible de se connecter au serveur GitLab, veuillez vérifier vos "
 "identifiants de connexion."
 
+msgid "Check new token validity"
+msgstr "Vérifier la validité du nouveau token"
+
 msgid "Close"
 msgstr "Fermer"
 
 msgid "Create a repository"
 msgstr "Créer un dépôt"
+
+msgid "Edit access token"
+msgstr "Éditer le token d'accès"
 
 msgid "Fetch GitLab repositories"
 msgstr "Récuperer les dépôts GitLab"
@@ -90,6 +96,9 @@ msgstr "Jeton du projet GitLab"
 msgid "GitLab project token scope must contain at least: api."
 msgstr "La portée du jeton du projet GitLab doit contenir au moins : api."
 
+msgid "GitLab repository"
+msgstr "Dépôt GitLab"
+
 msgid ""
 "GitLab repository <strong>%{ label }</strong> has been successfully "
 "integrated!"
@@ -104,6 +113,12 @@ msgstr ""
 
 msgid "GitLab server URL"
 msgstr "URL du serveur GitLab"
+
+msgid "GitLab token (personal or project)"
+msgstr "Jeton Gitlab (personnel ou projet)"
+
+msgid "GitLab token scope must contain at least: api."
+msgstr "La portée du jeton GitLab doit contenir au moins : api."
 
 msgid "Go to repository administration"
 msgstr "Aller à l'administration du dépôt"
@@ -163,6 +178,19 @@ msgstr "Trier les dépôts par ordre alphabétique"
 msgid "Sort repositories by their last update date"
 msgstr "Trier les dépôts par leur date de dernière mise à jour"
 
+msgid ""
+"Submitted token is invalid to access to this repository on this GitLab "
+"server."
+msgstr ""
+"Le jeton fourni est invalide pour accéder à ce dépôt sur ce serveur GitLab"
+
+msgid ""
+"The access token will be used to configure project hooks and automatically "
+"write comments on GitLab commits and merge requests."
+msgstr ""
+"Le jeton d'accès sera utilisé pour configurer les hooks de projet et "
+"commenter automatiquement les commits et les demandes de fusion GitLab."
+
 msgid "There are no repositories in this project"
 msgstr "Il n'y a aucun dépôt dans ce projet"
 
@@ -200,6 +228,9 @@ msgid ""
 msgstr ""
 "Vous n'avez pas la permission de créer de dépôts git comme vous n'êtes pas "
 "administrateur du service Git."
+
+msgid "You must provide a valid GitLab API token"
+msgstr "Vous devez fournir un jeton d'API valide"
 
 msgid "You must provide a valid GitLab server and user API token"
 msgstr "Vous devez fournir un serveur GitLab et un jeton d'API valides"

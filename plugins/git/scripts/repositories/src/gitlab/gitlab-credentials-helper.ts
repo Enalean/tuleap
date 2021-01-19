@@ -18,7 +18,12 @@
  */
 import { GitLabCredentials } from "../type";
 
-export { credentialsAreEmpty, serverUrlIsValid, formatUrl };
+export {
+    credentialsAreEmpty,
+    serverUrlIsValid,
+    formatUrlToGetAllProject,
+    formatUrlToGetProjectFromId,
+};
 
 function credentialsAreEmpty(credentials: GitLabCredentials): boolean {
     return (
@@ -35,11 +40,20 @@ function serverUrlIsValid(server_url: string): boolean {
     return reg_exp.test(server_url);
 }
 
-function formatUrl(server_url: string): string {
+function formatUrlToGetAllProject(server_url: string): string {
     let url = server_url;
     if (server_url.slice(-1) === "/") {
         url = server_url.slice(0, -1);
     }
 
     return url + "/api/v4/projects?membership=true&per_page=20&min_access_level=40";
+}
+
+function formatUrlToGetProjectFromId(server_url: string, repository_id: number): string {
+    let url = server_url;
+    if (server_url.slice(-1) === "/") {
+        url = server_url.slice(0, -1);
+    }
+
+    return url + "/api/v4/projects/" + repository_id;
 }

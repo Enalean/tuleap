@@ -78,9 +78,18 @@
                         <div
                             class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right gitlab-administration-dropdown"
                             ref="dropdown_gitlab_administration_menu_options"
-                            v-bind:data-test="`dropdown-gitlab-administration-menu-options-${repository.id}`"
+                            data-test="dropdown-gitlab-administration-menu-options"
                             role="menu"
                         >
+                            <div
+                                class="tlp-dropdown-menu-item"
+                                role="menuitem"
+                                ref="edit_access_token_gitlab_repository"
+                                data-test="edit-access-token-gitlab-repository"
+                            >
+                                <i class="fas fa-fw fa-key" aria-hidden="true"></i>
+                                {{ edit_access_token_repository_title }}
+                            </div>
                             <div
                                 class="tlp-dropdown-menu-item unlink-repository-gitlab"
                                 role="menuitem"
@@ -168,6 +177,9 @@ export default {
         unlink_repository_title() {
             return this.$gettext("Unlink the repository");
         },
+        edit_access_token_repository_title() {
+            return this.$gettext("Edit access token");
+        },
         formatted_last_update_date() {
             const date = new Date(this.repository.last_update_date);
             const time_ago = new TimeAgo(getDashCasedLocale());
@@ -204,6 +216,15 @@ export default {
                 });
             }
 
+            const button_edit_access_token = this.$refs.edit_access_token_gitlab_repository;
+
+            if (button_edit_access_token) {
+                button_edit_access_token.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    this.showEditAccessTokenGitlabRepositoryModal(this.repository);
+                });
+            }
+
             const button_gitlab_administration = this.$refs.gitlab_administration;
             const dropdown_gitlab_administration = this.$refs.dropdown_gitlab_administration;
 
@@ -219,7 +240,10 @@ export default {
         }
     },
     methods: {
-        ...mapActions(["showDeleteGitlabRepositoryModal"]),
+        ...mapActions([
+            "showDeleteGitlabRepositoryModal",
+            "showEditAccessTokenGitlabRepositoryModal",
+        ]),
     },
 };
 </script>

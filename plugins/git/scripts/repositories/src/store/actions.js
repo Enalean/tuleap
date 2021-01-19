@@ -33,7 +33,10 @@ import {
     REPOSITORIES_SORTED_BY_PATH,
     ANONYMOUS_USER_ID,
 } from "../constants.js";
-import { formatUrl } from "../gitlab/gitlab-credentials-helper";
+import {
+    formatUrlToGetAllProject,
+    formatUrlToGetProjectFromId,
+} from "../gitlab/gitlab-credentials-helper";
 import { getAsyncGitlabRepositoryList as getAsyncGitlabRepository } from "../gitlab/gitlab-api-querier";
 
 export const setDisplayMode = async (context, new_mode) => {
@@ -63,6 +66,11 @@ export const showAddGitlabRepositoryModal = ({ state }) => {
 export const showDeleteGitlabRepositoryModal = (context, repository) => {
     context.commit("setUnlinkGitlabRepository", repository);
     context.state.unlink_gitlab_repository_modal.toggle();
+};
+
+export const showEditAccessTokenGitlabRepositoryModal = (context, repository) => {
+    context.commit("setEditAccessTokenGitlabRepository", repository);
+    context.state.edit_access_token_gitlab_repository_modal.toggle();
 };
 
 export const changeRepositories = async (context, new_owner_id) => {
@@ -159,7 +167,7 @@ async function handleGetRepositoryListError(e, commit) {
 export async function getGitlabRepositoryList(context, credentials) {
     let pagination = 1;
     let repositories_gitlab = [];
-    credentials.server_url = formatUrl(credentials.server_url);
+    credentials.server_url = formatUrlToGetAllProject(credentials.server_url);
     const server_url_without_pagination = credentials.server_url;
 
     const response = await getAsyncGitlabRepository(credentials);
@@ -183,6 +191,18 @@ export async function getGitlabRepositoryList(context, credentials) {
     }
 
     return repositories_gitlab;
+}
+
+export async function getGitlabRepositoryFromId(context, { credentials, id }) {
+    credentials.server_url = formatUrlToGetProjectFromId(credentials.server_url, id);
+
+    const response = await getAsyncGitlabRepository(credentials);
+
+    if (response.status !== 200) {
+        throw Error();
+    }
+
+    return response.json();
 }
 
 async function queryAPIGitlab(credentials, server_url_without_pagination, pagination) {

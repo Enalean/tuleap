@@ -23,7 +23,9 @@
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.1.2",
     "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.1.2"
+    "vue-property-decorator": "^9.1.2",
+    "vuex-class": "^0.3.2",
+    "vuex-mock-store": "0.0.8"
   },
   "config": {
     "bin": "../../node_modules/.bin"

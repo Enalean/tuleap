@@ -31,6 +31,8 @@ import {
     getAsyncRepositoryList,
     changeRepositories,
     getGitlabRepositoryList,
+    getGitlabRepositoryFromId,
+    showEditAccessTokenGitlabRepositoryModal,
 } from "./actions.js";
 import * as repository_list_presenter from "../repository-list-presenter";
 import * as rest_querier from "../api/rest-querier.js";
@@ -285,6 +287,31 @@ describe("Store actions", () => {
         });
     });
 
+    describe("showEditAccessTokenGitlabRepositoryModal", () => {
+        let context;
+        beforeEach(() => {
+            context = {
+                commit: jest.fn(),
+                state: {
+                    edit_access_token_gitlab_repository_modal: { toggle: jest.fn() },
+                },
+            };
+        });
+
+        const repository = { id: 5 };
+
+        it("When modal should be open, Then repository is set and modal is opened", () => {
+            showEditAccessTokenGitlabRepositoryModal(context, repository);
+            expect(context.commit).toHaveBeenCalledWith(
+                "setEditAccessTokenGitlabRepository",
+                repository
+            );
+            expect(
+                context.state.edit_access_token_gitlab_repository_modal.toggle
+            ).toHaveBeenCalled();
+        });
+    });
+
     describe("getGitlabRepositoryList", () => {
         let context;
         beforeEach(() => {
@@ -373,6 +400,71 @@ describe("Store actions", () => {
             expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
                 server_url:
                     "https://example/api/v4/projects?membership=true&per_page=20&min_access_level=40",
+                token: "azerty1234",
+            });
+        });
+    });
+
+    describe("getGitlabRepositoryFromId", () => {
+        let context;
+        beforeEach(() => {
+            context = {
+                commit: jest.fn(),
+            };
+        });
+
+        it("When api is called, Then url is formatted", async () => {
+            const getAsyncGitlabRepositoryList = jest.spyOn(
+                gitlab_querier,
+                "getAsyncGitlabRepositoryList"
+            );
+            getAsyncGitlabRepositoryList.mockReturnValue(
+                new Promise((resolve) => {
+                    resolve({
+                        headers: {
+                            get: () => 1,
+                        },
+                        status: 200,
+                        json: () => Promise.resolve([{ id: 10 }]),
+                    });
+                })
+            );
+            const credentials = {
+                server_url: "https://example/",
+                token: "azerty1234",
+            };
+
+            expect(await getGitlabRepositoryFromId(context, { credentials, id: 12 })).toEqual([
+                { id: 10 },
+            ]);
+            expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
+                server_url: "https://example/api/v4/projects/12",
+                token: "azerty1234",
+            });
+        });
+
+        it("When an error is retrieved from api, Then an error is thrown", async () => {
+            const getAsyncGitlabRepositoryList = jest.spyOn(
+                gitlab_querier,
+                "getAsyncGitlabRepositoryList"
+            );
+            getAsyncGitlabRepositoryList.mockReturnValue(
+                new Promise((resolve) => {
+                    resolve({
+                        status: 401,
+                    });
+                })
+            );
+            const credentials = {
+                server_url: "https://example/",
+                token: "azerty1234",
+            };
+
+            await expect(
+                getGitlabRepositoryFromId(context, { credentials, id: 12 })
+            ).rejects.toEqual(new Error());
+            expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
+                server_url: "https://example/api/v4/projects/12",
                 token: "azerty1234",
             });
         });
