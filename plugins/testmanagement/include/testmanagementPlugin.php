@@ -563,7 +563,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
         $dao                          = new ArtifactLinksUsageDao();
         $covered_by_type_is_activated = ! $dao->isTypeDisabledInProject(
-            $project->getID(),
+            (int) $project->getID(),
             NatureCoveredByPresenter::NATURE_COVERED_BY
         );
 
