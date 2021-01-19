@@ -22,6 +22,7 @@ require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.php';
 
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Git\DefaultSettings\Pane\DefaultSettingsPanesCollection;
 use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Events\AfterRepositoryForked;
@@ -81,6 +82,7 @@ use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullrequestDisplayer;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestUpdater;
+use Tuleap\PullRequest\Reference\CrossReferencePullRequestOrganizer;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\Reference\ProjectReferenceRetriever;
 use Tuleap\PullRequest\Reference\ReferenceDao;
@@ -94,11 +96,11 @@ use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\PullRequest\Tooltip\Presenter;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
-use Tuleap\Request\CollectRoutesEvent;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Reference\NatureCollection;
+use Tuleap\Request\CollectRoutesEvent;
 
 class pullrequestPlugin extends Plugin // phpcs:ignore
 {
@@ -132,6 +134,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(GetProjectHistoryEntryValue::NAME);
         $this->addHook(WorkerEvent::NAME);
+        $this->addHook(CrossReferenceByNatureOrganizer::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
@@ -757,5 +760,20 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->getRepositoryFactory(),
             new \Tuleap\InstanceBaseURLBuilder()
         );
+    }
+
+    public function crossReferenceByNatureOrganizer(CrossReferenceByNatureOrganizer $organizer): void
+    {
+        $pull_request_organizer = new CrossReferencePullRequestOrganizer(
+            ProjectManager::instance(),
+            new Factory(new \Tuleap\PullRequest\Dao(), ReferenceManager::instance()),
+            $this->getPullRequestPermissionsChecker(),
+            $this->getRepositoryFactory(),
+            new \Tuleap\Date\TlpRelativeDatePresenterBuilder(),
+            UserManager::instance(),
+            UserHelper::instance(),
+        );
+
+        $pull_request_organizer->organizePullRequestReferences($organizer);
     }
 }
