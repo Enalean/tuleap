@@ -40,10 +40,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
      */
     private $tracker_id;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\Admin\ArtifactLinksUsageDao
-     */
-    private $type_dao;
-    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Hierarchy_HierarchicalTrackerFactory
      */
     private $factory;
@@ -70,7 +66,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
         $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($tracker, []);
         $this->request              = Mockery::mock(Codendi_Request::class);
         $this->dao                  = \Mockery::spy(HierarchyDAO::class);
-        $this->type_dao             = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
         $this->factory              = \Mockery::spy(\Tracker_Hierarchy_HierarchicalTrackerFactory::class);
         $this->trigger_rules_dao    = Mockery::spy(Tracker_Workflow_Trigger_RulesDao::class);
         $this->trigger_rules_dao->shouldReceive('searchTriggeringTrackersByTargetTrackerID')->andReturn([]);
@@ -155,7 +150,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
-            $this->type_dao,
             $this->trigger_rules_dao,
             self::buildEventDispatcher()
         );
@@ -173,7 +167,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
-            $this->type_dao,
             $this->trigger_rules_dao,
             self::buildEventDispatcher()
         );
@@ -191,7 +184,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
-            $this->type_dao,
             $this->trigger_rules_dao,
             self::buildEventDispatcher()
         );
@@ -213,7 +205,6 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
-            $this->type_dao,
             $this->trigger_rules_dao,
             self::buildEventDispatcher()
         );
@@ -228,33 +219,12 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
-            $this->type_dao,
             $this->trigger_rules_dao,
             self::buildEventDispatcher()
         );
         $this->dao->shouldReceive('updateChildren')->once();
 
         $controller->updateFromXmlProjectImportProcess($mapping);
-    }
-
-    public function testItDoesNotUpdateHierarchyIfIsChildTypeIsDisabled(): void
-    {
-        $this->type_dao->shouldReceive('isProjectUsingArtifactLinkTypes')->andReturns(true);
-        $this->type_dao->shouldReceive('isTypeDisabledInProject')->andReturns(true);
-
-        $this->dao->shouldReceive('updateChildren')->never();
-
-        $controller = new HierarchyController(
-            $this->request,
-            $this->hierarchical_tracker,
-            $this->factory,
-            $this->dao,
-            $this->type_dao,
-            $this->trigger_rules_dao,
-            self::buildEventDispatcher()
-        );
-
-        $controller->update();
     }
 
     /**

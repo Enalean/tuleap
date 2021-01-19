@@ -936,7 +936,6 @@ class Tracker implements Tracker_Dispatchable_Interface
             $hierarchical_tracker,
             $factory,
             $dao,
-            new ArtifactLinksUsageDao(),
             new Tracker_Workflow_Trigger_RulesDao(),
             $event_manager
         );

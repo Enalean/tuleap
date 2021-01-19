@@ -22,17 +22,14 @@ namespace Tuleap\Tracker\Hierarchy;
 
 use Codendi_Request;
 use Feedback;
-use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
 use TemplateRendererFactory;
 use Tracker;
-use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_Hierarchy_HierarchicalTracker;
 use Tracker_Hierarchy_HierarchicalTrackerFactory;
 use Tracker_Hierarchy_Presenter;
 use Tracker_Workflow_Trigger_RulesDao;
-use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Valid_UInt;
 
 class HierarchyController
@@ -57,11 +54,6 @@ class HierarchyController
      * @var HierarchyDAO
      */
     private $dao;
-
-    /**
-     * @var ArtifactLinksUsageDao
-     */
-    private $artifact_links_usage_dao;
     /**
      * @var Tracker_Workflow_Trigger_RulesDao
      */
@@ -80,7 +72,6 @@ class HierarchyController
         Tracker_Hierarchy_HierarchicalTracker $tracker,
         Tracker_Hierarchy_HierarchicalTrackerFactory $factory,
         HierarchyDAO $dao,
-        ArtifactLinksUsageDao $artifact_links_usage_dao,
         Tracker_Workflow_Trigger_RulesDao $tracker_workflow_trigger_rules_dao,
         EventDispatcherInterface $event_dispatcher
     ) {
@@ -88,7 +79,6 @@ class HierarchyController
         $this->tracker                            = $tracker;
         $this->factory                            = $factory;
         $this->dao                                = $dao;
-        $this->artifact_links_usage_dao           = $artifact_links_usage_dao;
         $this->tracker_workflow_trigger_rules_dao = $tracker_workflow_trigger_rules_dao;
         $this->renderer                           = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
         $this->event_dispatcher                   = $event_dispatcher;
@@ -105,7 +95,6 @@ class HierarchyController
             $this->tracker,
             $this->factory->getPossibleChildren($this->tracker),
             $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker()),
-            $this->isIsChildTypeDisabledForProject($this->tracker->getProject()),
             $this->getOtherResourceNameManagingTheTrackerHierarchy(),
             $this->getChildrenUsedInTriggerRules()
         );
@@ -136,15 +125,6 @@ class HierarchyController
         return $children_used_in_triggers_rules;
     }
 
-    private function isIsChildTypeDisabledForProject(Project $project): bool
-    {
-        return $this->artifact_links_usage_dao->isProjectUsingArtifactLinkTypes((int) $project->getID()) &&
-            $this->artifact_links_usage_dao->isTypeDisabledInProject(
-                (int) $project->getID(),
-                Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
-            );
-    }
-
     private function getOtherResourceNameManagingTheTrackerHierarchy(): ?string
     {
         $tracker_hierarchy_delegation = new TrackerHierarchyDelegation($this->tracker->getUnhierarchizedTracker());
@@ -157,7 +137,7 @@ class HierarchyController
         $vChildren = new Valid_UInt('children');
         $vChildren->required();
 
-        if ($this->getOtherResourceNameManagingTheTrackerHierarchy() !== null || $this->isIsChildTypeDisabledForProject($this->tracker->getProject())) {
+        if ($this->getOtherResourceNameManagingTheTrackerHierarchy() !== null) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-tracker', 'The tracker hierarchy cannot be defined.')

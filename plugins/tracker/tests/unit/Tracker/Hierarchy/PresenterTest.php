@@ -43,7 +43,6 @@ final class Tracker_Hierarchy_PresenterTest extends \PHPUnit\Framework\TestCase
             $tracker,
             $possible_children,
             new TreeNode(),
-            false,
             null,
             []
         );

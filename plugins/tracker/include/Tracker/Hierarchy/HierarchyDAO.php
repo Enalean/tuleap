@@ -241,12 +241,6 @@ class HierarchyDAO extends DataAccessObject
         return $this->getDB()->run($sql, $group_id);
     }
 
-    public function isAHierarchySetInProject(int $project_id): bool
-    {
-        $rows = $this->searchParentChildAssociations($project_id);
-        return count($rows) > 0;
-    }
-
     public function deleteParentChildAssociationsForTracker(int $tracker_id): void
     {
         $sql = 'DELETE h.*
