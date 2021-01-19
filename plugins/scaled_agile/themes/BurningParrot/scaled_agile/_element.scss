@@ -17,16 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@each $color-name, $colors in $tlp-swatch-color-map {
-    .element-card-#{$color-name} {
-        --card-color: #{map-get($colors, 'primary')};
-    }
-
-    .element-card-xref-#{$color-name} {
-        color: #{map-get($colors, 'primary')};
-    }
-}
-
 .element-card {
     position: relative;
     margin: 0 $tlp-small-spacing $tlp-small-spacing $tlp-small-spacing;
@@ -47,7 +37,7 @@
         content: '';
         display: block;
         position: absolute;
-        top: -1px;
+        top: 20px;
         left: -1px;
         width: 4px;
         height: calc(100% + 2px);
@@ -58,6 +48,7 @@
 
 .element-card-xref {
     margin: 0 0 $tlp-small-spacing 0;
+    color: var(--text-color, #{$tlp-ui-dimmed});
     font-size: .65rem;
 
     &:hover {

@@ -2,7 +2,7 @@
 
 exports[`ToBePlannedCard Displays the empty state for Backlog unplanned section 1`] = `
 <div
-  class="element-card element-card-lake_placid_blue"
+  class="element-card"
 >
   <div
     class="element-card-content"
@@ -11,7 +11,7 @@ exports[`ToBePlannedCard Displays the empty state for Backlog unplanned section 
       class="element-card-xref-label"
     >
       <a
-        class="element-card-xref element-card-xref-lake_placid_blue"
+        class="element-card-xref"
         href="/plugins/tracker/?aid=100"
       >
         

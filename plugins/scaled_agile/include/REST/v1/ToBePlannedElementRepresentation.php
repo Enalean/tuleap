@@ -39,16 +39,26 @@ final class ToBePlannedElementRepresentation
      * @var string
      */
     public $artifact_title;
-    /**
-     * @var string
-     */
-    public $tracker_color;
 
-    public function __construct(string $tracker_name, int $artifact_id, string $artifact_title, string $tracker_color)
+    public function __construct(string $tracker_name, int $artifact_id, string $artifact_title)
     {
         $this->tracker_name = $tracker_name;
         $this->artifact_id = $artifact_id;
         $this->artifact_title = $artifact_title;
-        $this->tracker_color = $tracker_color;
+    }
+
+    public function getTrackerName(): string
+    {
+        return $this->tracker_name;
+    }
+
+    public function getArtifactId(): int
+    {
+        return $this->artifact_id;
+    }
+
+    public function getArtifactTitle(): string
+    {
+        return $this->artifact_title;
     }
 }

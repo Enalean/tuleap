@@ -23,7 +23,6 @@ export interface ToBePlannedElement {
     artifact_id: number;
     tracker_name: string;
     artifact_title: string;
-    tracker_color: string;
 }
 
 export function getToBePlannedElements(program_id: number): Promise<ToBePlannedElement[]> {

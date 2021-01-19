@@ -31,13 +31,11 @@ describe("Tracker reports retriever", () => {
                 artifact_id: 1,
                 tracker_name: "bug",
                 artifact_title: "My bug name",
-                tracker_color: "plum_crazy",
             },
             {
                 artifact_id: 2,
                 tracker_name: "story",
                 artifact_title: "My story",
-                tracker_color: "flamingo_pink",
             },
         ];
 
