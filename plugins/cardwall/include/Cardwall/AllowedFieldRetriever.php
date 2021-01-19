@@ -51,13 +51,10 @@ class AllowedFieldRetriever
         switch ($this->form_element_factory->getType($field)) {
             case 'sb':
                 return ['rb'];
-                break;
             case 'rb':
                 return ['sb'];
-                break;
             default:
                 return [];
-                break;
         }
     }
 }

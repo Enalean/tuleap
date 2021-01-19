@@ -148,16 +148,6 @@ function util_date_explode($date)
             // if it doesn't work try YYYY only
             $res = preg_match("/\s*(\d+)/", $date, $match);
             return ['1970', '1', '1'];
-            if ($res == 0) {
-         // nothing is valid return Epoch time
-                $year = '1970';
-                $month = '1';
-                $day = '1';
-            } else {
-                [, $year] = $match;
-                $month = '1';
-                $day = '1';
-            }
         } else {
             [, $year, $month] = $match;
             $day = '1';

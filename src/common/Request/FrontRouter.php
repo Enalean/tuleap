@@ -88,10 +88,8 @@ class FrontRouter
             switch ($route_info[0]) {
                 case FastRoute\Dispatcher::NOT_FOUND:
                     throw new NotFoundException(_('The page you are looking for does not exist'));
-                    break;
                 case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                     throw new \RuntimeException('This route does not support ' . $_SERVER['REQUEST_METHOD'], 405);
-                    break;
                 case FastRoute\Dispatcher::FOUND:
                     if (is_callable($route_info[1])) {
                         $handler = $route_info[1]();

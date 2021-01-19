@@ -188,17 +188,13 @@ class Statistics_DiskUsageManager
         switch ($groupBy) {
             case 'DAY':
                 return $row['year'] . '-' . $row['month'] . '-' . $row['day'];
-                break;
             case 'MONTH':
                 return $row['year'] . '-' . $row['month'];
-                break;
             case 'WEEK':
                 return $row['year'] . '-' . $row['week'];
-                break;
             default:
             case 'YEAR':
                 return $row['year'];
-                break;
         }
     }
 

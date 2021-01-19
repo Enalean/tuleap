@@ -58,11 +58,9 @@ class WorkerSystemCtlCommand extends Command
         switch ($input->getArgument('action')) {
             case 'start':
                 return $this->start($output);
-                break;
 
             case 'stop':
                 return $this->stop($output);
-                break;
 
             default:
                 $output->writeln('<error>Invalid action</error>');

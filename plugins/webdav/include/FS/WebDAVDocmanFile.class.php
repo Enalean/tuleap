@@ -87,7 +87,6 @@ class WebDAVDocmanFile extends Sabre_DAV_File
             case Docman_File::class:
                 $version = $this->item->getCurrentVersion();
                 return $version->getFilename();
-                break;
             case Docman_EmbeddedFile::class:
                 return $this->item->getTitle();
         }
@@ -197,7 +196,6 @@ class WebDAVDocmanFile extends Sabre_DAV_File
         switch (get_class($this->item)) {
             case Docman_File::class:
                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
-                break;
             case Docman_EmbeddedFile::class:
                 $this->rename($name);
                 break;

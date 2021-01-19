@@ -74,7 +74,7 @@ final class LegacyRestoreDocumentsController implements DispatchableWithRequest
                     } else {
                         exit_error(dgettext('tuleap-docman', 'Error'), dgettext('tuleap-docman', 'The selected item has not been restored.'));
                     }
-                    break;
+                    // This does not fall-through the next case because all the branches "never-return"
                 case 'confirm_restore_version':
                     $versionFactory = new Docman_VersionFactory();
                     $version = $versionFactory->getSpecificVersionById($id);
@@ -85,7 +85,7 @@ final class LegacyRestoreDocumentsController implements DispatchableWithRequest
                     } else {
                         exit_error(dgettext('tuleap-docman', 'Error'), dgettext('tuleap-docman', 'The selected version has not been restored.'));
                     }
-                    break;
+                    // This does not fall-through the next case because all the branches "never-return"
                 default:
                     break;
             }

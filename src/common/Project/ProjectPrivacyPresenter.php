@@ -94,17 +94,14 @@ final class ProjectPrivacyPresenter
                     return _('Project privacy set to public.') . ' ' .
                         _('By default, its content is available to all authenticated, but not restricted, users.') . ' ' .
                         _('Please note that more restrictive permissions might exist on some items.');
-                    break;
                 case Project::ACCESS_PUBLIC_UNRESTRICTED:
                     return _('Project privacy set to public including restricted.') . ' ' .
                         _('By default, its content is available to all authenticated users.') . ' ' .
                         _('Please note that more restrictive permissions might exist on some items.');
-                    break;
                 case Project::ACCESS_PRIVATE_WO_RESTRICTED:
                     return _('Project privacy set to private.') . ' ' .
                         _('Only project members can access its content.') . ' ' .
                         _('Restricted users are not allowed in this project.');
-                    break;
                 default:
                     return _('Project privacy set to private including restricted.') . ' ' .
                         _('Only project members can access its content.') . ' ' .
@@ -137,13 +134,10 @@ final class ProjectPrivacyPresenter
             switch ($project->getAccess()) {
                 case Project::ACCESS_PUBLIC:
                     return _('Public');
-                    break;
                 case Project::ACCESS_PUBLIC_UNRESTRICTED:
                     return _('Public including restricted');
-                    break;
                 case Project::ACCESS_PRIVATE_WO_RESTRICTED:
                     return _('Private');
-                    break;
                 default:
                     return _('Private including restricted');
             }

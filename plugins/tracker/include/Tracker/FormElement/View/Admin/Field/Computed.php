@@ -78,7 +78,6 @@ class Computed extends Tracker_FormElement_View_Admin_Field
                 break;
             default:
                 return parent::fetchAdminSpecificProperty($key, $property);
-                break;
         }
 
         return $html;

@@ -4,7 +4,8 @@
  * and open the template in the editor.
  */
 
-require 'Docman_XMLExport.class.php';
+require __DIR__ . '/Docman_XMLExport.class.php';
+require __DIR__ . '/Docman_ExportException.class.php';
 
 /**
  * Description of XMLExportclass
@@ -94,12 +95,10 @@ class XMLExport
             $parentDirectory = dirname($directoryPath);
             if (! is_dir($parentDirectory)) {
                 throw new DocmanExportException("Folder [" . $parentDirectory . "] does not exist");
-                return false;
             }
 
             if (! is_writable($parentDirectory)) {
                 throw new DocmanExportException("Folder [" . $parentDirectory . "] is not writable");
-                return false;
             }
 
             $dirCreated = mkdir($directoryPath, 0755, true);
@@ -109,12 +108,10 @@ class XMLExport
                 return true;
             } else {
                 throw new DocmanExportException("Unable to create folder [" . $directoryPath . "]");
-                return false;
             }
         } catch (Exception $exception) {
             $this->logger->error("Unable to create folder [" . $directoryPath . "] for project [" . $this->groupId . "] Error message: " . $exception->getMessage());
             throw new DocmanExportException("Unable to create folder [" . $directoryPath . "] for project [" . $this->groupId . "] Error message: " . $exception->getMessage());
-            return false;
         }
     }
 }

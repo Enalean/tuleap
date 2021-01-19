@@ -190,7 +190,6 @@ class Admin_Homepage_Controller
                 break;
             case UPLOAD_ERR_NO_FILE:
                 return;
-                break;
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
                 $this->response->addFeedback(
@@ -198,7 +197,6 @@ class Admin_Homepage_Controller
                     $GLOBALS['Language']->getText('admin_main', 'logo_too_big')
                 );
                 return;
-                break;
             default:
                 $this->response->addFeedback(
                     Feedback::ERROR,

@@ -136,25 +136,21 @@ final class CoreRepository implements Repository
     public function getBackupPath(): ?string
     {
         throw new \RuntimeException('Cannot delete a core repository yet');
-        return null;
     }
 
     public function getSystemBackupPath(): string
     {
         throw new \RuntimeException('Cannot delete a core repository yet');
-        return '';
     }
 
     public function getBackupFileName(): string
     {
         throw new \RuntimeException('Cannot delete a core repository yet');
-        return '';
     }
 
     public function getDeletionDate(): ?int
     {
         throw new \RuntimeException('Cannot delete a core repository yet');
-        return null;
     }
 
     public function setDeletionDate(int $deletion_date): void

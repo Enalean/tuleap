@@ -103,8 +103,6 @@ class ValueFormatter
         } catch (UnsupportedFieldException $exception) {
             return $this->output->fetchWhenUnsupportedField($artifact_link_info);
         }
-
-        return '';
     }
 
     private function fillSearchAndReplace(

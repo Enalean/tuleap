@@ -348,7 +348,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             return true;
         } else {
             throw new Exception('Rename: Unable to propagate rename to gitolite conf (error code: ' . $retVal . '): ' . implode('%%%', $output));
-            return false;
         }
     }
 

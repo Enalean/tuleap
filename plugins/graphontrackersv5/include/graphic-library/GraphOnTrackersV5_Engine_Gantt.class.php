@@ -118,17 +118,13 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
         switch ($this->scale) {
             case 'day':
                 return GANTT_HYEAR | GANTT_HMONTH | GANTT_HWEEK | GANTT_HDAY;
-                break;
             case 'week':
                 return GANTT_HYEAR | GANTT_HMONTH | GANTT_HWEEK;
-                break;
             case 'month':
                 return GANTT_HYEAR | GANTT_HMONTH;
-                break;
             case 'year':
             default:
                 return GANTT_HYEAR;
-                break;
         }
     }
 

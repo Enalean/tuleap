@@ -85,15 +85,12 @@ class WorkerSupervisorCommand extends Command
                 $is_daemon = $input->getOption('daemon');
                 assert(is_bool($is_daemon));
                 return $this->start($output, $is_daemon);
-                break;
 
             case 'status':
                 return $this->status($output);
-                break;
 
             case 'stop':
                 return $this->stop($output);
-                break;
 
             default:
                 $output->writeln('<error>Invalid action</error>');

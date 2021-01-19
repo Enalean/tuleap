@@ -499,16 +499,12 @@ class Archive
         switch ($format) {
             case self::COMPRESS_TAR:
                 return 'tar';
-                break;
             case self::COMPRESS_BZ2:
                 return 'tar.bz2';
-                break;
             case self::COMPRESS_GZ:
                 return 'tar.gz';
-                break;
             case self::COMPRESS_ZIP:
                 return 'zip';
-                break;
         }
     }
 

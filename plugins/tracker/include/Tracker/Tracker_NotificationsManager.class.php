@@ -644,13 +644,10 @@ class Tracker_NotificationsManager
         switch ($notification_level) {
             case Tracker::NOTIFICATIONS_LEVEL_DISABLED:
                 return dgettext('plugin-tracker', 'No notifications');
-                break;
             case Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE:
                 return dgettext('plugin-tracker', 'Status change notifications');
-                break;
             default:
                 return dgettext('plugin-tracker', 'Default Tuleap notifications');
-                break;
         }
     }
 

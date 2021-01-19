@@ -89,28 +89,20 @@ abstract class ComparisonFromWhereBuilder implements FromWhereBuilder
         switch ($metadata->getName()) {
             case AllowedMetadata::TITLE:
                 return $this->title_builder->getFromWhere($metadata, $comparison, $trackers);
-                break;
             case AllowedMetadata::DESCRIPTION:
                 return $this->description_builder->getFromWhere($metadata, $comparison, $trackers);
-                break;
             case AllowedMetadata::STATUS:
                 return $this->status_builder->getFromWhere($metadata, $comparison, $trackers);
-                break;
             case AllowedMetadata::SUBMITTED_ON:
                 return $this->submitted_on_builder->getFromWhere($metadata, $comparison, $trackers);
-                break;
             case AllowedMetadata::LAST_UPDATE_DATE:
                 return $this->last_update_date_builder->getFromWhere($metadata, $comparison, $trackers);
-                break;
             case AllowedMetadata::SUBMITTED_BY:
                 return $this->submitted_by_builder->getFromWhere($metadata, $comparison, $trackers);
-                break;
             case AllowedMetadata::LAST_UPDATE_BY:
                 return $this->last_update_by_builder->getFromWhere($metadata, $comparison, $trackers);
-                break;
             case AllowedMetadata::ASSIGNED_TO:
                 return $this->assigned_to_builder->getFromWhere($metadata, $comparison, $trackers);
-                break;
         }
     }
 }

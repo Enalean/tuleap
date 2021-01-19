@@ -302,13 +302,10 @@ class Blob extends FilesystemObject
             case 'jpeg':
             case 'jpe':
                 return 'image/jpeg';
-                break;
             case 'gif':
                 return 'image/gif';
-                break;
             case 'png':
                 return 'image/png';
-                break;
         }
 
         return '';

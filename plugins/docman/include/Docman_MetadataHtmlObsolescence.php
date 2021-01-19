@@ -32,7 +32,6 @@ class Docman_MetadataHtmlObsolescence extends \Docman_MetadataHtml
         switch ($v) {
             case \PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT:
                 return \dgettext('tuleap-docman', 'Permanent');
-                break;
             default:
                 return \DateHelper::formatForLanguage($GLOBALS['Language'], $v, \true);
         }
