@@ -49,7 +49,7 @@ final class FieldXmlExporterTest extends TestCase
     public function testItExportAField(): void
     {
         $parent_node = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><fieldset><formElements/></fieldset>');
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->exporter->exportField(
             $parent_node,
@@ -69,7 +69,7 @@ final class FieldXmlExporterTest extends TestCase
         $this->assertNotNull($form_element_node);
 
         $this->assertEquals("string", $form_element_node['type']);
-        $this->assertEquals("FSummary", $form_element_node['ID']);
+        $this->assertEquals("F1", $form_element_node['ID']);
         $this->assertEquals("1", $form_element_node['rank']);
         $this->assertEquals("1", $form_element_node['use_it']);
 

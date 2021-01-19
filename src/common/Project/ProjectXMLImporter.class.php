@@ -140,12 +140,16 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->XML_file_content_retriever          = $XML_file_content_retriever;
     }
 
-    public static function build(\User\XML\Import\IFindUserFromXMLReference $user_finder, ProjectCreator $project_creator): self
+    public static function build(\User\XML\Import\IFindUserFromXMLReference $user_finder, ProjectCreator $project_creator, ?\Psr\Log\LoggerInterface $logger = null): self
     {
         $event_manager           = EventManager::instance();
         $user_manager            = UserManager::instance();
         $ugroup_manager          = new UGroupManager();
-        $logger                  = self::getLogger();
+        if ($logger) {
+            $logger = new BrokerLogger([$logger, self::getLogger()]);
+        } else {
+            $logger = self::getLogger();
+        }
         $frs_permissions_creator = new FRSPermissionCreator(
             new FRSPermissionDao(),
             new UGroupDao(),

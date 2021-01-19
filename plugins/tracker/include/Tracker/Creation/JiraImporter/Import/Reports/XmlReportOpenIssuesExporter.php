@@ -45,27 +45,21 @@ class XmlReportOpenIssuesExporter implements IExportJiraLikeXmlReport
     private $report_table_exporter;
 
     /**
-     * @var StatusValuesCollection
-     */
-    private $status_values_collection;
-
-    /**
      * @param FieldMapping[] $column_fields
      */
     public function __construct(
         XmlReportDefaultCriteriaExporter $default_criteria_exporter,
         XML_SimpleXMLCDATAFactory $cdata_factory,
-        XmlReportTableExporter $report_table_exporter,
-        StatusValuesCollection $status_values_collection
+        XmlReportTableExporter $report_table_exporter
     ) {
         $this->default_criteria_exporter = $default_criteria_exporter;
         $this->cdata_factory             = $cdata_factory;
         $this->report_table_exporter     = $report_table_exporter;
-        $this->status_values_collection  = $status_values_collection;
     }
 
     public function exportJiraLikeReport(
         SimpleXMLElement $reports_node,
+        StatusValuesCollection $status_values_collection,
         ?FieldMapping $summary_field,
         ?FieldMapping $description_field,
         ?FieldMapping $status_field,
@@ -103,7 +97,7 @@ class XmlReportOpenIssuesExporter implements IExportJiraLikeXmlReport
             $report_node,
             $criteria_fields,
             $status_field,
-            $this->status_values_collection
+            $status_values_collection
         );
 
         $this->report_table_exporter->exportResultsTable(
@@ -137,7 +131,7 @@ class XmlReportOpenIssuesExporter implements IExportJiraLikeXmlReport
 
         foreach ($status_values_collection->getOpenValues() as $allowed_value_representation) {
             $selected_value = $criteria_value->addChild('selected_value');
-            $selected_value->addAttribute('REF', "V" . $allowed_value_representation->getId());
+            $selected_value->addAttribute('REF', $allowed_value_representation->getXMLId());
         }
 
         $this->default_criteria_exporter->exportDefaultCriteria($field_mappings, $criterias_node);

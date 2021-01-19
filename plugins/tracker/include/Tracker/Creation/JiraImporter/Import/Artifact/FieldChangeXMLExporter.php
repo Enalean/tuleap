@@ -27,10 +27,9 @@ use DateTimeImmutable;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
@@ -66,11 +65,6 @@ class FieldChangeXMLExporter
     private $field_change_list_builder;
 
     /**
-     * @var StatusValuesTransformer
-     */
-    private $status_values_transformer;
-
-    /**
      * @var FieldChangeFileBuilder
      */
     private $field_change_file_builder;
@@ -81,8 +75,7 @@ class FieldChangeXMLExporter
         FieldChangeTextBuilder $field_change_text_builder,
         FieldChangeFloatBuilder $field_change_float_builder,
         FieldChangeListBuilder $field_change_list_builder,
-        FieldChangeFileBuilder $field_change_file_builder,
-        StatusValuesTransformer $status_values_transformer
+        FieldChangeFileBuilder $field_change_file_builder
     ) {
         $this->field_change_date_builder   = $field_change_date_builder;
         $this->field_change_string_builder = $field_change_string_builder;
@@ -90,7 +83,6 @@ class FieldChangeXMLExporter
         $this->field_change_float_builder  = $field_change_float_builder;
         $this->field_change_list_builder   = $field_change_list_builder;
         $this->field_change_file_builder   = $field_change_file_builder;
-        $this->status_values_transformer   = $status_values_transformer;
     }
 
     public function exportFieldChanges(
@@ -156,15 +148,22 @@ class FieldChangeXMLExporter
             $mapping->getType() === Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE
         ) {
             assert(is_array($value));
+            if (! $mapping instanceof ListFieldMapping) {
+                throw new \RuntimeException('Mapping type ' . $mapping->getType() . ' must be a ' . ListFieldMapping::class);
+            }
             assert($mapping->getBindType() !== null);
 
-            $value_ids = [
-                $value['id']
-            ];
-
-            if ($mapping->getFieldName() === AlwaysThereFieldsExporter::JIRA_STATUS_NAME) {
+            if ($mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
                 $value_ids = [
-                    $this->status_values_transformer->transformJiraStatusValue((int) $value['id'])
+                    $value['id']
+                ];
+            } else {
+                $mapped_value = $mapping->getValueForId((int) $value['id']);
+                if (! $mapped_value) {
+                    throw new \RuntimeException('Value ' . $value['id'] . ' doesnt exist in structure mapping');
+                }
+                $value_ids = [
+                    $mapped_value->getXMLIdValue(),
                 ];
             }
 
@@ -172,14 +171,28 @@ class FieldChangeXMLExporter
                 $changeset_node,
                 $mapping->getFieldName(),
                 $mapping->getBindType(),
-                $value_ids
+                $value_ids,
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE) {
             assert(is_array($value));
+            if (! $mapping instanceof ListFieldMapping) {
+                throw new \RuntimeException('Mapping type ' . $mapping->getType() . ' must be a ' . ListFieldMapping::class);
+            }
             assert($mapping->getBindType() !== null);
+
             $value_ids = [];
-            foreach ($value as $value_from_api) {
-                $value_ids[] = $value_from_api['id'];
+            if ($mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+                foreach ($value as $value_from_api) {
+                    $value_ids[] = $value_from_api['id'];
+                }
+            } else {
+                foreach ($value as $value_from_api) {
+                    $mapped_value = $mapping->getValueForId((int) $value_from_api['id']);
+                    if (! $mapped_value) {
+                        throw new \RuntimeException('Value ' . $value_from_api['id'] . ' doesnt exist in structure mapping');
+                    }
+                    $value_ids[] = $mapped_value->getXMLIdValue();
+                }
             }
 
             $this->field_change_list_builder->build(

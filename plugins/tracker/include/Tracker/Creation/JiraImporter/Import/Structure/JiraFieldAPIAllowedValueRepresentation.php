@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
-
 /**
  * @psalm-immutable
  */
@@ -39,16 +37,22 @@ class JiraFieldAPIAllowedValueRepresentation
      * @var string
      */
     private $name;
+    /**
+     * @var int
+     */
+    private $xml_id;
 
-    public function __construct(
+    private function __construct(
         int $id,
-        string $name
+        string $name,
+        int $xml_id
     ) {
-        $this->id    = $id;
-        $this->name = $name;
+        $this->id     = $id;
+        $this->name   = $name;
+        $this->xml_id = $xml_id;
     }
 
-    public static function buildFromAPIResponse(array $jira_field_allowed_value): self
+    public static function buildFromAPIResponse(array $jira_field_allowed_value, IDGenerator $id_generator): self
     {
         $allowed_value_id   = (int) $jira_field_allowed_value['id'];
         $allowed_value_name = '';
@@ -61,20 +65,23 @@ class JiraFieldAPIAllowedValueRepresentation
 
         return new self(
             $allowed_value_id,
-            $allowed_value_name
+            $allowed_value_name,
+            $id_generator->getNextId(),
         );
     }
 
-    public static function buildFromAPIResponseStatuses(array $status): self
+    public static function buildFromAPIResponseStatuses(array $status, IDGenerator $id_generator): self
     {
-        $status_value_transformer = new StatusValuesTransformer();
-        $allowed_value_id         = $status_value_transformer->transformJiraStatusValue((int) $status['id']);
-        $allowed_value_name       = (string) $status['name'];
-
         return new self(
-            $allowed_value_id,
-            $allowed_value_name
+            (int) $status['id'],
+            (string) $status['name'],
+            $id_generator->getNextId(),
         );
+    }
+
+    public static function buildWithJiraIdOnly(int $jira_id, IDGenerator $id_generator): self
+    {
+        return new self($jira_id, '', $id_generator->getNextId());
     }
 
     public function getId(): int
@@ -85,5 +92,15 @@ class JiraFieldAPIAllowedValueRepresentation
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getXMLId(): string
+    {
+        return \Tracker_FormElement_Field_List_Bind_StaticValue::XML_ID_PREFIX . $this->xml_id;
+    }
+
+    public function getXMLIdValue(): int
+    {
+        return $this->xml_id;
     }
 }

@@ -27,22 +27,22 @@ use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 
 class PermissionsXMLExporterTest extends TestCase
 {
     public function testItExportsDefaultPermissionsForFieldsInMapping(): void
     {
         $tracker_node = new SimpleXMLElement('<tracker/>');
-        $mapping_collection = new FieldMappingCollection();
+        $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $mapping_collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 'summary',
                 'Fsummary',
                 'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                null
             )
         );
 
@@ -78,14 +78,13 @@ class PermissionsXMLExporterTest extends TestCase
     public function testItExportsOnlyReadPermissionsForArtifactIdField(): void
     {
         $tracker_node = new SimpleXMLElement('<tracker/>');
-        $mapping_collection = new FieldMappingCollection();
+        $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $mapping_collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 'artifact_id',
                 'Fartifact_id',
                 'Artifact Id',
                 Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
-                null
             )
         );
 
@@ -109,14 +108,13 @@ class PermissionsXMLExporterTest extends TestCase
     public function testItExportsOnlyReadPermissionsForOldJiraLinkField(): void
     {
         $tracker_node = new SimpleXMLElement('<tracker/>');
-        $mapping_collection = new FieldMappingCollection();
+        $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $mapping_collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 'jira_issue_url',
                 'Fjira_issue_url',
                 'Link to original issue',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                null
             )
         );
 

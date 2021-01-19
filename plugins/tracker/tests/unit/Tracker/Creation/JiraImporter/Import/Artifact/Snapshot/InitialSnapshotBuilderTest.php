@@ -36,8 +36,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationState
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChangeInitialValueRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 
 class InitialSnapshotBuilderTest extends TestCase
 {
@@ -147,68 +149,69 @@ class InitialSnapshotBuilderTest extends TestCase
 
     private function buildFieldMappingCollection(): FieldMappingCollection
     {
-        $collection = new FieldMappingCollection();
+        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $collection->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 "status",
                 "Fstatus",
                 "status",
                 "sb",
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                [],
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 "customfield_10040",
                 "Fcustomfield_10040",
                 "Field 02",
                 "msb",
-                null
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                [],
             )
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 "description",
                 "Fdescription",
                 "Description",
                 "text",
-                null
             ),
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 "jira_issue_url",
                 "Fjira_issue_url",
                 "Link to original issue",
                 "string",
-                null
             ),
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ScalarFieldMapping(
                 "attachment",
                 "Fattachment",
                 "Attachments",
                 "file",
-                null
             ),
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 "assignee",
                 "Fassignee",
                 "Assignee",
                 "sb",
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                [],
             ),
         );
         $collection->addMapping(
-            new FieldMapping(
+            new ListFieldMapping(
                 "homies",
                 "Fhomies",
                 "Homies",
                 "msb",
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                [],
             ),
         );
 
@@ -395,12 +398,13 @@ class InitialSnapshotBuilderTest extends TestCase
             new DateTimeImmutable("2020-03-25T14:14:10.823+0100"),
             [
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ListFieldMapping(
                         "status",
                         "Fstatus",
                         "status",
                         "sb",
-                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                        \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                        [],
                     ),
                     [
                         'id' => "10000"
@@ -408,12 +412,13 @@ class InitialSnapshotBuilderTest extends TestCase
                     null
                 ),
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ListFieldMapping(
                         "customfield_10040",
                         "Fcustomfield_10040",
                         "Field 02",
                         "msb",
-                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                        \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                        [],
                     ),
                     [
                         ['id' => "10009"]
@@ -421,23 +426,21 @@ class InitialSnapshotBuilderTest extends TestCase
                     null
                 ),
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "description",
                         "Fdescription",
                         "Description",
                         "text",
-                        null
                     ),
                     "dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq",
                     null
                 ),
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ScalarFieldMapping(
                         "attachment",
                         "Fattachment",
                         "Attachments",
                         "file",
-                        null
                     ),
                     [
                         "id" => "10007"
@@ -445,12 +448,13 @@ class InitialSnapshotBuilderTest extends TestCase
                     null
                 ),
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ListFieldMapping(
                         "assignee",
                         "Fassignee",
                         "Assignee",
                         "sb",
-                        \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                        \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                        [],
                     ),
                     [
                         "id" => "104"
@@ -458,12 +462,13 @@ class InitialSnapshotBuilderTest extends TestCase
                     null
                 ),
                 new FieldSnapshot(
-                    new FieldMapping(
+                    new ListFieldMapping(
                         "homies",
                         "Fhomies",
                         "Homies",
                         "msb",
-                        \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                        \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                        [],
                     ),
                     [
                         ["id" => "104"],

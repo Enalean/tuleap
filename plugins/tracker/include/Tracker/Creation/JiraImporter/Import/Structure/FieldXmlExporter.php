@@ -64,10 +64,10 @@ class FieldXmlExporter
         FieldMappingCollection $jira_field_mapping_collection,
         ?string $bind_type
     ): void {
-        $field = $container_parent_node->formElements->addChild('formElement');
+        $field = $container_parent_node->formElements->addChild(\Tracker_FormElement::XML_TAG);
         $field->addAttribute('type', $type);
 
-        $xml_id = "F" . $jira_field_id;
+        $xml_id = \Tracker_FormElement::XML_ID_PREFIX . $jira_field_mapping_collection->getNextId();
         $field->addAttribute('ID', $xml_id);
         $field->addAttribute('rank', (string) $rank);
         $field->addAttribute('use_it', "1");
@@ -100,20 +100,32 @@ class FieldXmlExporter
             $items_node = $bind_node->addChild("items");
             foreach ($bound_values as $value) {
                 $item_node = $items_node->addChild("item");
-                $item_node->addAttribute("ID", "V" . $value->getId());
+                $item_node->addAttribute("ID", $value->getXMLId());
                 $item_node->addAttribute("label", $value->getName());
                 $item_node->addAttribute("is_hidden", "0");
             }
         }
 
-        $jira_field_mapping_collection->addMapping(
-            new FieldMapping(
-                $jira_field_id,
-                $xml_id,
-                $formatted_name,
-                $type,
-                $bind_type
-            )
-        );
+        if ($bind_type) {
+            $jira_field_mapping_collection->addMapping(
+                new ListFieldMapping(
+                    $jira_field_id,
+                    $xml_id,
+                    $formatted_name,
+                    $type,
+                    $bind_type,
+                    $bound_values
+                )
+            );
+        } else {
+            $jira_field_mapping_collection->addMapping(
+                new ScalarFieldMapping(
+                    $jira_field_id,
+                    $xml_id,
+                    $formatted_name,
+                    $type,
+                )
+            );
+        }
     }
 }

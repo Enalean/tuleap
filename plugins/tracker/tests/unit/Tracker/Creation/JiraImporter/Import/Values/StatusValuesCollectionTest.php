@@ -28,6 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 
 class StatusValuesCollectionTest extends TestCase
 {
@@ -72,7 +73,8 @@ class StatusValuesCollectionTest extends TestCase
 
         $this->collection->initCollectionForProjectAndIssueType(
             $jira_project_key,
-            $jira_issue_type
+            $jira_issue_type,
+            new FieldAndValueIDGenerator(),
         );
 
         $this->assertCount(3, $this->collection->getAllValues());

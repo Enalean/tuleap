@@ -47,14 +47,10 @@ class ContainersXMLCollectionBuilder
         $this->simplexml_cdata_factory = $simplexml_cdata_factory;
     }
 
-    public function buildCollectionOfJiraContainersXML(SimpleXMLElement $form_elements): ContainersXMLCollection
+    public function buildCollectionOfJiraContainersXML(SimpleXMLElement $form_elements, ContainersXMLCollection $collection): void
     {
-        $collection = new ContainersXMLCollection();
-
         $this->buildFieldsets($form_elements, $collection);
         $this->buildColumns($collection);
-
-        return $collection;
     }
 
     private function buildFieldsets(SimpleXMLElement $form_elements, ContainersXMLCollection $collection): void
@@ -64,7 +60,7 @@ class ContainersXMLCollectionBuilder
             self::DETAILS_FIELDSET_NAME,
             'Details',
             1,
-            1
+            $collection->getNextId(),
         );
 
         $custom_fieldset_node = $this->buildFieldsetXMLNode(
@@ -72,7 +68,7 @@ class ContainersXMLCollectionBuilder
             self::CUSTOM_FIELDSET_NAME,
             'Custom Fields',
             2,
-            2
+            $collection->getNextId(),
         );
 
         $attachment_fieldset_node = $this->buildFieldsetXMLNode(
@@ -80,7 +76,7 @@ class ContainersXMLCollectionBuilder
             self::ATTACHMENT_FIELDSET_NAME,
             'Attachments',
             3,
-            3
+            $collection->getNextId(),
         );
 
         $collection->addContainerInCollection(
@@ -103,8 +99,8 @@ class ContainersXMLCollectionBuilder
     {
         $form_elements = $collection->getContainerByName(self::DETAILS_FIELDSET_NAME);
 
-        $left_column   = $this->buildColumnXMLNode($form_elements->formElements, 'c1', 'c1', 1, 1);
-        $right_column  = $this->buildColumnXMLNode($form_elements->formElements, 'c2', 'c2', 2, 2);
+        $left_column   = $this->buildColumnXMLNode($form_elements->formElements, 'c1', 'c1', 1, $collection->getNextId());
+        $right_column  = $this->buildColumnXMLNode($form_elements->formElements, 'c2', 'c2', 2, $collection->getNextId());
 
         $collection->addContainerInCollection(
             self::LEFT_COLUMN_NAME,

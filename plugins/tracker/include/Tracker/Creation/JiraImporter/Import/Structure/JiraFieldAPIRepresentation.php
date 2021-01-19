@@ -67,7 +67,7 @@ class JiraFieldAPIRepresentation
         $this->bound_values = $bound_values;
     }
 
-    public static function buildFromAPIResponseAndID(string $jira_field_id, array $jira_field): self
+    public static function buildFromAPIResponseAndID(string $jira_field_id, array $jira_field, IDGenerator $id_generator): self
     {
         $schema = null;
         if (isset($jira_field['schema']['system'])) {
@@ -79,7 +79,7 @@ class JiraFieldAPIRepresentation
         $bound_values = [];
         if (isset($jira_field['allowedValues'])) {
             foreach ($jira_field['allowedValues'] as $jira_field_allowed_value) {
-                $bound_values[] = JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponse($jira_field_allowed_value);
+                $bound_values[] = JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponse($jira_field_allowed_value, $id_generator);
             }
         }
 

@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Values;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 
 class StatusValuesCollection
@@ -61,7 +62,7 @@ class StatusValuesCollection
         $this->logger = $logger;
     }
 
-    public function initCollectionForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_name): void
+    public function initCollectionForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_name, IDGenerator $id_generator): void
     {
         $this->logger->debug("Build status collection ...");
         $statuses_url     = "project/" . urlencode($jira_project_key) . "/statuses";
@@ -80,16 +81,17 @@ class StatusValuesCollection
             }
 
             foreach ($statuses_content_per_issue_type['statuses'] as $status) {
-                $this->addStatusInCollections($status);
+                $this->addStatusInCollections($status, $id_generator);
             }
         }
 
         $this->logger->debug("Status collection successfully built.");
     }
 
-    private function addStatusInCollections(array $status): void
+    private function addStatusInCollections(array $status, IDGenerator $id_generator): void
     {
-        $status_representation = JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses($status);
+        $status_representation = JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses($status, $id_generator);
+        $this->logger->debug('Generate ' . $status_representation->getXMLId() . ' out of ' . print_r($status, true));
         $this->all_values[] = $status_representation;
 
         if (! isset($status['statusCategory']['key'])) {

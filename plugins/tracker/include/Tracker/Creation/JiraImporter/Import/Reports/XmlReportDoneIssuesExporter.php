@@ -46,27 +46,21 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
     private $report_table_exporter;
 
     /**
-     * @var StatusValuesCollection
-     */
-    private $status_values_collection;
-
-    /**
      * @param FieldMapping[] $column_fields
      */
     public function __construct(
         XmlReportDefaultCriteriaExporter $default_criteria_exporter,
         XML_SimpleXMLCDATAFactory $cdata_factory,
-        XmlReportTableExporter $report_table_exporter,
-        StatusValuesCollection $status_values_collection
+        XmlReportTableExporter $report_table_exporter
     ) {
         $this->default_criteria_exporter = $default_criteria_exporter;
         $this->cdata_factory             = $cdata_factory;
         $this->report_table_exporter     = $report_table_exporter;
-        $this->status_values_collection  = $status_values_collection;
     }
 
     public function exportJiraLikeReport(
         SimpleXMLElement $reports_node,
+        StatusValuesCollection $status_values_collection,
         ?FieldMapping $summary_field,
         ?FieldMapping $description_field,
         ?FieldMapping $status_field,
@@ -79,7 +73,7 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
             return;
         }
 
-        $done_values = $this->status_values_collection->getClosedValues();
+        $done_values = $status_values_collection->getClosedValues();
 
         if (count($done_values) === 0) {
             return;
@@ -147,7 +141,7 @@ class XmlReportDoneIssuesExporter implements IExportJiraLikeXmlReport
 
         foreach ($done_values as $done_value) {
             $selected_value = $criteria_value->addChild('selected_value');
-            $selected_value->addAttribute('REF', "V" . $done_value->getId());
+            $selected_value->addAttribute('REF', $done_value->getXMLId());
         }
 
         $this->default_criteria_exporter->exportDefaultCriteria($field_mappings, $criterias_node);

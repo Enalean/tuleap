@@ -29,6 +29,15 @@ class FieldMappingCollection
      * @var FieldMapping[]
      */
     private $mapping = [];
+    /**
+     * @var IDGenerator
+     */
+    private $field_id_generator;
+
+    public function __construct(IDGenerator $field_id_generator)
+    {
+        $this->field_id_generator = $field_id_generator;
+    }
 
     public function addMapping(FieldMapping $field_mapping): void
     {
@@ -47,5 +56,10 @@ class FieldMappingCollection
     public function getAllMappings(): array
     {
         return $this->mapping;
+    }
+
+    public function getNextId(): int
+    {
+        return $this->field_id_generator->getNextId();
     }
 }

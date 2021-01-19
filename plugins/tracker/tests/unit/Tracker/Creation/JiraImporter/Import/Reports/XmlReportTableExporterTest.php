@@ -24,27 +24,25 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use XML_SimpleXMLCDATAFactory;
 
 final class XmlReportTableExporterTest extends TestCase
 {
     public function testItCreatesATableRenderer(): void
     {
-        $summary_field_mapping = new FieldMapping(
+        $summary_field_mapping = new ScalarFieldMapping(
             'summary',
             'Fsummary',
             'summary',
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
-            null
         );
 
-        $description_field_mapping = new FieldMapping(
+        $description_field_mapping = new ScalarFieldMapping(
             'description',
             'Fdescription',
             'description',
             Tracker_FormElementFactory::FIELD_TEXT_TYPE,
-            null
         );
 
         $table_renderer_exporter = new XmlReportTableExporter(

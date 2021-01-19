@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 class ListFieldChangeInitialValueRetrieverTest extends TestCase
@@ -63,12 +63,13 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
     {
         $list_value = $this->list_field_change_initial_value_retriever->retrieveBoundValue(
             "10005",
-            new FieldMapping(
+            new ListFieldMapping(
                 'status',
                 'Fstatus',
                 'Status',
                 'sb',
-                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                [],
             )
         );
 
@@ -85,12 +86,13 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
 
         $list_value = $this->list_field_change_initial_value_retriever->retrieveBoundValue(
             'e8a6c4d54',
-            new FieldMapping(
+            new ListFieldMapping(
                 'assignee',
                 'Fassignee',
                 'Assignee',
                 'sb',
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                [],
             )
         );
 
@@ -112,12 +114,13 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
 
         $list_value = $this->list_field_change_initial_value_retriever->retrieveBoundValue(
             'e8a6c4d54, a7e9f1b2c',
-            new FieldMapping(
+            new ListFieldMapping(
                 'multiuserpicker',
                 'Fmultiuserpicker',
                 'Multi userpicker',
                 'msb',
-                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                [],
             )
         );
 
