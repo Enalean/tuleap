@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Presenters;
+namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
 /**
  * @psalm-immutable
  */
-class PostPushCommitBotCommentReferencePresenter
+class BotCommentReferencePresenter
 {
     /**
      * @var string

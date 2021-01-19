@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
+namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -38,13 +38,13 @@ use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Templating\TemplateCache;
 
-class PostPushCommitBotCommenterTest extends TestCase
+class PostMergeRequestBotCommenterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     /**
-     * @var PostPushCommitBotCommenter
+     * @var PostMergeRequestBotCommenter
      */
     private $commenter;
     /**
@@ -60,7 +60,7 @@ class PostPushCommitBotCommenterTest extends TestCase
      */
     private $logger;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostPushCommitWebhookData
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostMergeRequestWebhookData
      */
     private $webhook_data;
     /**
@@ -83,7 +83,7 @@ class PostPushCommitBotCommenterTest extends TestCase
         $this->client_wrapper        = Mockery::mock(ClientWrapper::class);
         $this->credentials_retriever = Mockery::mock(CredentialsRetriever::class);
         $this->logger                = Mockery::mock(LoggerInterface::class);
-        $this->webhook_data          = Mockery::mock(PostPushCommitWebhookData::class);
+        $this->webhook_data          = Mockery::mock(PostMergeRequestWebhookData::class);
         $this->gitlab_repository     = Mockery::mock(GitlabRepository::class);
 
         $this->bot_comment_reference_presenter_builder = Mockery::mock(BotCommentReferencePresenterBuilder::class);
@@ -91,7 +91,7 @@ class PostPushCommitBotCommenterTest extends TestCase
         $template_cache         = \Mockery::mock(TemplateCache::class, ['getPath' => null]);
         $this->template_factory = new TemplateRendererFactory($template_cache);
 
-        $this->commenter = new PostPushCommitBotCommenter(
+        $this->commenter = new PostMergeRequestBotCommenter(
             $this->client_wrapper,
             $this->credentials_retriever,
             $this->logger,
@@ -106,19 +106,18 @@ class PostPushCommitBotCommenterTest extends TestCase
         $this->logger->shouldReceive('debug')->never();
         $this->client_wrapper->shouldReceive('postUrl')->never();
 
-        $this->commenter->addCommentOnCommit($this->webhook_data, $this->gitlab_repository, []);
+        $this->commenter->addCommentOnMergeRequest($this->webhook_data, $this->gitlab_repository, []);
     }
 
     public function testNothingHappenIfNoCredentialsRetrieved(): void
     {
         $this->webhook_data
-            ->shouldReceive("getSha1")
-            ->andReturn("azer12563")
-            ->once();
+            ->shouldReceive("getMergeRequestId")
+            ->andReturn("42");
 
         $this->logger
             ->shouldReceive("debug")
-            ->with("Comment can't be added on commit #azer12563 because there is no bot API token.")
+            ->with("Comment can't be added on merge request #42 because there is no bot API token.")
             ->once();
 
         $this->credentials_retriever
@@ -129,15 +128,14 @@ class PostPushCommitBotCommenterTest extends TestCase
 
         $this->client_wrapper->shouldReceive('postUrl')->never();
 
-        $this->commenter->addCommentOnCommit($this->webhook_data, $this->gitlab_repository, [new WebhookTuleapReference(123)]);
+        $this->commenter->addCommentOnMergeRequest($this->webhook_data, $this->gitlab_repository, [new WebhookTuleapReference(123)]);
     }
 
     public function testClientWrapperThrowErrorAndLogIt(): void
     {
         $this->webhook_data
-            ->shouldReceive("getSha1")
-            ->andReturn("azer12563")
-            ->twice();
+            ->shouldReceive("getMergeRequestId")
+            ->andReturn("42");
 
         $this->gitlab_repository
             ->shouldReceive('getGitlabRepositoryId')
@@ -168,25 +166,33 @@ class PostPushCommitBotCommenterTest extends TestCase
             ->andReturn($references_presenter)
             ->once();
 
-        $url     = "/projects/4/repository/commits/azer12563/comments";
-        $comment = "\nThis commit references:\n * [TULEAP-123](https://example.fr)\n * [TULEAP-59](https://example.fr)\n";
+        $url     = "/projects/4/merge_requests/42/notes";
+        $comment = <<<EOS
+
+            This merge request references:
+
+             * [TULEAP-123](https://example.fr)
+             * [TULEAP-59](https://example.fr)
+
+
+            EOS;
 
         $this->client_wrapper
             ->shouldReceive('postUrl')
-            ->with($credentials, $url, ["note" => $comment])
+            ->with($credentials, $url, ["body" => $comment])
             ->once()
             ->andThrow(new GitlabRequestException("404", "not found"));
 
         $this->logger
             ->shouldReceive('error')
-            ->with("An error occurred during automatically comment commit #azer12563")
+            ->with("An error occurred during automatically comment merge request #42")
             ->once();
         $this->logger
             ->shouldReceive('error')
             ->with("|  |_Error returned by the GitLab server: not found")
             ->once();
 
-        $this->commenter->addCommentOnCommit(
+        $this->commenter->addCommentOnMergeRequest(
             $this->webhook_data,
             $this->gitlab_repository,
             $references
@@ -196,9 +202,8 @@ class PostPushCommitBotCommenterTest extends TestCase
     public function testPOSTCommentOnCommit(): void
     {
         $this->webhook_data
-            ->shouldReceive("getSha1")
-            ->andReturn("azer12563")
-            ->twice();
+            ->shouldReceive("getMergeRequestId")
+            ->andReturn("42");
 
         $this->gitlab_repository
             ->shouldReceive('getGitlabRepositoryId')
@@ -227,20 +232,25 @@ class PostPushCommitBotCommenterTest extends TestCase
             ->andReturn($references_presenter)
             ->once();
 
-        $url     = "/projects/4/repository/commits/azer12563/comments";
-        $comment = "This commit references: [TULEAP-123](https://example.fr).\n";
+        $url     = "/projects/4/merge_requests/42/notes";
+        $comment = <<<EOS
+
+            This merge request references: [TULEAP-123](https://example.fr).
+
+
+            EOS;
 
         $this->client_wrapper
             ->shouldReceive('postUrl')
-            ->with($credentials, $url, ["note" => $comment])
+            ->with($credentials, $url, ['body' => $comment])
             ->once();
 
         $this->logger
             ->shouldReceive("debug")
-            ->with("Comment was successfully added on commit #azer12563")
+            ->with("Comment was successfully added on merge request #42")
             ->once();
 
-        $this->commenter->addCommentOnCommit(
+        $this->commenter->addCommentOnMergeRequest(
             $this->webhook_data,
             $this->gitlab_repository,
             $references

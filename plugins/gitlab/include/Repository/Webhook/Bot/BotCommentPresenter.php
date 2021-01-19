@@ -18,32 +18,30 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
+declare(strict_types=1);
 
-use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
+namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
-class PostPushCommitCredentialsRetriever
+/**
+ * @psalm-immutable
+ */
+class BotCommentPresenter
 {
     /**
-     * @var GitlabBotApiTokenRetriever
+     * @var BotCommentReferencePresenter[]
      */
-    private $token_retriever;
+    public $references;
+    /**
+     * @var bool
+     */
+    public $has_only_one_reference;
 
-    public function __construct(GitlabBotApiTokenRetriever $token_retriever)
+    /**
+     * @param BotCommentReferencePresenter[] $references
+     */
+    public function __construct(array $references)
     {
-        $this->token_retriever = $token_retriever;
-    }
-
-    public function getCredentials(GitlabRepository $repository): ?Credentials
-    {
-        $token = $this->token_retriever->getBotAPIToken($repository);
-
-        if (! $token) {
-            return null;
-        }
-
-        return new Credentials($repository->getGitlabServerUrl(), $token);
+        $this->references             = $references;
+        $this->has_only_one_reference = count($references) === 1;
     }
 }

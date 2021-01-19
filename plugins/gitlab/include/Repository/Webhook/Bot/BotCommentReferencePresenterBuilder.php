@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Presenters;
+namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\InstanceBaseURLBuilder;
 
-class PostPushCommitBotCommentReferencePresenterBuilder
+class BotCommentReferencePresenterBuilder
 {
     /**
      * @var InstanceBaseURLBuilder
@@ -39,13 +39,14 @@ class PostPushCommitBotCommentReferencePresenterBuilder
 
     /**
      * @param WebhookTuleapReference[] $references
-     * @return PostPushCommitBotCommentReferencePresenter[]
+     *
+     * @return BotCommentReferencePresenter[]
      */
     public function build(array $references): array
     {
         $comment_presenters = [];
         foreach ($references as $index => $reference) {
-            $comment_presenters[] = new PostPushCommitBotCommentReferencePresenter($reference->getId(), $this->getArtifactUrl($reference));
+            $comment_presenters[] = new BotCommentReferencePresenter($reference->getId(), $this->getArtifactUrl($reference));
         }
         return $comment_presenters;
     }

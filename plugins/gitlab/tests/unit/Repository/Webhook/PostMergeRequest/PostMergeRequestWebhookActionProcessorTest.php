@@ -21,15 +21,15 @@
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Psr\Log\LoggerInterface;
 use Reference;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
+use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
@@ -62,16 +62,21 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MergeRequestTuleapReferenceDao
      */
     private $merge_request_reference_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostMergeRequestBotCommenter
+     */
+    private $bot_commenter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->tuleap_reference_retriever               = Mockery::mock(TuleapReferenceRetriever::class);
-        $this->logger                                   = Mockery::mock(LoggerInterface::class);
-        $this->reference_manager                        = Mockery::mock(\ReferenceManager::class);
-        $this->merge_request_reference_dao              = Mockery::mock(MergeRequestTuleapReferenceDao::class);
-        $this->gitlab_repository_project_retriever      = Mockery::mock(GitlabRepositoryProjectRetriever::class);
+        $this->tuleap_reference_retriever          = Mockery::mock(TuleapReferenceRetriever::class);
+        $this->logger                              = Mockery::mock(LoggerInterface::class);
+        $this->reference_manager                   = Mockery::mock(\ReferenceManager::class);
+        $this->merge_request_reference_dao         = Mockery::mock(MergeRequestTuleapReferenceDao::class);
+        $this->gitlab_repository_project_retriever = Mockery::mock(GitlabRepositoryProjectRetriever::class);
+        $this->bot_commenter                       = Mockery::mock(PostMergeRequestBotCommenter::class);
 
         $this->processor = new PostMergeRequestWebhookActionProcessor(
             new WebhookTuleapReferencesParser(),
@@ -79,7 +84,8 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             $this->reference_manager,
             $this->merge_request_reference_dao,
             $this->gitlab_repository_project_retriever,
-            $this->logger
+            $this->logger,
+            $this->bot_commenter,
         );
     }
 
@@ -106,9 +112,11 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
         $this->gitlab_repository_project_retriever
             ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
             ->with($gitlab_repository)
-            ->andReturn([
-                Project::buildForTest()
-            ])
+            ->andReturn(
+                [
+                    Project::buildForTest()
+                ]
+            )
             ->once();
 
         $this->merge_request_reference_dao
@@ -127,18 +135,24 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
 
         $this->logger
             ->shouldReceive('info')
-            ->with('|_ Reference to Tuleap artifact #58 found, cross-reference will be added for each project the GitLab repository is integrated in.')
+            ->with(
+                '|_ Reference to Tuleap artifact #58 found, cross-reference will be added for each project the GitLab repository is integrated in.'
+            )
             ->once();
 
 
         $this->logger
             ->shouldReceive('info')
-            ->with('|_ Reference to Tuleap artifact #666 found, cross-reference will be added for each project the GitLab repository is integrated in.')
+            ->with(
+                '|_ Reference to Tuleap artifact #666 found, cross-reference will be added for each project the GitLab repository is integrated in.'
+            )
             ->once();
 
         $this->logger
             ->shouldReceive('info')
-            ->with('|_ Reference to Tuleap artifact #45 found, cross-reference will be added for each project the GitLab repository is integrated in.')
+            ->with(
+                '|_ Reference to Tuleap artifact #45 found, cross-reference will be added for each project the GitLab repository is integrated in.'
+            )
             ->once();
 
         $this->tuleap_reference_retriever
@@ -178,7 +192,9 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
 
         $this->logger
             ->shouldReceive("error")
-            ->with('No reference found with the keyword \'art\', and this must not happen. If you read this, this is really bad.')
+            ->with(
+                'No reference found with the keyword \'art\', and this must not happen. If you read this, this is really bad.'
+            )
             ->once();
 
         $this->logger
@@ -189,6 +205,10 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
         $this->logger
             ->shouldReceive('info')
             ->with('Merge request data for 2 saved in database')
+            ->once();
+
+        $this->bot_commenter
+            ->shouldReceive('addCommentOnMergeRequest')
             ->once();
 
         $this->processor->process($gitlab_repository, $merge_request_webhook_data);
@@ -217,9 +237,11 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
         $this->gitlab_repository_project_retriever
             ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
             ->with($gitlab_repository)
-            ->andReturn([
-                Project::buildForTest()
-            ])
+            ->andReturn(
+                [
+                    Project::buildForTest()
+                ]
+            )
             ->once();
 
         $this->merge_request_reference_dao
@@ -238,7 +260,9 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
 
         $this->logger
             ->shouldReceive('info')
-            ->with('|_ Reference to Tuleap artifact #58 found, cross-reference will be added for each project the GitLab repository is integrated in.')
+            ->with(
+                '|_ Reference to Tuleap artifact #58 found, cross-reference will be added for each project the GitLab repository is integrated in.'
+            )
             ->once();
 
         $this->tuleap_reference_retriever
@@ -267,6 +291,10 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
         $this->logger
             ->shouldReceive('info')
             ->with('Merge request data for 2 saved in database')
+            ->once();
+
+        $this->bot_commenter
+            ->shouldReceive('addCommentOnMergeRequest')
             ->once();
 
         $this->processor->process($gitlab_repository, $merge_request_webhook_data);
