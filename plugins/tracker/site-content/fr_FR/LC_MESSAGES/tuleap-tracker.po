@@ -3586,6 +3586,10 @@ msgid "Tracker %1$s not duplicated"
 msgstr "L'outil de suivi %1$s n'a pas été copié"
 
 #, php-format
+msgid "Tracker %s : field %s (%s) has no permission"
+msgstr "Outil de suivi %s : le champ %s (%s) n'a pas de permissons"
+
+#, php-format
 msgid "Tracker %s has been successfully deleted"
 msgstr "L'outil de suivi %s a été supprimé"
 

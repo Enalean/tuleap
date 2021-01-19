@@ -779,6 +779,77 @@ final class TrackerXmlImportTest extends TestCase
         );
     }
 
+    public function testWarnUserIfAFieldHasNoPermission()
+    {
+        $xml                = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+                     <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+                         <name>name10</name>
+                         <item_name>item11</item_name>
+                         <description>desc12</description>
+                         <color>inca-silver</color>
+                         <cannedResponses/>
+                         <formElements>
+                            <formElement type="string" ID="F691" rank="0" required="1"/>
+                            <formElement type="string" ID="F692" rank="0" required="1"/>
+                         </formElements>
+                     </tracker>'
+        );
+        $feedback_collector = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
+        $tracker            = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getName')->andReturn("tracker_name");
+        $this->tracker_xml_importer->shouldReceive('setTrackerGeneralInformation')->once();
+        $this->tracker_factory->shouldReceive('getInstanceFromRow')->once()->andReturn($tracker);
+        $this->tracker_xml_importer->shouldReceive('setCannedResponses')->once()->withArgs([$xml, $tracker]);
+        $this->tracker_form_element_factory->shouldReceive('getInstanceFromXML')->twice();
+
+        $this->tracker_xml_importer->shouldReceive('setSemantics')->once()->withArgs([$xml, $tracker]);
+        $this->tracker_xml_importer->shouldReceive('setLegacyDependencies')->once()->withArgs([$xml]);
+        $this->tracker_xml_importer->shouldReceive('setRules')->once()->withArgs([$xml, $tracker]);
+        $this->tracker_xml_importer->shouldReceive('setTrackerReports')->once()->withArgs(
+            [$xml, $this->project, $tracker]
+        );
+        $this->tracker_xml_importer->shouldReceive('setWorkflow')->once()->withArgs([$xml, $this->project, $tracker]);
+        $this->tracker_xml_importer->shouldReceive('setWebhooks')->once()->withArgs([$xml, $tracker]);
+        $this->tracker_xml_importer->shouldReceive('setPermissions')->once();
+
+        $this->initXmlFieldMapping($xml);
+
+        $this->feedback_collector->shouldReceive("addWarnings")
+            ->with("Tracker tracker_name : field field_2 (F692) has no permission")->once();
+
+        $this->tracker_xml_importer->getInstanceFromXML(
+            $xml,
+            $this->project,
+            "tracker name",
+            "trcker description",
+            "bugs",
+            'peggy-pink',
+            $feedback_collector,
+            $this->user
+        );
+    }
+
+    private function initXmlFieldMapping(SimpleXMLElement $xml_tracker)
+    {
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive("getName")->andReturn("tracker_name");
+
+        $this->tracker_factory->shouldReceive('getTrackerByShortnameAndProjectId')->andReturn($tracker);
+        $field_1 = Mockery::mock(\Tracker_FormElement::class);
+        $field_1->shouldReceive("getName")->andReturn("field_1");
+        $field_1->shouldReceive("hasCachedPermissions")->andReturn(true);
+
+        $field_2 = Mockery::mock(\Tracker_FormElement::class);
+        $field_2->shouldReceive("getName")->andReturn("field_2");
+        $field_2->shouldReceive("hasCachedPermissions")->andReturn(false);
+
+        $this->tracker_form_element_factory->shouldReceive("getFields")->andReturn([]);
+        $this->mapping_from_existing_tracker->shouldReceive("getXmlFieldsMapping")->andReturn(["F691" => $field_1, "F692" => $field_2]);
+
+        $this->tracker_xml_importer->updateFromXML($this->project, $xml_tracker);
+    }
+
     public function testItImportsUpdatedArtifacts(): void
     {
         $xml = new SimpleXMLElement(

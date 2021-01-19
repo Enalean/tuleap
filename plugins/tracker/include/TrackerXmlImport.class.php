@@ -845,7 +845,30 @@ class TrackerXmlImport
         $this->setWebhooks($xml, $tracker);
         $this->setPermissions($xml, $project, $tracker, $this->xml_fields_mapping);
 
+        $this->checkPermissions($tracker);
+
         return $tracker;
+    }
+
+    private function checkPermissions(Tracker $tracker): void
+    {
+        foreach ($this->xml_fields_mapping as $xml_id => $field) {
+            if (! $field instanceof Tracker_FormElement || $field instanceof Tracker_FormElement_Container) {
+                continue;
+            }
+
+            if (! $field->hasCachedPermissions()) {
+                $this->feedback_collector
+                    ->addWarnings(
+                        sprintf(
+                            dgettext('tuleap-tracker', "Tracker %s : field %s (%s) has no permission"),
+                            $tracker->getName(),
+                            $field->getName(),
+                            $xml_id
+                        )
+                    );
+            }
+        }
     }
 
     private function getFormElementsFromXml(SimpleXMLElement $xml): array
