@@ -170,7 +170,6 @@ class CardsResource
         } catch (CardControllerBuilderRequestPlanningIdException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
-        throw new RestException(404);
     }
 
     /**

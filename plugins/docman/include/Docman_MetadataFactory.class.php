@@ -451,7 +451,6 @@ class Docman_MetadataFactory
         } else {
             return $this->updateHardCodedMetadata($md);
         }
-        return false;
     }
 
     public function create(&$md)

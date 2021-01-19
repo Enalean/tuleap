@@ -62,22 +62,16 @@ class UserIsUGroupMemberChecker
         switch ($ugroup->getId()) {
             case ProjectUGroup::PROJECT_MEMBERS:
                 return $this->user_permissions_dao->isUserPartOfProjectMembers($project->getID(), $user->getId());
-                break;
             case ProjectUGroup::PROJECT_ADMIN:
                 return $this->user_permissions_dao->isUserPartOfProjectAdmins($project->getID(), $user->getId());
-                break;
             case ProjectUGroup::WIKI_ADMIN:
                 return $this->user_permissions_dao->isUserPartOfWikiAdmins($project->getID(), $user->getId());
-                break;
             case ProjectUGroup::FORUM_ADMIN:
                 return $this->user_permissions_dao->isUserPartOfForumAdmins($project->getID(), $user->getId());
-                break;
             case ProjectUGroup::NEWS_WRITER:
                 return $this->user_permissions_dao->isUserPartOfNewsEditors($project->getID(), $user->getId());
-                break;
             case ProjectUGroup::NEWS_ADMIN:
                 return $this->user_permissions_dao->isUserPartOfNewsAdmins($project->getID(), $user->getId());
-                break;
         }
     }
 }

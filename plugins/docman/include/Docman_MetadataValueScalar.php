@@ -70,13 +70,10 @@ class Docman_MetadataValueScalar extends \Docman_MetadataValue
         switch ($this->type) {
             case \PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
                 return $this->valueText;
-                break;
             case \PLUGIN_DOCMAN_METADATA_TYPE_STRING:
                 return $this->valueString;
-                break;
             case \PLUGIN_DOCMAN_METADATA_TYPE_DATE:
                 return $this->valueDate;
-                break;
             default:
                 return \null;
         }

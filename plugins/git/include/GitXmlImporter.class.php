@@ -254,7 +254,6 @@ class GitXmlImporter
             case self::WRITE_TAG:
             case self::WPLUS_TAG:
                 return true;
-                break;
             default:
                 return false;
         }

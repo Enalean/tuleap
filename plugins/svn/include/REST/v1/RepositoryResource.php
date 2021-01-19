@@ -526,8 +526,6 @@ class RepositoryResource extends AuthenticatedResource
 
             if ($this->isDeletionAlreadyQueued($repository)) {
                 throw new RestException(400, 'Repository already in queue for deletion');
-
-                return;
             }
 
             $this->repository_deleter->queueRepositoryDeletion($repository);

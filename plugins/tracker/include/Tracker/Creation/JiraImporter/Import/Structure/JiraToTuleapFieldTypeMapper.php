@@ -76,7 +76,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'thumbnail':
                 default:
                     return;
-                    break;
             }
         } else {
             $jira_type = $jira_field->getSchema();

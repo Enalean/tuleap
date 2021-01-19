@@ -119,10 +119,8 @@ class Git_Hook_PushDetails
             switch ($this->rev_type) {
                 case self::OBJECT_TYPE_COMMIT:
                     return self::TYPE_UNANNOTATED_TAG;
-                    break;
                 case self::OBJECT_TYPE_TAG:
                     return self::TYPE_ANNOTATED_TAG;
-                    break;
             }
         } elseif ($this->rev_type == self::OBJECT_TYPE_COMMIT) {
             if (strpos($this->refname, 'refs/heads/') === 0) {

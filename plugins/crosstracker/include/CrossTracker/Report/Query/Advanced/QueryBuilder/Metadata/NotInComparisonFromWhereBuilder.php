@@ -56,13 +56,10 @@ class NotInComparisonFromWhereBuilder implements FromWhereBuilder
         switch ($metadata->getName()) {
             case AllowedMetadata::SUBMITTED_BY:
                 return $this->submitted_by_builder->getFromWhere($metadata, $comparison, $trackers);
-                break;
             case AllowedMetadata::LAST_UPDATE_BY:
                 return $this->last_update_by_builder->getFromWhere($metadata, $comparison, $trackers);
-                break;
             case AllowedMetadata::ASSIGNED_TO:
                 return $this->assigned_to_builder->getFromWhere($metadata, $comparison, $trackers);
-                break;
         }
     }
 }

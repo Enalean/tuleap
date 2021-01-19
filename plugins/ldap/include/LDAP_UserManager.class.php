@@ -620,7 +620,6 @@ class LDAP_UserManager
                 break;
             default:
                 throw new IdentifierTypeNotRecognizedException();
-                break;
         }
 
         if ($lri === false) {

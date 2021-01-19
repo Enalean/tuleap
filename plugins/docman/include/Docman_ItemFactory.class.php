@@ -174,22 +174,16 @@ class Docman_ItemFactory
         switch ($itemTypeId) {
             case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
                 return dgettext('tuleap-docman', 'Folder');
-            break;
             case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
                 return dgettext('tuleap-docman', 'File');
-            break;
             case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
                 return dgettext('tuleap-docman', 'Link');
-            break;
             case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
                 return dgettext('tuleap-docman', 'Embedded file');
-            break;
             case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
                 return dgettext('tuleap-docman', 'Wiki page');
-            break;
             case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
                 return dgettext('tuleap-docman', 'Empty document');
-            break;
             default:
                 return $GLOBALS['Language']->getText('include_html', 'unknown_value');
         }

@@ -871,20 +871,16 @@ class ArtifactField
         switch ($this->getDataType()) {
             case $this->DATATYPE_TEXT:
                 return "valueText";
-            break;
 
             case $this->DATATYPE_INT:
             case $this->DATATYPE_USER:
                 return "valueInt";
-            break;
 
             case $this->DATATYPE_FLOAT:
                 return "valueFloat";
-            break;
 
             case $this->DATATYPE_DATE:
                 return "valueDate";
-            break;
         } // switch
     }
 

@@ -23,7 +23,6 @@
 
 use Tuleap\Chart\Chart;
 use Tuleap\Chart\ColorsForCharts;
-use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Widget_ProjectSvnStats extends Widget
@@ -46,14 +45,6 @@ class Widget_ProjectSvnStats extends Widget
     public function getContent()
     {
         return _('This widget is deprecated, you should remove it.');
-
-        $request = HTTPRequest::instance();
-
-        return '<div style="text-align:center">
-                <img src="/widgets/?action=process-widget&widget_id=' . $this->id .
-            '&owner=' . ProjectDashboardController::LEGACY_DASHBOARD_TYPE . ($request->get('group_id')) .
-            '&name[' . $this->id . ']=' . $this->getInstanceId() . '" />
-                </div>';
     }
 
     protected $tmp_nb_of_commit;

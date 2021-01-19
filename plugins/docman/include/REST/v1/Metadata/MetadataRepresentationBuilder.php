@@ -136,19 +136,14 @@ class MetadataRepresentationBuilder
         switch ($type) {
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
                 return 'text';
-                break;
             case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
                 return 'string';
-                break;
             case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
                 return 'date';
-                break;
             case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                 return 'list';
-                break;
             default:
                 throw new UnknownMetadataException("Metadata type: " . $type . " unknown");
-                break;
         }
     }
 }

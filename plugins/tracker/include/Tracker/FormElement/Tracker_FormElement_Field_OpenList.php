@@ -304,8 +304,6 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Provides a textbox containing a list of values, with autocompletion');
-
-        return 'Provide a textbox containing an list of values, with autocompletion';
     }
 
     public static function getFactoryIconUseIt()

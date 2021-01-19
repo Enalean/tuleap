@@ -150,7 +150,6 @@ class PHP_BigFile
                     return true;
                 }
                 return false;
-            break;
 
             case 'w':
             case 'wb':
@@ -164,7 +163,6 @@ class PHP_BigFile
                 } else {
                     return touch($this->path);
                 }
-                break;
 
             case 'a':
             case 'ab':
@@ -315,7 +313,6 @@ class PHP_BigFile
                 } else {
                      return false;
                 }
-                break;
 
             case SEEK_CUR:
                 if ($offset >= 0) {
@@ -324,7 +321,6 @@ class PHP_BigFile
                 } else {
                      return false;
                 }
-                break;
 
             case SEEK_END:
                 if ($this->filesize + $offset >= 0) {
@@ -333,7 +329,6 @@ class PHP_BigFile
                 } else {
                      return false;
                 }
-                break;
 
             default:
                 return false;

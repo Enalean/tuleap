@@ -36,7 +36,6 @@ class User_UserStatusManager
                 case PFUser::STATUS_VALIDATED_RESTRICTED:
                 case PFUser::STATUS_PENDING:
                     throw new User_StatusPendingException();
-                    break;
                 default:
                     throw new User_StatusInvalidException();
             }
@@ -87,7 +86,6 @@ class User_UserStatusManager
             case PFUser::STATUS_ACTIVE:
             case PFUser::STATUS_RESTRICTED:
                 return true;
-                break;
             case PFUser::STATUS_DELETED:
                 throw new User_StatusDeletedException();
             case PFUser::STATUS_SUSPENDED:

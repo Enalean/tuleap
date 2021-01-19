@@ -642,16 +642,12 @@ class Docman_PermissionsManager
         switch ($p) {
             case self::ITEM_PERMISSION_TYPE_READ:
                 return 1;
-                break;
             case self::ITEM_PERMISSION_TYPE_WRITE:
                 return 2;
-                break;
             case self::ITEM_PERMISSION_TYPE_MANAGE:
                 return 3;
-                break;
             default:
                 return 100;
-                break;
         }
     }
 

@@ -43,10 +43,8 @@ class AdminDelegation_Service //phpcs:ignore
         switch ($service) {
             case self::SHOW_PROJECT_ADMINS:
                 return dgettext('tuleap-admindelegation', 'See project administrators');
-                break;
             case self::SHOW_PROJECTS:
                 return dgettext('tuleap-admindelegation', 'See all projects');
-                break;
         }
     }
 
@@ -62,10 +60,8 @@ class AdminDelegation_Service //phpcs:ignore
         switch ($widget) {
             case 'admindelegation':
                 return self::SHOW_PROJECT_ADMINS;
-                break;
             case 'admindelegation_projects':
                 return self::SHOW_PROJECTS;
-                break;
         }
         return false;
     }

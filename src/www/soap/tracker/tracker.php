@@ -3358,8 +3358,6 @@ if (defined('NUSOAP')) {
                 $a->mailFollowupWithPermissions($addresses, $changes);
                 return true;
             }
-            // Update last_update_date field
-            $a->update_last_update_date();
         } else {
             return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addArtifactFollowup');
         }
