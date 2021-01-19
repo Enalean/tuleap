@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -55,44 +55,32 @@ class ArtifactLinkTypeCanBeUnused implements Dispatchable
         $this->type    = $type;
     }
 
-    /**
-     * @return Project
-     */
-    public function getProject()
+    public function getProject(): Project
     {
         return $this->project;
     }
 
-    /**
-     * @return NaturePresenter
-     */
-    public function getType()
+    public function getType(): NaturePresenter
     {
         return $this->type;
     }
 
-    public function setTypeIsCheckedByPlugin()
+    public function setTypeIsCheckedByPlugin(): void
     {
         $this->is_type_checked_by_plugin = true;
     }
 
-    public function setTypeIsUnusable()
+    public function setTypeIsUnusable(): void
     {
         $this->can_be_unused = true;
     }
 
-    /**
-     * @return bool
-     */
-    public function canTypeBeUnused()
+    public function canTypeBeUnused(): bool
     {
         return $this->can_be_unused;
     }
 
-    /**
-     * @return bool
-     */
-    public function doesPluginCheckedTheType()
+    public function doesPluginCheckedTheType(): bool
     {
         return $this->is_type_checked_by_plugin;
     }

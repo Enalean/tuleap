@@ -270,6 +270,10 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
 
     private function artifactLinkTypeCanBeUnused(Project $project, NaturePresenter $type): bool
     {
+        if ($type->shortname === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
+            return false;
+        }
+
         $event = new ArtifactLinkTypeCanBeUnused($project, $type);
         $this->event_manager->processEvent($event);
 
@@ -279,10 +283,6 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
 
         if (! $type->is_system) {
             return true;
-        }
-
-        if ($type->shortname === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
-            return ! $this->hierarchy_dao->isAHierarchySetInProject((int) $project->getID());
         }
 
         return false;

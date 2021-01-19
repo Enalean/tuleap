@@ -1495,7 +1495,9 @@ msgid "Field type successfully changed"
 msgstr "Type du champ modifié avec succès"
 
 msgid "Field type successfully changed for the field and all its target fields"
-msgstr "Type du champ modifié avec succès pour le champ et l'ensemble de ses champs cibles"
+msgstr ""
+"Type du champ modifié avec succès pour le champ et l'ensemble de ses champs "
+"cibles"
 
 msgid "Field updated"
 msgstr "Champ mis à jour"
@@ -2247,13 +2249,6 @@ msgstr "Veuillez fournir une limite valide."
 
 msgid "Please provide a valid query."
 msgstr "Veuillez fournir une requête valide."
-
-msgid ""
-"Please reactivate the \"_is_child\" artifact link type to be able to define "
-"the tracker hierarchy."
-msgstr ""
-"Merci d'activer le lien entre artéfacts \"_is_child\" afin de pouvoir "
-"définir une hiérarchie entre outils de suivi."
 
 msgid "Please select a tracker"
 msgstr "Sélectionnez un outil de suivi"
