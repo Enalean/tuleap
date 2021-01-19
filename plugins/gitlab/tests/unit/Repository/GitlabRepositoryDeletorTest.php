@@ -30,10 +30,11 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 
 class GitlabRepositoryDeletorTest extends TestCase
 {
@@ -91,6 +92,10 @@ class GitlabRepositoryDeletorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitTuleapReferenceDao
      */
     private $commit_tuleap_reference_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MergeRequestTuleapReferenceDao
+     */
+    private $merge_request_dao;
 
     protected function setUp(): void
     {
@@ -103,6 +108,7 @@ class GitlabRepositoryDeletorTest extends TestCase
         $this->gitlab_repository_dao         = Mockery::mock(GitlabRepositoryDao::class);
         $this->gitlab_bot_api_token_dao      = Mockery::mock(GitlabBotApiTokenDao::class);
         $this->commit_tuleap_reference_dao   = Mockery::mock(CommitTuleapReferenceDao::class);
+        $this->merge_request_dao             = Mockery::mock(MergeRequestTuleapReferenceDao::class);
 
         $this->deletor = new GitlabRepositoryDeletor(
             $this->git_permissions_manager,
@@ -112,6 +118,7 @@ class GitlabRepositoryDeletorTest extends TestCase
             $this->gitlab_repository_dao,
             $this->gitlab_bot_api_token_dao,
             $this->commit_tuleap_reference_dao,
+            $this->merge_request_dao
         );
 
         $this->gitlab_repository = new GitlabRepository(
@@ -230,6 +237,8 @@ class GitlabRepositoryDeletorTest extends TestCase
             ->shouldReceive('deleteCommitsInGitlabRepository')
             ->with(1)
             ->once();
+
+        $this->merge_request_dao->shouldReceive('deleteAllMergeRequestWithRepositoryId')->once();
 
         $this->deletor->deleteRepositoryInProject(
             $this->gitlab_repository,

@@ -35,3 +35,11 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_bot_api_token (
     repository_id INT(11) NOT NULL PRIMARY KEY,
     token BLOB NOT NULL
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_gitlab_merge_request_info (
+    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    repository_id INT(11) NOT NULL,
+    merge_request_id INT(11) NOT NULL,
+    title TEXT NOT NULL,
+    UNIQUE KEY merge_request_id(repository_id, merge_request_id)
+) ENGINE=InnoDB;
