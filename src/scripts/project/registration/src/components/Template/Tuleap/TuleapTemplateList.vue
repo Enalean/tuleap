@@ -39,14 +39,15 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import TemplateCard from "../TemplateCard.vue";
-import { State } from "vuex-class";
 import { TemplateData } from "../../../type";
+import { namespace } from "vuex-class";
+const configuration = namespace("configuration");
 
 @Component({
     components: { TemplateCard },
 })
 export default class TuleapTemplateList extends Vue {
-    @State
+    @configuration.State
     tuleap_templates!: TemplateData[];
 }
 </script>

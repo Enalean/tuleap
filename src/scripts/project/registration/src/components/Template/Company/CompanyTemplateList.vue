@@ -38,18 +38,19 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import TemplateCard from "../TemplateCard.vue";
-import { State } from "vuex-class";
 import { TemplateData } from "../../../type";
 import { sprintf } from "sprintf-js";
+import { namespace } from "vuex-class";
+const configuration = namespace("configuration");
 
 @Component({
     components: { TemplateCard },
 })
 export default class TuleapCompanyTemplateList extends Vue {
-    @State
+    @configuration.State
     company_templates!: TemplateData[];
 
-    @State
+    @configuration.State
     company_name!: string;
 
     get platform_template_name(): string {

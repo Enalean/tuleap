@@ -18,24 +18,14 @@
  *
  */
 
-import { FieldData, TemplateData, TroveCatData } from "../type";
+import { TemplateData } from "../type";
+import { ConfigurationState } from "./configuration";
 
 export interface State {
-    tuleap_templates: TemplateData[];
     selected_tuleap_template: TemplateData | null;
     selected_company_template: TemplateData | null;
-    are_restricted_users_allowed: boolean;
-    are_anonymous_allowed: boolean;
-    project_default_visibility: string;
     error: string | null;
     is_creating_project: boolean;
-    is_project_approval_required: boolean;
-    trove_categories: TroveCatData[];
-    is_description_required: boolean;
-    project_fields: FieldData[];
-    company_templates: TemplateData[];
-    company_name: string;
-    can_user_choose_project_visibility: boolean;
 }
 
 export interface StoreOptions {
@@ -46,6 +36,9 @@ export interface StoreOptions {
         is_creating_project: boolean;
         project_default_visibility: string;
         is_project_approval_required: boolean;
-        are_anonymous_allowed: boolean;
     };
+}
+
+export interface RootState extends State {
+    readonly configuration: ConfigurationState;
 }

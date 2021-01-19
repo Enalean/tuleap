@@ -22,9 +22,10 @@ import { initVueGettext, getPOFileFromLocale } from "../../tuleap/gettext/vue-ge
 import App from "./src/components/App.vue";
 import { TemplateData, TroveCatData } from "./src/type";
 import { createStore } from "./src/store";
-import { State } from "./src/store/type";
+import { RootState } from "./src/store/type";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createRouter } from "./src/router";
+import { ConfigurationState } from "./src/store/configuration";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("project-registration");
@@ -68,7 +69,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const is_creating_project = false;
     const is_project_approval_required = Boolean(vue_mount_point.dataset.projectsMustBeApproved);
     const is_description_required = Boolean(vue_mount_point.dataset.isDescriptionMandatory);
-    const are_anonymous_allowed = Boolean(vue_mount_point.dataset.areAnonymousAllowed);
     const can_user_choose_project_visibility = Boolean(
         vue_mount_point.dataset.canUserChoosePrivacy
     );
@@ -81,15 +81,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const company_name = String(vue_mount_point.dataset.companyName);
 
-    const root_state: State = {
+    const configuration_state: ConfigurationState = {
         tuleap_templates,
-        selected_tuleap_template,
-        selected_company_template,
         are_restricted_users_allowed,
-        are_anonymous_allowed,
         project_default_visibility,
-        error,
-        is_creating_project,
         is_project_approval_required,
         trove_categories,
         is_description_required,
@@ -97,6 +92,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         company_templates,
         company_name,
         can_user_choose_project_visibility,
+    };
+
+    const root_state: RootState = {
+        selected_tuleap_template,
+        selected_company_template,
+        error,
+        is_creating_project,
+        configuration: configuration_state,
     };
 
     Vue.use(VueDOMPurifyHTML, {
@@ -108,7 +111,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const AppComponent = Vue.extend(App);
-    const store = createStore(root_state);
+    const store = createStore(root_state, configuration_state);
     const router = createRouter();
 
     new AppComponent({

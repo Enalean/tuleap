@@ -20,21 +20,10 @@
 import { State } from "./type";
 
 const state: State = {
-    tuleap_templates: [],
     selected_tuleap_template: null,
     selected_company_template: null,
-    are_restricted_users_allowed: false,
-    are_anonymous_allowed: false,
-    project_default_visibility: "",
     error: null,
     is_creating_project: false,
-    is_project_approval_required: false,
-    trove_categories: [],
-    is_description_required: false,
-    project_fields: [],
-    company_templates: [],
-    company_name: "",
-    can_user_choose_project_visibility: false,
 };
 
 export default state;

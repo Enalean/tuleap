@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
@@ -18,36 +18,37 @@
  *
  */
 
-import { Store } from "vuex-mock-store";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import TemplateCardContent from "../TemplateCard.vue";
 import TuleapTemplateList from "./TuleapTemplateList.vue";
-import { State } from "../../../store/type";
 import { TemplateData } from "../../../type";
+import { ConfigurationState } from "../../../store/configuration";
+import { RootState } from "../../../store/type";
 
 describe("TuleapTemplateList", () => {
     let local_vue = createLocalVue();
-    let store: Store;
     let wrapper: Wrapper<TuleapTemplateList>;
 
     async function createWrapper(
         tuleap_templates: TemplateData[]
     ): Promise<Wrapper<TuleapTemplateList>> {
-        const state: State = {
+        const configuration_state: ConfigurationState = {
             tuleap_templates: tuleap_templates,
-        } as State;
+        } as ConfigurationState;
 
-        const store_options = {
-            state,
-        };
-        store = createStoreMock(store_options);
         local_vue = await createProjectRegistrationLocalVue();
 
         return shallowMount(TuleapTemplateList, {
             localVue: local_vue,
-            mocks: { $store: store },
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        configuration: configuration_state,
+                    } as RootState,
+                }),
+            },
         });
     }
 

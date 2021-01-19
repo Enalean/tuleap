@@ -18,37 +18,38 @@
  *
  */
 
-import { Store } from "vuex-mock-store";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import TemplateCardContent from "../TemplateCard.vue";
 import CompanyTemplateList from "./CompanyTemplateList.vue";
-import { State } from "../../../store/type";
+import { RootState } from "../../../store/type";
 import { TemplateData } from "../../../type";
+import { ConfigurationState } from "../../../store/configuration";
 
 describe("CompanyTemplateList", () => {
     let local_vue = createLocalVue();
-    let store: Store;
     let wrapper: Wrapper<CompanyTemplateList>;
 
     describe("has no templates", () => {
         beforeEach(async () => {
             const company_templates: TemplateData[] = [];
-            const state: State = {
+            const configuration_state: ConfigurationState = {
                 company_templates: company_templates,
                 company_name: "",
-            } as State;
+            } as ConfigurationState;
 
-            const store_options = {
-                state,
-            };
-            store = createStoreMock(store_options);
             local_vue = await createProjectRegistrationLocalVue();
 
             wrapper = shallowMount(CompanyTemplateList, {
                 localVue: local_vue,
-                mocks: { $store: store },
+                mocks: {
+                    $store: createStoreMock({
+                        state: {
+                            configuration: configuration_state,
+                        } as RootState,
+                    }),
+                },
             });
         });
 
@@ -78,20 +79,22 @@ describe("CompanyTemplateList", () => {
                 },
             ];
 
-            const state: State = {
+            const configuration_state: ConfigurationState = {
                 company_templates: company_templates,
                 company_name: "",
-            } as State;
+            } as ConfigurationState;
 
-            const store_options = {
-                state,
-            };
-            store = createStoreMock(store_options);
             local_vue = await createProjectRegistrationLocalVue();
 
             wrapper = shallowMount(CompanyTemplateList, {
                 localVue: local_vue,
-                mocks: { $store: store },
+                mocks: {
+                    $store: createStoreMock({
+                        state: {
+                            configuration: configuration_state,
+                        } as RootState,
+                    }),
+                },
             });
         });
 
@@ -101,7 +104,7 @@ describe("CompanyTemplateList", () => {
         });
 
         it(`displays the company name if the platform name is not Tuleap`, async () => {
-            wrapper.vm.$store.state.company_name = "Nichya company";
+            wrapper.vm.$store.state.configuration.company_name = "Nichya company";
             await wrapper.vm.$nextTick();
             expect(
                 wrapper
@@ -111,7 +114,7 @@ describe("CompanyTemplateList", () => {
         });
 
         it(`displays 'Custom templates' if the platform name is Tuleap`, async () => {
-            wrapper.vm.$store.state.company_name = "Tuleap";
+            wrapper.vm.$store.state.configuration.company_name = "Tuleap";
             await wrapper.vm.$nextTick();
             expect(
                 wrapper

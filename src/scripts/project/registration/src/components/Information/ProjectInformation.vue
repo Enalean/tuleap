@@ -100,7 +100,7 @@ import {
     TroveCatData,
     TroveCatProperties,
 } from "../../type";
-import { Getter, State } from "vuex-class";
+import { Getter, State, namespace } from "vuex-class";
 import EventBus from "../../helpers/event-bus";
 import TroveCategoryList from "./TroveCat/TroveCategoryList.vue";
 import FieldDescription from "./Fields/FieldDescription.vue";
@@ -113,6 +113,7 @@ import {
     ACCESS_PUBLIC,
     ACCESS_PUBLIC_UNRESTRICTED,
 } from "../../constant";
+const configuration = namespace("configuration");
 
 const DEFAULT_PROJECT_ID = "100";
 
@@ -138,28 +139,28 @@ export default class ProjectInformation extends Vue {
     @State
     error!: string;
 
-    @State
+    @configuration.State
     are_restricted_users_allowed!: boolean;
 
-    @State
+    @configuration.State
     project_default_visibility!: string;
 
     @State
     selected_tuleap_template!: TemplateData;
 
-    @State
+    @configuration.State
     is_project_approval_required!: boolean;
 
-    @State
+    @configuration.State
     trove_categories!: Array<TroveCatData>;
 
-    @State
+    @configuration.State
     project_fields!: Array<FieldData>;
 
     @State
     selected_company_template!: TemplateData;
 
-    @State
+    @configuration.State
     can_user_choose_project_visibility!: boolean;
 
     selected_visibility = "";
@@ -256,6 +257,7 @@ export default class ProjectInformation extends Vue {
             categories: this.trove_cats,
             fields: this.field_list,
         };
+
         if (
             this.selected_tuleap_template &&
             this.selected_tuleap_template.id !== DEFAULT_PROJECT_ID
