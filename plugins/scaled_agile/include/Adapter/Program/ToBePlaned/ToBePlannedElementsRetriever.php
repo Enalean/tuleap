@@ -27,6 +27,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\ToBePlannedElementsStore;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
 use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementCollectionRepresentation;
 use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementRepresentation;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 final class ToBePlannedElementsRetriever implements RetrieveToBePlannedElements
 {
@@ -83,9 +84,9 @@ final class ToBePlannedElementsRetriever implements RetrieveToBePlannedElements
             }
 
             $elements[] = new ToBePlannedElementRepresentation(
-                $artifact['tracker_name'],
                 (int) $artifact['artifact_id'],
-                $artifact['artifact_title']
+                $artifact['artifact_title'],
+                MinimalTrackerRepresentation::build($full_artifact->getTracker())
             );
         }
 

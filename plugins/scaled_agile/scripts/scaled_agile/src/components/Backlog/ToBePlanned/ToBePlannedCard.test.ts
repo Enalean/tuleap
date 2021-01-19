@@ -31,7 +31,10 @@ describe("ToBePlannedCard", () => {
                 element: {
                     artifact_id: 100,
                     artifact_title: "My artifact",
-                    tracker_name: "bug",
+                    tracker: {
+                        label: "bug",
+                        color_name: "lake_placid_blue",
+                    },
                 } as ToBePlannedElement,
             },
             localVue: await createScaledAgileLocalVue(),

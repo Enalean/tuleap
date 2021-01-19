@@ -21,8 +21,15 @@ import { recursiveGet } from "tlp";
 
 export interface ToBePlannedElement {
     artifact_id: number;
-    tracker_name: string;
     artifact_title: string;
+    tracker: TrackerMinimalRepresentation;
+}
+
+interface TrackerMinimalRepresentation {
+    id: number;
+    uri: string;
+    label: string;
+    color_name: string;
 }
 
 export function getToBePlannedElements(program_id: number): Promise<ToBePlannedElement[]> {

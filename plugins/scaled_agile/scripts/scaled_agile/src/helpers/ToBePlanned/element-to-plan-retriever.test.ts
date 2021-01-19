@@ -29,13 +29,23 @@ describe("Tracker reports retriever", () => {
         const expected_elements: ToBePlannedElement[] = [
             {
                 artifact_id: 1,
-                tracker_name: "bug",
                 artifact_title: "My bug name",
+                tracker: {
+                    label: "bug",
+                    color_name: "plum_crazy",
+                    id: 1,
+                    uri: "/tracker/1",
+                },
             },
             {
                 artifact_id: 2,
-                tracker_name: "story",
                 artifact_title: "My story",
+                tracker: {
+                    label: "story",
+                    color_name: "flamingo_pink",
+                    id: 2,
+                    uri: "/tracker/2",
+                },
             },
         ];
 
