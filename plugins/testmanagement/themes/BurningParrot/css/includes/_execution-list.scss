@@ -75,9 +75,17 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
 
 .test-campaign-header-trophy {
     margin: 0 0 0 $tlp-medium-spacing;
-    color: #f3b13a;
+    padding: 0;
+    border: 0;
+    background-color: unset;
+    color: $tlp-swatch-graffiti-yellow;
     font-size: 22px;
     cursor: pointer;
+
+    &:hover,
+    &:focus {
+        color: darken($tlp-swatch-graffiti-yellow, 20%);
+    }
 }
 
 .test-campaign-current-progression-container {
@@ -215,6 +223,7 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
 
     > .tests-list-filter-search {
         flex: 1;
+        width: 0;
         margin: 0 0 0 18px;
         border-style: none;
     }
@@ -232,9 +241,12 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
     justify-content: center;
     height: 22px;
     margin: 3px 3px 3px 0;
+    border: 0;
     border-radius: 20px;
+    background-color: unset;
 
-    &:hover {
+    &:hover,
+    &:focus {
         transition: 125ms background-color ease-in-out;
         background: #f0f1f8;
         cursor: pointer;
@@ -335,8 +347,10 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
         color: $tlp-ui-dimmed;
     }
 
-    &:hover {
+    &:hover,
+    &:focus {
         background: transparentize($tlp-theme-color, .93);
+        text-decoration: none;
     }
 
     > .tlp-avatar-small {

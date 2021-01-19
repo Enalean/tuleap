@@ -188,7 +188,8 @@ $tlp-button-secondary-outline-color: $tlp-theme-sidebar-background-color;
     background: $tlp-button-secondary-background;
     color: $tlp-button-secondary-color;
 
-    &:hover {
+    &:hover,
+    &:focus {
         @include tlp-button-darken($tlp-button-secondary-background, 5%);
     }
 

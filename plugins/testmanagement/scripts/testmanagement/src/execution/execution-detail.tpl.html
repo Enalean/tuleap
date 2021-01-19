@@ -31,18 +31,20 @@
 
             <div class="current-test-header-actions">
                 <div class="tlp-dropdown" ng-if="linkMenuIsVisible">
-                    <i class="fa fa-bug fa-fw current-test-header-action" id="dropdown-link-bug" open-tlp-dropdown></i>
+                    <button class="current-test-header-action tlp-button-secondary" id="dropdown-link-bug" open-tlp-dropdown>
+                        <i class="fa fa-fw fa-bug"></i>
+                    </button>
                     <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
-                        <a class="tlp-dropdown-menu-item" role="menuitem" ng-if="canCreateIssue"
+                        <button class="tlp-dropdown-menu-item" role="menuitem" ng-if="canCreateIssue"
                            ng-click="showLinkToNewBugModal()">
                             <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i>
                             <span translate>Create a new bug</span>
-                        </a>
-                        <a class="tlp-dropdown-menu-item" role="menuitem" ng-if="canLinkIssue"
+                        </button>
+                        <button class="tlp-dropdown-menu-item" role="menuitem" ng-if="canLinkIssue"
                            ng-click="showLinkToExistingBugModal()">
                             <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-link"></i>
                             <span translate>Link to an existing bug</span>
-                        </a>
+                        </button>
                         <span
                                 ng-if="execution.linked_bugs.length > 0"
                                 class="tlp-dropdown-menu-title"
@@ -61,26 +63,26 @@
                     </div>
                 </div>
 
-                <a class="current-test-header-action"
+                <button class="current-test-header-action tlp-button-secondary"
                    ng-if="! linkMenuIsVisible && canCreateIssue"
                    ng-click="showLinkToNewBugModal()"
                    title="{{ 'Create a new bug' | translate }}"
                 >
                     <i class="fa fa-fw fa-bug"></i>
-                </a>
+                </button>
 
-                <a href="/plugins/tracker/?aid={{ execution.definition.id }}" class="current-test-header-action">
+                <a href="/plugins/tracker/?aid={{ execution.definition.id }}" class="current-test-header-action tlp-button-secondary">
                     <i class="fas fa-fw fa-pencil-alt"
                        data-test="current-test-edit"
                        ng-click="showEditArtifactModal($event, execution.definition)"
                        title="{{ 'Edit this test' | translate }}"></i>
                 </a>
-                <span class="current-test-header-action"
+                <button class="current-test-header-action tlp-button-secondary"
                       ng-click="showArtifactLinksGraphModal(execution)"
                       title="{{ 'Show dependencies graph for this test' | translate }}"
                 >
                     <i class="fa fa-tlp-dependencies-graph"></i>
-                </span>
+                </button>
             </div>
         </section>
 
@@ -134,6 +136,7 @@
         <execution-with-steps class="current-test-content"
                               ng-if="execution.definition.steps.length && execution.is_automated === false"
                               execution="execution"
+                              tabindex="-1"
         ></execution-with-steps>
 
         <section ng-if="execution.is_automated === false" class="tlp-pane-section current-test-footer-section">

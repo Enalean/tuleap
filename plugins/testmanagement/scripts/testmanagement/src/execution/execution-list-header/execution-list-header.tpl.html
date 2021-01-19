@@ -33,7 +33,9 @@
         <span ng-if="$ctrl.positiveScore(presence.score)"
             class="tlp-badge-primary">{{ $ctrl.positiveScore(presence.score) }}</span>
     </div>
-    <i class="fa fa-trophy test-campaign-header-trophy"
-       ng-if="$ctrl.isRealtimeEnabled()"
-       ng-click="$ctrl.showPresencesModal()"></i>
+    <button class="test-campaign-header-trophy"
+            ng-if="$ctrl.isRealtimeEnabled()"
+            ng-click="$ctrl.showPresencesModal()">
+        <i class="fa fa-trophy"></i>
+    </button>
 </div>
