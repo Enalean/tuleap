@@ -35,7 +35,10 @@
                             ng-model="search"
                         >
                         <div class="tlp-dropdown tests-filters-dropdown">
-                            <button id="toggle-filters-dropdown" class="tests-toggle-filters">
+                            <button id="toggle-filters-dropdown"
+                                    class="tests-toggle-filters"
+                                    title="{{ 'Toggle filters dropdown' | translate }}"
+                            >
                                 <i class="fa fa-check-circle test-status-icon passed" ng-class="{'filtered-status': isStatusHidden('passed')}"></i>
                                 <i class="fa fa-times-circle test-status-icon failed" ng-class="{'filtered-status': isStatusHidden('failed')}"></i>
                                 <i class="fa fa-exclamation-circle test-status-icon blocked" ng-class="{'filtered-status': isStatusHidden('blocked')}"></i>
