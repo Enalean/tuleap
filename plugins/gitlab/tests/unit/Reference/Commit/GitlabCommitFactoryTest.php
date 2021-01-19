@@ -24,14 +24,14 @@ namespace Tuleap\Gitlab\Reference\Commit;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 
 class GitlabCommitFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CommitTuleapReferenceDAO
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CommitTuleapReferenceDao
      */
     private $commit_dao;
     /**
@@ -41,7 +41,7 @@ class GitlabCommitFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->commit_dao = \Mockery::mock(CommitTuleapReferenceDAO::class);
+        $this->commit_dao = \Mockery::mock(CommitTuleapReferenceDao::class);
         $this->factory = new GitlabCommitFactory(
             $this->commit_dao
         );

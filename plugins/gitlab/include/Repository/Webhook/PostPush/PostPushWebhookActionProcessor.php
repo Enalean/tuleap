@@ -30,7 +30,7 @@ use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
@@ -58,7 +58,7 @@ class PostPushWebhookActionProcessor
     private $reference_manager;
 
     /**
-     * @var CommitTuleapReferenceDAO
+     * @var CommitTuleapReferenceDao
      */
     private $commit_tuleap_reference_dao;
 
@@ -74,7 +74,7 @@ class PostPushWebhookActionProcessor
     public function __construct(
         WebhookTuleapReferencesParser $commit_tuleap_references_parser,
         GitlabRepositoryProjectRetriever $gitlab_repository_project_retriever,
-        CommitTuleapReferenceDAO $commit_tuleap_reference_dao,
+        CommitTuleapReferenceDao $commit_tuleap_reference_dao,
         ReferenceManager $reference_manager,
         TuleapReferenceRetriever $tuleap_reference_retriever,
         LoggerInterface $logger,

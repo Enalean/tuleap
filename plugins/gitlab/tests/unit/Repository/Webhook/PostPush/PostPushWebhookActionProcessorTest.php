@@ -32,7 +32,7 @@ use ReferenceManager;
 use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDAO;
+use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 use Tuleap\Gitlab\Reference\TuleapReferencedArtifactNotFoundException;
 use Tuleap\Gitlab\Reference\TuleapReferenceNotFoundException;
@@ -62,7 +62,7 @@ final class PostPushWebhookActionProcessorTest extends TestCase
     private $reference_manager;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitTuleapReferenceDAO
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommitTuleapReferenceDao
      */
     private $commit_tuleap_reference_dao;
 
@@ -82,7 +82,7 @@ final class PostPushWebhookActionProcessorTest extends TestCase
         $this->logger = Mockery::mock(LoggerInterface::class);
 
         $this->gitlab_repository_project_retriever = Mockery::mock(GitlabRepositoryProjectRetriever::class);
-        $this->commit_tuleap_reference_dao         = Mockery::mock(CommitTuleapReferenceDAO::class);
+        $this->commit_tuleap_reference_dao         = Mockery::mock(CommitTuleapReferenceDao::class);
         $this->reference_manager                   = Mockery::mock(ReferenceManager::class);
         $this->tuleap_reference_retriever          = Mockery::mock(TuleapReferenceRetriever::class);
         $this->commenter                           = Mockery::mock(PostPushCommitBotCommenter::class);
