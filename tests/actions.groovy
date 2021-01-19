@@ -119,7 +119,7 @@ def runPsalmUnusedCodeDetection(String configPath, String root='.') {
         dir ('sources') {
             sh """
             mkdir -p ../results/psalm/
-            scl enable php73 "src/vendor/bin/psalm --find-unused-code --config='${configPath}' --root='${root}' --report=../results/psalm/checkstyle.xml"
+            scl enable php73 "src/vendor/bin/psalm --find-unused-code --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
             """
         }
     }
