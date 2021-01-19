@@ -25,6 +25,8 @@ namespace Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\RetrieveProgramIncrements;
 use Tuleap\ScaledAgile\Program\Program;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
 {
@@ -36,13 +38,19 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
      * @var \Tracker_ArtifactFactory
      */
     private $artifact_factory;
+    /**
+     * @var TimeframeBuilder
+     */
+    private $timeframe_builder;
 
     public function __construct(
         ProgramIncrementsDAO $program_increments_dao,
-        \Tracker_ArtifactFactory $artifact_factory
+        \Tracker_ArtifactFactory $artifact_factory,
+        TimeframeBuilder $timeframe_builder
     ) {
         $this->program_increments_dao = $program_increments_dao;
         $this->artifact_factory       = $artifact_factory;
+        $this->timeframe_builder      = $timeframe_builder;
     }
 
     /**
@@ -62,18 +70,30 @@ final class ProgramIncrementsRetriever implements RetrieveProgramIncrements
 
         $program_increments = [];
         foreach ($program_increment_artifacts as $program_increment_artifact) {
-            $title = $program_increment_artifact->getTitle();
-            if ($title === null) {
-                continue;
+            $program_increment = $this->getProgramIncrementFromArtifact($user, $program_increment_artifact);
+            if ($program_increment !== null) {
+                $program_increments[] = $program_increment;
             }
-            $status_field = $program_increment_artifact->getTracker()->getStatusField();
-            if ($status_field === null || ! $status_field->userCanRead($user)) {
-                continue;
-            }
-
-            $program_increments[] = new ProgramIncrement($title);
         }
 
         return $program_increments;
+    }
+
+    private function getProgramIncrementFromArtifact(\PFUser $user, Artifact $program_increment_artifact): ?ProgramIncrement
+    {
+        $title = $program_increment_artifact->getTitle();
+        if ($title === null) {
+            return null;
+        }
+
+        $status       = null;
+        $status_field = $program_increment_artifact->getTracker()->getStatusField();
+        if ($status_field !== null && $status_field->userCanRead($user)) {
+            $status = $program_increment_artifact->getStatus();
+        }
+
+        $time_period = $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactForREST($program_increment_artifact, $user);
+
+        return new ProgramIncrement($title, $status, $time_period->getStartDate(), $time_period->getEndDate());
     }
 }

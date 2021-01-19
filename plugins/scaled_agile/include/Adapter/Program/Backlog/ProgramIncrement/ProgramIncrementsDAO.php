@@ -35,17 +35,18 @@ class ProgramIncrementsDAO extends DataAccessObject
                 FROM tracker_artifact AS artifact
                 JOIN tracker_changeset ON (artifact.last_changeset_id = tracker_changeset.id)
                 -- get open artifacts
-                JOIN (
+                LEFT JOIN (
                     tracker_semantic_status AS status
                     JOIN tracker_changeset_value AS status_changeset ON (status.field_id = status_changeset.field_id)
                     JOIN tracker_changeset_value_list AS status_value ON (status_changeset.id = status_value.changeset_value_id)
                 ) ON (artifact.tracker_id = status.tracker_id AND tracker_changeset.id = status_changeset.changeset_id)
-                WHERE status.open_value_id = status_value.bindvalue_id AND artifact.tracker_id IN (
-                    SELECT program_increment_tracker_id
-                    FROM plugin_scaled_agile_plan
-                    JOIN tracker ON (tracker.id = plugin_scaled_agile_plan.program_increment_tracker_id)
-                    WHERE tracker.group_id = ?
-                )';
+                WHERE (status.open_value_id = status_value.bindvalue_id OR status.field_id IS NULL) AND
+                      artifact.tracker_id IN (
+                          SELECT program_increment_tracker_id
+                          FROM plugin_scaled_agile_plan
+                          JOIN tracker ON (tracker.id = plugin_scaled_agile_plan.program_increment_tracker_id)
+                          WHERE tracker.group_id = ?
+                      )';
 
         return $this->getDB()->run($sql, $program_id);
     }

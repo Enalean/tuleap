@@ -29,6 +29,7 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrement;
 use Tuleap\ScaledAgile\Program\Program;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class ProgramIncrementsRetrieverTest extends TestCase
 {
@@ -43,16 +44,21 @@ final class ProgramIncrementsRetrieverTest extends TestCase
      */
     private $artifact_factory;
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TimeframeBuilder
+     */
+    private $timeframe_builder;
+    /**
      * @var ProgramIncrementsRetriever
      */
     private $retriever;
 
     protected function setUp(): void
     {
-        $this->dao              = Mockery::mock(ProgramIncrementsDAO::class);
-        $this->artifact_factory = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->dao               = Mockery::mock(ProgramIncrementsDAO::class);
+        $this->artifact_factory  = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->timeframe_builder = Mockery::mock(TimeframeBuilder::class);
 
-        $this->retriever = new ProgramIncrementsRetriever($this->dao, $this->artifact_factory);
+        $this->retriever = new ProgramIncrementsRetriever($this->dao, $this->artifact_factory, $this->timeframe_builder);
     }
 
     public function testCanRetrievesOpenProgramIncrements(): void
@@ -67,9 +73,14 @@ final class ProgramIncrementsRetrieverTest extends TestCase
 
         $artifact_14->shouldReceive('getTitle')->andReturn('Artifact 14');
         $artifact_15->shouldReceive('getTitle')->andReturn('Artifact 15');
-        $tracker = Mockery::mock(\Tracker::class);
+        $tracker     = Mockery::mock(\Tracker::class);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(1611067637, 10);
         foreach ([$artifact_14, $artifact_15] as $mock_artifact) {
             $mock_artifact->shouldReceive('getTracker')->andReturn($tracker);
+            $mock_artifact->shouldReceive('getStatus')->andReturn('Open');
+            $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifactForREST')
+                ->with($mock_artifact, $user)
+                ->andReturn($time_period);
         }
         $status_field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $status_field->shouldReceive('userCanRead')->andReturn(true);
@@ -78,7 +89,10 @@ final class ProgramIncrementsRetrieverTest extends TestCase
         $program_increments = $this->retriever->retrieveOpenProgramIncrements(self::buildProgram(), $user);
 
         self::assertEquals(
-            [new ProgramIncrement('Artifact 14'), new ProgramIncrement('Artifact 15')],
+            [
+                new ProgramIncrement('Artifact 14', 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
+                new ProgramIncrement('Artifact 15', 'Open', $time_period->getStartDate(), $time_period->getEndDate()),
+            ],
             $program_increments
         );
     }
@@ -102,24 +116,6 @@ final class ProgramIncrementsRetrieverTest extends TestCase
         $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($artifact);
 
         $artifact->shouldReceive('getTitle')->andReturn(null);
-
-        self::assertEmpty($this->retriever->retrieveOpenProgramIncrements(self::buildProgram(), $user));
-    }
-
-    public function testDoesNotRetrieveArtifactsWhereTheUserCannotReadTheStatus(): void
-    {
-        $user = UserTestBuilder::aUser()->build();
-
-        $this->dao->shouldReceive('searchOpenProgramIncrements')->andReturn([['id' => 16]]);
-        $artifact = Mockery::mock(Artifact::class);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($artifact);
-
-        $artifact->shouldReceive('getTitle')->andReturn('Title');
-        $tracker = Mockery::mock(\Tracker::class);
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $status_field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $status_field->shouldReceive('userCanRead')->andReturn(false);
-        $tracker->shouldReceive('getStatusField')->andReturn($status_field);
 
         self::assertEmpty($this->retriever->retrieveOpenProgramIncrements(self::buildProgram(), $user));
     }
