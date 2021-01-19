@@ -18,12 +18,13 @@
   -->
 
 <template>
-    <div class="element-card">
+    <div class="element-card" v-bind:class="`element-card-${element.tracker_color}`">
         <div class="element-card-content">
             <div class="element-card-xref-label">
                 <a
                     v-bind:href="`/plugins/tracker/?aid=${element.artifact_id}`"
                     class="element-card-xref"
+                    v-bind:class="`element-card-xref-${element.tracker_color}`"
                 >
                     {{ element.tracker_name }} #{{ element.artifact_id }}
                 </a>

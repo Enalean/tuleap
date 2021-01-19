@@ -85,7 +85,8 @@ final class ToBePlannedElementsRetriever implements RetrieveToBePlannedElements
             $elements[] = new ToBePlannedElementRepresentation(
                 $artifact['tracker_name'],
                 (int) $artifact['artifact_id'],
-                $artifact['artifact_title']
+                $artifact['artifact_title'],
+                $full_artifact->getTracker()->getColor()->getName()
             );
         }
 
