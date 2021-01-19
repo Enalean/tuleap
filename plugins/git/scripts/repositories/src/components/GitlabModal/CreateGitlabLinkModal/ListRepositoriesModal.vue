@@ -248,7 +248,7 @@ export default {
             return this.getGitlabRepositoriesIntegrated.find((repository_integrated) => {
                 return (
                     repository_integrated.normalized_path === repository.path_with_namespace &&
-                    repository_integrated.gitlab_data.full_url !== repository.web_url
+                    repository_integrated.gitlab_data.gitlab_repository_url !== repository.web_url
                 );
             });
         },
@@ -256,7 +256,7 @@ export default {
             return this.getGitlabRepositoriesIntegrated.find((repository_integrated) => {
                 return (
                     repository_integrated.gitlab_data.gitlab_repository_id === repository.id &&
-                    repository_integrated.gitlab_data.full_url === repository.web_url
+                    repository_integrated.gitlab_data.gitlab_repository_url === repository.web_url
                 );
             });
         },

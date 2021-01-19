@@ -37,17 +37,20 @@ final class ConcealedBotApiTokenPatchRepresentation
     /**
      * @var string
      */
-    public $full_url;
+    public $gitlab_repository_url;
 
     /**
      * @var ConcealedString
      */
     public $gitlab_bot_api_token;
 
-    public function __construct(int $gitlab_repository_id, string $full_url, ConcealedString $gitlab_bot_api_token)
-    {
+    public function __construct(
+        int $gitlab_repository_id,
+        string $gitlab_repository_url,
+        ConcealedString $gitlab_bot_api_token
+    ) {
         $this->gitlab_repository_id = $gitlab_repository_id;
-        $this->full_url             = $full_url;
+        $this->gitlab_repository_url = $gitlab_repository_url;
         $this->gitlab_bot_api_token = $gitlab_bot_api_token;
     }
 }

@@ -21,11 +21,11 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202101151907_add_commit_id_index extends ForgeUpgrade_Bucket
+final class b202101181830_rename_full_url extends ForgeUpgrade_Bucket
 {
     public function description(): string
     {
-        return 'Add commit_id index on plugin_gitlab_commit_info table';
+        return 'Rename full_url column in plugin_gitlab_repository table';
     }
 
     public function preUp(): void
@@ -35,10 +35,13 @@ final class b202101151907_add_commit_id_index extends ForgeUpgrade_Bucket
 
     public function up(): void
     {
-        $this->db->addIndex(
-            'plugin_gitlab_commit_info',
-            'commit_id',
-            'ALTER TABLE plugin_gitlab_commit_info ADD INDEX commit_id(repository_id, commit_sha1(10))'
-        );
+        $sql = "ALTER TABLE plugin_gitlab_repository CHANGE full_url gitlab_repository_url VARCHAR(255) NOT NULL;";
+
+        $res = $this->db->dbh->exec($sql);
+        if ($res === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                'An error occurred while renaming full_url column in plugin_gitlab_repository'
+            );
+        }
     }
 }

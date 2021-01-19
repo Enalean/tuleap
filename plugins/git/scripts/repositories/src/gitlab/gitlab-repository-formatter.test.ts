@@ -28,7 +28,7 @@ describe("gitlabRepositoryFormatter", () => {
                 gitlab_repository_id: 1,
                 name: "MyPath/MyRepo",
                 description: "This is my description.",
-                full_url: "https://example.com/MyPath/MyRepo",
+                gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                 last_push_date: "2020-10-28T15:13:13+01:00",
             } as GitLabRepository;
 
@@ -44,7 +44,7 @@ describe("gitlabRepositoryFormatter", () => {
                 last_update_date: "2020-10-28T15:13:13+01:00",
                 additional_information: [],
                 gitlab_data: {
-                    full_url: "https://example.com/MyPath/MyRepo",
+                    gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                     gitlab_repository_id: 1,
                 },
             });
@@ -56,7 +56,7 @@ describe("gitlabRepositoryFormatter", () => {
                 gitlab_repository_id: 1,
                 name: "MyRepo",
                 description: "This is my description.",
-                full_url: "https://example.com/MyRepo",
+                gitlab_repository_url: "https://example.com/MyRepo",
                 last_push_date: "2020-10-28T15:13:13+01:00",
             } as GitLabRepository;
 
@@ -72,7 +72,7 @@ describe("gitlabRepositoryFormatter", () => {
                 last_update_date: "2020-10-28T15:13:13+01:00",
                 additional_information: [],
                 gitlab_data: {
-                    full_url: "https://example.com/MyRepo",
+                    gitlab_repository_url: "https://example.com/MyRepo",
                     gitlab_repository_id: 1,
                 },
             });

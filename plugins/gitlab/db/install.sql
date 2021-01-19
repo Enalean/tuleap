@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS plugin_gitlab_repository (
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
     gitlab_repository_id INT(11) NOT NULL,
+    gitlab_repository_url VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    full_url VARCHAR(255) NOT NULL,
     last_push_date INT(11) NOT NULL,
-    UNIQUE (gitlab_repository_id, full_url)
+    UNIQUE (gitlab_repository_id, gitlab_repository_url)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS plugin_gitlab_repository_project (

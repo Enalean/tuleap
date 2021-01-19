@@ -49,7 +49,7 @@ final class GitlabRepositoryFactoryTest extends TestCase
                     'gitlab_repository_id' => 1254652,
                     'name' => 'proj/test01',
                     'description' => '',
-                    'full_url' => 'https://example.com/proj/test01',
+                    'gitlab_repository_url' => 'https://example.com/proj/test01',
                     'last_push_date' => 1603371803,
                 ]
             ]);
@@ -63,7 +63,7 @@ final class GitlabRepositoryFactoryTest extends TestCase
         $this->assertSame(1254652, $gitlab_repository->getGitlabRepositoryId());
         $this->assertSame('proj/test01', $gitlab_repository->getName());
         $this->assertSame('', $gitlab_repository->getDescription());
-        $this->assertSame('https://example.com/proj/test01', $gitlab_repository->getFullUrl());
+        $this->assertSame('https://example.com/proj/test01', $gitlab_repository->getGitlabRepositoryUrl());
         $this->assertSame(1603371803, $gitlab_repository->getLastPushDate()->getTimestamp());
     }
 }

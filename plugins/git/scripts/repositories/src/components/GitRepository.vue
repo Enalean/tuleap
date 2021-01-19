@@ -161,7 +161,7 @@ export default {
         },
         getRepositoryPath() {
             if (this.isGitlabRepository) {
-                return this.repository.gitlab_data.full_url;
+                return this.repository.gitlab_data.gitlab_repository_url;
             }
             return getRepositoryListUrl() + this.repository.normalized_path;
         },

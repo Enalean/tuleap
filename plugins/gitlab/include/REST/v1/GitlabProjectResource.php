@@ -91,7 +91,7 @@ final class GitlabProjectResource extends AuthenticatedResource
                 $gitlab_repository->getGitlabRepositoryId(),
                 $gitlab_repository->getName(),
                 $gitlab_repository->getDescription(),
-                $gitlab_repository->getFullUrl(),
+                $gitlab_repository->getGitlabRepositoryUrl(),
                 $gitlab_repository->getLastPushDate()->getTimestamp(),
             );
         }
