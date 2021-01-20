@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,29 +20,43 @@
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
 import {
-    getRepositoryList,
-    getForkedRepositoryList,
     postRepository,
     deleteIntegrationGitlab,
-    getGitlabRepositoryList,
     postGitlabRepository,
     patchGitlabRepository,
-} from "./rest-querier.js";
+    GitLabRepositoryUpdate,
+    getRepositoryList,
+    getForkedRepositoryList,
+    getGitlabRepositoryList,
+    GitRepositoryRecursiveGet,
+} from "./rest-querier";
+import { Repository } from "../type";
+import { RecursiveGetInit } from "@tuleap/tlp-fetch";
 
 jest.mock("tlp");
 
 describe("API querier", () => {
     describe("getRepositoryList", () => {
         it("Given a project id and a callback, then it will recursively get all project repositories and call the callback for each batch", () => {
-            return new Promise((done) => {
-                const repositories = [{ id: 37 }, { id: 91 }];
-                const tlpRecursiveGet = jest
-                    .spyOn(tlp, "recursiveGet")
-                    .mockImplementation((route, config) =>
-                        config.getCollectionCallback({ repositories })
-                    );
+            return new Promise<void>((done) => {
+                const repositories = [{ id: 37 } as Repository, { id: 91 } as Repository];
+                const repository_collection: GitRepositoryRecursiveGet = {
+                    repositories,
+                };
+                const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet").mockImplementation(
+                    <T>(
+                        url: string,
+                        init?: RecursiveGetInit<GitRepositoryRecursiveGet, T>
+                    ): Promise<T[]> => {
+                        if (!init || !init.getCollectionCallback) {
+                            throw new Error();
+                        }
 
-                function displayCallback(result) {
+                        return Promise.resolve(init.getCollectionCallback(repository_collection));
+                    }
+                );
+
+                function displayCallback(result: Array<Repository>): void {
                     expect(result).toEqual(repositories);
                     done();
                 }
@@ -67,17 +81,29 @@ describe("API querier", () => {
 
     describe("getForkedRepositoryList", () => {
         it("Given a project id, an owner id and a callback, then it will recursively get all forks and call the callback for each batch", () => {
-            return new Promise((done) => {
-                const repositories = [{ id: 88 }, { id: 57 }];
-                const tlpRecursiveGet = jest
-                    .spyOn(tlp, "recursiveGet")
-                    .mockImplementation((route, config) =>
-                        config.getCollectionCallback({ repositories })
-                    );
-                function displayCallback(result) {
+            return new Promise<void>((done) => {
+                const repositories = [{ id: 88 } as Repository, { id: 57 } as Repository];
+                const repository_collection: GitRepositoryRecursiveGet = {
+                    repositories,
+                };
+                const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet").mockImplementation(
+                    <T>(
+                        url: string,
+                        init?: RecursiveGetInit<GitRepositoryRecursiveGet, T>
+                    ): Promise<T[]> => {
+                        if (!init || !init.getCollectionCallback) {
+                            throw new Error();
+                        }
+
+                        return Promise.resolve(init.getCollectionCallback(repository_collection));
+                    }
+                );
+
+                function displayCallback(result: Array<Repository>): void {
                     expect(result).toEqual(repositories);
                     done();
                 }
+
                 const project_id = 5;
                 const owner_id = "477";
 
@@ -122,14 +148,23 @@ describe("API querier", () => {
 
     describe("getGitlabRepositoryList", () => {
         it("Given a project id and a callback, Then it will recursively get all Gitlab repositories and call the callback for each batch", () => {
-            return new Promise((done) => {
-                const repositories = [{ id: 37 }, { id: 91 }];
+            return new Promise<void>((done) => {
+                const repositories = [{ id: 37 } as Repository, { id: 91 } as Repository];
 
-                jest.spyOn(tlp, "recursiveGet").mockImplementation((route, config) =>
-                    config.getCollectionCallback(repositories)
+                jest.spyOn(tlp, "recursiveGet").mockImplementation(
+                    <T>(
+                        url: string,
+                        init?: RecursiveGetInit<Array<Repository>, T>
+                    ): Promise<T[]> => {
+                        if (!init || !init.getCollectionCallback) {
+                            throw new Error();
+                        }
+
+                        return Promise.resolve(init.getCollectionCallback(repositories));
+                    }
                 );
 
-                function displayCallback(result) {
+                function displayCallback(result: Array<Repository>): void {
                     expect(result).toEqual(repositories);
                     done();
                 }
@@ -204,7 +239,7 @@ describe("API querier", () => {
                     gitlab_repository_id: 20,
                     gitlab_repository_url: "https://example.com",
                 },
-            };
+            } as GitLabRepositoryUpdate;
 
             const body_stringify = JSON.stringify(body);
 

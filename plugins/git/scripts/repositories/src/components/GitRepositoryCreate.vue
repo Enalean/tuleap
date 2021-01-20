@@ -101,7 +101,7 @@
     </form>
 </template>
 <script>
-import { postRepository } from "../api/rest-querier.js";
+import { postRepository } from "../api/rest-querier";
 import { getProjectId } from "../repository-list-presenter";
 import { createModal } from "tlp";
 

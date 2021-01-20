@@ -167,8 +167,9 @@ import { getProjectId } from "../../../repository-list-presenter";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Action, Getter } from "vuex-class";
-import { GitlabProject, GitlabDataWithPath, GitLabDataToPostAPI } from "../../../type";
+import { GitlabProject, GitlabDataWithPath } from "../../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { GitLabRepositoryCreation } from "../../../api/rest-querier";
 
 @Component
 export default class ListRepositoriesModal extends Vue {
@@ -180,7 +181,7 @@ export default class ListRepositoriesModal extends Vue {
     readonly server_url!: string;
 
     @Action
-    readonly postIntegrationGitlab!: (gitlab_data: GitLabDataToPostAPI) => Promise<void>;
+    readonly postIntegrationGitlab!: (gitlab_data: GitLabRepositoryCreation) => Promise<void>;
 
     @Getter
     getGitlabRepositoriesIntegrated!: GitlabDataWithPath[];
