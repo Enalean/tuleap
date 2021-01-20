@@ -22,7 +22,7 @@ namespace Tuleap\TestManagement\REST\v1\Execution;
 
 use PFUser;
 use Tracker_FormElementFactory;
-use Tuleap\TestManagement\REST\v1\DefinitionRepresentation;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentation;
 use Tuleap\TestManagement\REST\v1\ExecutionRepresentation;
 use Tuleap\TestManagement\REST\v1\StepResultRepresentation;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;

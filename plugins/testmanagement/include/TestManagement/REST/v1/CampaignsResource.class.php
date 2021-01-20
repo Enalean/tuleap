@@ -88,6 +88,7 @@ use Tuleap\TestManagement\REST\FormattedChangesetValueForFileFieldRetriever;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForIntFieldRetriever;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForListFieldRetriever;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForTextFieldRetriever;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentationBuilder;
 use Tuleap\TestManagement\REST\v1\Execution\ListOfDefinitionsForCampaignRetriever;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
@@ -210,6 +211,8 @@ class CampaignsResource
             new StepsResultsFilter()
         );
         $purifier =  Codendi_HTMLPurifier::instance();
+        $commonmark_interpreter = CommonMarkInterpreter::build($purifier);
+
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
@@ -217,13 +220,17 @@ class CampaignsResource
             $assigned_to_representation_builder,
             $this->artifact_dao,
             $this->artifact_factory,
-            $requirement_retriever,
             $definition_retriever,
             $this->execution_dao,
             $steps_results_representation_builder,
-            $purifier,
             new FileUploadDataProvider($this->getFrozenFieldDetector(), $this->formelement_factory),
-            CommonMarkInterpreter::build($purifier)
+            new DefinitionRepresentationBuilder(
+                $this->formelement_factory,
+                $this->conformance_validator,
+                $requirement_retriever,
+                $purifier,
+                $commonmark_interpreter
+            )
         );
 
         $campaign_dao = new CampaignDao();

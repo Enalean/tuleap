@@ -24,7 +24,7 @@ namespace Tuleap\TestPlan\REST\v1;
 
 use PFUser;
 use Tracker_FormElementFactory;
-use Tuleap\TestManagement\REST\v1\MinimalDefinitionRepresentation;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\MinimalDefinitionRepresentation;
 use Tuleap\TestPlan\TestDefinition\TestPlanTestDefinitionWithTestStatus;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation;

@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TestManagement\REST\v1;
+namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -70,12 +70,15 @@ class DefinitionRepresentationTest extends TestCase
         $purifier = \Mockery::mock(\Codendi_HTMLPurifier::class);
         $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn("description")->once();
         $commonmark_interpreter = \Mockery::mock(ContentInterpretor::class);
-        $representation         = new DefinitionRepresentation(
+        $representation         = new DefinitionTextOrHTMLRepresentation(
             $purifier,
             $commonmark_interpreter,
             $artifact,
             $this->form_element_factory,
-            $user
+            $user,
+            'text',
+            null,
+            null
         );
 
         $this->assertEquals("description", $representation->description);

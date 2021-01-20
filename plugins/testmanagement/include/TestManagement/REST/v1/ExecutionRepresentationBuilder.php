@@ -23,13 +23,14 @@ namespace Tuleap\TestManagement\REST\v1;
 use PFUser;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionNotFoundException;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\Execution\PaginatedExecutions;
 use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentation;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresentationBuilder;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
@@ -70,10 +71,6 @@ class ExecutionRepresentationBuilder
      */
     private $artifact_factory;
     /**
-     * @var RequirementRetriever
-     */
-    private $requirement_retriever;
-    /**
      * @var ExecutionDao
      */
     private $execution_dao;
@@ -86,17 +83,13 @@ class ExecutionRepresentationBuilder
      */
     private $steps_results_representation_builder;
     /**
-     * @var \Codendi_HTMLPurifier
-     */
-    private $purifier;
-    /**
      * @var FileUploadDataProvider
      */
     private $file_upload_data_provider;
     /**
-     * @var ContentInterpretor
+     * @var DefinitionRepresentationBuilder
      */
-    private $interpreter;
+    private $definition_representation_builder;
 
     public function __construct(
         UserManager $user_manager,
@@ -105,13 +98,11 @@ class ExecutionRepresentationBuilder
         AssignedToRepresentationBuilder $assigned_to_representation_builder,
         ArtifactDao $artifact_dao,
         Tracker_ArtifactFactory $artifact_factory,
-        RequirementRetriever $requirement_retriever,
         DefinitionForExecutionRetriever $definition_retriever,
         ExecutionDao $execution_dao,
         StepsResultsRepresentationBuilder $steps_results_representation_builder,
-        \Codendi_HTMLPurifier $purifier,
         FileUploadDataProvider $file_upload_data_provider,
-        ContentInterpretor $interpreter
+        DefinitionRepresentationBuilder $definition_representation_builder
     ) {
         $this->user_manager                         = $user_manager;
         $this->tracker_form_element_factory         = $tracker_form_element_factory;
@@ -119,13 +110,11 @@ class ExecutionRepresentationBuilder
         $this->assigned_to_representation_builder   = $assigned_to_representation_builder;
         $this->artifact_dao                         = $artifact_dao;
         $this->artifact_factory                     = $artifact_factory;
-        $this->requirement_retriever                = $requirement_retriever;
         $this->definition_retriever                 = $definition_retriever;
         $this->execution_dao                        = $execution_dao;
         $this->steps_results_representation_builder = $steps_results_representation_builder;
-        $this->purifier                             = $purifier;
         $this->file_upload_data_provider            = $file_upload_data_provider;
-        $this->interpreter                          = $interpreter;
+        $this->definition_representation_builder    = $definition_representation_builder;
     }
 
     /**
@@ -277,14 +266,14 @@ class ExecutionRepresentationBuilder
         Artifact $definition,
         array $definitions_changeset_ids
     ): DefinitionRepresentation {
-        return new DefinitionRepresentation(
-            $this->purifier,
-            $this->interpreter,
-            $definition,
-            $this->tracker_form_element_factory,
+        return $this->definition_representation_builder->getDefinitionRepresentation(
             $user,
-            $this->getSpecificDefinitionChangesetForExecution($execution, $definition, $definitions_changeset_ids),
-            $this->requirement_retriever->getRequirementForDefinition($definition, $user)
+            $definition,
+            $this->getSpecificDefinitionChangesetForExecution(
+                $execution,
+                $definition,
+                $definitions_changeset_ids
+            )
         );
     }
 

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement\REST\v1;
+namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations;
 
 use PFUser;
 use Tracker_Artifact_Changeset;
@@ -31,12 +31,6 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class MinimalDefinitionRepresentation
 {
-    public const ROUTE = 'testmanagement_definitions';
-
-    public const FIELD_SUMMARY         = 'summary';
-    public const FIELD_CATEGORY        = 'category';
-    public const FIELD_AUTOMATED_TESTS = 'automated_tests';
-
     /**
      * @var int ID of the artifact
      *
@@ -80,80 +74,32 @@ class MinimalDefinitionRepresentation
     ) {
         $tracker_id = $artifact->getTrackerId();
         $this->id   = JsonCast::toInt($artifact->getId());
-        $this->uri  = self::ROUTE . '/' . $this->id;
+        $this->uri  = DefinitionRepresentation::ROUTE . '/' . $this->id;
 
         $changeset = $changeset ?: self::getArtifactLastChangeset($artifact);
 
-        $this->summary         = self::getTextFieldValue(
+        $this->summary         = DefinitionRepresentationBuilder::getTextChangesetValue(
             $form_element_factory,
             $tracker_id,
             $user,
             $artifact,
             $changeset,
-            self::FIELD_SUMMARY
+            DefinitionRepresentation::FIELD_SUMMARY
         );
         $this->category        = self::getCategory($form_element_factory, $tracker_id, $user, $changeset);
-        $this->automated_tests = self::getTextFieldValue(
+        $this->automated_tests = DefinitionRepresentationBuilder::getTextChangesetValue(
             $form_element_factory,
             $tracker_id,
             $user,
             $artifact,
             $changeset,
-            self::FIELD_AUTOMATED_TESTS
+            DefinitionRepresentation::FIELD_AUTOMATED_TESTS
         );
     }
 
     private static function getArtifactLastChangeset(Artifact $artifact): ?Tracker_Artifact_Changeset
     {
         return $artifact->getLastChangeset();
-    }
-
-    /**
-     * @param string $field_shortname
-     *
-     * @return string
-     */
-    final protected static function getTextFieldValue(
-        Tracker_FormElementFactory $form_element_factory,
-        int $tracker_id,
-        PFUser $user,
-        Artifact $artifact,
-        ?Tracker_Artifact_Changeset $changeset,
-        $field_shortname
-    ) {
-        $field_value = self::getFieldValue($form_element_factory, $tracker_id, $user, $artifact, $changeset, $field_shortname);
-        if (! $field_value) {
-            return '';
-        }
-        \assert($field_value instanceof \Tracker_Artifact_ChangesetValue_Text);
-
-        return $field_value->getText();
-    }
-
-    /**
-     * @param string $field_shortname
-     *
-     * @return \Tracker_Artifact_ChangesetValue|null
-     */
-    final protected static function getFieldValue(
-        Tracker_FormElementFactory $form_element_factory,
-        int $tracker_id,
-        PFUser $user,
-        Artifact $artifact,
-        ?Tracker_Artifact_Changeset $changeset,
-        $field_shortname
-    ) {
-        $field = $form_element_factory->getUsedFieldByNameForUser(
-            $tracker_id,
-            $field_shortname,
-            $user
-        );
-
-        if (! $field) {
-            return null;
-        }
-
-        return $artifact->getValue($field, $changeset);
     }
 
     private static function getCategory(
@@ -164,7 +110,7 @@ class MinimalDefinitionRepresentation
     ): ?string {
         $field_status = $form_element_factory->getSelectboxFieldByNameForUser(
             $tracker_id,
-            self::FIELD_CATEGORY,
+            DefinitionRepresentation::FIELD_CATEGORY,
             $user
         );
 

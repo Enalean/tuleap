@@ -21,10 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TestManagement\REST\v1\StepDefinitionRepresentations;
+namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations;
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionRepresentation;
 
 class StepDefinitionRepresentationTest extends TestCase
 {
