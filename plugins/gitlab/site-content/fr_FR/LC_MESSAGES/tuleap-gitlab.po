@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid "Closed"
+msgstr "Fermée"
+
 msgid "GitLab"
 msgstr "GitLab"
 
@@ -19,7 +22,13 @@ msgid "GitLab commit"
 msgstr "Commit GitLab"
 
 msgid "GitLab merge request"
-msgstr "Merge request GitLab"
+msgstr "Demande de fusion GitLab"
+
+msgid "Merged"
+msgstr "Fusionnée"
+
+msgid "Open"
+msgstr "Ouverte"
 
 msgid "Provides an integration GitLab to Tuleap."
 msgstr "Fournit une integration de GitLab vers Tuleap."
@@ -28,7 +37,7 @@ msgid "Reference to a GitLab commit"
 msgstr "Référence vers un commit GitLab"
 
 msgid "Reference to a GitLab merge request"
-msgstr "Référence vers une merge request GitLab"
+msgstr "Référence vers une demande de fusion GitLab"
 
 #, php-format
 msgid ""

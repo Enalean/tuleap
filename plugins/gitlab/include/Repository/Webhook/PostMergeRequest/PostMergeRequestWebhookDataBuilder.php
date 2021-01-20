@@ -20,15 +20,17 @@
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
-use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 use Psr\Log\LoggerInterface;
+use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
 class PostMergeRequestWebhookDataBuilder
 {
-    private const OBJECT_ATTRIBUTES_KEY         = "object_attributes";
-    private const MERGE_REQUEST_ID_KEY          = "iid";
-    private const MERGE_REQUEST_TITLE_KEY       = "title";
-    private const MERGE_REQUEST_DESCRIPTION_KEY = "description";
+    private const OBJECT_ATTRIBUTES_KEY          = "object_attributes";
+    private const MERGE_REQUEST_ID_KEY           = "iid";
+    private const MERGE_REQUEST_TITLE_KEY        = "title";
+    private const MERGE_REQUEST_DESCRIPTION_KEY  = "description";
+    private const MERGE_REQUEST_STATE_KEY        = 'state';
+
     /**
      * @var LoggerInterface
      */
@@ -39,13 +41,18 @@ class PostMergeRequestWebhookDataBuilder
         $this->logger = $logger;
     }
 
-    public function build(string $event_name, int $project_id, string $project_url, array $webhook_content): PostMergeRequestWebhookData
-    {
+    public function build(
+        string $event_name,
+        int $project_id,
+        string $project_url,
+        array $webhook_content
+    ): PostMergeRequestWebhookData {
         $this->checkNoMissingKeyInMergeRequestData($webhook_content);
 
         $merge_request_id = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_ID_KEY];
         $title            = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_TITLE_KEY];
         $description      = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_DESCRIPTION_KEY];
+        $state            = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_STATE_KEY];
 
         $this->logger->debug("Webhook merge request with id $merge_request_id retrieved.");
         $this->logger->debug("|_ Its title is: $title");
@@ -57,7 +64,8 @@ class PostMergeRequestWebhookDataBuilder
             $project_url,
             $merge_request_id,
             $title,
-            $description
+            $description,
+            $state,
         );
     }
 
@@ -70,16 +78,17 @@ class PostMergeRequestWebhookDataBuilder
             throw new MissingKeyException(self::OBJECT_ATTRIBUTES_KEY);
         }
 
-        if (! isset($merge_request_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_ID_KEY])) {
-            throw new MissingKeyException(self::MERGE_REQUEST_ID_KEY . ' in ' . self::OBJECT_ATTRIBUTES_KEY);
-        }
+        $required_keys = [
+            self::MERGE_REQUEST_ID_KEY,
+            self::MERGE_REQUEST_TITLE_KEY,
+            self::MERGE_REQUEST_DESCRIPTION_KEY,
+            self::MERGE_REQUEST_STATE_KEY,
+        ];
 
-        if (! isset($merge_request_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_TITLE_KEY])) {
-            throw new MissingKeyException(self::MERGE_REQUEST_TITLE_KEY . ' in ' . self::OBJECT_ATTRIBUTES_KEY);
-        }
-
-        if (! isset($merge_request_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_DESCRIPTION_KEY])) {
-            throw new MissingKeyException(self::MERGE_REQUEST_DESCRIPTION_KEY . ' in ' . self::OBJECT_ATTRIBUTES_KEY);
+        foreach ($required_keys as $required_key) {
+            if (! isset($merge_request_content[self::OBJECT_ATTRIBUTES_KEY][$required_key])) {
+                throw new MissingKeyException($required_key . ' in ' . self::OBJECT_ATTRIBUTES_KEY);
+            }
         }
     }
 }

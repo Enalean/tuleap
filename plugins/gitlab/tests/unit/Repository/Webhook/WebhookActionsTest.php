@@ -141,7 +141,8 @@ final class WebhookActionsTest extends TestCase
             'https://example.com',
             2,
             'TULEAP-123',
-            "",
+            '',
+            'closed',
         );
 
         $now = new DateTimeImmutable();

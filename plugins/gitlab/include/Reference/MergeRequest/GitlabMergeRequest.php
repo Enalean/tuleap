@@ -22,20 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Reference\MergeRequest;
 
-class GitlabMergeRequest
+/**
+ * @psalm-immutable
+ */
+final class GitlabMergeRequest
 {
     /**
      * @var string
      */
     private $title;
+    /**
+     * @var string
+     */
+    private $state;
 
-    public function __construct(string $title)
+    public function __construct(string $title, string $state)
     {
         $this->title = $title;
+        $this->state = $state;
     }
 
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function getState(): string
+    {
+        return $this->state;
     }
 }

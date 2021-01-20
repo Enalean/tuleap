@@ -275,14 +275,9 @@ class WebhookDataExtractorTest extends TestCase
                   "project":{"id": 123456, "web_url": "https://example.com/path/repo01"},
                   "object_attributes":{
                     "iid": 2,
-                    "updated_at": "2021-01-12 13:49:35 UTC",
                     "title": "My Title",
                     "description": "My Description",
                     "state": "opened"
-                  },
-                  "user": {
-                    "name": "John Snow",
-                    "email": "jsnow@AtTheWall.fr"
                   }
                 }'
             )

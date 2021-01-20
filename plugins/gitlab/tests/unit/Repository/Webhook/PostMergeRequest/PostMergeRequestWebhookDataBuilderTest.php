@@ -20,8 +20,8 @@
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
-use PHPUnit\Framework\TestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
@@ -88,8 +88,13 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
     public function testItReturnsPostMergeRequestWebhookData(): void
     {
         $webhook_content = [
-            'object_attributes' => ["iid" => 1, "title" => "My Title", "description" => "My description", "state" => "closed", "updated_at" => "2021-01-12 13:49:35 UTC"],
-            'user' => ['email' => 'daenerys@onHerDragon.com', "name" => "Daenerys Targaryen"]
+            'object_attributes' => [
+                'iid'         => 1,
+                'title'       => 'My Title',
+                'description' => 'My description',
+                'state'       => 'closed',
+                'created_at'  => '2021-01-12 13:49:35 UTC'
+            ],
         ];
 
         $this->logger

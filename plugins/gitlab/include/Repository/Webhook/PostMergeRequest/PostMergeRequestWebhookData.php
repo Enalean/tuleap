@@ -44,11 +44,14 @@ class PostMergeRequestWebhookData implements WebhookData
      * @var string
      */
     private $description;
-
     /**
      * @var int
      */
     private $merge_request_id;
+    /**
+     * @var string
+     */
+    private $state;
 
     public function __construct(
         string $event_name,
@@ -56,14 +59,16 @@ class PostMergeRequestWebhookData implements WebhookData
         string $gitlab_url,
         int $merge_request_id,
         string $title,
-        string $description
+        string $description,
+        string $state
     ) {
-        $this->event_name         = $event_name;
-        $this->gitlab_project_id  = $gitlab_project_id;
-        $this->gitlab_url         = $gitlab_url;
-        $this->title              = $title;
-        $this->description        = $description;
-        $this->merge_request_id = $merge_request_id;
+        $this->event_name        = $event_name;
+        $this->gitlab_project_id = $gitlab_project_id;
+        $this->gitlab_url        = $gitlab_url;
+        $this->title             = $title;
+        $this->description       = $description;
+        $this->merge_request_id  = $merge_request_id;
+        $this->state             = $state;
     }
 
     public function getEventName(): string
@@ -94,5 +99,10 @@ class PostMergeRequestWebhookData implements WebhookData
     public function getMergeRequestId(): int
     {
         return $this->merge_request_id;
+    }
+
+    public function getState(): string
+    {
+        return $this->state;
     }
 }

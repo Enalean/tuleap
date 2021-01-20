@@ -29,28 +29,34 @@ class MergeRequestTuleapReferenceDao extends DataAccessObject
     public function saveGitlabMergeRequestInfo(
         int $repository_id,
         int $merge_request_id,
-        string $title
+        string $title,
+        string $description,
+        string $state
     ): void {
         $this->getDB()->insertOnDuplicateKeyUpdate(
             'plugin_gitlab_merge_request_info',
             [
                 'repository_id'    => $repository_id,
                 'merge_request_id' => $merge_request_id,
-                'title'            => $title
+                'title'            => $title,
+                'description'      => $description,
+                'state'            => $state,
             ],
             [
-                'title'
+                'title',
+                'description',
+                'state',
             ]
         );
     }
 
     /**
-     * @psalm-return array{repository_id: int, merge_request_id: int, title: string}
+     * @psalm-return array{title: string, state: string}
      */
     public function searchMergeRequestInRepositoryWithId(int $repository_id, int $merge_request_id): ?array
     {
         $sql = "
-            SELECT title
+            SELECT title, state
             FROM plugin_gitlab_merge_request_info
             WHERE repository_id = ?
                 AND merge_request_id = ?

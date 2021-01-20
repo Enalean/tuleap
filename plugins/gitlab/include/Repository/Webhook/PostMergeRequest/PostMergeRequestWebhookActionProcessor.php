@@ -159,14 +159,16 @@ class PostMergeRequestWebhookActionProcessor
 
     private function saveMergeRequestData(
         GitlabRepository $gitlab_repository,
-        PostMergeRequestWebhookData $merge_request_webhook_data
+        PostMergeRequestWebhookData $webhook_data
     ): void {
-        $merge_request_id = $merge_request_webhook_data->getMergeRequestId();
+        $merge_request_id = $webhook_data->getMergeRequestId();
 
         $this->merge_request_reference_dao->saveGitlabMergeRequestInfo(
             $gitlab_repository->getId(),
             $merge_request_id,
-            $merge_request_webhook_data->getTitle()
+            $webhook_data->getTitle(),
+            $webhook_data->getDescription(),
+            $webhook_data->getState(),
         );
 
         $this->logger->info("Merge request data for $merge_request_id saved in database");
