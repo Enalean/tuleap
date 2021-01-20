@@ -47,6 +47,7 @@ final class CreateProjectFromJiraCommand extends Command
     private const OPT_TULEAP_USER  = 'tuleap-user';
     private const OPT_SHORTNAME    = 'shortname';
     private const OPT_FULLNAME     = 'fullname';
+    private const OPT_OUTPUT       = 'output';
 
     /**
      * @var UserManager
@@ -81,7 +82,8 @@ final class CreateProjectFromJiraCommand extends Command
             ->addOption(self::OPT_JIRA_PROJECT, '', InputOption::VALUE_REQUIRED, 'ID of the Jira project to import (you will be prompted if not provided)')
             ->addOption(self::OPT_TULEAP_USER, '', InputOption::VALUE_REQUIRED, 'Login name of the user who will be admin of the project')
             ->addOption(self::OPT_SHORTNAME, '', InputOption::VALUE_REQUIRED, 'Short name of the Tuleap project to create')
-            ->addOption(self::OPT_FULLNAME, '', InputOption::VALUE_REQUIRED, 'Full name of the Tuleap project to create');
+            ->addOption(self::OPT_FULLNAME, '', InputOption::VALUE_REQUIRED, 'Full name of the Tuleap project to create')
+            ->addOption(self::OPT_OUTPUT, 'o', InputOption::VALUE_REQUIRED, 'Generate the project archive without actually importing it');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -137,11 +139,22 @@ final class CreateProjectFromJiraCommand extends Command
             $jira_project = $this->getStringOption($input, self::OPT_JIRA_PROJECT);
         }
 
+        $archive_path = $input->getOption(self::OPT_OUTPUT);
+        if (! is_string($archive_path)) {
+            $archive_path = false;
+        }
+
         $output->writeln(sprintf("Create project %s", $shortname));
 
         try {
-            $project = $this->create_project_from_jira->create($logger, $jira_client, $jira_credentials, $jira_project, $shortname, $fullname);
-            $output->writeln(sprintf('Project %d created', $project->getID()));
+            if ($archive_path !== false) {
+                $this->create_project_from_jira->generateArchive($logger, $jira_client, $jira_credentials, $jira_project, $shortname, $fullname, $archive_path);
+                $output->writeln("XML file generated: $archive_path");
+            } else {
+                $project = $this->create_project_from_jira->create($logger, $jira_client, $jira_credentials, $jira_project, $shortname, $fullname);
+                $output->writeln(sprintf('Project %d created', $project->getID()));
+                $output->writeln("Import completed");
+            }
         } catch (\XML_ParseException $exception) {
             $logger->debug($exception->getIndentedXml());
             foreach ($exception->getErrors() as $error) {
@@ -150,8 +163,6 @@ final class CreateProjectFromJiraCommand extends Command
             }
             return 1;
         }
-
-        $output->writeln("Import completed");
         return 0;
     }
 
