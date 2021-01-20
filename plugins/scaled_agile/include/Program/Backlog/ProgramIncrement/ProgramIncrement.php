@@ -32,8 +32,25 @@ final class ProgramIncrement
      */
     public $title;
 
-    public function __construct(string $title)
+    /**
+     * @var string|null
+     */
+    public $status;
+
+    /**
+     * @var int|null
+     */
+    public $start_date;
+    /**
+     * @var int|null
+     */
+    public $end_date;
+
+    public function __construct(string $title, ?string $status, ?int $start_date, ?int $end_date)
     {
-        $this->title = $title;
+        $this->title      = $title;
+        $this->status     = $status;
+        $this->start_date = $start_date;
+        $this->end_date   = $end_date;
     }
 }

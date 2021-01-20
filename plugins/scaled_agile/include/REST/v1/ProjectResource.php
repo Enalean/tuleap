@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\REST\v1;
 
+use BackendLogger;
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\REST\AuthenticatedResource;
@@ -48,6 +49,9 @@ use Tuleap\ScaledAgile\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ScaledAgile\Program\Plan\CreatePlan;
 use Tuleap\ScaledAgile\Program\Plan\PlanCreator;
 use Tuleap\ScaledAgile\Team\Creation\TeamCreator;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 final class ProjectResource extends AuthenticatedResource
 {
@@ -90,17 +94,22 @@ final class ProjectResource extends AuthenticatedResource
         $this->team_creator = new TeamCreator($build_program, $team_adapter, $team_dao);
 
         $artifact_factory              = \Tracker_ArtifactFactory::instance();
+        $form_element_factory          = \Tracker_FormElementFactory::instance();
         $this->to_be_planned_retriever = new ToBePlannedElementsRetriever(
             $build_program,
             new ToBePlannedElementsDao(),
             $artifact_factory,
-            \Tracker_FormElementFactory::instance()
+            $form_element_factory
         );
         $this->program_increments_builder = new ProgramIncrementBuilder(
             $build_program,
             new ProgramIncrementsRetriever(
                 new ProgramIncrementsDAO(),
-                $artifact_factory
+                $artifact_factory,
+                new TimeframeBuilder(
+                    new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
+                    BackendLogger::getDefaultLogger()
+                )
             )
         );
     }
