@@ -43,6 +43,8 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     public const FIELD_RADIO_BUTTON_TYPE     = 'rb';
     public const FIELD_MULTI_SELECT_BOX_TYPE = 'msb';
     public const FIELD_FILE_TYPE             = 'file';
+    public const FIELD_ARTIFACT_LINKS        = 'art_link';
+    public const FIELD_CROSS_REFERENCES      = 'cross';
 
     public const CONTAINER_COLUMN_TYPE   = 'column';
     public const CONTAINER_FIELDSET_TYPE = 'fieldset';
@@ -76,7 +78,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         'cb'                              => Tracker_FormElement_Field_Checkbox::class,
         'int'                             => Tracker_FormElement_Field_Integer::class,
         'tbl'                             => Tracker_FormElement_Field_OpenList::class,
-        'art_link'                        => Tracker_FormElement_Field_ArtifactLink::class,
+        self::FIELD_ARTIFACT_LINKS        => Tracker_FormElement_Field_ArtifactLink::class,
         'perm'                            => Tracker_FormElement_Field_PermissionsOnArtifact::class,
         'shared'                          => Tracker_FormElement_Shared::class,
     ];
@@ -88,7 +90,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         'atid'                             => Tracker_FormElement_Field_PerTrackerArtifactId::class,
         'subby'                            => Tracker_FormElement_Field_SubmittedBy::class,
         'luby'                             => Tracker_FormElement_Field_LastModifiedBy::class,
-        'cross'                            => Tracker_FormElement_Field_CrossReferences::class,
+        self::FIELD_CROSS_REFERENCES       => Tracker_FormElement_Field_CrossReferences::class,
         'burndown'                         => Tracker_FormElement_Field_Burndown::class,
         'computed'                         => Tracker_FormElement_Field_Computed::class,
         'priority'                         => Tracker_FormElement_Field_Priority::class,
@@ -718,7 +720,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getUsedArtifactLinkFields($tracker)
     {
-        return $this->getUsedFormElementsByType($tracker, ['art_link']);
+        return $this->getUsedFormElementsByType($tracker, [self::FIELD_ARTIFACT_LINKS]);
     }
 
     /**

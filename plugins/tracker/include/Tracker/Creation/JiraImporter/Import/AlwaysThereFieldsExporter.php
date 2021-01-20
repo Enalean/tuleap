@@ -48,6 +48,9 @@ class AlwaysThereFieldsExporter
     public const JIRA_CREATED_NAME           = "created";
     public const JIRA_CREATED_BY             = "creator";
 
+    public const JIRA_ISSUE_LINKS_NAME      = 'issuelinks';
+    public const JIRA_CROSS_REFERENCES_NAME = 'org.tuleap.crossreferences'; // doesn't exist at jira side
+
     private const JIRA_RESOLUTION_DATE_NAME  = "resolutiondate";
     public const JIRA_STATUS_RANK          = 1;
     public const JIRA_CREATOR_RANK         = 2;
@@ -63,6 +66,9 @@ class AlwaysThereFieldsExporter
     public const JIRA_ATTACHMENT_RANK  = 1;
     public const JIRA_SUMMARY_RANK     = 1;
     public const JIRA_DESCRIPTION_RANK = 2;
+
+    public const JIRA_ISSUE_LINKS_RANK      = 1;
+    public const JIRA_CROSS_REFERENCES_RANK = 2;
 
     /**
      * @var FieldXmlExporter
@@ -191,6 +197,34 @@ class AlwaysThereFieldsExporter
             [],
             $field_mapping_collection,
             null
+        );
+
+        $this->field_xml_exporter->exportField(
+            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LINKS_FIELDSET_NAME),
+            Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
+            self::JIRA_ISSUE_LINKS_NAME,
+            'Links',
+            self::JIRA_ISSUE_LINKS_NAME,
+            self::JIRA_ISSUE_LINKS_RANK,
+            false,
+            [],
+            [],
+            $field_mapping_collection,
+            null,
+        );
+
+        $this->field_xml_exporter->exportField(
+            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LINKS_FIELDSET_NAME),
+            Tracker_FormElementFactory::FIELD_CROSS_REFERENCES,
+            self::JIRA_CROSS_REFERENCES_NAME,
+            'References',
+            self::JIRA_CROSS_REFERENCES_NAME,
+            self::JIRA_CROSS_REFERENCES_RANK,
+            false,
+            [],
+            [],
+            $field_mapping_collection,
+            null,
         );
     }
 }

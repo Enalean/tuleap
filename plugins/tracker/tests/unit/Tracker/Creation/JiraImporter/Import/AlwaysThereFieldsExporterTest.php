@@ -263,6 +263,38 @@ class AlwaysThereFieldsExporterTest extends TestCase
             ]
         )->once();
 
+        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LINKS_FIELDSET_NAME),
+                Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
+                'issuelinks',
+                'Links',
+                'issuelinks',
+                1,
+                false,
+                [],
+                [],
+                $this->field_mapping_collection,
+                null
+            ]
+        )->once();
+
+        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LINKS_FIELDSET_NAME),
+                Tracker_FormElementFactory::FIELD_CROSS_REFERENCES,
+                'org.tuleap.crossreferences',
+                'References',
+                'org.tuleap.crossreferences',
+                2,
+                false,
+                [],
+                [],
+                $this->field_mapping_collection,
+                null
+            ]
+        )->once();
+
         $this->exporter->exportFields(
             $this->containers_collection,
             $this->field_mapping_collection,
