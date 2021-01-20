@@ -30,7 +30,6 @@
                 v-bind:href="getRepositoryPath"
                 class="git-repository-card-link"
                 data-test="git-repository-path"
-                v-bind:id="`git-repository-card-link-${repository.id}`"
             >
                 <div class="tlp-pane-header git-repository-card-header">
                     <h2
@@ -68,13 +67,33 @@
                         v-if="is_admin && isGitlabRepository"
                         class="git-repository-card-admin-link"
                         data-test="git-repository-card-admin-unlink-gitlab"
+                        ref="gitlab_administration"
                     >
                         <i
-                            class="far fa-fw fa-trash-alt unlink-repository-gitlab"
-                            v-bind:title="unlink_repository_title"
-                            v-bind:id="`unlink-gitlab-repository-${repository.id}`"
-                            v-bind:data-test="`unlink-gitlab-repository-${repository.id}`"
+                            class="fas fa-fw fa-cog git-repository-card-admin-link"
+                            v-bind:title="administration_gitlab_title"
+                            ref="dropdown_gitlab_administration"
+                            v-bind:data-test="`dropdown-gitlab-administration-${repository.id}`"
                         ></i>
+                        <div
+                            class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right gitlab-administration-dropdown"
+                            ref="dropdown_gitlab_administration_menu_options"
+                            v-bind:data-test="`dropdown-gitlab-administration-menu-options-${repository.id}`"
+                            role="menu"
+                        >
+                            <div
+                                class="tlp-dropdown-menu-item unlink-repository-gitlab"
+                                role="menuitem"
+                                ref="unlink_gitlab_repository"
+                                v-bind:data-test="`unlink-gitlab-repository-${repository.id}`"
+                            >
+                                <i
+                                    class="far fa-fw fa-trash-alt tlp-dropdown-menu-item-icon"
+                                    v-bind:title="unlink_repository_title"
+                                ></i>
+                                {{ unlink_repository_title }}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <section
@@ -110,6 +129,7 @@ import TimeAgo from "javascript-time-ago";
 import { getDashCasedLocale, getProjectId, getUserIsAdmin } from "../repository-list-presenter";
 import PullRequestBadge from "./PullRequestBadge.vue";
 import { getRepositoryListUrl } from "../breadcrumb-presenter";
+import { createDropdown } from "tlp";
 
 export default {
     name: "GitRepository",
@@ -142,6 +162,9 @@ export default {
         administration_link_title() {
             return this.$gettext("Go to repository administration");
         },
+        administration_gitlab_title() {
+            return this.$gettext("Manage the repository");
+        },
         unlink_repository_title() {
             return this.$gettext("Unlink the repository");
         },
@@ -172,21 +195,25 @@ export default {
     },
     mounted() {
         if (this.isGitlabRepository) {
-            const card_repository = document.getElementById(
-                "git-repository-card-link-" + this.repository.id
-            );
-            const button_unlink = document.getElementById(
-                "unlink-gitlab-repository-" + this.repository.id
-            );
-            if (card_repository && button_unlink) {
-                card_repository.addEventListener("click", (event) => {
-                    if (event.target === button_unlink) {
-                        event.preventDefault();
-                        this.showDeleteGitlabRepositoryModal(this.repository);
-                        return;
-                    }
+            const button_unlink = this.$refs.unlink_gitlab_repository;
 
-                    event.stopPropagation();
+            if (button_unlink) {
+                button_unlink.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    this.showDeleteGitlabRepositoryModal(this.repository);
+                });
+            }
+
+            const button_gitlab_administration = this.$refs.gitlab_administration;
+            const dropdown_gitlab_administration = this.$refs.dropdown_gitlab_administration;
+
+            if (button_gitlab_administration && dropdown_gitlab_administration) {
+                button_gitlab_administration.addEventListener("click", (event) => {
+                    event.preventDefault();
+                });
+                createDropdown(dropdown_gitlab_administration, {
+                    keyboard: false,
+                    dropdown_menu: this.$refs.dropdown_gitlab_administration_menu_options,
                 });
             }
         }

@@ -50,7 +50,7 @@ describe("GitRepository", () => {
         });
     }
 
-    it("When user is git admin but repository comes from Gitlab, Then trash icon is displayed", () => {
+    it("When user is git admin but repository comes from Gitlab, Then admin icon is displayed", () => {
         propsData = {
             repository: {
                 id: 1,
@@ -71,6 +71,11 @@ describe("GitRepository", () => {
         expect(wrapper.find("[data-test=git-repository-card-admin-link]").exists()).toBeFalsy();
         expect(
             wrapper.find("[data-test=git-repository-card-admin-unlink-gitlab]").exists()
+        ).toBeTruthy();
+
+        expect(wrapper.find("[data-test=dropdown-gitlab-administration-1]").exists()).toBeTruthy();
+        expect(
+            wrapper.find("[data-test=dropdown-gitlab-administration-menu-options-1]").exists()
         ).toBeTruthy();
     });
 

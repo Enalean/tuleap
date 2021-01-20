@@ -21,8 +21,15 @@
     margin: 0;
 }
 
-.git-repository-card-admin-link .unlink-repository-gitlab {
+.unlink-repository-gitlab {
     color: $tlp-ui-danger;
+}
+
+.tlp-dropdown-menu.tlp-dropdown-menu-right.tlp-dropdown-menu-on-icon {
+    &.gitlab-administration-dropdown {
+        right: -12px;
+        cursor: default;
+    }
 }
 
 .git-gitlab-icon-align-to-date {
