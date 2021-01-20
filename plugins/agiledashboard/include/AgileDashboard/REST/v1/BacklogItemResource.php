@@ -338,7 +338,7 @@ class BacklogItemResource extends AuthenticatedResource
                         $artifact,
                         $backlog_items_ids,
                         [],
-                        \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+                        \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
                     );
                     $indexed_children_ids = array_flip($backlog_items_ids);
                 }
