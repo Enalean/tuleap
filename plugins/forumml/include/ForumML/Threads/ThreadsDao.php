@@ -27,7 +27,6 @@ use Tuleap\DB\DataAccessObject;
 
 class ThreadsDao extends DataAccessObject
 {
-
     public const HEADER_ID_DATE    = 2;
     public const HEADER_ID_FROM    = 3;
     public const HEADER_ID_SUBJECT = 4;
@@ -42,8 +41,12 @@ class ThreadsDao extends DataAccessObject
         return $this->getDB()->row($sql, $id);
     }
 
-    public function searchThreadsOfLists(int $id, int $limit, int $offset): array
+    public function searchThreadsOfLists(int $id, int $limit, int $offset, string $search): array
     {
+        if ($search) {
+            return $this->searchThreadsOfListsForAGivenSubject($id, $limit, $offset, $search);
+        }
+
         $sql = 'SELECT SQL_CALC_FOUND_ROWS m.id_message,
                            m.last_thread_update,
                            mh_d.value as date,
@@ -74,6 +77,40 @@ class ThreadsDao extends DataAccessObject
             self::HEADER_ID_SUBJECT,
             $id,
             $id,
+            $offset,
+            $limit
+        );
+    }
+
+    private function searchThreadsOfListsForAGivenSubject(int $id, int $limit, int $offset, string $search): array
+    {
+        $subject = '%' . $this->getDB()->escapeLikeValue($search) . '%';
+
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS m.id_message,
+                           m.last_thread_update,
+                           mh_d.value as date,
+                           mh_f.value as sender,
+                           mh_s.value as subject
+                FROM plugin_forumml_message AS m
+                         LEFT JOIN plugin_forumml_messageheader AS mh_d
+                                   ON (mh_d.id_message = m.id_message AND mh_d.id_header = ?)
+                         LEFT JOIN plugin_forumml_messageheader AS mh_f
+                                   ON (mh_f.id_message = m.id_message AND mh_f.id_header = ?)
+                         INNER JOIN plugin_forumml_messageheader AS mh_s
+                                   ON (mh_s.id_message = m.id_message AND mh_s.id_header = ?)
+                WHERE m.id_parent = 0
+                  AND id_list = ?
+                  AND mh_s.value LIKE ?
+                ORDER BY last_thread_update DESC
+                LIMIT ?, ?';
+
+        return $this->getDB()->run(
+            $sql,
+            self::HEADER_ID_DATE,
+            self::HEADER_ID_FROM,
+            self::HEADER_ID_SUBJECT,
+            $id,
+            $subject,
             $offset,
             $limit
         );

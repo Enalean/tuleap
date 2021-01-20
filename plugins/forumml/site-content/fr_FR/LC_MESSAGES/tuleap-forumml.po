@@ -27,9 +27,6 @@ msgstr "Attacher un fichier"
 msgid "Attachment not found"
 msgstr "Attachement manquant"
 
-msgid "Author"
-msgstr "Auteur"
-
 msgid "Back to the list"
 msgstr "Retour à la liste"
 
@@ -83,7 +80,6 @@ msgstr "Soumettre un nouveau fil de discussion"
 msgid "Reply"
 msgstr "Répondre"
 
-#, php-format
 msgid "Search results for '%1$s'"
 msgstr "Résultat de recherche pour '%1$s'"
 
@@ -103,11 +99,14 @@ msgstr "Echec d'envoi. Adresse courriel en Cc non valide.<br>'%1$s'"
 msgid "Submit failed. You must specify the mail subject."
 msgstr "L'envoi a échoué. Vous devez spécifier le sujet du mail."
 
-msgid "Submitted on"
-msgstr "Date"
-
 msgid "The mailing-list does not exist or is inactive."
 msgstr "Cette mailing-liste n'existe pas ou bien elle est inactive."
+
+msgid "There aren't any threads matching your query."
+msgstr "Il n'y a pas de fil de discussion qui corresponde à votre requête."
+
+msgid "There aren't any threads yet."
+msgstr "Il n'y a pas de fil de discussion pour l'instant."
 
 msgid ""
 "There can be some delay before to see the message in the archives. If you "
@@ -116,12 +115,6 @@ msgstr ""
 "Il peut y avoir un délai avant de voir le message dans les archives. Si vous "
 "ne voyez pas votre message, merci de rafraichir la page dans quelques "
 "instants."
-
-msgid "There isn't any thread yet."
-msgstr "Il n'y a pas de fil de discussion pour l'instant."
-
-msgid "Thread"
-msgstr "Fil de discussion"
 
 msgid "Threads"
 msgstr "Fils"
@@ -138,6 +131,3 @@ msgstr "Vous devez spécifier l'identificateur (id) de la mailing-liste."
 #, php-format
 msgid "on %1$s"
 msgstr "le %1$s"
-
-msgid "thread(s) found"
-msgstr "Fil(s) trouvés"

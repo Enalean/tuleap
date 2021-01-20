@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Tuleap\ForumML;
 
 use Codendi_HTMLPurifier;
-use DataAccessObject;
 use ForumML_MessageManager;
 use HTTPRequest;
 use ProjectManager;
@@ -241,29 +240,7 @@ class ListMailsController implements DispatchableWithRequest
                 $GLOBALS['Response']->redirect(ThreadsController::getUrl((int) $list_id));
             }
         } else {
-            // search archives
-            $dao              = new DataAccessObject();
-            $sql              = sprintf(
-                'SELECT mh.id_message, mh.value' .
-                ' FROM plugin_forumml_message m, plugin_forumml_messageheader mh' .
-                ' WHERE mh.id_header = %s' .
-                ' AND m.id_list = %d' .
-                ' AND m.id_parent = 0' .
-                ' AND m.id_message = mh.id_message' .
-                ' AND mh.value LIKE %s',
-                FORUMML_SUBJECT,
-                $dao->da->escapeInt($list_id),
-                $dao->da->quoteLikeValueSurround($request->get('search'))
-            );
-            $result           = $dao->retrieve($sql);
-            $number_of_result = 0;
-            if ($result !== false) {
-                $number_of_result = $result->rowCount();
-            }
-            echo "<H3>" . sprintf(dgettext('tuleap-forumml', 'Search results for \'%1$s\''), $purified_search) . " (" . $hp->purify($number_of_result) . " " . dgettext('tuleap-forumml', 'thread(s) found') . ")</H3>";
-            if ($number_of_result > 0) {
-                plugin_forumml_show_search_results($this->plugin, $result, $group_id, $list_id);
-            }
+            $GLOBALS['Response']->redirect(ThreadsController::getSearchUrl((int) $list_id, (string) $request->get('search')));
         }
 
         mail_footer($params);

@@ -139,6 +139,7 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
             $list_id,
             $list_name,
             (int) $request->getValidated('offset', 'uint', 0),
+            (string) $request->get('search'),
         );
 
         $layout->addCssAsset(new CssAsset($this->include_assets, 'style-forumml'));
@@ -159,6 +160,16 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
     public static function getUrl(int $list_id): string
     {
         return '/plugins/forumml/list/' . urlencode((string) $list_id) . '/threads';
+    }
+
+    public static function getSearchUrl(int $list_id, string $words): string
+    {
+        return self::getUrl($list_id) . '?' .
+            http_build_query(
+                [
+                    'search' => $words,
+                ]
+            );
     }
 
     private function getProjectFromListRow(int $group_id): Project

@@ -62,11 +62,12 @@ class ThreadsPresenterBuilder
         \PFUser $user,
         int $list_id,
         string $list_name,
-        int $offset
+        int $offset,
+        string $search
     ): ThreadsPresenter {
         $limit = 10;
 
-        $threads    = $this->dao->searchThreadsOfLists($list_id, $limit, $offset);
+        $threads    = $this->dao->searchThreadsOfLists($list_id, $limit, $offset, $search);
         $nb_threads = $this->dao->foundRows();
 
         $thread_info_presenter_collection = [];
@@ -96,6 +97,7 @@ class ThreadsPresenterBuilder
             $nb_threads,
             $thread_info_presenter_collection,
             $post_thread_url,
+            $search,
             new PaginationPresenter(
                 $limit,
                 $offset,

@@ -49,6 +49,14 @@ final class ThreadsPresenter
      * @var PaginationPresenter
      */
     public $pagination;
+    /**
+     * @var string
+     */
+    public $search;
+    /**
+     * @var bool
+     */
+    public $is_empty_state;
 
     /**
      * @param ThreadInfoPresenter[] $threads
@@ -58,12 +66,16 @@ final class ThreadsPresenter
         int $nb_threads,
         array $threads,
         string $post_thread_url,
+        string $search,
         PaginationPresenter $pagination
     ) {
         $this->list_name       = $list_name;
         $this->nb_threads      = $nb_threads;
         $this->threads         = $threads;
         $this->post_thread_url = $post_thread_url;
+        $this->search          = $search;
         $this->pagination      = $pagination;
+
+        $this->is_empty_state = ! $search && ! $nb_threads;
     }
 }

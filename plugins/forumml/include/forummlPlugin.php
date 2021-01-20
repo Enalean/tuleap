@@ -145,7 +145,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $dao   = new MailingListDao();
             foreach ($dao->searchByProject($params['project']->getId()) as $row) {
                 $lists[] = [
-                    'url'              => $this->getSearchUrl($params['project']->getId(), $row['group_list_id'], $params['words']),
+                    'url'              => $this->getSearchUrl((int) $row['group_list_id'], (string) $params['words']),
                     'title'            => $row['list_name'],
                     'extra-parameters' => false
                 ];
@@ -168,15 +168,14 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $query = $params['query'];
 
         if ($query->getTypeOfSearch() == self::SEARCH_TYPE) {
-            $request = HTTPRequest::instance();
-            $list    = (int) $request->get('list');
-            util_return_to($this->getSearchUrl($query->getProject()->getId(), $list, $query->getWords()));
+            $list_id = (int) HTTPRequest::instance()->get('list');
+            util_return_to($this->getSearchUrl($list_id, (string) $query->getWords()));
         }
     }
 
-    private function getSearchUrl($group_id, $list_id, $words)
+    private function getSearchUrl(int $list_id, string $words): string
     {
-        return '/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '&search=' . urlencode($words);
+        return ForumML\Threads\ThreadsController::getSearchUrl($list_id, $words);
     }
 
     /**
