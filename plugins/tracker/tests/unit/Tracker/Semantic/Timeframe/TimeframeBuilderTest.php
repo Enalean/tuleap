@@ -220,6 +220,34 @@ final class TimeframeBuilderTest extends TestCase
         $this->assertSame(2, $time_period->getDuration());
     }
 
+    public function testItBuildsATimePeriodWithNoEndDateWhenNoEndDateValueExist(): void
+    {
+        $start_date       = '01/20/2021';
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $this->semantic_timeframe_builder
+            ->shouldReceive('getSemantic')
+            ->with($this->tracker)
+            ->andReturn(
+                new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+            );
+
+        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
+        $end_date_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
+        $end_date_changeset_value->shouldReceive('getTimestamp')->andReturn(null);
+        $end_date_field->shouldReceive('getLastChangesetValue')
+            ->andReturn($end_date_changeset_value);
+
+        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifactForREST($this->artifact, $this->user);
+
+        self::assertSame(strtotime($start_date), $time_period->getStartDate());
+        self::assertNull($time_period->getEndDate());
+        self::assertSame(null, $time_period->getDuration());
+    }
+
     public function testItBuildsATimePeriodWithEndDateForArtifactWithZeroForEndDateIfUserCannotRead(): void
     {
         $start_date       = '07/01/2013';
@@ -327,7 +355,7 @@ final class TimeframeBuilderTest extends TestCase
         );
     }
 
-    public function testItThrowsAnExceptionWhenStartDateIsEmptyInChartContext()
+    public function testItThrowsAnExceptionWhenStartDateIsEmptyOrHasNoValueInChartContext()
     {
         $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $start_date_field->shouldReceive('userCanRead')->andReturn(true);
@@ -351,32 +379,6 @@ final class TimeframeBuilderTest extends TestCase
             $this->artifact,
             $this->user
         );
-    }
-
-    public function testItBuildsATimePeriodForChartWhenStartDateHasNoLastChangesetValueAndDurationIsSet()
-    {
-        $duration         = 10;
-        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
-        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
-        $duration_field = Mockery::mock(Tracker_FormElement_Field_Numeric::class);
-        $duration_field->shouldReceive('userCanRead')->andReturn(true);
-
-        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
-        );
-
-        $start_date_field->shouldReceive('getLastChangesetValue')
-            ->with($this->artifact)
-            ->andReturnNull();
-
-        $this->mockDurationFieldWithValue($duration, $duration_field);
-
-        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifactChartRendering(
-            $this->artifact,
-            $this->user
-        );
-
-        $this->assertNull($time_period->getStartDate());
     }
 
     public function testItThrowsAnExceptionWhenNoDurationFieldInChartContext()
@@ -683,9 +685,9 @@ final class TimeframeBuilderTest extends TestCase
 
         $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifactForREST($this->artifact, $this->user);
 
-        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertSame(strtotime($start_date), $time_period->getEndDate());
-        $this->assertNull($time_period->getDuration());
+        self::assertSame(strtotime($start_date), $time_period->getStartDate());
+        self::assertNull($time_period->getEndDate());
+        self::assertNull($time_period->getDuration());
     }
 
     public function testItBuildsATimePeriodWithoutWeekObjectForRESTWithStartDateAsNullForArtifactIfNoLastChangesetValueForStartDate(): void
@@ -733,8 +735,8 @@ final class TimeframeBuilderTest extends TestCase
         $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifactForREST($this->artifact, $this->user);
 
         $this->assertSame(strtotime($start_date), $time_period->getStartDate());
-        $this->assertSame(strtotime($start_date), $time_period->getEndDate());
-        $this->assertNull($time_period->getDuration());
+        self::assertNull($time_period->getEndDate());
+        self::assertNull($time_period->getDuration());
     }
 
     public function testItBuildsATimePeriodForRESTFromEndDate(): void

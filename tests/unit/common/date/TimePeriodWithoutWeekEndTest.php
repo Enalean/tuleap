@@ -104,6 +104,15 @@ class TimePeriodWithoutWeekEndTest extends TestCase
         $this->assertSame(1, $timestamps);
     }
 
+    public function testDoesNotAssumeTheEndDateWhenDurationIsNotProvided(): void
+    {
+        $start_date  = mktime(23, 59, 59, 1, 20, 2020);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, null);
+
+        self::assertNull($time_period->getDuration());
+        self::assertNull($time_period->getEndDate());
+    }
+
     /**
      * @dataProvider providerForNumberOfDaysSinceStart
      */

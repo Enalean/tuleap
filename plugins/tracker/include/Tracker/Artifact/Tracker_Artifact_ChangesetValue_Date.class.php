@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,10 +46,8 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
 
     /**
      * Get timestamp of this changeset value date
-     *
-     * @return int the timestamp, or null if date is null (none)
      */
-    public function getTimestamp()
+    public function getTimestamp(): ?int
     {
         return $this->timestamp;
     }
@@ -90,7 +88,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     {
         $date = null;
         if ($this->getTimestamp()) {
-            $date = date('c', $this->getTimestamp());
+            $date = date('c', $this->getTimestamp() ?? 0);
         }
         return $this->getFullRESTRepresentation($date);
     }
