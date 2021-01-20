@@ -121,9 +121,6 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
@@ -2284,23 +2281,9 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $this->getArtifactFactory(),
             $this->getEventManager(),
             $this->getReferenceManager(),
-            $this->getSourceOfAssociationCollectionBuilder(),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
             $this->getTransactionExecutor(),
             $this->getChangesetSaver()
-        );
-    }
-
-    private function getSourceOfAssociationCollectionBuilder()
-    {
-        return new SourceOfAssociationCollectionBuilder(
-            new SubmittedValueConvertor(
-                $this->getArtifactFactory(),
-                new SourceOfAssociationDetector(
-                    $this->getHierarchyFactory()
-                )
-            ),
-            $this->getFormElementFactory()
         );
     }
 

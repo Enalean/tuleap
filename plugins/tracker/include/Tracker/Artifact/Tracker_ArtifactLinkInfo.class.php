@@ -28,7 +28,12 @@ class Tracker_ArtifactLinkInfo
     protected $group_id;
     protected $tracker_id;
     protected $last_changeset_id;
+
+    /**
+     * @var string|null
+     */
     private $nature;
+
     /**
      * @var Artifact
      */
@@ -39,9 +44,8 @@ class Tracker_ArtifactLinkInfo
      * @param string  $keyword
      * @param int $group_id
      * @param int $last_changeset_id
-     * @param string $nature
      */
-    public function __construct($artifact_id, $keyword, $group_id, $tracker_id, $last_changeset_id, $nature)
+    public function __construct($artifact_id, $keyword, $group_id, $tracker_id, $last_changeset_id, ?string $nature)
     {
         $this->artifact_id       = $artifact_id;
         $this->keyword           = $keyword;
@@ -154,12 +158,12 @@ class Tracker_ArtifactLinkInfo
         return $this->getKeyword() . ' #' . $this->getArtifactId();
     }
 
-    public function getNature()
+    public function getNature(): ?string
     {
         return $this->nature;
     }
 
-    public function setNature($nature)
+    public function setNature(?string $nature)
     {
         $this->nature = $nature;
     }

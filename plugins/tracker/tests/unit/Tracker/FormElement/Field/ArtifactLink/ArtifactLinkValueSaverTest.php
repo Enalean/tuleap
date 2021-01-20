@@ -25,12 +25,14 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
+use Tuleap\GlobalResponseMock;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
 class ArtifactLinkValueSaverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
     /** @var Tracker_FormElement_Field_ArtifactLink */
     private $field;
@@ -63,6 +65,11 @@ class ArtifactLinkValueSaverTest extends TestCase
 
     /** @var ArtifactLinkFieldValueDao */
     private $dao;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\Admin\ArtifactLinksUsageDao
+     */
+    private $artifact_link_usage_dao;
 
     protected function setUp(): void
     {
@@ -314,7 +321,7 @@ class ArtifactLinkValueSaverTest extends TestCase
         );
     }
 
-    public function testItDoesNotUseIsChildArtifactLinkTypeIfTypeIsDisabled(): void
+    public function testItReturnsNullIfProjectUsesArtifactLinkTypes(): void
     {
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
@@ -327,7 +334,7 @@ class ArtifactLinkValueSaverTest extends TestCase
         ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
-        $this->artifact_link_usage_dao->shouldReceive('isTypeDisabledInProject')->with(101, '_is_child')->andReturns(true);
+        $this->artifact_link_usage_dao->shouldReceive('isProjectUsingArtifactLinkTypes')->andReturnTrue();
 
         $this->dao->shouldReceive('create')->with(\Mockery::any(), null, \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 

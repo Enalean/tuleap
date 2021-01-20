@@ -88,7 +88,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
                 $field_xml,
                 'value',
                 (string) $artifact_link_info->getArtifactId(),
-                ['nature' => $artifact_link_info->getNature()]
+                ['nature' => (string) $artifact_link_info->getNature()]
             );
             $this->children_collector->addChild($artifact_link_info->getArtifactId(), $artifact->getId());
         }

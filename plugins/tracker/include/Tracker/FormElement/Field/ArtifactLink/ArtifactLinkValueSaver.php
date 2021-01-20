@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,7 +33,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactLinkValueSaver
 {
-
     /**
      * @var Tracker_ReferenceManager
      */
@@ -151,26 +150,40 @@ class ArtifactLinkValueSaver
         return null;
     }
 
+    /**
+     * If project does not use the artifact link types yet, _is_child must continue
+     * to be automatically set to that when an admin will enable the types everything
+     * will be consistent
+     */
     private function getNatureDefinedByHierarchy(
         Tracker_ArtifactLinkInfo $artifactlinkinfo,
         Tracker $from_tracker,
         Tracker $to_tracker,
-        $existing_nature
-    ) {
-        $is_child = $this->isTrackerChildrenOfTheOtherTracker($to_tracker, $from_tracker);
+        ?string $existing_nature
+    ): ?string {
+        $is_child  = $this->isTrackerChildrenOfTheOtherTracker($to_tracker, $from_tracker);
+        $is_parent = $this->isTrackerChildrenOfTheOtherTracker($from_tracker, $to_tracker);
 
-        if ($is_child) {
+        if ($this->artifact_links_usage_dao->isProjectUsingArtifactLinkTypes((int) $from_tracker->getProject()->getID())) {
             if (
-                $this->artifact_links_usage_dao->isTypeDisabledInProject(
-                    (int) $from_tracker->getProject()->getID(),
-                    Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
-                )
+                ($is_child && $existing_nature !== Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) ||
+                $is_parent
             ) {
-                return Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::WARN,
+                    sprintf(
+                        dgettext('tuleap-tracker', 'There is a hierarchy defined between "%s" and "%s" but the link between this artifact and %s is not parent/child.'),
+                        $from_tracker->getName(),
+                        $to_tracker->getName(),
+                        $artifactlinkinfo->getLabel()
+                    )
+                );
             }
 
-            $this->warnForceUsageOfChildType($artifactlinkinfo, $from_tracker, $existing_nature);
+            return null;
+        }
 
+        if ($is_child) {
             return Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
         }
 
@@ -179,8 +192,6 @@ class ArtifactLinkValueSaver
             && ! $is_child
             && $existing_nature === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
         ) {
-            $this->warnForceUsageOfNoneType($artifactlinkinfo, $from_tracker);
-
             return Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
         }
 
@@ -196,32 +207,6 @@ class ArtifactLinkValueSaver
         }
 
         return false;
-    }
-
-    private function warnForceUsageOfNoneType(Tracker_ArtifactLinkInfo $artifactlinkinfo, Tracker $from_tracker)
-    {
-        if ($from_tracker->isProjectAllowedToUseNature()) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                sprintf(dgettext('tuleap-tracker', 'As per config (hierarchy), the type _is_child cannot be used for the link to artifact #%1$s'), $artifactlinkinfo->getArtifactId())
-            );
-        }
-    }
-
-    private function warnForceUsageOfChildType(
-        Tracker_ArtifactLinkInfo $artifactlinkinfo,
-        Tracker $from_tracker,
-        $existing_nature
-    ) {
-        if (
-            $existing_nature !== Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
-            && $from_tracker->isProjectAllowedToUseNature()
-        ) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                sprintf(dgettext('tuleap-tracker', 'As per config (hierarchy), force use of _is_child type for the link to artifact #%1$s'), $artifactlinkinfo->getArtifactId())
-            );
-        }
     }
 
     private function getNatureDefinedByPlugin(

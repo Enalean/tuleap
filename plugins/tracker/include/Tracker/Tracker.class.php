@@ -52,9 +52,6 @@ use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
@@ -937,7 +934,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             $factory,
             $dao,
             new Tracker_Workflow_Trigger_RulesDao(),
-            $event_manager
+            $event_manager,
+            new ArtifactLinksUsageDao()
         );
 
         return $controller;
@@ -3178,15 +3176,6 @@ class Tracker implements Tracker_Dispatchable_Interface
             $this->getTrackerArtifactFactory(),
             EventManager::instance(),
             ReferenceManager::instance(),
-            new SourceOfAssociationCollectionBuilder(
-                new SubmittedValueConvertor(
-                    Tracker_ArtifactFactory::instance(),
-                    new SourceOfAssociationDetector(
-                        Tracker_HierarchyFactory::instance()
-                    )
-                ),
-                Tracker_FormElementFactory::instance()
-            ),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
             new DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build()

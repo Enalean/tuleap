@@ -34,8 +34,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollection;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
@@ -84,23 +82,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
-
-    /**
-     * @var SourceOfAssociationCollection | null
-     *
-     * @use getSourceOfAssociationCollection()
-     */
-    private $cache_source_of_association_collection = null;
-
-    /** @return SourceOfAssociationCollection */
-    private function getSourceOfAssociationCollection()
-    {
-        if (! $this->cache_source_of_association_collection) {
-            $this->cache_source_of_association_collection = new SourceOfAssociationCollection();
-        }
-
-        return $this->cache_source_of_association_collection;
-    }
 
     /**
      * Display the html form in the admin ui
@@ -1396,11 +1377,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             return false;
         }
 
-        $source_of_association_collection_dev_null = new SourceOfAssociationCollection();
         $submitted_value = $this->getSubmittedValueConvertor()->convert(
             $new_value,
-            $source_of_association_collection_dev_null,
-            $artifact,
             $old_value
         );
 
@@ -1583,7 +1561,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     private function getPostNewChangesetQueue()
     {
         $queue = new Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue();
-        $queue->add($this->getUpdateLinkingDirectionCommand());
         $queue->add($this->getProcessChildrenTriggersCommand());
 
         EventManager::instance()->processEvent(
@@ -1608,11 +1585,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         );
     }
 
-    private function getUpdateLinkingDirectionCommand()
-    {
-        return new Tracker_FormElement_Field_ArtifactLink_UpdateLinkingDirectionCommand($this->getSourceOfAssociationCollection());
-    }
-
     public function saveNewChangeset(
         Artifact $artifact,
         ?Tracker_Artifact_Changeset $old_changeset,
@@ -1630,8 +1602,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $convertor       = $this->getSubmittedValueConvertor();
         $submitted_value = $convertor->convert(
             $value,
-            $this->getSourceOfAssociationCollection(),
-            $artifact,
             $previous_changesetvalue
         );
 
@@ -1693,14 +1663,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         );
     }
 
-    /** @return SubmittedValueConvertor */
-    private function getSubmittedValueConvertor()
+    private function getSubmittedValueConvertor(): SubmittedValueConvertor
     {
         return new SubmittedValueConvertor(
-            Tracker_ArtifactFactory::instance(),
-            new SourceOfAssociationDetector(
-                Tracker_HierarchyFactory::instance()
-            )
+            Tracker_ArtifactFactory::instance()
         );
     }
 

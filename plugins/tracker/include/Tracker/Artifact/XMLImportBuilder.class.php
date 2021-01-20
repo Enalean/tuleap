@@ -26,9 +26,6 @@ use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 
 class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -78,15 +75,6 @@ class Tracker_Artifact_XMLImportBuilder // phpcs:ignore PSR1.Classes.ClassDeclar
             $artifact_factory,
             EventManager::instance(),
             ReferenceManager::instance(),
-            new SourceOfAssociationCollectionBuilder(
-                new SubmittedValueConvertor(
-                    Tracker_ArtifactFactory::instance(),
-                    new SourceOfAssociationDetector(
-                        Tracker_HierarchyFactory::instance()
-                    )
-                ),
-                Tracker_FormElementFactory::instance()
-            ),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
             new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
             ArtifactChangesetSaver::build()

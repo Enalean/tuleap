@@ -681,22 +681,6 @@ msgstr ""
 msgid "As of"
 msgstr "Le"
 
-#, php-format
-msgid ""
-"As per config (hierarchy), force use of _is_child type for the link to "
-"artifact #%1$s"
-msgstr ""
-"Tel que définit par la hiérarchie, la nature \"_is_child\" a été forcée pour "
-"le lien vers l'artéfact #%1$s"
-
-#, php-format
-msgid ""
-"As per config (hierarchy), the type _is_child cannot be used for the link to "
-"artifact #%1$s"
-msgstr ""
-"Tel que définit par la hiérarchie, la nature \"_is_child\" ne peut être "
-"utilisée pour le lien vers l'artéfact #%1$s"
-
 msgid ""
 "As trackers can be fully customized, you may want to define what is the "
 "title of your artifacts, or when you consider an artifact to be open or "
@@ -3418,6 +3402,14 @@ msgstr ""
 
 msgid "There are no child trackers defined for this tracker"
 msgstr "Ce tracker n'a pas de trackers enfants"
+
+#, php-format
+msgid ""
+"There is a hierarchy defined between \"%s\" and \"%s\" but the link between "
+"this artifact and %s is not parent/child."
+msgstr ""
+"Il y'a une hiérarchie définie entre \"%s\" et \"%s\", mais le lien entre"
+"cet artéfact et %s n'est pas défini comme parent/enfant."
 
 #, php-format
 msgid "There is no field with ID:%1$s"

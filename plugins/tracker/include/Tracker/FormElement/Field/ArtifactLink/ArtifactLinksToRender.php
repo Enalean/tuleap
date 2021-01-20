@@ -171,7 +171,7 @@ class ArtifactLinksToRender
         $by_nature = [];
         foreach ($link_infos as $artifact_link) {
             if ($this->canUseArtifactLink($current_user, $artifact_link)) {
-                $nature = $artifact_link->getNature();
+                $nature = (string) $artifact_link->getNature();
                 if (! isset($by_nature[$nature])) {
                     $by_nature[$nature] = [];
                 }
