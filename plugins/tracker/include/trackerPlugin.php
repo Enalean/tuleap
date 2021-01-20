@@ -162,7 +162,6 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
-use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\Legacy\Inheritor;
 use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
@@ -2094,7 +2093,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function routeGlobalAdminArtifactLinks(): ArtifactLinksController
     {
         $dao                     = new ArtifactLinksUsageDao();
-        $hierarchy_dao           = new HierarchyDAO();
         $updater                 = new ArtifactLinksUsageUpdater($dao);
         $types_presenter_factory = new NaturePresenterFactory(new NatureDao(), $dao);
         $event_manager           = EventManager::instance();
@@ -2110,7 +2108,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $dao,
             $updater,
             $types_presenter_factory,
-            $hierarchy_dao,
             $event_manager
         );
     }
