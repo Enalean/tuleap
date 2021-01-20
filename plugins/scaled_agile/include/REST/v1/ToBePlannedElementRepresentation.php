@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\REST\v1;
 
+use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\BackgroundColor;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 /**
@@ -41,14 +42,20 @@ final class ToBePlannedElementRepresentation
      * @var MinimalTrackerRepresentation
      */
     public $tracker;
+    /**
+     * @var string
+     */
+    public $background_color;
 
     public function __construct(
         int $artifact_id,
         string $artifact_title,
-        MinimalTrackerRepresentation $minimal_tracker_representation
+        MinimalTrackerRepresentation $minimal_tracker_representation,
+        BackgroundColor $background_color
     ) {
-        $this->artifact_id    = $artifact_id;
-        $this->artifact_title = $artifact_title;
-        $this->tracker        = $minimal_tracker_representation;
+        $this->artifact_id      = $artifact_id;
+        $this->artifact_title   = $artifact_title;
+        $this->tracker          = $minimal_tracker_representation;
+        $this->background_color = $background_color->getBackgroundColorName();
     }
 }

@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="element-card" v-bind:class="`element-card-${element.tracker.color_name}`">
+    <div class="element-card" v-bind:class="additional_classnames">
         <div class="element-card-content">
             <div class="element-card-xref-label">
                 <a
@@ -31,20 +31,37 @@
                 <span class="element-card-label">{{ element.artifact_title }}</span>
             </div>
         </div>
+        <div class="element-card-accessibility" v-if="show_accessibility_pattern"></div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import EmptyState from "./EmptyState.vue";
 import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
+import { userHasAccessibilityMode } from "../../../configuration";
 
-@Component({
-    components: { EmptyState },
-})
+@Component({})
 export default class ToBePlannedCard extends Vue {
     @Prop({ required: true })
     readonly element!: ToBePlannedElement;
+
+    get show_accessibility_pattern(): boolean {
+        return userHasAccessibilityMode() && this.element.background_color !== "";
+    }
+
+    get additional_classnames(): string {
+        const classnames = [`element-card-${this.element.tracker.color_name}`];
+
+        if (this.element.background_color) {
+            classnames.push(`element-card-background-${this.element.background_color}`);
+        }
+
+        if (this.show_accessibility_pattern) {
+            classnames.push("element-card-with-accessibility");
+        }
+
+        return classnames.join(" ");
+    }
 }
 </script>

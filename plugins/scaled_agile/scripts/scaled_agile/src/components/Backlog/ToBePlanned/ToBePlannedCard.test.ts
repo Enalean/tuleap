@@ -21,11 +21,13 @@ import { shallowMount, ShallowMountOptions } from "@vue/test-utils";
 import ToBePlannedCard from "./ToBePlannedCard.vue";
 import { createScaledAgileLocalVue } from "../../../helpers/local-vue-for-test";
 import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
+import * as configuration from "../../../configuration";
 
 describe("ToBePlannedCard", () => {
     let component_options: ShallowMountOptions<ToBePlannedCard>;
 
-    it("Displays the empty state for Backlog unplanned section", async () => {
+    it("Displays a card with accessibility pattern", async () => {
+        jest.spyOn(configuration, "userHasAccessibilityMode").mockReturnValue(true);
         component_options = {
             propsData: {
                 element: {
@@ -35,6 +37,28 @@ describe("ToBePlannedCard", () => {
                         label: "bug",
                         color_name: "lake_placid_blue",
                     },
+                    background_color: "peggy_pink_text",
+                } as ToBePlannedElement,
+            },
+            localVue: await createScaledAgileLocalVue(),
+        };
+
+        const wrapper = shallowMount(ToBePlannedCard, component_options);
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Displays a card without accessibility pattern", async () => {
+        jest.spyOn(configuration, "userHasAccessibilityMode").mockReturnValue(false);
+        component_options = {
+            propsData: {
+                element: {
+                    artifact_id: 100,
+                    artifact_title: "My artifact",
+                    tracker: {
+                        label: "bug",
+                        color_name: "lake_placid_blue",
+                    },
+                    background_color: "",
                 } as ToBePlannedElement,
             },
             localVue: await createScaledAgileLocalVue(),

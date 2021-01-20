@@ -26,18 +26,25 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_ArtifactFactory;
+use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\BackgroundColor;
 use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\ToBePlannedElementsStore;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
 use Tuleap\ScaledAgile\Program\Program;
 use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementCollectionRepresentation;
 use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementRepresentation;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\TrackerColor;
 
 class ToBePlannedElementRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BackgroundColorRetriever
+     */
+    private $retrieve_background;
 
     /**
      * @var ToBePlannedElementsRetriever
@@ -70,12 +77,14 @@ class ToBePlannedElementRetrieverTest extends TestCase
         $this->build_program             = \Mockery::mock(BuildProgram::class);
         $this->artifact_factory          = \Mockery::mock(Tracker_ArtifactFactory::class);
         $this->form_element_factory      = \Mockery::mock(\Tracker_FormElementFactory::instance());
+        $this->retrieve_background       = \Mockery::mock(BackgroundColorRetriever::class);
 
         $this->retriever = new ToBePlannedElementsRetriever(
             $this->build_program,
             $this->to_be_planned_element_dao,
             $this->artifact_factory,
-            $this->form_element_factory
+            $this->form_element_factory,
+            $this->retrieve_background
         );
     }
 
@@ -95,30 +104,47 @@ class ToBePlannedElementRetrieverTest extends TestCase
         $this->form_element_factory->shouldReceive('getFieldById')->with(1)->andReturn($field);
         $field->shouldReceive('userCanRead')->andReturnTrue();
 
-        $artifact_one = \Mockery::mock(\Artifact::class);
+        $artifact_one = \Mockery::mock(Artifact::class);
         $artifact_one->shouldReceive('userCanView')->with($user)->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact_one);
         $tracker_one = \Mockery::mock(\Tracker::class);
         $tracker_one->shouldReceive("getColor")->andReturn(TrackerColor::fromName("lake-placid-blue"));
         $tracker_one->shouldReceive("getId")->andReturn(1);
         $tracker_one->shouldReceive("getName")->andReturn("bug");
-        $tracker_one->shouldReceive("getProject")->andReturn(new Project(['group_id' => 101, 'group_name' => "My project"]));
+        $tracker_one->shouldReceive("getProject")->andReturn(
+            new Project(['group_id' => 101, 'group_name' => "My project"])
+        );
         $artifact_one->shouldReceive('getTracker')->once()->andReturn($tracker_one);
 
-        $artifact_two = \Mockery::mock(\Artifact::class);
+        $artifact_two = \Mockery::mock(Artifact::class);
         $artifact_two->shouldReceive('userCanView')->with($user)->andReturnTrue();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(2)->andReturn($artifact_two);
         $tracker_two = \Mockery::mock(\Tracker::class);
         $tracker_two->shouldReceive("getColor")->andReturn(TrackerColor::fromName("deep-blue"));
         $tracker_two->shouldReceive("getId")->andReturn(2);
         $tracker_two->shouldReceive("getName")->andReturn("user stories");
-        $tracker_two->shouldReceive("getProject")->andReturn(new Project(['group_id' => 101, 'group_name' => "My project"]));
+        $tracker_two->shouldReceive("getProject")->andReturn(
+            new Project(['group_id' => 101, 'group_name' => "My project"])
+        );
         $artifact_two->shouldReceive('getTracker')->once()->andReturn($tracker_two);
+
+        $this->retrieve_background->shouldReceive('retrieveBackgroundColor')
+            ->andReturn(new BackgroundColor("lake-placid-blue"));
 
         $collection = new ToBePlannedElementCollectionRepresentation(
             [
-                new ToBePlannedElementRepresentation(1, 'Artifact 1', MinimalTrackerRepresentation::build($tracker_one)),
-                new ToBePlannedElementRepresentation(2, 'Artifact 2', MinimalTrackerRepresentation::build($tracker_two)),
+                new ToBePlannedElementRepresentation(
+                    1,
+                    'Artifact 1',
+                    MinimalTrackerRepresentation::build($tracker_one),
+                    new BackgroundColor("lake-placid-blue")
+                ),
+                new ToBePlannedElementRepresentation(
+                    2,
+                    'Artifact 2',
+                    MinimalTrackerRepresentation::build($tracker_two),
+                    new BackgroundColor("lake-placid-blue")
+                ),
             ]
         );
 

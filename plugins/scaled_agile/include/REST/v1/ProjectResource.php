@@ -25,6 +25,7 @@ namespace Tuleap\ScaledAgile\REST\v1;
 use BackendLogger;
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementsDAO;
@@ -36,6 +37,7 @@ use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramMustHaveExplicitBacklogEnabledException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
+use Tuleap\ScaledAgile\Adapter\Program\ToBePlaned\BackgroundColorRetriever;
 use Tuleap\ScaledAgile\Adapter\Program\ToBePlaned\ToBePlannedElementsDao;
 use Tuleap\ScaledAgile\Adapter\Program\ToBePlaned\ToBePlannedElementsRetriever;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerAdapter;
@@ -49,6 +51,7 @@ use Tuleap\ScaledAgile\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ScaledAgile\Program\Plan\CreatePlan;
 use Tuleap\ScaledAgile\Program\Plan\PlanCreator;
 use Tuleap\ScaledAgile\Team\Creation\TeamCreator;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -99,7 +102,8 @@ final class ProjectResource extends AuthenticatedResource
             $build_program,
             new ToBePlannedElementsDao(),
             $artifact_factory,
-            $form_element_factory
+            $form_element_factory,
+            new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever()))
         );
         $this->program_increments_builder = new ProgramIncrementBuilder(
             $build_program,

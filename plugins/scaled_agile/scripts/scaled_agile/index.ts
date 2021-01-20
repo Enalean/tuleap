@@ -56,7 +56,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const program_id = parseInt(vue_mount_point.dataset.programId, 10);
 
-    build(project_name, project_short_name, project_privacy, project_flags, program_id);
+    if (!vue_mount_point.dataset.userWithAccessibilityMode) {
+        throw new Error("Missing accessiblity dataset");
+    }
+    const accessibility = Boolean(vue_mount_point.dataset.userWithAccessibilityMode);
+
+    build(
+        project_name,
+        project_short_name,
+        project_privacy,
+        project_flags,
+        program_id,
+        accessibility
+    );
 
     await initVueGettext(
         Vue,

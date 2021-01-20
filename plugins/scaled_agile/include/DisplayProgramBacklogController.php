@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ScaledAgile;
 
 use HTTPRequest;
+use PFUser;
 use Project;
 use scaled_agilePlugin;
 use Tuleap\Layout\BaseLayout;
@@ -102,9 +103,15 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         $this->includeHeaderAndNavigationBar($layout, $project);
         $layout->includeFooterJavascriptFile($this->getAssets()->getFileURL('scaled_agile.js'));
 
+        $user = $request->getCurrentUser();
+
         $this->template_renderer->renderToPage(
             'program-backlog',
-            new ProgramBacklogPresenter($project, $this->project_flags_builder->buildProjectFlags($project))
+            new ProgramBacklogPresenter(
+                $project,
+                $this->project_flags_builder->buildProjectFlags($project),
+                (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE)
+            )
         );
 
         $layout->footer([]);

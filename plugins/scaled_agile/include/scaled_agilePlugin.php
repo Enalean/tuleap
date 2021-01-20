@@ -121,7 +121,7 @@ final class scaled_agilePlugin extends Plugin
 
     public function getDependencies(): array
     {
-        return ['tracker', 'agiledashboard'];
+        return ['tracker', 'agiledashboard', 'cardwall'];
     }
 
     public function service_classnames(array &$params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
