@@ -30,7 +30,7 @@
 
     function saveState(evt, toggler, is_collapsing) {
         var id = $(toggler).attr("data-id");
-        if (!$(evt.target).hasClass("fa-thumb-tack")) {
+        if (!$(evt.target).hasClass("collapse-fieldset-button")) {
             return;
         }
 

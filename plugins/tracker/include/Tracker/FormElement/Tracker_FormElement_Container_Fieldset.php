@@ -123,7 +123,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $html .= '</td>';
         $html .= '<td class="tracker_artifact_fieldset_alwayscollapsed ' . $always_collapsed . '">';
         if ($current_user->isLoggedIn()) {
-            $html .= '<i class="fas fa-thumbtack"></i>';
+            $html .= '<i class="fas fa-thumbtack collapse-fieldset-button"></i>';
         }
         $html .= '</td></tr></table>';
         $html .= '</legend>';
