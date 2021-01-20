@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
+namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
 use Psr\Log\LoggerInterface;
 use TemplateRendererFactory;
@@ -31,7 +31,7 @@ use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 
-class PostPushCommitBotCommenter
+class PostMergeRequestBotCommenter
 {
     /**
      * @var ClientWrapper
@@ -71,8 +71,8 @@ class PostPushCommitBotCommenter
     /**
      * @param WebhookTuleapReference[] $references
      */
-    public function addCommentOnCommit(
-        PostPushCommitWebhookData $commit,
+    public function addCommentOnMergeRequest(
+        PostMergeRequestWebhookData $merge_request,
         GitlabRepository $gitlab_repository,
         array $references
     ): void {
@@ -82,27 +82,28 @@ class PostPushCommitBotCommenter
 
         $credentials = $this->credentials_retriever->getCredentials($gitlab_repository);
 
+        $merge_request_id = $merge_request->getMergeRequestId();
         if (! $credentials) {
-            $this->logger->debug("Comment can't be added on commit #{$commit->getSha1()} because there is no bot API token.");
+            $this->logger->debug("Comment can't be added on merge request #$merge_request_id because there is no bot API token.");
             return;
         }
 
         $reference_presenters = $this->bot_comment_reference_presenter_builder->build($references);
 
         $renderer = $this->template_renderer_factory->getRenderer(dirname(__FILE__) . '/../../../../templates');
-        $comment  = $renderer->renderToString("gitlab-bot-comment-commit", new BotCommentPresenter($reference_presenters));
+        $comment  = $renderer->renderToString("gitlab-bot-comment-merge-request", new BotCommentPresenter($reference_presenters));
 
         try {
-            $url = "/projects/{$gitlab_repository->getGitlabRepositoryId()}/repository/commits/{$commit->getSha1()}/comments";
+            $url = "/projects/{$gitlab_repository->getGitlabRepositoryId()}/merge_requests/$merge_request_id/notes";
             $this->gitlab_api_client->postUrl(
                 $credentials,
                 $url,
-                ["note" => $comment]
+                ["body" => $comment]
             );
 
-            $this->logger->debug("Comment was successfully added on commit #{$commit->getSha1()}");
+            $this->logger->debug("Comment was successfully added on merge request #$merge_request_id");
         } catch (GitlabRequestException | GitlabResponseAPIException $request_exception) {
-            $this->logger->error("An error occurred during automatically comment commit #{$commit->getSha1()}");
+            $this->logger->error("An error occurred during automatically comment merge request #$merge_request_id");
             $this->logger->error("|  |_{$request_exception->getMessage()}");
         }
     }

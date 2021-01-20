@@ -40,16 +40,17 @@ use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
+use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
+use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitCredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
-use Tuleap\Gitlab\Repository\Webhook\PostPush\Presenters\PostPushCommitBotCommentReferencePresenterBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
@@ -203,9 +204,9 @@ class gitlabPlugin extends Plugin
                     $logger,
                     new PostPushCommitBotCommenter(
                         $gitlab_api_client,
-                        new PostPushCommitCredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
                         $logger,
-                        new PostPushCommitBotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
+                        new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
                         TemplateRendererFactory::build()
                     )
                 ),
@@ -222,6 +223,13 @@ class gitlabPlugin extends Plugin
                         ProjectManager::instance()
                     ),
                     $logger,
+                    new PostMergeRequestBotCommenter(
+                        $gitlab_api_client,
+                        new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
+                        $logger,
+                        new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
+                        TemplateRendererFactory::build()
+                    ),
                 ),
                 $logger,
             ),

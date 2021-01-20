@@ -20,20 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush\Presenters;
+namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
-use PHPUnit\Framework\TestCase;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\InstanceBaseURLBuilder;
-use Mockery;
 
-class PostPushCommitBotCommentReferencePresenterBuilderTest extends TestCase
+class BotCommentReferencePresenterBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var PostPushCommitBotCommentReferencePresenterBuilder
+     * @var BotCommentReferencePresenterBuilder
      */
     private $builder;
     /**
@@ -47,7 +47,7 @@ class PostPushCommitBotCommentReferencePresenterBuilderTest extends TestCase
 
         $this->instanciate_url_builder = Mockery::mock(InstanceBaseURLBuilder::class);
         $this->instanciate_url_builder->shouldReceive('build')->andReturn("https://tuleap.dev");
-        $this->builder = new PostPushCommitBotCommentReferencePresenterBuilder(
+        $this->builder = new BotCommentReferencePresenterBuilder(
             $this->instanciate_url_builder
         );
     }

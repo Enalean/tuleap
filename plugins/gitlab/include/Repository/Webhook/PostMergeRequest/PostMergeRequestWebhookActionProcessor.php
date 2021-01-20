@@ -58,6 +58,10 @@ class PostMergeRequestWebhookActionProcessor
      * @var GitlabRepositoryProjectRetriever
      */
     private $gitlab_repository_project_retriever;
+    /**
+     * @var PostMergeRequestBotCommenter
+     */
+    private $commenter;
 
     public function __construct(
         WebhookTuleapReferencesParser $reference_parser,
@@ -65,7 +69,8 @@ class PostMergeRequestWebhookActionProcessor
         \ReferenceManager $reference_manager,
         MergeRequestTuleapReferenceDao $merge_request_reference_dao,
         GitlabRepositoryProjectRetriever $gitlab_repository_project_retriever,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        PostMergeRequestBotCommenter $commenter
     ) {
         $this->reference_parser                    = $reference_parser;
         $this->tuleap_reference_retriever          = $tuleap_reference_retriever;
@@ -73,6 +78,7 @@ class PostMergeRequestWebhookActionProcessor
         $this->merge_request_reference_dao         = $merge_request_reference_dao;
         $this->gitlab_repository_project_retriever = $gitlab_repository_project_retriever;
         $this->logger                              = $logger;
+        $this->commenter                           = $commenter;
     }
 
     public function process(GitlabRepository $gitlab_repository, PostMergeRequestWebhookData $webhook_data): void
@@ -120,6 +126,7 @@ class PostMergeRequestWebhookActionProcessor
         if (! empty($good_references)) {
             // Save merge request data if there is at least 1 good artifact reference in the merge request description and title
             $this->saveMergeRequestData($gitlab_repository, $webhook_data);
+            $this->commenter->addCommentOnMergeRequest($webhook_data, $gitlab_repository, $good_references);
         }
     }
 
@@ -150,8 +157,10 @@ class PostMergeRequestWebhookActionProcessor
         }
     }
 
-    private function saveMergeRequestData(GitlabRepository $gitlab_repository, PostMergeRequestWebhookData $merge_request_webhook_data): void
-    {
+    private function saveMergeRequestData(
+        GitlabRepository $gitlab_repository,
+        PostMergeRequestWebhookData $merge_request_webhook_data
+    ): void {
         $merge_request_id = $merge_request_webhook_data->getMergeRequestId();
 
         $this->merge_request_reference_dao->saveGitlabMergeRequestInfo(
@@ -163,8 +172,10 @@ class PostMergeRequestWebhookActionProcessor
         $this->logger->info("Merge request data for $merge_request_id saved in database");
     }
 
-    private function getGitlabMergeRequestReferenceId(GitlabRepository $gitlab_repository, PostMergeRequestWebhookData $merge_request_webhook_data): string
-    {
+    private function getGitlabMergeRequestReferenceId(
+        GitlabRepository $gitlab_repository,
+        PostMergeRequestWebhookData $merge_request_webhook_data
+    ): string {
         return $gitlab_repository->getName() . '/' . $merge_request_webhook_data->getMergeRequestId();
     }
 }

@@ -18,21 +18,21 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
+namespace Tuleap\Gitlab\Repository\Webhook\Bot;
 
-use PHPUnit\Framework\TestCase;
 use Mockery;
-use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Gitlab\Repository\GitlabRepository;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
 
-class PostPushCommitCredentialsRetrieverTest extends TestCase
+class CredentialsRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var PostPushCommitCredentialsRetriever
+     * @var CredentialsRetriever
      */
     private $credentials_retriever;
     /**
@@ -46,7 +46,7 @@ class PostPushCommitCredentialsRetrieverTest extends TestCase
 
         $this->token_retriever = Mockery::mock(GitlabBotApiTokenRetriever::class);
 
-        $this->credentials_retriever = new PostPushCommitCredentialsRetriever(
+        $this->credentials_retriever = new CredentialsRetriever(
             $this->token_retriever
         );
     }
