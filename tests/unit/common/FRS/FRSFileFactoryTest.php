@@ -726,6 +726,9 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testMoveFileforgeOk()
     {
+        if (! is_file('/usr/bin/perl')) {
+            self::markTestSkipped('Perl is not available at /usr/bin/perl');
+        }
         // Create target release directory
         $this->createReleaseDir('prj', 'p123_r456');
         touch(ForgeConfig::get('ftp_incoming_dir') . '/toto.txt');

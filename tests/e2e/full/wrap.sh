@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This is the central script to execute in order to execute "e2e tests"
 # This will bring-up the platform, run the tests, stop and remove everything

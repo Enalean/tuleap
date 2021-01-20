@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-# Copyright (c) Enalean, 2015 - 2018. All rights reserved
+# Copyright (c) Enalean, 2015-Present. All rights reserved
 #
 # This file is a part of Tuleap.
 #

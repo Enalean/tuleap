@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This is the central script to execute in order to execute "whole platform integration tests"
 # It is meant to be called without any arguments
