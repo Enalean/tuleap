@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../../../tests/jest/jest.base.config.js");
-const path = require("path");
-
-module.exports = {
-    ...base_config,
-    displayName: "kanban",
-    setupFiles: ["./tests/jest.setup.js"],
-    moduleNameMapper: {
-        ...base_config.moduleNameMapper,
-        "^.+\\.html$": "identity-obj-proxy",
-        // angular is imported by the artifact modal
-        "^angular$": "<rootDir>/node_modules/angular/index.js",
-        "^@tuleap/ckeditor-image-upload$": path.resolve(
-            __dirname,
-            "./tests/ckeditor-image-upload-mock.js"
-        ),
-    },
-};
+export function findImageUrls() {}
+export function isThereAnImageWithDataURI() {}
+export function buildFileUploadHandler() {}
+export class MaxSizeUploadExceededError extends Error {}
+export class UploadError extends Error {}

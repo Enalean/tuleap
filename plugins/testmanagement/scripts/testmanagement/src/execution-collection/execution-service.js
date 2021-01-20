@@ -22,11 +22,11 @@ import CKEDITOR from "ckeditor4";
 import prettyKibibytes from "pretty-kibibytes";
 
 import {
+    isThereAnImageWithDataURI,
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
     UploadError,
-} from "../../../../../../src/scripts/tuleap/ckeditor/file-upload-handler-factory";
-import { isThereAnImageWithDataURI } from "../../../../../../src/scripts/tuleap/ckeditor/image-urls-finder.js";
+} from "@tuleap/ckeditor-image-upload";
 
 export default ExecutionService;
 

@@ -24,11 +24,11 @@ import { addInstance } from "./consistent-uploaded-files-before-submit-checker.j
 import { initGettext } from "../gettext/gettext-factory.js";
 import { disableFormSubmit, enableFormSubmit } from "./form-adapter.js";
 import {
+    isThereAnImageWithDataURI,
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
     UploadError,
-} from "./file-upload-handler-factory.js";
-import { isThereAnImageWithDataURI } from "./image-urls-finder.js";
+} from "@tuleap/ckeditor-image-upload";
 import { getPOFileFromLocale } from "../gettext/gettext-init";
 
 export async function initiateUploadImage(ckeditor_instance, options, element) {

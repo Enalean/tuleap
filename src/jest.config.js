@@ -41,4 +41,5 @@ module.exports = {
         "!scripts/FlamingParrot/keymaster-sequence/**",
     ],
     testPathIgnorePatterns: ["/node_modules/", "/themes/tlp/", "/scripts/lib/"],
+    setupFiles: ["./scripts/tests/jest.setup.js"],
 };

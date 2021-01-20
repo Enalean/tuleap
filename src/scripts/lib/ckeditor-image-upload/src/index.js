@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-Since CKEditor is included in core and published on window as window.CKEDITOR,
-we need to setup this mock for unit tests because webpack configurations
-define it as "external".
- */
-window.CKEDITOR = {};
+export * from "./image-urls-finder";
+export * from "./file-upload-handler-factory";

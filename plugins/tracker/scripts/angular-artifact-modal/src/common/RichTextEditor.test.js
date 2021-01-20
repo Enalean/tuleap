@@ -20,16 +20,22 @@
 import CKEDITOR from "ckeditor4";
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import {
-    MaxSizeUploadExceededError,
-    UploadError,
-} from "../../../../../../src/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
-import * as file_upload_handler_factory from "../../../../../../src/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
-import * as image_urls_finder from "../../../../../../src/scripts/tuleap/ckeditor/image-urls-finder.js";
+import { MaxSizeUploadExceededError, UploadError } from "@tuleap/ckeditor-image-upload";
+import * as image_upload from "@tuleap/ckeditor-image-upload";
 import * as is_uploading_in_ckeditor_state from "../tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
 import store_options from "../store/index.js";
 import localVue from "../helpers/local-vue.js";
 import RichTextEditor from "./RichTextEditor.vue";
+
+jest.mock("@tuleap/ckeditor-image-upload", () => {
+    const actual_module = jest.requireActual("@tuleap/ckeditor-image-upload");
+    return {
+        MaxSizeUploadExceededError: actual_module.MaxSizeUploadExceededError,
+        UploadError: actual_module.UploadError,
+        buildFileUploadHandler: jest.fn(),
+        isThereAnImageWithDataURI: jest.fn(),
+    };
+});
 
 let store,
     format,
@@ -61,9 +67,10 @@ function getInstance() {
 
 describe(`RichTextEditor`, () => {
     beforeEach(() => {
+        jest.resetAllMocks();
         store = createStoreMock(store_options);
 
-        buildFileUploadHandler = jest.spyOn(file_upload_handler_factory, "buildFileUploadHandler");
+        buildFileUploadHandler = jest.spyOn(image_upload, "buildFileUploadHandler");
 
         setIsUploadingInCKEditor = jest.spyOn(
             is_uploading_in_ckeditor_state,
@@ -74,7 +81,7 @@ describe(`RichTextEditor`, () => {
             "setIsNotUploadingInCKEditor"
         );
 
-        isThereAnImageWithDataURI = jest.spyOn(image_urls_finder, "isThereAnImageWithDataURI");
+        isThereAnImageWithDataURI = jest.spyOn(image_upload, "isThereAnImageWithDataURI");
 
         editor = {
             on: jest.fn(),

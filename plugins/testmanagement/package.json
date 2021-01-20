@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/angular-tlp": "file://../../src/scripts/lib/angular-tlp",
+    "@tuleap/ckeditor-image-upload": "file://../../src/scripts/lib/ckeditor-image-upload",
     "@tuleap/list-picker": "file://../../src/scripts/lib/list-picker",
     "@tuleap/plugin-tracker": "file://../tracker",
     "@tuleap/filter-inline-table": "file://../../src/scripts/lib/filter-table",

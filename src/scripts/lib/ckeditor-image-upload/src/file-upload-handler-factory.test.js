@@ -19,7 +19,6 @@
 
 import * as TUS from "tus-js-client";
 import { mockFetchSuccess, mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper.js";
-import * as gettext_factory from "../gettext/gettext-factory.js";
 import {
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
@@ -34,10 +33,6 @@ describe(`file-upload-handler-factory`, () => {
         loader,
         options = {};
     beforeEach(() => {
-        jest.spyOn(gettext_factory, "getGettextProvider").mockImplementation(() => ({
-            gettext: () => "",
-        }));
-
         options = {
             ckeditor_instance: {
                 fire: jest.fn(),
