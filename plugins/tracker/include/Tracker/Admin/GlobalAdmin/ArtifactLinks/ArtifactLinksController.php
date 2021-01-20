@@ -41,7 +41,6 @@ use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 class ArtifactLinksController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {
@@ -61,11 +60,6 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
      * @var NaturePresenterFactory
      */
     private $types_presenter_factory;
-
-    /**
-     * @var HierarchyDAO
-     */
-    private $hierarchy_dao;
 
     /**
      * @var EventManager
@@ -91,13 +85,11 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
         ArtifactLinksUsageDao $dao,
         ArtifactLinksUsageUpdater $updater,
         NaturePresenterFactory $types_presenter_factory,
-        HierarchyDAO $hierarchy_dao,
         EventManager $event_manager
     ) {
         $this->dao                     = $dao;
         $this->updater                 = $updater;
         $this->types_presenter_factory = $types_presenter_factory;
-        $this->hierarchy_dao           = $hierarchy_dao;
         $this->event_manager           = $event_manager;
         $this->project_manager         = $project_manager;
         $this->tracker_manager         = $tracker_manager;
