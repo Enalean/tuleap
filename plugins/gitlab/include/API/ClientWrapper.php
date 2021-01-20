@@ -125,4 +125,35 @@ class ClientWrapper
 
         return $json;
     }
+
+    /**
+     * @throws GitlabRequestException
+     */
+    public function deleteUrl(Credentials $gitlab_credentials, string $url): void
+    {
+        $client = $this->gitlab_client_factory->buildHTTPClient($gitlab_credentials);
+
+        $request = $this->factory
+            ->createRequest(
+                'DELETE',
+                $gitlab_credentials->getGitlabServerUrl() . "/api/v4" . $url
+            )
+            ->withHeader('Content-Type', 'application/json');
+
+        try {
+            $response = $client->sendRequest($request);
+            if ($response->getStatusCode() < 200 || 300 <= $response->getStatusCode()) {
+                throw new GitlabRequestException(
+                    $response->getStatusCode(),
+                    $response->getReasonPhrase()
+                );
+            }
+        } catch (ClientExceptionInterface $exception) {
+            throw new GitlabRequestException(
+                500,
+                $exception->getMessage(),
+                $exception
+            );
+        }
+    }
 }

@@ -27,6 +27,17 @@ msgstr "Demande de fusion GitLab"
 msgid "Merged"
 msgstr "Fusionnée"
 
+#, php-format
+msgid ""
+"New secret has been generated, but we could not update the GitLab hooks. "
+"GitLab server error: %s"
+msgstr ""
+"Le nouveau secret a été généré, mais nous n'avons pas pu mettre à jour les "
+"hooks GitLab. Erreur du serveur GitLab: %s"
+
+msgid "No credentials found to contact the GitLab server."
+msgstr "Aucun identifiant trouvé pour contacter le server GitLab."
+
 msgid "Open"
 msgstr "Ouverte"
 
@@ -58,6 +69,14 @@ msgid ""
 "We managed to contact the server, but couldn't parse the response. We are "
 "not confident enough to update the token."
 msgstr ""
-"Nous avons réussi à contacter le serveur, mais n'avons pu analyser sa "
+"Nous avons réussi à contacter le serveur, mais n'avons pas pu analyser sa "
 "réponse. Aussi, nous ne sommes pas assez confiants pour mettre à jour le "
 "jeton."
+
+msgid ""
+"We managed to generate a new secret and to send it to the server, but "
+"couldn't parse the response. You should check that everything is ok."
+msgstr ""
+"Nous avons réussi à générer un nouveau secret et à l'envoyer au serveur, "
+"mais n'avons pas pu analyser sa réponse. Vous devriez vérifier que tout est "
+"ok."

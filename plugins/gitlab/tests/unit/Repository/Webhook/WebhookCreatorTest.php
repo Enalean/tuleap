@@ -25,6 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
@@ -54,12 +55,17 @@ class WebhookCreatorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
      */
     private $gitlab_api_client;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
 
     protected function setUp(): void
     {
         $this->key_factory       = Mockery::mock(KeyFactory::class);
         $this->dao               = Mockery::mock(WebhookDao::class);
         $this->gitlab_api_client = Mockery::mock(ClientWrapper::class);
+        $this->logger            = Mockery::mock(LoggerInterface::class);
 
         $instance_base_url = Mockery::mock(InstanceBaseURLBuilder::class, ['build' => 'https://tuleap.example.com']);
 
@@ -67,7 +73,8 @@ class WebhookCreatorTest extends TestCase
             $this->key_factory,
             $this->dao,
             $this->gitlab_api_client,
-            $instance_base_url
+            $instance_base_url,
+            $this->logger,
         );
     }
 
@@ -84,6 +91,12 @@ class WebhookCreatorTest extends TestCase
             new \DateTimeImmutable(),
         );
 
+        $this->dao
+            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->with(1)
+            ->once()
+            ->andReturn([]);
+
         $encryption_key = \Mockery::mock(EncryptionKey::class);
         $encryption_key
             ->shouldReceive('getRawKeyMaterial')
@@ -99,7 +112,7 @@ class WebhookCreatorTest extends TestCase
             ->shouldReceive('postUrl')
             ->with(
                 $credentials,
-                "/projects/2/hooks",
+                '/projects/2/hooks',
                 Mockery::on(function (array $config) {
                     return count(array_keys($config)) === 5
                         && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
@@ -121,7 +134,92 @@ class WebhookCreatorTest extends TestCase
             ->with(1, 7, Mockery::type('string'))
             ->once();
 
-        $this->creator->addWebhookInGitlabProject($credentials, $repository);
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Creating new hook for the_full_url')
+            ->once();
+
+        $this->creator->generateWebhookInGitlabProject($credentials, $repository);
+    }
+
+    public function testItGeneratesAWebhookForRepositoryAndRemoveTheOldOne(): void
+    {
+        $credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My Secret'));
+
+        $repository = new GitlabRepository(
+            1,
+            2,
+            'winter-is-coming',
+            'Need more blankets, we are going to freeze our asses',
+            'the_full_url',
+            new \DateTimeImmutable(),
+        );
+
+        $this->dao
+            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->with(1)
+            ->once()
+            ->andReturn(['gitlab_webhook_id' => 6]);
+
+        $this->gitlab_api_client
+            ->shouldReceive('deleteUrl')
+            ->with(
+                $credentials,
+                '/projects/2/hooks/6'
+            );
+        $this->dao
+            ->shouldReceive('deleteGitlabRepositoryWebhook')
+            ->with(1)
+            ->once();
+
+        $encryption_key = \Mockery::mock(EncryptionKey::class);
+        $encryption_key
+            ->shouldReceive('getRawKeyMaterial')
+            ->andReturns(
+                str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
+            );
+        $this->key_factory
+            ->shouldReceive('getEncryptionKey')
+            ->andReturn($encryption_key)
+            ->once();
+
+        $this->gitlab_api_client
+            ->shouldReceive('postUrl')
+            ->with(
+                $credentials,
+                '/projects/2/hooks',
+                Mockery::on(function (array $config) {
+                    return count(array_keys($config)) === 5
+                        && $config['url'] === 'https://tuleap.example.com/plugins/gitlab/repository/webhook'
+                        && is_string($config['token'])
+                        && $config['push_events'] === true
+                        && $config['merge_requests_events'] === true
+                        && $config['enable_ssl_verification'] === true;
+                })
+            )
+            ->once()
+            ->andReturn(
+                [
+                    'id' => 7,
+                ]
+            );
+
+        $this->dao
+            ->shouldReceive('storeWebhook')
+            ->with(1, 7, Mockery::type('string'))
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Deleting previous hook for the_full_url')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Creating new hook for the_full_url')
+            ->once();
+
+        $this->creator->generateWebhookInGitlabProject($credentials, $repository);
     }
 
     public function testItDoesNotSaveAnythingIfGitlabDidNotCreateTheWebhook(): void
@@ -136,6 +234,12 @@ class WebhookCreatorTest extends TestCase
             'the_full_url',
             new \DateTimeImmutable(),
         );
+
+        $this->dao
+            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->with(1)
+            ->once()
+            ->andReturn([]);
 
         $this->gitlab_api_client
             ->shouldReceive('postUrl')
@@ -158,9 +262,14 @@ class WebhookCreatorTest extends TestCase
             ->shouldReceive('storeWebhook')
             ->never();
 
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Creating new hook for the_full_url')
+            ->once();
+
         $this->expectException(GitlabRequestException::class);
 
-        $this->creator->addWebhookInGitlabProject($credentials, $repository);
+        $this->creator->generateWebhookInGitlabProject($credentials, $repository);
     }
 
     public function testItThrowsExceptionIfWebhookCreationReturnsUnexpectedPayload(): void
@@ -175,6 +284,12 @@ class WebhookCreatorTest extends TestCase
             'the_full_url',
             new \DateTimeImmutable(),
         );
+
+        $this->dao
+            ->shouldReceive('getGitlabRepositoryWebhook')
+            ->with(1)
+            ->once()
+            ->andReturn([]);
 
         $this->gitlab_api_client
             ->shouldReceive('postUrl')
@@ -197,8 +312,18 @@ class WebhookCreatorTest extends TestCase
             ->shouldReceive('storeWebhook')
             ->never();
 
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Creating new hook for the_full_url')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('error')
+            ->with('Received response payload seems invalid')
+            ->once();
+
         $this->expectException(WebhookCreationException::class);
 
-        $this->creator->addWebhookInGitlabProject($credentials, $repository);
+        $this->creator->generateWebhookInGitlabProject($credentials, $repository);
     }
 }

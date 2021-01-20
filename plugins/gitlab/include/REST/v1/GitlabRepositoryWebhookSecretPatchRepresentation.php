@@ -25,15 +25,15 @@ namespace Tuleap\Gitlab\REST\v1;
 /**
  * @psalm-immutable
  */
-final class GitlabRepositoryPatchRepresentation
+final class GitlabRepositoryWebhookSecretPatchRepresentation
 {
     /**
-     * @var GitlabRepositoryBotApiTokenPatchRepresentation | null {@type \Tuleap\Gitlab\REST\v1\GitlabRepositoryBotApiTokenPatchRepresentation} {@required false}
+     * @var int {@required true}
      */
-    public $update_bot_api_token;
+    public $gitlab_repository_id;
 
     /**
-     * @var GitlabRepositoryWebhookSecretPatchRepresentation | null {@type \Tuleap\Gitlab\REST\v1\GitlabRepositoryWebhookSecretPatchRepresentation} {@required false}
+     * @var string {@required true}
      */
-    public $generate_new_secret;
+    public $gitlab_repository_url;
 }
