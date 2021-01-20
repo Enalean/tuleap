@@ -111,66 +111,66 @@
                     <p class="empty-pane-text" translate>There are no tests you can see.</p>
                 </section>
 
-                <section class="tlp-pane-section tests-list-section">
-                    <ul class="tests-list">
-                        <li class="tests-list-category"
-                            ng-repeat-start="category in categories"
+                <nav class="tlp-pane-section tests-list-section">
+                    <ol class="tests-list">
+                        <li ng-repeat="category in categories"
                             ng-if="canCategoryBeDisplayed(category)">
-                            {{ category.label }}
+                            <p class="tests-list-category">{{ category.label }}</p>
+                            <ol class="tests-list">
+                                <li ng-repeat="execution in category.executions
+                                    | toArray:false
+                                    | ExecutionListFilter:search:status
+                                    | AutomatedTestsFilter:are_automated_tests_shown
+                                    | orderBy:'definition.id'
+                                    | unique:'definition.id'
+                                    track by execution.definition.id"
+                                >
+                                    <a class="tests-list-test {{ execution.status }}"
+                                       ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
+                                       ng-click="viewTestExecution(execution)"
+                                       ng-class="{active: checkActiveClassOnExecution(execution)}"
+                                       data-exec-id="{{ execution.id }}"
+                                    >
+                                        <div class="tlp-avatar-small tlp-tooltip tlp-tooltip-top"
+                                             data-tlp-tooltip="{{ presence.real_name }}"
+                                             ng-if="execution.viewed_by"
+                                             ng-repeat="user in execution.viewed_by">
+                                            <img title="{{ user.real_name }}"
+                                                 ng-src="{{ user.avatar_url }}"
+                                                 onerror="this.src='/themes/common/images/avatar_default.png'"
+                                                 alt="avatar">
+                                        </div>
+                                        <span class="tests-list-test-title" data-test="test-title">
+                                            <span class="tests-list-test-id">
+                                                #{{ execution.definition.id }}
+                                            </span>
+                                            {{ execution.definition.summary}}
+                                        </span>
+                                        <i class="fa test-automated-icon"
+                                           ng-class="{
+                                                'fa-tlp-robot': execution.status === 'notrun',
+                                                'fa-tlp-robot blocked': execution.status === 'blocked',
+                                                'fa-tlp-robot-happy passed': execution.status === 'passed',
+                                                'fa-tlp-robot-unhappy failed': execution.status === 'failed'
+                                            }"
+                                           ng-if="execution.definition.automated_tests !== ''"
+                                           title="{{ 'This is an automated test' | translate }}"></i>
+                                        <i class="fa fa-check-circle test-status-icon passed"
+                                           ng-if="execution.status === 'passed'"
+                                           title="{{ 'Passed' | translate }}"></i>
+                                        <i class="fa fa-times-circle test-status-icon failed"
+                                           ng-if="execution.status === 'failed'"
+                                           title="{{ 'Failed' | translate }}"></i>
+                                        <i class="fa fa-exclamation-circle test-status-icon blocked"
+                                           ng-if="execution.status === 'blocked'"
+                                           title="{{ 'Blocked' | translate }}"></i>
+                                    </a>
+                                </li>
+                            </ol>
                         </li>
-                        <li ng-repeat-end="">
-                            <a class="tests-list-test {{ execution.status }}"
-                               ng-repeat="execution in category.executions
-                                | toArray:false
-                                | ExecutionListFilter:search:status
-                                | AutomatedTestsFilter:are_automated_tests_shown
-                                | orderBy:'definition.id'
-                                | unique:'definition.id'
-                                track by execution.definition.id"
-                               ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
-                               ng-click="viewTestExecution(execution)"
-                               ng-class="{active: checkActiveClassOnExecution(execution)}"
-                               data-exec-id="{{ execution.id }}"
-                            >
-                                <div class="tlp-avatar-small tlp-tooltip tlp-tooltip-top"
-                                     data-tlp-tooltip="{{ presence.real_name }}"
-                                     ng-if="execution.viewed_by"
-                                     ng-repeat="user in execution.viewed_by">
-                                    <img title="{{ user.real_name }}"
-                                         ng-src="{{ user.avatar_url }}"
-                                         onerror="this.src='/themes/common/images/avatar_default.png'"
-                                         alt="avatar">
-                                </div>
-                                <span class="tests-list-test-title" data-test="test-title">
-                                    <span class="tests-list-test-id">
-                                        #{{ execution.definition.id }}
-                                    </span>
-                                    {{ execution.definition.summary}}
-                                </span>
-                                <i class="fa test-automated-icon"
-                                   ng-class="{
-                                        'fa-tlp-robot': execution.status === 'notrun',
-                                        'fa-tlp-robot blocked': execution.status === 'blocked',
-                                        'fa-tlp-robot-happy passed': execution.status === 'passed',
-                                        'fa-tlp-robot-unhappy failed': execution.status === 'failed'
-                                    }"
-                                   ng-if="execution.definition.automated_tests !== ''"
-                                   title="{{ 'This is an automated test' | translate }}"></i>
-                                <i class="fa fa-check-circle test-status-icon passed"
-                                   ng-if="execution.status === 'passed'"
-                                   title="{{ 'Passed' | translate }}"></i>
-                                <i class="fa fa-times-circle test-status-icon failed"
-                                   ng-if="execution.status === 'failed'"
-                                   title="{{ 'Failed' | translate }}"></i>
-                                <i class="fa fa-exclamation-circle test-status-icon blocked"
-                                   ng-if="execution.status === 'blocked'"
-                                   title="{{ 'Blocked' | translate }}"></i>
-                            </a>
-                        </li>
-                    </ul>
-
+                    </ol>
                     <div class="loader" ng-if="loading()"></div>
-                </section>
+                </nav>
             </div>
         </section>
 

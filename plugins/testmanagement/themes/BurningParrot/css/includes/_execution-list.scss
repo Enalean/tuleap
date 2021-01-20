@@ -308,6 +308,7 @@ $height-testmanagement-header: #{$tlp-title-spacing + $tlp-medium-spacing + 40};
 }
 
 .tests-list-category {
+    margin: 0;
     padding: 5px 10px;
     background: $tlp-theme-background-color;
     color: $tlp-theme-color;
