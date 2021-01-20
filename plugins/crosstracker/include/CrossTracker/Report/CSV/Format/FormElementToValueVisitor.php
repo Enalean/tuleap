@@ -68,7 +68,7 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
     {
         $date_changeset_value = $this->changeset_value;
         \assert($date_changeset_value instanceof \Tracker_Artifact_ChangesetValue_Date);
-        return new DateValue($date_changeset_value->getTimestamp(), $field->isTimeDisplayed());
+        return new DateValue($date_changeset_value->getTimestamp() ?? 0, $field->isTimeDisplayed());
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field)

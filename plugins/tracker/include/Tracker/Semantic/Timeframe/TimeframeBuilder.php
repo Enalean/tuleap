@@ -118,7 +118,11 @@ class TimeframeBuilder
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
 
         try {
-            $start_date = $this->getTimestamp($user, $artifact, $semantic_timeframe);
+            try {
+                $start_date = $this->getTimestamp($user, $artifact, $semantic_timeframe);
+            } catch (TimeframeFieldNoValueException $exception) {
+                $start_date = null;
+            }
 
             if (! $start_date) {
                 throw new Tracker_FormElement_Chart_Field_Exception(
@@ -129,8 +133,6 @@ class TimeframeBuilder
             throw new Tracker_FormElement_Chart_Field_Exception(
                 dgettext('tuleap-tracker', 'The tracker doesn\'t have a "start_date" Date field or you don\'t have the permission to access it.')
             );
-        } catch (TimeframeFieldNoValueException $exception) {
-            $start_date = null;
         }
 
         if ($semantic_timeframe->getEndDateField() !== null) {
@@ -208,7 +210,13 @@ class TimeframeBuilder
 
         assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
 
-        return (int) $value->getTimestamp();
+        $timestamp = $value->getTimestamp();
+
+        if ($timestamp === null) {
+            throw new TimeframeFieldNoValueException();
+        }
+
+        return $timestamp;
     }
 
     /**
@@ -252,6 +260,12 @@ class TimeframeBuilder
 
         assert($last_changeset_value instanceof Tracker_Artifact_ChangesetValue_Date);
 
-        return (int) $last_changeset_value->getTimestamp();
+        $timestamp = $last_changeset_value->getTimestamp();
+
+        if ($timestamp === null) {
+            throw new TimeframeFieldNoValueException();
+        }
+
+        return $timestamp;
     }
 }
