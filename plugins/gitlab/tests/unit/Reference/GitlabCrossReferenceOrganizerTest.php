@@ -372,11 +372,13 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->andReturn($another_repository);
 
         $john_snow_merge_request = new GitlabMergeRequest(
-            'The title of the MR 14'
+            'The title of the MR 14',
+            'merged',
         );
 
         $samwell_tarly_merge_request = new GitlabMergeRequest(
-            'The title of MR #26'
+            'The title of MR #26',
+            'closed',
         );
 
         $this->gitlab_merge_request_reference_retriever

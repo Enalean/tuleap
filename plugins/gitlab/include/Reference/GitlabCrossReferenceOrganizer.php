@@ -25,10 +25,12 @@ use Project;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
+use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReference;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\Reference\AdditionalBadgePresenter;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 
@@ -87,7 +89,9 @@ class GitlabCrossReferenceOrganizer
     ): void {
         $project = $this->project_manager->getProject($cross_reference_presenter->target_gid);
 
-        [$repository_name, $item_id] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId($cross_reference_presenter->target_value);
+        [$repository_name, $item_id] = GitlabReferenceExtractor::splitRepositoryNameAndReferencedItemId(
+            $cross_reference_presenter->target_value
+        );
 
         if (! $repository_name || ! $item_id) {
             return;
@@ -100,6 +104,7 @@ class GitlabCrossReferenceOrganizer
 
         if ($repository === null) {
             $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+
             return;
         }
 
@@ -140,6 +145,7 @@ class GitlabCrossReferenceOrganizer
 
         if ($commit_info === null) {
             $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+
             return;
         }
 
@@ -167,13 +173,43 @@ class GitlabCrossReferenceOrganizer
 
         if ($gitlab_merge_request === null) {
             $by_nature_organizer->removeUnreadableCrossReference($cross_reference_presenter);
+
             return;
         }
 
+        $additional_badge_presenters = $this->getMergeRequestAdditionalBadges($gitlab_merge_request);
+
         $by_nature_organizer->moveCrossReferenceToSection(
             $cross_reference_presenter
-                ->withTitle($gitlab_merge_request->getTitle(), null),
+                ->withTitle($gitlab_merge_request->getTitle(), null)
+                ->withAdditionalBadges($additional_badge_presenters),
             $project->getUnixNameLowerCase() . '/' . $repository->getName()
         );
+    }
+
+    /**
+     * @return AdditionalBadgePresenter[]
+     */
+    private function getMergeRequestAdditionalBadges(GitlabMergeRequest $gitlab_merge_request): array
+    {
+        $status_label = '';
+        switch ($gitlab_merge_request->getState()) {
+            case 'opened':
+                $status_label = dgettext('tuleap-gitlab', 'Open');
+                break;
+            case 'merged':
+                $status_label = dgettext('tuleap-gitlab', 'Merged');
+                break;
+            case 'closed':
+                $status_label = dgettext('tuleap-gitlab', 'Closed');
+                break;
+        }
+
+        $additional_badge_presenters = [];
+        if ($status_label) {
+            $additional_badge_presenters[] = new AdditionalBadgePresenter($status_label, false, false);
+        }
+
+        return $additional_badge_presenters;
     }
 }

@@ -54,7 +54,8 @@ class GitlabMergeRequestReferenceRetriever
     private function getInstanceFromRow(array $row): GitlabMergeRequest
     {
         return new GitlabMergeRequest(
-            $row['title']
+            $row['title'],
+            $row['state'],
         );
     }
 }

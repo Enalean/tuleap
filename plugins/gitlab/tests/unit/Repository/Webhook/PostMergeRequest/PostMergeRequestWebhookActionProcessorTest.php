@@ -107,6 +107,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             2,
             "My Title TULEAP-58",
             'TULEAP-666 TULEAP-45',
+            'opened',
         );
 
         $this->gitlab_repository_project_retriever
@@ -121,7 +122,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
 
         $this->merge_request_reference_dao
             ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58')
+            ->with(1, 2, 'My Title TULEAP-58', 'TULEAP-666 TULEAP-45', 'opened')
             ->once();
 
         $this->reference_manager
@@ -232,6 +233,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
             2,
             "My Title TULEAP-58",
             '',
+            'closed',
         );
 
         $this->gitlab_repository_project_retriever
@@ -246,7 +248,7 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
 
         $this->merge_request_reference_dao
             ->shouldReceive('saveGitlabMergeRequestInfo')
-            ->with(1, 2, 'My Title TULEAP-58')
+            ->with(1, 2, 'My Title TULEAP-58', '', 'closed')
             ->once();
 
         $this->reference_manager
