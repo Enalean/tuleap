@@ -27,6 +27,7 @@ class JiraProjectBuilder
 {
     /**
      * @throws JiraConnectionException
+     * @return array<array{id: string, label: string}>
      */
     public function build(ClientWrapper $wrapper): array
     {
@@ -76,8 +77,8 @@ class JiraProjectBuilder
             }
             $collection->addProject(
                 [
-                    'id'    => $project['key'],
-                    'label' => $project['name'],
+                    'id'    => (string) $project['key'],
+                    'label' => (string) $project['name'],
                 ]
             );
         }

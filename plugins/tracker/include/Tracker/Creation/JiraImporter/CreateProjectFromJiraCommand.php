@@ -1,0 +1,166 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Creation\JiraImporter;
+
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
+use Tuleap\Cryptography\ConcealedString;
+use UserManager;
+
+final class CreateProjectFromJiraCommand extends Command
+{
+    public const NAME = 'import-project:from-jira';
+
+    private const OPT_JIRA_HOST    = 'jira-host';
+    private const OPT_JIRA_USER    = 'jira-user';
+    private const OPT_JIRA_TOKEN   = 'jira-token';
+    private const OPT_JIRA_PROJECT = 'jira-project-id';
+    private const OPT_TULEAP_USER  = 'tuleap-user';
+    private const OPT_SHORTNAME    = 'shortname';
+    private const OPT_FULLNAME     = 'fullname';
+
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+    /**
+     * @var JiraProjectBuilder
+     */
+    private $jira_project_builder;
+    /**
+     * @var CreateProjectFromJira
+     */
+    private $create_project_from_jira;
+
+    public function __construct(
+        UserManager $user_manager,
+        JiraProjectBuilder $jira_project_builder,
+        CreateProjectFromJira $create_project_from_jira
+    ) {
+        parent::__construct(self::NAME);
+        $this->user_manager               = $user_manager;
+        $this->jira_project_builder       = $jira_project_builder;
+        $this->create_project_from_jira   = $create_project_from_jira;
+    }
+
+    protected function configure(): void
+    {
+        $this->setDescription('Import a project from a Jira instance')
+            ->addOption(self::OPT_JIRA_HOST, '', InputOption::VALUE_REQUIRED, 'URL of the Jira server')
+            ->addOption(self::OPT_JIRA_USER, '', InputOption::VALUE_REQUIRED, 'User email to access the platform')
+            ->addOption(self::OPT_JIRA_TOKEN, '', InputOption::VALUE_REQUIRED, 'User Token to access the platform')
+            ->addOption(self::OPT_JIRA_PROJECT, '', InputOption::VALUE_REQUIRED, 'ID of the Jira project to import (you will be prompted if not provided)')
+            ->addOption(self::OPT_TULEAP_USER, '', InputOption::VALUE_REQUIRED, 'Login name of the user who will be admin of the project')
+            ->addOption(self::OPT_SHORTNAME, '', InputOption::VALUE_REQUIRED, 'Short name of the Tuleap project to create')
+            ->addOption(self::OPT_FULLNAME, '', InputOption::VALUE_REQUIRED, 'Full name of the Tuleap project to create');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
+
+        $logger = new ConsoleLogger($output);
+        $question_helper = $this->getHelper('question');
+        assert($question_helper instanceof QuestionHelper);
+
+        $jira_host = $this->getStringOption($input, self::OPT_JIRA_HOST);
+        $jira_username = $this->getStringOption($input, self::OPT_JIRA_USER);
+        if (! $input->getOption(self::OPT_JIRA_TOKEN)) {
+            do {
+                $question = new Question('Please provide ' . $jira_username . ' token');
+                $question->setHidden(true);
+                $question->setHiddenFallback(false);
+                $token = $question_helper->ask($input, $output, $question);
+            } while (! is_string($token));
+            $jira_token = new ConcealedString($token);
+            \sodium_memzero($token);
+        } else {
+            $jira_token = new ConcealedString($this->getStringOption($input, self::OPT_JIRA_TOKEN));
+        }
+
+        $shortname = $this->getStringOption($input, self::OPT_SHORTNAME);
+        $fullname  = $input->getOption(self::OPT_FULLNAME);
+        if (! is_string($fullname)) {
+            $fullname = $shortname;
+        }
+        $tuleap_username = $this->getStringOption($input, self::OPT_TULEAP_USER);
+
+        $user = $this->user_manager->forceLogin($tuleap_username);
+        if (! $user || ! $user->isAlive()) {
+            throw new InvalidArgumentException('invalid user');
+        }
+
+        $jira_credentials = new JiraCredentials($jira_host, $jira_username, $jira_token);
+
+        $jira_client = ClientWrapper::build($jira_credentials);
+
+        if (! $input->getOption(self::OPT_JIRA_PROJECT)) {
+            $jira_projects = $this->jira_project_builder->build($jira_client);
+            $autocomplete = [];
+            $output->writeln('');
+            foreach ($jira_projects as $project) {
+                $autocomplete[] = $project['id'];
+            }
+            $question = new ChoiceQuestion("Please select the name of the Jira project to import", $autocomplete);
+            $question->setAutocompleterValues($autocomplete);
+            $jira_project = $question_helper->ask($input, $output, $question);
+        } else {
+            $jira_project = $this->getStringOption($input, self::OPT_JIRA_PROJECT);
+        }
+
+        $output->writeln(sprintf("Create project %s", $shortname));
+
+        try {
+            $project = $this->create_project_from_jira->create($logger, $jira_client, $jira_credentials, $jira_project, $shortname, $fullname);
+            $output->writeln(sprintf('Project %d created', $project->getID()));
+        } catch (\XML_ParseException $exception) {
+            $logger->debug($exception->getIndentedXml());
+            foreach ($exception->getErrors() as $error) {
+                $logger->error($error->getMessage() . ' (Type: ' . $error->getType() . ') Line: ' . $error->getLine() . ' Column: ' . $error->getColumn());
+                $logger->error('Error L' . $error->getLine() . ': ' . $exception->getSourceXMLForError($error));
+            }
+            return 1;
+        }
+
+        $output->writeln("Import completed");
+        return 0;
+    }
+
+    private function getStringOption(InputInterface $input, string $key): string
+    {
+        $shortname = $input->getOption($key);
+        if (! is_string($shortname)) {
+            throw new MissingOptionsException('--' . $key . ' is missing');
+        }
+        return $shortname;
+    }
+}

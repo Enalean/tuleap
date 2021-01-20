@@ -53,12 +53,14 @@ use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
@@ -109,6 +111,8 @@ use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\AsynchronousJiraRunner;
 use Tuleap\Tracker\Creation\JiraImporter\AsyncJiraScheduler;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\CreateProjectFromJira;
+use Tuleap\Tracker\Creation\JiraImporter\CreateProjectFromJiraCommand;
 use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCleaner;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraTuleapUsersMapping;
@@ -117,8 +121,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\CancellationOfJir
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
+use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectListController;
 use Tuleap\Tracker\Creation\JiraImporter\JiraRunner;
+use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackersListController;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportCleaner;
@@ -1959,7 +1965,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return new JiraProjectListController(
             $this->getProjectManager(),
             $this->getTrackerCreationPermissionChecker(),
-            new \Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder(),
+            new JiraProjectBuilder(),
             new ClientWrapperBuilder()
         );
     }
@@ -1969,7 +1975,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return new JiraTrackersListController(
             $this->getProjectManager(),
             $this->getTrackerCreationPermissionChecker(),
-            new \Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder(),
+            new JiraTrackerBuilder(),
             new ClientWrapperBuilder()
         );
     }
@@ -2173,6 +2179,24 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new NotificationLevelExtractor(),
                     $this->getTrackerFactory(),
                     new TrackerDao()
+                );
+            }
+        );
+        $commands_collector->addCommand(
+            CreateProjectFromJiraCommand::NAME,
+            static function (): CreateProjectFromJiraCommand {
+                $user_manager = UserManager::instance();
+                return new CreateProjectFromJiraCommand(
+                    $user_manager,
+                    new JiraProjectBuilder(),
+                    new CreateProjectFromJira(
+                        $user_manager,
+                        TemplateFactory::build(),
+                        new XMLFileContentRetriever(),
+                        new XMLImportHelper($user_manager),
+                        new JiraTrackerBuilder(),
+                        new XML_SimpleXMLCDATAFactory(),
+                    )
                 );
             }
         );
