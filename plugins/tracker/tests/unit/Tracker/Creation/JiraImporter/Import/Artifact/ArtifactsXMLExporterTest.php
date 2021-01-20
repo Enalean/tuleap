@@ -53,6 +53,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldAndValueIDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
@@ -137,6 +138,9 @@ class ArtifactsXMLExporterTest extends TestCase
                         UserXMLExporter::build()
                     ),
                     new FieldChangeFileBuilder(),
+                    new FieldChangeArtifactLinksBuilder(
+                        new XML_SimpleXMLCDATAFactory(),
+                    )
                 ),
                 new IssueSnapshotCollectionBuilder(
                     new ChangelogEntriesBuilder(

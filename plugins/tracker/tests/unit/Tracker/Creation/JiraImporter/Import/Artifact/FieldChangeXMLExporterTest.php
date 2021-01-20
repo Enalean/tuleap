@@ -27,10 +27,12 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\IDGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use UserManager;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\FieldSnapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
@@ -88,6 +90,9 @@ class FieldChangeXMLExporterTest extends TestCase
                 )
             ),
             new FieldChangeFileBuilder(),
+            new FieldChangeArtifactLinksBuilder(
+                new XML_SimpleXMLCDATAFactory(),
+            )
         );
     }
 
@@ -436,6 +441,61 @@ class FieldChangeXMLExporterTest extends TestCase
         $this->assertCount(2, $field_change_node->value);
         $this->assertSame('105', (string) $field_change_node->value[0]);
         $this->assertSame('106', (string) $field_change_node->value[1]);
+    }
+
+    public function testItExportsTheLinkedIssues(): void
+    {
+        $jira_value_id = 3;
+        $generated_tuleap_id = 15;
+
+        $mapping = new ScalarFieldMapping(
+            AlwaysThereFieldsExporter::JIRA_ISSUE_LINKS_NAME,
+            '?',
+            '?',
+            \Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS,
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot = new Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new FieldSnapshot(
+                    $mapping,
+                    [
+                        [
+                            'id' => '10030',
+                            'self' => '...',
+                            'type' => [
+                                'id'   => '10003',
+                                'name' => 'Relates',
+                                'inward' => 'relates to',
+                                'outward' => 'relates to',
+                                'self' => '...',
+                            ],
+                            'outwardIssue' => [
+                                'id' => '10089',
+                                'key' => 'JUS-1',
+                                'self' => '...',
+                                'fields' => [],
+
+                            ]
+                        ]
+                    ],
+                    null
+                )
+            ],
+            null
+        );
+        $this->exporter->exportFieldChanges(
+            $snapshot,
+            $changeset_node
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        self::assertSame(\Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, (string) $field_change_node['type']);
+        self::assertCount(1, $field_change_node->value);
+        self::assertSame('10089', (string) $field_change_node->value[0]);
     }
 
     private function getPreWiredIDGenerator(int $pre_defined_id): IDGenerator
