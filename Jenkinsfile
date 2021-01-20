@@ -22,19 +22,36 @@ pipeline {
         }
 
         stage('Prepare') {
+            agent {
+                dockerfile {
+                    dir 'sources/tools/utils/nix/'
+                    filename 'build-tools.dockerfile'
+                    reuseNode true
+                    args '--tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only'
+                }
+            }
             steps {
                 dir ('results') {
                     deleteDir()
                 }
-                script {
-                    actions = load 'sources/tests/actions.groovy'
-                    actions.prepareSources('nexus.enalean.com_readonly', 'github-token-composer')
+                dir ('sources') {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'nexus.enalean.com_readonly',
+                            passwordVariable: 'NPM_PASSWORD',
+                            usernameVariable: 'NPM_USER'
+                        ),
+                        string(credentialsId: 'github-token-composer', variable: 'COMPOSER_GITHUB_AUTH')
+                    ]) {
+                        sh 'tools/utils/scripts/generated-files-builder.sh dev'
+                    }
                 }
             }
         }
 
         stage('Check lockfiles') {
             steps { script {
+                actions = load 'sources/tests/actions.groovy'
                 actions.runFilesStatusChangesDetection('plugins/botmattermost_agiledashboard', 'lockfiles', 'package-lock.json composer.lock')
             } }
             post {
