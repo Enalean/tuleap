@@ -21,27 +21,25 @@
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import FieldDescription from "./FieldDescription.vue";
-import { State } from "../../../store/type";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
+import { ConfigurationState } from "../../../store/configuration";
 
 describe("FieldDescription -", () => {
     let factory: Wrapper<FieldDescription>;
     beforeEach(async () => {
-        const state: State = {
+        const configuration_state: ConfigurationState = {
             is_description_required: false,
-        } as State;
+        } as ConfigurationState;
 
         const getters = {
             has_error: false,
             is_template_selected: false,
         };
 
-        const store_options = {
-            state,
+        const store = createStoreMock({
+            state: { configuration: configuration_state },
             getters,
-        };
-
-        const store = createStoreMock(store_options);
+        });
 
         factory = shallowMount(FieldDescription, {
             localVue: await createProjectRegistrationLocalVue(),
@@ -50,7 +48,7 @@ describe("FieldDescription -", () => {
     });
     it("add correct attribute when description is required", async () => {
         const wrapper = factory;
-        wrapper.vm.$store.state.is_description_required = true;
+        wrapper.vm.$store.state.configuration.is_description_required = true;
 
         const description = wrapper.get("[data-test=project-description]")
             .element as HTMLTextAreaElement;
@@ -61,7 +59,7 @@ describe("FieldDescription -", () => {
 
     it("add correct attribute when description is NOT requried", async () => {
         const wrapper = factory;
-        wrapper.vm.$store.state.is_description_required = false;
+        wrapper.vm.$store.state.configuration.is_description_required = false;
 
         const description = wrapper.get("[data-test=project-description]")
             .element as HTMLTextAreaElement;

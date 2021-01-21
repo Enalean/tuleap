@@ -25,16 +25,21 @@ import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
-import { State } from "../../store/type";
+import { RootState } from "../../store/type";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
 import EventBus from "../../helpers/event-bus";
 import VueRouter from "vue-router";
 import * as location_helper from "../../helpers/location-helper";
 import { Store } from "vuex-mock-store";
 import { ProjectProperties, TemplateData } from "../../type";
+import { ConfigurationState } from "../../store/configuration";
 
 describe("ProjectInformation -", () => {
-    let factory: Wrapper<ProjectInformation>, router: VueRouter, store: Store;
+    let factory: Wrapper<ProjectInformation>,
+        router: VueRouter,
+        store: Store,
+        root_state: RootState,
+        configuration_state: ConfigurationState;
     beforeEach(() => {
         router = new VueRouter({
             routes: [
@@ -55,29 +60,29 @@ describe("ProjectInformation -", () => {
     });
     describe("User can choose visibility and restricted users are allowed -", () => {
         beforeEach(async () => {
-            const state: State = {
-                selected_tuleap_template: {
-                    title: "string",
-                    description: "string",
-                    id: "scrum",
-                    glyph: "string",
-                    is_built_in: true,
-                },
+            configuration_state = {
                 are_restricted_users_allowed: true,
                 can_user_choose_project_visibility: true,
-            } as State;
+            } as ConfigurationState;
 
             const getters = {
                 has_error: false,
                 is_template_selected: true,
             };
 
-            const store_options = {
-                state,
+            store = createStoreMock({
+                state: {
+                    selected_tuleap_template: {
+                        title: "string",
+                        description: "string",
+                        id: "scrum",
+                        glyph: "string",
+                        is_built_in: true,
+                    },
+                    configuration: configuration_state,
+                },
                 getters,
-            };
-
-            store = createStoreMock(store_options);
+            });
 
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
@@ -118,7 +123,11 @@ describe("ProjectInformation -", () => {
                 is_template_selected: false,
             };
 
-            store = createStoreMock({ getters });
+            store = createStoreMock({
+                state: { root_state, configuration: configuration_state },
+                getters,
+            });
+
             const wrapper = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
                 mocks: { $store: store },
@@ -168,7 +177,7 @@ describe("ProjectInformation -", () => {
                 allow_restricted: false,
             };
 
-            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$store.state.configuration.are_restricted_users_allowed = true;
             factory.vm.$data.selected_visibility = "public";
 
             factory.vm.$data.name_properties = {
@@ -193,7 +202,7 @@ describe("ProjectInformation -", () => {
                 .spyOn(location_helper, "redirectToUrl")
                 .mockImplementation();
 
-            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$store.state.configuration.are_restricted_users_allowed = true;
             factory.vm.$data.selected_visibility = "private";
 
             factory.vm.$data.name_properties = {
@@ -230,7 +239,7 @@ describe("ProjectInformation -", () => {
                 .spyOn(location_helper, "redirectToUrl")
                 .mockImplementation();
 
-            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$store.state.configuration.are_restricted_users_allowed = true;
             factory.vm.$data.selected_visibility = "private-wo-restr";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
@@ -266,7 +275,7 @@ describe("ProjectInformation -", () => {
                 .spyOn(location_helper, "redirectToUrl")
                 .mockImplementation();
 
-            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$store.state.configuration.are_restricted_users_allowed = true;
             factory.vm.$data.selected_visibility = "public";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
@@ -302,7 +311,7 @@ describe("ProjectInformation -", () => {
                 .spyOn(location_helper, "redirectToUrl")
                 .mockImplementation();
 
-            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$store.state.configuration.are_restricted_users_allowed = true;
             factory.vm.$data.selected_visibility = "unrestricted";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
@@ -334,8 +343,8 @@ describe("ProjectInformation -", () => {
         });
 
         it(`Redirects user on waiting for validation when project needs a site administrator approval`, async () => {
-            factory.vm.$store.state.is_project_approval_required = true;
-            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$store.state.configuration.is_project_approval_required = true;
+            factory.vm.$store.state.configuration.are_restricted_users_allowed = true;
             factory.vm.$data.selected_visibility = "private";
 
             factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -348,29 +357,29 @@ describe("ProjectInformation -", () => {
 
     describe("User can choose visibility and restricted users are NOT allowed -", () => {
         beforeEach(async () => {
-            const state: State = {
-                selected_tuleap_template: {
-                    title: "string",
-                    description: "string",
-                    id: "scrum",
-                    glyph: "string",
-                    is_built_in: true,
-                },
+            const configuration_state: ConfigurationState = {
                 are_restricted_users_allowed: false,
                 can_user_choose_project_visibility: true,
-            } as State;
+            } as ConfigurationState;
 
             const getters = {
                 has_error: false,
                 is_template_selected: true,
             };
 
-            const store_options = {
-                state,
+            store = createStoreMock({
+                state: {
+                    selected_tuleap_template: {
+                        title: "string",
+                        description: "string",
+                        id: "scrum",
+                        glyph: "string",
+                        is_built_in: true,
+                    },
+                    configuration: configuration_state,
+                },
                 getters,
-            };
-
-            store = createStoreMock(store_options);
+            });
 
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
@@ -384,7 +393,7 @@ describe("ProjectInformation -", () => {
                 .spyOn(location_helper, "redirectToUrl")
                 .mockImplementation();
 
-            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$store.state.configuration.are_restricted_users_allowed = true;
             factory.vm.$data.selected_visibility = "private-wo-restr";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
@@ -420,7 +429,7 @@ describe("ProjectInformation -", () => {
                 .spyOn(location_helper, "redirectToUrl")
                 .mockImplementation();
 
-            factory.vm.$store.state.are_restricted_users_allowed = true;
+            factory.vm.$store.state.configuration.are_restricted_users_allowed = true;
             factory.vm.$data.selected_visibility = "public";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
@@ -454,29 +463,29 @@ describe("ProjectInformation -", () => {
 
     describe("User can Not choose visibility -", () => {
         beforeEach(async () => {
-            const state: State = {
-                selected_tuleap_template: {
-                    title: "string",
-                    description: "string",
-                    id: "scrum",
-                    glyph: "string",
-                    is_built_in: true,
-                },
+            const configuration_state: ConfigurationState = {
                 are_restricted_users_allowed: false,
                 can_user_choose_project_visibility: false,
-            } as State;
+            } as ConfigurationState;
 
             const getters = {
                 has_error: false,
                 is_template_selected: true,
             };
 
-            const store_options = {
-                state,
+            store = createStoreMock({
+                state: {
+                    selected_tuleap_template: {
+                        title: "string",
+                        description: "string",
+                        id: "scrum",
+                        glyph: "string",
+                        is_built_in: true,
+                    },
+                    configuration: configuration_state,
+                },
                 getters,
-            };
-
-            store = createStoreMock(store_options);
+            });
 
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
@@ -493,25 +502,23 @@ describe("ProjectInformation -", () => {
     });
 
     describe("Field list update -", () => {
-        let factory: Wrapper<ProjectInformation>, store: Store;
+        let factory: Wrapper<ProjectInformation>;
         beforeEach(async () => {
-            const state: State = {} as State;
-
             const getters = {
                 has_error: false,
                 is_template_selected: true,
             };
 
-            const store_options = {
-                state,
-                getters,
-            };
-
-            store = createStoreMock(store_options);
-
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
-                mocks: { $store: store },
+                mocks: {
+                    $store: createStoreMock({
+                        state: {
+                            configuration: {},
+                        },
+                        getters,
+                    }),
+                },
             });
         });
         it("build the field list object", () => {
@@ -541,28 +548,29 @@ describe("ProjectInformation -", () => {
             const redirect_to_url = jest
                 .spyOn(location_helper, "redirectToUrl")
                 .mockImplementation();
-            const state: State = {
-                selected_tuleap_template: {
-                    title: "string",
-                    description: "string",
-                    id: "scrum",
-                    glyph: "string",
-                    is_built_in: true,
-                } as TemplateData,
+
+            const configuration_state: ConfigurationState = {
                 company_name: "",
-            } as State;
+            } as ConfigurationState;
 
             const getters = {
                 has_error: false,
                 is_template_selected: true,
             };
 
-            const store_options = {
-                state,
+            store = createStoreMock({
+                state: {
+                    selected_tuleap_template: {
+                        title: "string",
+                        description: "string",
+                        id: "scrum",
+                        glyph: "string",
+                        is_built_in: true,
+                    } as TemplateData,
+                    configuration: configuration_state,
+                },
                 getters,
-            };
-
-            store = createStoreMock(store_options);
+            });
 
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
@@ -603,28 +611,25 @@ describe("ProjectInformation -", () => {
             const redirect_to_url = jest
                 .spyOn(location_helper, "redirectToUrl")
                 .mockImplementation();
-            const state: State = {
-                selected_tuleap_template: null,
-                selected_company_template: {
-                    title: "Company Template",
-                    description: "desc",
-                    id: "150",
-                    glyph: "string",
-                    is_built_in: true,
-                } as TemplateData,
-            } as State;
-
             const getters = {
                 has_error: false,
                 is_template_selected: true,
             };
 
-            const store_options = {
-                state,
+            store = createStoreMock({
+                state: {
+                    selected_tuleap_template: null,
+                    selected_company_template: {
+                        title: "Company Template",
+                        description: "desc",
+                        id: "150",
+                        glyph: "string",
+                        is_built_in: true,
+                    } as TemplateData,
+                    configuration: {},
+                },
                 getters,
-            };
-
-            store = createStoreMock(store_options);
+            });
 
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
@@ -664,27 +669,30 @@ describe("ProjectInformation -", () => {
             const redirect_to_url = jest
                 .spyOn(location_helper, "redirectToUrl")
                 .mockImplementation();
-            const state: State = {
-                selected_tuleap_template: {
-                    title: "Default Site Template",
-                    description: "The default Tuleap template",
-                    id: "100",
-                    glyph: "string",
-                    is_built_in: true,
-                } as TemplateData,
-            } as State;
+
+            configuration_state = {
+                are_restricted_users_allowed: true,
+                can_user_choose_project_visibility: true,
+            } as ConfigurationState;
 
             const getters = {
                 has_error: false,
                 is_template_selected: true,
             };
 
-            const store_options = {
-                state,
+            store = createStoreMock({
+                state: {
+                    selected_tuleap_template: {
+                        title: "Default Site Template",
+                        description: "The default Tuleap template",
+                        id: "100",
+                        glyph: "string",
+                        is_built_in: true,
+                    } as TemplateData,
+                    configuration: configuration_state,
+                },
                 getters,
-            };
-
-            store = createStoreMock(store_options);
+            });
 
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),

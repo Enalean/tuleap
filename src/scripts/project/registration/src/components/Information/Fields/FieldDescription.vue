@@ -41,11 +41,12 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
+const configuration = namespace("configuration");
 
 @Component
 export default class FieldDescription extends Vue {
-    @State
+    @configuration.State
     is_description_required!: boolean;
 }
 </script>

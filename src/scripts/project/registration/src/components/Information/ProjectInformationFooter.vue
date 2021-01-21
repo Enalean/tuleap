@@ -48,17 +48,18 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { State } from "vuex-class";
+import { State, namespace } from "vuex-class";
+const configuration = namespace("configuration");
 
 @Component({})
 export default class ProjectInformationFooter extends Vue {
     @State
     is_creating_project!: boolean;
 
-    @State
+    @configuration.State
     is_project_approval_required!: boolean;
 
-    @State
+    @configuration.State
     are_restricted_users_allowed!: boolean;
 
     is_loading = false;

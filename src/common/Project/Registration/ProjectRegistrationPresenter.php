@@ -79,11 +79,6 @@ class ProjectRegistrationPresenter
      * @var bool
      * @psalm-readonly
      */
-    public $are_anonymous_allowed;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
     public $can_user_choose_privacy;
 
     public function __construct(
@@ -105,7 +100,6 @@ class ProjectRegistrationPresenter
         $this->field_list                            = json_encode($field_list);
         $this->company_templates                     = json_encode($company_templates);
         $this->company_name                          = ForgeConfig::get('sys_org_name');
-        $this->are_anonymous_allowed                 = (bool) ForgeConfig::areAnonymousAllowed();
         $this->can_user_choose_privacy               = (bool) ForgeConfig::get(
             ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY
         );

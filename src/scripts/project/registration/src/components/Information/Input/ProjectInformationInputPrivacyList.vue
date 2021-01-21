@@ -73,17 +73,18 @@ import {
     ACCESS_PUBLIC,
     ACCESS_PUBLIC_UNRESTRICTED,
 } from "../../../constant";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
+const configuration = namespace("configuration");
 
 @Component
 export default class ProjectInformationInputPrivacyList extends Vue {
-    @State
+    @configuration.State
     project_default_visibility!: string;
 
-    @State
+    @configuration.State
     are_restricted_users_allowed!: boolean;
 
-    @State
+    @configuration.State
     can_user_choose_project_visibility!: boolean;
 
     select2_visibility_select: Select2Plugin | null = null;
