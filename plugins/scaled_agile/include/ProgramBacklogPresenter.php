@@ -50,16 +50,24 @@ final class ProgramBacklogPresenter
      * @var int|null
      */
     public $program_id;
+    /**
+     * @var bool
+     */
+    public $user_has_accessibility_mode;
 
     /**
      * @param ProjectFlagPresenter[] $project_flags
      */
-    public function __construct(\Project $project, array $project_flags)
+    public function __construct(\Project $project, array $project_flags, bool $user_has_accessibility_mode)
     {
-        $this->project_name       = $project->getPublicName();
-        $this->project_short_name = $project->getUnixNameLowerCase();
-        $this->project_privacy    = json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR);
-        $this->project_flags      = json_encode($project_flags, JSON_THROW_ON_ERROR);
-        $this->program_id         = (int) $project->getID();
+        $this->project_name                = $project->getPublicName();
+        $this->project_short_name          = $project->getUnixNameLowerCase();
+        $this->project_privacy             = json_encode(
+            ProjectPrivacyPresenter::fromProject($project),
+            JSON_THROW_ON_ERROR
+        );
+        $this->project_flags               = json_encode($project_flags, JSON_THROW_ON_ERROR);
+        $this->program_id                  = (int) $project->getID();
+        $this->user_has_accessibility_mode = $user_has_accessibility_mode;
     }
 }

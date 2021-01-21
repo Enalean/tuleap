@@ -25,6 +25,13 @@
     .element-card-xref-#{$color-name} {
         color: #{map-get($colors, 'text')};
     }
+
+    .element-card-background-#{$color-name} {
+        --secondary-color: #{map-get($colors, 'secondary')};
+        --border-color: #{map-get($colors, 'border')};
+        --text-color: #{map-get($colors, 'text')};
+        --accessibility-pattern: url("#{map-get($colors, 'pattern')}");
+    }
 }
 
 .element-card {
@@ -53,6 +60,36 @@
         height: calc(100% + 2px);
         border-radius: 3px 0 0 3px;
         background: var(--card-color);
+    }
+
+    &.element-card-with-accessibility {
+        &[class*='element-card-background-'] {
+            padding: $tlp-small-spacing $tlp-medium-spacing $tlp-small-spacing ($tlp-small-spacing + 2);
+
+            > .element-card-accessibility {
+                opacity: .5;
+                background-color: var(--text-color);
+                /* stylelint-disable-next-line property-no-vendor-prefix */
+                -webkit-mask-image: var(--accessibility-pattern);
+                mask-image: var(--accessibility-pattern);
+            }
+        }
+
+        &:not([class*='element-card-background-']) > .element-card-accessibility {
+            display: none;
+        }
+
+        > .element-card-content > .element-card-info {
+            margin: 0 5px 0 0;
+        }
+    }
+
+    .element-card-accessibility {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: $tlp-medium-spacing;
+        height: 100%;
     }
 }
 

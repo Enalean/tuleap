@@ -47,17 +47,23 @@ final class ToBePlannedElementsRetriever implements RetrieveToBePlannedElements
      * @var \Tracker_FormElementFactory
      */
     private $form_element_factory;
+    /**
+     * @var BackgroundColorRetriever
+     */
+    private $retrieve_background_color;
 
     public function __construct(
         BuildProgram $build_program,
         ToBePlannedElementsStore $to_be_planned_element_dao,
         \Tracker_ArtifactFactory $artifact_factory,
-        \Tracker_FormElementFactory $form_element_factory
+        \Tracker_FormElementFactory $form_element_factory,
+        BackgroundColorRetriever $retrieve_background_color
     ) {
         $this->to_be_planned_element_dao = $to_be_planned_element_dao;
         $this->build_program             = $build_program;
         $this->artifact_factory          = $artifact_factory;
         $this->form_element_factory      = $form_element_factory;
+        $this->retrieve_background_color = $retrieve_background_color;
     }
 
     /**
@@ -86,7 +92,8 @@ final class ToBePlannedElementsRetriever implements RetrieveToBePlannedElements
             $elements[] = new ToBePlannedElementRepresentation(
                 (int) $artifact['artifact_id'],
                 $artifact['artifact_title'],
-                MinimalTrackerRepresentation::build($full_artifact->getTracker())
+                MinimalTrackerRepresentation::build($full_artifact->getTracker()),
+                $this->retrieve_background_color->retrieveBackgroundColor($full_artifact, $user)
             );
         }
 

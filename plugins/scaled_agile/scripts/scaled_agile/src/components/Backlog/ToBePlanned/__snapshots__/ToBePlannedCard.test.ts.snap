@@ -1,6 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ToBePlannedCard Displays the empty state for Backlog unplanned section 1`] = `
+exports[`ToBePlannedCard Displays a card with accessibility pattern 1`] = `
+<div
+  class="element-card element-card-lake_placid_blue element-card-background-peggy_pink_text element-card-with-accessibility"
+>
+  <div
+    class="element-card-content"
+  >
+    <div
+      class="element-card-xref-label"
+    >
+      <a
+        class="element-card-xref element-card-xref-lake_placid_blue"
+        href="/plugins/tracker/?aid=100"
+      >
+        
+                bug #100
+            
+      </a>
+       
+      <span
+        class="element-card-label"
+      >
+        My artifact
+      </span>
+    </div>
+  </div>
+   
+  <div
+    class="element-card-accessibility"
+  />
+</div>
+`;
+
+exports[`ToBePlannedCard Displays a card without accessibility pattern 1`] = `
 <div
   class="element-card element-card-lake_placid_blue"
 >
@@ -26,5 +59,7 @@ exports[`ToBePlannedCard Displays the empty state for Backlog unplanned section 
       </span>
     </div>
   </div>
+   
+  <!---->
 </div>
 `;

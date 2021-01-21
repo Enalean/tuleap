@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
@@ -17,27 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from "tlp";
+declare(strict_types=1);
 
-export interface ToBePlannedElement {
-    artifact_id: number;
-    artifact_title: string;
-    tracker: TrackerMinimalRepresentation;
-    background_color: string;
-}
+namespace Tuleap\ScaledAgile\Program\Backlog\ToBePlanned;
 
-interface TrackerMinimalRepresentation {
-    id: number;
-    uri: string;
-    label: string;
-    color_name: string;
-}
+final class BackgroundColor
+{
+    /**
+     * @var string
+     */
+    private $background_color_name;
 
-export function getToBePlannedElements(program_id: number): Promise<ToBePlannedElement[]> {
-    return recursiveGet(`/api/v1/projects/${encodeURIComponent(program_id)}/scaled_agile_backlog`, {
-        params: {
-            limit: 50,
-            offset: 0,
-        },
-    });
+    public function __construct(string $background_color_name)
+    {
+        $this->background_color_name = $background_color_name;
+    }
+
+    public function getBackgroundColorName(): string
+    {
+        return $this->background_color_name;
+    }
 }
