@@ -106,6 +106,9 @@ export default class AccessTokenFormModal extends Vue {
     @Prop({ required: true })
     readonly repository!: Repository;
 
+    @Prop({ required: true })
+    readonly gitlab_token!: string;
+
     @Action
     readonly getGitlabRepositoryFromId!: ({
         credentials,
@@ -115,7 +118,7 @@ export default class AccessTokenFormModal extends Vue {
         id: number;
     }) => Promise<GitLabRepository>;
 
-    private gitlab_new_token = "";
+    private gitlab_new_token = this.gitlab_token;
     private error_message = "";
     private is_checking_validity_of_new_token = false;
 

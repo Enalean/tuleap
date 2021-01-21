@@ -26,6 +26,7 @@ import {
     deleteIntegrationGitlab,
     getGitlabRepositoryList,
     postGitlabRepository,
+    patchGitlabRepository,
 } from "./rest-querier.js";
 
 jest.mock("tlp");
@@ -187,6 +188,34 @@ describe("API querier", () => {
             expect(tlpPost).toHaveBeenCalledWith("/api/gitlab_repositories", {
                 headers,
                 body,
+            });
+        });
+    });
+
+    describe("patchGitlabRepository", () => {
+        it("Given body, Then api is queried to patch gitlab repository", async () => {
+            const headers = {
+                "content-type": "application/json",
+            };
+
+            const body = {
+                update_bot_api_token: {
+                    gitlab_bot_api_token: "AZERTY12345",
+                    gitlab_repository_id: 20,
+                    gitlab_repository_url: "https://example.com",
+                },
+            };
+
+            const body_stringify = JSON.stringify(body);
+
+            const tlpPatch = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatch);
+
+            await patchGitlabRepository(body);
+
+            expect(tlpPatch).toHaveBeenCalledWith("/api/gitlab_repositories", {
+                headers,
+                body: body_stringify,
             });
         });
     });

@@ -23,9 +23,11 @@ import EditAccessTokenGitlabModal from "./EditAccessTokenGitlabModal.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import AccessTokenFormModal from "./AccessTokenFormModal.vue";
+import ConfirmReplaceTokenModal from "./ConfirmReplaceTokenModal.vue";
+import { Store } from "vuex-mock-store";
 
 describe("EditAccessTokenGitlabModal", () => {
-    let store, localVue;
+    let store: Store, localVue;
 
     function instantiateComponent(): Wrapper<EditAccessTokenGitlabModal> {
         store = createStoreMock({});
@@ -73,5 +75,95 @@ describe("EditAccessTokenGitlabModal", () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.$data.repository).toEqual(null);
+    });
+
+    it("When CredentialsFormModal emits on-get-new-token-gitlab, Then ConfirmReplaceTokenModal is rendered", async () => {
+        const wrapper = instantiateComponent();
+
+        wrapper.setData({
+            repository: {
+                id: 10,
+            },
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeTruthy();
+        wrapper
+            .findComponent(AccessTokenFormModal)
+            .vm.$emit("on-get-new-token-gitlab", { token: "azert123" });
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ConfirmReplaceTokenModal).exists()).toBeTruthy();
+        expect(
+            wrapper.findComponent(ConfirmReplaceTokenModal).attributes().gitlab_new_token
+        ).toEqual("azert123");
+    });
+
+    it("When ConfirmReplaceTokenModal emits on-success-edit-token, Then data are reset and success message is displayed", async () => {
+        const wrapper = instantiateComponent();
+
+        wrapper.setData({
+            repository: {
+                gitlab_data: {
+                    gitlab_repository_url: "https://example.com/my/repo",
+                    gitlab_repository_id: 12,
+                },
+                normalized_path: "my/repo",
+            },
+            gitlab_new_token: "azert123",
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ConfirmReplaceTokenModal).exists()).toBeTruthy();
+
+        wrapper.findComponent(ConfirmReplaceTokenModal).vm.$emit("on-success-edit-token");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.repository).toBeNull();
+        expect(wrapper.vm.$data.gitlab_new_token).toEqual("");
+
+        expect(store.commit).toHaveBeenCalledWith(
+            "setSuccessMessage",
+            "Token of remote repository my/repo has been successfully updated."
+        );
+    });
+
+    it("When ConfirmReplaceTokenModal emits on-back-button, Then CredentialsFormModal is displayed with token", async () => {
+        const wrapper = instantiateComponent();
+
+        const repository = {
+            gitlab_data: {
+                gitlab_repository_url: "https://example.com/my/repo",
+                gitlab_repository_id: 12,
+            },
+            normalized_path: "my/repo",
+        };
+
+        wrapper.setData({
+            repository,
+            gitlab_new_token: "azert123",
+        });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ConfirmReplaceTokenModal).exists()).toBeTruthy();
+
+        wrapper.findComponent(ConfirmReplaceTokenModal).vm.$emit("on-back-button");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeTruthy();
+        expect(wrapper.findComponent(AccessTokenFormModal).attributes().gitlab_token).toEqual(
+            "azert123"
+        );
+
+        expect(wrapper.findComponent(ConfirmReplaceTokenModal).exists()).toBeFalsy();
+
+        expect(wrapper.vm.$data.repository).toEqual(repository);
+        expect(wrapper.vm.$data.gitlab_new_token).toEqual("azert123");
     });
 });

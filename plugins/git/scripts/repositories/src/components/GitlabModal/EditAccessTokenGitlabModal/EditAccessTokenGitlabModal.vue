@@ -40,9 +40,18 @@
             </div>
         </div>
         <access-token-form-modal
-            v-if="repository !== null"
+            v-if="display_form_to_edit"
             v-bind:repository="repository"
+            v-bind:gitlab_token="gitlab_new_token"
             v-on:on-close-modal="onCloseModal"
+            v-on:on-get-new-token-gitlab="onGetNewToken"
+        />
+        <confirm-replace-token-modal
+            v-if="display_confirmation_message"
+            v-bind:repository="repository"
+            v-bind:gitlab_new_token="gitlab_new_token"
+            v-on:on-back-button="onBackToEditToken"
+            v-on:on-success-edit-token="onSuccessEditToken"
         />
     </div>
 </template>
@@ -52,11 +61,15 @@ import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import { createModal, Modal } from "tlp";
 import AccessTokenFormModal from "./AccessTokenFormModal.vue";
+import ConfirmReplaceTokenModal from "./ConfirmReplaceTokenModal.vue";
+import { Repository } from "../../../type";
 
-@Component({ components: { AccessTokenFormModal } })
+@Component({ components: { ConfirmReplaceTokenModal, AccessTokenFormModal } })
 export default class EditAccessTokenGitlabModal extends Vue {
     private modal: Modal | null = null;
-    private repository = null;
+    private repository: Repository | null = null;
+    private gitlab_new_token = "";
+    private on_back_to_edit = false;
 
     get close_label(): string {
         return this.$gettext("Close");
@@ -80,8 +93,45 @@ export default class EditAccessTokenGitlabModal extends Vue {
         }
     }
 
+    onBackToEditToken(): void {
+        this.on_back_to_edit = true;
+    }
+
+    onGetNewToken({ token }: { token: string }): void {
+        this.gitlab_new_token = token;
+        this.on_back_to_edit = false;
+    }
+
+    onSuccessEditToken(): void {
+        this.$store.commit("setSuccessMessage", this.success_message);
+        this.onCloseModal();
+    }
+
     reset(): void {
         this.repository = null;
+        this.gitlab_new_token = "";
+        this.on_back_to_edit = false;
+    }
+
+    get success_message(): string {
+        if (!this.repository || !this.repository.normalized_path) {
+            return "";
+        }
+
+        return this.$gettextInterpolate(
+            this.$gettext("Token of remote repository %{ label } has been successfully updated."),
+            {
+                label: this.repository.normalized_path,
+            }
+        );
+    }
+
+    get display_form_to_edit(): boolean {
+        return this.repository !== null && (this.gitlab_new_token === "" || this.on_back_to_edit);
+    }
+
+    get display_confirmation_message(): boolean {
+        return this.repository !== null && this.gitlab_new_token !== "" && !this.on_back_to_edit;
     }
 }
 </script>

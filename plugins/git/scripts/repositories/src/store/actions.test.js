@@ -33,6 +33,7 @@ import {
     getGitlabRepositoryList,
     getGitlabRepositoryFromId,
     showEditAccessTokenGitlabRepositoryModal,
+    updateBotApiTokenGitlab,
 } from "./actions.js";
 import * as repository_list_presenter from "../repository-list-presenter";
 import * as rest_querier from "../api/rest-querier.js";
@@ -466,6 +467,63 @@ describe("Store actions", () => {
             expect(getAsyncGitlabRepositoryList).toHaveBeenCalledWith({
                 server_url: "https://example/api/v4/projects/12",
                 token: "azerty1234",
+            });
+        });
+    });
+
+    describe("updateBotApiTokenGitlab", () => {
+        const context = {};
+
+        it("When api is called, Then url is formatted", async () => {
+            const patchGitlabRepository = jest.spyOn(rest_querier, "patchGitlabRepository");
+
+            patchGitlabRepository.mockReturnValue(
+                new Promise((resolve) => {
+                    resolve({
+                        headers: {
+                            get: () => 1,
+                        },
+                        status: 200,
+                    });
+                })
+            );
+
+            const credentials = {
+                gitlab_bot_api_token: "AZERTY1234",
+                gitlab_repository_id: 10,
+                gitlab_repository_url: "https://example.com",
+            };
+
+            await updateBotApiTokenGitlab(context, credentials);
+
+            expect(patchGitlabRepository).toHaveBeenCalledWith({
+                update_bot_api_token: credentials,
+            });
+        });
+
+        it("When an error is retrieved from api, Then an error is thrown", async () => {
+            const patchGitlabRepository = jest.spyOn(rest_querier, "patchGitlabRepository");
+
+            patchGitlabRepository.mockReturnValue(
+                new Promise((resolve, reject) => {
+                    reject({
+                        status: 401,
+                    });
+                })
+            );
+
+            const credentials = {
+                gitlab_bot_api_token: "AZERTY1234",
+                gitlab_repository_id: 10,
+                gitlab_repository_url: "https://example.com",
+            };
+
+            await expect(updateBotApiTokenGitlab(context, credentials)).rejects.toEqual({
+                status: 401,
+            });
+
+            expect(patchGitlabRepository).toHaveBeenCalledWith({
+                update_bot_api_token: credentials,
             });
         });
     });
