@@ -25,11 +25,12 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 
 class SecretRetriever
 {
     /**
-     * @var SecretDao
+     * @var WebhookDao
      */
     private $dao;
 
@@ -38,7 +39,7 @@ class SecretRetriever
      */
     private $key_factory;
 
-    public function __construct(SecretDao $dao, KeyFactory $key_factory)
+    public function __construct(WebhookDao $dao, KeyFactory $key_factory)
     {
         $this->dao         = $dao;
         $this->key_factory = $key_factory;
@@ -49,7 +50,7 @@ class SecretRetriever
      */
     public function getWebhookSecretForRepository(GitlabRepository $gitlab_repository): ConcealedString
     {
-        $row = $this->dao->getGitlabRepositoryWebhookSecret($gitlab_repository->getId());
+        $row = $this->dao->getGitlabRepositoryWebhook($gitlab_repository->getId());
         if ($row === null) {
             throw new SecretNotDefinedException($gitlab_repository->getId());
         }

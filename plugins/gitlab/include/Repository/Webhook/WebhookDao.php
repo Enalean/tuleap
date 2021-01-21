@@ -19,39 +19,40 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Gitlab\Repository\Webhook\Secret;
+namespace Tuleap\Gitlab\Repository\Webhook;
 
 use Tuleap\DB\DataAccessObject;
 
-class SecretDao extends DataAccessObject
+class WebhookDao extends DataAccessObject
 {
     /**
-     * @psalm-return array{id:int, webhook_secret:string}
+     * @psalm-return array{repository_id:int, webhook_secret:string}
      */
-    public function getGitlabRepositoryWebhookSecret(int $repository_id): ?array
+    public function getGitlabRepositoryWebhook(int $repository_id): ?array
     {
         $sql = 'SELECT *
                 FROM plugin_gitlab_repository_webhook_secret
-                WHERE id = ?';
+                WHERE repository_id = ?';
 
         return $this->getDB()->row($sql, $repository_id);
     }
 
-    public function deleteGitlabRepositoryWebhookSecret(int $repository_id): void
+    public function deleteGitlabRepositoryWebhook(int $repository_id): void
     {
         $this->getDB()->delete(
             'plugin_gitlab_repository_webhook_secret',
-            ['id' => $repository_id]
+            ['repository_id' => $repository_id]
         );
     }
 
-    public function storeGitlabRepositoryWebhookSecret(int $repository_id, string $encrypted_secret): void
+    public function storeWebhook(int $repository_id, int $webhook_id, string $encrypted_secret): void
     {
         $this->getDB()->insert(
             'plugin_gitlab_repository_webhook_secret',
             [
-                'id'             => $repository_id,
-                'webhook_secret' => $encrypted_secret
+                'repository_id'     => $repository_id,
+                'webhook_secret'    => $encrypted_secret,
+                'gitlab_webhook_id' => $webhook_id,
             ]
         );
     }

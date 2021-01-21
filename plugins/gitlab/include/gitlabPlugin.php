@@ -52,9 +52,9 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretChecker;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
 use Tuleap\Gitlab\Repository\Webhook\Secret\SecretRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookActions;
+use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\WebhookRepositoryRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
@@ -183,7 +183,7 @@ class gitlabPlugin extends Plugin
             ),
             new SecretChecker(
                 new SecretRetriever(
-                    new SecretDao(),
+                    new WebhookDao(),
                     new KeyFactory()
                 )
             ),
