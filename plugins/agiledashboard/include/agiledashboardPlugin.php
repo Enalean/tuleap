@@ -374,7 +374,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     private function getConfigurationManager()
     {
         return new AgileDashboard_ConfigurationManager(
-            new AgileDashboard_ConfigurationDao()
+            new AgileDashboard_ConfigurationDao(),
+            EventManager::instance()
         );
     }
 

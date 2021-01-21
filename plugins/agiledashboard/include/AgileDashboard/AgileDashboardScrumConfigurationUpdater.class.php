@@ -83,11 +83,17 @@ class AgileDashboardScrumConfigurationUpdater
         $this->scrum_mono_milestone_disabler = $scrum_mono_milestone_disabler;
         $this->scrum_mono_milestone_checker  = $scrum_mono_milestone_checker;
         $this->configuration_updater         = $configuration_updater;
-        $this->event_dispatcher = $event_dispatcher;
+        $this->event_dispatcher              = $event_dispatcher;
     }
 
     public function updateConfiguration(): void
     {
+        $block_scrum_access = new \Tuleap\AgileDashboard\BlockScrumAccess($this->request->getProject());
+        $this->event_dispatcher->dispatch($block_scrum_access);
+        if (! $block_scrum_access->isScrumAccessEnabled()) {
+            return;
+        }
+
         if (! $this->request->exist('scrum-title-admin')) {
             $this->response->missingScrumTitle();
 
@@ -142,7 +148,7 @@ class AgileDashboardScrumConfigurationUpdater
 
     private function getActivatedScrum()
     {
-        $scrum_was_activated = $this->config_manager->scrumIsActivatedForProject($this->project_id);
+        $scrum_was_activated = $this->config_manager->scrumIsActivatedForProject($this->request->getProject());
         $scrum_is_activated  = $this->request->get('activate-scrum');
 
         if ($scrum_is_activated && ! $scrum_was_activated) {

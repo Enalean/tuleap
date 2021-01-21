@@ -132,7 +132,7 @@ class KanbanXmlImporter
         $is_kanban_activated = 1;
         $this->agile_dashboard_configuration_manager->updateConfiguration(
             $project->getID(),
-            $this->agile_dashboard_configuration_manager->scrumIsActivatedForProject($project->getID()),
+            $this->agile_dashboard_configuration_manager->scrumIsActivatedForProject($project),
             $is_kanban_activated,
             $this->agile_dashboard_configuration_manager->getScrumTitle($project->getID()),
             $kanban_name

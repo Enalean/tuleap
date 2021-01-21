@@ -166,6 +166,7 @@ class AdminController extends BaseController
 
     public function adminScrum(): string
     {
+        $this->redirectToKanbanPaneIfScrumAccessIsBlocked();
         $include_assets = new IncludeAssets(
             __DIR__ . '/../../../../src/www/assets/agiledashboard',
             '/assets/agiledashboard'
@@ -196,6 +197,7 @@ class AdminController extends BaseController
 
     public function adminCharts()
     {
+        $this->redirectToKanbanPaneIfScrumAccessIsBlocked();
         return $this->renderToString(
             "admin-charts",
             $this->getAdminChartsPresenter(
@@ -213,6 +215,7 @@ class AdminController extends BaseController
             $this->config_manager->kanbanIsActivatedForProject($project_id),
             $this->config_manager->getKanbanTitle($project_id),
             $has_kanban,
+            $this->isScrumAccessible(),
             \ForgeConfig::get('use_burnup_count_elements')
         );
     }
@@ -359,6 +362,21 @@ class AdminController extends BaseController
                 'group_id' => $this->group_id
             ]
         );
+    }
+
+    private function isScrumAccessible(): bool
+    {
+        $block_access_scrum = new BlockScrumAccess($this->project);
+        $this->event_manager->dispatch($block_access_scrum);
+
+        return $block_access_scrum->isScrumAccessEnabled();
+    }
+
+    private function redirectToKanbanPaneIfScrumAccessIsBlocked(): void
+    {
+        if (! $this->isScrumAccessible()) {
+            $this->redirect(['group_id' => $this->project->getID(), 'action' => 'admin', 'pane' => 'kanban']);
+        }
     }
 
     private function getAdminChartsPresenter(Project $project): AdminChartsPresenter
