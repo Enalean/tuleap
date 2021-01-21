@@ -52,6 +52,7 @@ pipeline {
             }
             steps {
                 script {
+                    actions = load 'sources/tests/actions.groovy'
                     actions.runPsalmTaintAnalysis('tests/psalm/psalm.xml')
                 }
             }
