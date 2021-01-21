@@ -38,11 +38,11 @@ abstract class Tracker_Permission_Command
     public const PERMISSION_SUBMITTER_ONLY         = 'SUBMITTER_ONLY';
 
     protected static $non_admin_permissions = [
-        Tracker_Permission_Command::PERMISSION_FULL,
-        Tracker_Permission_Command::PERMISSION_ASSIGNEE,
-        Tracker_Permission_Command::PERMISSION_SUBMITTER,
-        Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
-        Tracker_Permission_Command::PERMISSION_ASSIGNEE_AND_SUBMITTER
+        self::PERMISSION_FULL,
+        self::PERMISSION_ASSIGNEE,
+        self::PERMISSION_SUBMITTER,
+        self::PERMISSION_SUBMITTER_ONLY,
+        self::PERMISSION_ASSIGNEE_AND_SUBMITTER
     ];
 
     /** @var Tracker_Permission_Command */

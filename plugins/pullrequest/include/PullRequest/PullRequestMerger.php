@@ -121,7 +121,7 @@ class PullRequestMerger
      */
     private function getUniqueRandomDirectory()
     {
-        $parent_tmp = \ForgeConfig::get('tmp_dir') . DIRECTORY_SEPARATOR . PullRequestMerger::MERGE_TEMPORARY_SUBFOLDER;
+        $parent_tmp = \ForgeConfig::get('tmp_dir') . DIRECTORY_SEPARATOR . self::MERGE_TEMPORARY_SUBFOLDER;
 
         is_dir($parent_tmp) || mkdir($parent_tmp, 0750, true);
 
@@ -133,7 +133,7 @@ class PullRequestMerger
     private function cleanTemporaryRepository($temporary_name)
     {
         $path       = realpath($temporary_name);
-        $check_path = strpos($path, PullRequestMerger::MERGE_TEMPORARY_SUBFOLDER);
+        $check_path = strpos($path, self::MERGE_TEMPORARY_SUBFOLDER);
         if ($check_path !== false) {
             $cmd = new System_Command();
             $cmd->exec('rm -rf ' . escapeshellarg($path));

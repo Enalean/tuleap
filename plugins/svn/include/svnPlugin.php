@@ -242,10 +242,10 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return new XMLSvnExporter(
             $this->getRepositoryManager(),
             $project,
-            new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instance(Backend::SVN)),
+            new SvnAdmin(new System_Command(), self::getLogger(), Backend::instance(Backend::SVN)),
             new XML_SimpleXMLCDATAFactory(),
             $this->getMailNotificationManager(),
-            \SvnPlugin::getLogger(),
+            self::getLogger(),
             new AccessFileReader()
         );
     }
@@ -382,7 +382,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     ProjectManager::instance(),
                     $this->getApacheConfGenerator(),
                     $this->getRepositoryDeleter(),
-                    new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instance(Backend::SVN))
+                    new SvnAdmin(new System_Command(), self::getLogger(), Backend::instance(Backend::SVN))
                 ];
                 break;
             case SystemEvent_SVN_IMPORT_CORE_REPOSITORY::class:
@@ -590,7 +590,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 new MailHeaderManager(new MailHeaderDao()),
                 $repository_manager,
                 $this->getMailNotificationManager(),
-                \SvnPlugin::getLogger(),
+                self::getLogger(),
                 new NotificationListBuilder(
                     new UGroupDao(),
                     new CollectionOfUserToBeNotifiedPresenterBuilder($this->getUserNotifyDao()),

@@ -124,6 +124,8 @@
     <!-- Require usage of ::class instead of __CLASS__, get_class(), get_class($this), get_called_class() and get_parent_class() -->
     <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
     <rule ref="SlevomatCodingStandard.Classes.DisallowLateStaticBindingForConstants"/>
+    <!-- Require usage of self for self-referencing -->
+    <rule ref="Squiz.Classes.SelfMemberReference"/>
     <!-- Check the presence of a comment/copyright block at the very beginning of the file -->
     <rule ref="./TuleapCodingStandard/Sniffs/Commenting/FileCopyrightSniff.php"/>
     <!-- Forbid fancy group uses -->

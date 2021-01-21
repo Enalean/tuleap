@@ -200,7 +200,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
     public function getCountDayUntilDate(int $date): int
     {
         if ($date < $this->getEndDate()) {
-            return TimePeriodWithoutWeekEnd::getNumberOfDaysWithoutWeekEndBetweenTwoDates((int) $this->getStartDate(), $date);
+            return self::getNumberOfDaysWithoutWeekEndBetweenTwoDates((int) $this->getStartDate(), $date);
         } else {
             return count($this->getDayOffsets());
         }
@@ -294,7 +294,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
             return 0;
         }
 
-        return TimePeriodWithoutWeekEnd::getNumberOfDaysWithoutWeekEndBetweenTwoDates(
+        return self::getNumberOfDaysWithoutWeekEndBetweenTwoDates(
             (int) $this->getStartDate(),
             $this->getTodayTimestamp()
         );

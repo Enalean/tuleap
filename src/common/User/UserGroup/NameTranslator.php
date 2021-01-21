@@ -40,12 +40,12 @@ class NameTranslator
     public const  CONFIG_AUTHENTICATED_LABEL = 'ugroup_authenticated_label';
 
     public static $names = [
-        NameTranslator::NOBODY,
-        NameTranslator::ANON,
-        NameTranslator::AUTHENTICATED,
-        NameTranslator::REGISTERED,
-        NameTranslator::PROJECT_MEMBERS,
-        NameTranslator::PROJECT_ADMINS,
+        self::NOBODY,
+        self::ANON,
+        self::AUTHENTICATED,
+        self::REGISTERED,
+        self::PROJECT_MEMBERS,
+        self::PROJECT_ADMINS,
     ];
 
     /**

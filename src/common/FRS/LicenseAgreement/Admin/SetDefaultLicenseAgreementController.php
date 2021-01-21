@@ -77,7 +77,7 @@ class SetDefaultLicenseAgreementController implements DispatchableWithRequest
             new LicenseAgreementFactory(
                 new LicenseAgreementDao()
             ),
-            SetDefaultLicenseAgreementController::getCSRFTokenSynchronizer(),
+            self::getCSRFTokenSynchronizer(),
         );
     }
 

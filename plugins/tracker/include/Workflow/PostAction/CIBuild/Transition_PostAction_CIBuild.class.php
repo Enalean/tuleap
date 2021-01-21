@@ -100,7 +100,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         if ($this->isDefined()) {
-            $child = $root->addChild(Transition_PostAction_CIBuild::XML_TAG_NAME);
+            $child = $root->addChild(self::XML_TAG_NAME);
             $child->addAttribute('job_url', $this->getJobUrl());
         }
     }

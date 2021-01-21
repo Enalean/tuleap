@@ -5904,10 +5904,10 @@ class ColorFactory
 
     public static function getColor()
     {
-        if (ColorFactory::$iIdx >= ColorFactory::$iNum) {
-            ColorFactory::$iIdx = 0;
+        if (self::$iIdx >= self::$iNum) {
+            self::$iIdx = 0;
         }
-        return ColorFactory::$iColorList[ColorFactory::$iIdx++];
+        return self::$iColorList[self::$iIdx++];
     }
 }
 

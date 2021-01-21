@@ -499,7 +499,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $project = $this->getProjectFromParams($params);
         $dao     = $this->getDao();
 
-        if ($project->usesService(MediaWikiPlugin::SERVICE_SHORTNAME)) {
+        if ($project->usesService(self::SERVICE_SHORTNAME)) {
             $dao->deleteUserGroup($project->getID(), $params['ugroup_id']);
             $dao->resetUserGroups($project);
         }
@@ -541,7 +541,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $project = $this->getProjectFromParams($params);
         $dao     = $this->getDao();
 
-        if ($project->usesService(MediaWikiPlugin::SERVICE_SHORTNAME)) {
+        if ($project->usesService(self::SERVICE_SHORTNAME)) {
             $dao->resetUserGroupsForUser($user, $project);
         }
     }
@@ -551,7 +551,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $user            = $params['user'];
         $projects        = ProjectManager::instance()->getAllProjectsButDeleted();
         foreach ($projects as $project) {
-            if ($project->usesService(MediaWikiPlugin::SERVICE_SHORTNAME)) {
+            if ($project->usesService(self::SERVICE_SHORTNAME)) {
                 $this->getDao()->renameUser($project, $params['old_user_name'], $user->getUnixName());
             }
         }

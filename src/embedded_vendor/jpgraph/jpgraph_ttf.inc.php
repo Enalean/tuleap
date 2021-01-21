@@ -163,9 +163,9 @@ class LanguageConv
     {
         if (LANGUAGE_GREEK) {
             if (GREEK_FROM_WINDOWS) {
-                $unistring = LanguageConv::gr_win2uni($aTxt);
+                $unistring = self::gr_win2uni($aTxt);
             } else {
-                $unistring = LanguageConv::gr_iso2uni($aTxt);
+                $unistring = self::gr_iso2uni($aTxt);
             }
             return $unistring;
         } elseif (LANGUAGE_CYRILLIC) {
@@ -174,7 +174,7 @@ class LanguageConv
             }
             if (! defined('LANGUAGE_CHARSET') || stristr(LANGUAGE_CHARSET, 'koi8-r') || stristr(LANGUAGE_CHARSET, 'windows-1251')) {
                 $isostring = mb_convert_encoding($aTxt, 'ISO-8859-5', 'KOI8-R');
-                $unistring = LanguageConv::iso2uni($isostring);
+                $unistring = self::iso2uni($isostring);
             } else {
                 $unistring = $aTxt;
             }
@@ -194,7 +194,7 @@ class LanguageConv
         ) {
             return mb_convert_encoding($aTxt, 'UTF-8', 'EUC-JP');
         } elseif ($aFF == FF_DAVID || $aFF == FF_MIRIAM || $aFF == FF_AHRON) {
-            return LanguageConv::heb_iso2uni($aTxt);
+            return self::heb_iso2uni($aTxt);
         } else {
             return $aTxt;
         }

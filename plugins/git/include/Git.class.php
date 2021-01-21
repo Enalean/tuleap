@@ -116,7 +116,7 @@ class Git extends PluginController
      */
     public static function allPermissionTypes()
     {
-        return [Git::PERM_READ, Git::PERM_WRITE, Git::PERM_WPLUS];
+        return [self::PERM_READ, self::PERM_WRITE, self::PERM_WPLUS];
     }
 
     /**
@@ -124,7 +124,7 @@ class Git extends PluginController
      */
     public static function allDefaultPermissionTypes()
     {
-        return [Git::DEFAULT_PERM_READ, Git::DEFAULT_PERM_WRITE, Git::DEFAULT_PERM_WPLUS];
+        return [self::DEFAULT_PERM_READ, self::DEFAULT_PERM_WRITE, self::DEFAULT_PERM_WPLUS];
     }
 
     /**

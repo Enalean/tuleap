@@ -155,7 +155,7 @@ class Pack
 
         $magic = fread($index, 4);
         if ($magic == "\xFFtOc") {
-            $version = Pack::fuint32($index);
+            $version = self::fuint32($index);
             if ($version == 2) {
                 $offset = $this->SearchIndexV2($index, $hash);
             }
@@ -208,7 +208,7 @@ class Pack
             $mid = ($low + $high) >> 1;
             fseek($index, 4 * 256 + 24 * $mid);
 
-            $off = Pack::fuint32($index);
+            $off = self::fuint32($index);
             $binName = fread($index, 20);
             $name = bin2hex($binName);
 
@@ -266,7 +266,7 @@ class Pack
          * get the object count from fanout[255]
          */
         fseek($index, 8 + 4 * 255);
-        $objectCount = Pack::fuint32($index);
+        $objectCount = self::fuint32($index);
 
         /*
          * binary search for the index of the hash in the sha listing
@@ -333,11 +333,11 @@ class Pack
         if ($binaryHash[0] == "\x00") {
             $low = 0;
             fseek($index, $offset);
-            $high = Pack::fuint32($index);
+            $high = self::fuint32($index);
         } else {
             fseek($index, $offset + (ord($binaryHash[0]) - 1) * 4);
-            $low = Pack::fuint32($index);
-            $high = Pack::fuint32($index);
+            $low = self::fuint32($index);
+            $high = self::fuint32($index);
         }
         return [$low, $high];
     }
@@ -363,7 +363,7 @@ class Pack
         flock($pack, LOCK_SH);
 
         $magic = fread($pack, 4);
-        $version = Pack::fuint32($pack);
+        $version = self::fuint32($pack);
         if ($magic != 'PACK' || $version != 2) {
             flock($pack, LOCK_UN);
             fclose($pack);
@@ -409,12 +409,12 @@ class Pack
             $size |= (($c & 0x7f) << $i);
         }
 
-        if ($type == Pack::OBJ_COMMIT || $type == Pack::OBJ_TREE || $type == Pack::OBJ_BLOB || $type == Pack::OBJ_TAG) {
+        if ($type == self::OBJ_COMMIT || $type == self::OBJ_TREE || $type == self::OBJ_BLOB || $type == self::OBJ_TAG) {
             /*
              * regular gzipped object data
              */
             return [$type, gzuncompress(fread($pack, $size + 512), $size)];
-        } elseif ($type == Pack::OBJ_OFS_DELTA) {
+        } elseif ($type == self::OBJ_OFS_DELTA) {
             /*
              * delta of an object at offset
              */
@@ -448,10 +448,10 @@ class Pack
                  * read base object at offset and apply delta to it
                  */
                 list($type, $base) = $this->UnpackObject($pack, $baseOffset);
-                $data = Pack::ApplyDelta($delta, $base);
+                $data = self::ApplyDelta($delta, $base);
                 return [$type, $data];
             }
-        } elseif ($type == Pack::OBJ_REF_DELTA) {
+        } elseif ($type == self::OBJ_REF_DELTA) {
             /*
              * delta of object with hash
              */
@@ -469,7 +469,7 @@ class Pack
              */
             $delta = gzuncompress(fread($pack, $size + 512), $size);
 
-            $data = Pack::ApplyDelta($delta, $base);
+            $data = self::ApplyDelta($delta, $base);
 
             return [$type, $data];
         }
@@ -494,8 +494,8 @@ class Pack
          * algorithm from patch-delta.c
          */
         $pos = 0;
-        $baseSize = Pack::ParseVarInt($delta, $pos);
-        $resultSize = Pack::ParseVarInt($delta, $pos);
+        $baseSize = self::ParseVarInt($delta, $pos);
+        $resultSize = self::ParseVarInt($delta, $pos);
 
         $data = '';
         $deltalen = strlen($delta);
@@ -591,7 +591,7 @@ class Pack
      */
     private static function fuint32($handle)
     {
-        return Pack::uint32(fread($handle, 4));
+        return self::uint32(fread($handle, 4));
     }
 
     private static function uint64($str)

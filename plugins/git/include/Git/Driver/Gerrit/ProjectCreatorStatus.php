@@ -93,7 +93,7 @@ class Git_Driver_Gerrit_ProjectCreatorStatus
     public function canModifyPermissionsTuleapSide(GitRepository $repository)
     {
         $status = $this->getStatus($repository);
-        if ($status == Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE || $status == Git_Driver_Gerrit_ProjectCreatorStatus::DONE) {
+        if ($status == self::QUEUE || $status == self::DONE) {
             return false;
         }
         return true;

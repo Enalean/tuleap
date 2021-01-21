@@ -537,7 +537,7 @@ class PagePermission
      */
     public function accessTypes()
     {
-        return array_keys(PagePermission::defaultPerms());
+        return array_keys(self::defaultPerms());
     }
 
     /**
@@ -549,7 +549,7 @@ class PagePermission
         $def = [ACL_ADMIN => true,
                      ACL_OWNER => true];
         $perm = [];
-        foreach (PagePermission::accessTypes() as $access) {
+        foreach (self::accessTypes() as $access) {
             $perm[$access] = $def;
         }
         return $perm;

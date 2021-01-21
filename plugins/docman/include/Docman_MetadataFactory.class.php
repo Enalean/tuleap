@@ -412,10 +412,10 @@ class Docman_MetadataFactory
     public function isValidLabel($label)
     {
         $valid = false;
-        if (Docman_MetadataFactory::isHardCodedMetadata($label)) {
+        if (self::isHardCodedMetadata($label)) {
             $valid = true;
         } else {
-            $valid = Docman_MetadataFactory::isRealMetadata($label);
+            $valid = self::isRealMetadata($label);
         }
         return $valid;
     }

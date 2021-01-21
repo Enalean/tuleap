@@ -359,7 +359,7 @@ class Docman_ApprovalTableReviewerFactory
     /*static*/ public function getAllPendingReviewsForUser($userId)
     {
         $reviewsArray = [];
-        $dao = Docman_ApprovalTableReviewerFactory::_getDao();
+        $dao = self::_getDao();
         $dar = $dao->getAllReviewsForUserByState($userId, PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
         $docmanUrl = HTTPRequest::instance()->getServerUrl() . '/plugins/docman';
         while ($dar->valid()) {
@@ -383,7 +383,7 @@ class Docman_ApprovalTableReviewerFactory
     /*static*/ public function getAllApprovalTableForUser($userId)
     {
         $reviewsArray = [];
-        $dao = Docman_ApprovalTableReviewerFactory::_getDao();
+        $dao = self::_getDao();
         $dar = $dao->getAllApprovalTableForUser($userId);
         $docmanUrl = HTTPRequest::instance()->getServerUrl() . '/plugins/docman';
         while ($dar->valid()) {

@@ -80,8 +80,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         foreach ($bind_values as $value) {
             $representation = new FieldValueRepresentation();
             $representation->build([
-                Tracker_FormElement_Field_List_Bind::REST_ID_KEY    => $value->getId(),
-                Tracker_FormElement_Field_List_Bind::REST_LABEL_KEY => $value->getAPIValue()
+                self::REST_ID_KEY    => $value->getId(),
+                self::REST_LABEL_KEY => $value->getAPIValue()
             ]);
             $rest_array[] = $representation;
         }
