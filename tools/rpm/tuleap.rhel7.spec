@@ -464,7 +464,7 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboar
 %package plugin-scaled_agile
 Summary: Scaled Agile Backlog
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-agiledashboard
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall, tuleap-plugin-agiledashboard
 %description plugin-scaled_agile
 %{summary}.
 
