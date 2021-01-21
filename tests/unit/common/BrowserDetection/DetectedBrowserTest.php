@@ -29,9 +29,10 @@ final class DetectedBrowserTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public const IE11_USER_AGENT_STRING        = 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko';
-    public const OLD_IE_USER_AGENT_STRING      = 'Mozilla/4.0 (compatible; MSIE 4.01; Mac_PowerPC)';
-    public const EDGE_LEGACY_USER_AGENT_STRING = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/18.17763';
+    public const IE11_USER_AGENT_STRING             = 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko';
+    public const OLD_IE_USER_AGENT_STRING           = 'Mozilla/4.0 (compatible; MSIE 4.01; Mac_PowerPC)';
+    public const EDGE_LEGACY_USER_AGENT_STRING      = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/18.17763';
+    public const VERY_OLD_FIREFOX_USER_AGENT_STRING = 'Mozilla/5.0 (Windows NT 6.1; rv:68.7) Gecko/20100101 Firefox/68.7';
 
     /**
      * @dataProvider dataProviderBrowserUA
@@ -39,15 +40,15 @@ final class DetectedBrowserTest extends TestCase
     public function testDetectsBrowser(
         string $user_agent,
         ?string $expected_browser_name,
-        bool $expected_is_ie11,
-        bool $expected_ie_before_11,
-        bool $expected_edge_legacy
+        bool $expected_is_ie,
+        bool $expected_edge_legacy,
+        bool $expected_browser_is_outdated
     ): void {
         $detected_browser = self::buildDetectedBrowserFromSpecificUserAgentString($user_agent);
-        $this->assertEquals($expected_browser_name, $detected_browser->getName());
-        $this->assertEquals($expected_is_ie11, $detected_browser->isIE11());
-        $this->assertEquals($expected_ie_before_11, $detected_browser->isIEBefore11());
-        $this->assertEquals($expected_edge_legacy, $detected_browser->isEdgeLegacy());
+        self::assertEquals($expected_browser_name, $detected_browser->getName());
+        self::assertEquals($expected_is_ie, $detected_browser->isIE());
+        self::assertEquals($expected_edge_legacy, $detected_browser->isEdgeLegacy());
+        self::assertEquals($expected_browser_is_outdated, $detected_browser->isAnOutdatedBrowser());
     }
 
     public function dataProviderBrowserUA(): array
@@ -58,20 +59,20 @@ final class DetectedBrowserTest extends TestCase
                 'Internet Explorer',
                 true,
                 false,
-                false,
+                true,
             ],
             'Old IE' => [
                 self::OLD_IE_USER_AGENT_STRING,
                 'Internet Explorer',
-                false,
                 true,
                 false,
+                true,
             ],
             'Edge Legacy' => [
                 self::EDGE_LEGACY_USER_AGENT_STRING,
                 'Edge Legacy',
                 false,
-                false,
+                true,
                 true,
             ],
             'Edge' => [
@@ -88,12 +89,26 @@ final class DetectedBrowserTest extends TestCase
                 false,
                 false,
             ],
+            'Very Old Firefox' => [
+                self::VERY_OLD_FIREFOX_USER_AGENT_STRING,
+                'Firefox',
+                false,
+                false,
+                true,
+            ],
             'Chrome' => [
-                'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36',
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36',
                 'Chrome',
                 false,
                 false,
                 false,
+            ],
+            'Very Old Chrome' => [
+                'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36',
+                'Chrome',
+                false,
+                false,
+                true,
             ],
             'Chromium' => [
                 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36',
@@ -119,10 +134,10 @@ final class DetectedBrowserTest extends TestCase
 
         $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
 
-        $this->assertNull($detected_browser->getName());
-        $this->assertFalse($detected_browser->isIE11());
-        $this->assertFalse($detected_browser->isIEBefore11());
-        $this->assertFalse($detected_browser->isEdgeLegacy());
+        self::assertNull($detected_browser->getName());
+        self::assertFalse($detected_browser->isIE());
+        self::assertFalse($detected_browser->isEdgeLegacy());
+        self::assertFalse($detected_browser->isAnOutdatedBrowser());
     }
 
     private static function buildDetectedBrowserFromSpecificUserAgentString(string $user_agent): DetectedBrowser

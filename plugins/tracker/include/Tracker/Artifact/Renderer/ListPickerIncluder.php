@@ -57,7 +57,7 @@ final class ListPickerIncluder
         }
 
         $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
-        return ! $detected_browser->isIE11() && ! $detected_browser->isEdgeLegacy() && ! $detected_browser->isIEBefore11();
+        return ! $detected_browser->isIE() && ! $detected_browser->isEdgeLegacy();
     }
 
     public static function isListPickerEnabledOnPlatform(): bool

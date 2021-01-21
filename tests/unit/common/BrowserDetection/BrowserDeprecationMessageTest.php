@@ -38,21 +38,12 @@ final class BrowserDeprecationMessageTest extends TestCase
         self::assertNull(BrowserDeprecationMessage::fromDetectedBrowser($detected_browser));
     }
 
-    public function testGetsDeprecationMessageForIE11(): void
+    public function testGetsDeprecationMessageForIE(): void
     {
         $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::IE11_USER_AGENT_STRING);
         $message          = BrowserDeprecationMessage::fromDetectedBrowser($detected_browser);
 
         self::assertNotNull($message);
-        self::assertFalse($message->can_be_dismiss);
-    }
-
-    public function testGetsDeprecationMessageForOldIE(): void
-    {
-        $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::OLD_IE_USER_AGENT_STRING);
-        $message          = BrowserDeprecationMessage::fromDetectedBrowser($detected_browser);
-
-        self::assertNotNull($detected_browser);
         self::assertFalse($message->can_be_dismiss);
     }
 
@@ -70,6 +61,15 @@ final class BrowserDeprecationMessageTest extends TestCase
     public function testGetsDeprecationMessageForEdgeLegacy(): void
     {
         $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::EDGE_LEGACY_USER_AGENT_STRING);
+        $message          = BrowserDeprecationMessage::fromDetectedBrowser($detected_browser);
+
+        self::assertNotNull($detected_browser);
+        self::assertTrue($message->can_be_dismiss);
+    }
+
+    public function testGetsDeprecationMessageForOutdatedVersionsOfSupportedBrowsers(): void
+    {
+        $detected_browser = $this->buildDetectedBrowserFromUserAgent(DetectedBrowserTest::VERY_OLD_FIREFOX_USER_AGENT_STRING);
         $message          = BrowserDeprecationMessage::fromDetectedBrowser($detected_browser);
 
         self::assertNotNull($detected_browser);

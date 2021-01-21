@@ -83,7 +83,7 @@ final class ProjectBackgroundAdministrationController implements DispatchableWit
             $backgrounds = $this->background_retriever->getBackgrounds($project);
             $this->renderer->renderToPage(
                 'administration',
-                new ProjectBackgroundAdministrationPresenter($backgrounds, (int) $project->getID(), DetectedBrowser::detectFromTuleapHTTPRequest($request)->isIE11()),
+                new ProjectBackgroundAdministrationPresenter($backgrounds, (int) $project->getID(), DetectedBrowser::detectFromTuleapHTTPRequest($request)->isIE()),
             );
         };
         $this->layout_helper->renderInProjectAdministrationLayout(

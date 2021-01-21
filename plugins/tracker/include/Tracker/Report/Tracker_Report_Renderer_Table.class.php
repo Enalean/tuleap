@@ -870,7 +870,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $html .= '>';
 
-        if (! DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())->isIE11()) {
+        if (! DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())->isIE()) {
             $html .= '<thead class="table-sticky-header">';
         } else {
             $html .= '<thead>';
