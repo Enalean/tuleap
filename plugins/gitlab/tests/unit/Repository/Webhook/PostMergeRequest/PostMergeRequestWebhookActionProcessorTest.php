@@ -301,4 +301,115 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
 
         $this->processor->process($gitlab_repository, $merge_request_webhook_data);
     }
+
+    public function testIDoesNotSaveMergeRequestDataIfNoReferencesAreFound(): void
+    {
+        $gitlab_repository = new GitlabRepository(
+            1,
+            123654,
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
+            new DateTimeImmutable()
+        );
+
+        $merge_request_webhook_data = new PostMergeRequestWebhookData(
+            'merge_request',
+            123,
+            'https://example.com',
+            2,
+            "My Title",
+            '',
+            'closed',
+        );
+
+        $this->gitlab_repository_project_retriever
+            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
+            ->with($gitlab_repository)
+            ->andReturn(
+                [
+                    Project::buildForTest()
+                ]
+            )
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('0 Tuleap references found in merge request 2')
+            ->once();
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->andReturn([]);
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('saveGitlabMergeRequestInfo')
+            ->never();
+
+        $this->bot_commenter
+            ->shouldReceive('addCommentOnMergeRequest')
+            ->never();
+
+        $this->processor->process($gitlab_repository, $merge_request_webhook_data);
+    }
+
+    public function testItUpdatesSavedMergeRequestDataIfNoReferencesAreFoundButMergeRequestWasAlreadySaved(): void
+    {
+        $gitlab_repository = new GitlabRepository(
+            1,
+            123654,
+            'root/repo01',
+            '',
+            'https://example.com/root/repo01',
+            new DateTimeImmutable()
+        );
+
+        $merge_request_webhook_data = new PostMergeRequestWebhookData(
+            'merge_request',
+            123,
+            'https://example.com',
+            2,
+            "My Title",
+            '',
+            'closed',
+        );
+
+        $this->gitlab_repository_project_retriever
+            ->shouldReceive('getProjectsGitlabRepositoryIsIntegratedIn')
+            ->with($gitlab_repository)
+            ->andReturn(
+                [
+                    Project::buildForTest()
+                ]
+            )
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('0 Tuleap references found in merge request 2')
+            ->once();
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('searchMergeRequestInRepositoryWithId')
+            ->andReturn([
+                'title' => 'Previous title',
+                'state' => 'opened',
+            ]);
+
+        $this->merge_request_reference_dao
+            ->shouldReceive('saveGitlabMergeRequestInfo')
+            ->with(1, 2, 'My Title', '', 'closed')
+            ->once();
+
+        $this->logger
+            ->shouldReceive('info')
+            ->with('Merge request data for 2 saved in database')
+            ->once();
+
+        $this->bot_commenter
+            ->shouldReceive('addCommentOnMergeRequest')
+            ->never();
+
+        $this->processor->process($gitlab_repository, $merge_request_webhook_data);
+    }
 }

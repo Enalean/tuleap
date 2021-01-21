@@ -95,13 +95,19 @@ class PostMergeRequestWebhookActionProcessor
 
         $nb_found_references = count($references_collection->getTuleapReferences());
 
-        $this->logger->info($nb_found_references . " Tuleap references found in merge request " . $webhook_data->getMergeRequestId());
+        $this->logger->info(
+            $nb_found_references . " Tuleap references found in merge request " . $webhook_data->getMergeRequestId()
+        );
 
         foreach ($references_collection->getTuleapReferences() as $tuleap_reference) {
-            $this->logger->info("|_ Reference to Tuleap artifact #" . $tuleap_reference->getId() . " found, cross-reference will be added for each project the GitLab repository is integrated in.");
+            $this->logger->info(
+                "|_ Reference to Tuleap artifact #{$tuleap_reference->getId()} found, cross-reference will be added for each project the GitLab repository is integrated in."
+            );
 
             try {
-                $external_reference = $this->tuleap_reference_retriever->retrieveTuleapReference($tuleap_reference->getId());
+                $external_reference = $this->tuleap_reference_retriever->retrieveTuleapReference(
+                    $tuleap_reference->getId()
+                );
 
                 assert($external_reference instanceof \Reference);
 
@@ -123,9 +129,11 @@ class PostMergeRequestWebhookActionProcessor
             }
         }
 
-        if (! empty($good_references)) {
-            // Save merge request data if there is at least 1 good artifact reference in the merge request description and title
+        if ($this->shouldWeSaveMergeRequestData($good_references, $gitlab_repository, $webhook_data)) {
             $this->saveMergeRequestData($gitlab_repository, $webhook_data);
+        }
+
+        if (! empty($good_references)) {
             $this->commenter->addCommentOnMergeRequest($webhook_data, $gitlab_repository, $good_references);
         }
     }
@@ -179,5 +187,27 @@ class PostMergeRequestWebhookActionProcessor
         PostMergeRequestWebhookData $merge_request_webhook_data
     ): string {
         return $gitlab_repository->getName() . '/' . $merge_request_webhook_data->getMergeRequestId();
+    }
+
+    /**
+     * @param WebhookTuleapReference[] $good_references
+     */
+    private function shouldWeSaveMergeRequestData(
+        array $good_references,
+        GitlabRepository $gitlab_repository,
+        PostMergeRequestWebhookData $webhook_data
+    ): bool {
+        if (! empty($good_references)) {
+            return true;
+        }
+
+        $already_saved_merge_request_row = $this->merge_request_reference_dao->searchMergeRequestInRepositoryWithId(
+            $gitlab_repository->getId(),
+            $webhook_data->getMergeRequestId()
+        );
+
+        $is_merge_request_already_saved = ! empty($already_saved_merge_request_row);
+
+        return $is_merge_request_already_saved;
     }
 }
