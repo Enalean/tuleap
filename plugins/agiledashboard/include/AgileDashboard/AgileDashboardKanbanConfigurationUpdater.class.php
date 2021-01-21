@@ -60,7 +60,7 @@ class AgileDashboardKanbanConfigurationUpdater
 
         $this->config_manager->updateConfiguration(
             $this->project_id,
-            $this->config_manager->scrumIsActivatedForProject($this->project_id),
+            $this->config_manager->scrumIsActivatedForProject($this->request->getProject()),
             $kanban_is_activated,
             $this->config_manager->getScrumTitle($this->project_id),
             $this->getKanbanTitle()

@@ -299,7 +299,8 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
     private function getConfigurationManager()
     {
         return new AgileDashboard_ConfigurationManager(
-            new AgileDashboard_ConfigurationDao()
+            new AgileDashboard_ConfigurationDao(),
+            EventManager::instance()
         );
     }
 

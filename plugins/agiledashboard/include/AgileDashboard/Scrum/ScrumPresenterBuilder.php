@@ -90,7 +90,7 @@ class ScrumPresenterBuilder
         $root_planning_name          = '';
         $potential_planning_trackers = [];
         $root_planning               = $this->planning_factory->getRootPlanning($user, $group_id) ?: null;
-        $scrum_activated             = $this->config_manager->scrumIsActivatedForProject($group_id);
+        $scrum_activated             = $this->config_manager->scrumIsActivatedForProject($project);
 
         if ($root_planning) {
             $can_create_planning = count($this->planning_factory->getAvailablePlanningTrackers($user, $group_id)) > 0;

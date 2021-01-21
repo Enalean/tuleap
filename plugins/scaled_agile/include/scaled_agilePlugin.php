@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\ConfigurationCheckDelegation;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
@@ -109,6 +110,7 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook('tracker_usage', 'trackerUsage');
         $this->addHook('project_is_deleted', 'projectIsDeleted');
         $this->addHook(ConfigurationCheckDelegation::NAME);
+        $this->addHook(BlockScrumAccess::NAME);
         $this->addHook(TrackerHierarchyDelegation::NAME);
         $this->addHook(OriginalProjectCollector::NAME);
         $this->addHook(Event::SERVICE_CLASSNAMES);
@@ -381,6 +383,14 @@ final class scaled_agilePlugin extends Plugin
         } catch (ConfigurationUserCanNotSeeProgramException | ProgramNotFoundException | UserCanNotAccessToProgramException | ProjectIsNotAProgramException $e) {
             $configuration_check_delegation->disablePlanning();
             $this->getLogger()->debug($e->getMessage());
+        }
+    }
+
+    public function blockScrumAccess(BlockScrumAccess $block_scrum_access): void
+    {
+        $program_store = new ProgramDao();
+        if ($program_store->isProjectAProgramProject((int) $block_scrum_access->getProject()->getID())) {
+            $block_scrum_access->disableScrumAccess();
         }
     }
 
