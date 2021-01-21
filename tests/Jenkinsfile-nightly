@@ -39,6 +39,7 @@ pipeline {
                         sh 'tools/utils/scripts/generated-files-builder.sh dev'
                     }
                 }
+                script { actions = load 'sources/tests/actions.groovy' }
             }
         }
 
