@@ -70,6 +70,12 @@ export default {
     setUnlinkGitlabRepository(state, repository) {
         state.unlink_gitlab_repository = repository;
     },
+    setEditAccessTokenGitlabRepositoryModal(state, modal) {
+        state.edit_access_token_gitlab_repository_modal = modal;
+    },
+    setEditAccessTokenGitlabRepository(state, repository) {
+        state.edit_access_token_gitlab_repository = repository;
+    },
     setDisplayMode(state, new_mode) {
         if (isUnknownMode(new_mode)) {
             state.display_mode = REPOSITORIES_SORTED_BY_LAST_UPDATE;

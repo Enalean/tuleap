@@ -17,7 +17,12 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  */
 
-import { credentialsAreEmpty, serverUrlIsValid, formatUrl } from "./gitlab-credentials-helper";
+import {
+    credentialsAreEmpty,
+    serverUrlIsValid,
+    formatUrlToGetAllProject,
+    formatUrlToGetProjectFromId,
+} from "./gitlab-credentials-helper";
 import { GitLabCredentials } from "../type";
 
 describe("Gitlab Credentials Helper", () => {
@@ -75,11 +80,11 @@ describe("Gitlab Credentials Helper", () => {
             expect(serverUrlIsValid(credentials.server_url)).toBeTruthy();
         });
     });
-    describe("formatUrl", () => {
+    describe("formatUrlToGetAllProject", () => {
         it("When URL finishes with /, Then url is good", () => {
             const url = "https://example.com/";
 
-            expect(formatUrl(url)).toEqual(
+            expect(formatUrlToGetAllProject(url)).toEqual(
                 "https://example.com/api/v4/projects?membership=true&per_page=20&min_access_level=40"
             );
         });
@@ -87,8 +92,25 @@ describe("Gitlab Credentials Helper", () => {
         it("When URL doesn't finish with /, Then url is good", () => {
             const url = "https://example.com";
 
-            expect(formatUrl(url)).toEqual(
+            expect(formatUrlToGetAllProject(url)).toEqual(
                 "https://example.com/api/v4/projects?membership=true&per_page=20&min_access_level=40"
+            );
+        });
+    });
+    describe("formatUrlToGetProjectFromId", () => {
+        it("When URL finishes with /, Then url is good", () => {
+            const url = "https://example.com/";
+
+            expect(formatUrlToGetProjectFromId(url, 1)).toEqual(
+                "https://example.com/api/v4/projects/1"
+            );
+        });
+
+        it("When URL doesn't finish with /, Then url is good", () => {
+            const url = "https://example.com";
+
+            expect(formatUrlToGetProjectFromId(url, 1)).toEqual(
+                "https://example.com/api/v4/projects/1"
             );
         });
     });

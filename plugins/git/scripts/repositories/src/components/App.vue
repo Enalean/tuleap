@@ -31,6 +31,7 @@
             <git-repository-create />
             <gitlab-repository-modal />
             <unlink-repository-gitlab-modal />
+            <edit-access-token-gitlab-modal />
             <folder-repository-list v-if="isFolderDisplayMode" />
             <repository-list v-else />
             <repository-list-spinner />
@@ -55,6 +56,7 @@ import { PROJECT_KEY } from "../constants.js";
 import { getExternalPlugins } from "../repository-list-presenter";
 import JenkinsServers from "./ActionBar/JenkinsServers.vue";
 import GitlabRepositoryModal from "./GitlabModal/CreateGitlabLinkModal/GitlabRepositoryModal.vue";
+import EditAccessTokenGitlabModal from "./GitlabModal/EditAccessTokenGitlabModal/EditAccessTokenGitlabModal.vue";
 import UnlinkRepositoryGitlabModal from "./GitlabModal/UnlinkGitlabRepositoryModal/UnlinkRepositoryGitlabModal.vue";
 import SuccessMessage from "./SuccessMessage";
 
@@ -65,6 +67,7 @@ export default {
         SuccessMessage,
         GitlabRepositoryModal,
         UnlinkRepositoryGitlabModal,
+        EditAccessTokenGitlabModal,
         ErrorMessage,
         RepositoryList,
         ActionBar,

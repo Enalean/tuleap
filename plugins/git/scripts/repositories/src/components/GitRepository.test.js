@@ -75,7 +75,7 @@ describe("GitRepository", () => {
 
         expect(wrapper.find("[data-test=dropdown-gitlab-administration-1]").exists()).toBeTruthy();
         expect(
-            wrapper.find("[data-test=dropdown-gitlab-administration-menu-options-1]").exists()
+            wrapper.find("[data-test=dropdown-gitlab-administration-menu-options]").exists()
         ).toBeTruthy();
     });
 
@@ -256,5 +256,58 @@ describe("GitRepository", () => {
 
         expect(wrapper.find("[data-test=repository_name]").text()).not.toContain("MyPath/");
         expect(wrapper.find("[data-test=repository_name]").text()).toContain("MyRepo");
+    });
+
+    it("When repository is GitLab and user clicks to unlink, Then modal opens", async () => {
+        const repository = {
+            id: 1,
+            normalized_path: "MyPath/MyRepo",
+            description: "This is my description.",
+            path_without_project: "MyPath",
+            label: "MyRepo",
+            last_update_date: "2020-10-28T15:13:13+01:00",
+            additional_information: [],
+            gitlab_data: {
+                gitlab_repository_url: "https://example.com/MyPath/MyRepo",
+                gitlab_repository_id: 1,
+            },
+        };
+        propsData = { repository };
+
+        const wrapper = instantiateComponent();
+
+        wrapper.find("[data-test=unlink-gitlab-repository-1]").trigger("click");
+
+        await wrapper.vm.$nextTick();
+
+        expect(store.dispatch).toHaveBeenCalledWith("showDeleteGitlabRepositoryModal", repository);
+    });
+
+    it("When repository is GitLab and user clicks to edit token, Then modal opens", async () => {
+        const repository = {
+            id: 1,
+            normalized_path: "MyPath/MyRepo",
+            description: "This is my description.",
+            path_without_project: "MyPath",
+            label: "MyRepo",
+            last_update_date: "2020-10-28T15:13:13+01:00",
+            additional_information: [],
+            gitlab_data: {
+                gitlab_repository_url: "https://example.com/MyPath/MyRepo",
+                gitlab_repository_id: 1,
+            },
+        };
+        propsData = { repository };
+
+        const wrapper = instantiateComponent();
+
+        wrapper.find("[data-test=edit-access-token-gitlab-repository]").trigger("click");
+
+        await wrapper.vm.$nextTick();
+
+        expect(store.dispatch).toHaveBeenCalledWith(
+            "showEditAccessTokenGitlabRepositoryModal",
+            repository
+        );
     });
 });
