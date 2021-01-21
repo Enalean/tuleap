@@ -24,7 +24,7 @@ import { createScaledAgileLocalVue } from "../helpers/local-vue-for-test";
 describe("App", () => {
     let component_options: ShallowMountOptions<App>;
 
-    it("Displays the empty state", async () => {
+    it("Displays the backlog section", async () => {
         component_options = {
             propsData: {
                 project_public_name: "Public name",

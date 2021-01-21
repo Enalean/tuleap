@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/core": "file://../../src",
+    "@tuleap/date-helper": "file:../../src/scripts/lib/date-helper",
     "vue": "^2.6.12",
     "vuex": "^3.6.0",
     "vuex-class": "^0.3.2"

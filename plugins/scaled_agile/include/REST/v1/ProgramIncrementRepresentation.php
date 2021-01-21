@@ -31,6 +31,10 @@ use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrement;
 final class ProgramIncrementRepresentation
 {
     /**
+     * @var int
+     */
+    public $id;
+    /**
      * @var string
      */
     public $title;
@@ -47,8 +51,9 @@ final class ProgramIncrementRepresentation
      */
     public $end_date;
 
-    private function __construct(string $title, ?string $status, ?int $start_date, ?int $end_date)
+    private function __construct(int $id, string $title, ?string $status, ?int $start_date, ?int $end_date)
     {
+        $this->id         = $id;
         $this->title      = $title;
         $this->status     = $status;
         $this->start_date = JsonCast::toDate($start_date);
@@ -58,6 +63,7 @@ final class ProgramIncrementRepresentation
     public static function fromProgramIncrement(ProgramIncrement $program_increment): self
     {
         return new self(
+            $program_increment->id,
             $program_increment->title,
             $program_increment->status,
             $program_increment->start_date,

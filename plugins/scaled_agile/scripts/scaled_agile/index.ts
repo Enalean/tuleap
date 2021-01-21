@@ -31,6 +31,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    const locale = document.body.dataset.userLocale;
+    if (locale === undefined) {
+        throw new Error("Unable to load user locale");
+    }
+
+    Vue.config.language = locale;
+
     if (!vue_mount_point.dataset.projectName) {
         throw new Error("Missing projectName dataset");
     }
@@ -67,7 +74,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         project_privacy,
         project_flags,
         program_id,
-        accessibility
+        accessibility,
+        locale.replace("_", "-")
     );
 
     await initVueGettext(

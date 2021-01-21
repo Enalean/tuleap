@@ -1,0 +1,85 @@
+/**
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.program-increment-display {
+    margin: 0 $tlp-small-spacing $tlp-large-spacing 0;
+}
+
+.program-increment-title {
+    margin: 0 0 $tlp-large-spacing 0;
+}
+
+.program-increment-header {
+    display: flex;
+    position: sticky;
+    z-index: 2;
+    top: 44px;
+    align-items: center;
+    transition: background .1s linear;
+    border-radius: 0 0 3px 3px;
+    background: $tlp-ui-white;
+    box-shadow: inset 1px 1px 1px $tlp-ui-border-normal;
+    cursor: pointer;
+
+    &:hover {
+        transition: background .1s linear;
+        background: darken($tlp-ui-white, 2%);
+    }
+}
+
+.program-increment-header-label {
+    flex: 0 0 auto;
+    color: $tlp-ui-dimmed;
+}
+
+.program-increment-header-dates {
+    margin: 0 $tlp-small-spacing 0 0;
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+}
+
+.program-increment-header-spacer {
+    flex: 1 1 auto;
+    min-width: $tlp-medium-spacing;
+}
+
+.program-increment-info {
+    display: flex;
+    align-items: center;
+    padding: $tlp-small-spacing $tlp-medium-spacing;
+    border-radius: 0 0 3px 3px;
+    background: $tlp-ui-white;
+    box-shadow: inset 1px 1px 1px $tlp-ui-border-normal;
+}
+
+.program-increment-content {
+    position: relative;
+    border-radius: 0 0 3px 3px;
+    background: darken($tlp-ui-white, 2%);
+    box-shadow: inset 1px 1px 1px $tlp-ui-border-normal;
+}
+
+.program-increment-content-items {
+    min-height: 70px;
+    text-align: center;
+}
+
+#program-increment-error {
+    margin: 0 $tlp-large-spacing 0 0;
+}

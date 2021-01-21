@@ -28,6 +28,7 @@ let project_privacy: ProjectPrivacy;
 let project_flags: Array<ProjectFlag>;
 let id_program: number;
 let user_with_accessibility_mode: boolean;
+let locale: string;
 
 export function build(
     public_name: string,
@@ -35,7 +36,8 @@ export function build(
     privacy: ProjectPrivacy,
     flags: Array<ProjectFlag>,
     program_id: number,
-    accessibility: boolean
+    accessibility: boolean,
+    user_locale: string
 ): void {
     project_public_name = public_name;
     project_short_name = short_name;
@@ -43,6 +45,7 @@ export function build(
     project_flags = flags;
     id_program = program_id;
     user_with_accessibility_mode = accessibility;
+    locale = user_locale;
 }
 
 export function getProjectPublicName(): string {
@@ -67,4 +70,8 @@ export function programId(): number {
 
 export function userHasAccessibilityMode(): boolean {
     return user_with_accessibility_mode;
+}
+
+export function getUserLocale(): string {
+    return locale;
 }

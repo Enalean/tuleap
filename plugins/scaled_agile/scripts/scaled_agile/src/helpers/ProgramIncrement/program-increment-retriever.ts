@@ -17,29 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function formatFromPhpToMoment(php_date_format: string): string {
-    switch (php_date_format) {
-        case "d/m/Y":
-            return "DD/MM/YYYY";
-        case "d/m/Y H:i":
-            return "DD/MM/YYYY HH:mm";
-        case "Y-m-d":
-            return "YYYY-MM-DD";
-        case "Y-m-d H:i":
-            return "YYYY-MM-DD HH:mm";
-        default:
-            throw new Error("Only french and english date are supported for display");
-    }
+import { recursiveGet } from "tlp";
+
+export interface ProgramIncrement {
+    id: number;
+    title: string;
+    status: string;
+    start_date: string | null;
+    end_date: string | null;
 }
 
-export function formatDateYearMonthDay(user_locale: string, date: string | null): string {
-    if (!(date && Date.parse(date))) {
-        return "";
-    }
-
-    return new Date(date).toLocaleDateString(user_locale, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
+export function getProgramIncrements(program_id: number): Promise<ProgramIncrement[]> {
+    return recursiveGet(`/api/v1/projects/${encodeURIComponent(program_id)}/program_increments`, {
+        params: {
+            limit: 50,
+            offset: 0,
+        },
     });
 }

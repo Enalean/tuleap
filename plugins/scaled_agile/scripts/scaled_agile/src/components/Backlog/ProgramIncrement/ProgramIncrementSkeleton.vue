@@ -17,20 +17,9 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template>
-    <div>
-        <h2 v-translate>Program Increment</h2>
-        <empty-state />
+<template functional>
+    <div class="tlp-card tlp-skeleton-card" id="element-skeleton">
+        <span class="tlp-skeleton-text element-skeleton-xref"></span>
+        <span class="tlp-skeleton-text element-skeleton-title"></span>
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import EmptyState from "./EmptyState.vue";
-
-@Component({
-    components: { EmptyState },
-})
-export default class ProgramIncrement extends Vue {}
-</script>

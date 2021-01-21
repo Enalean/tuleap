@@ -18,23 +18,23 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import ToBePlanned from "./ToBePlanned.vue";
-import * as retriever from "../../../helpers/ToBePlanned/element-to-plan-retriever";
+import ProgramIncrementList from "./ProgramIncrementList.vue";
+import * as retriever from "../../../helpers/ProgramIncrement/program-increment-retriever";
 import * as configuration from "../../../configuration";
-import { ToBePlannedElement } from "../../../helpers/ToBePlanned/element-to-plan-retriever";
 import { createScaledAgileLocalVue } from "../../../helpers/local-vue-for-test";
 import { DefaultData } from "vue/types/options";
+import { ProgramIncrement } from "../../../helpers/ProgramIncrement/program-increment-retriever";
 
-describe("ToBePlanned", () => {
+describe("ProgramIncrementList", () => {
     it("Displays the empty state when no artifact are found", async () => {
-        jest.spyOn(retriever, "getToBePlannedElements").mockResolvedValue([]);
+        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([]);
         jest.spyOn(configuration, "programId").mockImplementation(() => 202);
 
-        const wrapper = shallowMount(ToBePlanned, {
+        const wrapper = shallowMount(ProgramIncrementList, {
             localVue: await createScaledAgileLocalVue(),
-            data(): DefaultData<ToBePlanned> {
+            data(): DefaultData<ProgramIncrementList> {
                 return {
-                    to_be_planned_elements: [],
+                    program_increments: [],
                     is_loading: false,
                     has_error: false,
                 };
@@ -42,19 +42,19 @@ describe("ToBePlanned", () => {
         });
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=to-be-planned-skeleton]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=to-be-planned-elements]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=to-be-planned-error]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=program-increment-skeleton]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=program-increments]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=program-increment-error]").exists()).toBe(false);
     });
 
     it("Displays an error when rest route fail", async () => {
-        jest.spyOn(retriever, "getToBePlannedElements").mockResolvedValue([]);
+        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([]);
         jest.spyOn(configuration, "programId").mockImplementation(() => 202);
-        const wrapper = shallowMount(ToBePlanned, {
+        const wrapper = shallowMount(ProgramIncrementList, {
             localVue: await createScaledAgileLocalVue(),
-            data(): DefaultData<ToBePlanned> {
+            data(): DefaultData<ProgramIncrementList> {
                 return {
-                    to_be_planned_elements: [],
+                    program_increments: [],
                     is_loading: false,
                     has_error: true,
                     error_message: "Oups, something happened",
@@ -63,38 +63,35 @@ describe("ToBePlanned", () => {
         });
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=to-be-planned-skeleton]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=to-be-planned-elements]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=to-be-planned-error]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=program-increment-skeleton]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=program-increments]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=program-increment-error]").exists()).toBe(true);
     });
 
     it("Displays the elements to be planned", async () => {
         const element_one = {
-            artifact_id: 1,
-            artifact_title: "My artifact",
-            tracker: {
-                label: "bug",
-            },
-        } as ToBePlannedElement;
+            id: 1,
+            title: "PI 1",
+            status: '"To be Planned',
+            start_date: null,
+            end_date: null,
+        } as ProgramIncrement;
         const element_two = {
-            artifact_id: 2,
-            artifact_title: "My user story",
-            tracker: {
-                label: "user_stories",
-            },
-        } as ToBePlannedElement;
+            title: "PI 2",
+            status: "Planned",
+            start_date: "2021-01-20T00:00:00+01:00",
+            end_date: "2021-01-20T00:00:00+01:00",
+            id: 2,
+        } as ProgramIncrement;
 
-        jest.spyOn(retriever, "getToBePlannedElements").mockResolvedValue([
-            element_one,
-            element_two,
-        ]);
+        jest.spyOn(retriever, "getProgramIncrements").mockResolvedValue([element_one, element_two]);
         jest.spyOn(configuration, "programId").mockImplementation(() => 202);
 
-        const wrapper = shallowMount(ToBePlanned, {
+        const wrapper = shallowMount(ProgramIncrementList, {
             localVue: await createScaledAgileLocalVue(),
-            data(): DefaultData<ToBePlanned> {
+            data(): DefaultData<ProgramIncrementList> {
                 return {
-                    to_be_planned_elements: [element_one, element_two],
+                    program_increments: [element_one, element_two],
                     is_loading: false,
                     has_error: false,
                     error_message: "",
@@ -103,8 +100,8 @@ describe("ToBePlanned", () => {
         });
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=to-be-planned-skeleton]").exists()).toBe(false);
-        expect(wrapper.find("[data-test=to-be-planned-elements]").exists()).toBe(true);
-        expect(wrapper.find("[data-test=to-be-planned-error]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=program-increment-skeleton]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=program-increments]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=program-increment-error]").exists()).toBe(false);
     });
 });
