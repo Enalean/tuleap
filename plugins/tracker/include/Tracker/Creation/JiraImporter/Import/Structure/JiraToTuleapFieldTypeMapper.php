@@ -389,7 +389,7 @@ class JiraToTuleapFieldTypeMapper
                     $this->logger->debug(" |_ Field " . $id . " (" . $jira_type . ") ignored ");
                     break;
                 default:
-                    $this->error_collector->addError("Unknonw mapping type " . $jira_type);
+                    $this->error_collector->addError("Unknown mapping type " . $jira_type);
             }
         }
     }

@@ -33,9 +33,10 @@ class ContainersXMLCollectionBuilder
     public const DETAILS_FIELDSET_NAME    = 'details_fieldset';
     public const CUSTOM_FIELDSET_NAME     = 'custom_fieldset';
     public const ATTACHMENT_FIELDSET_NAME = 'attachment_fieldset';
+    public const LINKS_FIELDSET_NAME      = 'links_fieldset';
 
-    public const LEFT_COLUMN_NAME  = 'left_column';
-    public const RIGHT_COLUMN_NAME = 'right_column';
+    public const LEFT_COLUMN_NAME    = 'left_column';
+    public const RIGHT_COLUMN_NAME   = 'right_column';
 
     /**
      * @var XML_SimpleXMLCDATAFactory
@@ -79,6 +80,14 @@ class ContainersXMLCollectionBuilder
             $collection->getNextId(),
         );
 
+        $lins_fieldset_node = $this->buildFieldsetXMLNode(
+            $form_elements,
+            self::LINKS_FIELDSET_NAME,
+            'Links',
+            4,
+            $collection->getNextId(),
+        );
+
         $collection->addContainerInCollection(
             self::DETAILS_FIELDSET_NAME,
             $details_fieldset_node
@@ -92,6 +101,11 @@ class ContainersXMLCollectionBuilder
         $collection->addContainerInCollection(
             self::ATTACHMENT_FIELDSET_NAME,
             $attachment_fieldset_node
+        );
+
+        $collection->addContainerInCollection(
+            self::LINKS_FIELDSET_NAME,
+            $lins_fieldset_node,
         );
     }
 
