@@ -90,6 +90,38 @@ final class CreateProjectFromJira
 
     public function create(LoggerInterface $logger, ClientWrapper $jira_client, JiraCredentials $jira_credentials, string $jira_project, string $shortname, string $fullname): \Project
     {
+        try {
+            $xml_element = $this->generateFromJira($logger, $jira_client, $jira_credentials, $jira_project, $shortname, $fullname);
+            $archive = new JiraProjectArchive($xml_element);
+            return $this->createProject($logger, $xml_element, $archive);
+        } catch (\XML_ParseException $exception) {
+            $this->logParseErrors($logger, $exception);
+            throw $exception;
+        }
+    }
+
+    public function generateArchive(LoggerInterface $logger, ClientWrapper $jira_client, JiraCredentials $jira_credentials, string $jira_project, string $shortname, string $fullname, string $archive_path): void
+    {
+        try {
+            $xml_element = $this->generateFromJira($logger, $jira_client, $jira_credentials, $jira_project, $shortname, $fullname);
+            $xml_element->saveXML($archive_path);
+        } catch (\XML_ParseException $exception) {
+            $this->logParseErrors($logger, $exception);
+            throw $exception;
+        }
+    }
+
+    private function logParseErrors(LoggerInterface $logger, \XML_ParseException $exception): void
+    {
+        $logger->debug($exception->getIndentedXml());
+        foreach ($exception->getErrors() as $error) {
+            $logger->error($error->getMessage() . ' (Type: ' . $error->getType() . ') Line: ' . $error->getLine() . ' Column: ' . $error->getColumn());
+            $logger->error('Error @ line' . $exception->getSourceXMLForError($error));
+        }
+    }
+
+    private function generateFromJira(LoggerInterface $logger, ClientWrapper $jira_client, JiraCredentials $jira_credentials, string $jira_project, string $shortname, string $fullname): \SimpleXMLElement
+    {
         $jira_trackers = $this->jira_tracker_builder->build($jira_client, $jira_project);
         if (count($jira_trackers) === 0) {
             throw new \RuntimeException("There are no Jira issue types to import");
@@ -144,17 +176,7 @@ final class CreateProjectFromJira
             $jira_exporter->exportJiraToXml($tracker_xml, $jira_credentials->getJiraUrl(), $jira_project, $jira_tracker['name'], $field_id_generator);
         }
 
-        try {
-            $archive = new JiraProjectArchive($xml_element);
-            return $this->createProject($logger, $xml_element, $archive);
-        } catch (\XML_ParseException $exception) {
-            $logger->debug($exception->getIndentedXml());
-            foreach ($exception->getErrors() as $error) {
-                $logger->error($error->getMessage() . ' (Type: ' . $error->getType() . ') Line: ' . $error->getLine() . ' Column: ' . $error->getColumn());
-                $logger->error('Error @ line' . $exception->getSourceXMLForError($error));
-            }
-            throw $exception;
-        }
+        return $xml_element;
     }
 
     /**
