@@ -75,6 +75,7 @@ final class ClientWrapperTest extends \PHPUnit\Framework\TestCase
         $response = \Mockery::mock(ResponseInterface::class);
 
         $response->shouldReceive('getStatusCode')->andReturn(403)->twice();
+        $response->shouldReceive('getBody')->andReturn('');
         $response->shouldReceive('getReasonPhrase')->andReturn("Forbidden")->once();
         $this->factory->shouldReceive('createRequest')
             ->withArgs(['GET', "https://example.com/rest/api/latest/project"])->once();

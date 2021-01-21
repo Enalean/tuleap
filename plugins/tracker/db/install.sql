@@ -981,6 +981,7 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_pending_jira_import (
     encrypted_jira_token BLOB NOT NULL,
     jira_project_id TEXT NOT NULL,
     jira_issue_type_name TEXT NOT NULL,
+    jira_issue_type_id TEXT NOT NULL,
     tracker_name TEXT NOT NULL,
     tracker_shortname TEXT NOT NULL,
     tracker_color VARCHAR(64) NOT NULL,

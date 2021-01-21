@@ -155,11 +155,11 @@ final class CreateProjectFromJira
 
         $trackers_xml = $xml_element->addChild('trackers');
 
-
         foreach ($jira_trackers as $jira_tracker) {
+            $logger->info(sprintf("Import tracker %s", $jira_tracker['name']));
+
             $tracker_fullname = $jira_tracker['name'];
             $tracker_itemname = str_replace('-', '_', $jira_tracker['name']);
-            $logger->info(sprintf("Import tracker %s", $jira_tracker['name']));
 
             $tracker_xml = $trackers_xml->addChild('tracker');
             $tracker_xml->addAttribute('instantiate_for_new_projects', '0');
@@ -173,7 +173,7 @@ final class CreateProjectFromJira
 
             $tracker_xml->addChild('cannedResponses');
 
-            $jira_exporter->exportJiraToXml($tracker_xml, $jira_credentials->getJiraUrl(), $jira_project, $jira_tracker['name'], $field_id_generator);
+            $jira_exporter->exportJiraToXml($tracker_xml, $jira_credentials->getJiraUrl(), $jira_project, $jira_tracker['id'], $field_id_generator);
         }
 
         return $xml_element;

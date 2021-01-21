@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use Psr\Http\Message\ResponseInterface;
+
 class JiraConnectionException extends \Exception
 {
     /**
@@ -63,6 +65,40 @@ class JiraConnectionException extends \Exception
                 'tuleap-tracker',
                 "Can not connect to Jira server, please check your Jira credentials."
             )
+        );
+    }
+
+    public static function responseIsNotOk(ResponseInterface $response): self
+    {
+        $jira_errors   = [];
+        $jira_warnings = [];
+        try {
+            $body = \json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            if (isset($body['errorMessages']) && count($body['errorMessages'])) {
+                $jira_errors = $body['errorMessages'];
+            }
+            if (isset($body['warningMessages']) && count($body['warningMessages'])) {
+                $jira_warnings = $body['warningMessages'];
+            }
+        } catch (\JsonException $exception) {
+            return new self(
+                sprintf(
+                    'Query was not successful (code: %d, message: "%s"). Error response cannot be read, invalid json',
+                    $response->getStatusCode(),
+                    $response->getReasonPhrase(),
+                ),
+                ''
+            );
+        }
+        return new self(
+            sprintf(
+                'Query was not successful (code: %d, message: "%s"). Jira errors:' . PHP_EOL . '%s' . PHP_EOL . 'Jira warnings:' . PHP_EOL . '%s',
+                $response->getStatusCode(),
+                $response->getReasonPhrase(),
+                implode(PHP_EOL, $jira_errors),
+                implode(PHP_EOL, $jira_warnings),
+            ),
+            ''
         );
     }
 

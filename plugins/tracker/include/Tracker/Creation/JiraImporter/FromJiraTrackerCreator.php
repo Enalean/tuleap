@@ -136,12 +136,12 @@ class FromJiraTrackerCreator
         string $jira_username,
         string $jira_url,
         string $jira_project_id,
-        string $jira_issue_type_name,
+        string $jira_issue_type_id,
         \PFUser $user
     ): Tracker {
         $this->logger->info("Begin import from jira.");
         $this->logger->info("Selected jira project: $jira_project_id");
-        $this->logger->info("Selected jira issue type: $jira_issue_type_name");
+        $this->logger->info("Selected jira issue type: $jira_issue_type_id");
 
         $this->creation_data_checker->checkAtProjectCreation((int) $project->getID(), $name, $itemname);
         $jira_exporter = $this->getJiraExporter($jira_token, $jira_username, $jira_url);
@@ -160,7 +160,7 @@ class FromJiraTrackerCreator
 
         $tracker_xml->addChild('cannedResponses');
 
-        $jira_exporter->exportJiraToXml($tracker_xml, $jira_url, $jira_project_id, $jira_issue_type_name, new FieldAndValueIDGenerator());
+        $jira_exporter->exportJiraToXml($tracker_xml, $jira_url, $jira_project_id, $jira_issue_type_id, new FieldAndValueIDGenerator());
 
         try {
             $trackers = $this->tracker_xml_import->import(

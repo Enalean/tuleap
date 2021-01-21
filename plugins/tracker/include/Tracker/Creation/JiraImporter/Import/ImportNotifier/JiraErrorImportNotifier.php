@@ -74,6 +74,7 @@ class JiraErrorImportNotifier
                     'jira_server'          => $pending_jira_import->getJiraServer(),
                     'jira_project_id'      => $pending_jira_import->getJiraProjectId(),
                     'jira_issue_type_name' => $pending_jira_import->getJiraIssueTypeName(),
+                    'jira_issue_type_id'   => $pending_jira_import->getJiraIssueTypeId(),
                     'tracker_name'         => $pending_jira_import->getTrackerName(),
                     'tracker_shortname'    => $pending_jira_import->getTrackerShortname(),
                     'message'              => $message,

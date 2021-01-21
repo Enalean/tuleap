@@ -65,7 +65,7 @@ class StatusValuesCollectionTest extends TestCase
     public function testItInitsCollections(): void
     {
         $jira_project_key = 'key';
-        $jira_issue_type  = 'bug';
+        $jira_issue_type  = '10002';
 
         $this->logger->shouldReceive('debug');
 

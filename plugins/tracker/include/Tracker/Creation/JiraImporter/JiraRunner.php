@@ -172,7 +172,7 @@ class JiraRunner
                 $pending_import->getJiraUser(),
                 $pending_import->getJiraServer(),
                 $pending_import->getJiraProjectId(),
-                $pending_import->getJiraIssueTypeName(),
+                $pending_import->getJiraIssueTypeId(),
                 $pending_import->getUser()
             );
             $this->success_notifier->warnUserAboutSuccess($pending_import, $tracker, $this->jira_user_on_tuleap_cache);

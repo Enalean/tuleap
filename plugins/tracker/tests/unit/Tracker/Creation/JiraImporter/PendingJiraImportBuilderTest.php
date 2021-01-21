@@ -157,6 +157,7 @@ class PendingJiraImportBuilderTest extends TestCase
             'created_on'           => 0,
             'jira_server'          => '',
             'jira_issue_type_name' => '',
+            'jira_issue_type_id'   => '',
             'tracker_name'         => '',
             'tracker_shortname'    => '',
             'project_id'           => 42,

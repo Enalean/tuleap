@@ -40,10 +40,10 @@ class JiraFieldRetriever
     /**
      * @return JiraFieldAPIRepresentation[]
      */
-    public function getAllJiraFields(string $jira_project_key, string $jira_issue_type_name, IDGenerator $id_generator): array
+    public function getAllJiraFields(string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): array
     {
         $meta_url = "issue/createmeta?projectKeys=" . urlencode($jira_project_key) .
-            "&issuetypeNames=" . urlencode($jira_issue_type_name) . "&expand=projects.issuetypes.fields";
+            "&issuetypeIds=" . urlencode($jira_issue_type_id) . "&expand=projects.issuetypes.fields";
 
         $project_meta_content = $this->wrapper->getUrl($meta_url);
 
