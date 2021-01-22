@@ -114,7 +114,7 @@ class WikiAttachment /* implements UGroupPermission */
             $gid = $this->gid;
         }
 
-        $dao = WikiAttachment::getDao();
+        $dao = self::getDao();
         $dar = $dao->getList($gid);
 
         while ($row = $dar->getRow()) {
@@ -157,7 +157,7 @@ class WikiAttachment /* implements UGroupPermission */
             }
         }
 
-        $dao = WikiAttachment::getDao();
+        $dao = self::getDao();
         $dar = $dao->getListWithCounterOrderedByRevDate($gid);
 
         $i = 0;
@@ -357,7 +357,7 @@ class WikiAttachment /* implements UGroupPermission */
      */
     public function isActive()
     {
-        $dao = WikiAttachment::getDao();
+        $dao = self::getDao();
         $dar = $dao->read($this->id);
         if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
@@ -368,7 +368,7 @@ class WikiAttachment /* implements UGroupPermission */
 
     public function dbadd()
     {
-        $dao = WikiAttachment::getDao();
+        $dao = self::getDao();
         $created = $dao->create($this->gid, $this->getFilename(), $this->getFilesystemName());
 
         if (! $created) {
@@ -411,7 +411,7 @@ class WikiAttachment /* implements UGroupPermission */
     public function getId()
     {
         if (! is_numeric($this->id)) {
-            $dao = WikiAttachment::getDao();
+            $dao = self::getDao();
             $dar = $dao->getIdFromFilename($this->gid, $this->getFilename());
 
             if ($dar->rowCount() > 1) {
@@ -472,7 +472,7 @@ class WikiAttachment /* implements UGroupPermission */
     public function initWithId($id = 0)
     {
         $this->id = (int) $id;
-        $dao = WikiAttachment::getDao();
+        $dao = self::getDao();
         $dar = $dao->read($this->id);
         $this->setFromRow($dar->getRow());
     }

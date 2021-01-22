@@ -241,7 +241,7 @@ class Archive
      */
     public function GetExtension() // @codingStandardsIgnoreLine
     {
-        return Archive::FormatToExtension($this->format);
+        return self::FormatToExtension($this->format);
     }
 
     /**

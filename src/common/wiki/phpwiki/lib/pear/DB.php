@@ -259,7 +259,7 @@ class DB
         $obj = new DB_mysql_pdo();
 
         $err = $obj->connect();
-        if (DB::isError($err)) {
+        if (self::isError($err)) {
             return $err;
         }
 
@@ -389,7 +389,7 @@ class DB
             ];
         }
 
-        if (DB::isError($value)) {
+        if (self::isError($value)) {
             $value = $value->getCode();
         }
 

@@ -81,7 +81,7 @@ class SaveLicenseAgreementController implements DispatchableWithRequest
             new LicenseAgreementFactory(
                 new LicenseAgreementDao()
             ),
-            SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
+            self::getCSRFTokenSynchronizer(),
         );
     }
 

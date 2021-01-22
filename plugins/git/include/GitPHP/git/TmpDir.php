@@ -110,7 +110,7 @@ class TmpDir
         $this->dir = Util::AddSlash(Config::GetInstance()->GetValue('gittmp'));
 
         if (empty($this->dir)) {
-            $this->dir = TmpDir::SystemTmpDir();
+            $this->dir = self::SystemTmpDir();
         }
 
         if (empty($this->dir)) {

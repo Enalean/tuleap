@@ -104,7 +104,7 @@ class AsynchronousArtifactsDeletionActionsRunner
         try {
             $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
             $queue->pushSinglePersistentMessage(
-                AsynchronousArtifactsDeletionActionsRunner::TOPIC,
+                self::TOPIC,
                 [
                     'artifact_id' => (int) $artifact->getId(),
                     'user_id'     => (int) $user->getId(),

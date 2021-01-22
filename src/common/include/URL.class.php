@@ -25,7 +25,7 @@ class URL
     /**
     * @see http://www.ietf.org/rfc/rfc2396.txt Annex B
     */
-    /* static */ public function parse($url)
+    public static function parse($url)
     {
         $components = [];
         preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i', $url, $components);
@@ -33,13 +33,13 @@ class URL
     }
     /* static */ public function getHost($url)
     {
-        $components = URL::parse($url);
+        $components = self::parse($url);
         return $components[4];
     }
 
     public static function getScheme($url)
     {
-        $components = URL::parse($url);
+        $components = self::parse($url);
         return $components[2];
     }
     /**

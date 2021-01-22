@@ -231,9 +231,9 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
             'value'
         );
         $scaleSelect->addMultipleOptions([
-                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => dgettext('tuleap-graphontrackersv5', 'Day'),
-                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => dgettext('tuleap-graphontrackersv5', 'Week'),
-                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => dgettext('tuleap-graphontrackersv5', 'Month'),
+                                              self::SCALE_DAY => dgettext('tuleap-graphontrackersv5', 'Day'),
+                                              self::SCALE_WEEK => dgettext('tuleap-graphontrackersv5', 'Week'),
+                                              self::SCALE_MONTH => dgettext('tuleap-graphontrackersv5', 'Month'),
                                               ], $this->getScale());
         return array_merge(
             parent::getProperties(),

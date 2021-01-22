@@ -83,7 +83,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         $file = null;
         if (! $dar->isError() && $dar->valid()) {
             $data_array = $dar->current();
-            $file = FRSFileFactory::getFRSFileFromArray($data_array);
+            $file = self::getFRSFileFromArray($data_array);
         }
         return $file;
     }
@@ -103,7 +103,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         if (! $dar->isError() && $dar->valid()) {
             while ($dar->valid()) {
                 $data_array = $dar->current();
-                $files[] = FRSFileFactory::getFRSFileFromArray($data_array);
+                $files[] = self::getFRSFileFromArray($data_array);
                 $dar->next();
             }
         }

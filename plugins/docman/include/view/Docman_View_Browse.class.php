@@ -172,7 +172,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     public static function isViewAllowed($view)
     {
         //List is part of SOAP api
-        return in_array($view, array_merge(array_keys(Docman_View_Browse::getDefaultViews()), ['List']));
+        return in_array($view, array_merge(array_keys(self::getDefaultViews()), ['List']));
     }
     /* static */ public function getViewForCurrentUser($group_id, $report = '')
     {
@@ -185,7 +185,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
                 $pref = $sBo->getView();
             }
         }
-        if (! $pref || ! Docman_View_Browse::isViewAllowed($pref)) {
+        if (! $pref || ! self::isViewAllowed($pref)) {
             $pref = 'Tree';
         }
         return $pref;

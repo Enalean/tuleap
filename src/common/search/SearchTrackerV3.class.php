@@ -154,7 +154,7 @@ class Search_SearchTrackerV3
         }
 
         return new Search_SearchTypePresenter(
-            Search_SearchTrackerV3::NAME,
+            self::NAME,
             $GLOBALS['Language']->getText('project_admin_editservice', 'service_tracker_lbl_key'),
             $facets
         );

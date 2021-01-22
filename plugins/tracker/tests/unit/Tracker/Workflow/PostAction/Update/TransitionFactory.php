@@ -38,7 +38,7 @@ class TransitionFactory
 
     public static function buildATransitionWithId(int $id): MockInterface
     {
-        $transition = TransitionFactory::buildATransition();
+        $transition = self::buildATransition();
         $transition->shouldReceive('getId')
             ->andReturn($id);
         return $transition;

@@ -431,7 +431,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public function isPublic(): bool
     {
         $access = $this->data_array['access'];
-        return $access !== Project::ACCESS_PRIVATE && $access !== Project::ACCESS_PRIVATE_WO_RESTRICTED;
+        return $access !== self::ACCESS_PRIVATE && $access !== self::ACCESS_PRIVATE_WO_RESTRICTED;
     }
 
     /**

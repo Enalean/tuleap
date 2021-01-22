@@ -890,7 +890,7 @@ class Docman_ItemDao extends DataAccessObject
             ' FROM plugin_docman_item i' .
             ' WHERE i.wiki_page = \'%s\'' .
             ' AND i.group_id = %d' .
-            ' AND ' . Docman_ItemDao::getCommonExcludeStmt('i'),
+            ' AND ' . self::getCommonExcludeStmt('i'),
             db_es($wikipage),
             db_ei($group_id)
         );

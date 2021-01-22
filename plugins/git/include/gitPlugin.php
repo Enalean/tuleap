@@ -1311,7 +1311,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($params['group_id']);
-        if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+        if ($project->usesService(self::SERVICE_SHORTNAME)) {
             $controler = $this->getGitController();
             $controler->logsDaily($params);
         }
@@ -1486,7 +1486,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $groupId = $request->get('group_id');
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($groupId);
-        if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+        if ($project->usesService(self::SERVICE_SHORTNAME)) {
             $event->addWidget('plugin_git_project_pushes');
         }
     }

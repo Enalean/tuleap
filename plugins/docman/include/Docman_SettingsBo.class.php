@@ -137,7 +137,7 @@ class Docman_SettingsBo
      */
     public function exportMetadataUsage($dstGroupId)
     {
-        $dstBo = Docman_SettingsBo::instance($dstGroupId);
+        $dstBo = self::instance($dstGroupId);
         $dstBo->_importMetadataUsage($this, 'obsolescence_date');
         $dstBo->_importMetadataUsage($this, 'status');
     }

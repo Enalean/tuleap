@@ -672,7 +672,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         $renderer->renderToPage(
             $presenter->getTemplateDir(),
-            TrackerManager::DELETED_TRACKERS_TEMPLATE_NAME,
+            self::DELETED_TRACKERS_TEMPLATE_NAME,
             $presenter
         );
     }

@@ -330,7 +330,7 @@ class Tracker_ReportFactory
             $report->expert_query
         );
         //create criterias
-        $reportDB = Tracker_ReportFactory::instance()->getReportById($reportId, null);
+        $reportDB = self::instance()->getReportById($reportId, null);
         if ($report->criterias) {
             foreach ($report->criterias as $criteria) {
                 assert($criteria instanceof Tracker_Report_Criteria);

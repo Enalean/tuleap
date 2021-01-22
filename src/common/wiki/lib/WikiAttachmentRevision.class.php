@@ -347,7 +347,7 @@ class WikiAttachmentRevision
             $id  = $this->attachmentId;
         }
 
-        $dao = WikiAttachmentRevision::getDao();
+        $dao = self::getDao();
         $dar = $dao->getAllRevisions($id);
         while ($row = $dar->getRow()) {
             $war = new WikiAttachmentRevision($gid);

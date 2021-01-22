@@ -25,7 +25,7 @@ require_once 'bootstrap.php';
 class DynamicCredentialsTest extends \RestBase
 {
     public const USERNAME         = 'forge__dynamic_credential-user1';
-    public const USERNAME_EXPIRED = DynamicCredentialsTest::USERNAME . '-expired';
+    public const USERNAME_EXPIRED = self::USERNAME . '-expired';
     public const PASSWORD         = 'password';
 
     public function testPOSTNewAccountAndLogin()

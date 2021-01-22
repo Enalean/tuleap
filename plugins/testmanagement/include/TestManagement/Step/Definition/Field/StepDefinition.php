@@ -364,7 +364,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         }
 
         $steps = [];
-        $rank  = StepDefinition::START_RANK;
+        $rank  = self::START_RANK;
         foreach ($submitted_values['description'] as $key => $description) {
             $description = trim($description);
             if (! $description) {

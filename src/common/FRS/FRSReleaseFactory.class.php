@@ -102,7 +102,7 @@ class FRSReleaseFactory
 
         $data_array = $dar->current();
 
-        return (FRSReleaseFactory::getFRSReleaseFromArray($data_array));
+        return (self::getFRSReleaseFromArray($data_array));
     }
 
     /**

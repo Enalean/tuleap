@@ -88,7 +88,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
 
     protected function getCumulativeFlowData($engine)
     {
-        if ($this->nbSteps > GraphOnTrackersV5_CumulativeFlow_DataBuilder::MAX_STEPS) {
+        if ($this->nbSteps > self::MAX_STEPS) {
             $engine->setError(
                 dgettext('tuleap-graphontrackersv5', 'Please choose a smaller period, or increase the scale.')
             );

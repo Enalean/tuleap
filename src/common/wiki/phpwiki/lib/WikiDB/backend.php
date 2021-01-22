@@ -546,7 +546,7 @@ class WikiDB_backend
             $result = [];
             foreach (explode(',', $column) as $col) {
                 if (empty($this)) {
-                    $result[] = WikiDB_backend::sortby($col, $action);
+                    $result[] = self::sortby($col, $action);
                 } else {
                     $result[] = $this->sortby($col, $action);
                 }

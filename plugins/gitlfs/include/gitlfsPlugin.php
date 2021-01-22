@@ -427,7 +427,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
-        $config_should_be_displayed = \ForgeConfig::get(\gitlfsPlugin::DISPLAY_CONFIG_KEY, true);
+        $config_should_be_displayed = \ForgeConfig::get(self::DISPLAY_CONFIG_KEY, true);
         if ($config_should_be_displayed) {
             $site_administration_add_option->addPluginOption(
                 SiteAdministrationPluginOption::build(

@@ -95,7 +95,7 @@ class ItemStatusMapper
     private function checkStatusIsAvailable(?string $status_string): void
     {
         $metadata_usage = $this->docman_settings_bo->getMetadataUsage('status');
-        if (! ($metadata_usage === "1") && ($status_string !== ItemStatusMapper::ITEM_STATUS_NONE)) {
+        if (! ($metadata_usage === "1") && ($status_string !== self::ITEM_STATUS_NONE)) {
             throw HardCodedMetadataException::itemStatusNotAvailable();
         }
     }

@@ -58,14 +58,14 @@ class PlanningParameters
     public static function fromArray(array $array)
     {
         $parameters  = new PlanningParameters();
-        $backlog_ids = PlanningParameters::get($array, self::BACKLOG_TRACKER_IDS);
+        $backlog_ids = self::get($array, self::BACKLOG_TRACKER_IDS);
 
-        $parameters->name                       = PlanningParameters::get($array, self::NAME);
-        $parameters->backlog_title              = PlanningParameters::get($array, self::BACKLOG_TITLE);
-        $parameters->plan_title                 = PlanningParameters::get($array, self::PLANNING_TITLE);
+        $parameters->name                       = self::get($array, self::NAME);
+        $parameters->backlog_title              = self::get($array, self::BACKLOG_TITLE);
+        $parameters->plan_title                 = self::get($array, self::PLANNING_TITLE);
         $parameters->backlog_tracker_ids        = ($backlog_ids) ? $backlog_ids : [];
-        $parameters->planning_tracker_id        = PlanningParameters::get($array, self::PLANNING_TRACKER_ID);
-        $parameters->priority_change_permission = PlanningParameters::get($array, PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
+        $parameters->planning_tracker_id        = self::get($array, self::PLANNING_TRACKER_ID);
+        $parameters->priority_change_permission = self::get($array, PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
 
         return $parameters;
     }
