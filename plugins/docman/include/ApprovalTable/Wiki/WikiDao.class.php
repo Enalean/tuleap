@@ -42,9 +42,9 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
 
     public function getApprovalTableItemId($itemId, $fields = 'app.*', $limit = '', $tableStatus = false)
     {
-        $where = 'app.item_id = ' . $this->da->escapeInt($itemId) .
+        $where   = 'app.item_id = ' . $this->da->escapeInt($itemId) .
             ' AND app.wiki_version_id IS NOT NULL';
-        $join  = '';
+        $join    = '';
         $orderBy = ' ORDER BY app.wiki_version_id DESC ';
         return $this->getTableWithStatus($tableStatus, $fields, $where, $join, $orderBy, $limit);
     }
@@ -115,7 +115,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
      */
     public function userAccessedSince($userId, $pageName, $groupId, $versionId)
     {
-        $sql  = 'SELECT NULL' .
+        $sql = 'SELECT NULL' .
             ' FROM wiki_log wl' .
             ' WHERE pagename = ' . $this->da->quoteSmart($pageName) .
             ' AND group_id = ' . $this->da->escapeInt($groupId) .

@@ -49,7 +49,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
     ) {
         parent::__construct($artifact, $request, $user);
 
-        $this->renderer      = $renderer;
+        $this->renderer = $renderer;
     }
 
     /** @see Tracker_Artifact_View_View::getURL() */
@@ -84,7 +84,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         if (! $submitted_values || ! is_array($submitted_values)) {
             $submitted_values = [];
         }
-        $html_form = $this->renderer->fetchFields($this->artifact, $submitted_values);
+        $html_form  = $this->renderer->fetchFields($this->artifact, $submitted_values);
         $html_form .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
 
         $html .= $this->renderer->fetchArtifactForm($html_form);
@@ -100,7 +100,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
      */
     private function fetchFollowUps($submitted_comment = '')
     {
-        $html = '';
+        $html  = '';
         $html .= $this->fetchSubmitButton();
 
         $tracker      = $this->artifact->getTracker();
@@ -152,7 +152,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
             $display_changes_style = 'style="display: none"';
         }
 
-        $html = '<div class="tracker_artifact_followup_comments_display_settings">';
+        $html  = '<div class="tracker_artifact_followup_comments_display_settings">';
         $html .= '<div class="btn-group">';
         $html .= '<a href="#" class="btn btn-small dropdown-toggle" data-toggle="dropdown">';
         $html .= '<i class="fa fa-cog"></i> ' . $settings_label . ' <span class="caret"></span>';
@@ -186,12 +186,12 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         foreach ($comments as $item) {
             \assert($item instanceof Tracker_Artifact_Followup_Item);
             if ($previous_item) {
-                $diff_to_previous = $item->diffToPreviousArtifactView($this->user, $previous_item);
-                $classnames  = 'tracker_artifact_followup ';
-                $classnames .= $item->getFollowUpClassnames($diff_to_previous);
-                $comment_html = '<li id="followup_' . $item->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up">';
-                $comment_html .= $item->fetchFollowUp($diff_to_previous, $this->user);
-                $comment_html .= '</li>';
+                $diff_to_previous   = $item->diffToPreviousArtifactView($this->user, $previous_item);
+                $classnames         = 'tracker_artifact_followup ';
+                $classnames        .= $item->getFollowUpClassnames($diff_to_previous);
+                $comment_html       = '<li id="followup_' . $item->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up">';
+                $comment_html      .= $item->fetchFollowUp($diff_to_previous, $this->user);
+                $comment_html      .= '</li>';
                 $comments_content[] = $comment_html;
             }
             $previous_item = $item;
@@ -206,9 +206,9 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
 
     private function fetchAddNewComment(Tracker $tracker, $submitted_comment)
     {
-        $html = '<li>';
+        $html  = '<li>';
         $html .= '<div>';
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
 
         if (count($responses = $tracker->getCannedResponseFactory()->getCannedResponses($tracker))) {
             $html .= '<p><b>' . dgettext('tuleap-tracker', 'Use a Canned Response:') . '</b>&nbsp;';

@@ -71,7 +71,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
 
     public function getTemporaryFile($file_id)
     {
-        $file_id  = $this->da->escapeInt($file_id);
+        $file_id = $this->da->escapeInt($file_id);
 
         $sql = "SELECT * FROM tracker_fileinfo_temporary
                     JOIN tracker_fileinfo ON tracker_fileinfo_temporary.fileinfo_id = tracker_fileinfo.id
@@ -82,7 +82,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
 
     public function getTemporaryFileByTemporaryName($temporary_name)
     {
-        $temporary_name  = $this->da->quoteSmart($temporary_name);
+        $temporary_name = $this->da->quoteSmart($temporary_name);
 
         $sql = "SELECT * FROM tracker_fileinfo_temporary
                     JOIN tracker_fileinfo ON tracker_fileinfo_temporary.fileinfo_id = tracker_fileinfo.id

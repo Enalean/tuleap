@@ -56,7 +56,7 @@ class NatureDao extends DataAccessObject
 
     public function getNatureByShortname($shortname)
     {
-        $shortname     = $this->da->quoteSmart($shortname);
+        $shortname = $this->da->quoteSmart($shortname);
 
         $sql = "SELECT * FROM plugin_tracker_artifactlink_natures WHERE shortname = $shortname";
 
@@ -85,7 +85,7 @@ class NatureDao extends DataAccessObject
         $this->purgeDeletedTypeInArtifactLinkTypeUsage($shortname);
 
         $shortname = $this->da->quoteSmart($shortname);
-        $sql = "DELETE FROM plugin_tracker_artifactlink_natures WHERE shortname = $shortname";
+        $sql       = "DELETE FROM plugin_tracker_artifactlink_natures WHERE shortname = $shortname";
 
         $this->update($sql);
 

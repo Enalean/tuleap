@@ -34,7 +34,7 @@ if (! $group_id) {
 
 session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
-$pm = ProjectManager::instance();
+$pm      = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 $service = $project->getService(\Service::CVS);
 if (! ($service instanceof ServiceCVS)) {
@@ -50,14 +50,14 @@ $service->displayCVSAdminHeader($request->getCurrentUser());
 // get project name
 $sql = "SELECT unix_group_name, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble, cvs_is_private from groups where group_id=" . db_ei($group_id);
 
-$result = db_query($sql);
-$projectname = db_result($result, 0, 'unix_group_name');
-$cvs_tracked = db_result($result, 0, 'cvs_tracker');
-$cvs_watch_mode = db_result($result, 0, 'cvs_watch_mode');
-$cvs_mailing_list = db_result($result, 0, 'cvs_events_mailing_list');
+$result             = db_query($sql);
+$projectname        = db_result($result, 0, 'unix_group_name');
+$cvs_tracked        = db_result($result, 0, 'cvs_tracker');
+$cvs_watch_mode     = db_result($result, 0, 'cvs_watch_mode');
+$cvs_mailing_list   = db_result($result, 0, 'cvs_events_mailing_list');
 $cvs_mailing_header = db_result($result, 0, 'cvs_events_mailing_header');
-$cvs_preamble = db_result($result, 0, 'cvs_preamble');
-$cvs_is_private = db_result($result, 0, 'cvs_is_private');
+$cvs_preamble       = db_result($result, 0, 'cvs_preamble');
+$cvs_is_private     = db_result($result, 0, 'cvs_is_private');
 
 if ($cvs_mailing_list == 'NULL') {
     $cvs_mailing_list = '';
@@ -68,7 +68,7 @@ if ($cvs_mailing_header == 'NULL') {
     $custom_mailing_header = "";
 }
 
-$project = ProjectManager::instance()->getProject($group_id);
+$project  = ProjectManager::instance()->getProject($group_id);
 $checked  = $project->isPublic() && ! $cvs_is_private ? '' : 'checked="true"';
 $readonly = $project->isPublic() ? '' : 'readonly="true" disabled="true"';
 

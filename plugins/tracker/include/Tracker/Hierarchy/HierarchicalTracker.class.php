@@ -41,8 +41,8 @@ class Tracker_Hierarchy_HierarchicalTracker
 
     public function __construct(Tracker $unhierarchizedTracker, array $children)
     {
-        $this->unhierarchizedTracker   = $unhierarchizedTracker;
-        $this->children = $children;
+        $this->unhierarchizedTracker = $unhierarchizedTracker;
+        $this->children              = $children;
     }
 
     public function getUnhierarchizedTracker()

@@ -20,8 +20,8 @@
 
 class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const ADMIN_USER_NAME      = 'admin';
-    public const ADMIN_PASSWORD       = 'welcome0';
+    public const ADMIN_USER_NAME = 'admin';
+    public const ADMIN_PASSWORD  = 'welcome0';
 
     public const TEST_USER_1_NAME        = 'rest_api_tester_1';
     public const TEST_USER_1_REALNAME    = 'Test User 1';
@@ -52,8 +52,8 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public const TEST_USER_RESTRICTED_2_DISPLAYNAME = ' (rest_api_restricted_2)';
     public const TEST_USER_RESTRICTED_2_EMAIL       = 'rest_api_restricted_2@example.com';
 
-    public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME        = "rest_api_delegated_rest_project_manager";
-    public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_PASS        = 'welcome0';
+    public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME = "rest_api_delegated_rest_project_manager";
+    public const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_PASS = 'welcome0';
 
     public const ADMIN_PROJECT_ID = 100;
 
@@ -80,22 +80,22 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public const STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID    = 103;
     public const STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL = 'developers';
 
-    public const STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID    = 104;
+    public const STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID = 104;
 
-    public const STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID    = 105;
+    public const STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID = 105;
 
     public const STATIC_PUBLIC_WITH_MEMBERSHIP_UGROUP_DEVS_LABEL = 'developers';
 
-    public const DYNAMIC_UGROUP_PROJECT_MEMBERS_ID        = 3;
-    public const DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY       = 'ugroup_project_members_name_key';
-    public const DYNAMIC_UGROUP_PROJECT_ADMINS_ID         = 4;
-    public const DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL      = 'project_admins';
-    public const DYNAMIC_UGROUP_FILE_MANAGER_ID           = 11;
-    public const DYNAMIC_UGROUP_FILE_MANAGER_LABEL        = 'file_manager_admins';
-    public const DYNAMIC_UGROUP_WIKI_ADMIN_ID             = 14;
-    public const DYNAMIC_UGROUP_FORUM_ADMIN_ID            = 16;
-    public const DYNAMIC_UGROUP_NEWS_ADMIN_ID             = 17;
-    public const DYNAMIC_UGROUP_NEWS_WRITER_ID            = 18;
+    public const DYNAMIC_UGROUP_PROJECT_MEMBERS_ID   = 3;
+    public const DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY  = 'ugroup_project_members_name_key';
+    public const DYNAMIC_UGROUP_PROJECT_ADMINS_ID    = 4;
+    public const DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL = 'project_admins';
+    public const DYNAMIC_UGROUP_FILE_MANAGER_ID      = 11;
+    public const DYNAMIC_UGROUP_FILE_MANAGER_LABEL   = 'file_manager_admins';
+    public const DYNAMIC_UGROUP_WIKI_ADMIN_ID        = 14;
+    public const DYNAMIC_UGROUP_FORUM_ADMIN_ID       = 16;
+    public const DYNAMIC_UGROUP_NEWS_ADMIN_ID        = 17;
+    public const DYNAMIC_UGROUP_NEWS_WRITER_ID       = 18;
 
     /** @var ProjectManager */
     protected $project_manager;
@@ -114,7 +114,7 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     protected function activatePlugin($name)
     {
         $plugin_factory = PluginFactory::instance();
-        $plugin = $plugin_factory->createPlugin($name);
+        $plugin         = $plugin_factory->createPlugin($name);
         $plugin_factory->availablePlugin($plugin);
     }
 }

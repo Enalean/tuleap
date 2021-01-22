@@ -163,7 +163,7 @@ abstract class Tracker_Semantic
 
     protected function getFieldUserCanRead(PFUser $user)
     {
-        $field      = $this->getField();
+        $field = $this->getField();
         if ($field && $field->userCanRead($user)) {
             return $field;
         }

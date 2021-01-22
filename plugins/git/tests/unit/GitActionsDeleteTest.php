@@ -64,7 +64,7 @@ class GitActionsDeleteTests extends TestCase
         $git_repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
         $git_repository_factory->shouldReceive('getRepositoryById')->with($this->repository_id)->andReturns($this->repository);
 
-        $git_plugin  = Mockery::mock(\GitPlugin::class)
+        $git_plugin = Mockery::mock(\GitPlugin::class)
             ->shouldReceive('areFriendlyUrlsActivated')
             ->andReturnFalse()
             ->getMock();

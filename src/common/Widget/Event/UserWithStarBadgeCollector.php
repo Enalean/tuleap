@@ -39,7 +39,7 @@ class UserWithStarBadgeCollector implements Dispatchable
      */
     public function __construct(Project $project, array $users)
     {
-        $this->users = $users;
+        $this->users   = $users;
         $this->project = $project;
     }
 

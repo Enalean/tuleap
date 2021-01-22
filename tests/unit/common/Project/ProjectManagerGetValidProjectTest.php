@@ -38,7 +38,7 @@ class ProjectManagerGetValidProjectTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao = \Mockery::spy(\ProjectDao::class);
+        $this->dao             = \Mockery::spy(\ProjectDao::class);
         $this->project_manager = ProjectManager::testInstance(
             Mockery::mock(ProjectAccessChecker::class),
             Mockery::mock(ProjectHistoryDao::class),

@@ -34,7 +34,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->backend    = \Mockery::spy(\Git_Backend_Gitolite::class);
+        $this->backend = \Mockery::spy(\Git_Backend_Gitolite::class);
 
         $this->repository = \Mockery::spy(\GitRepository::class);
         $this->repository->shouldReceive('getBackend')->andReturns($this->backend);

@@ -21,7 +21,7 @@
 require_once __DIR__ . '/../../../../src/www/include/pre.php';
 
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $p->renderWSDL();
 } else {

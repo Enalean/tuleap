@@ -39,7 +39,7 @@ $widget_factory = new WidgetFactory(
     EventManager::instance()
 );
 
-$dao = new DashboardWidgetDao($widget_factory);
+$dao    = new DashboardWidgetDao($widget_factory);
 $router = new Router(
     new PreferencesController(
         $dao,

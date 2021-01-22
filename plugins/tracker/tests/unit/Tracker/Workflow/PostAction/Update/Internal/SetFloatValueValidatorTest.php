@@ -52,7 +52,7 @@ class SetFloatValueValidatorTest extends TestCase
 
     public function testValidateDoesNotThrowWhenValid()
     {
-        $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class)
+        $float_field       = Mockery::mock(\Tracker_FormElement_Field_Float::class)
             ->shouldReceive('getId')
             ->andReturn(1)
             ->getMock();

@@ -237,9 +237,9 @@ class Docman_VersionDao extends DataAccessObject
         $cols   = ['item_id', 'number', 'user_id', 'label', 'changelog', 'date', 'filename', 'filesize', 'filetype', 'path'];
         foreach ($row as $key => $value) {
             if (in_array($key, $cols)) {
-                $arg[]    = $key;
+                $arg[]                  = $key;
                 $params['force_string'] = ($key == 'label');
-                $values[] = $this->da->quoteSmart($value, $params);
+                $values[]               = $this->da->quoteSmart($value, $params);
             }
         }
         if (count($arg)) {
@@ -360,7 +360,7 @@ class Docman_VersionDao extends DataAccessObject
                 $pendings[] = $row;
             }
 
-            $sql = 'SELECT FOUND_ROWS() as nb';
+            $sql        = 'SELECT FOUND_ROWS() as nb';
             $resNumrows = $this->retrieve($sql);
             if ($resNumrows === false) {
                 return [];

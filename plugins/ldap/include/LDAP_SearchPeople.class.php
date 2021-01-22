@@ -56,15 +56,15 @@ class LDAP_SearchPeople extends Search_SearchPeople
 
     private function getMatchingUsers(Search_SearchQuery $query, $limit)
     {
-        $users = [];
-        $ldap_result_iterator  = $this->ldap->searchUser($query->getWords());
+        $users                = [];
+        $ldap_result_iterator = $this->ldap->searchUser($query->getWords());
         if ($ldap_result_iterator !== false && $ldap_result_iterator->count() > 0) {
             $ldap_result_iterator->count();
 
             $ldap_result_iterator->seek($query->getOffset());
             while ($ldap_result_iterator->valid() && $limit > 0) {
                 $ldap_result = $ldap_result_iterator->current();
-                $users[] = $this->getUserPresenter($ldap_result);
+                $users[]     = $this->getUserPresenter($ldap_result);
                 $ldap_result_iterator->next();
                 $limit--;
             }

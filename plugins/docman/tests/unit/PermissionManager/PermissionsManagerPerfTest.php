@@ -55,9 +55,9 @@ class PermissionsManagerPerfTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = \Mockery::spy(PFUser::class);
+        $this->user     = \Mockery::spy(PFUser::class);
         $this->docmanPm = \Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $project = Mockery::mock(Project::class);
+        $project        = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturn('102');
         $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
         $this->docmanPm->allows(['_itemIsLockedForUser' => false]);

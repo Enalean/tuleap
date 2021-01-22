@@ -58,7 +58,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
         );
 
         $children_trackers = $changeset_value->getField()->getTracker()->getChildren();
-        $values = $changeset_value->getValue();
+        $values            = $changeset_value->getValue();
         if ($values) {
             array_walk(
                 $values,
@@ -79,8 +79,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter 
         $index,
         $userdata
     ) {
-        $field_xml         = $userdata['field_xml'];
-        $artifact          = $userdata['artifact'];
+        $field_xml = $userdata['field_xml'];
+        $artifact  = $userdata['artifact'];
 
         if ($this->canExportLinkedArtifact($artifact_link_info)) {
             $cdata_factory = new XML_SimpleXMLCDATAFactory();

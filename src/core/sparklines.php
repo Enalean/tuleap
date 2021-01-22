@@ -21,7 +21,7 @@
 
 session_write_close();
 
-$sparklines = [];
+$sparklines        = [];
 $reference_manager = ReferenceManager::instance();
 $project_manager   = ProjectManager::instance();
 
@@ -59,7 +59,7 @@ if (is_array($sparkline_urls)) {
             if ($ref) {
                 // Get groupname (might be useful in replace rules)
                 $projname = null;
-                $project = $project_manager->getProject($group_id);
+                $project  = $project_manager->getProject($group_id);
                 if ($project) {
                     $projname = $project->getUnixName();
                 }

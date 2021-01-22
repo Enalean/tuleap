@@ -45,7 +45,7 @@ class LicenseAgreementControllersHelper
     public function __construct(FRSPermissionManager $permission_manager, TemplateRendererFactory $renderer_factory)
     {
         $this->permission_manager = $permission_manager;
-        $this->renderer_factory = $renderer_factory;
+        $this->renderer_factory   = $renderer_factory;
     }
 
     public function assertCanAccess(Project $project, PFUser $current_user): void

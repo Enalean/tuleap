@@ -40,8 +40,8 @@ class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     {
         parent::setUp();
         $this->fixtures = $this->getTmpDir();
-        $source      = escapeshellarg(__DIR__ . '/_fixtures');
-        $destination = escapeshellarg($this->fixtures);
+        $source         = escapeshellarg(__DIR__ . '/_fixtures');
+        $destination    = escapeshellarg($this->fixtures);
         exec("cp -a $source/* $destination/");
         $this->command = \Mockery::spy(\System_Command::class);
     }
@@ -107,7 +107,7 @@ class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testItRecordsOnlyThePathOfThePlugin()
     {
-        $this->command = \Mockery::spy(\System_Command::class);
+        $this->command             = \Mockery::spy(\System_Command::class);
         $this->forgeupgrade_config = new ForgeUpgradeConfig($this->command, dirname(__FILE__) . '/_fixtures/forgeupgrade-config-docman.ini');
         $this->command->shouldReceive('exec')->with("/usr/lib/forgeupgrade/bin/forgeupgrade --dbdriver='/usr/share/tuleap/src/forgeupgrade/ForgeUpgrade_Db_Driver_Codendi.php' --path='/usr/share/tuleap/plugins/agiledashboard' record-only")->once();
 

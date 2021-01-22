@@ -30,7 +30,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         $line = "Tue Jan 14 05:05:49 2014 0 ::ffff:192.168.1.66 295 /.message a _ o a anon@localhost ftp 0 * c";
 
         $parser = new \Tuleap\ProFTPd\Xferlog\Parser();
-        $entry = $parser->extract($line);
+        $entry  = $parser->extract($line);
 
         $this->assertEquals(strtotime("Tue Jan 14 05:05:49 2014"), $entry->current_time);
         $this->assertEquals(0, $entry->transfer_time);

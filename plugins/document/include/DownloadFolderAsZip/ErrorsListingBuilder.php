@@ -41,7 +41,7 @@ final class ErrorsListingBuilder
         if (count($this->bad_file_paths) === 0) {
             return;
         }
-        $contents = dgettext('tuleap-document', 'There was a problem and the following files could not be downloaded:');
+        $contents  = dgettext('tuleap-document', 'There was a problem and the following files could not be downloaded:');
         $contents .= PHP_EOL . implode(PHP_EOL, $this->bad_file_paths);
         $zip->addFile(self::ERROR_FILE_NAME, $contents);
     }

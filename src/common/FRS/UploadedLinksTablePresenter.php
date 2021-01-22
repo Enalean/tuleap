@@ -38,6 +38,6 @@ class UploadedLinksTablePresenter
         $this->owner_label = _('Owner');
         $this->date_label  = _('Date');
 
-        $this->links_list  = $links;
+        $this->links_list = $links;
     }
 }

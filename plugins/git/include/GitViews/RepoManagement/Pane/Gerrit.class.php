@@ -199,7 +199,7 @@ class Gerrit extends Pane
     {
         $html = '';
         foreach ($this->gerrit_servers as $server) {
-            $driver         = $this->driver_factory->getDriver($server);
+            $driver = $this->driver_factory->getDriver($server);
             try {
                 $plugin_enabled = (int) $driver->isDeletePluginEnabled($server);
                 $should_delete  = (int) $this->doesRemoteGerritProjectNeedDeleting($server);
@@ -264,7 +264,7 @@ class Gerrit extends Pane
 
     private function getContentAlreadyMigrated(\PFUser $user): string
     {
-        $btn_name      = 'confirm_disconnect_gerrit';
+        $btn_name = 'confirm_disconnect_gerrit';
         if ($this->request->get($btn_name)) {
             return $this->getDisconnectFromGerritConfirmationScreen();
         }
@@ -360,7 +360,7 @@ class Gerrit extends Pane
     private function getDisconnectFromGerritOptions()
     {
         $gerrit_server = $this->getGerritServerForRepository($this->repository);
-        $html = '';
+        $html          = '';
 
         $driver = $this->driver_factory->getDriver($gerrit_server);
         if ($driver->isDeletePluginEnabled($gerrit_server)) {

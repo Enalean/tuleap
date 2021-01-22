@@ -31,7 +31,7 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
      */
     public function _getElementName($e, $hideNone = \false)
     {
-        $hp = \Codendi_HTMLPurifier::instance();
+        $hp   = \Codendi_HTMLPurifier::instance();
         $name = '';
         switch ($e->getId()) {
             case 100:
@@ -52,7 +52,7 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
                 $name = \dgettext('tuleap-docman', 'None');
                 break;
             default:
-                $hp = \Codendi_HTMLPurifier::instance();
+                $hp   = \Codendi_HTMLPurifier::instance();
                 $name = $hp->purify($e->getDescription());
         }
         return $name;
@@ -60,7 +60,7 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
     public function getValue($hideNone = \false)
     {
         $vIter = $this->md->getValue();
-        $html = '';
+        $html  = '';
         $first = \true;
         $vIter->rewind();
         while ($vIter->valid()) {
@@ -79,12 +79,12 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
         $html = '';
         // First is their any value already selected
         $selectedElements = [];
-        $eIter = $this->md->getValue();
+        $eIter            = $this->md->getValue();
         if ($eIter != \null) {
             //@todo: a toArray() method in ArrayIterator maybe useful here.
             $eIter->rewind();
             while ($eIter->valid()) {
-                $e = $eIter->current();
+                $e                  = $eIter->current();
                 $selectedElements[] = $e->getId();
                 $eIter->next();
             }
@@ -98,17 +98,17 @@ class Docman_MetadataHtmlList extends \Docman_MetadataHtml
                 $selectedElements[] = $dfltValue;
             }
         }
-        $name = $this->_getFieldName();
+        $name     = $this->_getFieldName();
         $multiple = '';
         if ($this->md->isMultipleValuesAllowed()) {
-            $name = $name . '[]';
+            $name     = $name . '[]';
             $multiple = ' multiple = "multiple" size = "6"';
         }
         $html .= '<select name="' . $name . '"' . $multiple . ' id="' . $this->md->getLabel() . '">' . "\n";
         $vIter = $this->md->getListOfValueIterator();
         $vIter->rewind();
         while ($vIter->valid()) {
-            $e = $vIter->current();
+            $e        = $vIter->current();
             $selected = '';
             if (\in_array($e->getId(), $selectedElements)) {
                 $selected = ' selected="selected"';

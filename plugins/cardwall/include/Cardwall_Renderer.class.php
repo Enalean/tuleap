@@ -64,9 +64,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         ?Tracker_FormElement_Field_Selectbox $field = null
     ) {
         parent::__construct($id, $report, $name, $description, $rank);
-        $this->plugin         = $plugin;
-        $this->field          = $field;
-        $this->config         = $config;
+        $this->plugin = $plugin;
+        $this->field  = $field;
+        $this->config = $config;
     }
 
     /**
@@ -80,7 +80,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     public function initiateSession()
     {
         $this->report_session = new Tracker_Report_Session($this->report->id);
-        $field_id = '';
+        $field_id             = '';
         if ($this->field !== null) {
             $field_id = $this->field->getId();
         }
@@ -113,17 +113,17 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         if (! $total_rows) {
             if (! $form) {
-                $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../../../src/templates/dashboard');
+                $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../../../src/templates/dashboard');
                 return $renderer->renderToString("widget-empty-content-svg", null);
             }
 
             return '<p>' . dgettext('tuleap-tracker', 'No artifact found.') . '</p>';
         }
 
-        $artifact_ids     = explode(',', $matching_ids['id']);
-        $presenter = $this->getPresenter($artifact_ids, $user, $form);
+        $artifact_ids = explode(',', $matching_ids['id']);
+        $presenter    = $this->getPresenter($artifact_ids, $user, $form);
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../templates');
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../templates');
 
         return $renderer->renderToString('renderer', $presenter);
     }
@@ -138,8 +138,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         if ($this->field === null) {
             $board = new Cardwall_Board([], new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
         } else {
-            $field_provider      = new Cardwall_FieldProviders_CustomFieldRetriever($this->field);
-            $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackRenderer($user, $this->report);
+            $field_provider     = new Cardwall_FieldProviders_CustomFieldRetriever($this->field);
+            $column_preferences = new Cardwall_UserPreferences_Autostack_AutostackRenderer($user, $this->report);
 
             $filter = '';
             if (! $this->report->is_in_expert_mode) {
@@ -157,19 +157,19 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
                 $columns = $this->config->getRendererColumns($this->field);
             }
 
-            $column_autostack    = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
+            $column_autostack = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
             $column_autostack->setAutostack($columns, $column_preferences);
-            $display_preferences = new Cardwall_UserPreferences_UserPreferencesDisplayUser(Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS);
-            $mapping_collection  = $this->config->getCardwallMappings(
+            $display_preferences      = new Cardwall_UserPreferences_UserPreferencesDisplayUser(Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS);
+            $mapping_collection       = $this->config->getCardwallMappings(
                 [$this->field->getId() => $this->field],
                 $columns
             );
             $background_color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
-            $accent_color_builder = new AccentColorBuilder(
+            $accent_color_builder     = new AccentColorBuilder(
                 $this->getFormElementFactory(),
                 new BindDecoratorRetriever()
             );
-            $presenter_builder = new Cardwall_CardInCellPresenterBuilder(
+            $presenter_builder        = new Cardwall_CardInCellPresenterBuilder(
                 new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
                 new Cardwall_CardFields(Tracker_FormElementFactory::instance()),
                 $display_preferences,
@@ -228,7 +228,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      */
     public function fetchWidget(PFUser $user)
     {
-        $html  = '';
+        $html = '';
 
         $additional_button_presenter = new WidgetAdditionalButtonPresenter(
             $this->report->getTracker(),
@@ -253,7 +253,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     public function create()
     {
         $success = true;
-        $rrf = Tracker_Report_RendererFactory::instance();
+        $rrf     = Tracker_Report_RendererFactory::instance();
         if ($renderer_id = $rrf->saveRenderer($this->report, $this->name, $this->description, $this->getType())) {
             //field_id
             $this->saveRendererProperties($renderer_id);
@@ -335,7 +335,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
 
     public function getStylesheetDependencies(): CssAssetCollection
     {
-        $tracker_assets = new IncludeAssets(
+        $tracker_assets  = new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/trackers',
             '/assets/trackers'
         );

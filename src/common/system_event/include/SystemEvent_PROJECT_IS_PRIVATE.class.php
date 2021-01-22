@@ -43,8 +43,8 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
         UserRemover $user_remover,
         UGroupManager $ugroup_manager
     ) {
-        $this->user_remover                         = $user_remover;
-        $this->ugroup_manager                       = $ugroup_manager;
+        $this->user_remover   = $user_remover;
+        $this->ugroup_manager = $ugroup_manager;
     }
 
     /**
@@ -58,9 +58,9 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
      */
     public function verbalizeParameters($with_link)
     {
-        $txt = '';
+        $txt                                 = '';
         list($group_id, $project_is_private) = $this->getParametersAsArray();
-        $txt .= 'project: ' . $this->verbalizeProjectId($group_id, $with_link) . ', project is private: ' . ($project_is_private ? 'true' : 'false');
+        $txt                                .= 'project: ' . $this->verbalizeProjectId($group_id, $with_link) . ', project is private: ' . ($project_is_private ? 'true' : 'false');
         return $txt;
     }
 
@@ -86,7 +86,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
         }
 
         if ($project->usesSVN()) {
-            $backendSVN    = Backend::instanceSVN();
+            $backendSVN = Backend::instanceSVN();
             if (! $backendSVN->setSVNPrivacy($project, $project_is_private)) {
                 $this->error("Could not set svn privacy for project $group_id");
                 return false;

@@ -114,12 +114,12 @@ class DefinitionRepresentationBuilderTest extends TestCase
 
     public function testItThrowsExceptionIfTheDescriptionFieldIsNull(): void
     {
-        $user                = Mockery::mock(PFUser::class);
+        $user       = Mockery::mock(PFUser::class);
         $changeset  = Mockery::mock(Tracker_Artifact_Changeset::class);
         $field      = Mockery::mock(\Tracker_FormElement_Field::class);
         $text_field = Mockery::mock(Tracker_Artifact_ChangesetValue_Text::class);
 
-        $tracker_id = 1450;
+        $tracker_id          = 1450;
         $definition_artifact = $this->mockDefinitionArtifact($user, $tracker_id);
 
         $this->mockChangesetValue($definition_artifact, $changeset, $field, $text_field);
@@ -216,9 +216,9 @@ class DefinitionRepresentationBuilderTest extends TestCase
     public function testItThrowsAnErrorIfTheDescriptionFormatIsInvalid(): void
     {
         $user                = Mockery::mock(PFUser::class);
-        $field = Mockery::mock(\Tracker_FormElement_Field::class);
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $text_field = Mockery::mock(Tracker_Artifact_ChangesetValue_Text::class);
+        $field               = Mockery::mock(\Tracker_FormElement_Field::class);
+        $changeset           = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $text_field          = Mockery::mock(Tracker_Artifact_ChangesetValue_Text::class);
         $definition_artifact = $this->mockDefinitionArtifact($user, 111);
 
         $this->mockChangesetValue($definition_artifact, $changeset, $field, $text_field);

@@ -54,20 +54,20 @@ class Docman_Metadata
     public $defaultValue;
     public function __construct()
     {
-        $this->id = \null;
-        $this->groupId = \null;
-        $this->name = \null;
-        $this->type = \null;
-        $this->label = \null;
-        $this->description = \null;
-        $this->isRequired = \null;
-        $this->isEmptyAllowed = \null;
+        $this->id                      = \null;
+        $this->groupId                 = \null;
+        $this->name                    = \null;
+        $this->type                    = \null;
+        $this->label                   = \null;
+        $this->description             = \null;
+        $this->isRequired              = \null;
+        $this->isEmptyAllowed          = \null;
         $this->isMultipleValuesAllowed = \null;
-        $this->keepHistory = \null;
-        $this->special = \null;
-        $this->useIt = \null;
-        $this->value = \null;
-        $this->defaultValue = \null;
+        $this->keepHistory             = \null;
+        $this->special                 = \null;
+        $this->useIt                   = \null;
+        $this->value                   = \null;
+        $this->defaultValue            = \null;
     }
     //{{{ Accessors
     public function setId($v)

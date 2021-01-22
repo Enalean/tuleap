@@ -36,7 +36,7 @@ class User_PasswordExpirationChecker
     {
         if ($this->getPasswordLifetimeInSeconds()) {
             $expiration_date = $this->getPasswordExpirationDate();
-            $warning_date = $expiration_date + DateHelper::SECONDS_IN_A_DAY * self::DAYS_FOR_EXPIRATION_WARN;
+            $warning_date    = $expiration_date + DateHelper::SECONDS_IN_A_DAY * self::DAYS_FOR_EXPIRATION_WARN;
             if ($user->getLastPwdUpdate() < $warning_date) {
                 $expiration_delay = ceil(($user->getLastPwdUpdate() - $expiration_date) / ( DateHelper::SECONDS_IN_A_DAY ));
                 $GLOBALS['Response']->addFeedback(

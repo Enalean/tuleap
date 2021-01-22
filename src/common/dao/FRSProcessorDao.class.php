@@ -35,7 +35,7 @@ class FRSProcessorDao extends DataAccessObject
      */
     public function searchProcessorId($group_id, $name)
     {
-        $sql = sprintf(
+        $sql  = sprintf(
             "SELECT * FROM frs_processor WHERE (group_id=100 OR group_id=%s) AND name=%s ORDER BY rank",
             $this->da->escapeInt($group_id),
             $this->da->quoteSmart((string) $name)
@@ -51,7 +51,7 @@ class FRSProcessorDao extends DataAccessObject
     public function searchById($processor_id)
     {
         $processor_id = $this->da->escapeInt($processor_id);
-        $sql = "SELECT * FROM frs_processor WHERE processor_id=$processor_id";
+        $sql          = "SELECT * FROM frs_processor WHERE processor_id=$processor_id";
 
         return $this->retrieveFirstRow($sql);
     }

@@ -133,8 +133,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
         $html = '';
 
         if ($numeric_fields = Tracker_FormElementFactory::instance()->getUsedPotentiallyContainingNumericValueFields($this->tracker)) {
-            $html .= '<form method="POST" action="' . $this->getUrl() . '">';
-            $html .= $this->getCSRFToken()->fetchHTMLInput();
+            $html  .= '<form method="POST" action="' . $this->getUrl() . '">';
+            $html  .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="initial_effort_field_id">';
             if (! $this->getFieldId()) {
                 $select .= '<option value="-1" selected="selected">' . $purify->purify(dgettext('tuleap-tracker', 'Choose a field...')) . '</option>';
@@ -189,7 +189,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();
             $field_id = $request->get('initial_effort_field_id');
-            $field = Tracker_FormElementFactory::instance()->getUsedPotentiallyContainingNumericValueFieldById($this->tracker, $field_id);
+            $field    = Tracker_FormElementFactory::instance()->getUsedPotentiallyContainingNumericValueFieldById($this->tracker, $field_id);
 
             if ($field) {
                 $this->initial_effort_field = $field;
@@ -245,7 +245,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
     public static function load(Tracker $tracker)
     {
         if (! isset(self::$_instances[$tracker->getId()])) {
-            $field = self::getFieldFromTracker($tracker);
+            $field                               = self::getFieldFromTracker($tracker);
             self::$_instances[$tracker->getId()] = new AgileDashBoard_Semantic_InitialEffort($tracker, $field);
         }
         return self::$_instances[$tracker->getId()];

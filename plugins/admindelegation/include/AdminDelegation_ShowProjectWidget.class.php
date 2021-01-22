@@ -80,9 +80,9 @@ class AdminDelegation_ShowProjectWidget extends Widget
         $sql = 'SELECT SQL_CALC_FOUND_ROWS group_name, group_id, unix_group_name, access FROM groups WHERE ' . $statements . ' status = "A" ORDER BY register_time DESC LIMIT ' . db_ei($offset) . ', ' . db_ei($limit);
         $res = db_query($sql);
 
-        $sql = 'SELECT FOUND_ROWS() as nb';
+        $sql         = 'SELECT FOUND_ROWS() as nb';
         $res_numrows = db_query($sql);
-        $row = db_fetch_array($res_numrows);
+        $row         = db_fetch_array($res_numrows);
 
         return ['projects' => $res, 'numrows' => $row['nb']];
     }
@@ -106,7 +106,7 @@ class AdminDelegation_ShowProjectWidget extends Widget
         foreach ($allCriterias as $val) {
             $selectedCriteria[$val] = '';
         }
-        $vCriteria    = new Valid_WhiteList('criteria', $allCriterias);
+        $vCriteria = new Valid_WhiteList('criteria', $allCriterias);
         $vCriteria->required();
         if ($request->validArray($vCriteria)) {
             $criteria = $request->get('criteria');
@@ -114,8 +114,8 @@ class AdminDelegation_ShowProjectWidget extends Widget
             $criteria = $allCriterias;
         }
         foreach ($criteria as $val) {
-            $condition[] = $val;
-            $urlParam   .= '&criteria[]=' . urlencode($val);
+            $condition[]            = $val;
+            $urlParam              .= '&criteria[]=' . urlencode($val);
             $selectedCriteria[$val] = 'checked="checked"';
         }
 
@@ -131,7 +131,7 @@ class AdminDelegation_ShowProjectWidget extends Widget
         if (! $offset || $offset < 0) {
             $offset = 0;
         }
-        $limit  = 10;
+        $limit = 10;
 
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -180,7 +180,7 @@ class AdminDelegation_ShowProjectWidget extends Widget
                 $html .= '</thead>';
 
                 $html .= '<tbody>';
-                $i = 1;
+                $i     = 1;
                 while ($row = db_fetch_array($res['projects'])) {
                     $html .= '<tr class="' . util_get_alt_row_color($i++) . '">';
                     $html .= '<td>';

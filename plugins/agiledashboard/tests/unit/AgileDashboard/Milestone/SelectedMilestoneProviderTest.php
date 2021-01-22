@@ -43,7 +43,7 @@ class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends \PHPUnit\Fr
 
     protected function setUp(): void
     {
-        $artifact_id    = 123;
+        $artifact_id     = 123;
         $this->milestone = Mockery::mock(Planning_ArtifactMilestone::class);
         $this->milestone->shouldReceive('getArtifactId')->andReturn($artifact_id);
 

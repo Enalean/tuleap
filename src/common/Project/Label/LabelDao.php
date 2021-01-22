@@ -53,7 +53,7 @@ class LabelDao extends DataAccessObject
         $project_id = $this->da->escapeInt($project_id);
         $name       = $this->da->quoteSmart($new_name);
 
-        $sql = "SELECT id
+        $sql    = "SELECT id
                 FROM project_label
                 WHERE project_id = $project_id AND name = $name";
         $result = $this->retrieveFirstRow($sql);
@@ -61,7 +61,7 @@ class LabelDao extends DataAccessObject
             return $result['id'];
         }
 
-        $sql = "INSERT INTO project_label (project_id, name, is_outline, color)
+        $sql          = "INSERT INTO project_label (project_id, name, is_outline, color)
                 VALUES ($project_id, $name, 1, 'chrome-silver')";
         $new_labels[] = $new_name;
 

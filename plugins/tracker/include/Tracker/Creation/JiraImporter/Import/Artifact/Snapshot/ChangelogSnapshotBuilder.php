@@ -141,7 +141,7 @@ class ChangelogSnapshotBuilder
                 $field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE &&
                 $changed_field_to !== null
             ) {
-                $account_ids = explode(',', $changed_field_to);
+                $account_ids        = explode(',', $changed_field_to);
                 $selected_users_ids = [];
 
                 foreach ($account_ids as $account_id) {

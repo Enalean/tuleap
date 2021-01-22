@@ -34,7 +34,7 @@ class Tracker_TooltipFactoryTest extends TestCase
     //testing Tooltip import
     public function testImport()
     {
-        $xml = simplexml_load_string(
+        $xml     = simplexml_load_string(
             file_get_contents(__DIR__ . '/../../_fixtures/ImportTrackerSemanticTooltipTest.xml')
         );
         $tracker = Mockery::mock(Tracker::class);

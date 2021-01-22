@@ -32,9 +32,9 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5
         parent::buildProperties($engine);
         $engine->data   = [];
         $engine->legend = null;
-        $result = [];
-        $ff = Tracker_FormElementFactory::instance();
-        $af = $ff->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
+        $result         = [];
+        $ff             = Tracker_FormElementFactory::instance();
+        $af             = $ff->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
         \assert($af instanceof Tracker_FormElement_Field_List);
         if (! $af) {
             $this->displayNoFieldError();
@@ -46,8 +46,8 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5
             $from   = " FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) " . $af->getQueryFromWithDecorator();
             $where  = " WHERE a.id IN (" . $this->artifacts['id'] . ")
                           AND c.id IN (" . $this->artifacts['last_changeset_id'] . ") ";
-            $sql = $select . $from . $where . ' GROUP BY ' . $af->getQueryGroupBy() . ' ORDER BY ' . $af->getQueryOrderby();
-            $res = db_query($sql);
+            $sql    = $select . $from . $where . ' GROUP BY ' . $af->getQueryGroupBy() . ' ORDER BY ' . $af->getQueryOrderby();
+            $res    = db_query($sql);
             while ($data = db_fetch_array($res)) {
                 $engine->data[]   = $data['nb'];
                 $engine->colors[] = $this->getColor($data);

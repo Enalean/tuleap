@@ -115,11 +115,11 @@ class CleanUnusedTest extends TestCase
         $this->dao = Mockery::mock(CleanUnusedDao::class);
         $this->initDao();
 
-        $this->backend         = Mockery::mock(Backend::class);
-        $this->media_wiki_dao  = Mockery::mock(MediawikiDao::class);
-        $this->data_dir        = Mockery::mock(MediawikiDataDir::class);
+        $this->backend        = Mockery::mock(Backend::class);
+        $this->media_wiki_dao = Mockery::mock(MediawikiDao::class);
+        $this->data_dir       = Mockery::mock(MediawikiDataDir::class);
 
-        $this->clean_unused    = new CleanUnused(
+        $this->clean_unused = new CleanUnused(
             $this->logger,
             $this->dao,
             $this->project_manager,

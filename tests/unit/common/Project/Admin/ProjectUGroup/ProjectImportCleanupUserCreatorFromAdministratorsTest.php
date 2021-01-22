@@ -45,7 +45,7 @@ final class ProjectImportCleanupUserCreatorFromAdministratorsTest extends TestCa
 
     public function testOnlyProjectAdminUGroupAreAccepted(): void
     {
-        $ugroup  = Mockery::mock(ProjectUGroup::class);
+        $ugroup = Mockery::mock(ProjectUGroup::class);
         $ugroup->shouldReceive('getId')->andReturn(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->expectException(NotProjectAdministratorUGroup::class);

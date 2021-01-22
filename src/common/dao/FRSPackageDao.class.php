@@ -28,7 +28,7 @@ class FRSPackageDao extends DataAccessObject
     public function __construct($da, $status_deleted)
     {
         parent::__construct($da);
-        $this->table_name = 'frs_package';
+        $this->table_name     = 'frs_package';
         $this->STATUS_DELETED = $status_deleted;
     }
 
@@ -45,7 +45,7 @@ class FRSPackageDao extends DataAccessObject
 
     public function searchInGroupById($id, $group_id, $extraFlags = 0)
     {
-        $_id = (int) $id;
+        $_id       = (int) $id;
         $_group_id = (int) $group_id;
         return $this->_search(' p.package_id = ' . $this->da->escapeInt($_id) . ' AND p.group_id = ' . $this->da->escapeInt($_group_id), '', ' ORDER BY rank DESC LIMIT 1', null, $extraFlags);
     }
@@ -63,7 +63,7 @@ class FRSPackageDao extends DataAccessObject
 
     public function searchInGroupByReleaseId($id, $group_id)
     {
-        $_id = (int) $id;
+        $_id       = (int) $id;
         $_group_id = (int) $group_id;
         return $this->_search(
             'p.group_id = ' . $this->da->escapeInt($_group_id) . ' AND r.release_id = ' . $this->da->escapeInt($_id) . ' AND p.package_id = r.package_id AND r.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED),
@@ -160,27 +160,27 @@ class FRSPackageDao extends DataAccessObject
         $values = [];
 
         if ($group_id !== null) {
-            $arg[] = 'group_id';
+            $arg[]    = 'group_id';
             $values[] = ($this->da->escapeInt($group_id));
         }
 
         if ($name !== null) {
-            $arg[] = 'name';
+            $arg[]    = 'name';
             $values[] = $this->da->quoteSmart($name, ['force_string' => true]);
         }
 
         if ($status_id !== null) {
-            $arg[] = 'status_id';
+            $arg[]    = 'status_id';
             $values[] = ($this->da->escapeInt($status_id));
         }
 
         if ($rank !== null) {
-            $arg[] = 'rank';
+            $arg[]    = 'rank';
             $values[] = $this->prepareRanking('frs_package', 0, $group_id, $rank, 'package_id', 'group_id');
         }
 
         if ($approve_license !== null) {
-            $arg[] = 'approve_license';
+            $arg[]    = 'approve_license';
             $values[] = ($approve_license ? 1 : 0);
         }
 
@@ -264,14 +264,14 @@ class FRSPackageDao extends DataAccessObject
     public function updateFromArray($data_array)
     {
         $updated = false;
-        $id = false;
+        $id      = false;
         if (isset($data_array['package_id'])) {
             $package_id = $data_array['package_id'];
         }
         if ($package_id) {
             $dar = $this->searchById($package_id);
             if (! $dar->isError() && $dar->valid()) {
-                $current = $dar->current();
+                $current   = $dar->current();
                 $set_array = [];
                 foreach ($data_array as $key => $value) {
                     if ($key != 'package_id' && $value != $current[$key]) {
@@ -282,7 +282,7 @@ class FRSPackageDao extends DataAccessObject
                     }
                 }
                 if (count($set_array)) {
-                    $sql = 'UPDATE frs_package'
+                    $sql     = 'UPDATE frs_package'
                         . ' SET ' . implode(' , ', $set_array)
                         . ' WHERE package_id=' . $this->da->quoteSmart($package_id);
                     $updated = $this->update($sql);

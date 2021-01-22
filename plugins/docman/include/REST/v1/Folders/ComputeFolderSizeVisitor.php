@@ -35,7 +35,7 @@ class ComputeFolderSizeVisitor implements ItemVisitor
 {
     public function visitFolder(Docman_Folder $item, array $params = []): void
     {
-        $items = $item->getAllItems();
+        $items    = $item->getAllItems();
         $iterator = $items->iterator();
 
         $params['size_collector']->addOneFolder();

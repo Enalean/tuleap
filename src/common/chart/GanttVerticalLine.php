@@ -30,9 +30,9 @@ final class GanttVerticalLine extends GanttPlotObject
 {
     private $iLine;
     private $title_margin = 3;
-    private $iDayOffset = 0.5;
-    private $iStartRow = -1;
-    private $iEndRow = -1;
+    private $iDayOffset   = 0.5;
+    private $iStartRow    = -1;
+    private $iEndRow      = -1;
 
     public function __construct($aDate, $aTitle, $aColor, $aWeight, $aStyle)
     {
@@ -50,7 +50,7 @@ final class GanttVerticalLine extends GanttPlotObject
     public function SetRowSpan($aStart, $aEnd = -1) // phpcs:ignore
     {
         $this->iStartRow = $aStart;
-        $this->iEndRow = $aEnd;
+        $this->iEndRow   = $aEnd;
     }
 
     public function SetDayOffset($aOff = 0.5) // phpcs:ignore

@@ -25,8 +25,8 @@ class Docman_ItemActionNewFolder extends \Docman_ItemAction
     public function __construct(&$item)
     {
         parent::__construct($item);
-        $this->action = 'newFolder';
+        $this->action  = 'newFolder';
         $this->classes = 'docman_item_option_newfolder';
-        $this->title = \dgettext('tuleap-docman', 'New folder');
+        $this->title   = \dgettext('tuleap-docman', 'New folder');
     }
 }

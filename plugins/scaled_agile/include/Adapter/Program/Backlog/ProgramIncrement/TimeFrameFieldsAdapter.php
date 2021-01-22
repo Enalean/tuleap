@@ -38,7 +38,7 @@ final class TimeFrameFieldsAdapter
     public function __construct(
         SemanticTimeframeBuilder $timeframe_builder
     ) {
-        $this->timeframe_builder    = $timeframe_builder;
+        $this->timeframe_builder = $timeframe_builder;
     }
 
     /**

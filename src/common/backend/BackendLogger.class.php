@@ -31,9 +31,9 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
      *
      * @tlp-config-key
      */
-    public const CONFIG_LOGGER          = 'sys_logger';
+    public const CONFIG_LOGGER = 'sys_logger';
 
-    public const FILENAME              = 'codendi_syslog';
+    public const FILENAME = 'codendi_syslog';
 
     private $filepath;
 
@@ -112,10 +112,10 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
     {
         $log_string = $message;
         if (isset($context['exception']) && $context['exception'] instanceof Throwable) {
-            $exception      = $context['exception'];
-            $error_message  = $exception->getMessage();
-            $stack_trace    = $exception->getTraceAsString();
-            $log_string    .= ": $error_message:\n$stack_trace";
+            $exception     = $context['exception'];
+            $error_message = $exception->getMessage();
+            $stack_trace   = $exception->getTraceAsString();
+            $log_string   .= ": $error_message:\n$stack_trace";
         }
         return $log_string;
     }

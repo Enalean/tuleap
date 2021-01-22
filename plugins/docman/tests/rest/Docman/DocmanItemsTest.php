@@ -63,7 +63,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . $folder['id'] . '/docman_items')
         );
-        $items_folder_2     = $response->json();
+        $items_folder_2 = $response->json();
 
         $items = array_merge($items_folder_1, $items_folder_2);
 
@@ -102,7 +102,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
             REST_TestDataBuilder::TEST_BOT_USER_NAME,
             $this->client->get('docman_items/' . $folder['id'] . '/docman_items')
         );
-        $items_folder_2     = $response->json();
+        $items_folder_2 = $response->json();
 
         $items = array_merge($items_folder_1, $items_folder_2);
 
@@ -213,7 +213,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
      */
     public function testGetFolderWithSize(int $root_id): void
     {
-        $root_folder = $this->loadRootFolderContent($root_id);
+        $root_folder        = $this->loadRootFolderContent($root_id);
         $folder_to_download = $this->findItemByTitle($root_folder, 'Download me as a zip');
 
         $request  = $this->client->get('docman_items/' . $folder_to_download['id'] . '/?with_size=true');

@@ -208,8 +208,8 @@ class UserGroupResource extends AuthenticatedResource
 
             $nb_member = 0;
             if ($member !== null) {
-                $member_representations   = array_slice([$member], $offset, $limit);
-                $nb_member                = 1;
+                $member_representations = array_slice([$member], $offset, $limit);
+                $nb_member              = 1;
             }
             $this->sendPaginationHeaders($limit, $offset, $nb_member);
         }
@@ -432,8 +432,8 @@ class UserGroupResource extends AuthenticatedResource
      */
     private function userCanSeeUserGroups($project_id)
     {
-        $project      = $this->project_manager->getProject($project_id);
-        $user         = $this->user_manager->getCurrentUser();
+        $project = $this->project_manager->getProject($project_id);
+        $user    = $this->user_manager->getCurrentUser();
         ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
 
         return true;
@@ -536,9 +536,9 @@ class UserGroupResource extends AuthenticatedResource
         try {
             $this->checkAccess();
 
-            $project_id   = $user_group_representation->project_id;
-            $project      = $this->project_manager->getProject($project_id);
-            $user         = $this->user_manager->getCurrentUser();
+            $project_id = $user_group_representation->project_id;
+            $project    = $this->project_manager->getProject($project_id);
+            $user       = $this->user_manager->getCurrentUser();
 
             ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
                 $project
@@ -552,7 +552,7 @@ class UserGroupResource extends AuthenticatedResource
                 $user_group_representation->description
             );
 
-            $new_ugroup                = $this->ugroup_manager->getById($new_ugroup_id);
+            $new_ugroup = $this->ugroup_manager->getById($new_ugroup_id);
             return new UserGroupRepresentation($project, $new_ugroup);
         } catch (CannotCreateUGroupException $exception) {
             throw new RestException(400, $exception->getMessage());

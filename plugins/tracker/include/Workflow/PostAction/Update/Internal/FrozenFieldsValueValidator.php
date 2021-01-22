@@ -102,7 +102,7 @@ class FrozenFieldsValueValidator
         if ($workflow === null) {
             throw new LogicException('Tracker #' . $tracker->getId() . ' does not have a workflow');
         }
-        $workflow_field_id  = (int) $workflow->getFieldId();
+        $workflow_field_id = (int) $workflow->getFieldId();
 
         foreach ($frozen_fields->getFieldIds() as $field_id) {
             $this->validateFieldIsUsedInTracker($field_id, $used_field_ids);

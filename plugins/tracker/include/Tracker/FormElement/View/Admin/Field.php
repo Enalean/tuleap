@@ -78,7 +78,7 @@ class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admi
      */
     protected function fetchRequired()
     {
-        $html = '';
+        $html  = '';
         $html .= '<p>';
         $html .= '<input type="hidden" name="formElement_data[required]" value="0" />';
         $html .= '<label class="checkbox">';

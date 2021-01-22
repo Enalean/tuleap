@@ -197,11 +197,11 @@ class ProjectTrackersResource extends AuthenticatedResource
         $offset,
         $filter_on_tracker_administration_permission
     ) {
-        $all_trackers            = TrackerFactory::instance()->getTrackersByGroupIdUserCanView(
+        $all_trackers = TrackerFactory::instance()->getTrackersByGroupIdUserCanView(
             $project->getId(),
             $user
         );
-        $trackers                = array_slice($all_trackers, $offset, $limit);
+        $trackers     = array_slice($all_trackers, $offset, $limit);
 
         $transition_retriever = new TransitionRetriever(
             new StateFactory(
@@ -219,7 +219,7 @@ class ProjectTrackersResource extends AuthenticatedResource
             )
         );
 
-        $builder = new Tracker_REST_TrackerRestBuilder(
+        $builder                 = new Tracker_REST_TrackerRestBuilder(
             Tracker_FormElementFactory::instance(),
             new FormElementRepresentationsBuilder(
                 Tracker_FormElementFactory::instance(),
@@ -256,7 +256,7 @@ class ProjectTrackersResource extends AuthenticatedResource
             }
             if ($representation === self::MINIMAL_REPRESENTATION) {
                 $tracker_minimal_representation = MinimalTrackerRepresentation::build($tracker);
-                $tracker_representations[] = $tracker_minimal_representation;
+                $tracker_representations[]      = $tracker_minimal_representation;
             } else {
                 $tracker_representations[] = $builder->getTrackerRepresentationInTrackerContext($user, $tracker);
             }

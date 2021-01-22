@@ -67,7 +67,7 @@ class JWTGeneratorTest extends TestCase
         $this->ugroup_literalizer->shouldReceive('getUserGroupsForUserWithArobase')->andReturn($u_groups);
 
         $this->jwt_configuration = Configuration::forSymmetricSigner(new Sha512(), Key\InMemory::plainText('private_key_test'));
-        $this->jwt_generator = new JWTGenerator($this->jwt_configuration, $this->user_manager, $this->ugroup_literalizer);
+        $this->jwt_generator     = new JWTGenerator($this->jwt_configuration, $this->user_manager, $this->ugroup_literalizer);
     }
 
     public function testJWTDecodedWithAlgorithmHS512(): void
@@ -84,8 +84,8 @@ class JWTGeneratorTest extends TestCase
             'user_rights' => ['@site_active']
         ];
 
-        $token        = $this->jwt_generator->getToken();
-        $decoded      = (new Parser())->parse($token);
+        $token   = $this->jwt_generator->getToken();
+        $decoded = (new Parser())->parse($token);
 
         self::assertSame($expected, (array) $decoded->claims()->get('data'));
     }

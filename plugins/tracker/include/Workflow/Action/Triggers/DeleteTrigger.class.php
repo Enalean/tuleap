@@ -33,8 +33,8 @@ class Tracker_Workflow_Action_Triggers_DeleteTrigger
 
     public function __construct(Tracker $tracker, Tracker_Workflow_Trigger_RulesManager $rule_manager)
     {
-        $this->tracker             = $tracker;
-        $this->rule_manager        = $rule_manager;
+        $this->tracker      = $tracker;
+        $this->rule_manager = $rule_manager;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)

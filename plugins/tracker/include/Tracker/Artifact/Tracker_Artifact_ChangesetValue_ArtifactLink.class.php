@@ -147,12 +147,12 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     {
         $next = $this->getValue();
         if (! empty($next)) {
-            $result = '';
+            $result    = '';
             $added_arr = [];
             foreach ($next as $art_id => $added_element) {
                 $added_arr[] = $added_element->getLink();
             }
-            $added   = implode(', ', $added_arr);
+            $added  = implode(', ', $added_arr);
             $result = ' ' . dgettext('tuleap-tracker', 'set to') . ' ' . $added;
             return $result;
         }

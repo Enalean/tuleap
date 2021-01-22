@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
 
 class IncomingMailParsingTest extends TestCase
 {
-    public const HTML_ONLY_BODY = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+    public const HTML_ONLY_BODY                   = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 </head>

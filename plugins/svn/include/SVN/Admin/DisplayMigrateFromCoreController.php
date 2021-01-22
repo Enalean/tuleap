@@ -62,7 +62,7 @@ final class DisplayMigrateFromCoreController implements DispatchableWithRequest,
     ) {
         $this->project_manager     = $project_manager;
         $this->permissions_manager = $permissions_manager;
-        $this->repository_manager = $repository_manager;
+        $this->repository_manager  = $repository_manager;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void

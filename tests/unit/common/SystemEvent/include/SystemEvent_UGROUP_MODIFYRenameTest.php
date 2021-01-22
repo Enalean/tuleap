@@ -42,7 +42,7 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends TestCase
         parent::setUp();
 
         $this->event_manager = \Mockery::mock(\EventManager::class);
-        $project_manager = \Mockery::spy(\ProjectManager::class);
+        $project_manager     = \Mockery::spy(\ProjectManager::class);
 
         EventManager::setInstance($this->event_manager);
         ProjectManager::setInstance($project_manager);

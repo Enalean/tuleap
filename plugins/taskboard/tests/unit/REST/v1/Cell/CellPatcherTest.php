@@ -135,8 +135,8 @@ final class CellPatcherTest extends TestCase
     {
         $this->mockSwimlaneArtifactWithValidProject();
         $this->mockArtifact(456, false);
-        $payload         = new CellPatchRepresentation();
-        $payload->add    = 456;
+        $payload      = new CellPatchRepresentation();
+        $payload->add = 456;
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);

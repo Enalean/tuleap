@@ -168,7 +168,7 @@ class TrackerFieldsResource extends AuthenticatedResource
         $file_ongoing_upload_dao = new FileOngoingUploadDao();
 
         $upload_path_allocator = new UploadPathAllocator($file_ongoing_upload_dao, Tracker_FormElementFactory::instance());
-        $file_creator     = new FileCreator(
+        $file_creator          = new FileCreator(
             new FileToUploadCreator(
                 $file_ongoing_upload_dao,
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),

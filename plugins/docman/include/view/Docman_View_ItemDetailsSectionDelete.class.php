@@ -33,17 +33,17 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
     public function getContent($params = [])
     {
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : (is_a($this->item, 'Docman_File') ? 'file' : 'document');
-        $item_type = $this->_controller->getItemFactory()->getItemTypeForItem($this->item);
+        $item_type          = $this->_controller->getItemFactory()->getItemTypeForItem($this->item);
 
         $vVersion = new Valid_UInt('version');
         $vVersion->required();
         if ($this->_controller->request->valid($vVersion)) {
             $version = $this->_controller->request->get('version');
-            $label = $this->_controller->request->get('label');
+            $label   = $this->_controller->request->get('label');
         } else {
             $version = false;
         }
-        $content = '';
+        $content  = '';
         $content .= '<dl><dt>' . dgettext('tuleap-docman', 'Delete') . '</dt><dd>';
         $content .= '<form action="' . $this->url . '" method="POST">';
         $content .= '<div class="docman_confirm_delete">';
@@ -83,11 +83,11 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
 
     public function getWikiDeleteInfo()
     {
-        $output = '';
+        $output  = '';
         $output .= dgettext('tuleap-docman', '<p><em>Please Note that if you check the \'Cascade deletion to wiki\' option, the referenced wiki page will no longer exist in wiki service too.</em></p>');
 
         // List of other possible referencers.
-        $pagename = $this->item->getPagename();
+        $pagename    = $this->item->getPagename();
         $referencers = $this->_controller->getItemFactory()->getWikiPageReferencers($pagename, $this->item->getGroupId());
         if (is_array($referencers) && count($referencers) > 1) {
             $output .= dgettext('tuleap-docman', '<p><em>You should also be aware that the following documents will no longer be valid if you choose to cascade deletion to wiki service:</em></p>');
@@ -111,20 +111,20 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
     private function getWikiDocumentPath($item)
     {
         $parents = [];
-        $html = '';
+        $html    = '';
 
         $purifier = Codendi_HTMLPurifier::instance();
 
         $reference = $item;
 
         while ($item && $item->getParentId() != 0) {
-            $item = $this->_controller->getItemFactory()->getItemFromDb($item->getParentId());
+            $item      = $this->_controller->getItemFactory()->getItemFromDb($item->getParentId());
             $parents[] = [
                 'id'    => $item->getId(),
                 'title' => $item->getTitle()
             ];
         }
-        $parents = array_reverse($parents);
+        $parents  = array_reverse($parents);
         $item_url = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&sort_update_date=0&action=show&id=';
         foreach ($parents as $parent) {
             $html .= '<a href="' . $item_url . urlencode($parent['id']) . '">' . $purifier->purify($parent['title']) . '</a>';

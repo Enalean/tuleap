@@ -35,8 +35,8 @@ class SetFieldValueRepresentation extends PostActionRepresentation
 {
     public const TYPE = "set_field_value";
 
-    public const UNSET_DATE_VALUE = null;
-    public const EMPTY_DATE_VALUE = "";
+    public const UNSET_DATE_VALUE   = null;
+    public const EMPTY_DATE_VALUE   = "";
     public const CURRENT_DATE_VALUE = "current";
 
     public const DATE_VALUE_MAPPING = [

@@ -36,7 +36,7 @@ class StateStorage
 
     public function saveState(State $state): void
     {
-        $stored_state = new SessionState(
+        $stored_state                             = new SessionState(
             $state->getSecretKey(),
             $state->getReturnTo(),
             $state->getNonce(),

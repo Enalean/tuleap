@@ -21,7 +21,7 @@
 require_once __DIR__ . '/../../../src/vendor/autoload.php';
 
 $locar_inc_finder = new Config_LocalIncFinder();
-$local_inc = $locar_inc_finder->getLocalIncPath();
+$local_inc        = $locar_inc_finder->getLocalIncPath();
 
 require_once $local_inc;
 
@@ -35,7 +35,7 @@ $dao = new MediawikiSiteAdminResourceRestrictorDao();
 if (isset($GLOBALS['TULEAP_MW_PROJECT'])) {
     $wiki_name = $GLOBALS['TULEAP_MW_PROJECT'];
 } else {
-    $uri = explode('/', $_SERVER['REQUEST_URI']);
+    $uri       = explode('/', $_SERVER['REQUEST_URI']);
     $wiki_name = $uri[4];
 }
 

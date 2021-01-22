@@ -160,7 +160,7 @@ class Config
         $test_execution_tracker_id  = $this->getTestExecutionTrackerId($template);
         $issue_tracker_id           = $this->getIssueTrackerId($template);
 
-        $trackers_id                = [];
+        $trackers_id = [];
         if ($campaign_tracker_id) {
             $trackers_id[] = new TestmanagementConfigTracker(
                 TestmanagementTrackersConfigurator::CAMPAIGN_TRACKER_NAME,

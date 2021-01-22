@@ -70,7 +70,7 @@ final class ListPickerIncluder
      */
     public static function getTrackersHavingListPickerDisabled(): array
     {
-        $config_value = \ForgeConfig::get(self::FORGE_CONFIG_KEY);
+        $config_value               = \ForgeConfig::get(self::FORGE_CONFIG_KEY);
         $tracker_id_prefix_position = strpos($config_value, "t:");
         if ($tracker_id_prefix_position === false) {
             return [];

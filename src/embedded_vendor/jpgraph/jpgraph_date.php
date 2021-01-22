@@ -48,11 +48,11 @@ define('SECPERMIN', 60);
 
 class DateScale extends LinearScale
 {
-    private $date_format = '';
-    private $iStartAlign = false;
-    private $iEndAlign = false;
+    private $date_format     = '';
+    private $iStartAlign     = false;
+    private $iEndAlign       = false;
     private $iStartTimeAlign = false;
-    private $iEndTimeAlign = false;
+    private $iEndTimeAlign   = false;
 
     //---------------
     // CONSTRUCTOR
@@ -61,11 +61,11 @@ class DateScale extends LinearScale
         assert($aType == "x");
         assert($aMin <= $aMax);
 
-        $this->type = $aType;
-        $this->scale = [$aMin, $aMax];
+        $this->type       = $aType;
+        $this->scale      = [$aMin, $aMax];
         $this->world_size = $aMax - $aMin;
-        $this->ticks = new LinearTicks();
-        $this->intscale = true;
+        $this->ticks      = new LinearTicks();
+        $this->intscale   = true;
     }
 
 
@@ -125,9 +125,9 @@ class DateScale extends LinearScale
                     $d -= $w;
                 } else {
                     $d += (7 - $w);
-                    $h = 23;
-                    $i = 59;
-                    $s = 59;
+                    $h  = 23;
+                    $i  = 59;
+                    $s  = 59;
                 }
             }
         }
@@ -168,7 +168,7 @@ class DateScale extends LinearScale
         $s = (int) date('s', $aTime);
         if ($aHourType !== false) {
             $aHourType %= 6;
-            $hourAdj = [0 => 1, 1 => 2, 2 => 3, 3 => 4, 4 => 6, 5 => 12];
+            $hourAdj    = [0 => 1, 1 => 2, 2 => 3, 3 => 4, 4 => 6, 5 => 12];
             if ($aRound == 0) {
                 $h = floor($h / $hourAdj[$aHourType]) * $hourAdj[$aHourType];
             } else {
@@ -178,17 +178,17 @@ class DateScale extends LinearScale
                 $h = ceil($h / $hourAdj[$aHourType]) * $hourAdj[$aHourType];
                 if ($h >= 24) {
                     $aTime += 86400;
-                    $y = (int) date('Y', $aTime);
-                    $m = (int) date('m', $aTime);
-                    $d = (int) date('d', $aTime);
-                    $h -= 24;
+                    $y      = (int) date('Y', $aTime);
+                    $m      = (int) date('m', $aTime);
+                    $d      = (int) date('d', $aTime);
+                    $h     -= 24;
                 }
             }
             $i = 0;
             $s = 0;
         } elseif ($aMinType !== false) {
             $aMinType %= 5;
-            $minAdj = [0 => 1, 1 => 5, 2 => 10, 3 => 15, 4 => 30];
+            $minAdj    = [0 => 1, 1 => 5, 2 => 10, 3 => 15, 4 => 30];
             if ($aRound == 0) {
                 $i = floor($i / $minAdj[$aMinType]) * $minAdj[$aMinType];
             } else {
@@ -198,29 +198,29 @@ class DateScale extends LinearScale
                 $i = ceil($i / $minAdj[$aMinType]) * $minAdj[$aMinType];
                 if ($i >= 60) {
                     $aTime += 3600;
-                    $y = (int) date('Y', $aTime);
-                    $m = (int) date('m', $aTime);
-                    $d = (int) date('d', $aTime);
-                    $h = (int) date('H', $aTime);
-                    $i = 0;
+                    $y      = (int) date('Y', $aTime);
+                    $m      = (int) date('m', $aTime);
+                    $d      = (int) date('d', $aTime);
+                    $h      = (int) date('H', $aTime);
+                    $i      = 0;
                 }
             }
             $s = 0;
         } elseif ($aSecType !== false) {
             $aSecType %= 5;
-            $secAdj = [0 => 1, 1 => 5, 2 => 10, 3 => 15, 4 => 30];
+            $secAdj    = [0 => 1, 1 => 5, 2 => 10, 3 => 15, 4 => 30];
             if ($aRound == 0) {
                 $s = floor($s / $secAdj[$aSecType]) * $secAdj[$aSecType];
             } else {
                 $s = ceil($s / $secAdj[$aSecType] * 1.0) * $secAdj[$aSecType];
                 if ($s >= 60) {
-                    $s = 0;
+                    $s      = 0;
                     $aTime += 60;
-                    $y = (int) date('Y', $aTime);
-                    $m = (int) date('m', $aTime);
-                    $d = (int) date('d', $aTime);
-                    $h = (int) date('H', $aTime);
-                    $i = (int) date('i', $aTime);
+                    $y      = (int) date('Y', $aTime);
+                    $m      = (int) date('m', $aTime);
+                    $d      = (int) date('d', $aTime);
+                    $h      = (int) date('H', $aTime);
+                    $i      = (int) date('i', $aTime);
                 }
             }
         }
@@ -331,12 +331,12 @@ class DateScale extends LinearScale
             return false;
         }
         $done = false;
-        $i = 0;
+        $i    = 0;
         while (! $done) {
             if ($diff > $scalePoints[2 * $i]) {
                 // Get major and minor scale for this intervall
                 $scaleSteps = $scalePoints[2 * $i + 1];
-                $major = $scaleSteps[0][min($aDensity, count($scaleSteps[0]) - 1)];
+                $major      = $scaleSteps[0][min($aDensity, count($scaleSteps[0]) - 1)];
                 // Try to find out which minor step looks best
                 $minor = $scaleSteps[1][min($aDensity, count($scaleSteps[1]) - 1)];
                 if ($aAdjust) {
@@ -413,7 +413,7 @@ class DateScale extends LinearScale
             $aEndAlign = $aStartAlign;
         }
         $this->iStartAlign = $aStartAlign;
-        $this->iEndAlign = $aEndAlign;
+        $this->iEndAlign   = $aEndAlign;
     }
 
     public function SetTimeAlign($aStartAlign, $aEndAlign = false)
@@ -422,7 +422,7 @@ class DateScale extends LinearScale
             $aEndAlign = $aStartAlign;
         }
         $this->iStartTimeAlign = $aStartAlign;
-        $this->iEndTimeAlign = $aEndAlign;
+        $this->iEndTimeAlign   = $aEndAlign;
     }
 
 
@@ -434,13 +434,13 @@ class DateScale extends LinearScale
             // Special case when we only have one data point.
             // Create a small artifical intervall to do the autoscaling
             $aStartTime -= 10;
-            $aEndTime += 10;
+            $aEndTime   += 10;
         }
         $done = false;
-        $i = 0;
+        $i    = 0;
         while (! $done && $i < 5) {
             list($adjstart,$adjend,$maj,$min,$format) = $this->DoDateAutoScale($aStartTime, $aEndTime, $i);
-            $n = floor(($adjend - $adjstart) / $maj);
+            $n                                        = floor(($adjend - $adjstart) / $maj);
             if ($n * 1.7 > $aNumSteps) {
                 $done = true;
             }

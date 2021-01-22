@@ -71,7 +71,7 @@ class DailyJobCommand extends Command
         $this->db_connection              = $db_connection;
         $this->execution_delayed_launcher = $execution_delayed_launcher;
         $this->access_key_revoker         = $access_key_revoker;
-        $this->user_suspension_manager = $user_suspension_manager;
+        $this->user_suspension_manager    = $user_suspension_manager;
     }
 
     protected function configure(): void

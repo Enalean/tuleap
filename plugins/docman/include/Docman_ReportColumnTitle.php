@@ -30,18 +30,18 @@ class Docman_ReportColumnTitle extends \Docman_ReportColumn
     }
     public function getTableBox($item, $view, $params)
     {
-        $html = '';
+        $html        = '';
         $docmanIcons = $view->_getDocmanIcons($params);
-        $icon_src = $docmanIcons->getIconForItem($item, $params);
-        $icon = '<img src="' . $icon_src . '" class="docman_item_icon" />';
-        $html .= '<span style="white-space: nowrap;">';
-        $html .= $icon;
-        $url = \Tuleap\Docman\View\DocmanViewURLBuilder::buildActionUrl($item, $params, ['action' => 'show', 'id' => $item->getId()], \false, \true);
-        $html .= '<a href="' . $url . '" id="docman_item_title_link_' . $item->getId() . '">';
-        $html .= \htmlentities($item->getTitle(), \ENT_QUOTES, 'UTF-8');
-        $html .= '</a>';
-        $html .= $view->getItemMenu($item, $params);
-        $html .= '</span>';
+        $icon_src    = $docmanIcons->getIconForItem($item, $params);
+        $icon        = '<img src="' . $icon_src . '" class="docman_item_icon" />';
+        $html       .= '<span style="white-space: nowrap;">';
+        $html       .= $icon;
+        $url         = \Tuleap\Docman\View\DocmanViewURLBuilder::buildActionUrl($item, $params, ['action' => 'show', 'id' => $item->getId()], \false, \true);
+        $html       .= '<a href="' . $url . '" id="docman_item_title_link_' . $item->getId() . '">';
+        $html       .= \htmlentities($item->getTitle(), \ENT_QUOTES, 'UTF-8');
+        $html       .= '</a>';
+        $html       .= $view->getItemMenu($item, $params);
+        $html       .= '</span>';
         return $html;
     }
     public function getJavascript($item, $view)

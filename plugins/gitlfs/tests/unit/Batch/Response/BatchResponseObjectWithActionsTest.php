@@ -32,7 +32,7 @@ class BatchResponseObjectWithActionsTest extends TestCase
 
     public function testBatchReponseObjectsWithActionsCanBeSerialized()
     {
-        $action_content  = \Mockery::mock(BatchResponseActions::class);
+        $action_content = \Mockery::mock(BatchResponseActions::class);
         $action_content->shouldReceive('jsonSerialize')->andReturns(new \stdClass());
 
         $oid  = 'oid';

@@ -64,16 +64,16 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject
     private function moveFieldsInTheirColumns($tv5_id)
     {
         $parent_id = $left = $right = $left_rank = $right_rank = $rank = null;
-        $sql = "SELECT *
+        $sql       = "SELECT *
                 FROM temp_tracker_field_$tv5_id
                 ORDER BY parent_id, global_rank";
         foreach ($this->retrieve($sql) as $data) {
             if ($parent_id !== $data['parent_id']) {
                 $parent_id = $data['parent_id'];
-                $left  = null;
-                $right = null;
-                $nb    = 0;
-                $rank  = 1;
+                $left      = null;
+                $right     = null;
+                $nb        = 0;
+                $rank      = 1;
                 $this->trace('Creating columns for ' . $parent_id);
             }
 
@@ -90,15 +90,15 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject
             } else {
                 if ($data['pos'] == 'L') {
                     if (! $left) {
-                        $left = $this->createColumn($nb++, $parent_id, $rank++);
-                        $left_rank  = 1;
+                        $left      = $this->createColumn($nb++, $parent_id, $rank++);
+                        $left_rank = 1;
                     }
                     $new_parent = $left;
                     $new_rank   = $left_rank++;
                     $this->trace("{$data['id']} will be moved to the left in #$new_parent.");
                 } else { //pos = R
                     if (! $right) {
-                        $right = $this->createColumn($nb++, $parent_id, $rank++);
+                        $right      = $this->createColumn($nb++, $parent_id, $rank++);
                         $right_rank = 1;
                     }
                     $new_parent = $right;
@@ -125,7 +125,7 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject
                 SELECT $parent_id, 'column', 'column_$index', 'c$index', $rank, tracker_id, use_it
                 FROM tracker_field
                 WHERE id = $parent_id";
-        $id = $this->updateAndGetLastId($sql);
+        $id  = $this->updateAndGetLastId($sql);
         $this->trace("c$index with rank $rank has been created #($id)");
         return $id;
     }

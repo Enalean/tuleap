@@ -38,14 +38,14 @@ class ListEndpointsPresenter
 
     public function __construct(Endpoint $endpoint, CSRFSynchronizerToken $csrf_add, CSRFSynchronizerToken $csrf_delete)
     {
-        $this->username_source = $endpoint->getUsernameSource();
-        $this->project_source  = $endpoint->getProjectSource();
-        $this->tracker_source  = $endpoint->getTrackerSource();
-        $this->username_target = $endpoint->getUsernameTarget();
-        $this->project_target  = $endpoint->getProjectTarget();
-        $this->base_uri        = $endpoint->getBaseUri();
-        $this->webhook         = $endpoint->getWebhook();
+        $this->username_source   = $endpoint->getUsernameSource();
+        $this->project_source    = $endpoint->getProjectSource();
+        $this->tracker_source    = $endpoint->getTrackerSource();
+        $this->username_target   = $endpoint->getUsernameTarget();
+        $this->project_target    = $endpoint->getProjectTarget();
+        $this->base_uri          = $endpoint->getBaseUri();
+        $this->webhook           = $endpoint->getWebhook();
         $this->csrf_token_delete = $csrf_delete;
-        $this->csrf_token_add = $csrf_add;
+        $this->csrf_token_add    = $csrf_add;
     }
 }

@@ -58,7 +58,7 @@ class LDAP_SyncMail
         foreach ($projectList as $project) {
             $projectRecipient = [];
             $projectAdmins    = $project->getAdmins();
-            $unixProjectName      = $project->getUnixName();
+            $unixProjectName  = $project->getUnixName();
             foreach ($projectAdmins as $admin) {
                 $projectRecipient[$admin->getId()] = $admin->getEmail();
             }

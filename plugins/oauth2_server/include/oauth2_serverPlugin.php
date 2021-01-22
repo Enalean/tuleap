@@ -260,7 +260,7 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routePostProjectAdmin(): DispatchableWithRequest
     {
-        $storage =& $_SESSION ?? [];
+        $storage          =& $_SESSION ?? [];
         $response_factory = HTTPFactoryBuilder::responseFactory();
         return new \Tuleap\OAuth2Server\Administration\AddAppController(
             $response_factory,
@@ -288,7 +288,7 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routePostSiteAdmin(): DispatchableWithRequest
     {
-        $storage =& $_SESSION ?? [];
+        $storage          =& $_SESSION ?? [];
         $response_factory = HTTPFactoryBuilder::responseFactory();
         return new \Tuleap\OAuth2Server\Administration\AddAppController(
             $response_factory,
@@ -462,10 +462,10 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeAuthorizationEndpoint(): DispatchableWithRequest
     {
-        $response_factory = HTTPFactoryBuilder::responseFactory();
-        $stream_factory = HTTPFactoryBuilder::streamFactory();
+        $response_factory     = HTTPFactoryBuilder::responseFactory();
+        $stream_factory       = HTTPFactoryBuilder::streamFactory();
         $redirect_uri_builder = new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory());
-        $scope_builder = $this->buildScopeBuilder();
+        $scope_builder        = $this->buildScopeBuilder();
         return new AuthorizationEndpointController(
             new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormRenderer(
                 $response_factory,
@@ -624,13 +624,13 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeTokenRevocation(): DispatchableWithRequest
     {
-        $response_factory = HTTPFactoryBuilder::responseFactory();
-        $stream_factory   = HTTPFactoryBuilder::streamFactory();
-        $app_dao          = new AppDao();
+        $response_factory           = HTTPFactoryBuilder::responseFactory();
+        $stream_factory             = HTTPFactoryBuilder::streamFactory();
+        $app_dao                    = new AppDao();
         $authorization_code_revoker = new OAuth2AuthorizationCodeRevoker(
             new OAuth2AuthorizationCodeDAO()
         );
-        $split_token_hasher = new SplitTokenVerificationStringHasher();
+        $split_token_hasher         = new SplitTokenVerificationStringHasher();
         return new \Tuleap\OAuth2Server\Grant\TokenRevocationController(
             $response_factory,
             $stream_factory,

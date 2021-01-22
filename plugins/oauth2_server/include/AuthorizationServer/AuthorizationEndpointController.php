@@ -55,12 +55,12 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
     public const  CODE_PARAMETER          = 'code';
     public const  STATE_PARAMETER         = 'state';
     // see https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
-    private const NONCE_PARAMETER         = 'nonce';
-    public const PROMPT_PARAMETER         = 'prompt';
-    private const MAX_AGE_PARAMETER       = 'max_age';
-    private const REQUEST_PARAMETER       = 'request';
-    private const REQUEST_URI_PARAMETER   = 'request_uri';
-    private const REGISTRATION_PARAMETER  = 'registration';
+    private const NONCE_PARAMETER        = 'nonce';
+    public const PROMPT_PARAMETER        = 'prompt';
+    private const MAX_AGE_PARAMETER      = 'max_age';
+    private const REQUEST_PARAMETER      = 'request';
+    private const REQUEST_URI_PARAMETER  = 'request_uri';
+    private const REGISTRATION_PARAMETER = 'registration';
     // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
     public const  ERROR_PARAMETER            = 'error';
     public const  ERROR_CODE_INVALID_REQUEST = 'invalid_request';

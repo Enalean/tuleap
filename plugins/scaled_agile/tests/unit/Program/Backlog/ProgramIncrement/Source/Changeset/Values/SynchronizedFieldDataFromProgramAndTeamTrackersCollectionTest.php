@@ -97,7 +97,7 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
 
     private function buildSynchronizedFieldDataFromProgramAndTeamTrackers(bool $submitable, bool $updatable): SynchronizedFieldFromProgramAndTeamTrackers
     {
-        $artifact_link      = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
         $this->mockField($artifact_link, 1, $submitable, $updatable);
         $artifact_link_field_data = new Field($artifact_link);
 
@@ -105,19 +105,19 @@ final class SynchronizedFieldDataFromProgramAndTeamTrackersCollectionTest extend
         $this->mockField($title_field, 2, true, true);
         $title_field_data = new Field($title_field);
 
-        $description_field    = Mockery::mock(Tracker_FormElement_Field_Text::class);
+        $description_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
         $this->mockField($description_field, 3, true, true);
         $description_field_data = new Field($description_field);
 
-        $status_field        = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
+        $status_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
         $this->mockField($status_field, 4, true, true);
         $status_field_data = new Field($status_field);
 
-        $field_start_date      = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $field_start_date = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_start_date, 5, true, true);
         $start_date_field_data = new Field($field_start_date);
 
-        $field_end_date          = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $field_end_date = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_end_date, 6, true, true);
         $end_date_field_data = new Field($field_end_date);
 

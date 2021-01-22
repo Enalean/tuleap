@@ -70,7 +70,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
     {
         parent::setUp();
 
-        $timezone_retriever = new TimezoneRetriever();
+        $timezone_retriever      = new TimezoneRetriever();
         $this->original_timezone = $timezone_retriever::getServerTimezone();
 
         $logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
@@ -89,8 +89,8 @@ class BurndownDataBuilderForRESTTest extends TestCase
         $cache_checker = Mockery::mock(BurndownCacheGenerationChecker::class);
         $cache_checker->shouldReceive('isBurndownUnderCalculationBasedOnServerTimezone')->andReturn(false);
 
-        $this->computed_cache = Mockery::mock(ComputedFieldDao::class);
-        $this->common_data_builder = new BurndownCommonDataBuilder(
+        $this->computed_cache               = Mockery::mock(ComputedFieldDao::class);
+        $this->common_data_builder          = new BurndownCommonDataBuilder(
             $logger,
             $field_retriever,
             Mockery::mock(ChartConfigurationValueRetriever::class),
@@ -127,7 +127,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
         $this->user->shouldReceive("getTimezone")->andReturn('America/Los_Angeles');
 
         $start_date = strtotime('2018-11-01');
-        $duration = 5;
+        $duration   = 5;
 
         $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
@@ -144,7 +144,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
         $this->user->shouldReceive("getTimezone")->andReturn('Asia/Tokyo');
 
         $start_date = strtotime('2018-11-01');
-        $duration = 5;
+        $duration   = 5;
 
         $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
@@ -162,7 +162,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
 
         $start_date = strtotime('2018-11-01');
         $second_day = strtotime('2018-11-02');
-        $third_day = strtotime('2018-11-03');
+        $third_day  = strtotime('2018-11-03');
 
         $duration = 2;
 
@@ -202,7 +202,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
 
         $start_date = strtotime('2018-11-01');
         $second_day = strtotime('2018-11-02');
-        $third_day = strtotime('2018-11-03');
+        $third_day  = strtotime('2018-11-03');
 
         $this->computed_cache->shouldReceive("searchCachedDays")->andReturns(
             [

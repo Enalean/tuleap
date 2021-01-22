@@ -34,7 +34,7 @@ $frsrf   = new FRSReleaseFactory();
 $user    = UserManager::instance()->getCurrentUser();
 $release = $frsrf->getFRSReleaseFromDb($release_id);
 
-$permission_manager = FRSPermissionManager::build();
+$permission_manager         = FRSPermissionManager::build();
 $release_permission_manager = new ReleasePermissionManager($permission_manager, $frsrf);
 if (
     $release === null ||

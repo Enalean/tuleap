@@ -43,7 +43,7 @@ class DatabaseInitialization extends \DatabaseInitialization
         $this->mysqli->real_query($sql);
 
         $project_id = (int) $gitlab_integration_project->getID();
-        $sql = "INSERT INTO plugin_gitlab_repository_project (id, project_id)
+        $sql        = "INSERT INTO plugin_gitlab_repository_project (id, project_id)
                 VALUES (1, $project_id)";
 
         $this->mysqli->real_query($sql);

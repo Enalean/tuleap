@@ -43,7 +43,7 @@ final class UserManagerAuthenticateTest extends TestCase
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
-    private $username    = 'toto';
+    private $username = 'toto';
     private $password;
     private $ldap_params = [
         'dn'          => 'dc=tuleap,dc=local',
@@ -81,7 +81,7 @@ final class UserManagerAuthenticateTest extends TestCase
     {
         parent::setUp();
         ForgeConfig::set('sys_logger_level', 'debug');
-        $this->password = new ConcealedString('welcome0');
+        $this->password                     = new ConcealedString('welcome0');
         $this->empty_ldap_result_iterator   = $this->buildLDAPIterator([], []);
         $this->john_mc_lane_result_iterator = $this->buildLDAPIterator(
             [
@@ -315,14 +315,14 @@ final class UserManagerAuthenticateTest extends TestCase
         $ldap_info = [
             'count' => count($info),
         ];
-        $i = 0;
+        $i         = 0;
         foreach ($info as $people) {
             $nb_params_excluding_dn = count($people) - 1;
-            $ldap_info[$i] = [
+            $ldap_info[$i]          = [
                 'dn'    => $people['dn'],
                 'count' => $nb_params_excluding_dn
             ];
-            $j = 0;
+            $j                      = 0;
             foreach ($people as $param => $value) {
                 if ($param == 'dn') {
                     continue;
@@ -331,7 +331,7 @@ final class UserManagerAuthenticateTest extends TestCase
                     'count' => 1,
                     0       => $value,
                 ];
-                $ldap_info[$i][$j] = $param;
+                $ldap_info[$i][$j]     = $param;
                 $j++;
             }
             $i++;

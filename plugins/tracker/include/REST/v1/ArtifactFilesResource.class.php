@@ -42,7 +42,7 @@ class ArtifactFilesResource
 
     public function __construct()
     {
-        $this->user          = UserManager::instance()->getCurrentUser();
+        $this->user = UserManager::instance()->getCurrentUser();
     }
 
     /**

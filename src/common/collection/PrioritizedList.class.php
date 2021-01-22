@@ -40,7 +40,7 @@ class PrioritizedList extends LinkedList
      */
     public function add($element, $priority = 0)
     {
-        $this->elements[] = $element;
+        $this->elements[]              = $element;
         $this->priorities[$priority][] = count($this->elements) - 1;
     }
 

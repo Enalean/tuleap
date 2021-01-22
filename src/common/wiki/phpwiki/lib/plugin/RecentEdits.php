@@ -22,9 +22,9 @@ class WikiPlugin_RecentEdits extends WikiPlugin_RecentChanges
 
     public function getDefaultArguments()
     {
-        $args = parent::getDefaultArguments();
+        $args               = parent::getDefaultArguments();
         $args['show_minor'] = true;
-        $args['show_all'] = true;
+        $args['show_all']   = true;
         return $args;
     }
 
@@ -38,12 +38,12 @@ class WikiPlugin_RecentEdits extends WikiPlugin_RecentChanges
         if (! isset($args['limit'])) {
             $args['limit'] = 15;
         }
-        $args['format'] = 'box';
-        $args['show_minor'] = true;
-        $args['show_major'] = true;
+        $args['format']       = 'box';
+        $args['show_minor']   = true;
+        $args['show_major']   = true;
         $args['show_deleted'] = false;
-        $args['show_all'] = true;
-        $args['days'] = 90;
+        $args['show_all']     = true;
+        $args['days']         = 90;
         return $this->makeBox(
             WikiLink(_("RecentEdits"), '', _("Recent Edits")),
             $this->format($this->getChanges($request->_dbi, $args), $args)

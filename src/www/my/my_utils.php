@@ -31,7 +31,7 @@ function my_hide_url($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
     global $Language;
 
     $pref_name = 'my_hide_' . $svc . $db_item_id;
-    $old_hide = $old_count = $old_pref_value = user_get_preference($pref_name);
+    $old_hide  = $old_count = $old_pref_value = user_get_preference($pref_name);
     if ($old_pref_value) {
         list($old_hide,$old_count) = explode('|', $old_pref_value);
     }
@@ -49,7 +49,7 @@ function my_hide_url($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
             $pref_value = "$hide|$count";
         } else {
             $pref_value = "$old_hide|$count";
-            $hide = $old_hide;
+            $hide       = $old_hide;
         }
     } else {
         if ($old_hide) {
@@ -81,8 +81,8 @@ function my_hide_url($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
 
 function my_hide($svc, $db_item_id, $item_id, $hide)
 {
-    $pref_name = 'my_hide_' . $svc . $db_item_id;
-    $old_pref_value = user_get_preference($pref_name);
+    $pref_name                 = 'my_hide_' . $svc . $db_item_id;
+    $old_pref_value            = user_get_preference($pref_name);
     list($old_hide,$old_count) = explode('|', $old_pref_value);
 
     // Make sure they are both 0 if never set before

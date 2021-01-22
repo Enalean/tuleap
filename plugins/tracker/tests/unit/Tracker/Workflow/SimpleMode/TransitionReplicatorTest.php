@@ -87,7 +87,7 @@ class TransitionReplicatorTest extends TestCase
             ->shouldReceive('getFieldNotEmptyCondition')
             ->andReturn($not_empty_condition);
         $is_comment_required = true;
-        $comment_condition = Mockery::mock(\Workflow_Transition_Condition_CommentNotEmpty::class)
+        $comment_condition   = Mockery::mock(\Workflow_Transition_Condition_CommentNotEmpty::class)
             ->shouldReceive('isCommentRequired')
             ->andReturn($is_comment_required)
             ->getMock();

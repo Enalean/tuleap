@@ -90,10 +90,10 @@ final class TrackerCollectionFactoryTest extends TestCase
 
     public function testBuildFromProgramProjectAndItsTeams(): void
     {
-        $teams               = new TeamProjectsCollection(
+        $teams = new TeamProjectsCollection(
             [$this->first_team_project_data, $this->second_team_project_data]
         );
-        $user                = UserTestBuilder::aUser()->build();
+        $user  = UserTestBuilder::aUser()->build();
 
         $program_tracker_id = 512;
         $this->mockRootPlanning($program_tracker_id, 101, $user);
@@ -153,10 +153,10 @@ final class TrackerCollectionFactoryTest extends TestCase
 
     public function testBuildFromTeamProjects(): void
     {
-        $teams               = new TeamProjectsCollection(
+        $teams = new TeamProjectsCollection(
             [$this->first_team_project_data, $this->second_team_project_data]
         );
-        $user                = UserTestBuilder::aUser()->build();
+        $user  = UserTestBuilder::aUser()->build();
 
         $first_tracker_id = 1024;
         $this->mockRootPlanning($first_tracker_id, 103, $user);

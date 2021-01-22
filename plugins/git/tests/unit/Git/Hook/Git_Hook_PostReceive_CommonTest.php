@@ -45,17 +45,17 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user                       = \Mockery::spy(\PFUser::class);
-        $this->log_analyzer               = \Mockery::spy(\Git_Hook_LogAnalyzer::class);
-        $this->git_repository_factory     = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->user_manager               = \Mockery::spy(\UserManager::class);
-        $this->repository                 = \Mockery::spy(\GitRepository::class);
-        $this->ci_launcher                = \Mockery::spy(\Git_Ci_Launcher::class);
-        $this->parse_log                  = \Mockery::spy(\Git_Hook_ParseLog::class);
-        $this->system_event_manager       = \Mockery::spy(\Git_SystemEventManager::class);
-        $this->mail_builder               = \Mockery::spy(\MailBuilder::class);
-        $this->event_manager              = \Mockery::spy(\EventManager::class);
-        $this->request_sender             = \Mockery::spy(\Tuleap\Git\Webhook\WebhookRequestSender::class);
+        $this->user                   = \Mockery::spy(\PFUser::class);
+        $this->log_analyzer           = \Mockery::spy(\Git_Hook_LogAnalyzer::class);
+        $this->git_repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->user_manager           = \Mockery::spy(\UserManager::class);
+        $this->repository             = \Mockery::spy(\GitRepository::class);
+        $this->ci_launcher            = \Mockery::spy(\Git_Ci_Launcher::class);
+        $this->parse_log              = \Mockery::spy(\Git_Hook_ParseLog::class);
+        $this->system_event_manager   = \Mockery::spy(\Git_SystemEventManager::class);
+        $this->mail_builder           = \Mockery::spy(\MailBuilder::class);
+        $this->event_manager          = \Mockery::spy(\EventManager::class);
+        $this->request_sender         = \Mockery::spy(\Tuleap\Git\Webhook\WebhookRequestSender::class);
 
         $this->post_receive = new Git_Hook_PostReceive(
             $this->log_analyzer,

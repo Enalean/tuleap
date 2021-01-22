@@ -78,7 +78,7 @@ class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.Class
      */
     public function archiveDeletedItem(ArchiveDeletedItemEvent $event): void
     {
-        $logger           = $this->getLogger();
+        $logger = $this->getLogger();
 
         $archive_path = $this->getWellFormattedArchivePath();
 
@@ -94,7 +94,7 @@ class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.Class
             return;
         }
 
-        $source_path = $event->getSourcePath();
+        $source_path      = $event->getSourcePath();
         $destination_path = $archive_path . $event->getArchivePrefix() . '_' . basename($source_path);
 
         if (! file_exists($source_path)) {

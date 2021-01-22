@@ -249,7 +249,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         Codendi_Request $request,
         PFUser $current_user
     ) {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
 
         if ($list_fields = Tracker_FormElementFactory::instance()->getUsedListFields($this->tracker)) {
@@ -258,7 +258,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
             $html .= '<input type="hidden" name="field_id" value="' . $hp->purify((int) $this->getFieldId()) . '">';
 
             // field selectbox
-            $field = null;
+            $field  = null;
             $select = '<select name="field_id">';
 
             $selected = '';
@@ -270,7 +270,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
             foreach ($list_fields as $list_field) {
                 $selected = '';
                 if ($list_field->getId() == $this->getFieldId()) {
-                    $field = $list_field;
+                    $field    = $list_field;
                     $selected = ' selected="selected" ';
                 }
                 $select .= '<option value="' . $hp->purify($list_field->getId()) . '" ' . $selected . '>' . $hp->purify($list_field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
@@ -420,7 +420,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
 
         $this->list_field  = null;
         $this->open_values = [];
-        $dao = new Tracker_Semantic_StatusDao();
+        $dao               = new Tracker_Semantic_StatusDao();
         $dao->delete($this->tracker->getId());
     }
 
@@ -436,7 +436,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
      */
     public function save()
     {
-        $dao = new Tracker_Semantic_StatusDao();
+        $dao         = new Tracker_Semantic_StatusDao();
         $open_values = [];
         foreach ($this->open_values as $v) {
             if (is_scalar($v)) {
@@ -457,7 +457,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         $dao = $this->getDao();
 
         $dao->startTransaction();
-        $new_id = $this->list_field->addBindValue($new_value);
+        $new_id              = $this->list_field->addBindValue($new_value);
         $this->open_values[] = $new_id;
         $this->save();
         $dao->commit();

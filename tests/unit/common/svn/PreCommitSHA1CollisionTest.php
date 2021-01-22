@@ -30,7 +30,7 @@ class PreCommitSHA1CollisionTest extends TestCase
 
     public function testItAcceptsCommitThatDoesNotContainSHA1Collision(): void
     {
-        $svn_hook                = \Mockery::spy(\SVN_Hooks::class)->shouldAllowMockingProtectedMethods();
+        $svn_hook = \Mockery::spy(\SVN_Hooks::class)->shouldAllowMockingProtectedMethods();
         $svn_hook->shouldReceive('getProjectFromRepositoryPath')->andReturns(\Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]));
         $svnlook                 = \Mockery::spy(\SVN_Svnlook::class);
         $sha1_collision_detector = \Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class);
@@ -52,7 +52,7 @@ class PreCommitSHA1CollisionTest extends TestCase
 
     public function testItRejectsCommitContainingSHA1Collision(): void
     {
-        $svn_hook                = \Mockery::spy(\SVN_Hooks::class)->shouldAllowMockingProtectedMethods();
+        $svn_hook = \Mockery::spy(\SVN_Hooks::class)->shouldAllowMockingProtectedMethods();
         $svn_hook->shouldReceive('getProjectFromRepositoryPath')->andReturns(\Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]));
         $svnlook                 = \Mockery::spy(\SVN_Svnlook::class);
         $sha1_collision_detector = \Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class);

@@ -123,7 +123,7 @@ class DB_common extends PEAR
      */
     public function toString()
     {
-        $info = strtolower(static::class);
+        $info  = strtolower(static::class);
         $info .=  ': (phptype=' . $this->phptype .
                   ', dbsyntax=' . $this->dbsyntax .
                   ')';
@@ -782,7 +782,7 @@ class DB_common extends PEAR
      */
     public function prepare($query)
     {
-        $tokens   = preg_split(
+        $tokens    = preg_split(
             '/((?<!\\\)[&?!])/',
             $query,
             -1,
@@ -811,8 +811,8 @@ class DB_common extends PEAR
         $this->prepare_tokens[] = &$newtokens;
         end($this->prepare_tokens);
 
-        $k = key($this->prepare_tokens);
-        $this->prepare_types[$k] = $types;
+        $k                          = key($this->prepare_tokens);
+        $this->prepare_types[$k]    = $types;
         $this->prepared_queries[$k] = implode(' ', $newtokens);
 
         return $k;
@@ -889,15 +889,15 @@ class DB_common extends PEAR
         switch ($mode) {
             case DB_AUTOQUERY_INSERT:
                 $values = '';
-                $names = '';
+                $names  = '';
                 foreach ($table_fields as $value) {
                     if ($first) {
                         $first = false;
                     } else {
-                        $names .= ',';
+                        $names  .= ',';
                         $values .= ',';
                     }
-                    $names .= $value;
+                    $names  .= $value;
                     $values .= '?';
                 }
                 return "INSERT INTO $table ($names) VALUES ($values)";
@@ -1271,11 +1271,11 @@ class DB_common extends PEAR
                 } else {
                     $tmp = $params;
                 }
-                $params = $fetchmode;
+                $params    = $fetchmode;
                 $fetchmode = $tmp;
             } elseif ($params !== null) {
                 $fetchmode = $params;
-                $params = [];
+                $params    = [];
             }
         }
 
@@ -1348,7 +1348,7 @@ class DB_common extends PEAR
         }
 
         $fetchmode = is_int($col) ? DB_FETCHMODE_ORDERED : DB_FETCHMODE_ASSOC;
-        $ret = [];
+        $ret       = [];
 
         while (is_array($row = $res->fetchRow($fetchmode))) {
             $ret[] = $row[$col];
@@ -1575,11 +1575,11 @@ class DB_common extends PEAR
                 } else {
                     $tmp = $params;
                 }
-                $params = $fetchmode;
+                $params    = $fetchmode;
                 $fetchmode = $tmp;
             } elseif ($params !== null) {
                 $fetchmode = $params;
-                $params = [];
+                $params    = [];
             }
         }
 

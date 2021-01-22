@@ -60,7 +60,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
-        $args = $this->getArgs($argstr, $request);
+        $args           = $this->getArgs($argstr, $request);
         $args['action'] = strtolower($args['action']);
         extract($args);
 
@@ -133,7 +133,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
 
     public function _do_purge_cache(&$request, $args)
     {
-        $dbi = $request->getDbh();
+        $dbi   = $request->getDbh();
         $pages = $dbi->getAllPages('include_empty'); // Do we really want the empty ones too?
         while (($page = $pages->next())) {
             $page->set('_cached_html', false);
@@ -144,13 +144,13 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
     public function _do_purge_bad_pagenames(&$request, $args)
     {
         // FIXME: this should be moved into WikiDB::normalize() or something...
-        $dbi = $request->getDbh();
+        $dbi   = $request->getDbh();
         $count = 0;
-        $list = HTML::ol(['align' => 'left']);
+        $list  = HTML::ol(['align' => 'left']);
         $pages = $dbi->getAllPages('include_empty'); // Do we really want the empty ones too?
         while (($page = $pages->next())) {
             $pagename = $page->getName();
-            $wpn = new WikiPageName($pagename);
+            $wpn      = new WikiPageName($pagename);
             if (! $wpn->isValid()) {
                 $dbi->purgePage($pagename);
                 $list->pushContent(HTML::li($pagename));
@@ -173,11 +173,11 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
      */
     public function _do_purge_empty_pages(&$request, $args)
     {
-        $dbi = $request->getDbh();
-        $count = 0;
+        $dbi         = $request->getDbh();
+        $count       = 0;
         $notpurgable = 0;
-        $list = HTML::ol(['align' => 'left']);
-        $pages = $dbi->getAllPages('include_empty');
+        $list        = HTML::ol(['align' => 'left']);
+        $pages       = $dbi->getAllPages('include_empty');
         while (($page = $pages->next())) {
             if (! $page->exists() and ($links = $page->getBackLinks('include_empty')) and ! $links->next()) {
                 $pagename = $page->getName();
@@ -228,11 +228,11 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
     public function _do_email_verification(&$request, &$args)
     {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
-        $dbi = $request->getDbh();
+        $dbi      = $request->getDbh();
         $pagelist = new PageList('pagename', 0, $args);
         //$args['return_url'] = 'action=email-verification-verified';
-        $email = new _PageList_Column_email('email', _("E-Mail"), 'left');
-        $emailVerified = new _PageList_Column_emailVerified(
+        $email                = new _PageList_Column_email('email', _("E-Mail"), 'left');
+        $emailVerified        = new _PageList_Column_emailVerified(
             'emailVerified',
             _("Verification Status"),
             'center'
@@ -242,7 +242,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         //This is the best method to find all users (Db and PersonalPage)
         $current_user = $request->_user;
         if (empty($args['verify'])) {
-            $group = $request->getGroup();
+            $group    = $request->getGroup();
             $allusers = $group->_allUsers();
         } else {
             $allusers = array_keys($args['user']);
@@ -258,9 +258,9 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
                 if (! $prefs->get('userid')) {
                     $prefs->set('userid', $username);
                 }
-                $group = (int) (count($pagelist->_rows) / $pagelist->_group_rows);
-                $class = ($group % 2) ? 'oddrow' : 'evenrow';
-                $row = HTML::tr(['class' => $class]);
+                $group       = (int) (count($pagelist->_rows) / $pagelist->_group_rows);
+                $class       = ($group % 2) ? 'oddrow' : 'evenrow';
+                $row         = HTML::tr(['class' => $class]);
                 $page_handle = $dbi->getPage($username);
                 $row->pushContent($pagelist->_columns[0]->format(
                     $pagelist,
@@ -283,7 +283,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         if (! empty($args['verify'])) {
             return HTML($pagelist->_generateTable(false));
         } else {
-            $args['verify'] = 1;
+            $args['verify']     = 1;
             $args['return_url'] = $request->getURLtoSelf();
             return HTML::form(
                 ['action' => $request->getPostURL(),
@@ -321,7 +321,7 @@ class _PageList_Column_emailVerified extends _PageList_Column
 {
     public function _getValue(&$prefs, $status)
     {
-        $name = $prefs->get('userid');
+        $name  = $prefs->get('userid');
         $input = HTML::input(['type' => 'checkbox',
                                    'name' => 'wikiadminutils[verified][' . $name . ']',
                                    'value' => 1]);

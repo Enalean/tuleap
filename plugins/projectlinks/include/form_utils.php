@@ -208,14 +208,14 @@ define("FORM_STD_COL_WIDTH", 25);   // used to calculate col span to help keep f
 define("FORM_URL_WIDTH", 120);        // standard maxlen for a URL
 
 //globals
-$gFormID = "";             // counter to identify each form uniquely
-$gFormName = "";           // to identify each form uniquely by name
-$gInForm = false;          // to control form errors
-$gFirstFormTextBox = "";   // used to place the focus in the first text item box
-$gFormSectionLevel = 0;   // used to ensure form sections are controlled properly
-$gFormGroupLevel = 0;   // used to ensure form groups are controlled properly
-$gFormHiddenParams = "";   // to accumulate the values of hidden parameters
-$gFormCaptions = "";
+$gFormID               = "";             // counter to identify each form uniquely
+$gFormName             = "";           // to identify each form uniquely by name
+$gInForm               = false;          // to control form errors
+$gFirstFormTextBox     = "";   // used to place the focus in the first text item box
+$gFormSectionLevel     = 0;   // used to ensure form sections are controlled properly
+$gFormGroupLevel       = 0;   // used to ensure form groups are controlled properly
+$gFormHiddenParams     = "";   // to accumulate the values of hidden parameters
+$gFormCaptions         = "";
 $gValidationCollection = []; // validation control
 
 //=============================================================================
@@ -225,12 +225,12 @@ function form_Start($serviceURI = "")
         $gFormHiddenParams, $gFormSectionLevel, $gFormGroupLevel,
         $gValidationCollection, $gPageDateCodeWritten, $gFormCaptions;
 
-    $gFormID += 1;
-    $gFormName = "Form" . $gFormID;
-    $gFormUsedDateBox = false;
-    $gFirstFormTextBox = "";
-    $gFormHiddenParams = [];
-    $gFormCaptions = [];
+    $gFormID              += 1;
+    $gFormName             = "Form" . $gFormID;
+    $gFormUsedDateBox      = false;
+    $gFirstFormTextBox     = "";
+    $gFormHiddenParams     = [];
+    $gFormCaptions         = [];
     $gValidationCollection = [];
 
     if ($gInForm) {
@@ -244,7 +244,7 @@ function form_Start($serviceURI = "")
     print "\n<Form ID='$gFormName' Action='$serviceURI' Method='post' enctype='multipart/form-data' onsubmit='return Validate" . $gFormName . "()'>\n";
     form_TableStart(0);
     $gFormSectionLevel = 0;
-    $gFormGroupLevel = 0;
+    $gFormGroupLevel   = 0;
 }
 
 //=============================================================================
@@ -305,21 +305,21 @@ function form_End(
     print "function Validate" . $gFormName . "()\n";
     print "{\n";
     print "var result = true;\n";
-    $EmitEmailCode = false;
+    $EmitEmailCode  = false;
     $EmitNumberCode = false;
     foreach ($gValidationCollection as $valItemKey => $valItem) {
         if (! isset($gFormCaptions[$valItem->ParamName])) {
             trigger_error("Validation item '" .
                 $valItem->ParamName . "' is not a form item ($valItemKey => $valItem)");
         }
-        $jsItemRef = form_JS_ElementRef($valItem->ParamName) . ".value";
+        $jsItemRef      = form_JS_ElementRef($valItem->ParamName) . ".value";
         $jsItemErrStart = "{result=false;alert('" . addslashes($gFormCaptions[$valItem->ParamName] ?? '') . ": ";
-        $jsItemErrEnd = "');}\n";
-        $jsItemPresent = "if ($jsItemRef == '')"
+        $jsItemErrEnd   = "');}\n";
+        $jsItemPresent  = "if ($jsItemRef == '')"
                     . $jsItemErrStart
                     . dgettext('tuleap-projectlinks', 'must be completed')
                     . $jsItemErrEnd;
-        $jsItemNumeric = "if (!isNumber($jsItemRef))"
+        $jsItemNumeric  = "if (!isNumber($jsItemRef))"
                     . $jsItemErrStart
                     . dgettext('tuleap-projectlinks', 'must be a number')
                     . $jsItemErrEnd;
@@ -413,7 +413,7 @@ function form_Validation($ParamName, $Tests, $OptionalParam = null)
         $Tests = [$Tests => $OptionalParam];
     }
     foreach ($Tests as $Test => $OptionalParam) {
-        $valItem = new tValidation();
+        $valItem            = new tValidation();
         $valItem->ParamName = $ParamName;
         switch ($Test) {
             case FORM_VAL_IS_NOT_ZERO_LENGTH:
@@ -433,7 +433,7 @@ function form_Validation($ParamName, $Tests, $OptionalParam = null)
                 trigger_error("form_Validation: Can't handle requested validation: " . $ParamName . " (" . $Test . ")");
                 break;
         }
-        $valItem->Test = $Test;
+        $valItem->Test           = $Test;
         $gValidationCollection[] = $valItem;
     }
 }
@@ -715,13 +715,13 @@ define("BLANK_ROW_PREFIX", true);
 
 function form_genSelectBoxFromSQL($ParamName, $Caption, $SQLstr, $DefaultValue = "", $PrefixWithBlankItem = NO_BLANK_ROW_PREFIX, $SubmitOnChange = NO_SUBMIT_ON_CHANGE)
 {
-    $db_res = db_query($SQLstr);
+    $db_res      = db_query($SQLstr);
     $optionsList = [];
     if ($PrefixWithBlankItem) {
         $optionsList["- - -"] = "";
     }
     while ($row = db_fetch_array($db_res)) {
-        $i = 2;
+        $i        = 2;
         $itemname = $row[1];
         while (isset($row[$i])) {
             $itemname .= " - " . $row[$i++];
@@ -755,7 +755,7 @@ function form_genTextBox($ParamName, $Caption, $DefaultValue = "", $Width = FORM
     switch (strtoupper(substr($DefaultValue, 0, 4))) {
         case "COF:":    // clear on focus
             $DefaultValue = substr($DefaultValue, 4);
-            $Script = " onfocus=\"JavaScript:if (this.value == '" . addslashes($DefaultValue) . "') this.value='';\"";
+            $Script       = " onfocus=\"JavaScript:if (this.value == '" . addslashes($DefaultValue) . "') this.value='';\"";
             break;
         default:
             $Script = "";
@@ -1069,10 +1069,10 @@ function update_database($tableName, $items, $selectCriteria = "")
     $sql = "";
     if (strlen($selectCriteria) <= 0) {
         // Insert
-        $SQLitems = "";
+        $SQLitems  = "";
         $SQLValues = "";
         foreach ($items as $name => $value) {
-            $SQLitems .= (strlen($SQLitems) ? "," : "") . " $name";
+            $SQLitems  .= (strlen($SQLitems) ? "," : "") . " $name";
             $SQLValues .= (strlen($SQLValues) ? "," : "") . " $value";
         }
         $sql = "INSERT INTO $tableName ($SQLitems) VALUES ($SQLValues);";

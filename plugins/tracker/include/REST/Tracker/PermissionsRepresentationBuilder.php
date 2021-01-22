@@ -40,19 +40,19 @@ class PermissionsRepresentationBuilder
 
     public function __construct(\UGroupManager $ugroup_manager, PermissionsFunctionsWrapper $permissions_functions_wrapper)
     {
-        $this->ugroup_manager = $ugroup_manager;
+        $this->ugroup_manager                = $ugroup_manager;
         $this->permissions_functions_wrapper = $permissions_functions_wrapper;
     }
 
     public function getPermissionsRepresentation(Tracker $tracker, \PFUser $user): ?PermissionsRepresentation
     {
         if ($tracker->userIsAdmin($user)) {
-            $ugroups = $this->permissions_functions_wrapper->getTrackerUGroupsPermissions($tracker);
-            $can_access = [];
-            $can_access_submitted_by_user = [];
-            $can_access_assigned_to_group = [];
+            $ugroups                       = $this->permissions_functions_wrapper->getTrackerUGroupsPermissions($tracker);
+            $can_access                    = [];
+            $can_access_submitted_by_user  = [];
+            $can_access_assigned_to_group  = [];
             $can_access_submitted_by_group = [];
-            $can_admin = [];
+            $can_admin                     = [];
             foreach ($ugroups as $ugroup) {
                 if (isset($ugroup['permissions'][Tracker::PERMISSION_ADMIN])) {
                     $this->addUserGroupRepresentation($can_admin, $tracker, $ugroup);
@@ -79,7 +79,7 @@ class PermissionsRepresentationBuilder
     {
         $ugroup = $this->ugroup_manager->getUGroup($tracker->getProject(), $result_array['ugroup']['id']);
         if ($ugroup) {
-            $representation = new MinimalUserGroupRepresentation((int) $ugroup->getProjectId(), $ugroup);
+            $representation           = new MinimalUserGroupRepresentation((int) $ugroup->getProjectId(), $ugroup);
             $ugroup_representations[] = $representation;
         }
     }

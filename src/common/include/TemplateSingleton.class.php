@@ -61,9 +61,9 @@ class TemplateSingleton
 
     public function update()
     {
-        $db_res = db_query("SELECT * FROM group_type");
+        $db_res           = db_query("SELECT * FROM group_type");
         $this->data_array = [];
-        $rows = db_numrows($db_res);
+        $rows             = db_numrows($db_res);
         for ($i = 0; $i < $rows; $i++) {
             $this->data_array[db_result($db_res, $i, 'type_id')] = db_result($db_res, $i, 'name');
         }

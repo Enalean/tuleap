@@ -62,7 +62,7 @@ class VersionToUploadCreatorTest extends TestCase
         $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns([]);
         $this->dao->shouldReceive('saveDocumentVersionOngoingUpload')->once()->andReturns(12);
 
-        $is_file_locked = false;
+        $is_file_locked     = false;
         $document_to_upload = $creator->create(
             $item,
             $user,
@@ -99,7 +99,7 @@ class VersionToUploadCreatorTest extends TestCase
             ]
         );
 
-        $is_file_locked = false;
+        $is_file_locked     = false;
         $document_to_upload = $creator->create(
             $parent_item,
             $user,

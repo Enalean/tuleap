@@ -52,7 +52,7 @@ class GitRepositoryReference extends \Tuleap\Git\REST\v1\GitRepositoryReference
     public function build(GitRepository $repository)
     {
         parent::build($repository);
-        $this->name = $repository->getFullName();
+        $this->name    = $repository->getFullName();
         $this->project = new ProjectReference($repository->getProject());
 
         $this->clone_http_url = $this->gitolite_access_URL_generator->getHTTPURL($repository) ?: null;

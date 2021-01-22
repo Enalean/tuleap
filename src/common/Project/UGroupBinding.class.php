@@ -197,8 +197,8 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
      */
     public function reloadUgroupBinding($ugroupId, $sourceId)
     {
-        $refresher = $this->getRecursiveRefresher();
-        $source_ugroup = $this->ugroupManager->getById($sourceId);
+        $refresher          = $this->getRecursiveRefresher();
+        $source_ugroup      = $this->ugroupManager->getById($sourceId);
         $destination_ugroup = $this->ugroupManager->getById($ugroupId);
         $refresher->refreshUGroupAndBoundUGroups($source_ugroup, $destination_ugroup);
     }

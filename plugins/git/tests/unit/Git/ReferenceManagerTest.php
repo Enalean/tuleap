@@ -41,12 +41,12 @@ class Git_ReferenceManagerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->project               = \Mockery::spy(\Project::class);
+        $this->project = \Mockery::spy(\Project::class);
         $this->project->shouldReceive('getId')->andReturns(101);
         $this->project->shouldReceive('getUnixName')->andReturns('gpig');
-        $this->repository_factory    = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->reference_manager     = \Mockery::spy(\ReferenceManager::class);
-        $this->repository            = \Mockery::spy(\GitRepository::class);
+        $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->reference_manager  = \Mockery::spy(\ReferenceManager::class);
+        $this->repository         = \Mockery::spy(\GitRepository::class);
         $this->repository->shouldReceive('getId')->andReturns(222);
         $this->git_reference_manager = new Git_ReferenceManager($this->repository_factory, $this->reference_manager);
     }

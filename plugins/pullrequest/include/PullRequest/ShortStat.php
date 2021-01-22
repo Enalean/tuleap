@@ -35,8 +35,8 @@ class ShortStat
         $lines_removed
     ) {
         $this->files_changed = $files_changed;
-        $this->lines_added    = $lines_added;
-        $this->lines_removed  = $lines_removed;
+        $this->lines_added   = $lines_added;
+        $this->lines_removed = $lines_removed;
     }
 
     public function getFilesChangedNumber()

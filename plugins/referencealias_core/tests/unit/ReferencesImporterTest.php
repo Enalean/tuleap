@@ -41,13 +41,13 @@ class ReferencesImporterTest extends TestCase
 
     public function testItShouldAddPkgLinks()
     {
-        $xml = <<<XML
+        $xml                = <<<XML
             <references>
                 <reference source="pkg1234" target="1"/>
                 <reference source="pkg12"   target="2"/>
             </references>
 XML;
-        $xml = new \SimpleXMLElement($xml);
+        $xml                = new \SimpleXMLElement($xml);
         $created_references = ['package' => ['1' => '1337', '2' => '42']];
 
         $this->dao->shouldReceive('getRef')->andReturn([]);
@@ -57,13 +57,13 @@ XML;
 
     public function testItShouldAddRelLinks()
     {
-        $xml = <<<XML
+        $xml                = <<<XML
             <references>
                 <reference source="rel4567" target="3"/>
                 <reference source="rel34"   target="4"/>
             </references>
 XML;
-        $xml = new \SimpleXMLElement($xml);
+        $xml                = new \SimpleXMLElement($xml);
         $created_references = ['release' => ['3' => '6778', '4' => '6779']];
 
         $this->dao->shouldReceive('getRef')->andReturn([]);
@@ -73,12 +73,12 @@ XML;
 
     public function testItShouldNotAddIfTargetIsUnknown()
     {
-        $xml = <<<XML
+        $xml                = <<<XML
             <references>
                 <reference source="pkg1234" target="456"/>
             </references>
 XML;
-        $xml = new \SimpleXMLElement($xml);
+        $xml                = new \SimpleXMLElement($xml);
         $created_references = ['package' => []];
 
         $dar = \Mockery::spy(DataAccessResult::class);
@@ -91,12 +91,12 @@ XML;
 
     public function testItShouldNotAddUnknownReferences()
     {
-        $xml = <<<XML
+        $xml                = <<<XML
             <references>
                 <reference source="stuff1234" target="1"/>
             </references>
 XML;
-        $xml = new \SimpleXMLElement($xml);
+        $xml                = new \SimpleXMLElement($xml);
         $created_references = ['package' => ['1' => '1337']];
 
         $dar = \Mockery::spy(DataAccessResult::class);

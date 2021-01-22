@@ -128,10 +128,10 @@ class ArtifactsResource extends AuthenticatedResource
     public const ORDER_ASC          = 'asc';
     public const ORDER_DESC         = 'desc';
 
-    public const VALUES_FORMAT_COLLECTION  = 'collection';
-    public const VALUES_FORMAT_BY_FIELD    = 'by_field';
-    public const VALUES_FORMAT_ALL         = 'all';
-    public const VALUES_DEFAULT            = null;
+    public const VALUES_FORMAT_COLLECTION = 'collection';
+    public const VALUES_FORMAT_BY_FIELD   = 'by_field';
+    public const VALUES_FORMAT_ALL        = 'all';
+    public const VALUES_DEFAULT           = null;
 
     public const DEFAULT_TRACKER_STRUCTURE  = self::MINIMAL_TRACKER_STRUCTURE;
     public const MINIMAL_TRACKER_STRUCTURE  = 'minimal';
@@ -1014,7 +1014,7 @@ class ArtifactsResource extends AuthenticatedResource
                 throw new RestException(400, $event->getNotUpdatableMessage());
             }
 
-            $move_action             = $this->getMoveAction($user);
+            $move_action = $this->getMoveAction($user);
 
             if ($patch->move->dry_run) {
                 $feedback_collector = new FeedbackFieldCollector();
@@ -1121,7 +1121,7 @@ class ArtifactsResource extends AuthenticatedResource
 
     private function getTrackerById(PFUser $user, $tracker_id)
     {
-        $tracker  = $this->tracker_factory->getTrackerById($tracker_id);
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if (! $tracker) {
             throw new RestException(404, "Tracker not found");
         }

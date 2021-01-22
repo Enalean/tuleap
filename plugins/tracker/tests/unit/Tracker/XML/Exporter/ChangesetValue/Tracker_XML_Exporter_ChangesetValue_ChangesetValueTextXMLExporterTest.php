@@ -44,8 +44,8 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTes
 
     protected function setUp(): void
     {
-        $this->field         = Mockery::spy(Tracker_FormElement_Field_File::class)->shouldReceive('getName')->andReturn('textarea')->getMock();
-        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter(
+        $this->field    = Mockery::spy(Tracker_FormElement_Field_File::class)->shouldReceive('getName')->andReturn('textarea')->getMock();
+        $this->exporter = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter(
             new FieldChangeTextBuilder(
                 new XML_SimpleXMLCDATAFactory()
             )

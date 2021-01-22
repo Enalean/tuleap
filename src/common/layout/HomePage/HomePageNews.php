@@ -88,17 +88,17 @@ class HomePageNews
         string $summary,
         string $details
     ) {
-        $this->summary = $summary;
+        $this->summary           = $summary;
         $this->purified_time_ago = DateHelper::relativeDateInlineContext((int) $date->getTimestamp(), $author);
-        $this->project_url = $project->getUrl();
+        $this->project_url       = $project->getUrl();
         $this->project_name      = $project->getPublicName();
         $this->author_url        = $author->getPublicProfileUrl();
         $this->author_name       = $author->getRealName();
         $this->author_avatar_url = $author->getAvatarUrl();
 
-        $this->purifier = $purifier;
+        $this->purifier          = $purifier;
         $this->unescaped_details = $details;
-        $this->project = $project;
+        $this->project           = $project;
     }
 
     public function details()

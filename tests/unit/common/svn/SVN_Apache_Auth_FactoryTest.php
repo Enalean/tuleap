@@ -36,7 +36,7 @@ class SVN_Apache_Auth_FactoryTest extends TestCase
 
     public function testItReturnModPluginIfPluginAuthIsConfiguredForThisProject(): void
     {
-        $my_svn_apache  = new class extends SVN_Apache {
+        $my_svn_apache = new class extends SVN_Apache {
             protected function getProjectAuthentication(\Project $project): string
             {
             }

@@ -128,7 +128,7 @@ class UserDashboardController
 
         $this->assets_includer->includeAssets($user_dashboards_presenter);
 
-        $title   = $this->getPageTitle($user_dashboards_presenter, $current_user);
+        $title    = $this->getPageTitle($user_dashboards_presenter, $current_user);
         $purifier = Codendi_HTMLPurifier::instance();
         $GLOBALS['Response']->header([
             'title' => $purifier->purify($title),

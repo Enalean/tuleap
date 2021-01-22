@@ -53,7 +53,7 @@ final class UserAccessKeyRepresentationRetrieverTest extends TestCase
         $this->access_key_header_extractor = \Mockery::mock(AccessKeyHeaderExtractor::class);
         $this->metadata_retriever          = \Mockery::mock(AccessKeyMetadataRetriever::class);
 
-        $this->representation_retriever    = new UserAccessKeyRepresentationRetriever(
+        $this->representation_retriever = new UserAccessKeyRepresentationRetriever(
             $this->access_key_header_extractor,
             $this->metadata_retriever
         );

@@ -47,7 +47,7 @@ function svn_header(Project $project, $params)
         ];
     }
 
-    $toolbar = [];
+    $toolbar   = [];
     $toolbar[] = ['title' => $Language->getText('svn_utils', 'svn_info'),
                      'url'   => '/svn/?func=info&group_id=' . $group_id];
 
@@ -104,7 +104,7 @@ function svn_header_admin($params)
         return;
     }
 
-    $toolbar = [];
+    $toolbar   = [];
     $toolbar[] = ['title' => $Language->getText('svn_utils', 'admin'),
                        'url'   => '/svn/admin/?group_id=' . $group_id];
     $toolbar[] = ['title' => $Language->getText('svn_admin_index', 'gen_sett'),
@@ -139,7 +139,7 @@ function svn_utils_technician_box($group_id, $name = '_commiter', $checked = 'xz
             // Selected 'my commits' but never commited
             $checked = 'xzxz';
         }
-        $userids = util_result_column_to_array($result, 0);
+        $userids   = util_result_column_to_array($result, 0);
         $usernames = util_result_column_to_array($result, 1);
         // Format user name according to preferences
         $UH = new UserHelper();
@@ -167,7 +167,7 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
     $purifier = Codendi_HTMLPurifier::instance();
 
     $url_nomorder = $url;
-    $url .= "&morder=" . $purifier->purify(urlencode($morder));
+    $url         .= "&morder=" . $purifier->purify(urlencode($morder));
 
     if ($morder != '') {
         $orderstr = $Language->getText('svn_utils', 'sorted_by') . ' ' . svn_utils_criteria_list_to_text($morder, $url_nomorder);
@@ -177,7 +177,7 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
     echo '<A name="results"></A>';
     echo '<h3>' . $Language->getText('svn_utils', 'match_ci', $total_rows) . ' ' . $orderstr . '</h3>';
 
-    $nav_bar = '<table width= "100%"><tr>';
+    $nav_bar  = '<table width= "100%"><tr>';
     $nav_bar .= '<td width="20%" align ="left">';
 
     echo '<P>' . $Language->getText('svn_utils', 'sort', $url . '&order=#results') . ' ';
@@ -185,11 +185,11 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
     if ($msort) {
         $url_alternate_sort = str_replace('msort=1', 'msort=0', $url) .
         '&order=#results';
-        $text = $Language->getText('svn_utils', 'deacti');
+        $text               = $Language->getText('svn_utils', 'deacti');
     } else {
         $url_alternate_sort = str_replace('msort=0', 'msort=1', $url) .
         '&order=#results';
-        $text = $Language->getText('svn_utils', 'acti');
+        $text               = $Language->getText('svn_utils', 'acti');
     }
 
     echo $Language->getText('svn_utils', 'multi_sort', [$url_alternate_sort, $text]) . "\n";
@@ -211,7 +211,7 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
     $nav_bar .= '</td>';
 
     $offset_last = min($offset + $chunksz - 1, $total_rows - 1);
-    $nav_bar .= '<td width= "60% " align = "center" class="small">' . $Language->getText('svn_utils', 'items', [($offset + 1), ($offset_last + 1)]) . "</td>\n";
+    $nav_bar    .= '<td width= "60% " align = "center" class="small">' . $Language->getText('svn_utils', 'items', [($offset + 1), ($offset_last + 1)]) . "</td>\n";
 
     $nav_bar .= '<td width="20%" align ="right">';
 
@@ -245,29 +245,29 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
         $filter_str = "&commiter='" . urlencode($commiter) . "'";
     }
     if ($path != '') {
-        $url_path = $purifier->purify(urlencode($path));
+        $url_path   = $purifier->purify(urlencode($path));
         $filter_str = $filter_str . "&path='$url_path'";
     }
 
-    $url .= "&order=";
-    $title_arr = [];
+    $url        .= "&order=";
+    $title_arr   = [];
     $title_arr[] = $Language->getText('svn_browse_revision', 'rev');
     $title_arr[] = $Language->getText('svn_utils', 'desc');
     $title_arr[] = $Language->getText('svn_utils', 'date');
     $title_arr[] = $Language->getText('svn_browse_revision', 'commiter');
 
-    $links_arr = [];
+    $links_arr   = [];
     $links_arr[] = $url . 'revision#results';
     $links_arr[] = $url . 'description#results';
     $links_arr[] = $url . 'date#results';
     $links_arr[] = $url . 'who#results';
 
     $url_nomorder = $url;
-    $url .= "&morder=$morder";
+    $url         .= "&morder=$morder";
 
     echo html_build_list_table_top($title_arr, $links_arr);
 
-    $i = 0;
+    $i  = 0;
     $uh = UserHelper::instance();
     while ($row = db_fetch_array($result)) {
         // description is escaped in svn-checkins.pl
@@ -304,7 +304,7 @@ function svn_utils_add_sort_criteria($criteria_list, $order, $msort)
     $found = false;
     if ($criteria_list) {
         $arr = explode(',', $criteria_list);
-        $i = 0;
+        $i   = 0;
         foreach ($arr as $attr) {
             preg_match("/\s*([^<>]*)([<>]*)/", $attr, $match);
             list(,$mattr,$mdir) = $match;
@@ -365,14 +365,14 @@ function svn_utils_criteria_list_to_text($criteria_list, $url)
 {
     if ($criteria_list) {
         $morder = '';
-        $arr = explode(',', $criteria_list);
+        $arr    = explode(',', $criteria_list);
 
         $purifier = Codendi_HTMLPurifier::instance();
 
         foreach ($arr as $crit) {
             $morder .= ($morder ? "," . $crit : $crit);
-            $attr = str_replace('>', '', $crit);
-            $attr = str_replace('<', '', $attr);
+            $attr    = str_replace('>', '', $crit);
+            $attr    = str_replace('<', '', $attr);
 
             $arr_text[] = '<a href="' . $url . '&morder=' . $purifier->purify(urlencode($morder)) . '#results">' .
             $purifier->purify(svn_utils_field_get_label($attr)) . '</a><img src="' . util_get_dir_image_theme() .
@@ -408,14 +408,14 @@ function svn_utils_show_revision_detail($result, $group_id, $group_name, $commit
     */
 
     $rows = db_numrows($result);
-    $url = "/svn/?func=detailrevision&commit_id=$commit_id&group_id=$group_id&order=";
+    $url  = "/svn/?func=detailrevision&commit_id=$commit_id&group_id=$group_id&order=";
 
     $description = db_result($result, 0, 'description');
     $description = util_line_wrap(htmlspecialchars_decode($description, ENT_QUOTES));
     $list_log    = '<pre>' . $purifier->purify($description, CODENDI_PURIFIER_BASIC_NOBR, $group_id) . '</pre>';
 
     $revision = db_result($result, 0, 'revision');
-    $hdr = '[' . $Language->getText('svn_browse_revision', 'rev') . ' #' . $revision . '] - ';
+    $hdr      = '[' . $Language->getText('svn_browse_revision', 'rev') . ' #' . $revision . '] - ';
 
     echo '<h2>' . $hdr . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'date')) . '</h2></h2>';
 
@@ -429,38 +429,38 @@ function svn_utils_show_revision_detail($result, $group_id, $group_name, $commit
     }
 
     echo '<h3> ' . $Language->getText('svn_utils', 'impacted_files') . '</h3>';
-    $title_arr = [];
+    $title_arr   = [];
     $title_arr[] = $Language->getText('svn_utils', 'file');
     $title_arr[] = $Language->getText('svn_browse_revision', 'rev');
     $title_arr[] = $Language->getText('svn_utils', 'type');
     //$title_arr[]='AddedLines'; To be implemented
     //$title_arr[]='RemovedLines'; To be implemented
 
-    $links_arr = [];
+    $links_arr   = [];
     $links_arr[] = $url . 'filename';
     $links_arr[] = $url . '';
     $links_arr[] = $url . 'type';
 
-    $pm = ProjectManager::instance();
+    $pm      = ProjectManager::instance();
     $project = $pm->getProject($group_id);
-    $root = $project->getUnixName();
+    $root    = $project->getUnixName();
 
     echo html_build_list_table_top($title_arr, $links_arr);
 
     for ($i = 0; $i < $rows; $i++) {
-        $type = db_result($result, $i, 'type');
-        $dirname = db_result($result, $i, 'dir');
+        $type     = db_result($result, $i, 'type');
+        $dirname  = db_result($result, $i, 'dir');
         $filename = db_result($result, $i, 'file');
         $fullpath = $dirname . $filename;
 
         if ($filename) {
             // It' a file
             $viewfile_url = svn_utils_make_viewlink($group_name, $fullpath, $fullpath, "&pathrev=$revision&view=log");
-            $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&revision=$revision&pathrev=$revision&view=markup");
+            $viewrev_url  = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&revision=$revision&pathrev=$revision&view=markup");
         } else {
             // It' a directory
             $viewfile_url = svn_utils_make_viewlink($group_name, $fullpath, $fullpath, "&pathrev=$revision");
-            $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&pathrev=$revision&view=log");
+            $viewrev_url  = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&pathrev=$revision&view=log");
         }
 
         if ($type == 'Change') {
@@ -492,7 +492,7 @@ function svn_utils_show_revision_detail($result, $group_id, $group_name, $commit
 function svn_utils_format_svn_history($group_id)
 {
     global $Language;
-    $output = '';
+    $output          = '';
     $res_svnfullhist = svn_data_get_svn_history($group_id);
 
     if (! $res_svnfullhist || db_numrows($res_svnfullhist) < 1) {
@@ -513,8 +513,8 @@ function svn_utils_format_svn_history($group_id)
 
         // Format output
         $output = '<P><b>' . $Language->getText('svn_utils', 'ci_week') . '</b><BR>&nbsp;';
-        $uh = new UserHelper();
-        $hp = Codendi_HTMLPurifier::instance();
+        $uh     = new UserHelper();
+        $hp     = Codendi_HTMLPurifier::instance();
         foreach ($svnhist as $user => $value) {
             $output .= '<BR>'
                 . $hp->purify($uh->getDisplayNameFromUserName($user), CODENDI_PURIFIER_CONVERT_HTML)
@@ -538,7 +538,7 @@ function svn_utils_read_svn_access_file($project_svnroot)
     global $Language;
 
     $filename = "$project_svnroot/.SVNAccessFile";
-    $buffer = '';
+    $buffer   = '';
 
     $fd = @fopen("$filename", "r");
     if (! $fd) {
@@ -574,7 +574,7 @@ function svn_utils_write_svn_access_file($project_svnroot, $contents)
     global $feedback,$Language;
 
     $accessfile = new SVN_AccessFile_Writer($project_svnroot);
-    $ret = $accessfile->write($contents);
+    $ret        = $accessfile->write($contents);
 
     if ($accessfile->isErrorFile()) {
         $feedback .= $Language->getText('svn_utils', 'file_err', $accessfile->filename());
@@ -611,7 +611,7 @@ $GLOBALS['SVNGROUPS'] = "None";
 function svn_utils_parse_access_file($project_svnroot)
 {
     global $SVNACCESS, $SVNGROUPS,$Language;
-    $filename = "$project_svnroot/.SVNAccessFile";
+    $filename  = "$project_svnroot/.SVNAccessFile";
     $SVNACCESS = [];
     $SVNGROUPS = [];
 
@@ -627,13 +627,13 @@ function svn_utils_parse_access_file($project_svnroot)
 
         $ST_START = 0;
         $ST_GROUP = 1;
-        $ST_PATH = 2;
+        $ST_PATH  = 2;
 
         $state = $ST_START;
 
-        $content = @fread($f, filesize($filename));
+        $content   = @fread($f, filesize($filename));
         $separator = "\n\t\r\0\x0B";
-        $line = strtok($content, $separator);
+        $line      = strtok($content, $separator);
         while ($line) {
           //echo $line."<br>\n";
             if (preg_match($comment_pat, $line) || preg_match($empty_pat, $line)) {
@@ -653,14 +653,14 @@ function svn_utils_parse_access_file($project_svnroot)
             if ($state == $ST_GROUP) {
                 $m = preg_match($group_pat, $line, $matches);
                 if ($m) {
-                    $group = $matches[1];
-                    $users = $matches[2];
+                    $group                         = $matches[1];
+                    $users                         = $matches[2];
                     $SVNGROUPS[strtolower($group)] = array_map('trim', preg_split("/,/D", strtolower($users)));
                 }
             } elseif ($state == $ST_PATH) {
                 $m = preg_match($perm_pat, $line, $matches);
                 if ($m) {
-                    $who = $matches[1];
+                    $who  = $matches[1];
                     $perm = $matches[2];
 
                     if (strpos($who, '@') === 0) {
@@ -819,13 +819,13 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
     }
     $select .= ' svn_commits.revision as revision, svn_commits.id as commit_id, svn_commits.description as description, svn_commits.date as date, svn_commits.whoid';
 
-    $from = " FROM svn_commits";
+    $from  = " FROM svn_commits";
     $where = " WHERE svn_commits.group_id=" . db_ei($project->getGroupId());
 
     //check user access rights
     if (! empty($forbidden)) {
-        $from .= " INNER JOIN svn_checkins ON (svn_checkins.commitid = svn_commits.id)";
-        $from .= " INNER JOIN svn_dirs ON (svn_dirs.id = svn_checkins.dirid)";
+        $from           .= " INNER JOIN svn_checkins ON (svn_checkins.commitid = svn_commits.id)";
+        $from           .= " INNER JOIN svn_dirs ON (svn_dirs.id = svn_checkins.dirid)";
         $where_forbidden = "";
         foreach ($forbidden as $no_access => $v) {
             if ($no_access == $_path) {
@@ -833,7 +833,7 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
             }
             $where_forbidden .= " AND svn_dirs.dir not like '" . db_es(substr($no_access, 1)) . "%'";
         }
-        $where .= $where_forbidden;
+        $where    .= $where_forbidden;
         $group_by .= ' GROUP BY revision';
     }
 
@@ -841,8 +841,8 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
     if ($_path != '') {
         $path_str = " AND svn_dirs.dir like '%" . db_es($_path) . "%'";
         if (! isset($forbidden) || empty($forbidden)) {
-            $from .= " INNER JOIN svn_checkins ON (svn_checkins.commitid = svn_commits.id)";
-            $from .= " INNER JOIN svn_dirs ON (svn_dirs.id = svn_checkins.dirid)";
+            $from     .= " INNER JOIN svn_checkins ON (svn_checkins.commitid = svn_commits.id)";
+            $from     .= " INNER JOIN svn_dirs ON (svn_dirs.id = svn_checkins.dirid)";
             $group_by .= ' GROUP BY revision';
         }
     } else {
@@ -879,7 +879,7 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
     if (empty($order_by)) {
         $order_by_sql = " ORDER BY revision DESC ";
     } else {
-        $order_by_sql = ' ORDER BY ';
+        $order_by_sql  = ' ORDER BY ';
         $order_by_sql .= implode(
             ',',
             array_map(
@@ -899,10 +899,10 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
     // Compute the number of rows.
     $totalrows = -1;
     if ($foundRows) {
-        $sql1 = 'SELECT FOUND_ROWS() as nb';
+        $sql1    = 'SELECT FOUND_ROWS() as nb';
         $result1 = db_query($sql1);
         if ($result1 && ! db_error()) {
-            $row1 = db_fetch_array($result1);
+            $row1      = db_fetch_array($result1);
             $totalrows = $row1['nb'];
         }
     }

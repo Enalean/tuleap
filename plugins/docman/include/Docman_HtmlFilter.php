@@ -29,7 +29,7 @@ class Docman_HtmlFilter
     public function __construct($filter)
     {
         $this->filter = $filter;
-        $this->hp = \Codendi_HTMLPurifier::instance();
+        $this->hp     = \Codendi_HTMLPurifier::instance();
     }
     public function _fieldName()
     {
@@ -38,7 +38,7 @@ class Docman_HtmlFilter
     }
     public function _valueSelectorHtml($formName)
     {
-        $html = '';
+        $html  = '';
         $value = $this->filter->getValue();
         if ($value !== \null) {
             $html .= '<input type="hidden" name="' . $this->filter->md->getLabel() . '" value="' . $this->hp->purify($value) . '" />';
@@ -52,10 +52,10 @@ class Docman_HtmlFilter
         if ($trashLinkBase) {
             $trashLink = $trashLinkBase . $this->filter->md->getLabel();
             $trashWarn = $this->hp->purify(\dgettext('tuleap-docman', 'Are you sure you want to remove this filter from the list?'));
-            $trashAlt = $this->hp->purify(\dgettext('tuleap-docman', 'Remove the filter'));
+            $trashAlt  = $this->hp->purify(\dgettext('tuleap-docman', 'Remove the filter'));
             $trashLink = \html_trash_link($trashLink, $trashWarn, $trashAlt);
         }
-        $html = '<tr>';
+        $html  = '<tr>';
         $html .= '<td>';
         $html .= $trashLink;
         $html .= '&nbsp;';

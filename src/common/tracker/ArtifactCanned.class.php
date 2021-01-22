@@ -63,7 +63,7 @@ class ArtifactCanned
             return false;
         }
         $this->ArtifactType = $ArtifactType;
-        $this->atid = $ArtifactType->getID();
+        $this->atid         = $ArtifactType->getID();
 
         if ($data) {
             if (is_array($data)) {
@@ -253,13 +253,13 @@ class ArtifactCanned
      */
     public function setError($string)
     {
-        $this->error_state = true;
+        $this->error_state   = true;
         $this->error_message = $string;
     }
 
     public function clearError()
     {
-        $this->error_state = false;
+        $this->error_state   = false;
         $this->error_message = '';
     }
 

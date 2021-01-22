@@ -22,7 +22,7 @@ require_once __DIR__ . '/../include/pre.php';
 
 $request = HTTPRequest::instance();
 
-$pm = ProjectManager::instance();
+$pm      = ProjectManager::instance();
 $project = $pm->getProject($request->get('group_id'));
 if ($project && $request->exist('id')) {
     $db_res = db_query("SELECT * 

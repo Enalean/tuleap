@@ -55,9 +55,9 @@ class ServiceActivator
             return;
         }
 
-        $template_services   = $this->service_manager->getListOfAllowedServicesForProject($template);
-        $svn_core_service    = $this->getSVNCoreService($template_services);
-        $svn_plugin_service  = $this->getSVNPluginService($template_services);
+        $template_services  = $this->service_manager->getListOfAllowedServicesForProject($template);
+        $svn_core_service   = $this->getSVNCoreService($template_services);
+        $svn_plugin_service = $this->getSVNPluginService($template_services);
 
         if ($svn_core_service) {
             $data->unsetProjectServiceUsage($svn_core_service->getId());
@@ -79,9 +79,9 @@ class ServiceActivator
             return true;
         }
 
-        $template_services   = $this->service_manager->getListOfAllowedServicesForProject($template);
-        $svn_plugin_service  = $this->getSVNPluginService($template_services);
-        $svn_core_service    = $this->getSVNCoreService($template_services);
+        $template_services  = $this->service_manager->getListOfAllowedServicesForProject($template);
+        $svn_plugin_service = $this->getSVNPluginService($template_services);
+        $svn_core_service   = $this->getSVNCoreService($template_services);
 
         if ($svn_core_service || $svn_plugin_service) {
             return $this->service_creator->createService(

@@ -144,7 +144,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         $html .= '<div class="docman_filters">';
         if (isset($params['filter']) && $params['filter'] !== null) {
             $htmlReport = new Docman_ReportHtml($params['filter'], $this, $params['default_url']);
-            $html .= $htmlReport->toHtml($params);
+            $html      .= $htmlReport->toHtml($params);
         }
         $html .= "</div>\n";
 
@@ -181,7 +181,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         } else {
             $pref = user_get_preference(PLUGIN_DOCMAN_VIEW_PREF . '_' . $group_id);
             if (! $pref) {
-                $sBo = Docman_SettingsBo::instance($group_id);
+                $sBo  = Docman_SettingsBo::instance($group_id);
                 $pref = $sBo->getView();
             }
         }

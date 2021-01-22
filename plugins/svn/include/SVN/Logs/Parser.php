@@ -65,7 +65,7 @@ class Parser
     {
         if (strpos($matches['url'], self::BASE_URL) === 0) {
             $url_without_base = substr($matches['url'], strlen(self::BASE_URL));
-            $url_parts = explode('/', $url_without_base);
+            $url_parts        = explode('/', $url_without_base);
 
             $log_cache->add(
                 $url_parts[0],
@@ -81,7 +81,7 @@ class Parser
     {
         if (strpos($matches['url'], self::CORE_URL) === 0) {
             $url_without_base = substr($matches['url'], strlen(self::CORE_URL));
-            $url_parts = explode('/', $url_without_base);
+            $url_parts        = explode('/', $url_without_base);
 
             $log_cache->addCore(
                 $url_parts[0],

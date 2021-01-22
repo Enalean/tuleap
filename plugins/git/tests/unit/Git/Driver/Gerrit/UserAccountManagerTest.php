@@ -44,7 +44,7 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends TestCa
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = new PFUser([
+        $this->user                  = new PFUser([
             'language_id' => 'en',
             'ldap_id' => 'testUser'
         ]);
@@ -53,7 +53,7 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends TestCa
         $this->remote_gerrit_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
         $this->gerrit_user           = \Mockery::spy(\Git_Driver_Gerrit_User::class);
 
-        $this->user_account_manager  = \Mockery::mock(
+        $this->user_account_manager = \Mockery::mock(
             \Git_Driver_Gerrit_UserAccountManager::class,
             [$this->gerrit_driver_factory, $this->remote_gerrit_factory]
         )

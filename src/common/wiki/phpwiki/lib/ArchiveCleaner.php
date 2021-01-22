@@ -31,7 +31,7 @@ class ArchiveCleaner
             return false;
         }
 
-        $page = $revision->getPage();
+        $page      = $revision->getPage();
         $author_id = $revision->get('author_id');
 
         $previous = $page->getRevisionBefore($revision);
@@ -103,8 +103,8 @@ class ArchiveCleaner_Counter
         $this->min_age  = isset($min_age)  ? $min_age  : 0;
         $this->min_keep = isset($min_keep) ? $min_keep : 0;
 
-        $this->max_age  = isset($max_age)  ? $max_age  : $INFINITY;
-        $this->keep     = isset($keep)     ? $keep     : $INFINITY;
+        $this->max_age = isset($max_age)  ? $max_age  : $INFINITY;
+        $this->keep    = isset($keep)     ? $keep     : $INFINITY;
 
         if ($this->keep > $this->max_keep) {
             $this->keep = $this->max_keep;
@@ -117,8 +117,8 @@ class ArchiveCleaner_Counter
             $this->min_age = $this->max_age;
         }
 
-        $this->now = time();
-        $this->count = 0;
+        $this->now                 = time();
+        $this->count               = 0;
         $this->previous_supplanted = false;
     }
 
@@ -155,7 +155,7 @@ class ArchiveCleaner_Counter
     public function keep($revision)
     {
         $count = ++$this->count;
-        $age = $this->computeAge($revision);
+        $age   = $this->computeAge($revision);
 
         if ($count > $this->max_keep) {
             return false;

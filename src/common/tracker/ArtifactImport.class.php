@@ -101,18 +101,18 @@ class ArtifactImport
    */
     public function __construct($ath, $art_field_fact, $group)
     {
-        $this->ath = $ath;
+        $this->ath            = $ath;
         $this->art_field_fact = $art_field_fact;
-        $this->group = $group;
+        $this->group          = $group;
 
         $this->localizeLabels();
         $this->used_fields = $this->getUsedFields();
 
-        $this->aid_column = -1;
-        $this->submitted_by_column = -1;
-        $this->submitted_on_column = -1;
+        $this->aid_column              = -1;
+        $this->submitted_by_column     = -1;
+        $this->submitted_on_column     = -1;
         $this->last_update_date_column = -1;
-        $this->parsed_labels = [];
+        $this->parsed_labels           = [];
     }
 
     public function localizeLabels()
@@ -122,15 +122,15 @@ class ArtifactImport
         // all tracker scripts handle them properly
         // For now make a big hack, we export it according to user language preferences
 
-        $this->lbl_list['follow_ups'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments');
+        $this->lbl_list['follow_ups']      = $GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments');
         $this->lbl_list['is_dependent_on'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on');
-        $this->lbl_list['add_cc'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl');
-        $this->lbl_list['cc_comment'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl');
+        $this->lbl_list['add_cc']          = $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl');
+        $this->lbl_list['cc_comment']      = $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl');
 
-        $this->dsc_list['follow_ups'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'all_followup_comments');
+        $this->dsc_list['follow_ups']      = $GLOBALS['Language']->getText('project_export_artifact_export', 'all_followup_comments');
         $this->dsc_list['is_dependent_on'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on_list');
-        $this->dsc_list['add_cc'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_dsc');
-        $this->dsc_list['cc_comment'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_dsc');
+        $this->dsc_list['add_cc']          = $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_dsc');
+        $this->dsc_list['cc_comment']      = $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_dsc');
     }
 
 
@@ -147,10 +147,10 @@ class ArtifactImport
         // (standard fields) and the artifact field table with a special flag and make sure
         // all tracker scripts handle them properly
         // For now reuse localizeLabels hack
-        $used_fields[$this->lbl_list['follow_ups']] = "";
+        $used_fields[$this->lbl_list['follow_ups']]      = "";
         $used_fields[$this->lbl_list['is_dependent_on']] = "";
-        $used_fields[$this->lbl_list['add_cc']] = "";
-        $used_fields[$this->lbl_list['cc_comment']] = "";
+        $used_fields[$this->lbl_list['add_cc']]          = "";
+        $used_fields[$this->lbl_list['cc_comment']]      = "";
 
         //special cases for submitted by, submitted on and last_update_date that can be set
         //"unused" by the user but that will nevertheless be used by Codendi
@@ -323,7 +323,7 @@ class ArtifactImport
         $hp = Codendi_HTMLPurifier::instance();
         for ($c = 0; $c < count($this->parsed_labels); $c++) {
             $label = $this->parsed_labels[$c];
-            $val = $data[$c];
+            $val   = $data[$c];
             $field = $this->used_fields[$label];
             if ($field) {
                 $field_name = $field->getName();
@@ -384,7 +384,7 @@ class ArtifactImport
                                $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) ]));
                                  return false;
                         }
-                        $date = format_date("Y-m-d", $unix_time);
+                        $date     = format_date("Y-m-d", $unix_time);
                         $data[$c] = $date;
                     }
                 }
@@ -443,15 +443,15 @@ class ArtifactImport
       //$field = $used_fields["Summary"];
         $summary_field = $this->art_field_fact->getFieldFromName('summary');
         $summary_label = $summary_field->getLabel();
-        $summary_col = array_search($summary_label, $this->parsed_labels);
+        $summary_col   = array_search($summary_label, $this->parsed_labels);
 
         $submitted_by_field = $this->art_field_fact->getFieldFromName('submitted_by');
         $submitted_by_label = $submitted_by_field->getLabel();
-        $summary = htmlspecialchars($data[$summary_col]);
+        $summary            = htmlspecialchars($data[$summary_col]);
         if ($this->submitted_by_column != -1) {
             $sub_user_name = $data[$this->submitted_by_column];
           //$sub_user_ids = $predefined_values[$submitted_by_col];
-            $res = user_get_result_set_from_unix($sub_user_name);
+            $res         = user_get_result_set_from_unix($sub_user_name);
             $sub_user_id = db_result($res, 0, 'user_id');
         } else {
             $this->getImportUser($sub_user_id, $sub_user_name);
@@ -479,8 +479,8 @@ class ArtifactImport
     public function checkUpdateArtifact($row, &$data, $aid)
     {
         global $Language;
-        $hp = Codendi_HTMLPurifier::instance();
-        $sql = "SELECT artifact_id FROM artifact WHERE artifact_id = $aid and group_artifact_id = " . $this->ath->getID();
+        $hp     = Codendi_HTMLPurifier::instance();
+        $sql    = "SELECT artifact_id FROM artifact WHERE artifact_id = $aid and group_artifact_id = " . $this->ath->getID();
         $result = db_query($sql);
         if (db_numrows($result) == 0) {
             $this->setError($Language->getText('tracker_import_utils', 'art_not_exists', [
@@ -518,7 +518,7 @@ class ArtifactImport
 
       //avoid that lines with a length > 1000 will be truncated by fgetcsv
         $length = 1000;
-        $array = file($csv_filename);
+        $array  = file($csv_filename);
         for ($i = 0; $i < count($array); $i++) {
             if ($length < strlen($array[$i])) {
                 $length = strlen($array[$i]);
@@ -528,7 +528,7 @@ class ArtifactImport
       //unset($array);
 
         $csv_file = fopen($csv_filename, "r");
-        $row = 0;
+        $row      = 0;
 
         require_once __DIR__ . '/../../www/project/export/project_export_utils.php';
 
@@ -631,7 +631,7 @@ class ArtifactImport
     {
         for ($c = 0; $c < sizeof($this->parsed_labels); $c++) {
             $field_label = $this->parsed_labels[$c];
-            $field = $this->used_fields[$field_label];
+            $field       = $this->used_fields[$field_label];
             if ($field) {
                 $this->setPredefinedValue($field, $c);
             }
@@ -655,7 +655,7 @@ class ArtifactImport
            //for all other fields not submitted by
             } else {
                 $predef_val = $field->getFieldPredefinedValues($this->ath->getID());
-                $count = db_numrows($predef_val);
+                $count      = db_numrows($predef_val);
                 for ($i = 0; $i < $count; $i++) {
                             $values[SimpleSanitizer::unsanitize(db_result($predef_val, $i, 1))] = db_result($predef_val, $i, 0);
                 }
@@ -730,8 +730,8 @@ class ArtifactImport
       */
 
         $comment = htmlspecialchars($arr['comment']);
-        $sql = " SELECT * FROM artifact_history WHERE artifact_id = " . db_ei($art_id) . " AND field_name = 'comment' AND new_value = '" . db_es($comment) . "'";
-        $res = db_query($sql);
+        $sql     = " SELECT * FROM artifact_history WHERE artifact_id = " . db_ei($art_id) . " AND field_name = 'comment' AND new_value = '" . db_es($comment) . "'";
+        $res     = db_query($sql);
 
         if ($res && db_numrows($res) > 0) {
             return true;
@@ -758,8 +758,8 @@ class ArtifactImport
         }
 
         $comment = htmlspecialchars($arr['comment']);
-        $sql = "SELECT new_value FROM artifact_history WHERE artifact_id = " . db_ei($artifact_id);
-        $result = db_query($sql);
+        $sql     = "SELECT new_value FROM artifact_history WHERE artifact_id = " . db_ei($artifact_id);
+        $result  = db_query($sql);
         if ($result && db_numrows($result) > 0) {
             while ($row = db_fetch_array($result)) {
                 if ($this->canApplyHtmlSpecialChars($row['new_value']) && htmlspecialchars($row['new_value']) == $comment) {
@@ -812,11 +812,11 @@ class ArtifactImport
                         $date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), time());
                         $this->getImportUser($sub_user_id, $sub_user_name);
                         $arr["date"] = "<I>$date</I>";
-                        $arr["by"] = "<I>$sub_user_name</I>";
+                        $arr["by"]   = "<I>$sub_user_name</I>";
                         $arr["type"] = "<I>" . $GLOBALS['Language']->getText('global', 'none') . "</I>";
                     } else {
                         $arr["date"] = time();
-                        $arr["by"] = $GLOBALS['user_id'];
+                        $arr["by"]   = $GLOBALS['user_id'];
                         $arr["type"] = 100;
                     }
                     $arr["comment"] = $comment;
@@ -828,7 +828,7 @@ class ArtifactImport
             }
 
         // here starts reel parsing
-            $comment = substr($comment, strlen($GLOBALS['Language']->getText('tracker_import_utils', 'date') . ":"));
+            $comment     = substr($comment, strlen($GLOBALS['Language']->getText('tracker_import_utils', 'date') . ":"));
             $by_position = strpos($comment, $GLOBALS['Language']->getText('global', 'by') . ": ");
 
             if ($by_position === false) {
@@ -847,7 +847,7 @@ class ArtifactImport
         //skip "By: "
             $comment = substr($comment, ($by_position + strlen($GLOBALS['Language']->getText('global', 'by') . ": ")));
 
-            $by = strtok($comment, " \n\t\r\0\x0B");
+            $by      = strtok($comment, " \n\t\r\0\x0B");
             $comment = trim(substr($comment, strlen($by) + 1));
 
             if ($by == $GLOBALS['Language']->getText('global', 'none')) {
@@ -874,10 +874,10 @@ class ArtifactImport
 
         //see if there is comment-type or none
             $comment_type_id = false;
-            $type_end_pos = strpos($comment, "]");
+            $type_end_pos    = strpos($comment, "]");
             if (strpos($comment, "[") == 0 && $type_end_pos != false) {
-                  $comment_type = substr($comment, 1, ($type_end_pos - 1));
-                  $comment = trim(substr($comment, ($type_end_pos + 1)));
+                  $comment_type    = substr($comment, 1, ($type_end_pos - 1));
+                  $comment         = trim(substr($comment, ($type_end_pos + 1)));
                   $comment_type_id = $this->checkCommentType($comment_type);
             }
 
@@ -891,9 +891,9 @@ class ArtifactImport
                   $comment_type_id = $comment_type;
             }
 
-            $arr["date"] = $date;
-            $arr["by"] = $by;
-            $arr["type"] = $comment_type_id;
+            $arr["date"]    = $date;
+            $arr["by"]      = $by;
+            $arr["type"]    = $comment_type_id;
             $arr["comment"] = $comment;
         //if (!$this->checkCommentExist($arr,$art_id)) {
             $parsed_comments[] = $arr;
@@ -931,7 +931,7 @@ class ArtifactImport
         $c_type_field = $this->art_field_fact->getFieldFromName('comment_type_id');
         if ($c_type_field) {
             $predef_val = $c_type_field->getFieldPredefinedValues($this->ath->getID());
-            $count = db_numrows($predef_val);
+            $count      = db_numrows($predef_val);
             for ($p = 0; $p < $count; $p++) {
                 if ($comment_type == db_result($predef_val, $p, 1)) {
                        $comment_type_id = db_result($predef_val, $p, 0);
@@ -977,13 +977,13 @@ class ArtifactImport
                     $comment_type = 100;
                 }
             } else {
-                $comment = substr($comment, strlen($GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": "));
+                $comment     = substr($comment, strlen($GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": "));
                 $by_position = strpos($comment, $GLOBALS['Language']->getText('global', 'by') . ": ");
                 if ($by_position === false) {
                     $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'specify_originator', [$i - 1, $comment]));
                     return false;
                 }
-                $type = trim(substr($comment, 0, $by_position));
+                $type            = trim(substr($comment, 0, $by_position));
                 $comment_type_id = $this->checkCommentType($type);
                 if ($comment_type_id === false) {
                     if ($for_parse_report) {
@@ -1007,9 +1007,9 @@ class ArtifactImport
                 return false;
             }
 
-            $comment = substr($comment, ($by_position + strlen($GLOBALS['Language']->getText('global', 'by') . ": ")));
+            $comment     = substr($comment, ($by_position + strlen($GLOBALS['Language']->getText('global', 'by') . ": ")));
             $on_position = strpos($comment, $GLOBALS['Language']->getText('global', 'on') . ": ");
-            $by = trim(substr($comment, 0, $on_position));
+            $by          = trim(substr($comment, 0, $on_position));
 
             if (! $for_parse_report) {
                 $res = user_get_result_set_from_unix($by);
@@ -1024,16 +1024,16 @@ class ArtifactImport
             }
       // On:
             $comment = substr($comment, ($on_position + strlen($GLOBALS['Language']->getText('global', 'on') . ": ")));
-            $on = strtok($comment, "\n\t\r\0\x0B");
+            $on      = strtok($comment, "\n\t\r\0\x0B");
             $comment = trim(substr($comment, strlen($on)));
             if (! $for_parse_report) {
                 list($on,$ok) = util_importdatefmt_to_unixtime($on);
             }
 
-            $arr["date"] = $on;
-            $arr["by"] = $by;
-            $arr["type"] = $comment_type;
-            $arr["comment"] = trim($comment);
+            $arr["date"]      = $on;
+            $arr["by"]        = $by;
+            $arr["type"]      = $comment_type;
+            $arr["comment"]   = trim($comment);
             $parsed_details[] = $arr;
         }
 
@@ -1102,7 +1102,7 @@ class ArtifactImport
             } elseif ($field_name == "submitted_by") {
                 $sub_user_name = $data[$label];
                 if ($sub_user_name && $sub_user_name != "") {
-                    $res = user_get_result_set_from_unix($sub_user_name);
+                    $res            = user_get_result_set_from_unix($sub_user_name);
                     $imported_value = db_result($res, 0, 'user_id');
                 }
                 $vfl[$field_name] = $imported_value;
@@ -1257,9 +1257,9 @@ class ArtifactImport
             if ($comments) {
                 if ($this->parseFollowUpComments($comments, $parsed_comments, $aid) && $parsed_comments && ! empty($parsed_comments)) {
                     $comments_ok = true;
-                    $changes = null;
+                    $changes     = null;
                     if (! $ah->addFollowUpComments($parsed_comments)) {
-                        $errors .= $Language->getText('tracker_import_utils', 'problem_insert_followup', $ah->getID()) . " ";
+                        $errors     .= $Language->getText('tracker_import_utils', 'problem_insert_followup', $ah->getID()) . " ";
                         $comments_ok = false;
                         return false;
                     }
@@ -1290,7 +1290,7 @@ class ArtifactImport
    */
     public function updateDB($parsed_labels, $artifacts_data, $aid_column, &$errors, $notify = false)
     {
-        $this->aid_column = $aid_column;
+        $this->aid_column    = $aid_column;
         $this->parsed_labels = $parsed_labels;
         $this->getPredefinedValues();
 
@@ -1304,7 +1304,7 @@ class ArtifactImport
             } else {
                 $aid_field = $this->art_field_fact->getFieldFromName('artifact_id');
                 $aid_label = $aid_field->getLabel();
-                $aid = $data[$aid_label];
+                $aid       = $data[$aid_label];
                 if ($aid != "") {
                        $ok = $this->updateArtifact($i + 2, $data, $aid, $errors, $notify);
                 } else {
@@ -1324,13 +1324,13 @@ class ArtifactImport
      */
     public function setError($string)
     {
-        $this->error_state = true;
+        $this->error_state   = true;
         $this->error_message = $string;
     }
 
     public function clearError()
     {
-        $this->error_state = false;
+        $this->error_state   = false;
         $this->error_message = '';
     }
 

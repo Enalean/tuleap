@@ -72,10 +72,10 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \P
         $this->artlink_exporter = \Mockery::spy(
             \Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter::class
         );
-        $this->collector    = Mockery::mock(ExternalExporterCollector::class);
+        $this->collector        = Mockery::mock(ExternalExporterCollector::class);
         $this->artifact_xml     = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml    = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
-        $this->unknown_exporter       = \Mockery::spy(
+        $this->unknown_exporter = \Mockery::spy(
             \Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter::class
         );
         $this->visitor          = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(

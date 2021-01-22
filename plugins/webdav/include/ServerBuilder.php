@@ -48,7 +48,7 @@ final class ServerBuilder
     public function __construct(\WebDAVPlugin $plugin)
     {
         $this->max_file_size = (int) $plugin->getPluginInfo()->getPropertyValueForName('max_file_size');
-        $this->plugin = $plugin;
+        $this->plugin        = $plugin;
     }
 
     public function getServerOnDedicatedDomain(\PFUser $user): Sabre_DAV_Server
@@ -94,7 +94,7 @@ final class ServerBuilder
             mkdir($locks_path, 0750, true);
         }
         $lockBackend = new Sabre_DAV_Locks_Backend_FS($locks_path);
-        $lockPlugin = new Sabre_DAV_Locks_Plugin($lockBackend);
+        $lockPlugin  = new Sabre_DAV_Locks_Plugin($lockBackend);
         $server->addPlugin($lockPlugin);
 
         // Creating the browser plugin

@@ -74,8 +74,8 @@ class ResourcesPatcher
     {
         $to_add = [];
         foreach ($add as $move) {
-            $added_id = $move->id;
-            $to_add[] = $added_id;
+            $added_id    = $move->id;
+            $to_add[]    = $added_id;
             $remove_from = $move->remove_from;
             if ($remove_from !== null) {
                 $from_artifact = $this->getArtifact($remove_from);

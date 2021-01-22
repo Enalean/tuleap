@@ -174,7 +174,7 @@ class ProjectQuotaManager
     public function getProjectCustomQuota($groupId)
     {
         $allowedQuota = null;
-        $res = $this->dao->getProjectCustomQuota($groupId);
+        $res          = $this->dao->getProjectCustomQuota($groupId);
         if ($res && ! $res->isError() && $res->rowCount() == 1) {
             $row          = $res->getRow();
             $allowedQuota = $row[Statistics_ProjectQuotaDao::REQUEST_SIZE];

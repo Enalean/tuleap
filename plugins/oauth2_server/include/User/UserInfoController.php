@@ -61,7 +61,7 @@ final class UserInfoController extends DispatchablePSR15Compatible implements Di
         $current_user       = $granted_authorization->getUser();
         $user_info_response = UserInfoResponseRepresentation::fromUserWithSubject($current_user);
 
-        $email_scope = OpenIDConnectEmailScope::fromItself();
+        $email_scope   = OpenIDConnectEmailScope::fromItself();
         $profile_scope = OpenIDConnectProfileScope::fromItself();
         foreach ($granted_authorization->getScopes() as $scope) {
             if ($email_scope->covers($scope)) {

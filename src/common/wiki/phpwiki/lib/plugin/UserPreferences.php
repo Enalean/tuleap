@@ -52,7 +52,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
     {
         global $request;
         $pagename = $request->getArg('pagename');
-        $user = $request->getUser();
+        $user     = $request->getUser();
         if (
             isset($user->_prefs) and
              isset($user->_prefs->_prefs) and
@@ -98,7 +98,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
 // ((defined('ALLOW_BOGO_LOGIN') && ALLOW_BOGO_LOGIN && $user->isSignedIn()) ||
              $user->isAuthenticated() and ! empty($userid)
         ) {
-            $pref = &$request->_prefs;
+            $pref           = &$request->_prefs;
             $args['isForm'] = true;
             //trigger_error("DEBUG: reading prefs from getPreferences".print_r($pref));
 
@@ -107,7 +107,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                 $delete = $request->getArg('delete');
                 if ($delete and $request->getArg('verify')) {
                     // deleting prefs, verified
-                    $default_prefs = $pref->defaultPreferences();
+                    $default_prefs           = $pref->defaultPreferences();
                     $default_prefs['userid'] = $user->UserName();
                     $user->setPreferences($default_prefs);
                     $request->_setUser($user);
@@ -147,7 +147,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                             $rp['theme'] = '';
                         }
                         if (empty($rp['lang'])) {
-                            $rp['lang']  = '';
+                            $rp['lang'] = '';
                         }
                         $num = $user->setPreferences($rp);
                         if (! empty($rp['passwd'])) {
@@ -172,14 +172,14 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                             $errmsg .= " " . _("No changes.");
                         } else {
                             $request->_setUser($user);
-                            $pref = $user->_prefs;
+                            $pref    = $user->_prefs;
                             $errmsg .= sprintf(_("%d UserPreferences fields successfully updated."), $num);
                         }
                     }
                     $args['errmsg'] = HTML(HTML::h2($errmsg), HTML::hr());
                 }
             }
-            $args['available_themes'] = listAvailableThemes();
+            $args['available_themes']    = listAvailableThemes();
             $args['available_languages'] = listAvailableLanguages();
 
             return Template('userprefs', $args);

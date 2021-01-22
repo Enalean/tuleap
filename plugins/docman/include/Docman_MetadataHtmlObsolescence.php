@@ -38,21 +38,21 @@ class Docman_MetadataHtmlObsolescence extends \Docman_MetadataHtml
     }
     public function _getField()
     {
-        $labels = [\PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT => \dgettext('tuleap-docman', 'Permanent'), 3 => \dgettext('tuleap-docman', '3 Months from today'), 6 => \dgettext('tuleap-docman', '6 Months from today'), 12 => \dgettext('tuleap-docman', '12 Months from today'), 100 => \dgettext('tuleap-docman', 'Fixed date'), 200 => \dgettext('tuleap-docman', 'Obsolete today')];
-        $selected = $this->md->getValue();
+        $labels        = [\PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT => \dgettext('tuleap-docman', 'Permanent'), 3 => \dgettext('tuleap-docman', '3 Months from today'), 6 => \dgettext('tuleap-docman', '6 Months from today'), 12 => \dgettext('tuleap-docman', '12 Months from today'), 100 => \dgettext('tuleap-docman', 'Fixed date'), 200 => \dgettext('tuleap-docman', 'Obsolete today')];
+        $selected      = $this->md->getValue();
         $selectedInput = '';
         if ($selected === \null) {
             $selected = $this->md->getDefaultValue();
         } else {
             if ($selected != 0) {
                 $selectedInput = \date("Y-n-j", $selected);
-                $selected = 100;
+                $selected      = 100;
             }
         }
-        $name = 'validity';
+        $name      = 'validity';
         $inputname = $this->_getFieldName();
-        $field = '';
-        $field .= '<select name="' . $name . '" onchange="javascript:change_obsolescence_date(document.forms.' . $this->formParams['form_name'] . ')" id="' . $this->md->getLabel() . '">' . "\n";
+        $field     = '';
+        $field    .= '<select name="' . $name . '" onchange="javascript:change_obsolescence_date(document.forms.' . $this->formParams['form_name'] . ')" id="' . $this->md->getLabel() . '">' . "\n";
         foreach ($labels as $value => $label) {
             $select = '';
             if ($value == $selected) {

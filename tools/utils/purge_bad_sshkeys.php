@@ -24,7 +24,7 @@ $sql = 'SELECT user_id, user_name, realname, email, authorized_keys FROM user WH
 $res = db_query($sql);
 while ($row = db_fetch_array($res)) {
     $valid_keys = [];
-    $keys = array_filter(explode(PFUser::SSH_KEY_SEPARATOR, $row['authorized_keys']));
+    $keys       = array_filter(explode(PFUser::SSH_KEY_SEPARATOR, $row['authorized_keys']));
     foreach ($keys as $key) {
         $key_file = '/var/tmp/codendi_cache/ssh_key_check';
         $written  = file_put_contents($key_file, $key);

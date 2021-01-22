@@ -29,7 +29,7 @@ class UtilsHTTPTest extends TestCase
 
     public function testItExtractBody()
     {
-        $string = "Content-type: sdfsdf\r\n\r\nThe body";
+        $string               = "Content-type: sdfsdf\r\n\r\nThe body";
         list($headers, $body) = http_split_header_body($string);
 
         $this->assertSame("The body", $body);
@@ -37,7 +37,7 @@ class UtilsHTTPTest extends TestCase
 
     public function testItExtractBodyThatStartsWithNul()
     {
-        $string = "Content-type: sdfsdf\r\n\r\n" . (0x00) . "The body";
+        $string               = "Content-type: sdfsdf\r\n\r\n" . (0x00) . "The body";
         list($headers, $body) = http_split_header_body($string);
 
         $this->assertSame((0x00) . "The body", $body);

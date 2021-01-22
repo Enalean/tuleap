@@ -64,7 +64,7 @@ class CrossReferenceLinkPresenterCollectionBuilder
             return null;
         }
 
-        $params = "?target_id=" . $currRef->getRefTargetId();
+        $params  = "?target_id=" . $currRef->getRefTargetId();
         $params .= "&target_gid=" . $currRef->getRefTargetGid();
         $params .= "&target_type=" . $currRef->getRefTargetType();
         $params .= "&target_key=" . $currRef->getRefTargetKey();

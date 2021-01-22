@@ -126,7 +126,7 @@ final class XmlReportOpenIssuesExporterTest extends TestCase
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
         );
 
-        $tracker_node = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
+        $tracker_node       = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
         $this->reports_node = $tracker_node->addChild('reports');
 
         $this->cdata_factory             = new \XML_SimpleXMLCDATAFactory();
@@ -256,7 +256,7 @@ final class XmlReportOpenIssuesExporterTest extends TestCase
 
     private function getPreWiredIDGenerator(int $pre_wired_value): IDGenerator
     {
-        $id_generator = new class implements IDGenerator {
+        $id_generator     = new class implements IDGenerator {
             /** @var int */
             public $id;
 

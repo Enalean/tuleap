@@ -238,7 +238,7 @@ class AdminController
     private function saveWriters(Tracker $tracker, $selected_write_ugroup)
     {
         $override_collection = new PermissionsNormalizerOverrideCollection();
-        $normalized_ids = $this->permissions_normalizer->getNormalizedUGroupIds(
+        $normalized_ids      = $this->permissions_normalizer->getNormalizedUGroupIds(
             $tracker->getProject(),
             $selected_write_ugroup,
             $override_collection
@@ -252,7 +252,7 @@ class AdminController
     private function saveReaders(Tracker $tracker, $selected_read_ugroup)
     {
         $override_collection = new PermissionsNormalizerOverrideCollection();
-        $normalized_ids = $this->permissions_normalizer->getNormalizedUGroupIds(
+        $normalized_ids      = $this->permissions_normalizer->getNormalizedUGroupIds(
             $tracker->getProject(),
             $selected_read_ugroup,
             $override_collection

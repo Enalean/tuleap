@@ -134,7 +134,7 @@ class HistoryValueFormatter
 
     private function formatProjectPermission(Project $project, $permission_type, $key)
     {
-        $value = '';
+        $value   = '';
         $ugroups = $this->getUgroupsForPermissionForProject($project, $permission_type);
         if ($ugroups) {
             $value .= $this->formatUgroups($ugroups, $key);
@@ -145,7 +145,7 @@ class HistoryValueFormatter
 
     private function formatRepositoryPermission(GitRepository $repository, $permission_type, $key)
     {
-        $value = '';
+        $value   = '';
         $ugroups = $this->getUgroupsForPermissionForRepository($repository, $permission_type);
         if ($ugroups) {
             $value .= $this->formatUgroups($ugroups, $key);
@@ -156,7 +156,7 @@ class HistoryValueFormatter
 
     private function formatUgroups(array $ugroups, $key)
     {
-        $value = "$key: ";
+        $value  = "$key: ";
         $value .= implode(
             ', ',
             array_map(

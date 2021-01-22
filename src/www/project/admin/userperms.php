@@ -58,10 +58,10 @@ if ($request->exist('submit')) {
     $res_dev = db_query("SELECT * FROM user_group WHERE group_id=$group_id");
     while ($row_dev = db_fetch_array($res_dev)) {
         if ($request->exist("update_user_$row_dev[user_id]")) {
-            $svn_flags  = "svn_user_$row_dev[user_id]";
-            $res = true;
+            $svn_flags = "svn_user_$row_dev[user_id]";
+            $res       = true;
             if ($request->exist($svn_flags)) {
-                $sql = "UPDATE user_group SET svn_flags = '" . db_es($request->get($svn_flags)) . "'";
+                $sql  = "UPDATE user_group SET svn_flags = '" . db_es($request->get($svn_flags)) . "'";
                 $sql .= " WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
 
                 $res = db_query($sql);
@@ -70,7 +70,7 @@ if ($request->exist('submit')) {
             $tracker_error = false;
             if ($project->usesTracker() && $at_arr) {
                 for ($j = 0; $j < count($at_arr); $j++) {
-                    $atid = $at_arr[$j]->getID();
+                    $atid       = $at_arr[$j]->getID();
                     $perm_level = "tracker_user_$row_dev[user_id]_$atid";
                     if ($at_arr[$j]->existUser($row_dev['user_id'])) {
                         if (! $at_arr[$j]->updateUser($row_dev['user_id'], $request->get($perm_level))) {
@@ -118,7 +118,7 @@ if (! $offset) {
 }
 $number_per_page = 25;
 
-$sql = [];
+$sql           = [];
 $sql['select'] = "SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
                   user.realname AS realname,
                   user.user_id AS user_id,
@@ -134,7 +134,7 @@ $sql['where'] = " WHERE user.user_id = user_group.user_id
                     AND user_group.group_id = " . db_ei($group_id);
 
 if ($pattern) {
-    $uh = UserHelper::instance();
+    $uh            = UserHelper::instance();
     $sql['filter'] = $uh->getUserFilter($pattern);
 } else {
     $sql['filter'] = '';
@@ -145,7 +145,7 @@ $sql['limit'] = " LIMIT " . db_ei($offset) . ", " . db_ei($number_per_page);
 
 if ($project->usesTracker() && $at_arr) {
     for ($j = 0; $j < count($at_arr); $j++) {
-        $atid = db_ei($at_arr[$j]->getID());
+        $atid           = db_ei($at_arr[$j]->getID());
         $sql['select'] .= ", IFNULL(artifact_perm_" . $atid . ".perm_level, 0) AS perm_level_" . $atid . " ";
         $sql['from']   .= " LEFT JOIN artifact_perm AS artifact_perm_" . $atid . "
                                  ON(artifact_perm_" . $atid . ".user_id = user_group.user_id
@@ -157,9 +157,9 @@ $res_dev = db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['filter
 if (! $res_dev || db_numrows($res_dev) == 0 || $number_per_page < 1) {
     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_userperms', 'no_users_found'));
 }
-$sql = 'SELECT FOUND_ROWS() AS nb';
-$res = db_query($sql);
-$row = db_fetch_array($res);
+$sql            = 'SELECT FOUND_ROWS() AS nb';
+$res            = db_query($sql);
+$row            = db_fetch_array($res);
 $num_total_rows = $row['nb'];
 
 project_admin_header(
@@ -200,7 +200,7 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
     echo '<TABLE class="table">';
 
     $head = '<thead><tr>';
-    $i = 0;
+    $i    = 0;
 
     $should_display_submit_button = false;
 
@@ -208,7 +208,7 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
 
     if ($project->usesSVN()) {
         $should_display_submit_button = true;
-        $head .= '<th>' . $Language->getText('project_admin_userperms', 'svn') . '</th>';
+        $head                        .= '<th>' . $Language->getText('project_admin_userperms', 'svn') . '</th>';
     }
 
     if ($project->usesTracker() && $at_arr) {
@@ -233,7 +233,7 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
         echo '<td><input type="hidden" name="' . $purifier->purify('update_user_' . $row_dev['user_id']) . '">' . $user_name . '</td>';
      // svn
         if ($project->usesSVN()) {
-            $cell = '';
+            $cell  = '';
             $cell .= '<TD><SELECT name="' . $purifier->purify('svn_user_' . $row_dev['user_id']) . '">';
             $cell .= '<OPTION value="0"' . (($row_dev['svn_flags'] == 0) ? " selected" : "") . '>' . $Language->getText('global', 'none');
             $cell .= '<OPTION value="2"' . (($row_dev['svn_flags'] == 2) ? " selected" : "") . '>' . $Language->getText('project_admin_index', 'admin');
@@ -245,9 +245,9 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
         if ($project->usesTracker() && $at_arr) {
             // Loop on tracker
             for ($j = 0; $j < count($at_arr); $j++) {
-                $atid = $at_arr[$j]->getID();
-                $perm = $row_dev['perm_level_' . $atid];
-                $cell = '';
+                $atid  = $at_arr[$j]->getID();
+                $perm  = $row_dev['perm_level_' . $atid];
+                $cell  = '';
                 $cell .= '<TD><SELECT name="' . $purifier->purify('tracker_user_' . $row_dev['user_id']) . '_' . $purifier->purify($atid) . '">';
                 $cell .= '<OPTION value="0"' . (($perm == 0) ? " selected" : "") . '>' . $Language->getText('global', 'none');
                 $cell .= '<OPTION value="3"' . (($perm == 3 || $perm == 2) ? " selected" : "") . '>' . $Language->getText('project_admin_userperms', 'admin');
@@ -268,7 +268,7 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
     </table>';
     if ($num_total_rows && $number_per_page < $num_total_rows) {
         //Jump to page
-        $nb_of_pages = ceil($num_total_rows / $number_per_page);
+        $nb_of_pages  = ceil($num_total_rows / $number_per_page);
         $current_page = round($offset / $number_per_page);
 
         echo '<div style="font-family:Verdana">Page: ';

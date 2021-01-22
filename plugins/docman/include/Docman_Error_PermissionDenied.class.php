@@ -26,7 +26,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
     {
         if ($user->isAnonymous()) {
             $event_manager = EventManager::instance();
-            $redirect = new URLRedirect($event_manager);
+            $redirect      = new URLRedirect($event_manager);
             $redirect->redirectToLogin();
         } else {
             $this->buildPermissionDeniedInterface($project);
@@ -42,8 +42,8 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
         echo "<br>" . $purifier->purify(dgettext('tuleap-docman', 'Permission denied set on documents. You can not view this documents unless administrator grant you access.'));
 
         $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
-        $pm = ProjectManager::instance();
-        $dar = $pm->getMessageToRequesterForAccessProject($project->getID());
+        $pm      = ProjectManager::instance();
+        $dar     = $pm->getMessageToRequesterForAccessProject($project->getID());
         if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {
@@ -118,7 +118,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
         $params = [];
         $query  = explode('&', parse_url($url, PHP_URL_QUERY));
         foreach ($query as $tok) {
-            [$var, $val] = explode('=', $tok);
+            [$var, $val]  = explode('=', $tok);
             $params[$var] = urldecode($val);
         }
         return $params;
@@ -143,16 +143,16 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
                 //if no item id is filled, we retieve the root id: the id of "Project documentation"
                 if (isset($query['group_id'])) {
                     $itemFactory = $this->_getItemFactoryInstance($project->getId());
-                    $res = $itemFactory->getRoot($project->getId());
+                    $res         = $itemFactory->getRoot($project->getId());
                     if ($res !== null) {
-                        $row = $res->toRow();
+                        $row         = $res->toRow();
                         $query['id'] = $row['item_id'];
                     }
                 }
             }
         }
 
-        $pm = $this->_getPermissionManagerInstance($project->getId());
+        $pm        = $this->_getPermissionManagerInstance($project->getId());
         $adminList = [];
         if (isset($query['id'])) {
             $adminList = $pm->getDocmanManagerUsers($query['id'], $project);

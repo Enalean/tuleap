@@ -29,14 +29,14 @@ class ArtifactGroupListDao extends DataAccessObject
     }
     public function updateArtifactGroupList($artifact_id, $group_id, $name, $description, $itemname, $allow_copy, $submit_instructions, $browse_instructions, $instantiate_for_new_projects)
     {
-        $artifact_id = $this->da->quoteSmart($artifact_id);
-        $group_id = $this->da->quoteSmart($group_id);
-        $name = $this->da->quoteSmart($name);
-        $description = $this->da->quoteSmart($description);
-        $itemname = $this->da->quoteSmart($itemname);
-        $allow_copy = $this->da->quoteSmart($allow_copy);
-        $submit_instructions = $this->da->quoteSmart($submit_instructions);
-        $browse_instructions = $this->da->quoteSmart($browse_instructions);
+        $artifact_id                  = $this->da->quoteSmart($artifact_id);
+        $group_id                     = $this->da->quoteSmart($group_id);
+        $name                         = $this->da->quoteSmart($name);
+        $description                  = $this->da->quoteSmart($description);
+        $itemname                     = $this->da->quoteSmart($itemname);
+        $allow_copy                   = $this->da->quoteSmart($allow_copy);
+        $submit_instructions          = $this->da->quoteSmart($submit_instructions);
+        $browse_instructions          = $this->da->quoteSmart($browse_instructions);
         $instantiate_for_new_projects = $this->da->quoteSmart($instantiate_for_new_projects);
 
         $sql = "UPDATE $this->table_name SET 
@@ -54,10 +54,10 @@ class ArtifactGroupListDao extends DataAccessObject
 
     public function updateItemName($group_id, $oldItemname, $itemname)
     {
-        $group_id = $this->da->quoteSmart($group_id);
-        $itemname = $this->da->quoteSmart($itemname);
+        $group_id    = $this->da->quoteSmart($group_id);
+        $itemname    = $this->da->quoteSmart($itemname);
         $oldItemname = $this->da->quoteSmart($oldItemname);
-        $sql = "UPDATE $this->table_name SET 
+        $sql         = "UPDATE $this->table_name SET 
 			item_name=$itemname
             WHERE item_name=$oldItemname AND group_id=$group_id";
 
@@ -67,7 +67,7 @@ class ArtifactGroupListDao extends DataAccessObject
     public function searchNameByGroupId($group_id)
     {
         $group_id = $this->da->quoteSmart($group_id);
-        $sql = "SELECT * FROM $this->table_name WHERE group_id=$group_id";
+        $sql      = "SELECT * FROM $this->table_name WHERE group_id=$group_id";
         return $this->retrieve($sql);
     }
 }

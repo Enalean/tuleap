@@ -75,14 +75,14 @@ final class IndexControllerTest extends TestCase
 
     public function testProcessRenders(): void
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
+        $project      = M::mock(\Project::class)->shouldReceive('getID')
             ->andReturn('102')
             ->getMock();
         $current_user = M::mock(\PFUser::class);
         $this->layout_helper->setCallbackParams($project, $current_user);
 
         $request = M::mock(\HTTPRequest::class);
-        $layout = M::mock(BaseLayout::class);
+        $layout  = M::mock(BaseLayout::class);
 
         $this->assets->shouldReceive('getFileURL')
             ->once()

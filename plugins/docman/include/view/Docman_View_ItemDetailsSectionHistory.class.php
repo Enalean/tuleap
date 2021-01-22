@@ -31,7 +31,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
     public function __construct($item, $url, $display_access_logs, $logger)
     {
         parent::__construct($item, $url, 'history', dgettext('tuleap-docman', 'History'));
-        $this->logger = $logger;
+        $this->logger              = $logger;
         $this->display_access_logs = $display_access_logs;
     }
 
@@ -56,15 +56,15 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
 
     private function getFileVersions(\PFUser $current_user): string
     {
-        $uh      = UserHelper::instance();
-        $content = '<h3>' . dgettext('tuleap-docman', 'Versions') . '</h3>';
+        $uh              = UserHelper::instance();
+        $content         = '<h3>' . dgettext('tuleap-docman', 'Versions') . '</h3>';
         $version_factory = new Docman_VersionFactory();
         $approvalFactory = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
         $versions        = $version_factory->getAllVersionForItem($this->item);
 
         if ($versions) {
             if (count($versions)) {
-                $titles = [];
+                $titles   = [];
                 $titles[] = dgettext('tuleap-docman', 'Version');
                 $titles[] = dgettext('tuleap-docman', 'Date');
                 $titles[] = dgettext('tuleap-docman', 'Author');
@@ -74,21 +74,21 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                 $titles[] = dgettext('tuleap-docman', 'Delete');
                 $content .= html_build_list_table_top($titles, false, false, false, null, "table");
                 $odd_even = ['boxitem', 'boxitemalt'];
-                $i = 0;
+                $i        = 0;
                 foreach ($versions as $key => $nop) {
-                    $download = DocmanViewURLBuilder::buildActionUrl(
+                    $download       = DocmanViewURLBuilder::buildActionUrl(
                         $this->item,
                         ['default_url' => $this->url],
                         ['action' => 'show', 'id' => $this->item->getId(), 'version_number' => $versions[$key]->getNumber()]
                     );
-                    $delete = DocmanViewURLBuilder::buildActionUrl(
+                    $delete         = DocmanViewURLBuilder::buildActionUrl(
                         $this->item,
                         ['default_url' => $this->url],
                         ['action' => 'confirmDelete', 'id' => $this->item->getId(), 'version' => $versions[$key]->getNumber()]
                     );
                     $delete_version = "delete-" . $this->item->getId() . "-" . $versions[$key]->getNumber();
 
-                    $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
+                    $user     = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
                     $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
                     $content .= '<td align="center"><a href="' . $download . '">' . $versions[$key]->getNumber() . '</a></td>';
                     $content .= '<td>' . \DateHelper::relativeDateBlockContext($versions[$key]->getDate(), $current_user) . '</td>';
@@ -135,7 +135,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
         $versions        = $version_factory->getAllVersionForItem($this->item);
 
         if ($versions) {
-            $titles = [
+            $titles   = [
                 dgettext('tuleap-docman', 'Version'),
                 dgettext('tuleap-docman', 'Date'),
                 dgettext('tuleap-docman', 'Author'),
@@ -145,7 +145,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
             $content .= html_build_list_table_top($titles, false, false, false, null, "table");
 
             $odd_even = ['boxitem', 'boxitemalt'];
-            $i = 0;
+            $i        = 0;
 
             foreach (array_keys($versions) as $key) {
                 $download = DocmanViewURLBuilder::buildActionUrl(
@@ -153,7 +153,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     ['default_url' => $this->url],
                     ['action' => 'show', 'id' => $this->item->getId(), 'version_number' => $versions[$key]->getNumber()]
                 );
-                $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
+                $user     = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
                 $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
                 $content .= '<td align="center"><a href="' . $download . '">' . $versions[$key]->getNumber() . '</a></td>';
                 $content .= '<td>' . \DateHelper::relativeDateBlockContext($versions[$key]->getDate(), $current_user) . '</td>';

@@ -24,8 +24,8 @@ namespace Tuleap\OAuth2Server\E2E\RelyingPartyOIDC;
 
 final class OAuth2TestFlowConstants
 {
-    public const REDIRECT_URI    = 'https://oauth2-server-rp-oidc:8443/callback';
-    public const BASE_CLIENT_URI = 'https://tuleap';
+    public const REDIRECT_URI       = 'https://oauth2-server-rp-oidc:8443/callback';
+    public const BASE_CLIENT_URI    = 'https://tuleap';
     public const DISCOVERY_ENDPOINT = self::BASE_CLIENT_URI . '/.well-known/openid-configuration';
 
     private function __construct()

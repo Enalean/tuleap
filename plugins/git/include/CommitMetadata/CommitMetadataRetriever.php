@@ -68,7 +68,7 @@ class CommitMetadataRetriever
             $author          = $contributors_by_email->getUserByEmail($author_email);
             $committer_email = $commit->getCommitterEmail();
             $committer       = $contributors_by_email->getUserByEmail($committer_email);
-            $metadata[]   = new CommitMetadata($status, $author, $committer);
+            $metadata[]      = new CommitMetadata($status, $author, $committer);
         }
 
         return $metadata;

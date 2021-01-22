@@ -33,9 +33,9 @@ final class SiteDeployFPM
     public const PHP74_DST_CONF_DIR = '/etc/opt/remi/php74';
     public const PHP74_SRC_CONF_DIR = __DIR__ . '/../../../../etc/fpm74';
 
-    private const FPM_PART_ERRORS      = 'tuleap_errors.part';
-    private const FPM_PART_ERRORS_PROD = 'tuleap_errors_prod.part';
-    private const FPM_PART_ERRORS_DEV  = 'tuleap_errors_dev.part';
+    private const FPM_PART_ERRORS             = 'tuleap_errors.part';
+    private const FPM_PART_ERRORS_PROD        = 'tuleap_errors_prod.part';
+    private const FPM_PART_ERRORS_DEV         = 'tuleap_errors_dev.part';
     private const FPM_CONFIGURATION_TO_DEPLOY = [
         'tuleap.conf'                      => 'tuleap.conf',
         'tuleap-long-running-request.conf' => 'tuleap-long-running-request.conf',
@@ -209,7 +209,7 @@ final class SiteDeployFPM
     {
         $this->logger->info("Deploy $this->tuleap_php_configuration_folder/$reference_file into $this->php_configuration_folder/php-fpm.d/$configuration_name");
 
-        $variables = [
+        $variables   = [
             '%application_user%',
         ];
         $replacement = [

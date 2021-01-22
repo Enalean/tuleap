@@ -28,7 +28,7 @@ class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_V
 
     protected function fetchForm()
     {
-        $html = '';
+        $html  = '';
         $html .= $this->adminElement->fetchTypeNotModifiable();
         $html .= $this->adminElement->fetchLabelForUpdate();
         $html .= $this->adminElement->fetchDescriptionForUpdate();

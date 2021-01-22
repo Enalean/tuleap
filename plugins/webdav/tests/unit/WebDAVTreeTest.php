@@ -56,12 +56,12 @@ final class WebDAVTreeTest extends TestCase
     {
         parent::setUp();
 
-        $this->user            = \Mockery::spy(\PFUser::class);
-        $this->project         = \Mockery::spy(\Project::class)->shouldReceive('getID')->with()->andReturns(101)->getMock();
-        $this->package         = new FRSPackage();
-        $this->release         = \Mockery::spy(FRSRelease::class);
-        $this->file            = \Mockery::spy(\FRSFile::class);
-        $this->docman_folder   = \Mockery::spy(\Docman_Folder::class);
+        $this->user          = \Mockery::spy(\PFUser::class);
+        $this->project       = \Mockery::spy(\Project::class)->shouldReceive('getID')->with()->andReturns(101)->getMock();
+        $this->package       = new FRSPackage();
+        $this->release       = \Mockery::spy(FRSRelease::class);
+        $this->file          = \Mockery::spy(\FRSFile::class);
+        $this->docman_folder = \Mockery::spy(\Docman_Folder::class);
 
         $docman_item_factory = \Mockery::spy(\Docman_ItemFactory::class)->shouldReceive('getItemFromDb')->with()->andReturns(\Mockery::spy(\Docman_Item::class));
         Docman_ItemFactory::setInstance(101, $docman_item_factory);
@@ -75,72 +75,72 @@ final class WebDAVTreeTest extends TestCase
 
     public function testCanBeMovedFailNotMovable(): void
     {
-        $source = null;
+        $source      = null;
         $destination = null;
-        $tree = $this->getTestTree();
+        $tree        = $this->getTestTree();
 
         $this->assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceNotReleaseDestinationPackage(): void
     {
-        $source = null;
+        $source      = null;
         $destination = $this->getTestPackage();
-        $tree = $this->getTestTree();
+        $tree        = $this->getTestTree();
 
         $this->assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceNotFileDestinationRelease(): void
     {
-        $source = null;
+        $source      = null;
         $destination = $this->getTestRelease();
-        $tree = $this->getTestTree();
+        $tree        = $this->getTestTree();
 
         $this->assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceReleaseDestinationNotPackage(): void
     {
-        $source = $this->getTestRelease();
+        $source      = $this->getTestRelease();
         $destination = null;
-        $tree = $this->getTestTree();
+        $tree        = $this->getTestTree();
 
         $this->assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceFileDestinationNotRelease(): void
     {
-        $source = $tree = $this->getTestFile();
+        $source      = $tree = $this->getTestFile();
         $destination = null;
-        $tree = $this->getTestTree();
+        $tree        = $this->getTestTree();
 
         $this->assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceReleaseDestinationPackageNotSameProject(): void
     {
-        $source = $this->getTestRelease2();
+        $source      = $this->getTestRelease2();
         $destination = $this->getTestPackage();
-        $tree = $this->getTestTree();
+        $tree        = $this->getTestTree();
 
         $this->assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedFailSourceFileDestinationReleaseNotSameProject(): void
     {
-        $source = $tree = $this->getTestFile();
+        $source      = $tree = $this->getTestFile();
         $destination = $this->getTestRelease2();
-        $tree = $this->getTestTree();
+        $tree        = $this->getTestTree();
 
         $this->assertFalse($tree->canBeMoved($source, $destination));
     }
 
     public function testCanBeMovedSucceedeSourceReleaseDestinationPackage(): void
     {
-        $source = $this->getTestRelease();
+        $source      = $this->getTestRelease();
         $destination = $this->getTestPackage();
-        $tree = $this->getTestTree();
+        $tree        = $this->getTestTree();
 
         $this->assertTrue($tree->canBeMoved($source, $destination));
     }
@@ -152,7 +152,7 @@ final class WebDAVTreeTest extends TestCase
         $this->project->shouldReceive('getGroupId')->andReturns(1);
 
         $destination = $this->getTestRelease();
-        $tree = $this->getTestTree();
+        $tree        = $this->getTestTree();
 
         $this->assertTrue($tree->canBeMoved($source, $destination));
     }
@@ -209,7 +209,7 @@ final class WebDAVTreeTest extends TestCase
 
     public function testCopyNoWriteEnabled(): void
     {
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(false);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -223,7 +223,7 @@ final class WebDAVTreeTest extends TestCase
      */
     public function testCopyWrongDestination(): void
     {
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -241,7 +241,7 @@ final class WebDAVTreeTest extends TestCase
      */
     public function testCopyWrongSource(): void
     {
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -256,10 +256,10 @@ final class WebDAVTreeTest extends TestCase
 
     public function testCopyNotTheSameProject(): void
     {
-        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $sourceItem      = new \Docman_Folder(['group_id' => 1]);
         $destinationItem = new \Docman_Folder(['group_id' => 2]);
 
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -274,10 +274,10 @@ final class WebDAVTreeTest extends TestCase
 
     public function testCopyNoReadOnSource(): void
     {
-        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $sourceItem      = new \Docman_Folder(['group_id' => 1]);
         $destinationItem = new \Docman_Folder(['group_id' => 2]);
 
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -297,10 +297,10 @@ final class WebDAVTreeTest extends TestCase
 
     public function testCopyNoWriteOnDestination(): void
     {
-        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $sourceItem      = new \Docman_Folder(['group_id' => 1]);
         $destinationItem = new \Docman_Folder(['group_id' => 2]);
 
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -320,10 +320,10 @@ final class WebDAVTreeTest extends TestCase
 
     public function testCopySucceede(): void
     {
-        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $sourceItem      = new \Docman_Folder(['group_id' => 1]);
         $destinationItem = new \Docman_Folder(['group_id' => 1]);
 
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -346,10 +346,10 @@ final class WebDAVTreeTest extends TestCase
 
     public function testMoveDocmanSucceed(): void
     {
-        $sourceItem = new \Docman_Folder(['item_id' => 128, 'group_id' => 1]);
+        $sourceItem      = new \Docman_Folder(['item_id' => 128, 'group_id' => 1]);
         $destinationItem = new \Docman_Folder(['item_id' => 256, 'group_id' => 1]);
 
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -381,7 +381,7 @@ final class WebDAVTreeTest extends TestCase
         $destinationItem = \Mockery::spy(\Docman_Folder::class);
         $destinationItem->shouldReceive('getGroupId')->andReturns(1);
 
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -407,7 +407,7 @@ final class WebDAVTreeTest extends TestCase
 
     public function testMoveDocmanNoWriteEnabled(): void
     {
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(false);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -418,10 +418,10 @@ final class WebDAVTreeTest extends TestCase
 
     public function testMoveDocmanNotTheSameProject(): void
     {
-        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $sourceItem      = new \Docman_Folder(['group_id' => 1]);
         $destinationItem = new \Docman_Folder(['group_id' => 11]);
 
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -437,10 +437,10 @@ final class WebDAVTreeTest extends TestCase
 
     public function testMoveDocmanNoReadOnSource(): void
     {
-        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $sourceItem      = new \Docman_Folder(['group_id' => 1]);
         $destinationItem = new \Docman_Folder(['group_id' => 1]);
 
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -461,10 +461,10 @@ final class WebDAVTreeTest extends TestCase
 
     public function testMoveDocmanNoWriteOnDestination(): void
     {
-        $sourceItem = new \Docman_Folder(['group_id' => 1]);
+        $sourceItem      = new \Docman_Folder(['group_id' => 1]);
         $destinationItem = new \Docman_Folder(['group_id' => 1]);
 
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);
@@ -487,7 +487,7 @@ final class WebDAVTreeTest extends TestCase
     {
         $sourceItem = new \Docman_Folder(['group_id' => 1]);
 
-        $tree = $this->getTestTree();
+        $tree  = $this->getTestTree();
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('isWriteEnabled')->andReturns(true);
         $tree->shouldReceive('getUtils')->andReturns($utils);

@@ -61,16 +61,16 @@ class FrontRouterTest extends TestCase
     {
         parent::setUp();
 
-        $this->route_collector = Mockery::mock(RouteCollector::class);
+        $this->route_collector          = Mockery::mock(RouteCollector::class);
         $this->url_verification_factory = Mockery::mock(\URLVerificationFactory::class);
-        $this->request = Mockery::mock(\HTTPRequest::class);
+        $this->request                  = Mockery::mock(\HTTPRequest::class);
         $this->request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
-        $this->layout = Mockery::mock(BaseLayout::class);
-        $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->error_rendering = Mockery::mock(ErrorRendering::class);
-        $theme_manager = Mockery::mock(\ThemeManager::class);
-        $this->burning_parrot = Mockery::mock(BurningParrotTheme::class);
-        $this->plugin_manager = Mockery::mock(PluginManager::class);
+        $this->layout                  = Mockery::mock(BaseLayout::class);
+        $this->logger                  = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->error_rendering         = Mockery::mock(ErrorRendering::class);
+        $theme_manager                 = Mockery::mock(\ThemeManager::class);
+        $this->burning_parrot          = Mockery::mock(BurningParrotTheme::class);
+        $this->plugin_manager          = Mockery::mock(PluginManager::class);
         $this->request_instrumentation = Mockery::mock(RequestInstrumentation::class);
 
         $this->user = Mockery::mock(\PFUser::class);

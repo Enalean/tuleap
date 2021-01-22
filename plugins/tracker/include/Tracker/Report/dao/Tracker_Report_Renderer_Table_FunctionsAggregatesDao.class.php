@@ -28,8 +28,8 @@ class Tracker_Report_Renderer_Table_FunctionsAggregatesDao extends DataAccessObj
 
     public function searchByRendererId($renderer_id)
     {
-        $renderer_id  = $this->da->escapeInt($renderer_id);
-        $sql = "SELECT *
+        $renderer_id = $this->da->escapeInt($renderer_id);
+        $sql         = "SELECT *
                 FROM $this->table_name
                 WHERE renderer_id = $renderer_id ";
         return $this->retrieve($sql);
@@ -42,7 +42,7 @@ class Tracker_Report_Renderer_Table_FunctionsAggregatesDao extends DataAccessObj
             $renderer_id = $this->da->escapeInt($renderer_id);
             $field_id    = $this->da->escapeInt($field_id);
             $aggregate   = $this->da->quoteSmart($aggregate);
-            $sql = "INSERT INTO $this->table_name(renderer_id, field_id, aggregate)
+            $sql         = "INSERT INTO $this->table_name(renderer_id, field_id, aggregate)
                                            VALUES($renderer_id, $field_id, $aggregate)";
             return $this->update($sql);
         }
@@ -78,16 +78,16 @@ class Tracker_Report_Renderer_Table_FunctionsAggregatesDao extends DataAccessObj
     {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_renderer_id   = $this->da->escapeInt($to_renderer_id);
-        $sql = "INSERT INTO $this->table_name(renderer_id, field_id, aggregate)
+        $sql              = "INSERT INTO $this->table_name(renderer_id, field_id, aggregate)
                 SELECT $to_renderer_id, field_id, aggregate
                 FROM $this->table_name
                 WHERE renderer_id = $from_renderer_id";
         $this->update($sql);
 
         foreach ($field_mapping as $mapping) {
-            $from  = $this->da->escapeInt($mapping['from']);
-            $to    = $this->da->escapeInt($mapping['to']);
-            $sql = "UPDATE $this->table_name 
+            $from = $this->da->escapeInt($mapping['from']);
+            $to   = $this->da->escapeInt($mapping['to']);
+            $sql  = "UPDATE $this->table_name 
                     SET field_id = $to
                     WHERE renderer_id = $to_renderer_id
                       AND field_id = $from";

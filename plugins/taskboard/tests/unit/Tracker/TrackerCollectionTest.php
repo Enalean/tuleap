@@ -33,7 +33,7 @@ final class TrackerCollectionTest extends TestCase
 
     public function testMapReturnsArrayOfResultsOfClosure(): void
     {
-        $milestone_tracker = M::mock(Tracker::class);
+        $milestone_tracker        = M::mock(Tracker::class);
         $first_tracker            = $this->mockTracker(1);
         $second_tracker           = $this->mockTracker(2);
         $first_taskboard_tracker  = new TaskboardTracker($milestone_tracker, $first_tracker);

@@ -89,7 +89,7 @@ final class MetadataUpdatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->item_factory = \Mockery::mock(\Docman_ItemFactory::class);
+        $this->item_factory                = \Mockery::mock(\Docman_ItemFactory::class);
         $this->status_mapper               = \Mockery::mock(ItemStatusMapper::class);
         $this->obsolescence_date_retriever = \Mockery::mock(HardcodedMetadataObsolescenceDateRetriever::class);
         $this->user_manager                = \Mockery::mock(\UserManager::class);
@@ -97,8 +97,8 @@ final class MetadataUpdatorTest extends TestCase
         $this->event_processor             = \Mockery::mock(MetadataEventProcessor::class);
         $this->recursive_updator           = \Mockery::mock(MetadataRecursiveUpdator::class);
         $this->document_on_going_retriever = \Mockery::mock(DocumentOngoingUploadRetriever::class);
-        $this->representation_retriever = \Mockery::mock(CustomMetadataRepresentationRetriever::class);
-        $this->metadata_value_updator = \Mockery::mock(MetadataValueUpdator::class);
+        $this->representation_retriever    = \Mockery::mock(CustomMetadataRepresentationRetriever::class);
+        $this->metadata_value_updator      = \Mockery::mock(MetadataValueUpdator::class);
 
         $this->updator = new MetadataUpdator(
             $this->item_factory,
@@ -511,7 +511,7 @@ final class MetadataUpdatorTest extends TestCase
 
     public function testFolderUpdateIsRejectedIfAnOtherItemHasTheSameTitle(): void
     {
-        $item        = \Mockery::mock(\Docman_Item::class);
+        $item = \Mockery::mock(\Docman_Item::class);
         $item->shouldReceive('getTitle')->andReturn("my title");
         $item->shouldReceive('getParentId')->andReturn(9);
 
@@ -530,7 +530,7 @@ final class MetadataUpdatorTest extends TestCase
 
     public function testFolderStatusUpdateIsDoneForEveryFolderAndItems(): void
     {
-        $item        = \Mockery::mock(\Docman_Item::class);
+        $item = \Mockery::mock(\Docman_Item::class);
         $item->shouldReceive('getTitle')->andReturn("my title");
         $item->shouldReceive('getParentId')->andReturn(9);
         $item->shouldReceive('getId')->andReturn(100);
@@ -569,7 +569,7 @@ final class MetadataUpdatorTest extends TestCase
 
     public function testFolderUpdateIsDoneForOtherFolder(): void
     {
-        $item        = \Mockery::mock(\Docman_Item::class);
+        $item = \Mockery::mock(\Docman_Item::class);
         $item->shouldReceive('getTitle')->andReturn("my title");
         $item->shouldReceive('getParentId')->andReturn(9);
         $item->shouldReceive('getId')->andReturn(100);
@@ -607,7 +607,7 @@ final class MetadataUpdatorTest extends TestCase
 
     public function testFolderUpdateCanBeDoneWithoutRecusrivity(): void
     {
-        $item        = \Mockery::mock(\Docman_Item::class);
+        $item = \Mockery::mock(\Docman_Item::class);
         $item->shouldReceive('getTitle')->andReturn("my title");
         $item->shouldReceive('getParentId')->andReturn(9);
         $item->shouldReceive('getId')->andReturn(100);

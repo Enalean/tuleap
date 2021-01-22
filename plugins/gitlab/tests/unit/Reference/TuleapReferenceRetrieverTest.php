@@ -63,7 +63,7 @@ class TuleapReferenceRetrieverTest extends TestCase
                 'get_artifact_reference_group_id',
                 Mockery::on(function (array &$params) {
                     $params['artifact_id'] = 100;
-                    $params['group_id'] = null;
+                    $params['group_id']    = null;
                     return true;
                 })
             );
@@ -80,7 +80,7 @@ class TuleapReferenceRetrieverTest extends TestCase
                 'get_artifact_reference_group_id',
                 Mockery::on(function (array &$params) {
                     $params['artifact_id'] = 100;
-                    $params['group_id'] = "101";
+                    $params['group_id']    = "101";
                     return true;
                 })
             );
@@ -100,7 +100,7 @@ class TuleapReferenceRetrieverTest extends TestCase
                 'get_artifact_reference_group_id',
                 Mockery::on(function (array &$params) {
                     $params['artifact_id'] = 100;
-                    $params['group_id'] = "101";
+                    $params['group_id']    = "101";
                     return true;
                 })
             );

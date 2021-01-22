@@ -60,18 +60,18 @@ class ArtifactLinkDiffTest extends TestCase
 
     public function testHasNoChangesWithEmptyArrays()
     {
-        $previous = [];
-        $next     = [];
+        $previous           = [];
+        $next               = [];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
         $this->assertFalse($artifact_link_diff->hasChanges());
     }
 
     public function testHasNoChangesWhenTheTwoArtifactsAreEquals()
     {
-        $previous = [
+        $previous           = [
             122 => new Tracker_ArtifactLinkInfo(122, '*', '*', '*', '*', ''),
         ];
-        $next     = [
+        $next               = [
             122 => new Tracker_ArtifactLinkInfo(122, '*', '*', '*', '*', ''),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
@@ -81,8 +81,8 @@ class ArtifactLinkDiffTest extends TestCase
     public function testHasChangesWithANewArtifact()
     {
         $this->factory->shouldReceive('getFromShortname')->andReturn(new NaturePresenter('', '', '', true));
-        $previous = [];
-        $next     = [
+        $previous           = [];
+        $next               = [
             122 => new Tracker_ArtifactLinkInfo(122, '*', '*', '*', '*', ''),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
@@ -91,18 +91,18 @@ class ArtifactLinkDiffTest extends TestCase
 
     public function testHasChangesWhenAnArtifactIsRemoved()
     {
-        $previous = [
+        $previous           = [
             122 => new Tracker_ArtifactLinkInfo(122, '*', '*', '*', '*', ''),
         ];
-        $next     = [];
+        $next               = [];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
         $this->assertTrue($artifact_link_diff->hasChanges());
     }
 
     public function testGetFormattedWithoutChanges()
     {
-        $previous = [];
-        $next     = [];
+        $previous           = [];
+        $next               = [];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
         $this->assertEquals('', $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
@@ -110,8 +110,8 @@ class ArtifactLinkDiffTest extends TestCase
     public function testGetFormattedWithAnAddedArtifactWithoutNature()
     {
         $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
-        $previous = [];
-        $next     = [
+        $previous           = [];
+        $next               = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
@@ -121,10 +121,10 @@ class ArtifactLinkDiffTest extends TestCase
     public function testGetFormattedWithRemovedAllArtifactsWithoutNature()
     {
         $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
-        $previous = [
+        $previous           = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
         ];
-        $next = [];
+        $next               = [];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
         $this->assertEquals(" cleared", $artifact_link_diff->fetchFormatted($this->user, '*', false));
     }
@@ -132,11 +132,11 @@ class ArtifactLinkDiffTest extends TestCase
     public function testGetFormattedWithRemovedOneArtifactWithoutNature()
     {
         $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
-        $previous = [
+        $previous           = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
             123 => $this->getTrackerArtifactLinkInfo(123, 'bug', ''),
         ];
-        $next     = [
+        $next               = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
@@ -146,8 +146,8 @@ class ArtifactLinkDiffTest extends TestCase
     public function testGetFormattedWithAnAddedArtifactWithRandomNature()
     {
         $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new NaturePresenter('fixed_in', 'Fixed in', '', true));
-        $previous = [];
-        $next     = [
+        $previous           = [];
+        $next               = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', 'fixed_in'),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
@@ -159,11 +159,11 @@ class ArtifactLinkDiffTest extends TestCase
     {
         $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
         $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new NaturePresenter('fixed_in', 'Fixed in', '', true));
-        $previous = [
+        $previous           = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
             123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
         ];
-        $next     = [
+        $next               = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
         ];
         $artifact_link_diff = new Tracker_Artifact_ChangesetValue_ArtifactLinkDiff($previous, $next, $this->tracker, $this->factory);
@@ -175,11 +175,11 @@ class ArtifactLinkDiffTest extends TestCase
         $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
         $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new NaturePresenter('fixed_in', 'Fixed in', '', true));
         $this->factory->shouldReceive('getFromShortname')->with('reported_in')->andReturn(new NaturePresenter('reported_in', 'Reported in', '', true));
-        $previous = [
+        $previous           = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
             123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
         ];
-        $next     = [
+        $next               = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', 'reported_in'),
             123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
         ];
@@ -192,11 +192,11 @@ class ArtifactLinkDiffTest extends TestCase
         $this->factory->shouldReceive('getFromShortname')->with('')->andReturn(new NaturePresenter('', '', '', true));
         $this->factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn(new NaturePresenter('fixed_in', 'Fixed in', '', true));
         $this->factory->shouldReceive('getFromShortname')->with('reported_in')->andReturn(new NaturePresenter('reported_in', 'Reported in', '', true));
-        $previous = [
+        $previous           = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', 'reported_in'),
             123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
         ];
-        $next     = [
+        $next               = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),
             123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
         ];
@@ -206,9 +206,9 @@ class ArtifactLinkDiffTest extends TestCase
 
     private function getTrackerArtifactLinkInfo(int $artifact_id, string $keyword, string $nature): Tracker_ArtifactLinkInfo
     {
-        $tracker = M::mock(Tracker::class, ['getItemName' => $keyword, 'getGroupId' => '*', 'getId' => 888]);
+        $tracker   = M::mock(Tracker::class, ['getItemName' => $keyword, 'getGroupId' => '*', 'getId' => 888]);
         $changeset = M::mock(\Tracker_Artifact_Changeset::class, ['getId' => '*']);
-        $artifact = M::mock(
+        $artifact  = M::mock(
             \Tuleap\Tracker\Artifact\Artifact::class,
             [
                 'getId' => $artifact_id,

@@ -50,7 +50,7 @@ class TrackerFormElementExportPermissionsToXmlTest extends TestCase
         $field_01->shouldReceive('isUsed')->andReturn(true);
 
         $xmlMapping['F' . $field_01->getId()] = $field_01->getId();
-        $xml     = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><permissions/>');
+        $xml                                  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><permissions/>');
         $field_01->exportPermissionsToXML($xml, $ugroups, $xmlMapping);
 
         $this->assertTrue(isset($xml->permission[0]));

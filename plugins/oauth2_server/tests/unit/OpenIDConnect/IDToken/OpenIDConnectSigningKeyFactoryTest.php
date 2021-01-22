@@ -33,7 +33,7 @@ final class OpenIDConnectSigningKeyFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private const SIGNING_PUBLIC_KEY  = <<<EOT
+    private const SIGNING_PUBLIC_KEY = <<<EOT
         -----BEGIN PUBLIC KEY-----
         MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApVp45DC1lniS5l9yiR81
         OM3BCESDLyZYX3pXS32oJz0eOIqgA4mnqGNvupo/ARJnu1W/KVNNqxBNGno1oNLg

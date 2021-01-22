@@ -28,7 +28,7 @@ final class Tracker_Report_ResultJoinerTest extends \PHPUnit\Framework\TestCase
         $matching_ids = [123 => 'whatever', 456 => 'whatever', 789 => 'whatever'];
         $other_result = [456 => 'whatever'];
 
-        $john = new Tracker_Report_ResultJoiner();
+        $john    = new Tracker_Report_ResultJoiner();
         $results = $john->joinResults($matching_ids, [$other_result]);
 
         $expected = [456 => 'whatever'];
@@ -37,11 +37,11 @@ final class Tracker_Report_ResultJoinerTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesAnIntersectionWithEveryResults(): void
     {
-        $matching_ids = [123 => 'whatever', 456 => 'whatever', 789 => 'whatever'];
+        $matching_ids   = [123 => 'whatever', 456 => 'whatever', 789 => 'whatever'];
         $other_result_1 = [456 => 'whatever', 789 => 'whatever'];
         $other_result_2 = [456 => 'whatever'];
 
-        $john = new Tracker_Report_ResultJoiner();
+        $john    = new Tracker_Report_ResultJoiner();
         $results = $john->joinResults($matching_ids, [$other_result_1, $other_result_2]);
 
         $expected = [456 => 'whatever'];

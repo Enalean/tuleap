@@ -160,17 +160,17 @@ if (! $request->valid($vGroupId)) {
                     $_rev_id = $pref_arr[0];
                 }
                 $_commiter = $pref_arr[1];
-                $_path = $pref_arr[2];
-                $_srch = $pref_arr[3];
-                $chunksz = $pref_arr[4];
-                $set = 'custom';
+                $_path     = $pref_arr[2];
+                $_srch     = $pref_arr[3];
+                $chunksz   = $pref_arr[4];
+                $set       = 'custom';
             } else {
-                $set = 'custom';
+                $set       = 'custom';
                 $_commiter = 0;
             }
         } else {
             $_commiter = 0;
-            $set = 'custom';
+            $set       = 'custom';
         }
     } else {
         $set = $request->get('set');
@@ -194,12 +194,12 @@ if (! $request->valid($vGroupId)) {
     /*
      Display commits based on the form post - by user or status or both
     */
-    $pm = ProjectManager::instance();
+    $pm      = ProjectManager::instance();
     $project = $pm->getProject($group_id);
-    $root = $project->getUnixName(false);
+    $root    = $project->getUnixName(false);
 
     list($result, $totalrows) = svn_get_revisions($project, $offset, $chunksz, $_rev_id, $_commiter, $_srch, $order_by, $pv);
-    $statement = $Language->getText('svn_browse_revision', 'view_commit');
+    $statement                = $Language->getText('svn_browse_revision', 'view_commit');
 
     /*
      creating a custom technician box which includes "any"

@@ -66,7 +66,7 @@ class NewDropdownPresenterBuilder
             return;
         }
 
-        $collector = $this->event_dispatcher->dispatch(new NewDropdownProjectLinksCollector($current_user, $project, $current_context_section));
+        $collector             = $this->event_dispatcher->dispatch(new NewDropdownProjectLinksCollector($current_user, $project, $current_context_section));
         $current_project_links = $collector->getCurrentProjectLinks();
         if (empty($current_project_links)) {
             return;

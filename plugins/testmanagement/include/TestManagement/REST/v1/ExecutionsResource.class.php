@@ -149,8 +149,8 @@ class ExecutionsResource
             $this->formelement_factory,
             new StepsResultsFilter()
         );
-        $purifier = Codendi_HTMLPurifier::instance();
-        $commonmark_interpreter = CommonMarkInterpreter::build($purifier);
+        $purifier                               = Codendi_HTMLPurifier::instance();
+        $commonmark_interpreter                 = CommonMarkInterpreter::build($purifier);
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,

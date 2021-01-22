@@ -100,7 +100,7 @@ final class VerifierTest extends \PHPUnit\Framework\TestCase
         $expired_creation_date = new \DateTime();
         $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));
         $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));
-        $dao                   = \Mockery::spy(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
+        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
         $dao->shouldReceive('getTokenInformationById')->andReturns([
             'verifier'      => 'token_verification_part_password_hashed',
             'user_id'       => 101,

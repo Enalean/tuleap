@@ -41,9 +41,9 @@ if ($order) {
 $when_str = '';
 $id_str   = "AND cvs_checkins.descid=" . db_ei($checkin_id) . " ";
 
-$commit_id  = $request->get('commit_id');
+$commit_id = $request->get('commit_id');
 if ($commit_id) {
-    $id_str    = "AND cvs_checkins.commitid=" . db_ei($commit_id) . " ";
+    $id_str = "AND cvs_checkins.commitid=" . db_ei($commit_id) . " ";
     if ($desc_id) {
         $desc_id = db_ei($desc_id);
         $id_str  = $id_str . "AND cvs_checkins.descid=$desc_id ";
@@ -81,7 +81,7 @@ if (db_numrows($result) > 0) {
         exit_error('Error', sprintf(_('Commit #%1$s not found in this project'), $commit_id));
     }
 
-    $pm = ProjectManager::instance();
+    $pm      = ProjectManager::instance();
     $project = $pm->getProject($group_id);
     $service = $project->getService(\Service::CVS);
     if (! ($service instanceof ServiceCVS)) {

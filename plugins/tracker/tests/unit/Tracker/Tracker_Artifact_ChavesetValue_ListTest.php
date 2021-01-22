@@ -65,8 +65,8 @@ class Tracker_Artifact_ChavesetValue_ListTest extends TestCase // phpcs:ignore S
     public function testDiffCleared(): void
     {
         $bind_value = $this->getBindValueForLabel("Sandra");
-        $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, []);
-        $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value]);
+        $list_1     = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, []);
+        $list_2     = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value]);
 
         $this->assertEquals(' cleared values: Sandra', $list_1->diff($list_2));
     }

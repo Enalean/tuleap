@@ -46,9 +46,9 @@ final class MappedFieldRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->status_retriever = M::mock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
+        $this->status_retriever          = M::mock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
         $this->freestyle_mapping_factory = M::mock(FreestyleMappingFactory::class);
-        $this->mapped_field_retriever = new MappedFieldRetriever(
+        $this->mapped_field_retriever    = new MappedFieldRetriever(
             $this->status_retriever,
             $this->freestyle_mapping_factory
         );

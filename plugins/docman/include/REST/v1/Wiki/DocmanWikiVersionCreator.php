@@ -56,11 +56,11 @@ class DocmanWikiVersionCreator
         DocmanItemUpdator $updator,
         DBTransactionExecutor $transaction_executor
     ) {
-        $this->version_factory            = $version_factory;
-        $this->docman_item_factory        = $docman_item_factory;
-        $this->event_manager              = $event_manager;
-        $this->updator                    = $updator;
-        $this->transaction_executor       = $transaction_executor;
+        $this->version_factory      = $version_factory;
+        $this->docman_item_factory  = $docman_item_factory;
+        $this->event_manager        = $event_manager;
+        $this->updator              = $updator;
+        $this->transaction_executor = $transaction_executor;
     }
 
     public function createWikiVersion(

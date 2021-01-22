@@ -38,7 +38,7 @@ final class Artifact
 
     public function __construct(int $id, int $submitted_on)
     {
-        $this->id = $id;
+        $this->id           = $id;
         $this->submitted_on = $submitted_on;
     }
 

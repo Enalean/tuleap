@@ -131,7 +131,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function isReservedName($val)
     {
-        $is_reserved_name = \preg_match('/^(' . '(www[0-9]?)|(cvs[0-9]?)|(shell[0-9]?)|(ftp[0-9]?)|(irc[0-9]?)|(news[0-9]?)' . '|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)' . '|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(monitor)|(mirrors?)' . '|(root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)' . '|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)' . '|(munin)|(mailman)|(ftpadmin)|(codendiadm)|(imadmin-bot)|(apache)|(nscd)' . '|(git)|(gitolite)' . ')$/i', $val);
+        $is_reserved_name   = \preg_match('/^(' . '(www[0-9]?)|(cvs[0-9]?)|(shell[0-9]?)|(ftp[0-9]?)|(irc[0-9]?)|(news[0-9]?)' . '|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)' . '|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(monitor)|(mirrors?)' . '|(root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)' . '|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)' . '|(munin)|(mailman)|(ftpadmin)|(codendiadm)|(imadmin-bot)|(apache)|(nscd)' . '|(git)|(gitolite)' . ')$/i', $val);
         $is_reserved_prefix = $this->isReservedPrefix($val);
         if ($is_reserved_name || $is_reserved_prefix) {
             $this->error = $GLOBALS['Language']->getText('include_account', 'reserved');

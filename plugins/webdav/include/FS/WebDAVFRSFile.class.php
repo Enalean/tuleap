@@ -45,10 +45,10 @@ class WebDAVFRSFile extends Sabre_DAV_File
 
     public function __construct(PFUser $user, Project $project, FRSFile $file, WebDAVUtils $utils)
     {
-        $this->user = $user;
+        $this->user    = $user;
         $this->project = $project;
-        $this->file = $file;
-        $this->utils = $utils;
+        $this->file    = $file;
+        $this->utils   = $utils;
     }
 
     /**

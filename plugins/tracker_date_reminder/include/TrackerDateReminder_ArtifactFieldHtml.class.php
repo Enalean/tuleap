@@ -31,14 +31,14 @@ class TrackerDateReminder_ArtifactFieldHtml
     {
         //get date field reminder settings from database
         $tdrArtifactField = new TrackerDateReminder_ArtifactField();
-        $res = $tdrArtifactField->getDateFieldReminderSettings($field->getID(), $at->getID());
-        $enabled = (db_numrows($res) == 1);
-        $start = db_result($res, 0, 'notification_start');
-        $frequency = db_result($res, 0, 'frequency');
-        $recurse = db_result($res, 0, 'recurse');
-        $notified_people = db_result($res, 0, 'notified_people');
-        $notified_groups = [];
-        $notified_users = [];
+        $res              = $tdrArtifactField->getDateFieldReminderSettings($field->getID(), $at->getID());
+        $enabled          = (db_numrows($res) == 1);
+        $start            = db_result($res, 0, 'notification_start');
+        $frequency        = db_result($res, 0, 'frequency');
+        $recurse          = db_result($res, 0, 'recurse');
+        $notified_people  = db_result($res, 0, 'notified_people');
+        $notified_groups  = [];
+        $notified_users   = [];
         if (trim($notified_people) != "") {
             $notif = explode(",", $notified_people);
             foreach ($notif as $value) {
@@ -57,10 +57,10 @@ class TrackerDateReminder_ArtifactFieldHtml
         }
         $notif_type = db_result($res, 0, 'notification_type');
         if ($notif_type == 1) {
-            $after = "selected";
+            $after  = "selected";
             $before = "";
         } else {
-            $after = "";
+            $after  = "";
             $before = "selected";
         }
 
@@ -100,7 +100,7 @@ class TrackerDateReminder_ArtifactFieldHtml
                               ['value' => '2', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_ASSIGNEE_short_desc')],
                               ['value' => '3', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_CC_short_desc')],
                               ['value' => '4', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_COMMENTER_short_desc')]];
-        $out .= html_build_multiple_select_box_from_array($artRoleNames, 'notified_users[]', $notified_users, 4, true, '', false, '', false, '', false);
+        $out         .= html_build_multiple_select_box_from_array($artRoleNames, 'notified_users[]', $notified_users, 4, true, '', false, '', false, '', false);
 
         $GLOBALS['Language']->getText('global', 'and');
 

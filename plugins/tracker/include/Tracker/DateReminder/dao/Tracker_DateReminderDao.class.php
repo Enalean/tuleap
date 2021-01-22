@@ -73,14 +73,14 @@ class Tracker_DateReminderDao extends DataAccessObject
     {
         $values = [];
         foreach ($roles as $role) {
-            $role = (int) $this->da->escapeInt($role);
+            $role     = (int) $this->da->escapeInt($role);
             $values[] = " (
                     " . $reminderId . ",
                     " . $role . "
                 )";
         }
         $values = implode(', ', $values);
-        $sql = "INSERT INTO tracker_reminder_notified_roles
+        $sql    = "INSERT INTO tracker_reminder_notified_roles
                     (
                     reminder_id,
                     role_id
@@ -108,7 +108,7 @@ class Tracker_DateReminderDao extends DataAccessObject
         $ugroups          = $this->da->quoteSmart($ugroups);
         $notificationType = $this->da->escapeInt($notificationType);
         $distance         = $this->da->escapeInt($distance);
-        $sql = "INSERT INTO tracker_reminder
+        $sql              = "INSERT INTO tracker_reminder
                 (
                 tracker_id,
                 field_id,
@@ -124,7 +124,7 @@ class Tracker_DateReminderDao extends DataAccessObject
                 " . $notificationType . ",
                 " . $distance . "
                 )";
-        $reminderId = $this->updateAndGetLastId($sql);
+        $reminderId       = $this->updateAndGetLastId($sql);
         if ($reminderId && ! empty($roles)) {
             return $this->insertDateReminderRoles($reminderId, $roles);
         }
@@ -150,17 +150,17 @@ class Tracker_DateReminderDao extends DataAccessObject
         $notificationType = $this->da->escapeInt($notificationType);
         $distance         = $this->da->escapeInt($distance);
         $status           = $this->da->escapeInt($status);
-        $sql = "Update tracker_reminder
+        $sql              = "Update tracker_reminder
                 SET
                 ugroups           = " . $ugroups . ",
                 notification_type = " . $notificationType . ",
                 distance          = " . $distance . ",
                 status            = " . $status . "
                 WHERE reminder_id = " . $reminderId;
-        $result = $this->update($sql);
+        $result           = $this->update($sql);
 
         if ($result) {
-            $sql = "DELETE FROM tracker_reminder_notified_roles
+            $sql    = "DELETE FROM tracker_reminder_notified_roles
                 WHERE reminder_id = $reminderId";
             $result = $this->update($sql);
             if ($result && ! empty($roles)) {
@@ -180,7 +180,7 @@ class Tracker_DateReminderDao extends DataAccessObject
     public function searchById($reminderId)
     {
         $reminderId = $this->da->escapeInt($reminderId);
-        $sql = "SELECT *
+        $sql        = "SELECT *
                 FROM tracker_reminder
                 JOIN tracker_field ON tracker_reminder.field_id = tracker_field.id
                 WHERE reminder_id = $reminderId AND tracker_field.use_it = 1";
@@ -204,10 +204,10 @@ class Tracker_DateReminderDao extends DataAccessObject
         $fieldId          = $this->da->escapeInt($fieldId);
         $notificationType = $this->da->escapeInt($notificationType);
         $distance         = $this->da->escapeInt($distance);
-        $condition  = "";
+        $condition        = "";
         if ($reminderId > 0) {
-            $reminderId       = $this->da->escapeInt($reminderId);
-            $condition = " AND reminder_id <>  " . $reminderId;
+            $reminderId = $this->da->escapeInt($reminderId);
+            $condition  = " AND reminder_id <>  " . $reminderId;
         }
         $sql = "SELECT *
                 FROM tracker_reminder
@@ -232,7 +232,7 @@ class Tracker_DateReminderDao extends DataAccessObject
     public function deleteReminder($reminderId)
     {
         $reminder = $this->da->escapeInt($reminderId);
-        $sql = "DELETE FROM tracker_reminder
+        $sql      = "DELETE FROM tracker_reminder
                 WHERE reminder_id = $reminder";
         if ($this->update($sql)) {
              $sql = "DELETE FROM tracker_reminder_notified_roles
@@ -252,7 +252,7 @@ class Tracker_DateReminderDao extends DataAccessObject
     public function getRolesByReminderId($reminderId)
     {
         $reminderId = $this->da->escapeInt($reminderId);
-        $sql = "SELECT role_id
+        $sql        = "SELECT role_id
                 FROM tracker_reminder_notified_roles
                 WHERE reminder_id = $reminderId";
         return $this->retrieve($sql);

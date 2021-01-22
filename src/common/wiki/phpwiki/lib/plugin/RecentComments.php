@@ -27,10 +27,10 @@ class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
     }
     public function getDefaultArguments()
     {
-        $args = WikiPlugin_RecentChanges::getDefaultArguments();
+        $args               = WikiPlugin_RecentChanges::getDefaultArguments();
         $args['show_minor'] = false;
-        $args['show_all'] = true;
-        $args['caption'] = _("Recent Comments");
+        $args['show_all']   = true;
+        $args['caption']    = _("Recent Comments");
         return $args;
     }
 
@@ -51,7 +51,7 @@ class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
 
     public function getChanges($dbi, $args)
     {
-        $changes = $dbi->mostRecent($this->getMostRecentParams($args));
+        $changes      = $dbi->mostRecent($this->getMostRecentParams($args));
         $show_deleted = $args['show_deleted'];
         if ($show_deleted == 'sometimes') {
             $show_deleted = $args['show_minor'];
@@ -85,9 +85,9 @@ class _RecentChanges_CommentFormatter extends _RecentChanges_HtmlFormatter
             return;
         }
         $doublettes[$rev->getPageName()] = 1;
-        $args = &$this->_args;
-        $class = 'rc-' . $this->importance($rev);
-        $time = $this->time($rev);
+        $args                            = &$this->_args;
+        $class                           = 'rc-' . $this->importance($rev);
+        $time                            = $this->time($rev);
         if (! $rev->get('is_minor_edit')) {
             $time = HTML::strong(['class' => 'pageinfo-majoredit'], $time);
         }
@@ -122,9 +122,9 @@ class RecentCommentsRevisionIterator extends WikiDB_PageRevisionIterator
     public function __construct($revisions, &$dbi)
     {
         $this->_revisions = $revisions;
-        $this->_wikidb = $dbi;
-        $this->_current = 0;
-        $this->_blog = new WikiPlugin_WikiBlog();
+        $this->_wikidb    = $dbi;
+        $this->_current   = 0;
+        $this->_blog      = new WikiPlugin_WikiBlog();
     }
 
     public function next()

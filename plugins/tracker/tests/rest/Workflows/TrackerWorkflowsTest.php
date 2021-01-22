@@ -127,12 +127,12 @@ class TrackerWorkflowsTest extends TrackerBase
      */
     public function testPATCHTrackerWorkflowsIsUsed()
     {
-        $query = '{"workflow": {"set_transitions_rules": {"is_used": true}}}';
+        $query    = '{"workflow": {"set_transitions_rules": {"is_used": true}}}';
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
         );
-        $result = $response->json();
+        $result   = $response->json();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals("1", $result['workflow']['is_used']);
     }
@@ -142,12 +142,12 @@ class TrackerWorkflowsTest extends TrackerBase
      */
     public function testPATCHTrackerWorkflowsIsNotUsed()
     {
-        $query = '{"workflow": {"set_transitions_rules": {"is_used": false}}}';
+        $query    = '{"workflow": {"set_transitions_rules": {"is_used": false}}}';
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
         );
-        $result = $response->json();
+        $result   = $response->json();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals("0", $result['workflow']['is_used']);
     }
@@ -158,7 +158,7 @@ class TrackerWorkflowsTest extends TrackerBase
      */
     public function testPATCHTrackerWorkflowsDeleteAWorkflowTransitionRules()
     {
-        $query = '{"workflow": {"delete_transitions_rules": true}}';
+        $query    = '{"workflow": {"delete_transitions_rules": true}}';
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->client->patch(
@@ -167,7 +167,7 @@ class TrackerWorkflowsTest extends TrackerBase
                 null
             )
         );
-        $result = $response->json();
+        $result   = $response->json();
 
         $this->assertEquals(200, $response->getStatusCode());
 

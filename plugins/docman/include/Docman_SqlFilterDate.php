@@ -30,36 +30,36 @@ class Docman_SqlFilterDate extends \Docman_SqlFilter
     // '<'
     public function _getEndStatement($value)
     {
-        $stmt = '';
+        $stmt            = '';
         list($time, $ok) = \util_date_to_unixtime($value);
         if ($ok) {
             list($year, $month, $day) = \util_date_explode($value);
-            $time_before = \mktime(23, 59, 59, $month, $day - 1, $year);
-            $stmt = $this->field . " <= " . $time_before;
+            $time_before              = \mktime(23, 59, 59, $month, $day - 1, $year);
+            $stmt                     = $this->field . " <= " . $time_before;
         }
         return $stmt;
     }
     // '=' means that day between 00:00 and 23:59
     public function _getEqualStatement($value)
     {
-        $stmt = '';
+        $stmt            = '';
         list($time, $ok) = \util_date_to_unixtime($value);
         if ($ok) {
             list($year, $month, $day) = \util_date_explode($value);
-            $time_end = \mktime(23, 59, 59, $month, $day, $year);
-            $stmt = $this->field . " >= " . $time . " AND " . $this->field . " <= " . $time_end;
+            $time_end                 = \mktime(23, 59, 59, $month, $day, $year);
+            $stmt                     = $this->field . " >= " . $time . " AND " . $this->field . " <= " . $time_end;
         }
         return $stmt;
     }
     // '>'
     public function _getStartStatement($value)
     {
-        $stmt = '';
+        $stmt            = '';
         list($time, $ok) = \util_date_to_unixtime($value);
         if ($ok) {
             list($year, $month, $day) = \util_date_explode($value);
-            $time_after = \mktime(0, 0, 0, $month, $day + 1, $year);
-            $stmt = $this->field . " >= " . $time_after;
+            $time_after               = \mktime(0, 0, 0, $month, $day + 1, $year);
+            $stmt                     = $this->field . " >= " . $time_after;
         }
         return $stmt;
     }

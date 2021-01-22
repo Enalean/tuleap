@@ -32,7 +32,7 @@ class Tracker_SharedFormElementFactory
     public function __construct(Tracker_FormElementFactory $factory, Tracker_FormElement_Field_List_BindFactory $boundValuesFactory)
     {
         $this->boundValuesFactory = $boundValuesFactory;
-        $this->factory = $factory;
+        $this->factory            = $factory;
     }
 
 
@@ -48,7 +48,7 @@ class Tracker_SharedFormElementFactory
 
         $data = $this->populateFormElementDataForASharedField($field);
         $type = $data['type'];
-        $id = $this->factory->createFormElement($tracker, $type, $data, $tracker_is_empty, $force_absolute_ranking);
+        $id   = $this->factory->createFormElement($tracker, $type, $data, $tracker_is_empty, $force_absolute_ranking);
         $this->boundValuesFactory->duplicateByReference($field->getId(), $id);
         return $id;
     }

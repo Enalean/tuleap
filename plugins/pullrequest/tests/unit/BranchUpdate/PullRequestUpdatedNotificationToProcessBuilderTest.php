@@ -84,14 +84,14 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->user_manager              = \Mockery::mock(UserManager::class);
-        $this->pull_request_factory      = \Mockery::mock(Factory::class);
-        $this->git_repository_factory    = \Mockery::mock(GitRepositoryFactory::class);
-        $this->owner_retriever           = \Mockery::mock(OwnerRetriever::class);
-        $this->user_helper               = \Mockery::mock(UserHelper::class);
-        $this->html_url_builder          = \Mockery::mock(HTMLURLBuilder::class);
-        $this->url_manager               = \Mockery::mock(Git_GitRepositoryUrlManager::class);
-        $this->commits_differ            = \Mockery::mock(PullRequestUpdateCommitDiff::class);
+        $this->user_manager           = \Mockery::mock(UserManager::class);
+        $this->pull_request_factory   = \Mockery::mock(Factory::class);
+        $this->git_repository_factory = \Mockery::mock(GitRepositoryFactory::class);
+        $this->owner_retriever        = \Mockery::mock(OwnerRetriever::class);
+        $this->user_helper            = \Mockery::mock(UserHelper::class);
+        $this->html_url_builder       = \Mockery::mock(HTMLURLBuilder::class);
+        $this->url_manager            = \Mockery::mock(Git_GitRepositoryUrlManager::class);
+        $this->commits_differ         = \Mockery::mock(PullRequestUpdateCommitDiff::class);
 
         $this->builder = new PullRequestUpdatedNotificationToProcessBuilder(
             $this->user_manager,
@@ -138,11 +138,11 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
 
     private function setUpValidRepositoryWithoutDeterminingTheExpectedDiff(): PullRequestUpdatedEvent
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);
         $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
-        $change_user   = $this->buildUser(102);
-        $owners        = [$change_user, $this->buildUser(104), $this->buildUser(105)];
+        $change_user = $this->buildUser(102);
+        $owners      = [$change_user, $this->buildUser(104), $this->buildUser(105)];
 
         $git_exec = new GitExec($this->getTmpDir());
         $git_exec->init();
@@ -184,7 +184,7 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
 
     public function testNoNotificationIsBuiltWhenThePullRequestCannotBeFound(): void
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(404);
         $change_user = $this->buildUser(102);
 
@@ -205,7 +205,7 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
 
     public function testNoNotificationIsBuiltWhenTheUserUpdatingThePullRequestCannotBeFound(): void
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(14);
         $change_user = $this->buildUser(404);
 
@@ -228,9 +228,9 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
 
     public function testNoNotificationIsBuiltWhenTheDestinationRepositoryCannotBeFound(): void
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(14);
-        $change_user = $this->buildUser(102);
+        $change_user    = $this->buildUser(102);
         $git_repository = \Mockery::mock(GitRepository::class);
         $git_repository->shouldReceive('getId')->andReturn(404);
         $pull_request->shouldReceive('getRepoDestId')->andReturn($git_repository->getId());
@@ -256,10 +256,10 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
 
     public function testNoNotificationIsBuiltWhenTheDestinationRepositoryDataAreNotAvailable(): void
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);
         $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
-        $change_user   = $this->buildUser(102);
+        $change_user = $this->buildUser(102);
 
         $git_repository = \Mockery::mock(GitRepository::class);
         $git_repository->shouldReceive('getId')->andReturn(2);

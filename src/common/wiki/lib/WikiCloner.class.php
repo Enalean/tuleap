@@ -44,9 +44,9 @@ class WikiCloner
    */
     public function __construct($template_id = 0, $group_id = 0)
     {
-        $this->template_id = (int) $template_id;
-        $this->group_id = (int) $group_id;
-        $this->tmpl_wiki_exist = null;
+        $this->template_id      = (int) $template_id;
+        $this->group_id         = (int) $group_id;
+        $this->tmpl_wiki_exist  = null;
         $this->new_wiki_is_used = null;
     }
 
@@ -62,7 +62,7 @@ class WikiCloner
     public function newWikiIsUsed()
     {
         if ($this->new_wiki_is_used === null) {
-            $res = db_query(sprintf("SELECT is_used FROM service WHERE group_id=%d AND short_name='%s'", $this->group_id, $this->escapeString("wiki")));
+            $res                    = db_query(sprintf("SELECT is_used FROM service WHERE group_id=%d AND short_name='%s'", $this->group_id, $this->escapeString("wiki")));
             $this->new_wiki_is_used = (db_result($res, 0, 'is_used') ==  1);
         }
         return $this->new_wiki_is_used;
@@ -77,7 +77,7 @@ class WikiCloner
     public function templateWikiExists()
     {
         if ($this->new_wiki_is_used === null) {
-            $res = db_query('SELECT count(*) AS nb FROM wiki_page'
+            $res                   = db_query('SELECT count(*) AS nb FROM wiki_page'
                          . ' WHERE group_id=' . db_ei($this->template_id));
             $this->tmpl_wiki_exist = (db_result($res, 0, 'nb') > 0);
         }
@@ -86,7 +86,7 @@ class WikiCloner
 
     public function templateWikiHaveAttachments()
     {
-        $res = db_query('SELECT count(*) AS nb FROM wiki_attachment'
+        $res                    = db_query('SELECT count(*) AS nb FROM wiki_attachment'
                     . ' WHERE group_id=' . db_ei($this->template_id));
         $tmpl_wiki_attach_exist = (db_result($res, 0, 'nb') > 0);
         return $tmpl_wiki_attach_exist;
@@ -110,7 +110,7 @@ class WikiCloner
         $this->addWikiLinkEntries($arr);
         $this->cloneWikiRecentTable($arr);
         if ($this->templateWikiHaveAttachments()) {
-            $attachments_array = $this->cloneWikiAttachementTable();
+            $attachments_array   = $this->cloneWikiAttachementTable();
             $attachments_rev_arr = $this->cloneWikiAttachmentRevisionTable($attachments_array);
             $this->cloneWikiAttachmentLogTable($attachments_array, $attachments_rev_arr);
         }
@@ -128,7 +128,7 @@ class WikiCloner
     public function addWikiEntries()
     {
         $language = $this->getTemplateLanguageId();
-        $we_data = $this->getTemplateWikiEntries();
+        $we_data  = $this->getTemplateWikiEntries();
         foreach ($we_data as $id => $data) {
             $result = db_query(sprintf(
                 "INSERT INTO wiki_group_list (group_id, wiki_name, wiki_link, description, rank, language_id)"
@@ -155,10 +155,10 @@ class WikiCloner
     {
         foreach ($array as $key => $value) {
             $tmpl_version_data = $this->getTemplateWikiVersionData($key);
-            $result = db_query(sprintf("select version, mtime, minor_edit, content FROM wiki_version WHERE id=%d", $key));
+            $result            = db_query(sprintf("select version, mtime, minor_edit, content FROM wiki_version WHERE id=%d", $key));
             while ($row = db_fetch_array($result)) {
                  $num_ver = $row['version'];
-                 $res = db_query(sprintf(
+                 $res     = db_query(sprintf(
                      "INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)"
                      . "VALUES(%d, %d, %d, %d, '%s', '%s')",
                      $value,
@@ -182,14 +182,14 @@ class WikiCloner
    */
     public function cloneWikiPageTable()
     {
-        $ids = [];
+        $ids    = [];
         $result = db_query(sprintf("SELECT id, pagename FROM wiki_page WHERE group_id=%d", $this->template_id));
         while ($row = db_fetch_array($result)) {
-            $pagename =  $row['pagename'];
-            $tmpl_page_id = $row['id'];
-            $page_data = $this->getTemplatePageData($pagename);
-            $new_data = $this->createNewPageData($page_data);
-            $id = $this->insertNewWikiPage($new_data, $pagename);
+            $pagename           =  $row['pagename'];
+            $tmpl_page_id       = $row['id'];
+            $page_data          = $this->getTemplatePageData($pagename);
+            $new_data           = $this->createNewPageData($page_data);
+            $id                 = $this->insertNewWikiPage($new_data, $pagename);
             $ids[$tmpl_page_id] = $id;
         }
         return $ids;
@@ -259,11 +259,11 @@ class WikiCloner
             mkdir(ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->group_id, fileperms(ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->template_id));
         }
 
-        $ids = [];
+        $ids    = [];
         $result = db_query(sprintf("SELECT id, name FROM wiki_attachment WHERE group_id=%d", $this->template_id));
         while ($row = db_fetch_array($result)) {
-            $id = $row['id'];
-            $name = $row['name'];
+            $id       = $row['id'];
+            $name     = $row['name'];
             $ids[$id] = $this->insertNewAttachment($name);
      // Create a directory for attachment file revisions.
             $dir_mode = $this->getFileMode(ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->template_id . '/' . $name);
@@ -415,8 +415,8 @@ class WikiCloner
          $result = db_query(sprintf("SELECT name from wiki_attachment where id=%d", $id));
         if (db_numrows($result) > 0) {
             $attacment_name = db_result($result, 0, 'name');
-            $src = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->template_id . '/' . $attacment_name . '/' . $revision_num;
-            $dst = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->group_id . '/' . $attacment_name . '/' . $revision_num;
+            $src            = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->template_id . '/' . $attacment_name . '/' . $revision_num;
+            $dst            = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->group_id . '/' . $attacment_name . '/' . $revision_num;
             copy($src, $dst);
             $file_mode = $this->getFileMode($src);
             chmod($dst, $file_mode);
@@ -486,10 +486,10 @@ class WikiCloner
    */
     public function getTemplateWikiEntries()
     {
-        $we = [];
+        $we     = [];
         $result = db_query(sprintf("SELECT id, wiki_name, wiki_link, description, rank, language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id));
         while ($row = db_fetch_array($result)) {
-            $id = $row['id'];
+            $id      = $row['id'];
             $we[$id] = ['wiki_name' => $row['wiki_name'], 'wiki_link' => $row['wiki_link'], 'description' => $row['description'], 'rank' => $row['rank']];
         }
         return $we;
@@ -541,10 +541,10 @@ class WikiCloner
     public function getTemplateWikiVersionData($id)
     {
         $version = [];
-        $result = db_query(sprintf("SELECT version, versiondata FROM wiki_version WHERE id=%d", $id));
+        $result  = db_query(sprintf("SELECT version, versiondata FROM wiki_version WHERE id=%d", $id));
         while ($row = db_fetch_array($result)) {
-            $version_number = $row['version'];
-            $version_data = $this->_deserialize($row['versiondata']);
+            $version_number           = $row['version'];
+            $version_data             = $this->_deserialize($row['versiondata']);
             $version[$version_number] = $version_data;
         }
         return $version;

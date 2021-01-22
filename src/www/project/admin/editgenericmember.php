@@ -39,7 +39,7 @@ $generic_user_factory = new GenericUserFactory($user_manager, ProjectManager::in
 $generic_user         = $generic_user_factory->fetch($group_id);
 
 $redirect_url = '/project/admin/editgenericmember.php?group_id=' . (int) $group_id;
-$token = new CSRFSynchronizerToken($redirect_url);
+$token        = new CSRFSynchronizerToken($redirect_url);
 
 if ($request->get('update_generic_user')) {
     $token->check();

@@ -41,7 +41,7 @@ class RSSWriter091 extends RssWriter
         }
 
         $channel = &$this->_channel;
-        $items = &$this->_items;
+        $items   = &$this->_items;
 
         if ($items) {
             foreach ($items as $i) {
@@ -134,7 +134,7 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
 
     public function item_properties($rev)
     {
-        $page = $rev->getPage();
+        $page     = $rev->getPage();
         $pagename = $page->getName();
 
         return [ 'title'        => SplitPagename($pagename),

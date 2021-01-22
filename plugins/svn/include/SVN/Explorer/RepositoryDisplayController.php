@@ -49,9 +49,9 @@ class RepositoryDisplayController
         ViewVCProxy $viewvc_proxy,
         EventManager $event_manager
     ) {
-        $this->repository_manager  = $repository_manager;
-        $this->proxy               = $viewvc_proxy;
-        $this->event_manager       = $event_manager;
+        $this->repository_manager = $repository_manager;
+        $this->proxy              = $viewvc_proxy;
+        $this->event_manager      = $event_manager;
     }
 
     public function displayRepository(ServiceSvn $service, HTTPRequest $request, array $url_variables)

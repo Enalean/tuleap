@@ -28,7 +28,7 @@ class FrozenFieldsDao extends DataAccessObject
 {
     public function isFieldUsedInPostAction($field_id): bool
     {
-        $sql = 'SELECT NULL
+        $sql    = 'SELECT NULL
             FROM plugin_tracker_workflow_postactions_frozen_fields_value AS paf
             WHERE paf.field_id = ?';
         $result = $this->getDB()->cell($sql, $field_id);

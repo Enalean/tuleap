@@ -87,7 +87,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
 
     public function testItDoesNotOrganizeCrossReferencesItDoesNotKnow(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user                = Mockery::mock(PFUser::class);
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [

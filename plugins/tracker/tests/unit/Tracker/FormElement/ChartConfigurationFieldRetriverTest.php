@@ -95,7 +95,7 @@ class ChartConfigurationFieldRetrieverTest extends TestCase
 
         $this->artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
-        $this->user     = \Mockery::mock(\PFUser::class);
+        $this->user = \Mockery::mock(\PFUser::class);
 
         $this->field_duration         = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
         $this->field_capacity         = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
@@ -109,7 +109,7 @@ class ChartConfigurationFieldRetrieverTest extends TestCase
 
         $this->semantic_timeframe_builder = \Mockery::mock(SemanticTimeframeBuilder::class);
 
-        $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->logger                  = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->configuration_retriever = new ChartConfigurationFieldRetriever(
             $this->form_element_field_factoy,
             $this->semantic_timeframe_builder,

@@ -37,7 +37,7 @@ final class FileToDownload
 
     public function __construct(int $id, string $filename)
     {
-        $this->id = $id;
+        $this->id       = $id;
         $this->filename = $filename;
     }
 

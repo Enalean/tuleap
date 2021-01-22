@@ -40,7 +40,7 @@ function GenImgName()
     }
     $fname = basename($_SERVER['PHP_SELF']);
     if (! empty($_SERVER['QUERY_STRING'])) {
-        $q = @$_SERVER['QUERY_STRING'];
+        $q      = @$_SERVER['QUERY_STRING'];
         $fname .= '_' . preg_replace("/\W/", "_", $q) . '.' . $img_format;
     } else {
         $fname = substr($fname, 0, strlen($fname) - 4) . '.' . $img_format;

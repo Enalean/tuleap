@@ -59,11 +59,11 @@ class GitPermissionsManager
         FineGrainedDao $fine_grained_dao,
         FineGrainedRetriever $fine_grained_retriever
     ) {
-        $this->permissions_manager          = PermissionsManager::instance();
-        $this->git_permission_dao           = $git_permission_dao;
-        $this->git_system_event_manager     = $git_system_event_manager;
-        $this->fine_grained_dao             = $fine_grained_dao;
-        $this->fine_grained_retriever       = $fine_grained_retriever;
+        $this->permissions_manager      = PermissionsManager::instance();
+        $this->git_permission_dao       = $git_permission_dao;
+        $this->git_system_event_manager = $git_system_event_manager;
+        $this->fine_grained_dao         = $fine_grained_dao;
+        $this->fine_grained_retriever   = $fine_grained_retriever;
     }
 
     public function userIsGitAdmin(PFUser $user, Project $project)

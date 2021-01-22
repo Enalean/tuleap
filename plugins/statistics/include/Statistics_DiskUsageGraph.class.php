@@ -54,7 +54,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
         $data = $this->_dum->getWeeklyEvolutionServiceData($services, $groupBy, $startDate, $endDate);
         if (is_array($data) && ! empty($data)) {
             $lineplots = [];
-            $dates = [];
+            $dates     = [];
             foreach ($data as $service => $values) {
                 $color = $this->_dum->getServiceColor($service);
                 $ydata = [];
@@ -185,12 +185,12 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
         $data = $this->_dum->getWeeklyEvolutionProjectData($services, $groupId, $groupBy, $startDate, $endDate);
         if (is_array($data) && ! empty($data)) {
             $lineplots = [];
-            $dates = [];
+            $dates     = [];
             $lineAdded = false;
             foreach ($servicesList as $service => $serviceName) {
                 if (array_key_exists($service, $data) && is_array($data[$service]) && count($data[$service]) > 1) {
                     $values = $data[$service];
-                    $ydata = [];
+                    $ydata  = [];
                     foreach ($values as $date => $size) {
                         $dates[] = $date;
                         $ydata[] = $size;

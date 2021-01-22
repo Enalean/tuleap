@@ -74,7 +74,7 @@ class ProjectLabeledItems extends Widget
             __DIR__ . '/../../../templates/widgets'
         );
 
-        $this->dao = new Dao();
+        $this->dao                      = new Dao();
         $this->labels_retriever         = new ProjectLabelRetriever(new LabelDao());
         $this->project_data_validator   = new ProjectLabelRequestDataValidator();
         $this->config_retriever         = new ProjectLabelConfigRetriever(new ProjectLabelConfigDao());

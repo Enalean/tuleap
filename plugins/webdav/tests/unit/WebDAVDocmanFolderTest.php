@@ -55,7 +55,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->user = UserTestBuilder::aUser()->build();
+        $this->user    = UserTestBuilder::aUser()->build();
         $this->project = ProjectTestBuilder::aProject()->build();
     }
 
@@ -64,7 +64,7 @@ class WebDAVDocmanFolderTest extends TestCase
      */
     public function testGetChildListNoChildrens(): void
     {
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils                   = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
@@ -82,11 +82,11 @@ class WebDAVDocmanFolderTest extends TestCase
      */
     public function testGetChildListUserCanNotAccess(): void
     {
-        $item = \Mockery::spy(\Docman_Item::class);
+        $item              = \Mockery::spy(\Docman_Item::class);
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
         $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item]);
 
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils                   = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(false);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
@@ -109,7 +109,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
         $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
 
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils                   = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
@@ -136,7 +136,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
         $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
 
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils                   = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
@@ -153,8 +153,8 @@ class WebDAVDocmanFolderTest extends TestCase
 
     public function testGetChildrenDoesntListLinksWiki(): void
     {
-        $item1 = new \Docman_Folder(['title' => 'leFolder', 'parent_id' => '115']);
-        $item2 = new \Docman_Link(['title' => 'leLink', 'link_url' => 'https://example.com']);
+        $item1             = new \Docman_Folder(['title' => 'leFolder', 'parent_id' => '115']);
+        $item2             = new \Docman_Link(['title' => 'leLink', 'link_url' => 'https://example.com']);
         $docmanItemFactory = \Mockery::mock(\Docman_ItemFactory::class, ['getChildrenFromParent' => [$item1, $item2]]);
 
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
@@ -208,7 +208,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
         $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
 
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils                   = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
@@ -228,7 +228,7 @@ class WebDAVDocmanFolderTest extends TestCase
      */
     public function testGetChildNotFound(): void
     {
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils                   = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
@@ -254,7 +254,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
         $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
 
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils                   = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
@@ -279,7 +279,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $docmanItemFactory = \Mockery::spy(\Docman_ItemFactory::class);
         $docmanItemFactory->shouldReceive('getChildrenFromParent')->andReturns([$item1, $item2]);
 
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils                   = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);
@@ -294,7 +294,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
     public function testGetChildIsWiki(): void
     {
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils                   = \Mockery::spy(\WebDAVUtils::class);
         $docmanPermissionManager = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionManager->shouldReceive('userCanAccess')->andReturns(true);
         $utils->shouldReceive('getDocmanPermissionsManager')->andReturns($docmanPermissionManager);

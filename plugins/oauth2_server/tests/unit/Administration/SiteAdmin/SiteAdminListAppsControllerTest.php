@@ -69,7 +69,7 @@ final class SiteAdminListAppsControllerTest extends TestCase
         $this->presenter_builder   = \Mockery::mock(AdminOAuth2AppsPresenterBuilder::class);
         $this->include_assets      = \Mockery::mock(IncludeAssets::class);
         $this->csrf_token          = \Mockery::mock(\CSRFSynchronizerToken::class);
-        $this->controller = new SiteAdminListAppsController(
+        $this->controller          = new SiteAdminListAppsController(
             $this->admin_page_renderer,
             $this->user_manager,
             $this->presenter_builder,

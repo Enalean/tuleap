@@ -41,7 +41,7 @@ class ValidFactoryTest extends TestCase
         $this->assertNull(ValidFactory::getInstance('machinbidulechose'));
 
         $key = bin2hex(random_bytes(16));
-        $w = ValidFactory::getInstance('string', $key);
+        $w   = ValidFactory::getInstance('string', $key);
         $this->assertEquals($key, $w->getKey());
     }
 }

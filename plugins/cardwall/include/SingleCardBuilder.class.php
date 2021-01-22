@@ -84,7 +84,7 @@ class Cardwall_SingleCardBuilder
             $card_artifact,
             $user
         );
-        $accent_color = $this->accent_color_builder->build($card_artifact, $user);
+        $accent_color         = $this->accent_color_builder->build($card_artifact, $user);
 
         $presenter_factory = $this->getCardInCellPresenterFactory($config, $card_artifact, $field_provider, $columns);
 
@@ -212,7 +212,7 @@ class Cardwall_SingleCardBuilder
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
         Cardwall_OnTop_Config_ColumnCollection $columns
     ) {
-        $field = $field_provider->getField($artifact->getTracker());
+        $field         = $field_provider->getField($artifact->getTracker());
         $status_fields = [];
         if ($field !== null) {
             $status_fields[$field->getId()] = $field;

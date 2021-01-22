@@ -53,7 +53,7 @@ class JobDao extends DataAccessObject
 
     public function logBranchSource(int $job_id, int $status_code): void
     {
-        $job_id   = $this->da->escapeInt($job_id);
+        $job_id      = $this->da->escapeInt($job_id);
         $status_code = $this->da->escapeInt($status_code);
 
         $sql = "INSERT INTO plugin_hudson_git_job_branch_source (job_id, status_code)

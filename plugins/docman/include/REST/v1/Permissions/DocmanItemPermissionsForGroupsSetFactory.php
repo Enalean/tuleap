@@ -50,9 +50,9 @@ class DocmanItemPermissionsForGroupsSetFactory
         UserGroupRetriever $ugroup_retriever,
         ProjectManager $project_manager
     ) {
-        $this->ugroup_manager          = $ugroup_manager;
-        $this->ugroup_retriever        = $ugroup_retriever;
-        $this->project_manager         = $project_manager;
+        $this->ugroup_manager   = $ugroup_manager;
+        $this->ugroup_retriever = $ugroup_retriever;
+        $this->project_manager  = $project_manager;
     }
 
     /**

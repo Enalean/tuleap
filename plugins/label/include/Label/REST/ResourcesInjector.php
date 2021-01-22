@@ -33,7 +33,7 @@ class ResourcesInjector
 
     public function declareProjectResource(array &$resources, Project $project)
     {
-        $route = CollectionOfLabeledItemsRepresentation::ROUTE;
+        $route              = CollectionOfLabeledItemsRepresentation::ROUTE;
         $resource_reference = new ProjectResourceReference();
         $resource_reference->build($project, $route);
 

@@ -40,10 +40,10 @@ class Docman_Widget_MyDocmanSearch extends Widget
 
     public function getContent()
     {
-        $html = '';
+        $html    = '';
         $request = HTTPRequest::instance();
-        $um = UserManager::instance();
-        $user = $um->getCurrentUser();
+        $um      = UserManager::instance();
+        $user    = $um->getCurrentUser();
 
         $vFunc = new Valid_WhiteList('docman_func', ['show_docman']);
         $vFunc->required();
@@ -80,7 +80,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
             $res = $this->returnAllowedGroupId($docman_id, $user);
 
             if ($res) {
-                $dPm = Docman_PermissionsManager::instance($res['group_id']);
+                $dPm      = Docman_PermissionsManager::instance($res['group_id']);
                 $itemPerm = $dPm->userCanAccess($user, $docman_id);
 
                 if ($itemPerm) {

@@ -30,7 +30,7 @@ final class StyleTableForTlpProcessor
     public function __invoke(DocumentParsedEvent $e)
     {
         $document = $e->getDocument();
-        $walker  = $document->walker();
+        $walker   = $document->walker();
         while ($event = $walker->next()) {
             $node = $event->getNode();
 

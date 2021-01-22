@@ -70,7 +70,7 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
     public function getBacklog(Planning_Milestone $milestone, $limit = null, $offset = null)
     {
         $backlog_trackers_children_can_manage = [];
-        $first_child_backlog_trackers = $this->getFirstChildBacklogTracker($milestone);
+        $first_child_backlog_trackers         = $this->getFirstChildBacklogTracker($milestone);
         if ($first_child_backlog_trackers) {
             $backlog_trackers_children_can_manage = array_merge($backlog_trackers_children_can_manage, $first_child_backlog_trackers);
         } else {
@@ -110,7 +110,7 @@ class AgileDashboard_Milestone_Backlog_BacklogFactory
 
     private function getFirstChildBacklogTracker(Planning_Milestone $milestone)
     {
-        $backlog_tracker_children  = $milestone->getPlanning()->getPlanningTracker()->getChildren();
+        $backlog_tracker_children = $milestone->getPlanning()->getPlanningTracker()->getChildren();
         if ($backlog_tracker_children) {
             $first_child_tracker  = current($backlog_tracker_children);
             $first_child_planning = $this->planning_factory->getPlanningByPlanningTracker($first_child_tracker);

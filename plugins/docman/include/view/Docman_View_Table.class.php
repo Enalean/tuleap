@@ -33,10 +33,10 @@ class Docman_View_Table extends Docman_View_Browse
         $itemFactory = new Docman_ItemFactory($params['group_id']);
 
         // Limit browsing
-        $offset = 25;
-        $_low_limit  = 0;
+        $offset     = 25;
+        $_low_limit = 0;
         if (isset($params['start'])) {
-            $_low_limit  = (int) $params['start'];
+            $_low_limit = (int) $params['start'];
         }
         $_high_limit = $_low_limit + $offset;
 
@@ -59,7 +59,7 @@ class Docman_View_Table extends Docman_View_Browse
         // Generate table header
         $ci = $params['filter']->getColumnIterator();
         $ci->rewind();
-        $table = '<table border="0" cellspacing="1" cellpadding="2" width="100%" data-test="docman_report_table">';
+        $table  = '<table border="0" cellspacing="1" cellpadding="2" width="100%" data-test="docman_report_table">';
         $table .= '<tr class="boxtable">';
         while ($ci->valid()) {
             $column = $ci->current();
@@ -72,16 +72,16 @@ class Docman_View_Table extends Docman_View_Browse
         $altRowClass = 0;
         $itemIterator->rewind();
         while ($itemIterator->valid()) {
-            $item = $itemIterator->current();
+            $item    = $itemIterator->current();
             $trclass = html_get_alt_row_color($altRowClass++);
-            $table .=  "<tr class=\"" . $trclass . "\">\n";
+            $table  .=  "<tr class=\"" . $trclass . "\">\n";
             $ci->rewind();
             while ($ci->valid()) {
-                $column = $ci->current();
-                $table .= "<td>";
-                $table .= $column->getTableBox($item, $this, $params);
+                $column            = $ci->current();
+                $table            .= "<td>";
+                $table            .= $column->getTableBox($item, $this, $params);
                 $this->javascript .= $column->getJavascript($item, $this);
-                $table .= "</td>\n";
+                $table            .= "</td>\n";
                 $ci->next();
             }
             $table .=  "</tr>\n";
@@ -91,10 +91,10 @@ class Docman_View_Table extends Docman_View_Browse
 
         // Prepare Navigation Bar
         if ($_low_limit > 0) {
-            $firstUrl    = $this->_buildSearchUrl($params, ['start' => '0']);
-            $first       = '<a href="' . $firstUrl . '">&lt;&lt; ' . dgettext('tuleap-docman', 'Begin') . '</a>';
+            $firstUrl = $this->_buildSearchUrl($params, ['start' => '0']);
+            $first    = '<a href="' . $firstUrl . '">&lt;&lt; ' . dgettext('tuleap-docman', 'Begin') . '</a>';
         } else {
-            $first       = '&lt;&lt; ' . dgettext('tuleap-docman', 'Begin');
+            $first = '&lt;&lt; ' . dgettext('tuleap-docman', 'Begin');
         }
 
         $previousOffset = $_low_limit - $offset;
@@ -105,22 +105,22 @@ class Docman_View_Table extends Docman_View_Browse
             $previousUrl = $this->_buildSearchUrl($params, ['start' => $previousOffset]);
             $previous    = '<a href="' . $previousUrl . '">&lt; ' . sprintf(dgettext('tuleap-docman', 'Previous %1$s'), $offset) . '&gt;</a>';
         } else {
-            $previous    = '&lt; ' . sprintf(dgettext('tuleap-docman', 'Previous %1$s'), $offset);
+            $previous = '&lt; ' . sprintf(dgettext('tuleap-docman', 'Previous %1$s'), $offset);
         }
 
         if ($_high_limit < $nbItemsFound) {
-            $nextUrl     = $this->_buildSearchUrl($params, ['start' => $_high_limit]);
-            $next        = '<a href="' . $nextUrl . '">' . sprintf(dgettext('tuleap-docman', 'Next %1$s'), $offset) . ' &gt;</a>';
+            $nextUrl = $this->_buildSearchUrl($params, ['start' => $_high_limit]);
+            $next    = '<a href="' . $nextUrl . '">' . sprintf(dgettext('tuleap-docman', 'Next %1$s'), $offset) . ' &gt;</a>';
         } else {
-            $next        = sprintf(dgettext('tuleap-docman', 'Next %1$s'), $offset) . ' &gt;';
+            $next = sprintf(dgettext('tuleap-docman', 'Next %1$s'), $offset) . ' &gt;';
         }
 
         if ($_high_limit < $nbItemsFound) {
-            $lastOffset  = $nbItemsFound - $offset;
-            $lastUrl     = $this->_buildSearchUrl($params, ['start' => $lastOffset]);
-            $last        = '<a href="' . $lastUrl . '">' . dgettext('tuleap-docman', 'End') . ' &gt;&gt;</a>';
+            $lastOffset = $nbItemsFound - $offset;
+            $lastUrl    = $this->_buildSearchUrl($params, ['start' => $lastOffset]);
+            $last       = '<a href="' . $lastUrl . '">' . dgettext('tuleap-docman', 'End') . ' &gt;&gt;</a>';
         } else {
-            $last        = dgettext('tuleap-docman', 'End') . ' &gt;&gt;';
+            $last = dgettext('tuleap-docman', 'End') . ' &gt;&gt;';
         }
 
         $navbar = '<table border="0" width="100%"><tr><td align="left">' . $first . ' ' . $previous . '</td><td align="center">' . $nbItemsFound . ' ' . dgettext('tuleap-docman', 'Documents found') . '</td><td align="right">' . $next . ' ' . $last . '</td></tr></table>';

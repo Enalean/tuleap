@@ -126,7 +126,7 @@ class RegexpSet
     public function nextMatch($text, $prevMatch)
     {
         // Try to find match at same position.
-        $pos = strlen($prevMatch->prematch);
+        $pos     = strlen($prevMatch->prematch);
         $regexps = array_slice($this->_regexps, $prevMatch->regexp_ind + 1);
         if ($regexps) {
             $repeat = sprintf('{%d}', $pos);
@@ -156,7 +156,7 @@ class RegexpSet
         // and storing only those regexp which actually match.
         // There may be more than one, so we have to find the longest,
         // and match inside until the shortest is empty.
-            $matched = [];
+            $matched     = [];
             $matched_ind = [];
             for ($i = 0; $i < count($regexps); $i++) {
                 if (! trim($regexps[$i])) {
@@ -165,10 +165,10 @@ class RegexpSet
                 }
                 $pat = "/ ( . $repeat ) ( " . $regexps[$i] . " ) /x";
                 if (preg_match($pat, $text, $_m)) {
-                    $m = $_m; // FIXME: prematch, postmatch is wrong
-                    $matched[] = $regexps[$i];
+                    $m             = $_m; // FIXME: prematch, postmatch is wrong
+                    $matched[]     = $regexps[$i];
                     $matched_ind[] = $i;
-                    $regexp_ind = $i;
+                    $regexp_ind    = $i;
                 }
             }
         // To overcome ANCHORED:
@@ -205,8 +205,8 @@ class RegexpSet
         }
 
         $match->postmatch = substr($text, strlen($m[0]));
-        $match->prematch = $m[1];
-        $match->match = $m[2];
+        $match->prematch  = $m[1];
+        $match->match     = $m[2];
 
         /* DEBUGGING */
         /*
@@ -373,7 +373,7 @@ function LinkBracketLink($bracketlink)
             $rawlink = preg_replace("/%2F(%20)+\./i", "%2F.", $rawlink);
         }
     } else {
-        $link  = UnWikiEscape($rawlink);
+        $link = UnWikiEscape($rawlink);
     }
 
     /* Relatives links by Joel Schaubert.
@@ -385,7 +385,7 @@ function LinkBracketLink($bracketlink)
     // [label|link]
     // if label looks like a url to an image, we want an image link.
     if (isImageLink($label)) {
-        $imgurl = $label;
+        $imgurl   = $label;
         $intermap = getInterwikiMap();
         if (preg_match("/^" . $intermap->getRegexp() . ":/", $label)) {
             $imgurl = $intermap->link($label);
@@ -442,14 +442,14 @@ function LinkBracketLink($bracketlink)
         // Split anchor off end of pagename.
         if (preg_match('/\A(.*)(?<!' . ESCAPE_CHAR . ')#(.*?)\Z/', $rawlink, $m)) {
             list(,$rawlink,$anchor) = $m;
-            $pagename = UnWikiEscape($rawlink);
-            $anchor = UnWikiEscape($anchor);
+            $pagename               = UnWikiEscape($rawlink);
+            $anchor                 = UnWikiEscape($anchor);
             if (! $label) {
                 $label = $link;
             }
         } else {
             $pagename = $link;
-            $anchor = false;
+            $anchor   = false;
         }
         return new Cached_WikiLink($pagename, $label, $anchor);
     }
@@ -524,7 +524,7 @@ class Markup_wikiword extends SimpleMarkup
     public function _isWikiUserPage($page)
     {
         global $request;
-        $dbi = $request->getDbh();
+        $dbi         = $request->getDbh();
         $page_handle = $dbi->getPage($page);
         if ($page_handle and $page_handle->get('pref')) {
             return true;
@@ -578,8 +578,8 @@ class Markup_nestled_emphasis extends BalancedMarkup
         if (! $start_regexp) {
             // The three possible delimiters
             // (none of which can be followed by itself.)
-            $i = "_ (?! _)";
-            $b = "\\* (?! \\*)";
+            $i  = "_ (?! _)";
+            $b  = "\\* (?! \\*)";
             $tt = "= (?! =)";
 
             $any = "(?: ${i}|${b}|${tt})"; // any of the three.
@@ -671,7 +671,7 @@ class Markup_html_abbr extends BalancedMarkup
         $rest = substr($match, 1 + strlen($tag), -1);
         if (! empty($rest)) {
             list($key,$val) = explode("=", $rest);
-            $args = [$key => $val];
+            $args           = [$key => $val];
         } else {
             $args = [];
         }
@@ -687,7 +687,7 @@ class Markup_color extends BalancedMarkup
 {
     // %color=blue% blue text %% and back to normal
     public $_start_regexp = "%color=(?: [^%]*)%";
-    public $_end_regexp = "%%";
+    public $_end_regexp   = "%%";
 
     public function markup($match, $body)
     {
@@ -798,12 +798,12 @@ class Markup_isohexchars extends SimpleMarkup
 class InlineTransformer
 {
     public $_regexps = [];
-    public $_markup = [];
+    public $_markup  = [];
 
     public function __construct($markup_types = false)
     {
         if (! $markup_types) {
-            $non_default = false;
+            $non_default  = false;
             $markup_types = ['escape', 'bracketlink', 'url',
                                   'interwiki', 'wikiword', 'linebreak',
                                   'old_emphasis', 'nestled_emphasis',
@@ -835,7 +835,7 @@ class InlineTransformer
 
         assert(! isset($this->_markup[$regexp]));
         $this->_regexps[] = $regexp;
-        $this->_markup[] = $markup;
+        $this->_markup[]  = $markup;
     }
 
     public function parse(&$text, $end_regexps = ['$'])
@@ -847,7 +847,7 @@ class InlineTransformer
         //array_push($regexps, $end_regexps[0]);
         $regexps = new RegexpSet($regexps);
 
-        $input = $text;
+        $input  = $text;
         $output = new XmlContent();
 
         $match = $regexps->match($input);
@@ -866,7 +866,7 @@ class InlineTransformer
             }
 
             $markup = $this->_markup[$match->regexp_ind - 1];
-            $body = $this->_parse_markup_body($markup, $match->match, $match->postmatch, $end_regexps);
+            $body   = $this->_parse_markup_body($markup, $match->match, $match->postmatch, $end_regexps);
             if (! $body) {
                 // Couldn't match balanced expression.
                 // Ignore and look for next matching start regexp.

@@ -54,7 +54,7 @@ class MilestoneIsAllowedChecker
         $this->cardwall_on_top_dao = $cardwall_on_top_dao;
         $this->plugin_manager      = $plugin_manager;
         $this->taskboard_plugin    = $taskboard_plugin;
-        $this->taskboard_usage = $taskboard_usage;
+        $this->taskboard_usage     = $taskboard_usage;
     }
 
     public static function build(): self

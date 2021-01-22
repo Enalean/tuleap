@@ -26,7 +26,7 @@ class Tracker_FormElement_View_Admin_CreateSharedVisitor extends Tracker_FormEle
 
     protected function fetchForm()
     {
-        $html = '';
+        $html  = '';
         $html .= '<p>Field id:';
         $html .=  '<input type="text" name="formElement_data[field_id]" value="" />';
         $html .=  '</p>';

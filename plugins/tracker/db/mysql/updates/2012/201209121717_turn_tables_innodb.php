@@ -113,7 +113,7 @@ class b201209121717_turn_tables_innodb extends ForgeUpgrade_Bucket
         foreach ($tables as $table) {
             if (! $this->isTableInnoDB($table)) {
                 $this->log->info("Convert $table");
-                $sql = "ALTER TABLE $table ENGINE = InnoDB";
+                $sql    = "ALTER TABLE $table ENGINE = InnoDB";
                 $result = $this->db->dbh->exec($sql);
 
                 if ($result === false) {
@@ -126,7 +126,7 @@ class b201209121717_turn_tables_innodb extends ForgeUpgrade_Bucket
 
     private function isTableInnoDB($table)
     {
-        $sql = "SHOW TABLE STATUS WHERE Name = '$table' AND Engine = 'InnoDB'";
+        $sql    = "SHOW TABLE STATUS WHERE Name = '$table' AND Engine = 'InnoDB'";
         $result = $this->db->dbh->query($sql);
         return ($result->fetch() !== false);
     }

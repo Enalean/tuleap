@@ -49,8 +49,8 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
         $item->shouldReceive('getId')->andReturn(5);
         $item_factory->shouldReceive('getItemFromDb')->andReturns($item);
 
-        $id      = 12;
-        $user    = \Mockery::mock(\PFUser::class);
+        $id   = 12;
+        $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturn('102');
         $server_request = (new NullServerRequest())->withAttribute('id', (string) $id)
             ->withAttribute(RESTCurrentUserMiddleware::class, $user);

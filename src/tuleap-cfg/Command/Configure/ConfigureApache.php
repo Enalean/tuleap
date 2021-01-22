@@ -52,7 +52,7 @@ class ConfigureApache
             throw new PermissionsDeniedException($file_path . ' is not writable by current user (uid ' . posix_getuid() . ')');
         }
 
-        $content = file_get_contents($file_path);
+        $content     = file_get_contents($file_path);
         $new_content = preg_replace(
             [
                 '/^User.*$/m',
@@ -82,7 +82,7 @@ class ConfigureApache
             throw new PermissionsDeniedException($file_path . ' is not writable by current user (uid ' . posix_getuid() . ')');
         }
 
-        $content = file_get_contents($file_path);
+        $content     = file_get_contents($file_path);
         $new_content = preg_replace(
             [
                 '/^Listen (.*)$/m',

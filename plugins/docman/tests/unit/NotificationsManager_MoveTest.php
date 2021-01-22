@@ -249,7 +249,7 @@ class NotificationsManager_MoveTest extends TestCase
 
         $docman_path = \Mockery::spy(\Docman_Path::class);
 
-        $dnmm     = \Mockery::mock(\Docman_NotificationsManager_Move::class)->makePartial(
+        $dnmm = \Mockery::mock(\Docman_NotificationsManager_Move::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();
         $dnmm->shouldReceive('_groupGetObject')->andReturns($project);
         $dnmm->shouldReceive('_getItemFactory')->andReturns($item_factory);
@@ -276,8 +276,8 @@ class NotificationsManager_MoveTest extends TestCase
         $link_provider->shouldReceive('getShowLinkUrl')->with($c)->andReturn();
         $link_provider->shouldReceive('getNotificationLinkUrl')->with($d)->andReturn();
 
-        $mail_builder          = new MailBuilder($template_render_factory, $this->mail_filter);
-        $users_retriever       = new UsersRetriever(
+        $mail_builder    = new MailBuilder($template_render_factory, $this->mail_filter);
+        $users_retriever = new UsersRetriever(
             $dao,
             $docman_itemfactory
         );

@@ -45,7 +45,7 @@ class FolderPropertiesRepresentation
 
     public static function build(Docman_Folder $folder): self
     {
-        $visitor = new ComputeFolderSizeVisitor();
+        $visitor        = new ComputeFolderSizeVisitor();
         $size_collector = new FolderSizeCollector();
 
         $folder->accept($visitor, ['size_collector' => $size_collector]);

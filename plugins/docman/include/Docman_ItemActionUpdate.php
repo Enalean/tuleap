@@ -25,8 +25,8 @@ class Docman_ItemActionUpdate extends \Docman_ItemAction
     public function __construct(&$item)
     {
         parent::__construct($item);
-        $this->action = 'action_update';
+        $this->action  = 'action_update';
         $this->classes = 'docman_item_option_update';
-        $this->title = \dgettext('tuleap-docman', 'Update');
+        $this->title   = \dgettext('tuleap-docman', 'Update');
     }
 }

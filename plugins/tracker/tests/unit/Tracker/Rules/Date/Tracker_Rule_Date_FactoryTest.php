@@ -57,7 +57,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
         $this->tracker = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->tracker_id)->getMock();
 
         $this->date_rule_dao = \Mockery::spy(\Tracker_Rule_Date_Dao::class);
-        $this->source_field = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
+        $this->source_field  = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
         $this->source_field->shouldReceive('getId')->andReturns($this->source_field_id);
 
         $this->target_field = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
@@ -147,7 +147,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertIsArray($date_rules);
         $this->assertCount(1, $date_rules);
 
-        $rule = $date_rules[0];
+        $rule                  = $date_rules[0];
         $obtained_source_field = $rule->getSourceField();
         $obtained_target_field = $rule->getTargetField();
 
@@ -158,7 +158,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testItDelegatesDeletionToDao(): void
     {
-        $rule_id    = '456';
+        $rule_id = '456';
         $this->date_rule_dao->shouldReceive('deleteById')->with($this->tracker_id, $rule_id)->once();
         $this->date_rule_factory->deleteById($this->tracker_id, $rule_id);
     }
@@ -192,7 +192,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
 
-        $field_mapping   = [
+        $field_mapping = [
             [
                 'from'  => 123,
                 'to'    => 888
@@ -223,7 +223,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
 
-        $field_mapping   = [
+        $field_mapping = [
             [
                 'from'  => 111,
                 'to'    => 555
@@ -280,7 +280,7 @@ final class Tracker_Rule_Date_FactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testExport(): void
     {
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = ['F25' => 102,
                                    'F28' => 103,
                                    'F29' => 801,

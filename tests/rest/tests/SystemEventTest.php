@@ -33,7 +33,7 @@ final class SystemEventTest extends RestBase
 
     public function testGET(): void
     {
-        $response  = $this->getResponse(
+        $response = $this->getResponse(
             $this->client->get('system_event'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
@@ -43,7 +43,7 @@ final class SystemEventTest extends RestBase
 
     public function testGETWithRESTReadOnlyUser(): void
     {
-        $response  = $this->getResponse(
+        $response = $this->getResponse(
             $this->client->get('system_event'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );

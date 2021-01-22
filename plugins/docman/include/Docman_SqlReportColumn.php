@@ -31,7 +31,7 @@ class Docman_SqlReportColumn extends \Docman_MetadataSqlQueryChunk
     }
     public function getOrderBy()
     {
-        $sql = '';
+        $sql  = '';
         $sort = $this->column->getSort();
         if ($sort !== \null) {
             if ($sort == \PLUGIN_DOCMAN_SORT_ASC) {

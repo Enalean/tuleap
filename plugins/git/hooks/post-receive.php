@@ -134,7 +134,7 @@ $post_receive->beforeParsingReferences($repository_path);
 
 $count = 0;
 while ($count <= COUNT_THRESHOLD && $line = fgets(STDIN)) {
-    $count += 1;
+    $count                            += 1;
     list($old_rev, $new_rev, $refname) = explode(' ', trim($line));
     try {
         $post_receive->execute($repository_path, $user_name, $old_rev, $new_rev, $refname);

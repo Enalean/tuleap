@@ -75,7 +75,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
      *
      * @tlp-config-key
      */
-    public const MAX_FILE_SIZE_KEY  = 'git_lfs_max_file_size';
+    public const MAX_FILE_SIZE_KEY = 'git_lfs_max_file_size';
 
     public function __construct($id)
     {

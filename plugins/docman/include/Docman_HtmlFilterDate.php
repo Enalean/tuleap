@@ -30,7 +30,7 @@ class Docman_HtmlFilterDate extends \Docman_HtmlFilter
     }
     public function _valueSelectorHtml($formName)
     {
-        $html = '';
+        $html  = '';
         $html .= \html_select_operator($this->filter->getFieldOperatorName(), $this->filter->getOperator());
         $html .= \html_field_date($this->filter->getFieldValueName(), $this->filter->getValue(), \false, '10', '10', $formName, \false);
         return $html;

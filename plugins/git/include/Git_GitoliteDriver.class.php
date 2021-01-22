@@ -261,7 +261,7 @@ class Git_GitoliteDriver
 
     public function updateMainConfIncludes()
     {
-        $git_modifications = $this->gitolite_conf_writer->writeGitoliteConfiguration();
+        $git_modifications         = $this->gitolite_conf_writer->writeGitoliteConfiguration();
         $files_are_correctly_added = true;
 
         foreach ($git_modifications->toAdd() as $touched_file) {

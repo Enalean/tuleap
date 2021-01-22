@@ -646,9 +646,9 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
      */
     public function testPostWikiDocument(int $root_id): int
     {
-        $headers = ['Content-Type' => 'application/json'];
+        $headers         = ['Content-Type' => 'application/json'];
         $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
-        $query = json_encode(
+        $query           = json_encode(
             [
                 'title'           => 'NEW W',
                 'description'     => 'A description',
@@ -671,9 +671,9 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
      */
     public function testPostWikiDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id): void
     {
-        $headers = ['Content-Type' => 'application/json'];
+        $headers         = ['Content-Type' => 'application/json'];
         $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
-        $query = json_encode(
+        $query           = json_encode(
             [
                 'title'           => 'NEW W',
                 'description'     => 'A description',
@@ -735,9 +735,9 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
      */
     public function testPostEmbeddedDocument(int $root_id): int
     {
-        $headers = ['Content-Type' => 'application/json'];
+        $headers             = ['Content-Type' => 'application/json'];
         $embedded_properties = ['content' => 'step1 : Avoid to sort items in the docman'];
-        $query = json_encode(
+        $query               = json_encode(
             [
                 'title'               => 'NEW EMEBEDDED',
                 'description'         => 'A description',
@@ -760,9 +760,9 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
      */
     public function testPostEmbeddedDocumentDenidedForUserRESTReadOnlyAdminNotInvolvedInProject(int $root_id): void
     {
-        $headers = ['Content-Type' => 'application/json'];
+        $headers             = ['Content-Type' => 'application/json'];
         $embedded_properties = ['content' => 'step1 : Avoid to sort items in the docman'];
-        $query = json_encode(
+        $query               = json_encode(
             [
                 'title'               => 'NEW EMEBEDDED',
                 'description'         => 'A description',

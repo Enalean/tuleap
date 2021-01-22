@@ -79,9 +79,9 @@ class BaseGlobalAdminPresenter
         $this->admin_groups_url    = GlobalAdministratorsController::getURL($project);
         $this->admin_groups        = dgettext('tuleap-svn', 'Admin Groups');
 
-        $this->csrf_input          = $token->fetchHTMLInput();
-        $this->title               = dgettext('tuleap-svn', 'SVN Administration');
-        $this->submit              = dgettext('tuleap-svn', 'Save');
+        $this->csrf_input = $token->fetchHTMLInput();
+        $this->title      = dgettext('tuleap-svn', 'SVN Administration');
+        $this->submit     = dgettext('tuleap-svn', 'Save');
 
         $this->has_migrate_from_core = $has_migrate_from_core;
         $this->migrate_from_core_url = DisplayMigrateFromCoreController::getURL($project);

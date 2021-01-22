@@ -33,7 +33,7 @@ class MetadataTest extends TestCase
     {
         // Parameters
         $dstGroupId = '321';
-        $srcMd = new Docman_Metadata();
+        $srcMd      = new Docman_Metadata();
         $srcMd->setId(301);
         $srcMd->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
         $metadataMapping = [];
@@ -62,7 +62,7 @@ class MetadataTest extends TestCase
     {
         // Parameters
         $dstGroupId = '321';
-        $srcMd = new Docman_ListMetadata();
+        $srcMd      = new Docman_ListMetadata();
         $srcMd->setId(301);
         $srcMd->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $metadataMapping = [];
@@ -81,7 +81,7 @@ class MetadataTest extends TestCase
         $dstMdF->shouldReceive('findByName')->andReturns($iter);
         $srcMdF->shouldReceive('_getMetadataFactory')->with($dstGroupId)->once()->andReturns($dstMdF);
 
-        $dstLoveF = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
+        $dstLoveF      = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
         $valuesMapping = [101 => 201, 102 => 202];
         $dstLoveF->shouldReceive('cloneValues')->once()->andReturns($valuesMapping);
         $srcMdF->shouldReceive('_getListOfValuesElementFactory')->with(301)->once()->andReturns($dstLoveF);
@@ -98,8 +98,8 @@ class MetadataTest extends TestCase
     public function testTwoCallsOfCloneOneMetadataList(): void
     {
         // Common params
-        $dstGroupId = '321';
-        $metadataMapping = [];
+        $dstGroupId              = '321';
+        $metadataMapping         = [];
         $metadataMapping['love'] = [];
 
         $findIter = \Mockery::spy(ArrayIterator::class);
@@ -154,7 +154,7 @@ class MetadataTest extends TestCase
     public function testCloneRealMetadata(): void
     {
         // Parameters
-        $dstGroupId = '321';
+        $dstGroupId      = '321';
         $metadataMapping = [];
 
         // Factory to test

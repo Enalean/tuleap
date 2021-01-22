@@ -33,14 +33,14 @@ class Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData
 
     public function __construct(Tracker $tracker, Tracker_FormElementFactory $formelement_factory)
     {
-        $this->tracker = $tracker;
+        $this->tracker             = $tracker;
         $this->formelement_factory = $formelement_factory;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
     {
         $rules_builder_factory = new Tracker_Workflow_Trigger_RulesBuilderFactory($this->formelement_factory);
-        $rules_builder_data = $rules_builder_factory->getForTracker($this->tracker);
+        $rules_builder_data    = $rules_builder_factory->getForTracker($this->tracker);
         $GLOBALS['Response']->sendJSON($rules_builder_data->fetchFormattedForJson());
     }
 }

@@ -64,13 +64,13 @@ class ConfigPermissionsSerializerMirrorsTest extends TestCase
         $this->repository->shouldReceive('getId')->andReturn(115);
         $this->repository->shouldReceive('getProject')->andReturn($this->project);
 
-        $user_mirror1     = Mockery::spy(\PFUser::class);
+        $user_mirror1 = Mockery::spy(\PFUser::class);
         $user_mirror1->shouldReceive('getUserName')->andReturn('git_mirror_1');
-        $this->mirror_1   = new Git_Mirror_Mirror($user_mirror1, 1, 'url', 'hostname', 'EUR');
+        $this->mirror_1 = new Git_Mirror_Mirror($user_mirror1, 1, 'url', 'hostname', 'EUR');
 
-        $user_mirror2     = Mockery::spy(\PFUser::class);
+        $user_mirror2 = Mockery::spy(\PFUser::class);
         $user_mirror2->shouldReceive('getUserName')->andReturn('git_mirror_2');
-        $this->mirror_2   = new Git_Mirror_Mirror($user_mirror2, 2, 'url', 'hostname', 'IND');
+        $this->mirror_2 = new Git_Mirror_Mirror($user_mirror2, 2, 'url', 'hostname', 'IND');
 
         $this->permissions_manager = Mockery::spy(\PermissionsManager::class);
         PermissionsManager::setInstance($this->permissions_manager);

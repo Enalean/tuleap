@@ -36,7 +36,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
         $md = $params['md'];
 
         $sthCanChange = false;
-        $mdContent = '';
+        $mdContent    = '';
 
         $mdContent .= '<h3>' . dgettext('tuleap-docman', 'Property parameters') . '</h3>';
 
@@ -90,7 +90,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
                 switch ($e->getStatus()) {
                     case 'A':
                         $canDelete = true;
-                        $status = dgettext('tuleap-docman', 'Active');
+                        $status    = dgettext('tuleap-docman', 'Active');
                         break;
                     case 'P':
                         $status = dgettext('tuleap-docman', 'Permanent');
@@ -109,7 +109,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
                     // Name
                     $name = Docman_MetadataHtmlList::_getElementName($e);
                     if ($e->getId() > 100) {
-                        $url = DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => 'admin_display_love',
+                        $url  = DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => 'admin_display_love',
                                                                              'md' => $md->getLabel(),
                                                                              'loveid' => $e->getId()]);
                         $href = '<a href="' . $url . '">' . $name . '</a>';
@@ -127,9 +127,9 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
                     // Delete
                     $trash = '-';
                     if ($canDelete) {
-                        $link = '?group_id=' . $params['group_id'] . '&action=admin_delete_love&loveid=' . $e->getId() . '&md=' . $md->getLabel();
-                        $warn = sprintf(dgettext('tuleap-docman', 'You are about to delete the value \'%1$s\' in the current category. All documents already labeled with this value will be bound to \'None\'. Click on \'Ok\' to proceed otherwise click on \'Cancel\'.'), $name);
-                        $alt  = sprintf(dgettext('tuleap-docman', 'Delete value \'%1$s\''), $name);
+                        $link  = '?group_id=' . $params['group_id'] . '&action=admin_delete_love&loveid=' . $e->getId() . '&md=' . $md->getLabel();
+                        $warn  = sprintf(dgettext('tuleap-docman', 'You are about to delete the value \'%1$s\' in the current category. All documents already labeled with this value will be bound to \'None\'. Click on \'Ok\' to proceed otherwise click on \'Cancel\'.'), $name);
+                        $alt   = sprintf(dgettext('tuleap-docman', 'Delete value \'%1$s\''), $name);
                         $trash = html_trash_link($link, $warn, $alt);
                     }
                     echo '<td>' . $trash . '</td>';
@@ -163,7 +163,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
             }
         }
 
-        $backUrl  = DocmanViewURLBuilder::buildUrl(
+        $backUrl = DocmanViewURLBuilder::buildUrl(
             $params['default_url'],
             ['action' => 'admin_metadata']
         );

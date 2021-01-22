@@ -36,7 +36,7 @@ class UserWithStarBadgeFinder
     public function findBadgedUser(UserWithStarBadgeCollector $collector)
     {
         $project_owner_row = $this->project_owner_dao->searchByProjectID($collector->getProject()->getID());
-        $badged_user_id = (string) $project_owner_row['user_id'];
+        $badged_user_id    = (string) $project_owner_row['user_id'];
 
         foreach ($collector->getUsers() as $user) {
             if ($user->getId() === $badged_user_id) {

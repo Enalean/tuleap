@@ -39,11 +39,11 @@ class RecipientFactoryTest extends TestCase
         $this->artifact->shouldReceive('getChangeset')->with(200)->andReturns($this->changeset);
         $this->changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
 
-        $this->salt      = 'whatever';
-        $this->host      = 'tuleap.example.com';
+        $this->salt = 'whatever';
+        $this->host = 'tuleap.example.com';
 
-        $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class)->shouldReceive('getArtifactById')->with(101)->andReturns($this->artifact)->getMock();
-        $this->user_manager      = \Mockery::spy(\UserManager::class)->shouldReceive('getUserById')->with(123)->andReturns($this->user)->getMock();
+        $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class)->shouldReceive('getArtifactById')->with(101)->andReturns($this->artifact)->getMock();
+        $this->user_manager     = \Mockery::spy(\UserManager::class)->shouldReceive('getUserById')->with(123)->andReturns($this->user)->getMock();
 
         $this->factory = new Tracker_Artifact_MailGateway_RecipientFactory(
             $this->artifact_factory,
@@ -55,7 +55,7 @@ class RecipientFactoryTest extends TestCase
 
     public function testItGeneratesAMailGatewayRecipientFromEmail()
     {
-        $email = '<101-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com>';
+        $email     = '<101-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com>';
         $recipient = $this->factory->getFromEmail($email);
 
         $this->assertEquals($this->artifact, $recipient->getArtifact());
@@ -86,7 +86,7 @@ class RecipientFactoryTest extends TestCase
 
     public function testItGeneratesAMailGatewayRecipientFromUserAndArtifact()
     {
-        $email = '101-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com';
+        $email     = '101-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com';
         $recipient = $this->factory->getFromUserAndChangeset($this->user, $this->changeset);
 
         $this->assertEquals($this->artifact, $recipient->getArtifact());

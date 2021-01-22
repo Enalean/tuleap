@@ -40,7 +40,7 @@ if ($group_id && ! $atid) {
     // Manage trackers: create and delete
 
     //    get the Group object
-    $pm = ProjectManager::instance();
+    $pm    = ProjectManager::instance();
     $group = $pm->getProject($group_id);
     if (! $group || ! is_object($group) || $group->isError()) {
         exit_no_group();
@@ -61,7 +61,7 @@ if ($group_id && ! $atid) {
     // Manage trackers: create and delete
 
     //    get the Group object
-    $pm = ProjectManager::instance();
+    $pm    = ProjectManager::instance();
     $group = $pm->getProject($group_id);
     if (! $group || ! is_object($group) || $group->isError()) {
         exit_no_group();
@@ -155,20 +155,20 @@ if ($group_id && ! $atid) {
                 }
 
             // now insert all the field entries in the artifact_report_field table
-                $aff = new ArtifactFieldFactory($ath);
+                $aff    = new ArtifactFieldFactory($ath);
                 $fields = $aff->getAllUsedFields();
                 foreach ($fields as $field) {
-                    $cb_search = 'CBSRCH_' . $field->getName();
-                    $cb_report = 'CBREP_' . $field->getName();
-                    $tf_search = 'TFSRCH_' . $field->getName();
-                    $tf_report = 'TFREP_' . $field->getName();
+                    $cb_search   = 'CBSRCH_' . $field->getName();
+                    $cb_report   = 'CBREP_' . $field->getName();
+                    $tf_search   = 'TFSRCH_' . $field->getName();
+                    $tf_report   = 'TFREP_' . $field->getName();
                     $tf_colwidth = 'TFCW_' . $field->getName();
 
                     $cb_search_val = ($request->getValidated($cb_search) ? '1' : '0');
                     $cb_report_val = ($request->getValidated($cb_report) ? '1' : '0');
 
-                    $tf_search_val = $request->getValidated($tf_search);
-                    $tf_report_val = $request->getValidated($tf_report);
+                    $tf_search_val   = $request->getValidated($tf_search);
+                    $tf_report_val   = $request->getValidated($tf_report);
                     $tf_colwidth_val = $request->getValidated($tf_colwidth);
 
                     if ($cb_search_val || $cb_report_val || $tf_search_val || $tf_report_val) {
@@ -231,7 +231,7 @@ if ($group_id && ! $atid) {
             $artifact_canned_id = $request->getValidated('artifact_canned_id', 'uint', 0);
             if ($request->getValidated('post_changes')) {
                    $title = $request->getValidated('title', 'string', '');
-                   $body = $request->getValidated('body', 'text', '');
+                   $body  = $request->getValidated('body', 'text', '');
                 if ($request->getValidated('create_canned')) {
                     $aci = $ach->create($title, $body);
                     if (! $aci) {
@@ -286,7 +286,7 @@ if ($group_id && ! $atid) {
 
             switch ($request->getValidated('action')) {
                 case 'remove_global':
-                    $ok = false;
+                    $ok                     = false;
                     $global_notification_id = $request->getValidated('global_notification_id', 'uint');
                     if ($global_notification_id) {
                         $agnf = new ArtifactGlobalNotificationFactory();
@@ -341,7 +341,7 @@ if ($group_id && ! $atid) {
                       */
 
                     if ($submitted_notifications) {
-                        $agnf = new ArtifactGlobalNotificationFactory();
+                        $agnf   = new ArtifactGlobalNotificationFactory();
                         $notifs = $agnf->getGlobalNotificationsForTracker($atid);
                         foreach ($notifs as $id => $nop) {
                             if (
@@ -380,7 +380,7 @@ if ($group_id && ! $atid) {
                 for ($i = 0; $i < $ath->num_roles; $i++) {
                     $role_id = $ath->arr_roles[$i]['role_id'];
                     for ($j = 0; $j < $ath->num_events; $j++) {
-                        $event_id = $ath->arr_events[$j]['event_id'];
+                        $event_id  = $ath->arr_events[$j]['event_id'];
                         $cbox_name = 'cb_' . $role_id . '_' . $event_id;
                         //echo "DBG $cbox_name -> '".$$cbox_name."'<br>";
                         $arr_notif[$role_id][$event_id] = ( $request->getValidated($cbox_name) ? 1 : 0);
@@ -418,12 +418,12 @@ if ($group_id && ! $atid) {
             }
 
             if ($request->getValidated('update')) {
-                $name        = $sanitizer->sanitize($request->getValidated('name', 'string', ''));
-                $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
-                $itemname = $request->getValidated('itemname', 'string', '');
-                $allow_copy = $request->getValidated('allow_copy') ? 1 : 0;
-                $submit_instructions = $request->getValidated('submit_instructions', 'text', '');
-                $browse_instructions = $request->getValidated('browse_instructions', 'text', '');
+                $name                         = $sanitizer->sanitize($request->getValidated('name', 'string', ''));
+                $description                  = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
+                $itemname                     = $request->getValidated('itemname', 'string', '');
+                $allow_copy                   = $request->getValidated('allow_copy') ? 1 : 0;
+                $submit_instructions          = $request->getValidated('submit_instructions', 'text', '');
+                $browse_instructions          = $request->getValidated('browse_instructions', 'text', '');
                 $instantiate_for_new_projects = $ath->Group->isTemplate() && $request->getValidated('instantiate_for_new_projects') ? 1 : 0;
 
                 if (
@@ -467,7 +467,7 @@ if ($group_id && ! $atid) {
             }
 
             $field_id = $request->getValidated('field_id', 'uint', 0);
-            $field = $art_field_fact->getFieldFromId($field_id);
+            $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field && is_array($request->get('value_function'))) {
                 if (! $field->updateValueFunction($atid, $request->get('value_function'))) {
                     exit_error($Language->getText('global', 'error'), $art_field_fact->getErrorMessage());
@@ -491,7 +491,7 @@ if ($group_id && ! $atid) {
                 return;
             }
             $field_id = $request->getValidated('field_id', 'uint', 0);
-            $field = $art_field_fact->getFieldFromId($field_id);
+            $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
           // For date fields, it is possible to give a computed default value (current date)
                 if ($field->isDateField() && $request->get('default_date_type') == 'current_date') {
@@ -528,7 +528,7 @@ if ($group_id && ! $atid) {
             }
 
             $field_id = $request->getValidated('field_id', 'uint', 0);
-            $field = $art_field_fact->getFieldFromId($field_id);
+            $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
                 require('./field_values_details.php');
             }
@@ -546,7 +546,7 @@ if ($group_id && ! $atid) {
             }
 
             $field_id = $request->getValidated('field_id', 'uint', 0);
-            $field = $art_field_fact->getFieldFromId($field_id);
+            $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
                 $ath->adminHeader(['title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') .
                 $Language->getText('tracker_admin_field_values_details', 'values_admin'),
@@ -573,7 +573,7 @@ if ($group_id && ! $atid) {
             }
 
             $field_id = $request->getValidated('field_id', 'uint', 0);
-            $field = $art_field_fact->getFieldFromId($field_id);
+            $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
                 $value       = $sanitizer->sanitize($request->getValidated('value', 'string', ''));
                 $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
@@ -599,7 +599,7 @@ if ($group_id && ! $atid) {
             }
 
             $field_id = $request->getValidated('field_id', 'uint', 0);
-            $field = $art_field_fact->getFieldFromId($field_id);
+            $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field && $request->valid(new Valid_WhiteList('status', ['A', 'H', 'P']))) {
                 $value_id    = $request->getValidated('value_id', 'uint');
                 $value       = $sanitizer->sanitize($request->getValidated('value', 'string', ''));
@@ -631,9 +631,9 @@ if ($group_id && ! $atid) {
             }
 
             $field_id = $request->getValidated('field_id', 'uint', 0);
-            $field = $art_field_fact->getFieldFromId($field_id);
+            $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
-                $value_id    = $request->getValidated('value_id', 'uint');
+                $value_id = $request->getValidated('value_id', 'uint');
                 if (! $field->deleteValueList($atid, $value_id)) {
                     exit_error($Language->getText('global', 'error'), $field->getErrorMessage());
                 } else {
@@ -675,7 +675,7 @@ if ($group_id && ! $atid) {
                        $keep_history   = $request->getValidated('keep_history', new Valid_WhiteList('', [1]), 0);
                        $special        = $request->getValidated('special', new Valid_WhiteList('', [1]), 0);
                        $use_it         = $request->getValidated('use_it', new Valid_WhiteList('', [1]), 0);
-                       $field_set_id = $request->getValidated('field_set_id', 'uint');
+                       $field_set_id   = $request->getValidated('field_set_id', 'uint');
 
                 if (
                     ! $art_field_fact->createField(
@@ -716,7 +716,7 @@ if ($group_id && ! $atid) {
             }
 
             $field_id = $request->getValidated('field_id', 'uint', 0);
-            $field = $art_field_fact->getFieldFromId($field_id);
+            $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
                 if (
                     $request->valid(new Valid_WhiteList('data_type', [1, 2, 3, 4, 5])) //See data_type in ArtifactField.class.php
@@ -734,7 +734,7 @@ if ($group_id && ! $atid) {
                      $keep_history   = $request->getValidated('keep_history', new Valid_WhiteList('', [1]), 0);
                      $special        = $request->getValidated('special', new Valid_WhiteList('', [1]), 0);
                      $use_it         = $request->getValidated('use_it', new Valid_WhiteList('', [1]), 0);
-                     $field_set_id = $request->getValidated('field_set_id', 'uint');
+                     $field_set_id   = $request->getValidated('field_set_id', 'uint');
                     if (
                         ! $field->update(
                             $atid,
@@ -782,7 +782,7 @@ if ($group_id && ! $atid) {
             }
 
             $field_id = $request->getValidated('field_id', 'uint', 0);
-            $field = $art_field_fact->getFieldFromId($field_id);
+            $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
                 $em = EventManager::instance();
                 $em->processEvent('tracker_admin_field_delete', ['field' => $field, 'ath' => $ath]);
@@ -819,7 +819,7 @@ if ($group_id && ! $atid) {
             }
 
             $field_id = $request->getValidated('field_id', 'uint', 0);
-            $field = $art_field_fact->getFieldFromId($field_id);
+            $field    = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
                 $ath->adminHeader(['title' => $Language->getText('tracker_admin_field_usage', 'tracker_admin') . $Language->getText('tracker_admin_index', 'modify_usage'),
                 'help' => 'tracker-v3.html#creation-and-modification-of-a-tracker-field-set']);
@@ -872,7 +872,7 @@ if ($group_id && ! $atid) {
                   // Delete related reference if it exists
                   // NOTE: there is no way to know if the reference is actually related to this tracker.
                   $reference_manager = ReferenceManager::instance();
-                  $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs(strtolower($ath->getItemName()), $group_id, 1);
+                  $ref               = $reference_manager->loadReferenceFromKeywordAndNumArgs(strtolower($ath->getItemName()), $group_id, 1);
                 if ($ref) {
                     if ($reference_manager->deleteReference($ref)) {
                         $GLOBALS['Response']->addFeedback('info', $Language->getText('project_reference', 't_r_deleted'));
@@ -946,7 +946,7 @@ if ($group_id && ! $atid) {
             }
 
             $fieldset_id = $request->getValidated('fieldset_id', 'uint', 0);
-            $fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
+            $fieldset    = $art_fieldset_fact->getFieldSetById($fieldset_id);
 
             if ($fieldset) {
                 $ath->adminHeader(['title' => $Language->getText('tracker_admin_fieldset', 'tracker_admin') . $Language->getText('tracker_admin_index', 'modify_fieldset'),
@@ -976,7 +976,7 @@ if ($group_id && ! $atid) {
             }
 
             $fieldset_id = $request->getValidated('fieldset_id', 'uint', 0);
-            $fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
+            $fieldset    = $art_fieldset_fact->getFieldSetById($fieldset_id);
             if ($fieldset) {
                 $name        = $sanitizer->sanitize($request->getValidated('name', 'string', ''));
                 $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
@@ -1017,7 +1017,7 @@ if ($group_id && ! $atid) {
             }
 
             $fieldset_id = $request->getValidated('fieldset_id', 'uint', 0);
-            $fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
+            $fieldset    = $art_fieldset_fact->getFieldSetById($fieldset_id);
             if ($fieldset) {
                 if (! $art_fieldset_fact->deleteFieldSet($fieldset_id)) {
                     exit_error($Language->getText('global', 'error'), $art_fieldset_fact->getErrorMessage());

@@ -66,7 +66,7 @@ class GitViewsRepoManagementPaneCIToken extends Pane
             $this->repository->getProjectId(),
             $this->repository->getId()
         );
-        $html = $renderer->renderToString('ci-token-pane', $presenter);
+        $html      = $renderer->renderToString('ci-token-pane', $presenter);
         return $html;
     }
 }

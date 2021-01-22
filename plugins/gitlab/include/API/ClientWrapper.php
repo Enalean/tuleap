@@ -45,8 +45,8 @@ class ClientWrapper
         StreamFactoryInterface $stream_factory,
         GitlabHTTPClientFactory $gitlab_client_factory
     ) {
-        $this->factory        = $factory;
-        $this->stream_factory = $stream_factory;
+        $this->factory               = $factory;
+        $this->stream_factory        = $stream_factory;
         $this->gitlab_client_factory = $gitlab_client_factory;
     }
 

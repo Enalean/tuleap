@@ -43,7 +43,7 @@ class Tracker_FormElement_View_Admin_StaticField_LineBreak extends Tracker_FormE
 
     protected function fetchCustomHelp()
     {
-        $html = '';
+        $html  = '';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= dgettext('tuleap-tracker', 'The label will not appear in form.');
         $html .= '</span>';

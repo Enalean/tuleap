@@ -127,7 +127,7 @@ class RdfWriter extends RssWriter // in fact it should be rewritten to be other 
         ];
 
         $this->_uris_seen = [];
-        $this->_items = [];
+        $this->_items     = [];
     }
 }
 

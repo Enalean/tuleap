@@ -177,11 +177,11 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
         if ($this->asOfDate == 0) {
             $dateRep  = date("Y-m-d", $_SERVER['REQUEST_TIME']);
             $dateDisp = date("m-d-Y", $_SERVER['REQUEST_TIME']);
-            $vline = new GanttVerticalLine($dateRep, "Today:" . $dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
+            $vline    = new GanttVerticalLine($dateRep, "Today:" . $dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
         } else {
             $dateRep  = $this->asOfDate;
             $dateDisp = date("m-d-Y", strtotime($this->asOfDate));
-            $vline = new GanttVerticalLine($dateRep, $dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
+            $vline    = new GanttVerticalLine($dateRep, $dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
         }
         $vline->SetDayOffset(0.5);
         $vline->title->SetFont($this->graph->getFont(), FS_NORMAL, 7);
@@ -195,8 +195,8 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
         //add info to gantt graph
         $this->graph->scale->actinfo->SetColTitles(["Id", $this->summary_label]);
 
-        $format = "Y-m-d";
-        $today  = strtotime('now');
+        $format  = "Y-m-d";
+        $today   = strtotime('now');
         $one_day = 24 * 3600;
         for ($i = 0; $i < count($this->data); $i++) {
             $s = $this->data[$i]['start'];
@@ -311,7 +311,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
     protected function addMilestone($pos, $data, $params = [])
     {
         $format = "Y-m-d";
-        $aLabel   = isset($params['label']) ? $params['label'] : [$data['id'], html_entity_decode($data['summary'])];
+        $aLabel = isset($params['label']) ? $params['label'] : [$data['id'], html_entity_decode($data['summary'])];
         if (isset($params['date'])) {
             if (in_array($params['date'], ['start', 'due', 'finish'])) {
                 $aDate = $data[$params['date']];
@@ -332,7 +332,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
 
     protected function addErrorBar($pos, $data)
     {
-        $format   = "Y-m-d";
+        $format = "Y-m-d";
 
         $debut = null;
         $fin   = null;

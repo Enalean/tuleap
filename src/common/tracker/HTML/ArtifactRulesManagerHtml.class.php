@@ -54,7 +54,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
         $hp = Codendi_HTMLPurifier::instance();
         echo "\n//------------------------------------------------------\n";
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
-        $used_fields = $art_field_fact->getAllUsedFields();
+        $used_fields    = $art_field_fact->getAllUsedFields();
         foreach ($used_fields as $field) {
             if ($field->getName() != 'submitted_by') {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
@@ -90,9 +90,9 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
 
     public function getAllSourceFields($target_id)
     {
-        $sources = [];
+        $sources        = [];
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
-        $used_fields = $art_field_fact->getAllUsedFields();
+        $used_fields    = $art_field_fact->getAllUsedFields();
         foreach ($used_fields as $field) {
             if ($field->getName() != 'submitted_by') {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
@@ -107,9 +107,9 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
 
     public function getAllTargetFields($source_id)
     {
-        $targets = [];
+        $targets        = [];
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
-        $used_fields = $art_field_fact->getAllUsedFields();
+        $used_fields    = $art_field_fact->getAllUsedFields();
         foreach ($used_fields as $field) {
             if ($field->getName() != 'submitted_by') {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
@@ -316,9 +316,9 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
     }
     public function _header()
     {
-        $params = [];
-        $params['title']   = $this->artifact_type->getName() . ' ' . $GLOBALS['Language']->getText('tracker_include_type', 'mng_field_dependencies');
-        $params['help']    = 'tracker-v3.html#field-dependencies';
+        $params          = [];
+        $params['title'] = $this->artifact_type->getName() . ' ' . $GLOBALS['Language']->getText('tracker_include_type', 'mng_field_dependencies');
+        $params['help']  = 'tracker-v3.html#field-dependencies';
         $this->artifact_type->adminHeader($params);
         $this->artifact_type->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type', 'mng_field_dependencies_title'));
     }

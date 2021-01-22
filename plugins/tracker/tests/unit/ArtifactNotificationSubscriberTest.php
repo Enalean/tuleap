@@ -45,12 +45,12 @@ class ArtifactNotificationSubscriberTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->artifact     = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(201);
         $this->artifact->shouldReceive('getUri');
         $this->artifact_dao = \Mockery::spy(\Tracker_ArtifactDao::class);
 
-        $this->user    = Mockery::mock(\PFUser::class);
+        $this->user = Mockery::mock(\PFUser::class);
         $this->user->shouldReceive('getId')->andReturn(101);
         $this->request = \Mockery::spy(\Codendi_Request::class);
 

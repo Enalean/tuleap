@@ -40,7 +40,7 @@ function dumpStats($dao, $sql, ZipArchive $archive, $name)
 }
 
 $plugin_manager = PluginManager::instance();
-$dao = new DataAccessObject();
+$dao            = new DataAccessObject();
 
 $base_path = ForgeConfig::get('tmp_dir') . '/stats';
 if (! is_dir($base_path) && ! mkdir($base_path, 0700, true)) {
@@ -48,8 +48,8 @@ if (! is_dir($base_path) && ! mkdir($base_path, 0700, true)) {
 }
 $filename = $base_path . '/usage-stats-' . date('Ymd-His') . '.zip';
 
-$archive  = new ZipArchive();
-$status   = $archive->open($filename, ZipArchive::CREATE);
+$archive = new ZipArchive();
+$status  = $archive->open($filename, ZipArchive::CREATE);
 if ($status !== true) {
     die("ERROR: Unable to create $filename archive ($status)\n");
 }

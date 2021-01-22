@@ -83,7 +83,7 @@ class PullRequest implements Labelable
 
     public function createWithNewID(int $new_pull_request_id): self
     {
-        $new_pull_request = clone $this;
+        $new_pull_request     = clone $this;
         $new_pull_request->id = $new_pull_request_id;
 
         return $new_pull_request;
@@ -91,7 +91,7 @@ class PullRequest implements Labelable
 
     public function updateMergeStatus(int $new_merge_status): self
     {
-        $updated_pull_request = clone $this;
+        $updated_pull_request               = clone $this;
         $updated_pull_request->merge_status = $new_merge_status;
 
         return $updated_pull_request;

@@ -38,7 +38,7 @@ class Tracker_Migration_V3
      */
     public function createTV5FromTV3(Project $project, $name, $description, $itemname, ArtifactType $tv3)
     {
-        $dao = new Tracker_Migration_V3_Dao();
+        $dao    = new Tracker_Migration_V3_Dao();
         $logger = BackendLogger::getDefaultLogger(Tracker_Migration_MigrationManager::LOG_FILE);
 
         $log_prefix = '[' . bin2hex(random_bytes(7)) . ']';

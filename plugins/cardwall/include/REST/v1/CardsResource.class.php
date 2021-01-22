@@ -66,7 +66,7 @@ class CardsResource
             $this->formelement_factory
         );
 
-        $bind_decorator_retriever = new BindDecoratorRetriever();
+        $bind_decorator_retriever  = new BindDecoratorRetriever();
         $this->single_card_builder = new Cardwall_SingleCardBuilder(
             $this->config_factory,
             new Cardwall_CardFields(
@@ -153,7 +153,7 @@ class CardsResource
         try {
             $this->checkIdIsWellFormed($id);
             list($planning_id, $artifact_id) = explode('_', $id);
-            $single_card = $this->single_card_builder->getSingleCard($user, $artifact_id, $planning_id);
+            $single_card                     = $this->single_card_builder->getSingleCard($user, $artifact_id, $planning_id);
             if ($single_card->getArtifact()->userCanView($user)) {
                 ProjectAuthorization::userCanAccessProject(
                     $user,

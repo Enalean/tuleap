@@ -177,9 +177,9 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $GLOBALS['HTML']->addBreadcrumbs($breadcrumbs);
 
         foreach ($toolbar as $t) {
-            $class = isset($t['class']) ? 'class="' . $t['class'] . '"' : '';
+            $class      = isset($t['class']) ? 'class="' . $t['class'] . '"' : '';
             $item_title = isset($t['short_title']) ? $t['short_title'] : $t['title'];
-            $data_test = isset($t['data-test']) ? 'data-test="' . $t['data-test'] . '"' : '';
+            $data_test  = isset($t['data-test']) ? 'data-test="' . $t['data-test'] . '"' : '';
             $GLOBALS['HTML']->addToolbarItem('<a href="' . $t['url'] . '" ' . $class . ' ' . $data_test . '>' . $item_title . '</a>');
         }
         $params['title']  = $title;

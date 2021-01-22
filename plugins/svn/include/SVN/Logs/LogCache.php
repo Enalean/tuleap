@@ -28,10 +28,10 @@ class LogCache
     public const WRITE = 'write';
     public const READ  = 'read';
 
-    private $cache         = [];
-    private $cache_core    = [];
-    private $project_names = [];
-    private $user_names    = [];
+    private $cache                  = [];
+    private $cache_core             = [];
+    private $project_names          = [];
+    private $user_names             = [];
     private $last_access_date_cache = [];
 
     public function add($project_name, $repository_name, $user_name, $action_type, DateTime $date)
@@ -46,7 +46,7 @@ class LogCache
         }
         $this->cache[$project_name][$repository_name][$user_name][$day][$action_type]++;
         $this->project_names[$project_name] = 1;
-        $this->user_names[$user_name] = 1;
+        $this->user_names[$user_name]       = 1;
     }
 
     public function addCore($project_name, $user_name, $action_type, DateTime $date)

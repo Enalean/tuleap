@@ -34,7 +34,7 @@ final class CampaignsTest extends BaseTest
     {
         $expected_campaign = $this->valid_73_campaign;
 
-        $response  = $this->getResponse($this->client->get('testmanagement_campaigns/' . $expected_campaign['id']));
+        $response = $this->getResponse($this->client->get('testmanagement_campaigns/' . $expected_campaign['id']));
         $campaign = $response->json();
 
         $this->assertEquals($expected_campaign, $campaign);
@@ -44,7 +44,7 @@ final class CampaignsTest extends BaseTest
     {
         $expected_campaign = $this->valid_73_campaign;
 
-        $response  = $this->getResponse(
+        $response = $this->getResponse(
             $this->client->get('testmanagement_campaigns/' . $expected_campaign['id']),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -72,7 +72,7 @@ final class CampaignsTest extends BaseTest
     {
         $campaign = $this->valid_73_campaign;
 
-        $all_executions_request  = $this->client->get('testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
+        $all_executions_request = $this->client->get('testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
 
         $all_executions_response = $this->getResponse(
             $all_executions_request,
@@ -171,7 +171,7 @@ final class CampaignsTest extends BaseTest
 
     public function testPatchCampaignSuccessWithAutomatedTests()
     {
-        $campaign                               = $this->valid_73_campaign;
+        $campaign                = $this->valid_73_campaign;
         $automated_tests_results = [
             'build_url'      => 'https://exemple/of/url',
             'junit_contents' => [],
@@ -216,7 +216,7 @@ final class CampaignsTest extends BaseTest
     public function testPatchCampaignExecutions(): void
     {
         $campaign = $this->valid_73_campaign;
-        $def_id = $this->getFirstExecution($campaign['id'], REST_TestDataBuilder::TEST_BOT_USER_NAME)['definition']["id"];
+        $def_id   = $this->getFirstExecution($campaign['id'], REST_TestDataBuilder::TEST_BOT_USER_NAME)['definition']["id"];
 
         $all_executions_response = $this->getResponse(
             $this->client->patch(

@@ -37,7 +37,7 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            $c = self::class;
+            $c              = self::class;
             self::$instance = new $c();
         }
         return self::$instance;
@@ -84,7 +84,7 @@ class Tracker_Semantic_TitleFactory implements IBuildSemanticFromXML, IDuplicate
         $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();
         if ($row) {
             $from_title_field_id = $row['field_id'];
-            $to_title_field_id = false;
+            $to_title_field_id   = false;
             foreach ($field_mapping as $mapping) {
                 if ($mapping['from'] == $from_title_field_id) {
                     $to_title_field_id = $mapping['to'];

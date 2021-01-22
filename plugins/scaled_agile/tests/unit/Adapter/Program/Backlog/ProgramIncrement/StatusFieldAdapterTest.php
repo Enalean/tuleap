@@ -45,7 +45,7 @@ final class StatusFieldAdapterTest extends TestCase
     protected function setUp(): void
     {
         $this->semantic_status_factory = \Mockery::mock(\Tracker_Semantic_StatusFactory::class);
-        $this->adapter                      = new StatusFieldAdapter($this->semantic_status_factory);
+        $this->adapter                 = new StatusFieldAdapter($this->semantic_status_factory);
     }
 
     public function testItThrowsWhenNoStatusIsFound(): void
@@ -61,8 +61,8 @@ final class StatusFieldAdapterTest extends TestCase
 
     public function testItBuildStatusFieldData(): void
     {
-        $source_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(123)->build());
-        $field          = new \Tracker_FormElement_Field_Selectbox(
+        $source_tracker  = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $field           = new \Tracker_FormElement_Field_Selectbox(
             1,
             $source_tracker->getTrackerId(),
             null,

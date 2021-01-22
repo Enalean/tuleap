@@ -25,7 +25,7 @@ class BackendSystem extends Backend
 {
 
 
-    protected $needRefreshUserCache = false;
+    protected $needRefreshUserCache  = false;
     protected $needRefreshGroupCache = false;
 
 
@@ -432,7 +432,7 @@ class BackendSystem extends Backend
         if (! $user) {
             return false;
         }
-        $homedir = ForgeConfig::get('homedir_prefix') . "/" . $user->getUserName();
+        $homedir    = ForgeConfig::get('homedir_prefix') . "/" . $user->getUserName();
         $backupfile = ForgeConfig::get('sys_project_backup_path') . "/" . $user->getUserName() . ".tgz";
 
         if (is_dir($homedir)) {
@@ -463,7 +463,7 @@ class BackendSystem extends Backend
         if (! $project) {
             return false;
         }
-        $mydir = ForgeConfig::get('grpdir_prefix') . "/" . $project->getUnixName(false);
+        $mydir      = ForgeConfig::get('grpdir_prefix') . "/" . $project->getUnixName(false);
         $backupfile = ForgeConfig::get('sys_project_backup_path') . "/" . $project->getUnixName(false) . ".tgz";
 
         if (is_dir($mydir)) {
@@ -525,7 +525,7 @@ class BackendSystem extends Backend
         $time  = $_SERVER['REQUEST_TIME'] - (3600 * 24 * $delay);
 
         if (is_dir(ForgeConfig::get('ftp_frs_dir_prefix'))) {
-            $frs = $this->getFRSFileFactory();
+            $frs    = $this->getFRSFileFactory();
             $status =  $frs->moveFiles($time, $this);
         }
 
@@ -582,7 +582,7 @@ class BackendSystem extends Backend
     public function projectHomeExists($project)
     {
         $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
-        $home_dir = ForgeConfig::get('grpdir_prefix') . "/" . $unix_group_name;
+        $home_dir        = ForgeConfig::get('grpdir_prefix') . "/" . $unix_group_name;
         if (is_dir($home_dir)) {
             return true;
         } else {

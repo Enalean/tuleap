@@ -59,11 +59,11 @@ class TransitionPatcherTest extends TestCase
 
     public function testPatchThrowsI18NRestExceptionWhenNoAuthorizedUgroups()
     {
-        $transition = Mockery::mock(\Transition::class);
-        $patch_representation = new WorkflowTransitionPATCHRepresentation();
+        $transition                                      = Mockery::mock(\Transition::class);
+        $patch_representation                            = new WorkflowTransitionPATCHRepresentation();
         $patch_representation->authorized_user_group_ids = [];
-        $patch_representation->not_empty_field_ids = [94];
-        $patch_representation->is_comment_required = false;
+        $patch_representation->not_empty_field_ids       = [94];
+        $patch_representation->is_comment_required       = false;
 
         $this->expectExceptionCode(400);
 
@@ -72,11 +72,11 @@ class TransitionPatcherTest extends TestCase
 
     public function testPatchUpdatesSingleTransitionInAdvancedMode()
     {
-        $transition_from_advanced_workflow = $this->buildTransitionWithWorkflowMode(true);
-        $patch_representation = new WorkflowTransitionPATCHRepresentation();
+        $transition_from_advanced_workflow               = $this->buildTransitionWithWorkflowMode(true);
+        $patch_representation                            = new WorkflowTransitionPATCHRepresentation();
         $patch_representation->authorized_user_group_ids = ['704', '703_3'];
-        $patch_representation->not_empty_field_ids = [23];
-        $patch_representation->is_comment_required = true;
+        $patch_representation->not_empty_field_ids       = [23];
+        $patch_representation->is_comment_required       = true;
 
         $this->updater
             ->shouldReceive('update')
@@ -93,11 +93,11 @@ class TransitionPatcherTest extends TestCase
 
     public function testPatchUpdatesAllSiblingTransitionsInSimpleMode()
     {
-        $transition_from_simple_workflow = $this->buildTransitionWithWorkflowMode(false);
-        $patch_representation = new WorkflowTransitionPATCHRepresentation();
+        $transition_from_simple_workflow                 = $this->buildTransitionWithWorkflowMode(false);
+        $patch_representation                            = new WorkflowTransitionPATCHRepresentation();
         $patch_representation->authorized_user_group_ids = ['110_3', '374'];
-        $patch_representation->not_empty_field_ids = [30];
-        $patch_representation->is_comment_required = true;
+        $patch_representation->not_empty_field_ids       = [30];
+        $patch_representation->is_comment_required       = true;
 
         $transition_from_simple_workflow->shouldReceive('getIdTo')->andReturn('999');
 
@@ -122,7 +122,7 @@ class TransitionPatcherTest extends TestCase
 
     private function buildTransitionWithWorkflowMode(bool $is_advanced): Mockery\MockInterface
     {
-        $workflow = Mockery::mock(\Workflow::class)
+        $workflow          = Mockery::mock(\Workflow::class)
             ->shouldReceive('isAdvanced')
             ->andReturn($is_advanced)
             ->getMock();

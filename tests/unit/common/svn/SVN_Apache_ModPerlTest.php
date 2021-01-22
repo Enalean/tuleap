@@ -42,7 +42,7 @@ class SVN_Apache_ModPerlTest extends TestCase
         $this->gpig_repository = new CoreApacheConfRepository(
             ProjectTestBuilder::aProject()->withId(101)->withPublicName('Guinea Pig')->build(),
         );
-        $this->modperl = new SVN_Apache_ModPerl(
+        $this->modperl         = new SVN_Apache_ModPerl(
             new \Tuleap\SvnCore\Cache\Parameters(50, 3600),
         );
     }

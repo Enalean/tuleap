@@ -236,7 +236,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     private function formatDiff($changeset_value, $format, $is_for_mail)
     {
         if ($this->files !== $changeset_value->getFiles()) {
-            $result = '';
+            $result  = '';
             $removed = [];
             foreach (array_diff($changeset_value->getFiles(), $this->files) as $fi) {
                 $removed[] = $fi->getFilename();
@@ -286,7 +286,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         $previews = [];
         $this->extractAddedAndPreviewsFromFiles($files, $format, $still_existing_files_ids, $added, $previews);
 
-        $result   = '';
+        $result = '';
         if ($added) {
             $result .= implode(', ', $added) . ' ' . dgettext('tuleap-tracker', 'added');
         }

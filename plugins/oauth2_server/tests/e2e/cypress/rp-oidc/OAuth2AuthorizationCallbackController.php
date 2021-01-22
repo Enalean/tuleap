@@ -109,12 +109,12 @@ final class OAuth2AuthorizationCallbackController
         }
 
         $http_client_with_client_credentials = $this->http_client_with_client_credential_factory->getHTTPClient();
-        $access_token_response  = $this->exchangeAuthorizationCode(
+        $access_token_response               = $this->exchangeAuthorizationCode(
             $http_client_with_client_credentials,
             $auth_code
         );
-        $sub = $this->validateIDToken($access_token_response['id_token']);
-        $refresh_token_response = $this->refreshTokens(
+        $sub                                 = $this->validateIDToken($access_token_response['id_token']);
+        $refresh_token_response              = $this->refreshTokens(
             $http_client_with_client_credentials,
             $access_token_response['refresh_token']
         );
@@ -264,7 +264,7 @@ final class OAuth2AuthorizationCallbackController
         }
 
         $jwks_document = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $keys = [];
+        $keys          = [];
         foreach ($jwks_document['keys'] as $key) {
             if ($key['alg'] === 'RS256') {
                 $keys[] = PKCS1Format::convertFromRSAModulusAndExponent(

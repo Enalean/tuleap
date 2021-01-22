@@ -114,7 +114,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject
 
     public function delete($kanban_id)
     {
-        $kanban_id   = $this->da->escapeInt($kanban_id);
+        $kanban_id = $this->da->escapeInt($kanban_id);
 
         $this->startTransaction();
 

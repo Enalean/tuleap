@@ -49,12 +49,12 @@ class GitActionsFetchConfigTest extends TestCase
         $this->repo->shouldReceive('getId')->andReturns($this->repo_id);
         $this->repo->shouldReceive('belongsToProject')->with($this->project)->andReturns(true);
 
-        $this->user    = \Mockery::spy(\PFUser::class);
+        $this->user = \Mockery::spy(\PFUser::class);
 
-        $this->request = \Mockery::spy(\Codendi_Request::class);
+        $this->request              = \Mockery::spy(\Codendi_Request::class);
         $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
-        $this->controller = \Mockery::spy(\Git::class);
-        $this->driver = \Mockery::spy(\Git_Driver_Gerrit::class);
+        $this->controller           = \Mockery::spy(\Git::class);
+        $this->driver               = \Mockery::spy(\Git_Driver_Gerrit::class);
 
         $gerrit_server = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
 
@@ -67,12 +67,12 @@ class GitActionsFetchConfigTest extends TestCase
             ->andReturn($this->repo)
             ->getMock();
 
-        $this->project_creator = \Mockery::spy(\Git_Driver_Gerrit_ProjectCreator::class);
+        $this->project_creator         = \Mockery::spy(\Git_Driver_Gerrit_ProjectCreator::class);
         $this->git_permissions_manager = \Mockery::spy(\GitPermissionsManager::class);
 
         $this->controller->shouldReceive('getRequest')->andReturns($this->request);
 
-        $git_plugin  = Mockery::mock(\GitPlugin::class)
+        $git_plugin = Mockery::mock(\GitPlugin::class)
             ->shouldReceive('areFriendlyUrlsActivated')
             ->andReturnFalse()
             ->getMock();

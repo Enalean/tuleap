@@ -170,8 +170,8 @@ if ($pv) {
 $group_unix_name = $project->getUnixName();
 
 $proj_stats['packages'] = $num_packages;
-$pm   = PermissionsManager::instance();
-$fmmf = new FileModuleMonitorFactory();
+$pm                     = PermissionsManager::instance();
+$fmmf                   = new FileModuleMonitorFactory();
 
 $javascript_packages_array = [];
 
@@ -213,7 +213,7 @@ foreach ($packages as $package_id => $package_for_display) {
             $frs_icon = $package_for_display['is_collapsed'] ? FRS_COLLAPSED_ICON : FRS_EXPANDED_ICON;
             $html    .= '<a href="#"  data-test="toggle-package" onclick="javascript:toggle_package(\'p_' . $package_id . '\'); return false;" /><img src="' . $frs_icon . '" id="img_p_' . $package_id . '" /></a>&nbsp;';
         }
-        $html             .= " <$emphasis data-test='package-name'>" . $hp->purify(util_unconvert_htmlspecialchars($package->getName()))
+        $html .= " <$emphasis data-test='package-name'>" . $hp->purify(util_unconvert_htmlspecialchars($package->getName()))
             . "</$emphasis>";
         if (! $pv) {
             if ($permission_manager->isAdmin($project, $user)) {
@@ -255,7 +255,7 @@ foreach ($packages as $package_id => $package_for_display) {
 
         $javascript_releases_array = [];
         $package_class_collapsed   = $package_for_display['is_collapsed'] ? 'frs_collapsed' : '';
-        $html .= '<div class="' . $package_class_collapsed . '" id="p_' . $package_id . '">';
+        $html                     .= '<div class="' . $package_class_collapsed . '" id="p_' . $package_id . '">';
         if (! $pv && $permission_manager->isAdmin($project, $user)) {
             $html .= '<p><a
                          href="admin/release.php?func=add&amp;group_id=' . $hp->purify($group_id) . '&amp;package_id=' . $hp->purify(urlencode($package_id)) . '"
@@ -301,7 +301,7 @@ foreach ($packages as $package_id => $package_for_display) {
                     $html .= '  <TD>';
                     if (! $pv) {
                         $frs_icon = $is_release_collapsed ? FRS_COLLAPSED_ICON : FRS_EXPANDED_ICON;
-                        $html .= '<a href="#" onclick="javascript:toggle_release(\'p_' . $package_id . '\', \'r_' . $package_release->getReleaseID() . '\'); return false;" /><img src="' . $frs_icon . '" id="img_p_' . $package_id . 'r_' . $package_release->getReleaseID() . '" /></a>';
+                        $html    .= '<a href="#" onclick="javascript:toggle_release(\'p_' . $package_id . '\', \'r_' . $package_release->getReleaseID() . '\'); return false;" /><img src="' . $frs_icon . '" id="img_p_' . $package_id . 'r_' . $package_release->getReleaseID() . '" /></a>';
                     }
                     $html .= "     <$emphasis data-test='release-name'>" .
                         $hp->purify($package_release->getName()) . "</$emphasis>";
@@ -337,12 +337,12 @@ foreach ($packages as $package_id => $package_for_display) {
                     $html .= '</table>';
 
                     // get the files in this release....
-                    $res_file = $frsff->getFRSFileInfoListByReleaseFromDb($package_release->getReleaseID());
+                    $res_file  = $frsff->getFRSFileInfoListByReleaseFromDb($package_release->getReleaseID());
                     $num_files = 0;
                     if ($res_file !== null) {
                         $num_files = count($res_file);
                     }
-                    $uploaded_links  = $uploaded_links_retriever->getLinksForRelease($package_release);
+                    $uploaded_links = $uploaded_links_retriever->getLinksForRelease($package_release);
 
                     if (! isset($proj_stats['files'])) {
                         $proj_stats['files'] = 0;
@@ -352,18 +352,18 @@ foreach ($packages as $package_id => $package_for_display) {
                     $javascript_files_array  = [];
                     $release_class_collapsed = $is_release_collapsed && ! $pv ? 'frs_collapsed' : '';
                     if ((! $res_file && ! $uploaded_links) || ($num_files < 1 && count($uploaded_links) < 1)) {
-                        $html .= '<span class="' . $release_class_collapsed . '" id="p_' . $hp->purify(urlencode($package_id)) . 'r_' . $hp->purify(urlencode((string) $package_release->getReleaseID())) . 'f_0"><B>' . $Language->getText('file_showfiles', 'no_files') . '</B></span>' . "\n";
+                        $html                    .= '<span class="' . $release_class_collapsed . '" id="p_' . $hp->purify(urlencode($package_id)) . 'r_' . $hp->purify(urlencode((string) $package_release->getReleaseID())) . 'f_0"><B>' . $Language->getText('file_showfiles', 'no_files') . '</B></span>' . "\n";
                         $javascript_files_array[] = "'f_0'";
                     } else {
                         $javascript_files_array[] = "'f_0'";
                         //get the file_type and processor type
-                        $q = "select * from frs_filetype";
+                        $q            = "select * from frs_filetype";
                         $res_filetype = db_query($q);
                         while ($resrow = db_fetch_array($res_filetype)) {
                             $file_type[$resrow['type_id']] = $resrow['name'];
                         }
 
-                        $q = "select * from frs_processor";
+                        $q             = "select * from frs_processor";
                         $res_processor = db_query($q);
                         while ($resrow = db_fetch_array($res_processor)) {
                             $processor[$resrow['processor_id']] = $resrow['name'];
@@ -372,7 +372,7 @@ foreach ($packages as $package_id => $package_for_display) {
                         $html .= '<span class="' . $release_class_collapsed . '" id="p_' . $hp->purify(urlencode($package_id)) . 'r_' . $hp->purify(urlencode((string) $package_release->getReleaseID())) . 'f_0">';
 
                         if ($res_file) {
-                            $title_arr = [];
+                            $title_arr   = [];
                             $title_arr[] = $Language->getText('file_admin_editreleases', 'filename');
                             $title_arr[] = $Language->getText('file_showfiles', 'size');
                             $title_arr[] = $Language->getText('file_showfiles', 'd_l');
@@ -381,7 +381,7 @@ foreach ($packages as $package_id => $package_for_display) {
                             $title_arr[] = $Language->getText('file_showfiles', 'date');
                             $title_arr[] = $Language->getText('file_showfiles', 'md5sum');
                             $title_arr[] = $Language->getText('file_showfiles', 'user');
-                            $html .= html_build_list_table_top(
+                            $html       .= html_build_list_table_top(
                                 $title_arr,
                                 false,
                                 false,
@@ -408,7 +408,7 @@ foreach ($packages as $package_id => $package_for_display) {
                                 $list     = explode('/', $filename);
                                 $fname    = $list[sizeof($list) - 1];
                                 $class    = $bgcolor . ' ' . $release_class_collapsed;
-                                $html     .= "\t\t" . '<TR id="p_' . $package_id . 'r_' . $package_release->getReleaseID(
+                                $html    .= "\t\t" . '<TR id="p_' . $package_id . 'r_' . $package_release->getReleaseID(
                                 ) . 'f_' . $file_release['file_id'] . '" class="' . $class . '"><TD><B>';
 
                                 $javascript_files_array[] = "'f_" . $file_release['file_id'] . "'";
@@ -420,15 +420,15 @@ foreach ($packages as $package_id => $package_for_display) {
                                     $size_precision = 2;
                                 }
                                 $owner = UserManager::instance()->getUserById($file_release['user_id']);
-                                $html  .= '</B></TD>' . '<TD>' . FRSFile::convertBytesToKbytes(
+                                $html .= '</B></TD>' . '<TD>' . FRSFile::convertBytesToKbytes(
                                     $file_release['file_size'],
                                     $size_precision
                                 ) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>';
-                                $html  .= '<TD>' . (isset($processor[$file_release['processor']]) ? $hp->purify(
+                                $html .= '<TD>' . (isset($processor[$file_release['processor']]) ? $hp->purify(
                                     $processor[$file_release['processor']],
                                     CODENDI_PURIFIER_CONVERT_HTML
                                 ) : "") . '</TD>';
-                                $html  .= '<TD>' . (isset($file_type[$file_release['type']]) ? $hp->purify(
+                                $html .= '<TD>' . (isset($file_type[$file_release['type']]) ? $hp->purify(
                                     $file_type[$file_release['type']]
                                 ) : "") . '</TD>' . '<TD>' . format_date(
                                     "Y-m-d",
@@ -463,22 +463,22 @@ foreach ($packages as $package_id => $package_for_display) {
                             $link_presenters = $uploaded_link_presenters_builder->build($uploaded_links);
 
                             $uploaded_links_presenter = new UploadedLinksTablePresenter($link_presenters);
-                            $html .= $renderer->renderToString('uploaded-links', $uploaded_links_presenter);
+                            $html                    .= $renderer->renderToString('uploaded-links', $uploaded_links_presenter);
                         }
 
                         $html .= '</table>';
                         $html .= '</span>';
                     }
                     $javascript_releases_array[] = "'r_" . $package_release->getReleaseID() . "': [" . implode(",", $javascript_files_array) . "]";
-                    $cpt_release = $cpt_release + 1;
+                    $cpt_release                 = $cpt_release + 1;
                 }
             }
             if (! $cpt_release) {
                 $html .= '<B>' . $Language->getText('file_showfiles', 'no_releases') . '</B>' . "\n";
             }
         }
-        $html .= '</div>';
-        $html .= '</fieldset>';
+        $html                       .= '</div>';
+        $html                       .= '</fieldset>';
         $javascript_packages_array[] = "'p_" . $package_id . "': {" . implode(",", $javascript_releases_array) . "}";
     }
 }
@@ -486,7 +486,7 @@ foreach ($packages as $package_id => $package_for_display) {
 echo $html;
 
 if (! $pv) {
-    $javascript_array = 'var packages = {';
+    $javascript_array  = 'var packages = {';
     $javascript_array .= implode(",", $javascript_packages_array);
     $javascript_array .= '}';
     print '<script language="javascript">' . $javascript_array . '</script>';

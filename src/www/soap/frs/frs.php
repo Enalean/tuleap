@@ -552,7 +552,7 @@ if (defined('NUSOAP')) {
     {
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm    = ProjectManager::instance();
                 $group = $pm->getGroupByIdForSoap($group_id, 'addPackage');
             } catch (SoapFault $e) {
                 return $e;
@@ -568,7 +568,7 @@ if (defined('NUSOAP')) {
                                    'status_id'       => $status_id,
                                    'rank'            => $rank,
                                    'approve_license' => $approve_license];
-                    $dar = $pkg_fact->create($pkg_array);
+                    $dar       = $pkg_fact->create($pkg_array);
                     if (! $dar) {
                         return new SoapFault(INVALID_PACKAGE_FAULT, $dar->isError(), 'addPackage');
                     } else {
@@ -706,7 +706,7 @@ if (defined('NUSOAP')) {
                                         'changes' => $changes,
                                         'status_id' => $status_id,
                                         'release_date' => $release_date];
-                    $dar = $release_fact->create($release_array);
+                    $dar           = $release_fact->create($release_array);
                     if (! $dar) {
                         return new SoapFault(INVALID_RELEASE_FAULT, $dar->isError(), 'addRelease');
                     } else {
@@ -714,7 +714,7 @@ if (defined('NUSOAP')) {
                         //add the default permission inherited from package
                         //we can modify it from web UI
                         $release_array['release_id'] = $dar;
-                        $release = new FRSRelease($release_array);
+                        $release                     = new FRSRelease($release_array);
                         if ($release_fact->setDefaultPermissions($release)) {
                             return $dar;
                         } else {
@@ -763,7 +763,7 @@ if (defined('NUSOAP')) {
         }
 
         $pkg_fact = new FRSPackageFactory();
-        $package = $pkg_fact->getFRSPackageFromDb($package_id);
+        $package  = $pkg_fact->getFRSPackageFromDb($package_id);
         if (! $package || $package->getGroupID() != $group_id) {
             return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'updateRelease');
         }
@@ -863,7 +863,7 @@ if (defined('NUSOAP')) {
 
             // retieve the package
             $pkg_fact = new FRSPackageFactory();
-            $package = $pkg_fact->getFRSPackageFromDb($package_id);
+            $package  = $pkg_fact->getFRSPackageFromDb($package_id);
             if (! $package || $package->isDeleted() || $package->getGroupID() != $group_id) {
                 return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFileInfo');
             }
@@ -874,7 +874,7 @@ if (defined('NUSOAP')) {
 
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
-            $release = $release_fact->getFRSReleaseFromDb($release_id);
+            $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (! $release || $release->isDeleted() || $release->getPackageID() != $package_id) {
                 return new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFileInfo');
             }
@@ -884,7 +884,7 @@ if (defined('NUSOAP')) {
             }
 
             $file_fact = new FRSFileFactory();
-            $file = $file_fact->getFRSFileFromDb($file_id);
+            $file      = $file_fact->getFRSFileFromDb($file_id);
             if (! $file || ! $file->isActive() || $file->getReleaseID() != $release_id) {
                 return new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'getFileInfo');
             }
@@ -1119,7 +1119,7 @@ if (defined('NUSOAP')) {
             $file_fact = new FRSFileFactory();
             if ($file_fact->userCanAdd($group_id)) {
                 $tmpname = tempnam("/tmp", "codendi_soap_frs");
-                $fh = fopen($tmpname, "wb");
+                $fh      = fopen($tmpname, "wb");
                 if (! $fh) {
                     return new SoapFault(INVALID_FILE_FAULT, 'Could not create temporary file in directory /tmp', 'addFile');
                 }
@@ -1249,8 +1249,8 @@ if (defined('NUSOAP')) {
             return new SoapFault(INVALID_FILE_FAULT, 'Filename is invalid', 'addFileChunk');
         }
 
-        $fp = fopen($incoming_file_path, $mode);
-        $chunk = base64_decode($contents);
+        $fp      = fopen($incoming_file_path, $mode);
+        $chunk   = base64_decode($contents);
         $cLength = strlen($chunk);
         $written = fwrite($fp, $chunk);
         fclose($fp);
@@ -1348,7 +1348,7 @@ if (defined('NUSOAP')) {
     {
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm      = ProjectManager::instance();
                 $project = $pm->getGroupByIdForSoap($group_id, 'getUploadedFiles');
             } catch (SoapFault $e) {
                 return $e;
@@ -1450,7 +1450,7 @@ if (defined('NUSOAP')) {
                 return $e;
             }
             $packageFactory = new FRSPackageFactory();
-            $packages = [];
+            $packages       = [];
             if ($package_id && ! $cleanup_all) {
                 $package = $packageFactory->getFRSPackageFromDb($package_id);
                 if (! $package || $package->getGroupID() != $group_id) {
@@ -1463,7 +1463,7 @@ if (defined('NUSOAP')) {
             $deleted = [];
             foreach ($packages as $package) {
                 $releaseFactory = new FRSReleaseFactory();
-                $releases = $releaseFactory->getFRSReleasesFromDb($package->getPackageID());
+                $releases       = $releaseFactory->getFRSReleasesFromDb($package->getPackageID());
                 if (empty($releases)) {
                     if ($packageFactory->userCanUpdate($group_id, $package->getPackageID())) {
                         if ($packageFactory->delete_package($group_id, $package->getPackageID())) {
@@ -1507,12 +1507,12 @@ if (defined('NUSOAP')) {
                 return $e;
             }
             $packageFactory = new FRSPackageFactory();
-            $package = $packageFactory->getFRSPackageFromDb($package_id);
+            $package        = $packageFactory->getFRSPackageFromDb($package_id);
             if (! $package || $package->getGroupID() != $group_id) {
                 return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deleteRelease');
             }
             $releaseFactory = new FRSReleaseFactory();
-            $releases = [];
+            $releases       = [];
             if ($release_id && ! $cleanup_all) {
                 $release = $releaseFactory->getFRSReleaseFromDb($release_id);
                 if (! $release || $release->getPackageID() != $package_id) {

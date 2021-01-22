@@ -123,7 +123,7 @@ class TestBase extends RestBase
         ];
 
         if (isset($_ENV['TULEAP_HOST'])) {
-            $this->svn_domain  = $_ENV['TULEAP_HOST'];
+            $this->svn_domain = $_ENV['TULEAP_HOST'];
         }
     }
 }

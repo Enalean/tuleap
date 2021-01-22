@@ -52,13 +52,13 @@ class Git_Driver_Gerrit_MembershipManager
         UGroupManager $ugroup_manager,
         ProjectManager $project_manager
     ) {
-        $this->dao                    = $dao;
-        $this->driver_factory         = $driver_factory;
-        $this->gerrit_user_manager    = $gerrit_usermanager;
-        $this->gerrit_server_factory  = $gerrit_server_factory;
-        $this->logger                 = $logger;
-        $this->ugroup_manager         = $ugroup_manager;
-        $this->project_manager        = $project_manager;
+        $this->dao                   = $dao;
+        $this->driver_factory        = $driver_factory;
+        $this->gerrit_user_manager   = $gerrit_usermanager;
+        $this->gerrit_server_factory = $gerrit_server_factory;
+        $this->logger                = $logger;
+        $this->ugroup_manager        = $ugroup_manager;
+        $this->project_manager       = $project_manager;
     }
 
     /**
@@ -194,7 +194,7 @@ class Git_Driver_Gerrit_MembershipManager
             if ($this->doesGroupExistOnServer($server, $ugroup)) {
                 $migrated_ugroups[] = $ugroup;
             } elseif ($this->createGroupForServer($server, $ugroup)) {
-                $need_flush = true;
+                $need_flush         = true;
                 $migrated_ugroups[] = $ugroup;
             }
         }

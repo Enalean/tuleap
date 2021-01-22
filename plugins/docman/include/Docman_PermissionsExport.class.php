@@ -51,13 +51,13 @@ class Docman_PermissionsExport
         '   AND i.delete_date IS NULL' .
         ' ORDER BY i.rank ASC, permission_type';
 
-        $result = db_query($sql);
-        $title = '';
+        $result       = db_query($sql);
+        $title        = '';
         $newParentIds = [];
         while (($row = db_fetch_array($result))) {
             $this->parentTitles[$row['item_id']] = $this->parentTitles[$row['parent_id']] . '/' . $row['title'];
-            $output[$row['item_id']]['title'] = $this->parentTitles[$row['item_id']];
-            $output[$row['item_id']]['type']  = $row['item_type'];
+            $output[$row['item_id']]['title']    = $this->parentTitles[$row['item_id']];
+            $output[$row['item_id']]['type']     = $row['item_type'];
             foreach ($this->getUgroups() as $id => $name) {
                 if ($row['ugroup_id'] == $id) {
                     $output[$row['item_id']][$id] = $row['permission_type'];
@@ -85,9 +85,9 @@ class Docman_PermissionsExport
     public function gatherPermissions()
     {
         // Collect data
-        $itemFactory    = new Docman_ItemFactory($this->group->getId());
-        $rootItem       = $itemFactory->getRoot($this->group->getId());
-        $output         = [];
+        $itemFactory = new Docman_ItemFactory($this->group->getId());
+        $rootItem    = $itemFactory->getRoot($this->group->getId());
+        $output      = [];
         if ($rootItem !== null) {
             $this->parentTitles[$rootItem->getId()] = '';
             $this->fetchPerms([$rootItem->getId()], $output);

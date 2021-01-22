@@ -170,7 +170,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         $output = '';
         switch ($format) {
             case 'html':
-                $output  .= '<span>' . $this->getArtifactRank($artifact->getID()) . '</span>';
+                $output .= '<span>' . $this->getArtifactRank($artifact->getID()) . '</span>';
                 break;
             default:
                 $output .= $this->getArtifactRank($artifact->getID());

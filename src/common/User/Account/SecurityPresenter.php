@@ -83,12 +83,12 @@ final class SecurityPresenter
      */
     public function __construct(AccountTabPresenterCollection $tabs, CSRFSynchronizerToken $csrf_token, \PFUser $user, PasswordPreUpdateEvent $password_pre_update_event, array $password_validator_presenter, array $user_access)
     {
-        $this->tabs = $tabs;
-        $this->csrf_token = $csrf_token;
-        $this->remember_me_activated = (int) $user->getStickyLogin() === 1;
-        $this->username = $user->getUserName();
+        $this->tabs                     = $tabs;
+        $this->csrf_token               = $csrf_token;
+        $this->remember_me_activated    = (int) $user->getStickyLogin() === 1;
+        $this->username                 = $user->getUserName();
         $this->user_can_change_password = $password_pre_update_event->areUsersAllowedToChangePassword();
-        $this->passwords_validators = $password_validator_presenter;
+        $this->passwords_validators     = $password_validator_presenter;
         if ($user_access['last_auth_success']) {
             $this->last_successful_login = \DateHelper::formatForLanguage(
                 $user->getLanguage(),

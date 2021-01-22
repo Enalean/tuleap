@@ -43,7 +43,7 @@ class LFSObjectRemoverTest extends TestCase
 
     public function testDanglingObjectsAreRemoved(): void
     {
-        $deletion_delay = 3;
+        $deletion_delay     = 3;
         $lfs_object_remover = new LFSObjectRemover(
             $this->dao,
             new DBTransactionExecutorPassthrough(),
@@ -66,7 +66,7 @@ class LFSObjectRemoverTest extends TestCase
 
     public function testReferenceToTheDanglingObjectIsKeptWhenDeletionFails(): void
     {
-        $deletion_delay = 3;
+        $deletion_delay     = 3;
         $lfs_object_remover = new LFSObjectRemover(
             $this->dao,
             new DBTransactionExecutorPassthrough(),

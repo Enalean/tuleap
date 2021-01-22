@@ -33,7 +33,7 @@ class b201303200939_add_per_tracker_artifact_id extends ForgeUpgrade_Bucket
 
     public function up()
     {
-        $sql = "ALTER TABLE `tracker_artifact`
+        $sql    = "ALTER TABLE `tracker_artifact`
 					ADD COLUMN `per_tracker_artifact_id` INT(11) NOT NULL;";
         $result = $this->db->dbh->exec($sql);
 

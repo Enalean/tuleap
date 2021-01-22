@@ -27,10 +27,10 @@ function mail_header(array $params, PFUser $user): void
     \Tuleap\Project\ServiceInstrumentation::increment('mailinglists');
 
     //required for site_project_header
-    $params['group'] = $group_id;
+    $params['group']  = $group_id;
     $params['toptab'] = 'mail';
 
-    $pm = ProjectManager::instance();
+    $pm      = ProjectManager::instance();
     $project = $pm->getProject($group_id);
 
     if (! $project->usesMail()) {

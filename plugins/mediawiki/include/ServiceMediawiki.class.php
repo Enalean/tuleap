@@ -51,7 +51,7 @@ class ServiceMediawiki extends Service
                 new User_ForgeUserGroupPermissionsDao(),
             ),
         );
-        $breadcrumbs = $breadcrumb_builder->getBreadcrumbs(
+        $breadcrumbs        = $breadcrumb_builder->getBreadcrumbs(
             $this->project,
             UserManager::instance()->getCurrentUser(),
         );
@@ -66,7 +66,7 @@ class ServiceMediawiki extends Service
      */
     public function userIsAdmin(PFUser $user)
     {
-        $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
+        $forge_user_manager     = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );
         $has_special_permission = $forge_user_manager->doesUserHavePermission(

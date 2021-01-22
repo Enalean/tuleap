@@ -302,7 +302,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     /** @see Event::UGROUP_RENAME */
     public function ugroupRename(array $params): void
     {
-        $project         = $params['project'];
+        $project = $params['project'];
 
         $this->updateAllAccessFileOfProject($project, $params['new_ugroup_name'], $params['old_ugroup_name']);
     }
@@ -311,7 +311,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function changeProjectRepositoriesAccess(array $params)
     {
         $project_id = $params[0];
-        $project = ProjectManager::instance()->getProject($project_id);
+        $project    = ProjectManager::instance()->getProject($project_id);
 
         $this->updateAllAccessFileOfProject($project, null, null);
     }
@@ -365,7 +365,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         switch ($params['type']) {
             case 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_CREATE_REPOSITORY::NAME:
-                $params['class'] = SystemEvent_SVN_CREATE_REPOSITORY::class;
+                $params['class']        = SystemEvent_SVN_CREATE_REPOSITORY::class;
                 $params['dependencies'] = [
                     $this->getAccessFileHistoryCreator(),
                     $this->getRepositoryManager(),
@@ -376,7 +376,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 ];
                 break;
             case 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_DELETE_REPOSITORY::NAME:
-                $params['class'] = SystemEvent_SVN_DELETE_REPOSITORY::class;
+                $params['class']        = SystemEvent_SVN_DELETE_REPOSITORY::class;
                 $params['dependencies'] = [
                     $this->getRepositoryManager(),
                     ProjectManager::instance(),
@@ -386,7 +386,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 ];
                 break;
             case SystemEvent_SVN_IMPORT_CORE_REPOSITORY::class:
-                $params['class'] = SystemEvent_SVN_IMPORT_CORE_REPOSITORY::class;
+                $params['class']        = SystemEvent_SVN_IMPORT_CORE_REPOSITORY::class;
                 $params['dependencies'] = SystemEvent_SVN_IMPORT_CORE_REPOSITORY::getDependencies(
                     ProjectManager::instance(),
                     $this->getBackendSVN(),
@@ -538,7 +538,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $project         = $params['project'];
         $logger          = $params['logger'];
 
-        $user_manager    = $this->getUserManager();
+        $user_manager = $this->getUserManager();
 
         $svn = new XMLImporter(
             $xml,
@@ -770,8 +770,8 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function pendingDocumentsRetriever(PendingDocumentsRetriever $documents_retriever): void
     {
-        $project = $documents_retriever->getProject();
-        $user = $documents_retriever->getUser();
+        $project               = $documents_retriever->getProject();
+        $user                  = $documents_retriever->getUser();
         $archived_repositories = $this->getRepositoryManager()->getRestorableRepositoriesByProject($project, $user);
 
         $restore_controller = new RestoreController($this->getRepositoryManager());
@@ -789,7 +789,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $project         = $project_manager->getProject($params['group_id']);
         if ($project->usesService(self::SERVICE_SHORTNAME)) {
             $builder = new QueryBuilder();
-            $query  = $builder->buildQuery($project, $params['span'], $params['who']);
+            $query   = $builder->buildQuery($project, $params['span'], $params['who']);
 
              $params['logs'][] = [
                 'sql'   => $query,
@@ -967,7 +967,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         $event->setPluginActivated();
 
-        $class            = "Tuleap\\SVN\\REST\\" . $event->getVersion() . "\\ProjectResource";
+        $class = "Tuleap\\SVN\\REST\\" . $event->getVersion() . "\\ProjectResource";
         if (! class_exists($class)) {
             throw new LogicException("$class does not exist");
         }

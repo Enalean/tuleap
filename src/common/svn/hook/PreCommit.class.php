@@ -115,8 +115,8 @@ class SVN_Hook_PreCommit extends SVN_Hook
             if ($this->extractFilenameFromNonDeletedPath($path, $matches)) {
                 continue;
             }
-            $filename     = $matches[1];
-            $handle_file  = $this->svn_look->getContent($project, $transaction, $filename);
+            $filename    = $matches[1];
+            $handle_file = $this->svn_look->getContent($project, $transaction, $filename);
             if ($handle_file === false) {
                 throw new \RuntimeException("Can't get the content of the file $filename");
             }

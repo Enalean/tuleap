@@ -88,16 +88,16 @@ class GerritTest extends TestBase
 
     public function testGETServersForProject(): void
     {
-        $url = 'gerrit?for_project=' . $this->git_project_id;
-        $response  = $this->getResponse($this->client->get($url));
+        $url      = 'gerrit?for_project=' . $this->git_project_id;
+        $response = $this->getResponse($this->client->get($url));
 
         $this->assertGETServersForProject($response);
     }
 
     public function testGETServersForProjectWithReadOnlyAdmin(): void
     {
-        $url = 'gerrit?for_project=' . $this->git_project_id;
-        $response  = $this->getResponse(
+        $url      = 'gerrit?for_project=' . $this->git_project_id;
+        $response = $this->getResponse(
             $this->client->get($url),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -107,7 +107,7 @@ class GerritTest extends TestBase
 
     public function testGetGitRepositoryThrows403IfUserCantSeeRepository(): void
     {
-        $response  = $this->getResponseForNonMember($this->client->get('gerrit'));
+        $response = $this->getResponseForNonMember($this->client->get('gerrit'));
 
         $this->assertEquals($response->getStatusCode(), 403);
     }

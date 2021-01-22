@@ -24,8 +24,8 @@ class ArtifactXMLExporterDao extends DataAccessObject
     public function searchArtifacts($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $summary = $this->unconvertHtmlspecialcharsAlias('artifact.summary', 'summary');
-        $details = $this->unconvertHtmlspecialcharsAlias('details', 'details');
+        $summary    = $this->unconvertHtmlspecialcharsAlias('artifact.summary', 'summary');
+        $details    = $this->unconvertHtmlspecialcharsAlias('details', 'details');
 
         $sql = "SELECT artifact_id, $summary, $details, severity, status_id, open_date, user_name AS submitted_by, close_date
                 FROM artifact
@@ -38,7 +38,7 @@ class ArtifactXMLExporterDao extends DataAccessObject
     public function searchHistory($artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $old_value = $this->unconvertHtmlspecialcharsAlias('h.old_value', 'old_value');
+        $old_value   = $this->unconvertHtmlspecialcharsAlias('h.old_value', 'old_value');
 
         $comment = $this->unconvertHtmlspecialchars('h.new_value');
 
@@ -97,7 +97,7 @@ class ArtifactXMLExporterDao extends DataAccessObject
 
     public function searchFilesForArtifact($artifact_id)
     {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $artifact_id = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT *
                 FROM artifact_file
@@ -123,9 +123,9 @@ class ArtifactXMLExporterDao extends DataAccessObject
 
     public function searchFileBefore($artifact_id, $filename, $date)
     {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
-        $filename     = $this->da->quoteSmart($filename);
-        $date         = $this->da->escapeInt($date);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $filename    = $this->da->quoteSmart($filename);
+        $date        = $this->da->escapeInt($date);
 
         $sql = "SELECT id
                 FROM artifact_file
@@ -188,7 +188,7 @@ class ArtifactXMLExporterDao extends DataAccessObject
             throw new Exception_TV3XMLInvalidFieldTypeException($user_id);
         }
         $user_id = $this->da->escapeInt($user_id);
-        $sql = "SELECT user_name, ldap_id, email
+        $sql     = "SELECT user_name, ldap_id, email
                 FROM user
                 WHERE user_id = $user_id";
         return $this->retrieve($sql);

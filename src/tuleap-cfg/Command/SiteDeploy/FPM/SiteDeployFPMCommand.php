@@ -33,7 +33,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class SiteDeployFPMCommand extends Command
 {
-    public const NAME = 'site-deploy:fpm';
+    public const NAME            = 'site-deploy:fpm';
     public const OPT_PHP_VERSION = 'php-version';
     public const PHP73           = 'php73';
     public const PHP74           = 'php74';

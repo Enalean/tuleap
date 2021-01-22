@@ -22,7 +22,7 @@ class TrackerDateReminder_ArtifactField
 {
     public function getDateFieldReminderSettings($field_id, $group_artifact_id)
     {
-        $sql = sprintf(
+        $sql    = sprintf(
             'SELECT * FROM artifact_date_reminder_settings'
                       . ' WHERE group_artifact_id=%d'
                       . ' AND field_id=%d',
@@ -43,7 +43,7 @@ class TrackerDateReminder_ArtifactField
      */
     public function deleteFieldReminderSettings($field_id, $group_artifact_id)
     {
-        $del = sprintf(
+        $del    = sprintf(
             'DELETE FROM artifact_date_reminder_settings'
                 . ' WHERE field_id=%d'
                 . ' AND group_artifact_id=%d',
@@ -51,7 +51,7 @@ class TrackerDateReminder_ArtifactField
             $group_artifact_id
         );
         $result = db_query($del);
-        $rem = sprintf(
+        $rem    = sprintf(
             'DELETE FROM artifact_date_reminder_processing'
                 . ' WHERE field_id=%d'
                 . ' AND group_artifact_id=%d',
@@ -65,7 +65,7 @@ class TrackerDateReminder_ArtifactField
     public function populateProcessingForField(ArtifactType $at, $field_id, $group_artifact_id)
     {
         //Now populate the 'artifact_date_reminder_processing' table with concerned artifacts
-        $art = sprintf(
+        $art     = sprintf(
             'SELECT * FROM artifact'
             . ' WHERE group_artifact_id=%d'
             . ' AND status_id <> 3',
@@ -103,7 +103,7 @@ class TrackerDateReminder_ArtifactField
             $notified_users = implode(",", $people_notified);
             if (db_numrows($res) == 0) {
                 // No reminder, create it
-                $insert = 'INSERT INTO artifact_date_reminder_settings' .
+                $insert   = 'INSERT INTO artifact_date_reminder_settings' .
                           '(field_id, group_artifact_id, notification_start, notification_type, frequency, recurse, notified_people)' .
                           ' VALUES' .
                           ' (' . db_ei($field->getId()) . ',' . db_ei($group_artifact_id) . ',' . db_ei($start) . ',' . db_ei($notif_type) . ',' . db_ei($frequency) . ',' . db_ei($recurse) . ',"' . db_es($notified_users) . '")';

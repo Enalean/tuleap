@@ -64,7 +64,7 @@ class CommentNotEmpty_validateTest extends TestCase
     public function testItReturnsTrueIfCommentIsNotRequired()
     {
         $is_comment_required = false;
-        $condition = new Workflow_Transition_Condition_CommentNotEmpty(
+        $condition           = new Workflow_Transition_Condition_CommentNotEmpty(
             $this->transition,
             $this->dao,
             $is_comment_required
@@ -77,7 +77,7 @@ class CommentNotEmpty_validateTest extends TestCase
     public function testItReturnsFalseIfCommentIsRequiredAndNoCommentIsProvided()
     {
         $is_comment_required = true;
-        $condition = new Workflow_Transition_Condition_CommentNotEmpty(
+        $condition           = new Workflow_Transition_Condition_CommentNotEmpty(
             $this->transition,
             $this->dao,
             $is_comment_required
@@ -89,7 +89,7 @@ class CommentNotEmpty_validateTest extends TestCase
     public function testItReturnsTrueIfCommentIsRequiredAndCommentIsProvided()
     {
         $is_comment_required = true;
-        $condition = new Workflow_Transition_Condition_CommentNotEmpty(
+        $condition           = new Workflow_Transition_Condition_CommentNotEmpty(
             $this->transition,
             $this->dao,
             $is_comment_required

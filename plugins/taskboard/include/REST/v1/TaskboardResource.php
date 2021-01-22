@@ -53,9 +53,9 @@ class TaskboardResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->user_manager        = UserManager::instance();
-        $this->backlog_item_dao    = new AgileDashboard_BacklogItemDao();
-        $this->artifact_factory    = Tracker_ArtifactFactory::instance();
+        $this->user_manager     = UserManager::instance();
+        $this->backlog_item_dao = new AgileDashboard_BacklogItemDao();
+        $this->artifact_factory = Tracker_ArtifactFactory::instance();
     }
 
     /**

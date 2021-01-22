@@ -29,9 +29,9 @@ class ScaledAgileResourceTest extends \RestBase
     public function testPUTHierarchy(): void
     {
         $program_id = $this->getProgramProjectId();
-        $team_id = $this->getTeamProjectId();
+        $team_id    = $this->getTeamProjectId();
 
-        $hierarchy_definition  = json_encode(
+        $hierarchy_definition = json_encode(
             [
                 "program_tracker_id" => $this->tracker_ids[$program_id]['bug'],
                 "team_tracker_ids" => [$this->tracker_ids[$team_id]['story']]

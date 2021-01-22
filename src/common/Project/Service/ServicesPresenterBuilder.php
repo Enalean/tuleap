@@ -49,7 +49,7 @@ class ServicesPresenterBuilder
     public function build(Project $project, CSRFSynchronizerToken $csrf, PFUser $user): ServicesPresenter
     {
         $service_presenters = [];
-        $allowed_services = $this->service_manager->getListOfAllowedServicesForProject($project);
+        $allowed_services   = $this->service_manager->getListOfAllowedServicesForProject($project);
         foreach ($allowed_services as $service) {
             if (! $this->isServiceReadable($service, $user)) {
                 continue;
@@ -66,7 +66,7 @@ class ServicesPresenterBuilder
 
     private function buildJSONPresenter(Service $service, Project $project): ServiceJSONPresenter
     {
-        $service_link = $this->getServiceLink($service, $project);
+        $service_link         = $this->getServiceLink($service, $project);
         $is_link_customizable = $service_link === null;
         return new ServiceJSONPresenter(
             $service->getId(),

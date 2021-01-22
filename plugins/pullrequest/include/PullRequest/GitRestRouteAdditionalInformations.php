@@ -43,7 +43,7 @@ class GitRestRouteAdditionalInformations
     {
         foreach ($this->dao->searchRepositoriesWithOpenPullRequests($event->getRepositoryIds()) as $row) {
             $this->repository_with_open_pr[(int) $row['repository_id']] = true;
-            $this->repository_with_open_pr[(int) $row['repo_dest_id']] = true;
+            $this->repository_with_open_pr[(int) $row['repo_dest_id']]  = true;
         }
     }
 

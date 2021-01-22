@@ -121,7 +121,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
         if (! ($page == 'all')) {
             $p = $dbi->getPage($page);
 
-            $t = HTML::table(['class' => 'pagelist',
+            $t  = HTML::table(['class' => 'pagelist',
                                    'style' => 'font-size:smaller']);
             $th = HTML::thead();
             $tb = HTML::tbody();
@@ -139,7 +139,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
 
             $allrevisions_iter = $p->getAllRevisions();
             while ($rev = $allrevisions_iter->next()) {
-                $isminor = $rev->get('is_minor_edit');
+                $isminor         = $rev->get('is_minor_edit');
                 $authordoesmatch = $author == $rev->get('author');
 
                 if ($authordoesmatch && (! $isminor || ($includeminor && $isminor))) {
@@ -149,7 +149,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                         $rev->getversion(),
                         $rev
                     );
-                    $tr = HTML::tr(
+                    $tr       = HTML::tr(
                         HTML::td(
                             ['align' => 'right'],
                             $difflink,
@@ -185,7 +185,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
 
             /////////////////////////////////////////////////////////////
 
-            $t = HTML::table(['class' => 'pagelist',
+            $t  = HTML::table(['class' => 'pagelist',
                                    'style' => 'font-size:smaller']);
             $th = HTML::thead();
             $tb = HTML::tbody();
@@ -208,7 +208,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
 
                 $allrevisions_iter = $p->getAllRevisions();
                 while ($rev = $allrevisions_iter->next()) {
-                    $isminor = $rev->get('is_minor_edit');
+                    $isminor         = $rev->get('is_minor_edit');
                     $authordoesmatch = $author == $rev->get('author');
                     if ($authordoesmatch && (! $isminor || ($includeminor && $isminor))) {
                         $difflink = Button(
@@ -217,7 +217,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                             $rev->getversion(),
                             $rev
                         );
-                        $tr = HTML::tr(
+                        $tr       = HTML::tr(
                             HTML::td(
                                 $nbsp,
                                 ($isminor ? $rev->_pagename : WikiLink($rev->_pagename, 'auto'))

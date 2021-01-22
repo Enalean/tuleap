@@ -98,7 +98,7 @@ class MilestoneElementAdderTest extends TestCase
             $this->transaction_executor
         );
 
-        $this->backlog_add_representation = new BacklogAddRepresentation();
+        $this->backlog_add_representation     = new BacklogAddRepresentation();
         $this->backlog_add_representation->id = 112;
 
         $this->artifact = Mockery::mock(Artifact::class);

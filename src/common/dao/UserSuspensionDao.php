@@ -34,9 +34,9 @@ class UserSuspensionDao extends DataAccessObject
     public function getIdleAccounts(DateTimeImmutable $start_date, DateTimeImmutable $end_date): array
     {
         $start_date_timestamp = $start_date->getTimestamp();
-        $end_date_timestamp = $end_date->getTimestamp();
+        $end_date_timestamp   = $end_date->getTimestamp();
 
-        $sql  = 'SELECT  user.user_id, last_access_date FROM user ' .
+        $sql = 'SELECT  user.user_id, last_access_date FROM user ' .
         ' INNER JOIN user_access AS access  ON user.user_id=access.user_id' .
         ' WHERE (user.status != "D" AND user.status != "S") AND ' .
         ' (access.last_access_date != 0 AND access.last_access_date BETWEEN ? AND ?)';
@@ -56,7 +56,7 @@ class UserSuspensionDao extends DataAccessObject
     public function suspendExpiredAccounts(DateTimeImmutable $date)
     {
         $timestamp = $date->getTimestamp();
-        $sql = 'UPDATE user SET status = "S", unix_status = "S"' .
+        $sql       = 'UPDATE user SET status = "S", unix_status = "S"' .
             ' WHERE ( status != "D" AND expiry_date != 0' .
             ' AND expiry_date <  ? )';
         return $this->getDB()->run($sql, $timestamp);
@@ -68,7 +68,7 @@ class UserSuspensionDao extends DataAccessObject
     public function suspendInactiveAccounts(DateTimeImmutable $date)
     {
         $timestamp = $date->getTimestamp();
-        $sql  = 'UPDATE user AS user' .
+        $sql       = 'UPDATE user AS user' .
             ' INNER JOIN user_access AS access ON user.user_id=access.user_id' .
             ' SET user.status = "S", user.unix_status = "S"' .
             ' WHERE user.status != "D" AND (' .
@@ -91,7 +91,7 @@ class UserSuspensionDao extends DataAccessObject
      */
     public function delayForBeingNotProjectMembers(int $user_id): array
     {
-        $req = 'SELECT date from group_history where field_name = "removed_user" and old_value REGEXP ? order by date desc LIMIT 1';
+        $req   = 'SELECT date from group_history where field_name = "removed_user" and old_value REGEXP ? order by date desc LIMIT 1';
         $param = '[(]' . $this->getDB()->escapeLikeValue((string) $user_id) . '[)]$';
         return $this->getDB()->run($req, $param);
     }
@@ -104,16 +104,16 @@ class UserSuspensionDao extends DataAccessObject
     {
         //Return delay for being subscribed and not being added to any project
         $timestamp = $date->getTimestamp();
-        $select = 'SELECT NULL from user where user_id = ? and add_date < ? ';
+        $select    = 'SELECT NULL from user where user_id = ? and add_date < ? ';
         return $this->getDB()->run($select, $user_id, $timestamp);
     }
 
     public function getUsersWithoutConnectionOrAccessBetweenDates(DateTimeImmutable $start_date, DateTimeImmutable $end_date): array
     {
         $start_date_timestamp = $start_date->getTimestamp();
-        $end_date_timestamp = $end_date->getTimestamp();
+        $end_date_timestamp   = $end_date->getTimestamp();
 
-        $sql  = 'SELECT user.user_id, last_access_date FROM user' .
+        $sql = 'SELECT user.user_id, last_access_date FROM user' .
             ' INNER JOIN user_access AS access ON user.user_id=access.user_id' .
             ' WHERE (user.status != "S" AND user.status != "D" AND (' .
             '(access.last_access_date = 0 AND user.add_date BETWEEN ? AND ? ) OR ' .

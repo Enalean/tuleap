@@ -62,7 +62,7 @@ final class AddValidatorTest extends TestCase
     public function testValidateThrowsWhenArtifactToAddIsNeitherSoloItemNorChildOfSwimlane(): void
     {
         $artifact_to_add = $this->mockArtifact(456);
-        $other_parent       = $this->mockArtifact(42);
+        $other_parent    = $this->mockArtifact(42);
         $artifact_to_add->shouldReceive('getParent')
             ->once()
             ->andReturn($other_parent);

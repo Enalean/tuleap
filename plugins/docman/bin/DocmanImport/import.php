@@ -27,7 +27,7 @@ require_once __DIR__ . '/XMLDocmanUpdate.class.php';
 require_once __DIR__ . '/parameters.php';
 
 $console = new Log_ConsoleLogger();
-$usage = "
+$usage   = "
 Usage: import.php --url=<Tuleap URL> --project=<destination project unix name> --archive=<archive path>
        import.php --help";
 
@@ -80,7 +80,7 @@ if (($archive = getParameter($argv, 'archive', true)) === null) {
     $archive = null;
 }
 
-$project = getParameter($argv, 'project');
+$project   = getParameter($argv, 'project');
 $projectId = getParameter($argv, 'project-id');
 if ($project === null && $projectId === null) {
     $console->error("One of the following parameters is required: --project, --project-id");

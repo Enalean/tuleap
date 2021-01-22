@@ -48,10 +48,10 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function __construct($user, $project, $package, $release, $maxFileSize)
     {
-        $this->user = $user;
-        $this->project = $project;
-        $this->package = $package;
-        $this->release = $release;
+        $this->user        = $user;
+        $this->project     = $project;
+        $this->package     = $package;
+        $this->release     = $release;
         $this->maxFileSize = $maxFileSize;
     }
 
@@ -83,7 +83,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
     public function getChild($fileName)
     {
         $fileId = $this->getFileIdFromName($fileName);
-        $file = $this->getFRSFileFromId($fileId);
+        $file   = $this->getFRSFileFromId($fileId);
 
         // Check for errors
 
@@ -329,7 +329,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
     public function delete()
     {
         if ($this->userCanWrite()) {
-            $utils = $this->getUtils();
+            $utils  = $this->getUtils();
             $result = $utils->getReleaseFactory()->delete_release($this->getProject()->getGroupId(), $this->getReleaseId());
             if ($result == 0) {
                 throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'release_not_available'));

@@ -22,7 +22,7 @@ class Tracker_FormElement_View_Admin_Field_LastModifiedBy extends Tracker_FormEl
 
     protected function fetchCustomHelp()
     {
-        $html = '';
+        $html  = '';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= dgettext('tuleap-tracker', 'The field is automatically set to the last person who modified the artifact');
         $html .= '</span>';

@@ -33,7 +33,7 @@ class Cardwall_OnTop_Config_ColumnFactory
 
     public function __construct(Cardwall_OnTop_ColumnDao $dao)
     {
-        $this->dao        = $dao;
+        $this->dao = $dao;
     }
 
     /**
@@ -70,7 +70,7 @@ class Cardwall_OnTop_Config_ColumnFactory
         if (! $dar) {
             return null;
         }
-        $row = $dar->getRow();
+        $row          = $dar->getRow();
         $header_color = ColumnColorRetriever::getHeaderColorNameOrRGB($row);
         return new Cardwall_Column($column_id, $row['label'], $header_color);
     }

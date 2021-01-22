@@ -31,7 +31,7 @@ class ItemStatusMapper
      * @var \Docman_SettingsBo
      */
     private $docman_settings_bo;
-    public const ITEM_STATUS_NONE     = 'none';
+    public const ITEM_STATUS_NONE = 'none';
 
     public const ITEM_STATUS_DRAFT    = 'draft';
     public const ITEM_STATUS_APPROVED = 'approved';
@@ -53,7 +53,7 @@ class ItemStatusMapper
 
     public function __construct(\Docman_SettingsBo $docman_settings_bo)
     {
-        $this->docman_settings_bo  = $docman_settings_bo;
+        $this->docman_settings_bo = $docman_settings_bo;
     }
 
     /**

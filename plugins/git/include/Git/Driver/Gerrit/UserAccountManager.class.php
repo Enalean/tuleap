@@ -91,7 +91,7 @@ class Git_Driver_Gerrit_UserAccountManager
             return;
         }
 
-        $errors = [];
+        $errors         = [];
         $remote_servers = $this->remote_gerrit_factory->getRemoteServersForUser($user);
 
         foreach ($remote_servers as $remote_server) {
@@ -123,13 +123,13 @@ class Git_Driver_Gerrit_UserAccountManager
         }
 
         $gerrit_user = $this->getGerritUser($user);
-        $user_keys = array_unique($user->getAuthorizedKeysArray());
+        $user_keys   = array_unique($user->getAuthorizedKeysArray());
 
         if (! $user_keys) {
             return;
         }
 
-        $errors = [];
+        $errors         = [];
         $remote_servers = $this->remote_gerrit_factory->getRemoteServersForUser($user);
 
         foreach ($remote_servers as $remote_server) {

@@ -183,8 +183,8 @@ class GitXmlExporter
 
             $row = $this->git_log_dao->getLastPushForRepository($repository->getId());
             if (! empty($row) && $row['user_id'] !== 0) {
-                $last_push_node    = $root_node->addChild("last-push-date");
-                $user              = $this->user_manager->getUserById($row['user_id']);
+                $last_push_node = $root_node->addChild("last-push-date");
+                $user           = $this->user_manager->getUserById($row['user_id']);
                 $this->user_exporter->exportUser($user, $last_push_node, 'user');
                 $last_push_node->addAttribute("push_date", $row["push_date"]);
                 $last_push_node->addAttribute("commits_number", $row["commits_number"]);

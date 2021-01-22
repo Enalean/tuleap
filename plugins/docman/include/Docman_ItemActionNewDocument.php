@@ -25,8 +25,8 @@ class Docman_ItemActionNewDocument extends \Docman_ItemAction
     public function __construct(&$item)
     {
         parent::__construct($item);
-        $this->action = 'newDocument';
+        $this->action  = 'newDocument';
         $this->classes = 'docman_item_option_newdocument';
-        $this->title = \dgettext('tuleap-docman', 'New document');
+        $this->title   = \dgettext('tuleap-docman', 'New document');
     }
 }

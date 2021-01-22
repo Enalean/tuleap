@@ -340,7 +340,7 @@ class ProjectTest extends ProjectBase
 
     public function testThatAdminGetEvenPrivateProjectThatSheIsNotMemberOf()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/'));
+        $response       = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/'));
         $admin_projects = $response->json();
 
         foreach ($admin_projects as $project) {
@@ -351,7 +351,7 @@ class ProjectTest extends ProjectBase
             $this->assertFalse($project['is_member_of']);
 
             $project_members_uri = "user_groups/$this->project_private_id" . "_3/users";
-            $project_members = $this
+            $project_members     = $this
                 ->getResponseByName(
                     REST_TestDataBuilder::ADMIN_USER_NAME,
                     $this->client->get($project_members_uri)
@@ -487,7 +487,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETUnknownProject()
     {
-        $response  = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/1234567890'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/1234567890'));
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
@@ -778,7 +778,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETUserGroupsContainingStaticUGroups()
     {
-        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/user_groups'));
+        $response        = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/user_groups'));
         $expected_result = [
 
             [
@@ -899,7 +899,7 @@ class ProjectTest extends ProjectBase
 
     public function testPATCHbacklog()
     {
-        $uri = 'projects/' . $this->project_private_member_id . '/backlog';
+        $uri           = 'projects/' . $this->project_private_member_id . '/backlog';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
         $first_item  = $backlog_items[0];
@@ -969,19 +969,19 @@ class ProjectTest extends ProjectBase
 
     public function testPATCHbacklogMoveBackAndForthInTopBacklog()
     {
-        $uri = 'projects/' . $this->project_private_member_id . '/backlog';
+        $uri           = 'projects/' . $this->project_private_member_id . '/backlog';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
         $first_item  = $backlog_items[0];
         $second_item = $backlog_items[1];
         $third_item  = $backlog_items[2];
 
-        $releases = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/milestones'))->json();
+        $releases      = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/milestones'))->json();
         $first_release = $releases[0];
 
         $release_content = $this->getResponse($this->client->get('milestones/' . $first_release['id'] . '/content'))->json();
-        $first_epic  = $release_content[0];
-        $second_epic = $release_content[1];
+        $first_epic      = $release_content[0];
+        $second_epic     = $release_content[1];
 
         // remove from release, back to top backlog
         $response = $this->getResponse($this->client->patch('projects/' . $this->project_private_member_id . '/backlog', null, json_encode([

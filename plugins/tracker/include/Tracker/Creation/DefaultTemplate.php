@@ -36,7 +36,7 @@ class DefaultTemplate
     public function __construct(TrackerTemplatesRepresentation $representation, string $xml_file)
     {
         $this->representation = $representation;
-        $this->xml_file = $xml_file;
+        $this->xml_file       = $xml_file;
     }
 
     public function getRepresentation(): TrackerTemplatesRepresentation

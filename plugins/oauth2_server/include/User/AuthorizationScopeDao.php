@@ -48,9 +48,9 @@ class AuthorizationScopeDao extends DataAccessObject
      */
     public function searchScopes(int $authorization_id): array
     {
-        $sql = 'SELECT scope_key FROM plugin_oauth2_authorization_scope
+        $sql    = 'SELECT scope_key FROM plugin_oauth2_authorization_scope
                 WHERE authorization_id = ?';
-        $rows = $this->getDB()->q($sql, $authorization_id);
+        $rows   = $this->getDB()->q($sql, $authorization_id);
         $scopes = [];
         foreach ($rows as $row) {
             $scopes[] = $row['scope_key'];

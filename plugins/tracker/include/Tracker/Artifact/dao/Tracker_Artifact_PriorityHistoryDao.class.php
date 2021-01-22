@@ -43,7 +43,7 @@ class Tracker_Artifact_PriorityHistoryDao extends DataAccessObject
 
     public function getArtifactPriorityHistory($artifact_id)
     {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $artifact_id = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT *
                 FROM tracker_artifact_priority_history
@@ -54,7 +54,7 @@ class Tracker_Artifact_PriorityHistoryDao extends DataAccessObject
 
     public function deletePriorityChangesHistory($artifact_id)
     {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $artifact_id = $this->da->escapeInt($artifact_id);
 
         $sql = "DELETE
                 FROM tracker_artifact_priority_history

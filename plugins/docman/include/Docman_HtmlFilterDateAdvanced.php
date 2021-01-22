@@ -30,7 +30,7 @@ class Docman_HtmlFilterDateAdvanced extends \Docman_HtmlFilterDate
     }
     public function _valueSelectorHtml($formName)
     {
-        $html = '';
+        $html  = '';
         $html .= \dgettext('tuleap-docman', 'Start:');
         $html .= '&nbsp;';
         $html .= \html_field_date($this->filter->getFieldStartValueName(), $this->filter->getValueStart(), \false, '10', '10', $formName, \false);

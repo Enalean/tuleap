@@ -46,7 +46,7 @@ class Statistics_DiskUsageOutput
         $systems['si']['size']   = 1000;
         $systems['bi']['prefix'] = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
         $systems['bi']['size']   = 1024;
-        $sys = isset($systems[$system]) ? $systems[$system] : $systems['si'];
+        $sys                     = isset($systems[$system]) ? $systems[$system] : $systems['si'];
 
         // Max unit to display
         $depth = count($sys['prefix']) - 1;

@@ -28,7 +28,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
 
     protected function buildMatchExpression($field_name, $criteria_value)
     {
-        $expr = '';
+        $expr    = '';
         $matches = [];
         // If it is sourrounded by /.../ then assume a regexp
         if (preg_match('#(!?)/(.*)/#', $criteria_value, $matches)) {
@@ -56,7 +56,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
     {
         $html = '<input type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
-            $hp = Codendi_HTMLPurifier::instance();
+            $hp    = Codendi_HTMLPurifier::instance();
             $html .= $hp->purify($criteria_value, CODENDI_PURIFIER_CONVERT_HTML);
         }
         $html .= '" />';

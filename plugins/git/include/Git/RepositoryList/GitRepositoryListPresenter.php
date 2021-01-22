@@ -90,8 +90,8 @@ class GitRepositoryListPresenter
 
         $this->json_encoded_repositories_owners = json_encode($repositories_owners);
 
-        $this->display_mode = (string) $current_user->getPreference("are_git_repositories_sorted_by_path");
-        $this->external_plugins = json_encode($external_plugins);
+        $this->display_mode                = (string) $current_user->getPreference("are_git_repositories_sorted_by_path");
+        $this->external_plugins            = json_encode($external_plugins);
         $this->external_services_name_used = json_encode($external_services_name_used);
 
         $this->project_url         = $project->getUrl();

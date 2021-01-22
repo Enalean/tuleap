@@ -47,8 +47,8 @@ class SVN_RepositoryListing
 
     public function getSvnPaths(PFUser $user, Project $project, $svn_path)
     {
-        $paths            = [];
-        $content          = $this->svnlook->getDirectoryListing($project, $svn_path);
+        $paths   = [];
+        $content = $this->svnlook->getDirectoryListing($project, $svn_path);
 
         foreach ($content as $line) {
             if ($this->svn_permissions_manager->userCanRead($user, $project, $line)) {
@@ -83,7 +83,7 @@ class SVN_RepositoryListing
     {
         $date_based_path = [];
         foreach ($paths as $path) {
-            $path_info = $this->getSvnSinglePathWithLogDetails($project, $svn_path . '/' . $path);
+            $path_info                                     = $this->getSvnSinglePathWithLogDetails($project, $svn_path . '/' . $path);
             $date_based_path[$path_info->getTimestamp()][] = $path_info;
         }
 
@@ -98,7 +98,7 @@ class SVN_RepositoryListing
 
     private function getSvnSinglePathWithLogDetails(Project $project, $svn_path)
     {
-        $history = $this->splitHistory($this->svnlook->getPathLastHistory($project, $svn_path));
+        $history      = $this->splitHistory($this->svnlook->getPathLastHistory($project, $svn_path));
         $last_revison = $history[0];
 
         return $this->getRevisionInfo($last_revison, $project);
@@ -130,7 +130,7 @@ class SVN_RepositoryListing
 
     private function getRevisionInfo($revision, Project $project)
     {
-        $info = $this->svnlook->getInfo($project, $revision['revision']);
+        $info       = $this->svnlook->getInfo($project, $revision['revision']);
         $date_parts = explode(' (', $info[1]);
 
         return new SVN_RevisionPathInfo(

@@ -76,7 +76,7 @@ class WikiUser
     public $_authdbi;
     public $_homepage;
     public $_authmethod = '';
-    public $_authhow = '';
+    public $_authhow    = '';
 
     /**
      *
@@ -89,19 +89,19 @@ class WikiUser
     public function __construct(&$request, $userid = false, $authlevel = false)
     {
         $this->_request = &$request;
-        $this->_dbi = &$this->_request->getDbh();
+        $this->_dbi     = &$this->_request->getDbh();
 
         if (isa($userid, 'WikiUser')) {
-            $this->_userid   = $userid->_userid;
-            $this->_level    = $userid->_level;
+            $this->_userid = $userid->_userid;
+            $this->_level  = $userid->_level;
         } else {
             $this->_userid = $userid;
-            $this->_level = $authlevel;
+            $this->_level  = $authlevel;
         }
         if (! $this->_ok()) {
             // Paranoia: if state is at all inconsistent, log out...
-            $this->_userid = false;
-            $this->_level = false;
+            $this->_userid   = false;
+            $this->_level    = false;
             $this->_homepage = false;
             $this->_authhow .= ' paranoia logout';
         }
@@ -235,14 +235,14 @@ class WikiUser
         // Call update_locale in case the system's default language is not 'en'.
         // (We have no user pref for lang at this point yet, no one is logged in.)
         update_locale(DEFAULT_LANGUAGE);
-        $userid = '';
+        $userid        = '';
         $require_level = 0;
         extract($args); // fixme
 
         $require_level = max(0, min(WIKIAUTH_ADMIN, (int) $require_level));
 
         $pagename = $request->getArg('pagename');
-        $login = new Template(
+        $login    = new Template(
             'login',
             $request,
             compact(
@@ -255,7 +255,7 @@ class WikiUser
         );
         if ($seperate_page) {
             $request->discardOutput();
-            $page = $request->getPage($pagename);
+            $page     = $request->getPage($pagename);
             $revision = $page->getCurrentRevision();
             return GeneratePage($login, _("Sign In"), $revision);
         } else {
@@ -414,7 +414,7 @@ class WikiUser
         // create default homepage:
         //  properly expanded template and the pref metadata
         $template = Template('homepage.tmpl', $this->_request);
-        $text  = $template->getExpansion();
+        $text     = $template->getExpansion();
         $pageinfo = ['pagedata' => ['pref' => serialize($pref->_pref)],
                           'versiondata' => ['author' => $this->_userid],
                           'pagename' => $pagename,
@@ -451,7 +451,7 @@ class WikiUser
     // Not in the preferences.
     public function checkPassword($passwd)
     {
-        $prefs = $this->getPreferences();
+        $prefs         = $this->getPreferences();
         $stored_passwd = $prefs->get('passwd'); // crypted
         if (empty($prefs->_prefs['passwd'])) {    // not stored in the page
             // allow empty passwords? At least store a '*' then.

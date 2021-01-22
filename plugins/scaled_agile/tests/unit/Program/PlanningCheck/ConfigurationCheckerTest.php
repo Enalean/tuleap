@@ -38,12 +38,12 @@ final class ConfigurationCheckerTest extends TestCase
         $adapter = Mockery::mock(BuildPlanningConfiguration::class);
         $checker = new ConfigurationChecker($adapter);
 
-        $program = new Program(1);
+        $program           = new Program(1);
         $program_increment = new ProgramIncrementTracker(100);
         $adapter->shouldReceive('buildProgramFromTeamProject')->andReturn($program);
         $adapter->shouldReceive('buildProgramIncrementFromProjectId')->andReturn($program_increment);
 
-        $user = UserTestBuilder::aUser()->build();
+        $user    = UserTestBuilder::aUser()->build();
         $project = new Project(['group_id' => 1]);
 
         $this->assertEquals($program_increment, $checker->getProgramIncrementTracker($user, $project));
@@ -56,7 +56,7 @@ final class ConfigurationCheckerTest extends TestCase
 
         $adapter->shouldReceive('buildProgramFromTeamProject')->andReturn(null);
 
-        $user = UserTestBuilder::aUser()->build();
+        $user    = UserTestBuilder::aUser()->build();
         $project = new Project(['group_id' => 1]);
 
         $this->assertNull($checker->getProgramIncrementTracker($user, $project));

@@ -49,7 +49,7 @@ class ErrMsgText
             return 'Internal error: The specified error message (' . $errnbr . ') does not exist in the chosen locale (' . $__jpg_err_locale . ')';
         }
         $ea = $this->lt[$errnbr];
-        $j = 0;
+        $j  = 0;
         if ($a1 !== null) {
             $argv[$j++] = $a1;
             if ($a2 !== null) {
@@ -101,9 +101,9 @@ class ErrMsgText
 // in all methods.
 class JpGraphError
 {
-    private static $__iImgFlg = true;
+    private static $__iImgFlg  = true;
     private static $__iLogFile = '';
-    private static $__iTitle = 'JpGraph Error: ';
+    private static $__iTitle   = 'JpGraph Error: ';
     public static function Raise($aMsg, $aHalt = true)
     {
         throw new JpGraphException($aMsg);
@@ -208,7 +208,7 @@ class JpGraphErrObject
 {
 
     protected $iTitle = "JpGraph error: ";
-    protected $iDest = false;
+    protected $iDest  = false;
 
 
     public function __construct()
@@ -234,7 +234,7 @@ class JpGraphErrObject
                 error_log($this->iTitle . $aMsg);
             } else {
                 $str = '[' . date('r') . '] ' . $this->iTitle . $aMsg . "\n";
-                $f = @fopen($this->iDest, 'a');
+                $f   = @fopen($this->iDest, 'a');
                 if ($f) {
                     @fwrite($f, $str);
                     @fclose($f);
@@ -304,7 +304,7 @@ class JpGraphErrObjectImg extends JpGraphErrObject
             die($this->iTitle . ' ' . $aMsg);
         }
 
-        $aMsg = wordwrap($aMsg, 55);
+        $aMsg  = wordwrap($aMsg, 55);
         $lines = substr_count($aMsg, "\n");
 
         // Create the error icon GD

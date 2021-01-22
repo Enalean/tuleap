@@ -41,9 +41,9 @@ if ($action == 'permissions_frs_package') {
     $vGroupId = new Valid_GroupId();
     $vGroupId->required();
     if ($request->valid($vPackageId) && $request->valid($vGroupId)) {
-        $package_id = $request->get('package_id');
-        $group_id   = $request->get('group_id');
-        $project    = ProjectManager::instance()->getProject($group_id);
+        $package_id         = $request->get('package_id');
+        $group_id           = $request->get('group_id');
+        $project            = ProjectManager::instance()->getProject($group_id);
         $package_controller = new FRSPackageController(
             FRSPackageFactory::instance(),
             FRSReleaseFactory::instance(),
@@ -64,9 +64,9 @@ if ($action == 'permissions_frs_package') {
         $vGroupId = new Valid_GroupId();
         $vGroupId->required();
         if ($request->valid($vReleaseId) && $request->valid($vGroupId)) {
-            $group_id   = $request->get('group_id');
-            $release_id = $request->get('release_id');
-            $project    = ProjectManager::instance()->getProject($group_id);
+            $group_id           = $request->get('group_id');
+            $release_id         = $request->get('release_id');
+            $project            = ProjectManager::instance()->getProject($group_id);
             $release_controller = new FRSReleaseController(
                 FRSReleaseFactory::instance(),
                 new User_ForgeUserGroupFactory(new UserGroupDao()),
@@ -92,12 +92,12 @@ if ($action == 'permissions_frs_package') {
                 $request->valid($vGroupId) &&
                 $request->valid($vPackageId)
             ) {
-                $name = $request->get('name');
+                $name       = $request->get('name');
                 $package_id = $request->get('package_id');
                 $date       = $request->get('date');
                 $group_id   = $request->get('group_id');
-                $validator = new FRSValidator();
-                $release =  [
+                $validator  = new FRSValidator();
+                $release    =  [
                     'name' => $name,
                     'package_id' => $package_id,
                     'date' => $date
@@ -107,7 +107,7 @@ if ($action == 'permissions_frs_package') {
                     $header = ['valid' => true];
                 } else {
                     //frs non valid
-                    $errors = $validator->getErrors();
+                    $errors   = $validator->getErrors();
                     $feedback = new Feedback();
                     $feedback->log('error', $errors[0]);
                     $header = ['valid' => false, 'msg' => $feedback->fetch()];
@@ -137,8 +137,8 @@ if ($action == 'permissions_frs_package') {
                     $date       = $request->get('date');
                     $group_id   = $request->get('group_id');
                     $release_id = $request->get('release_id');
-                    $validator = new FRSValidator();
-                    $release =  [
+                    $validator  = new FRSValidator();
+                    $release    =  [
                         'name' => $name,
                         'release_id' => $release_id,
                         'package_id' => $package_id,
@@ -149,7 +149,7 @@ if ($action == 'permissions_frs_package') {
                         $header = ['valid' => true];
                     } else {
                         //frs non valid
-                        $errors = $validator->getErrors();
+                        $errors   = $validator->getErrors();
                         $feedback = new Feedback();
                         $feedback->log('error', $errors[0]);
                         $header = ['valid' => false, 'msg' => $feedback->fetch()];
@@ -158,11 +158,11 @@ if ($action == 'permissions_frs_package') {
                 }
             } else {
                 if ($action == 'refresh_file_list') {
-                    $project = $request->getProject();
-                    $frsff = new FRSFileFactory();
-                    $file_list = $frsff->getUploadedFileNames($project);
+                    $project             = $request->getProject();
+                    $frsff               = new FRSFileFactory();
+                    $file_list           = $frsff->getUploadedFileNames($project);
                     $available_ftp_files = implode(",", $file_list);
-                    $purifier = Codendi_HTMLPurifier::instance();
+                    $purifier            = Codendi_HTMLPurifier::instance();
                     $available_ftp_files = $purifier->purify($available_ftp_files, CODENDI_PURIFIER_JS_DQUOTE);
                     echo '{"valid":true, "msg":"' . $available_ftp_files . '"}';
                 }

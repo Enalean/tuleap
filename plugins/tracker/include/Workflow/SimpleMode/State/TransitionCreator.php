@@ -50,9 +50,9 @@ class TransitionCreator
         TransitionReplicator $conditions_replicator,
         TransitionExtractor $transition_extractor
     ) {
-        $this->transition_factory         = $transition_factory;
-        $this->transition_replicator      = $conditions_replicator;
-        $this->transition_extractor       = $transition_extractor;
+        $this->transition_factory    = $transition_factory;
+        $this->transition_replicator = $conditions_replicator;
+        $this->transition_extractor  = $transition_extractor;
     }
 
     /**

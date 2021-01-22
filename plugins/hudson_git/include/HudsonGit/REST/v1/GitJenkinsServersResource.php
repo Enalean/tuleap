@@ -41,9 +41,9 @@ use UserManager;
 
 final class GitJenkinsServersResource extends AuthenticatedResource
 {
-    private const DEFAULT_LIMIT = 10;
-    private const MAX_LIMIT = 50;
-    private const DEFAULT_OFFSET  = 0;
+    private const DEFAULT_LIMIT  = 10;
+    private const MAX_LIMIT      = 50;
+    private const DEFAULT_OFFSET = 0;
 
     /**
      * @var UserManager
@@ -121,7 +121,7 @@ final class GitJenkinsServersResource extends AuthenticatedResource
         int $limit = self::DEFAULT_LIMIT,
         int $offset = self::DEFAULT_OFFSET
     ): JenkinsServerRepresentationCollection {
-        $user = $this->user_manager->getCurrentUser();
+        $user    = $this->user_manager->getCurrentUser();
         $project = $this->project_manager->getProject($id);
 
         $this->checkAccess();
@@ -136,7 +136,7 @@ final class GitJenkinsServersResource extends AuthenticatedResource
             $limit,
             $offset
         );
-        $total = $this->jenkins_server_dao->foundRows();
+        $total   = $this->jenkins_server_dao->foundRows();
 
         foreach ($results as $server) {
             $servers[] = new JenkinsServer(

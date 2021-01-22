@@ -51,10 +51,10 @@ class ProjectCrossTrackerSearch extends Widget
         );
 
         $request = HTTPRequest::instance();
-        $user   = $request->getCurrentUser();
+        $user    = $request->getCurrentUser();
 
         $permission_checker = new WidgetPermissionChecker(new CrossTrackerReportDao(), \ProjectManager::instance());
-        $is_admin = $permission_checker->isUserWidgetAdmin($user, $this->content_id);
+        $is_admin           = $permission_checker->isUserWidgetAdmin($user, $this->content_id);
 
         return $renderer->renderToString(
             'project-cross-tracker-search',

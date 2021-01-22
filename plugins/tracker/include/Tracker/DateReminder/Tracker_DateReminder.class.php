@@ -247,9 +247,9 @@ class Tracker_DateReminder
      */
     public function getRecipients(Artifact $artifact)
     {
-        $recipients    = [];
-        $ugroups       = $this->getUgroups(true);
-        $roles         = $this->getRoles();
+        $recipients = [];
+        $ugroups    = $this->getUgroups(true);
+        $roles      = $this->getRoles();
         if (! empty($ugroups)) {
             $recipients = array_merge($recipients, $this->getRecipientsFromUgroups());
         }
@@ -268,7 +268,7 @@ class Tracker_DateReminder
      */
     private function getRecipientsFromUgroups()
     {
-        $recipients = [];
+        $recipients    = [];
         $uGroupManager = new UGroupManager();
         $ugroups       = $this->getUgroups(true);
         foreach ($ugroups as $ugroupId) {
@@ -343,12 +343,12 @@ class Tracker_DateReminder
      */
     public function getUgroupsLabel()
     {
-        $ugroupsLabel   = '';
-        $ugroupManager  = $this->getUGroupManager();
-        $ugroups        = explode(',', $this->ugroups);
+        $ugroupsLabel  = '';
+        $ugroupManager = $this->getUGroupManager();
+        $ugroups       = explode(',', $this->ugroups);
         if (! empty($ugroups)) {
             foreach ($ugroups as $ugroup) {
-                $ugroupsLabel  .= ' "' . \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroupManager->getById($ugroup)->getName()) . ' "';
+                $ugroupsLabel .= ' "' . \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroupManager->getById($ugroup)->getName()) . ' "';
             }
         }
         return $ugroupsLabel;
@@ -361,10 +361,10 @@ class Tracker_DateReminder
      */
     public function getRolesLabel()
     {
-        $rolesLabel   = '';
-        $roles        = $this->getRoles();
+        $rolesLabel = '';
+        $roles      = $this->getRoles();
         foreach ($roles as $role) {
-            $rolesLabel  .= ' "' . $role->getLabel() . ' "';
+            $rolesLabel .= ' "' . $role->getLabel() . ' "';
         }
         return $rolesLabel;
     }

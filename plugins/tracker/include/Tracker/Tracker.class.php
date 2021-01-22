@@ -98,12 +98,12 @@ use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
 class Tracker implements Tracker_Dispatchable_Interface
 {
-    public const PERMISSION_ADMIN               = 'PLUGIN_TRACKER_ADMIN';
-    public const PERMISSION_FULL                = 'PLUGIN_TRACKER_ACCESS_FULL';
-    public const PERMISSION_ASSIGNEE            = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
-    public const PERMISSION_SUBMITTER           = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
-    public const PERMISSION_NONE                = 'PLUGIN_TRACKER_NONE';
-    public const PERMISSION_SUBMITTER_ONLY      = 'PLUGIN_TRACKER_ACCESS_SUBMITTER_ONLY';
+    public const PERMISSION_ADMIN          = 'PLUGIN_TRACKER_ADMIN';
+    public const PERMISSION_FULL           = 'PLUGIN_TRACKER_ACCESS_FULL';
+    public const PERMISSION_ASSIGNEE       = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
+    public const PERMISSION_SUBMITTER      = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
+    public const PERMISSION_NONE           = 'PLUGIN_TRACKER_NONE';
+    public const PERMISSION_SUBMITTER_ONLY = 'PLUGIN_TRACKER_ACCESS_SUBMITTER_ONLY';
 
     public const NOTIFICATIONS_LEVEL_DEFAULT       = 0;
     public const NOTIFICATIONS_LEVEL_DISABLED      = 1;
@@ -170,8 +170,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     // they are not used after the import
     public $tooltip;
     public $cannedResponses = [];
-    public $formElements = [];
-    public $reports = [];
+    public $formElements    = [];
+    public $reports         = [];
     public $workflow;
     public $webhooks = [];
     /**
@@ -532,7 +532,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function fetchAdminFormElements()
     {
-        $html = '';
+        $html  = '';
         $html .= '<div id="tracker-admin-fields" class="tracker-admin-group">';
         foreach ($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchAdmin($this);
@@ -543,7 +543,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function fetchFormElementsMasschange()
     {
-        $html = '';
+        $html  = '';
         $html .= '<table class="masschange-tracker-artifact"><tr><td>';
         foreach ($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchSubmitMasschange();
@@ -577,7 +577,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         //TODO: log the admin actions (add a formElement, ...) ?
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $func = (string) $request->get('func');
         switch ($func) {
             case 'new-artifact':
@@ -892,7 +892,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $hp = Codendi_HTMLPurifier::instance();
                 $hp->purify($name);
 
-                $report = new Tracker_Report(0, $name, 'Public rapport', 0, 0, null, false, $this->getId(), 1, false, '', null, 0);
+                $report           = new Tracker_Report(0, $name, 'Public rapport', 0, 0, null, false, $this->getId(), 1, false, '', null, 0);
                 $report->criteria = [];
 
                 $this->getReportFactory()->saveObject($this->id, $report);
@@ -994,7 +994,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         //If no default one, take the first private one
         if (! $report) {
             $report_for_user = $this->getReportFactory()->getReportsByTrackerId($this->id, $current_user->getid());
-            $report = array_shift($report_for_user);
+            $report          = array_shift($report_for_user);
         }
 
         $link_artifact_id = (int) $request->get('link-artifact-id');
@@ -1165,7 +1165,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             );
 
             if ($this->userCanSubmitArtifact($this->getUserManager()->getCurrentUser())) {
-                $link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
+                $link_presenter_builder                         = new TrackerNewDropdownLinkPresenterBuilder();
                 $params['new_dropdown_current_context_section'] = new NewDropdownLinkSectionPresenter(
                     sprintf(dgettext("tuleap-tracker", "%s tracker"), $this->getItemName()),
                     [
@@ -1195,8 +1195,8 @@ class Tracker implements Tracker_Dispatchable_Interface
         $tracker_crumb = EventManager::instance()->dispatch(new TrackerCrumbInContext($this, $user));
         assert($tracker_crumb instanceof TrackerCrumbInContext);
 
-        $crumb = $tracker_crumb->getCrumb(TrackerCrumbInContext::TRACKER_CRUMB_IDENTIFIER);
-        $sub_items = $crumb->getSubItems();
+        $crumb             = $tracker_crumb->getCrumb(TrackerCrumbInContext::TRACKER_CRUMB_IDENTIFIER);
+        $sub_items         = $crumb->getSubItems();
         $existing_sections = $sub_items->getSections();
 
         $links_collection = new BreadCrumbLinkCollection([]);
@@ -1238,7 +1238,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             );
             $admin_breadcrumb->setDataAttribute("test", "link-to-current-tracker-administration");
 
-            $admin_sections[]           = new SubItemsSection(
+            $admin_sections[] = new SubItemsSection(
                 '',
                 new BreadCrumbLinkCollection([$admin_breadcrumb])
             );
@@ -1281,7 +1281,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->buildAndDisplayAdministrationHeader($layout, $title, [], $params);
         $this->IncludeTrackerEmailCopyPasteJavascriptForFlamingParrot();
 
-        $items = [];
+        $items            = [];
         $event_parameters = ["items" => &$items, "tracker_id" => $this->id];
         EventManager::instance()->processEvent(TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
 
@@ -1298,7 +1298,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     ) {
         $this->buildAndDisplayAdministrationHeader($layout, $title, $breadcrumbs, $params);
 
-        $items = [];
+        $items            = [];
         $event_parameters = ["items" => &$items, "tracker_id" => $this->id];
         EventManager::instance()->processEvent(TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
 
@@ -1357,7 +1357,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayWarningGeneralsettings();
         $this->displayAdminItemHeader($layout, 'editoptions', dgettext('tuleap-tracker', 'General settings'));
         $cannot_configure_instantiate_for_new_projects = false;
-        $params = ['cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects, 'tracker' => $this];
+        $params                                        = ['cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects, 'tracker' => $this];
         EventManager::instance()->processEvent(TRACKER_EVENT_GENERAL_SETTINGS, $params);
         $this->renderer->renderToPage(
             'tracker-general-settings',
@@ -1418,9 +1418,9 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $this->formElementFactory->displayFactories($this);
 
-        $w = new Widget_Static(dgettext('tuleap-tracker', 'Unused elements'));
-        $unused_elements_content = '';
-        $unused_elements_content = dgettext('tuleap-tracker', 'Below is a catalog of preconfigured elements ready for use.');
+        $w                        = new Widget_Static(dgettext('tuleap-tracker', 'Unused elements'));
+        $unused_elements_content  = '';
+        $unused_elements_content  = dgettext('tuleap-tracker', 'Below is a catalog of preconfigured elements ready for use.');
         $unused_elements_content .= '<div class="tracker-admin-palette-content"><table>';
         foreach (Tracker_FormElementFactory::instance()->getUnusedFormElementForTracker($this) as $f) {
             $unused_elements_content .= $f->fetchAdminAdd();
@@ -1524,8 +1524,8 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     protected function editOptions(HTTPRequest $request): void
     {
-        $previous_shortname = $this->getItemName();
-        $previous_public_name      = $this->getName();
+        $previous_shortname   = $this->getItemName();
+        $previous_public_name = $this->getName();
 
         $reference_manager                = ReferenceManager::instance();
         $tracker_general_settings_checker = new TrackerGeneralSettingsChecker(
@@ -1534,8 +1534,8 @@ class Tracker implements Tracker_Dispatchable_Interface
         );
 
         $validated_tracker_color = $request->get('tracker_color');
-        $validated_public_name = trim($request->getValidated('name', 'string', ''));
-        $validated_short_name  = trim($request->getValidated('item_name', 'string', ''));
+        $validated_public_name   = trim($request->getValidated('name', 'string', ''));
+        $validated_short_name    = trim($request->getValidated('item_name', 'string', ''));
 
         try {
             $tracker_general_settings_checker->check(
@@ -1556,7 +1556,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
 
         $cannot_configure_instantiate_for_new_projects = false;
-        $params = [
+        $params                                        = [
             'cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects,
             'tracker'                                       => $this
         ];
@@ -1564,9 +1564,9 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $this->name            = $validated_public_name;
         $request_tracker_color = $validated_tracker_color;
-        $this->item_name                    = $validated_short_name;
+        $this->item_name       = $validated_short_name;
 
-        $this->description     = trim($request->getValidated('description', 'text', ''));
+        $this->description                  = trim($request->getValidated('description', 'text', ''));
         $this->allow_copy                   = $request->getValidated('allow_copy') ? 1 : 0;
         $this->enable_emailgateway          = $request->getValidated('enable_emailgateway') ? 1 : 0;
         $this->submit_instructions          = $request->getValidated('submit_instructions', 'text', '');
@@ -1801,7 +1801,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         if (! $this->cache_permissions) {
             $this->cache_permissions = [];
-            $perm_dao = new Tracker_PermDao();
+            $perm_dao                = new Tracker_PermDao();
             if ($dar = $perm_dao->searchAccessPermissionsByTrackerId($this->getId())) {
                 while ($row = $dar->getRow()) {
                     $this->cache_permissions[$row['ugroup_id']][] = $row['permission_type'];
@@ -1854,7 +1854,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         if (! $this->cached_permission_authorized_ugroups || empty($this->cached_permission_authorized_ugroups)) {
             $this->cached_permission_authorized_ugroups = [];
-            $perm_dao = new Tracker_PermDao();
+            $perm_dao                                   = new Tracker_PermDao();
 
             if ($dar = $perm_dao->searchAccessPermissionsByTrackerId($this->getId())) {
                 while ($row = $dar->getRow()) {
@@ -1952,7 +1952,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function userCanSubmitArtifact($user = false)
     {
         if (! $user instanceof PFUser) {
-            $um = UserManager::instance();
+            $um   = UserManager::instance();
             $user = $um->getCurrentUser();
         }
 
@@ -2000,7 +2000,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function userHasFullAccess($user = false)
     {
         if (! ($user instanceof PFUser)) {
-            $um = UserManager::instance();
+            $um   = UserManager::instance();
             $user = $um->getCurrentUser();
         }
         if ($user->isSuperUser() || $user->isMember($this->getGroupId(), 'A')) {
@@ -2118,7 +2118,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
 
         // semantic
-        $tsm = $this->getTrackerSemanticManager();
+        $tsm   = $this->getTrackerSemanticManager();
         $child = $xmlElem->addChild('semantics');
         $tsm->exportToXML($child, $xmlMapping);
 
@@ -2159,7 +2159,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $webhook_xml_exporter->exportTrackerWebhooksInXML($xmlElem, $this);
 
         // permissions
-        $node_perms       = $xmlElem->addChild('permissions');
+        $node_perms      = $xmlElem->addChild('permissions');
         $project_ugroups = $this->getUGroupRetrieverWithLegacy()->getProjectUgroupIds($this->getProject());
         // tracker permissions
         if ($permissions = $this->getPermissionsByUgroupId()) {
@@ -2215,7 +2215,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     private function getCSVFields(array $header)
     {
-        $fef = $this->getFormElementFactory();
+        $fef    = $this->getFormElementFactory();
         $fields = [];
         foreach ($header as $field_name) {
             if ($field_name !== 'aid') {
@@ -2238,7 +2238,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             $current_user = UserManager::instance()->getCurrentUser();
         }
 
-        $separator = ",";   // by default, comma.
+        $separator                 = ",";   // by default, comma.
         $separator_csv_export_pref = $current_user->getPreference('user_csv_separator');
         switch ($separator_csv_export_pref) {
             case "comma":
@@ -2284,8 +2284,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $separator = $this->_getCSVSeparator($current_user);
 
                 $is_valid = true;
-                $i = 0;
-                $lines = [];
+                $i        = 0;
+                $lines    = [];
                 while ($line = fgetcsv($f, 0, $separator)) {
                     if ($line === false) {
                         $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Error in CSV file at line %1$s'), $i));
@@ -2307,25 +2307,25 @@ class Tracker implements Tracker_Dispatchable_Interface
                         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
                         //body
                         if (count($lines) > 1) {
-                            $html_table = '';
+                            $html_table  = '';
                             $html_table .= '<table class="table csv-import-preview">';
                             $html_table .=  '<thead>';
-                            $header = array_shift($lines);
+                            $header      = array_shift($lines);
                             $html_table .=  '<tr class="boxtable">';
                             $html_table .=  '<th class="boxtitle"></th>';
-                            $fields = $this->getCSVFields($header);
+                            $fields      = $this->getCSVFields($header);
 
                             foreach ($header as $field_name) {
                                 $html_table .=  '<th class="boxtitle tracker_report_table_column">';
                                 $html_table .=  $purifier->purify($field_name);
                                 $html_table .=  '</th>';
                             }
-                            $html_table .=  '</tr>';
-                            $html_table .=  '</thead>';
-                            $html_table .=  '<tbody>';
-                            $nb_lines = 0;
+                            $html_table          .=  '</tr>';
+                            $html_table          .=  '</thead>';
+                            $html_table          .=  '<tbody>';
+                            $nb_lines             = 0;
                             $nb_artifact_creation = 0;
-                            $nb_artifact_update = 0;
+                            $nb_artifact_update   = 0;
                             foreach ($lines as $line_number => $data_line) {
                                 if ($nb_lines % 2 == 0) {
                                     $tr_class = 'boxitem';
@@ -2334,10 +2334,10 @@ class Tracker implements Tracker_Dispatchable_Interface
                                 }
                                 $html_table .= '<tr class="' . $tr_class . '">';
                                 $html_table .= '<td style="color:gray;">' . ($line_number + 1) . '</td>';
-                                $mode = 'creation';
+                                $mode        = 'creation';
                                 foreach ($data_line as $idx => $data_cell) {
                                     if ($fields[$idx] && is_a($fields[$idx], 'Tracker_FormElement_Field')) {
-                                        $field  = $fields[$idx];
+                                        $field          = $fields[$idx];
                                         $displayed_data = $field->getFieldDataForCSVPreview($data_cell);
                                     } else {
                                         // else: this cell is an 'aid' cell
@@ -2470,7 +2470,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function isValidCSV($lines, $separator)
     {
-        $is_valid = true;
+        $is_valid    = true;
         $header_line = array_shift($lines);
 
         if (count($header_line) == 1) {
@@ -2495,7 +2495,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function hasUnknownAid($header_line, $lines)
     {
         $has_unknown = false;
-        $aid_key = array_search('aid', $header_line);
+        $aid_key     = array_search('aid', $header_line);
         //Update mode
         if ($aid_key !== false) {
             foreach ($lines as $line) {
@@ -2520,14 +2520,14 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function hasBlockingError($header_line, $lines)
     {
         $has_blocking_error = false;
-        $fef = $this->getFormElementFactory();
-        $aid_key = array_search('aid', $header_line);
-        $af = $this->getTrackerArtifactFactory();
-        $artifact = null;
-        $hp       = Codendi_HTMLPurifier::instance();
+        $fef                = $this->getFormElementFactory();
+        $aid_key            = array_search('aid', $header_line);
+        $af                 = $this->getTrackerArtifactFactory();
+        $artifact           = null;
+        $hp                 = Codendi_HTMLPurifier::instance();
 
-        $unknown_fields   = [];
-        $error_nature     = [];
+        $unknown_fields = [];
+        $error_nature   = [];
         foreach ($lines as $cpt_line => $line) {
             $data = [];
             foreach ($header_line as $idx => $field_name) {
@@ -2561,7 +2561,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                             $artifact_id = 0;
                         }
 
-                        $artifact = $af->getInstanceFromRow(
+                        $artifact              = $af->getInstanceFromRow(
                             [
                                 'id'                       => $artifact_id,
                                 'tracker_id'               => $this->id,
@@ -2639,9 +2639,9 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function isMissingRequiredFields($header_line, $lines)
     {
         $is_missing = false;
-        $fields = [];
-        $fef = $this->getFormElementFactory();
-        $fields = $fef->getUsedFields($this);
+        $fields     = [];
+        $fef        = $this->getFormElementFactory();
+        $fields     = $fef->getUsedFields($this);
         foreach ($fields as $field) {
             if ($field->isRequired()) {
                 $key = array_search($field->getName(), $header_line);
@@ -2672,7 +2672,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     protected function aidExists($aid)
     {
-        $af = $this->getTrackerArtifactFactory();
+        $af       = $this->getTrackerArtifactFactory();
         $artifact = $af->getArtifactById($aid);
         if ($artifact) {
             if ($artifact->getTrackerId() == $this->getId()) {
@@ -2699,11 +2699,11 @@ class Tracker implements Tracker_Dispatchable_Interface
             } else {
                 $send_notifications = false;
             }
-            $fields = $this->getCSVFields($header);
-            $af = Tracker_ArtifactFactory::instance();
-            $nb_lines = 0;
+            $fields               = $this->getCSVFields($header);
+            $af                   = Tracker_ArtifactFactory::instance();
+            $nb_lines             = 0;
             $nb_artifact_creation = 0;
-            $nb_artifact_update = 0;
+            $nb_artifact_update   = 0;
             foreach ($lines as $line_number => $data_line) {
                 $mode        = 'creation';
                 $fields_data = [];
@@ -3144,7 +3144,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     private function getArtifactXMLImporterForArtifactCopy(Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger)
     {
-        $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator(
+        $fields_validator = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator(
             $this->getFormElementFactory(),
             $this->getArtifactLinkValidator()
         );
@@ -3307,7 +3307,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     private function getNewChangesetFieldsValidator(): Tracker_Artifact_Changeset_NewChangesetFieldsValidator
     {
-        $frozen_field_detector = new FrozenFieldDetector(
+        $frozen_field_detector   = new FrozenFieldDetector(
             new TransitionRetriever(
                 new StateFactory(
                     TransitionFactory::instance(),

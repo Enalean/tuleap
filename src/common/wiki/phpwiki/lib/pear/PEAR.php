@@ -282,11 +282,11 @@ class PEAR
     public function setErrorHandling($mode = null, $options = null)
     {
         if (isset($this)) {
-            $setmode     = &$this->_default_error_mode;
-            $setoptions  = &$this->_default_error_options;
+            $setmode    = &$this->_default_error_mode;
+            $setoptions = &$this->_default_error_options;
         } else {
-            $setmode     = &$GLOBALS['_PEAR_default_error_mode'];
-            $setoptions  = &$GLOBALS['_PEAR_default_error_options'];
+            $setmode    = &$GLOBALS['_PEAR_default_error_mode'];
+            $setoptions = &$GLOBALS['_PEAR_default_error_options'];
         }
 
         switch ($mode) {
@@ -296,7 +296,7 @@ class PEAR
             case PEAR_ERROR_DIE:
             case PEAR_ERROR_EXCEPTION:
             case null:
-                $setmode = $mode;
+                $setmode    = $mode;
                 $setoptions = $options;
                 break;
 
@@ -497,7 +497,7 @@ class PEAR
         if ($mode === null) {
             // Class error handler
             if (isset($this) && isset($this->_default_error_mode)) {
-                $mode = $this->_default_error_mode;
+                $mode        = $this->_default_error_mode;
                     $options = $this->_default_error_options;
             // Global error handler
             } elseif (isset($GLOBALS['_PEAR_default_error_mode'])) {
@@ -561,10 +561,10 @@ class PEAR
     {
         $stack = &$GLOBALS['_PEAR_error_handler_stack'];
         if (isset($this)) {
-            $def_mode = &$this->_default_error_mode;
+            $def_mode    = &$this->_default_error_mode;
             $def_options = &$this->_default_error_options;
         } else {
-            $def_mode = &$GLOBALS['_PEAR_default_error_mode'];
+            $def_mode    = &$GLOBALS['_PEAR_default_error_mode'];
             $def_options = &$GLOBALS['_PEAR_default_error_options'];
         }
             $stack[] = [$def_mode, $def_options];
@@ -704,18 +704,18 @@ class PEAR_Error
         if ($mode === null) {
             $mode = PEAR_ERROR_RETURN;
         }
-        $this->message   = $message;
-        $this->code      = $code;
-        $this->mode      = $mode;
-        $this->userinfo  = $userinfo;
+        $this->message  = $message;
+        $this->code     = $code;
+        $this->mode     = $mode;
+        $this->userinfo = $userinfo;
         if ($mode & PEAR_ERROR_CALLBACK) {
-            $this->level = E_USER_NOTICE;
+            $this->level    = E_USER_NOTICE;
             $this->callback = $options;
         } else {
             if ($options === null) {
                 $options = E_USER_NOTICE;
             }
-            $this->level = $options;
+            $this->level    = $options;
             $this->callback = null;
         }
         if ($this->mode & PEAR_ERROR_PRINT) {
@@ -901,7 +901,7 @@ class PEAR_Error
      */
     public function toString()
     {
-        $modes = [];
+        $modes  = [];
         $levels = [E_USER_NOTICE  => 'notice',
                         E_USER_WARNING => 'warning',
                         E_USER_ERROR   => 'error'];

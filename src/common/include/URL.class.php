@@ -83,7 +83,7 @@ class URL
             if (strpos($req_uri, '/viewvc.php/') !== false) {
                 $this_proj_name = $this->getGroupNameFromSVNUrl($req_uri);
             } elseif (strpos($req_uri, '/projects/') !== false) {
-                $pieces = explode("/", $url);
+                $pieces         = explode("/", $url);
                 $this_proj_name = $pieces[2];
             }
             //Project short name validation
@@ -91,7 +91,7 @@ class URL
             if ($rule->containsIllegalChars($this_proj_name)) {
                 return false;
             }
-            $dao = $this->getProjectDao();
+            $dao         = $this->getProjectDao();
             $dao_results = $dao->searchByUnixGroupName($this_proj_name);
             if ($dao_results->rowCount() < 1) {// project does not exist
                 return false;
@@ -103,8 +103,8 @@ class URL
         if (strpos($req_uri, '/forum/') === 0) {
             if (array_key_exists('forum_id', $_REQUEST) && $_REQUEST['forum_id']) {
                 // Get corresponding project
-                $dao = $this->getForumDao();
-                $result = $dao->searchByGroupForumId($_REQUEST['forum_id']);
+                $dao      = $this->getForumDao();
+                $result   = $dao->searchByGroupForumId($_REQUEST['forum_id']);
                 $group_id = $result->getRow();
                 $group_id = $group_id['group_id'];
 
@@ -116,8 +116,8 @@ class URL
 
             if (array_key_exists('msg_id', $_REQUEST) && $_REQUEST['msg_id']) {
                 // Get corresponding project
-                $dao = $this->getForumDao();
-                $row = $dao->getMessageProjectIdAndForumId($_REQUEST['msg_id']);
+                $dao      = $this->getForumDao();
+                $row      = $dao->getMessageProjectIdAndForumId($_REQUEST['msg_id']);
                 $group_id = $row['group_id'];
                 $forum_id = $row['group_forum_id'];
 
@@ -132,8 +132,8 @@ class URL
         // Artifact attachment download...
         if (strpos($req_uri, '/tracker/download.php') === 0) {
             if (isset($_REQUEST['artifact_id'])) {
-                $dao = $this->getArtifactDao();
-                $result = $dao->searchArtifactId($_REQUEST['artifact_id']);
+                $dao      = $this->getArtifactDao();
+                $result   = $dao->searchArtifactId($_REQUEST['artifact_id']);
                 $group_id = $result->getRow();
                 $group_id = $group_id['group_id'];
             }
@@ -160,8 +160,8 @@ class URL
 
     private function getGroupIdForNewsFromForumId($forum_id)
     {
-        $dao = $this->getNewsBytesDao();
-        $result = $dao->searchByForumId($forum_id);
+        $dao      = $this->getNewsBytesDao();
+        $result   = $dao->searchByForumId($forum_id);
         $group_id = $result->getRow();
         return $group_id['group_id'];
     }

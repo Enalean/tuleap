@@ -43,7 +43,7 @@ class PROFTPD_UPDATE_ACL extends \SystemEvent
 
     public function injectDependencies(Admin\ACLUpdater $acl_updater, Admin\PermissionsManager $permissions_manager, ProjectManager $project_manager, $ftp_directory)
     {
-        $this->acl_updater             = $acl_updater;
+        $this->acl_updater         = $acl_updater;
         $this->ftp_directory       = $ftp_directory;
         $this->permissions_manager = $permissions_manager;
         $this->project_manager     = $project_manager;
@@ -51,7 +51,7 @@ class PROFTPD_UPDATE_ACL extends \SystemEvent
 
     public function process()
     {
-        $project     = $this->getProjectFromParameters();
+        $project = $this->getProjectFromParameters();
         $this->acl_updater->recursivelyApplyACL(
             $this->getDirectoryPath($project),
             \ForgeConfig::get('sys_http_user'),

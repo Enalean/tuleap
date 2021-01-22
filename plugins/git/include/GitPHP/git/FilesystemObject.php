@@ -270,7 +270,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
         $path = $this->path;
 
         while (($pos = strrpos($path, '/')) !== false) {
-            $path = substr($path, 0, $pos);
+            $path     = substr($path, 0, $pos);
             $pathhash = $this->commit->PathToHash($path);
             if (! empty($pathhash)) {
                 $parent = $this->GetProject()->GetTree($pathhash);

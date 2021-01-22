@@ -45,7 +45,7 @@ final class ProjectAdministratorCheckerTest extends TestCase
             ->once()
             ->andReturn(104)
             ->getMock();
-        $user = M::mock(\PFUser::class)->shouldReceive('isAdmin')
+        $user    = M::mock(\PFUser::class)->shouldReceive('isAdmin')
             ->with(104)
             ->once()
             ->andReturnFalse()
@@ -61,7 +61,7 @@ final class ProjectAdministratorCheckerTest extends TestCase
             ->once()
             ->andReturn(104)
             ->getMock();
-        $user = M::mock(\PFUser::class)->shouldReceive('isAdmin')
+        $user    = M::mock(\PFUser::class)->shouldReceive('isAdmin')
             ->with(104)
             ->once()
             ->andReturnTrue()

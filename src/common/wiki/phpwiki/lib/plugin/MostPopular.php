@@ -81,13 +81,13 @@ class WikiPlugin_MostPopular extends WikiPlugin
 
         if (! $request->getArg('count')) {
             //$args['count'] = $dbi->numPages(false,$exclude);
-            $allpages = $dbi->mostPopular(0, $sortby);
+            $allpages      = $dbi->mostPopular(0, $sortby);
             $args['count'] = $allpages->count();
         } else {
             $args['count'] = $request->getArg('count');
         }
         //$dbi->touch();
-        $pages = $dbi->mostPopular($limit, $sortby);
+        $pages    = $dbi->mostPopular($limit, $sortby);
         $pagelist = new PageList($columns, $exclude, $args);
         while ($page = $pages->next()) {
             $hits = $page->get('hits');

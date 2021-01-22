@@ -799,14 +799,14 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
     {
         $date = 'christmas eve';
 
-        $criteria  = Mockery::mock(Tracker_Report_Criteria::class);
+        $criteria = Mockery::mock(Tracker_Report_Criteria::class);
         $values   = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_BETWEEN
         ];
 
         $field = $this->getDateField();
-        $res = $field->setCriteriaValueFromREST($criteria, $values);
+        $res   = $field->setCriteriaValueFromREST($criteria, $values);
         $this->assertFalse($res);
     }
 }

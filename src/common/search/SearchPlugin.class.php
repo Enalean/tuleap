@@ -36,7 +36,7 @@ class Search_SearchPlugin
 
     public function search(Search_SearchQuery $query, Search_SearchResults $results)
     {
-        $params   = [
+        $params = [
             'query'   => $query,
             'results' => $results,
         ];

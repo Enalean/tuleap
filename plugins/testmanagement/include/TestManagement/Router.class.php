@@ -277,7 +277,7 @@ class Router
     private function getService(Codendi_Request $request)
     {
         if ($this->service == null) {
-            $project = $request->getProject();
+            $project       = $request->getProject();
             $this->service = $project->getService('plugin_testmanagement');
         }
         if ($this->service === null) {

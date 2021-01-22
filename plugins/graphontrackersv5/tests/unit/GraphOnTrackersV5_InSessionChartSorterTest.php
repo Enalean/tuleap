@@ -51,7 +51,7 @@ class GraphOnTrackersV5_InSessionChartSorterTest extends TestCase
         $this->pie      = \Mockery::spy(\GraphOnTrackersV5_Chart_Pie::class);
         $this->bar      = \Mockery::spy(\GraphOnTrackersV5_Chart_Bar::class);
         $this->burndown = \Mockery::spy(\GraphOnTrackersV5_Chart_Burndown::class);
-        $this->charts = [
+        $this->charts   = [
             $this->pie,
             $this->bar,
             $this->burndown
@@ -74,7 +74,7 @@ class GraphOnTrackersV5_InSessionChartSorterTest extends TestCase
     private function expectOrder()
     {
         $charts_in_order = func_get_args();
-        $i = 0;
+        $i               = 0;
         foreach ($charts_in_order as $chart) {
             $this->$chart->shouldReceive('setRank')->with($i)->once();
             $this->session->shouldReceive('set');

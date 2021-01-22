@@ -95,7 +95,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
      */
     public function tracker_event_manage_semantics($parameters) // @codingStandardsIgnoreLine
     {
-        $tracker = $parameters['tracker'];
+        $tracker   = $parameters['tracker'];
         $semantics = $parameters['semantics'];
         \assert($semantics instanceof Tracker_SemanticCollection);
 
@@ -124,7 +124,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $velocity = SemanticVelocity::load($event->getTracker());
 
         if ($velocity->getVelocityField()) {
-            $semantic_url = TRACKER_BASE_URL . "?" . http_build_query(
+            $semantic_url  = TRACKER_BASE_URL . "?" . http_build_query(
                 [
                     "tracker"  => $event->getTracker()->getId(),
                     "func"     => "admin-semantic",
@@ -141,7 +141,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     public function cssfile($params)
     {
         if ($this->isInAdminSemantics()) {
-            $css_file_url         = $this->getAssets()->getFileURL('style-fp.css');
+            $css_file_url = $this->getAssets()->getFileURL('style-fp.css');
 
             echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
         }
@@ -173,8 +173,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function beforeEvent(BeforeEvent $before_event)
     {
-        $tracker           = $before_event->getArtifact()->getTracker();
-        $semantic_status   = Tracker_Semantic_Status::load($tracker);
+        $tracker         = $before_event->getArtifact()->getTracker();
+        $semantic_status = Tracker_Semantic_Status::load($tracker);
         if (! $semantic_status->getField() || $semantic_status->getField()->isMultiple()) {
             return;
         }

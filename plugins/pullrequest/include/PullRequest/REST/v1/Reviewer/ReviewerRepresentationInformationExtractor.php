@@ -34,7 +34,7 @@ final class ReviewerRepresentationInformationExtractor
 
     public function __construct(UserRESTReferenceRetriever $user_rest_reference_retriever)
     {
-        $this->user_rest_reference_retriever   = $user_rest_reference_retriever;
+        $this->user_rest_reference_retriever = $user_rest_reference_retriever;
     }
 
     /**

@@ -95,7 +95,7 @@ class Tracker_Artifact_MailGateway_CitationStripper
 
     private function getContentInsideBody(DOMDocument $doc)
     {
-        $xml = simplexml_import_dom($doc);
+        $xml     = simplexml_import_dom($doc);
         $content = '';
         foreach ($xml->body->children() as $child) {
             $content .= $child->asXML();

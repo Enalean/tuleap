@@ -89,10 +89,10 @@ class WriteMailController implements DispatchableWithRequest
             }
         }
 
-        $params['title'] = 'ForumML';
-        $params['group'] = $group_id;
+        $params['title']  = 'ForumML';
+        $params['group']  = $group_id;
         $params['toptab'] = 'mail';
-        $params['help'] = "collaboration.html#mailing-lists";
+        $params['help']   = "collaboration.html#mailing-lists";
         mail_header($params, $request->getCurrentUser());
 
         $purifier = \Codendi_HTMLPurifier::instance();

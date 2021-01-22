@@ -33,9 +33,9 @@ final class Tracker_Artifact_ChangesetValue_IntegerTest extends \PHPUnit\Framewo
 
     public function testIntegers(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $field    = Mockery::mock(Tracker_FormElement_Field_Integer::class);
         $changest = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $integer = new Tracker_Artifact_ChangesetValue_Integer(111, $changest, $field, false, 42);
+        $integer  = new Tracker_Artifact_ChangesetValue_Integer(111, $changest, $field, false, 42);
         $this->assertSame(42, $integer->getInteger());
 
         $string_int = new Tracker_Artifact_ChangesetValue_Integer(111, $changest, $field, false, '55');
@@ -48,10 +48,10 @@ final class Tracker_Artifact_ChangesetValue_IntegerTest extends \PHPUnit\Framewo
 
     public function testNoDiff(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $field    = Mockery::mock(Tracker_FormElement_Field_Integer::class);
         $changest = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $int_1 = new Tracker_Artifact_ChangesetValue_Integer(111, $changest, $field, false, 54);
-        $int_2 = new Tracker_Artifact_ChangesetValue_Integer(111, $changest, $field, false, 54);
+        $int_1    = new Tracker_Artifact_ChangesetValue_Integer(111, $changest, $field, false, 54);
+        $int_2    = new Tracker_Artifact_ChangesetValue_Integer(111, $changest, $field, false, 54);
         $this->assertFalse($int_1->diff($int_2));
         $this->assertFalse($int_2->diff($int_1));
     }
@@ -71,9 +71,9 @@ final class Tracker_Artifact_ChangesetValue_IntegerTest extends \PHPUnit\Framewo
         $field->shouldReceive('getId')->andReturn(10);
         $field->shouldReceive('getLabel')->andReturn("integer");
 
-        $user  = Mockery::mock(PFUser::class);
+        $user = Mockery::mock(PFUser::class);
 
-        $changeset = new Tracker_Artifact_ChangesetValue_Integer(111, Mockery::mock(Tracker_Artifact_Changeset::class), $field, true, 556);
+        $changeset      = new Tracker_Artifact_ChangesetValue_Integer(111, Mockery::mock(Tracker_Artifact_Changeset::class), $field, true, 556);
         $representation = $changeset->getRESTValue($user);
 
         $this->assertEquals(556, $representation->value);

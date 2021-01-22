@@ -27,7 +27,7 @@ class LockCreateRequestTest extends TestCase
 
     public function testParsingRequest()
     {
-        $json = <<<JSON
+        $json         = <<<JSON
 {
   "path": "test/testFile.png",
   "ref": {
@@ -50,7 +50,7 @@ JSON;
   "path": "test/testFile.png"
 }
 JSON;
-        $lock_request = LockCreateRequest::buildFromJSONString($json_without_ref);
+        $lock_request     = LockCreateRequest::buildFromJSONString($json_without_ref);
 
         $this->assertSame('test/testFile.png', $lock_request->getPath());
         $this->assertNull($lock_request->getReference());

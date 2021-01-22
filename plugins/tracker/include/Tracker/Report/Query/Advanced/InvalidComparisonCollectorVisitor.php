@@ -133,24 +133,24 @@ class InvalidComparisonCollectorVisitor implements Visitor
         InvalidMetadata\NotInComparisonChecker $metadata_not_in_comparison_checker,
         InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor
     ) {
-        $this->field_equal_comparison_visitor                    = $field_equal_comparison_visitor;
-        $this->field_not_equal_comparison_visitor                = $field_not_equal_comparison_visitor;
-        $this->field_lesser_than_comparison_visitor              = $field_lesser_than_comparison_visitor;
-        $this->field_greater_than_comparison_visitor             = $field_greater_than_comparison_visitor;
-        $this->field_lesser_than_or_equal_comparison_visitor     = $field_lesser_than_or_equal_comparison_visitor;
-        $this->field_greater_than_or_equal_comparison_visitor    = $field_greater_than_or_equal_comparison_visitor;
-        $this->field_between_comparison_visitor                  = $field_between_comparison_visitor;
-        $this->field_in_comparison_visitor                       = $field_in_comparison_visitor;
-        $this->field_not_in_comparison_visitor                   = $field_not_in_comparison_visitor;
-        $this->invalid_searchable_collector_visitor              = $invalid_searchable_collector_visitor;
-        $this->metadata_equal_comparison_checker                 = $metadata_equal_comparison_checker;
-        $this->metadata_not_equal_comparison_checker             = $metadata_not_equal_comparison_checker;
-        $this->metadata_lesser_than_comparison_checker           = $metadata_lesser_than_comparison_checker;
-        $this->metadata_greater_than_comparison_checker          = $metadata_greater_than_comparison_checker;
-        $this->metadata_lesser_than_or_equal_comparison_checker  = $metadata_lesser_than_or_equal_comparison_checker;
-        $this->metadata_between_comparison_checker               = $metadata_between_comparison_checker;
-        $this->metadata_in_comparison_checker                    = $metadata_in_comparison_checker;
-        $this->metadata_not_in_comparison_checker                = $metadata_not_in_comparison_checker;
+        $this->field_equal_comparison_visitor                   = $field_equal_comparison_visitor;
+        $this->field_not_equal_comparison_visitor               = $field_not_equal_comparison_visitor;
+        $this->field_lesser_than_comparison_visitor             = $field_lesser_than_comparison_visitor;
+        $this->field_greater_than_comparison_visitor            = $field_greater_than_comparison_visitor;
+        $this->field_lesser_than_or_equal_comparison_visitor    = $field_lesser_than_or_equal_comparison_visitor;
+        $this->field_greater_than_or_equal_comparison_visitor   = $field_greater_than_or_equal_comparison_visitor;
+        $this->field_between_comparison_visitor                 = $field_between_comparison_visitor;
+        $this->field_in_comparison_visitor                      = $field_in_comparison_visitor;
+        $this->field_not_in_comparison_visitor                  = $field_not_in_comparison_visitor;
+        $this->invalid_searchable_collector_visitor             = $invalid_searchable_collector_visitor;
+        $this->metadata_equal_comparison_checker                = $metadata_equal_comparison_checker;
+        $this->metadata_not_equal_comparison_checker            = $metadata_not_equal_comparison_checker;
+        $this->metadata_lesser_than_comparison_checker          = $metadata_lesser_than_comparison_checker;
+        $this->metadata_greater_than_comparison_checker         = $metadata_greater_than_comparison_checker;
+        $this->metadata_lesser_than_or_equal_comparison_checker = $metadata_lesser_than_or_equal_comparison_checker;
+        $this->metadata_between_comparison_checker              = $metadata_between_comparison_checker;
+        $this->metadata_in_comparison_checker                   = $metadata_in_comparison_checker;
+        $this->metadata_not_in_comparison_checker               = $metadata_not_in_comparison_checker;
     }
 
     public function collectErrors(

@@ -40,8 +40,8 @@ class ByFieldFieldListPresenter
 
     public function __construct(int $id, string $name, bool $is_selected)
     {
-        $this->id = $id;
-        $this->name = $name;
+        $this->id          = $id;
+        $this->name        = $name;
         $this->is_selected = $is_selected;
     }
 }

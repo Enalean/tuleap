@@ -39,7 +39,7 @@ final class Hierarchy
     public function __construct(int $program_tracker_id, array $team_backlog_ids)
     {
         $this->program_tracker_id = $program_tracker_id;
-        $this->team_backlog_ids    = $team_backlog_ids;
+        $this->team_backlog_ids   = $team_backlog_ids;
     }
 
     public function getProgramTrackerId(): int

@@ -59,7 +59,7 @@ class KanbanXMLExporter
      */
     public function export(SimpleXMLElement $xml_element, Project $project): void
     {
-        $kanban_title     = $this->configuration_dao->getKanbanTitle($project->getID());
+        $kanban_title = $this->configuration_dao->getKanbanTitle($project->getID());
         if (! $kanban_title) {
             return;
         }

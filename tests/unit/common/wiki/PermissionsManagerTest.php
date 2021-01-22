@@ -41,7 +41,7 @@ class Wiki_PermissionsManagerTest extends TestCase
     {
         parent::setUp();
 
-        $this->project   = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('perceval')->getMock();
+        $this->project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('perceval')->getMock();
         $this->project->shouldReceive('getId')->andReturns(200);
 
         $this->wiki_page = \Mockery::spy(\Tuleap\PHPWiki\WikiPage::class)->shouldReceive('getId')->andReturns(101)->getMock();

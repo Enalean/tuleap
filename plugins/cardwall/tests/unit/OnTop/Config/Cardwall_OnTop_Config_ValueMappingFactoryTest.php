@@ -30,12 +30,12 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \PHPUnit\Frame
         parent::setUp();
         $element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
-        $this->dao      = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
-        $this->factory  = new Cardwall_OnTop_Config_ValueMappingFactory($element_factory, $this->dao);
+        $this->dao     = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
+        $this->factory = new Cardwall_OnTop_Config_ValueMappingFactory($element_factory, $this->dao);
 
-        $this->field_123    = Mockery::mock(Tracker_FormElement_Field::class);
+        $this->field_123 = Mockery::mock(Tracker_FormElement_Field::class);
         $this->field_123->shouldReceive('getId')->andReturn(123);
-        $this->field_124    = Mockery::mock(Tracker_FormElement_Field::class);
+        $this->field_124 = Mockery::mock(Tracker_FormElement_Field::class);
         $this->field_124->shouldReceive('getId')->andReturn(124);
         $this->status_field = Mockery::mock(Tracker_FormElement_Field::class);
         $this->status_field->shouldReceive('getId')->andReturn(125);
@@ -48,14 +48,14 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \PHPUnit\Frame
         $element_factory->shouldReceive('getFieldById')->with(124)->andReturns($this->field_124);
         $element_factory->shouldReceive('getFieldById')->with(125)->andReturns($this->status_field);
 
-        $group_id           = 234;
-        $this->tracker      = Mockery::mock(Tracker::class);
+        $group_id      = 234;
+        $this->tracker = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(3);
         $this->tracker->shouldReceive('getGroupId')->andReturn($group_id);
-        $this->tracker_10   = Mockery::mock(Tracker::class);
+        $this->tracker_10 = Mockery::mock(Tracker::class);
         $this->tracker_10->shouldReceive('getId')->andReturn(10);
         $this->tracker_10->shouldReceive('getStatusField')->andReturn($this->status_field);
-        $this->tracker_20   = Mockery::mock(Tracker::class);
+        $this->tracker_20 = Mockery::mock(Tracker::class);
         $this->tracker_20->shouldReceive('getId')->andReturn(20);
 
         $this->dao->shouldReceive('searchMappingFieldValues')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
@@ -113,19 +113,19 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \PHPUnit\Frame
     {
         $element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
-        $dao      = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
-        $factory  = new Cardwall_OnTop_Config_ValueMappingFactory($element_factory, $dao);
+        $dao     = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
+        $factory = new Cardwall_OnTop_Config_ValueMappingFactory($element_factory, $dao);
 
         $field_124 = Mockery::spy(Tracker_FormElement_Field::class);
         $field_124->shouldReceive('getId')->andReturn(124);
 
         $element_factory->shouldReceive('getFieldById')->with(124)->andReturns($field_124);
 
-        $group_id           = 234;
-        $tracker = Mockery::mock(Tracker::class);
+        $group_id = 234;
+        $tracker  = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(3);
         $tracker->shouldReceive('getGroupId')->andReturn($group_id);
-        $tracker_20   = Mockery::mock(Tracker::class);
+        $tracker_20 = Mockery::mock(Tracker::class);
         $tracker_20->shouldReceive('getId')->andReturn(20);
 
         $dao->shouldReceive('searchMappingFieldValues')->with($tracker->getId())->andReturns(\TestHelper::arrayToDar([

@@ -135,10 +135,10 @@ class WikiPlugin_Template extends WikiPlugin
             $r = $p->getCurrentRevision();
         }
         $initial_content = $r->getPackedContent();
-        $c = explode("\n", $initial_content);
+        $c               = explode("\n", $initial_content);
 
         if ($section) {
-            $c = extractSection($section, $c, $page, $quiet, $sectionhead);
+            $c               = extractSection($section, $c, $page, $quiet, $sectionhead);
             $initial_content = implode("\n", $c);
         }
 
@@ -154,7 +154,7 @@ class WikiPlugin_Template extends WikiPlugin
             if (! empty($vars)) {
                 foreach (preg_split("/&/D", $vars) as $pair) {
                     list($key,$val) = preg_split("/=/D", $pair);
-                    $var[$key] = $val;
+                    $var[$key]      = $val;
                 }
             }
             $thispage = $dbi->getPage($basepage);
@@ -164,7 +164,7 @@ class WikiPlugin_Template extends WikiPlugin
             }
             // those are overridable
             if (empty($var['mtime']) and preg_match('/%%mtime%%/', $initial_content)) {
-                $thisrev  = $thispage->getCurrentRevision(false);
+                $thisrev      = $thispage->getCurrentRevision(false);
                 $var['mtime'] = $GLOBALS['WikiTheme']->formatDateTime($thisrev->get('mtime'));
             }
             if (empty($var['ctime']) and preg_match('/%%ctime%%/', $initial_content)) {

@@ -100,34 +100,34 @@ class XmlParser
     public function tag_open($parser, $name, $attrs = '')
     {
         $this->_tag = strtolower($name);
-        $node = new XmlElement($this->_tag);
+        $node       = new XmlElement($this->_tag);
         if (is_string($attrs) and ! empty($attrs)) {
             // lowercase attr names
             foreach (preg_split('/ /D', $attrs) as $pair) {
                 if (strstr($pair, "=")) {
-                    list($key,$val) = preg_split('/=/D', $pair);
-                    $key = strtolower(trim($key));
-                    $val = str_replace(['"', "'"], '', trim($val));
+                    list($key,$val)    = preg_split('/=/D', $pair);
+                    $key               = strtolower(trim($key));
+                    $val               = str_replace(['"', "'"], '', trim($val));
                     $node->_attr[$key] = $val;
                 } else {
-                    $key = str_replace(['"', "'"], '', strtolower(trim($pair)));
+                    $key               = str_replace(['"', "'"], '', strtolower(trim($pair)));
                     $node->_attr[$key] = $key;
                 }
             }
         } elseif (! empty($attrs) and is_array($attrs)) {
             foreach ($attrs as $key => $val) {
-                $key = strtolower(trim($key));
-                $val = str_replace(['"', "'"], '', trim($val));
+                $key               = strtolower(trim($key));
+                $val               = str_replace(['"', "'"], '', trim($val));
                 $node->_attr[$key] = $val;
             }
         }
         if (! is_null($this->current)) {
             $this->current->_content[] = $node;    // copy or ref?
-            $node->parent = $this->current;       // ref
+            $node->parent              = $this->current;       // ref
         }
         $this->current = $node;              // ref
         if (empty($this->root)) {
-            $this->root = $node;              // ref for === test below
+            $this->root                 = $node;              // ref for === test below
             $GLOBALS['xml_parser_root'] = $this->root;  // copy
         }
     }

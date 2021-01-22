@@ -42,7 +42,7 @@ class StateFactory
 
     public function __construct(TransitionFactory $transition_factory, SimpleWorkflowDao $simple_workflow_dao)
     {
-        $this->transition_factory = $transition_factory;
+        $this->transition_factory  = $transition_factory;
         $this->simple_workflow_dao = $simple_workflow_dao;
     }
 

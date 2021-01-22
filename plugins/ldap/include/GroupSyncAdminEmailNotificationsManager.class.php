@@ -74,10 +74,10 @@ class GroupSyncAdminEmailNotificationsManager implements GroupSyncNotificationsM
             return;
         }
 
-        $to_add = $this->getUsersFromIds($to_add);
+        $to_add    = $this->getUsersFromIds($to_add);
         $to_remove = $this->getUsersFromIds($to_remove);
 
-        $admins = $project->getAdmins();
+        $admins       = $project->getAdmins();
         $project_name = $project->getPublicName();
 
         $this->sendMailToAdmins($admins, $project, $to_add, $to_remove);
@@ -125,7 +125,7 @@ class GroupSyncAdminEmailNotificationsManager implements GroupSyncNotificationsM
     private function setLocalizedMailAttributes(\PFUser $receiver, \Project $project, array $to_add, array $to_remove)
     {
         $current_locale = $this->user_manager->getCurrentUser()->getLocale();
-        $user_locale = $receiver->getLocale();
+        $user_locale    = $receiver->getLocale();
 
         setlocale(LC_CTYPE, "$user_locale.UTF-8");
         setlocale(LC_MESSAGES, "$user_locale.UTF-8");

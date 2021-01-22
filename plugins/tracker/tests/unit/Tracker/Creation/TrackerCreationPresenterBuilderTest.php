@@ -90,7 +90,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->tracker_factory  = \Mockery::mock(\TrackerFactory::class);
         $this->jira_runner      = \Mockery::mock(JiraRunner::class);
 
-        $this->builder         = new TrackerCreationPresenterBuilder(
+        $this->builder = new TrackerCreationPresenterBuilder(
             $this->project_manager,
             $this->tracker_dao,
             $this->pending_jira_dao,
@@ -130,7 +130,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
         $expected_list_of_existing_trackers = ['names' => [], 'shortnames' => []];
-        $expected_template = new TrackerCreationPresenter(
+        $expected_template                  = new TrackerCreationPresenter(
             [],
             [],
             $expected_list_of_existing_trackers,
@@ -164,7 +164,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
         $expected_list_of_existing_trackers = ['names' => [], 'shortnames' => []];
-        $expected_template = new TrackerCreationPresenter(
+        $expected_template                  = new TrackerCreationPresenter(
             [],
             [],
             $expected_list_of_existing_trackers,
@@ -199,7 +199,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
         $expected_list_of_existing_trackers = ['names' => [], 'shortnames' => []];
-        $expected_template = new TrackerCreationPresenter(
+        $expected_template                  = new TrackerCreationPresenter(
             [],
             [],
             $expected_list_of_existing_trackers,
@@ -249,7 +249,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
         $expected_list_of_existing_trackers = ['names' => [], 'shortnames' => []];
-        $expected_template = new TrackerCreationPresenter(
+        $expected_template                  = new TrackerCreationPresenter(
             [
                 new TrackerTemplatesRepresentation('default-activity', 'Activities', 'Description', 'fiesta-red'),
                 new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'Description', 'clockwork-orange')
@@ -318,7 +318,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                 $tracker_user_admin
             ]);
 
-        $tracker_bugs = new TrackerTemplatesRepresentation('1', 'request', 'Description', 'peggy-pink');
+        $tracker_bugs  = new TrackerTemplatesRepresentation('1', 'request', 'Description', 'peggy-pink');
         $tracker_epics = new TrackerTemplatesRepresentation('2', 'stories', 'Description', 'sherwood-green');
 
         $project_template[] = new ProjectTemplatesRepresentation(

@@ -29,9 +29,9 @@ class SVN_RepositoryListingGetSvnPathTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->svnlook = \Mockery::spy(\SVN_Svnlook::class);
-        $this->svn_perms_mgr = \Mockery::spy(\SVN_PermissionsManager::class);
-        $this->user_manager  = \Mockery::spy(\UserManager::class);
+        $this->svnlook          = \Mockery::spy(\SVN_Svnlook::class);
+        $this->svn_perms_mgr    = \Mockery::spy(\SVN_PermissionsManager::class);
+        $this->user_manager     = \Mockery::spy(\UserManager::class);
         $this->svn_repo_listing = new SVN_RepositoryListing($this->svn_perms_mgr, $this->svnlook, $this->user_manager);
     }
 

@@ -45,8 +45,8 @@ final class OAuth2RefreshTokenTest extends TestCase
 
     public function testBuildsRefreshTokenWithAReducedSetOfScopes(): void
     {
-        $scope              = OAuth2TestScope::fromItself();
-        $scope_test_refresh = $this->buildTestScopeRefreshToken();
+        $scope                 = OAuth2TestScope::fromItself();
+        $scope_test_refresh    = $this->buildTestScopeRefreshToken();
         $initial_refresh_token = OAuth2RefreshToken::createWithASetOfScopes(
             13,
             [$scope, $scope_test_refresh]

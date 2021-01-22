@@ -75,7 +75,7 @@ class Git_Backend_GitoliteTest extends TestCase
 
     public function testItSavesForkInfoIntoDB(): void
     {
-        $name  = 'tuleap';
+        $name          = 'tuleap';
         $old_namespace = '';
         $new_namespace = 'u/johanm/ericsson';
         $new_repo_path = "gpig/$new_namespace/$name.git";
@@ -89,7 +89,7 @@ class Git_Backend_GitoliteTest extends TestCase
         $old_repo->setProject($project);
 
         $backend = \Mockery::mock(\Git_Backend_Gitolite::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(GitDao::class);
+        $dao     = \Mockery::spy(GitDao::class);
         $backend->setDao($dao);
 
         $backend->shouldReceive('clonePermissions')->with($old_repo, $new_repo)->once();
@@ -101,13 +101,13 @@ class Git_Backend_GitoliteTest extends TestCase
 
     public function testForkClonesRepository(): void
     {
-        $name  = 'tuleap';
+        $name          = 'tuleap';
         $old_namespace = '';
         $new_namespace = 'u/johanm/ericsson';
         $new_repo_path = "gpig/$new_namespace/$name.git";
 
-        $driver     = \Mockery::spy(\Git_GitoliteDriver::class);
-        $project    = \Mockery::spy(\Project::class);
+        $driver  = \Mockery::spy(\Git_GitoliteDriver::class);
+        $project = \Mockery::spy(\Project::class);
 
         $project->shouldReceive('getUnixName')->andReturns('gpig');
 
@@ -143,12 +143,12 @@ class Git_Backend_GitoliteTest extends TestCase
         $namespace        = '';
         $new_repo_path    = "$new_project_name/$namespace/$repo_name.git";
 
-        $driver     = \Mockery::spy(\Git_GitoliteDriver::class);
+        $driver = \Mockery::spy(\Git_GitoliteDriver::class);
 
-        $new_project    = \Mockery::spy(\Project::class);
+        $new_project = \Mockery::spy(\Project::class);
         $new_project->shouldReceive('getUnixName')->andReturns($new_project_name);
 
-        $old_project    = \Mockery::spy(\Project::class);
+        $old_project = \Mockery::spy(\Project::class);
         $old_project->shouldReceive('getUnixName')->andReturns('garden');
 
         $new_repo = $this->givenAGitRepoWithNameAndNamespace($repo_name, $namespace);
@@ -177,13 +177,13 @@ class Git_Backend_GitoliteTest extends TestCase
 
     public function testForkWithTargetPathAlreadyExistingShouldNotFork(): void
     {
-        $name  = 'tuleap';
+        $name          = 'tuleap';
         $old_namespace = '';
         $new_namespace = 'u/johanm/ericsson';
         $new_repo_path = "gpig/$new_namespace/$name.git";
 
-        $driver     = \Mockery::spy(\Git_GitoliteDriver::class);
-        $dao        = \Mockery::spy(GitDao::class);
+        $driver = \Mockery::spy(\Git_GitoliteDriver::class);
+        $dao    = \Mockery::spy(GitDao::class);
 
         $new_repo = $this->givenAGitRepoWithNameAndNamespace($name, $new_namespace);
         $new_repo->setPath($new_repo_path);
@@ -231,7 +231,7 @@ class Git_Backend_GitoliteTest extends TestCase
         $new->shouldReceive('getId')->andReturns($new_repo_id);
         $new->shouldReceive('getProject')->andReturns($project);
 
-        $backend  = $this->givenABackendGitolite();
+        $backend = $this->givenABackendGitolite();
 
         $permissionsManager = $backend->getPermissionsManager();
         $permissionsManager->shouldReceive('duplicateWithStatic')->with($old_repo_id, $new_repo_id, Git::allPermissionTypes())->once();
@@ -273,7 +273,7 @@ class Git_Backend_GitoliteTest extends TestCase
         $new->shouldReceive('getId')->andReturns($new_repo_id);
         $new->shouldReceive('getProject')->andReturns($new_project);
 
-        $backend  = $this->givenABackendGitolite();
+        $backend = $this->givenABackendGitolite();
 
         $permissionsManager = $backend->getPermissionsManager();
         $permissionsManager->shouldReceive('duplicateWithoutStatic')->with($old_repo_id, $new_repo_id, Git::allPermissionTypes())->once();
@@ -301,7 +301,7 @@ class Git_Backend_GitoliteTest extends TestCase
         $dao                = \Mockery::spy(GitDao::class);
         $permissionsManager = \Mockery::spy(\PermissionsManager::class);
         $gitPlugin          = \Mockery::mock(GitPlugin::class);
-        $backend = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), \Mockery::spy(\Psr\Log\LoggerInterface::class));
+        $backend            = new Git_Backend_Gitolite($driver, \Mockery::spy(GitoliteAccessURLGenerator::class), \Mockery::spy(\Psr\Log\LoggerInterface::class));
         $backend->setDao($dao);
         $backend->setPermissionsManager($permissionsManager);
         $backend->setGitPlugin($gitPlugin);

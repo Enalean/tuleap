@@ -101,7 +101,7 @@ class ProjectBacklogResource
             $this->planning_factory
         );
 
-        $this->milestone_factory      = new Planning_MilestoneFactory(
+        $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
             Tracker_ArtifactFactory::instance(),
             $tracker_form_element_factory,

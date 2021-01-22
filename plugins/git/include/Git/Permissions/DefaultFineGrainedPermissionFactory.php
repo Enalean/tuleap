@@ -373,7 +373,7 @@ class DefaultFineGrainedPermissionFactory
         $permissions = [];
 
         foreach ($this->dao->searchDefaultBranchesFineGrainedPermissions($project->getID()) as $row) {
-            $permission    = $this->getInstanceFromRow($row);
+            $permission                        = $this->getInstanceFromRow($row);
             $permissions[$permission->getId()] = $permission;
         }
 
@@ -385,7 +385,7 @@ class DefaultFineGrainedPermissionFactory
         $permissions = [];
 
         foreach ($this->dao->searchDefaultTagsFineGrainedPermissions($project->getID()) as $row) {
-            $permission    = $this->getInstanceFromRow($row);
+            $permission                        = $this->getInstanceFromRow($row);
             $permissions[$permission->getId()] = $permission;
         }
 

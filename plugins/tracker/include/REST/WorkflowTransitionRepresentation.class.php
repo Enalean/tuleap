@@ -42,7 +42,7 @@ class WorkflowTransitionRepresentation
 
     public function build($id, $from_id, $to_id)
     {
-        $this->id = JsonCast::toInt($id);
+        $this->id      = JsonCast::toInt($id);
         $this->from_id = JsonCast::toInt($from_id);
         $this->to_id   = JsonCast::toInt($to_id);
     }

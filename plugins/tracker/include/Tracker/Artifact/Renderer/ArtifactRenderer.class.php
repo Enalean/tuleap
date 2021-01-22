@@ -138,7 +138,7 @@ abstract class Tracker_Artifact_ArtifactRenderer
      */
     public function fetchAnonymousEmailForm()
     {
-        $html = '<p>';
+        $html  = '<p>';
         $html .= sprintf(dgettext('tuleap-tracker', '<strong><span class="highlight">You Are NOT Logged In<br />Please <a href="%1$s">log in,</a> so update notifications can be emailed to you.</span></strong><br />If you don\'t have a user account, then enter your email address instead:'), '/account/login.php?return_to=' . urlencode($_SERVER['REQUEST_URI']));
         $html .= '<br />';
         $html .= '<input type="text" name="email" id="email" size="50" maxsize="100" />';

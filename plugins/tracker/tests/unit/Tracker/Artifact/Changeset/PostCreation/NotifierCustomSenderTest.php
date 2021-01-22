@@ -60,20 +60,20 @@ class NotifierCustomSenderTest extends TestCase
     {
         parent::setUp();
 
-        $logger                          = \Mockery::mock(LoggerInterface::class);
-        $this->recipients_manager        = \Mockery::mock(RecipientsManager::class);
+        $logger                   = \Mockery::mock(LoggerInterface::class);
+        $this->recipients_manager = \Mockery::mock(RecipientsManager::class);
 
-        $this->mail_gateway_config       = \Mockery::mock(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig::class);
+        $this->mail_gateway_config = \Mockery::mock(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig::class);
         $this->mail_gateway_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturn(false);
         $this->mail_gateway_config->shouldReceive('isInsecureEmailgatewayEnabled')->andReturn(false);
 
         $config_notification_assigned_to = \Mockery::mock(ConfigNotificationAssignedTo::class);
         $config_notification_assigned_to->shouldReceive('isAssignedToSubjectEnabled')->andReturn(false);
 
-        $this->recipient_factory         = \Mockery::mock(Tracker_Artifact_MailGateway_RecipientFactory::class);
-        $user_helper                     = \Mockery::spy(UserHelper::class);
-        $this->mail_sender               = \Mockery::mock(MailSender::class);
-        $this->custom_email_sender       = \Mockery::mock(\Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender::class);
+        $this->recipient_factory   = \Mockery::mock(Tracker_Artifact_MailGateway_RecipientFactory::class);
+        $user_helper               = \Mockery::spy(UserHelper::class);
+        $this->mail_sender         = \Mockery::mock(MailSender::class);
+        $this->custom_email_sender = \Mockery::mock(\Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender::class);
 
         $tracker = \Mockery::spy(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
@@ -158,7 +158,7 @@ class NotifierCustomSenderTest extends TestCase
 
     public function testFetchesTheCorrectlyFormattedSenderFieldWhenEnabled()
     {
-        $messages = $this->getMessagesForRecipients(true);
+        $messages  = $this->getMessagesForRecipients(true);
         $formatter = new ConfigNotificationEmailCustomSenderFormatter([$this->default_format_var => $this->default_format_value]);
         foreach ($messages as $message) {
             $this->assertNotEquals(strpos($message['from'], $formatter->formatString($this->default_format)), false);
@@ -167,7 +167,7 @@ class NotifierCustomSenderTest extends TestCase
 
     public function testDoesNotFetchCustomSendersWhenDisabled()
     {
-        $messages = $this->getMessagesForRecipients(false);
+        $messages  = $this->getMessagesForRecipients(false);
         $formatter = new ConfigNotificationEmailCustomSenderFormatter([$this->default_format_var => $this->default_format_value]);
         foreach ($messages as $message) {
             $this->assertEquals(strpos($message['from'], $formatter->formatString($this->default_format)), false);

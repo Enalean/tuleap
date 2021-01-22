@@ -49,7 +49,7 @@ class SVN_SOAPServer
     ) {
         $this->soap_request_validator = $soap_request_validator;
         $this->svn_repository_listing = $svn_repository_listing;
-        $this->dispatcher = $dispatcher;
+        $this->dispatcher             = $dispatcher;
     }
 
     /**
@@ -118,7 +118,7 @@ class SVN_SOAPServer
     public function getSvnPathsWithLogDetails($sessionKey, $group_id, $path, $sort)
     {
         try {
-            $data = [];
+            $data         = [];
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);

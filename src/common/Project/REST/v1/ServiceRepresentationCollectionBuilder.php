@@ -44,7 +44,7 @@ class ServiceRepresentationCollectionBuilder
      */
     public function getServiceRepresentationCollectionForProject(Project $project, PFUser $user): array
     {
-        $collection = [];
+        $collection       = [];
         $allowed_services = $this->service_manager->getListOfAllowedServicesForProject($project);
         foreach ($allowed_services as $service) {
             if (! $this->isServiceReadable($service, $user)) {

@@ -74,7 +74,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
     ) {
         $gerrit_project_name = $this->getGerritProjectName($repository);
         $this->logger->info("Gerrit REST driver: Create project $gerrit_project_name");
-        $request = $this->request_factory->createRequest(
+        $request  = $this->request_factory->createRequest(
             'PUT',
             $this->getGerritURL($server, '/projects/' . urlencode($gerrit_project_name))
         )->withHeader(self::HEADER_CONTENT_TYPE, self::MIME_JSON)
@@ -400,7 +400,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         string $ssh_key
     ): void {
         $this->logger->info("Gerrit REST driver: Add ssh key for user " . $user->getSSHUserName());
-        $response = $this->sendRequest(
+        $response             = $this->sendRequest(
             $server,
             $this->request_factory->createRequest(
                 'POST',

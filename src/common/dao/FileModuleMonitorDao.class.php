@@ -25,7 +25,7 @@ class FileModuleMonitorDao extends DataAccessObject
     public function whoIsMonitoringPackageByID($group_id, $package_id)
     {
         $_package_id = (int) $package_id;
-        $_group_id = (int) $group_id;
+        $_group_id   = (int) $group_id;
 
         $sql = sprintf(
             "SELECT u.email,u.user_id,p.name "
@@ -85,7 +85,7 @@ class FileModuleMonitorDao extends DataAccessObject
             $option = "AND anonymous = 0";
         }
         $_package_id = (int) $package_id;
-        $_user_id = $user->getID();
+        $_user_id    = $user->getID();
 
         return $this->_search(' fm.filemodule_id = ' . $this->da->escapeInt($_package_id) . ' AND fm.user_id =' . $this->da->escapeInt($_user_id) . ' ' . $option, '', ' ORDER BY filemodule_id DESC');
     }
@@ -112,8 +112,8 @@ class FileModuleMonitorDao extends DataAccessObject
      */
     public function create($filemodule_id, PFUser $user, $anonymous = true)
     {
-        $arg      = [];
-        $values   = [];
+        $arg    = [];
+        $values = [];
 
         $arg[]    = 'filemodule_id';
         $values[] = ($this->da->escapeInt($filemodule_id));
@@ -124,7 +124,7 @@ class FileModuleMonitorDao extends DataAccessObject
         $arg[]    = 'anonymous';
         $values[] = ($this->da->escapeInt($anonymous));
 
-        $sql      = "INSERT INTO filemodule_monitor
+        $sql = "INSERT INTO filemodule_monitor
                      (" . implode(", ", $arg) . ")
                      VALUES (" . implode(", ", $values) . ")";
         return $this->update($sql);

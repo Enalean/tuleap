@@ -39,7 +39,7 @@ class SystemEventsFollowersDao extends DataAccessObject
     public function searchByType($type)
     {
         $type = $this->da->quoteLikeValueSurround($type);
-        $sql = "SELECT *
+        $sql  = "SELECT *
                 FROM $this->table_name
                 WHERE types LIKE $type
                 ORDER BY id ASC";
@@ -50,7 +50,7 @@ class SystemEventsFollowersDao extends DataAccessObject
     {
         $emails = $this->da->quoteSmart($emails);
         $types  = $this->da->quoteSmart($types);
-        $sql = "INSERT INTO $this->table_name(emails, types)
+        $sql    = "INSERT INTO $this->table_name(emails, types)
                 VALUES ($emails, $types)";
 
         return $this->updateAndGetLastId($sql);
@@ -58,7 +58,7 @@ class SystemEventsFollowersDao extends DataAccessObject
 
     public function delete($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name
                 WHERE id = $id";
         return $this->update($sql);
@@ -66,10 +66,10 @@ class SystemEventsFollowersDao extends DataAccessObject
 
     public function save($id, $emails, $types)
     {
-        $id = $this->da->escapeInt($id);
+        $id     = $this->da->escapeInt($id);
         $emails = $this->da->quoteSmart($emails);
         $types  = $this->da->quoteSmart($types);
-        $sql = "UPDATE $this->table_name
+        $sql    = "UPDATE $this->table_name
                 SET emails = $emails,
                     types = $types
                 WHERE id = $id";

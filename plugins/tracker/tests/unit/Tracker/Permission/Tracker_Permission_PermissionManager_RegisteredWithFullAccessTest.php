@@ -70,7 +70,7 @@ final class Tracker_Permission_PermissionManager_RegisteredWithFullAccessTest ex
         ];
 
         $tracker_id = 112;
-        $project_id       = 34;
+        $project_id = 34;
         $tracker    = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturns($tracker_id);
         $tracker->shouldReceive('getGroupId')->andReturns($project_id);

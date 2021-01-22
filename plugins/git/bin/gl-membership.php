@@ -40,7 +40,7 @@ if (! isset($argv[1])) {
 }
 
 $ugroup_literalizer = new UGroupLiteralizer();
-$groups = $ugroup_literalizer->getUserGroupsForUserName($argv[1]);
+$groups             = $ugroup_literalizer->getUserGroupsForUserName($argv[1]);
 if (count($groups) > 0) {
     echo implode(' ', $groups) . PHP_EOL;
 }

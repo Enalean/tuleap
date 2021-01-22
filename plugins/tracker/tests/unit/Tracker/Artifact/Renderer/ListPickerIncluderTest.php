@@ -43,7 +43,7 @@ class ListPickerIncluderTest extends TestCase
         ];
 
         foreach ($legacy_user_agents as $user_agent_name) {
-            $request = $this->buildRequestFromUserAgent($user_agent_name);
+            $request             = $this->buildRequestFromUserAgent($user_agent_name);
             $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 42);
 
             $this->assertEquals(false, $will_include_assets);
@@ -54,7 +54,7 @@ class ListPickerIncluderTest extends TestCase
     {
         \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "1");
 
-        $request = $this->buildRequestFromUserAgent('Some modern browser UA');
+        $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
         $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 42);
 
         $this->assertEquals(true, $will_include_assets);
@@ -64,7 +64,7 @@ class ListPickerIncluderTest extends TestCase
     {
         \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "0");
 
-        $request = $this->buildRequestFromUserAgent('Some modern browser UA');
+        $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
         $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 42);
 
         $this->assertEquals(false, $will_include_assets);
@@ -74,7 +74,7 @@ class ListPickerIncluderTest extends TestCase
     {
         \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
 
-        $request = $this->buildRequestFromUserAgent('Some modern browser UA');
+        $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
         $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 1);
 
         $this->assertEquals(false, $will_include_assets);
@@ -84,7 +84,7 @@ class ListPickerIncluderTest extends TestCase
     {
         \ForgeConfig::set(ListPickerIncluder::FORGE_CONFIG_KEY, "t:1,2,3");
 
-        $request = $this->buildRequestFromUserAgent('Some modern browser UA');
+        $request             = $this->buildRequestFromUserAgent('Some modern browser UA');
         $will_include_assets = ListPickerIncluder::isListPickerEnabledAndBrowserCompatible($request, 42);
 
         $this->assertEquals(true, $will_include_assets);

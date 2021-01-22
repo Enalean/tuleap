@@ -57,8 +57,8 @@ class Docman_Link extends Docman_Document
     }
     public function toRow()
     {
-        $row = parent::toRow();
-        $row['link_url'] = $this->getUrl();
+        $row              = parent::toRow();
+        $row['link_url']  = $this->getUrl();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_LINK;
         return $row;
     }

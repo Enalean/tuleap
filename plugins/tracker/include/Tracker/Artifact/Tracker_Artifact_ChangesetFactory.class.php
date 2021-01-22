@@ -168,7 +168,7 @@ class Tracker_Artifact_ChangesetFactory
     private function setCommentsFromCache(array $cache, Tracker_Artifact_Changeset $changeset)
     {
         if (isset($cache[$changeset->getId()])) {
-            $row = $cache[$changeset->getId()];
+            $row     = $cache[$changeset->getId()];
             $comment = new Tracker_Artifact_Changeset_Comment(
                 $row['id'],
                 $changeset,

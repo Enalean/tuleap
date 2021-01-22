@@ -201,7 +201,7 @@ class _PageHistory_HtmlFormatter extends _RecentChanges_HtmlFormatter
                 )
             );
         } else {
-            $time = HTML::strong(['class' => 'pageinfo-majoredit'], $time);
+            $time       = HTML::strong(['class' => 'pageinfo-majoredit'], $time);
             $minor_flag = '';
         }
 
@@ -309,22 +309,22 @@ class WikiPlugin_PageHistory extends WikiPlugin_RecentChanges
 
     public function getDefaultFormArguments()
     {
-        $dflts = WikiPlugin_RecentChanges::getDefaultFormArguments();
+        $dflts              = WikiPlugin_RecentChanges::getDefaultFormArguments();
         $dflts['textinput'] = 'page';
         return $dflts;
     }
 
     public function getMostRecentParams($args)
     {
-        $params = WikiPlugin_RecentChanges::getMostRecentParams($args);
+        $params                          = WikiPlugin_RecentChanges::getMostRecentParams($args);
         $params['include_all_revisions'] = true;
         return $params;
     }
 
     public function getChanges($dbi, $args)
     {
-        $page = $dbi->getPage($args['page']);
-        $iter = $page->getAllRevisions();
+        $page   = $dbi->getPage($args['page']);
+        $iter   = $page->getAllRevisions();
         $params = $this->getMostRecentParams($args);
         return new _PageHistory_PageRevisionIter($iter, $params);
     }
@@ -349,13 +349,13 @@ class WikiPlugin_PageHistory extends WikiPlugin_RecentChanges
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
-        $args = $this->getArgs($argstr, $request);
+        $args     = $this->getArgs($argstr, $request);
         $pagename = $args['page'];
         if (empty($pagename)) {
             return $this->makeForm("", $request);
         }
 
-        $page = $dbi->getPage($pagename);
+        $page    = $dbi->getPage($pagename);
         $current = $page->getCurrentRevision();
         if ($current->getVersion() < 1) {
             return HTML(

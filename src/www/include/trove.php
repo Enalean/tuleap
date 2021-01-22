@@ -61,7 +61,7 @@ function trove_setnode($group_id, $trove_cat_id, $rootnode = 0)
 
     // need to see if this one is more specific than another
     // if so, delete the other and proceed with this insertion
-    $subnodeids = explode(' :: ', $row_verifycat['fullpath_ids']);
+    $subnodeids    = explode(' :: ', $row_verifycat['fullpath_ids']);
     $res_checksubs = db_query('SELECT trove_cat_id FROM trove_group_link WHERE '
     . 'group_id=' . db_ei($group_id) . ' AND trove_cat_root=' . db_ei($rootnode));
     while ($row_checksubs = db_fetch_array($res_checksubs)) {

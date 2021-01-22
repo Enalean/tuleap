@@ -39,7 +39,7 @@ final class TestPlanLinkedTestDefinitionsTest extends TestCase
 
     public function testStoreASubsetOfLinkedTestDefinitions(): void
     {
-        $artifacts = [
+        $artifacts               = [
             TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(
                 \Tuleap\Tracker\Artifact\Artifact::class
             )),

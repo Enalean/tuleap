@@ -148,11 +148,11 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
     public static function buildSelf(): self
     {
-        $event_manager   = EventManager::instance();
-        $user_manager    = \UserManager::instance();
-        $user_helper     = new UserHelper();
-        $ugroup_manager  = new UGroupManager();
-        $ugroup_binding  = new UGroupBinding(
+        $event_manager  = EventManager::instance();
+        $user_manager   = \UserManager::instance();
+        $user_helper    = new UserHelper();
+        $ugroup_manager = new UGroupManager();
+        $ugroup_binding = new UGroupBinding(
             new UGroupUserDao(),
             $ugroup_manager
         );
@@ -249,7 +249,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
     private function display(HTTPRequest $request, BaseLayout $layout, Project $project)
     {
-        $title   = _('Members');
+        $title = _('Members');
 
         $project_members_list = $this->getFormattedProjectMembers($project);
         $template_path        = ForgeConfig::get('tuleap_dir') . '/src/templates/project/members';
@@ -304,7 +304,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
     {
         $this->csrf_token->check();
 
-        $rm_id        = $request->getValidated(
+        $rm_id = $request->getValidated(
             'user_id',
             'uint',
             0
@@ -337,7 +337,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         $project_members = [];
 
         foreach ($database_results as $member) {
-            $user = new \PFUser($member);
+            $user                       = new \PFUser($member);
             $member['avatar_url']       = $user->getAvatarUrl();
             $member['ugroups']          = $this->getUGroupsPresenters($project, $member);
             $member['profile_page_url'] = "/users/" . urlencode($member['user_name']) .  "/";
@@ -349,7 +349,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
 
             $member['status_presenter'] = new StatusPresenter($member['status']);
-            $project_members[] = $member;
+            $project_members[]          = $member;
         }
 
         return $project_members;

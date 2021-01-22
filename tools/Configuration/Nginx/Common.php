@@ -66,8 +66,8 @@ class Common
     private function copyTuleapDotD(): void
     {
         $this->logger->info("Deploy configuration chunks in {$this->nginx_base_dir}/conf.d/tuleap.d");
-        $tuleap_d_dir       = $this->nginx_base_dir . '/conf.d/tuleap.d';
-        $tuleap_d_base_dir  = $this->tuleap_base_dir . '/src/etc/nginx/tuleap.d';
+        $tuleap_d_dir      = $this->nginx_base_dir . '/conf.d/tuleap.d';
+        $tuleap_d_base_dir = $this->tuleap_base_dir . '/src/etc/nginx/tuleap.d';
 
         $this->createDirectoryIfNotExists($tuleap_d_dir);
         foreach (new DirectoryIterator($tuleap_d_base_dir) as $file) {

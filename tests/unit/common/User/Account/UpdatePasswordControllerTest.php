@@ -83,7 +83,7 @@ final class UpdatePasswordControllerTest extends TestCase
     protected function setUp(): void
     {
         $this->event_manager = new class implements EventDispatcherInterface {
-            private $password_change = true;
+            private $password_change       = true;
             private $old_password_required = true;
 
             public function dispatch(object $event)

@@ -22,8 +22,8 @@ class EditToolbar
         //FIXME: enable Undo button for all other buttons also, not only the search/replace button
         if (JS_SEARCHREPLACE) {
             $this->tokens['JS_SEARCHREPLACE'] = 1;
-            $undo_btn = $WikiTheme->getImageURL("ed_undo.png");
-            $undo_d_btn = $WikiTheme->getImageURL("ed_undo_d.png");
+            $undo_btn                         = $WikiTheme->getImageURL("ed_undo.png");
+            $undo_d_btn                       = $WikiTheme->getImageURL("ed_undo_d.png");
             // JS_SEARCHREPLACE from walterzorn.de
             $WikiTheme->addMoreHeaders(Javascript("
 var f, sr_undo, replacewin, undo_buffer=new Array(), undo_buffer_index=0;
@@ -187,7 +187,7 @@ function undo_save() {
                                  "sample" => "",
                                  "tip" => _("Horizontal line")]
                            ];
-            $btn = new SubmitImageButton(
+            $btn       = new SubmitImageButton(
                 _("Save"),
                 "edit[save]",
                 'toolbar',
@@ -195,7 +195,7 @@ function undo_save() {
             );
             $btn->addTooltip(_("Save"));
             $toolbar .= ('document.writeln("' . addslashes($btn->asXml()) . '");' . "\n");
-            $btn = new SubmitImageButton(
+            $btn      = new SubmitImageButton(
                 _("Preview"),
                 "edit[preview]",
                 'toolbar',
@@ -205,15 +205,15 @@ function undo_save() {
             $toolbar .= ('document.writeln("' . addslashes($btn->asXml()) . '");' . "\n");
 
             foreach ($toolarray as $tool) {
-                $image = $WikiTheme->getImageURL($tool["image"]);
-                $open  = $tool["open"];
-                $close = $tool["close"];
+                $image  = $WikiTheme->getImageURL($tool["image"]);
+                $open   = $tool["open"];
+                $close  = $tool["close"];
                 $sample = addslashes($tool["sample"]);
                 // Note that we use the tip both for the ALT tag and the TITLE tag of the image.
                 // Older browsers show a "speedtip" type message only for ALT.
                 // Ideally these should be different, realistically they
                 // probably don't need to be.
-                $tip = addslashes($tool["tip"]);
+                $tip      = addslashes($tool["tip"]);
                 $toolbar .= ("addTagButton('$image','$tip','$open','$close','$sample');\n");
             }
             $toolbar .= ("addInfobox('"
@@ -224,7 +224,7 @@ function undo_save() {
         if (JS_SEARCHREPLACE) {
             $undo_d_btn = $WikiTheme->getImageURL("ed_undo_d.png");
             //$redo_btn = $WikiTheme->getImageURL("ed_redo.png");
-            $sr_btn   = $WikiTheme->getImageURL("ed_replace.png");
+            $sr_btn = $WikiTheme->getImageURL("ed_replace.png");
             //TODO: generalize the UNDO button and fix it for Search & Replace
             $sr_html = HTML(
                 HTML::img(['class' => "toolbar",
@@ -318,7 +318,7 @@ function undo_save() {
         if (defined('PHPWIKI_DIR')) {
             $plugin_dir = PHPWIKI_DIR . "/$plugin_dir";
         }
-        $pd = new fileSet($plugin_dir, '*.php');
+        $pd      = new fileSet($plugin_dir, '*.php');
         $plugins = $pd->getFiles();
         unset($pd);
         sort($plugins);
@@ -328,22 +328,22 @@ function undo_save() {
             $w = new WikiPluginLoader();
             foreach ($plugins as $plugin) {
                 $pluginName = str_replace(".php", "", $plugin);
-                $p = $w->getPlugin($pluginName, false); // second arg?
+                $p          = $w->getPlugin($pluginName, false); // second arg?
                 // trap php files which aren't WikiPlugin~s
                 if (strtolower(substr(get_parent_class($p), 0, 10)) == 'wikiplugin') {
                     $plugin_args = '';
-                    $desc = $p->getArgumentsDescription();
-                    $src = ["\n", '"', "'", '|', '[', ']', '\\'];
-                    $replace = ['%0A', '%22', '%27', '%7C', '%5B', '%5D', '%5C'];
-                    $desc = str_replace("<br />", ' ', $desc->asXML());
+                    $desc        = $p->getArgumentsDescription();
+                    $src         = ["\n", '"', "'", '|', '[', ']', '\\'];
+                    $replace     = ['%0A', '%22', '%27', '%7C', '%5B', '%5D', '%5C'];
+                    $desc        = str_replace("<br />", ' ', $desc->asXML());
                     if ($desc) {
                         $plugin_args = '\n' . str_replace($src, $replace, $desc);
                     }
-                    $toinsert = "%0A<?plugin " . $pluginName . $plugin_args . "?>"; // args?
+                    $toinsert   = "%0A<?plugin " . $pluginName . $plugin_args . "?>"; // args?
                     $plugin_js .= ",['$pluginName','$toinsert']";
                 }
             }
-            $plugin_js = substr($plugin_js, 1);
+            $plugin_js    = substr($plugin_js, 1);
             $more_buttons = HTML::img(['class' => "toolbar",
                                             'src'  => $WikiTheme->getImageURL("ed_plugins.png"),
                                             'title' => _("AddPlugin"),
@@ -361,7 +361,7 @@ function undo_save() {
     public function pagesPulldown($query, $case_exact = false, $regex = 'auto')
     {
         require_once('lib/TextSearchQuery.php');
-        $dbi = $GLOBALS['request']->_dbi;
+        $dbi       = $GLOBALS['request']->_dbi;
         $page_iter = $dbi->titleSearch(new TextSearchQuery($query, $case_exact, $regex));
         if ($page_iter->count()) {
             global $WikiTheme;
@@ -386,16 +386,16 @@ function undo_save() {
     public function templatePulldown($query, $case_exact = false, $regex = 'auto')
     {
         require_once('lib/TextSearchQuery.php');
-        $dbi = $GLOBALS['request']->_dbi;
+        $dbi       = $GLOBALS['request']->_dbi;
         $page_iter = $dbi->titleSearch(new TextSearchQuery($query, $case_exact, $regex));
-        $count = 0;
+        $count     = 0;
         if ($page_iter->count()) {
             global $WikiTheme;
             $pages_js = '';
             while ($p = $page_iter->next()) {
-                $rev = $p->getCurrentRevision();
-                $src = ["\n", '"'];
-                $replace = ['_nl', '_quot'];
+                $rev      = $p->getCurrentRevision();
+                $src      = ["\n", '"'];
+                $replace  = ['_nl', '_quot'];
                 $toinsert = str_replace($src, $replace, $rev->_get_content());
                 //$toinsert = str_replace("\n",'\n',addslashes($rev->_get_content()));
                 $pages_js .= ",['" . $p->getName() . "','_nl$toinsert']";

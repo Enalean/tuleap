@@ -468,10 +468,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $html  = '';
-        $html  .= ' <a class="direct-link-to-artifact tracker-widget-artifacts" href="' . TRACKER_BASE_URL . '/?aid=' . $this->id . '">';
-        $html  .= $hp->purify($item_name, CODENDI_PURIFIER_CONVERT_HTML);
-        $html  .= ' #';
-        $html  .= $this->id;
+        $html .= ' <a class="direct-link-to-artifact tracker-widget-artifacts" href="' . TRACKER_BASE_URL . '/?aid=' . $this->id . '">';
+        $html .= $hp->purify($item_name, CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= ' #';
+        $html .= $this->id;
         $title = $this->getTitle();
         if ($title) {
             $html .= ' - ';
@@ -502,7 +502,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
 
     private function fetchTitleContent($prefix, $unsubscribe_button)
     {
-        $html = '';
+        $html  = '';
         $html .= $this->fetchHiddenTrackerId();
         $html .= '<div class="tracker_artifact_title">';
         $html .= $prefix;

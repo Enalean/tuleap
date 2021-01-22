@@ -41,9 +41,9 @@ class FRSPackageRouter
         FRSPackageFactory $package_factory,
         FRSPermissionManager $permission_manager
     ) {
-        $this->package_controller         = $package_controller;
-        $this->package_factory            = $package_factory;
-        $this->permission_manager         = $permission_manager;
+        $this->package_controller = $package_controller;
+        $this->package_factory    = $package_factory;
+        $this->permission_manager = $permission_manager;
     }
 
     public function route(HTTPRequest $request, Project $project, PFUser $user)
@@ -120,7 +120,7 @@ class FRSPackageRouter
     private function getExistingPackagesForProject(Project $project)
     {
         $existing_packages = [];
-        $packages = $this->package_factory->getFRSPackagesFromDb($project->getGroupId());
+        $packages          = $this->package_factory->getFRSPackagesFromDb($project->getGroupId());
         foreach ($packages as $p => $nop) {
             $existing_packages[] = [
                 'id'   => $packages[$p]->getPackageId(),

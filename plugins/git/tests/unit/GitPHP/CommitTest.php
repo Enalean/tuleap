@@ -55,7 +55,7 @@ gpgsig -----BEGIN PGP SIGNATURE-----
 
 This is Tuleap 10.4
 EOF;
-    public const EXPECTED_PGP_SIGNATURE = <<<EOF
+    public const EXPECTED_PGP_SIGNATURE            = <<<EOF
 -----BEGIN PGP SIGNATURE-----
 
 iQEzBAABCgAdFiEEZYSpTRl85FSuRKh0m6S5XYk2HS0FAlty8aMACgkQm6S5XYk2
@@ -83,7 +83,7 @@ EOF;
     ) {
         $project = \Mockery::mock(Project::class);
         $project->shouldReceive('GetObject')->with('3f4a9ea9a9bcc19fa6f0806058469c5e4c35df82')->andReturns($commit_content);
-        $commit  = new Commit($project, '3f4a9ea9a9bcc19fa6f0806058469c5e4c35df82');
+        $commit = new Commit($project, '3f4a9ea9a9bcc19fa6f0806058469c5e4c35df82');
 
         $this->assertSame($author_name, $commit->GetAuthorName());
         $this->assertSame($author_email, $commit->getAuthorEmail());

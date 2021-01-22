@@ -182,9 +182,9 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->built_from_template = $template_from_project_for_creation;
         $this->is_test             = isset($project['is_test'])                ? $project['is_test']                : null;
         $this->setAccessFromProjectData($project);
-        $this->trove_data          = isset($project['trove']) ? $project['trove'] : [];
-        $this->data_services       = isset($project['services'])               ? $project['services']               : [];
-        $this->data_fields         = $project;
+        $this->trove_data    = isset($project['trove']) ? $project['trove'] : [];
+        $this->data_services = isset($project['services'])               ? $project['services']               : [];
+        $this->data_fields   = $project;
     }
 
     private function getAccessFromProjectArrayData(array $project)
@@ -261,18 +261,18 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
         $long_description_tagname = 'long-description';
 
-        $attrs = $xml->attributes();
-        $this->unix_name     = (string) $attrs['unix-name'];
-        $this->full_name     = (string) $attrs['full-name'];
+        $attrs                     = $xml->attributes();
+        $this->unix_name           = (string) $attrs['unix-name'];
+        $this->full_name           = (string) $attrs['full-name'];
         $this->short_description   = (string) $attrs['description'];
         $this->built_from_template = TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate();
-        $this->is_test       = (bool) false;
-        $this->trove_data    = [];
-        $this->data_services = [];
-        $this->data_fields   = [
+        $this->is_test             = (bool) false;
+        $this->trove_data          = [];
+        $this->data_services       = [];
+        $this->data_fields         = [
             'form_101' => (string) $xml->$long_description_tagname
         ];
-        $this->is_built_from_xml = true;
+        $this->is_built_from_xml   = true;
 
         switch ($attrs['access']) {
             case 'unrestricted':

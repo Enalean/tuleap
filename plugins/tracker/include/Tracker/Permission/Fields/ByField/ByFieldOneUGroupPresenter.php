@@ -72,15 +72,15 @@ class ByFieldOneUGroupPresenter
 
     public function __construct(ByFieldUGroup $ugroup, ByFieldGroupPermissions $fields_permission_for_group)
     {
-        $this->ugroup_id         = $ugroup->getId();
-        $this->ugroup_name       = $ugroup->getName();
+        $this->ugroup_id             = $ugroup->getId();
+        $this->ugroup_name           = $ugroup->getName();
         $this->might_not_have_access = $ugroup->getMightNotHaveAccess();
-        $this->field_id          = $fields_permission_for_group->getFieldId();
-        $this->has_submit_access = $fields_permission_for_group->hasSubmitPermission($ugroup);
-        $this->not_submitable    = ! $fields_permission_for_group->getField()->isSubmitable();
-        $this->is_updatable      = $fields_permission_for_group->getField()->isUpdateable();
-        $this->has_no_access     = $fields_permission_for_group->hasNoAccess($ugroup);
-        $this->has_read_access   = $fields_permission_for_group->hasReadOnlyPermission($ugroup);
-        $this->has_update_access = $fields_permission_for_group->hasUpdatePermission($ugroup);
+        $this->field_id              = $fields_permission_for_group->getFieldId();
+        $this->has_submit_access     = $fields_permission_for_group->hasSubmitPermission($ugroup);
+        $this->not_submitable        = ! $fields_permission_for_group->getField()->isSubmitable();
+        $this->is_updatable          = $fields_permission_for_group->getField()->isUpdateable();
+        $this->has_no_access         = $fields_permission_for_group->hasNoAccess($ugroup);
+        $this->has_read_access       = $fields_permission_for_group->hasReadOnlyPermission($ugroup);
+        $this->has_update_access     = $fields_permission_for_group->hasUpdatePermission($ugroup);
     }
 }

@@ -39,7 +39,7 @@ abstract class SVN_Apache
      */
     public function getConf(ApacheConfRepository $repository): string
     {
-        $conf = '';
+        $conf  = '';
         $conf .= "<Location " . $repository->getURLPath() . ">\n";
         $conf .= "    DAV svn\n";
         $conf .= "    SVNPath " . $repository->getFilesystemPath() . "\n";
@@ -60,7 +60,7 @@ abstract class SVN_Apache
      */
     protected function getCommonAuthentication(Project $project): string
     {
-        $conf = '';
+        $conf  = '';
         $conf .= "    Require valid-user\n";
         $conf .= "    AuthType Basic\n";
         $conf .= "    AuthName \"Subversion Authorization (" . $this->escapeStringForApacheConf($project->getPublicName()) . ")\"\n";

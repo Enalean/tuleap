@@ -32,7 +32,7 @@ class b2018005141637_add_stepdef_table extends ForgeUpgrade_Bucket
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_testmanagement_changeset_value_stepdef(
+        $sql    = "CREATE TABLE IF NOT EXISTS plugin_testmanagement_changeset_value_stepdef(
             id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
             changeset_value_id INT(11) NOT NULL,
             description TEXT,

@@ -64,7 +64,7 @@ class DiskUsageGlobalPresenterBuilder
     private function buildDataGlobal()
     {
         $data_global = [];
-        $result        = $this->usage_manager->getLatestData();
+        $result      = $this->usage_manager->getLatestData();
 
         if (isset($result['service'][Statistics_DiskUsageManager::USR_HOME])) {
             $data_global[] = [

@@ -22,12 +22,12 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 try {
     $user_manager = UserManager::instance();
-    $user = $user_manager->forceLogin($argv[1]);
+    $user         = $user_manager->forceLogin($argv[1]);
 
     $tracker = TrackerFactory::instance()->getTrackerById($argv[2]);
     if ($tracker) {
         $xml_import_builder = new Tracker_Artifact_XMLImportBuilder();
-        $xml_import = $xml_import_builder->build(
+        $xml_import         = $xml_import_builder->build(
             new XMLImportHelper($user_manager),
             new Log_ConsoleLogger()
         );

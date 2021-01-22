@@ -41,7 +41,7 @@ class Docman_SqlFilterGlobalText extends \Docman_SqlFilterText
     {
         $stmt = [];
         if ($this->filter->getValue() !== \null && $this->filter->getValue() != '') {
-            $qv = $this->filter->getValue();
+            $qv         = $this->filter->getValue();
             $searchType = $this->getSearchType($qv);
             if ($searchType['like']) {
                 $matches[] = ' i.title LIKE ' . $searchType['pattern'] . '  OR i.description LIKE ' . $searchType['pattern'];

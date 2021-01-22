@@ -149,34 +149,34 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         $sql = "SELECT * FROM widget_image WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
-            $data = db_fetch_array($res);
+            $data              = db_fetch_array($res);
             $this->image_title = $data['title'];
             $this->image_url   = $data['url'];
-            $this->content_id = $id;
+            $this->content_id  = $id;
         }
     }
     public function create(Codendi_Request $request)
     {
         $content_id = false;
-        $vUrl = new Valid_HTTPURI('url');
+        $vUrl       = new Valid_HTTPURI('url');
         $vUrl->setErrorMessage($GLOBALS['Language']->getText('widget_imageviewer', 'invalid_url'));
         $vUrl->required();
         if ($request->validInArray('image', $vUrl)) {
-            $image = $request->get('image');
+            $image  = $request->get('image');
             $vTitle = new Valid_String('title');
             $vTitle->required();
             if (! $request->validInArray('image', $vTitle)) {
                 $image['title'] = 'Image';
             }
-            $sql = 'INSERT INTO widget_image (owner_id, owner_type, title, url) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($image['title']) . "', '" . db_escape_string($image['url']) . "')";
-            $res = db_query($sql);
+            $sql        = 'INSERT INTO widget_image (owner_id, owner_type, title, url) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($image['title']) . "', '" . db_escape_string($image['url']) . "')";
+            $res        = db_query($sql);
             $content_id = db_insertid($res);
         }
         return $content_id;
     }
     public function updatePreferences(Codendi_Request $request)
     {
-        $done = false;
+        $done       = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();
         if (($image = $request->get('image')) && $request->valid($vContentId)) {
@@ -195,8 +195,8 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
             }
 
             if ($url || $title) {
-                $sql = "UPDATE widget_image SET " . $title . ", " . $url . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($request->get('content_id'));
-                $res = db_query($sql);
+                $sql  = "UPDATE widget_image SET " . $title . ", " . $url . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($request->get('content_id'));
+                $res  = db_query($sql);
                 $done = true;
             }
         }

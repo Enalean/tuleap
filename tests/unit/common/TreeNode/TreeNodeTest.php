@@ -45,7 +45,7 @@ class TreeNodeTest extends TestCase
     {
         $child1 = new TreeNode();
         $child2 = new TreeNode();
-        $node = new TreeNode();
+        $node   = new TreeNode();
 
         $node->addChild($child1);
         $node->addChild($child2);
@@ -55,11 +55,11 @@ class TreeNodeTest extends TestCase
 
     public function testItReturnsTheChildrenAndSubChildrenAsAFlatList(): void
     {
-        $child1 = new TreeNode();
+        $child1    = new TreeNode();
         $subchild1 = new TreeNode();
         $child1->addChild($subchild1);
         $child2 = new TreeNode();
-        $node = new TreeNode();
+        $node   = new TreeNode();
 
         $node->addChild($child1);
         $node->addChild($child2);
@@ -94,18 +94,18 @@ class TreeNodeTest extends TestCase
 
     public function testItAddsTheGivenChildren(): void
     {
-        $root       = new TreeNode();
-        $children   = [new TreeNode(), new TreeNode()];
+        $root     = new TreeNode();
+        $children = [new TreeNode(), new TreeNode()];
         $root->setChildren($children);
         $this->assertEquals($children, $root->getChildren());
     }
 
     public function testItSetsTheParentNodeOfTheChildren(): void
     {
-        $root       = new TreeNode();
-        $node_1     = new TreeNode();
-        $node_2     = new TreeNode();
-        $children   = [$node_1, $node_2];
+        $root     = new TreeNode();
+        $node_1   = new TreeNode();
+        $node_2   = new TreeNode();
+        $children = [$node_1, $node_2];
         $root->setChildren($children);
         $this->assertEquals($root, $node_2->getParentNode());
         $this->assertEquals($root, $node_1->getParentNode());

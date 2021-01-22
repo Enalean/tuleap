@@ -56,7 +56,7 @@ final class XMLExporterTest extends TestCase
     {
         parent::setUp();
 
-        $this->explicit_backlog_dao = Mockery::mock(ExplicitBacklogDao::class);
+        $this->explicit_backlog_dao              = Mockery::mock(ExplicitBacklogDao::class);
         $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
 
         $this->exporter = new XMLExporter(

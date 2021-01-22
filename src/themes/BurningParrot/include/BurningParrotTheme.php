@@ -149,11 +149,11 @@ class BurningParrotTheme extends BaseLayout
         }
 
 
-        $url_redirect                = new URLRedirect(EventManager::instance());
-        $header_presenter_builder    = new HeaderPresenterBuilder();
-        $main_classes                = isset($params['main_classes']) ? $params['main_classes'] : [];
-        $sidebar                     = $this->getSidebarFromParams($params);
-        $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $project);
+        $url_redirect                 = new URLRedirect(EventManager::instance());
+        $header_presenter_builder     = new HeaderPresenterBuilder();
+        $main_classes                 = isset($params['main_classes']) ? $params['main_classes'] : [];
+        $sidebar                      = $this->getSidebarFromParams($params);
+        $body_classes                 = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $project);
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
 
         $breadcrumbs = $breadcrumb_presenter_builder->build($this->breadcrumbs);
@@ -250,9 +250,9 @@ class BurningParrotTheme extends BaseLayout
             $body_classes = $params['body_class'];
         }
 
-        $color = \ThemeVariantColor::buildFromVariant((new \ThemeVariant())->getVariantForUser($this->user));
+        $color          = \ThemeVariantColor::buildFromVariant((new \ThemeVariant())->getVariantForUser($this->user));
         $body_classes[] = 'theme-' . $color->getName();
-        $is_condensed = $this->user->getPreference(\PFUser::PREFERENCE_DISPLAY_DENSITY) === \PFUser::DISPLAY_DENSITY_CONDENSED;
+        $is_condensed   = $this->user->getPreference(\PFUser::PREFERENCE_DISPLAY_DENSITY) === \PFUser::DISPLAY_DENSITY_CONDENSED;
         if ($is_condensed) {
             $body_classes[] = 'theme-condensed';
         }
@@ -352,7 +352,7 @@ class BurningParrotTheme extends BaseLayout
             $this->show_sidebar = true;
             return $params['sidebar'];
         } elseif (! empty($params['group'])) {
-            $project = $this->project_manager->getProject($params['group']);
+            $project            = $this->project_manager->getProject($params['group']);
             $this->show_sidebar = true;
             return $this->getSidebarPresenterForProject($project, $params);
         }

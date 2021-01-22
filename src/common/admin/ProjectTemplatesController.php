@@ -53,7 +53,7 @@ class ProjectTemplatesController implements DispatchableWithRequest
             $templates_presenters[] = new TemplatePresenter($template);
         }
 
-        $title = _('Project templates');
+        $title     = _('Project templates');
         $presenter = new TemplateListPresenter(new ProjectCreationNavBarPresenter('templates'), $title, $templates_presenters);
 
         $admin_page = new AdminPageRenderer();

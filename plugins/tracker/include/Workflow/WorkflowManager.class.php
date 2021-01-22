@@ -33,14 +33,14 @@ class WorkflowManager
     {
         $workflow_factory = WorkflowFactory::instance();
         if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {
-            $token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(
+            $token             = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(
                 [
                     'tracker' => (int) $this->tracker->id,
                     'func'    => Workflow::FUNC_ADMIN_RULES,
                     ]
             ));
             $rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance());
-            $action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $rule_date_factory, $token);
+            $action            = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $rule_date_factory, $token);
         } elseif ($request->get('func') == Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS) {
             $token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(
                 [

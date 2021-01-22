@@ -31,7 +31,7 @@ class Widget_ProjectLatestFileReleases extends Widget
     {
         parent::__construct('projectlatestfilereleases');
         $request = HTTPRequest::instance();
-        $pm = ProjectManager::instance();
+        $pm      = ProjectManager::instance();
         $project = $pm->getProject($request->get('group_id'));
         if ($project && $this->canBeUsedByProject($project)) {
             $service = $project->getService(Service::FILE);

@@ -43,8 +43,8 @@ class GettextHelper
     {
         $translated_formatted_text = $this->getGettextValueFromCache($text);
         if ($translated_formatted_text === null) {
-            $parts                     = $this->splitTextInParts($text);
-            $string                    = $this->shift($text, $parts);
+            $parts  = $this->splitTextInParts($text);
+            $string = $this->shift($text, $parts);
 
             $translated_text           = gettext($string);
             $translated_formatted_text = $this->getFormattedText($translated_text, $parts);

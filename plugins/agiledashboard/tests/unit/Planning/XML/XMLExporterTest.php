@@ -107,7 +107,7 @@ class XMLExporterTest extends TestCase
         $this->planning2->shouldReceive('getBacklogTrackers')->andReturn([$backlog_tracker2]);
 
         $this->planning_permissions_manager = Mockery::mock(PlanningPermissionsManager::class);
-        $this->exporter = new XMLExporter($this->planning_permissions_manager);
+        $this->exporter                     = new XMLExporter($this->planning_permissions_manager);
 
         $this->agiledasboard_node = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <agiledashboard/>

@@ -112,13 +112,13 @@ class WikiPlugin_PageGroup extends WikiPlugin
         if (empty($parent)) {
             // FIXME: WikiPlugin has no way to report when
             // required args are missing?
-            $error_text = fmt(
+            $error_text  = fmt(
                 "%s: %s",
                 "WikiPlugin_" . $this->getName(),
                 $error_text
             );
             $error_text .= " " . sprintf(_("A required argument '%s' is missing."), 'parent');
-            $html = $error_text;
+            $html        = $error_text;
             return $html;
         }
         $directions =  ['next'     => _("Next"),
@@ -168,7 +168,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
 
         $thispage = array_search($pagename, $c);
 
-        $go =  ['previous', 'next'];
+        $go    =  ['previous', 'next'];
         $links = HTML();
         $links->pushcontent($label);
         $links->pushcontent(" [ "); // an experiment
@@ -179,9 +179,9 @@ class WikiPlugin_PageGroup extends WikiPlugin
             if ($go_item == 'previous') {
                 if ($loop) {
                     if ($thispage == 0) {
-                        $linkpage  = $c[$lastindex];
+                        $linkpage = $c[$lastindex];
                     } else {
-                        $linkpage  = $c[$thispage - 1];
+                        $linkpage = $c[$thispage - 1];
                     }
                     // mind the French : punctuation
                     $text = fmt(
@@ -197,8 +197,8 @@ class WikiPlugin_PageGroup extends WikiPlugin
                     if ($thispage == 0) {
                         // skip it
                     } else {
-                        $linkpage  = $c[$thispage - 1];
-                        $text = fmt(
+                        $linkpage = $c[$thispage - 1];
+                        $text     = fmt(
                             "%s: %s",
                             $directions[$go_item],
                             $WikiTheme->makeLinkButton($linkpage)
@@ -213,9 +213,9 @@ class WikiPlugin_PageGroup extends WikiPlugin
             } elseif ($go_item == 'next') {
                 if ($loop) {
                     if ($thispage == $lastindex) {
-                        $linkpage  = $c[1];
+                        $linkpage = $c[1];
                     } else {
-                        $linkpage  = $c[$thispage + 1];
+                        $linkpage = $c[$thispage + 1];
                     }
                     $text = fmt(
                         "%s: %s",
@@ -227,7 +227,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
                         // skip it
                     } else {
                         $linkpage = $c[$thispage + 1];
-                        $text = fmt(
+                        $text     = fmt(
                             "%s: %s",
                             $directions[$go_item],
                             $WikiTheme->makeLinkButton($linkpage)

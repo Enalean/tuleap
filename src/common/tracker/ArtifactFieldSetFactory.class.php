@@ -68,7 +68,7 @@ class ArtifactFieldSetFactory
                 $this->setError('ArtifactFieldSetFactory:: ' . $ArtifactType->getErrorMessage());
                 return false;
             }
-            $this->ArtifactType = $ArtifactType;
+            $this->ArtifactType      = $ArtifactType;
             $this->ArtifactFieldSets = [];
             $this->fetchData($this->ArtifactType->getID());
         }
@@ -101,7 +101,7 @@ class ArtifactFieldSetFactory
 
         //echo $sql;
 
-        $res = db_query($sql);
+        $res                     = db_query($sql);
         $this->ArtifactFieldSets = [];
         while ($fieldset_array = db_fetch_array($res)) {
             // create a new ArtifactFieldSet (empty)
@@ -110,7 +110,7 @@ class ArtifactFieldSetFactory
             $fieldset->setFromArray($fieldset_array);
             // set the fields contained inside the FieldSet
             $art_field_fact = new ArtifactFieldFactory($this->ArtifactType);
-            $fields = $art_field_fact->getFieldsContainedInFieldSet($fieldset_array['field_set_id']);
+            $fields         = $art_field_fact->getFieldsContainedInFieldSet($fieldset_array['field_set_id']);
             $fieldset->setArtifactFields($fields);
 
             $this->ArtifactFieldSets[] = $fieldset;
@@ -133,8 +133,8 @@ class ArtifactFieldSetFactory
                 WHERE group_artifact_id='" . db_ei($group_artifact_id) . "'
                 ORDER BY rank ASC";
 
-        $result = db_query($sql);
-        $rows = db_numrows($result);
+        $result              = db_query($sql);
+        $rows                = db_numrows($result);
         $myArtifactFieldSets = [];
 
         if (! $result || $rows < 1) {
@@ -158,16 +158,16 @@ class ArtifactFieldSetFactory
      */
     public function getFieldSetById($field_set_id)
     {
-        $fieldsets = $this->ArtifactFieldSets;
+        $fieldsets         = $this->ArtifactFieldSets;
         $searched_fieldset = null;
-        $found = false;
+        $found             = false;
         foreach ($fieldsets as $fieldset) {
             if ($found) {
                 break;
             }
             if ($fieldset->getID() == $field_set_id) {
                 $searched_fieldset = $fieldset;
-                $found = true;
+                $found             = true;
             }
         }
         return $searched_fieldset;
@@ -192,10 +192,10 @@ class ArtifactFieldSetFactory
      */
     public function getAllFieldSetsContainingUsedFields()
     {
-        $fieldsets = $this->ArtifactFieldSets;
+        $fieldsets      = $this->ArtifactFieldSets;
         $used_fieldsets = [];
         foreach ($fieldsets as $fieldset) {
-            $fields = $fieldset->getArtifactFields();
+            $fields                       = $fieldset->getArtifactFields();
             $fieldset_contains_used_field = false;
             // Walk the field list, stop when we find a used field
             foreach ($fields as $field) {
@@ -225,10 +225,10 @@ class ArtifactFieldSetFactory
      */
     public function getAllFieldSetsContainingUnusedFields()
     {
-        $fieldsets = $this->ArtifactFieldSets;
+        $fieldsets        = $this->ArtifactFieldSets;
         $unused_fieldsets = [];
         foreach ($fieldsets as $fieldset) {
-            $fields = $fieldset->getArtifactFields();
+            $fields                         = $fieldset->getArtifactFields();
             $fieldset_contains_unused_field = false;
             // Walk the field list, stop when we find an unused field
             foreach ($fields as $field) {
@@ -269,7 +269,7 @@ class ArtifactFieldSetFactory
 
         // Default values
         $description = ($description ? $description : "");
-        $rank = ($rank ? $rank : 0);
+        $rank        = ($rank ? $rank : 0);
 
         // create the artifact_field_set
         $sql = "INSERT INTO artifact_field_set (group_artifact_id, name, description, rank)
@@ -303,14 +303,14 @@ class ArtifactFieldSetFactory
                 WHERE group_artifact_id='" .  db_ei($this->ArtifactType->getID())  . "' AND
                       field_set_id='" . db_ei($field_set_id) . "'";
 
-        $result = db_query($sql);
+        $result   = db_query($sql);
         $num_rows = db_numrows($result);
         if ($num_rows != 0) {
             $this->setError($Language->getText('tracker_common_fieldset_factory', 'delete_only_empty_fieldset') . ' ' . db_error());
             return false;
         } else {
             // Delete the FieldSet
-            $sql = "DELETE FROM artifact_field_set
+            $sql    = "DELETE FROM artifact_field_set
                     WHERE field_set_id=" .  db_ei($field_set_id);
             $result = db_query($sql);
             if (! $result || db_affected_rows($result) <= 0) {
@@ -330,7 +330,7 @@ class ArtifactFieldSetFactory
     {
      // Delete artifact_field_set records
         $artifact_type = $this->getArtifactType();
-        $sql = 'DELETE FROM artifact_field_set WHERE group_artifact_id=' . db_ei($artifact_type->getID());
+        $sql           = 'DELETE FROM artifact_field_set WHERE group_artifact_id=' . db_ei($artifact_type->getID());
 
      //echo $sql;
 
@@ -356,8 +356,8 @@ class ArtifactFieldSetFactory
         global $Language;
         // Copy the field_sets
         $fieldset_id_source_dest_array = [];
-        $sql_source_fieldset = "SELECT field_set_id, name, description, rank FROM artifact_field_set WHERE group_artifact_id=" . db_ei($atid_source);
-        $res_source_fieldset = db_query($sql_source_fieldset);
+        $sql_source_fieldset           = "SELECT field_set_id, name, description, rank FROM artifact_field_set WHERE group_artifact_id=" . db_ei($atid_source);
+        $res_source_fieldset           = db_query($sql_source_fieldset);
         while ($fieldset_source_array = db_fetch_array($res_source_fieldset)) {
             // For each fieldset of the source tracker, we create a new fieldset in the dest tracker,
             // And we remember the association source_fieldset_id <=> dest_fieldset_id to build
@@ -386,7 +386,7 @@ class ArtifactFieldSetFactory
      */
     public function setError($string)
     {
-        $this->error_state = true;
+        $this->error_state   = true;
         $this->error_message = $string;
     }
 

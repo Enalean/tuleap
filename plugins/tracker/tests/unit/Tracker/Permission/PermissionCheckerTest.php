@@ -526,7 +526,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
 
     public function testAccessPermsSubmitterAssigneeFullAccess(): void
     {
-        $t_access_submitterassignee  = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $t_access_submitterassignee = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_submitterassignee->shouldReceive('getId')->andReturns(7);
         $t_access_submitterassignee->shouldReceive('getGroupId')->andReturns(101);
         $t_access_submitterassignee->shouldReceive('getProject')->andReturns($this->project);
@@ -556,7 +556,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
 
     public function testAccessPermsPrivateProject(): void
     {
-        $t_access_registered  = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $t_access_registered = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_registered->shouldReceive('getId')->andReturns(7);
         $t_access_registered->shouldReceive('getGroupId')->andReturns(102);
         $t_access_registered->shouldReceive('getProject')->andReturns($this->project_private);
@@ -679,7 +679,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $artifact_assignee->shouldReceive('useArtifactPermissions')->andReturns(false);
         $artifact_assignee->shouldReceive('getSubmittedBy')->andReturns(120);
         $user_changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
-        $contributors = [121];
+        $contributors         = [121];
         $user_changeset_value->shouldReceive('getValue')->andReturns($contributors);
         $artifact_assignee->shouldReceive('getValue')->with($contributor_field)->andReturns($user_changeset_value);
 
@@ -713,7 +713,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $artifact_subass->shouldReceive('useArtifactPermissions')->andReturns(false);
         $artifact_subass->shouldReceive('getSubmittedBy')->andReturns(123);
         $user_changeset_value = Mockery::spy(Tracker_Artifact_ChangesetValue::class);
-        $contributors = [121];
+        $contributors         = [121];
         $user_changeset_value->shouldReceive('getValue')->andReturns($contributors);
         $artifact_subass->shouldReceive('getValue')->with($contributor_field)->andReturns($user_changeset_value);
 
@@ -780,7 +780,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $artifact_subass->shouldReceive('useArtifactPermissions')->andReturns(false);
         $artifact_subass->shouldReceive('getSubmittedBy')->andReturns(123);
         $user_changeset_value = Mockery::spy(Tracker_Artifact_ChangesetValue::class);
-        $contributors = [121];
+        $contributors         = [121];
         $user_changeset_value->shouldReceive('getValue')->andReturns($contributors);
         $artifact_subass->shouldReceive('getValue')->with($contributor_field)->andReturns($user_changeset_value);
 

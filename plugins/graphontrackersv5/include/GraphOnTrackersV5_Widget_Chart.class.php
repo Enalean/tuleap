@@ -145,29 +145,29 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         $sql = "SELECT * FROM plugin_graphontrackersv5_widget_chart WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
-            $data = db_fetch_array($res);
+            $data              = db_fetch_array($res);
             $this->chart_title = $data['title'];
             $this->chart_id    = $data['chart_id'];
-            $this->content_id = $id;
+            $this->content_id  = $id;
         }
     }
     public function create(Codendi_Request $request)
     {
         $content_id = false;
-        $vId = new Valid_UInt('chart_id');
+        $vId        = new Valid_UInt('chart_id');
         $vId->setErrorMessage("Can't add empty chart id");
         $vId->required();
         if ($request->validInArray('chart', $vId)) {
-            $chart = $request->get('chart');
-            $sql = 'INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($chart['title']) . "', " . db_escape_int($chart['chart_id']) . ")";
-            $res = db_query($sql);
+            $chart      = $request->get('chart');
+            $sql        = 'INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($chart['title']) . "', " . db_escape_int($chart['chart_id']) . ")";
+            $res        = db_query($sql);
             $content_id = db_insertid($res);
         }
         return $content_id;
     }
     public function updatePreferences(Codendi_Request $request)
     {
-        $done = false;
+        $done       = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();
         if (($chart = $request->get('chart')) && $request->valid($vContentId)) {
@@ -186,8 +186,8 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
             }
 
             if ($id || $title) {
-                $sql = "UPDATE plugin_graphontrackersv5_widget_chart SET " . $title . ", " . $id . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . (int) $request->get('content_id');
-                $res = db_query($sql);
+                $sql  = "UPDATE plugin_graphontrackersv5_widget_chart SET " . $title . ", " . $id . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . (int) $request->get('content_id');
+                $res  = db_query($sql);
                 $done = true;
             }
         }

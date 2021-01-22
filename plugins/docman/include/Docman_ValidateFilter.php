@@ -28,7 +28,7 @@ class Docman_ValidateFilter
     public $isValid;
     public function __construct($filter)
     {
-        $this->filter = $filter;
+        $this->filter  = $filter;
         $this->message = '';
         $this->isValid = \null;
     }

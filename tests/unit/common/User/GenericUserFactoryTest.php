@@ -30,9 +30,9 @@ class GenericUserFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user_manager = \Mockery::spy(\UserManager::class);
+        $this->user_manager    = \Mockery::spy(\UserManager::class);
         $this->project_manager = \Mockery::spy(\ProjectManager::class);
-        $this->project = \Mockery::spy(\Project::class);
+        $this->project         = \Mockery::spy(\Project::class);
         $this->project_manager->shouldReceive('getProject')->andReturns($this->project);
         $dao = \Mockery::spy(\GenericUserDao::class);
 

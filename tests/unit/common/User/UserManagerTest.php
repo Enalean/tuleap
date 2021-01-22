@@ -27,7 +27,7 @@ class UserManagerTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclara
 
     public function testLogout()
     {
-        $cm               = \Mockery::mock(CookieManager::class);
+        $cm = \Mockery::mock(CookieManager::class);
         $cm->shouldReceive('getCookie')->andReturns('valid_hash');
         $cm->shouldReceive('removeCookie')->with('session_hash')->once();
 
@@ -40,10 +40,10 @@ class UserManagerTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclara
             'isDeleted'      => false,
         ]);
 
-        $session_manager  = \Mockery::mock(\Tuleap\User\SessionManager::class, ['getUser' => $user123]);
+        $session_manager = \Mockery::mock(\Tuleap\User\SessionManager::class, ['getUser' => $user123]);
         $session_manager->shouldReceive('destroyCurrentSession')->with($user123)->once();
 
-        $um               = \Mockery::mock(UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $um = \Mockery::mock(UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $um->shouldReceive([
             'getDao'            => \Mockery::spy(UserDao::class),
             'getCookieManager'  => $cm,

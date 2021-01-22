@@ -124,13 +124,13 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public const SYSTEM_NATURE_NAME     = 'document';
     public const SERVICE_SHORTNAME      = 'docman';
 
-    public const ADMIN_BASE_URL                      = '/admin/document';
+    public const ADMIN_BASE_URL = '/admin/document';
     /**
      * Max size for individual files in Document and Docman plugins (in bytes)
      *
      * @tlp-config-key
      */
-    public const PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING       = 'plugin_docman_max_file_size';
+    public const PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING = 'plugin_docman_max_file_size';
     /**
      * Max number of files that can be uploaded with a drag'n drop in interface
      *
@@ -295,7 +295,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         if (! $params['object_type']) {
             if (in_array($params['permission_type'], ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'])) {
-                $if = new Docman_ItemFactory();
+                $if   = new Docman_ItemFactory();
                 $item = $if->getItemFromDb($params['object_id']);
                 if ($item) {
                     $params['object_type'] = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
@@ -307,7 +307,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         if (! $params['object_name']) {
             if (in_array($params['permission_type'], ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'])) {
-                $if = new Docman_ItemFactory();
+                $if   = new Docman_ItemFactory();
                 $item = $if->getItemFromDb($params['object_id']);
                 if ($item) {
                     $params['object_name'] = $item->getTitle();
@@ -477,9 +477,9 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function process()
     {
-        $request            = HTTPRequest::instance();
-        $user               = $request->getCurrentUser();
-        $proxy = new DocmanHTTPControllerProxy(
+        $request = HTTPRequest::instance();
+        $user    = $request->getCurrentUser();
+        $proxy   = new DocmanHTTPControllerProxy(
             EventManager::instance(),
             new ExternalLinkParametersExtractor(),
             $this->getHTTPController(),
@@ -509,21 +509,21 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function wiki_before_content($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['action'] = 'wiki_before_content';
-        $request = new Docman_WikiRequest($params);
+        $request          = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
     public function wiki_display_remove_button($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['action'] = 'wiki_display_remove_button';
-        $request = new Docman_WikiRequest($params);
+        $request          = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
     public function isWikiPageReferenced($params)
     {
         $params['action'] = 'check_whether_wiki_page_is_referenced';
-        $request = new Docman_WikiRequest($params);
+        $request          = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
@@ -536,14 +536,14 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function userCanAccessWikiDocument($params)
     {
         $params['action'] = 'check_whether_user_can_access';
-        $request = new Docman_WikiRequest($params);
+        $request          = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
     public function getPermsLabelForWiki($params)
     {
         $params['action'] = 'getPermsLabelForWiki';
-        $request = new Docman_WikiRequest($params);
+        $request          = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
     }
 
@@ -554,14 +554,14 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         }
 
         $finder = new DocumentFromReferenceValueFinder();
-        $item = $finder->findItem($event->getProject(), $event->getUser(), $event->getValue());
+        $item   = $finder->findItem($event->getProject(), $event->getUser(), $event->getValue());
         if (! $item) {
             return;
         }
 
         $icon_presenter_builder = new DocumentIconPresenterBuilder();
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__);
+        $renderer     = TemplateRendererFactory::build()->getRenderer(__DIR__);
         $tooltip_json = new \Tuleap\Layout\TooltipJSON(
             $renderer->renderToString('tooltip-title', [
                 'icon'  => $icon_presenter_builder->buildForItem($item),
@@ -586,7 +586,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
     {
         if ($event->getReference()->getServiceShortName() === 'docman') {
-            $request = new Codendi_Request([
+            $request    = new Codendi_Request([
                 'id'       => $event->getValue(),
                 'group_id' => $event->getProject()->getID(),
                 'action'   => 'ajax_reference_tooltip'
@@ -606,7 +606,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function project_export_entry($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // Docman perms
-        $url  = '?group_id=' . $params['group_id'] . '&export=plugin_docman_perms';
+        $url                                                             = '?group_id=' . $params['group_id'] . '&export=plugin_docman_perms';
         $params['labels']['plugin_eac_docman']                           = dgettext('tuleap-docman', 'Document Manager Permissions');
         $params['data_export_links']['plugin_eac_docman']                = $url . '&show=csv';
         $params['data_export_format_links']['plugin_eac_docman']         = $url . '&show=format';
@@ -625,7 +625,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         if ($params['export'] == 'plugin_docman_perms') {
             include_once('Docman_PermissionsExport.class.php');
-            $request = HTTPRequest::instance();
+            $request    = HTTPRequest::instance();
             $permExport = new Docman_PermissionsExport($params['project']);
             if ($request->get('show') == 'csv') {
                 $permExport->toCSV();
@@ -646,7 +646,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root') . '/';
         //Is this project using docman
         if (is_dir($docmanPath . $params['project']->getUnixName())) {
-            $version      = new Docman_VersionFactory();
+            $version = new Docman_VersionFactory();
 
             return $version->renameProject($docmanPath, $params['project'], $params['new_name']);
         }
@@ -661,11 +661,11 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function file_exists_in_data_dir($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root') . '/';
-        $path = $docmanPath . $params['new_name'];
+        $path       = $docmanPath . $params['new_name'];
 
         if (Backend::fileExists($path)) {
             $params['result'] = false;
-            $params['error'] = dgettext('tuleap-docman', 'A directory already exists with this name under docman');
+            $params['error']  = dgettext('tuleap-docman', 'A directory already exists with this name under docman');
         }
     }
 
@@ -681,7 +681,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         if ($params['project']->usesService('docman')) {
             if (! isset($this->rootItems[$groupId])) {
                 include_once 'Docman_ItemFactory.class.php';
-                $docmanItemFactory = new Docman_ItemFactory();
+                $docmanItemFactory         = new Docman_ItemFactory();
                 $this->rootItems[$groupId] = $docmanItemFactory->getRoot($groupId);
             }
             $params['roots']['docman'] = $this->rootItems[$groupId];
@@ -695,9 +695,9 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
      */
     public function plugin_statistics_disk_usage_collect_project($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $row             = $params['project_row'];
-        $root            = $this->getPluginInfo()->getPropertyValueForName('docman_root');
-        $path            = $root . '/' . strtolower($row['unix_group_name']);
+        $row  = $params['project_row'];
+        $root = $this->getPluginInfo()->getPropertyValueForName('docman_root');
+        $path = $root . '/' . strtolower($row['unix_group_name']);
 
         if (! isset($params['time_to_collect']['plugin_docman'])) {
             $params['time_to_collect']['plugin_docman'] = 0;
@@ -737,7 +737,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function pendingDocumentsRetriever(PendingDocumentsRetriever $event): void
     {
         $request = HTTPRequest::instance();
-        $limit = 25;
+        $limit   = 25;
 
         //return all pending versions for given group id
         $offsetVers = $request->getValidated('offsetVers', 'uint', 0);
@@ -746,9 +746,9 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         }
 
         $version = new Docman_VersionFactory();
-        $res = $version->listPendingVersions($event->getProject()->getID(), $offsetVers, $limit);
-        $html = '';
-        $html .= '<section class="tlp-pane">
+        $res     = $version->listPendingVersions($event->getProject()->getID(), $offsetVers, $limit);
+        $html    = '';
+        $html   .= '<section class="tlp-pane">
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">' . dgettext('tuleap-docman', 'Document Manager') . '</h1>
@@ -788,9 +788,9 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         if (! $offsetItem || $offsetItem < 0) {
             $offsetItem = 0;
         }
-        $item = new Docman_ItemFactory($event->getProject()->getID());
-        $res = $item->listPendingItems($event->getProject()->getID(), $offsetItem, $limit);
-        $html = '';
+        $item  = new Docman_ItemFactory($event->getProject()->getID());
+        $res   = $item->listPendingItems($event->getProject()->getID(), $offsetItem, $limit);
+        $html  = '';
         $html .= '<section class="tlp-pane-section">
                 <h2 class="tlp-pane-subtitle">' . dgettext('tuleap-docman', 'Deleted items') . '</h2>';
         if (isset($res) && $res) {
@@ -829,7 +829,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         $hp = Codendi_HTMLPurifier::instance();
 
-        $html = '';
+        $html  = '';
         $html .= '<table class="tlp-table">
             <thead>
                 <tr>
@@ -845,13 +845,13 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             <tbody>';
 
         $user_manager = UserManager::instance();
-        $user = $user_manager->getCurrentUser();
+        $user         = $user_manager->getCurrentUser();
 
         if ($nbVersions > 0) {
             foreach ($versions as $row) {
                 $historyUrl = $this->getPluginPath() . '/index.php?group_id=' . $groupId . '&id=' . $row['item_id'] . '&action=details&section=history';
-                $purgeDate = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $row['date']);
-                $html .= '<tr>' .
+                $purgeDate  = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $row['date']);
+                $html      .= '<tr>' .
                 '<td class="tlp-table-cell-numeric"><a href="' . $historyUrl . '">' . $row['item_id'] . '</a></td>' .
                 '<td>' . $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId) . '</td>' .
                 '<td>' . $hp->purify($row['label']) . '</td>' .
@@ -909,14 +909,14 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function showPendingItems(CSRFSynchronizerToken $csrf_token, $res, $groupId, $nbItems, $offset, $limit)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp          = Codendi_HTMLPurifier::instance();
         $itemFactory = new Docman_ItemFactory($groupId);
-        $uh = UserHelper::instance();
+        $uh          = UserHelper::instance();
 
         $user_manager = UserManager::instance();
-        $user = $user_manager->getCurrentUser();
+        $user         = $user_manager->getCurrentUser();
 
-        $html = '';
+        $html  = '';
         $html .= '<table class="tlp-table">
             <thead>
                 <tr>
@@ -935,7 +935,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         if ($nbItems > 0) {
             foreach ($res as $row) {
                 $purgeDate = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $row['date']);
-                $html .= '<tr>' .
+                $html     .= '<tr>' .
                 '<td class="tlp-table-cell-numeric">' . $row['id'] . '</td>' .
                 '<td>' . $itemFactory->getItemTypeAsText($row['item_type']) . '</td>' .
                 '<td>' . $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId) . '</td>' .
@@ -1041,8 +1041,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $project_id = $params['group_id'];
         $user_id    = $params['user_id'];
 
-        $project = $this->getProject($project_id);
-        $user    = $this->getUserManager()->getUserById($user_id);
+        $project                                  = $this->getProject($project_id);
+        $user                                     = $this->getUserManager()->getUserById($user_id);
         $notifications_for_project_member_cleaner = $this->getNotificationsForProjectMemberCleaner($project);
         $notifications_for_project_member_cleaner->cleanNotificationsAfterUserRemoval($project, $user);
     }
@@ -1203,7 +1203,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $updater = $this->getUgroupsToNotifyUpdater();
         $updater->updateProjectAccess($project_id, $old_access, $new_access);
 
-        $project = $this->getProject($project_id);
+        $project                                  = $this->getProject($project_id);
         $notifications_for_project_member_cleaner = $this->getNotificationsForProjectMemberCleaner($project);
         $notifications_for_project_member_cleaner->cleanNotificationsAfterProjectVisibilityChange($project, $new_access);
     }
@@ -1347,8 +1347,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 $service_pane_builder->buildPresenter($event)
             );
 
-        $project         = $event->getProject();
-        $service         = $project->getService($this->getServiceShortname());
+        $project = $event->getProject();
+        $service = $project->getService($this->getServiceShortname());
         if ($service !== null) {
             $rank_in_project = $service->getRank();
             $event->addPane($admin_permission_pane, $rank_in_project);
@@ -1601,7 +1601,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     private function getProvider(Project $project): ILinkUrlProvider
     {
-        $provider = new LegacyLinkProvider(
+        $provider      = new LegacyLinkProvider(
             HTTPRequest::instance()->getServerUrl() . '/?group_id=' . urlencode((string) $project->getID())
         );
         $link_provider = new DocmanLinkProvider($project, $provider);

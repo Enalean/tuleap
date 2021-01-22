@@ -71,11 +71,11 @@ class GlyphFinder
     private function getCoreGlyph($name)
     {
         $core_glyphs_location = new GlyphLocation(__DIR__ . '/../../glyphs');
-        $glyph = $this->readGlyph($core_glyphs_location, $name);
+        $glyph                = $this->readGlyph($core_glyphs_location, $name);
 
         if (! $glyph) {
             $custom_glyphs_location = new GlyphLocation(ForgeConfig::get('sys_data_dir') . '/images/');
-            $glyph = $this->readGlyph($custom_glyphs_location, $name);
+            $glyph                  = $this->readGlyph($custom_glyphs_location, $name);
         }
 
         return $glyph;

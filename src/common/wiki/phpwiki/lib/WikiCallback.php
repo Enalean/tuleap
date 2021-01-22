@@ -120,7 +120,7 @@ class WikiMethodCb extends WikiCallback
      */
     public function __construct(&$object, $methodName)
     {
-        $this->object = &$object;
+        $this->object     = &$object;
         $this->methodName = $methodName;
     }
 

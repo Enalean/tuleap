@@ -187,7 +187,7 @@ final class GitProjectResource extends AuthenticatedResource
 
         $repository_factory        = new GitRepositoryFactory(new \GitDao(), ProjectManager::instance());
         $total_number_repositories = 0;
-        $git_repositories   = $repository_factory->getPaginatedRepositoriesUserCanSee(
+        $git_repositories          = $repository_factory->getPaginatedRepositoriesUserCanSee(
             $project,
             $user,
             $scope,
@@ -218,7 +218,7 @@ final class GitProjectResource extends AuthenticatedResource
             \EventManager::instance(),
             new \Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder())
         );
-        $result = new GitRepositoryListRepresentation(
+        $result                      = new GitRepositoryListRepresentation(
             $repository_resource_builder->buildWithList($user, $git_repositories, $fields)
         );
 

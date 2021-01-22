@@ -121,7 +121,7 @@ class Git_Driver_Gerrit_UmbrellaProjectManager
 
             if (! $driver->doesTheParentProjectExist($gerrit_server, $project_name)) {
                 $admin_group_name = $project_name . '/' . $admin_ugroup->getNormalizedName();
-                $project_name = $driver->createProjectWithPermissionsOnly($gerrit_server, $project, $admin_group_name);
+                $project_name     = $driver->createProjectWithPermissionsOnly($gerrit_server, $project, $admin_group_name);
             }
         }
     }

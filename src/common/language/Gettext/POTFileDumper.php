@@ -39,7 +39,7 @@ msgstr ""
 EOS;
 
         foreach ($entries as $entry) {
-            $msgid = $this->escape($entry->getMsgid());
+            $msgid    = $this->escape($entry->getMsgid());
             $content .= "msgid \"$msgid\"\n";
 
             $msgid_plural = $this->escape($entry->getMsgidPlural());

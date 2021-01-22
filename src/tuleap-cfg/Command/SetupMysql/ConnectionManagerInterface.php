@@ -27,9 +27,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 interface ConnectionManagerInterface
 {
-    public const SSL_NO_SSL     = 'disabled';
-    public const SSL_NO_VERIFY  = 'no-verify';
-    public const SSL_VERIFY_CA  = 'verify-ca';
+    public const SSL_NO_SSL    = 'disabled';
+    public const SSL_NO_VERIFY = 'no-verify';
+    public const SSL_VERIFY_CA = 'verify-ca';
 
     public const ALLOWED_SSL_MODES = [
         self::SSL_NO_SSL,

@@ -59,7 +59,7 @@ class PullRequestFileUniDiffRepresentation
     public static function build(FileUniDiff $diff, array $inline_comments, $mime_type, $charset, $special_format): self
     {
         $new_instance = new self();
-        $lines = [];
+        $lines        = [];
         foreach ($diff->getLines() as $line) {
             $lines[] = new PullRequestLineUniDiffRepresentation($line, $charset);
         }

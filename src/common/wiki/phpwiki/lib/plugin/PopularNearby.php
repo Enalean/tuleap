@@ -74,7 +74,7 @@ class WikiPlugin_PopularNearby extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         extract($args);
         $header = '';
-        $page = $dbi->getPage($pagename);
+        $page   = $dbi->getPage($pagename);
         switch ($mode) {
             case 'incoming': // not the hits, but the number of links
                 if (! $noheader) {
@@ -92,7 +92,7 @@ class WikiPlugin_PopularNearby extends WikiPlugin
                 if (! $noheader) {
                     $header = sprintf(_("%d most popular nearby: "), $limit);
                 }
-                $inlinks = $page->getLinks();
+                $inlinks  = $page->getLinks();
                 $outlinks = $page->getLinks('reversed');
                 // array_merge doesn't sort out duplicate page objects here.
                 $links = $this->sortedLinks(
@@ -149,12 +149,12 @@ class WikiPlugin_PopularNearby extends WikiPlugin
             while ($page = $pages->next()) {
                 // different score algorithm:
                 //   the number of links to/from the page
-                $l = $page->getLinks(! $direction);
+                $l     = $page->getLinks(! $direction);
                 $score = $l->count();
                 if (! $score) {
                     continue;
                 }
-                $name = $page->_pagename;
+                $name    = $page->_pagename;
                 $links[] = ['hits' => $score,
                                  'pagename' => $name,
                                  'format' => HTML(WikiLink($name), ' (' . $score . ')')];

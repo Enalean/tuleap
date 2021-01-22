@@ -66,7 +66,7 @@ class AssetsIncluder
     private function includeAssetsNeededByWidgets(array $dashboards_presenter): CssAssetCollection
     {
         $deduplicated_css_assets = $this->css_asset_collection;
-        $current_dashboard = $this->getCurrentDashboard($dashboards_presenter);
+        $current_dashboard       = $this->getCurrentDashboard($dashboards_presenter);
         if (! $current_dashboard) {
             return $deduplicated_css_assets;
         }

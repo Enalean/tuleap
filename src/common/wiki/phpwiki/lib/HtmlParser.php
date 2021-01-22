@@ -91,7 +91,7 @@ class HtmlParser extends XmlParser
         $output = '';
         if (isa($node, 'XmlElement')) {
             $dialect = $this->dialect;
-            $conv = $dialect->_handlers[$node->_tag];
+            $conv    = $dialect->_handlers[$node->_tag];
             if (is_string($conv) and method_exists($dialect, $conv)) {
                 $output = $dialect->$conv($node);
             } elseif (is_array($conv)) {
@@ -297,11 +297,11 @@ class HtmlParser_PhpWiki2 extends HtmlParser
     }
     public function wikify_th($node)
     {
-        $ident = empty($this->ident) ? '' : $this->ident;
-        $output = "$ident| ";
+        $ident   = empty($this->ident) ? '' : $this->ident;
+        $output  = "$ident| ";
         $content = $this->elem_contents($node);
         preg_replace("s/^\s+/", "", $content);
-        $output .= $content;
+        $output      .= $content;
         $this->ident .= '  ';
         return "$output |\n";
     }
@@ -313,7 +313,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
 
     public function wikify_link($node)
     {
-        $url = $this->absolute_url($node->getAttr('href'));
+        $url   = $this->absolute_url($node->getAttr('href'));
         $title = $this->elem_contents($node);
         if (empty($url)) {
             $title = trim($title);
@@ -359,7 +359,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
     public function wikify_img($node)
     {
         $image_url = $this->absolute_url($node->getAttr('src'));
-        $file = basename($image_url);
+        $file      = basename($image_url);
         $alignment = $node->getAttr('align');
         $this->log("Processing IMG tag for SRC: " . $image_url . "...");
         // Grab attributes to be added to the [ Image ] markup (since 1.3.10)
@@ -414,7 +414,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
                 $this->log("    IMG tag's WIDTH attribute ($width) differs from actual width of image ($actual_w)");
                 $this->log("      -- that means we're going to need a thumbnail");
                 $this->log("    Adding 'width' to list of attributes for [Image] markup");
-                $attrs[] = "width=$width";
+                $attrs[]     = "width=$width";
                 $width_added = true;
             }
             $height = $node->getAttr('height');

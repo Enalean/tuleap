@@ -73,7 +73,7 @@ class MetadataListOfValuesElementFactoryTest extends TestCase
 
         // Parameters
         $valuesMapping = [];
-        $srcMd = new Docman_ListMetadata();
+        $srcMd         = new Docman_ListMetadata();
         $srcMd->setId(123);
         $srcMd->setLabel('field_123');
         $dstMd = new Docman_ListMetadata();
@@ -106,7 +106,7 @@ class MetadataListOfValuesElementFactoryTest extends TestCase
 
         // Parameters
         $valuesMapping = [101 => 201];
-        $srcMd = new Docman_ListMetadata();
+        $srcMd         = new Docman_ListMetadata();
         $srcMd->setId(123);
         $srcMd->setLabel('field_123');
         $dstMd = new Docman_ListMetadata();

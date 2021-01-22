@@ -109,7 +109,7 @@ class UserListResultsPresenter
         $this->no_matching_users       = $GLOBALS['Language']->getText('admin_userlist', 'no_matching_users');
 
         $default_params['sort_order'] = $sort_order;
-        $this->pagination = new PaginationPresenter(
+        $this->pagination             = new PaginationPresenter(
             $limit,
             $offset,
             count($this->matching_users),

@@ -39,7 +39,7 @@ class SearchFormPresenterBuilder
     public function __construct(EventManager $event_manager, Codendi_Request $request)
     {
         $this->event_manager = $event_manager;
-        $this->request = $request;
+        $this->request       = $request;
     }
 
     public function build(): SearchFormPresenter
@@ -48,7 +48,7 @@ class SearchFormPresenterBuilder
         $group_id       = $this->request->get('group_id');
 
         $search_entries = [];
-        $hidden = [];
+        $hidden         = [];
 
         if ($group_id) {
             $hidden[] = [
@@ -61,7 +61,7 @@ class SearchFormPresenterBuilder
                     'value'    => 'forums',
                     'selected' => true,
                 ];
-                $hidden[] = [
+                $hidden[]         = [
                     'name'  => 'forum_id',
                     'value' => $this->request->get('forum_id')
                 ];
@@ -71,7 +71,7 @@ class SearchFormPresenterBuilder
                     'value'    => 'tracker',
                     'selected' => true,
                 ];
-                $hidden[] = [
+                $hidden[]         = [
                     'name'  => 'atid',
                     'value' => $this->request->get('atid')
                 ];

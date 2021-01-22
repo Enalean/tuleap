@@ -109,7 +109,7 @@ class PluginDao extends DataAccessObject
     public function restrictProjectPluginUse($pluginId, $restrict)
     {
         $_usage = ($restrict === true ? 1 : 0);
-        $sql = sprintf(
+        $sql    = sprintf(
             'UPDATE plugin' .
                        ' SET prj_restricted = %d' .
                        ' WHERE id = %d',

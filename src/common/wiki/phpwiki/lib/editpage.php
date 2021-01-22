@@ -64,9 +64,9 @@ class PageEditor
         $version = $request->getArg('version');
         if ($version !== false) {
             $this->selected = $this->page->getRevision($version);
-            $this->version = $version;
+            $this->version  = $version;
         } else {
-            $this->version = $this->current->getVersion();
+            $this->version  = $this->current->getVersion();
             $this->selected = $this->page->getRevision($this->version);
         }
 
@@ -81,11 +81,11 @@ class PageEditor
                 ($template = $request->getArg('template'))
                    and $request->_dbi->isWikiPage($template)
             ) {
-                $page = $request->_dbi->getPage($template);
-                $current = $page->getCurrentRevision();
+                $page           = $request->_dbi->getPage($template);
+                $current        = $page->getCurrentRevision();
                 $this->_content = $current->getPackedContent();
             } elseif ($initial_content = $request->getArg('initial_content')) {
-                $this->_content = $initial_content;
+                $this->_content     = $initial_content;
                 $this->_redirect_to = $request->getArg('save_and_redirect_to');
             }
         }
@@ -97,11 +97,11 @@ class PageEditor
     public function editPage()
     {
         global $WikiTheme;
-        $saveFailed = false;
-        $tokens = &$this->tokens;
-        $tokens['PAGE_LOCKED_MESSAGE'] = '';
+        $saveFailed                          = false;
+        $tokens                              = &$this->tokens;
+        $tokens['PAGE_LOCKED_MESSAGE']       = '';
         $tokens['CONCURRENT_UPDATE_MESSAGE'] = '';
-        $r = $this->request;
+        $r                                   = $this->request;
 
         if (
             isset($r->args['pref']['editWidth'])
@@ -142,18 +142,18 @@ class PageEditor
             // an array, or convert it as necesary.
             $orig = $this->page->getRevision($this->_currentVersion);
             // FIXME: what if _currentVersion has be deleted?
-            $orig_content = $orig->getContent();
-            $this_content = explode("\n", $this->_content);
+            $orig_content  = $orig->getContent();
+            $this_content  = explode("\n", $this->_content);
             $other_content = $this->current->getContent();
             include_once("lib/diff3.php");
-            $diff = new Diff3($orig_content, $this_content, $other_content);
+            $diff   = new Diff3($orig_content, $this_content, $other_content);
             $output = $diff->merged_output(_("Your version"), _("Other version"));
             // Set the content of the textarea to the merged diff
             // output, and update the version
-            $this->_content = implode("\n", $output);
-            $this->_currentVersion = $this->current->getVersion();
-            $this->version = $this->_currentVersion;
-            $unresolved = $diff->ConflictingBlocks;
+            $this->_content                      = implode("\n", $output);
+            $this->_currentVersion               = $this->current->getVersion();
+            $this->version                       = $this->_currentVersion;
+            $unresolved                          = $diff->ConflictingBlocks;
             $tokens['CONCURRENT_UPDATE_MESSAGE']
                 = $this->getConflictMessage($unresolved);
         } elseif ($saveFailed) {
@@ -178,7 +178,7 @@ class PageEditor
         if (ENABLE_EDIT_TOOLBAR) {
             include_once("lib/EditToolbar.php");
             $toolbar = new EditToolbar();
-            $tokens = array_merge($tokens, $toolbar->getTokens());
+            $tokens  = array_merge($tokens, $toolbar->getTokens());
         }
 
         return $this->output('editpage', _("Edit: %s"));
@@ -188,13 +188,13 @@ class PageEditor
     {
         global $WikiTheme;
         $selected = &$this->selected;
-        $current = &$this->current;
+        $current  = &$this->current;
 
         if ($selected && $selected->getVersion() != $current->getVersion()) {
-            $rev = $selected;
+            $rev      = $selected;
             $pagelink = WikiLink($selected);
         } else {
-            $rev = $current;
+            $rev      = $current;
             $pagelink = WikiLink($this->page);
         }
 
@@ -214,7 +214,7 @@ class PageEditor
         assert($this->isInitialEdit());
         assert($this->selected);
 
-        $this->tokens['PAGE_SOURCE'] = $this->_content;
+        $this->tokens['PAGE_SOURCE']   = $this->_content;
         $this->tokens['HIDDEN_INPUTS'] = HiddenInputs($this->request->getArgs());
         return $this->output('viewsource', _("View Source: %s"));
     }
@@ -270,7 +270,7 @@ class PageEditor
 
         // Save new revision
         $this->_content = $this->getContent();
-        $newrevision = $page->save(
+        $newrevision    = $page->save(
             $this->_content,
             $this->version == -1
                                      ? -1
@@ -287,12 +287,12 @@ class PageEditor
             $reference_manager->extractCrossRef($this->_content, $page->getName(), ReferenceManager::REFERENCE_NATURE_WIKIPAGE, GROUP_ID);
 
             // Save succeded. We raise an event.
-            $new = $this->version + 1;
-            $difflink = WikiURL($page->getName(), ['action' => 'diff'], true);
+            $new       = $this->version + 1;
+            $difflink  = WikiURL($page->getName(), ['action' => 'diff'], true);
             $difflink .= "&versions%5b%5d=" . $this->version . "&versions%5b%5d=" . $new;
-            $eM = EventManager::instance();
-            $uM = UserManager::instance();
-            $user = $uM->getCurrentUser();
+            $eM        = EventManager::instance();
+            $uM        = UserManager::instance();
+            $user      = $uM->getCurrentUser();
             $wiki_page = new WikiPage(GROUP_ID, $page->getName());
             $eM->processEvent(
                 "wiki_page_updated",
@@ -319,8 +319,8 @@ class PageEditor
          all direct calls (admin plugins) */
 
         // look at the errorstack
-        $errors   = $GLOBALS['ErrorManager']->_postponed_errors;
-        $warnings = $GLOBALS['ErrorManager']->getPostponedErrorsAsHTML();
+        $errors                                     = $GLOBALS['ErrorManager']->_postponed_errors;
+        $warnings                                   = $GLOBALS['ErrorManager']->getPostponedErrorsAsHTML();
         $GLOBALS['ErrorManager']->_postponed_errors = $errors;
 
         $dbi = $request->getDbh();
@@ -383,9 +383,9 @@ class PageEditor
     public function getConvertedPreview()
     {
         include_once('lib/PageType.php');
-        $this->_content = $this->getContent();
+        $this->_content       = $this->getContent();
         $this->meta['markup'] = 2.0;
-        $this->_content = ConvertOldMarkup($this->_content);
+        $this->_content       = ConvertOldMarkup($this->_content);
         return new TransformedText($this->page, $this->_content, $this->meta);
     }
 
@@ -393,7 +393,7 @@ class PageEditor
     public function getContent()
     {
         if (USE_HTMLAREA) {
-            $xml_output = Edit_HtmlArea_ConvertAfter($this->_content);
+            $xml_output     = Edit_HtmlArea_ConvertAfter($this->_content);
             $this->_content = join("", $xml_output->_content);
             return $this->_content;
         } else {
@@ -452,9 +452,9 @@ class PageEditor
 
         $readonly = ! $this->canEdit(); // || $this->isConcurrentUpdate();
         if (USE_HTMLAREA) {
-            $html = $this->getPreview();
+            $html               = $this->getPreview();
             $this->_wikicontent = $this->_content;
-            $this->_content = $html->asXML();
+            $this->_content     = $html->asXML();
         }
 
         $textarea = HTML::textarea(
@@ -477,7 +477,7 @@ class PageEditor
     {
         global $WikiTheme;
         $request = &$this->request;
-        $page = &$this->page;
+        $page    = &$this->page;
 
         $h = ['action'   => 'edit',
                    'pagename' => $page->getName(),
@@ -485,32 +485,27 @@ class PageEditor
                    'edit[pagetype]' => $this->meta['pagetype'],
                    'edit[current_version]' => $this->_currentVersion];
 
-        $el['HIDDEN_INPUTS'] = HiddenInputs($h);
-        $el['EDIT_TEXTAREA'] = $this->getTextArea();
-        $el['SUMMARY_INPUT']
-            = HTML::input(['type'  => 'text',
+        $el['HIDDEN_INPUTS']      = HiddenInputs($h);
+        $el['EDIT_TEXTAREA']      = $this->getTextArea();
+        $el['SUMMARY_INPUT']      = HTML::input(['type'  => 'text',
                                 'class' => 'wikitext',
                                 'id' => 'edit[summary]',
                                 'name'  => 'edit[summary]',
                                 'size'  => 50,
                                 'maxlength' => 256,
                                 'value' => $this->meta['summary']]);
-        $el['MINOR_EDIT_CB']
-            = HTML::input(['type' => 'checkbox',
+        $el['MINOR_EDIT_CB']      = HTML::input(['type' => 'checkbox',
                                 'name'  => 'edit[minor_edit]',
                                 'id' => 'edit[minor_edit]',
                                 'checked' => (bool) $this->meta['is_minor_edit']]);
-        $el['OLD_MARKUP_CB']
-            = HTML::input(['type' => 'checkbox',
+        $el['OLD_MARKUP_CB']      = HTML::input(['type' => 'checkbox',
                                 'name' => 'edit[markup]',
                                 'value' => 'old',
                                 'checked' => $this->meta['markup'] < 2.0,
                                 'id' => 'useOldMarkup',
                                 'onclick' => 'showOldMarkupRules(this.checked)']);
-        $el['OLD_MARKUP_CONVERT'] = ($this->meta['markup'] < 2.0)
-            ? Button('submit:edit[edit_convert]', _("Convert"), 'wikiaction') : '';
-        $el['LOCKED_CB']
-            = HTML::input(['type' => 'checkbox',
+        $el['OLD_MARKUP_CONVERT'] = ($this->meta['markup'] < 2.0) ? Button('submit:edit[edit_convert]', _("Convert"), 'wikiaction') : '';
+        $el['LOCKED_CB']          = HTML::input(['type' => 'checkbox',
                                 'name' => 'edit[locked]',
                                 'id'   => 'edit[locked]',
                                 'disabled' => (bool) ! $this->user->isadmin(),
@@ -527,7 +522,7 @@ class PageEditor
 
         $el['IS_CURRENT'] = $this->version == $this->current->getVersion();
 
-        $el['WIDTH_PREF'] = HTML::input(['type' => 'text',
+        $el['WIDTH_PREF']     = HTML::input(['type' => 'text',
                                     'size' => 3,
                                     'maxlength' => 4,
                                     'class' => "numeric",
@@ -535,7 +530,7 @@ class PageEditor
                                     'id'   => 'pref[editWidth]',
                                     'value' => $request->getPref('editWidth'),
                                     'onchange' => 'this.form.submit();']);
-        $el['HEIGHT_PREF'] = HTML::input(['type' => 'text',
+        $el['HEIGHT_PREF']    = HTML::input(['type' => 'text',
                                      'size' => 3,
                                      'maxlength' => 4,
                                      'class' => "numeric",
@@ -543,7 +538,7 @@ class PageEditor
                                      'id'   => 'pref[editHeight]',
                                      'value' => $request->getPref('editHeight'),
                                      'onchange' => 'this.form.submit();']);
-        $el['SEP'] = $WikiTheme->getButtonSeparator();
+        $el['SEP']            = $WikiTheme->getButtonSeparator();
         $el['AUTHOR_MESSAGE'] = fmt("Author will be logged as %s.", HTML::em($this->user->getId()));
 
         return $el;
@@ -597,13 +592,13 @@ class PageEditor
             return false;       // FIXME: some kind of warning?
         }
 
-        $is_old_markup = ! empty($posted['markup']) && $posted['markup'] == 'old';
-        $meta['markup'] = $is_old_markup ? false : 2.0;
-        $meta['summary'] = trim(substr($posted['summary'], 0, 256));
+        $is_old_markup         = ! empty($posted['markup']) && $posted['markup'] == 'old';
+        $meta['markup']        = $is_old_markup ? false : 2.0;
+        $meta['summary']       = trim(substr($posted['summary'], 0, 256));
         $meta['is_minor_edit'] = ! empty($posted['minor_edit']);
-        $meta['pagetype'] = ! empty($posted['pagetype']) ? $posted['pagetype'] : false;
+        $meta['pagetype']      = ! empty($posted['pagetype']) ? $posted['pagetype'] : false;
 
-        $this->meta = array_merge($this->meta, $meta);
+        $this->meta   = array_merge($this->meta, $meta);
         $this->locked = ! empty($posted['locked']);
 
         if (! empty($posted['preview'])) {
@@ -621,22 +616,22 @@ class PageEditor
 
     public function _initializeState()
     {
-        $request = &$this->request;
-        $current = &$this->current;
+        $request  = &$this->request;
+        $current  = &$this->current;
         $selected = &$this->selected;
-        $user = &$this->user;
+        $user     = &$this->user;
 
         if (! $selected) {
             NoSuchRevision($request, $this->page, $this->version); // noreturn
         }
 
         $this->_currentVersion = $current->getVersion();
-        $this->_content = $selected->getPackedContent();
+        $this->_content        = $selected->getPackedContent();
 
         $this->locked = $this->page->get('locked');
 
         // If author same as previous author, default minor_edit to on.
-        $age = $this->meta['mtime'] - $current->get('mtime');
+        $age                         = $this->meta['mtime'] - $current->get('mtime');
         $this->meta['is_minor_edit'] = ( $age < MINOR_EDIT_TIMEOUT
                                          && $current->get('author') == $user->getId()
                                          );
@@ -648,7 +643,7 @@ class PageEditor
             $is_new_markup = $selected->get('markup') >= 2.0;
         }
 
-        $this->meta['markup'] = $is_new_markup ? 2.0 : false;
+        $this->meta['markup']   = $is_new_markup ? 2.0 : false;
         $this->meta['pagetype'] = $selected->get('pagetype');
         if ($this->meta['pagetype'] == 'wikiblog') {
             $this->meta['summary'] = $selected->get('summary'); // keep blog title
@@ -681,17 +676,17 @@ class LoadFileConflictPageEditor extends PageEditor
             // Get the text of the original page, and the two conflicting edits
             // The diff class takes arrays as input.  So retrieve content as
             // an array, or convert it as necesary.
-            $orig = $this->page->getRevision($this->_currentVersion);
-            $this_content = explode("\n", $this->_content);
+            $orig          = $this->page->getRevision($this->_currentVersion);
+            $this_content  = explode("\n", $this->_content);
             $other_content = $this->current->getContent();
             include_once("lib/diff.php");
-            $diff2 = new Diff($other_content, $this_content);
+            $diff2         = new Diff($other_content, $this_content);
             $context_lines = max(
                 4,
                 count($other_content) + 1,
                 count($this_content) + 1
             );
-            $fmt = new BlockDiffFormatter($context_lines);
+            $fmt           = new BlockDiffFormatter($context_lines);
 
             $this->_content = $fmt->format($diff2);
             // FIXME: integrate this into class BlockDiffFormatter
@@ -706,8 +701,8 @@ class LoadFileConflictPageEditor extends PageEditor
                 $this->_content
             );
 
-            $this->_currentVersion = $this->current->getVersion();
-            $this->version = $this->_currentVersion;
+            $this->_currentVersion               = $this->current->getVersion();
+            $this->version                       = $this->_currentVersion;
             $tokens['CONCURRENT_UPDATE_MESSAGE'] = $this->getConflictMessage();
         }
 
@@ -728,13 +723,13 @@ class LoadFileConflictPageEditor extends PageEditor
     public function output($template, $title_fs)
     {
         $selected = &$this->selected;
-        $current = &$this->current;
+        $current  = &$this->current;
 
         if ($selected && $selected->getVersion() != $current->getVersion()) {
-            $rev = $selected;
+            $rev      = $selected;
             $pagelink = WikiLink($selected);
         } else {
-            $rev = $current;
+            $rev      = $current;
             $pagelink = WikiLink($this->page);
         }
 

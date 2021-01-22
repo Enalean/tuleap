@@ -58,7 +58,7 @@ class Tracker_XML_Exporter_ChildrenXMLExporterTest extends \PHPUnit\Framework\Te
         parent::setUp();
         $this->artifact_xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><artifacts />');
 
-        $this->file_updater = Mockery::mock(Tracker_XML_Updater_TemporaryFileXMLUpdater::class);
+        $this->file_updater     = Mockery::mock(Tracker_XML_Updater_TemporaryFileXMLUpdater::class);
         $this->artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
 
         $artifact_1 = Mockery::mock(Artifact::class)

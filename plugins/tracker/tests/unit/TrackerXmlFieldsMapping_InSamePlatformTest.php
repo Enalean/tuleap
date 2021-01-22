@@ -27,7 +27,7 @@ final class TrackerXmlFieldsMapping_InSamePlatformTest extends \PHPUnit\Framewor
     public function testItReturnsTheNewValueId(): void
     {
         $xml_fields_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
-        $new_value_id = $xml_fields_mapping->getNewValueId(24058);
+        $new_value_id       = $xml_fields_mapping->getNewValueId(24058);
 
         $this->assertEquals(24058, $new_value_id);
     }

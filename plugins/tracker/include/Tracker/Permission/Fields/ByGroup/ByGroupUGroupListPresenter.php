@@ -44,9 +44,9 @@ class ByGroupUGroupListPresenter
 
     public function __construct(int $id, string $name, bool $might_not_have_access, bool $is_selected)
     {
-        $this->id = $id;
-        $this->name = $name;
+        $this->id                    = $id;
+        $this->name                  = $name;
         $this->might_not_have_access = $might_not_have_access;
-        $this->is_selected = $is_selected;
+        $this->is_selected           = $is_selected;
     }
 }

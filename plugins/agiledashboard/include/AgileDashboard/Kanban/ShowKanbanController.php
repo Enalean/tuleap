@@ -90,8 +90,8 @@ class ShowKanbanController extends BaseController
      */
     public function getBreadcrumbs()
     {
-        $kanban_id   = (int) $this->request->get('id');
-        $user        = $this->request->getCurrentUser();
+        $kanban_id = (int) $this->request->get('id');
+        $user      = $this->request->getCurrentUser();
 
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb(

@@ -73,7 +73,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent
      */
     public function process()
     {
-        $ugroup_name = null;
+        $ugroup_name     = null;
         $ugroup_old_name = null;
         // Check parameters
         if (count($this->getParametersAsArray()) == 4) {

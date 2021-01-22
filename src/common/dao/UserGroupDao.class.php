@@ -29,7 +29,7 @@ class UserGroupDao extends DataAccessObject
     public function searchByUserId($user_id)
     {
         $user_id = $this->da->escapeInt($user_id);
-        $sql = "SELECT *
+        $sql     = "SELECT *
                 FROM user_group
                 WHERE user_id = $user_id";
         return $this->retrieve($sql);
@@ -42,7 +42,7 @@ class UserGroupDao extends DataAccessObject
     public function searchActiveGroupsByUserId($user_id)
     {
         $user_id = $this->da->escapeInt($user_id);
-        $sql = "SELECT *
+        $sql     = "SELECT *
                 FROM user_group INNER JOIN groups USING(group_id)
                 WHERE user_id = $user_id
                   AND groups.status = 'A'";
@@ -75,10 +75,10 @@ class UserGroupDao extends DataAccessObject
     public function returnUsersNumberByGroupId($groupId)
     {
         $groupId = $this->da->escapeInt($groupId);
-        $sql = 'SELECT count(*) as numrows
+        $sql     = 'SELECT count(*) as numrows
                 FROM user_group
                 WHERE group_id =' . $groupId;
-        $row = $this->retrieve($sql)->getRow();
+        $row     = $this->retrieve($sql)->getRow();
         return $row['numrows'];
     }
 
@@ -104,7 +104,7 @@ class UserGroupDao extends DataAccessObject
     {
         $project_id = $this->getDa()->escapeInt($project_id);
         $user_id    = $this->getDa()->escapeInt($user_id);
-        $sql = "SELECT u.email as email  FROM user u
+        $sql        = "SELECT u.email as email  FROM user u
                     JOIN user_group ug
                     USING(user_id)
                     WHERE ug.admin_flags='A'
@@ -139,7 +139,7 @@ class UserGroupDao extends DataAccessObject
         //        necessarily know who will use this dao.
         $user_id  = $this->da->escapeInt($user_id);
         $group_id = $this->da->escapeInt($group_id);
-        $sql = "UPDATE user_group
+        $sql      = "UPDATE user_group
                 SET $flag
                 WHERE group_id = $group_id
                   AND user_id = $user_id";
@@ -159,7 +159,7 @@ class UserGroupDao extends DataAccessObject
         $extra = '';
         if ($predefined !== null && is_array($predefined)) {
             $predefined = implode(',', $predefined);
-            $extra = ' OR ugroup_id IN (' . $this->da->quoteSmart($predefined) . ')';
+            $extra      = ' OR ugroup_id IN (' . $this->da->quoteSmart($predefined) . ')';
         }
         $sql = "SELECT *
               FROM ugroup

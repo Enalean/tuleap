@@ -102,7 +102,7 @@ class Worker
     {
         if (isset($options['id'])) {
             if (ctype_digit((string) $options['id']) && $options['id'] >= 0) {
-                $this->id = (int) $options['id'];
+                $this->id       = (int) $options['id'];
                 $this->pid_file = self::getPidFilePath($this->id);
             } else {
                 $this->cliError("Invalid 'id' it should be a positive integer\n");

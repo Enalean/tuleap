@@ -53,7 +53,7 @@ final class BoundDecoratorSaverTest extends TestCase
         );
         $this->bound_decorator_saver = new BoundDecoratorSaver($this->bind_decorator_dao);
 
-        $this->field = \Mockery::mock(\Tracker_FormElement_Field_List::class);
+        $this->field    = \Mockery::mock(\Tracker_FormElement_Field_List::class);
         $this->field_id = 101;
         $this->field->shouldReceive('getId')->andReturn($this->field_id);
     }

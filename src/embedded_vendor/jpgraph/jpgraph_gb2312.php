@@ -1515,12 +1515,12 @@ class GB2312toUTF8
         $utf8 = '';
         while ($gb) {
             if (ord(substr($gb, 0, 1)) > 127) {
-                $t = substr($gb, 0, 2);
-                $gb = substr($gb, 2);
+                $t     = substr($gb, 0, 2);
+                $gb    = substr($gb, 2);
                 $utf8 .= $this->u2utf8($this->codetable[hexdec(bin2hex($t)) - 0x8080]);
             } else {
-                $t = substr($gb, 0, 1);
-                $gb = substr($gb, 1);
+                $t     = substr($gb, 0, 1);
+                $gb    = substr($gb, 1);
                 $utf8 .= $this->u2utf8($t);
             }
         }

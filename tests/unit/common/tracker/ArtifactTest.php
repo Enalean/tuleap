@@ -30,7 +30,7 @@ final class ArtifactTest extends \PHPUnit\Framework\TestCase
 
     public function testAddDependenciesSimple(): void
     {
-        $a = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $a             = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $a->data_array = ['artifact_id' => 147];
         $a->shouldReceive('insertDependency')->andReturns(true);
         $a->shouldReceive('validArtifact')->andReturns(true);
@@ -41,7 +41,7 @@ final class ArtifactTest extends \PHPUnit\Framework\TestCase
 
     public function testAddWrongDependency(): void
     {
-        $a = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $a             = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $a->data_array = ['artifact_id' => 147];
         $a->shouldReceive('insertDependency')->andReturns(true);
         $a->shouldReceive('validArtifact')->andReturns(false);
@@ -53,7 +53,7 @@ final class ArtifactTest extends \PHPUnit\Framework\TestCase
 
     public function testAddDependenciesDouble(): void
     {
-        $a = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $a             = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $a->data_array = ['artifact_id' => 147];
         $a->shouldReceive('insertDependency')->andReturns(true);
         $a->shouldReceive('validArtifact')->andReturns(true);
@@ -66,7 +66,7 @@ final class ArtifactTest extends \PHPUnit\Framework\TestCase
     {
         $art = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $txtContent = 'testing the feature';
+        $txtContent  = 'testing the feature';
         $htmlContent = '&lt;pre&gt;   function processEvent($event, $params) {&lt;br /&gt;       foreach(parent::processEvent($event, $params) as $key =&amp;gt; $value) {&lt;br /&gt;           $params[$key] = $value;&lt;br /&gt;       }&lt;br /&gt;   }&lt;br /&gt;&lt;/pre&gt; ';
         //the output will be delivered in a mail
         $this->assertEquals('   function processEvent($event, $params) {       foreach(parent::processEvent($event, $params) as $key => $value) {           $params[$key] = $value;       }   } ', $art->formatFollowUp(102, 1, $htmlContent, 2));

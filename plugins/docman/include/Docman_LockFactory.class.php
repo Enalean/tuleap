@@ -41,8 +41,8 @@ class Docman_LockFactory
 
     public function __construct(Docman_LockDao $dao, Docman_Log $docman_log)
     {
-        $this->dao           = $dao;
-        $this->docman_log    = $docman_log;
+        $this->dao        = $dao;
+        $this->docman_log = $docman_log;
     }
 
    /**
@@ -220,7 +220,7 @@ class Docman_LockFactory
      */
     private function logLock(Docman_Item $item, PFUser $user)
     {
-        $p             = [
+        $p = [
             'group_id' => $item->getGroupId(),
             'item'     => $item,
             'user'     => $user
@@ -238,7 +238,7 @@ class Docman_LockFactory
      */
     private function logUnlock(Docman_Item $item, PFUser $user)
     {
-        $p             = [
+        $p = [
             'group_id' => $item->getGroupId(),
             'item'     => $item,
             'user'     => $user

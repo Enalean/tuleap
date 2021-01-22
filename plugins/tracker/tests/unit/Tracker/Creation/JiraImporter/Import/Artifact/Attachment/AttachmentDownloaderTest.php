@@ -47,7 +47,7 @@ class AttachmentDownloaderTest extends TestCase
 
         $client  = Mockery::mock(ClientInterface::class);
         $factory = Mockery::mock(RequestFactoryInterface::class);
-        $logger = Mockery::mock(LoggerInterface::class);
+        $logger  = Mockery::mock(LoggerInterface::class);
 
         $logger->shouldReceive("debug");
 

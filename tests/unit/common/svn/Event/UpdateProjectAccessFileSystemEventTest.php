@@ -54,7 +54,7 @@ final class UpdateProjectAccessFileSystemEventTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->backend_svn      = \Mockery::mock(\BackendSVN::class);
+        $this->backend_svn = \Mockery::mock(\BackendSVN::class);
         \Backend::setInstance(\Backend::SVN, $this->backend_svn);
         $this->project_manager  = \Mockery::mock(\ProjectManager::class);
         $this->event_dispatcher = \Mockery::mock(EventDispatcherInterface::class);

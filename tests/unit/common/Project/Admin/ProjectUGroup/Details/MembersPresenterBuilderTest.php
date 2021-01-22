@@ -162,7 +162,7 @@ final class MembersPresenterBuilderTest extends TestCase
 
     public function testItFormatsUGroupMembers(): void
     {
-        $ugroup = Mockery::mock(
+        $ugroup       = Mockery::mock(
             \ProjectUGroup::class,
             ['isBound' => false, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class), 'getProjectId' => 202]
         );
@@ -244,7 +244,7 @@ final class MembersPresenterBuilderTest extends TestCase
 
     public function testItSetsMemberIsNewsAdmin(): void
     {
-        $ugroup = Mockery::mock(
+        $ugroup       = Mockery::mock(
             \ProjectUGroup::class,
             [
                 'isBound'      => false,

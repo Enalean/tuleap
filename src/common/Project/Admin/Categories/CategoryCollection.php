@@ -50,7 +50,7 @@ final class CategoryCollection
             if (! is_array($trove_cat_ids)) {
                 continue;
             }
-            $category = new TroveCat((int) $root_id, '', '');
+            $category     = new TroveCat((int) $root_id, '', '');
             $has_children = false;
             foreach ($trove_cat_ids as $cat_id) {
                 if ($cat_id === '') {

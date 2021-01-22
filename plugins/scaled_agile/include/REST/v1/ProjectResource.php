@@ -96,9 +96,9 @@ final class ProjectResource extends AuthenticatedResource
         $team_dao           = new TeamDao();
         $this->team_creator = new TeamCreator($build_program, $team_adapter, $team_dao);
 
-        $artifact_factory              = \Tracker_ArtifactFactory::instance();
-        $form_element_factory          = \Tracker_FormElementFactory::instance();
-        $this->to_be_planned_retriever = new ToBePlannedElementsRetriever(
+        $artifact_factory                 = \Tracker_ArtifactFactory::instance();
+        $form_element_factory             = \Tracker_FormElementFactory::instance();
+        $this->to_be_planned_retriever    = new ToBePlannedElementsRetriever(
             $build_program,
             new ToBePlannedElementsDao(),
             $artifact_factory,

@@ -29,12 +29,12 @@ class ArtifactGlobalNotificationFactory
     public function getGlobalNotificationsForTracker($tracker_id)
     {
         $notifs = [];
-        $dao = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
-        $dar = $dao->searchByTrackerId($tracker_id);
+        $dao    = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
+        $dar    = $dao->searchByTrackerId($tracker_id);
         if ($dar) {
             $notifs = [];
             while ($dar->valid()) {
-                $row = $dar->current();
+                $row                = $dar->current();
                 $notifs[$row['id']] = new ArtifactGlobalNotification($row);
                 $dar->next();
             }
@@ -54,8 +54,8 @@ class ArtifactGlobalNotificationFactory
     }
     public function updateGlobalNotification($global_notification_id, $data)
     {
-        $dao = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
-        $feedback = '';
+        $dao               = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
+        $feedback          = '';
         $arr_email_address = preg_split('/[,;]/D', $data['addresses']);
         if (! util_validateCCList($arr_email_address, $feedback, false)) {
             $GLOBALS['Response']->addFeedback('error', $feedback);
@@ -71,7 +71,7 @@ class ArtifactGlobalNotificationFactory
     public function getAllAddresses($tracker_id, $update = false)
     {
         $addresses = [];
-        $notifs = $this->getGlobalNotificationsForTracker($tracker_id);
+        $notifs    = $this->getGlobalNotificationsForTracker($tracker_id);
         foreach ($notifs as $key => $nop) {
             if (! $update || $notifs[$key]->isAllUpdates()) {
                 foreach (preg_split('/[,;]/D', $notifs[$key]->getAddresses()) as $address) {

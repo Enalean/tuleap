@@ -83,7 +83,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         'shared'                          => Tracker_FormElement_Shared::class,
     ];
 
-    protected $special_classnames = [
+    protected $special_classnames     = [
         self::FIELD_LAST_UPDATE_DATE_TYPE  => Tracker_FormElement_Field_LastUpdateDate::class,
         self::FIELD_ARTIFACT_ID_TYPE       => Tracker_FormElement_Field_ArtifactId::class,
         self::FIELD_SUBMITTED_ON_TYPE      => Tracker_FormElement_Field_SubmittedOn::class,
@@ -114,7 +114,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      *  - group   => (in/out) array of {'type' => 'classname'} Containers of fields (column, fieldset, …)
      *  - static  => (in/out) array of {'type' => 'classname'} Static fields (static text, separators, …)
      */
-    public const GET_CLASSNAMES     = 'tracker_formelement_get_classnames';
+    public const GET_CLASSNAMES = 'tracker_formelement_get_classnames';
 
     /**
      * Get the visitor responsible of the display of create interface for the element
@@ -297,7 +297,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     {
         if (! isset($this->used_formElements[$id])) {
             $this->used_formElements[$id] = null;
-            $form_element = $this->getFormElementById($id);
+            $form_element                 = $this->getFormElementById($id);
             if ($form_element && $form_element->isUsed()) {
                 $this->used_formElements[$id] = $form_element;
             }
@@ -485,7 +485,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     {
         $all = [];
         foreach ($this->getDao()->searchByParentId($parent_id) as $row) {
-            $form_element_id = $row['id'];
+            $form_element_id       = $row['id'];
             $all[$form_element_id] = $this->getCachedInstanceFromRow($row);
         }
         return $all;
@@ -960,7 +960,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                         'values'  => $created_values,
                         'workflow' => $has_workflow
                     ];
-                    $type = $this->getType($created_form_element);
+                    $type      = $this->getType($created_form_element);
                 }
                 $tracker = TrackerFactory::instance()->getTrackerByid($to_tracker_id);
             }
@@ -1006,8 +1006,8 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $tracker_id = $tracker->getId();
 
         if (! isset($this->cache_used_form_elements_by_tracker_and_type[$tracker_id][$key])) {
-            $used                      = true;
-            $used_form_elements_result = $this->getDao()->searchUsedByTrackerIdAndType($tracker_id, $type, $used);
+            $used                                                                  = true;
+            $used_form_elements_result                                             = $this->getDao()->searchUsedByTrackerIdAndType($tracker_id, $type, $used);
             $this->cache_used_form_elements_by_tracker_and_type[$tracker_id][$key] = $this->getCachedInstancesFromDAR($used_form_elements_result);
         }
 
@@ -1023,10 +1023,10 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     public function getUnusedFormElementForTracker(Tracker $tracker)
     {
-        $unused = [];
+        $unused     = [];
         $tracker_id = $tracker->getId();
         foreach ($this->getDao()->searchUnusedByTrackerId($tracker_id) as $row) {
-            $form_element_id = $row['id'];
+            $form_element_id          = $row['id'];
             $unused[$form_element_id] = $this->getCachedInstanceFromRow($row);
         }
         return array_filter($unused);
@@ -1043,7 +1043,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             foreach ($this->getDao()->searchUsedByTrackerId($tracker_id) as $row) {
                 $form_element = $this->getCachedInstanceFromRow($row);
                 if ($form_element) {
-                    $form_element_id = $row['id'];
+                    $form_element_id                           = $row['id'];
                     $this->used[$tracker_id][$form_element_id] = $form_element;
                     $this->used_formElements[$form_element_id] = $form_element;
                 }
@@ -1152,7 +1152,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $this->getEventManager()->processEvent($external_element_event);
             $curElem = $external_element_event->getFormElement();
         } else {
-            $row = [
+            $row     = [
                 'formElement_type'  => (string) $att['type'],
                 'name'              => (string) $xml->name,
                 'label'             => (string) $xml->label,
@@ -1268,7 +1268,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     private function fixSharedFieldOriginalValueIds($field_id, $old_original_field_id, $field_mapping)
     {
-        $field         = $this->getShareableFieldById($field_id);
+        $field = $this->getShareableFieldById($field_id);
         if ($field === null) {
             return;
         }
@@ -1396,10 +1396,10 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $success = false;
         if ($form_element = $this->getFormElementById($form_element_id)) {
             //Don't use anymore the field
-            $form_element->use_it    = 0;
+            $form_element->use_it = 0;
             //remove the field from its container
             $form_element->parent_id = 0;
-            $success = $this->getDao()->save($form_element);
+            $success                 = $this->getDao()->save($form_element);
         }
         return $success;
     }
@@ -1430,7 +1430,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                              ProjectUGroup::PROJECT_MEMBERS  => plugin_tracker_permission_get_input_value_from_permission(Tracker_FormElement_Field::PERMISSION_UPDATE)
                          ]
                     ];
-                    $tracker = $form_element->getTracker();
+                    $tracker     = $form_element->getTracker();
                     plugin_tracker_permission_process_update_fields_permissions(
                         $tracker->getGroupID(),
                         $tracker->getID(),
@@ -1487,7 +1487,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $event = new FilterFormElementsThatCanBeCreatedForTracker($klasses, $tracker);
         $this->getEventManager()->processEvent($event);
 
-        $html = '';
+        $html  = '';
         $html .= '<div class="tracker-admin-palette-content">';
         foreach ($event->getKlasses() as $type => $klass) {
             $html .= $this->getFactoryButton($klass, 'create-formElement[' .  urlencode($type) . ']', $tracker);
@@ -1499,8 +1499,8 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     public function getFactoryButton($klass, $name, Tracker $tracker, $label = null, $description = null, $icon = null, $isUnique = null)
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $button = '';
+        $hp           = Codendi_HTMLPurifier::instance();
+        $button       = '';
         $button_class = 'button';
         if (! $label) {
             $label = $klass::getFactoryLabel();
@@ -1530,8 +1530,8 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         }
 
         if ($isUnique) {
-            $type = array_search($klass, array_merge($this->classnames, $this->special_classnames), true);
-            $used = true;
+            $type     = array_search($klass, array_merge($this->classnames, $this->special_classnames), true);
+            $used     = true;
             $elements = $this->getFormElementsByType($tracker, $type, $used);
             if ($elements) {
                 return true;
@@ -1561,7 +1561,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             $form_element->setTracker($tracker);
 
             $klasses = array_merge($this->classnames, $this->special_classnames, $this->group_classnames, $this->staticfield_classnames);
-            $klass = $klasses[$type];
+            $klass   = $klasses[$type];
 
             //Waiting for PHP5.3 and $klass::staticMethod()
             $getFactoryLabel = new ReflectionMethod($klass, 'getFactoryLabel');
@@ -1640,7 +1640,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                                 $name .= '_';
                             }
                             $name .= '1';
-                            $uniq = false;
+                            $uniq  = false;
                         }
                     }
 
@@ -1730,7 +1730,7 @@ class Tracker_FormElementFactory //phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 foreach ($ugroups_permissions as $ugroup_id => $perms) {
                     $ugroups_permissions[$ugroup_id] = [];
                     foreach ($perms as $key => $value) {
-                        $new_value = plugin_tracker_permission_get_input_value_from_permission($value);
+                        $new_value                       = plugin_tracker_permission_get_input_value_from_permission($value);
                         $ugroups_permissions[$ugroup_id] = array_merge($ugroups_permissions[$ugroup_id], $new_value);
                     }
                 }

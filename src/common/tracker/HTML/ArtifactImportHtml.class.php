@@ -111,13 +111,13 @@ class ArtifactImportHtml extends ArtifactImport
       //artifact_id is not given otherwise the artifacts should
       //only be updated and we don't need to touch sub_on and sub_by
         if ($this->aid_column == -1 && $this->submitted_by_column == -1) {
-            $new_sub_by_col = count($parsed_labels);
+            $new_sub_by_col     = count($parsed_labels);
             $submitted_by_field = $this->art_field_fact->getFieldFromName('submitted_by');
-            $parsed_labels[] = $submitted_by_field->getLabel();
+            $parsed_labels[]    = $submitted_by_field->getLabel();
         }
 
         if ($this->aid_column == -1 && (isset($submitted_on_column) && $submitted_on_column == -1)) {
-            $new_sub_on_col = count($parsed_labels);
+            $new_sub_on_col  = count($parsed_labels);
             $open_date_field = $this->art_field_fact->getFieldFromName('open_date');
             $parsed_labels[] = $open_date_field->getLabel();
         }
@@ -141,8 +141,8 @@ class ArtifactImportHtml extends ArtifactImport
                 $width = ' class="small"';
 
                 $submitted_by_field = $this->art_field_fact->getFieldFromName('submitted_by');
-                $open_date_field = $this->art_field_fact->getFieldFromName('open_date');
-                $aid_field = $this->art_field_fact->getFieldFromName('artifact_id');
+                $open_date_field    = $this->art_field_fact->getFieldFromName('open_date');
+                $aid_field          = $this->art_field_fact->getFieldFromName('artifact_id');
 
          //SUBMITTED_ON
                 if ($parsed_labels[$c] == $open_date_field->getLabel()) {
@@ -258,7 +258,7 @@ class ArtifactImportHtml extends ArtifactImport
         }
 
         $errors = "";
-        $ok = $this->updateDB($parsed_labels, $artifacts_data, $aid_column, $errors, $notify);
+        $ok     = $this->updateDB($parsed_labels, $artifacts_data, $aid_column, $errors, $notify);
 
         if ($ok) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_import', 'success_import', $count_artifacts));
@@ -291,7 +291,7 @@ class ArtifactImportHtml extends ArtifactImport
 
         $fields = $col_list = $multiple_queries = $all_queries = [];
         $select = $from = $where = '';
-        $sql = $this->ath->buildExportQuery($fields, $col_list, $this->lbl_list, $this->dsc_list, $select, $from, $where, $multiple_queries, $all_queries);
+        $sql    = $this->ath->buildExportQuery($fields, $col_list, $this->lbl_list, $this->dsc_list, $select, $from, $where, $multiple_queries, $all_queries);
 
       //we need only one single record
         $sql .= " LIMIT 1";
@@ -311,7 +311,7 @@ class ArtifactImportHtml extends ArtifactImport
         $eol = "\n";
 
         $result = db_query($sql);
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
 
         echo '<h3>' . $Language->getText('tracker_import', 'format_hdr'),'</h3>';
         echo '<p>' . $Language->getText('tracker_import', 'format_msg'),'<p>';

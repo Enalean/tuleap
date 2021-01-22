@@ -51,13 +51,13 @@ class TrackerCrumbInContext implements Dispatchable
 
     public function __construct(\Tracker $tracker, \PFUser $user)
     {
-        $this->tracker = $tracker;
+        $this->tracker                                     = $tracker;
         $this->go_to_links[self::TRACKER_CRUMB_IDENTIFIER] = new TrackerCrumbLinkInContext(
             $this->tracker->getName(),
             sprintf(dgettext('tuleap-tracker', '%s tracker'), $this->tracker->getName()),
             TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId()
         );
-        $this->user = $user;
+        $this->user                                        = $user;
     }
 
     public function getTracker(): \Tracker
@@ -96,7 +96,7 @@ class TrackerCrumbInContext implements Dispatchable
     private function addSubItems(BreadCrumb $crumb, array $links): BreadCrumb
     {
         if (count($links) > 0) {
-            $sub_items = new BreadCrumbSubItems();
+            $sub_items       = new BreadCrumbSubItems();
             $link_collection = new BreadCrumbLinkCollection();
             foreach ($links as $link) {
                 $link_collection[] = $link->getSecondaryLink();

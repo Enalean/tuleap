@@ -130,15 +130,15 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     private function getPackagesForUser($user_id): array
     {
-        $frspf = $this->getFRSPackageFactory();
-        $packages = [];
-        $sql = "SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date " .
+        $frspf      = $this->getFRSPackageFactory();
+        $packages   = [];
+        $sql        = "SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date " .
         "FROM frs_package,frs_release " .
         "WHERE frs_package.package_id=frs_release.package_id " .
         "AND frs_package.group_id='" . db_ei($this->getGroupId()) . "' " .
         "AND frs_release.status_id=' " . db_ei($frspf->STATUS_ACTIVE) . "' " .
         "ORDER BY frs_package.rank,frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
-        $res_files = db_query($sql);
+        $res_files  = db_query($sql);
         $rows_files = db_numrows($res_files);
         if ($res_files && $rows_files >= 1) {
             for ($f = 0; $f < $rows_files; $f++) {
@@ -157,7 +157,7 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                             $authorized = permission_is_authorized('PACKAGE_READ', $package_id, $user_id, $this->getGroupId());
                         }
                         if ($authorized) {
-                            $packages[] = [
+                            $packages[]                     = [
                                 'package_name' => db_result($res_files, $f, 'package_name'),
                                 'release_name' => db_result($res_files, $f, 'release_name'),
                                 'release_id'   => $release_id,

@@ -75,7 +75,7 @@ class InvitationEmailNotifier
         $login_url = $this->instance_base_url_builder->build() . '/account/login.php';
 
         $presenter = new InvitationEmailLoginPresenter($current_user, $recipient_user, $login_url, $custom_message);
-        $body = $this->template_renderer->renderToString("invite-login", $presenter);
+        $body      = $this->template_renderer->renderToString("invite-login", $presenter);
         $body_text = $this->template_renderer->renderToString("invite-login-text", $presenter);
 
         $mail->setBodyHtml($body);
@@ -94,7 +94,7 @@ class InvitationEmailNotifier
         $register_url = $this->instance_base_url_builder->build() . '/account/register.php';
 
         $presenter = new InvitationEmailRegisterPresenter($current_user, $register_url, $custom_message);
-        $body = $this->template_renderer->renderToString("invite-register", $presenter);
+        $body      = $this->template_renderer->renderToString("invite-register", $presenter);
         $body_text = $this->template_renderer->renderToString("invite-register-text", $presenter);
 
         $mail->setBodyHtml($body);

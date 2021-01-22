@@ -185,14 +185,14 @@ final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
         $changeset_03->shouldReceive('getComment')->andReturns($comment_03);
         $changeset_04->shouldReceive('getComment')->andReturns($comment_04);
 
-        $rng_validator    = new XML_RNGValidator();
-        $artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class)->shouldReceive('getArtifactsByTrackerId')->with(101)->andReturns([
+        $rng_validator        = new XML_RNGValidator();
+        $artifact_factory     = \Mockery::spy(\Tracker_ArtifactFactory::class)->shouldReceive('getArtifactsByTrackerId')->with(101)->andReturns([
             $artifact_01,
             $artifact_02
         ])->getMock();
         $can_bypass_threshold = true;
 
-        $user_xml_exporter = new UserXMLExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
+        $user_xml_exporter        = new UserXMLExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
         $external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
 
         $exporter = new Tracker_Artifact_XMLExport(
@@ -237,11 +237,11 @@ final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
 
     public function testItRaisesAnExceptionWhenThresholdIsReached(): void
     {
-        $rng_validator    = new XML_RNGValidator();
-        $artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class)->shouldReceive('getArtifactsByTrackerId')->andReturns(array_fill(0, Tracker_Artifact_XMLExport::THRESHOLD + 1, null))->getMock();
+        $rng_validator        = new XML_RNGValidator();
+        $artifact_factory     = \Mockery::spy(\Tracker_ArtifactFactory::class)->shouldReceive('getArtifactsByTrackerId')->andReturns(array_fill(0, Tracker_Artifact_XMLExport::THRESHOLD + 1, null))->getMock();
         $can_bypass_threshold = false;
 
-        $user_xml_exporter = \Mockery::spy(\UserXMLExporter::class);
+        $user_xml_exporter        = \Mockery::spy(\UserXMLExporter::class);
         $external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
 
         $exporter = new Tracker_Artifact_XMLExport(

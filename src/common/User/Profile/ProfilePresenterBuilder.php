@@ -39,7 +39,7 @@ class ProfilePresenterBuilder
     public function __construct(EventManager $event_manager, Codendi_HTMLPurifier $purifier)
     {
         $this->event_manager = $event_manager;
-        $this->purifier = $purifier;
+        $this->purifier      = $purifier;
     }
 
     public function getPresenter(PFUser $user, PFUser $current_user)

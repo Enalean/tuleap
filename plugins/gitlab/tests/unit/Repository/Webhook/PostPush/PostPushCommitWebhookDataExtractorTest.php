@@ -229,7 +229,7 @@ class PostPushCommitWebhookDataExtractorTest extends TestCase
         $commits_data = $this->extractor->retrieveWebhookCommitsData($webhook_content);
         $this->assertCount(2, $commits_data);
 
-        $first_commit  = $commits_data[0];
+        $first_commit = $commits_data[0];
         $this->assertSame("feff4ced04b237abb8b4a50b4160099313152c3c", $first_commit->getSha1());
         $this->assertSame("commit 01", $first_commit->getTitle());
         $this->assertSame("commit 01", $first_commit->getMessage());

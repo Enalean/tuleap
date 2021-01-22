@@ -143,9 +143,9 @@ class UGroupLiteralizerTest extends TestCase
 
     public function testItCanReturnUgroupIdsFromAnItemAndItsPermissionTypes(): void
     {
-        $object_id = 100;
-        $expected  = [ProjectUGroup::PROJECT_MEMBERS];
-        $project   = \Mockery::spy(\Project::class);
+        $object_id           = 100;
+        $expected            = [ProjectUGroup::PROJECT_MEMBERS];
+        $project             = \Mockery::spy(\Project::class);
         $permissions_manager = \Mockery::spy(\PermissionsManager::class);
         $permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($project, $object_id, self::PERMISSIONS_TYPE)->andReturns($expected);
         PermissionsManager::setInstance($permissions_manager);
@@ -160,7 +160,7 @@ class UGroupLiteralizerTest extends TestCase
         $user_projects = [
             ['group_id' => 102, 'unix_group_name' => 'gpig2']
         ];
-        $user_groups = [
+        $user_groups   = [
             ['ugroup_id' => 105]
         ];
         $this->user->shouldReceive('getProjects')->andReturns($user_projects);
@@ -181,7 +181,7 @@ class UGroupLiteralizerTest extends TestCase
         $user_projects = [
             ['group_id' => 102, 'unix_group_name' => 'gpig2']
         ];
-        $user_groups = [
+        $user_groups   = [
             ['ugroup_id' => 105]
         ];
         $this->user->shouldReceive('getProjects')->andReturns($user_projects);

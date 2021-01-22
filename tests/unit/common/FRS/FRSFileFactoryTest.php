@@ -429,7 +429,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testRemoveStagingEmptyDirectories()
     {
-        $ff = new FRSFileFactory();
+        $ff      = new FRSFileFactory();
         $backend = \Mockery::spy(\BackendSystem::class);
 
         $this->createDeletedReleaseDir('prj', 'p1_r1');
@@ -473,7 +473,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $backend = \Mockery::spy(\BackendSystem::class);
 
         $user = \Mockery::spy(\PFUser::class);
-        $um = \Mockery::spy(\UserManager::class);
+        $um   = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('getCurrentUser')->andReturns($user);
         $fileFactory->shouldReceive('_getUserManager')->andReturns($um);
         $fileFactory->shouldReceive('_getEventManager')->andReturns(\Mockery::spy(EventManager::class));
@@ -530,7 +530,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         touch($filepath);
         $this->assertTrue(is_dir(dirname($filepath)));
         $backend = \Mockery::spy(\BackendSystem::class);
-        $file = \Mockery::spy(\FRSFile::class);
+        $file    = \Mockery::spy(\FRSFile::class);
         $file->shouldReceive('getFileID')->andReturns(12);
         $file->shouldReceive('getFileName')->andReturns('p2_r1/toto.xls');
         $file->shouldReceive('getFileLocation')->andReturns(ForgeConfig::get('ftp_frs_dir_prefix') . '/prj/p2_r1/toto.xls');
@@ -544,7 +544,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $fileFactory->shouldReceive('_getFRSFileDao')->andReturns($dao);
 
         $user = \Mockery::spy(\PFUser::class);
-        $um = \Mockery::spy(\UserManager::class);
+        $um   = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('getCurrentUser')->andReturns($user);
         $fileFactory->shouldReceive('_getUserManager')->andReturns($um);
         $fileFactory->shouldReceive('_getEventManager')->andReturns(\Mockery::spy(EventManager::class));
@@ -584,7 +584,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $backend->shouldReceive('chgrp')->andReturns(true);
 
         $user = \Mockery::spy(\PFUser::class);
-        $um = \Mockery::spy(\UserManager::class);
+        $um   = \Mockery::spy(\UserManager::class);
         $um->shouldReceive('getCurrentUser')->andReturns($user);
         $fileFactory->shouldReceive('_getUserManager')->andReturns($um);
         $fileFactory->shouldReceive('_getEventManager')->andReturns(\Mockery::spy(EventManager::class));
@@ -616,7 +616,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $dao = \Mockery::spy(\FRSFileDao::class);
         $dao->shouldReceive('cancelRestore')->once();
         $fileFactory->shouldReceive('_getFRSFileDao')->andReturns($dao);
-        $file = \Mockery::spy(\FRSFile::class);
+        $file    = \Mockery::spy(\FRSFile::class);
         $backend = \Mockery::spy(\BackendSystem::class);
 
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
@@ -635,7 +635,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
         $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
-        $backend  = \Mockery::spy(\BackendSystem::class);
+        $backend = \Mockery::spy(\BackendSystem::class);
         $ff->shouldReceive('restoreFile')->with(
             Mockery::any(function (FRSFile $file) {
                 $file->getFileID() === 12;
@@ -654,7 +654,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
         $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
-        $backend  = \Mockery::spy(\BackendSystem::class);
+        $backend = \Mockery::spy(\BackendSystem::class);
         $ff->shouldReceive('restoreFile')->once()->andReturns(false);
         $ff->shouldReceive('restoreFile')->once()->andReturns(true);
 
@@ -671,7 +671,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
         $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
-        $backend  = \Mockery::spy(\BackendSystem::class);
+        $backend = \Mockery::spy(\BackendSystem::class);
         $ff->shouldReceive('restoreFile')->never()->andReturns(false);
 
         $this->assertFalse($ff->restoreDeletedFiles($backend));
@@ -687,7 +687,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Psr\Log\LoggerInterface::class));
         $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
-        $backend  = \Mockery::spy(\BackendSystem::class);
+        $backend = \Mockery::spy(\BackendSystem::class);
         $ff->shouldReceive('restoreFile')->never()->andReturns(false);
 
         $this->assertTrue($ff->restoreDeletedFiles($backend));
@@ -806,7 +806,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     public function testCreateFileIllegalName()
     {
         $ff = new FRSFileFactory();
-        $f = new FRSFile();
+        $f  = new FRSFile();
         $f->setFileName('%toto#.txt');
 
         $this->expectException(FRSFileIllegalNameException::class);

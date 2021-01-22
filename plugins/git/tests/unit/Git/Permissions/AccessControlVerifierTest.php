@@ -57,7 +57,7 @@ final class AccessControlVerifierTest extends TestCase
     {
         $this->fine_grained_permissions->shouldReceive('doesRepositoryUseFineGrainedPermissions')->andReturns(false);
 
-        $access_control_verifier  = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
+        $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 
         $this->user->shouldReceive('hasPermission')->andReturns(true);
 

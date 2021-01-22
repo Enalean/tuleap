@@ -70,7 +70,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
         $factory = \Mockery::spy(\GitRepositoryFactory::class);
         $factory->shouldReceive('getRepositoryById')->with($this->repository_id)->andReturns($this->repository);
 
-        $id = $type = $parameters = $priority = $status = $create_date = $process_date = $end_date = $log = 0;
+        $id          = $type = $parameters = $priority = $status = $create_date = $process_date = $end_date = $log = 0;
         $this->event = \Mockery::mock(\SystemEvent_GIT_GERRIT_MIGRATION::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->event->setParameters("$this->repository_id::$this->remote_server_id::true");
         $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);

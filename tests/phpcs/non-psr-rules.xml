@@ -51,6 +51,12 @@
             <property name="spacing" value="1"/>
         </properties>
     </rule>
+    <!-- Force alignment of corresponding assignment statement tokens -->
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <properties>
+            <property name="error" value="true"/>
+        </properties>
+    </rule>
     <rule ref="Generic.PHP.ForbiddenFunctions">
         <properties>
             <property name="forbiddenFunctions" type="array">

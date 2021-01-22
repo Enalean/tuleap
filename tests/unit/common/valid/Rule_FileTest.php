@@ -37,7 +37,7 @@ class Rule_FileTest extends TestCase
     {
         parent::setUp();
         $tmpName = $this->getTmpDir() . '/_unit_tests_rules_file.txt';
-        $fd = fopen($tmpName, 'w');
+        $fd      = fopen($tmpName, 'w');
         fwrite($fd, 'A test file');
         fclose($fd);
         $this->file = ['name'     => 'File test 1',
@@ -121,7 +121,7 @@ class Rule_FileTest extends TestCase
     public function testNoName(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1000);
-        $r = new Rule_File();
+        $r                  = new Rule_File();
         $this->file['name'] = '';
         $this->assertFalse($r->isValid($this->file));
     }

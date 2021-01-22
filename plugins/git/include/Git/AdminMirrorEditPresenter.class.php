@@ -43,10 +43,10 @@ class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter
     {
         parent::__construct($title, $csrf);
 
-        $this->id         = $mirror->id;
-        $this->url        = $mirror->url;
-        $this->hostname   = $mirror->hostname;
-        $this->name       = $mirror->name;
+        $this->id       = $mirror->id;
+        $this->url      = $mirror->url;
+        $this->hostname = $mirror->hostname;
+        $this->name     = $mirror->name;
 
         $this->owner      = $mirror->owner;
         $this->owner_name = $mirror->owner_name;

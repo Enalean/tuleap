@@ -54,7 +54,7 @@ final class UserMappingManagerTest extends TestCase
         $this->dao                             = \Mockery::mock(UserMappingDao::class);
         $this->user_dao                        = \Mockery::mock(\UserDao::class);
         $this->can_remove_user_mapping_checker = \Mockery::mock(CanRemoveUserMappingChecker::class);
-        $this->user_mapping_manager = new UserMappingManager($this->dao, $this->user_dao, $this->can_remove_user_mapping_checker, new DBTransactionExecutorPassthrough());
+        $this->user_mapping_manager            = new UserMappingManager($this->dao, $this->user_dao, $this->can_remove_user_mapping_checker, new DBTransactionExecutorPassthrough());
     }
 
     public function testItThrowsAnExceptionIfTheMappingCanNotBeFound(): void

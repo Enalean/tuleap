@@ -44,19 +44,19 @@ class TlpRelativeDatePresenterBuilder
         switch ($user->getPreference(\DateHelper::PREFERENCE_NAME)) {
             case \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN:
                 $preference = "absolute";
-                $placement = $position;
+                $placement  = $position;
                 break;
             case \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP:
                 $preference = "absolute";
-                $placement = "tooltip";
+                $placement  = "tooltip";
                 break;
             case \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN:
                 $preference = "relative";
-                $placement = $position;
+                $placement  = $position;
                 break;
             case \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP:
                 $preference = "relative";
-                $placement = "tooltip";
+                $placement  = "tooltip";
                 break;
             default:
                 $default_display = DefaultRelativeDatesDisplayPreferenceRetriever::getDefaultPlacementAndPreference($position);

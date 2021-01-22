@@ -37,15 +37,15 @@ class PermissionPresenter extends BaseFrsPresenter
 
     public function __construct(Project $project, array $ugroups_admin, array $ugroups_reader)
     {
-        $this->administrators_title      = $GLOBALS['Language']->getText('file_file_utils', 'administrators_title');
-        $this->administrator_info        = $GLOBALS['Language']->getText('file_file_utils', 'administrator_info');
-        $this->readers_title             = $GLOBALS['Language']->getText('file_file_utils', 'readers_title');
-        $this->readers_info              = $GLOBALS['Language']->getText('file_file_utils', 'readers_info');
-        $this->frs_admins_submit_button  = $GLOBALS['Language']->getText('file_file_utils', 'frs_admins_submit_button');
-        $this->ugroups_admin             = $ugroups_admin;
-        $this->ugroups_reader            = $ugroups_reader;
-        $this->project_id                = $project->getId();
-        $this->frs_admins_form_action    = '/file/admin/?' . http_build_query([
+        $this->administrators_title     = $GLOBALS['Language']->getText('file_file_utils', 'administrators_title');
+        $this->administrator_info       = $GLOBALS['Language']->getText('file_file_utils', 'administrator_info');
+        $this->readers_title            = $GLOBALS['Language']->getText('file_file_utils', 'readers_title');
+        $this->readers_info             = $GLOBALS['Language']->getText('file_file_utils', 'readers_info');
+        $this->frs_admins_submit_button = $GLOBALS['Language']->getText('file_file_utils', 'frs_admins_submit_button');
+        $this->ugroups_admin            = $ugroups_admin;
+        $this->ugroups_reader           = $ugroups_reader;
+        $this->project_id               = $project->getId();
+        $this->frs_admins_form_action   = '/file/admin/?' . http_build_query([
             'group_id' => $this->project_id,
             'action'   => 'admin-frs-admins'
         ]);

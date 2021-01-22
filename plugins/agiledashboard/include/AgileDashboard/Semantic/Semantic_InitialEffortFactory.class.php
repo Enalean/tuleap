@@ -43,7 +43,7 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFrom
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            $class_name = self::class;
+            $class_name     = self::class;
             self::$instance = new $class_name();
         }
         return self::$instance;
@@ -59,7 +59,7 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFrom
 
     public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): ?Tracker_Semantic
     {
-        $xml_field = $xml->field;
+        $xml_field            = $xml->field;
         $xml_field_attributes = $xml_field->attributes();
         if (! isset($xml_mapping[(string) $xml_field_attributes['REF']])) {
             return null;
@@ -92,7 +92,7 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFrom
         $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();
         if ($row) {
             $from_title_field_id = $row['field_id'];
-            $to_title_field_id = false;
+            $to_title_field_id   = false;
             foreach ($field_mapping as $mapping) {
                 if ($mapping['from'] == $from_title_field_id) {
                     $to_title_field_id = $mapping['to'];

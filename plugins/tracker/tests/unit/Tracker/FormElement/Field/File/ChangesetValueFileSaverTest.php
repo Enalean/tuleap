@@ -42,7 +42,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -75,7 +75,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -122,7 +122,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -169,7 +169,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -219,7 +219,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -281,7 +281,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -343,7 +343,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
-        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping        = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 

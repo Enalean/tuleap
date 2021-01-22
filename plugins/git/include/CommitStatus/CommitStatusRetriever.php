@@ -45,8 +45,8 @@ class CommitStatusRetriever
      */
     public function getLastCommitStatuses(\GitRepository $repository, array $commit_references)
     {
-        $statuses           = [];
-        $commit_status_rows = $this->dao->getLastCommitStatusByRepositoryIdAndCommitReferences(
+        $statuses                                = [];
+        $commit_status_rows                      = $this->dao->getLastCommitStatusByRepositoryIdAndCommitReferences(
             $repository->getId(),
             $commit_references
         );

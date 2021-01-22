@@ -118,7 +118,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function getAccessURL(GitRepository $repository)
     {
-        $transports = [];
+        $transports    = [];
         $ssh_transport = $this->gitolite_access_URL_generator->getSSHURL($repository);
         if ($ssh_transport) {
             $transports['ssh'] = $ssh_transport;
@@ -180,8 +180,8 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $project_creator_status = new Git_Driver_Gerrit_ProjectCreatorStatus(
             new Git_Driver_Gerrit_ProjectCreatorStatusDao()
         );
-        $ok = true;
-        $ok &= $this->savePermission($repository, Git::PERM_READ, $perms);
+        $ok                     = true;
+        $ok                    &= $this->savePermission($repository, Git::PERM_READ, $perms);
         if ($project_creator_status->canModifyPermissionsTuleapSide($repository)) {
             if ($ok) {
                 $ok &= $this->savePermission($repository, Git::PERM_WRITE, $perms);
@@ -222,7 +222,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function deletePermissions($repository)
     {
-        $group_id = $repository->getProjectId();
+        $group_id  = $repository->getProjectId();
         $object_id = $repository->getId();
         return permission_clear_all($group_id, Git::PERM_READ, $object_id)
             && permission_clear_all($group_id, Git::PERM_WRITE, $object_id)
@@ -302,7 +302,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     {
         if (is_dir($this->driver->getRepositoriesPath() . '/' . $project->getUnixName())) {
             $backend = $this->getBackend();
-            $ok = rename(
+            $ok      = rename(
                 $this->driver->getRepositoriesPath() . '/' . $project->getUnixName(),
                 $this->driver->getRepositoriesPath() . '/' . $newName
             );

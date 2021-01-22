@@ -38,7 +38,7 @@ final class ArchiveDeletedItemEvent implements Dispatchable
 
     public function __construct(ArchiveDeletedItemProvider $file_provider, bool $skip_duplicated = false)
     {
-        $this->file_provider = $file_provider;
+        $this->file_provider   = $file_provider;
         $this->skip_duplicated = $skip_duplicated;
     }
 

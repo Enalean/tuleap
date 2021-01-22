@@ -34,7 +34,7 @@ class StepsResultsFilter
         StepDefinitionChangesetValue $definition_changeset_value,
         StepExecutionChangesetValue $execution_changeset_value
     ) {
-        $definition_value               = $definition_changeset_value->getValue();
+        $definition_value    = $definition_changeset_value->getValue();
         $step_definition_ids = array_map(
             function (Step $step_definition) {
                 return $step_definition->getId();

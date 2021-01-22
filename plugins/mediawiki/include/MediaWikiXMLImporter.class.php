@@ -109,7 +109,7 @@ class MediaWikiXMLImporter
         $this->importRights($project, $xml_mediawiki);
 
         $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . "/" . (int) $project->getID();
-        $owner = ForgeConfig::get('sys_http_user');
+        $owner                  = ForgeConfig::get('sys_http_user');
         if ($owner) {
             $no_filter_file_extension = [];
             $this->backend->recurseChownChgrp($mediawiki_storage_path, $owner, $owner, $no_filter_file_extension);
@@ -124,8 +124,8 @@ class MediaWikiXMLImporter
     {
         $this->logger->info("Importing pages for {$project->getUnixName()}");
         $project_name = escapeshellarg($project->getUnixName());
-        $backup_path = escapeshellarg($backup_path);
-        $command = $this->getMaintenanceWrapperPath() . " $project_name importDump.php $backup_path";
+        $backup_path  = escapeshellarg($backup_path);
+        $command      = $this->getMaintenanceWrapperPath() . " $project_name importDump.php $backup_path";
         $this->sys_command->exec($command);
         return true;
     }
@@ -144,8 +144,8 @@ class MediaWikiXMLImporter
     {
         $this->logger->info("Importing files for {$project->getUnixName()}");
         $project_name = escapeshellarg($project->getUnixName());
-        $backup_path = escapeshellarg($backup_path);
-        $command = $this->getMaintenanceWrapperPath() . " $project_name importImages.php --comment='Tuleap import' $backup_path";
+        $backup_path  = escapeshellarg($backup_path);
+        $command      = $this->getMaintenanceWrapperPath() . " $project_name importImages.php --comment='Tuleap import' $backup_path";
 
         $this->sys_command->exec($command);
         return true;
@@ -179,7 +179,7 @@ class MediaWikiXMLImporter
         $ugroup_ids = [];
         foreach ($permission_xmlnode->ugroup as $ugroup) {
             $ugroup_name = (string) $ugroup;
-            $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
+            $ugroup      = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
             if ($ugroup === null) {
                 $this->logger->warning("Could not find any ugroup named $ugroup_name, skip it.");
                 continue;

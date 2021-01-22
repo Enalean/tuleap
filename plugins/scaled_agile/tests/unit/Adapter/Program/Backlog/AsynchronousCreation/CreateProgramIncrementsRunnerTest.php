@@ -67,7 +67,7 @@ final class CreateProgramIncrementsRunnerTest extends TestCase
             $this->pending_creation_store,
             Mockery::mock(Tracker_Artifact_ChangesetFactory::class)
         );
-        $this->runner        = new CreateProgramIncrementsRunner(
+        $this->runner                 = new CreateProgramIncrementsRunner(
             $logger,
             $this->queue_factory,
             $replication_adapter,

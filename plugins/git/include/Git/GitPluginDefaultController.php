@@ -41,8 +41,8 @@ class GitPluginDefaultController implements DispatchableWithRequest
 
     public function __construct(RouterLink $router_link, EventManager $event_manager)
     {
-        $this->router_link        = $router_link;
-        $this->event_manager      = $event_manager;
+        $this->router_link   = $router_link;
+        $this->event_manager = $event_manager;
     }
 
     /**

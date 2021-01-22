@@ -53,7 +53,7 @@ class ConfigPermissionsSerializerTest extends TestCase
         $this->project_id++;
         $this->repository_id++;
 
-        $this->project    = Mockery::spy(\Project::class);
+        $this->project = Mockery::spy(\Project::class);
         $this->project->shouldReceive('getId')->andReturns($this->project_id);
         $this->project->shouldReceive('getUnixName')->andReturns('project' . $this->project_id);
 
@@ -115,7 +115,7 @@ class ConfigPermissionsSerializerTest extends TestCase
     public function testItReturnsProjectNameWithProjectMemberIfUserIsProjectMember()
     {
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([ProjectUGroup::PROJECT_MEMBERS]);
-        $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
+        $result       = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
         $this->assertMatchesRegularExpression('/=\s@' . $project_name . '_project_members$/', $result);
     }
@@ -123,7 +123,7 @@ class ConfigPermissionsSerializerTest extends TestCase
     public function testItReturnsProjectNameWithProjectAdminIfUserIsProjectAdmin()
     {
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([ProjectUGroup::PROJECT_ADMIN]);
-        $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
+        $result       = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
         $this->assertMatchesRegularExpression('/=\s@' . $project_name . '_project_admin$/', $result);
     }

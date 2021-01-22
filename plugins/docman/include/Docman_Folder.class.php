@@ -41,7 +41,7 @@ class Docman_Folder extends Docman_Item
 
     public function toRow()
     {
-        $row = parent::toRow();
+        $row              = parent::toRow();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
         return $row;
     }

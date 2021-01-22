@@ -35,11 +35,11 @@
 
     public function __construct($item, string $url, $id, $title)
     {
-        $this->id     = $id;
-        $this->title  = $title;
-        $this->item   = $item;
-        $this->url    = $url;
-        $this->hp     = Codendi_HTMLPurifier::instance();
+        $this->id    = $id;
+        $this->title = $title;
+        $this->item  = $item;
+        $this->url   = $url;
+        $this->hp    = Codendi_HTMLPurifier::instance();
     }
 
     public function getId()

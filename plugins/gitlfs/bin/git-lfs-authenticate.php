@@ -39,7 +39,7 @@ require_once __DIR__ . '/../include/gitlfsPlugin.php';
 
 try {
     $project_manager = ProjectManager::instance();
-    $ssh_auth = new SSHAuthenticate(
+    $ssh_auth        = new SSHAuthenticate(
         $project_manager,
         UserManager::instance(),
         new GitRepositoryFactory(
@@ -55,7 +55,7 @@ try {
         new UserOperationFactory(),
         PluginManager::instance()->getAvailablePluginByName('gitlfs')
     );
-    $response = $ssh_auth->main($_SERVER['GL_USER'], $argv);
+    $response        = $ssh_auth->main($_SERVER['GL_USER'], $argv);
     echo \json_encode($response, JSON_FORCE_OBJECT);
 } catch (\Tuleap\GitLFS\SSHAuthenticate\InvalidCommandException $exception) {
     fwrite(STDERR, $exception->getMessage() . PHP_EOL);

@@ -34,7 +34,7 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollect
 use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if (! $p || ! $pluginManager->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }

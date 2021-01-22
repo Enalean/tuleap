@@ -108,8 +108,8 @@ class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
     {
         parent::setUp();
 
-        $this->retriever = Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class);
-        $this->factory   = Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class);
+        $this->retriever        = Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class);
+        $this->factory          = Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class);
         $this->regexp_retriever = Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class);
 
         $mapper = Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
@@ -275,8 +275,8 @@ EOS;
         $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_03]);
         $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers          = [$this->ugroup_01, $this->ugroup_02];
-        $rewinders        = [$this->ugroup_03];
+        $writers   = [$this->ugroup_01, $this->ugroup_02];
+        $rewinders = [$this->ugroup_03];
 
         $this->permission_03->setWriters($writers);
         $this->permission_03->setRewinders($rewinders);
@@ -307,8 +307,8 @@ EOS;
         $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
         $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers          = [$this->ugroup_01, $this->ugroup_02];
-        $rewinders        = [];
+        $writers   = [$this->ugroup_01, $this->ugroup_02];
+        $rewinders = [];
 
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);
@@ -337,8 +337,8 @@ EOS;
         $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
         $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers          = [$this->ugroup_nobody];
-        $rewinders        = [];
+        $writers   = [$this->ugroup_nobody];
+        $rewinders = [];
 
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);
@@ -365,8 +365,8 @@ EOS;
         $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
         $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers          = [$this->ugroup_01, $this->ugroup_02];
-        $rewinders        = [$this->ugroup_03];
+        $writers   = [$this->ugroup_01, $this->ugroup_02];
+        $rewinders = [$this->ugroup_03];
 
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);
@@ -398,8 +398,8 @@ EOS;
         $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn([1 => $this->permission_01]);
         $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn([2 => $this->permission_02]);
 
-        $writers          = [$this->ugroup_01, $this->ugroup_02];
-        $rewinders        = [$this->ugroup_03];
+        $writers   = [$this->ugroup_01, $this->ugroup_02];
+        $rewinders = [$this->ugroup_03];
 
         $this->permission_01->setWriters($writers);
         $this->permission_01->setRewinders($rewinders);

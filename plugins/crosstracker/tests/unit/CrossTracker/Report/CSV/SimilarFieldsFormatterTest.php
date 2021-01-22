@@ -126,8 +126,8 @@ class SimilarFieldsFormatterTest extends TestCase
 
         $formatted_string_field = '"safari"';
         $formatted_text_field   = '"inappendiculate gas pearly"';
-        $formatted_float_field = 48.6946;
-        $formatted_date_field = '05/11/2018 17:42';
+        $formatted_float_field  = 48.6946;
+        $formatted_date_field   = '05/11/2018 17:42';
 
         $this->csv_formatter_visitor->shouldReceive('visitTextValue')->andReturn(
             $formatted_string_field,

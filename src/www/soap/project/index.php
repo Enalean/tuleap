@@ -43,7 +43,7 @@ if ($request->exist('wsdl')) {
     $projectManager   = ProjectManager::instance();
     $soapLimitFactory = new SOAP_RequestLimitatorFactory();
 
-    $ugroup_dao         = new UGroupDao();
+    $ugroup_dao = new UGroupDao();
 
     $projectCreator = ProjectCreator::buildSelfRegularValidation();
 

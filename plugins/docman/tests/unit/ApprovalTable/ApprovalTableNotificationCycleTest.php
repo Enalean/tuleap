@@ -115,12 +115,12 @@ final class ApprovalTableNotificationCycleTest extends TestCase
     public function testLastReviewerApprove(): void
     {
         $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $mail = \Mockery::spy(Mail::class);
+        $mail  = \Mockery::spy(Mail::class);
         $cycle->shouldReceive('sendNotifTableApproved')->once()->andReturns($mail);
         $cycle->shouldReceive('notifyNextReviewer')->never();
-        $reviewer = \Mockery::spy(Docman_ApprovalReviewer::class);
+        $reviewer       = \Mockery::spy(Docman_ApprovalReviewer::class);
         $isLastReviewer = true;
-        $withComments = "";
+        $withComments   = "";
         $cycle->reviewerApprove($reviewer, $isLastReviewer, $withComments);
     }
 }

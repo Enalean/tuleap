@@ -235,7 +235,7 @@ class GitViews_RepoManagement
     private function displayTab(Pane\Pane $pane)
     {
         echo '<li class="' . ($this->current_pane == $pane->getIdentifier() ? 'active' : '') . '">';
-        $url = GIT_BASE_URL . '/?' . http_build_query(
+        $url      = GIT_BASE_URL . '/?' . http_build_query(
             [
                 'action' => 'repo_management',
                 'group_id' => $this->repository->getProjectId(),

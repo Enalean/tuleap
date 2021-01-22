@@ -109,7 +109,7 @@ class MailGatewayInsecureTest extends TestCase
         $this->tracker->shouldReceive('getFormElementFields')->andReturns([$title_field, $description_field]);
 
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getId')->andReturns(666)->getMock();
-        $filter = \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter::class);
+        $filter          = \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter::class);
 
         $this->mailgateway = new Tracker_Artifact_MailGateway_InsecureMailGateway(
             $this->incoming_message_factory,

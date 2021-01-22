@@ -65,7 +65,7 @@ class LicenseAgreementControllersHelperTest extends TestCase
         $this->current_user = new \PFUser(['language_id' => 'en_US']);
 
         $this->service_file = Mockery::mock(\ServiceFile::class, ['displayFRSHeader' => 'foo']);
-        $this->project = Mockery::mock(\Project::class, ['isError' => false, 'getID' => '101']);
+        $this->project      = Mockery::mock(\Project::class, ['isError' => false, 'getID' => '101']);
         $this->project->shouldReceive('getFileService')->andReturn($this->service_file)->byDefault();
 
         $this->renderer_factory = Mockery::mock(TemplateRendererFactory::class);

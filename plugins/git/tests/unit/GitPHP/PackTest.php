@@ -81,7 +81,7 @@ class PackTest extends TestCase
      */
     protected function setUp(): void
     {
-        $git_repository = vfsStream::setup(
+        $git_repository          = vfsStream::setup(
             'git_repo',
             null,
             [
@@ -93,7 +93,7 @@ class PackTest extends TestCase
         $this->pack_archive_file = vfsStream::newFile('pack-' . self::SHA1_PACK . '.pack')->at(
             $git_repository->getChild('objects/pack')
         )->withContent(file_get_contents(__DIR__ . '/fixtures/pack/archive.pack'));
-        $this->pack_index_file = vfsStream::newFile('pack-' . self::SHA1_PACK . '.idx')->at(
+        $this->pack_index_file   = vfsStream::newFile('pack-' . self::SHA1_PACK . '.idx')->at(
             $git_repository->getChild('objects/pack')
         );
 
@@ -126,7 +126,7 @@ class PackTest extends TestCase
         $full_reference_tests = [];
         foreach ($reference_tests as $reference_test) {
             foreach (self::ALL_PACK_INDEX_PATHS as $pack_index_path) {
-                $reference_test[] = $pack_index_path;
+                $reference_test[]       = $pack_index_path;
                 $full_reference_tests[] = $reference_test;
             }
         }
@@ -165,7 +165,7 @@ class PackTest extends TestCase
         $full_object_tests = [];
         foreach ($object_tests as $object_test) {
             foreach (self::ALL_PACK_INDEX_PATHS as $pack_index_path) {
-                $object_test[] = $pack_index_path;
+                $object_test[]       = $pack_index_path;
                 $full_object_tests[] = $object_test;
             }
         }
@@ -178,7 +178,7 @@ class PackTest extends TestCase
         $this->pack_index_file->withContent(file_get_contents(self::V2_PACK_INDEX_PATH));
         $this->pack_archive_file->withContent('NOTAPACK');
 
-        $pack           = new Pack($this->project, self::SHA1_PACK);
+        $pack = new Pack($this->project, self::SHA1_PACK);
 
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Unsupported pack format');
@@ -191,7 +191,7 @@ class PackTest extends TestCase
         $this->pack_index_file->withContent(file_get_contents(self::V2_PACK_INDEX_PATH));
         $this->pack_archive_file->withContent('PACK' . pack('N', 9));
 
-        $pack           = new Pack($this->project, self::SHA1_PACK);
+        $pack = new Pack($this->project, self::SHA1_PACK);
 
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Unsupported pack format');

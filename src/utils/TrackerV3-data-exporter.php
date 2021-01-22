@@ -20,11 +20,11 @@
 
 require_once __DIR__ . '/../www/include/pre.php';
 
-$debug           = false;
-$overwrite       = false;
-$atid            = null;
-$archive_path    = null;
-$debug_option    = getopt('d');
+$debug            = false;
+$overwrite        = false;
+$atid             = null;
+$archive_path     = null;
+$debug_option     = getopt('d');
 $overwrite_option = getopt('o');
 
 if (isset($debug_option['d'])) {
@@ -57,9 +57,9 @@ if (! $overwrite && file_exists($archive_path)) {
 }
 
 try {
-    $xml      = new DOMDocument("1.0", "UTF8");
-    $logger   = new Log_ConsoleLogger();
-    $archive  = new ZipArchive();
+    $xml     = new DOMDocument("1.0", "UTF8");
+    $logger  = new Log_ConsoleLogger();
+    $archive = new ZipArchive();
     if ($archive->open($archive_path, ZipArchive::CREATE) !== true) {
         echo '*** ERROR: Cannot create archive: ' . $archive_path;
         exit(1);

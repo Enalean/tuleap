@@ -21,7 +21,7 @@
 
 /* abstract */ class Docman_View_View
 {
-    public $dfltSortParams = [];
+    public $dfltSortParams   = [];
     public $dfltSearchParams = [];
 
     /**
@@ -42,8 +42,8 @@
     public function __construct(&$controller)
     {
         $this->_controller = $controller;
-        $this->hp = Codendi_HTMLPurifier::instance();
-        $this->javascript = "";
+        $this->hp          = Codendi_HTMLPurifier::instance();
+        $this->javascript  = "";
     }
 
     public function display($params = [])
@@ -123,7 +123,7 @@
     public function _initSearchAndSortParams($params)
     {
         if (! count($this->dfltSortParams)) {
-            $this->dfltSortParams = [];
+            $this->dfltSortParams   = [];
             $this->dfltSearchParams = [];
 
             if (isset($params['filter']) && $params['filter'] !== null) {
@@ -188,13 +188,13 @@
      */
     public function getActionForItem(Docman_Item $item)
     {
-        $js = 'docman.addActionForItem(' . $item->getId() . ', ';
-        $params = [];
-        $user = $this->_controller->getUser();
+        $js              = 'docman.addActionForItem(' . $item->getId() . ', ';
+        $params          = [];
+        $user            = $this->_controller->getUser();
         $itemMenuVisitor = new Docman_View_GetMenuItemsVisitor($user, $item->getGroupId());
-        $user_actions = $item->accept($itemMenuVisitor, $params);
-        $js .= json_encode($user_actions);
-        $js .= ");\n";
+        $user_actions    = $item->accept($itemMenuVisitor, $params);
+        $js             .= json_encode($user_actions);
+        $js             .= ");\n";
         return $js;
     }
 
@@ -202,7 +202,7 @@
     {
         $docman_icons = $this->_getDocmanIcons($params);
 
-        $html = '';
+        $html  = '';
         $html .= '<span class="docman_item_options">';
         $html .= '<a data-test="document_item" title="' . dgettext('tuleap-docman', 'Show actions') . '"
             href="' . $params['default_url'] . '&amp;action=details&amp;id=' . $item->getId() . '"

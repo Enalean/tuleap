@@ -55,7 +55,7 @@ final class ServicePOSTDataBuilderTest extends TestCase
     {
         $this->event_manager            = M::mock(\EventManager::class);
         $this->service_manager          = M::mock(\ServiceManager::class);
-        $link_data_builder = new ServiceLinkDataBuilder();
+        $link_data_builder              = new ServiceLinkDataBuilder();
         $this->service_postdata_builder = new ServicePOSTDataBuilder(
             $this->event_manager,
             $this->service_manager,
@@ -347,7 +347,7 @@ final class ServicePOSTDataBuilderTest extends TestCase
 
     public function testBuildFromRequestThrowsWhenIconIsInvalid(): void
     {
-        $project  = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')
                               ->with($project)
                               ->andReturns([]);
@@ -424,7 +424,7 @@ final class ServicePOSTDataBuilderTest extends TestCase
                 'getDescription' => 'plugin_svn:service_lbl_description',
             ]
         );
-        $project  = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
         $this->service_manager
             ->shouldReceive('getListOfAllowedServicesForProject')
             ->with($project)

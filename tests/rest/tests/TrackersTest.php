@@ -143,7 +143,7 @@ final class TrackersTest extends TrackerBase
     public function testGetTrackersId(): void
     {
         $tracker_uri = $this->getReleaseTrackerUri();
-        $response = $this->getResponse($this->client->get($tracker_uri));
+        $response    = $this->getResponse($this->client->get($tracker_uri));
 
         $this->assertGETTrackersId($response, $tracker_uri);
     }
@@ -151,7 +151,7 @@ final class TrackersTest extends TrackerBase
     public function testGETTrackersIdWithReadOnlyAdmin(): void
     {
         $tracker_uri = $this->getReleaseTrackerUri();
-        $response = $this->getResponse(
+        $response    = $this->getResponse(
             $this->client->get($tracker_uri),
             \REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -192,7 +192,7 @@ final class TrackersTest extends TrackerBase
             $this->client->get($this->getReleaseTrackerUri())
         )->json();
 
-        $all_user_groups = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/user_groups'))->json();
+        $all_user_groups   = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/user_groups'))->json();
         $developers_ugroup = [];
         $static_ugroup_2   = [];
         $project_members   = [];
@@ -367,7 +367,7 @@ final class TrackersTest extends TrackerBase
 
     public function testGetTrackerArtifacts(): void
     {
-        $request = $this->client->get($this->getReleaseTrackerUri() . '/artifacts');
+        $request  = $this->client->get($this->getReleaseTrackerUri() . '/artifacts');
         $response = $this->getResponse($request);
 
         $this->assertGETTrackerArtifacts($response);
@@ -375,7 +375,7 @@ final class TrackersTest extends TrackerBase
 
     public function testGetTrackerArtifactsWithReadOnlyAdmin(): void
     {
-        $request = $this->client->get($this->getReleaseTrackerUri() . '/artifacts');
+        $request  = $this->client->get($this->getReleaseTrackerUri() . '/artifacts');
         $response = $this->getResponse($request, \REST_TestDataBuilder::TEST_BOT_USER_NAME);
 
         $this->assertGETTrackerArtifacts($response);
@@ -428,7 +428,7 @@ final class TrackersTest extends TrackerBase
 
     public function testGetTrackerArtifactsAdvancedQuery()
     {
-        $query = json_encode(
+        $query     = json_encode(
             [
             "Name" => [
                 "operator" => "contains",
@@ -463,26 +463,26 @@ final class TrackersTest extends TrackerBase
 
     public function testGetTrackerArtifactsExpertQueryWithNonexistentFieldReturnsError()
     {
-        $query     = "nonexistent='Believe'";
-        $request   = $this->client->get('trackers/' . $this->user_stories_tracker_id . '/artifacts?values=all&expert_query=' . $query);
-        $response  = $this->getResponse($request);
+        $query    = "nonexistent='Believe'";
+        $request  = $this->client->get('trackers/' . $this->user_stories_tracker_id . '/artifacts?values=all&expert_query=' . $query);
+        $response = $this->getResponse($request);
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
     public function testGetTrackerArtifactsExpertQueryWithNotSupportedFieldReturnsError()
     {
-        $query     = "openlist='On going'";
-        $request   = $this->client->get('trackers/' . $this->user_stories_tracker_id . '/artifacts?values=all&expert_query=' . $query);
-        $response  = $this->getResponse($request);
+        $query    = "openlist='On going'";
+        $request  = $this->client->get('trackers/' . $this->user_stories_tracker_id . '/artifacts?values=all&expert_query=' . $query);
+        $response = $this->getResponse($request);
 
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
     public function testGetTrackerArtifactsExpertQueryWithASyntaxErrorInQueryReturnsError()
     {
-        $query     = "i_want_to='On going";
-        $request   = $this->client->get('trackers/' . $this->user_stories_tracker_id . '/artifacts?values=all&expert_query=' . $query);
-        $response  = $this->getResponse($request);
+        $query    = "i_want_to='On going";
+        $request  = $this->client->get('trackers/' . $this->user_stories_tracker_id . '/artifacts?values=all&expert_query=' . $query);
+        $response = $this->getResponse($request);
 
         $this->assertEquals($response->getStatusCode(), 400);
     }

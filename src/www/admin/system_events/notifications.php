@@ -114,8 +114,8 @@ if ($notification_to_update) {
 $notifications = [];
 foreach ($dao->searchAll() as $row) {
     $status_selected = explode(',', $row['types']);
-    $checked = false;
-    $status = [
+    $checked         = false;
+    $status          = [
         [
             'label'            => ucfirst(strtolower(SystemEvent::STATUS_NEW)),
             'value'            => SystemEvent::STATUS_NEW,

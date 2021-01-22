@@ -35,14 +35,14 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     public function __construct($item, $url, $theme_path, $force, $token, $updateConfirmed, $recurse, $recurseOnDocs)
     {
         parent::__construct($item, $url, $theme_path, true, $force);
-        $this->token = $token;
-        $this->formName = 'update_metadata';
+        $this->token            = $token;
+        $this->formName         = 'update_metadata';
         $this->subItemsWritable = null;
-        $this->updateConfirmed = $updateConfirmed;
-        $this->recurse = $recurse;
-        $this->recurseOnDocs = $recurseOnDocs;
+        $this->updateConfirmed  = $updateConfirmed;
+        $this->recurse          = $recurse;
+        $this->recurseOnDocs    = $recurseOnDocs;
 
-        $this->nbDocsImpacted = null;
+        $this->nbDocsImpacted    = null;
         $this->nbFoldersImpacted = null;
     }
 
@@ -53,11 +53,11 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
 
     public function getContent($params = [])
     {
-        $html = '';
+        $html   = '';
         $params = ['form_name' => $this->formName];
         $html  .= '<form name="' . $params['form_name'] . '" action="' . $this->url . '" method="post" class="docman_form">';
         if (! $this->updateConfirmed && $this->_subItemsAreWritable()) {
-            $html .= '<div class="docman_confirm_delete">';
+            $html  .= '<div class="docman_confirm_delete">';
             $nbDocs = 0;
             if ($this->recurseOnDocs) {
                 $nbDocs = $this->nbDocsImpacted;
@@ -83,12 +83,12 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     public function _subItemsAreWritable()
     {
         if ($this->subItemsWritable === null) {
-            $dPm = Docman_PermissionsManager::instance($this->item->getGroupId());
+            $dPm                    = Docman_PermissionsManager::instance($this->item->getGroupId());
             $this->subItemsWritable = $dPm->currentUserCanWriteSubItems($this->item->getId());
 
             // Cache some info.
             $subItemsWritableVisitor = $dPm->getSubItemsWritableVisitor();
-            $this->nbDocsImpacted = $subItemsWritableVisitor->getDocumentCounter();
+            $this->nbDocsImpacted    = $subItemsWritableVisitor->getDocumentCounter();
             // Do not count the first folder which is the parent one.
             $this->nbFoldersImpacted = $subItemsWritableVisitor->getFolderCounter() - 1;
         }
@@ -99,7 +99,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     {
         $html = '';
 
-        $html .= '<tr style="vertical-align:top;">';
+        $html   .= '<tr style="vertical-align:top;">';
         $checked = '';
         if ($this->_subItemsAreWritable()) {
             if (in_array($field->md->getLabel(), $this->recurse)) {
@@ -107,7 +107,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
             }
             $html .= '<td style="text-align: center;"><input type="checkbox" name="recurse[]" value="' . $field->md->getLabel() . '"' . $checked . ' /></td>';
         }
-        $html .= '<td class="label">';
+        $html     .= '<td class="label">';
         $fieldHtml = $this->_getFieldLabel($field);
         if ($checked != '') {
             $html .= '<strong>' . $fieldHtml . '</strong>';
@@ -167,7 +167,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
 
     public function _getAdditionalRows()
     {
-        $html  = '<p>';
+        $html = '<p>';
         if ($this->token) {
             $html .= '<input type="hidden" name="token" value="' . $this->token . '" />';
         }

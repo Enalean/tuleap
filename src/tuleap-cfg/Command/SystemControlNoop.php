@@ -36,7 +36,7 @@ class SystemControlNoop implements SystemControlInterface
 
     public function __construct(string $action, string ...$targets)
     {
-        $this->action = $action;
+        $this->action  = $action;
         $this->targets = $targets;
     }
 

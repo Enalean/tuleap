@@ -44,10 +44,10 @@ class TimeCheckerTest extends TestCase
         $this->user = \Mockery::spy(\PFUser::class);
         $this->user->allows()->getId()->andReturns(102);
 
-        $this->time_checker    = new TimeChecker();
-        $this->time            = \Mockery::spy(Time::class);
+        $this->time_checker = new TimeChecker();
+        $this->time         = \Mockery::spy(Time::class);
 
-        $this->artifact        = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive([
             'getId'      => 200
         ]);

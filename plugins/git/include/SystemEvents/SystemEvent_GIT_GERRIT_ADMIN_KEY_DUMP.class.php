@@ -57,7 +57,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent
 
     public function process()
     {
-        $server = $this->getServer();
+        $server          = $this->getServer();
         $replication_key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $replication_key
             ->setGerritHostId($server->getId())

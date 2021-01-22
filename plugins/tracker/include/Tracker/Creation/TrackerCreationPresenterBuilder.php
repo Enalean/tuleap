@@ -94,7 +94,7 @@ class TrackerCreationPresenterBuilder
             $project_templates[] = new ProjectTemplatesRepresentation($project, $formatted_tracker);
         }
 
-        $existing_trackers = $this->getExistingTrackersNamesAndShortnamesInProject($current_project);
+        $existing_trackers            = $this->getExistingTrackersNamesAndShortnamesInProject($current_project);
         $trackers_from_other_projects = $this->getTrackersUserIsAdmin($user);
 
         $tracker_colors = [
@@ -121,7 +121,7 @@ class TrackerCreationPresenterBuilder
     {
         if ($project->usesService('tracker')) {
             $tv3_factory = new \ArtifactTypeFactory($project);
-            $tv3 = $tv3_factory->getArtifactTypes();
+            $tv3         = $tv3_factory->getArtifactTypes();
 
             return ! empty($tv3);
         }
@@ -131,7 +131,7 @@ class TrackerCreationPresenterBuilder
 
     private function getExistingTrackersNamesAndShortnamesInProject(Project $project): array
     {
-        $trackers = $this->tracker_dao->searchByGroupId($project->getID());
+        $trackers          = $this->tracker_dao->searchByGroupId($project->getID());
         $existing_trackers = [
             'names'      => [],
             'shortnames' => []
@@ -142,12 +142,12 @@ class TrackerCreationPresenterBuilder
         }
 
         foreach ($trackers as $tracker) {
-            $existing_trackers['names'][] = strtolower($tracker['name']);
+            $existing_trackers['names'][]      = strtolower($tracker['name']);
             $existing_trackers['shortnames'][] = strtolower($tracker['item_name']);
         }
 
         foreach ($this->pending_jira_import_dao->searchByProjectId((int) $project->getID()) as $row) {
-            $existing_trackers['names'][] = strtolower($row['tracker_name']);
+            $existing_trackers['names'][]      = strtolower($row['tracker_name']);
             $existing_trackers['shortnames'][] = strtolower($row['tracker_shortname']);
         }
 
@@ -157,7 +157,7 @@ class TrackerCreationPresenterBuilder
     private function getTrackersUserIsAdmin(\PFUser $user): array
     {
         $projects_ids = $user->getProjects();
-        $trackers = [];
+        $trackers     = [];
 
         if (count($projects_ids) === 0) {
             return $trackers;
@@ -165,7 +165,7 @@ class TrackerCreationPresenterBuilder
 
         foreach ($projects_ids as $id) {
             $trackers_user_can_view = $this->tracker_factory->getTrackersByGroupIdUserCanView($id, $user);
-            $trackers_base_info = [];
+            $trackers_base_info     = [];
 
             foreach ($trackers_user_can_view as $tracker) {
                 if (! $tracker->userIsAdmin($user)) {

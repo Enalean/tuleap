@@ -32,8 +32,8 @@ class UGroupManagerGetUGroupTest extends TestCase
         $this->non_existent_ugroup_id = 102;
         $this->integrators_ugroup_id  = 103;
 
-        $this->project        = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(123)->getMock();
-        $dao = \Mockery::spy(\UGroupDao::class);
+        $this->project = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(123)->getMock();
+        $dao           = \Mockery::spy(\UGroupDao::class);
 
         $ugroup_definitions = [
             ['ugroup_id' => "1",   'name' => "ugroup_anonymous_users_name_key",    'description' => "ugroup_anonymous_users_desc_key",     'group_id' => "100"],

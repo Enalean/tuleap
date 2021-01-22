@@ -111,7 +111,7 @@ final class DescriptionValueAdapterTest extends TestCase
         $expected_data = new DescriptionValue("My description", "text");
 
         $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
-        $data = $adapter->build($this->field_description_data, $replication_data);
+        $data             = $adapter->build($this->field_description_data, $replication_data);
 
         $this->assertEquals($expected_data, $data);
     }

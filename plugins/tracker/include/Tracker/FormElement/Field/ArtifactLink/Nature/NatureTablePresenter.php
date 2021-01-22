@@ -49,10 +49,10 @@ class NatureTablePresenter
         $is_reverse_artifact_links,
         Tracker_FormElement_Field_ArtifactLink $field
     ) {
-        $this->table_id              = self::TABLE_ID_PREFIX . $nature->shortname;
-        $this->nature                = $nature->shortname;
-        $this->nature_label          = $this->fetchTabLabel($nature, $is_reverse_artifact_links);
-        $this->tracker_id            = $field->getTracker()->getId();
+        $this->table_id     = self::TABLE_ID_PREFIX . $nature->shortname;
+        $this->nature       = $nature->shortname;
+        $this->nature_label = $this->fetchTabLabel($nature, $is_reverse_artifact_links);
+        $this->tracker_id   = $field->getTracker()->getId();
 
         $language                 = $GLOBALS['Language'];
         $this->id_label           = dgettext('tuleap-tracker', 'Artifact ID');
@@ -64,9 +64,9 @@ class NatureTablePresenter
         $this->submitted_by_label = dgettext('tuleap-tracker', 'Submitted By');
         $this->assigned_to_label  = dgettext('tuleap-tracker', 'Assigned to');
 
-        $art_factory = \Tracker_ArtifactFactory::instance();
+        $art_factory          = \Tracker_ArtifactFactory::instance();
         $this->artifact_links = [];
-        $html_classes = '';
+        $html_classes         = '';
         foreach ($artifact_links as $artifact_link) {
             $artifact               = $art_factory->getArtifactById($artifact_link->getArtifactId());
             $this->artifact_links[] = new ArtifactInNatureTablePresenter($artifact, $html_classes, $field);

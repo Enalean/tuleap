@@ -49,7 +49,7 @@ class NotInComparisonFromWhereBuilder implements FromWhereBuilder
      */
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
-        $from = 'INNER JOIN tracker_semantic_contributor AS assigned_to_field_not_equal
+        $from            = 'INNER JOIN tracker_semantic_contributor AS assigned_to_field_not_equal
             ON (
               assigned_to_field_not_equal.tracker_id = tracker_artifact.tracker_id
             )
@@ -65,7 +65,7 @@ class NotInComparisonFromWhereBuilder implements FromWhereBuilder
             )';
         $from_parameters = [];
 
-        $tracker_ids = array_map(
+        $tracker_ids           = array_map(
             function (Tracker $tracker) {
                 return $tracker->getId();
             },

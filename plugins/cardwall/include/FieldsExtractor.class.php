@@ -47,7 +47,7 @@ class Cardwall_FieldsExtractor
         foreach ($root_node->getChildren() as $child) {
             $leafs = array_merge($leafs, $child->flattenChildren());
         }
-        $artifacts  = [];
+        $artifacts = [];
         foreach ($leafs as $node) {
             $this->appendIfArtifactNode($artifacts, $node);
         }
@@ -67,8 +67,8 @@ class Cardwall_FieldsExtractor
         foreach ($artifacts as $artifact) {
             $trackers[] = $artifact->getTracker();
         }
-        $status_fields          = array_filter(array_map([$this->field_provider, 'getField'], $trackers));
-        $indexed_status_fields  = $this->indexById($status_fields);
+        $status_fields         = array_filter(array_map([$this->field_provider, 'getField'], $trackers));
+        $indexed_status_fields = $this->indexById($status_fields);
         return $indexed_status_fields;
     }
 

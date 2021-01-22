@@ -44,24 +44,24 @@ class AlwaysThereFieldsExporter
     public const JIRA_LINK_FIELD_ID        = "jira_issue_url";
     public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";
 
-    public const JIRA_UPDATED_ON_NAME        = "updated";
-    public const JIRA_CREATED_NAME           = "created";
-    public const JIRA_CREATED_BY             = "creator";
+    public const JIRA_UPDATED_ON_NAME = "updated";
+    public const JIRA_CREATED_NAME    = "created";
+    public const JIRA_CREATED_BY      = "creator";
 
     public const JIRA_ISSUE_LINKS_NAME      = 'issuelinks';
     public const JIRA_CROSS_REFERENCES_NAME = 'org.tuleap.crossreferences'; // doesn't exist at jira side
 
-    private const JIRA_RESOLUTION_DATE_NAME  = "resolutiondate";
-    public const JIRA_STATUS_RANK          = 1;
-    public const JIRA_CREATOR_RANK         = 2;
-    public const JIRA_CREATED_RANK         = 3;
-    public const JIRA_UPDATED_ON_RANK      = 4;
-    public const JIRA_RESOLUTION_DATE_RANK = 5;
-    public const JIRA_PRIORITY_RANK        = 6;
-    public const JIRA_ARTIFACT_ID_RANK     = 7;
-    public const JIRA_LINK_RANK            = 8;
-    public const JIRA_ASSIGNEE_RANK        = 9;
-    public const JIRA_REPORTER_RANK        = 10;
+    private const JIRA_RESOLUTION_DATE_NAME = "resolutiondate";
+    public const JIRA_STATUS_RANK           = 1;
+    public const JIRA_CREATOR_RANK          = 2;
+    public const JIRA_CREATED_RANK          = 3;
+    public const JIRA_UPDATED_ON_RANK       = 4;
+    public const JIRA_RESOLUTION_DATE_RANK  = 5;
+    public const JIRA_PRIORITY_RANK         = 6;
+    public const JIRA_ARTIFACT_ID_RANK      = 7;
+    public const JIRA_LINK_RANK             = 8;
+    public const JIRA_ASSIGNEE_RANK         = 9;
+    public const JIRA_REPORTER_RANK         = 10;
 
     public const JIRA_ATTACHMENT_RANK  = 1;
     public const JIRA_SUMMARY_RANK     = 1;

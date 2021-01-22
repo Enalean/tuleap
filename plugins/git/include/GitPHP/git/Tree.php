@@ -138,14 +138,14 @@ class Tree extends FilesystemObject
         $treeData = $this->GetProject()->GetObject($this->hash);
 
         $start = 0;
-        $len = strlen($treeData);
+        $len   = strlen($treeData);
         while ($start < $len) {
             $pos = strpos($treeData, "\0", $start);
 
             list($mode, $path) = explode(' ', substr($treeData, $start, $pos - $start), 2);
-            $mode = str_pad($mode, 6, '0', STR_PAD_LEFT);
-            $hash = bin2hex(substr($treeData, $pos + 1, 20));
-            $start = $pos + 21;
+            $mode              = str_pad($mode, 6, '0', STR_PAD_LEFT);
+            $hash              = bin2hex(substr($treeData, $pos + 1, 20));
+            $start             = $pos + 21;
 
             $octmode = octdec($mode);
 

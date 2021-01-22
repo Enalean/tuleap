@@ -71,13 +71,13 @@ class MilestoneRepresentationBuilder
         \PlanningFactory $planning_factory,
         ProjectBackgroundConfiguration $project_background_configuration
     ) {
-        $this->milestone_factory = $milestone_factory;
-        $this->backlog_factory = $backlog_factory;
-        $this->event_manager = $event_manager;
-        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
-        $this->parent_tracker_retriever = $parent_tracker_retriever;
-        $this->sub_milestone_finder = $sub_milestone_finder;
-        $this->planning_factory = $planning_factory;
+        $this->milestone_factory                = $milestone_factory;
+        $this->backlog_factory                  = $backlog_factory;
+        $this->event_manager                    = $event_manager;
+        $this->scrum_mono_milestone_checker     = $scrum_mono_milestone_checker;
+        $this->parent_tracker_retriever         = $parent_tracker_retriever;
+        $this->sub_milestone_finder             = $sub_milestone_finder;
+        $this->planning_factory                 = $planning_factory;
         $this->project_background_configuration = $project_background_configuration;
     }
 
@@ -126,7 +126,7 @@ class MilestoneRepresentationBuilder
             $this->project_background_configuration
         );
 
-        $milestone_representation_reference_holder = new class
+        $milestone_representation_reference_holder                           = new class
         {
             /**
              * @var MilestoneRepresentation

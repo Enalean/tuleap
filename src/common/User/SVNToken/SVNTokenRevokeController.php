@@ -44,7 +44,7 @@ final class SVNTokenRevokeController implements DispatchableWithRequest
     public function __construct(\CSRFSynchronizerToken $csrf_token, SVN_TokenHandler $token_handler)
     {
         $this->token_handler = $token_handler;
-        $this->csrf_token = $csrf_token;
+        $this->csrf_token    = $csrf_token;
     }
 
     /**

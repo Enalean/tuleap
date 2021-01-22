@@ -32,8 +32,8 @@ use Tracker_FormElementFactory;
 
 class TimeframeChecker
 {
-    private const START_DATE_FIELD_NAME  = 'start_date';
-    private const DURATION_FIELD_NAME    = 'duration';
+    private const START_DATE_FIELD_NAME = 'start_date';
+    private const DURATION_FIELD_NAME   = 'duration';
 
     /**
      * @var Tracker_FormElementFactory

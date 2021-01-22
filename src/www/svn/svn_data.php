@@ -36,7 +36,7 @@ function svn_data_get_technicians($group_id)
 
 function svn_data_update_general_settings($group_id, $svn_tracked, $svn_preamble, $svn_mandatory_ref, $svn_can_change_log)
 {
-    $query = "update groups set svn_tracker='" . db_ei($svn_tracked) .
+    $query  = "update groups set svn_tracker='" . db_ei($svn_tracked) .
     "', svn_preamble='" . db_es(htmlspecialchars($svn_preamble)) .
         "', svn_mandatory_ref='" . db_ei($svn_mandatory_ref) .
         "', svn_can_change_log='" . db_ei($svn_can_change_log) .
@@ -56,7 +56,7 @@ function svn_data_get_svn_history($group_id, $period = false)
     // All times in svn tables are stored in UTC!!!
         $date_clause = " AND date >= " . db_ei((gmdate('U') - $period)) . " ";
     }
-    $query = "SELECT whoid, user.user_name, count(id) as commits " .
+    $query  = "SELECT whoid, user.user_name, count(id) as commits " .
     "FROM svn_commits, user " .
     "WHERE svn_commits.whoid=user.user_id AND svn_commits.group_id=" . db_ei($group_id) . " " .
     $date_clause .
@@ -77,10 +77,10 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id = 0, $order
     }
 
     //check user access rights
-    $pm = ProjectManager::instance();
+    $pm      = ProjectManager::instance();
     $project = $pm->getProject($group_id);
 
-    $forbidden = svn_utils_get_forbidden_paths(user_getname(), $project->getSVNRootPath());
+    $forbidden       = svn_utils_get_forbidden_paths(user_getname(), $project->getSVNRootPath());
     $where_forbidden = "";
     if (! empty($forbidden)) {
         foreach ($forbidden as $no_access => $value) {

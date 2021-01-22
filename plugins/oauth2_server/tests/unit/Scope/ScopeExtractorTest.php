@@ -94,7 +94,7 @@ final class ScopeExtractorTest extends TestCase
 
     public function testExtractScopeFromQueryWithoutDuplicates(): void
     {
-        $foobar_scope    = M::mock(AuthenticationScope::class);
+        $foobar_scope = M::mock(AuthenticationScope::class);
         $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->with(
             M::on(
                 static function (AuthenticationScopeIdentifier $scope_identifier): bool {

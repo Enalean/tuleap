@@ -115,7 +115,7 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
         $this->field->shouldReceive('getLabel')->andReturns('field_float');
 
         $changeset_value = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, true, 45.1046);
-        $representation = $changeset_value->getRESTValue(\Mockery::mock(\PFUser::class));
+        $representation  = $changeset_value->getRESTValue(\Mockery::mock(\PFUser::class));
 
         $this->assertEquals($representation->value, 45.1046);
     }

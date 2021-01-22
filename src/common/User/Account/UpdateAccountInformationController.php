@@ -66,9 +66,9 @@ final class UpdateAccountInformationController implements DispatchableWithReques
         AvatarGenerator $avatar_generator
     ) {
         $this->event_dispatcher = $event_dispatcher;
-        $this->csrf_token = $csrf_token;
-        $this->user_manager = $user_manager;
-        $this->email_updater = $email_updater;
+        $this->csrf_token       = $csrf_token;
+        $this->user_manager     = $user_manager;
+        $this->email_updater    = $email_updater;
         $this->avatar_generator = $avatar_generator;
     }
 

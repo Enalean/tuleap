@@ -134,7 +134,7 @@ try {
         $archive = new Export\ZipArchive($output);
     }
 
-    $user = UserManager::instance()->forceLogin($username);
+    $user                              = UserManager::instance()->forceLogin($username);
     $temporary_dump_path_on_filesystem = $archive->getArchivePath() . time();
 
     $xml_content       = $xml_exporter->export($project, $options, $user, $archive, $temporary_dump_path_on_filesystem);
@@ -152,7 +152,7 @@ try {
     $archive->close();
 
     $system_command = new System_Command();
-    $command = "rm -rf $temporary_dump_path_on_filesystem";
+    $command        = "rm -rf $temporary_dump_path_on_filesystem";
     $system_command->exec($command);
 
     fwrite(STDOUT, "Archive $output created." . PHP_EOL);

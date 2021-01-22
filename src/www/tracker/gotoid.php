@@ -33,7 +33,7 @@ function generic_redirect($location, $aid, $group_id, $art_group_id, $atid, $atn
     if (($group_id) && ($group_id != $art_group_id)) {
         // The link is coming from another project, add a warning msg
         $group_name = util_get_group_name_from_id($art_group_id);
-        $feed = "&feedback=" . urlencode($Language->getText('tracker_gotoid', 'art_belongs_to', $group_name));
+        $feed       = "&feedback=" . urlencode($Language->getText('tracker_gotoid', 'art_belongs_to', $group_name));
     }
     if (($atn) && (strtolower($atn) != strtolower($art_name))) {
         if ((strtolower($atn) != "art") && (strtolower($atn) != "artifact")) {
@@ -58,7 +58,7 @@ $atn = strtolower($request->get('atn'));
 // If group_name given as argument then infer group_id first
 $group_name = $request->get('group_name');
 if ($group_name && ! $group_id) {
-    $grp = group_get_object_by_name($group_name);
+    $grp      = group_get_object_by_name($group_name);
     $group_id = $grp->getGroupId();
 }
 
@@ -72,7 +72,7 @@ if (($atn == 'rev') || ($atn == 'revision')) {
 }
 if ($atn == 'commit') {
     // when commit is used see if it revision exists in SVN else redirect to CVS
-    $res = svn_data_get_revision_detail($group_id, 0, $aid);
+    $res  = svn_data_get_revision_detail($group_id, 0, $aid);
     $feed = '';
     if ($res && db_numrows($res) > 0) {
         $location .= $svn_loc . $feed;
@@ -82,7 +82,7 @@ if ($atn == 'commit') {
         if (($commit_group_id) && ($group_id != $commit_group_id)) {
             // The link is coming from another project, add a warning msg
             $group_name = util_get_group_name_from_id($commit_group_id);
-            $feed = "&feedback" . urlencode($Language->getText('tracker_gotoid', 'commit_belongs_to', $group_name));
+            $feed       = "&feedback" . urlencode($Language->getText('tracker_gotoid', 'commit_belongs_to', $group_name));
         }
         $location .= $cvs_loc . $feed;
     }

@@ -46,11 +46,11 @@ class SystemEventManager
     // Constructor
     private function __construct(?SystemEventDao $dao = null, ?SystemEventsFollowersDao $followers_dao = null)
     {
-        $this->dao = $dao;
+        $this->dao           = $dao;
         $this->followers_dao = $followers_dao;
         $this->_getDao();
 
-        $event_manager = $this->_getEventManager();
+        $event_manager    = $this->_getEventManager();
         $events_to_listen = [
             Event::SYSTEM_CHECK,
             Event::PROJECT_RENAME,
@@ -112,7 +112,7 @@ class SystemEventManager
     public static function instance()
     {
         if (! isset(self::$_instance)) {
-            $c = self::class;
+            $c               = self::class;
             self::$_instance = new $c();
         }
         return self::$_instance;
@@ -540,18 +540,18 @@ class SystemEventManager
                 $klass = $this->getClassForType($row['type']);
                 break;
             case SystemEvent::TYPE_UGROUP_MODIFY:
-                $klass = $this->getClassForType($row['type']);
+                $klass        = $this->getClassForType($row['type']);
                 $klass_params = [new UpdateProjectAccessFilesScheduler($this)];
                 break;
             case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
             case SystemEvent::TYPE_SVN_AUTHORIZE_TOKENS:
             case SystemEvent::TYPE_SVN_REVOKE_TOKENS:
             case SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE:
-                $klass = $this->getClassForType($row['type']);
+                $klass        = $this->getClassForType($row['type']);
                 $klass_params = [Backend::instance(Backend::SVN)];
                 break;
             case SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES:
-                $klass = $this->getClassForType($row['type']);
+                $klass        = $this->getClassForType($row['type']);
                 $klass_params = [ProjectManager::instance(), EventManager::instance()];
                 break;
             case SystemEvent::TYPE_PROJECT_IS_PRIVATE:

@@ -53,8 +53,8 @@ class LFSAPIHTTPAccessControlTest extends TestCase
             $this->access_control_verifier
         );
 
-        $repository       = \Mockery::mock(\GitRepository::class);
-        $batch_request    = \Mockery::mock(BatchRequest::class);
+        $repository    = \Mockery::mock(\GitRepository::class);
+        $batch_request = \Mockery::mock(BatchRequest::class);
         $batch_request->shouldReceive('isRead')->andReturns(true);
 
         $this->assertTrue($batch_api_access_control->canAccess($repository, $batch_request, null));
@@ -75,7 +75,7 @@ class LFSAPIHTTPAccessControlTest extends TestCase
             $this->access_control_verifier
         );
 
-        $repository       = \Mockery::mock(\GitRepository::class);
+        $repository = \Mockery::mock(\GitRepository::class);
         $repository->shouldReceive('userCanRead')->andReturns(true);
         $batch_request = \Mockery::mock(BatchRequest::class);
         $batch_request->shouldReceive('isRead')->andReturns(true);
@@ -101,7 +101,7 @@ class LFSAPIHTTPAccessControlTest extends TestCase
             $this->access_control_verifier
         );
 
-        $repository       = \Mockery::mock(\GitRepository::class);
+        $repository = \Mockery::mock(\GitRepository::class);
         $repository->shouldReceive('userCanRead')->andReturns(true);
         $batch_request = \Mockery::mock(BatchRequest::class);
         $batch_request->shouldReceive('isRead')->andReturns(false);
@@ -120,7 +120,7 @@ class LFSAPIHTTPAccessControlTest extends TestCase
             $this->access_control_verifier
         );
 
-        $repository       = \Mockery::mock(\GitRepository::class);
+        $repository = \Mockery::mock(\GitRepository::class);
         $repository->shouldReceive('userCanRead')->andReturns(true);
         $batch_request = \Mockery::mock(BatchRequest::class);
         $batch_request->shouldReceive('isRead')->andReturns(true);
@@ -144,7 +144,7 @@ class LFSAPIHTTPAccessControlTest extends TestCase
             $this->access_control_verifier
         );
 
-        $repository       = \Mockery::mock(\GitRepository::class);
+        $repository = \Mockery::mock(\GitRepository::class);
         $repository->shouldReceive('userCanRead')->andReturns(false);
         $batch_request = \Mockery::mock(BatchRequest::class);
 

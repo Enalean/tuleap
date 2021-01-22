@@ -34,7 +34,7 @@ final class SwaggerJsonAPIAccessKey implements SwaggerJsonSecurityDefinition
     /**
      * @var string
      */
-    public $in   = 'header';
+    public $in = 'header';
     /**
      * @var string
      */

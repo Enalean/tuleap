@@ -221,7 +221,7 @@ final class EmailNotificationTask implements PostCreationTask
     private function getEmailSenderAddress(Tracker_Artifact_Changeset $changeset)
     {
         $address = $this->getDefaultSenderAddress();
-        $name = $this->getSenderName($changeset);
+        $name    = $this->getSenderName($changeset);
         return self::getEmailSender($name, $address);
     }
 
@@ -281,8 +281,8 @@ final class EmailNotificationTask implements PostCreationTask
      * */
     private function getAppropriateSenderFields(Tracker_Artifact_Changeset $changeset)
     {
-        $fields = [];
-        $user_row = $changeset->getSubmitter()->toRow();
+        $fields      = [];
+        $user_row    = $changeset->getSubmitter()->toRow();
         $user_fields = self::DEFAULT_SENDER_EXPOSED_FIELDS;
         foreach ($user_fields as $exposed_field => $internal_field) {
             $fields[$exposed_field] = $user_row[$internal_field];
@@ -292,7 +292,7 @@ final class EmailNotificationTask implements PostCreationTask
 
     private function getMessageId(\PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
-        $recipient         = $this->recipient_factory->getFromUserAndChangeset($user, $changeset);
+        $recipient = $this->recipient_factory->getFromUserAndChangeset($user, $changeset);
         return $recipient->getEmail();
     }
 
@@ -317,7 +317,7 @@ final class EmailNotificationTask implements PostCreationTask
     {
         $ignore_perms = ! $check_perms;
 
-        $lang        = $user->getLanguage();
+        $lang = $user->getLanguage();
 
         $mailManager = new \MailManager();
         $format      = $mailManager->getMailPreferencesByUser($user);
@@ -356,7 +356,7 @@ final class EmailNotificationTask implements PostCreationTask
         $format = 'text';
         $art    = $changeset->getArtifact();
 
-        $output = '+============== ' . '[' . $art->getTracker()->getItemName() . ' #' . $art->getId() . '] ' . $art->fetchMailTitle($recipient_user, $format, $ignore_perms) . ' ==============+';
+        $output  = '+============== ' . '[' . $art->getTracker()->getItemName() . ' #' . $art->getId() . '] ' . $art->fetchMailTitle($recipient_user, $format, $ignore_perms) . ' ==============+';
         $output .= PHP_EOL;
         $output .= PHP_EOL;
         $proto   = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
@@ -508,7 +508,7 @@ final class EmailNotificationTask implements PostCreationTask
 
         if ($this->isNotificationAssignedToEnabled($artifact->getTracker())) {
             $filter = '<div style="display: none !important;">';
-            $users = $artifact->getAssignedTo($recipient);
+            $users  = $artifact->getAssignedTo($recipient);
             foreach ($users as $user) {
                 $filter .= '=ASSIGNED_TO=' . $user->getUserName() . '<br>';
             }

@@ -32,8 +32,8 @@ class PaginatedCampaignsRepresentations
 
     public function __construct(array $campaign_representations, int $total_size)
     {
-        $this->campaign_representations   = $campaign_representations;
-        $this->total_size                 = $total_size;
+        $this->campaign_representations = $campaign_representations;
+        $this->total_size               = $total_size;
     }
 
     public function getCampaignsRepresentations(): array

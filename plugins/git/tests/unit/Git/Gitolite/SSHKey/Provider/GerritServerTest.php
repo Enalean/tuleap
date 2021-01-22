@@ -54,7 +54,7 @@ class GerritServerTest extends \PHPUnit\Framework\TestCase
                 'ssh_key' => $server3_key->getKey()
             ]
         ];
-        $gerrit_server_dao = \Mockery::mock(Git_RemoteServer_Dao::class);
+        $gerrit_server_dao           = \Mockery::mock(Git_RemoteServer_Dao::class);
         $gerrit_server_dao->shouldReceive('searchAllServersWithSSHKey')->andReturns($gerrit_server_access_result);
 
         $gerrit_server_provider = new GerritServer($gerrit_server_dao);

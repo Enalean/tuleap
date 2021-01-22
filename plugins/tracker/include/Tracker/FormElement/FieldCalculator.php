@@ -68,8 +68,8 @@ class FieldCalculator
                     ) {
                         if (isset($row['value']) && $row['value'] !== null) {
                             $already_seen->addArtifactAsAlreadyProcessed((string) $row['parent_id']);
-                            $last_id                         = $row['parent_id'];
-                            $sum                             += $row['value'];
+                            $last_id = $row['parent_id'];
+                            $sum    += $row['value'];
                         } elseif ($row['type'] === 'computed' && $row['artifact_link_id'] !== null) {
                             $artifact_ids_to_fetch[] = $row['artifact_link_id'];
                         } elseif (isset($row[$row['type'] . '_value'])) {

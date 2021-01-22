@@ -200,7 +200,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItIsValidWhenTheFieldIsRequiredAndIsAutocomputed(): void
     {
-        $field = $this->getComputedField();
+        $field    = $this->getComputedField();
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(233);
         $field->shouldReceive('isRequired')->andReturn(true);
@@ -217,7 +217,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItIsValidWhenTheFieldIsNotRequiredAndIsAutocomputed(): void
     {
-        $field = $this->getComputedField();
+        $field    = $this->getComputedField();
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(233);
         $field->shouldReceive('isRequired')->andReturn(false);
@@ -234,7 +234,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItIsValidWhenTheFieldIsRequiredAndHasAManualValue(): void
     {
-        $field = $this->getComputedField();
+        $field    = $this->getComputedField();
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(233);
         $field->shouldReceive('isRequired')->andReturn(true);
@@ -251,7 +251,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItIsNotValidWhenTheFieldIsRequiredAndDoesntHaveAManualValue(): void
     {
-        $field = $this->getComputedField();
+        $field    = $this->getComputedField();
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(233);
         $field->shouldReceive('isRequired')->andReturn(true);
@@ -267,7 +267,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItIsNotValidWhenTheFieldIsNotRequiredAndDoesntHaveAManualValue(): void
     {
-        $field = $this->getComputedField();
+        $field    = $this->getComputedField();
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(233);
         $field->shouldReceive('isRequired')->andReturn(false);
@@ -283,7 +283,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItIsValidWhenNoValuesAreSubmitted(): void
     {
-        $field = $this->getComputedField();
+        $field    = $this->getComputedField();
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(233);
         $field->shouldReceive('isRequired')->andReturn(false);
@@ -530,7 +530,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
     public function testItDetectsChangeWhenBackToAutocompute(): void
     {
-        $field = $this->getComputedField();
+        $field    = $this->getComputedField();
         $artifact = Mockery::mock(Artifact::class);
 
         $old_value = Mockery::mock(ChangesetValueComputed::class);
@@ -711,7 +711,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase
 
         $field = $this->getComputedFieldForManualValueRetrievement($value_dao, $user, $changeset);
 
-        $value = json_encode(
+        $value     = json_encode(
             $value = [
                 'manual_value'    => 20,
                 'is_autocomputed' => 0

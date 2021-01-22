@@ -39,10 +39,10 @@ class DiskUsageSearchFieldsPresenter
         $start_date_value,
         $end_date_value
     ) {
-        $this->service_values     = $service_values;
-        $this->fields_values_url  = $fields_values_url;
-        $this->start_date_value   = $start_date_value;
-        $this->end_date_value     = $end_date_value;
+        $this->service_values    = $service_values;
+        $this->fields_values_url = $fields_values_url;
+        $this->start_date_value  = $start_date_value;
+        $this->end_date_value    = $end_date_value;
 
         $this->title            = $GLOBALS['Language']->getText('global', 'search_title');
         $this->services_label   = dgettext('tuleap-statistics', 'Services');

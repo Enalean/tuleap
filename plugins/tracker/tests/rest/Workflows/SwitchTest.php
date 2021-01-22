@@ -30,7 +30,7 @@ class SwitchTest extends TrackerBase
 {
     public function testPATCHTrackerToSwitchWorkflowInAdvancedMode(): array
     {
-        $tracker = $this->tracker_representations[$this->simple_mode_workflow_to_switch_tracker_id];
+        $tracker  = $this->tracker_representations[$this->simple_mode_workflow_to_switch_tracker_id];
         $workflow = $tracker['workflow'];
 
         $this->assertFalse($workflow['is_advanced']);

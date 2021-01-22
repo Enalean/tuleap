@@ -25,15 +25,15 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
 
     protected function fetchReadOnly()
     {
-        $html = '';
+        $html  = '';
         $html .= '<br class="tracker-admin-linebreak" id="tracker-admin-formElements_' . $this->id . '" />';
         return $html;
     }
 
     public function fetchAdmin($tracker)
     {
-        $html = '';
-        $hp = Codendi_HTMLPurifier::instance();
+        $html  = '';
+        $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '">';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);

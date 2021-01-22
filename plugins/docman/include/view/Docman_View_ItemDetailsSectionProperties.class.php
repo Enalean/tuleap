@@ -32,19 +32,19 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
 
     public function __construct($item, $url, $theme_path, $user_can_write = false, $force = null)
     {
-        $this->user_can_write = $user_can_write;
-        $this->force = $force;
-        $this->theme_path = $theme_path;
-        $this->formName = '';
+        $this->user_can_write           = $user_can_write;
+        $this->force                    = $force;
+        $this->theme_path               = $theme_path;
+        $this->formName                 = '';
         $this->inheritableMetadataArray = null;
-        $id = 'properties';
-        $title = dgettext('tuleap-docman', 'Properties');
+        $id                             = 'properties';
+        $title                          = dgettext('tuleap-docman', 'Properties');
         parent::__construct($item, $url, $id, $title);
     }
 
     public function _getPropertyRow($label, $value)
     {
-        $html = '';
+        $html  = '';
         $html .= '<tr style="vertical-align:top;">';
         $html .= '<td class="label">' . $label . '</td>';
         $html .= '<td class="value">' . $value . '</td>';
@@ -79,15 +79,15 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
 
     public function _getDirectLinkField()
     {
-        $html = '';
+        $html        = '';
         $itemFactory = new Docman_ItemFactory();
         if ($itemFactory->getItemTypeForItem($this->item) != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
-            $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
-            $um = UserManager::instance();
+            $dpm  = Docman_PermissionsManager::instance($this->item->getGroupId());
+            $um   = UserManager::instance();
             $user = $um->getCurrentUser();
             $href = '';
             if (! $this->item->isObsolete() || ($this->item->isObsolete() && $dpm->userCanAdmin($user))) {
-                $url = DocmanViewURLBuilder::buildActionUrl(
+                $url  = DocmanViewURLBuilder::buildActionUrl(
                     $this->item,
                     ['default_url' => $this->url],
                     ['action' => 'show', 'id' => $this->item->getId()]
@@ -110,8 +110,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html .= $this->_getlockInfo();
 
         $params['theme_path'] = $this->theme_path;
-        $get_fields = new Docman_View_GetFieldsVisitor();
-        $fields = $this->item->accept($get_fields, $params);
+        $get_fields           = new Docman_View_GetFieldsVisitor();
+        $fields               = $this->item->accept($get_fields, $params);
 
         $html .= '<table class="docman_item_details_properties">';
 
@@ -132,7 +132,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
 
     public function getContent($params = [])
     {
-        $html  = '';
+        $html = '';
 
         $defaultValuesToManage = false;
         if (is_a($this->item, 'Docman_Folder') && count($this->_getInheritableMetadata()) > 0) {
@@ -174,12 +174,12 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
     public function _getInheritableMetadata()
     {
         if ($this->inheritableMetadataArray === null) {
-            $mdFactory = new Docman_MetadataFactory($this->item->getGroupId());
+            $mdFactory      = new Docman_MetadataFactory($this->item->getGroupId());
             $inheritableMda = $mdFactory->getInheritableMdLabelArray(true);
 
             $mdIter = $this->item->getMetadataIterator();
 
-            $mdHtmlFactory = new Docman_MetadataHtmlFactory();
+            $mdHtmlFactory                  = new Docman_MetadataHtmlFactory();
             $this->inheritableMetadataArray = $mdHtmlFactory->buildFieldArray($mdIter, $inheritableMda, true, $this->formName, $this->theme_path);
         }
         return $this->inheritableMetadataArray;
@@ -192,10 +192,10 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
 
     public function _getDefaultValues()
     {
-        $html = '';
+        $html   = '';
         $fields = $this->_getInheritableMetadata();
-        $html .= '<table class="docman_item_details_properties">';
-        $html .= $this->_getDefaultValuesTableHeader();
+        $html  .= '<table class="docman_item_details_properties">';
+        $html  .= $this->_getDefaultValuesTableHeader();
         foreach ($fields as $field) {
             $html .= $this->_getDefaultValuePropertyField($field);
         }
@@ -205,7 +205,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
 
     public function _getDefaultValuesFields()
     {
-        $html = '';
+        $html  = '';
         $html .= '<h3>' . dgettext('tuleap-docman', 'Default Values') . '</h3>';
         $html .= '<p>' . dgettext('tuleap-docman', 'Define the default properties values for the item that will be created within this folder.') . '</p>';
         $html .= $this->_getDefaultValues();
@@ -215,13 +215,13 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
     public function _getlockInfo()
     {
         $html = '';
-        $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
+        $dpm  = Docman_PermissionsManager::instance($this->item->getGroupId());
         if ($dpm->getLockFactory()->itemIsLocked($this->item)) {
             $lockInfos = $dpm->getLockFactory()->getLockInfoForItem($this->item);
-            $locker = UserHelper::instance()->getLinkOnUserFromUserId($lockInfos['user_id']);
-            $lockDate = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $lockInfos['lock_date']);
-            $html .= '<p>';
-            $html .= sprintf(dgettext('tuleap-docman', '%1$s <strong>locked</strong> this document on %2$s.'), $locker, $lockDate);
+            $locker    = UserHelper::instance()->getLinkOnUserFromUserId($lockInfos['user_id']);
+            $lockDate  = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $lockInfos['lock_date']);
+            $html     .= '<p>';
+            $html     .= sprintf(dgettext('tuleap-docman', '%1$s <strong>locked</strong> this document on %2$s.'), $locker, $lockDate);
             if (! $this->user_can_write) {
                 $html .= dgettext('tuleap-docman', 'You cannot modify it until the lock owner or a document manager release the lock.');
             }

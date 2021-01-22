@@ -40,10 +40,10 @@ class MailRegisterPresenter extends MailOutlinePresenter
         $login
     ) {
         parent::__construct($logo_url, $title, $thanks, $signature, $color_logo);
-        $this->section_one          = $section_one;
-        $this->section_two          = $section_two;
-        $this->section_after_login  = $section_after_login;
-        $this->help                 = $help;
-        $this->login                = $login;
+        $this->section_one         = $section_one;
+        $this->section_two         = $section_two;
+        $this->section_after_login = $section_after_login;
+        $this->help                = $help;
+        $this->login               = $login;
     }
 }

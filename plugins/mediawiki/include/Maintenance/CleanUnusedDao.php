@@ -40,7 +40,7 @@ class CleanUnusedDao extends DataAccessObject
      */
     private $logger;
 
-    private $db_deleted = 0;
+    private $db_deleted     = 0;
     private $tables_deleted = 0;
 
     public function __construct(LoggerInterface $logger, $central_database)
@@ -97,7 +97,7 @@ class CleanUnusedDao extends DataAccessObject
     private function getServicesQuery($is_used, ?int $limit = null)
     {
         $is_used = $this->da->escapeInt($is_used);
-        $sql = "SELECT plugin_mediawiki_database.*
+        $sql     = "SELECT plugin_mediawiki_database.*
                 FROM service
                   JOIN plugin_mediawiki_database ON (project_id = group_id)
                 WHERE short_name = 'plugin_mediawiki'
@@ -117,7 +117,7 @@ class CleanUnusedDao extends DataAccessObject
         if ($this->central_database && $project_id > 0) {
             foreach ($this->getTablesToDrop($project_id) as $row) {
                 $fullname = $this->central_database . '.' . $row['name'];
-                $sql = "DROP TABLE $fullname";
+                $sql      = "DROP TABLE $fullname";
                 $this->logger->info("$sql");
                 if (! $dry_run) {
                     $this->update($sql);
@@ -161,7 +161,7 @@ class CleanUnusedDao extends DataAccessObject
     private function doesDatabaseExist($database)
     {
         $database = $this->da->quoteSmart($database);
-        $sql = "SELECT SCHEMA_NAME AS 'name'
+        $sql      = "SELECT SCHEMA_NAME AS 'name'
           FROM INFORMATION_SCHEMA.SCHEMATA
           WHERE SCHEMA_NAME = $database";
         return $this->retrieveCount($sql) !== 0;
@@ -206,7 +206,7 @@ class CleanUnusedDao extends DataAccessObject
     {
         $this->logger->info("Desactivate service in project");
         $project_id = $this->da->escapeInt($project_id);
-        $sql = "UPDATE service SET is_used = 0 WHERE group_id = $project_id AND short_name = 'plugin_mediawiki'";
+        $sql        = "UPDATE service SET is_used = 0 WHERE group_id = $project_id AND short_name = 'plugin_mediawiki'";
         if (! $dry_run) {
             $this->update($sql);
             $this->logger->info("Service desactivated");
@@ -225,8 +225,8 @@ class CleanUnusedDao extends DataAccessObject
 
     public function getAllMediawikiBasesNotReferenced()
     {
-        $db_name   = ForgeConfig::get('sys_dbname');
-        $sql = "SELECT SCHEMA_NAME AS 'name'
+        $db_name = ForgeConfig::get('sys_dbname');
+        $sql     = "SELECT SCHEMA_NAME AS 'name'
                 FROM INFORMATION_SCHEMA.SCHEMATA
                   LEFT JOIN $db_name.plugin_mediawiki_database db ON (db.database_name = SCHEMA_NAME)
                 WHERE SCHEMA_NAME LIKE 'plugin_mediawiki_%'
@@ -237,7 +237,7 @@ class CleanUnusedDao extends DataAccessObject
     public function isDBEmpty($database_name)
     {
         $database_name = $this->da->quoteSmart($database_name);
-        $sql = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = $database_name LIMIT 1";
+        $sql           = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = $database_name LIMIT 1";
         return $this->retrieveCount($sql) === 0;
     }
 
@@ -260,7 +260,7 @@ class CleanUnusedDao extends DataAccessObject
     public function doesDatabaseHaveContent($database_name)
     {
         $table_name = $database_name . '.' . MediawikiDao::DEDICATED_DATABASE_TABLE_PREFIX . 'page';
-        $sql = "SELECT 1 FROM $table_name LIMIT 1";
+        $sql        = "SELECT 1 FROM $table_name LIMIT 1";
         $this->retrieveCount($sql) !== 0;
     }
 }

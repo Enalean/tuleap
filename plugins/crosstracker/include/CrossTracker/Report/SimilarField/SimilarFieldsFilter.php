@@ -30,10 +30,10 @@ class SimilarFieldsFilter
         return array_filter(
             $candidates,
             function (SimilarFieldCandidate $candidate) {
-                $tracker = $candidate->getTracker();
-                $title_semantic = \Tracker_Semantic_Title::load($tracker);
+                $tracker              = $candidate->getTracker();
+                $title_semantic       = \Tracker_Semantic_Title::load($tracker);
                 $description_semantic = \Tracker_Semantic_Description::load($tracker);
-                $status_semantic = \Tracker_Semantic_Status::load($tracker);
+                $status_semantic      = \Tracker_Semantic_Status::load($tracker);
 
                 $semantics_usage_visitor = new FieldUsedInSupportedSemanticsVisitor(
                     $title_semantic,

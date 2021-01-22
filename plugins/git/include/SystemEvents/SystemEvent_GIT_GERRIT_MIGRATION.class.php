@@ -49,8 +49,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
 
     public function process()
     {
-        $repo_id           = (int) $this->getParameter(0);
-        $remote_server_id  = (int) $this->getParameter(1);
+        $repo_id          = (int) $this->getParameter(0);
+        $remote_server_id = (int) $this->getParameter(1);
         $this->dao->switchToGerrit($repo_id, $remote_server_id);
 
         $repository = $this->repository_factory->getRepositoryById($repo_id);
@@ -60,9 +60,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
         }
 
         try {
-            $server                = $this->server_factory->getServer($repository);
-            $gerrit_template_id    = $this->getParameter(2);
-            $gerrit_project        = $this->project_creator->createGerritProject($server, $repository, $gerrit_template_id);
+            $server             = $this->server_factory->getServer($repository);
+            $gerrit_template_id = $this->getParameter(2);
+            $gerrit_project     = $this->project_creator->createGerritProject($server, $repository, $gerrit_template_id);
             $this->project_creator->removeTemporaryDirectory();
             $this->project_creator->finalizeGerritProjectCreation($server, $repository, $gerrit_template_id);
             $this->dao->setGerritMigrationSuccess($repository->getId());
@@ -94,9 +94,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
     {
         $user = $this->getRequester();
         if (! $user->isAnonymous()) {
-            $factory = new BaseLanguageFactory();
+            $factory  = new BaseLanguageFactory();
             $language = $factory->getBaseLanguage($user->getLocale());
-            $url = HTTPRequest::instance()->getServerUrl() . GIT_BASE_URL . '/?action=repo_management&group_id=' . $repository->getProjectId() . '&repo_id=' . $repository->getId() . '&pane=gerrit';
+            $url      = HTTPRequest::instance()->getServerUrl() . GIT_BASE_URL . '/?action=repo_management&group_id=' . $repository->getProjectId() . '&repo_id=' . $repository->getId() . '&pane=gerrit';
 
             $notification = new Notification(
                 [$user->getEmail()],
@@ -151,7 +151,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
     {
         $txt = '#' . $repo_id;
         if ($with_link) {
-            $hp = Codendi_HTMLPurifier::instance();
+            $hp   = Codendi_HTMLPurifier::instance();
             $repo = $this->repository_factory->getRepositoryById($repo_id);
             if ($repo) {
                 $txt = $repo->getHTMLLink($this->url_manager);

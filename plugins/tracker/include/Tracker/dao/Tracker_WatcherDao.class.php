@@ -31,7 +31,7 @@ class Tracker_WatcherDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $user_id    = $this->da->escapeInt($user_id);
-        $sql = "SELECT *
+        $sql        = "SELECT *
                 FROM $this->table_name
                 WHERE tracker_id = $tracker_id 
                   AND user_id = $user_id";
@@ -42,7 +42,7 @@ class Tracker_WatcherDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $watchee_id = $this->da->escapeInt($watchee_id);
-        $sql = "SELECT *
+        $sql        = "SELECT *
                 FROM $this->table_name
                 WHERE tracker_id = $tracker_id 
                   AND watchee_id = $watchee_id";

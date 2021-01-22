@@ -78,7 +78,7 @@ class Sender
      */
     private function sendMailPerProjectMember(Project $project, PFUser $user, $status): void
     {
-        $purifier      = Codendi_HTMLPurifier::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
 
         $title = dgettext('tuleap-project_ownership', 'Project status updated');
 

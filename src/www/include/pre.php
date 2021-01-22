@@ -195,7 +195,7 @@ if (! defined('FRONT_ROUTER')) {
             )
         )
     );
-    $HTML = $theme_manager->getTheme($current_user);
+    $HTML          = $theme_manager->getTheme($current_user);
 }
 
 // Check if anonymous user is allowed to browse the site
@@ -209,7 +209,7 @@ if (! IS_SCRIPT) {
     if (! defined('FRONT_ROUTER')) {
         $urlVerifFactory = new URLVerificationFactory($event_manager);
         $global_server   = $_SERVER ?? [];
-        $urlVerif = $urlVerifFactory->getURLVerification($global_server);
+        $urlVerif        = $urlVerifFactory->getURLVerification($global_server);
         $urlVerif->assertValidUrl($global_server, $request);
 
         (new RequestInstrumentation(Prometheus::instance()))->incrementLegacy(

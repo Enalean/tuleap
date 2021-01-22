@@ -106,7 +106,7 @@ class ArtifactsXMLExporterTest extends TestCase
         $forge_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
         $forge_user->shouldReceive('getUserName')->andReturn('Tracker Importer');
 
-        $jira_author_retriever = new JiraAuthorRetriever(
+        $jira_author_retriever               = new JiraAuthorRetriever(
             $this->logger,
             $this->user_manager,
             new JiraUserOnTuleapCache(new JiraTuleapUsersMapping(), $forge_user),

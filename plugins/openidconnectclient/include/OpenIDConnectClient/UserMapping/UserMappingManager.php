@@ -65,7 +65,7 @@ class UserMappingManager
             throw new CannotCreateAMappingForASpecialUserException($user_id);
         }
         $this->user_dao->storeLoginSuccess($user_id, $last_used);
-        $is_saved  = $this->dao->save($user_id, $provider_id, $identifier, $last_used);
+        $is_saved = $this->dao->save($user_id, $provider_id, $identifier, $last_used);
         if (! $is_saved) {
             throw new UserMappingDataAccessException();
         }

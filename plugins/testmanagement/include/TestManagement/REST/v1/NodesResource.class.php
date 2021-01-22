@@ -66,7 +66,7 @@ class NodeResource
     {
         try {
             $factory = new NodeBuilderFactory();
-            $user = $this->getCurrentUser();
+            $user    = $this->getCurrentUser();
 
             $artifact = $factory->getArtifactById($user, (int) $id);
 

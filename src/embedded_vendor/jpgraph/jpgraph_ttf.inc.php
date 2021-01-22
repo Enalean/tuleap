@@ -243,11 +243,11 @@ class LanguageConv
     public static function heb_iso2uni($isoline)
     {
         $isoline = hebrev($isoline);
-        $o = '';
+        $o       = '';
 
         $n = strlen($isoline);
         for ($i = 0; $i < $n; $i++) {
-            $c = ord(substr($isoline, $i, 1));
+            $c  = ord(substr($isoline, $i, 1));
             $o .= ($c > 223) && ($c < 251) ? '&#' . (1264 + $c) . ';' : chr($c);
         }
         return utf8_encode($o);
@@ -609,8 +609,8 @@ class SymChar
 
         ];
 
-        $n = count($iSymbols);
-        $i = 0;
+        $n     = count($iSymbols);
+        $i     = 0;
         $found = false;
         $aSymb = strtolower($aSymb);
         while ($i < $n && ! $found) {

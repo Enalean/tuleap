@@ -48,8 +48,8 @@ class WeeklySummaryController implements DispatchableWithRequest, DispatchableWi
 
     public function __construct(\TemplateRendererFactory $renderer_factory, ActivityLoggerDao $activity_logger_dao, User_ForgeUserGroupPermissionsManager $forge_user_group_permissions_manager)
     {
-        $this->renderer            = $renderer_factory->getRenderer(__DIR__ . '/templates');
-        $this->activity_logger_dao = $activity_logger_dao;
+        $this->renderer                             = $renderer_factory->getRenderer(__DIR__ . '/templates');
+        $this->activity_logger_dao                  = $activity_logger_dao;
         $this->forge_user_group_permissions_manager = $forge_user_group_permissions_manager;
     }
     /**
@@ -65,7 +65,7 @@ class WeeklySummaryController implements DispatchableWithRequest, DispatchableWi
         foreach ($this->getWeeks() as $week) {
             $first_day_of_week = new \DateTimeImmutable($week);
             $last_day_of_week  = $first_day_of_week->add(new \DateInterval('P7D'));
-            $weeks['weeks'][] = $this->getNbActionsPerUser($week, $first_day_of_week, $last_day_of_week);
+            $weeks['weeks'][]  = $this->getNbActionsPerUser($week, $first_day_of_week, $last_day_of_week);
         }
 
         $layout->header(['title' => 'Create Test Environment - Weekly Summary']);
@@ -76,8 +76,8 @@ class WeeklySummaryController implements DispatchableWithRequest, DispatchableWi
     private function getWeeks(): array
     {
         $time_boundaries = $this->activity_logger_dao->getMinMaxTimeFromLogs();
-        $first_date = new \DateTime(sprintf('@%d', $time_boundaries['min_time']));
-        $last_date  = new \DateTimeImmutable(sprintf('@%d', $time_boundaries['max_time']));
+        $first_date      = new \DateTime(sprintf('@%d', $time_boundaries['min_time']));
+        $last_date       = new \DateTimeImmutable(sprintf('@%d', $time_boundaries['max_time']));
 
         $weeks = [];
         do {

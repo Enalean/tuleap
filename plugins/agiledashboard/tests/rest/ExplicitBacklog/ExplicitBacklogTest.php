@@ -34,7 +34,7 @@ class ExplicitBacklogTest extends TestBase
     public function testPatchATopBacklogInExplicitContextDoesNotFail(): void
     {
         $artifact_id_to_add = $this->getFirstStoryArtifactId();
-        $patch_body = json_encode([
+        $patch_body         = json_encode([
             'add' => [
                 ['id' => $artifact_id_to_add],
             ]
@@ -141,8 +141,8 @@ class ExplicitBacklogTest extends TestBase
 
     private function removeStoryFromTopBacklog()
     {
-        $artifact_id_to_add  = $this->getFirstStoryArtifactId();
-        $patch_body          = json_encode([
+        $artifact_id_to_add = $this->getFirstStoryArtifactId();
+        $patch_body         = json_encode([
             'remove' => [
                 [
                     'id' => $artifact_id_to_add

@@ -23,7 +23,7 @@ class Tracker_FormElement_View_Admin_Field_PermissionsOnArtifact extends Tracker
 
     protected function fetchCustomHelp()
     {
-        $html = '';
+        $html  = '';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= dgettext('tuleap-tracker', 'Warning : use that field only once.');
         $html .= '</span>';

@@ -76,13 +76,13 @@ class AccessKeyMetadata
         ?\DateTimeImmutable $expiration_date,
         array $scopes
     ) {
-        $this->id               = $id;
-        $this->creation_date    = $creation_date;
-        $this->expiration_date  = $expiration_date;
-        $this->description      = $description;
-        $this->last_used_date   = $last_used_date;
-        $this->last_used_ip     = $last_used_ip;
-        $this->scopes           = $scopes;
+        $this->id              = $id;
+        $this->creation_date   = $creation_date;
+        $this->expiration_date = $expiration_date;
+        $this->description     = $description;
+        $this->last_used_date  = $last_used_date;
+        $this->last_used_ip    = $last_used_ip;
+        $this->scopes          = $scopes;
     }
 
     public function getID(): int

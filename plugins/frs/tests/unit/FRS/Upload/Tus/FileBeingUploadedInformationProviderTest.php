@@ -48,7 +48,7 @@ class FileBeingUploadedInformationProviderTest extends TestCase
             ]
         );
 
-        $item_id = 12;
+        $item_id        = 12;
         $server_request = (new NullServerRequest())->withAttribute('id', (string) $item_id)
             ->withAttribute(RESTCurrentUserMiddleware::class, $current_user);
         $current_user->shouldReceive('getID')->andReturn('102');
@@ -75,12 +75,12 @@ class FileBeingUploadedInformationProviderTest extends TestCase
 
     public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase(): void
     {
-        $dao            = \Mockery::mock(FileOngoingUploadDao::class);
+        $dao        = \Mockery::mock(FileOngoingUploadDao::class);
         $data_store = new FileBeingUploadedInformationProvider(new UploadPathAllocator(), $dao);
 
         $dao->shouldReceive('searchFileOngoingUploadByIDUserIDAndExpirationDate')->andReturns([]);
 
-        $current_user   = \Mockery::mock(\PFUser::class);
+        $current_user = \Mockery::mock(\PFUser::class);
         $current_user->shouldReceive('getId')->andReturn('102');
         $server_request = (new NullServerRequest())->withAttribute('id', '12')
             ->withAttribute(RESTCurrentUserMiddleware::class, $current_user);

@@ -281,8 +281,8 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
     {
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(852);
-        $tracker  = \Mockery::mock(\Tracker::class);
-        $project  = \Mockery::mock(\Project::class);
+        $tracker = \Mockery::mock(\Tracker::class);
+        $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(102);
         $tracker->shouldReceive('getProject')->andReturn($project);
         $tracker->shouldReceive('userCanView')->andReturn(true);

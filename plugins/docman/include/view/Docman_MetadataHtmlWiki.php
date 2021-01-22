@@ -38,7 +38,7 @@ class Docman_MetadataHtmlWiki extends \Docman_MetadataHtml
     }
     public function &getValidator()
     {
-        $msg = \dgettext('tuleap-docman', 'The page name is required.');
+        $msg       = \dgettext('tuleap-docman', 'The page name is required.');
         $validator = new \Docman_ValidateValueNotEmpty($this->pagename, $msg);
         return $validator;
     }

@@ -73,7 +73,7 @@ class Util
         $from = [
             '/'
         ];
-        $to = [
+        $to   = [
             '-'
         ];
         return str_replace($from, $to, $str);

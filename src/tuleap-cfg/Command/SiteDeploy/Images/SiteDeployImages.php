@@ -62,7 +62,7 @@ final class SiteDeployImages
     {
         foreach (self::LOGOS as $logo_name) {
             $dst_file = $this->images_dir . '/' . $logo_name;
-            $logo = $this->theme_dir . '/' . $logo_name;
+            $logo     = $this->theme_dir . '/' . $logo_name;
             if (! file_exists($dst_file)) {
                 if (file_exists($logo)) {
                     $output->writeln(sprintf('<info>Copy custom %s to %s</info>', $logo, $dst_file));

@@ -38,10 +38,10 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
 
     public function __construct($groupId, $user)
     {
-        $this->dpm = Docman_PermissionsManager::instance($groupId);
-        $this->user = $user;
-        $this->docIdList = [];
-        $this->fldIdList = [];
+        $this->dpm        = Docman_PermissionsManager::instance($groupId);
+        $this->user       = $user;
+        $this->docIdList  = [];
+        $this->fldIdList  = [];
         $this->docCounter = 0;
         $this->fldCounter = 0;
     }
@@ -54,12 +54,12 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
 
         if ($this->_itemIsWritable($item, $params)) {
             $this->fldIdList[] = $item->getId();
-            $items = $item->getAllItems();
+            $items             = $item->getAllItems();
             if ($items && $items->size() > 0) {
                 $iter = $items->iterator();
                 $iter->rewind();
                 while ($iter->valid()) {
-                    $child = $iter->current();
+                    $child    = $iter->current();
                     $canWrite = ($canWrite && $child->accept($this, $params));
                     $iter->next();
                 }

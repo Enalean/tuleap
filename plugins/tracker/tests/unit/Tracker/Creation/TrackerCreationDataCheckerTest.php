@@ -91,9 +91,9 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
     public function testItThrowAnExceptionWhenNewTrackerLengthIsInvalidDuringTrackerDuplication(): void
     {
-        $shortname = "bugs_with_a_very_very_long_shortname";
+        $shortname   = "bugs_with_a_very_very_long_shortname";
         $template_id = "25";
-        $user = \Mockery::mock(\PFUser::class);
+        $user        = \Mockery::mock(\PFUser::class);
 
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('Tracker shortname length must be inferior to 25 characters.');
@@ -106,9 +106,9 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
     public function testItThrowAnExceptionWhenOriginalTrackerIsNotFound(): void
     {
-        $shortname = "bugs";
+        $shortname   = "bugs";
         $template_id = "12";
-        $user = \Mockery::mock(\PFUser::class);
+        $user        = \Mockery::mock(\PFUser::class);
 
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
 
@@ -123,9 +123,9 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
     public function testItThrowAnExceptionWhenUserCanNotReadOriginalTrackerDuringTrackerDuplication(): void
     {
-        $shortname = "bugs";
+        $shortname   = "bugs";
         $template_id = "12";
-        $user = \Mockery::mock(\PFUser::class);
+        $user        = \Mockery::mock(\PFUser::class);
 
         $tracker = \Mockery::mock(\Tracker::class);
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
@@ -145,9 +145,9 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
     public function testItDoesNotCheckUserPermissionsWhenTrackerComeFromAProjectTemplate(): void
     {
-        $shortname = "bugs";
+        $shortname   = "bugs";
         $template_id = "12";
-        $user = \Mockery::mock(\PFUser::class);
+        $user        = \Mockery::mock(\PFUser::class);
 
         $tracker = \Mockery::mock(\Tracker::class);
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
@@ -165,9 +165,9 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
     public function testItDoesNotThrowAnExceptionWhenOldTrackerLengthWasInvalid(): void
     {
-        $project_id = 101;
+        $project_id  = 101;
         $public_name = "New bugs";
-        $shortname = "new_bugs";
+        $shortname   = "new_bugs";
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
@@ -352,7 +352,7 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
     public function testItThrowsAnExceptionWhenTemplateTrackerIsInvalid(): void
     {
-        $template_id  = 101;
+        $template_id = 101;
 
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(false);
 
@@ -366,10 +366,10 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
     public function testItThrowsAnExceptionWhenTemplateTrackerProjectIsInvalid(): void
     {
-        $template_id  = 101;
+        $template_id = 101;
 
         $tracker = Mockery::mock(\Tracker::class);
-        $project    = Mockery::mock(\Project::class);
+        $project = Mockery::mock(\Project::class);
         $tracker->shouldReceive('getProject')->andReturn($project);
         $project->shouldReceive('isError')->andReturnTrue();
 

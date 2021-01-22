@@ -91,7 +91,7 @@ class ProjectHistorySearchPresenter
         $this->selected_event     = $selected_event;
         $this->selected_subevents = $selected_subevents;
 
-        $this->events = [
+        $this->events         = [
             [
                 'key'        => 'any',
                 'label'      => $GLOBALS["Language"]->getText('global', 'any'),

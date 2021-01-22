@@ -35,9 +35,9 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
 
     protected function __construct()
     {
-        $this->gitRootPath  = '';
-        $this->driver       = new GitDriver();
-        $this->dao          = new GitDao();
+        $this->gitRootPath = '';
+        $this->driver      = new GitDriver();
+        $this->dao         = new GitDao();
         //WARN : this is much safer to set it to an absolute path
         $this->gitRootPath  = Git_Backend_Interface::GIT_ROOT_PATH;
         $this->gitBackupDir = PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir');
@@ -45,7 +45,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
 
     public function setUp(Git_GitRepositoryUrlManager $url_manager)
     {
-        $this->url_manager  = $url_manager;
+        $this->url_manager = $url_manager;
     }
 
     public function setGitBackupDir($dir)
@@ -201,7 +201,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
 
     protected function setRepositoryPermissions($repository)
     {
-        $path = $this->getGitRootPath() . DIRECTORY_SEPARATOR . $repository->getPath();
+        $path                     = $this->getGitRootPath() . DIRECTORY_SEPARATOR . $repository->getPath();
         $no_filter_file_extension = [];
         $this->recurseChownChgrp(
             $path,
@@ -214,7 +214,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
 
     protected function createGitRoot()
     {
-        $gitRootPath    = $this->getGitRootPath();
+        $gitRootPath = $this->getGitRootPath();
         //create the gitroot directory
         if (! is_dir($gitRootPath)) {
             if (! mkdir($gitRootPath, 0755)) {
@@ -248,11 +248,11 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     public function archive(GitRepository $repository)
     {
         chdir($this->getGitRootPath());
-        $path = $repository->getPath();
+        $path        = $repository->getPath();
         $archiveName = $repository->getBackupPath() . '.tar.gz';
-        $cmd    = ' tar czf ' . escapeshellarg($archiveName) . ' ' . escapeshellarg($path) . ' 2>&1';
-        $rcode  = 0;
-        $output = $this->system($cmd, $rcode);
+        $cmd         = ' tar czf ' . escapeshellarg($archiveName) . ' ' . escapeshellarg($path) . ' 2>&1';
+        $rcode       = 0;
+        $output      = $this->system($cmd, $rcode);
         if ($rcode != 0) {
             throw new GitBackendException($cmd . ' -> ' . $output);
         }
@@ -277,8 +277,8 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
      */
     public function getAccessURL(GitRepository $repository)
     {
-        $serverName  = $_SERVER['SERVER_NAME'];
-        $user = UserManager::instance()->getCurrentUser();
+        $serverName = $_SERVER['SERVER_NAME'];
+        $user       = UserManager::instance()->getCurrentUser();
         return ['ssh' => $user->getUserName() . '@' . $serverName . ':/gitroot/' . $repository->getProject()->getUnixName() . '/' . $repository->getName() . '.git'];
     }
 
@@ -355,7 +355,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         if (count($rows) > 0) {
             foreach ($rows as $row) {
                 $typeIndex[] = $row['month'] . " " . $row['year'];
-                $typeArray[]      = intval($row['count']);
+                $typeArray[] = intval($row['count']);
             }
             $formatter->addLine($typeIndex);
             $formatter->addLine($typeArray);

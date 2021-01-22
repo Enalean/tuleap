@@ -157,8 +157,8 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->should_logo_be_displayed  = $should_logo_be_displayed;
         $this->is_legacy_logo_customized = $is_legacy_logo_customized;
         $this->is_svg_logo_customized    = $is_svg_logo_customized;
-        $this->is_super_user = $user->isSuperUser();
-        $this->invite_buddies_presenter = $invite_buddies_presenter;
+        $this->is_super_user             = $user->isSuperUser();
+        $this->invite_buddies_presenter  = $invite_buddies_presenter;
 
         $this->user_id                    = $this->user->getId();
         $this->has_platform_banner        = $platform_banner !== null;
@@ -168,8 +168,8 @@ class FlamingParrot_NavBarPresenter // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $this->platform_banner_is_warning  = $platform_banner && $platform_banner->getImportance() === Banner::IMPORTANCE_WARNING;
         $this->platform_banner_is_critical = $platform_banner && $platform_banner->getImportance() === Banner::IMPORTANCE_CRITICAL;
 
-        $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
-        $this->my_account_label     = $GLOBALS['Language']->getText('my_index', 'account_maintenance');
+        $this->logout_label     = $GLOBALS['Language']->getText('include_menu', 'logout');
+        $this->my_account_label = $GLOBALS['Language']->getText('my_index', 'account_maintenance');
 
         $this->current_user_id = $user->getId();
         $this->history         = _('History');

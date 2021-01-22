@@ -29,28 +29,28 @@ DEFINE('PATTERN_STRIPE2', 10);
 //===================================================
 class BarPlot extends Plot
 {
-    public $fill = false;
-    public $fill_color = "lightblue"; // Default is to fill with light blue
-    public $iPattern = -1;
-    public $iPatternDensity = 80;
-    public $iPatternColor = 'black';
-    public $valuepos = 'top';
-    public $grad = false;
-    public $grad_style = 1;
-    public $grad_fromcolor = [50, 50, 200];
-    public $grad_tocolor = [255, 255, 255];
-    public $ymin = 0;
-    protected $width = 0.4; // in percent of major ticks
-    protected $abswidth = -1; // Width in absolute pixels
-    protected $ybase = 0; // Bars start at 0
-    protected $align = "center";
-    protected $bar_shadow = false;
+    public $fill                = false;
+    public $fill_color          = "lightblue"; // Default is to fill with light blue
+    public $iPattern            = -1;
+    public $iPatternDensity     = 80;
+    public $iPatternColor       = 'black';
+    public $valuepos            = 'top';
+    public $grad                = false;
+    public $grad_style          = 1;
+    public $grad_fromcolor      = [50, 50, 200];
+    public $grad_tocolor        = [255, 255, 255];
+    public $ymin                = 0;
+    protected $width            = 0.4; // in percent of major ticks
+    protected $abswidth         = -1; // Width in absolute pixels
+    protected $ybase            = 0; // Bars start at 0
+    protected $align            = "center";
+    protected $bar_shadow       = false;
     protected $bar_shadow_color = "black";
     protected $bar_shadow_hsize = 3;
     protected $bar_shadow_vsize = 3;
-    protected $bar_3d = false;
-    protected $bar_3d_hsize = 3;
-    protected $bar_3d_vsize = 3;
+    protected $bar_3d           = false;
+    protected $bar_3d_hsize     = 3;
+    protected $bar_3d_vsize     = 3;
 
     //---------------
     // CONSTRUCTOR
@@ -66,7 +66,7 @@ class BarPlot extends Plot
     // Set a drop shadow for the bar (or rather an "up-right" shadow)
     public function SetShadow($aColor = "black", $aHSize = 3, $aVSize = 3, $aShow = true)
     {
-        $this->bar_shadow = $aShow;
+        $this->bar_shadow       = $aShow;
         $this->bar_shadow_color = $aColor;
         $this->bar_shadow_vsize = $aVSize;
         $this->bar_shadow_hsize = $aHSize;
@@ -77,7 +77,7 @@ class BarPlot extends Plot
 
     public function Set3D($aHSize = 3, $aVSize = 3, $aShow = true)
     {
-        $this->bar_3d = $aShow;
+        $this->bar_3d       = $aShow;
         $this->bar_3d_vsize = $aVSize;
         $this->bar_3d_hsize = $aHSize;
 
@@ -257,9 +257,9 @@ class BarPlot extends Plot
 
     public function SetNoFill()
     {
-        $this->grad = false;
+        $this->grad       = false;
         $this->fill_color = false;
-        $this->fill = false;
+        $this->fill       = false;
     }
 
     public function SetFillColor($aColor)
@@ -268,14 +268,14 @@ class BarPlot extends Plot
         // In that case convert it to a hex string since it will otherwise be
         // interpretated as an array of colors for each individual bar.
 
-        $aColor = RGB::tryHexConversion($aColor);
-        $this->fill = true;
+        $aColor           = RGB::tryHexConversion($aColor);
+        $this->fill       = true;
         $this->fill_color = $aColor;
     }
 
     public function SetFillGradient($aFromColor, $aToColor = null, $aStyle = null)
     {
-        $this->grad = true;
+        $this->grad           = true;
         $this->grad_fromcolor = $aFromColor;
         $this->grad_tocolor   = $aToColor;
         $this->grad_style     = $aStyle;
@@ -289,8 +289,8 @@ class BarPlot extends Plot
     public function SetPattern($aPattern, $aColor = 'black')
     {
         if (is_array($aPattern)) {
-            $n = count($aPattern);
-            $this->iPattern = [];
+            $n                     = count($aPattern);
+            $this->iPattern        = [];
             $this->iPatternDensity = [];
             if (is_array($aColor)) {
                 $this->iPatternColor = [];
@@ -317,43 +317,43 @@ class BarPlot extends Plot
         switch ($aPattern) {
             case PATTERN_DIAG1:
                 $aPatternValue = 1;
-                $aDensity = 92;
+                $aDensity      = 92;
                 break;
             case PATTERN_DIAG2:
                 $aPatternValue = 1;
-                $aDensity = 78;
+                $aDensity      = 78;
                 break;
             case PATTERN_DIAG3:
                 $aPatternValue = 2;
-                $aDensity = 92;
+                $aDensity      = 92;
                 break;
             case PATTERN_DIAG4:
                 $aPatternValue = 2;
-                $aDensity = 78;
+                $aDensity      = 78;
                 break;
             case PATTERN_CROSS1:
                 $aPatternValue = 8;
-                $aDensity = 90;
+                $aDensity      = 90;
                 break;
             case PATTERN_CROSS2:
                 $aPatternValue = 8;
-                $aDensity = 78;
+                $aDensity      = 78;
                 break;
             case PATTERN_CROSS3:
                 $aPatternValue = 8;
-                $aDensity = 65;
+                $aDensity      = 65;
                 break;
             case PATTERN_CROSS4:
                 $aPatternValue = 7;
-                $aDensity = 90;
+                $aDensity      = 90;
                 break;
             case PATTERN_STRIPE1:
                 $aPatternValue = 5;
-                $aDensity = 94;
+                $aDensity      = 94;
                 break;
             case PATTERN_STRIPE2:
                 $aPatternValue = 5;
-                $aDensity = 85;
+                $aDensity      = 85;
                 break;
             default:
                 JpGraphError::RaiseL(2002);
@@ -443,17 +443,17 @@ class BarPlot extends Plot
                         if (is_numeric($this->grad_fromcolor[0]) && $this->grad_fromcolor[0] > 0 && $this->grad_fromcolor[0] < 256) {
                             // RGB Triple
                             $fromcolor = $this->grad_fromcolor;
-                            $tocolor = $this->grad_tocolor;
-                            $style = $this->grad_style;
+                            $tocolor   = $this->grad_tocolor;
+                            $style     = $this->grad_style;
                         } else {
                             $fromcolor = $this->grad_fromcolor[$i % $ng][0];
-                            $tocolor = $this->grad_fromcolor[$i % $ng][1];
-                            $style = $this->grad_fromcolor[$i % $ng][2];
+                            $tocolor   = $this->grad_fromcolor[$i % $ng][1];
+                            $style     = $this->grad_fromcolor[$i % $ng][2];
                         }
                     } else {
                         $fromcolor = $this->grad_fromcolor[$i % $ng][0];
-                        $tocolor = $this->grad_fromcolor[$i % $ng][1];
-                        $style = $this->grad_fromcolor[$i % $ng][2];
+                        $tocolor   = $this->grad_fromcolor[$i % $ng][1];
+                        $style     = $this->grad_fromcolor[$i % $ng][2];
                     }
                     $grad->FilledRectangle(
                         $pts[2],
@@ -501,29 +501,29 @@ class BarPlot extends Plot
                 $ssv = $this->bar_shadow_vsize;
                 // Create points to create a "upper-right" shadow
                 if ($val > 0) {
-                    $sp[0] = $pts[6];
-                    $sp[1] = $pts[7];
-                    $sp[2] = $pts[4];
-                    $sp[3] = $pts[5];
-                    $sp[4] = $pts[2];
-                    $sp[5] = $pts[3];
-                    $sp[6] = $pts[2] + $ssh;
-                    $sp[7] = $pts[3] - $ssv;
-                    $sp[8] = $pts[4] + $ssh;
-                    $sp[9] = $pts[5] - $ssv;
+                    $sp[0]  = $pts[6];
+                    $sp[1]  = $pts[7];
+                    $sp[2]  = $pts[4];
+                    $sp[3]  = $pts[5];
+                    $sp[4]  = $pts[2];
+                    $sp[5]  = $pts[3];
+                    $sp[6]  = $pts[2] + $ssh;
+                    $sp[7]  = $pts[3] - $ssv;
+                    $sp[8]  = $pts[4] + $ssh;
+                    $sp[9]  = $pts[5] - $ssv;
                     $sp[10] = $pts[6] + $ssh;
                     $sp[11] = $pts[7] - $ssv;
                 } elseif ($val < 0) {
-                    $sp[0] = $pts[4];
-                    $sp[1] = $pts[5];
-                    $sp[2] = $pts[6];
-                    $sp[3] = $pts[7];
-                    $sp[4] = $pts[0];
-                    $sp[5] = $pts[1];
-                    $sp[6] = $pts[0] + $ssh;
-                    $sp[7] = $pts[1] - $ssv;
-                    $sp[8] = $pts[6] + $ssh;
-                    $sp[9] = $pts[7] - $ssv;
+                    $sp[0]  = $pts[4];
+                    $sp[1]  = $pts[5];
+                    $sp[2]  = $pts[6];
+                    $sp[3]  = $pts[7];
+                    $sp[4]  = $pts[0];
+                    $sp[5]  = $pts[1];
+                    $sp[6]  = $pts[0] + $ssh;
+                    $sp[7]  = $pts[1] - $ssv;
+                    $sp[8]  = $pts[6] + $ssh;
+                    $sp[9]  = $pts[7] - $ssv;
                     $sp[10] = $pts[4] + $ssh;
                     $sp[11] = $pts[5] - $ssv;
                 }
@@ -612,13 +612,13 @@ class BarPlot extends Plot
                     $rx = $pts[2];
                     $ry = $pts[3];
                 }
-                $width = abs($pts[4] - $pts[0]) + 1;
+                $width  = abs($pts[4] - $pts[0]) + 1;
                 $height = abs($pts[1] - $pts[3]) + 1;
                 $prect->SetPos(new Rectangle($rx, $ry, $width, $height));
                 $prect->Stroke($img);
             } else {
                 if ($this->iPattern > -1) {
-                    $f = new RectPatternFactory();
+                    $f     = new RectPatternFactory();
                     $prect = $f->Create($this->iPattern, $this->iPatternColor, 1);
                     $prect->SetDensity($this->iPatternDensity);
                     if ($val < 0) {
@@ -628,7 +628,7 @@ class BarPlot extends Plot
                         $rx = $pts[2];
                         $ry = $pts[3];
                     }
-                    $width = abs($pts[4] - $pts[0]) + 1;
+                    $width  = abs($pts[4] - $pts[0]) + 1;
                     $height = abs($pts[1] - $pts[3]) + 1;
                     $prect->SetPos(new Rectangle($rx, $ry, $width, $height));
                     $prect->Stroke($img);
@@ -710,7 +710,7 @@ class BarPlot extends Plot
                 //'Unknown position for values on bars :'.$this->valuepos);
             }
             // Create the client side image map
-            $rpts = $img->ArrRotate($pts);
+            $rpts      = $img->ArrRotate($pts);
             $csimcoord = round($rpts[0]) . ", " . round($rpts[1]);
             for ($j = 1; $j < 4; ++$j) {
                 $csimcoord .= ", " . round($rpts[2 * $j]) . ", " . round($rpts[2 * $j + 1]);
@@ -725,7 +725,7 @@ class BarPlot extends Plot
 
                 $sval = '';
                 if (! empty($this->csimalts[$i])) {
-                    $sval = sprintf($this->csimalts[$i], $this->coords[0][$i]);
+                    $sval             = sprintf($this->csimalts[$i], $this->coords[0][$i]);
                     $this->csimareas .= " title=\"$sval\" alt=\"$sval\" ";
                 }
                 $this->csimareas .= " />\n";
@@ -747,8 +747,8 @@ class GroupBarPlot extends BarPlot
     // CONSTRUCTOR
     public function __construct($plots)
     {
-        $this->width = 0.7;
-        $this->plots = $plots;
+        $this->width    = 0.7;
+        $this->plots    = $plots;
         $this->nbrplots = count($plots);
         if ($this->nbrplots < 1) {
             JpGraphError::RaiseL(2007);//('Cannot create GroupBarPlot from empty plot array.');
@@ -759,7 +759,7 @@ class GroupBarPlot extends BarPlot
             }
         }
         $this->numpoints = $plots[0]->numpoints;
-        $this->width = 0.7;
+        $this->width     = 0.7;
     }
 
     //---------------
@@ -780,11 +780,11 @@ class GroupBarPlot extends BarPlot
     public function Min()
     {
         list($xmin,$ymin) = $this->plots[0]->Min();
-        $n = count($this->plots);
+        $n                = count($this->plots);
         for ($i = 0; $i < $n; ++$i) {
             list($xm,$ym) = $this->plots[$i]->Min();
-            $xmin = max($xmin, $xm);
-            $ymin = min($ymin, $ym);
+            $xmin         = max($xmin, $xm);
+            $ymin         = min($ymin, $ym);
         }
         return [$xmin, $ymin];
     }
@@ -792,18 +792,18 @@ class GroupBarPlot extends BarPlot
     public function Max()
     {
         list($xmax,$ymax) = $this->plots[0]->Max();
-        $n = count($this->plots);
+        $n                = count($this->plots);
         for ($i = 0; $i < $n; ++$i) {
             list($xm,$ym) = $this->plots[$i]->Max();
-            $xmax = max($xmax, $xm);
-            $ymax = max($ymax, $ym);
+            $xmax         = max($xmax, $xm);
+            $ymax         = max($ymax, $ym);
         }
         return [$xmax, $ymax];
     }
 
     public function GetCSIMareas()
     {
-        $n = count($this->plots);
+        $n         = count($this->plots);
         $csimareas = '';
         for ($i = 0; $i < $n; ++$i) {
             $csimareas .= $this->plots[$i]->csimareas;
@@ -814,8 +814,8 @@ class GroupBarPlot extends BarPlot
     // Stroke all the bars next to each other
     public function Stroke($img, $xscale, $yscale)
     {
-        $tmp = $xscale->off;
-        $n = count($this->plots);
+        $tmp      = $xscale->off;
+        $n        = count($this->plots);
         $subwidth = $this->width / $this->nbrplots;
 
         for ($i = 0; $i < $n; ++$i) {
@@ -840,13 +840,13 @@ class GroupBarPlot extends BarPlot
 //===================================================
 class AccBarPlot extends BarPlot
 {
-    public $plots = null;
+    public $plots     = null;
     private $nbrplots = 0;
     //---------------
     // CONSTRUCTOR
     public function __construct($plots)
     {
-        $this->plots = $plots;
+        $this->plots    = $plots;
         $this->nbrplots = count($plots);
         if ($this->nbrplots < 1) {
             JpGraphError::RaiseL(2010);//('Cannot create AccBarPlot from empty plot array.');
@@ -870,7 +870,7 @@ class AccBarPlot extends BarPlot
         $this->SetWeight(0);
 
         $this->numpoints = $plots[0]->numpoints;
-        $this->value = new DisplayValue();
+        $this->value     = new DisplayValue();
     }
 
     //---------------
@@ -891,12 +891,12 @@ class AccBarPlot extends BarPlot
     public function Max()
     {
         list($xmax) = $this->plots[0]->Max();
-        $nmax = 0;
+        $nmax       = 0;
         for ($i = 0; $i < count($this->plots); ++$i) {
-            $n = count($this->plots[$i]->coords[0]);
-            $nmax = max($nmax, $n);
+            $n       = count($this->plots[$i]->coords[0]);
+            $nmax    = max($nmax, $n);
             list($x) = $this->plots[$i]->Max();
-            $xmax = max($xmax, $x);
+            $xmax    = max($xmax, $x);
         }
         for ($i = 0; $i < $nmax; $i++) {
             // Get y-value for bar $i by adding the
@@ -932,14 +932,14 @@ class AccBarPlot extends BarPlot
 
     public function Min()
     {
-        $nmax = 0;
+        $nmax                = 0;
         list($xmin,$ysetmin) = $this->plots[0]->Min();
         for ($i = 0; $i < count($this->plots); ++$i) {
-            $n = count($this->plots[$i]->coords[0]);
-            $nmax = max($nmax, $n);
+            $n          = count($this->plots[$i]->coords[0]);
+            $nmax       = max($nmax, $n);
             list($x,$y) = $this->plots[$i]->Min();
-            $xmin = Min($xmin, $x);
-            $ysetmin = Min($y, $ysetmin);
+            $xmin       = Min($xmin, $x);
+            $ysetmin    = Min($y, $ysetmin);
         }
         for ($i = 0; $i < $nmax; $i++) {
             // Get y-value for bar $i by adding the
@@ -973,19 +973,19 @@ class AccBarPlot extends BarPlot
         $img->SetLineWeight($this->weight);
         $grad = null;
         for ($i = 0; $i < $this->numpoints - 1; $i++) {
-            $accy = 0;
+            $accy     = 0;
             $accy_neg = 0;
             for ($j = 0; $j < $this->nbrplots; ++$j) {
                 $img->SetColor($this->plots[$j]->color);
 
                 if ($this->plots[$j]->coords[0][$i] >= 0) {
-                    $yt = $yscale->Translate($this->plots[$j]->coords[0][$i] + $accy);
+                    $yt    = $yscale->Translate($this->plots[$j]->coords[0][$i] + $accy);
                     $accyt = $yscale->Translate($accy);
                     $accy += $this->plots[$j]->coords[0][$i];
                 } else {
                     //if ( $this->plots[$j]->coords[0][$i] < 0 || $accy_neg < 0 ) {
-                    $yt = $yscale->Translate($this->plots[$j]->coords[0][$i] + $accy_neg);
-                    $accyt = $yscale->Translate($accy_neg);
+                    $yt        = $yscale->Translate($this->plots[$j]->coords[0][$i] + $accy_neg);
+                    $accyt     = $yscale->Translate($accy_neg);
                     $accy_neg += $this->plots[$j]->coords[0][$i];
                 }
 
@@ -1018,12 +1018,12 @@ class AccBarPlot extends BarPlot
                         $sp[3] = $pts[7] - $ssv;
 
                         // In case the final bar is negative
-                        $nsp[0] = $pts[0];
-                        $nsp[1] = $pts[1];
-                        $nsp[2] = $pts[0] + $ssh;
-                        $nsp[3] = $pts[1] - $ssv;
-                        $nsp[4] = $pts[6] + $ssh;
-                        $nsp[5] = $pts[7] - $ssv;
+                        $nsp[0]  = $pts[0];
+                        $nsp[1]  = $pts[1];
+                        $nsp[2]  = $pts[0] + $ssh;
+                        $nsp[3]  = $pts[1] - $ssv;
+                        $nsp[4]  = $pts[6] + $ssh;
+                        $nsp[5]  = $pts[7] - $ssv;
                         $nsp[10] = $pts[6] + 1;
                         $nsp[11] = $pts[7];
                     }
@@ -1043,12 +1043,12 @@ class AccBarPlot extends BarPlot
                         }
 
                         if ($accy > 0) {
-                            $sp[4] = $pts[4] + $ssh;
-                            $sp[5] = $pts[5] - $ssv;
-                            $sp[6] = $pts[2] + $ssh;
-                            $sp[7] = $pts[3] - $ssv;
-                            $sp[8] = $pts[2];
-                            $sp[9] = $pts[3] - 1;
+                            $sp[4]  = $pts[4] + $ssh;
+                            $sp[5]  = $pts[5] - $ssv;
+                            $sp[6]  = $pts[2] + $ssh;
+                            $sp[7]  = $pts[3] - $ssv;
+                            $sp[8]  = $pts[2];
+                            $sp[9]  = $pts[3] - 1;
                             $sp[10] = $pts[4] + 1;
                             $sp[11] = $pts[5];
                             $img->FilledPolygon($sp, 4);
@@ -1086,17 +1086,17 @@ class AccBarPlot extends BarPlot
                             ) {
                                 // RGB Triple
                                 $fromcolor = $this->plots[$j]->grad_fromcolor;
-                                $tocolor = $this->plots[$j]->grad_tocolor;
-                                $style = $this->plots[$j]->grad_style;
+                                $tocolor   = $this->plots[$j]->grad_tocolor;
+                                $style     = $this->plots[$j]->grad_style;
                             } else {
                                 $fromcolor = $this->plots[$j]->grad_fromcolor[$i % $ng][0];
-                                $tocolor = $this->plots[$j]->grad_fromcolor[$i % $ng][1];
-                                $style = $this->plots[$j]->grad_fromcolor[$i % $ng][2];
+                                $tocolor   = $this->plots[$j]->grad_fromcolor[$i % $ng][1];
+                                $style     = $this->plots[$j]->grad_fromcolor[$i % $ng][2];
                             }
                         } else {
                             $fromcolor = $this->plots[$j]->grad_fromcolor[$i % $ng][0];
-                            $tocolor = $this->plots[$j]->grad_fromcolor[$i % $ng][1];
-                            $style = $this->plots[$j]->grad_fromcolor[$i % $ng][2];
+                            $tocolor   = $this->plots[$j]->grad_fromcolor[$i % $ng][1];
+                            $style     = $this->plots[$j]->grad_fromcolor[$i % $ng][2];
                         }
                         $grad->FilledRectangle(
                             $pts[2],
@@ -1154,7 +1154,7 @@ class AccBarPlot extends BarPlot
                         $rx = $pts[2];
                         $ry = $pts[3];
                     }
-                    $width = abs($pts[4] - $pts[0]) + 1;
+                    $width  = abs($pts[4] - $pts[0]) + 1;
                     $height = abs($pts[1] - $pts[3]) + 1;
                     $prect->SetPos(new Rectangle($rx, $ry, $width, $height));
                     $prect->Stroke($img);
@@ -1164,7 +1164,7 @@ class AccBarPlot extends BarPlot
 
                 if ($i < count($this->plots[$j]->csimtargets)) {
                     // Create the client side image map
-                    $rpts = $img->ArrRotate($pts);
+                    $rpts      = $img->ArrRotate($pts);
                     $csimcoord = round($rpts[0]) . ", " . round($rpts[1]);
                     for ($k = 1; $k < 4; ++$k) {
                         $csimcoord .= ", " . round($rpts[2 * $k]) . ", " . round($rpts[2 * $k + 1]);
@@ -1179,7 +1179,7 @@ class AccBarPlot extends BarPlot
 
                         $sval = '';
                         if (! empty($this->plots[$j]->csimalts[$i])) {
-                            $sval = sprintf($this->plots[$j]->csimalts[$i], $this->plots[$j]->coords[0][$i]);
+                            $sval             = sprintf($this->plots[$j]->csimalts[$i], $this->plots[$j]->coords[0][$i]);
                             $this->csimareas .= " title=\"$sval\" ";
                         }
                         $this->csimareas .= " alt=\"$sval\" />\n";
@@ -1217,7 +1217,7 @@ class AccBarPlot extends BarPlot
             }
             $this->value->Stroke($img, $accy + $accy_neg, $x, $y);
 
-            $accy = 0;
+            $accy     = 0;
             $accy_neg = 0;
             for ($j = 0; $j < $this->nbrplots; ++$j) {
                 // We don't print 0 values in an accumulated bar plot
@@ -1226,7 +1226,7 @@ class AccBarPlot extends BarPlot
                 }
 
                 if ($this->plots[$j]->coords[0][$i] > 0) {
-                    $yt = $yscale->Translate($this->plots[$j]->coords[0][$i] + $accy);
+                    $yt    = $yscale->Translate($this->plots[$j]->coords[0][$i] + $accy);
                     $accyt = $yscale->Translate($accy);
                     if ($this->plots[$j]->valuepos == 'center') {
                         $y = $accyt - ($accyt - $yt) / 2;
@@ -1247,8 +1247,8 @@ class AccBarPlot extends BarPlot
                         $this->plots[$j]->value->SetMargin(1);
                     }
                 } else {
-                    $yt = $yscale->Translate($this->plots[$j]->coords[0][$i] + $accy_neg);
-                    $accyt = $yscale->Translate($accy_neg);
+                    $yt        = $yscale->Translate($this->plots[$j]->coords[0][$i] + $accy_neg);
+                    $accyt     = $yscale->Translate($accy_neg);
                     $accy_neg += $this->plots[$j]->coords[0][$i];
                     if ($this->plots[$j]->valuepos == 'center') {
                         $y = $accyt - ($accyt - $yt) / 2;

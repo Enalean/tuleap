@@ -214,7 +214,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $fields_validator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetFieldsValidator::class);
         $fields_validator->shouldReceive('validate')->andReturns(true);
 
-        $artifact_saver    = Mockery::mock(ArtifactChangesetSaver::class);
+        $artifact_saver = Mockery::mock(ArtifactChangesetSaver::class);
         $artifact_saver->shouldReceive('saveChangeset')->once();
 
         $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
@@ -335,7 +335,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $comment_dao = \Mockery::spy(\Tracker_Artifact_Changeset_CommentDao::class);
         $comment_dao->shouldReceive('createNewVersion')->andReturns(true)->once();
 
-        $dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
+        $dao             = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
         $changeset_saver = Mockery::mock(ArtifactChangesetSaver::class);
         $changeset_saver->shouldReceive('saveChangeset')->andReturn(1002);
 
@@ -590,7 +590,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $comment_dao = \Mockery::spy(\Tracker_Artifact_Changeset_CommentDao::class);
         $comment_dao->shouldReceive('createNewVersion')->andReturns(true)->once();
 
-        $dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
+        $dao             = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
         $changeset_saver = Mockery::mock(ArtifactChangesetSaver::class);
         $changeset_saver->shouldReceive('saveChangeset')->andReturn(1002);
 

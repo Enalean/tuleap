@@ -72,15 +72,15 @@ final class ReleasePermissionsForGroupsBuilderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->project_id = 350;
-        $this->a_project = M::mock(\Project::class, ['getID' => (string) $this->project_id, 'getPublicName' => 'foo']);
+        $this->project_id   = 350;
+        $this->a_project    = M::mock(\Project::class, ['getID' => (string) $this->project_id, 'getPublicName' => 'foo']);
         $this->a_release_id = '34';
-        $this->a_release = new FRSRelease(['release_id' => $this->a_release_id]);
+        $this->a_release    = new FRSRelease(['release_id' => $this->a_release_id]);
         $this->a_release->setProject($this->a_project);
-        $this->an_frs_admin = M::mock(\PFUser::class);
+        $this->an_frs_admin        = M::mock(\PFUser::class);
         $this->permissions_manager = M::mock(\IPermissionsManagerNG::class);
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturn([])->byDefault();
-        $this->ugroup_manager = M::mock(\UGroupManager::class);
+        $this->ugroup_manager          = M::mock(\UGroupManager::class);
         $this->frs_permissions_manager = M::mock(FRSPermissionManager::class);
         $this->frs_permissions_manager->shouldReceive('isAdmin')->with($this->a_project, $this->an_frs_admin)->andReturnTrue();
 
@@ -111,7 +111,7 @@ final class ReleasePermissionsForGroupsBuilderTest extends TestCase
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->a_project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
 
         $static_ugroup_id = 345;
-        $static_ugroup = new ProjectUGroup([
+        $static_ugroup    = new ProjectUGroup([
             'ugroup_id' => $static_ugroup_id,
             'name' => 'Developers',
             'group_id' => $this->project_id,

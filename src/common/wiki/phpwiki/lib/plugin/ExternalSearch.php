@@ -57,7 +57,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
     public function _getInterWikiUrl(&$request)
     {
         $intermap = getInterwikiMap();
-        $map = $intermap->_map;
+        $map      = $intermap->_map;
 
         if (in_array($this->_url, array_keys($map))) {
             if (empty($this->_name)) {
@@ -94,7 +94,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
 
         $posted = $_POST;
         if (in_array('url', array_keys($posted))) {
-            $s = $posted['s'];
+            $s          = $posted['s'];
             $this->_url = $posted['url'];
             $this->_getInterWikiUrl($request);
             if (strstr($this->_url, '%s')) {
@@ -109,7 +109,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
             }
         }
         $this->_name = $name;
-        $this->_s = $s;
+        $this->_s    = $s;
         if ($formsize < 1) {
             $formsize = 30;
         }

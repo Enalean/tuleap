@@ -57,8 +57,8 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
 
     private function parseCSVFile()
     {
-        $csv    = fopen($this->output_filename, 'r');
-        $header = fgetcsv($csv);
+        $csv        = fopen($this->output_filename, 'r');
+        $header     = fgetcsv($csv);
         $first_data = fgetcsv($csv);
         fclose($csv);
 

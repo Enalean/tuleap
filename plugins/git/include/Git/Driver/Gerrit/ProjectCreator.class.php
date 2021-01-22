@@ -22,7 +22,7 @@
 class Git_Driver_Gerrit_ProjectCreator
 {
 
-    public const GROUP_REPLICATION = 'replication';
+    public const GROUP_REPLICATION      = 'replication';
     public const GROUP_REGISTERED_USERS = 'Registered Users';
 
     public const NO_PERMISSIONS_MIGRATION      = 'none';
@@ -327,8 +327,8 @@ class Git_Driver_Gerrit_ProjectCreator
         // means they can modify the permissions for any reference in the
         // project.
 
-        $ugroup_ids_read = $this->user_finder->getUgroups($repository->getId(), Git::PERM_READ);
-        $ugroup_ids_write = $this->user_finder->getUgroups($repository->getId(), Git::PERM_WRITE);
+        $ugroup_ids_read   = $this->user_finder->getUgroups($repository->getId(), Git::PERM_READ);
+        $ugroup_ids_write  = $this->user_finder->getUgroups($repository->getId(), Git::PERM_WRITE);
         $ugroup_ids_rewind = $this->user_finder->getUgroups($repository->getId(), Git::PERM_WPLUS);
 
         $ugroups_read   = [];

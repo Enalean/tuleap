@@ -66,7 +66,7 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
      */
     public function verbalizeParameters($with_link): string
     {
-        $txt = '';
+        $txt  = '';
         $txt .= 'user: ' . $this->verbalizeUserId($this->getIdFromParam(), $with_link);
         return $txt;
     }

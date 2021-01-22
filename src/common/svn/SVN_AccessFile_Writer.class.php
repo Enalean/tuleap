@@ -53,8 +53,8 @@ class SVN_AccessFile_Writer
     public function read_defaults($display = false)
     {
         $this->err = false;
-        $fd = @fopen($this->accessfile, "r");
-        $buffer = '';
+        $fd        = @fopen($this->accessfile, "r");
+        $buffer    = '';
         if ($fd) {
             $in_settings = false;
             while (! feof($fd)) {
@@ -86,17 +86,17 @@ class SVN_AccessFile_Writer
     public function write($contents)
     {
         $this->err = false;
-        $fd = fopen($this->accessfile, "w+");
+        $fd        = fopen($this->accessfile, "w+");
         if ($fd) {
             if (fwrite($fd, str_replace("\r", '', $contents)) === false) {
                 $this->err = 'write';
-                $ret = false;
+                $ret       = false;
             } else {
                 $ret = true;
             }
         } else {
             $this->err = 'file';
-            $ret = false;
+            $ret       = false;
         }
         fclose($fd);
         return $ret;

@@ -49,8 +49,8 @@ class MailGatewayConfigPresenter
         $localinc_path,
         MailGatewayConfig $config
     ) {
-        $this->title                 = $title;
-        $this->csrf_token            = $csrf->fetchHTMLInput();
+        $this->title      = $title;
+        $this->csrf_token = $csrf->fetchHTMLInput();
 
         $this->is_insecure_emailgateway_enabled    = $config->isInsecureEmailgatewayEnabled();
         $this->is_token_based_emailgateway_enabled = $config->isTokenBasedEmailgatewayEnabled();

@@ -50,15 +50,15 @@ final class BackendCVSTest extends TestCase
         mkdir($this->getTmpDir() . '/cvsroot');
         mkdir($this->getTmpDir() . '/tmp');
         copy(__DIR__ . '/_fixtures/cvsroot/loginfo.cvsnt', $this->getTmpDir() . '/cvsroot/loginfo.cvsnt');
-        $this->initial_cvs_prefix              = ForgeConfig::get('cvs_prefix');
+        $this->initial_cvs_prefix = ForgeConfig::get('cvs_prefix');
         ForgeConfig::set('cvs_prefix', $this->getTmpDir() . '/cvsroot');
-        $this->initial_cvslock_prefix          = ForgeConfig::get('cvslock_prefix');
+        $this->initial_cvslock_prefix = ForgeConfig::get('cvslock_prefix');
         ForgeConfig::set('cvslock_prefix', $this->getTmpDir() . '/var/lock/cvs');
-        $this->initial_tmp_dir                 = ForgeConfig::get('tmp_dir');
+        $this->initial_tmp_dir = ForgeConfig::get('tmp_dir');
         ForgeConfig::set('tmp_dir', $this->getTmpDir() . '/tmp');
-        $this->initial_cvs_cmd                 = ForgeConfig::get('cvs_cmd');
+        $this->initial_cvs_cmd = ForgeConfig::get('cvs_cmd');
         ForgeConfig::set('cvs_cmd', "/usr/bin/cvs");
-        $this->initial_cvs_root_allow_file     = ForgeConfig::get('cvs_root_allow_file');
+        $this->initial_cvs_root_allow_file = ForgeConfig::get('cvs_root_allow_file');
         ForgeConfig::set('cvs_root_allow_file', $this->getTmpDir() . '/cvs_root_allow');
         $this->initial_sys_project_backup_path = ForgeConfig::get('sys_project_backup_path');
         ForgeConfig::set('sys_project_backup_path', $this->getTmpDir() . '/tmp');
@@ -163,7 +163,7 @@ final class BackendCVSTest extends TestCase
 
     public function testCVSRootListUpdate(): void
     {
-        $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $backend     = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $service_dao = \Mockery::spy(\ServiceDao::class);
         $service_dao->shouldReceive('searchActiveUnixGroupByUsedService')->andReturns([['unix_group_name' => 'TestProj'], ['unix_group_name' => 'gpig']]);
         $backend->shouldReceive('_getServiceDao')->andReturns($service_dao);

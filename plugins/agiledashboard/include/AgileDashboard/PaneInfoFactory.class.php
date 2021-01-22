@@ -32,7 +32,7 @@ class AgileDashboard_PaneInfoFactory
     public function __construct(
         AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder
     ) {
-        $this->submilestone_finder          = $submilestone_finder;
+        $this->submilestone_finder = $submilestone_finder;
     }
 
     public function getDetailsPaneInfo(Planning_Milestone $milestone)

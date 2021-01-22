@@ -81,9 +81,9 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
 
         $this->user = Mockery::mock(\PFUser::class);
 
-        $this->execution_status_updater                      = Mockery::mock(ExecutionStatusUpdater::class);
-        $this->execution_change_extractor                    = Mockery::mock(ExecutionChangesExtractor::class);
-        $this->tests_data_extractor                          = Mockery::mock(TestsDataFromJunitExtractor::class);
+        $this->execution_status_updater                              = Mockery::mock(ExecutionStatusUpdater::class);
+        $this->execution_change_extractor                            = Mockery::mock(ExecutionChangesExtractor::class);
+        $this->tests_data_extractor                                  = Mockery::mock(TestsDataFromJunitExtractor::class);
         $this->list_of_executions_with_automated_test_data_retriever = Mockery::mock(
             ListOfExecutionsWithAutomatedTestDataRetriever::class
         );
@@ -121,8 +121,8 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
             [$execution_with_automated_test]
         );
 
-        $automated_tests_results                          = new AutomatedTestsResultPATCHRepresentation();
-        $automated_tests_results->build_url               = 'http://exemple/of/url';
+        $automated_tests_results                 = new AutomatedTestsResultPATCHRepresentation();
+        $automated_tests_results->build_url      = 'http://exemple/of/url';
         $automated_tests_results->junit_contents = [
             '<testsuites>
                 <testsuite>
@@ -199,8 +199,8 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
             [$execution_with_automated_test_1, $execution_with_automated_test_2]
         );
 
-        $automated_tests_results                          = new AutomatedTestsResultPATCHRepresentation();
-        $automated_tests_results->build_url               = 'http://exemple/of/url';
+        $automated_tests_results                 = new AutomatedTestsResultPATCHRepresentation();
+        $automated_tests_results->build_url      = 'http://exemple/of/url';
         $automated_tests_results->junit_contents = [
             '<testsuites>
                 <testsuite>
@@ -281,8 +281,8 @@ class ExecutionFromAutomatedTestsUpdaterTest extends TestCase
             [$execution_with_automated_test_1, $execution_with_automated_test_2]
         );
 
-        $automated_tests_results                          = new AutomatedTestsResultPATCHRepresentation();
-        $automated_tests_results->build_url               = 'http://exemple/of/url';
+        $automated_tests_results                 = new AutomatedTestsResultPATCHRepresentation();
+        $automated_tests_results->build_url      = 'http://exemple/of/url';
         $automated_tests_results->junit_contents = [
             '<testsuites>
                 <testsuite>

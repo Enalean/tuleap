@@ -45,7 +45,7 @@ class LatestNewsController implements DispatchableWithRequest
 
     public function __construct(NewsDao $dao, \Codendi_HTMLPurifier $html_purifier)
     {
-        $this->dao = $dao;
+        $this->dao           = $dao;
         $this->html_purifier = $html_purifier;
     }
 

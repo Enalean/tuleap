@@ -112,19 +112,19 @@ final class AccountInformationCollectionPresenter
         AccountInformationCollection $account_information_collection,
         string $default_avatar_data_url
     ) {
-        $this->tabs = $tabs;
-        $this->csrf_token = $csrf_token;
-        $this->user_id = (int) $user->getId();
-        $this->user_name = $user->getUserName();
-        $this->real_name = $user->getRealName();
-        $this->email     = $user->getEmail();
-        $this->has_avatar = (bool) $user->hasAvatar();
-        $this->avatar_url = $user->getAvatarUrl();
-        $this->can_change_real_name = $account_information_collection->isUserAllowedToCanChangeRealName();
-        $this->can_change_email     = $account_information_collection->isUserAllowedToChangeEmail();
-        $this->extra_information = $account_information_collection->getExtraInformation();
-        $this->timezone = new Account_TimezoneSelectorPresenter($user->getTimezone());
-        $this->change_email_pending = $user->getConfirmHash() != '';
+        $this->tabs                    = $tabs;
+        $this->csrf_token              = $csrf_token;
+        $this->user_id                 = (int) $user->getId();
+        $this->user_name               = $user->getUserName();
+        $this->real_name               = $user->getRealName();
+        $this->email                   = $user->getEmail();
+        $this->has_avatar              = (bool) $user->hasAvatar();
+        $this->avatar_url              = $user->getAvatarUrl();
+        $this->can_change_real_name    = $account_information_collection->isUserAllowedToCanChangeRealName();
+        $this->can_change_email        = $account_information_collection->isUserAllowedToChangeEmail();
+        $this->extra_information       = $account_information_collection->getExtraInformation();
+        $this->timezone                = new Account_TimezoneSelectorPresenter($user->getTimezone());
+        $this->change_email_pending    = $user->getConfirmHash() != '';
         $this->default_avatar_data_url = $default_avatar_data_url;
     }
 }

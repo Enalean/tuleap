@@ -68,7 +68,7 @@ class Docman_NotificationsManager_AddTest extends TestCase
 
         $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($folder);
 
-        $user    = Mockery::mock(PFUser::class);
+        $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getRealName')->andReturn("UserName");
 
         $details_url = "http://www.example.com/plugins/docman/project_name/preview/100/";
@@ -82,7 +82,7 @@ class Docman_NotificationsManager_AddTest extends TestCase
             $params
         );
 
-        $expected_message = "/my/folder/parent has been modified by UserName.\n";
+        $expected_message  = "/my/folder/parent has been modified by UserName.\n";
         $expected_message .= $details_url . "\n\n";
         $expected_message .= "Added:\nmy file name\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";

@@ -92,7 +92,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         ]);
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker  = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(false);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 
@@ -120,7 +120,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         ]);
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker  = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(true);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 
@@ -165,7 +165,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         ]);
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker  = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(false);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 
@@ -188,7 +188,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         ]);
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker  = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(true);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 
@@ -227,7 +227,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         ]);
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker  = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(false);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 
@@ -249,7 +249,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExp
         ]);
 
         $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker  = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturns(true);
         $artifact->shouldReceive('getTracker')->andReturns($tracker);
 

@@ -62,6 +62,6 @@ class FilesHeaderPresenter
         $this->committer_epoch = $committer_epoch;
         $this->is_tag          = $is_tag;
 
-        $this->json_encoded_parameters  = json_encode($url_parameters);
+        $this->json_encoded_parameters = json_encode($url_parameters);
     }
 }

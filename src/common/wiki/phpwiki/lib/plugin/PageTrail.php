@@ -80,7 +80,7 @@ class WikiPlugin_PageTrail extends WikiPlugin
 
         // Get name of the current page we are on
         $thispage = $request->getArg('pagename');
-        $Pages = $request->session->get("PageTrail");
+        $Pages    = $request->session->get("PageTrail");
         if (! is_array($Pages)) {
             $Pages = [];
         }

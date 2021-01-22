@@ -186,7 +186,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
             return;
         }
 
-        $dao = new CrossReferenceDao();
+        $dao                            = new CrossReferenceDao();
         $params['is_reference_removed'] = $dao->deleteFullCrossReference($cross_reference);
     }
 

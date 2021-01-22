@@ -66,11 +66,11 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     private $lcs;
     public function diff($from_lines, $to_lines)
     {
-        $n_from = \sizeof($from_lines);
-        $n_to = \sizeof($to_lines);
+        $n_from         = \sizeof($from_lines);
+        $n_to           = \sizeof($to_lines);
         $this->xchanged = $this->ychanged = [];
-        $this->xv = $this->yv = [];
-        $this->xind = $this->yind = [];
+        $this->xv       = $this->yv = [];
+        $this->xind     = $this->yind = [];
         unset($this->seq);
         unset($this->in_seq);
         unset($this->lcs);
@@ -100,7 +100,7 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
                 continue;
             }
             $yhash[$line] = 1;
-            $this->yv[] = $line;
+            $this->yv[]   = $line;
             $this->yind[] = $yi;
         }
         for ($xi = $skip; $xi < $n_from - $endskip; $xi++) {
@@ -108,7 +108,7 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
             if ($this->xchanged[$xi] = empty($yhash[$line])) {
                 continue;
             }
-            $this->xv[] = $line;
+            $this->xv[]   = $line;
             $this->xind[] = $xi;
         }
         // Find the LCS.
@@ -118,7 +118,7 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->_shift_boundaries($to_lines, $this->ychanged, $this->xchanged);
         // Compute the edit operations.
         $edits = [];
-        $xi = $yi = 0;
+        $xi    = $yi = 0;
         while ($xi < $n_from || $yi < $n_to) {
             // Skip matching "snake".
             $copy = [];
@@ -170,7 +170,7 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         if ($xlim - $xoff > $ylim - $yoff) {
             // Things seems faster (I'm not sure I understand why)
             // when the shortest sequence in X.
-            $flip = \true;
+            $flip                            = \true;
             list($xoff, $xlim, $yoff, $ylim) = [$yoff, $ylim, $xoff, $xlim];
         }
         if ($flip) {
@@ -182,12 +182,12 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
                 $ymatches[$this->yv[$i]][] = $i;
             }
         }
-        $this->lcs = 0;
+        $this->lcs    = 0;
         $this->seq[0] = $yoff - 1;
         $this->in_seq = [];
-        $ymids[0] = [];
-        $numer = $xlim - $xoff + $nchunks - 1;
-        $x = $xoff;
+        $ymids[0]     = [];
+        $numer        = $xlim - $xoff + $nchunks - 1;
+        $x            = $xoff;
         for ($chunk = 0; $chunk < $nchunks; $chunk++) {
             if ($chunk > 0) {
                 for ($i = 0; $i <= $this->lcs; $i++) {
@@ -203,7 +203,7 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
                 $matches = $ymatches[$line];
                 foreach ($matches as $y) {
                     if (empty($this->in_seq[$y])) {
-                        $k = $this->_lcs_pos($y);
+                        $k         = $this->_lcs_pos($y);
                         $ymids[$k] = $ymids[$k - 1];
                         break;
                     }
@@ -213,20 +213,20 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
                         // Optimization: this is a common case:
                         //  next match is just replacing previous match.
                         $this->in_seq[$this->seq[$k]] = \false;
-                        $this->seq[$k] = $y;
-                        $this->in_seq[$y] = 1;
+                        $this->seq[$k]                = $y;
+                        $this->in_seq[$y]             = 1;
                     } elseif (empty($this->in_seq[$y])) {
-                        $k = $this->_lcs_pos($y);
+                        $k         = $this->_lcs_pos($y);
                         $ymids[$k] = $ymids[$k - 1];
                     }
                 }
             }
         }
         $seps[] = $flip ? [$yoff, $xoff] : [$xoff, $yoff];
-        $ymid = $ymids[$this->lcs];
+        $ymid   = $ymids[$this->lcs];
         for ($n = 0; $n < $nchunks - 1; $n++) {
-            $x1 = $xoff + (int) (($numer + ($xlim - $xoff) * $n) / $nchunks);
-            $y1 = $ymid[$n] + 1;
+            $x1     = $xoff + (int) (($numer + ($xlim - $xoff) * $n) / $nchunks);
+            $y1     = $ymid[$n] + 1;
             $seps[] = $flip ? [$y1, $x1] : [$x1, $y1];
         }
         $seps[] = $flip ? [$ylim, $xlim] : [$xlim, $ylim];
@@ -237,7 +237,7 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $end = $this->lcs;
         if ($end == 0 || $ypos > $this->seq[$end]) {
             $this->seq[++$this->lcs] = $ypos;
-            $this->in_seq[$ypos] = 1;
+            $this->in_seq[$ypos]     = 1;
             return $this->lcs;
         }
         $beg = 1;
@@ -250,8 +250,8 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
             }
         }
         $this->in_seq[$this->seq[$end]] = \false;
-        $this->seq[$end] = $ypos;
-        $this->in_seq[$ypos] = 1;
+        $this->seq[$end]                = $ypos;
+        $this->in_seq[$ypos]            = 1;
         return $end;
     }
     /* Find LCS of two sequences.
@@ -283,7 +283,7 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
             // This is ad hoc but seems to work well.
             //$nchunks = sqrt(min($xlim - $xoff, $ylim - $yoff) / 2.5);
             //$nchunks = max(2,min(8,(int)$nchunks));
-            $nchunks = \min(7, $xlim - $xoff, $ylim - $yoff) + 1;
+            $nchunks          = \min(7, $xlim - $xoff, $ylim - $yoff) + 1;
             list($lcs, $seps) = $this->_diag($xoff, $xlim, $yoff, $ylim, $nchunks);
         }
         if ($lcs == 0) {
@@ -319,9 +319,9 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      */
     public function _shift_boundaries($lines, &$changed, $other_changed)
     {
-        $i = 0;
-        $j = 0;
-        $len = \sizeof($lines);
+        $i         = 0;
+        $j         = 0;
+        $len       = \sizeof($lines);
         $other_len = \sizeof($other_changed);
         while (1) {
             /*
@@ -366,7 +366,7 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
                  */
                 while ($start > 0 && $lines[$start - 1] == $lines[$i - 1]) {
                     $changed[--$start] = 1;
-                    $changed[--$i] = \false;
+                    $changed[--$i]     = \false;
                     while ($start > 0 && $changed[$start - 1]) {
                         $start--;
                     }
@@ -389,7 +389,7 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
                  */
                 while ($i < $len && $lines[$start] == $lines[$i]) {
                     $changed[$start++] = \false;
-                    $changed[$i++] = 1;
+                    $changed[$i++]     = 1;
                     while ($i < $len && $changed[$i]) {
                         $i++;
                     }
@@ -408,7 +408,7 @@ class Codendi_DiffEngine // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
              */
             while ($corresponding < $i) {
                 $changed[--$start] = 1;
-                $changed[--$i] = 0;
+                $changed[--$i]     = 0;
                 while ($other_changed[--$j]) {
                     continue;
                 }

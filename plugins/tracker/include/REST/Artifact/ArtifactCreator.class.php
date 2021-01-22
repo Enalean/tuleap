@@ -32,9 +32,9 @@ class Tracker_REST_Artifact_ArtifactCreator
 
     public function __construct(Tracker_REST_Artifact_ArtifactValidator $artifact_validator, Tracker_ArtifactFactory $artifact_factory, TrackerFactory $tracker_factory)
     {
-        $this->artifact_validator  = $artifact_validator;
-        $this->artifact_factory    = $artifact_factory;
-        $this->tracker_factory     = $tracker_factory;
+        $this->artifact_validator = $artifact_validator;
+        $this->artifact_factory   = $artifact_factory;
+        $this->tracker_factory    = $tracker_factory;
     }
 
     /**

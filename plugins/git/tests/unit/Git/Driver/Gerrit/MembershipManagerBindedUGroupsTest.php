@@ -61,7 +61,7 @@ class MembershipManagerBindedUGroupsTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('mozilla')->getMock();
+        $project      = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('mozilla')->getMock();
         $this->ugroup = new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers']);
         $this->ugroup->setProject($project);
         $this->ugroup->setSourceGroup(null);
@@ -111,7 +111,7 @@ class MembershipManagerBindedUGroupsTest extends TestCase
     public function testItRemovesBindingWithAGroup(): void
     {
         $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('mozilla')->getMock();
-        $ugroup = new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers']);
+        $ugroup  = new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers']);
         $ugroup->setProject($project);
         $ugroup->setSourceGroup(null);
 
@@ -123,7 +123,7 @@ class MembershipManagerBindedUGroupsTest extends TestCase
 
     public function testItAddsMembersOfPreviousSourceAsHardCodedMembersOnRemove(): void
     {
-        $user = new PFUser([
+        $user        = new PFUser([
             'language_id' => 'en',
             'ldap_id' => 'blabla'
         ]);
@@ -134,7 +134,7 @@ class MembershipManagerBindedUGroupsTest extends TestCase
         $source_ugroup->shouldReceive('getMembers')->andReturns([$user]);
 
         $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('mozilla')->getMock();
-        $ugroup = new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers']);
+        $ugroup  = new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers']);
         $ugroup->setProject($project);
         $ugroup->setSourceGroup($source_ugroup);
 

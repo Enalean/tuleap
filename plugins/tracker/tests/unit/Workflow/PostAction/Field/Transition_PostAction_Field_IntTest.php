@@ -39,10 +39,10 @@ final class Transition_PostAction_Field_IntTest extends TestCase //phpcs:ignore 
 
     protected function setUp(): void
     {
-        $value             = 0;
-        $post_action_id    = 9348;
-        $transition        = \Mockery::spy(\Transition::class);
-        $this->field       = \Mockery::spy(\Tracker_FormElement_Field_Integer::class)
+        $value          = 0;
+        $post_action_id = 9348;
+        $transition     = \Mockery::spy(\Transition::class);
+        $this->field    = \Mockery::spy(\Tracker_FormElement_Field_Integer::class)
             ->shouldReceive('getId')->andReturns(1131)->getMock();
 
         $this->post_action = \Mockery::mock(

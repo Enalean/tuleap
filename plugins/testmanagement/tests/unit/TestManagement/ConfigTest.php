@@ -72,7 +72,7 @@ final class ConfigTest extends TestCase
             'test_execution_tracker_id' => 12,
             'issue_tracker_id' => 13
         ];
-        $dar = \TestHelper::arrayToDar($properties);
+        $dar        = \TestHelper::arrayToDar($properties);
         $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn($dar);
 
         $tracker = \Mockery::mock(\Tracker::class);
@@ -94,7 +94,7 @@ final class ConfigTest extends TestCase
             'test_execution_tracker_id' => 12,
             'issue_tracker_id' => 13
         ];
-        $dar = \TestHelper::arrayToDar($properties);
+        $dar        = \TestHelper::arrayToDar($properties);
         $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn($dar);
 
         $tracker = \Mockery::mock(\Tracker::class);

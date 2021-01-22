@@ -98,8 +98,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
 
     public static function build(\Psr\Log\LoggerInterface $logger): self
     {
-        $form_element_factory    = \Tracker_FormElementFactory::instance();
-        $artifact_factory        = Tracker_ArtifactFactory::instance();
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $artifact_factory     = Tracker_ArtifactFactory::instance();
 
         return new Tracker_Artifact_Changeset_InitialChangesetCreator(
             Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::build(),

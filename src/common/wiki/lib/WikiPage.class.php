@@ -71,7 +71,7 @@ class WikiPage
                 self::$gid      = (int) $id;
                 $this->pagename = $pagename;
                 $this->findPageId();
-                $this->wrapper  = new WikiPageWrapper(self::$gid);
+                $this->wrapper = new WikiPageWrapper(self::$gid);
             }
         } else {
             $this->id       = 0;
@@ -145,7 +145,7 @@ class WikiPage
 
         if (isset($current_revision_metadata['author'])) {
             $user_manager = UserManager::instance();
-            $author = $user_manager->getUserByUserName($current_revision_metadata['author']);
+            $author       = $user_manager->getUserByUserName($current_revision_metadata['author']);
 
             if ($author) {
                 $last_author_id = (int) $author->getId();
@@ -221,7 +221,7 @@ class WikiPage
                 )
             );
         }
-        $row = db_fetch_array($res);
+        $row      = db_fetch_array($res);
         $this->id =  $row['id'];
     }
 
@@ -241,7 +241,7 @@ class WikiPage
         }
         $row = db_fetch_array($res);
 
-        self::$gid =  $row['group_id'];
+        self::$gid      =  $row['group_id'];
         $this->pagename =  $row['pagename'];
     }
 
@@ -303,7 +303,7 @@ class WikiPage
     {
         if ($this->referenced == true) {
             $userCanAccess = false;
-            $eM = EventManager::instance();
+            $eM            = EventManager::instance();
             $eM->processEvent('userCanAccessWikiDocument', [
                             'canAccess' => &$userCanAccess,
                             'wiki_page'  => $this->pagename,

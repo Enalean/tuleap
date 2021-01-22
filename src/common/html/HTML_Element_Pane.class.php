@@ -38,9 +38,9 @@ class HTML_Element_Pane extends HTML_Element
     public function __construct($panes, $active, $content)
     {
         parent::__construct('', '', '', '');
-        $this->panes  = $panes;
+        $this->panes      = $panes;
         $this->activePane = $active;
-        $this->content = $content;
+        $this->content    = $content;
     }
 
     /**
@@ -50,7 +50,7 @@ class HTML_Element_Pane extends HTML_Element
      */
     public function renderValue()
     {
-        $html = '<div class="tabbable">';
+        $html  = '<div class="tabbable">';
         $html .= '<ul class="nav nav-tabs">';
         foreach ($this->panes as $pane) {
             $html .= '<li class="' . ($pane['name'] == $this->activePane ? 'active' : '') . '">';

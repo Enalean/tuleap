@@ -42,7 +42,7 @@ class Tracker_SemanticFactory
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            $c = self::class;
+            $c              = self::class;
             self::$instance = new $c();
         }
         return self::$instance;
@@ -54,9 +54,9 @@ class Tracker_SemanticFactory
         array $xml_mapping,
         Tracker $tracker
     ): ?Tracker_Semantic {
-        $semantic = null;
+        $semantic   = null;
         $attributes = $xml->attributes();
-        $type = $attributes['type'];
+        $type       = $attributes['type'];
 
         $builder = $this->getSemanticFromXMLBuilder((string) $type);
         if ($builder === null) {

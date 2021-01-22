@@ -33,9 +33,9 @@ class ReferencesImporter
     /** @var LoggerInterface */
     private $logger;
 
-    public const XREF_TRACKER  = 'tracker';
-    public const XREF_ARTF     = 'artf';
-    public const XREF_PLAN     = 'plan';
+    public const XREF_TRACKER = 'tracker';
+    public const XREF_ARTF    = 'artf';
+    public const XREF_PLAN    = 'plan';
 
     public function __construct(Dao $dao, LoggerInterface $logger)
     {

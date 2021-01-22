@@ -58,7 +58,7 @@ class Tracker_DateReminderFactory
      */
     public function getTrackerReminders($allReminders = false)
     {
-        $reminders = [];
+        $reminders   = [];
         $reminderDao = $this->getDao();
         if ($allReminders) {
             $dar = $reminderDao->getDateReminders($this->getTracker()->getId(), false);
@@ -83,7 +83,7 @@ class Tracker_DateReminderFactory
             $ugroups          = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
             $roles            = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
             if (! empty($ugroups)) {
-                $ugroups          = join(",", $ugroups);
+                $ugroups = join(",", $ugroups);
             } else {
                 $ugroups = "";
             }
@@ -96,7 +96,7 @@ class Tracker_DateReminderFactory
         }
         $reminder = $this->getDao()->addDateReminder($this->getTracker()->getId(), $fieldId, $ugroups, $roles, $notificationType, $distance);
         if ($reminder) {
-            $roles = implode(",", $roles);
+            $roles      = implode(",", $roles);
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
             $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName() . ":" . $fieldId, $this->getTracker()->getGroupId(), [$distance . ' Day(s), Type: ' . $notificationType . ' ProjectUGroup(s): ' . $ugroups . 'Tracker Role(s): ' . $roles]);
             return (bool) $reminder;
@@ -140,7 +140,7 @@ class Tracker_DateReminderFactory
         if ($trackerDateField === null) {
             return;
         }
-        $fieldType        = $tff->getType($trackerDateField);
+        $fieldType = $tff->getType($trackerDateField);
         if ($fieldType == 'subon' && $notificationType == 0) {
             $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_before_submittedOn');
             throw new Tracker_DateReminderException($errorMessage);
@@ -164,11 +164,11 @@ class Tracker_DateReminderFactory
             $ugroups          = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
             $roles            = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
             if (! empty($ugroups)) {
-                $ugroups      = join(",", $ugroups);
+                $ugroups = join(",", $ugroups);
             } else {
                 $ugroups = "";
             }
-            $fieldId          = $this->date_reminder_renderer->validateFieldId($request);
+            $fieldId = $this->date_reminder_renderer->validateFieldId($request);
             if ($status == 1) {
                 $this->checkDuplicatedReminders($fieldId, $notificationType, $distance, $reminder->getId());
                 $this->isReminderBeforeOpenDate($fieldId, $notificationType);
@@ -180,7 +180,7 @@ class Tracker_DateReminderFactory
         }
         $updateReminder = $this->getDao()->updateDateReminder($reminder->getId(), $ugroups, $roles, $notificationType, $distance, $status);
         if ($updateReminder) {
-            $roles = implode(",", $roles);
+            $roles      = implode(",", $roles);
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
             $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->getTracker()->getName() . ":" . $reminder->getId(), $this->getTracker()->getGroupId(), ["Id: " . $reminderId . ", Type: " . $notificationType . ", ProjectUGroup(s): " . $ugroups . ", Tracker Role(s): " . $roles . ", Day(s): " . $distance . ", Status: " . $status]);
             return $updateReminder;
@@ -200,7 +200,7 @@ class Tracker_DateReminderFactory
     public function getInstanceFromRow($row)
     {
         $roles = [];
-        $dar = $this->getDao()->getRolesByReminderId($row['reminder_id']);
+        $dar   = $this->getDao()->getRolesByReminderId($row['reminder_id']);
         if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             foreach ($dar as $da) {
                 switch ($da['role_id']) {

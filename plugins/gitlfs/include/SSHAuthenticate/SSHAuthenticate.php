@@ -90,7 +90,7 @@ class SSHAuthenticate
         }
 
         $repository_path = explode('/', $argv[1]);
-        $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($repository_path[0]);
+        $project         = $this->project_manager->getProjectByCaseInsensitiveUnixName($repository_path[0]);
         if ($project === null || $project->isActive() !== true) {
             throw new InvalidCommandException('git-lfs-authenticate arg 1 must be in a valid project');
         }

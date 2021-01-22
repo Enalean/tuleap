@@ -128,7 +128,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function getValue($value_id)
     {
         $vs = $this->getAllValues();
-        $v = null;
+        $v  = null;
         if (isset($vs[$value_id])) {
             $v = $vs[$value_id];
         }
@@ -199,7 +199,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     {
         $values = $this->getAllValues();
         if ($is_multiple) {
-            $return = [];
+            $return           = [];
             $submitted_values = explode(',', $submitted_value);
             foreach ($values as $id => $value) {
                 if (in_array($value->getUGroupName(), $submitted_values)) {
@@ -312,10 +312,10 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function getQuerySelectAggregate($functions)
     {
-        $R1  = 'R1_' . $this->field->id;
-        $R2  = 'R2_' . $this->field->id;
-        $R3  = 'R3_' . $this->field->id;
-        $R4  = 'R4_' . $this->field->id;
+        $R1       = 'R1_' . $this->field->id;
+        $R2       = 'R2_' . $this->field->id;
+        $R3       = 'R3_' . $this->field->id;
+        $R4       = 'R4_' . $this->field->id;
         $same     = [];
         $separate = [];
         foreach ($functions as $f) {
@@ -363,7 +363,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function fetchRawValueFromChangeset($changeset)
     {
-        $value = '';
+        $value        = '';
         $values_array = [];
         if ($v = $changeset->getValue($this->field)) {
             $values = $v->getListValues();
@@ -408,7 +408,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function fetchAdminEditForm()
     {
-        $html = '';
+        $html  = '';
         $html .= '<h3>' . dgettext('tuleap-tracker', 'Bind to user groups') . '</h3>';
         $html .= self::fetchSelectUgroups('bind[values][]', $this->field, $this->values);
 
@@ -538,7 +538,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $items = $root->addChild('items');
         foreach ($this->values as $value) {
             $item = $items->addChild('item');
-            $id = $value->getXMLId();
+            $id   = $value->getXMLId();
             $item->addAttribute('ID', $id);
             $xmlMapping['values'][$id] = $value->getId();
             $item->addAttribute('label', $value->getUGroupName());
@@ -687,11 +687,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
     {
-        $project               = $value->getProject();
+        $project = $value->getProject();
         if (! $project) {
             throw new Project_NotFoundException();
         }
-        $ugroup                = $this->ugroup_manager->getUGroup($project, $value->getUgroupId());
+        $ugroup = $this->ugroup_manager->getUGroup($project, $value->getUgroupId());
         if (! $ugroup) {
             throw new \Tuleap\Project\UGroups\InvalidUGroupException($value->getUgroupId());
         }
@@ -711,7 +711,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $rest_array = [];
         foreach ($bind_values as $value) {
             $representation = new MinimalUserGroupRepresentation((int) $project_id, $value->getUgroup());
-            $rest_array[] = $representation;
+            $rest_array[]   = $representation;
         }
         return $rest_array;
     }

@@ -56,7 +56,7 @@ final class Transition_PostAction_CIBuildFactoryTest extends \PHPUnit\Framework\
         $this->transition_id  = 123;
         $this->post_action_id = 789;
 
-        $workflow_id = '1112';
+        $workflow_id    = '1112';
         $this->workflow = Mockery::mock(Workflow::class, ['getId' => $workflow_id]);
 
         $this->transition = new Transition(
@@ -67,8 +67,8 @@ final class Transition_PostAction_CIBuildFactoryTest extends \PHPUnit\Framework\
         );
         $this->transition->setWorkflow($this->workflow);
 
-        $this->dao        = Mockery::mock(Transition_PostAction_CIBuildDao::class);
-        $this->factory    = new Transition_PostAction_CIBuildFactory($this->dao);
+        $this->dao     = Mockery::mock(Transition_PostAction_CIBuildDao::class);
+        $this->factory = new Transition_PostAction_CIBuildFactory($this->dao);
     }
 
     public function testItLoadsCIBuildPostActions(): void
@@ -86,7 +86,7 @@ final class Transition_PostAction_CIBuildFactoryTest extends \PHPUnit\Framework\
         $this->assertCount(1, $this->factory->loadPostActions($this->transition));
 
         $post_action_array = $this->factory->loadPostActions($this->transition);
-        $first_pa = $post_action_array[0];
+        $first_pa          = $post_action_array[0];
 
         $this->assertEquals($post_action_value, $first_pa->getJobUrl());
         $this->assertEquals($this->post_action_id, $first_pa->getId());
@@ -124,8 +124,8 @@ final class Transition_PostAction_CIBuildFactoryTest extends \PHPUnit\Framework\
 
     public function testItDelegatesTheDuplicationToTheDao(): void
     {
-        $to_transition_id   = 2;
-        $field_mapping      = [];
+        $to_transition_id = 2;
+        $field_mapping    = [];
 
         $this->dao->shouldReceive('duplicate')->with($this->transition_id, $to_transition_id)->once();
         $this->factory->duplicate($this->transition, $to_transition_id, $field_mapping);
@@ -133,7 +133,7 @@ final class Transition_PostAction_CIBuildFactoryTest extends \PHPUnit\Framework\
 
     public function testItReconstitutesCIBuildPostActionsFromXML(): void
     {
-        $xml = new SimpleXMLElement('
+        $xml         = new SimpleXMLElement('
             <postaction_ci_build job_url="http://www"/>
         ');
         $mapping     = ['F1' => 62334];

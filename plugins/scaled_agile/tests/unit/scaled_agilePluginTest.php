@@ -50,9 +50,9 @@ final class scaled_agilePluginTest extends TestCase
 
     public function testDoesNotProvideNaturePresenterWhenTheTypeIsNotExposedByThePlugin(): void
     {
-        $plugin  = new scaled_agilePlugin(1);
+        $plugin    = new scaled_agilePlugin(1);
         $presenter = null;
-        $params  = ['shortname' => 'something', 'presenter' => &$presenter];
+        $params    = ['shortname' => 'something', 'presenter' => &$presenter];
         $plugin->getNaturePresenter($params);
 
         self::assertNull($presenter);

@@ -130,8 +130,8 @@ class ProjectDetailsPresenter
         $this->is_suspended_status = $project->getStatus() === Project::STATUS_SUSPENDED;
         $this->types               = $this->getTypes($project);
 
-        $template_factory  = TemplateFactory::build();
-        $xml_template = $template_factory->getTemplateForProject($project);
+        $template_factory = TemplateFactory::build();
+        $xml_template     = $template_factory->getTemplateForProject($project);
         if ($xml_template) {
             $this->built_from_xml_template = [
                 'name' => $xml_template->getId(),
@@ -147,27 +147,27 @@ class ProjectDetailsPresenter
         $this->custom_fields     = $all_custom_fields;
         $this->has_custom_fields = count($this->custom_fields) > 0;
 
-        $this->information_label     = $GLOBALS['Language']->getText('admin_project', 'information_label');
-        $this->history_label         = $GLOBALS['Language']->getText('admin_project', 'history_label');
-        $this->project_details_label = $GLOBALS['Language']->getText('admin_project', 'project_details_label');
-        $this->access_label          = $GLOBALS['Language']->getText('admin_project', 'access_label');
-        $this->description_label     = $GLOBALS['Language']->getText('admin_project', 'description_label');
-        $this->more_label            = $GLOBALS['Language']->getText('admin_project', 'more_label');
-        $this->homepage_label        = $GLOBALS['Language']->getText('admin_project', 'homepage_label');
-        $this->admin_label           = $GLOBALS['Language']->getText('admin_project', 'admin_label');
-        $this->members_label         = $GLOBALS['Language']->getText('admin_project', 'members_label');
-        $this->pending_label         = $GLOBALS['Language']->getText('admin_project', 'pending_label');
-        $this->manage_access_label   = $GLOBALS['Language']->getText('admin_project', 'manage_access_label');
-        $this->unix_name_label       = $GLOBALS['Language']->getText('admin_project', 'unix_name_label');
-        $this->save_label            = $GLOBALS['Language']->getText('admin_project', 'save_label');
-        $this->status_label          = $GLOBALS['Language']->getText('admin_project', 'status_label');
-        $this->type_label            = $GLOBALS['Language']->getText('admin_groupedit', 'group_type');
-        $this->built_from_label      = $GLOBALS['Language']->getText('admin_groupedit', 'built_from_template');
-        $this->instructions_label    = $GLOBALS['Language']->getText('admin_project', 'instructions_label');
-        $this->send_email_label      = $GLOBALS['Language']->getText('admin_project', 'send_email_label');
-        $this->instructions_desc     = $GLOBALS['Language']->getText('admin_project', 'instructions_desc');
-        $this->access_presenter      = $access_presenter;
-        $this->csrf_token            = $csrf_token;
+        $this->information_label                         = $GLOBALS['Language']->getText('admin_project', 'information_label');
+        $this->history_label                             = $GLOBALS['Language']->getText('admin_project', 'history_label');
+        $this->project_details_label                     = $GLOBALS['Language']->getText('admin_project', 'project_details_label');
+        $this->access_label                              = $GLOBALS['Language']->getText('admin_project', 'access_label');
+        $this->description_label                         = $GLOBALS['Language']->getText('admin_project', 'description_label');
+        $this->more_label                                = $GLOBALS['Language']->getText('admin_project', 'more_label');
+        $this->homepage_label                            = $GLOBALS['Language']->getText('admin_project', 'homepage_label');
+        $this->admin_label                               = $GLOBALS['Language']->getText('admin_project', 'admin_label');
+        $this->members_label                             = $GLOBALS['Language']->getText('admin_project', 'members_label');
+        $this->pending_label                             = $GLOBALS['Language']->getText('admin_project', 'pending_label');
+        $this->manage_access_label                       = $GLOBALS['Language']->getText('admin_project', 'manage_access_label');
+        $this->unix_name_label                           = $GLOBALS['Language']->getText('admin_project', 'unix_name_label');
+        $this->save_label                                = $GLOBALS['Language']->getText('admin_project', 'save_label');
+        $this->status_label                              = $GLOBALS['Language']->getText('admin_project', 'status_label');
+        $this->type_label                                = $GLOBALS['Language']->getText('admin_groupedit', 'group_type');
+        $this->built_from_label                          = $GLOBALS['Language']->getText('admin_groupedit', 'built_from_template');
+        $this->instructions_label                        = $GLOBALS['Language']->getText('admin_project', 'instructions_label');
+        $this->send_email_label                          = $GLOBALS['Language']->getText('admin_project', 'send_email_label');
+        $this->instructions_desc                         = $GLOBALS['Language']->getText('admin_project', 'instructions_desc');
+        $this->access_presenter                          = $access_presenter;
+        $this->csrf_token                                = $csrf_token;
         $this->plugin_suspended_and_not_blocked_warnings = $plugin_suspended_and_not_blocked_warnings;
     }
 

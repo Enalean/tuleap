@@ -189,7 +189,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     {
         $values = $this->getAllValues();
         if ($is_multiple) {
-            $return = [];
+            $return           = [];
             $submitted_values = explode(",", $submitted_value);
             foreach ($values as $id => $value) {
                 if (in_array($value->getLabel(), $submitted_values)) {
@@ -244,7 +244,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
     public function fetchRawValueFromChangeset($changeset)
     {
-        $value = '';
+        $value        = '';
         $values_array = [];
         if ($v = $changeset->getValue($this->field)) {
             $values = $v->getListValues();
@@ -380,8 +380,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     public function getQuerySelectAggregate($functions)
     {
-        $R1  = 'R1_' . $this->field->id;
-        $R2  = 'R2_' . $this->field->id;
+        $R1       = 'R1_' . $this->field->id;
+        $R2       = 'R2_' . $this->field->id;
         $same     = [];
         $separate = [];
         foreach ($functions as $f) {
@@ -469,7 +469,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public static function fetchAdminCreateForm($field)
     {
         $html = '';
-        $h = new HTML_Element_Input_Checkbox(dgettext('tuleap-tracker', 'alphabetically sort values'), 'bind[is_rank_alpha]', 0);
+        $h    = new HTML_Element_Input_Checkbox(dgettext('tuleap-tracker', 'alphabetically sort values'), 'bind[is_rank_alpha]', 0);
         $h->setId('is_rank_alpha');
         $html .= '<p>' . $h->render() . '</p>';
         $html .= '<p>';
@@ -512,7 +512,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $html .= '<input type="hidden" name="bind[order]" class="bind_order_values" value="" />';
         $html .= '<ul class="tracker-admin-bindvalue_list tracker-admin-bindvalue_list_sortable">';
 
-        $retriever = new BindValuesAdder();
+        $retriever       = new BindValuesAdder();
         $possible_values = $retriever->addNoneValue($this->getAllValues());
 
         foreach ($possible_values as $v) {
@@ -546,7 +546,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             return $html;
         }
 
-        $html        .= '<h3>' . dgettext('tuleap-tracker', 'Values added by users') . '</h3>';
+        $html       .= '<h3>' . dgettext('tuleap-tracker', 'Values added by users') . '</h3>';
         $user_values = [];
 
         foreach ($user_row_values as $row_value) {
@@ -611,7 +611,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
     private function fetchAdminEditRowNotModifiable(Tracker_FormElement_Field_List_Value $v)
     {
-        $html = '';
+        $html  = '';
         $html .= '<tr valign="top" class="' . ($v->isHidden() ? 'tracker_admin_static_value_hidden' : '') . '">';
         $html .= '<td>' . $this->formatChangesetValue(['id' => $v->getId()]) . '</td>';
         $html .= '</tr>';
@@ -725,7 +725,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                         $id = $this->addValue($new_value);
                         if ($id) {
                             $this->values[$id] = $this->getValueFromRow($value_dao->searchById($id)->getRow());
-                            $valueMapping[] = $id;
+                            $valueMapping[]    = $id;
                         }
                     }
                     if (isset($params['decorators'])) {

@@ -31,7 +31,7 @@ if (! $group_id || ! $project) {
     //define('ADMIN_PASSWD', '');
         define('AUTH_SESS_USER', 'user_id');
         define('AUTH_SESS_LEVEL', 2);
-        $USER_AUTH_ORDER = "Session : PersonalPage";
+        $USER_AUTH_ORDER  = "Session : PersonalPage";
         $USER_AUTH_POLICY = "stacked";
 
     // Override the default configuration for CONSTANTS before index.php

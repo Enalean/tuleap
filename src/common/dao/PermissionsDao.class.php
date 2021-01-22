@@ -197,8 +197,8 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
         if ($ugroup_mapping !== false) {
             foreach ($ugroup_mapping as $template_ugroup => $new_ugroup) {
                 $template_ugroup = $this->da->escapeInt($template_ugroup);
-                $new_ugroup = $this->da->escapeInt($new_ugroup);
-                $sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id)
+                $new_ugroup      = $this->da->escapeInt($new_ugroup);
+                $sql             = 'INSERT INTO permissions (permission_type,object_id,ugroup_id)
                             SELECT permission_type, ' . $to . ',' . $new_ugroup . '
                             FROM permissions
                             WHERE object_id = ' . $from . '
@@ -227,7 +227,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
         $permission_type = $this->da->quoteSmart($permission_type);
         $object_id       = $this->da->quoteSmart($object_id, ['force_string' => true]);
         $ugroup_id       = $this->da->escapeInt($ugroup_id);
-        $sql = "INSERT INTO permissions (object_id, permission_type, ugroup_id)
+        $sql             = "INSERT INTO permissions (object_id, permission_type, ugroup_id)
                 VALUES ($object_id, $permission_type, $ugroup_id)";
         return $this->update($sql);
     }
@@ -237,7 +237,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
         $permission_type = $this->da->quoteSmart($permission_type);
         $object_id       = $this->da->quoteSmart($object_id, ['force_string' => true]);
         $ugroup_id       = $this->da->escapeInt($ugroup_id);
-        $sql = "DELETE FROM permissions
+        $sql             = "DELETE FROM permissions
                 WHERE permission_type = $permission_type
                 AND object_id = $object_id
                 AND ugroup_id = $ugroup_id";
@@ -262,7 +262,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
 
     public function isThereAnExplicitWikiServicePermission($ugroup_id)
     {
-        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
 
         $sql =
            "SELECT * FROM permissions
@@ -293,7 +293,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao
 
     public function isThereADefaultWikiServicePermissionThatUsesUgroup($ugroup_id)
     {
-        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
 
         $sql =
            "SELECT permissions_values.* FROM permissions_values

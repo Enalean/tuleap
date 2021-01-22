@@ -40,7 +40,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
 
             $is_selected = true; //Hackalert: "None" selected by default. Overrided when other value is selected
         }
-        $label    = $this->getBind()->formatChangesetValueWithoutLink($value);
+        $label = $this->getBind()->formatChangesetValueWithoutLink($value);
 
         if (! $name) {
             $name = 'name="admin"';

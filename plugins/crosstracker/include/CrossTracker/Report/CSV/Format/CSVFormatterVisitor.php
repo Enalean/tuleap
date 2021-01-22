@@ -47,7 +47,7 @@ class CSVFormatterVisitor implements FormatterVisitor
 
     public function visitTextValue(TextValue $text_value, FormatterParameters $parameters)
     {
-        $value = $text_value->getValue();
+        $value         = $text_value->getValue();
         $escaped_value = str_ireplace('"', '""', $value);
         return '"' . $escaped_value . '"';
     }

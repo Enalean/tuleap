@@ -42,7 +42,7 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
 
     public function testItSkipsApache()
     {
-        $command = new \TuleapCfg\Command\ConfigureCommand(vfsStream::url('slash'));
+        $command        = new \TuleapCfg\Command\ConfigureCommand(vfsStream::url('slash'));
         $command_tester = new CommandTester($command);
         $command_tester->execute([
             'module'  => 'apache',
@@ -60,7 +60,7 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
         $base = vfsStream::url('slash');
         mkdir($base . '/etc/httpd/conf', 0777, true);
         copy(__DIR__ . '/../../../../src/tuleap-cfg/resources/httpd.conf', $base . '/etc/httpd/conf/httpd.conf');
-        $command = new \TuleapCfg\Command\ConfigureCommand($base);
+        $command        = new \TuleapCfg\Command\ConfigureCommand($base);
         $command_tester = new CommandTester($command);
         $command_tester->execute([
             'module'  => 'apache',
@@ -76,7 +76,7 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
         $base = vfsStream::url('slash');
         mkdir($base . '/etc/httpd/conf.d', 0777, true);
         copy(__DIR__ . '/../../../../src/tuleap-cfg/resources/ssl.conf', $base . '/etc/httpd/conf.d/ssl.conf');
-        $command = new \TuleapCfg\Command\ConfigureCommand($base);
+        $command        = new \TuleapCfg\Command\ConfigureCommand($base);
         $command_tester = new CommandTester($command);
         $command_tester->execute([
             'module'  => 'apache',
@@ -94,7 +94,7 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
         mkdir($base . '/etc/httpd/conf.d', 0777, true);
         copy(__DIR__ . '/_fixtures/httpd.conf', $base . '/etc/httpd/conf/httpd.conf');
         copy(__DIR__ . '/_fixtures/ssl.conf', $base . '/etc/httpd/conf.d/ssl.conf');
-        $command = new \TuleapCfg\Command\ConfigureCommand($base);
+        $command        = new \TuleapCfg\Command\ConfigureCommand($base);
         $command_tester = new CommandTester($command);
         $command_tester->execute([
             'module'  => 'apache',
@@ -118,7 +118,7 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
         $conf_dir = $this->root->getChild('etc/httpd/conf');
         $conf_dir->addChild($file);
 
-        $command = new \TuleapCfg\Command\ConfigureCommand($base);
+        $command        = new \TuleapCfg\Command\ConfigureCommand($base);
         $command_tester = new CommandTester($command);
         $command_tester->execute([
             'module'  => 'apache',
@@ -146,7 +146,7 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
         $conf_dir = $this->root->getChild('etc/httpd/conf.d');
         $conf_dir->addChild($file);
 
-        $command = new \TuleapCfg\Command\ConfigureCommand($base);
+        $command        = new \TuleapCfg\Command\ConfigureCommand($base);
         $command_tester = new CommandTester($command);
         $command_tester->execute([
             'module'  => 'apache',

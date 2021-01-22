@@ -24,9 +24,9 @@ class FRSPackageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
 
     public function testIsActive()
     {
-        $active_value = 1;
+        $active_value  = 1;
         $deleted_value = 2;
-        $hidden_value = 3;
+        $hidden_value  = 3;
 
         $p = new FRSPackage();
         $p->setStatusId($active_value);
@@ -41,9 +41,9 @@ class FRSPackageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
 
     public function testIsDeleted()
     {
-        $active_value = 1;
+        $active_value  = 1;
         $deleted_value = 2;
-        $hidden_value = 3;
+        $hidden_value  = 3;
 
         $p = new FRSPackage();
         $p->setStatusId($deleted_value);
@@ -58,9 +58,9 @@ class FRSPackageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
 
     public function testIsHidden()
     {
-        $active_value = 1;
+        $active_value  = 1;
         $deleted_value = 2;
-        $hidden_value = 3;
+        $hidden_value  = 3;
 
         $p = new FRSPackage();
         $p->setStatusId($hidden_value);

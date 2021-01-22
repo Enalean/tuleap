@@ -68,7 +68,7 @@ class SetDateValueRepositoryTest extends TestCase
         $this->set_date_value_dao->shouldReceive('updatePostAction')
             ->with(9, 43, 1);
 
-        $transition = TransitionFactory::buildATransitionWithId(1);
+        $transition     = TransitionFactory::buildATransitionWithId(1);
         $set_date_value = new SetDateValue(43, 1);
 
         $this->set_date_value_repository->create($transition, $set_date_value);
@@ -79,7 +79,7 @@ class SetDateValueRepositoryTest extends TestCase
         $this->set_date_value_dao->shouldReceive('create')
             ->andReturn(false);
 
-        $transition = TransitionFactory::buildATransition();
+        $transition     = TransitionFactory::buildATransition();
         $set_date_value = new SetDateValue(43, 1);
 
         $this->expectException(DataAccessQueryException::class);

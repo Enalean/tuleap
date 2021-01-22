@@ -23,8 +23,8 @@ class Cardwall_UserPreferences_UserPreferencesDisplayUser implements Tracker_Car
 
     public const ASSIGNED_TO_USERNAME_PREFERENCE_NAME = 'AD_cardwall_assign_to_display_username_';
 
-    public const DISPLAY_USERNAMES                    = 0;
-    public const DISPLAY_AVATARS                      = 1;
+    public const DISPLAY_USERNAMES = 0;
+    public const DISPLAY_AVATARS   = 1;
 
     /** @var bool */
     private $should_display_avatars;

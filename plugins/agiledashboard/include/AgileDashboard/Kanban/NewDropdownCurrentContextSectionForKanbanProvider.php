@@ -63,7 +63,7 @@ class NewDropdownCurrentContextSectionForKanbanProvider
     public function getSectionByKanbanId(int $kanban_id, \PFUser $user): ?NewDropdownLinkSectionPresenter
     {
         try {
-            $kanban  = $this->kanban_factory->getKanban($user, $kanban_id);
+            $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
             $this->kanban_actions_checker->checkUserCanAddArtifact($user, $kanban);
 
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());

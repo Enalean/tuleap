@@ -139,10 +139,10 @@ class Transition_PostActionFactory
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
-        $post_actions  = [];
+        $post_actions = [];
         foreach ($xml->children() as $child) {
-            $short_name = $this->deductPostActionShortNameFromXmlTagName($child->getName());
-            $subfactory = $this->getSubFactory($short_name);
+            $short_name     = $this->deductPostActionShortNameFromXmlTagName($child->getName());
+            $subfactory     = $this->getSubFactory($short_name);
             $post_actions[] = $subfactory->getInstanceFromXML($child, $xmlMapping, $transition);
         }
 

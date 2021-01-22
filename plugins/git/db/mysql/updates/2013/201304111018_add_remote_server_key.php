@@ -73,7 +73,7 @@ EOT;
         $update_stm = $this->db->dbh->prepare($update_sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
 
         $key_prefix_path = '/var/lib/codendi/gitolite/admin/keydir/forge__gerrit_';
-        $sql = 'SELECT * FROM plugin_git_remote_servers';
+        $sql             = 'SELECT * FROM plugin_git_remote_servers';
         foreach ($this->db->dbh->query($sql)->fetchAll() as $row) {
             $key_path = $key_prefix_path . $row['id'] . '@0.pub';
             if (is_file($key_path)) {

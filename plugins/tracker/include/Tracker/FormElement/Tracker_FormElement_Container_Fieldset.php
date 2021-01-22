@@ -63,7 +63,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         array $submitted_values,
         array $additional_classes
     ) {
-        $html = '';
+        $html    = '';
         $content = $this->getContainerContent($method, [$artifact, $submitted_values, $additional_classes]);
 
         if (count($content)) {
@@ -101,8 +101,8 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
 
     protected function fetchArtifactPrefix($extra_class = '')
     {
-        $hp           = Codendi_HTMLPurifier::instance();
-        $current_user = UserManager::instance()->getCurrentUser();
+        $hp                    = Codendi_HTMLPurifier::instance();
+        $current_user          = UserManager::instance()->getCurrentUser();
         $always_collapsed      = '';
         $fieldset_is_collapsed = $this->isCollapsed();
         $fieldset_is_expanded  = ! $fieldset_is_collapsed;
@@ -134,7 +134,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
 
     protected function fetchArtifactSuffix()
     {
-        $html = '</div>';
+        $html  = '</div>';
         $html .= '</fieldset>';
         return $html;
     }
@@ -167,8 +167,8 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
 
     public function fetchAdmin($tracker)
     {
-        $html = '';
-        $hp = Codendi_HTMLPurifier::instance();
+        $html  = '';
+        $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<fieldset class="tracker-admin-container tracker-admin-fieldset" id="tracker-admin-formElements_' . $this->id . '"><legend title="' . $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) . '"><label>';
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</label><span class="tracker-admin-field-controls">';
@@ -182,12 +182,12 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
             ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
         } else {
             $cannot_remove_message = $this->getCannotRemoveMessage();
-            $html .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
-            $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', ['alt' => 'remove']);
-            $html .= '</span>';
+            $html                 .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
+            $html                 .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', ['alt' => 'remove']);
+            $html                 .= '</span>';
         }
-        $html .= '</span>';
-        $html .= '</legend>';
+        $html   .= '</span>';
+        $html   .= '</legend>';
         $content = [];
         foreach ($this->getFormElements() as $formElement) {
             $content[] = $formElement->fetchAdmin($tracker);

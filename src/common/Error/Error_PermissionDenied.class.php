@@ -71,9 +71,9 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
     function extractReceiver($project, $urlData)  // phpcs:ignore Squiz.Scope.MethodScope.Missing
     {
         $admins = [];
-        $status  = true;
-        $pm = ProjectManager::instance();
-        $res = $pm->getMembershipRequestNotificationUGroup($project->getId());
+        $status = true;
+        $pm     = ProjectManager::instance();
+        $res    = $pm->getMembershipRequestNotificationUGroup($project->getId());
         if ($res && ! $res->isError()) {
             if ($res->rowCount() == 0) {
                 $dar = $pm->returnProjectAdminsByGroupId($project->getId());
@@ -89,7 +89,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
                  * 3 - UGROUP_1, UGROUP_2,.., UGROUP_n
                  */
                 $ugroups = [];
-                $dars = [];
+                $dars    = [];
                 foreach ($res as $row) {
                     if ($row['ugroup_id'] == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
                         $dar = $pm->returnProjectAdminsByGroupId($project->getId());
@@ -116,7 +116,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
             //If all selected ugroups are not valid, send mail to the project admins
             if (count($admins) == 0) {
                 $status = false;
-                $dar = $pm->returnProjectAdminsByGroupId($project->getId());
+                $dar    = $pm->returnProjectAdminsByGroupId($project->getId());
                 if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
                     foreach ($dar as $row) {
                         $admins[] = $row['email'];
@@ -135,7 +135,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
     {
         $request = HTTPRequest::instance();
 
-        $pm = $this->getProjectManager();
+        $pm      = $this->getProjectManager();
         $project = $pm->getProject($request->get('groupId'));
 
         $user_manager = $this->getUserManager();
@@ -166,8 +166,8 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
 
         //to
         $adminList = $this->extractReceiver($project, $urlData);
-        $admins = array_unique($adminList['admins']);
-        $to = implode(',', $admins);
+        $admins    = array_unique($adminList['admins']);
+        $to        = implode(',', $admins);
         $mail->setTo($to);
 
         $mail->setFrom(ForgeConfig::get('sys_noreply'));

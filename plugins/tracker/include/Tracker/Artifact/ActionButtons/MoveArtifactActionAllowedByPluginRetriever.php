@@ -50,7 +50,7 @@ class MoveArtifactActionAllowedByPluginRetriever implements Dispatchable
 
     public function __construct(\Tuleap\Tracker\Artifact\Artifact $artifact)
     {
-        $this->tracker = $artifact->getTracker();
+        $this->tracker  = $artifact->getTracker();
         $this->artifact = $artifact;
     }
 

@@ -61,8 +61,8 @@ class TransitionPOSTHandlerTest extends TestCase
     private $transition_creator;
 
     private const TRACKER_ID = 196;
-    private const FROM_ID = 134;
-    private const TO_ID = 279;
+    private const FROM_ID    = 134;
+    private const TO_ID      = 279;
 
     protected function setUp(): void
     {

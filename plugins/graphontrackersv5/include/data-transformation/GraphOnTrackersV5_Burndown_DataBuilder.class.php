@@ -38,20 +38,20 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
         $type                 = $form_element_factory->getType($effort_field);
 
         if ($this->isValidEffortField($effort_field, $type) && $this->isValidType($type)) {
-            $time_period     = new TimePeriodWithWeekEnd($this->chart->getStartDate(), $this->chart->getDuration());
-            $engine->data    = $this->getBurnDownData($effort_field->getId(), $type, $time_period);
+            $time_period  = new TimePeriodWithWeekEnd($this->chart->getStartDate(), $this->chart->getDuration());
+            $engine->data = $this->getBurnDownData($effort_field->getId(), $type, $time_period);
         }
 
-        $engine->legend      = null;
-        $engine->start_date  = $this->chart->getStartDate();
-        $engine->duration    = $this->chart->getDuration();
+        $engine->legend     = null;
+        $engine->start_date = $this->chart->getStartDate();
+        $engine->duration   = $this->chart->getDuration();
     }
 
     protected function getBurnDownData($effort_field_id, $type, TimePeriodWithWeekEnd $time_period)
     {
         $artifact_ids = explode(',', $this->artifacts['id']);
 
-        $sql          = "SELECT c.artifact_id AS id,
+        $sql = "SELECT c.artifact_id AS id,
                           DATE_FORMAT(FROM_UNIXTIME(c.submitted_on), '%Y%m%d') as day,
                           cvi.value
                         FROM tracker_changeset AS c

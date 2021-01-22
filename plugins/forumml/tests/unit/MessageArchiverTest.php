@@ -38,7 +38,7 @@ class MessageArchiverTest extends TestCase
         $incoming_mail = \Mockery::mock(IncomingMail::class);
         $incoming_mail->shouldReceive('getHeaders')->andReturns([]);
         $incoming_mail->shouldReceive('getAttachments')->andReturns([]);
-        $storage       = \Mockery::mock(\ForumML_FileStorage::class);
+        $storage = \Mockery::mock(\ForumML_FileStorage::class);
 
         $archiver->storeEmail($incoming_mail, $storage);
     }

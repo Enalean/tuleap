@@ -31,7 +31,7 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
     protected function setUp(): void
     {
         $rules_manager = \Mockery::spy(\Tracker_Workflow_Trigger_RulesManager::class);
-        $collection = new Tracker_Workflow_Trigger_TriggerRuleCollection();
+        $collection    = new Tracker_Workflow_Trigger_TriggerRuleCollection();
         $this->tracker = \Mockery::spy(\Tracker::class);
         $rules_manager->shouldReceive('getForTargetTracker')->with($this->tracker)->andReturns($collection);
 
@@ -40,7 +40,7 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
 
     public function testItRaisesAnExceptionIfNoTarget(): void
     {
-        $json = new stdClass();
+        $json         = new stdClass();
         $json->target = null;
 
         $this->expectException(\Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException::class);
@@ -49,7 +49,7 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
 
     public function testItRaisesAnExceptionIfTargetHasNoFieldId(): void
     {
-        $json = new stdClass();
+        $json         = new stdClass();
         $json->target = new stdClass();
 
         $this->expectException(\Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException::class);
@@ -58,8 +58,8 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
 
     public function testItRaisesAnExceptionIfTargetHasNoFieldValueId(): void
     {
-        $json = new stdClass();
-        $json->target = new stdClass();
+        $json                   = new stdClass();
+        $json->target           = new stdClass();
         $json->target->field_id = 34;
 
         $this->expectException(\Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException::class);
@@ -68,9 +68,9 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
 
     public function testItRaisesAnExceptionIfTargetHasNoCondition(): void
     {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
+        $json                         = new stdClass();
+        $json->target                 = new stdClass();
+        $json->target->field_id       = 34;
         $json->target->field_value_id = 75;
 
         $this->expectException(\Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException::class);
@@ -79,11 +79,11 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
 
     public function testItRaisesAnExceptionIfTargetHasInvalidCondition(): void
     {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
+        $json                         = new stdClass();
+        $json->target                 = new stdClass();
+        $json->target->field_id       = 34;
         $json->target->field_value_id = 75;
-        $json->condition = 'bla';
+        $json->condition              = 'bla';
 
         $this->expectException(\Tracker_Workflow_Trigger_Exception_TriggerInvalidConditionException::class);
         $this->validator->validateJsonFormat($json, $this->tracker);
@@ -91,11 +91,11 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
 
     public function testItRaisesAnExceptionIfNoTriggeringField(): void
     {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
+        $json                         = new stdClass();
+        $json->target                 = new stdClass();
+        $json->target->field_id       = 34;
         $json->target->field_value_id = 75;
-        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
+        $json->condition              = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
 
         $this->expectException(\Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException::class);
         $this->validator->validateJsonFormat($json, $this->tracker);
@@ -103,12 +103,12 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
 
     public function testItRaisesAnExceptionIfTriggeringFieldIsNotAnArray(): void
     {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
+        $json                         = new stdClass();
+        $json->target                 = new stdClass();
+        $json->target->field_id       = 34;
         $json->target->field_value_id = 75;
-        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
-        $json->triggering_fields = 'bla';
+        $json->condition              = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
+        $json->triggering_fields      = 'bla';
 
         $this->expectException(\Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException::class);
         $this->validator->validateJsonFormat($json, $this->tracker);
@@ -116,12 +116,12 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
 
     public function testItRaisesAnExceptionIfTriggeringFieldIsNotAnArrayOfFields(): void
     {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
+        $json                         = new stdClass();
+        $json->target                 = new stdClass();
+        $json->target->field_id       = 34;
         $json->target->field_value_id = 75;
-        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
-        $json->triggering_fields = ['bla'];
+        $json->condition              = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
+        $json->triggering_fields      = ['bla'];
 
         $this->expectException(\Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException::class);
         $this->validator->validateJsonFormat($json, $this->tracker);
@@ -129,14 +129,14 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
 
     public function testItRaisesAnExceptionIfTriggeringFieldsHaveIdenticalData(): void
     {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
+        $json                         = new stdClass();
+        $json->target                 = new stdClass();
+        $json->target->field_id       = 34;
         $json->target->field_value_id = 75;
-        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
+        $json->condition              = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
 
-        $triggering_field = new stdClass();
-        $triggering_field->field_id = 46;
+        $triggering_field                 = new stdClass();
+        $triggering_field->field_id       = 46;
         $triggering_field->field_value_id = 156;
 
         $json->triggering_fields = [$triggering_field, $triggering_field];
@@ -147,17 +147,17 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
 
     public function testItRaisesNoExceptionIfDataIsGood(): void
     {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
+        $json                         = new stdClass();
+        $json->target                 = new stdClass();
+        $json->target->field_id       = 34;
         $json->target->field_value_id = 75;
-        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
+        $json->condition              = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
 
-        $triggering_field = new stdClass();
-        $triggering_field->field_id = 46;
-        $triggering_field->field_value_id = 156;
-        $triggering_field2 = new stdClass();
-        $triggering_field2->field_id = 67;
+        $triggering_field                  = new stdClass();
+        $triggering_field->field_id        = 46;
+        $triggering_field->field_value_id  = 156;
+        $triggering_field2                 = new stdClass();
+        $triggering_field2->field_id       = 67;
         $triggering_field2->field_value_id = 62;
 
         $json->triggering_fields = [$triggering_field, $triggering_field2];
@@ -167,17 +167,17 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
 
     public function testItRaisesAnExceptionIfTargetFieldAlreadyHasRuleForSameValue(): void
     {
-        $json = new stdClass();
-        $json->target = new stdClass();
-        $json->target->field_id = 34;
+        $json                         = new stdClass();
+        $json->target                 = new stdClass();
+        $json->target->field_id       = 34;
         $json->target->field_value_id = 75;
-        $json->condition = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
+        $json->condition              = Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF;
 
-        $triggering_field = new stdClass();
-        $triggering_field->field_id = 46;
-        $triggering_field->field_value_id = 156;
-        $triggering_field2 = new stdClass();
-        $triggering_field2->field_id = 67;
+        $triggering_field                  = new stdClass();
+        $triggering_field->field_id        = 46;
+        $triggering_field->field_value_id  = 156;
+        $triggering_field2                 = new stdClass();
+        $triggering_field2->field_id       = 67;
         $triggering_field2->field_value_id = 62;
 
         $json->triggering_fields = [$triggering_field, $triggering_field2];
@@ -185,10 +185,10 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \PHPUnit\Frame
         $field_list = \Mockery::spy(\Tracker_FormElement_Field_List::class);
         $bind_value = \Mockery::spy(\Tracker_FormElement_Field_List_BindValue::class);
         $bind_value->shouldReceive('getId')->andReturns(75);
-        $target = new Tracker_Workflow_Trigger_FieldValue($field_list, $bind_value);
+        $target    = new Tracker_Workflow_Trigger_FieldValue($field_list, $bind_value);
         $condition = 'some_condition';
-        $triggers = [];
-        $rule = new Tracker_Workflow_Trigger_TriggerRule(7, $target, $condition, $triggers);
+        $triggers  = [];
+        $rule      = new Tracker_Workflow_Trigger_TriggerRule(7, $target, $condition, $triggers);
 
         $collection = new Tracker_Workflow_Trigger_TriggerRuleCollection();
         $collection->push($rule);

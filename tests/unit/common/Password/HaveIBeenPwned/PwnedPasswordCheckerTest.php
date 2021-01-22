@@ -60,7 +60,7 @@ EOF;
 
     public function testAPICallEmptyResponseIsNotConsideredAsACompromisedPassword(): void
     {
-        $retriever   = $this->createMock(PwnedPasswordRangeRetriever::class);
+        $retriever = $this->createMock(PwnedPasswordRangeRetriever::class);
         $retriever->method('getHashSuffixesMatchingPrefix')->willReturn('');
 
         $pwned_password_checker = new PwnedPasswordChecker($retriever);

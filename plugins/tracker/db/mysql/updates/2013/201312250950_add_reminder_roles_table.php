@@ -31,7 +31,7 @@ class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS tracker_reminder_notified_roles (
+        $sql    = "CREATE TABLE IF NOT EXISTS tracker_reminder_notified_roles (
                     reminder_id INT(11) UNSIGNED NOT NULL,
                     role_id TINYINT(1) UNSIGNED NOT NULL
                 );";
@@ -43,7 +43,7 @@ class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket
         }
 
         //Remove the NOT NULL Constraint on ugroups column
-        $sql = "ALTER TABLE tracker_reminder
+        $sql    = "ALTER TABLE tracker_reminder
                     MODIFY COLUMN ugroups VARCHAR(255) NULL;";
         $result = $this->db->dbh->exec($sql);
 
@@ -58,10 +58,10 @@ class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while fetching the constraint name: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
-        $row = $res->fetch();
+        $row   = $res->fetch();
         $index = $row['CONSTRAINT_NAME'];
         $res->closeCursor();
-        $sql = "ALTER TABLE `tracker_reminder` DROP INDEX " . $index . ";";
+        $sql    = "ALTER TABLE `tracker_reminder` DROP INDEX " . $index . ";";
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
                 $error_message = implode(', ', $this->db->dbh->errorInfo());

@@ -28,7 +28,7 @@ use Tuleap\Statistics\Frequencies\GraphDataBuilder\SampleGraph;
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if (! $p || ! $pluginManager->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }

@@ -32,7 +32,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
             return;
         }
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
         $renderer->renderToPage(
             'docman-title',
             ["title" => $this->getUnconvertedTitle($params)]
@@ -61,7 +61,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         $parents            = [];
         $item_factory       = $this->_getItemFactory($params);
         while ($item->getParentId() != 0) {
-            $item = $item_factory->getItemFromDb($item->getParentId());
+            $item      = $item_factory->getItemFromDb($item->getParentId());
             $parents[] = [
                 'item'  => $item,
                 'id'    => $item->getId(),
@@ -75,29 +75,29 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
             }
         }
         $this->_initSearchAndSortParams($params);
-        $urlParams = array_merge(
+        $urlParams           = array_merge(
             $this->dfltSortParams,
             $this->dfltSearchParams
         );
         $urlParams['action'] = $urlAction;
-        $html = '';
-        $html .= '<table border="0" width="100%">';
-        $html .= '<tr>';
-        $html .= '<td align="left">';
-        $html .= '<div id="docman_item_title_link_' . $id . '">' . dgettext('tuleap-docman', 'Location:') . ' ';
-        $parents = array_reverse($parents);
+        $html                = '';
+        $html               .= '<table border="0" width="100%">';
+        $html               .= '<tr>';
+        $html               .= '<td align="left">';
+        $html               .= '<div id="docman_item_title_link_' . $id . '">' . dgettext('tuleap-docman', 'Location:') . ' ';
+        $parents             = array_reverse($parents);
         foreach ($parents as $parent) {
             $urlParams['id'] = $parent['id'];
             $url             = DocmanViewURLBuilder::buildActionUrl($parent['item'], $params, $urlParams);
             $html           .= '&nbsp;<a href="' . $url . '">' .  $hp->purify($parent['title'], CODENDI_PURIFIER_CONVERT_HTML)  . '</a>&nbsp;/';
         }
-        $urlParams['id'] = $id;
-        $url = DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $urlParams);
-        $html .= '&nbsp;<a href="' . $url . '"><b>' .  $hp->purify($current_item_title, CODENDI_PURIFIER_CONVERT_HTML)  . '</b></a>';
-        $html .= $this->getItemMenu($current_item, $params, $bc = true);
+        $urlParams['id']   = $id;
+        $url               = DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $urlParams);
+        $html             .= '&nbsp;<a href="' . $url . '"><b>' .  $hp->purify($current_item_title, CODENDI_PURIFIER_CONVERT_HTML)  . '</b></a>';
+        $html             .= $this->getItemMenu($current_item, $params, $bc = true);
         $this->javascript .= $this->getActionForItem($current_item);
-        $html .= '</div>';
-        $html .= '</td>';
+        $html             .= '</div>';
+        $html             .= '</td>';
 
         echo $html;
     }

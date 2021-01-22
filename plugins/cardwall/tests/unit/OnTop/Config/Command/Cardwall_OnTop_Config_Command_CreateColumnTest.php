@@ -32,7 +32,7 @@ final class Cardwall_OnTop_Config_Command_CreateColumnTest extends \PHPUnit\Fram
         parent::setUp();
 
         $this->tracker_id = 666;
-        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker          = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturns($this->tracker_id);
 
         $this->dao     = \Mockery::spy(\Cardwall_OnTop_ColumnDao::class);

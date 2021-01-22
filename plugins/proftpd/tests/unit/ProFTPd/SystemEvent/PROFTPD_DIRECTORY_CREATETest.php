@@ -40,13 +40,13 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCa
     public function setUp(): void
     {
         parent::setUp();
-        $this->event   = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE')->setMethods(['done'])->disableOriginalConstructor()->getMock();
-        $this->backend = $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock();
+        $this->event       = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE')->setMethods(['done'])->disableOriginalConstructor()->getMock();
+        $this->backend     = $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock();
         $this->acl_updater = $this->getMockBuilder('Tuleap\ProFTPd\Admin\ACLUpdater')->disableOriginalConstructor()->getMock();
 
         $this->group_unix_name = "group_name";
-        $this->ftp_directory = '/var/tmp';
-        $this->path = $this->ftp_directory . "/" . $this->group_unix_name;
+        $this->ftp_directory   = '/var/tmp';
+        $this->path            = $this->ftp_directory . "/" . $this->group_unix_name;
 
         ForgeConfig::set('sys_http_user', 'someuser');
 

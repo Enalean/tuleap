@@ -74,7 +74,7 @@ final class MemberAdderTest extends TestCase
         $this->static_member_adder    = Mockery::mock(StaticMemberAdder::class);
         $this->dynamic_member_updater = Mockery::mock(DynamicUGroupMembersUpdater::class);
         $this->project_member_adder   = Mockery::mock(ProjectMemberAdderWithoutStatusCheckAndNotifications::class);
-        $this->detector = Mockery::mock(SynchronizedProjectMembershipDetector::class);
+        $this->detector               = Mockery::mock(SynchronizedProjectMembershipDetector::class);
         $this->adder                  = new MemberAdder(
             $this->verifier,
             $this->static_member_adder,
@@ -188,7 +188,7 @@ final class MemberAdderTest extends TestCase
             ->with(168)
             ->once()
             ->andReturnTrue();
-        $ugroup  = Mockery::mock(
+        $ugroup = Mockery::mock(
             ProjectUGroup::class,
             [
                 'getProject' => $project,
@@ -223,7 +223,7 @@ final class MemberAdderTest extends TestCase
             ->with(168)
             ->once()
             ->andReturnFalse();
-        $ugroup  = Mockery::mock(
+        $ugroup = Mockery::mock(
             ProjectUGroup::class,
             [
                 'getProject' => $project,

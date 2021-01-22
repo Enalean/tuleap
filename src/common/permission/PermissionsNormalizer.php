@@ -24,7 +24,7 @@ class PermissionsNormalizer
 
     public function getNormalizedUGroupIds(Project $project, array $ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection)
     {
-        $ugroup_mapper = new PermissionsUGroupMapper($project);
+        $ugroup_mapper         = new PermissionsUGroupMapper($project);
         $normalized_ugroup_ids = [];
         foreach ($ugroup_ids as $ugroup_id) {
             $this->appendOnceToHash(

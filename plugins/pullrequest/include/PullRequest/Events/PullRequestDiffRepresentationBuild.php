@@ -45,7 +45,7 @@ class PullRequestDiffRepresentationBuild implements Dispatchable
     public function __construct(string $object_dest, string $object_src)
     {
         $this->object_dest = $object_dest;
-        $this->object_src = $object_src;
+        $this->object_src  = $object_src;
     }
 
     public function setSpecialFormat(string $special_format): void

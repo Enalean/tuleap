@@ -47,8 +47,8 @@ class ListEndpointsController implements DispatchableWithRequest, DispatchableWi
 
     public function __construct(AdminPageRenderer $admin_page_rendered, ListEndpointsRetriever $list_endpoint_retriever, ListEndpointsPresenterBuilder $list_endpoints_presenter_builder)
     {
-        $this->admin_page_rendered     = $admin_page_rendered;
-        $this->list_endpoint_retriever = $list_endpoint_retriever;
+        $this->admin_page_rendered              = $admin_page_rendered;
+        $this->list_endpoint_retriever          = $list_endpoint_retriever;
         $this->list_endpoints_presenter_builder = $list_endpoints_presenter_builder;
     }
 

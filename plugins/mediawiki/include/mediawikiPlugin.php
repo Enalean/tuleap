@@ -148,7 +148,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function burning_parrot_get_javascript_files($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/mediawiki') === 0) {
-            $core_assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
+            $core_assets                  = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
             $params['javascript_files'][] = $core_assets->getFileURL('manage-allowed-projects-on-resource.js');
         }
     }
@@ -189,7 +189,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
                 'value'    => $this->getName(),
                 'selected' => $this->isSearchEntrySelected($params['type_of_search']),
             ];
-            $params['hidden_fields'][] = [
+            $params['hidden_fields'][]  = [
                 'name'  => 'group_id',
                 'value' => $project->getID()
             ];
@@ -451,7 +451,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     private function getInstantiater($group_id)
     {
         $project_manager = ProjectManager::instance();
-        $project = $project_manager->getProject($group_id);
+        $project         = $project_manager->getProject($group_id);
 
         if (! $project instanceof Project || $project->isError()) {
             return;
@@ -483,9 +483,9 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $number_of_page_since_a_date      = [];
         foreach ($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
             if ($project->usesService('plugin_mediawiki') && $dao->hasDatabase($project)) {
-                $number_of_page[] = $dao->getMediawikiPagesNumberOfAProject($project);
+                $number_of_page[]                   = $dao->getMediawikiPagesNumberOfAProject($project);
                 $number_of_page_between_two_dates[] = $dao->getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate($project, $start_date, $end_date);
-                $number_of_page_since_a_date[] = $dao->getCreatedPagesNumberSinceStartDate($project, $start_date);
+                $number_of_page_since_a_date[]      = $dao->getCreatedPagesNumberSinceStartDate($project, $start_date);
             }
         }
 
@@ -548,8 +548,8 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function systemevent_user_rename($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $user            = $params['user'];
-        $projects        = ProjectManager::instance()->getAllProjectsButDeleted();
+        $user     = $params['user'];
+        $projects = ProjectManager::instance()->getAllProjectsButDeleted();
         foreach ($projects as $project) {
             if ($project->usesService(self::SERVICE_SHORTNAME)) {
                 $this->getDao()->renameUser($project, $params['old_user_name'], $user->getUnixName());
@@ -559,7 +559,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     private function getUserFromParams($params)
     {
-        $user_id  = $params['user_id'];
+        $user_id = $params['user_id'];
 
         return UserManager::instance()->getUserById($user_id);
     }
@@ -605,7 +605,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function rename_project($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $project         = $params['project'];
+        $project = $params['project'];
 
         $this->updateMediawikiDirectory($project);
         $this->clearMediawikiCache($project);
@@ -648,8 +648,8 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
             $pieces       = explode("/", $url);
             $project_name = $pieces[4];
 
-            $dao          = $params['project_dao'];
-            $dao_results  = $dao->searchByUnixGroupName($project_name);
+            $dao         = $params['project_dao'];
+            $dao_results = $dao->searchByUnixGroupName($project_name);
             if ($dao_results->rowCount() < 1) {
                 // project does not exist
                 return false;
@@ -731,7 +731,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     {
         switch ($params['type']) {
             case SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME:
-                $params['class'] = 'SystemEvent_MEDIAWIKI_SWITCH_TO_123';
+                $params['class']        = 'SystemEvent_MEDIAWIKI_SWITCH_TO_123';
                 $params['dependencies'] = [
                     $this->getMediawikiMigrator(),
                     $this->getProjectManager(),
@@ -744,7 +744,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
                 ];
                 break;
             case SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME:
-                $params['class'] = 'Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB';
+                $params['class']        = 'Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB';
                 $params['dependencies'] = [
                     new MoveToCentralDbDao($this->getCentralDatabaseNameProperty()),
                 ];

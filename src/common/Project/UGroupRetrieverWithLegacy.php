@@ -69,8 +69,8 @@ class UGroupRetrieverWithLegacy
      */
     public function getProjectUgroupIds(Project $project): array
     {
-        $ugroups        = self::LEGACY_SYSTEM_USER_GROUPS;
-        $static_groups  = $this->ugroup_manager->getStaticUGroups($project);
+        $ugroups       = self::LEGACY_SYSTEM_USER_GROUPS;
+        $static_groups = $this->ugroup_manager->getStaticUGroups($project);
 
         foreach ($static_groups as $ugroup) {
             $ugroups[$ugroup->getName()] = (int) $ugroup->getId();

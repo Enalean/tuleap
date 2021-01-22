@@ -63,7 +63,7 @@ final class UpdateSessionPreferencesControllerTest extends TestCase
             $this->csrf_token,
             $this->user_manager,
         );
-        $this->user = UserTestBuilder::aUser()->withId(120)->build();
+        $this->user       = UserTestBuilder::aUser()->withId(120)->build();
     }
 
     public function testItThrowsExceptionWhenUserIsAnonymous(): void

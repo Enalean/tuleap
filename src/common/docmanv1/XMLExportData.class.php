@@ -166,10 +166,10 @@ class DocmanV1_XMLExportData
         $perms = $this->minimal_permissions;
         foreach ($results as $row) {
             if ($row['id'] < ProjectUGroup::PROJECT_ADMIN || $row['id'] > ProjectUGroup::NONE) {
-                $ugroup_name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']);
-                $ugroup_id   = $row['id'];
+                $ugroup_name               = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']);
+                $ugroup_id                 = $row['id'];
                 $this->ugroups[$ugroup_id] = $ugroup_name;
-                $perms[$ugroup_id][] = self::V2_SOAP_PERM_READ;
+                $perms[$ugroup_id][]       = self::V2_SOAP_PERM_READ;
             }
         }
         return $perms;
@@ -222,7 +222,7 @@ class DocmanV1_XMLExportData
     {
         foreach ($this->dao->searchAllDocs($doc_group_id) as $row) {
             $creator_name = $admin_user->getUserName();
-            $creator = $this->user_manager->getUserById($row['created_by']);
+            $creator      = $this->user_manager->getUserById($row['created_by']);
             if ($creator !== null && ($creator->isActive() || $creator->isRestricted())) {
                 $creator_name = $creator->getUnixName();
             }

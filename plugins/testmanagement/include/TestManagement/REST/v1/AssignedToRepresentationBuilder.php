@@ -50,8 +50,8 @@ class AssignedToRepresentationBuilder
      */
     public function getAssignedToRepresentationForExecution(PFUser $user, Artifact $execution)
     {
-        $field_value  = $this->getExecutionAssignedTo($user, $execution);
-        $user_id      = array_pop($field_value);
+        $field_value = $this->getExecutionAssignedTo($user, $execution);
+        $user_id     = array_pop($field_value);
         if (! $user_id) {
             return null;
         }

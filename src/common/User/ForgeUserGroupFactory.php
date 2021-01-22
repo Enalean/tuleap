@@ -68,7 +68,7 @@ class User_ForgeUserGroupFactory
     public function getAllForgeUserGroups()
     {
         $user_groups = [];
-        $rows = $this->dao->getAllForgeUGroups();
+        $rows        = $this->dao->getAllForgeUGroups();
         if (! $rows) {
             return $user_groups;
         }
@@ -135,7 +135,7 @@ class User_ForgeUserGroupFactory
     private function getStaticByProject(Project $project)
     {
         $user_groups = [];
-        $rows = $this->dao->getExistingUgroups($project->getID());
+        $rows        = $this->dao->getExistingUgroups($project->getID());
 
         if (! $rows) {
             return $user_groups;

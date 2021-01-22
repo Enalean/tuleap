@@ -69,7 +69,7 @@ class WikiPlugin_AppendText extends WikiPlugin
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
-        $args = $this->getArgs($argstr, $request);
+        $args     = $this->getArgs($argstr, $request);
         $pagename = $args['page'];
 
         if (empty($args['s'])) {
@@ -81,7 +81,7 @@ class WikiPlugin_AppendText extends WikiPlugin
             return '';
         }
 
-        $page = $dbi->getPage($pagename);
+        $page    = $dbi->getPage($pagename);
         $message = HTML();
 
         if (! $page->exists()) { // We might want to create it?
@@ -94,7 +94,7 @@ class WikiPlugin_AppendText extends WikiPlugin
 
         $current = $page->getCurrentRevision();
         $oldtext = $current->getPackedContent();
-        $text = $args['s'];
+        $text    = $args['s'];
 
         // If a "before" or "after" is specified but not found, we simply append text to the end.
         if (! empty($args['before'])) {
@@ -109,7 +109,7 @@ class WikiPlugin_AppendText extends WikiPlugin
                 : $this->_fallback($text, $oldtext, $args['before'], $message);
         } elseif (! empty($args['after'])) {
             // Insert after
-            $after = preg_quote($args['after'], "/");
+            $after   = preg_quote($args['after'], "/");
             $newtext = preg_match("/\n${after}/", $oldtext)
                 ? preg_replace(
                     "/(\n${after})/",
@@ -124,7 +124,7 @@ class WikiPlugin_AppendText extends WikiPlugin
         }
 
         require_once("lib/loadsave.php");
-        $meta = $current->_data;
+        $meta            = $current->_data;
         $meta['summary'] = sprintf(_("AppendText to %s"), $pagename);
         if ($page->save($newtext, $current->getVersion() + 1, $meta)) {
             $message->pushContent(_("Page successfully updated."), HTML::br());

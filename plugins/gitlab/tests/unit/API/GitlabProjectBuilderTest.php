@@ -50,7 +50,7 @@ final class GitlabProjectBuilderTest extends TestCase
         parent::setUp();
 
         $this->gitlab_api_client = Mockery::mock(ClientWrapper::class);
-        $this->credentials = new Credentials("https://example.com", new ConcealedString("azert125"));
+        $this->credentials       = new Credentials("https://example.com", new ConcealedString("azert125"));
 
         $this->project_builder = new GitlabProjectBuilder(
             $this->gitlab_api_client

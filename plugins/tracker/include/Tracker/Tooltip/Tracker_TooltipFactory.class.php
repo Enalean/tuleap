@@ -37,7 +37,7 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            $c = self::class;
+            $c              = self::class;
             self::$instance = new $c();
         }
         return self::$instance;

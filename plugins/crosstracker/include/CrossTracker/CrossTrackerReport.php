@@ -73,7 +73,7 @@ class CrossTrackerReport
     {
         $projects = [];
         foreach ($this->getTrackers() as $tracker) {
-            $project = $tracker->getProject();
+            $project                     = $tracker->getProject();
             $projects[$project->getID()] = $project;
         }
         return array_values($projects);

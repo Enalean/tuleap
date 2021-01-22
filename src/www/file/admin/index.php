@@ -46,7 +46,7 @@ $permission_manager = FRSPermissionManager::build();
 
 $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
-$user = UserManager::instance()->getCurrentUser();
+$user            = UserManager::instance()->getCurrentUser();
 if (! $permission_manager->isAdmin($project, $user)) {
     exit_permission_denied();
 }

@@ -81,17 +81,17 @@ class EditLicenseAgreementPresenter
 
     public function __construct(\Project $project, LicenseAgreementInterface $license_agreement, \CSRFSynchronizerToken $csrf_token, bool $can_be_deleted, UsedByPresenter ...$used_by)
     {
-        $this->id       = $license_agreement->getId();
-        $this->title    = $license_agreement->getTitle();
-        $this->content  = $license_agreement->getContent();
-        $this->list_url = ListLicenseAgreementsController::getUrl($project);
-        $this->save_url = SaveLicenseAgreementController::getUrl($project);
+        $this->id         = $license_agreement->getId();
+        $this->title      = $license_agreement->getTitle();
+        $this->content    = $license_agreement->getContent();
+        $this->list_url   = ListLicenseAgreementsController::getUrl($project);
+        $this->save_url   = SaveLicenseAgreementController::getUrl($project);
         $this->csrf_token = $csrf_token;
         if ($license_agreement instanceof NewLicenseAgreement) {
             $this->is_update = false;
         }
         $this->can_be_deleted = $can_be_deleted;
-        $this->used_by = $used_by;
-        $this->is_used_by = count($used_by) > 0;
+        $this->used_by        = $used_by;
+        $this->is_used_by     = count($used_by) > 0;
     }
 }

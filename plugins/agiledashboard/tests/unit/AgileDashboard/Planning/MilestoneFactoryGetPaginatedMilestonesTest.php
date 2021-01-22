@@ -160,12 +160,12 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
     public function testItReturnsEmptyWhenNoSubMilestones(): void
     {
-        $user        = UserTestBuilder::aUser()->build();
-        $top_planning = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
+        $user                      = UserTestBuilder::aUser()->build();
+        $top_planning              = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
         $parent_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $parent_milestone_artifact->shouldReceive('getId')->andReturn(121);
         $parent_milestone = new \Planning_ArtifactMilestone(\Project::buildForTest(), $top_planning, $parent_milestone_artifact, $this->mono_milestone_checker);
-        $request =  new SubMilestoneRequest($user, $parent_milestone, 50, 0, 'asc', new StatusAll());
+        $request          =  new SubMilestoneRequest($user, $parent_milestone, 50, 0, 'asc', new StatusAll());
 
         $this->milestone_dao->shouldReceive('searchPaginatedSubMilestones')->andReturn(\TestHelper::emptyDar());
         $this->milestone_dao->shouldReceive('foundRows')->andReturn(0);
@@ -178,13 +178,13 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
     public function testItReturnsSubMilestonesFilteredByStatus(): void
     {
-        $user        = UserTestBuilder::aUser()->build();
-        $top_planning = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
-        $sub_planning = new \Planning(2, 'Sprint Planning', 101, 'Irrelevant', 'Irrelevant');
+        $user                      = UserTestBuilder::aUser()->build();
+        $top_planning              = new \Planning(1, 'Release Planning', 101, 'Irrelevant', 'Irrelevant');
+        $sub_planning              = new \Planning(2, 'Sprint Planning', 101, 'Irrelevant', 'Irrelevant');
         $parent_milestone_artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $parent_milestone_artifact->shouldReceive('getId')->andReturn(121);
-        $parent_milestone = new \Planning_ArtifactMilestone(\Project::buildForTest(), $top_planning, $parent_milestone_artifact, $this->mono_milestone_checker);
-        $request =  new SubMilestoneRequest($user, $parent_milestone, 50, 0, 'asc', new StatusAll());
+        $parent_milestone      = new \Planning_ArtifactMilestone(\Project::buildForTest(), $top_planning, $parent_milestone_artifact, $this->mono_milestone_checker);
+        $request               =  new SubMilestoneRequest($user, $parent_milestone, 50, 0, 'asc', new StatusAll());
         $sub_milestone_tracker = $this->buildTestTracker(17);
 
         $this->milestone_dao->shouldReceive('searchPaginatedSubMilestones')
@@ -349,7 +349,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
             $this->mono_milestone_checker
         );
         $reference_milestone->setAncestors([$parent_milestone]);
-        $request             = new SiblingMilestoneRequest($user, $reference_milestone, 50, 0, new StatusOpen());
+        $request = new SiblingMilestoneRequest($user, $reference_milestone, 50, 0, new StatusOpen());
 
         $this->milestone_dao->shouldReceive('searchPaginatedSiblingMilestones')
             ->once()

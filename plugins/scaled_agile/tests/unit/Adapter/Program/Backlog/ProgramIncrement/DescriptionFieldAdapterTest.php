@@ -61,8 +61,8 @@ final class DescriptionFieldAdapterTest extends TestCase
 
     public function testItBuildDescriptionFieldData(): void
     {
-        $source_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(123)->build());
-        $field          = new \Tracker_FormElement_Field_Text(
+        $source_tracker       = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(123)->build());
+        $field                = new \Tracker_FormElement_Field_Text(
             1,
             $source_tracker->getTrackerId(),
             null,

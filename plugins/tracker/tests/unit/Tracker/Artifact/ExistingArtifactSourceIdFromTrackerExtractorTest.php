@@ -57,7 +57,7 @@ class ExistingArtifactSourceIdFromTrackerExtractorTest extends TestCase
     public function setUp(): void
     {
         $this->tracker_artifact_factory = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->artifact_source_id_dao = \Mockery::mock(TrackerArtifactSourceIdDao::class);
+        $this->artifact_source_id_dao   = \Mockery::mock(TrackerArtifactSourceIdDao::class);
 
         $this->tracker = \Mockery::mock(\Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(100);
@@ -114,7 +114,7 @@ class ExistingArtifactSourceIdFromTrackerExtractorTest extends TestCase
 
     private function mockAnArtifact($value, $id)
     {
-        $artifact = \Mockery::mock(Artifact::class);
+        $artifact  = \Mockery::mock(Artifact::class);
         $changeset = \Mockery::mock(Tracker_Artifact_ChangesetValue::class);
         $changeset->shouldReceive('getValue')->andReturn($value);
         $artifact->shouldReceive('getValue')->andReturn($changeset);

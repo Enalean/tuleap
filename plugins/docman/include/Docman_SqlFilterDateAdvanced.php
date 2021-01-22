@@ -29,9 +29,9 @@ class Docman_SqlFilterDateAdvanced extends \Docman_SqlFilterDate
     }
     public function _getSpecificSearchChunk()
     {
-        $stmt = [];
+        $stmt       = [];
         $startValue = $this->filter->getValueStart();
-        $endValue = $this->filter->getValueEnd();
+        $endValue   = $this->filter->getValueEnd();
         if ($startValue != '') {
             if ($endValue == $startValue) {
                 // Equal

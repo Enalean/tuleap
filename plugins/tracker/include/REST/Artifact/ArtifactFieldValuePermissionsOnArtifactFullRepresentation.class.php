@@ -51,10 +51,10 @@ class ArtifactFieldValuePermissionsOnArtifactFullRepresentation extends Artifact
 
     public function build($id, $type, $label, array $granted_groups, array $granted_groups_ids)
     {
-        $this->field_id       = JsonCast::toInt($id);
-        $this->type           = $type;
-        $this->label          = $label;
-        $this->granted_groups = $granted_groups;
+        $this->field_id           = JsonCast::toInt($id);
+        $this->type               = $type;
+        $this->label              = $label;
+        $this->granted_groups     = $granted_groups;
         $this->granted_groups_ids = $granted_groups_ids;
     }
 }

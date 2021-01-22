@@ -23,21 +23,21 @@ require_once __DIR__ . '/pre.php';
 $csrf = new CSRFSynchronizerToken('');
 $csrf->check('/my/');
 
-$request           = HTTPRequest::instance();
-$pm                = ProjectManager::instance();
-$massmail_sender   = new MassmailSender();
+$request         = HTTPRequest::instance();
+$pm              = ProjectManager::instance();
+$massmail_sender = new MassmailSender();
 
-$user              = $request->getCurrentUser();
-$group_id          = $request->get('group_id');
-$subject           = $request->get('subject');
-$body              = $request->get('body');
+$user     = $request->getCurrentUser();
+$group_id = $request->get('group_id');
+$subject  = $request->get('subject');
+$body     = $request->get('body');
 
 $project           = $pm->getProject($group_id);
 $admins            = $project->getAdmins();
 $project_name      = $project->getPublicName();
 $project_unix_name = $project->getUnixName();
 
-$body_info         = $GLOBALS['Language']->getText('contact_admins', 'body_info');
+$body_info = $GLOBALS['Language']->getText('contact_admins', 'body_info');
 
 $body = $body_info . $body;
 

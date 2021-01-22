@@ -33,10 +33,10 @@ final class Tracker_Report_RESTTest extends \PHPUnit\Framework\TestCase //phpcs:
 
     protected function setUp(): void
     {
-        $current_user        = \Mockery::spy(\PFUser::class);
-        $tracker             = \Mockery::spy(\Tracker::class);
-        $permissions_manager = \Mockery::spy(\PermissionsManager::class);
-        $dao                 = \Mockery::spy(\Tracker_ReportDao::class);
+        $current_user              = \Mockery::spy(\PFUser::class);
+        $tracker                   = \Mockery::spy(\Tracker::class);
+        $permissions_manager       = \Mockery::spy(\PermissionsManager::class);
+        $dao                       = \Mockery::spy(\Tracker_ReportDao::class);
         $this->formelement_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
 
         $this->report = new Tracker_Report_REST($current_user, $tracker, $permissions_manager, $dao, $this->formelement_factory);

@@ -79,10 +79,10 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
 
     public function renamePages(&$dbi, &$request, $pages, $from, $to, $updatelinks = false)
     {
-        $ul = HTML::ul();
-        $count = 0;
+        $ul        = HTML::ul();
+        $count     = 0;
         $post_args = $request->getArg('admin_rename');
-        $options = ['regex' => @$post_args['regex'],
+        $options   = ['regex' => @$post_args['regex'],
                          'icase' => @$post_args['icase']];
         foreach ($pages as $name) {
             if (
@@ -141,7 +141,7 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
             }
         }
 
-        $args = $this->getArgs($argstr, $request);
+        $args        = $this->getArgs($argstr, $request);
         $this->_args = $args;
         $this->preSelectS($args, $request);
 
@@ -149,9 +149,9 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
         if (! $p) {
             $p = $this->_list;
         }
-        $post_args = $request->getArg('admin_rename');
+        $post_args   = $request->getArg('admin_rename');
         $next_action = 'select';
-        $pages = [];
+        $pages       = [];
         if ($p && ! $request->isPost()) {
             $pages = $p;
         }
@@ -216,7 +216,7 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
             $header->pushContent(HTML::p(_("Select the pages to rename:")));
             if (! $post_args and count($pages) == 1) {
                 list($post_args['from'],) = array_keys($pages);
-                $post_args['to'] = $post_args['from'];
+                $post_args['to']          = $post_args['from'];
             }
             $header = $this->renameForm($header, $post_args);
         }
@@ -287,18 +287,18 @@ class _PageList_Column_renamed_pagename extends _PageList_Column
     {
         global $request;
         $post_args = $request->getArg('admin_rename');
-        $options = ['regex' => @$post_args['regex'],
+        $options   = ['regex' => @$post_args['regex'],
                          'icase' => @$post_args['icase']];
-        $value = WikiPlugin_WikiAdminRename::renameHelper(
+        $value     = WikiPlugin_WikiAdminRename::renameHelper(
             $page_handle->getName(),
             $post_args['from'],
             $post_args['to'],
             $options
         );
-        $div = HTML::div(" => ", HTML::input(['type' => 'text',
+        $div       = HTML::div(" => ", HTML::input(['type' => 'text',
                                                   'name' => 'rename[]',
                                                   'value' => $value]));
-        $new_page = $request->getPage($value);
+        $new_page  = $request->getPage($value);
         if ($new_page->exists()) {
             $div->setAttr('class', 'error');
             $div->setAttr('title', _("This page already exists"));

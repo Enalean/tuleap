@@ -39,7 +39,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     {
         $user = $this->_controller->getUser();
 
-        $content = '';
+        $content  = '';
         $content .= '<dl>';
 
         //{{{ New Version
@@ -70,7 +70,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         //}}}
 
         //{{{ Cut
-        $content .= '<dt>' . dgettext('tuleap-docman', 'Cut') . '</dt><dd>';
+        $content    .= '<dt>' . dgettext('tuleap-docman', 'Cut') . '</dt><dd>';
         $itemFactory = Docman_ItemFactory::instance($this->item->getGroupId());
         if ($itemFactory->isRoot($this->item)) {
             $content .= dgettext('tuleap-docman', 'You cannot cut this folder.');
@@ -160,7 +160,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             $itemFactory  = Docman_ItemFactory::instance($item->getGroupId());
             $copiedItemId = $itemFactory->getCopyPreference($this->_controller->getUser());
             $cutItemId    = $itemFactory->getCutPreference($this->_controller->getUser(), $item->getGroupId());
-            $srcItem = null;
+            $srcItem      = null;
             if ($copiedItemId !== false && $cutItemId === false) {
                 $srcItem = $itemFactory->getItemFromDb($copiedItemId);
             } elseif ($copiedItemId === false && $cutItemId !== false && $item->getId() != $cutItemId) {
@@ -169,7 +169,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             if ($srcItem && ! $itemFactory->isInSubTree($this->item->getId(), $srcItem->getId())) {
                 $content .= '</dd>';
                 $content .= '<dt>' . dgettext('tuleap-docman', 'Paste') . '</dt><dd>';
-                $copyurl = DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'action_paste', 'id' => $this->item->getId()]);
+                $copyurl  = DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'action_paste', 'id' => $this->item->getId()]);
                 $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">paste \'%2$s\' into this folder</a>.'), $copyurl, $this->hp->purify($srcItem->getTitle(), CODENDI_PURIFIER_CONVERT_HTML));
             }
             //}}}
@@ -179,7 +179,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     }
     public function visitDocument($item, $params = [])
     {
-        $content = '';
+        $content  = '';
         $content .= '<dt>' . dgettext('tuleap-docman', 'Update') . '</dt><dd>';
 
         if (! $this->_controller->userCanWrite($this->item->getid())) {

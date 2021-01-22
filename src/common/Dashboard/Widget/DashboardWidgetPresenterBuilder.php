@@ -40,7 +40,7 @@ class DashboardWidgetPresenterBuilder
         WidgetFactory $widget_factory,
         DisabledProjectWidgetsChecker $disabled_project_widgets_checker
     ) {
-        $this->widget_factory = $widget_factory;
+        $this->widget_factory                   = $widget_factory;
         $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
     }
 
@@ -81,7 +81,7 @@ class DashboardWidgetPresenterBuilder
     ) {
         $columns_presenter = [];
         foreach ($line->getWidgetColumns() as $column) {
-            $widgets_presenter = $this->getWidgetsPresenterByColumn($dashboard, $owner_info, $column, $can_update_dashboards);
+            $widgets_presenter   = $this->getWidgetsPresenterByColumn($dashboard, $owner_info, $column, $can_update_dashboards);
             $columns_presenter[] = new DashboardWidgetColumnPresenter($column->getId(), $widgets_presenter);
         }
         return $columns_presenter;

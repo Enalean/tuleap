@@ -216,7 +216,7 @@ class FileTest extends RestBase
         $this->assertEquals(201, $response_creation_file->getStatusCode());
         $this->assertEmpty($response_creation_file->json()['upload_href']);
 
-        $response_files = $this->getResponse($this->client->get('frs_release/1/files'));
+        $response_files      = $this->getResponse($this->client->get('frs_release/1/files'));
         $is_empty_file_found = false;
         foreach ($response_files->json()['files'] as $file) {
             if ($file['name'] === $name) {

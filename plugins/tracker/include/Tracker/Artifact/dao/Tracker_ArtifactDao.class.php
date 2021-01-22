@@ -37,7 +37,7 @@ class Tracker_ArtifactDao extends DataAccessObject
 
     public function searchById($id)
     {
-        $id      = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE id = $id ";
@@ -56,7 +56,7 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function searchByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT A.*, CVT.value AS title, CVT.body_format AS title_format
+        $sql        = "SELECT A.*, CVT.value AS title, CVT.body_format AS title_format
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
                     LEFT JOIN (
@@ -94,8 +94,8 @@ class Tracker_ArtifactDao extends DataAccessObject
     {
         $artifact_ids = $this->da->escapeIntImplode(explode(',', $artifact_ids));
 
-        $sql = " SELECT tracker_id, GROUP_CONCAT(id) AS id, GROUP_CONCAT(last_changeset_id) AS last_changeset_id";
-        $from = " FROM $this->table_name AS artifact";
+        $sql   = " SELECT tracker_id, GROUP_CONCAT(id) AS id, GROUP_CONCAT(last_changeset_id) AS last_changeset_id";
+        $from  = " FROM $this->table_name AS artifact";
         $where = " WHERE id IN (" . $artifact_ids . ")";
         $group = " GROUP BY tracker_id";
 
@@ -113,7 +113,7 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function searchOpenByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT A.*
+        $sql        = "SELECT A.*
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
                     INNER JOIN tracker_changeset AS C ON (A.last_changeset_id = C.id)          -- Last changeset is needed (no need of history)
@@ -169,7 +169,7 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function searchClosedByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT a.*
+        $sql        = "SELECT a.*
                 FROM tracker_artifact AS a
                     INNER JOIN tracker AS t ON (a.tracker_id = t.id)
                     INNER JOIN tracker_semantic_status AS ss USING(tracker_id)
@@ -192,9 +192,9 @@ class Tracker_ArtifactDao extends DataAccessObject
      */
     public function searchOpenSubmittedByUserId(PFUser $user, ?int $offset = null, ?int $limit = null)
     {
-        $user_id = $this->da->escapeInt($user->getId());
+        $user_id                 = $this->da->escapeInt($user->getId());
         $order_and_paginate_stmt = $this->getMyArtifactOrderAndPaginateStatement($offset, $limit);
-        $sql = "SELECT SQL_CALC_FOUND_ROWS A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
+        $sql                     = "SELECT SQL_CALC_FOUND_ROWS A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
@@ -229,7 +229,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      */
     public function searchOpenAssignedToUserId(PFUser $user, ?int $offset = null, ?int $limit = null)
     {
-        $user_id = $this->da->escapeInt($user->getId());
+        $user_id                 = $this->da->escapeInt($user->getId());
         $order_and_paginate_stmt = $this->getMyArtifactOrderAndPaginateStatement($offset, $limit);
         // The [SC|SS|ST.tracker_id = A.tracker_id is not mandatory but it gives a small perf boost
         $sql = "SELECT SQL_CALC_FOUND_ROWS A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
@@ -271,7 +271,7 @@ class Tracker_ArtifactDao extends DataAccessObject
      */
     public function searchOpenSubmittedByOrAssignedToUserId(PFUser $user, ?int $offset = null, ?int $limit = null)
     {
-        $user_id = $this->da->escapeInt($user->getId());
+        $user_id                 = $this->da->escapeInt($user->getId());
         $order_and_paginate_stmt = $this->getMyArtifactOrderAndPaginateStatement($offset, $limit);
         // The [SC|SS|ST.tracker_id = A.tracker_id is not mandatory but it gives a small perf boost
         $sql = "SELECT SQL_CALC_FOUND_ROWS A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on, G.group_name
@@ -339,7 +339,7 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function searchStatsForTracker($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT R1.t AS last_creation, R2.t AS last_update, R3.t as nb_total, R4.t as nb_open
+        $sql        = "SELECT R1.t AS last_creation, R2.t AS last_update, R3.t as nb_total, R4.t as nb_open
                 FROM (SELECT MAX(a.submitted_on) AS t
                     FROM tracker_artifact AS a
                     WHERE a.tracker_id = $tracker_id) AS R1,
@@ -497,12 +497,12 @@ class Tracker_ArtifactDao extends DataAccessObject
      */
     public function getArtifactsBySubmittedOnDate($trackerId, $date)
     {
-        $trackerId  = $this->da->escapeInt($trackerId);
-        $date       = $this->da->escapeInt($date);
-        $halfDay    = 60 * 60 * 12;
-        $minDate    = $date - $halfDay;
-        $maxDate    = $date + $halfDay;
-        $sql        = "SELECT id AS artifact_id FROM
+        $trackerId = $this->da->escapeInt($trackerId);
+        $date      = $this->da->escapeInt($date);
+        $halfDay   = 60 * 60 * 12;
+        $minDate   = $date - $halfDay;
+        $maxDate   = $date + $halfDay;
+        $sql       = "SELECT id AS artifact_id FROM
                        tracker_artifact
                        WHERE DATE(FROM_UNIXTIME(submitted_on)) BETWEEN DATE(FROM_UNIXTIME(" . $minDate . ")) AND DATE(FROM_UNIXTIME(" . $maxDate . "))
                          AND tracker_id = " . $trackerId;
@@ -519,9 +519,9 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function getPerTrackerArtifactId($aid)
     {
         $per_tracker_id = 0;
-        $aid = $this->da->escapeInt($aid);
-        $sql = "SELECT per_tracker_artifact_id FROM tracker_artifact where id = '" . $aid . "';";
-        $res = $this->retrieveFirstRow($sql);
+        $aid            = $this->da->escapeInt($aid);
+        $sql            = "SELECT per_tracker_artifact_id FROM tracker_artifact where id = '" . $aid . "';";
+        $res            = $this->retrieveFirstRow($sql);
         $per_tracker_id = $res['per_tracker_artifact_id'] | 0;
 
         return $per_tracker_id;
@@ -593,7 +593,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $limit        = $this->da->escapeInt($limit);
         $offset       = $this->da->escapeInt($offset);
 
-        $sql  = "SELECT SQL_CALC_FOUND_ROWS child_art.*, parent_art.id as parent_id, tracker_artifact_priority_rank.rank as rank" .
+        $sql = "SELECT SQL_CALC_FOUND_ROWS child_art.*, parent_art.id as parent_id, tracker_artifact_priority_rank.rank as rank" .
             $this->getSortedFromStatementForChildrenOfArtifacts($artifact_ids) .
             "LIMIT $limit
              OFFSET $offset";
@@ -650,7 +650,7 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function getTitles(array $artifact_ids)
     {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-        $sql = "SELECT artifact.id, CVT.value as title, CVT.body_format AS title_format
+        $sql          = "SELECT artifact.id, CVT.value as title, CVT.body_format AS title_format
                 FROM tracker_artifact artifact
                     INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
                     LEFT JOIN (
@@ -712,8 +712,8 @@ class Tracker_ArtifactDao extends DataAccessObject
 
     public function getLinkedOpenArtifactsOfTrackersNotLinkedToOthers($artifact_id, array $tracker_ids, array $excluded_linked_ids, array $additional_artifacts)
     {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
-        $tracker_ids  = $this->da->escapeIntImplode($tracker_ids);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
 
         $additional_artifacts_sql = '';
         if (! empty($additional_artifacts)) {
@@ -775,8 +775,8 @@ class Tracker_ArtifactDao extends DataAccessObject
 
     public function getLinkedArtifactsOfTrackersNotLinkedToOthers($artifact_id, array $tracker_ids, array $excluded_linked_ids, array $additional_artifacts)
     {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
-        $tracker_ids  = $this->da->escapeIntImplode($tracker_ids);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
 
         $additional_artifacts_sql = '';
         if (! empty($additional_artifacts)) {
@@ -786,8 +786,8 @@ class Tracker_ArtifactDao extends DataAccessObject
         $exclude       = '';
         $exclude_where = '';
         if (count($excluded_linked_ids) > 0) {
-            $exclude        = 'AND submile.id IN (' . $this->da->escapeIntImplode($excluded_linked_ids) . ')';
-            $exclude_where  = 'AND submile.id IS NULL';
+            $exclude       = 'AND submile.id IN (' . $this->da->escapeIntImplode($excluded_linked_ids) . ')';
+            $exclude_where = 'AND submile.id IS NULL';
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS linked_art.*
@@ -878,8 +878,8 @@ class Tracker_ArtifactDao extends DataAccessObject
 
     public function getLinkedArtifactsOfTrackersConcatenatedToCustomList($artifact_id, array $tracker_ids, array $additional_artifacts)
     {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
-        $tracker_ids  = $this->da->escapeIntImplode($tracker_ids);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
 
         $additional_artifacts_sql = '';
         if (! empty($additional_artifacts)) {
@@ -1005,10 +1005,10 @@ class Tracker_ArtifactDao extends DataAccessObject
         $limit,
         $offset
     ) {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
-        $tracker_ids  = $this->da->escapeIntImplode($tracker_ids);
-        $limit        = $this->da->escapeInt($limit);
-        $offset       = $this->da->escapeInt($offset);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
+        $limit       = $this->da->escapeInt($limit);
+        $offset      = $this->da->escapeInt($offset);
 
         $exclude      = '';
         $submile_null = '';
@@ -1128,10 +1128,10 @@ class Tracker_ArtifactDao extends DataAccessObject
         ?int $offset,
         string $filter
     ) {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
-        $tracker_ids  = $this->da->escapeIntImplode($tracker_ids);
-        $limit        = $this->da->escapeInt($limit);
-        $offset       = $this->da->escapeInt($offset);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
+        $limit       = $this->da->escapeInt($limit);
+        $offset      = $this->da->escapeInt($offset);
 
         $exclude       = '';
         $exclude_where = '';
@@ -1220,7 +1220,7 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function getArtifactsStatusByIds(array $artifact_ids)
     {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-        $sql = "SELECT A.id, IF(CVL.bindvalue_id IS NULL, '" . Artifact::STATUS_CLOSED . "', '" . Artifact::STATUS_OPEN . "') AS status
+        $sql          = "SELECT A.id, IF(CVL.bindvalue_id IS NULL, '" . Artifact::STATUS_CLOSED . "', '" . Artifact::STATUS_OPEN . "') AS status
                 FROM tracker_artifact AS A
                 LEFT JOIN (
                     tracker_changeset_value AS CV
@@ -1344,7 +1344,7 @@ class Tracker_ArtifactDao extends DataAccessObject
     public function updateLastChangsetId(int $changeset_id, int $artifact_id): void
     {
         $changeset_id = $this->da->escapeInt($changeset_id);
-        $artifact_id = $this->da->escapeInt($artifact_id);
+        $artifact_id  = $this->da->escapeInt($artifact_id);
 
         $sql = "UPDATE tracker_artifact
                 SET last_changeset_id = $changeset_id

@@ -40,7 +40,7 @@ class AutomaticUserRegistrationTest extends TestCase
 
     public function testItCreatesAnAccount(): void
     {
-        $user_manager       = \Mockery::spy(\UserManager::class);
+        $user_manager = \Mockery::spy(\UserManager::class);
         $user_manager->shouldReceive('createAccount')->once();
 
         $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
@@ -49,7 +49,7 @@ class AutomaticUserRegistrationTest extends TestCase
 
     public function testItNeedsAnEmail(): void
     {
-        $user_manager       = \Mockery::spy(\UserManager::class);
+        $user_manager = \Mockery::spy(\UserManager::class);
 
         $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
         $this->expectException(\Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToRegisterUserException::class);
@@ -60,11 +60,11 @@ class AutomaticUserRegistrationTest extends TestCase
     {
         \ForgeConfig::set(AutomaticUserRegistration::CONFIG_LDAP_ATTRIBUTE, 'email');
 
-        $user_manager       = \Mockery::spy(\UserManager::class);
+        $user_manager = \Mockery::spy(\UserManager::class);
         $user_manager->shouldReceive('createAccount')->once()->andReturnArg(0);
 
         $automatic_user_registration = new AutomaticUserRegistration($user_manager, $this->username_generator);
-        $user = $automatic_user_registration->register(['email' => 'user@example.com']);
+        $user                        = $automatic_user_registration->register(['email' => 'user@example.com']);
 
         self::assertInstanceOf(\PFUser::class, $user);
         self::assertSame('user@example.com', $user->getLdapId());

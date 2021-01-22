@@ -49,7 +49,7 @@ final class LegacySendMessageController implements DispatchableWithRequest
 
         if ($request->exist('Submit') && $request->existAndNonEmpty('func') && $func === 'docman_access_request') {
             $defaultMsg = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
-            $dar = $this->project_manager->getMessageToRequesterForAccessProject($request->get('groupId'));
+            $dar        = $this->project_manager->getMessageToRequesterForAccessProject($request->get('groupId'));
             if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {

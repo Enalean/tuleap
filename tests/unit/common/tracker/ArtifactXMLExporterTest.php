@@ -45,9 +45,9 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao                = \Mockery::spy(\ArtifactXMLExporterDao::class);
-        $this->dom                = new DOMDocument("1.0", "UTF8");
-        $this->archive            = new ZipArchive();
+        $this->dao     = \Mockery::spy(\ArtifactXMLExporterDao::class);
+        $this->dom     = new DOMDocument("1.0", "UTF8");
+        $this->archive = new ZipArchive();
         $this->archive->open($this->getTmpDir() . '/a', ZipArchive::CREATE);
         $node_helper              = new ArtifactXMLNodeHelper($this->dom);
         $attachment_exporter      = new ArtifactAttachmentXMLZipper($node_helper, $this->dao, $this->archive, true);
@@ -78,7 +78,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
     private function loadFixtures($fixture)
     {
-        $file_path = $this->fixtures_dir . $fixture . '.json';
+        $file_path       = $this->fixtures_dir . $fixture . '.json';
         $fixture_content = file_get_contents($file_path);
         if ($fixture_content == false) {
             throw new Exception("Unable to load $file_path (mis-typed?)");
@@ -728,13 +728,13 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $string = $this->findValue($change, 'field_14');
         $this->assertEquals('The error code is 23232', (string) $string->value);
-        $text   = $this->findValue($change, 'field_15');
+        $text = $this->findValue($change, 'field_15');
         $this->assertEquals('some text', (string) $text->value);
-        $int    = $this->findValue($change, 'field_16');
+        $int = $this->findValue($change, 'field_16');
         $this->assertEquals('9001', (string) $int->value);
-        $float  = $this->findValue($change, 'field_17');
+        $float = $this->findValue($change, 'field_17');
         $this->assertEquals('66.98', (string) $float->value);
-        $date   = $this->findValue($change, 'field_18');
+        $date = $this->findValue($change, 'field_18');
         $this->assertEquals($this->toExpectedDate(1234543210), (string) $date->value);
     }
 
@@ -749,13 +749,13 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $string = $this->findValue($change, 'field_14');
         $this->assertEquals('The error code is wrong', (string) $string->value);
-        $text   = $this->findValue($change, 'field_15');
+        $text = $this->findValue($change, 'field_15');
         $this->assertEquals('some rant', (string) $text->value);
-        $int    = $this->findValue($change, 'field_16');
+        $int = $this->findValue($change, 'field_16');
         $this->assertEquals('987', (string) $int->value);
-        $float  = $this->findValue($change, 'field_17');
+        $float = $this->findValue($change, 'field_17');
         $this->assertEquals('3.14', (string) $float->value);
-        $date   = $this->findValue($change, 'field_18');
+        $date = $this->findValue($change, 'field_18');
         $this->assertEquals($this->toExpectedDate(1234555555), (string) $date->value);
     }
 

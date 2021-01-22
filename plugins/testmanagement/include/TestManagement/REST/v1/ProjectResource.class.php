@@ -95,7 +95,7 @@ class ProjectResource
 
         $retriever = new RequirementRetriever($artifact_factory, $artifact_dao, $this->config);
 
-        $purifier =  \Codendi_HTMLPurifier::instance();
+        $purifier                                =  \Codendi_HTMLPurifier::instance();
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             $tracker_form_element_factory,
             $conformance_validator,
@@ -233,7 +233,7 @@ class ProjectResource
         if (! $tracker_id) {
             throw new RestException(400, 'The test definition tracker id is not well configured');
         }
-        $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if (! $tracker) {
             throw new RestException(400, 'The test definition tracker id is not well configured');
         }
@@ -257,7 +257,7 @@ class ProjectResource
     private function getReportById(PFUser $user, int $id)
     {
         $store_in_session = false;
-        $report = Tracker_ReportFactory::instance()->getReportById(
+        $report           = Tracker_ReportFactory::instance()->getReportById(
             $id,
             $user->getId(),
             $store_in_session
@@ -282,9 +282,9 @@ class ProjectResource
      */
     private function getDefinitionsSliceFromReport(int $report_id, int $limit, int $offset)
     {
-        $report = $this->getReportById($this->user, $report_id);
-        $matching_ids = $report->getMatchingIds();
-        $artifacts = [];
+        $report          = $this->getReportById($this->user, $report_id);
+        $matching_ids    = $report->getMatchingIds();
+        $artifacts       = [];
         $artifacts_count = 0;
 
         if (isset($matching_ids['id']) && ! empty($matching_ids['id'])) {
@@ -317,7 +317,7 @@ class ProjectResource
                      false
                  );
 
-        $artifacts = $paginated_artifacts->getArtifacts();
+        $artifacts       = $paginated_artifacts->getArtifacts();
         $artifacts_count = $paginated_artifacts->getTotalSize();
 
         return [

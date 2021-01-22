@@ -32,7 +32,7 @@ class b201804131646_add_execution_table extends ForgeUpgrade_Bucket
 
     public function up()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS plugin_testmanagement_execution(
+        $sql    = "CREATE TABLE IF NOT EXISTS plugin_testmanagement_execution(
             execution_artifact_id INT(11) NOT NULL PRIMARY KEY,
             definition_changeset_id INT(11) NOT NULL
         )";

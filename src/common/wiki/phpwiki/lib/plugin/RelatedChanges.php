@@ -42,11 +42,11 @@ class WikiPlugin_RelatedChanges extends WikiPlugin_RecentChanges
 
     public function getDefaultArguments()
     {
-        $args = WikiPlugin_RecentChanges::getDefaultArguments();
-        $args['page'] = '[pagename]';
+        $args               = WikiPlugin_RecentChanges::getDefaultArguments();
+        $args['page']       = '[pagename]';
         $args['show_minor'] = true;
-        $args['show_all'] = true;
-        $args['caption'] = _("Related Changes");
+        $args['show_all']   = true;
+        $args['caption']    = _("Related Changes");
         return $args;
     }
 
@@ -77,12 +77,12 @@ class WikiPlugin_RelatedChanges extends WikiPlugin_RecentChanges
         if (! isset($args['limit'])) {
             $args['limit'] = 15;
         }
-        $args['format'] = 'box';
-        $args['show_minor'] = false;
-        $args['show_major'] = true;
+        $args['format']       = 'box';
+        $args['show_minor']   = false;
+        $args['show_major']   = true;
         $args['show_deleted'] = false;
-        $args['show_all'] = false;
-        $args['days'] = 90;
+        $args['show_all']     = false;
+        $args['days']         = 90;
         return $this->makeBox(
             WikiLink(_("RelatedChanges"), '', _("Related Changes")),
             $this->format($this->getChanges($request->_dbi, $args), $args)
@@ -126,10 +126,10 @@ class RelatedChangesRevisionIterator extends WikiDB_PageRevisionIterator
     public function __construct($revisions, &$dbi, $pagename)
     {
         $this->_revisions = $revisions;
-        $this->_wikidb = $dbi;
-        $page = $dbi->getPage($pagename);
-        $links = $page->getLinks();
-        $this->_links = [];
+        $this->_wikidb    = $dbi;
+        $page             = $dbi->getPage($pagename);
+        $links            = $page->getLinks();
+        $this->_links     = [];
         while ($linked_page = $links->next()) {
             $this->_links[$linked_page->_pagename] = 1;
         }

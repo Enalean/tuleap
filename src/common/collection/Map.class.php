@@ -131,7 +131,7 @@ class Map
     public function remove($key, $wanted)
     {
         $compare_with_equals = method_exists($wanted, 'equals');
-        $removed = false;
+        $removed             = false;
         if ($this->containsKey($key) && isset($this->elements[$key])) {
             if (
                 ($compare_with_equals && $wanted->equals($this->elements[$key]))

@@ -34,29 +34,29 @@ class Docman_ItemAction
     public $extraUrlParams;
     public function __construct(&$item)
     {
-        $this->item = $item;
-        $this->action = '';
-        $this->classes = '';
-        $this->title = '';
-        $this->other_icons = [];
+        $this->item           = $item;
+        $this->action         = '';
+        $this->classes        = '';
+        $this->title          = '';
+        $this->other_icons    = [];
         $this->extraUrlParams = [];
     }
     public function fetchAction($params)
     {
-        $url = $params['default_url'] . '&action=' . $this->action . '&id=' . $this->item->getId();
+        $url   = $params['default_url'] . '&action=' . $this->action . '&id=' . $this->item->getId();
         $title = $this->title;
-        $href = '<a href="' . $url . '">' . $title . '</a>';
-        $html = '<li>' . $href . '</li>';
+        $href  = '<a href="' . $url . '">' . $title . '</a>';
+        $html  = '<li>' . $href . '</li>';
         return $html;
     }
     public function fetch($params)
     {
         $dfltUrlParams = ['action' => $this->action, 'id' => $this->item->getId()];
-        $_urlParams = \array_merge($dfltUrlParams, $this->extraUrlParams);
-        $url = \Tuleap\Docman\View\DocmanViewURLBuilder::buildActionUrl($this->item, $params, $_urlParams, \true, \true);
-        $html = '<a href="' . $url . '" class="' . $this->classes . '" title="' . $this->title . '">';
-        $html .= '<img src="' . $params['docman_icons']->getActionIcon($this->action) . '" class="docman_item_icon" alt="[' . $this->title . ']" />';
-        $html .= '</a>&nbsp;';
+        $_urlParams    = \array_merge($dfltUrlParams, $this->extraUrlParams);
+        $url           = \Tuleap\Docman\View\DocmanViewURLBuilder::buildActionUrl($this->item, $params, $_urlParams, \true, \true);
+        $html          = '<a href="' . $url . '" class="' . $this->classes . '" title="' . $this->title . '">';
+        $html         .= '<img src="' . $params['docman_icons']->getActionIcon($this->action) . '" class="docman_item_icon" alt="[' . $this->title . ']" />';
+        $html         .= '</a>&nbsp;';
         return $html;
     }
 }

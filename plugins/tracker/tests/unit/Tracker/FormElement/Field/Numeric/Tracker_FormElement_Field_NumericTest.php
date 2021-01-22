@@ -33,7 +33,7 @@ final class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends \PHPU
             ->shouldReceive('getLastValue')->andReturns(['value' => '123.45'])->getMock();
         $artifact  = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(123);
-        $field     = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
+        $field = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('userCanRead')->with($user)->andReturns(true);
         $field->shouldReceive('getValueDao')->andReturns($value_dao);
@@ -44,18 +44,18 @@ final class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends \PHPU
 
     public function testItDelegatesRetrievalOfTheOldValueToTheDaoWhenGivenATimestamp(): void
     {
-        $artifact_id    = 123;
-        $field_id       = 195;
-        $user           = new PFUser(['language_id' => 'en']);
-        $value_dao      = \Mockery::mock(
+        $artifact_id = 123;
+        $field_id    = 195;
+        $user        = new PFUser(['language_id' => 'en']);
+        $value_dao   = \Mockery::mock(
             \Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao::class
         );
-        $artifact       =  Mockery::mock(Artifact::class);
+        $artifact    =  Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($artifact_id);
-        $field          = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
+        $field     = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
-        $timestamp      = 9340590569;
-        $value          = 67.89;
+        $timestamp = 9340590569;
+        $value     = 67.89;
 
         $field->shouldReceive('getId')->andReturns($field_id);
         $field->shouldReceive('getValueDao')->andReturns($value_dao);
@@ -69,9 +69,9 @@ final class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends \PHPU
 
     public function testItReturnsZeroWhenUserDoesntHavePermissions(): void
     {
-        $user           = new PFUser(['language_id' => 'en']);
-        $artifact       =  Mockery::mock(Artifact::class);
-        $field          = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
+        $user     = new PFUser(['language_id' => 'en']);
+        $artifact =  Mockery::mock(Artifact::class);
+        $field    = \Mockery::mock(\Tracker_FormElement_Field_Float::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('userCanRead')->with($user)->andReturns(false);
 

@@ -64,7 +64,7 @@ class TransitionRetriever
 
         $field = $workflow->getField();
 
-        $current_value   = $last_changeset->getValue($field);
+        $current_value = $last_changeset->getValue($field);
         if ($current_value === null) {
             throw new NoTransitionForStateException();
         }

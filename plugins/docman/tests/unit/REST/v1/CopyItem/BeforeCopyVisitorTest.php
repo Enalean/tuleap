@@ -70,7 +70,7 @@ final class BeforeCopyVisitorTest extends TestCase
             $item_factory,
             $document_ongoing_upload_retriever
         );
-        $processed_item = new $processed_item_class();
+        $processed_item      = new $processed_item_class();
         $processed_item->setTitle('Title');
         $expectation_for_copy = $processed_item->accept(
             $before_copy_visitor,

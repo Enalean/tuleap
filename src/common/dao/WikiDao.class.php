@@ -50,7 +50,7 @@ class WikiDao extends DataAccessObject
             $res->rewind();
             if ($res->valid()) {
                 $row = $res->current();
-                $id = $row['id'];
+                $id  = $row['id'];
                 return $id;
             } else {
                 return null;
@@ -70,7 +70,7 @@ class WikiDao extends DataAccessObject
     public function searchCurrentWikiVersion($groupId, $pagename)
     {
         $version = null;
-        $sql = sprintf(
+        $sql     = sprintf(
             'SELECT MAX(version) AS version' .
                        ' FROM wiki_page ' .
                        '  INNER JOIN wiki_version USING(id)' .
@@ -79,9 +79,9 @@ class WikiDao extends DataAccessObject
             $groupId,
             $this->da->quoteSmart($pagename)
         );
-        $dar = $this->retrieve($sql);
+        $dar     = $this->retrieve($sql);
         if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
-            $row = $dar->current();
+            $row     = $dar->current();
             $version = $row['version'];
         }
         return $version;
@@ -169,11 +169,11 @@ class WikiDao extends DataAccessObject
     public function searchLanguage($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);
-        $sql = "SELECT DISTINCT wiki_group_list.language_id
+        $sql      = "SELECT DISTINCT wiki_group_list.language_id
                 FROM wiki_group_list
                 WHERE wiki_group_list.group_id=$group_id
                   AND wiki_group_list.language_id <> '0'";
-        $dar = $this->retrieve($sql);
+        $dar      = $this->retrieve($sql);
         if (count($dar) == 1) {
             $row = $dar->getRow();
             return $row['language_id'];

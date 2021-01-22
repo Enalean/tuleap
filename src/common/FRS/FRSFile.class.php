@@ -104,8 +104,8 @@ class FRSFile
     public function __construct($data_array = null)
     {
         $this->file_id       = null;
-        $this->filename     = null;
-        $this->filepath     = null;
+        $this->filename      = null;
+        $this->filepath      = null;
         $this->release_id    = null;
         $this->type_id       = null;
         $this->processor_id  = null;
@@ -218,9 +218,9 @@ class FRSFile
     public function getFileLocation()
     {
         if ($this->file_location == null) {
-            $group = $this->getGroup();
-            $group_unix_name = $group->getUnixName(false);
-            $basename = $this->getFilePath();
+            $group               = $this->getGroup();
+            $group_unix_name     = $group->getUnixName(false);
+            $basename            = $this->getFilePath();
             $this->file_location = ForgeConfig::get('ftp_frs_dir_prefix') . '/' . $group_unix_name . '/' . $basename;
         }
         return $this->file_location;
@@ -229,7 +229,7 @@ class FRSFile
     public function getFileSize()
     {
         if ($this->file_size == null) {
-            $file_location = $this->getFileLocation();
+            $file_location   = $this->getFileLocation();
             $this->file_size = \filesize($file_location);
         }
         return $this->file_size;
@@ -244,7 +244,7 @@ class FRSFile
     {
         $size_in_kbytes = $size_in_bytes / 1024;
 
-        $decimal_separator = $GLOBALS['Language']->getText('system', 'decimal_separator');
+        $decimal_separator  = $GLOBALS['Language']->getText('system', 'decimal_separator');
         $thousand_separator = $GLOBALS['Language']->getText('system', 'thousand_separator');
         // because I don't know how to specify a space in a .tab file
         if ($thousand_separator == "' '") {
@@ -391,7 +391,7 @@ class FRSFile
 
     public function toArray()
     {
-        $array = [];
+        $array                  = [];
         $array['file_id']       = $this->getFileID();
         $array['filename']      = $this->getFileName();
         $array['filepath']      = $this->getFilePath();
@@ -439,10 +439,10 @@ class FRSFile
     public function getPackageID()
     {
         // retrieve the release the file belongs to
-        $release_id = $this->getReleaseID();
+        $release_id   = $this->getReleaseID();
         $release_fact = new FRSReleaseFactory();
-        $release = $release_fact->getFRSReleaseFromDb($release_id);
-        $package_id = $release->getPackageID();
+        $release      = $release_fact->getFRSReleaseFromDb($release_id);
+        $package_id   = $release->getPackageID();
         return $package_id;
     }
 
@@ -457,11 +457,11 @@ class FRSFile
         if (empty($this->group)) {
             $pm = ProjectManager::instance();
             // retrieve the release the file belongs to
-            $release_id = $this->getReleaseID();
+            $release_id   = $this->getReleaseID();
             $release_fact = FRSReleaseFactory::instance();
-            $release = $release_fact->getFRSReleaseFromDb($release_id, null, null, FRSReleaseDao::INCLUDE_DELETED);
-            $group_id = $release->getGroupID();
-            $this->group = $pm->getProject($group_id);
+            $release      = $release_fact->getFRSReleaseFromDb($release_id, null, null, FRSReleaseDao::INCLUDE_DELETED);
+            $group_id     = $release->getGroupID();
+            $this->group  = $pm->getProject($group_id);
         }
         return $this->group;
     }
@@ -549,31 +549,31 @@ class FRSFile
     public function getReferenceTooltip()
     {
         $html_purifier = Codendi_HTMLPurifier::instance();
-        $tooltip = '';
-        $rf = new FRSReleaseFactory();
-        $pf = new FRSPackageFactory();
-        $release_id = $this->getReleaseID();
-        $release = $rf->getFRSReleaseFromDb($release_id);
-        $package_id = $release->getPackageID();
-        $package = $pf->getFRSPackageFromDb($package_id);
-        $tooltip .= '<table>';
-        $tooltip .= ' <tr>';
-        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'filename') . ':</strong></td>';
-        $tooltip .= '  <td>' . $html_purifier->purify(basename($this->getFileName())) . '</td>';
-        $tooltip .= ' </tr>';
-        $tooltip .= ' <tr>';
-        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_ref_tooltip', 'package_release') . ':</strong></td>';
-        $tooltip .= '  <td>' . $html_purifier->purify($package->getName() . ' / ' . $release->getName()) . '</td>';
-        $tooltip .= ' </tr>';
-        $tooltip .= ' <tr>';
-        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
-        $tooltip .= '  <td>' . $html_purifier->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $release->getReleaseDate())) . '</td>';
-        $tooltip .= ' </tr>';
-        $tooltip .= ' <tr>';
-        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'size') . ':</strong></td>';
-        $tooltip .= '  <td>' . $html_purifier->purify($this->getDisplayFileSize()) . '</td>';
-        $tooltip .= ' </tr>';
-        $tooltip .= '</table>';
+        $tooltip       = '';
+        $rf            = new FRSReleaseFactory();
+        $pf            = new FRSPackageFactory();
+        $release_id    = $this->getReleaseID();
+        $release       = $rf->getFRSReleaseFromDb($release_id);
+        $package_id    = $release->getPackageID();
+        $package       = $pf->getFRSPackageFromDb($package_id);
+        $tooltip      .= '<table>';
+        $tooltip      .= ' <tr>';
+        $tooltip      .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'filename') . ':</strong></td>';
+        $tooltip      .= '  <td>' . $html_purifier->purify(basename($this->getFileName())) . '</td>';
+        $tooltip      .= ' </tr>';
+        $tooltip      .= ' <tr>';
+        $tooltip      .= '  <td><strong>' . $GLOBALS['Language']->getText('file_ref_tooltip', 'package_release') . ':</strong></td>';
+        $tooltip      .= '  <td>' . $html_purifier->purify($package->getName() . ' / ' . $release->getName()) . '</td>';
+        $tooltip      .= ' </tr>';
+        $tooltip      .= ' <tr>';
+        $tooltip      .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
+        $tooltip      .= '  <td>' . $html_purifier->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $release->getReleaseDate())) . '</td>';
+        $tooltip      .= ' </tr>';
+        $tooltip      .= ' <tr>';
+        $tooltip      .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'size') . ':</strong></td>';
+        $tooltip      .= '  <td>' . $html_purifier->purify($this->getDisplayFileSize()) . '</td>';
+        $tooltip      .= ' </tr>';
+        $tooltip      .= '</table>';
         return $tooltip;
     }
 }

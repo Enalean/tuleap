@@ -45,7 +45,7 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
             'aid'       => (string) $this->artifact->getId(),
             'func'      => 'artifact-update',
         ];
-        $this->visit_recorder = $visit_recorder;
+        $this->visit_recorder             = $visit_recorder;
     }
 
     public function display(Codendi_Request $request, PFUser $current_user)

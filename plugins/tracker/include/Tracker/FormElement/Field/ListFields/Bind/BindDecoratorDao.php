@@ -46,8 +46,7 @@ class BindDecoratorDao extends DataAccessObject
     {
         $from_field_id = $this->da->escapeInt($from_field_id);
         $to_field_id   = $this->da->escapeInt($to_field_id);
-        $sql
-                       = "INSERT INTO tracker_field_list_bind_decorator (field_id, value_id, red, green, blue, tlp_color_name)
+        $sql           = "INSERT INTO tracker_field_list_bind_decorator (field_id, value_id, red, green, blue, tlp_color_name)
                 SELECT $to_field_id, value_id, red, green, blue, tlp_color_name
                 FROM tracker_field_list_bind_decorator
                 WHERE field_id = $from_field_id";
@@ -56,8 +55,7 @@ class BindDecoratorDao extends DataAccessObject
         foreach ($value_mapping as $from => $to) {
             $from = $this->da->escapeInt($from);
             $to   = $this->da->escapeInt($to);
-            $sql
-                  = "UPDATE tracker_field_list_bind_decorator
+            $sql  = "UPDATE tracker_field_list_bind_decorator
                     SET value_id = $to
                     WHERE field_id = $to_field_id
                       AND value_id = $from";

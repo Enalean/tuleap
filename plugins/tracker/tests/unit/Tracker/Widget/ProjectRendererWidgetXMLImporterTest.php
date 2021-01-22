@@ -61,7 +61,7 @@ class ProjectRendererWidgetXMLImporterTest extends TestCase
     {
         parent::setUp();
 
-        $this->widget = Mockery::mock(Widget::class);
+        $this->widget           = Mockery::mock(Widget::class);
         $this->mapping_registry = new MappingsRegistry();
 
         $this->renderer = Mockery::mock(Tracker_Report_Renderer::class);

@@ -35,8 +35,8 @@ class ContainersXMLCollectionBuilder
     public const ATTACHMENT_FIELDSET_NAME = 'attachment_fieldset';
     public const LINKS_FIELDSET_NAME      = 'links_fieldset';
 
-    public const LEFT_COLUMN_NAME    = 'left_column';
-    public const RIGHT_COLUMN_NAME   = 'right_column';
+    public const LEFT_COLUMN_NAME  = 'left_column';
+    public const RIGHT_COLUMN_NAME = 'right_column';
 
     /**
      * @var XML_SimpleXMLCDATAFactory
@@ -113,8 +113,8 @@ class ContainersXMLCollectionBuilder
     {
         $form_elements = $collection->getContainerByName(self::DETAILS_FIELDSET_NAME);
 
-        $left_column   = $this->buildColumnXMLNode($form_elements->formElements, 'c1', 'c1', 1, $collection->getNextId());
-        $right_column  = $this->buildColumnXMLNode($form_elements->formElements, 'c2', 'c2', 2, $collection->getNextId());
+        $left_column  = $this->buildColumnXMLNode($form_elements->formElements, 'c1', 'c1', 1, $collection->getNextId());
+        $right_column = $this->buildColumnXMLNode($form_elements->formElements, 'c2', 'c2', 2, $collection->getNextId());
 
         $collection->addContainerInCollection(
             self::LEFT_COLUMN_NAME,

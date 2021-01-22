@@ -53,7 +53,7 @@ class GitlabBotApiTokenInserterTest extends TestCase
         parent::setUp();
 
         $this->gitlab_bot_api_token_dao = Mockery::mock(GitlabBotApiTokenDao::class);
-        $this->key_factory = Mockery::mock(KeyFactory::class);
+        $this->key_factory              = Mockery::mock(KeyFactory::class);
 
         $this->inserter = new GitlabBotApiTokenInserter(
             $this->gitlab_bot_api_token_dao,

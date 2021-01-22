@@ -126,7 +126,7 @@ class ExecutionWithAutomatedTestDataProviderTest extends TestCase
         $definition->shouldReceive('getChangeset')->never();
         $definition->shouldReceive('getValue')->andReturn($automated_test);
 
-        $user  = Mockery::mock(PFUser::class);
+        $user = Mockery::mock(PFUser::class);
 
         $this->execution_dao->shouldReceive('searchDefinitionChangesetIdForExecution')->andReturn(12);
         $this->form_element_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn(null);

@@ -20,13 +20,13 @@
 
 require_once __DIR__ . '/../include/pre.php';
 
-$target_id = $request->get('target_id');
-$target_gid = $request->get('target_gid');
+$target_id   = $request->get('target_id');
+$target_gid  = $request->get('target_gid');
 $target_type = $request->get('target_type');
-$target_key = $request->get('target_key');
+$target_key  = $request->get('target_key');
 
-$source_id = $request->get('source_id');
-$source_gid = $request->get('source_gid');
+$source_id   = $request->get('source_id');
+$source_gid  = $request->get('source_gid');
 $source_type = $request->get('source_type');
  $source_key = $request->get('source_key');
 
@@ -41,7 +41,7 @@ if (! $project_admin) {
 }
 
 if ($project_admin) {
-    $cross_reference = new CrossReference(
+    $cross_reference   = new CrossReference(
         $source_id,
         $source_gid,
         $source_type,

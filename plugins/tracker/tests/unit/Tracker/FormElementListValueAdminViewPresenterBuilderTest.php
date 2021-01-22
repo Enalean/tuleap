@@ -49,7 +49,7 @@ class FormElementListValueAdminViewPresenterBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->field             = \Mockery::mock(Tracker_FormElement_Field::class);
+        $this->field = \Mockery::mock(Tracker_FormElement_Field::class);
         $this->field->shouldReceive('getTrackerId')->andReturn(5);
 
         $this->value_dao         = \Mockery::mock(BindStaticValueDao::class);

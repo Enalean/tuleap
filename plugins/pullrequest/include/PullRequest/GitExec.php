@@ -235,7 +235,7 @@ class GitExec extends Git_Exec
                 continue;
             }
             if (is_numeric($tokens[0])) {
-                $lines_added   += intval($tokens[0]);
+                $lines_added += intval($tokens[0]);
             }
             if (is_numeric($tokens[1])) {
                 $lines_removed += intval($tokens[1]);

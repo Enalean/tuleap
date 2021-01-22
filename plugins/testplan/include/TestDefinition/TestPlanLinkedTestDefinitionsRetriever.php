@@ -68,7 +68,7 @@ class TestPlanLinkedTestDefinitionsRetriever
             return TestPlanLinkedTestDefinitions::empty();
         }
 
-        $rows = $this->artifact_dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
+        $rows                             = $this->artifact_dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
             [$artifact->getId()],
             [NatureCoveredByPresenter::NATURE_COVERED_BY, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD],
             $test_definition_tracker_id,

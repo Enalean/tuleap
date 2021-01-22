@@ -40,7 +40,7 @@ final class ProjectImportCleanupUserCreatorFromAdministrators implements Dispatc
 
     public function __construct(PFUser $creator, ProjectUGroup $ugroup_administrator)
     {
-        $this->creator              = $creator;
+        $this->creator = $creator;
         if ($ugroup_administrator->getId() !== ProjectUGroup::PROJECT_ADMIN) {
             throw new NotProjectAdministratorUGroup($ugroup_administrator);
         }

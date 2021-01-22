@@ -50,9 +50,9 @@ class ResynchronizeGroupsController implements DispatchableWithRequest
 
     public function __construct(CSRFSynchronizerToken $csrf_token, Git_RemoteServer_GerritServerFactory $gerrit_server_factory, Git_Driver_Gerrit_MembershipManager $membership_manager)
     {
-        $this->csrf_token = $csrf_token;
+        $this->csrf_token            = $csrf_token;
         $this->gerrit_server_factory = $gerrit_server_factory;
-        $this->membership_manager = $membership_manager;
+        $this->membership_manager    = $membership_manager;
     }
 
     /**

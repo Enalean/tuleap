@@ -86,18 +86,18 @@ final class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPU
 
     protected function setUp(): void
     {
-        $this->submitter   = Mockery::mock(PFUser::class);
+        $this->submitter = Mockery::mock(PFUser::class);
         $this->submitter->shouldReceive('isAnonymous')->andReturnFalse();
         $this->submitter->shouldReceive('getId')->andReturn(102);
 
-        $this->changeset_dao  = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
-        $this->factory     = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->changeset_dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
+        $this->factory       = \Mockery::spy(\Tracker_FormElementFactory::class);
 
-        $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->workflow = \Mockery::spy(\Workflow::class);
-        $this->changeset_factory  = \Mockery::spy(\Tracker_Artifact_ChangesetFactory::class);
+        $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->workflow          = \Mockery::spy(\Workflow::class);
+        $this->changeset_factory = \Mockery::spy(\Tracker_Artifact_ChangesetFactory::class);
         $this->changeset_factory->shouldReceive('getChangeset')->andReturns(new Tracker_Artifact_Changeset_Null());
-        $tracker        = \Mockery::spy(\Tracker::class)->shouldReceive('getWorkflow')->andReturns($this->workflow)->getMock();
+        $tracker = \Mockery::spy(\Tracker::class)->shouldReceive('getWorkflow')->andReturns($this->workflow)->getMock();
         $tracker->shouldReceive('getId')->andReturns(888);
         $this->artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->artifact->setId(42);

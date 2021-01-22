@@ -38,7 +38,7 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->list_rule_dao = \Mockery::spy(\Tracker_Rule_List_Dao::class);
+        $this->list_rule_dao     = \Mockery::spy(\Tracker_Rule_List_Dao::class);
         $this->list_rule_factory = new Tracker_Rule_List_Factory($this->list_rule_dao);
     }
 
@@ -146,7 +146,7 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
 
-        $field_mapping   = [
+        $field_mapping = [
             [
                 'from'  => 123,
                 'to'    => 888,
@@ -228,7 +228,7 @@ final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
         $bf->shouldReceive('getType')->with($bind_f1)->andReturns('static');
         $bf->shouldReceive('getType')->with($bind_f2)->andReturns('static');
 
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $root              = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = ['F25' => 102,
                                    'F28' => 103,
                                    'values' => [

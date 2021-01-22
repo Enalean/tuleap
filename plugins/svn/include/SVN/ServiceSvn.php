@@ -73,7 +73,7 @@ class ServiceSvn extends Service
      */
     public function renderInPage(HTTPRequest $request, string $title, string $template, $presenter)
     {
-        $body_class = '';
+        $body_class  = '';
         $breadcrumbs = new BreadCrumbCollection();
         $this->renderInPageWithBodyClass($request, $title, $template, $presenter, $body_class, $breadcrumbs);
     }
@@ -123,7 +123,7 @@ class ServiceSvn extends Service
                 dgettext('tuleap-svn', 'Settings'),
                 $repository->getSettingUrl(),
             );
-            $sub_items = new BreadCrumbSubItems();
+            $sub_items     = new BreadCrumbSubItems();
             $sub_items->addSection(new SubItemsUnlabelledSection(new BreadCrumbLinkCollection([$settings_link])));
 
             $repository_crumb->setSubItems($sub_items);
@@ -162,7 +162,7 @@ class ServiceSvn extends Service
         $params = [
             'body_class' => [$body_class]
         ];
-        $title = $title . ' - ' . dgettext('tuleap-svn', 'SVN');
+        $title  = $title . ' - ' . dgettext('tuleap-svn', 'SVN');
 
         $repository_list_breadcrumb = new BreadCrumb(
             new BreadCrumbLink(

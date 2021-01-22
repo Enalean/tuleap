@@ -49,7 +49,7 @@ class Admin_Homepage_Dao extends DataAccessObject
         foreach ($headlines as $language_id => $headline) {
             $language_id = $this->da->quoteSmart($language_id);
             $headline    = $this->da->quoteSmart($headline);
-            $values[] = "($language_id, $headline)";
+            $values[]    = "($language_id, $headline)";
         }
 
         $sql = "REPLACE INTO homepage_headline(language_id, headline) VALUES " . implode(', ', $values);

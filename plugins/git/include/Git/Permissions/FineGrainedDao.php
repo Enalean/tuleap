@@ -481,7 +481,7 @@ class FineGrainedDao extends DataAccessObject
     {
         $old_ugroup_ids_in_condition = EasyStatement::open()->in('?*', $old_ugroup_ids);
 
-        $update = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_writers AS dw
+        $update          = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_writers AS dw
                     JOIN plugin_git_default_fine_grained_permissions AS perm ON (dw.permission_id = perm.id)
                     SET dw.ugroup_id = ?
                     WHERE dw.ugroup_id IN ($old_ugroup_ids_in_condition)
@@ -491,7 +491,7 @@ class FineGrainedDao extends DataAccessObject
         $update_params[] = $project_id;
         $this->getDB()->safeQuery($update, $update_params);
 
-        $delete = "DELETE dw
+        $delete          = "DELETE dw
                     FROM plugin_git_default_fine_grained_permissions_writers AS dw
                       JOIN plugin_git_default_fine_grained_permissions AS perm ON (dw.permission_id = perm.id)
                     WHERE dw.ugroup_id IN ($old_ugroup_ids_in_condition)
@@ -505,7 +505,7 @@ class FineGrainedDao extends DataAccessObject
     {
         $old_ugroup_ids_in_condition = EasyStatement::open()->in('?*', $old_ugroup_ids);
 
-        $update = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_rewinders AS dr
+        $update          = "UPDATE IGNORE plugin_git_default_fine_grained_permissions_rewinders AS dr
                     JOIN plugin_git_default_fine_grained_permissions AS perm ON (dr.permission_id = perm.id)
                     SET dr.ugroup_id = ?
                     WHERE dr.ugroup_id IN ($old_ugroup_ids_in_condition)
@@ -515,7 +515,7 @@ class FineGrainedDao extends DataAccessObject
         $update_params[] = $project_id;
         $this->getDB()->safeQuery($update, $update_params);
 
-        $delete = "DELETE dr
+        $delete          = "DELETE dr
                     FROM plugin_git_default_fine_grained_permissions_rewinders AS dr
                       JOIN plugin_git_default_fine_grained_permissions AS perm ON (dr.permission_id = perm.id)
                     WHERE dr.ugroup_id IN ($old_ugroup_ids_in_condition)
@@ -529,7 +529,7 @@ class FineGrainedDao extends DataAccessObject
     {
         $old_ugroup_ids_in_condition = EasyStatement::open()->in('?*', $old_ugroup_ids);
 
-        $update = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_writers AS rw
+        $update          = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_writers AS rw
                     JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rw.permission_id = perm.id)
                     JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
                     SET rw.ugroup_id = ?
@@ -540,7 +540,7 @@ class FineGrainedDao extends DataAccessObject
         $update_params[] = $project_id;
         $this->getDB()->safeQuery($update, $update_params);
 
-        $delete = "DELETE rw
+        $delete          = "DELETE rw
                     FROM plugin_git_repository_fine_grained_permissions_writers AS rw
                       JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rw.permission_id = perm.id)
                       JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
@@ -555,7 +555,7 @@ class FineGrainedDao extends DataAccessObject
     {
         $old_ugroup_ids_in_condition = EasyStatement::open()->in('?*', $old_ugroup_ids);
 
-        $update = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_rewinders AS rr
+        $update          = "UPDATE IGNORE plugin_git_repository_fine_grained_permissions_rewinders AS rr
                     JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rr.permission_id = perm.id)
                     JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)
                     SET rr.ugroup_id = ?
@@ -566,7 +566,7 @@ class FineGrainedDao extends DataAccessObject
         $update_params[] = $project_id;
         $this->getDB()->safeQuery($update, $update_params);
 
-        $delete = "DELETE rr
+        $delete          = "DELETE rr
                     FROM plugin_git_repository_fine_grained_permissions_rewinders AS rr
                       JOIN plugin_git_repository_fine_grained_permissions AS perm ON (rr.permission_id = perm.id)
                       JOIN plugin_git ON (perm.repository_id = plugin_git.repository_id)

@@ -146,7 +146,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
         $output = '';
         switch ($format) {
             case 'html':
-                $proto = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
+                $proto   = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
                 $output .= '<a href= "' . $proto . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">#' . (int) $artifact->id . '</a>';
                 break;
             default:
@@ -170,7 +170,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      */
     protected function fetchAdminFormElement()
     {
-        $html = '';
+        $html  = '';
         $html .= '<a href="#' . TRACKER_BASE_URL . '/?aid=123" onclick="return false;">#42</a>';
         return $html;
     }
@@ -203,7 +203,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      */
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $html = '';
+        $html  = '';
         $html .= $artifact->getId();
         return $html;
     }

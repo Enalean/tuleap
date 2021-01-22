@@ -104,7 +104,7 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
 
         $target = $rule->getTarget();
         try {
-            $comment = '<p>' . sprintf(dgettext('tuleap-tracker', 'Automatic change triggered by an update of <a href="%2$s">%1$s</a>.'), 'art #' . $child->getId(), $child->getLastChangeset()->getUri()) . '</p>';
+            $comment  = '<p>' . sprintf(dgettext('tuleap-tracker', 'Automatic change triggered by an update of <a href="%2$s">%1$s</a>.'), 'art #' . $child->getId(), $child->getLastChangeset()->getUri()) . '</p>';
             $comment .= '<p>' . $rule->getAsChangesetComment() . '</p>';
             $parent->createNewChangeset(
                 $target->getFieldData(),

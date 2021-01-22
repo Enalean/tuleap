@@ -59,7 +59,7 @@ class LDAPRetrieveAllArgumentsTest extends TestCase
         parent::setUp();
         ForgeConfig::set('sys_logger_level', 'debug');
         $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->ldap = \Mockery::mock(
+        $this->ldap   = \Mockery::mock(
             \LDAP::class,
             [$this->ldap_params, $this->logger]
         )

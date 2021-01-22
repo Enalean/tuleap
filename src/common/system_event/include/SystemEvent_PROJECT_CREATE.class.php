@@ -69,7 +69,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent
                 }
 
                 if ($project->usesCVS()) {
-                    $backendCVS    = Backend::instanceCVS();
+                    $backendCVS = Backend::instanceCVS();
                     if (! $backendCVS->createProjectCVS($project)) {
                         $this->error("Could not create/initialize project CVS repository");
                         return false;
@@ -79,7 +79,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent
                 }
 
                 if ($project->usesSVN()) {
-                    $backendSVN    = Backend::instanceSVN();
+                    $backendSVN = Backend::instanceSVN();
                     if (! $backendSVN->createProjectSVN((int) $group_id)) {
                         $this->error("Could not create/initialize project SVN repository");
                         return false;

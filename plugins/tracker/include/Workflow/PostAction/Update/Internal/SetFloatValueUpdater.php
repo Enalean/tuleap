@@ -40,7 +40,7 @@ class SetFloatValueUpdater implements PostActionUpdater
     public function __construct(SetFloatValueRepository $repository, SetFloatValueValidator $validator)
     {
         $this->repository = $repository;
-        $this->validator = $validator;
+        $this->validator  = $validator;
     }
 
     /**

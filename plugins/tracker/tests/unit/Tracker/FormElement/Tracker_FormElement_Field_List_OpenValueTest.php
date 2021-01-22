@@ -26,7 +26,7 @@ final class Tracker_FormElement_Field_List_OpenValueTest extends \PHPUnit\Framew
 
     public function testJSon(): void
     {
-        $id = 123;
+        $id    = 123;
         $label = 'Reopen';
         $value = new Tracker_FormElement_Field_List_OpenValue($id, $label, false);
         $this->assertEquals(

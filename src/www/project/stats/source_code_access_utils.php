@@ -16,7 +16,7 @@ function logs_cond($project, $span, $who)
 
     // Adjust to midnight this day
     $time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
-    $begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"] + 1, $time_back["tm_mday"], $time_back["tm_year"] + 1900);
+    $begin_date          = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"] + 1, $time_back["tm_mday"], $time_back["tm_year"] + 1900);
 
     // For Debug
     // print join(" ",localtime($begin_date,0))."<BR>";
@@ -175,7 +175,7 @@ function frs_logs_extract($project, $span, $who)
 
 function filedownload_logs_extract($project, $span, $who)
 {
-    $sql  = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_file.filename AS title "
+    $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_file.filename AS title "
     . "FROM filedownload_log AS log, user, frs_file, frs_release, frs_package "
     . "WHERE " . logs_cond($project, $span, $who)
     . "AND frs_package.group_id=" . $project->getGroupId() . " "
@@ -225,7 +225,7 @@ function cvsaccess_logs_extract($project, $span, $who)
 
     // Adjust to midnight this day
     $time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
-    $begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"] + 1, $time_back["tm_mday"], $time_back["tm_year"] + 1900);
+    $begin_date          = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"] + 1, $time_back["tm_mday"], $time_back["tm_year"] + 1900);
 
     $begin_day = strftime("%Y%m%d", $begin_date);
 
@@ -244,7 +244,7 @@ function cvsaccess_logs_extract($project, $span, $who)
         }
     }
 
-    $sql  = "SELECT history.day, user.user_name, user.realname, user.email, history.cvs_checkouts, history.cvs_browse "
+    $sql = "SELECT history.day, user.user_name, user.realname, user.email, history.cvs_checkouts, history.cvs_browse "
     . "FROM group_cvs_full_history as history, user "
     . "WHERE history.user_id=user.user_id " . $cond
     . "AND history.group_id=" . $project->getGroupId() . " "
@@ -313,7 +313,7 @@ function svnaccess_logs_extract($project, $span, $who)
 
     // Adjust to midnight this day
     $time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
-    $begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"] + 1, $time_back["tm_mday"], $time_back["tm_year"] + 1900);
+    $begin_date          = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"] + 1, $time_back["tm_mday"], $time_back["tm_year"] + 1900);
 
     $begin_day = strftime("%Y%m%d", $begin_date);
 
@@ -334,7 +334,7 @@ function svnaccess_logs_extract($project, $span, $who)
 
     // We do not show Co/up/del/add svn counters for now because
     // they are at 0 in the DB
-    $sql  = "SELECT group_svn_full_history.day, user.user_name, user.realname, user.email, svn_access_count, svn_browse "
+    $sql = "SELECT group_svn_full_history.day, user.user_name, user.realname, user.email, svn_access_count, svn_browse "
     . "FROM group_svn_full_history, user "
     . "WHERE group_svn_full_history.user_id=user.user_id " . $cond
     . "AND group_svn_full_history.group_id=" . $project->getGroupId() . " "
@@ -458,7 +458,7 @@ function wiki_attachments_logs_daily($project, $span = 7, $who = "allusers")
 function plugins_log_extract($project, $span, $who)
 {
     $event_manager = EventManager::instance();
-    $logs = [];
+    $logs          = [];
     $event_manager->processEvent('logs_daily', [
         'group_id'  => $project->getGroupId(),
         'logs_cond' => logs_cond($project, $span, $who),

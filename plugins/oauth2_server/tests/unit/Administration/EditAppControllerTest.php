@@ -63,7 +63,7 @@ final class EditAppControllerTest extends TestCase
         $this->project_verifier = M::mock(OAuth2AppProjectVerifier::class);
         $this->app_dao          = M::mock(AppDao::class);
         $csrf_token             = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller = new EditAppController(
+        $this->controller       = new EditAppController(
             HTTPFactoryBuilder::responseFactory(),
             $this->redirector,
             $this->project_verifier,

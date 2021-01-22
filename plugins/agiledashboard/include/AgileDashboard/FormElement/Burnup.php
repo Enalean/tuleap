@@ -95,7 +95,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
         $field_usage = $this->getChartFieldUsage();
 
-        $html = $this->getChartMessageFetcher()->fetchWarnings($this, $field_usage);
+        $html  = $this->getChartMessageFetcher()->fetchWarnings($this, $field_usage);
         $html .= '<img src="' . AGILEDASHBOARD_BASE_URL . '/images/fake-burnup-admin.png" />';
 
         return $html;
@@ -137,7 +137,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     ) {
         $user                      = UserManager::instance()->getCurrentUser();
         $can_burnup_be_regenerated = $artifact->getTracker()->userIsAdmin($user);
-        $burnup_presenter = $this->buildPresenter($artifact, $can_burnup_be_regenerated, $user);
+        $burnup_presenter          = $this->buildPresenter($artifact, $can_burnup_be_regenerated, $user);
 
         $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR);
 
@@ -167,9 +167,9 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         );
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('burnup-chart.js'));
 
-        $capacity                  = $this->getConfigurationValueRetriever()->getCapacity($artifact, $user);
-        $burnup_representation     = new BurnupRepresentation($capacity, $burnup_data);
-        $css_file_url              = $include_assets->getFileURL('burnup-chart.css');
+        $capacity              = $this->getConfigurationValueRetriever()->getCapacity($artifact, $user);
+        $burnup_representation = new BurnupRepresentation($capacity, $burnup_data);
+        $css_file_url          = $include_assets->getFileURL('burnup-chart.css');
 
         return new BurnupFieldPresenter(
             $this->getCountElementsModeChecker(),
@@ -305,7 +305,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         }
 
         $burnup_representation = new BurnupRepresentation($capacity, $burnup_data);
-        $formelement_field = $this->getFormElementFactory()->getFormElementById($this->getId());
+        $formelement_field     = $this->getFormElementFactory()->getFormElementById($this->getId());
 
         $field_representation = new ArtifactFieldValueFullRepresentation();
         $field_representation->build($this->getId(), $this->getFormElementFactory()->getType($formelement_field), $this->getLabel(), $burnup_representation);
@@ -370,11 +370,11 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
      */
     private function getChartFieldUsage()
     {
-        $use_start_date        = true;
-        $use_duration          = true;
-        $use_capacity          = true;
-        $use_hierarchy         = false;
-        $use_remaining_effort  = false;
+        $use_start_date       = true;
+        $use_duration         = true;
+        $use_capacity         = true;
+        $use_hierarchy        = false;
+        $use_remaining_effort = false;
 
         return new ChartFieldUsage(
             $use_start_date,

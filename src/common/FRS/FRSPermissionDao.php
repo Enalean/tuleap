@@ -71,7 +71,7 @@ class FRSPermissionDao extends DataAccessObject
         }
         $ugroups = [];
         foreach ($ugroup_ids as $ugroup_id) {
-            $ugroup_id   = $this->da->escapeInt($ugroup_id);
+            $ugroup_id = $this->da->escapeInt($ugroup_id);
             $ugroups[] = "($project_id, $permission_type, $ugroup_id)";
         }
 

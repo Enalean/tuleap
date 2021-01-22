@@ -373,7 +373,7 @@ class XmlElement extends XmlContent
                 }
                 $val = $attr;
             }
-            $qval = str_replace("\"", '&quot;', $this->_quote((string) $val));
+            $qval   = str_replace("\"", '&quot;', $this->_quote((string) $val));
             $start .= " $attr=\"$qval\"";
         }
         $start .= ">";
@@ -500,7 +500,7 @@ class FormattedText
         // like sprintf("%*s", 10, "x"); --- so we won't either.
         $m = [];
         if (! preg_match_all('/(?<!%)%(\d+)\$/x', $this->_fs, $m)) {
-            $this->_args  = $args;
+            $this->_args = $args;
         } else {
             // Format string has '%2$s' style argument reordering.
             // PHP doesn't support this.
@@ -677,7 +677,7 @@ function fmt($fs /* , ... */)
 {
     $s = new FormattedText(false);
 
-    $args = func_get_args();
+    $args    = func_get_args();
     $args[0] = _($args[0]);
     $s->_init($args);
     return $s;

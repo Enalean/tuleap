@@ -55,18 +55,18 @@ require_once("lib/loadsave.php");
  */
 function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = false)
 {
-    $dbi = $request->getDbh();
+    $dbi  = $request->getDbh();
     $page = $dbi->getPage($pagename);
     if ($page->exists()) {
         // check mtime: update automatically if pgsrc is newer
-        $rev = $page->getCurrentRevision();
+        $rev        = $page->getCurrentRevision();
         $page_mtime = $rev->get('mtime');
-        $data  = implode("", file($path . "/" . $filename));
+        $data       = implode("", file($path . "/" . $filename));
         if (($parts = ParseMimeifiedPages($data))) {
             usort($parts, 'SortByPageVersion');
             reset($parts);
-            $pageinfo = $parts[0];
-            $stat  = stat($path . "/" . $filename);
+            $pageinfo  = $parts[0];
+            $stat      = stat($path . "/" . $filename);
             $new_mtime = @$pageinfo['versiondata']['mtime'];
             if (! $new_mtime) {
                 $new_mtime = @$pageinfo['versiondata']['lastmodified'];
@@ -112,7 +112,7 @@ function isActionPage($filename)
                             "RecentReleases"      => "RssFeed",
                             "InterWikiMap"      => "InterWikiMap",
                             ];
-    $base = preg_replace("/\..{1,4}$/", "", basename($filename));
+    $base           = preg_replace("/\..{1,4}$/", "", basename($filename));
     if (isset($special[$base])) {
         return $special[$base];
     }
@@ -126,8 +126,8 @@ function isActionPage($filename)
 function CheckActionPageUpdate(&$request, $checkonly = false)
 {
     echo "<h3>",_("check for necessary ActionPage updates"),"</h3>\n";
-    $dbi = $request->getDbh();
-    $path = FindFile('codendipgsrc');
+    $dbi   = $request->getDbh();
+    $path  = FindFile('codendipgsrc');
     $pgsrc = new fileSet($path);
     // most actionpages have the same name as the plugin
     $loc_path = FindLocalizedFile('pgsrc');
@@ -171,8 +171,8 @@ function CheckActionPageUpdate(&$request, $checkonly = false)
 function CheckPgsrcUpdate(&$request, $checkonly = false)
 {
     echo "<h3>",_("check for necessary pgsrc updates"),"</h3>\n";
-    $dbi = $request->getDbh();
-    $path = FindLocalizedFile(WIKI_PGSRC);
+    $dbi   = $request->getDbh();
+    $path  = FindLocalizedFile(WIKI_PGSRC);
     $pgsrc = new fileSet($path);
     // fixme: verification, ...
     $isHomePage = false;
@@ -207,17 +207,17 @@ function CheckPgsrcUpdate(&$request, $checkonly = false)
 
 function fixConfigIni($match, $new)
 {
-    $file = FindFile("config/config.ini");
+    $file  = FindFile("config/config.ini");
     $found = false;
     if (is_writable($file)) {
-        $in = fopen($file, "rb");
+        $in  = fopen($file, "rb");
         $out = fopen($tmp = tempnam(FindFile("uploads"), "cfg"), "wb");
         if (isWindows()) {
             $tmp = str_replace("/", "\\", $tmp);
         }
         while ($s = fgets($in)) {
             if (preg_match($match, $s)) {
-                $s = $new . (isWindows() ? "\r\n" : "\n");
+                $s     = $new . (isWindows() ? "\r\n" : "\n");
                 $found = true;
             }
             fputs($out, $s);

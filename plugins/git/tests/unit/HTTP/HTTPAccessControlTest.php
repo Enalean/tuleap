@@ -56,15 +56,15 @@ final class HTTPAccessControlTest extends TestCase
             new GitHTTPAskBasicAuthenticationChallenge()
         );
 
-        $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
+        $git_repository = \Mockery::mock(\GitRepository::class);
+        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
         $git_repository->shouldReceive('getFullName');
         $_SERVER['PHP_AUTH_USER'] = 'forge__gerrit_1';
         $_SERVER['PHP_AUTH_PW']   = 'password';
-        $expected_user = \Mockery::mock(\PFO_User::class);
+        $expected_user            = \Mockery::mock(\PFO_User::class);
         $expected_user->shouldReceive('getUnixName');
         $replication_http_user_authenticator->shouldReceive('authenticate')->andReturns($expected_user);
 
@@ -94,8 +94,8 @@ final class HTTPAccessControlTest extends TestCase
             new GitHTTPAskBasicAuthenticationChallenge()
         );
 
-        $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
+        $git_repository = \Mockery::mock(\GitRepository::class);
+        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
@@ -138,8 +138,8 @@ final class HTTPAccessControlTest extends TestCase
             new GitHTTPAskBasicAuthenticationChallenge()
         );
 
-        $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
+        $git_repository = \Mockery::mock(\GitRepository::class);
+        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
@@ -149,7 +149,7 @@ final class HTTPAccessControlTest extends TestCase
         $replication_http_user_authenticator->shouldReceive('authenticate')
             ->andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
         $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
-        $expected_user = \Mockery::mock(\PFUser::class);
+        $expected_user          = \Mockery::mock(\PFUser::class);
         $expected_user->shouldReceive('getUnixName');
         $expected_user->shouldReceive('getId');
         $access_key_authenticator->shouldReceive('getUser')->andReturn($expected_user);
@@ -181,8 +181,8 @@ final class HTTPAccessControlTest extends TestCase
             $ask_basic_authentication_challenge
         );
 
-        $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
+        $git_repository = \Mockery::mock(\GitRepository::class);
+        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
@@ -192,7 +192,7 @@ final class HTTPAccessControlTest extends TestCase
         $replication_http_user_authenticator->shouldReceive('authenticate')->
         andThrows(\Mockery::spy(\Git_RemoteServer_NotFoundException::class));
         $_SERVER['REMOTE_ADDR'] = '2001:db8::3';
-        $found_user = \Mockery::mock(\PFUser::class);
+        $found_user             = \Mockery::mock(\PFUser::class);
         $found_user->shouldReceive('getUserName')->andReturn('username');
         $access_key_authenticator->shouldReceive('getUser')
             ->andThrow(new HTTPBasicAuthUserAccessKeyMisusageException('user1', $found_user));
@@ -228,8 +228,8 @@ final class HTTPAccessControlTest extends TestCase
             $ask_basic_authentication_challenge
         );
 
-        $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
+        $git_repository = \Mockery::mock(\GitRepository::class);
+        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
@@ -273,8 +273,8 @@ final class HTTPAccessControlTest extends TestCase
             $ask_basic_authentication_challenge
         );
 
-        $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
+        $git_repository = \Mockery::mock(\GitRepository::class);
+        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
@@ -311,8 +311,8 @@ final class HTTPAccessControlTest extends TestCase
             new GitHTTPAskBasicAuthenticationChallenge()
         );
 
-        $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
+        $git_repository = \Mockery::mock(\GitRepository::class);
+        $git_operation  = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $forge_access->shouldReceive('doesPlatformRequireLogin')->andReturns(false);

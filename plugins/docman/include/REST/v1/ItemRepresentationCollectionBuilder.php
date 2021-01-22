@@ -64,7 +64,7 @@ class ItemRepresentationCollectionBuilder
     {
         $dar        = $this->item_dao->searchByParentIdWithPagination($item->getId(), $limit, $offset);
         $row_number = $this->item_dao->foundRows();
-        $children = [];
+        $children   = [];
         foreach ($dar as $row) {
             if ($row && $this->permission_manager->userCanRead($user, $row['item_id'])) {
                 $docman_item = $this->item_factory->getItemFromRow($row);

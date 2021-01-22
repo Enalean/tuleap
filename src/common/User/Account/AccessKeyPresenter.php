@@ -54,10 +54,10 @@ class AccessKeyPresenter
 
     public function __construct(array $access_key_scopes, array $access_keys, ?ConcealedString $last_access_key, string $last_access_resolution)
     {
-        $this->access_key_scopes = $access_key_scopes;
-        $this->access_keys = $access_keys;
-        $this->last_access_key = $last_access_key;
+        $this->access_key_scopes      = $access_key_scopes;
+        $this->access_keys            = $access_keys;
+        $this->last_access_key        = $last_access_key;
         $this->last_access_resolution = $last_access_resolution;
-        $this->has_access_keys = count($this->access_keys) > 0;
+        $this->has_access_keys        = count($this->access_keys) > 0;
     }
 }

@@ -233,7 +233,7 @@ class MilestoneResource extends AuthenticatedResource
             new ProjectBackgroundConfiguration(new ProjectBackgroundDao())
         );
 
-        $this->query_to_criterion_converter = new QueryToCriterionStatusConverter();
+        $this->query_to_criterion_converter       = new QueryToCriterionStatusConverter();
         $this->query_to_criterion_only_all_status = new QueryToCriterionOnlyAllStatusConverter();
 
         $this->content_for_miletone_provider = ContentForMiletoneProvider::build($this->milestone_factory);
@@ -510,7 +510,7 @@ class MilestoneResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        $request = new SiblingMilestoneRequest($user, $milestone, $limit, $offset, $criterion);
+        $request    = new SiblingMilestoneRequest($user, $milestone, $limit, $offset, $criterion);
         $milestones = $this->milestone_factory->getPaginatedSiblingMilestones($request);
         $this->sendPaginationHeaders($limit, $offset, $milestones->getTotalSize());
 
@@ -569,7 +569,7 @@ class MilestoneResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        $request = new SubMilestoneRequest($user, $milestone, $limit, $offset, $order, $criterion);
+        $request    = new SubMilestoneRequest($user, $milestone, $limit, $offset, $order, $criterion);
         $milestones = $this->milestone_factory->getPaginatedSubMilestones($request);
         $this->sendPaginationHeaders($limit, $offset, $milestones->getTotalSize());
 
@@ -745,7 +745,7 @@ class MilestoneResource extends AuthenticatedResource
      */
     protected function patchContent($id, ?OrderRepresentation $order = null, ?array $add = null)
     {
-        $user = $this->getCurrentUser();
+        $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
         if (! $milestone) {
             throw new RestException(404, "Milestone not found");
@@ -1040,8 +1040,8 @@ class MilestoneResource extends AuthenticatedResource
      */
     protected function postBacklog($id, BacklogItemReference $item)
     {
-        $user        = $this->getCurrentUser();
-        $milestone   = $this->getMilestoneById($user, $id);
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $milestone->getProject()

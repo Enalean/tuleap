@@ -103,11 +103,11 @@ class XMLDocmanImport
      */
     public function __construct($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, Logger $logger)
     {
-        $this->force = $force;
-        $this->reorder = $reorder;
+        $this->force                 = $force;
+        $this->reorder               = $reorder;
         $this->importMessageMetadata = $importMessageMetadata;
-        $this->autoRetry = $autoRetry;
-        $this->logger = $logger;
+        $this->autoRetry             = $autoRetry;
+        $this->logger                = $logger;
 
         $this->logger->info("Init Import process");
 
@@ -140,7 +140,7 @@ class XMLDocmanImport
      */
     protected function loadXML($rootPath)
     {
-        $archiveName = basename($rootPath);
+        $archiveName       = basename($rootPath);
         $this->dataBaseDir = $rootPath . '/' . $archiveName;
 
         // DTD validation
@@ -255,7 +255,7 @@ class XMLDocmanImport
             foreach ($ugroups as $ugroup) {
                 if ($this->doc->xpath("/docman/ugroups/ugroup[@name='$ugroup->name']")) {
                     $this->ugroupMap[$ugroup->ugroup_id]['ugroup_name'] = $ugroup->name;
-                    $this->ugroupMap[$ugroup->ugroup_id]['members'] = [];
+                    $this->ugroupMap[$ugroup->ugroup_id]['members']     = [];
                     foreach ($ugroup->members as $member) {
                         $this->ugroupMap[$ugroup->ugroup_id]['members'][$member->user_name] = $member->user_id;
                     }
@@ -286,13 +286,13 @@ class XMLDocmanImport
                     $this->hardCodedMetadata[] = $metadata->label;
                 } else {
                     if ($this->doc->xpath("/docman/propdefs/propdef[@name='$metadata->name']")) {
-                        $this->metadataMap[$metadata->name]['label'] = $metadata->label;
-                        $this->metadataMap[$metadata->name]['type'] = $metadata->type;
+                        $this->metadataMap[$metadata->name]['label']          = $metadata->label;
+                        $this->metadataMap[$metadata->name]['type']           = $metadata->type;
                         $this->metadataMap[$metadata->name]['isEmptyAllowed'] = $metadata->isEmptyAllowed;
                         if ($metadata->type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                             $this->metadataMap[$metadata->name]['isMultipleValuesAllowed'] = $metadata->isMultipleValuesAllowed;
-                            $lov = $metadata->listOfValues;
-                            $this->metadataMap[$metadata->name]['values'] = [];
+                            $lov                                                           = $metadata->listOfValues;
+                            $this->metadataMap[$metadata->name]['values']                  = [];
                             foreach ($lov as $val) {
                                 if ($val->id != 100) {
                                     $this->metadataMap[$metadata->name]['values'][$val->name] = $val->id;
@@ -412,7 +412,7 @@ class XMLDocmanImport
     private function appendTextToNode(SimpleXMLElement $node, $text)
     {
         $domNode = dom_import_simplexml($node);
-        $dom = $domNode->ownerDocument;
+        $dom     = $domNode->ownerDocument;
         if ($dom === null) {
             return;
         }
@@ -446,12 +446,12 @@ class XMLDocmanImport
         // Check the values set to the properties
         foreach ($propertyList as $property) {
             $item_nodes = $property->xpath('../..');
-            $item_name = $item_nodes[0]->properties->title;
-            $title = (string) $property['title'];
+            $item_name  = $item_nodes[0]->properties->title;
+            $title      = (string) $property['title'];
 
             if (isset($this->metadataMap[$title])) {
                 $metadataDef =  $this->metadataMap[$title];
-                $type = $metadataDef['type'];
+                $type        = $metadataDef['type'];
                 switch ($type) {
                     case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                         $values = $property->value;
@@ -490,7 +490,7 @@ class XMLDocmanImport
         foreach ($requiredProperties as $requiredProperty) {
             // Iterate over the <properties> nodes (folders are not included)
             foreach ($propertiesList as $properties) {
-                $item_name = $properties->title;
+                $item_name        = $properties->title;
                 $searchedProperty = $properties->xpath("property[@title='$requiredProperty']");
                 if (count($searchedProperty) == 0) {
                     throw new Exception("Item '$item_name':\tThe required property '$requiredProperty' is not set.");
@@ -583,8 +583,8 @@ class XMLDocmanImport
 
                         $server_values = array_keys($this->metadataMap[$name]['values']);
                         if ($values != $server_values) {
-                            $diff1 = array_diff($values, $server_values);
-                            $diff2 = array_diff($server_values, $values);
+                            $diff1    = array_diff($values, $server_values);
+                            $diff2    = array_diff($server_values, $values);
                             $errorMsg = "The property '$name' doesn't declare the same list of values as in the target project:";
                             if (count($diff1)) {
                                 $errorMsg .= "\tNot on the target:\t" . implode(', ', $diff1);
@@ -670,7 +670,7 @@ class XMLDocmanImport
     protected function findPath($path)
     {
         // Transform "Unix path" to XPath
-        $xpath = '/docman' . preg_replace('/\/([^\/]+)/', '/item[properties/title="$1"]', $path);
+        $xpath    = '/docman' . preg_replace('/\/([^\/]+)/', '/item[properties/title="$1"]', $path);
         $nodeList = $this->doc->xpath($xpath);
 
         if ($nodeList === false || count($nodeList) == 0) {
@@ -800,7 +800,7 @@ class XMLDocmanImport
              $permissions
         ) = $this->getItemInformation($node);
 
-        $ordering         = 'end';
+        $ordering = 'end';
 
         switch ($node['type']) {
             case 'file':
@@ -884,14 +884,14 @@ class XMLDocmanImport
      */
     private function extractOneMetadata(SimpleXMLElement $property, array &$metadata)
     {
-        $propTitle = (string) $property['title'];
+        $propTitle        = (string) $property['title'];
         $dstMetadataLabel = $this->metadataMap[$propTitle]['label'];
 
         if ($this->metadataMap[$propTitle]['type'] == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $values = $property->xpath('value');
             if ($values !== false && count($values) > 0) {
                 foreach ($values as $value) {
-                    $val = (string) $value;
+                    $val        = (string) $value;
                     $metadata[] = ['label' => $dstMetadataLabel, 'value' => $this->metadataMap[$propTitle]['values'][$val]];
                 }
             } else {

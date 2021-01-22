@@ -35,11 +35,11 @@ class Tracker_URLTest extends TestCase
         $this->user->shouldReceive('getId')->andReturns(666);
 
         $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $af             = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $af->shouldReceive('getArtifactById')->with('1')->andReturns($this->artifact);
 
         $this->report = \Mockery::spy(\Tracker_Report::class);
-        $rf = \Mockery::spy(\Tracker_ReportFactory::class);
+        $rf           = \Mockery::spy(\Tracker_ReportFactory::class);
         $rf->shouldReceive('getReportById')->with('2', $this->user->getId(), true)->andReturns($this->report);
 
         $this->tracker = \Mockery::spy(\Tracker::class);
@@ -49,7 +49,7 @@ class Tracker_URLTest extends TestCase
         $tf->shouldReceive('getTrackerById')->with(3)->andReturns($this->tracker);
 
         $this->formElement = \Mockery::spy(\Tracker_FormElement_Interface::class);
-        $ff = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $ff                = \Mockery::spy(\Tracker_FormElementFactory::class);
         $ff->shouldReceive('getFormElementById')->with('4')->andReturns($this->formElement);
 
         $this->artifact->shouldReceive('getTracker')->andReturns($this->tracker);

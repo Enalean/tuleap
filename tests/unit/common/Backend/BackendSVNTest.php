@@ -51,7 +51,7 @@ class BackendSVNTest extends TestCase
      */
     public function createInstance(): void
     {
-        $this->backend                         = Mockery::mock(BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->backend = Mockery::mock(BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
     public function testItAddsProjectMembers()

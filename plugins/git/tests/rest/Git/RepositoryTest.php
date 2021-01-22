@@ -173,7 +173,7 @@ class RepositoryTest extends TestBase
 
     private function assertGetFiles(Response $response): void
     {
-        $content  = $response->json();
+        $content = $response->json();
 
         $this->assertEquals($content['name'], 'file01');
         $this->assertEquals($content['path'], 'file01');
@@ -202,7 +202,7 @@ class RepositoryTest extends TestBase
             'ref'          => 'master'
         ]);
 
-        $response  = $this->getResponse($this->client->get($url));
+        $response = $this->getResponse($this->client->get($url));
 
         $this->assertEquals($response->getStatusCode(), 404);
     }
@@ -214,7 +214,7 @@ class RepositoryTest extends TestBase
             'ref'          => 'NotABranch'
         ]);
 
-        $response  = $this->getResponse($this->client->get($url));
+        $response = $this->getResponse($this->client->get($url));
 
         $this->assertEquals($response->getStatusCode(), 404);
     }
@@ -364,7 +364,7 @@ class RepositoryTest extends TestBase
                 'name' => 'newTestGitRepository'
             ]
         );
-        $response = $this->getResponse(
+        $response     = $this->getResponse(
             $this->client->post('git/', null, $post_payload),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -381,7 +381,7 @@ class RepositoryTest extends TestBase
                 'name' => 'newTestGitRepository'
             ]
         );
-        $response = $this->getResponse(
+        $response     = $this->getResponse(
             $this->client->post('git/', null, $post_payload)
         );
 

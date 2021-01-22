@@ -24,9 +24,9 @@ use DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-    public const DIRECTION_UPLOAD  = 'i';
+    public const DIRECTION_UPLOAD   = 'i';
     public const DIRECTION_DOWNLOAD = 'o';
-    public const DIRECTION_DELETE = 'd';
+    public const DIRECTION_DELETE   = 'd';
 
     public const SERVICE_HTTP = 'http';
 
@@ -77,22 +77,22 @@ class Dao extends DataAccessObject
         $group_id,
         Entry $entry
     ) {
-        $user_id                = $this->da->escapeInt($user_id);
-        $group_id               = $this->da->escapeInt($group_id);
-        $time                   = $this->da->escapeInt($entry->current_time);
-        $transfer_time          = $this->da->escapeInt($entry->transfer_time);
-        $remote_host            = $this->da->quoteSmart($entry->remote_host);
-        $file_size              = $this->da->escapeInt($entry->file_size);
-        $file_name              = $this->da->quoteSmart($entry->filename);
-        $transfer_type          = $this->da->quoteSmart($entry->transfer_type);
-        $special_action_flag    = $this->da->quoteSmart($entry->special_action_flag);
-        $direction              = $this->da->quoteSmart($entry->direction);
-        $access_mode            = $this->da->quoteSmart($entry->access_mode);
-        $username               = $this->da->quoteSmart($entry->username);
-        $service_name           = $this->da->quoteSmart($entry->service_name);
-        $authentication_method  = $this->da->escapeInt($entry->authentication_method);
-        $authenticated_user_id  = $this->da->escapeInt($entry->authenticated_user_id);
-        $completion_status      = $this->da->quoteSmart($entry->completion_status);
+        $user_id               = $this->da->escapeInt($user_id);
+        $group_id              = $this->da->escapeInt($group_id);
+        $time                  = $this->da->escapeInt($entry->current_time);
+        $transfer_time         = $this->da->escapeInt($entry->transfer_time);
+        $remote_host           = $this->da->quoteSmart($entry->remote_host);
+        $file_size             = $this->da->escapeInt($entry->file_size);
+        $file_name             = $this->da->quoteSmart($entry->filename);
+        $transfer_type         = $this->da->quoteSmart($entry->transfer_type);
+        $special_action_flag   = $this->da->quoteSmart($entry->special_action_flag);
+        $direction             = $this->da->quoteSmart($entry->direction);
+        $access_mode           = $this->da->quoteSmart($entry->access_mode);
+        $username              = $this->da->quoteSmart($entry->username);
+        $service_name          = $this->da->quoteSmart($entry->service_name);
+        $authentication_method = $this->da->escapeInt($entry->authentication_method);
+        $authenticated_user_id = $this->da->escapeInt($entry->authenticated_user_id);
+        $completion_status     = $this->da->quoteSmart($entry->completion_status);
 
         $sql = "INSERT INTO plugin_proftpd_xferlog
                 (

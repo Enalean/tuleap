@@ -43,7 +43,7 @@ class ReferencesImporter
 
     public function __construct(Dao $dao, LoggerInterface $logger)
     {
-        $this->dao = $dao;
+        $this->dao    = $dao;
         $this->logger = $logger;
     }
 
@@ -54,10 +54,10 @@ class ReferencesImporter
         }
 
         foreach ($xml->children() as $reference) {
-            $source = (string) $reference['source'];
-            $target = (string) $reference['target'];
+            $source           = (string) $reference['source'];
+            $target           = (string) $reference['target'];
             $target_on_system = null;
-            $xref_kind = $this->crossRefKind($source);
+            $xref_kind        = $this->crossRefKind($source);
 
             if (isset($this->xref_kind[$xref_kind])) {
                 $object_type = $this->xref_kind[$xref_kind];

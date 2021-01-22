@@ -34,17 +34,17 @@ class UserAccountManagerPushSSHKeysTest extends TestCase
             'language_id' => 'en',
             'ldap_id' => 'testUser'
         ]);
-        $key1 = 'key1';
-        $key2 = 'key2';
+        $key1       = 'key1';
+        $key2       = 'key2';
 
         $this->user->setAuthorizedKeys($key1 . PFUser::SSH_KEY_SEPARATOR . $key2);
 
         $this->gerrit_driver         = \Mockery::spy(\Git_Driver_Gerrit::class);
         $this->gerrit_driver_factory = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->gerrit_driver)->getMock();
         $this->remote_gerrit_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->gerrit_user = \Mockery::spy(\Git_Driver_Gerrit_User::class);
+        $this->gerrit_user           = \Mockery::spy(\Git_Driver_Gerrit_User::class);
 
-        $this->user_account_manager  = \Mockery::mock(
+        $this->user_account_manager = \Mockery::mock(
             \Git_Driver_Gerrit_UserAccountManager::class,
             [$this->gerrit_driver_factory, $this->remote_gerrit_factory]
         )

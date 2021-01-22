@@ -41,7 +41,7 @@ class TroveCatFactory
         $trove_cats = [];
 
         foreach ($results as $row) {
-            $trove_cat = $this->getTroveCatWithChildrens($row);
+            $trove_cat                       = $this->getTroveCatWithChildrens($row);
             $trove_cats[$trove_cat->getId()] = $trove_cat;
         }
 
@@ -73,7 +73,7 @@ class TroveCatFactory
     {
         $trove_cats = [];
         foreach ($this->dao->getParentCategoriesUnderRoot() as $row) {
-            $trove_cat = $this->getTroveCatWithChildrenRecursively($row);
+            $trove_cat                             = $this->getTroveCatWithChildrenRecursively($row);
             $trove_cats[(int) $trove_cat->getId()] = $trove_cat;
         }
         return $trove_cats;

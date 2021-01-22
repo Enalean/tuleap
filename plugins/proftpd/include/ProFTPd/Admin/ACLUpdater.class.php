@@ -39,7 +39,7 @@ class ACLUpdater
 
     public function __construct(Backend $backend)
     {
-        $this->backend = $backend;
+        $this->backend     = $backend;
         $this->builder_map = [
             self::FILE      => new ACLBuilderForFile(),
             self::DIRECTORY => new ACLBuilderForDirectory(),

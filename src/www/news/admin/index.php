@@ -69,7 +69,7 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
         $validDetails = new Valid_Text('details');
 
         if ($request->valid($validSummary) && $request->valid($validDetails)) {
-            $sql = "UPDATE news_bytes SET is_approved=" . db_ei($status) . ", summary='" . db_es($request->get('summary')) . "', " .
+            $sql    = "UPDATE news_bytes SET is_approved=" . db_ei($status) . ", summary='" . db_es($request->get('summary')) . "', " .
                 "details='" . db_es($request->get('details')) . "' WHERE id=" . db_ei($id) . " AND group_id=" . db_ei($group_id);
             $result = db_query($sql);
 
@@ -79,10 +79,10 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index', 'project_newsbyte_updated'));
 
                 // update/create  news permissions
-                $qry1 = "SELECT * FROM news_bytes WHERE id=" . db_ei($id);
-                $res1 = db_query($qry1);
+                $qry1     = "SELECT * FROM news_bytes WHERE id=" . db_ei($id);
+                $res1     = db_query($qry1);
                 $forum_id = db_result($res1, 0, 'forum_id');
-                $res2 = news_read_permissions($forum_id);
+                $res2     = news_read_permissions($forum_id);
                 if (db_numrows($res2) > 0) {
                     //permission on this news is already defined, have to be updated
                     news_update_permissions($forum_id, $is_private, $group_id);
@@ -114,22 +114,22 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
       Show the submit form
      */
 
-        $sql = "SELECT * FROM news_bytes WHERE id=" . db_ei($id) . " AND group_id=" . db_ei($group_id);
+        $sql    = "SELECT * FROM news_bytes WHERE id=" . db_ei($id) . " AND group_id=" . db_ei($group_id);
         $result = db_query($sql);
         if (db_numrows($result) < 1) {
             exit_error($Language->getText('global', 'error'), $Language->getText('news_admin_index', 'not_found_err'));
         }
         $username = user_getname(db_result($result, 0, 'submitted_by'));
         $forum_id = db_result($result, 0, 'forum_id');
-        $res = news_read_permissions($forum_id);
+        $res      = news_read_permissions($forum_id);
      // check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
      // with ST DB state
         if (db_numrows($res) < 1 || (db_result($res, 0, 'ugroup_id') == $UGROUP_ANONYMOUS)) {
             $check_private = "";
-            $check_public = "CHECKED";
+            $check_public  = "CHECKED";
         } else {
             $check_private = "CHECKED";
-            $check_public = "";
+            $check_public  = "";
         }
 
         echo '
@@ -163,9 +163,9 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
       Show list of waiting news items
      */
 
-        $sql = "SELECT * FROM news_bytes WHERE is_approved <> 4 AND group_id=" . db_ei($group_id) . " ORDER BY date DESC";
+        $sql    = "SELECT * FROM news_bytes WHERE is_approved <> 4 AND group_id=" . db_ei($group_id) . " ORDER BY date DESC";
         $result = db_query($sql);
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
         if ($rows < 1) {
             echo '
                 <H4>' . $purifier->purify($Language->getText('news_admin_index', 'no_queued_item_found_for', $pm->getProject($group_id)->getPublicName())) . '</H1>';

@@ -31,7 +31,7 @@ final class XmlReportDefaultCriteriaExporterTest extends TestCase
 {
     public function testItExportsCriteriaWithNoSelectedValues(): void
     {
-        $node_criterias = new SimpleXMLElement('
+        $node_criterias       = new SimpleXMLElement('
             <criterias>
                 <criteria>
                     <field REF="Ffield01"></field>

@@ -118,7 +118,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
         $duration    = 10;
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $capacity   = 5;
+        $capacity = 5;
         $this->assertFalse(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
@@ -146,7 +146,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
         $duration    = 10;
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $capacity   = 5;
+        $capacity = 5;
         $this->assertFalse(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
@@ -180,7 +180,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
         $duration    = 10;
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $capacity   = 5;
+        $capacity = 5;
         $this->assertTrue(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
@@ -213,7 +213,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
         $duration    = 10;
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $capacity   = 5;
+        $capacity = 5;
         $this->assertTrue(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,

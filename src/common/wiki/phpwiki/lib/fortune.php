@@ -15,24 +15,24 @@ class Fortune
     public function quoteFromDir($dir)
     {
         $amount = 0;
-        $index = 0;
+        $index  = 0;
 
         if ($handle = opendir($dir)) {
             while (false !== ($file = readdir($handle))) {
                 if (strpos($file, ".dat") != false) {
                     $len = strlen($file);
                     if (substr($file, $len - 4) == ".dat") {
-                        $number = $this->getNumberOfQuotes($dir . "/" . $file);
-                        $amount += $number;
+                        $number         = $this->getNumberOfQuotes($dir . "/" . $file);
+                        $amount        += $number;
                         $quotes[$index] = $amount;
-                        $files[$index] = $file;
+                        $files[$index]  = $file;
                         $index++;
                     }
                 }
             }
 
             $index = random_int(0, $amount);
-            $i = 0;
+            $i     = 0;
 
             while ($quotes[$i] < $index) {
                 $i++;
@@ -105,9 +105,9 @@ class Fortune
     {
         fseek($fd, $index);
         $line = "";
-        $res = "";
+        $res  = "";
         do {
-            $res = $res . $line;
+            $res  = $res . $line;
             $line = fgets($fd, 1024) . "<br>";
         } while (($line[0] != "%") && (! feof($fd)));
 
@@ -132,10 +132,10 @@ class Fortune
     public function readLong($fd)
     {
         $res = fread($fd, 4);
-        $l = ord($res[3]);
-        $l += ord($res[2]) << 8;
-        $l += ord($res[1]) << 16;
-        $l += ord($res[0]) << 24;
+        $l   = ord($res[3]);
+        $l  += ord($res[2]) << 8;
+        $l  += ord($res[1]) << 16;
+        $l  += ord($res[0]) << 24;
         return $l;
     }
 
@@ -148,10 +148,10 @@ class Fortune
             exit;
         }
 
-        $i = 1;
-        $length = 0;
-        $longest = 0;
-        $shortest = 100000;
+        $i          = 1;
+        $length     = 0;
+        $longest    = 0;
+        $shortest   = 100000;
         $indices[0] = 0;
         while (! feof($fd)) {
             $line = fgets($fd);

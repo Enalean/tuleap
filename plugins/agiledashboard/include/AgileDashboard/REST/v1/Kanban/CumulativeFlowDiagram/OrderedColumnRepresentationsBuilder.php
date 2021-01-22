@@ -78,11 +78,11 @@ class OrderedColumnRepresentationsBuilder
         array $dates,
         $items_in_columns
     ) {
-        $items_count_for_archive = array_fill_keys($dates, 0);
+        $items_count_for_archive            = array_fill_keys($dates, 0);
         $items_count_grouped_by_open_column = [
             self::BACKLOG_BINDVALUE_ID => array_fill_keys($dates, 0)
         ];
-        $columns = $this->kanban_column_factory->getAllKanbanColumnsForAKanban(
+        $columns                            = $this->kanban_column_factory->getAllKanbanColumnsForAKanban(
             $kanban,
             $user
         );

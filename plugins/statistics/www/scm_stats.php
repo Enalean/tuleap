@@ -26,7 +26,7 @@ require_once __DIR__ . '/../include/Statistics_Formatter_Svn.class.php';
 require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.php';
 
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if (! $p || ! $pluginManager->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }
@@ -66,7 +66,7 @@ if ($startDate > $endDate) {
     $GLOBALS['Response']->redirect('/plugins/statistics/data_export.php');
 }
 
-$project_id  = null;
+$project_id = null;
 if ($request->exist('scm_statistics_project_select')) {
     $project_name    = $request->get('scm_statistics_project_select');
     $project_manager = ProjectManager::instance();

@@ -34,9 +34,9 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
         $engine->xaxis  = null;
         $engine->labels = null;
         $engine->legend = null;
-        $result = [];
-        $ff = Tracker_FormElementFactory::instance();
-        $af = $ff->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
+        $result         = [];
+        $ff             = Tracker_FormElementFactory::instance();
+        $af             = $ff->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
         \assert($af instanceof Tracker_FormElement_Field_List);
         if (! $af) {
             $this->displayNoFieldError();
@@ -61,18 +61,18 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5
                              $from_group;
             $where  = " WHERE a.id IN (" . $this->artifacts['id'] . ")
                           AND c.id IN (" . $this->artifacts['last_changeset_id'] . ") ";
-            $sql = $select . $from . $where . ' GROUP BY ' . $af->getQueryGroupBy() . $group_group . ' ORDER BY ' . $af->getQueryOrderby() . $order_group;
+            $sql    = $select . $from . $where . ' GROUP BY ' . $af->getQueryGroupBy() . $group_group . ' ORDER BY ' . $af->getQueryOrderby() . $order_group;
             //echo($sql);
             $none = $GLOBALS['Language']->getText('global', 'none');
-            $res = db_query($sql);
+            $res  = db_query($sql);
 
             while ($data = db_fetch_array($res)) {
                 $color = $this->getColor($data);
                 if ($select_group) {
-                    $engine->colors[$data[$af->name]] = $color;
+                    $engine->colors[$data[$af->name]]                 = $color;
                     $engine->data[$data[$af->name]][$data[$gf->name]] = $data['nb'];
-                    $engine->xaxis[$data[$gf->name]]  = $none;
-                    $engine->labels[$data[$gf->name]] = $none;
+                    $engine->xaxis[$data[$gf->name]]                  = $none;
+                    $engine->labels[$data[$gf->name]]                 = $none;
                     if ($data[$gf->name] !== null) {
                         $engine->xaxis[$data[$gf->name]]  = $gf->fetchRawValue($data[$gf->name]);
                         $engine->labels[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);

@@ -74,12 +74,12 @@ final class GitForkRepositoriesTest extends \PHPUnit\Framework\TestCase
     public function testExecutesForkRepositoriesActionWithAListOfRepos(): void
     {
         $groupId = 101;
-        $repo = new GitRepository();
-        $repos = [$repo];
-        $user = new PFUser();
+        $repo    = new GitRepository();
+        $repos   = [$repo];
+        $user    = new PFUser();
         $user->setId(42);
         $user->setUserName('Ben');
-        $path = PathJoinUtil::userRepoPath('Ben', 'toto');
+        $path            = PathJoinUtil::userRepoPath('Ben', 'toto');
         $forkPermissions = [];
 
         $project = Mockery::mock(Project::class);

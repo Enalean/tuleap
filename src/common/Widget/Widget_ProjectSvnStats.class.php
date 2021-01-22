@@ -50,23 +50,23 @@ class Widget_ProjectSvnStats extends Widget
     protected $tmp_nb_of_commit;
     public function process($owner_type, $owner_id)
     {
-        $dao = new SvnCommitsDao();
+        $dao               = new SvnCommitsDao();
         $colors_for_charts = new ColorsForCharts();
 
         //The default duration is 3 months back
         $nb_weeks = 4 * 3;
         $duration = 7 * $nb_weeks;
 
-        $day = 24 * 3600;
+        $day  = 24 * 3600;
         $week = 7 * $day;
 
         //compute the stats
-        $stats = [];
+        $stats         = [];
         $nb_of_commits = [];
         foreach ($dao->statsByGroupId($owner_id, $duration) as $row) {
             $stats[$row['whoid']]['by_day'][$row['day'] * $day] = $row['nb_commits'];
             $stats[$row['whoid']]['by_week'][$row['week']]      = $row['nb_commits'];
-            $this->tmp_nb_of_commit[$row['whoid']] = (isset($this->tmp_nb_of_commit[$row['whoid']]) ? $this->tmp_nb_of_commit[$row['whoid']] : 0) + $row['nb_commits'];
+            $this->tmp_nb_of_commit[$row['whoid']]              = (isset($this->tmp_nb_of_commit[$row['whoid']]) ? $this->tmp_nb_of_commit[$row['whoid']] : 0) + $row['nb_commits'];
         }
         if (count($stats)) {
             //sort the results
@@ -80,7 +80,7 @@ class Widget_ProjectSvnStats extends Widget
             foreach ($stats as $whoid => $stat) {
                 $tmp_stats = [];
                 for ($i = $start_of_period; $i <= $today; $i += $week) {
-                    $w = (int) date('W', $i);
+                    $w             = (int) date('W', $i);
                     $tmp_stats[$w] = isset($stat['by_week'][$w]) ? $stat['by_week'][$w] : '0';
                 }
                 $stats[$whoid]['by_week'] = $tmp_stats;
@@ -114,15 +114,15 @@ class Widget_ProjectSvnStats extends Widget
                 $c->legend->setColumns(2);
             }
 
-            $colors = array_reverse(array_slice($colors_for_charts->getChartColors(), 0, $nb_commiters));
+            $colors    = array_reverse(array_slice($colors_for_charts->getChartColors(), 0, $nb_commiters));
             $nb_colors = count($colors);
-            $bars = [];
-            $i = 0;
+            $bars      = [];
+            $i         = 0;
             foreach ($stats as $whoid => $stat) {
                 if (! array_key_exists('by_week', $stat)) {
                     continue;
                 }
-                $l = new BarPlot(array_values($stat['by_week']));
+                $l     = new BarPlot(array_values($stat['by_week']));
                 $color = $colors[$i++ % $nb_colors];
                 $l->SetColor($color . ':0.7');
                 $l->setFillColor($color);

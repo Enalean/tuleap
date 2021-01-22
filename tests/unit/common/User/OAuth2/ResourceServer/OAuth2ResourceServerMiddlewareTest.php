@@ -96,7 +96,7 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         $event->setGrantedAuthorization($granted_authorization);
         $this->event_dispatcher->shouldReceive('dispatch')->andReturn($event);
         $this->login_manager->shouldReceive('validateAndSetCurrentUser');
-        $handler = \Mockery::mock(RequestHandlerInterface::class);
+        $handler           = \Mockery::mock(RequestHandlerInterface::class);
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
         $handler->shouldReceive('handle')->andReturn($expected_response);
 

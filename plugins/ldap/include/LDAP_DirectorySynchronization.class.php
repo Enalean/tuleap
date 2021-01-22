@@ -77,11 +77,11 @@ class LDAP_DirectorySynchronization
     public function ldapSync($row, $users_are_suspendable = true)
     {
         $ldap_query = $this->ldap->getLDAPParam('eduid') . '=' . $row['ldap_id'];
-        $userSync = $this->getLdapUserSync();
+        $userSync   = $this->getLdapUserSync();
         $attributes = $userSync->getSyncAttributes($this->ldap);
 
         $time_start = microtime(true);
-        $lri = false;
+        $lri        = false;
 
         $search_depth = LDAP::SCOPE_SUBTREE;
         if ($this->ldap->getLDAPParam('search_depth') === LDAP::SCOPE_ONELEVEL_TEXT) {
@@ -94,7 +94,7 @@ class LDAP_DirectorySynchronization
                 break;
             }
         }
-        $time_end   = microtime(true);
+        $time_end        = microtime(true);
         $this->ldapTime += ($time_end - $time_start);
 
         if ($this->ldap->getErrno() === LDAP::ERR_SUCCESS && $lri) {
@@ -124,7 +124,7 @@ class LDAP_DirectorySynchronization
             }
 
             if ($modified) {
-                $em  = $this->getEventManager();
+                $em = $this->getEventManager();
                 $em->processEvent(LDAP_DAILY_SYNCHRO_UPDATE_USER, $user);
                 if ($user->getStatus() == 'S' && $users_are_suspendable) {
                     $this->getUserManager()->updateDb($user);

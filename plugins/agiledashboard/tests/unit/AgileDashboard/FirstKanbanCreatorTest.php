@@ -84,9 +84,9 @@ final class FirstKanbanCreatorTest extends TestCase
         $this->kanban_factory  = Mockery::mock(AgileDashboard_KanbanFactory::class);
         $this->xml_import      = Mockery::mock(TrackerXmlImport::class);
         $this->xml_import->shouldReceive('getTrackerItemNameFromXMLFile')->andReturn('tracker_item_name');
-        $this->report_updater  = Mockery::mock(TrackerReportUpdater::class);
-        $this->report_factory  = Mockery::mock(Tracker_ReportFactory::class);
-        $this->kanban_creator  = new AgileDashboard_FirstKanbanCreator(
+        $this->report_updater = Mockery::mock(TrackerReportUpdater::class);
+        $this->report_factory = Mockery::mock(Tracker_ReportFactory::class);
+        $this->kanban_creator = new AgileDashboard_FirstKanbanCreator(
             $project,
             $this->kanban_manager,
             $this->tracker_factory,

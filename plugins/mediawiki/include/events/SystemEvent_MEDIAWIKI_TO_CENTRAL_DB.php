@@ -37,7 +37,7 @@ class SystemEvent_MEDIAWIKI_TO_CENTRAL_DB extends SystemEvent
 
     public function injectDependencies(MoveToCentralDbDao $move_to_central_db)
     {
-        $this->move_to_central_db    = $move_to_central_db;
+        $this->move_to_central_db = $move_to_central_db;
     }
 
     public function process()

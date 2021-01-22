@@ -40,7 +40,7 @@ class AdminNewsRouter
     public function route(HTTPRequest $request)
     {
         if ($request->get('action')) {
-            $token  = $this->getCSRF();
+            $token = $this->getCSRF();
             $token->check();
             $this->update($request);
         } elseif ($request->get('publish')) {

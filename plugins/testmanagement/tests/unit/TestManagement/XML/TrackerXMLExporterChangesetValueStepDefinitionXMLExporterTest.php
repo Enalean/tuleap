@@ -90,7 +90,7 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
             </changeset>';
 
         $changeset_xml = new SimpleXMLElement($xml_data);
-        $expected_xml = new SimpleXMLElement($xml_data);
+        $expected_xml  = new SimpleXMLElement($xml_data);
 
         $values = [];
 

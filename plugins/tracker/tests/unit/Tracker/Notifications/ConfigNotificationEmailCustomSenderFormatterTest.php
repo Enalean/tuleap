@@ -38,11 +38,11 @@ class ConfigNotificationEmailCustomSenderFormatterTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $dummydata = [];
+        $dummydata           = [];
         $dummydata['field1'] = self::FIELD1_DATA;
         $dummydata['field2'] = self::FIELD2_DATA;
         $dummydata['format'] = self::FORMAT_DATA;
-        $this->formatter = new ConfigNotificationEmailCustomSenderFormatter($dummydata);
+        $this->formatter     = new ConfigNotificationEmailCustomSenderFormatter($dummydata);
     }
 
     public function testReturnsInputStringIfNoFormattingFound()
@@ -59,29 +59,29 @@ class ConfigNotificationEmailCustomSenderFormatterTest extends TestCase
 
     public function testCorrectlyFormatsKnownFields()
     {
-        $input      = 'The value %field1 shoud be in $dummydata[field1]';
-        $expected   = 'The value ' . self::FIELD1_DATA . ' shoud be in dummydata field1';
+        $input    = 'The value %field1 shoud be in $dummydata[field1]';
+        $expected = 'The value ' . self::FIELD1_DATA . ' shoud be in dummydata field1';
         $this->assertEquals($expected, $this->formatter->formatString($input));
     }
 
     public function testHandlesStringsWithBothCorrectAndIncorrectFormatting()
     {
-        $input      = '%field1 %fie_ld1 %random %field2%notafield';
-        $expected   = self::FIELD1_DATA . ' fie ld1 random ' . self::FIELD2_DATA . ' notafield';
+        $input    = '%field1 %fie_ld1 %random %field2%notafield';
+        $expected = self::FIELD1_DATA . ' fie ld1 random ' . self::FIELD2_DATA . ' notafield';
         $this->assertEquals($expected, $this->formatter->formatString($input));
     }
 
     public function testDoesNotParseRecursively()
     {
-        $input      = '%format';
-        $expected   = self::FORMAT_DATA;
+        $input    = '%format';
+        $expected = self::FORMAT_DATA;
         $this->assertEquals("field1", $this->formatter->formatString($input));
     }
 
     public function testDoesSlugify()
     {
-        $input      = self::NO_SLUGIFY;
-        $expected   = self::SLUGIFY;
+        $input    = self::NO_SLUGIFY;
+        $expected = self::SLUGIFY;
         $this->assertEquals($expected, $this->formatter->formatString($input));
     }
 }

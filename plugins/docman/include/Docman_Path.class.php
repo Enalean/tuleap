@@ -31,7 +31,7 @@ class Docman_Path
         if (! isset($this->path[$item->getId()])) {
             $this->path[$item->getId()] = '';
             if ($item->getParentId()) {
-                $if = $this->_getItemFactory();
+                $if     = $this->_getItemFactory();
                 $parent = $if->getItemFromDb($item->getParentId(), ['ignore_deleted' => true]);
                 if ($parent) {
                     $this->path[$item->getId()] = $this->get($parent) . '/';

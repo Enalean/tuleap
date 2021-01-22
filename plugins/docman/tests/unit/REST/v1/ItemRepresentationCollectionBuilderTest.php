@@ -85,7 +85,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $this->item_representation_builder            = Mockery::mock(ItemRepresentationBuilder::class);
         $this->item_version_factory                   = Mockery::mock(\Docman_VersionFactory::class);
         $this->link_version_factory                   = Mockery::mock(\Docman_LinkVersionFactory::class);
-        $this->event_manager = Mockery::mock(\EventManager::class);
+        $this->event_manager                          = Mockery::mock(\EventManager::class);
         $this->item_representation_visitor            = new ItemRepresentationVisitor(
             $this->item_representation_builder,
             $this->item_version_factory,
@@ -269,7 +269,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
 
     public function testItReturnsRepresentationOfParentsItems(): void
     {
-        $dar_folder_1    = [
+        $dar_folder_1 = [
             'item_id'     => 2,
             'title'       => 'folder 1',
             'user_id'     => 101,
@@ -277,7 +277,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
             'parent_id'   => 0
         ];
-        $dar_folder_2    = [
+        $dar_folder_2 = [
             'item_id'     => 3,
             'title'       => 'folder 2',
             'user_id'     => 101,
@@ -285,7 +285,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
             'parent_id'   => 1
         ];
-        $dar_item        = [
+        $dar_item     = [
             'item_id'     => 4,
             'title'       => 'item',
             'user_id'     => 101,
@@ -294,9 +294,9 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             'parent_id'   => 2
         ];
 
-        $docman_folder1     = new \Docman_Folder($dar_folder_1);
-        $docman_folder2     = new \Docman_Folder($dar_folder_2);
-        $item               = new \Docman_File($dar_item);
+        $docman_folder1 = new \Docman_Folder($dar_folder_1);
+        $docman_folder2 = new \Docman_Folder($dar_folder_2);
+        $item           = new \Docman_File($dar_item);
 
         $user                = Mockery::mock(PFUser::class);
         $user_representation = Mockery::mock(MinimalUserRepresentation::class);
@@ -311,7 +311,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $html_purifier->shouldReceive('purifyTextWithReferences')->atLeast()->once()
             ->andReturn('description with processed ref');
 
-        $project         = Mockery::mock(\Project::class);
+        $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(101);
         $representation1 = ItemRepresentation::build(
             $docman_folder1,

@@ -112,12 +112,12 @@ class ForgeAccess_AdminPresenter
             $this->localinc_path
         );
 
-        $this->access_anonymous_label  = $GLOBALS['Language']->getText('admin_main', 'access_anonymous_label');
-        $this->access_anonymous_desc   = $GLOBALS['Language']->getText('admin_main', 'access_anonymous_desc');
-        $this->access_regular_label    = $GLOBALS['Language']->getText('admin_main', 'access_regular_label');
-        $this->access_regular_desc     = $GLOBALS['Language']->getText('admin_main', 'access_regular_desc');
-        $this->access_restricted_label = $GLOBALS['Language']->getText('admin_main', 'access_restrited_label');
-        $this->access_restricted_desc  = $GLOBALS['Language']->getText('admin_main', 'access_restrited_desc');
+        $this->access_anonymous_label           = $GLOBALS['Language']->getText('admin_main', 'access_anonymous_label');
+        $this->access_anonymous_desc            = $GLOBALS['Language']->getText('admin_main', 'access_anonymous_desc');
+        $this->access_regular_label             = $GLOBALS['Language']->getText('admin_main', 'access_regular_label');
+        $this->access_regular_desc              = $GLOBALS['Language']->getText('admin_main', 'access_regular_desc');
+        $this->access_restricted_label          = $GLOBALS['Language']->getText('admin_main', 'access_restrited_label');
+        $this->access_restricted_desc           = $GLOBALS['Language']->getText('admin_main', 'access_restrited_desc');
         $this->current_restricted_users_message = $GLOBALS['Language']->getText(
             'admin_main',
             'current_restricted_users_message',
@@ -133,10 +133,10 @@ class ForgeAccess_AdminPresenter
         $this->ugroup_authenticated_users_placeholder = $GLOBALS['Language']->getText('admin_main', 'ugroup_authenticated_users_placeholder', [ForgeConfig::get('sys_org_name')]);
         $this->ugroup_registered_users_placeholder    = $GLOBALS['Language']->getText('admin_main', 'ugroup_registered_users_placeholder', [ForgeConfig::get('sys_org_name')]);
 
-        $this->ugroup_authenticated_users_label       = $GLOBALS['Language']->getText('admin_main', 'ugroup_authenticated_users_label');
-        $this->ugroup_registered_users_label          = $GLOBALS['Language']->getText('admin_main', 'ugroup_registered_users_label');
+        $this->ugroup_authenticated_users_label = $GLOBALS['Language']->getText('admin_main', 'ugroup_authenticated_users_label');
+        $this->ugroup_registered_users_label    = $GLOBALS['Language']->getText('admin_main', 'ugroup_registered_users_label');
 
-        $this->customize_ugroups_label_info           = $GLOBALS['Language']->getText('admin_main', 'customize_ugroups_label_info');
+        $this->customize_ugroups_label_info = $GLOBALS['Language']->getText('admin_main', 'customize_ugroups_label_info');
 
         $this->platform_access_control_label = $GLOBALS['Language']->getText('admin_main', 'platform_access_control');
     }

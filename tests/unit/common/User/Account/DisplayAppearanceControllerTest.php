@@ -67,7 +67,7 @@ class DisplayAppearanceControllerTest extends TestCase
         $GLOBALS['Language']->shouldReceive('gettext')->with('system', 'datefmt_short')->andReturn('d/m/Y');
 
         $this->appearance_builder = M::mock(AppearancePresenterBuilder::class);
-        $this->csrf_token = M::mock(CSRFSynchronizerToken::class);
+        $this->csrf_token         = M::mock(CSRFSynchronizerToken::class);
 
         $this->controller = new DisplayAppearanceController(
             $event_manager,

@@ -47,8 +47,8 @@ final class TestPlanTestDefinitionTrackerRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->testmanagement_config       = \Mockery::mock(Config::class);
-        $this->tracker_factory             = \Mockery::mock(TrackerFactory::class);
+        $this->testmanagement_config = \Mockery::mock(Config::class);
+        $this->tracker_factory       = \Mockery::mock(TrackerFactory::class);
 
         $this->retriever = new TestPlanTestDefinitionTrackerRetriever($this->testmanagement_config, $this->tracker_factory);
     }

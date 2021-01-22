@@ -42,7 +42,7 @@ class ArtifactFileHtml extends ArtifactFile // phpcs:ignore PSR1.Classes.ClassDe
             $this->setError($Language->getText('tracker_include_artifactfile', 'invalid_name'));
             return false;
         }
-            $size = @filesize($input_file);
+            $size       = @filesize($input_file);
             $input_data = @fread(@fopen($input_file, 'r'), $size);
         if ((strlen($input_data) < 1) || (strlen($input_data) > $sys_max_size_attachment)) {
                 $this->setError($Language->getText('tracker_include_artifactfile', 'not_attached', formatByteToMb($sys_max_size_attachment)));

@@ -54,8 +54,8 @@ class ImportExternalElement implements Dispatchable
 
     public function __construct(SimpleXMLElement $xml, Project $project, TrackerXmlImportFeedbackCollector $feedback_collector)
     {
-        $this->xml     = $xml;
-        $this->project = $project;
+        $this->xml                = $xml;
+        $this->project            = $project;
         $this->feedback_collector = $feedback_collector;
     }
 

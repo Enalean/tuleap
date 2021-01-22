@@ -32,7 +32,7 @@ class ScrumTemplate implements TuleapTemplate
 {
     public const NAME = 'scrum';
 
-    private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/scrum/project.xml';
+    private const PROJECT_XML        = __DIR__ . '/../../../../../tools/utils/setup_templates/scrum/project.xml';
     private const AGILEDASHBOARD_XML = __DIR__ . '/../../../../../plugins/agiledashboard/resources/templates/scrum_dashboard_template.xml';
 
     /**
@@ -66,10 +66,10 @@ class ScrumTemplate implements TuleapTemplate
 
     public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger, ConsistencyChecker $consistency_checker)
     {
-        $this->title              = _('Scrum');
-        $this->description        = _('Collect stories, plan releases, monitor sprints with a ready-to-use Scrum area');
-        $this->glyph_finder       = $glyph_finder;
-        $this->project_xml_merger = $project_xml_merger;
+        $this->title               = _('Scrum');
+        $this->description         = _('Collect stories, plan releases, monitor sprints with a ready-to-use Scrum area');
+        $this->glyph_finder        = $glyph_finder;
+        $this->project_xml_merger  = $project_xml_merger;
         $this->consistency_checker = $consistency_checker;
     }
 

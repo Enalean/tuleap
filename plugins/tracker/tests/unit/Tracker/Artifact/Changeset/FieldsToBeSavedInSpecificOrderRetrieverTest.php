@@ -45,7 +45,7 @@ class FieldsToBeSavedInSpecificOrderRetrieverTest extends TestCase
 
         $text_field = Mockery::mock(Tracker_FormElement_Field_Text::class);
         $file_field = Mockery::mock(Tracker_FormElement_Field_File::class);
-        $int_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $int_field  = Mockery::mock(Tracker_FormElement_Field_Integer::class);
 
         $factory = Mockery::mock(Tracker_FormElementFactory::class);
         $factory->shouldReceive('getUsedFields')->andReturn([$text_field, $file_field, $int_field]);

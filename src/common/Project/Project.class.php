@@ -30,31 +30,31 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     /**
      * The project is active
      */
-    public const STATUS_ACTIVE = 'A';
+    public const STATUS_ACTIVE       = 'A';
     public const STATUS_ACTIVE_LABEL = 'active';
 
     /**
      * The project is pending
      */
-    public const STATUS_PENDING = 'P';
+    public const STATUS_PENDING       = 'P';
     public const STATUS_PENDING_LABEL = 'pending';
 
     /**
      * The project is suspended
      */
-    public const STATUS_SUSPENDED = 'H';
+    public const STATUS_SUSPENDED       = 'H';
     public const STATUS_SUSPENDED_LABEL = 'suspended';
 
     /**
      * The project is deleted
      */
-    public const STATUS_DELETED = 'D';
+    public const STATUS_DELETED       = 'D';
     public const STATUS_DELETED_LABEL = 'deleted';
 
     /**
      * The project is system
      */
-    public const STATUS_SYSTEM = 's';
+    public const STATUS_SYSTEM       = 's';
     public const STATUS_SYSTEM_LABEL = 'system';
 
     public const SITE_NEWS_PROJECT_ID = 46;
@@ -125,7 +125,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         }
         $j = 1;
         foreach ($allowed_services as $service) {
-            $res_row = $service->data;
+            $res_row    = $service->data;
             $short_name = $service->getShortName();
             if (! $short_name) {
                 $short_name = $j++;
@@ -135,7 +135,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
             $res_row['description'] = $service->getInternationalizedDescription();
 
             $this->service_data_array[$short_name] = $res_row;
-            $this->services[$short_name] = $service;
+            $this->services[$short_name]           = $service;
 
             if ($service->isActive()) {
                 $this->cache_active_services[] = $service;
@@ -462,7 +462,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
 
     public function getProjectsCreatedFrom()
     {
-        $sql = 'SELECT * FROM groups WHERE built_from_template = ' . db_ei($this->getGroupId()) . " AND status <> 'D'";
+        $sql         = 'SELECT * FROM groups WHERE built_from_template = ' . db_ei($this->getGroupId()) . " AND status <> 'D'";
         $subprojects = [];
         if ($res = db_query($sql)) {
             while ($data = db_fetch_array($res)) {

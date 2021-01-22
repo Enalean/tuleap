@@ -37,8 +37,8 @@ class PostReceiveMailSender
     public const DEFAULT_MAIL_SUBJECT = 'Git notification';
     public const DEFAULT_FROM         = 'git';
 
-    public const TIMEOUT_EXIT_CODE    = 124;
-    public const INITIAL_COMMIT       = '0000000000000000000000000000000000000000';
+    public const TIMEOUT_EXIT_CODE = 124;
+    public const INITIAL_COMMIT    = '0000000000000000000000000000000000000000';
 
     /**
      * @var Git_GitRepositoryUrlManager
@@ -85,9 +85,9 @@ class PostReceiveMailSender
         $this->addAdditionalMailHeaders($mail_enhancer, $mail_raw_output);
         $this->setFrom($mail_enhancer);
 
-        $body          = $this->createMailBody($mail_raw_output);
-        $access_link   = $repository->getDiffLink($this->repository_url_manager, $newrev);
-        $notification  = new Notification($notified_mails, $subject, '', $body, $access_link, 'Git');
+        $body         = $this->createMailBody($mail_raw_output);
+        $access_link  = $repository->getDiffLink($this->repository_url_manager, $newrev);
+        $notification = new Notification($notified_mails, $subject, '', $body, $access_link, 'Git');
 
         if ($exit_status_code === self::TIMEOUT_EXIT_CODE) {
             $this->warnSiteAdministratorOfAMisuseOfAGitRepo($repository, $oldrev, $refname);

@@ -50,7 +50,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
             ->shouldAllowMockingProtectedMethods();
 
         $this->bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->dao   = Mockery::mock(OpenListValueDao::class);
+        $this->dao  = Mockery::mock(OpenListValueDao::class);
 
         $this->field->shouldReceive('getBind')->andReturn($this->bind);
         $this->field->shouldReceive('getOpenValueDao')->andReturn($this->dao);
@@ -70,7 +70,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
         $open_value_dao->shouldReceive('searchById')->andReturn([1, '20']); //, $odar_20,
 
         $value_dao = Mockery::mock(OpenListChangesetValueDao::class);
-        $results = TestHelper::arrayToDar(
+        $results   = TestHelper::arrayToDar(
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1000', 'openvalue_id' => null],
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1001', 'openvalue_id' => null],
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => null, 'openvalue_id' => '10'],
@@ -130,9 +130,9 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
 
     public function testSaveValue(): void
     {
-        $artifact = null;
-        $changeset_id = 666;
-        $submitted_value = [];
+        $artifact          = null;
+        $changeset_id      = 666;
+        $submitted_value   = [];
         $submitted_value[] = 'b101';   //exisiting bind value
         $submitted_value[] = 'b102 ';  //existing bind value
         $submitted_value[] = ' o301';  //existing open value
@@ -142,7 +142,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
         $submitted_value[] = 'bidon';  //bidon
         $submitted_value[] = '!new_1'; //new open value
         $submitted_value[] = '!new_2'; //new open value
-        $submitted_value = implode(',', $submitted_value);
+        $submitted_value   = implode(',', $submitted_value);
 
         $open_value_dao = Mockery::mock(OpenListChangesetValueDao::class);
         $open_value_dao->shouldReceive('create')->andReturn([1, 'new_1'])->once()->andReturn(901);
@@ -294,7 +294,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
     public function testItAcceptsValidValues(): void
     {
         $artifact = Mockery::mock(Artifact::class);
-        $field = Mockery::mock(Tracker_FormElement_Field_OpenList::class)
+        $field    = Mockery::mock(Tracker_FormElement_Field_OpenList::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('validate')->andReturnTrue();

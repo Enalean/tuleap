@@ -26,7 +26,7 @@ if (preg_match_all('/^\/plugins\/mediawiki\/wiki\/(\d+)\/([^\/][a-zA-Z]+)\/([a-z
 }
 
 $plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('mediawiki');
+$p              = $plugin_manager->getPluginByName('mediawiki');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $p->showImage(HTTPRequest::instance());
 } else {

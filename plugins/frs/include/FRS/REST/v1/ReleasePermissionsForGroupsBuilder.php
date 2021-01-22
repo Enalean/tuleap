@@ -48,8 +48,8 @@ class ReleasePermissionsForGroupsBuilder
     public function __construct(FRSPermissionManager $frs_permission_manager, IPermissionsManagerNG $permissions_manager, UGroupManager $ugroup_manager)
     {
         $this->frs_permission_manager = $frs_permission_manager;
-        $this->permissions_manager = $permissions_manager;
-        $this->ugroup_manager = $ugroup_manager;
+        $this->permissions_manager    = $permissions_manager;
+        $this->ugroup_manager         = $ugroup_manager;
     }
 
     public function getRepresentation(PFUser $user, FRSRelease $release): ?ReleasePermissionsForGroupsRepresentation
@@ -63,7 +63,7 @@ class ReleasePermissionsForGroupsBuilder
 
     private function getCanRead(FRSRelease $release): array
     {
-        $can_read = [];
+        $can_read   = [];
         $ugroup_ids = $this->permissions_manager->getAuthorizedUGroupIdsForProject(
             $release->getProject(),
             $release->getReleaseID(),

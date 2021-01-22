@@ -81,9 +81,9 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
 
     public function testBuildReturnsACompletePresenter(): void
     {
-        $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
-        $user = UserTestBuilder::aUser()->build();
-        $project = new \Project(['group_id' => '109']);
+        $planning          = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
+        $user              = UserTestBuilder::aUser()->build();
+        $project           = new \Project(['group_id' => '109']);
         $milestone_tracker = M::mock(\Tracker::class);
         $milestone_tracker->shouldReceive('getId')->andReturn(127);
         $planning->setPlanningTracker($milestone_tracker);
@@ -133,8 +133,8 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
     public function testBuildAddsAWarningFromAnEvent(): void
     {
         $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
-        $user = UserTestBuilder::aUser()->build();
-        $project = new \Project(['group_id' => '109']);
+        $user     = UserTestBuilder::aUser()->build();
+        $project  = new \Project(['group_id' => '109']);
         $this->mockBacklogAndMilestoneTrackers();
         $this->stubCardwallConfiguration();
         $burnup = M::mock(Burnup::class);
@@ -164,8 +164,8 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
     public function testBuildAddsNoWarning(): void
     {
         $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
-        $user = UserTestBuilder::aUser()->build();
-        $project = new \Project(['group_id' => '109']);
+        $user     = UserTestBuilder::aUser()->build();
+        $project  = new \Project(['group_id' => '109']);
         $this->mockBacklogAndMilestoneTrackers();
         $this->stubCardwallConfiguration();
         $this->tracker_form_element_factory->shouldReceive('getFormElementsByType')
@@ -182,8 +182,8 @@ final class PlanningEditionPresenterBuilderTest extends TestCase
     public function testBuildAllowsMilestoneTrackerUpdate(): void
     {
         $planning = new \Planning(89, 'Release planning', 109, 'Product Backlog', 'Release Plan');
-        $user = UserTestBuilder::aUser()->build();
-        $project = new \Project(['group_id' => '109']);
+        $user     = UserTestBuilder::aUser()->build();
+        $project  = new \Project(['group_id' => '109']);
         $this->mockBacklogAndMilestoneTrackers();
         $this->stubCardwallConfiguration();
         $this->tracker_form_element_factory->shouldReceive('getFormElementsByType')

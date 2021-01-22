@@ -40,7 +40,7 @@ class ToBeMappedUser extends ActionToBeTakenForUser
             throw new RuntimeException('Matching users should not be empty');
         }
 
-        $email  = $matching_users[0]->getEmail();
+        $email = $matching_users[0]->getEmail();
 
         parent::__construct($username, $realname, $email, $original_user_id, $original_ldap_id);
 

@@ -37,7 +37,7 @@ class AgileDashboard_MilestonesCardwallRepresentation
         $swimlanes     = [];
         foreach ($board->getSwimlines() as $swimline) {
             $swimline_representation = new AgileDashboard_SwimlineRepresentation($swimline, $planning_id, $user);
-            $swimlanes[] = $swimline_representation;
+            $swimlanes[]             = $swimline_representation;
         }
         $this->swimlanes = $swimlanes;
     }

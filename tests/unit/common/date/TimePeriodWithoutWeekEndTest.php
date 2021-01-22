@@ -87,7 +87,7 @@ class TimePeriodWithoutWeekEndTest extends TestCase
         $start_date  = mktime(23, 59, 59, 11, 5, 2016);
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 4);
 
-        $today = mktime(23, 59, 59, 11, 12, 2016);
+        $today      = mktime(23, 59, 59, 11, 12, 2016);
         $timestamps = $time_period->getCountDayUntilDate($today);
 
         $this->assertSame(5, $timestamps);
@@ -98,7 +98,7 @@ class TimePeriodWithoutWeekEndTest extends TestCase
         $start_date  = mktime(23, 59, 59, 11, 5, 2016);
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 4);
 
-        $today = mktime(23, 59, 59, 11, 8, 2016);
+        $today      = mktime(23, 59, 59, 11, 8, 2016);
         $timestamps = $time_period->getCountDayUntilDate($today);
 
         $this->assertSame(1, $timestamps);
@@ -392,8 +392,8 @@ class TimePeriodWithoutWeekEndTest extends TestCase
         }
 
         $start_date_timestamp = (new \DateTime($start_date))->getTimestamp();
-        $end_date_timestamp = (new DateTime($end_date))->getTimestamp();
-        $time_period = TimePeriodWithoutWeekEnd::buildFromEndDate(
+        $end_date_timestamp   = (new DateTime($end_date))->getTimestamp();
+        $time_period          = TimePeriodWithoutWeekEnd::buildFromEndDate(
             $start_date_timestamp,
             $end_date_timestamp,
             $logger

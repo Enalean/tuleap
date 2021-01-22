@@ -34,7 +34,7 @@ class b201605161710_reset_folders_owner_and_group extends ForgeUpgrade_Bucket
         chown($svn_plugin_folder, $sys_http_user);
         chgrp($svn_plugin_folder, $sys_http_user);
 
-        $project_dirs      = new DirectoryIterator($svn_plugin_folder);
+        $project_dirs = new DirectoryIterator($svn_plugin_folder);
 
         foreach ($project_dirs as $project_dir) {
             if (! $project_dir->isDot() && $project_dir->isDir()) {

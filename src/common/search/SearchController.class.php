@@ -38,12 +38,12 @@ class Search_SearchController
     public function __construct(EventManager $event_manager)
     {
         $this->event_manager = $event_manager;
-        $this->renderer = TemplateRendererFactory::build()->getRenderer(
+        $this->renderer      = TemplateRendererFactory::build()->getRenderer(
             [
                  ForgeConfig::get('codendi_dir') . '/src/templates/search',
             ]
         );
-        $this->search_types = [
+        $this->search_types  = [
             Search_SearchTrackerV3::NAME => new Search_SearchTrackerV3(new ArtifactDao()),
             Search_SearchProject::NAME   => new Search_SearchProject(new ProjectDao()),
             Search_SearchPeople::NAME    => new Search_SearchPeople(UserManager::instance()),
@@ -119,9 +119,9 @@ class Search_SearchController
 
     private function getSearchPresenter(Search_SearchQuery $query, $results)
     {
-        $project_search_types   = [];
-        $site_search_types      = [];
-        $redirect_to_services   = true;
+        $project_search_types = [];
+        $site_search_types    = [];
+        $redirect_to_services = true;
 
         $this->event_manager->processEvent(
             Event::SEARCH_TYPES_PRESENTERS,
@@ -139,11 +139,11 @@ class Search_SearchController
             $query->getWords(),
             $redirect_to_services
         );
-        $project_search_types = array_merge($additional_project_search_types, $project_search_types);
+        $project_search_types            = array_merge($additional_project_search_types, $project_search_types);
 
         $search_panes = [];
         if (! $query->getProject()->isError()) {
-            $project_name = $query->getProject()->getPublicName();
+            $project_name   = $query->getProject()->getPublicName();
             $search_panes[] = new Search_SearchPanePresenter(
                 $GLOBALS['Language']->getText('search_index', 'project_wide_search', $project_name),
                 $project_search_types,
@@ -204,7 +204,7 @@ class Search_SearchController
     private function doSearch(Search_SearchQuery $query)
     {
         $reference_manager = ReferenceManager::instance();
-        $references = $reference_manager->extractReferences(
+        $references        = $reference_manager->extractReferences(
             $query->getWords(),
             $query->getProject()->getId()
         );

@@ -57,9 +57,9 @@ class RealTimeMessageSender
         Tracker_Permission_PermissionsSerializer $permissions_serializer,
         RealTimeArtifactMessageSender $artifact_message_sender
     ) {
-        $this->node_js_client                  = $node_js_client;
-        $this->permissions_serializer          = $permissions_serializer;
-        $this->artifact_message_sender         = $artifact_message_sender;
+        $this->node_js_client          = $node_js_client;
+        $this->permissions_serializer  = $permissions_serializer;
+        $this->artifact_message_sender = $artifact_message_sender;
     }
 
     public function sendExecutionCreated(
@@ -72,7 +72,7 @@ class RealTimeMessageSender
         }
 
         $user_representation = UserRepresentation::build($user);
-        $data = [
+        $data                = [
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
         ];
@@ -89,7 +89,7 @@ class RealTimeMessageSender
         }
 
         $user_representation = UserRepresentation::build($user);
-        $data = [
+        $data                = [
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
         ];
@@ -105,7 +105,7 @@ class RealTimeMessageSender
         ?UserRepresentation $previous_user
     ): void {
         $user_representation = UserRepresentation::build($user);
-        $data = [
+        $data                = [
             'artifact_id'     => $artifact->getId(),
             'status'          => $status,
             'previous_status' => $previous_status,
@@ -148,7 +148,7 @@ class RealTimeMessageSender
         }
 
         $user_representation = UserRepresentation::build($user);
-        $data = [
+        $data                = [
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
         ];
@@ -173,7 +173,7 @@ class RealTimeMessageSender
         }
 
         $user_representation = UserRepresentation::build($user);
-        $data    = [
+        $data                = [
             'presence' => [
                 'execution_id' => $artifact->getId(),
                 'uuid'         => $uuid,
@@ -181,8 +181,8 @@ class RealTimeMessageSender
                 'user'         => $user_representation
             ]
         ];
-        $rights  = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
-        $message = new MessageDataPresenter(
+        $rights              = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
+        $message             = new MessageDataPresenter(
             $user->getId(),
             $_SERVER[self::HTTP_CLIENT_UUID],
             'testmanagement_' . $campaign->getId(),

@@ -47,19 +47,19 @@ class CrossReference
      */
     public function __construct($refSourceId, $refSourceGid, $refSourceType, $refSourceKey, $refTargetId, $refTargetGid, $refTargetType, $refTargetKey, $userId)
     {
-        $this->refSourceId = $refSourceId;
-        $this->refSourceGid = $refSourceGid;
+        $this->refSourceId   = $refSourceId;
+        $this->refSourceGid  = $refSourceGid;
         $this->refSourceType = $refSourceType;
-        $this->refTargetId = $refTargetId;
-        $this->refTargetGid = $refTargetGid;
+        $this->refTargetId   = $refTargetId;
+        $this->refTargetGid  = $refTargetGid;
         $this->refTargetType = $refTargetType;
-        $this->userId = $userId;
-        $this->sourceUrl = '';
-        $this->targetUrl = '';
+        $this->userId        = $userId;
+        $this->sourceUrl     = '';
+        $this->targetUrl     = '';
 
-        $this->sourceKey = $refSourceKey;
+        $this->sourceKey        = $refSourceKey;
         $this->insertSourceType = $refSourceType;
-        $this->targetKey = $refTargetKey;
+        $this->targetKey        = $refTargetKey;
         $this->insertTargetType = $refTargetType;
 
         $this->computeUrls();
@@ -148,7 +148,7 @@ class CrossReference
             $group_param = "&group_id=" . $this->refTargetGid;
         }
         $this->targetUrl = $server_url . "/goto?key=" . urlencode($this->targetKey) . "&val=" . urlencode($this->refTargetId) . $group_param;
-        $group_param = '';
+        $group_param     = '';
         if ($this->refSourceGid != 100) {
             $group_param = "&group_id=" . $this->refSourceGid;
         }

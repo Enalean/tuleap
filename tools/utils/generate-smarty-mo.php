@@ -67,8 +67,8 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
                 $template = escapeshellarg("$path/${gettext['po']}/$component.pot");
                 foreach (glob("$path/${gettext['po']}/*/LC_MESSAGES/*.po") as $locale_file) {
                     $locale_dir = dirname($locale_file);
-                    $mo_file = escapeshellarg("$locale_dir/$component.mo");
-                    $po_file = escapeshellarg($locale_file);
+                    $mo_file    = escapeshellarg("$locale_dir/$component.mo");
+                    $po_file    = escapeshellarg($locale_file);
                     executeCommandAndExitIfStderrNotEmpty("msgfmt -o $mo_file $po_file");
                 }
             }

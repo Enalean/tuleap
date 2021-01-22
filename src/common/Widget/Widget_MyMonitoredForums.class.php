@@ -41,29 +41,29 @@ class Widget_MyMonitoredForums extends Widget
 
     public function getContent()
     {
-        $purifier = Codendi_HTMLPurifier::instance();
+        $purifier                 = Codendi_HTMLPurifier::instance();
         $html_my_monitored_forums = '';
-        $sql = "SELECT groups.group_id, groups.group_name " .
+        $sql                      = "SELECT groups.group_id, groups.group_name " .
              "FROM groups,forum_group_list,forum_monitored_forums " .
              "WHERE groups.group_id=forum_group_list.group_id " .
              "AND groups.status = 'A' " .
             "AND forum_group_list.is_public <> 9 " .
              "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id " .
              "AND forum_monitored_forums.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' ";
-        $um = UserManager::instance();
-        $current_user = $um->getCurrentUser();
+        $um                       = UserManager::instance();
+        $current_user             = $um->getCurrentUser();
         if ($current_user->isRestricted()) {
             $projects = $current_user->getProjects();
-            $sql .= "AND groups.group_id IN (" . db_ei_implode($projects) . ") ";
+            $sql     .= "AND groups.group_id IN (" . db_ei_implode($projects) . ") ";
         }
         $sql .= "GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
 
         $result = db_query($sql);
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
         if (! $result || $rows < 1) {
             $html_my_monitored_forums .= $GLOBALS['Language']->getText('my_index', 'my_forums_msg');
         } else {
-            $request = HTTPRequest::instance();
+            $request                   = HTTPRequest::instance();
             $html_my_monitored_forums .= '<table class="tlp-table" style="width:100%">';
             for ($j = 0; $j < $rows; $j++) {
                 $group_id = db_result($result, $j, 'group_id');
@@ -77,7 +77,7 @@ class Widget_MyMonitoredForums extends Widget
                     "AND forum_monitored_forums.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' LIMIT 100";
 
                 $result2 = db_query($sql2);
-                $rows2 = db_numrows($result2);
+                $rows2   = db_numrows($result2);
 
                 $vItemId = new Valid_UInt('hide_item_id');
                 $vItemId->required();
@@ -101,12 +101,12 @@ class Widget_MyMonitoredForums extends Widget
                     $hide_url . '<a href="/forum/?group_id=' . $group_id . '">' .
                     $purifier->purify(db_result($result, $j, 'group_name')) . '</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 
-                $html = '';
+                $html      = '';
                 $count_new = max(0, $count_diff);
                 for ($i = 0; $i < $rows2; $i++) {
                     if (! $hide_now) {
                         $group_forum_id = db_result($result2, $i, 'group_forum_id');
-                        $html .= '
+                        $html          .= '
                     <TR class="' . util_get_alt_row_color($i) . '"><TD WIDTH="99%">' .
                         '&nbsp;&nbsp;&nbsp;-&nbsp;<A HREF="/forum/forum.php?forum_id=' . $group_forum_id . '">' .
                         stripslashes(db_result($result2, $i, 'forum_name')) . '</A></TD>' .
@@ -116,7 +116,7 @@ class Widget_MyMonitoredForums extends Widget
                     }
                 }
 
-                $html_hdr .= my_item_count($rows2, $count_new) . '</td></tr>';
+                $html_hdr                 .= my_item_count($rows2, $count_new) . '</td></tr>';
                 $html_my_monitored_forums .= $html_hdr . $html;
             }
             $html_my_monitored_forums .= '</table>';

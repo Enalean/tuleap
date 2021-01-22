@@ -43,7 +43,7 @@ function db_query($sql)
  */
 function db_query_params($sql, $params)
 {
-    $dar = CodendiDataAccess::instance()->query($sql, $params);
+    $dar                   = CodendiDataAccess::instance()->query($sql, $params);
     $GLOBALS['db_qhandle'] = $dar->getResult();
     /** @psalm-suppress DeprecatedFunction */
     if (db_numrows($GLOBALS['db_qhandle'])) {

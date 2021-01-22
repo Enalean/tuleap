@@ -73,7 +73,7 @@ final class ConfigureAtXMLImportTest extends TestCase
 
             public function create(Codendi_Request $request)
             {
-                $this->param = $request->get(ProjectMilestonesWidgetRetriever::PARAM_SELECTED_PROJECT);
+                $this->param   = $request->get(ProjectMilestonesWidgetRetriever::PARAM_SELECTED_PROJECT);
                 $this->project = $request->get('project');
             }
         };

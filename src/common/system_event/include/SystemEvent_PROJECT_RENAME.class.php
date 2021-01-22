@@ -56,9 +56,9 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
      */
     public function verbalizeParameters($with_link)
     {
-        $txt = '';
+        $txt                       = '';
         list($group_id, $new_name) = $this->getParametersAsArray();
-        $txt .= 'project: ' . $this->verbalizeProjectId($group_id, $with_link) . ' new name: ' . $new_name;
+        $txt                      .= 'project: ' . $this->verbalizeProjectId($group_id, $with_link) . ' new name: ' . $new_name;
         return $txt;
     }
 

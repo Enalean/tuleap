@@ -122,7 +122,7 @@ final class TusServerTest extends TestCase
         $upload_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns($content_type);
         $upload_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
         $upload_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns($upload_offset);
-        $request_body = \Mockery::mock(StreamInterface::class);
+        $request_body        = \Mockery::mock(StreamInterface::class);
         $request_body_stream = fopen('php://memory', 'rb+');
         fwrite($request_body_stream, $body_content);
         rewind($request_body_stream);
@@ -195,7 +195,7 @@ final class TusServerTest extends TestCase
         $incoming_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
         $incoming_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
         $incoming_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns(10);
-        $request_body = \Mockery::mock(StreamInterface::class);
+        $request_body        = \Mockery::mock(StreamInterface::class);
         $request_body_stream = fopen('php://memory', 'rb+');
         $request_body->shouldReceive('detach')->andReturns($request_body_stream);
         $incoming_request->shouldReceive('getBody')->andReturns($request_body);
@@ -279,7 +279,7 @@ final class TusServerTest extends TestCase
         $incoming_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
         $incoming_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
         $incoming_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns(0);
-        $request_body = \Mockery::mock(StreamInterface::class);
+        $request_body        = \Mockery::mock(StreamInterface::class);
         $request_body_stream = fopen('php://memory', 'rb+');
         $request_body->shouldReceive('detach')->andReturns($request_body_stream);
         $incoming_request->shouldReceive('getBody')->andReturns($request_body);
@@ -389,7 +389,7 @@ final class TusServerTest extends TestCase
         $incoming_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
         $incoming_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
         $incoming_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns(0);
-        $request_body = \Mockery::mock(StreamInterface::class);
+        $request_body        = \Mockery::mock(StreamInterface::class);
         $request_body_stream = fopen('php://memory', 'rb+');
         $request_body->shouldReceive('detach')->andReturns($request_body_stream);
         $incoming_request->shouldReceive('getBody')->andReturns($request_body);

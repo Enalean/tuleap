@@ -35,11 +35,11 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
         if ($value === '') {
             $matches_value = " = ''";
         } else {
-            $matches_value     = " LIKE ?";
+            $matches_value      = " LIKE ?";
             $where_parameters[] = '%' . DBFactory::getMainTuleapDBConnection()->getDB()->escapeLikeValue($value) . '%';
         }
 
-        $from = "";
+        $from  = "";
         $where = "changeset_value_title.changeset_id IS NOT NULL
             AND tracker_changeset_value_title.value $matches_value";
 

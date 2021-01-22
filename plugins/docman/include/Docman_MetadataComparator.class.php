@@ -29,9 +29,9 @@ class Docman_MetadataComparator
     public function __construct($srcGroupId, $dstGroupId, $themePath)
     {
         $this->docmanIcons = new Docman_Icons($themePath . '/images/ic/');
-        $pm = ProjectManager::instance();
-        $this->srcGo = $pm->getProject($srcGroupId);
-        $this->dstGo = $pm->getProject($dstGroupId);
+        $pm                = ProjectManager::instance();
+        $this->srcGo       = $pm->getProject($srcGroupId);
+        $this->dstGo       = $pm->getProject($dstGroupId);
     }
 
     /**
@@ -42,7 +42,7 @@ class Docman_MetadataComparator
     {
         $a = [];
         while ($iter->valid()) {
-            $e = $iter->current();
+            $e              = $iter->current();
             $a[$e->$func()] = $e;
             $iter->next();
         }
@@ -91,27 +91,27 @@ class Docman_MetadataComparator
 
         // Get list of ListOfValues elements from dst project
         $srcLoveFactory = new Docman_MetadataListOfValuesElementFactory($srcMd->getId());
-        $srcLoveIter = $srcLoveFactory->getIteratorByFieldId($srcMd->getId(), $srcMd->getLabel(), true);
+        $srcLoveIter    = $srcLoveFactory->getIteratorByFieldId($srcMd->getId(), $srcMd->getLabel(), true);
 
         // Get list of ListOfValues elements from dst project
         $dstLoveFactory = new Docman_MetadataListOfValuesElementFactory($dstMd->getId());
-        $dstLoveIter = $dstLoveFactory->getIteratorByFieldId($dstMd->getId(), $dstMd->getLabel(), true);
-        $dstLoveArray = $this->getArrayFromIterator($dstLoveIter, 'getId');
+        $dstLoveIter    = $dstLoveFactory->getIteratorByFieldId($dstMd->getId(), $dstMd->getLabel(), true);
+        $dstLoveArray   = $this->getArrayFromIterator($dstLoveIter, 'getId');
 
         $purifier = Codendi_HTMLPurifier::instance();
 
         // Keep a trace of matching love
         $matchingLove = [];
         while ($srcLoveIter->valid()) {
-            $srcLove = $srcLoveIter->current();
+            $srcLove  = $srcLoveIter->current();
             $rowStyle = 'missing';
 
             // Compute the differences
             $dstLove = false;
             if (isset($mdMap['love'][$srcLove->getId()])) {
-                $dstLove = $dstLoveArray[$mdMap['love'][$srcLove->getId()]];
+                $dstLove                         = $dstLoveArray[$mdMap['love'][$srcLove->getId()]];
                 $matchingLove[$dstLove->getId()] = true;
-                $rowStyle = 'equals';
+                $rowStyle                        = 'equals';
             } else {
                 $sthToImport = true;
             }
@@ -181,19 +181,19 @@ class Docman_MetadataComparator
     public function getMetadataCompareTable(&$sthToImport)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $html     = '';
 
         // True if there is sth to import in dst project.
         $sthToImport = false;
 
         // For source project, only get the 'Used' metadata.
         $srcMdFactory = new Docman_MetadataFactory($this->srcGo->getGroupId());
-        $srcMdIter = $srcMdFactory->getMetadataForGroup(true);
+        $srcMdIter    = $srcMdFactory->getMetadataForGroup(true);
 
         // For destination (current) project, get all metadata.
         $dstMdFactory = new Docman_MetadataFactory($this->dstGo->getGroupId());
-        $dstMdIter = $dstMdFactory->getMetadataForGroup();
-        $dstMdArray = $this->getArrayFromIterator($dstMdIter, 'getLabel');
+        $dstMdIter    = $dstMdFactory->getMetadataForGroup();
+        $dstMdArray   = $this->getArrayFromIterator($dstMdIter, 'getLabel');
 
         // Get mapping between the 2 definitions
         $mdMap = [];
@@ -223,7 +223,7 @@ class Docman_MetadataComparator
 
             // Compute the differences between the 2 projects
             $dstMdStatus = 'missing';
-            $dstMdLabel = '';
+            $dstMdLabel  = '';
             if ($srcMdFactory->isRealMetadata($srcMd->getLabel())) {
                 if (isset($mdMap['md'][$srcMd->getId()])) {
                     $dstMdLabel = $srcMdFactory->getLabelFromId($mdMap['md'][$srcMd->getId()]);
@@ -236,7 +236,7 @@ class Docman_MetadataComparator
                 $dstMd = $dstMdArray[$dstMdLabel];
                 if ($dstMd !== false) {
                     $matchingMd[$dstMdLabel] = true;
-                    $dstMdStatus = 'equivalent';
+                    $dstMdStatus             = 'equivalent';
                     if ($dstMd->equals($srcMd)) {
                         $dstMdStatus = 'equals';
                     } else {
@@ -304,7 +304,7 @@ class Docman_MetadataComparator
                     break;
                 case 'equivalent':
                     $diffArray = $this->checkMdDifferences($srcMd, $dstMd, $mdMap['love']);
-                    $diffStr = '<ul style="padding:0;padding-left:1.5em;margin:0;">';
+                    $diffStr   = '<ul style="padding:0;padding-left:1.5em;margin:0;">';
                     foreach ($diffArray as $diff) {
                         $diff_purified = $purifier->purify($diff, CODENDI_PURIFIER_FULL);
                         $diffStr      .= "<li>$diff_purified</li>";
@@ -342,10 +342,10 @@ class Docman_MetadataComparator
                 $html .= "<tr>\n";
 
                 // Name
-                $html .= "<td colspan=\"2\" style=\"font-weight: bold;\">";
+                $html         .= "<td colspan=\"2\" style=\"font-weight: bold;\">";
                 $purified_name = $purifier->purify($md->getName());
-                $html .= $purified_name;
-                $html .= "</td>";
+                $html         .= $purified_name;
+                $html         .= "</td>";
 
                 // Presence in source project
                 $html .= "<td></td>";

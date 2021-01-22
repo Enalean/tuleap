@@ -55,7 +55,7 @@ use Tuleap\AgileDashboard\KanbanRightsPresenter;
 class KanbanColumnsResource
 {
 
-    public const MAX_LIMIT = 100;
+    public const MAX_LIMIT        = 100;
     public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var AgileDashboard_KanbanFactory */

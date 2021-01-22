@@ -36,7 +36,7 @@ class BytesAmountHandledLFSObjectInstrumentationFilterTest extends TestCase
         $filter     = BytesAmountHandledLFSObjectInstrumentationFilter::buildReceivedBytesFilter($prometheus);
         StreamFilter::prependFilter($input_source, $filter);
 
-        $size       = 1024;
+        $size = 1024;
         fwrite($input_source, \str_repeat('A', $size));
         rewind($input_source);
         $destination_resource = fopen('php://memory', 'wb');
@@ -57,7 +57,7 @@ class BytesAmountHandledLFSObjectInstrumentationFilterTest extends TestCase
         $filter        = BytesAmountHandledLFSObjectInstrumentationFilter::buildTransmittedBytesFilter($prometheus, $transfer_type);
         StreamFilter::prependFilter($input_source, $filter);
 
-        $size       = 1024;
+        $size = 1024;
         fwrite($input_source, \str_repeat('A', $size));
         rewind($input_source);
         $destination_resource = fopen('php://memory', 'wb');

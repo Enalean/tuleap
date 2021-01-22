@@ -127,7 +127,7 @@ class GroupFactory
         if ($this->isError() || ! $result_my_groups) {
             return false;
         } else {
-            $pm = ProjectManager::instance();
+            $pm        = ProjectManager::instance();
             $my_groups = [];
             while ($res_group = db_fetch_array($result_my_groups)) {
                 $group = $pm->getProject($res_group['group_id']);

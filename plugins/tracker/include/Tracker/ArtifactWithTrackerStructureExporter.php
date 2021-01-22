@@ -38,8 +38,8 @@ class ArtifactWithTrackerStructureExporter
 
     public function __construct(TrackerXmlExport $exporter, XMLConvertor $convertor)
     {
-        $this->exporter      = $exporter;
-        $this->convertor     = $convertor;
+        $this->exporter  = $exporter;
+        $this->convertor = $convertor;
     }
 
     public function exportArtifactAndTrackerStructureToXML(PFUser $user, \Tuleap\Tracker\Artifact\Artifact $artifact, ZipArchive $archive)

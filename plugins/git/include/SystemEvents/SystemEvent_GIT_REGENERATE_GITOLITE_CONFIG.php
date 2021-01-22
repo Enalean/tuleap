@@ -34,8 +34,8 @@ class SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG extends SystemEvent
         Git_GitoliteDriver $gitolite_driver,
         ProjectManager $project_manager
     ) {
-        $this->gitolite_driver  = $gitolite_driver;
-        $this->project_manager  = $project_manager;
+        $this->gitolite_driver = $gitolite_driver;
+        $this->project_manager = $project_manager;
     }
 
     public function process()

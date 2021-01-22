@@ -65,7 +65,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                     $this->getMessageLink($t, ['path' => &$path, 'parent' => &$p, 'item' => &$last['item']])
                 );
             } else {
-                $i = array_pop($l['items']);
+                $i      = array_pop($l['items']);
                 $params = [
                     'item' => $i['item'],
                     'path' => &$path
@@ -86,7 +86,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                         }
                     }
                     if ($found) {
-                        $e = $v;
+                        $e     = $v;
                         $title = $e['parent']->getTitle();
                     } else {
                         trigger_error('Program Error, _REMOVED not found in notifications.');
@@ -171,7 +171,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
         $dpm   = $this->_getPermissionsManager();
         $users = $this->notified_people_retriever->getNotifiedUsers($this->project, $id);
         while ($users->valid()) {
-            $row  = $users->current();
+            $row = $users->current();
             if (! isset($this->_listeners[$row['user_id']])) {
                 $um   = $this->_getUserManager();
                 $user = $um->getUserById($row['user_id']);

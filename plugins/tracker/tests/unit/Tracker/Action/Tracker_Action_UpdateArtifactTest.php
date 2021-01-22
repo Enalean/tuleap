@@ -78,12 +78,12 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
     {
         parent::setUp();
 
-        $tracker_user_story_id     = 103;
-        $user_story_id             = 107;
-        $submitted_by              = 102;
-        $submitted_on              = 1234567890;
-        $use_artifact_permissions  = false;
-        $tracker                   = Mockery::spy(Tracker::class);
+        $tracker_user_story_id    = 103;
+        $user_story_id            = 107;
+        $submitted_by             = 102;
+        $submitted_on             = 1234567890;
+        $use_artifact_permissions = false;
+        $tracker                  = Mockery::spy(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn($this->tracker_id);
         $this->layout              = \Mockery::spy(\Tracker_IDisplayTrackerLayout::class);
         $this->request             = new Codendi_Request(['func' => 'artifact-update'], \Mockery::spy(ProjectManager::class));
@@ -161,7 +161,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($this->user_story);
 
         $user_story_id = $this->user_story->getId();
-        $expected = [$user_story_id => ['remaining_effort' => 23]];
+        $expected      = [$user_story_id => ['remaining_effort' => 23]];
         $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
@@ -173,14 +173,14 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $tracker_user_story_id = 110;
         $tracker_user_story    = Mockery::spy(Tracker::class);
         $tracker_user_story->shouldReceive('getId')->andReturn($tracker_user_story_id);
-        $user_story_id         = 111;
-        $user_story            = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $user_story_id = 111;
+        $user_story    = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $user_story->shouldReceive('getTracker')->andReturns($tracker_user_story);
         $user_story->shouldReceive('getId')->andReturns($user_story_id);
         $this->hierarchy_factory->shouldReceive('getParentArtifact')->with($this->user, $this->task)->andReturns($user_story);
 
-        $expected      = [];
+        $expected = [];
         $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
@@ -190,9 +190,9 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
     {
         $this->setUpAjaxRequestHeaders();
         $this->formelement_factory->shouldReceive('getComputableFieldByNameForUser')->with($this->tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->andReturns($this->computed_field);
-        $tracker        = Mockery::spy(Tracker::class);
+        $tracker = Mockery::spy(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn($this->tracker_id);
-        $task           = Mockery::spy(Artifact::class);
+        $task = Mockery::spy(Artifact::class);
         $task->shouldReceive('getId')->andReturn($this->artifact_id);
         $task->shouldReceive('getTracker')->andReturn($tracker);
         $visit_recorder = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
@@ -212,7 +212,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $tracker->shouldReceive('hasFormElementWithNameAndType')->andReturns(true);
         $this->computed_field->shouldReceive('isArtifactValueAutocomputed')->andReturns(true);
 
-        $expected      = [
+        $expected = [
             $this->artifact_id => ['remaining_effort' => '42 (autocomputed)']
         ];
         $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
@@ -259,8 +259,8 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
         $tracker_user_story_id = 110;
         $tracker_user_story    = Mockery::spy(Tracker::class);
         $tracker_user_story->shouldReceive('getId')->andReturn($tracker_user_story_id);
-        $user_story_id         = 111;
-        $user_story            = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $user_story_id = 111;
+        $user_story    = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->computed_field->shouldReceive('isArtifactValueAutocomputed')->andReturns(false);
         $user_story->shouldReceive('getTracker')->andReturns($tracker_user_story);
@@ -316,7 +316,7 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
     {
         $request        = new Codendi_Request($request_data, Mockery::spy(ProjectManager::class));
         $visit_recorder = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
-        $action = new class (
+        $action         = new class (
             $this->task,
             $this->formelement_factory,
             $this->event_manager,

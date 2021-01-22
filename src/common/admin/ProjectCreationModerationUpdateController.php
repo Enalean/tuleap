@@ -46,10 +46,10 @@ class ProjectCreationModerationUpdateController implements DispatchableWithReque
 
         (new \CSRFSynchronizerToken('/admin/project-creation/moderation'))->check();
 
-        $project_approval = $request->getToggleVariable('projects_must_be_approved');
+        $project_approval      = $request->getToggleVariable('projects_must_be_approved');
         $restricted_can_create = $request->getToggleVariable('restricted_users_can_create_projects');
-        $nb_max_global    = $this->getInputNotLowerThanMinusOne($request, 'nb_max_projects_waiting_for_validation');
-        $nb_max_per_user  = $this->getInputNotLowerThanMinusOne($request, 'nb_max_projects_waiting_for_validation_per_user');
+        $nb_max_global         = $this->getInputNotLowerThanMinusOne($request, 'nb_max_projects_waiting_for_validation');
+        $nb_max_per_user       = $this->getInputNotLowerThanMinusOne($request, 'nb_max_projects_waiting_for_validation_per_user');
 
         $config_dao = new \ConfigDao();
         $config_dao->save(\ProjectManager::CONFIG_PROJECT_APPROVAL, $project_approval);

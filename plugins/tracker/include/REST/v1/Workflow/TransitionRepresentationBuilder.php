@@ -62,9 +62,9 @@ class TransitionRepresentationBuilder implements Visitor
      */
     public function build()
     {
-        $id = JsonCast::toInt($this->transition->getId());
+        $id      = JsonCast::toInt($this->transition->getId());
         $from_id = JsonCast::toInt($this->transition->getIdFrom());
-        $to_id = JsonCast::toInt($this->transition->getIdTo());
+        $to_id   = JsonCast::toInt($this->transition->getIdTo());
 
         $conditions = $this->transition->getConditions()->getConditions();
         foreach ($conditions as &$condition) {
@@ -86,7 +86,7 @@ class TransitionRepresentationBuilder implements Visitor
      */
     public function visitPermissions(Workflow_Transition_Condition_Permissions $condition)
     {
-        $project_id = $this->getProjectId();
+        $project_id                      = $this->getProjectId();
         $this->authorized_user_group_ids = array_map(
             function ($group) use ($project_id) {
                 return UserGroupRepresentation::getRESTIdForProject($project_id, $group['ugroup_id']);

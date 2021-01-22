@@ -95,7 +95,7 @@ class TrackerXmlExport
         foreach ($this->tracker_factory->getTrackersByGroupId($project->getID()) as $tracker) {
             if ($tracker->isActive()) {
                 $exported_trackers[] = $tracker;
-                $artifacts = $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
+                $artifacts           = $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
                 $this->artifact_xml_export->export($tracker, $artifacts, $user, $archive);
             }
         }
@@ -126,7 +126,7 @@ class TrackerXmlExport
 
     private function addTypeChild(SimpleXMLElement $natures, NaturePresenter $type, $project_id)
     {
-        $cdata = new XML_SimpleXMLCDATAFactory();
+        $cdata      = new XML_SimpleXMLCDATAFactory();
         $type_child = $cdata->insert($natures, 'nature', $type->shortname);
         if ($this->artifact_links_usage_dao->isTypeDisabledInProject($project_id, $type->shortname)) {
             $type_child->addAttribute('is_used', 0);
@@ -222,7 +222,7 @@ class TrackerXmlExport
         Tuleap\Project\XML\Export\ArchiveInterface $archive,
         array $artifacts
     ) {
-        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        $tracker     = $this->tracker_factory->getTrackerById($tracker_id);
         $xml_content = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
                                          <trackers />'

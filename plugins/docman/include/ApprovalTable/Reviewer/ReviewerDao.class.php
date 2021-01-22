@@ -65,7 +65,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
     {
         if (is_array($status)) {
             $_status = array_map("intval", $status);
-            $state = 'state IN (' . implode(',', $status) . ')';
+            $state   = 'state IN (' . implode(',', $status) . ')';
         } else {
             $state = 'state = ' . intval($status);
         }
@@ -90,7 +90,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
     public function addUser($tableId, $userId)
     {
         $newRank = $this->prepareUserRanking($tableId, $userId, 'end');
-        $sql = sprintf(
+        $sql     = sprintf(
             'INSERT INTO plugin_docman_approval_user' .
                        '(table_id, reviewer_id, rank)' .
                        ' VALUES' .

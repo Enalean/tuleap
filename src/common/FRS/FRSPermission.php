@@ -29,7 +29,7 @@ class FRSPermission
 
     public function __construct($ugroup_id)
     {
-        $this->ugroup_id       = $ugroup_id;
+        $this->ugroup_id = $ugroup_id;
     }
 
     public function getUGroupId()

@@ -117,7 +117,7 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
     public function process()
     {
         $artifact_id = $this->getArtifactIdFromParameters();
-        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+        $artifact    = $this->artifact_factory->getArtifactById($artifact_id);
         if ($artifact === null) {
             $this->warning("Unable to find artifact " . $artifact_id);
 

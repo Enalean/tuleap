@@ -30,7 +30,7 @@ if (! $group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-$pm = ProjectManager::instance();
+$pm      = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 $service = $project->getService(\Service::CVS);
 if (! ($service instanceof ServiceCVS)) {

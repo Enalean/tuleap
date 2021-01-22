@@ -67,11 +67,11 @@ class DashboardWidgetPresenter
             $this->purified_custom_title = $widget->getPurifiedCustomTitle();
         }
 
-        $this->is_editable    = $widget->hasPreferences($this->widget_id);
-        $this->has_rss        = $widget->hasRss();
-        $this->rss_url        = (string) $widget->getRssUrl($widget->owner_id, $widget->owner_type);
-        $this->icon           = $widget->getIcon();
-        $this->has_icon       = (bool) $this->icon;
+        $this->is_editable = $widget->hasPreferences($this->widget_id);
+        $this->has_rss     = $widget->hasRss();
+        $this->rss_url     = (string) $widget->getRssUrl($widget->owner_id, $widget->owner_type);
+        $this->icon        = $widget->getIcon();
+        $this->has_icon    = (bool) $this->icon;
 
         $this->javascript_dependencies = $widget->getJavascriptDependencies();
         $this->stylesheet_dependencies = $widget->getStylesheetDependencies();
@@ -80,7 +80,7 @@ class DashboardWidgetPresenter
 
         $this->is_content_loaded_asynchronously = $widget->isAjax();
         if ($this->is_content_loaded_asynchronously) {
-            $this->content = '';
+            $this->content  = '';
             $this->ajax_url = $widget->getAjaxUrl($widget->owner_id, $widget->owner_type, $dashboard->getId());
         } else {
             $this->content  = $widget->getContent();

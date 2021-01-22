@@ -38,10 +38,10 @@ class Templating_Presenter_SplitButtonDropdowns
 
     public function __construct($id, $btn_class, Templating_Presenter_ButtonDropdownsOption $default_option, array $options)
     {
-        $this->id = $id;
-        $this->btn_class = $btn_class;
+        $this->id             = $id;
+        $this->btn_class      = $btn_class;
         $this->default_option = $default_option;
-        $this->options = $options;
+        $this->options        = $options;
     }
 
     public function id()

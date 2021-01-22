@@ -47,7 +47,7 @@ class BuildItemMappingVisitorTest extends TestCase
         $node->addItem($fld36);
 
         $itemMappingVisitor = new Docman_BuildItemMappingVisitor(569);
-        $nodesOk = $itemMappingVisitor->compareFolderChildren($fld140, $node);
+        $nodesOk            = $itemMappingVisitor->compareFolderChildren($fld140, $node);
         $this->assertEquals(
             [
                 150 => true,
@@ -118,7 +118,7 @@ class BuildItemMappingVisitorTest extends TestCase
         $node->addItem($fld36);
 
         $itemMappingVisitor = new Docman_BuildItemMappingVisitor(569);
-        $nodesOk = $itemMappingVisitor->compareFolderChildren($fld140, $node);
+        $nodesOk            = $itemMappingVisitor->compareFolderChildren($fld140, $node);
         $this->assertEquals(
             [
                 150 => true,
@@ -153,7 +153,7 @@ class BuildItemMappingVisitorTest extends TestCase
         $node->addItem($fld72);
 
         $itemMappingVisitor = new Docman_BuildItemMappingVisitor(569);
-        $nodesOk = $itemMappingVisitor->compareFolderChildren($fld140, $node);
+        $nodesOk            = $itemMappingVisitor->compareFolderChildren($fld140, $node);
         $this->assertEquals(
             [
                 150 => true,
@@ -243,13 +243,13 @@ class BuildItemMappingVisitorTest extends TestCase
         $mockDao->shouldReceive('searchByTitle')->with(['Folder 1.1.1'], 569, 37)->andReturns($mockDar37);
 
         // Permissions mock
-        $mockDPM  = \Mockery::spy(Docman_PermissionsManager::class);
+        $mockDPM = \Mockery::spy(Docman_PermissionsManager::class);
         $mockDPM->shouldReceive('userCanRead')->andReturns(true);
         $mockUser = \Mockery::spy(PFUser::class);
 
         $itemMappingVisitor = \Mockery::mock(Docman_BuildItemMappingVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
         // Need to init by hand because of fake constructor.
-        $itemMappingVisitor->groupId = 569;
+        $itemMappingVisitor->groupId     = 569;
         $itemMappingVisitor->itemMapping = [];
 
         // Attach mocks
@@ -335,7 +335,7 @@ class BuildItemMappingVisitorTest extends TestCase
 
         $itemMappingVisitor = \Mockery::mock(Docman_BuildItemMappingVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
         // Need to init by hand because of fake constructor.
-        $itemMappingVisitor->groupId = 569;
+        $itemMappingVisitor->groupId     = 569;
         $itemMappingVisitor->itemMapping = [];
 
         // Attach mocks
@@ -413,13 +413,13 @@ class BuildItemMappingVisitorTest extends TestCase
         $mockDao->shouldReceive('searchByTitle')->with(['Folder test'], 569, 40)->andReturns($mockDar37);
 
         // Permissions mock
-        $mockDPM  = \Mockery::spy(Docman_PermissionsManager::class);
+        $mockDPM = \Mockery::spy(Docman_PermissionsManager::class);
         $mockDPM->shouldReceive('userCanRead')->andReturns(true);
         $mockUser = \Mockery::spy(PFUser::class);
 
         $itemMappingVisitor = \Mockery::mock(Docman_BuildItemMappingVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
         // Need to init by hand because of fake constructor.
-        $itemMappingVisitor->groupId = 569;
+        $itemMappingVisitor->groupId     = 569;
         $itemMappingVisitor->itemMapping = [];
 
         // Attach mocks

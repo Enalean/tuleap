@@ -61,8 +61,8 @@ class DocumentBeforeModificationValidatorVisitorTest extends TestCase
         parent::setUp();
 
         $this->permission_manager = \Mockery::mock(Docman_PermissionsManager::class);
-        $this->current_user = \Mockery::mock(PFUser::class);
-        $this->item = \Mockery::mock(Docman_Item::class);
+        $this->current_user       = \Mockery::mock(PFUser::class);
+        $this->item               = \Mockery::mock(Docman_Item::class);
         $this->item->shouldReceive('getId')->andReturn(1);
         $this->validator_visitor = new DocumentBeforeModificationValidatorVisitor(
             $this->permission_manager,

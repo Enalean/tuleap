@@ -34,15 +34,15 @@ class TreesTest extends TestCase
     public function testNodeListToTree(): void
     {
         $nodes = [];
-        $tree = Trees::nodeListToTree($nodes);
+        $tree  = Trees::nodeListToTree($nodes);
         $this->assertNull($tree);
 
         $nodes = [0 => [0]];
-        $tree = Trees::nodeListToTree($nodes);
+        $tree  = Trees::nodeListToTree($nodes);
         $this->assertNull($tree);
 
         $nodes = [0 => [1]];
-        $tree = Trees::nodeListToTree($nodes);
+        $tree  = Trees::nodeListToTree($nodes);
         $this->assertEquals([0 => [1 => null]], $tree);
 
         //     0
@@ -55,19 +55,19 @@ class TreesTest extends TestCase
                      1 => [3],
                      2 => [4, 5],
                  ];
-        $tree = Trees::nodeListToTree($nodes);
+        $tree  = Trees::nodeListToTree($nodes);
         $this->assertEquals([0 => [1 => [3 => null], 2 => [4 => null, 5 => null]]], $tree);
     }
 
     public function testMergeTag(): void
     {
         $tree1 = [0 => null];
-        $res = Trees::mergeTag($tree1, $tree1);
+        $res   = Trees::mergeTag($tree1, $tree1);
         $this->assertEquals(['(root)' => null], $res);
 
         $tree1 = [0 => null];
         $tree2 = [1 => null];
-        $res = Trees::mergeTag($tree1, $tree2);
+        $res   = Trees::mergeTag($tree1, $tree2);
         $this->assertEquals(['(root)' => null], $res);
 
         //     0

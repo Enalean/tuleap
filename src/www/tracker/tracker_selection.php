@@ -48,14 +48,14 @@ function doSelection(form) {
 <?php
     //    get the Group object
     $group_id = $request->getValidated('group_id', 'GroupId');
-    $pm = ProjectManager::instance();
-    $group = $pm->getProject($group_id);
+    $pm       = ProjectManager::instance();
+    $group    = $pm->getProject($group_id);
 if (! $group || ! is_object($group) || $group->isError()) {
     exit_no_group();
 }
 
-        $count = 0;
-    $atf = new ArtifactTypeFactory($group);
+        $count      = 0;
+    $atf            = new ArtifactTypeFactory($group);
     $trackers_array = $atf->getArtifactTypesFromId($group_id);
 if ($trackers_array !== false) {
            echo '<select name="artifact_type_id" size="5">';

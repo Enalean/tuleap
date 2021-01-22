@@ -46,7 +46,7 @@ class LinkToGitFileBlobFinder
     {
         if (strpos($url, '/') !== 0) {
             $current_dir_full_path = dirname('/' . $this->current_path);
-            $url = $current_dir_full_path . '/' . $url;
+            $url                   = $current_dir_full_path . '/' . $url;
         }
         $url = URIModifier::removeDotSegments($url);
 

@@ -27,7 +27,7 @@ class Tracker_Artifact_ChangesetValue_StringTest extends \PHPUnit\Framework\Test
         $field = Mockery::mock(Tracker_FormElement_Field_String::class);
         $field->shouldReceive('getId')->andReturn(10);
         $field->shouldReceive('getLabel')->andReturn("field_string");
-        $user  = Mockery::mock(PFUser::class);
+        $user = Mockery::mock(PFUser::class);
 
         $changeset      = new Tracker_Artifact_ChangesetValue_String(
             111,

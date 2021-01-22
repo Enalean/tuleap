@@ -168,9 +168,9 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
                                    'Assigned To','Original Submission']);
-        $test->predefined_values = [];
+        $test->predefined_values    = [];
         $test->predefined_values[4] = ['schneide' => ''];
-        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission'];
+        $data                       = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission'];
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
 
@@ -217,11 +217,11 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
                                    'Assigned To','Original Submission','MB Field','SB Field']);
-        $test->predefined_values = [];
+        $test->predefined_values    = [];
         $test->predefined_values[4] = ['schneide' => ''];
         $test->predefined_values[6] = ['one' => '', 'two' => '', 'three' => ''];
         $test->predefined_values[7] = ['blue' => '', 'yellow' => '', 'red' => ''];
-        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission',
+        $data                       = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission',
         'one,two,' . $GLOBALS['Language']->getText('global', 'none'),'yellow'];
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
@@ -286,7 +286,7 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
         $test = new ArtifactImport($at, $aff, 'group');
         $test->parseFieldNames([$GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments')]);
         $parsed_comments = [];
-        $art_id = '1149';
+        $art_id          = '1149';
 
         $followup_comments = "Follow-ups
 **********
@@ -298,8 +298,8 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
 9/14/2004 2:13:03 PM DCO: Waiting on new database from Craig DeHond.
 ";
 
-        $um = \Mockery::spy(\UserManager::class);
-        $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $um   = \Mockery::spy(\UserManager::class);
+        $ai   = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $user = \Mockery::spy(\PFUser::class);
 
         $ai->shouldReceive('getUserManager')->andReturns($um);
@@ -314,7 +314,7 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[0]['type']);
         $this->assertEquals('doswald', $parsed_comments[0]['by']);
 
-        $parsed_comments = [];
+        $parsed_comments   = [];
         $followup_comments = "Follow-ups
 **********
 
@@ -397,9 +397,9 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
 
     public function testSplitFollowUpComments(): void
     {
-        $aitv = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $aitv              = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $followup_comments = file_get_contents(__DIR__ . '/_fixtures/followup_comments1.txt');
-        $comments = $aitv->splitFollowUpComments($followup_comments);
+        $comments          = $aitv->splitFollowUpComments($followup_comments);
         $this->assertCount(4 + 1, $comments); // + 1 because the follow-up comments header is returned
     }
 
@@ -472,8 +472,8 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->da->shouldReceive('numRows')->andReturns(1);
         $this->da->shouldReceive('fetchArray')->andReturns(['new_value' => '<pre> testing issue </pre>']);
         $this->dar->shouldReceive('getResult')->andReturns(true);
-        $artImp = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $artId = 12237;
+        $artImp       = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artId        = 12237;
         $parsedFollow = ['comment' => '<pre> testing issue </pre>'];
         $this->assertTrue($artImp->checkCommentExistInLegacyFormat($parsedFollow, $artId));
     }

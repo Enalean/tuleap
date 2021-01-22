@@ -154,7 +154,7 @@ class EventManager implements EventDispatcherInterface // phpcs:ignore
         $class_name = get_class($event);
         try {
             $constant_reflex = new \ReflectionClassConstant($class_name, 'NAME');
-            $event_name = $constant_reflex->getValue();
+            $event_name      = $constant_reflex->getValue();
             return $this->listeners[$event_name] ?? [];
         } catch (\ReflectionException $e) {
             return $this->listeners[$class_name] ?? [];

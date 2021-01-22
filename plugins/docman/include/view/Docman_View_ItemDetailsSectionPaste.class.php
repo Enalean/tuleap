@@ -45,34 +45,34 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         );
 
         $this->itemToPaste = $itemToPaste;
-        $pm = ProjectManager::instance();
-        $this->srcGo = $pm->getProject($this->itemToPaste->getGroupId());
-        $this->dstGo = $pm->getProject($item->getGroupId());
-        $this->mode  = $mode;
+        $pm                = ProjectManager::instance();
+        $this->srcGo       = $pm->getProject($this->itemToPaste->getGroupId());
+        $this->dstGo       = $pm->getProject($item->getGroupId());
+        $this->mode        = $mode;
     }
 
     public function checkMdDifferences(&$mdDiffers)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $html     = '';
 
-        $mdCmp = new Docman_MetadataComparator(
+        $mdCmp    = new Docman_MetadataComparator(
             $this->srcGo->getGroupId(),
             $this->dstGo->getGroupId(),
             $this->_controller->getThemePath()
         );
         $cmpTable = $mdCmp->getMetadataCompareTable($sthToImport);
         if ($sthToImport) {
-            $html .= '<h2>' . dgettext('tuleap-docman', 'Document properties') . '</h2>';
-            $dPm = Docman_PermissionsManager::instance($this->dstGo->getGroupId());
+            $html        .= '<h2>' . dgettext('tuleap-docman', 'Document properties') . '</h2>';
+            $dPm          = Docman_PermissionsManager::instance($this->dstGo->getGroupId());
             $current_user = UserManager::instance()->getCurrentUser();
             if ($dPm->userCanAdmin($current_user)) {
                 $mdDiffers = 'admin';
-                $html .= $cmpTable;
+                $html     .= $cmpTable;
             } else {
-                $mdDiffers = 'user';
+                $mdDiffers   = 'user';
                 $docmanIcons = $this->_getDocmanIcons();
-                $html .= sprintf(dgettext('tuleap-docman', '<p><img src="%3$s" /> There are differences in properties definitions between %1$s and %2$s. You <strong>may loose</strong> some <strong>properties informations</strong>.</p><p>You may either:<ul><li>Paste anyway, so only properties that exists in both %1$s and %2$s will be copied.</li><li>Ask to a document manager admin to import %2$s properties definitions</li></ul></p><p><strong>Note:</strong> This <strong>doesn\'t impact documents</strong> themselves. This only refers to properties.</p>'), $purifier->purify($this->srcGo->getPublicName()), $purifier->purify($this->dstGo->getPublicName()), $docmanIcons->getThemeIcon('warning.png'));
+                $html       .= sprintf(dgettext('tuleap-docman', '<p><img src="%3$s" /> There are differences in properties definitions between %1$s and %2$s. You <strong>may loose</strong> some <strong>properties informations</strong>.</p><p>You may either:<ul><li>Paste anyway, so only properties that exists in both %1$s and %2$s will be copied.</li><li>Ask to a document manager admin to import %2$s properties definitions</li></ul></p><p><strong>Note:</strong> This <strong>doesn\'t impact documents</strong> themselves. This only refers to properties.</p>'), $purifier->purify($this->srcGo->getPublicName()), $purifier->purify($this->dstGo->getPublicName()), $docmanIcons->getThemeIcon('warning.png'));
             }
         }
 
@@ -104,11 +104,11 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         }
         $content .= '</p>';
 
-        $content .= '<form name="select_paste_location" method="POST" action="?">';
-        $content .= '<input type="hidden" name="action" value="paste" />';
-        $content .= '<input type="hidden" name="group_id" value="' . $this->item->getGroupId() . '" />';
-        $content .= '<input type="hidden" name="id" value="' . $this->item->getId() . '" />';
-        $content .= '<p>';
+        $content    .= '<form name="select_paste_location" method="POST" action="?">';
+        $content    .= '<input type="hidden" name="action" value="paste" />';
+        $content    .= '<input type="hidden" name="group_id" value="' . $this->item->getGroupId() . '" />';
+        $content    .= '<input type="hidden" name="id" value="' . $this->item->getId() . '" />';
+        $content    .= '<p>';
         $itemRanking = new Docman_View_ItemRanking();
         $itemRanking->setDropDownName('rank');
         $content .= $itemRanking->getDropDownWidget($this->item);

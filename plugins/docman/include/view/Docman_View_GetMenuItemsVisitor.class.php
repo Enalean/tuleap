@@ -30,9 +30,9 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
 
     public function __construct(&$user, $groupId)
     {
-        $this->dPm = Docman_PermissionsManager::instance($groupId);
-        $this->user = $user;
-        $this->if = Docman_ItemFactory::instance($groupId);
+        $this->dPm     = Docman_PermissionsManager::instance($groupId);
+        $this->user    = $user;
+        $this->if      = Docman_ItemFactory::instance($groupId);
         $this->actions = [];
     }
 
@@ -58,7 +58,7 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
         // to develop and compute that case.
         if ($this->if->isMoveable($item) && $this->dPm->userCanWrite($this->user, $item->getId()) && $this->dPm->userCanWrite($this->user, $item->getParentId())) {
             $this->actions['canMove'] = true;
-            $this->actions['canCut'] = true;
+            $this->actions['canCut']  = true;
         }
         if (! $this->if->isRoot($item) && $this->dPm->userCanDelete($this->user, $item)) {
             $this->actions['canDelete'] = true;
@@ -88,10 +88,10 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
         if ($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewDocument'] = true;
             $this->actions['canNewFolder']   = true;
-            $pasteItemId = $this->if->getCutPreference($this->user, $item->getGroupId());
-            $itemFactory = Docman_ItemFactory::instance($item->getGroupId());
-            $parents = $itemFactory->getParents($item->getId());
-            $this->actions['parents'] = $parents;
+            $pasteItemId                     = $this->if->getCutPreference($this->user, $item->getGroupId());
+            $itemFactory                     = Docman_ItemFactory::instance($item->getGroupId());
+            $parents                         = $itemFactory->getParents($item->getId());
+            $this->actions['parents']        = $parents;
             if (
                 $this->if->getCopyPreference($this->user) !== false ||
                 $pasteItemId !== false && $pasteItemId != $item->getId() && ! (isset($parents[$pasteItemId]) && $parents[$pasteItemId])

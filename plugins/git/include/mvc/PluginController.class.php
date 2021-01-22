@@ -58,8 +58,8 @@ abstract class PluginController
 
     public function __construct(UserManager $user_manager, Codendi_Request $request)
     {
-        $this->user             = $user_manager->getCurrentUser();
-        $this->request          = $request;
+        $this->user    = $user_manager->getCurrentUser();
+        $this->request = $request;
     }
 
     public function getRequest()
@@ -214,12 +214,12 @@ abstract class PluginController
         if (empty($this->actions)) {
             return false;
         }
-        $results       = [];
-        $className     = static::class . 'Actions';
+        $results   = [];
+        $className = static::class . 'Actions';
         if (! class_exists($className)) {
             throw new LogicException("$className does not exist");
         }
-        $wa            = $this->instantiateAction($className);
+        $wa = $this->instantiateAction($className);
         foreach ($this->actions as $name => $params) {
             $wa->process($name, $params);
         }

@@ -37,11 +37,11 @@ class Widget_ProjectDescription extends Widget
     }
     public function getContent()
     {
-        $request = HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $pm = ProjectManager::instance();
-        $project = $pm->getProject($group_id);
-        $hp = Codendi_HTMLPurifier::instance();
+        $pm       = ProjectManager::instance();
+        $project  = $pm->getProject($group_id);
+        $hp       = Codendi_HTMLPurifier::instance();
 
         $html = '';
 

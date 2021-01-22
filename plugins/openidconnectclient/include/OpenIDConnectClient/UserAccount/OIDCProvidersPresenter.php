@@ -68,11 +68,11 @@ final class OIDCProvidersPresenter
         bool $unique_authentication_endpoint,
         bool $can_unlink_providers
     ) {
-        $this->tabs = $tabs;
+        $this->tabs       = $tabs;
         $this->csrf_token = $csrf_token;
 
         foreach ($user_mappings_usage as $user_mapping_usage) {
-            $last_usage = (new DateTimeImmutable())->setTimestamp($user_mapping_usage->getLastUsage());
+            $last_usage            = (new DateTimeImmutable())->setTimestamp($user_mapping_usage->getLastUsage());
             $this->user_mappings[] = [
                 'user_mapping_id'                         => $user_mapping_usage->getUserMappingId(),
                 'provider_name'                           => $user_mapping_usage->getProviderName(),
@@ -82,7 +82,7 @@ final class OIDCProvidersPresenter
                 )
             ];
         }
-        $this->no_mappings = count($this->user_mappings) === 0;
+        $this->no_mappings                    = count($this->user_mappings) === 0;
         $this->unique_authentication_endpoint = $unique_authentication_endpoint;
         $this->can_unlink_providers           = $can_unlink_providers;
     }

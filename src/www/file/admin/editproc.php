@@ -77,10 +77,10 @@ $presenter->displaySectionNavigation();
 $service->displayFRSHeader($project, _('Files Administration'));
 $renderer->renderToPage('toolbar-presenter', $presenter);
 
-$sql = "SELECT name,rank FROM frs_processor WHERE group_id=" . db_ei($group_id) . " AND processor_id=" . db_ei($proc_id);
+$sql    = "SELECT name,rank FROM frs_processor WHERE group_id=" . db_ei($group_id) . " AND processor_id=" . db_ei($proc_id);
 $result = db_query($sql);
-$name = db_result($result, 0, 'name');
-$rank = db_result($result, 0, 'rank');
+$name   = db_result($result, 0, 'name');
+$rank   = db_result($result, 0, 'rank');
 
 if (db_numrows($result) < 1) {
     // invalid  processor  id
@@ -95,7 +95,7 @@ if (db_numrows($result) < 1) {
 <H2><?php echo $Language->getText('file_admin_manageprocessors', 'update_proc'); ?></H2>
 
 <?php
-$hp = Codendi_HTMLPurifier::instance();
+$hp     = Codendi_HTMLPurifier::instance();
 $return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id=' . $hp->purify(urlencode($group_id)) . '" METHOD="POST">
     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $hp->purify($group_id) . '">
     <INPUT TYPE="HIDDEN" NAME="proc_id" VALUE="' . $hp->purify($proc_id) . '">

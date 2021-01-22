@@ -49,7 +49,7 @@ class AttachmentForTusUploadCreator implements AttachmentCreator
     ) {
         $this->ongoing_upload_dao    = $ongoing_upload_dao;
         $this->next_creator_in_chain = $next_creator_in_chain;
-        $this->provider = $provider;
+        $this->provider              = $provider;
     }
 
     public function createAttachment(

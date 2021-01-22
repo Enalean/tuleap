@@ -34,7 +34,7 @@ class ImportPropertiesTest extends TestCase
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $owner = Mockery::mock(PFUser::class);
+        $owner       = Mockery::mock(PFUser::class);
 
         $properties = ImportProperties::buildLink('title', 'description', 'link url', $create_date, $update_date, $owner);
         $this->assertEquals('title', $properties->getTitle());
@@ -50,7 +50,7 @@ class ImportPropertiesTest extends TestCase
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $owner = Mockery::mock(PFUser::class);
+        $owner       = Mockery::mock(PFUser::class);
 
         $properties = ImportProperties::buildEmpty('title', 'description', $create_date, $update_date, $owner);
         $this->assertEquals('title', $properties->getTitle());
@@ -66,7 +66,7 @@ class ImportPropertiesTest extends TestCase
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $owner = Mockery::mock(PFUser::class);
+        $owner       = Mockery::mock(PFUser::class);
 
         $properties = ImportProperties::buildFolder('title', 'description', $create_date, $update_date, $owner);
         $this->assertEquals('title', $properties->getTitle());
@@ -82,7 +82,7 @@ class ImportPropertiesTest extends TestCase
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $owner = Mockery::mock(PFUser::class);
+        $owner       = Mockery::mock(PFUser::class);
 
         $properties = ImportProperties::buildFile('title', 'description', $create_date, $update_date, $owner);
         $this->assertEquals('title', $properties->getTitle());
@@ -98,7 +98,7 @@ class ImportPropertiesTest extends TestCase
     {
         $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
         $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $owner = Mockery::mock(PFUser::class);
+        $owner       = Mockery::mock(PFUser::class);
 
         $properties = ImportProperties::buildEmbedded('title', 'description', $create_date, $update_date, $owner);
         $this->assertEquals('title', $properties->getTitle());

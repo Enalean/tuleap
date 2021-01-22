@@ -27,7 +27,7 @@ class LockVerifyRequestTest extends TestCase
 
     public function testParsingRequest()
     {
-        $json = <<<JSON
+        $json           = <<<JSON
 {
   "ref": {
     "name": "refs/heads/master"
@@ -43,7 +43,7 @@ JSON;
 
     public function testRequestCanBeParsedWhenNoRefIsGiven()
     {
-        $json_without_ref = <<<JSON
+        $json_without_ref           = <<<JSON
 {}
 JSON;
         $verify_request_without_ref = LockVerifyRequest::buildFromJSONString($json_without_ref);

@@ -71,10 +71,10 @@ final class MessageFetcherTest extends TestCase
             $this->semantic_done_factory
         );
 
-        $this->tracker          = \Mockery::mock(\Tracker::class);
-        $this->backlog_tracker  = \Mockery::mock(\Tracker::class);
+        $this->tracker         = \Mockery::mock(\Tracker::class);
+        $this->backlog_tracker = \Mockery::mock(\Tracker::class);
         $this->backlog_tracker->shouldReceive('getName');
-        $this->field            = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $this->field = \Mockery::mock(\Tracker_FormElement_Field::class);
     }
 
     public function testItDoesNotAddWarningsIfAllIsWellConfigured(): void

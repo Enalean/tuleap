@@ -32,7 +32,7 @@ class BacklogItemRepresentation
 
     public const CONTENT_ROUTE = 'content';
 
-    public const ROUTE         = 'backlog_items';
+    public const ROUTE = 'backlog_items';
 
     /**
      * @var Int

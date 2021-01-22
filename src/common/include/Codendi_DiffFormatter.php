@@ -56,11 +56,11 @@ class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.Missin
      */
     public function format($diff)
     {
-        $xi = $yi = 1;
-        $block = \false;
+        $xi      = $yi = 1;
+        $block   = \false;
         $context = [];
-        $nlead = $this->leading_context_lines;
-        $ntrail = $this->trailing_context_lines;
+        $nlead   = $this->leading_context_lines;
+        $ntrail  = $this->trailing_context_lines;
         $this->_start_diff();
         $x0 = $y0 = 0;
         foreach ($diff->edits as $edit) {
@@ -81,9 +81,9 @@ class Codendi_DiffFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.Missin
             } else {
                 if (! \is_array($block)) {
                     $context = \array_slice($context, \max(0, \sizeof($context) - $nlead));
-                    $x0 = $xi - \sizeof($context);
-                    $y0 = $yi - \sizeof($context);
-                    $block = [];
+                    $x0      = $xi - \sizeof($context);
+                    $y0      = $yi - \sizeof($context);
+                    $block   = [];
                     \assert(\is_array($context));
                     if ($context) {
                         $block[] = new \Codendi_DiffOp_Copy($context);

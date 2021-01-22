@@ -114,7 +114,7 @@ final class PullRequestNotificationSendMailTest extends TestCase
         $recipient_with_access->shouldReceive('getEmail')->andReturn('user@example.com');
         $recipient_with_access->shouldReceive('getLocale')->andReturn('en_US');
         $recipient_without_access = \Mockery::mock(\PFUser::class);
-        $notification = $this->buildNotificationToProcess($pull_request, $recipient_with_access, $recipient_without_access);
+        $notification             = $this->buildNotificationToProcess($pull_request, $recipient_with_access, $recipient_without_access);
 
         $destination_repository = \Mockery::mock(\GitRepository::class);
         $destination_repository->shouldReceive('getFullName')->andReturn('Repository name');

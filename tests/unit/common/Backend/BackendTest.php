@@ -166,7 +166,7 @@ final class BackendTest extends TestCase
                 $this->a_variable_for_tests = ($a + $b) * $c;
             }
         };
-        $backend_plugins_with_setup_and_params = new class ($backend_overridden_by_plugin_and_has_setup)
+        $backend_plugins_with_setup_and_params      = new class ($backend_overridden_by_plugin_and_has_setup)
         {
             /**
              * @var BackendSVN

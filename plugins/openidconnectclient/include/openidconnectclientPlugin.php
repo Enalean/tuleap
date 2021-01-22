@@ -148,7 +148,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
     public function burning_parrot_get_stylesheets($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($_SERVER['REQUEST_URI'] === '/') {
-            $variant = $params['variant'];
+            $variant                 = $params['variant'];
             $params['stylesheets'][] = $this->getAssets()->getFileURL('bp-style-' . $variant->getName() . '.css');
         }
     }
@@ -281,8 +281,8 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             $provider_manager         = $this->getProviderManager();
             $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
             try {
-                $unlinked_account     = $unlinked_account_manager->getbyId($link_id);
-                $provider             = $provider_manager->getById($unlinked_account->getProviderId());
+                $unlinked_account = $unlinked_account_manager->getbyId($link_id);
+                $provider         = $provider_manager->getById($unlinked_account->getProviderId());
 
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,

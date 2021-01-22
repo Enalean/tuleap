@@ -168,10 +168,10 @@ class RestProjectCreatorTest extends TestCase
     public function testCreateWithDefaultProjectTemplate()
     {
         $this->project->template_id = 100;
-        $this->project->shortname = 'gpig';
-        $this->project->label = 'Guinea Pig';
+        $this->project->shortname   = 'gpig';
+        $this->project->label       = 'Guinea Pig';
         $this->project->description = 'foo';
-        $this->project->is_public = false;
+        $this->project->is_public   = false;
 
         $template_project = \Mockery::mock(Project::class);
         $template_project->shouldReceive('isError')->andReturnFalse();
@@ -198,11 +198,11 @@ class RestProjectCreatorTest extends TestCase
 
     public function testCreateWithDefaultProjectTemplateAndExcludeRestrictedUsers()
     {
-        $this->project->template_id = 100;
-        $this->project->shortname = 'gpig';
-        $this->project->label = 'Guinea Pig';
-        $this->project->description = 'foo';
-        $this->project->is_public = false;
+        $this->project->template_id      = 100;
+        $this->project->shortname        = 'gpig';
+        $this->project->label            = 'Guinea Pig';
+        $this->project->description      = 'foo';
+        $this->project->is_public        = false;
         $this->project->allow_restricted = false;
 
         $template_project = \Mockery::mock(Project::class);
@@ -289,27 +289,27 @@ class RestProjectCreatorTest extends TestCase
 
     public function testItCreatesWithSelectedCategories()
     {
-        $this->project->template_id = 100;
-        $this->project->shortname = 'gpig';
-        $this->project->label = 'Guinea Pig';
-        $this->project->description = 'foo';
-        $this->project->is_public = false;
+        $this->project->template_id      = 100;
+        $this->project->shortname        = 'gpig';
+        $this->project->label            = 'Guinea Pig';
+        $this->project->description      = 'foo';
+        $this->project->is_public        = false;
         $this->project->allow_restricted = false;
-        $this->project->categories = [
+        $this->project->categories       = [
             CategoryPostRepresentation::build(14, 89),
             CategoryPostRepresentation::build(18, 53)
         ];
 
         $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
-        $new_project = new \Project(['group_id' => 201]);
+        $new_project      = new \Project(['group_id' => 201]);
 
         $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
         $this->project_creator->shouldReceive('createFromRest')->with('gpig', 'Guinea Pig', M::andAnyOtherArgs())->once()->andReturn($new_project);
 
         $verify_category_collection = static function (CategoryCollection $categories) {
             [$category1, $category2] = $categories->getRootCategories();
-            $category1_child1 = $category1->getChildren()[0];
-            $category2_child1 = $category2->getChildren()[0];
+            $category1_child1        = $category1->getChildren()[0];
+            $category2_child1        = $category2->getChildren()[0];
             return $category1->getId() === 14 && $category2->getId() === 18 &&
                 $category1_child1->getId() === 89 && $category2_child1->getId() === 53;
         };
@@ -323,13 +323,13 @@ class RestProjectCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionWhenMandatoryCategoryIsMissing()
     {
-        $this->project->template_id = 100;
-        $this->project->shortname = 'gpig';
-        $this->project->label = 'Guinea Pig';
-        $this->project->description = 'foo';
-        $this->project->is_public = false;
+        $this->project->template_id      = 100;
+        $this->project->shortname        = 'gpig';
+        $this->project->label            = 'Guinea Pig';
+        $this->project->description      = 'foo';
+        $this->project->is_public        = false;
         $this->project->allow_restricted = false;
-        $this->project->categories = [
+        $this->project->categories       = [
             CategoryPostRepresentation::build(14, 89),
             CategoryPostRepresentation::build(18, 53)
         ];
@@ -349,13 +349,13 @@ class RestProjectCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionWhenFieldCollectionIsInvalid()
     {
-        $this->project->template_id = 100;
-        $this->project->shortname = 'gpig';
-        $this->project->label = 'Guinea Pig';
-        $this->project->description = 'foo';
-        $this->project->is_public = false;
+        $this->project->template_id      = 100;
+        $this->project->shortname        = 'gpig';
+        $this->project->label            = 'Guinea Pig';
+        $this->project->description      = 'foo';
+        $this->project->is_public        = false;
         $this->project->allow_restricted = false;
-        $this->project->categories = [
+        $this->project->categories       = [
             CategoryPostRepresentation::build(14, 89),
             CategoryPostRepresentation::build(18, 53)
         ];

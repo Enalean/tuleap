@@ -56,7 +56,7 @@ final class TrackerCollectionRetrieverTest extends TestCase
             ->once()
             ->andReturnNull();
 
-        $result = $this->retriever->getTrackersForMilestone($milestone);
+        $result      = $this->retriever->getTrackersForMilestone($milestone);
         $tracker_ids = $result->map(
             function (TaskboardTracker $tracker) {
                 return $tracker->getTrackerId();
@@ -75,7 +75,7 @@ final class TrackerCollectionRetrieverTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $result = $this->retriever->getTrackersForMilestone($milestone);
+        $result      = $this->retriever->getTrackersForMilestone($milestone);
         $tracker_ids = $result->map(
             function (TaskboardTracker $tracker) {
                 return $tracker->getTrackerId();

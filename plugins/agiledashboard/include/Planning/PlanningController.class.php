@@ -49,9 +49,9 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
-    public const PAST_PERIOD   = 'past';
-    public const FUTURE_PERIOD = 'future';
-    public const NUMBER_PAST_MILESTONES_SHOWN = 10;
+    public const PAST_PERIOD                   = 'past';
+    public const FUTURE_PERIOD                 = 'future';
+    public const NUMBER_PAST_MILESTONES_SHOWN  = 10;
 
     /** @var PlanningFactory */
     private $planning_factory;
@@ -206,8 +206,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
     private function showHome()
     {
-        $user = $this->request->getCurrentUser();
-        $plannings = $this->planning_factory->getNonLastLevelPlannings(
+        $user           = $this->request->getCurrentUser();
+        $plannings      = $this->planning_factory->getNonLastLevelPlannings(
             $user,
             $this->group_id
         );
@@ -667,8 +667,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
     private function getCardwallConfiguration(Planning $planning)
     {
-        $tracker  = $planning->getPlanningTracker();
-        $view     = null;
+        $tracker = $planning->getPlanningTracker();
+        $view    = null;
 
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_PLANNING_CONFIG,
@@ -704,7 +704,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $event = new RootPlanningEditionEvent($this->project, $original_planning);
         $this->event_manager->dispatch($event);
         $already_used_milestone_tracker_ids = $this->planning_factory->getPlanningTrackerIdsByGroupId($this->group_id);
-        $validated_parameters = $this->update_request_validator->getValidatedPlanning(
+        $validated_parameters               = $this->update_request_validator->getValidatedPlanning(
             $original_planning,
             $this->request,
             $already_used_milestone_tracker_ids,
@@ -772,8 +772,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->redirectToMainAdministrationPageWhenPlanningManagementIsDelegatedToAnotherPlugin($this->project);
 
         $planning_id = $this->request->get('planning_id');
-        $user    = $this->request->getCurrentUser();
-        $project = $this->request->getProject();
+        $user        = $this->request->getCurrentUser();
+        $project     = $this->request->getProject();
 
         $this->transaction_executor->execute(
             function () use ($user, $planning_id, $project) {

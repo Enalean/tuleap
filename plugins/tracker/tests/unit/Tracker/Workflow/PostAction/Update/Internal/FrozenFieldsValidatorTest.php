@@ -43,8 +43,8 @@ class FrozenFieldsValidatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->form_element_factory    = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->tracker_rule_factory    = Mockery::mock(\Tracker_RuleFactory::class);
+        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->tracker_rule_factory = Mockery::mock(\Tracker_RuleFactory::class);
 
         $this->frozen_fields_validator = new FrozenFieldsValueValidator(
             $this->form_element_factory,
@@ -80,7 +80,7 @@ class FrozenFieldsValidatorTest extends TestCase
 
         $frozen_fields_value = new FrozenFieldsValue([1, 2]);
 
-        $tracker  = Mockery::mock(\Tracker::class);
+        $tracker = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
 
         $workflow = Mockery::mock(\Workflow::class);

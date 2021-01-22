@@ -131,7 +131,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
                 }
             }
             $fields_data[$this->field->getId()] = $new_date_timestamp;
-            $this->bypass_permissions = true;
+            $this->bypass_permissions           = true;
         }
     }
 

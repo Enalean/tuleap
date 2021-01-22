@@ -31,7 +31,7 @@ class Docman_View_Admin_Permissions extends Docman_View_Extra
     }
     public function _content($params)
     {
-        $content  = '';
+        $content = '';
 
         //{{{ Explanations
         $content .= '<div>';

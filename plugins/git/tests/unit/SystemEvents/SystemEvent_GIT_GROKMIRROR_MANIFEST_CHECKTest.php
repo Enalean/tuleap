@@ -32,7 +32,7 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends \PHPUnit\Framework\T
         parent::setUp();
 
         $this->manifest_manager = \Mockery::spy(\Git_Mirror_ManifestManager::class);
-        $this->event = \Mockery::mock(\SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->event            = \Mockery::mock(\SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->event->injectDependencies(
             $this->manifest_manager

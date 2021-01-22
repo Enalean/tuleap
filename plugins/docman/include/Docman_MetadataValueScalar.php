@@ -36,9 +36,9 @@ class Docman_MetadataValueScalar extends \Docman_MetadataValue
     public function __construct()
     {
         parent::__construct();
-        $this->valueText = \null;
-        $this->valueFloat = \null;
-        $this->valueDate = \null;
+        $this->valueText   = \null;
+        $this->valueFloat  = \null;
+        $this->valueDate   = \null;
         $this->valueString = \null;
     }
     public function setValueText($v)
@@ -99,15 +99,15 @@ class Docman_MetadataValueScalar extends \Docman_MetadataValue
         parent::initFromRow($row);
         if (isset($row['valueText'])) {
             $this->valueText = $row['valueText'];
-            $this->type = \PLUGIN_DOCMAN_METADATA_TYPE_TEXT;
+            $this->type      = \PLUGIN_DOCMAN_METADATA_TYPE_TEXT;
         }
         if (isset($row['valueDate'])) {
             $this->valueDate = $row['valueDate'];
-            $this->type = \PLUGIN_DOCMAN_METADATA_TYPE_DATE;
+            $this->type      = \PLUGIN_DOCMAN_METADATA_TYPE_DATE;
         }
         if (isset($row['valueString'])) {
             $this->valueString = $row['valueString'];
-            $this->type = \PLUGIN_DOCMAN_METADATA_TYPE_STRING;
+            $this->type        = \PLUGIN_DOCMAN_METADATA_TYPE_STRING;
         }
     }
 }

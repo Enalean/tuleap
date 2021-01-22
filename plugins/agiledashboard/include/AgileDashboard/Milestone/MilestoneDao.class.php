@@ -240,7 +240,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
             // no need to filter
         } else {
             if ($criterion->shouldRetrieveOpenMilestones()) {
-                $from_status_statement = "
+                $from_status_statement  = "
                     INNER JOIN tracker_changeset AS C ON ($alias_name.last_changeset_id = C.id)
                     LEFT JOIN (
                         tracker_semantic_status as SS
@@ -254,7 +254,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
                      )";
             }
             if ($criterion->shouldRetrieveClosedMilestones()) {
-                $from_status_statement = "
+                $from_status_statement  = "
                     INNER JOIN tracker_changeset_value AS cvs ON(
                         $alias_name.last_changeset_id = cvs.changeset_id
                     )
@@ -351,7 +351,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
 
     private function getFromFragments(array $list_of_trackers_ids)
     {
-        $trackers_ids = $list_of_trackers_ids;
+        $trackers_ids     = $list_of_trackers_ids;
         $first_tracker_id = array_shift($trackers_ids);
         return "tracker_artifact AS m{$first_tracker_id}
                 {$this->getTrackerFromFragment($first_tracker_id)}

@@ -28,16 +28,16 @@ class GerritServerFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private $server_id          = 1;
-    private $host               = 'g.tuleap.net';
-    private $ssh_port           = 32915;
-    private $http_port          = 8080;
-    private $login              = 'chuck';
-    private $identity_file      = '/home/chuck/.ssh/id_rsa';
-    private $replication_key    = 'ssh-rsa blablabla john@cake.do';
-    private $use_ssl            = false;
-    private $gerrit_version     = '2.5';
-    private $http_password      = 'azerty';
+    private $server_id       = 1;
+    private $host            = 'g.tuleap.net';
+    private $ssh_port        = 32915;
+    private $http_port       = 8080;
+    private $login           = 'chuck';
+    private $identity_file   = '/home/chuck/.ssh/id_rsa';
+    private $replication_key = 'ssh-rsa blablabla john@cake.do';
+    private $use_ssl         = false;
+    private $gerrit_version  = '2.5';
+    private $http_password   = 'azerty';
 
     private $alternate_server_id      = 2;
     private $alternate_host           = 'h.tuleap.net';
@@ -85,8 +85,8 @@ class GerritServerFactoryTest extends TestCase
             'replication_password' => '',
         ];
 
-        $git_dao   = Mockery::mock(GitDao::class);
-        $this->dao = \Mockery::spy(Git_RemoteServer_Dao::class);
+        $git_dao                    = Mockery::mock(GitDao::class);
+        $this->dao                  = \Mockery::spy(Git_RemoteServer_Dao::class);
         $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
 
         $this->dao->shouldReceive('searchAll')->andReturns([$this->dar_1, $this->dar_2]);
@@ -97,7 +97,7 @@ class GerritServerFactoryTest extends TestCase
 
         $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao, $git_dao, $this->system_event_manager, $this->project_manager);
 
-        $this->main_gerrit_server = new Git_RemoteServer_GerritServer(
+        $this->main_gerrit_server      = new Git_RemoteServer_GerritServer(
             $this->server_id,
             $this->host,
             $this->ssh_port,
@@ -110,7 +110,7 @@ class GerritServerFactoryTest extends TestCase
             $this->http_password,
             ''
         );
-        $this->alternate_gerrit_server  = new Git_RemoteServer_GerritServer(
+        $this->alternate_gerrit_server = new Git_RemoteServer_GerritServer(
             $this->alternate_server_id,
             $this->alternate_host,
             $this->ssh_port,
@@ -137,8 +137,8 @@ class GerritServerFactoryTest extends TestCase
 
     public function testItThrowsAnExceptionIfThereIsNoSuchServer(): void
     {
-        $unexisting_server_id   = 34;
-        $repo = $this->buildMockedRepository($unexisting_server_id);
+        $unexisting_server_id = 34;
+        $repo                 = $this->buildMockedRepository($unexisting_server_id);
         try {
             $this->factory->getServer($repo);
             $this->fail('Should have thrown GerritServerNotFoundException');
@@ -173,9 +173,9 @@ class GerritServerFactoryTest extends TestCase
 
     public function testItReturnsChildServers(): void
     {
-        $parent     = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
-        $child1      = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
-        $child2      = \Mockery::spy(\Project::class, ['getID' => 934, 'getUnixName' => false, 'isPublic' => false]);
+        $parent = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
+        $child1 = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
+        $child2 = \Mockery::spy(\Project::class, ['getID' => 934, 'getUnixName' => false, 'isPublic' => false]);
 
         $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns([$child1, $child2]);
         $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
@@ -194,10 +194,10 @@ class GerritServerFactoryTest extends TestCase
 
     public function testItReturnsAllProjectChildren(): void
     {
-        $parent      = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
-        $child1      = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
-        $child2      = \Mockery::spy(\Project::class, ['getID' => 934, 'getUnixName' => false, 'isPublic' => false]);
-        $grandchild  = \Mockery::spy(\Project::class, ['getID' => 96, 'getUnixName' => false, 'isPublic' => false]);
+        $parent     = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
+        $child1     = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
+        $child2     = \Mockery::spy(\Project::class, ['getID' => 934, 'getUnixName' => false, 'isPublic' => false]);
+        $grandchild = \Mockery::spy(\Project::class, ['getID' => 96, 'getUnixName' => false, 'isPublic' => false]);
 
         $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns([$child1, $child2]);
         $this->project_manager->shouldReceive('getChildProjects')->with(933)->andReturns([$grandchild]);
@@ -210,8 +210,8 @@ class GerritServerFactoryTest extends TestCase
 
     public function testItReturnsOnlyOneServerEvenWhenThereAreSeveral(): void
     {
-        $parent     = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
-        $child      = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
+        $parent = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
+        $child  = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
 
         $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns([$child]);
         $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);

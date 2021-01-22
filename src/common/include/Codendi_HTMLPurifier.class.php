@@ -278,7 +278,7 @@ class Codendi_HTMLPurifier
                 $hp = HTMLPurifier::getInstance();
 
                 $config = $this->getHPConfig($level);
-                $clean = $hp->purify($html, $config);
+                $clean  = $hp->purify($html, $config);
                 break;
 
             case self::CONFIG_BASIC:

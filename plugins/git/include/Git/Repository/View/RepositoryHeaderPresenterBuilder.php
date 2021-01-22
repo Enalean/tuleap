@@ -112,7 +112,7 @@ class RepositoryHeaderPresenterBuilder
     public function build(GitRepository $repository, PFUser $current_user): RepositoryHeaderPresenter
     {
         $parent_repository_presenter = null;
-        $parent_repository = $repository->getParent();
+        $parent_repository           = $repository->getParent();
         if (! empty($parent_repository)) {
             $parent_repository_presenter = $this->buildParentPresenter($parent_repository);
         }
@@ -162,7 +162,7 @@ class RepositoryHeaderPresenterBuilder
     private function buildClonePresenter(GitRepository $repository, PFUser $current_user)
     {
         $access_urls = $repository->getAccessURL();
-        $clone_urls = new CloneURLs();
+        $clone_urls  = new CloneURLs();
         if (isset($access_urls['ssh'])) {
             $clone_urls->setSshUrl($access_urls['ssh']);
         }

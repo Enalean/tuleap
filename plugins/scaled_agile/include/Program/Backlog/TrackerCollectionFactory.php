@@ -79,7 +79,7 @@ class TrackerCollectionFactory
      */
     private function getProgramIncrementTracker(\PFUser $user, Project $project): ScaledAgileTracker
     {
-        $root_planning     = $this->planning_adapter->buildRootPlanning($user, (int) $project->getID());
+        $root_planning = $this->planning_adapter->buildRootPlanning($user, (int) $project->getID());
         return $root_planning->getPlanningTracker();
     }
 }

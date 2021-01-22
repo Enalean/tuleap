@@ -84,7 +84,7 @@ class ImportProjectXMLCommand extends Command
 
         $configuration->setUpdate($update);
 
-        $project_id = $input->getOption("project");
+        $project_id            = $input->getOption("project");
         $project_name_override = (string) $input->getOption("name");
 
         $username = $input->getOption("user-name");
@@ -99,9 +99,9 @@ class ImportProjectXMLCommand extends Command
 
         $automap = false;
         if ($input->getOption("automap") !== null) {
-            $automap = true;
+            $automap     = true;
             $automap_arg = trim($input->getOption("automap"));
-            $exception =
+            $exception   =
                 "Automatically map users without taking email into account\n" .
                 "the second argument is the default action for accounts to\n" .
                 "create.\n" .
@@ -155,8 +155,8 @@ class ImportProjectXMLCommand extends Command
         $transformer    = new \User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager, $use_lame_password);
         $console_logger = new ConsoleLogger($output);
         $file_logger    = ProjectXMLImporter::getLogger();
-        $broker_log  = new BrokerLogger([$file_logger, $console_logger]);
-        $builder     = new \User\XML\Import\UsersToBeImportedCollectionBuilder(
+        $broker_log     = new BrokerLogger([$file_logger, $console_logger]);
+        $builder        = new \User\XML\Import\UsersToBeImportedCollectionBuilder(
             $user_manager,
             $xml_validator
         );
@@ -185,7 +185,7 @@ class ImportProjectXMLCommand extends Command
             }
             $users_collection->process($user_manager, $broker_log);
 
-            $user_finder = new \User\XML\Import\Mapping($user_manager, $users_collection, $broker_log);
+            $user_finder  = new \User\XML\Import\Mapping($user_manager, $users_collection, $broker_log);
             $xml_importer = ProjectXMLImporter::build($user_finder, \ProjectCreator::buildSelfByPassValidation());
 
             if (empty($project_id)) {

@@ -233,7 +233,7 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertEquals('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], $json['uri']);
         $this->assertEquals("R", $json['status']);
 
-        $value = json_encode(
+        $value    = json_encode(
             [
             'values' => [
                     'status' => "A",
@@ -433,7 +433,7 @@ final class UsersTest extends RestBase // phpcs:ignore
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME] . '/membership')
         );
-        $ugroups = $response->json();
+        $ugroups  = $response->json();
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID, $ugroups);
         $this->assertNotContains('ug_' . REST_TestDataBuilder::STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID, $ugroups);
@@ -969,7 +969,7 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     public function testPUTHistoryManipulation()
     {
-        $history_entries  = json_encode(
+        $history_entries = json_encode(
             [
                  [
                     'visit_time' => 1496386853,

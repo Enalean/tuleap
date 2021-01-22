@@ -42,7 +42,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
         $form_element_data['bind-type'] = 'users';
-        $form_element_data['bind'] = [
+        $form_element_data['bind']      = [
             'value_function' => [
                 'artifact_modifiers',
             ]
@@ -53,8 +53,8 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     public function getCriteriaWhere($criteria)
     {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
-            $a = 'A_' . $this->id;
-            $b = 'B_' . $this->id;
+            $a             = 'A_' . $this->id;
+            $b             = 'B_' . $this->id;
             $ids_to_search = array_intersect(
                 array_values($criteria_value),
                 array_merge([100], array_keys($this->getBind()->getAllValues()))
@@ -371,7 +371,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     public function getFieldData($value)
     {
         $um = $this->getUserManager();
-        $u = $um->getUserByUserName($value);
+        $u  = $um->getUserByUserName($value);
         if ($u) {
             return $u->getId();
         } else {

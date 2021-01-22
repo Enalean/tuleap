@@ -27,8 +27,8 @@ require_once __DIR__ . '/adminPresenter.class.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$token  = new CSRFSynchronizerToken('/admin/system_events/');
-$se     = SystemEventManager::instance();
+$token = new CSRFSynchronizerToken('/admin/system_events/');
+$se    = SystemEventManager::instance();
 
 $request_queue = $request->get('queue');
 
@@ -58,7 +58,7 @@ $all_status      = [
     SystemEvent::STATUS_WARNING,
     SystemEvent::STATUS_ERROR,
 ];
-$filter_status = $all_status;
+$filter_status   = $all_status;
 if (is_array($selected_status)) {
     if (in_array("0", $selected_status) || $selected_status === $all_status) {
         $selected_status = [];
@@ -94,7 +94,7 @@ if (! $filter_type) {
 
 $matching_events = $dao->searchLastEvents($offset, $limit, $filter_status, $filter_type)
     ->instanciateWith([$se, 'getInstanceFromRow']);
-$num_total_rows = $dao->foundRows();
+$num_total_rows  = $dao->foundRows();
 
 $events = [];
 foreach ($matching_events as $event) {
@@ -106,7 +106,7 @@ $default_params = [
     'filter_type'   => $filter_type,
     'queue'         => $selected_queue_name
 ];
-$pagination = new Tuleap\Layout\PaginationPresenter(
+$pagination     = new Tuleap\Layout\PaginationPresenter(
     $limit,
     $offset,
     count($events),

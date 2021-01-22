@@ -182,7 +182,7 @@ class CampaignsResource
         $this->conformance_validator = new ConfigConformanceValidator(
             $this->config
         );
-        $this->artifact_dao                = new ArtifactDao();
+        $this->artifact_dao          = new ArtifactDao();
 
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
@@ -205,13 +205,13 @@ class CampaignsResource
         $requirement_retriever = new RequirementRetriever($this->artifact_factory, $this->artifact_dao, $this->config);
         $definition_retriever  = new DefinitionForExecutionRetriever($this->conformance_validator);
 
-        $this->execution_dao                    = new ExecutionDao();
-        $steps_results_representation_builder   = new StepsResultsRepresentationBuilder(
+        $this->execution_dao                  = new ExecutionDao();
+        $steps_results_representation_builder = new StepsResultsRepresentationBuilder(
             $this->formelement_factory,
             new StepsResultsFilter()
         );
-        $purifier =  Codendi_HTMLPurifier::instance();
-        $commonmark_interpreter = CommonMarkInterpreter::build($purifier);
+        $purifier                             =  Codendi_HTMLPurifier::instance();
+        $commonmark_interpreter               = CommonMarkInterpreter::build($purifier);
 
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
@@ -304,13 +304,13 @@ class CampaignsResource
 
         $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager);
 
-        $node_js_client         = new NodeJSClient(
+        $node_js_client          = new NodeJSClient(
             HttpClientFactory::createClient(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             BackendLogger::getDefaultLogger(),
         );
-        $permissions_serializer = new Tracker_Permission_PermissionsSerializer(
+        $permissions_serializer  = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
         $artifact_message_sender = new RealTimeArtifactMessageSender(

@@ -77,8 +77,8 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->event_manager = \Mockery::spy(EventManager::class);
 
         $this->fine_grained_permission_replicator = Mockery::mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator');
-        $this->history_value_formatter = Mockery::mock('Tuleap\Git\Permissions\HistoryValueFormatter');
-        $this->project_history_dao = Mockery::mock('ProjectHistoryDao');
+        $this->history_value_formatter            = Mockery::mock('Tuleap\Git\Permissions\HistoryValueFormatter');
+        $this->project_history_dao                = Mockery::mock('ProjectHistoryDao');
 
         $this->manager = \Mockery::mock(
             \GitRepositoryManager::class,
@@ -197,7 +197,7 @@ class GitRepositoryManagerForkTest extends TestCase
 
     public function testForkIndividualRepositories(): void
     {
-        $path  = 'toto';
+        $path = 'toto';
         $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->andReturns(false);
         $this->repository->shouldReceive('userCanRead')->with($this->user)->andReturns(true);
         $this->backend->shouldReceive('isNameValid')->with($path)->andReturns(true);
@@ -212,8 +212,8 @@ class GitRepositoryManagerForkTest extends TestCase
 
     public function testClonesManyInternalRepositories(): void
     {
-        $namespace  = 'toto';
-        $repo_ids = ['1', '2', '3'];
+        $namespace = 'toto';
+        $repo_ids  = ['1', '2', '3'];
 
         $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->andReturns(false);
 
@@ -248,7 +248,7 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->project_history_dao->shouldReceive('groupAddHistory');
 
         $repo_ids = ['1', '2', '3'];
-        $repos = [];
+        $repos    = [];
         foreach ($repo_ids as $id) {
             $repo = Mockery::mock(GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
             $repo->shouldReceive('getId')->andReturns($id);
@@ -285,7 +285,7 @@ class GitRepositoryManagerForkTest extends TestCase
 
     public function testDoesntCloneUnreadableRepos(): void
     {
-        $repos = $this->getRepoCollectionUnreadableFor(['1', '2', '3'], $this->user);
+        $repos      = $this->getRepoCollectionUnreadableFor(['1', '2', '3'], $this->user);
         $to_project = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(2)->getMock();
 
         $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->andReturns(false);
@@ -312,7 +312,7 @@ class GitRepositoryManagerForkTest extends TestCase
 
     public function testForkCrossProjectsRedirectToCrossProjectGitRepositories(): void
     {
-        $repo_id = '1';
+        $repo_id    = '1';
         $project_id = 2;
 
         $this->user->shouldReceive('isMember')->with($project_id, 'A')->andReturns(true);
@@ -384,7 +384,7 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->andReturns(false);
 
         $errorMessage = 'user gitolite doesnt exist';
-        $repo2 = $this->givenARepository(456);
+        $repo2        = $this->givenARepository(456);
         $repo2->setName('megaRepoGit');
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', "Got an unexpected error while forking " . $repo2->getName() . ": " . $errorMessage)->once();

@@ -84,9 +84,9 @@ class ArtifactTypeFactory
     public function getStatusIdCount($group_artifact_id)
     {
         $count_array = [];
-        $sql = "select status_id,count(*) from artifact where group_artifact_id = " . db_ei($group_artifact_id) .
+        $sql         = "select status_id,count(*) from artifact where group_artifact_id = " . db_ei($group_artifact_id) .
         " group by status_id";
-        $result = db_query($sql);
+        $result      = db_query($sql);
 
         $rows = db_numrows($result);
 
@@ -140,7 +140,7 @@ class ArtifactTypeFactory
                 $arr_count = $this->getStatusIdCount($arr['group_artifact_id']);
                 if ($arr_count) {
                     $arr['open_count'] = array_key_exists('open_count', $arr_count) ? $arr_count['open_count'] : 0;
-                    $arr['count'] = $arr_count['count'];
+                    $arr['count']      = $arr_count['count'];
                 }
                                 $new_at = new ArtifactType($this->Group, $arr['group_artifact_id'], $arr);
                 if ($new_at->userCanView()) {
@@ -167,8 +167,8 @@ class ArtifactTypeFactory
 			AND status!='D'
 			ORDER BY group_artifact_id ASC";
 
-          $result = db_query($sql);
-          $rows = db_numrows($result);
+          $result          = db_query($sql);
+          $rows            = db_numrows($result);
           $myArtifactTypes = [];
 
         if (! $result || $rows < 1) {
@@ -206,7 +206,7 @@ class ArtifactTypeFactory
      //echo $sql;
 
         $result = db_query($sql);
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
         if (! $result || $rows < 1) {
             $this->setError($Language->getText('tracker_common_type', 'none_found') . ' ' . db_error());
             return false;
@@ -222,7 +222,7 @@ class ArtifactTypeFactory
      */
     public function preDeleteAllProjectArtifactTypes()
     {
-        $deleteStatus = true;
+        $deleteStatus  = true;
         $artifactTypes = $this->getArtifactTypes();
         if ($artifactTypes) {
             foreach ($artifactTypes as $artifactType) {
@@ -248,7 +248,7 @@ class ArtifactTypeFactory
             $arm = new ArtifactRulesManager();
             $arm->deleteRulesByArtifactType($artifactType->getID());
             $referenceManager = ReferenceManager::instance();
-            $ref = $referenceManager->loadReferenceFromKeywordAndNumArgs(strtolower($artifactType->getItemName()), $this->getGroup()->getGroupId(), 1);
+            $ref              = $referenceManager->loadReferenceFromKeywordAndNumArgs(strtolower($artifactType->getItemName()), $this->getGroup()->getGroupId(), 1);
             if ($ref) {
                 $referenceManager->deleteReference($ref);
             }
@@ -292,8 +292,8 @@ class ArtifactTypeFactory
         db_query($sql);
 
         // We need to instanciate an artifactType to instanciate the factories
-        $artifactType = new ArtifactType($this->getGroup(), $atid, false);
-        $art_field_fact = new ArtifactFieldFactory($artifactType);
+        $artifactType      = new ArtifactType($this->getGroup(), $atid, false);
+        $art_field_fact    = new ArtifactFieldFactory($artifactType);
         $art_fieldset_fact = new ArtifactFieldSetFactory($artifactType);
 
         // Delete the fields of this tracker
@@ -306,7 +306,7 @@ class ArtifactTypeFactory
         $art_report_fact->deleteReports($atid);
 
         //Generate an event
-        $em = EventManager::instance();
+        $em          = EventManager::instance();
         $pref_params = ['atid'   => $atid];
         $em->processEvent('artifactType_deleted', $pref_params);
 
@@ -392,7 +392,7 @@ class ArtifactTypeFactory
      */
     public function getMyArtifacts($user_id, $view = 'AS')
     {
-        $assignee = false;
+        $assignee  = false;
         $submitter = false;
 
         if (strpos($view, 'A') !== false) {
@@ -431,7 +431,7 @@ class ArtifactTypeFactory
             $assigneeSql = $sql .
                            ' AND afv.valueInt=' . db_ei($user_id) .
                            ' GROUP BY a.artifact_id';
-            $finalSql = $assigneeSql;
+            $finalSql    = $assigneeSql;
             if (! $submitter) {
                 $finalSql .= ' ORDER BY group_name, name, artifact_id';
             }
@@ -471,7 +471,7 @@ class ArtifactTypeFactory
                       status!='D'";
 
         $result = db_query($sql);
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
         if (! $result || $rows != 1) {
             $this->setError($Language->getText('tracker_common_type', 'none_found') . ' ' . db_error());
             return false;
@@ -522,7 +522,7 @@ class ArtifactTypeFactory
     public function isNameExists($name, $group_id)
     {
         $reference_dao = $this->getArtifactGroupListDao();
-        $dar = $reference_dao->searchNameByGroupId($group_id);
+        $dar           = $reference_dao->searchNameByGroupId($group_id);
         while ($row = $dar->getRow()) {
             if ($name == $row['name']) {
                 return true;
@@ -569,7 +569,7 @@ class ArtifactTypeFactory
         }
 
          //    get the template Group object
-        $pm = ProjectManager::instance();
+        $pm             = ProjectManager::instance();
         $template_group = $pm->getProject($group_id_template);
 
         if (! $template_group || ! is_object($template_group) || $template_group->isError()) {
@@ -577,7 +577,7 @@ class ArtifactTypeFactory
         }
 
      // get the Group object of the new tracker
-        $pm = ProjectManager::instance();
+        $pm    = ProjectManager::instance();
         $group = $pm->getProject($group_id);
         if (! $group || ! is_object($group) || $group->isError()) {
             $this->setError('ArtifactTypeFactory: ' . $Language->getText('tracker_common_type', 'invalid_templ'));
@@ -654,7 +654,7 @@ class ArtifactTypeFactory
                         $this->setError('ArtifactTypeFactory: ' . $art_report_fact->getErrorMessage());
                         return false;
                     }
-                    $em = EventManager::instance();
+                    $em          = EventManager::instance();
                     $pref_params = ['atid_source'   => $atid_template,
                                          'atid_dest'     => $id];
                     $em->processEvent('artifactType_created', $pref_params);
@@ -673,7 +673,7 @@ class ArtifactTypeFactory
                     }
 
                     // Create canned responses
-                    $canned_new = new ArtifactCanned($at_new);
+                    $canned_new      = new ArtifactCanned($at_new);
                     $canned_template = $at_template->getCannedResponses();
                     if ($canned_template && db_numrows($canned_template) > 0) {
                         while ($row = db_fetch_array($canned_template)) {
@@ -704,7 +704,7 @@ class ArtifactTypeFactory
      */
     public function setError($string)
     {
-        $this->error_state = true;
+        $this->error_state   = true;
         $this->error_message = $string;
     }
 

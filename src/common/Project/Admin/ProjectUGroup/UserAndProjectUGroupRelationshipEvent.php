@@ -38,7 +38,7 @@ abstract class UserAndProjectUGroupRelationshipEvent implements Dispatchable
     public function __construct(Project $project, PFUser $user)
     {
         $this->project = $project;
-        $this->user = $user;
+        $this->user    = $user;
     }
 
     /**

@@ -53,7 +53,7 @@ class ClientSecretUpdater
 
     public function updateClientSecret(int $app_id): void
     {
-        $secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+        $secret        = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $hashed_secret = $this->hasher->computeHash($secret);
         $this->app_dao->updateSecret($app_id, $hashed_secret);
         $this->client_secret_store->storeLastGeneratedClientSecret($app_id, $secret);

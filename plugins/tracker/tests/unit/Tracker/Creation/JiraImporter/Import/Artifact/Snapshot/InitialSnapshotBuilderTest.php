@@ -59,8 +59,8 @@ class InitialSnapshotBuilderTest extends TestCase
 
         $logger->shouldReceive('debug');
 
-        $user             = Mockery::mock(PFUser::class);
-        $jira_issue_api   = IssueAPIRepresentation::buildFromAPIResponse(
+        $user           = Mockery::mock(PFUser::class);
+        $jira_issue_api = IssueAPIRepresentation::buildFromAPIResponse(
             [
                 "id" => "10001",
                 "key" => "key01",

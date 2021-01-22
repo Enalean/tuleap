@@ -40,7 +40,7 @@ class ArtifactRulesManager
     public function getAllRulesByArtifactTypeWithOrder($artifact_type_id)
     {
         if (! isset($this->rules_by_tracker_id[$artifact_type_id])) {
-            $fact = $this->_getArtifactRuleFactory();
+            $fact                                         = $this->_getArtifactRuleFactory();
             $this->rules_by_tracker_id[$artifact_type_id] = $fact->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         }
         return $this->rules_by_tracker_id[$artifact_type_id];
@@ -112,7 +112,7 @@ class ArtifactRulesManager
         // $values[$field_id]['values'][] = selected value
         $values = [];
         foreach ($value_field_list as $field_name => $value) {
-            $field = $art_field_fact->getFieldFromName($field_name);
+            $field                   = $art_field_fact->getFieldFromName($field_name);
             $values[$field->getID()] = ['field' => $field, 'values' => is_array($value) ? $value : [$value]];
         }
 
@@ -167,7 +167,7 @@ class ArtifactRulesManager
                                         )
                                     ) {
                                         $applied = true;
-                                        $valid = $rule->applyTo(
+                                        $valid   = $rule->applyTo(
                                             $artifact_type_id,
                                             $source,
                                             $source_value,
@@ -183,11 +183,11 @@ class ArtifactRulesManager
                                 $error_occured = true;
                                 // looking for the source field value which cause the dependence problem
                                 $pb_source_field_values = $values[$source]['field']->getFieldPredefinedValues($artifact_type_id);
-                                $pb_source_values = $this->_getSelectedValuesForField($pb_source_field_values, $source, $values[$source]['values']);
+                                $pb_source_values       = $this->_getSelectedValuesForField($pb_source_field_values, $source, $values[$source]['values']);
 
                                 // looking for the target field value which cause the dependence problem
                                 $pb_target_field_values = $values[$target]['field']->getFieldPredefinedValues($artifact_type_id);
-                                $pb_target_values = $this->_getSelectedValuesForField($pb_target_field_values, $target, $target_value);
+                                $pb_target_values       = $this->_getSelectedValuesForField($pb_target_field_values, $target, $target_value);
 
                                 // detailled error message
                                 if (empty($pb_target_values)) {

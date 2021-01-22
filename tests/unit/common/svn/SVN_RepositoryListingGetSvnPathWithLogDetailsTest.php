@@ -29,16 +29,16 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->order = 'ASC';
-        $this->svnlook = \Mockery::spy(\SVN_Svnlook::class);
+        $this->order         = 'ASC';
+        $this->svnlook       = \Mockery::spy(\SVN_Svnlook::class);
         $this->svn_perms_mgr = \Mockery::spy(\SVN_PermissionsManager::class);
         $this->user_manager  = \Mockery::spy(\UserManager::class);
         $this->svn_perms_mgr->shouldReceive('userCanRead')->andReturns(true);
 
         $this->svn_repo_listing = new SVN_RepositoryListing($this->svn_perms_mgr, $this->svnlook, $this->user_manager);
 
-        $this->user     = \Mockery::spy(\PFUser::class);
-        $this->project  = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('gpig')->getMock();
+        $this->user    = \Mockery::spy(\PFUser::class);
+        $this->project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('gpig')->getMock();
 
         $content = [
             "/my/Project/tags",
@@ -51,19 +51,19 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends TestCase
 
     public function testItReturnsLastRevisionDetails(): void
     {
-        $path           = '/my/Project/tags';
-        $author_1       = 'rantanplan';
-        $author_1_id    = 458;
-        $author_1_user  = \Mockery::spy(\PFUser::class)->shouldReceive('getId')->andReturns($author_1_id)->getMock();
-        $datestamp_1    = '2003-02-22 17:44:49 -0600 (Sat, 22 Feb 2003)';
-        $timestamp_1    = 1045957489;
-        $log_message_1  = 'Rearrange lunch.';
-        $author_2       = 'chucky';
-        $author_2_id    = 70;
-        $author_2_user  = \Mockery::spy(\PFUser::class)->shouldReceive('getId')->andReturns($author_2_id)->getMock();
-        $datestamp_2    = '2019-08-12 01:01:43 -0900 (Sun, 23 Feb 2003)';
-        $timestamp_2    = 1565604103;
-        $log_message_2  = 'commit stuff';
+        $path          = '/my/Project/tags';
+        $author_1      = 'rantanplan';
+        $author_1_id   = 458;
+        $author_1_user = \Mockery::spy(\PFUser::class)->shouldReceive('getId')->andReturns($author_1_id)->getMock();
+        $datestamp_1   = '2003-02-22 17:44:49 -0600 (Sat, 22 Feb 2003)';
+        $timestamp_1   = 1045957489;
+        $log_message_1 = 'Rearrange lunch.';
+        $author_2      = 'chucky';
+        $author_2_id   = 70;
+        $author_2_user = \Mockery::spy(\PFUser::class)->shouldReceive('getId')->andReturns($author_2_id)->getMock();
+        $datestamp_2   = '2019-08-12 01:01:43 -0900 (Sun, 23 Feb 2003)';
+        $timestamp_2   = 1565604103;
+        $log_message_2 = 'commit stuff';
 
         $this->user_manager->shouldReceive('getUserByUserName')->with($author_1)->andReturns($author_1_user);
         $this->user_manager->shouldReceive('getUserByUserName')->with($author_2)->andReturns($author_2_user);
@@ -93,10 +93,10 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends TestCase
 
         $last_revision = $this->svn_repo_listing->getSvnPathsWithLogDetails($this->user, $this->project, $path, $this->order);
 
-        $path_info_1 = $last_revision[0];
+        $path_info_1      = $last_revision[0];
         $path_info_soap_1 = $path_info_1->exportToSoap();
 
-        $path_info_2 = $last_revision[1];
+        $path_info_2      = $last_revision[1];
         $path_info_soap_2 = $path_info_2->exportToSoap();
 
         $this->assertEquals($author_1_id, $path_info_soap_1['author']);
@@ -112,19 +112,19 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends TestCase
 
     public function testItReturnsLastRevisionDetailsEvenWhenExactSameTimestamp(): void
     {
-        $path           = '/my/Project/tags';
-        $author_1       = 'rantanplan';
-        $author_1_id    = 458;
-        $author_1_user  = \Mockery::spy(\PFUser::class)->shouldReceive('getId')->andReturns($author_1_id)->getMock();
-        $datestamp_1    = '2003-02-22 17:44:49 -0600 (Sat, 22 Feb 2003)';
-        $timestamp_1    = 1045957489;
-        $log_message_1  = 'Rearrange lunch.';
-        $author_2       = 'chucky';
-        $author_2_id    = 70;
-        $author_2_user  = \Mockery::spy(\PFUser::class)->shouldReceive('getId')->andReturns($author_2_id)->getMock();
-        $datestamp_2    = '2003-02-22 17:44:49 -0600 (Sat, 22 Feb 2003)';
-        $timestamp_2    = 1045957489;
-        $log_message_2  = 'commit stuff';
+        $path          = '/my/Project/tags';
+        $author_1      = 'rantanplan';
+        $author_1_id   = 458;
+        $author_1_user = \Mockery::spy(\PFUser::class)->shouldReceive('getId')->andReturns($author_1_id)->getMock();
+        $datestamp_1   = '2003-02-22 17:44:49 -0600 (Sat, 22 Feb 2003)';
+        $timestamp_1   = 1045957489;
+        $log_message_1 = 'Rearrange lunch.';
+        $author_2      = 'chucky';
+        $author_2_id   = 70;
+        $author_2_user = \Mockery::spy(\PFUser::class)->shouldReceive('getId')->andReturns($author_2_id)->getMock();
+        $datestamp_2   = '2003-02-22 17:44:49 -0600 (Sat, 22 Feb 2003)';
+        $timestamp_2   = 1045957489;
+        $log_message_2 = 'commit stuff';
 
         $this->user_manager->shouldReceive('getUserByUserName')->with($author_1)->andReturns($author_1_user);
         $this->user_manager->shouldReceive('getUserByUserName')->with($author_2)->andReturns($author_2_user);
@@ -154,10 +154,10 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends TestCase
 
         $last_revision = $this->svn_repo_listing->getSvnPathsWithLogDetails($this->user, $this->project, $path, $this->order);
 
-        $path_info_1 = $last_revision[0];
+        $path_info_1      = $last_revision[0];
         $path_info_soap_1 = $path_info_1->exportToSoap();
 
-        $path_info_2 = $last_revision[1];
+        $path_info_2      = $last_revision[1];
         $path_info_soap_2 = $path_info_2->exportToSoap();
 
         $this->assertEquals($author_1_id, $path_info_soap_1['author']);
@@ -173,7 +173,7 @@ class SVN_RepositoryListingGetSvnPathWithLogDetailsTest extends TestCase
 
     public function testItReturnsAnEmptyArrayIfEmptyRepository(): void
     {
-        $svnlook = \Mockery::spy(\SVN_Svnlook::class);
+        $svnlook          = \Mockery::spy(\SVN_Svnlook::class);
         $svn_repo_listing = new SVN_RepositoryListing($this->svn_perms_mgr, $svnlook, $this->user_manager);
 
         $content = ['/'];

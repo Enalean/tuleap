@@ -31,7 +31,7 @@ class FRSLog
      */
     protected function __construct()
     {
-        $em = EventManager::instance();
+        $em                   = EventManager::instance();
         $packageEventToListen = ['frs_create_package',
                                       'frs_update_package',
                                       'frs_delete_package'
@@ -68,7 +68,7 @@ class FRSLog
     public static function instance()
     {
         if (! isset(self::$_instance)) {
-            $c = self::class;
+            $c               = self::class;
             self::$_instance = new $c();
         }
         return self::$_instance;

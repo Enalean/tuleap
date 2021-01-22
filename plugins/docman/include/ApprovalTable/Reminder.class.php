@@ -37,8 +37,8 @@ class Docman_ApprovalTableReminder
      */
     public function remindApprovers()
     {
-        $dao = new Docman_ApprovalTableItemDao();
-        $dar = $dao->getTablesForReminder();
+        $dao    = new Docman_ApprovalTableItemDao();
+        $dar    = $dao->getTablesForReminder();
         $tables = [];
         if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
@@ -92,7 +92,7 @@ class Docman_ApprovalTableReminder
     {
         $nbNotif = 0;
         $this->populateReviewersList($table);
-        $reviewers   = $table->getReviewerArray();
+        $reviewers = $table->getReviewerArray();
         foreach ($reviewers as $reviewer) {
             if ($reviewer->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET || $reviewer->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED) {
                 $sent = $this->notifyIndividual($table, $reviewer->getId());
@@ -169,7 +169,7 @@ class Docman_ApprovalTableReminder
             return false;
         }
 
-        $subject     = sprintf(dgettext('tuleap-docman', '[%1$s] [Reminder] Please review \'%2$s\''), ForgeConfig::get('sys_name'), $docmanItem->getTitle());
+        $subject = sprintf(dgettext('tuleap-docman', '[%1$s] [Reminder] Please review \'%2$s\''), ForgeConfig::get('sys_name'), $docmanItem->getTitle());
 
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($reviewer);
@@ -230,8 +230,8 @@ class Docman_ApprovalTableReminder
      */
     private function getItemUrl(Docman_Item $docmanItem)
     {
-        $baseUrl   = HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . $docmanItem->getGroupId();
-        $itemUrl   = $baseUrl . '&action=show&id=' . $docmanItem->getId();
+        $baseUrl = HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . $docmanItem->getGroupId();
+        $itemUrl = $baseUrl . '&action=show&id=' . $docmanItem->getId();
         return $itemUrl;
     }
 
@@ -263,7 +263,7 @@ People *will not be notified* to review the document *until you approved it*.'),
                     $comment .= '<br>';
                     break;
                 case Codendi_Mail_Interface::FORMAT_TEXT:
-                    $comment = sprintf(dgettext('tuleap-docman', 'Message:
+                    $comment  = sprintf(dgettext('tuleap-docman', 'Message:
 ------------
 %1$s
 ------------'), $userComment);
@@ -286,7 +286,7 @@ People *will not be notified* to review the document *until you approved it*.'),
      */
     private function getApprovalTableOwner(Docman_ApprovalTable $table)
     {
-        $um    = UserManager::instance();
+        $um = UserManager::instance();
         return $um->getUserById($table->owner);
     }
 
@@ -299,7 +299,7 @@ People *will not be notified* to review the document *until you approved it*.'),
      */
     private function getItemProject(Docman_Item $docmanItem)
     {
-        $pm    = ProjectManager::instance();
+        $pm = ProjectManager::instance();
         return $pm->getProject($docmanItem->getGroupId());
     }
 
@@ -347,17 +347,17 @@ This is an automatic message. Please do not reply to this email.'), $docmanItem-
     private function getBodyHtml(Docman_ApprovalTable $table, Docman_Item $docmanItem)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $group = $this->getItemProject($docmanItem);
-        $owner = $this->getApprovalTableOwner($table);
-        $body  = dgettext('tuleap-docman', 'You are requested to review the following document:') . '<br><br><b>';
-        $body .= dgettext('tuleap-docman', 'Title:') . '</b> ' . $docmanItem->getTitle() . '<br><b>';
-        $body .= dgettext('tuleap-docman', 'Project:') . '</b> ' . $purifier->purify($group->getPublicName()) . '<br><b>';
-        $body .= dgettext('tuleap-docman', 'Requester:') . '</b><a href="' . $owner->getEmail() . '">' . $owner->getRealName() . '</a><br>';
-        $body .= '<a href="' . $this->getItemUrl($docmanItem) . '">' . dgettext('tuleap-docman', 'Direct link to the document') . ' </a><br>';
-        $body .= '<br>' . $this->getTableDescriptionAsMessage($table, Codendi_Mail_Interface::FORMAT_HTML) . '<br><br>';
-        $body .= dgettext('tuleap-docman', 'Notification type:') . ' ' . $this->getNotificationStyle($table) . ' <br><br>';
-        $body .= '<a href="' . $this->getReviewUrl($docmanItem) . '"><b>' . dgettext('tuleap-docman', 'Click on the following link to approve or reject the document') . '<b></a><br>';
-        $body .= '<br>--<br><i>' . dgettext('tuleap-docman', 'This is an automatic message. Please do not reply to this email') . '</i><br>';
+        $group    = $this->getItemProject($docmanItem);
+        $owner    = $this->getApprovalTableOwner($table);
+        $body     = dgettext('tuleap-docman', 'You are requested to review the following document:') . '<br><br><b>';
+        $body    .= dgettext('tuleap-docman', 'Title:') . '</b> ' . $docmanItem->getTitle() . '<br><b>';
+        $body    .= dgettext('tuleap-docman', 'Project:') . '</b> ' . $purifier->purify($group->getPublicName()) . '<br><b>';
+        $body    .= dgettext('tuleap-docman', 'Requester:') . '</b><a href="' . $owner->getEmail() . '">' . $owner->getRealName() . '</a><br>';
+        $body    .= '<a href="' . $this->getItemUrl($docmanItem) . '">' . dgettext('tuleap-docman', 'Direct link to the document') . ' </a><br>';
+        $body    .= '<br>' . $this->getTableDescriptionAsMessage($table, Codendi_Mail_Interface::FORMAT_HTML) . '<br><br>';
+        $body    .= dgettext('tuleap-docman', 'Notification type:') . ' ' . $this->getNotificationStyle($table) . ' <br><br>';
+        $body    .= '<a href="' . $this->getReviewUrl($docmanItem) . '"><b>' . dgettext('tuleap-docman', 'Click on the following link to approve or reject the document') . '<b></a><br>';
+        $body    .= '<br>--<br><i>' . dgettext('tuleap-docman', 'This is an automatic message. Please do not reply to this email') . '</i><br>';
         return $body;
     }
 

@@ -76,13 +76,13 @@ function build_grouphistory_filter($event = null, $subEventsBox = null, $value =
     }
     if (! empty($startDate)) {
         [$timestamp,] = util_date_to_unixtime($startDate);
-        $filter .= " AND group_history.date > " . $data_access->escapeInt($timestamp);
+        $filter      .= " AND group_history.date > " . $data_access->escapeInt($timestamp);
     }
     if (! empty($endDate)) {
         [$timestamp,] = util_date_to_unixtime($endDate);
         // Add 23:59:59 to timestamp
         $timestamp = $timestamp + 86399;
-        $filter .= " AND group_history.date < " . $data_access->escapeInt($timestamp);
+        $filter   .= " AND group_history.date < " . $data_access->escapeInt($timestamp);
     }
     if (! empty($value)) {
         //all_users need specific treatement
@@ -170,7 +170,7 @@ function get_history_entries()
 
     //Plugins related events should be filled using the hook
     $params = ['subEvents' => &$subEvents];
-    $em = EventManager::instance();
+    $em     = EventManager::instance();
     $em->processEvent('fill_project_history_sub_events', $params);
     return $subEvents;
 }
@@ -207,7 +207,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
                 $arr_args = explode('||', $args);
             }
         } else {
-            $msg_key = $field;
+            $msg_key  = $field;
             $arr_args = "";
         }
         $msg = $Language->getOverridableText('project_admin_utils', $msg_key, $arr_args);
@@ -222,7 +222,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
         //Translate dynamic ugroup name for permission entries
         if (strstr($msg_key, "perm_granted_for_") || strstr($msg_key, "perm_reset_for_") || strstr($msg_key, "membership_request_updated")) {
             $ugroupList = explode(",", $val);
-            $val = '';
+            $val        = '';
             foreach ($ugroupList as $ugroup) {
                 if ($val === '') {
                     $val .= ', ';
@@ -231,7 +231,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
             }
         } elseif ($msg_key == "group_type") {
             $template = TemplateSingleton::instance();
-            $val = $template->getLabel($val);
+            $val      = $template->getLabel($val);
         }
         $event = new GetProjectHistoryEntryValue($row, $val);
         EventManager::instance()->processEvent($event);
@@ -246,7 +246,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
             $html .= build_csv_record(['event', 'val', 'date', 'by'], $documents_body) . "\n";
         } else {
             $html .= $hp->purify($val, CODENDI_PURIFIER_BASIC);
-            $user = UserManager::instance()->getUserByUserName($row['user_name']);
+            $user  = UserManager::instance()->getUserByUserName($row['user_name']);
             $html .= '</TD><TD>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']) .
             '</TD><TD>' . UserHelper::instance()->getLinkOnUser($user) . '</TD></TR>';
         }
@@ -283,7 +283,7 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
     $history_rows   = $dao->groupGetHistory($offset, $limit, $group_id, $history_filter);
 
     if (isset($subEventsBox)) {
-        $subEventsString = implode(",", array_keys($subEventsBox));
+        $subEventsString  = implode(",", array_keys($subEventsBox));
         $forwardSubEvents = '&event=' . $event . '&subEventsBox=' . $subEventsString;
     } else {
         $forwardSubEvents = '&event=' . $event;
@@ -384,16 +384,16 @@ function export_grouphistory($group_id, $event = null, $subEventsBox = null, $va
 
     $eol = "\n";
 
-    $col_list = ['event', 'val', 'date', 'by'];
+    $col_list        = ['event', 'val', 'date', 'by'];
     $documents_title =  ['event' => $Language->getText('project_admin_utils', 'event'),
                               'val'   => $Language->getText('project_admin_utils', 'val'),
                               'date'  => $Language->getText('project_admin_utils', 'date'),
                               'by'    => $Language->getText('global', 'by')];
     echo build_csv_header($col_list, $documents_title) . $eol;
 
-    $dao = new ProjectHistoryDao(CodendiDataAccess::instance());
+    $dao            = new ProjectHistoryDao(CodendiDataAccess::instance());
     $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
-    $res = $dao->groupGetHistory(0, 0, $group_id, $history_filter);
+    $res            = $dao->groupGetHistory(0, 0, $group_id, $history_filter);
 
     if ($res['numrows'] > 0) {
         echo displayProjectHistoryResults($group_id, $res, true);

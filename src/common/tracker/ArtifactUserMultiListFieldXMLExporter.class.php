@@ -20,10 +20,10 @@
 
 class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter
 {
-    public const LABEL_VALUES_INDEX  = 'valueLabelList';
-    public const TV3_TYPE            = 'MB_5';
-    public const TV5_TYPE            = 'list';
-    public const TV5_BIND            = 'users';
+    public const LABEL_VALUES_INDEX = 'valueLabelList';
+    public const TV3_TYPE           = 'MB_5';
+    public const TV5_TYPE           = 'list';
+    public const TV5_BIND           = 'users';
 
     public const SYS_VALUE_NONE_FR = 'Aucun';
     public const SYS_VALUE_NONE_EN = 'None';

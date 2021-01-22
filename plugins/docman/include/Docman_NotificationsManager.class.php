@@ -312,7 +312,7 @@ class Docman_NotificationsManager
                 break;
         }
         $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
-        $msg .= $this->getMonitoringInformation($monitoredItem);
+        $msg          .= $this->getMonitoringInformation($monitoredItem);
 
         return $msg;
     }
@@ -403,7 +403,7 @@ class Docman_NotificationsManager
 
     protected function getMonitoringInformation(Docman_Item $monitored_item): string
     {
-        $message = "\n\n--------------------------------------------------------------------\n";
+        $message  = "\n\n--------------------------------------------------------------------\n";
         $message .= dgettext(
             'tuleap-docman',
             "You are receiving this message because you are monitoring this item."

@@ -98,7 +98,7 @@ class WorkerSystemCtlCommand extends Command
 
     private function getTuleapWorkers(): array
     {
-        $names = [];
+        $names   = [];
         $process = $this->process_factory->getProcess(
             ['/usr/bin/systemctl', 'list-units', '--no-pager', '--no-legend', '--plain', '--type=service', '--state=active', '--full', 'tuleap-worker@*']
         );

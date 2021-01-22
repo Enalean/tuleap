@@ -61,10 +61,10 @@ class TrackerCreator
         TrackerCreatorXmlErrorDisplayer $xml_error_displayer,
         TrackerCreationDataChecker $creation_data_checker
     ) {
-        $this->tracker_xml_import        = $tracker_xml_import;
-        $this->tracker_factory           = $tracker_factory;
-        $this->xml_error_displayer       = $xml_error_displayer;
-        $this->creation_data_checker     = $creation_data_checker;
+        $this->tracker_xml_import    = $tracker_xml_import;
+        $this->tracker_factory       = $tracker_factory;
+        $this->xml_error_displayer   = $xml_error_displayer;
+        $this->creation_data_checker = $creation_data_checker;
     }
 
     public static function build(): self

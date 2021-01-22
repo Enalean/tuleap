@@ -56,8 +56,8 @@ final class BindDecoratorRetrieverTest extends TestCase
         $this->artifact            = $this->createMock(Artifact::class);
         $this->changeset           = $this->createMock(Tracker_Artifact_Changeset::class);
         $this->changeset->method('getId')->willReturn(747);
-        $this->decorator           = $this->createMock(Tracker_FormElement_Field_List_BindDecorator::class);
-        $this->bind_static         = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->decorator   = $this->createMock(Tracker_FormElement_Field_List_BindDecorator::class);
+        $this->bind_static = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
     }
 
     public function testItReturnsTheDecoratorForTheFirstValue(): void

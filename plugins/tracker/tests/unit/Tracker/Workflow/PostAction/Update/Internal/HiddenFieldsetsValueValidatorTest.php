@@ -61,7 +61,7 @@ final class HiddenFieldsetsValueValidatorTest extends TestCase
 
         $hidden_fieldsets_values = new HiddenFieldsetsValue([648, 701]);
 
-        $tracker  = Mockery::mock(\Tracker::class);
+        $tracker = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
 
         $workflow = Mockery::mock(\Workflow::class);
@@ -108,7 +108,7 @@ final class HiddenFieldsetsValueValidatorTest extends TestCase
 
         $hidden_fieldsets_values = new HiddenFieldsetsValue([648, 702]);
 
-        $tracker  = Mockery::mock(\Tracker::class);
+        $tracker = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
 
         $workflow = Mockery::mock(\Workflow::class);

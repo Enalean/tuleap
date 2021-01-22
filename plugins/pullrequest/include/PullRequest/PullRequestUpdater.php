@@ -110,7 +110,7 @@ class PullRequestUpdater
         foreach ($prs as $pr) {
             $this->pull_request_factory->updateSourceRev($pr, $new_rev);
 
-            $repository_destination          = $this->git_repository_factory->getRepositoryById($pr->getRepoDestId());
+            $repository_destination = $this->git_repository_factory->getRepositoryById($pr->getRepoDestId());
             if ($repository_destination === null) {
                 continue;
             }
@@ -172,8 +172,8 @@ class PullRequestUpdater
             if ($pr_repository === null) {
                 continue;
             }
-            $pr_git_exec   = $this->git_exec_factory->getGitExec($pr_repository);
-            $merge_status  = $this->pull_request_merger->detectMergeabilityStatus(
+            $pr_git_exec  = $this->git_exec_factory->getGitExec($pr_repository);
+            $merge_status = $this->pull_request_merger->detectMergeabilityStatus(
                 $pr_git_exec,
                 $pr->getSha1Src(),
                 $branch_name
@@ -191,8 +191,8 @@ class PullRequestUpdater
             $dest_changes_diff = $this->diff_builder->buildFileUniDiff($git_exec, $file_path, $pull_request->getSha1Dest(), $new_dest_rev);
             $target_diff       = $this->diff_builder->buildFileUniDiffFromCommonAncestor($git_exec, $file_path, $new_dest_rev, $new_src_rev);
 
-            $has_src_changes   = count($changes_diff->getLines()) > 0;
-            $has_dest_changes  = count($dest_changes_diff->getLines()) > 0;
+            $has_src_changes  = count($changes_diff->getLines()) > 0;
+            $has_dest_changes = count($dest_changes_diff->getLines()) > 0;
 
             if ($has_src_changes || $has_dest_changes) {
                 if (! $has_src_changes) {

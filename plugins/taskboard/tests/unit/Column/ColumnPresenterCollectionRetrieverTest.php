@@ -76,9 +76,9 @@ class ColumnPresenterCollectionRetrieverTest extends TestCase
         $milestone->shouldReceive('getArtifactId')
             ->atLeast()->once()
             ->andReturn(42);
-        $todo_column       = new Cardwall_Column(2, 'To do', 'fiesta-red');
-        $ongoing_column    = new Cardwall_Column(4, 'On going', '');
-        $done_column       = new Cardwall_Column(6, 'Done', 'rgb(135,219,239)');
+        $todo_column    = new Cardwall_Column(2, 'To do', 'fiesta-red');
+        $ongoing_column = new Cardwall_Column(4, 'On going', '');
+        $done_column    = new Cardwall_Column(6, 'Done', 'rgb(135,219,239)');
         $this->column_factory->shouldReceive('getDashboardColumns')
             ->with($milestone_tracker)
             ->once()

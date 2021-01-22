@@ -42,7 +42,7 @@ class GitlabCommitFactoryTest extends TestCase
     protected function setUp(): void
     {
         $this->commit_dao = \Mockery::mock(CommitTuleapReferenceDao::class);
-        $this->factory = new GitlabCommitFactory(
+        $this->factory    = new GitlabCommitFactory(
             $this->commit_dao
         );
     }
@@ -61,7 +61,7 @@ class GitlabCommitFactoryTest extends TestCase
                 'author_email' => 'john-snow@the-wall.com',
             ]);
 
-        $repository = $this->getMockedGitlabRepository();
+        $repository  = $this->getMockedGitlabRepository();
         $commit_info = $this->factory->getGitlabCommitInRepositoryWithSha1(
             $repository,
             '11645a413d7af2995cd92e40bf387e39d06d0e61'
@@ -82,7 +82,7 @@ class GitlabCommitFactoryTest extends TestCase
             ->with(2, '11645a413d7af2995cd92e40bf387e39d06d0e61')
             ->andReturn(null);
 
-        $repository = $this->getMockedGitlabRepository();
+        $repository  = $this->getMockedGitlabRepository();
         $commit_info = $this->factory->getGitlabCommitInRepositoryWithSha1(
             $repository,
             '11645a413d7af2995cd92e40bf387e39d06d0e61'

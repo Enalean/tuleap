@@ -32,11 +32,11 @@ class Tracker_Chart_Burndown
      */
     private $burndown_data;
 
-    private $duration = 10;
-    protected $title = '';
+    private $duration      = 10;
+    protected $title       = '';
     protected $description = '';
-    protected $width = 640;
-    protected $height = 480;
+    protected $width       = 640;
+    protected $height      = 480;
 
     private $graph_data_ideal_burndown   = [];
     private $graph_data_human_dates      = [];
@@ -91,7 +91,7 @@ class Tracker_Chart_Burndown
     {
         $remaining_effort = $this->burndown_data->getRemainingEffort();
 
-        $date           = new DateTime();
+        $date = new DateTime();
         $date->setTimestamp($this->burndown_data->getTimePeriod()->getStartDate());
 
         $data                  = [];
@@ -121,7 +121,7 @@ class Tracker_Chart_Burndown
                     $data[$date->format('D d')] = [array_sum($last_remaining_effort ?? [])];
                 } else {
                     if ($last_remaining_effort) {
-                        $data[$date->format('D d')] = [array_sum($last_remaining_effort)];
+                        $data[$date->format('D d')]                  = [array_sum($last_remaining_effort)];
                         $last_remaining_effort[$date->format('Ymd')] = [array_sum($last_remaining_effort)];
                     } else {
                         $data[$date->format('D d')] = null;
@@ -164,8 +164,8 @@ class Tracker_Chart_Burndown
 
         $day_num = 0;
         foreach ($remaining_effort as $day => $effort) {
-            $this->graph_data_ideal_burndown[]   = floatval($slope * $day_num + $start_effort);
-            $this->graph_data_human_dates[]      = $day;
+            $this->graph_data_ideal_burndown[] = floatval($slope * $day_num + $start_effort);
+            $this->graph_data_human_dates[]    = $day;
             if (is_array($effort)) {
                 $this->graph_data_remaining_effort[] = array_sum($effort);
             } else {

@@ -33,10 +33,10 @@ class MailPresenterFactory
      */
     public function createMailAccountPresenter($login, $confirm_hash, $presenter_role, string $logo_url)
     {
-        $color_logo = "#000";
+        $color_logo   = "#000";
         $color_button = "#347DBA";
 
-        $base_url       = HTTPRequest::instance()->getServerUrl();
+        $base_url = HTTPRequest::instance()->getServerUrl();
         $this->setColorTheme($color_logo, $color_button);
 
         $attributes_presenter = [
@@ -80,7 +80,7 @@ class MailPresenterFactory
      */
     public function createMailProjectNotificationPresenter(Project $project, $logo_url)
     {
-        $color_logo = "#000";
+        $color_logo   = "#000";
         $color_button = "#347DBA";
 
         $this->setColorTheme($color_logo, $color_button);
@@ -101,7 +101,7 @@ class MailPresenterFactory
      */
     private function createAdminEmailPresenter(array $attributes_presenter)
     {
-        $login      = $attributes_presenter["login"];
+        $login = $attributes_presenter["login"];
 
         include($GLOBALS['Language']->getContent('account/new_account_email'));
         $presenter = new MailRegisterByAdminPresenter(
@@ -128,9 +128,9 @@ class MailPresenterFactory
      */
     private function createUserEmailPresenter(array $attributes_presenter)
     {
-        $base_url       = $attributes_presenter["base_url"];
-        $login          = $attributes_presenter["login"];
-        $confirm_hash   = $attributes_presenter["confirm_hash"];
+        $base_url     = $attributes_presenter["base_url"];
+        $login        = $attributes_presenter["login"];
+        $confirm_hash = $attributes_presenter["confirm_hash"];
 
         include($GLOBALS['Language']->getContent('include/new_user_email'));
         $redirect_url = $base_url . "/account/login.php?confirm_hash=$confirm_hash";
@@ -189,8 +189,8 @@ class MailPresenterFactory
      */
     private function createApprovalEmailPresenter(array $attributes_presenter)
     {
-        $base_url   = $attributes_presenter["base_url"];
-        $login      = $attributes_presenter["login"];
+        $base_url = $attributes_presenter["base_url"];
+        $login    = $attributes_presenter["login"];
 
         include($GLOBALS['Language']->getContent('admin/new_account_email'));
 
@@ -287,7 +287,7 @@ class MailPresenterFactory
         $color_logo = "#000";
         $this->setColorTheme($color_logo);
         $logo_retriever = new LogoRetriever();
-        $logo_url = $logo_retriever->getLegacyUrl();
+        $logo_url       = $logo_retriever->getLegacyUrl();
         return new MailAccountSuspensionAlertPresenter((string) $logo_url, $color_logo, $last_access_date, $suspension_date, $language);
     }
 
@@ -300,7 +300,7 @@ class MailPresenterFactory
         $color_logo = "#000";
         $this->setColorTheme($color_logo);
         $logo_retriever = new LogoRetriever();
-        $logo_url = $logo_retriever->getLegacyUrl();
+        $logo_url       = $logo_retriever->getLegacyUrl();
         return new MailAccountSuspensionPresenter((string) $logo_url, $color_logo, $last_access_date, $language);
     }
 }

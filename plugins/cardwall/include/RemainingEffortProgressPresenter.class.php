@@ -28,9 +28,9 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
 
     public function __construct($initial_effort, $capacity, $remaining_effort)
     {
-        $this->initial_effort    = $initial_effort;
-        $this->capacity          = $capacity;
-        $this->remaining_effort  = $remaining_effort;
+        $this->initial_effort   = $initial_effort;
+        $this->capacity         = $capacity;
+        $this->remaining_effort = $remaining_effort;
     }
 
     public function milestone_capacity()

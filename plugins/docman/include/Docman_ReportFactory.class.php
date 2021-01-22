@@ -58,12 +58,12 @@ class Docman_ReportFactory
             $dar = $dao->searchById($reportId);
             if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $noDbReport = false;
-                $row = $dar->getRow();
-                $report = new Docman_Report();
+                $row        = $dar->getRow();
+                $report     = new Docman_Report();
                 $report->initFromRow($row);
 
                 $filterFactory = new Docman_FilterFactory($this->groupId);
-                $fa = $filterFactory->addFiltersToReport($report);
+                $fa            = $filterFactory->addFiltersToReport($report);
 
                 $this->initColumns($report, $request);
             }
@@ -108,7 +108,7 @@ class Docman_ReportFactory
 
                 // validate reportId
                 $updReportOk = false;
-                $refReport = $this->getReportById($reportId);
+                $refReport   = $this->getReportById($reportId);
                 if ($refReport !== null) {
                     if ($refReport->getGroupId() == $this->groupId) {
                         if ($dpm->userCanAdmin($user)) {
@@ -156,10 +156,10 @@ class Docman_ReportFactory
         $filterFactory = new Docman_FilterFactory($this->groupId);
 
         $mdFactory = new Docman_MetadataFactory($this->groupId);
-        $mdIter = $mdFactory->getMetadataForGroup(true);
+        $mdIter    = $mdFactory->getMetadataForGroup(true);
         $mdIter->rewind();
         while ($mdIter->valid()) {
-            $md = $mdIter->current();
+            $md     = $mdIter->current();
             $filter = $filterFactory->createFilterOnMatch($md, $request, $report->getAdvancedSearch());
             $this->_validateFilterAndCreate($report, $filter, $feedback);
             $mdIter->next();
@@ -177,7 +177,7 @@ class Docman_ReportFactory
         if ($filter !== null) {
             // Validate submitted paramters
             $validateFilterFactory = new Docman_ValidateFilterFactory();
-            $validateFilter = $validateFilterFactory->getFromFilter($filter);
+            $validateFilter        = $validateFilterFactory->getFromFilter($filter);
             if ($validateFilter !== null) {
                 if (! $validateFilter->validate()) {
                     $feedback->log('error', $validateFilter->getMessage());
@@ -205,7 +205,7 @@ class Docman_ReportFactory
     public function initColumns(&$report, $request)
     {
         $settingsBo =  Docman_SettingsBo::instance($this->groupId);
-        $useStatus = $settingsBo->getMetadataUsage('status');
+        $useStatus  = $settingsBo->getMetadataUsage('status');
 
         if ($useStatus) {
             $columnsOnReport = ['status', 'title', 'description', 'location', 'owner', 'update_date'];
@@ -215,7 +215,7 @@ class Docman_ReportFactory
             $columnsOnReport = ['title', 'description', 'location', 'owner', 'update_date'];
         }
         $keepRefOnUpdateDate = null;
-        $thereIsAsort = false;
+        $thereIsAsort        = false;
 
         $colFactory = new Docman_ReportColumnFactory($this->groupId);
         foreach ($columnsOnReport as $colLabel) {
@@ -243,8 +243,8 @@ class Docman_ReportFactory
     public function getReportById($id)
     {
         $report = null;
-        $dao = $this->getDao();
-        $dar = $dao->searchById($id);
+        $dao    = $this->getDao();
+        $dar    = $dao->searchById($id);
         if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $report = new Docman_Report();
             $report->initFromRow($dar->current());
@@ -254,10 +254,10 @@ class Docman_ReportFactory
 
     public function getProjectReportsForGroup()
     {
-        $ra = [];
+        $ra  = [];
         $dao = $this->getDao();
         $dar = $dao->searchProjectReportByGroupId($this->groupId);
-        $i = 0;
+        $i   = 0;
         while ($dar->valid()) {
             $ra[$i] = new Docman_Report();
             $ra[$i]->initFromRow($dar->current());
@@ -270,10 +270,10 @@ class Docman_ReportFactory
 
     public function getPersonalReportsForUser($user)
     {
-        $ra = [];
+        $ra  = [];
         $dao = $this->getDao();
         $dar = $dao->searchPersonalReportByUserId($this->groupId, $user->getId());
-        $i = 0;
+        $i   = 0;
         while ($dar->valid()) {
             $ra[$i] = new Docman_Report();
             $ra[$i]->initFromRow($dar->current());
@@ -292,9 +292,9 @@ class Docman_ReportFactory
      */
     public function getReportsItems($reportId = null)
     {
-        $itemArray = [];
+        $itemArray   = [];
         $itemFactory = new Docman_ItemFactory($this->groupId);
-        $dao = $this->getDao();
+        $dao         = $this->getDao();
         foreach ($dao->searchItemsInReports($this->groupId, $reportId) as $row) {
             $itemArray[] = $itemFactory->getItemFromRow($row);
         }
@@ -347,7 +347,7 @@ class Docman_ReportFactory
 
     public function deleteReport($report)
     {
-        $dao = $this->getDao();
+        $dao           = $this->getDao();
         $filterFactory = new Docman_FilterFactory($this->groupId);
         if ($filterFactory->truncateFilters($report)) {
             return $dao->deleteById($report->getId());

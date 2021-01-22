@@ -29,10 +29,10 @@ class SVN_RevisionPathInfo
 
     public function __construct($path, $author_id, $timestamp, $commit_message)
     {
-        $this->path             = $path;
-        $this->author_id        = $author_id;
-        $this->timestamp        = $timestamp;
-        $this->commit_message   = $commit_message;
+        $this->path           = $path;
+        $this->author_id      = $author_id;
+        $this->timestamp      = $timestamp;
+        $this->commit_message = $commit_message;
     }
 
     public function exportToSoap()

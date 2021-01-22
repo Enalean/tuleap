@@ -33,8 +33,8 @@ class SiteCacheTest extends \PHPUnit\Framework\TestCase
 
     public function testItCreatesCacheDirectories()
     {
-        $cache_dir    = $this->getTmpDir() . DIRECTORY_SEPARATOR . 'tuleap_cache_dir';
-        $lang_dir     = $this->getTmpDir() . DIRECTORY_SEPARATOR . 'tuleap_lang_dir';
+        $cache_dir = $this->getTmpDir() . DIRECTORY_SEPARATOR . 'tuleap_cache_dir';
+        $lang_dir  = $this->getTmpDir() . DIRECTORY_SEPARATOR . 'tuleap_lang_dir';
 
         ForgeConfig::set('codendi_cache_dir', $cache_dir);
         $logger              = \Mockery::spy(\Psr\Log\LoggerInterface::class);

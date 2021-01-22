@@ -62,7 +62,7 @@ if ($start_date > $end_date) {
     exit(1);
 }
 
-$content = '';
+$content  = '';
 $content .= "Start date : $start_date \n";
 $content .= "End date : $end_date \n\n";
 

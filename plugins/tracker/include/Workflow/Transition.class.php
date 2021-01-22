@@ -38,7 +38,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * @var Tracker_FormElement_Field_List_Value
      */
-    protected $to   = null;
+    protected $to = null;
 
     /**
      * @var Array of Transition_PostAction

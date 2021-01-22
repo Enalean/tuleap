@@ -50,9 +50,9 @@ function CoAgreement($dbi, $page, $users, $active_userid)
     //the group agrees on the page based on their ratings
     $cur_page = $page;
 
-    $my_ratings_iter = $dbi->get_rating(0, $active_userid, $page);
+    $my_ratings_iter   = $dbi->get_rating(0, $active_userid, $page);
     $my_ratings_single = $my_ratings_iter->next();
-    $cur_rating = $my_ratings_single['ratingvalue'];
+    $cur_rating        = $my_ratings_single['ratingvalue'];
 
     $MIDDLE_RATING = 3;
 
@@ -62,9 +62,9 @@ function CoAgreement($dbi, $page, $users, $active_userid)
         $agreePos = 0;
     }
     foreach ($users as $buddy) {
-        $buddy_rating_iter = $dbi->get_rating(0, $buddy, $cur_page);
+        $buddy_rating_iter  = $dbi->get_rating(0, $buddy, $cur_page);
         $buddy_rating_array = $buddy_rating_iter->next();
-        $buddy_rating = $buddy_rating_array['ratingvalue'];
+        $buddy_rating       = $buddy_rating_array['ratingvalue'];
         if ($buddy_rating == "") {
             $agree = 1;
         } elseif ($agreePos && $buddy_rating >= $MIDDLE_RATING) {
@@ -92,15 +92,15 @@ function MinMisery($dbi, $page, $users, $active_userid)
 
     $cur_page = $page;
 
-    $my_ratings_iter = $dbi->get_rating(0, $active_userid, $page);
+    $my_ratings_iter   = $dbi->get_rating(0, $active_userid, $page);
     $my_ratings_single = $my_ratings_iter->next();
-    $cur_rating = $my_ratings_single['ratingvalue'];
+    $cur_rating        = $my_ratings_single['ratingvalue'];
 
     $min = $cur_rating;
     foreach ($users as $buddy) {
-        $buddy_rating_iter = $dbi->get_rating(0, $buddy, $cur_page);
+        $buddy_rating_iter  = $dbi->get_rating(0, $buddy, $cur_page);
         $buddy_rating_array = $buddy_rating_iter->next();
-        $buddy_rating = $buddy_rating_array['ratingvalue'];
+        $buddy_rating       = $buddy_rating_array['ratingvalue'];
         if ($buddy_rating != "" && $buddy_rating < $min) {
             $min = $buddy_rating;
         }
@@ -115,9 +115,9 @@ function AverageRating($dbi, $page, $users, $active_userid)
 
     $cur_page = $page;
 
-    $my_ratings_iter = $dbi->get_rating(0, $active_userid, $page);
+    $my_ratings_iter   = $dbi->get_rating(0, $active_userid, $page);
     $my_ratings_single = $my_ratings_iter->next();
-    $cur_rating = $my_ratings_single['ratingvalue'];
+    $cur_rating        = $my_ratings_single['ratingvalue'];
     if ($cur_rating != "") {
         $total = $cur_rating;
         $count = 1;
@@ -126,9 +126,9 @@ function AverageRating($dbi, $page, $users, $active_userid)
         $count = 0;
     }
     foreach ($users as $buddy) {
-        $buddy_rating_iter = $dbi->get_rating(0, $buddy, $cur_page);
+        $buddy_rating_iter  = $dbi->get_rating(0, $buddy, $cur_page);
         $buddy_rating_array = $buddy_rating_iter->next();
-        $buddy_rating = $buddy_rating_array['ratingvalue'];
+        $buddy_rating       = $buddy_rating_array['ratingvalue'];
         if ($buddy_rating != "") {
             $total = $total + $buddy_rating;
             $count++;

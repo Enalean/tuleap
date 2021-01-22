@@ -25,7 +25,7 @@ class SystemEvent_GIT_LEGACY_REPO_ACCESS extends SystemEvent
 
     public function process()
     {
-        $parameters  = $this->getParametersAsArray();
+        $parameters = $this->getParametersAsArray();
         //repo id
         $repositoryId = '';
         if (! empty($parameters[0])) {

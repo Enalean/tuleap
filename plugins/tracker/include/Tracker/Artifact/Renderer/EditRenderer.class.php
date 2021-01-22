@@ -96,7 +96,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user)
     {
-        $html  = parent::fetchFormContent($request, $current_user);
+        $html = parent::fetchFormContent($request, $current_user);
 
         if ($this->artifact->getTracker()->isProjectAllowedToUseNature()) {
             $parents = $this->retriever->getParentsHierarchy($this->artifact);
@@ -124,18 +124,18 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function displayHeader()
     {
-        $title        = sprintf(
+        $title       = sprintf(
             '%s - %s #%d',
             mb_substr($this->artifact->getTitle() ?? '', 0, 64),
             $this->tracker->getItemName(),
             $this->artifact->getId()
         );
-        $breadcrumbs  = [
+        $breadcrumbs = [
             ['title' => $this->artifact->getXRef(),
                   'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId()]
         ];
-        $request = HTTPRequest::instance();
-        $params       = [
+        $request     = HTTPRequest::instance();
+        $params      = [
             'body_class' => ['widgetable', 'has-sidebar-with-pinned-header', 'tracker-artifact-view-body'],
             'open_graph' => new \Tuleap\OpenGraph\OpenGraphPresenter(
                 $request->getServerUrl() . $this->artifact->getUri(),
@@ -237,7 +237,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $tab_level = 0;
         $html      = '';
         $html     .= '<ul class="tracker-hierarchy">';
-        $parents = array_reverse($hierarchy->getArtifacts());
+        $parents   = array_reverse($hierarchy->getArtifacts());
 
         foreach ($parents as $parent) {
             foreach ($parent as $father) {

@@ -46,7 +46,7 @@ class TuleapReferenceRetriever
      */
     public function retrieveTuleapReference(int $artifact_id): \Reference
     {
-        $project_id = $this->getArtifactProjectId($artifact_id);
+        $project_id         = $this->getArtifactProjectId($artifact_id);
         $external_reference = $this->reference_manager->loadReferenceFromKeyword(
             'art',
             $artifact_id

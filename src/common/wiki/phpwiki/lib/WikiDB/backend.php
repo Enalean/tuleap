@@ -170,7 +170,7 @@ class WikiDB_backend
     public function delete_page($pagename)
     {
         $mtime = time();
-        $user = $GLOBALS['request']->_user;
+        $user  = $GLOBALS['request']->_user;
         $vdata = ['author' => $user->getId(),
                        'author_id' => $user->getAuthenticatedId(),
                        'mtime' => $mtime];
@@ -498,11 +498,11 @@ class WikiDB_backend
             return [[], []];
         }
 
-        $words = preg_split('/\s+/', $search);
+        $words   = preg_split('/\s+/', $search);
         $exclude = [];
         foreach ($words as $key => $word) {
             if ($word[0] == '-' && $word != '-') {
-                $word = substr($word, 1);
+                $word      = substr($word, 1);
                 $exclude[] = preg_quote($word);
                 unset($words[$key]);
             }
@@ -554,10 +554,10 @@ class WikiDB_backend
             return join(",", $result);
         }
         if (substr($column, 0, 1) == '+') {
-            $order = '+';
+            $order  = '+';
             $column = substr($column, 1);
         } elseif (substr($column, 0, 1) == '-') {
-            $order = '-';
+            $order  = '-';
             $column = substr($column, 1);
         }
         // default order: +pagename, -mtime, -hits
@@ -664,7 +664,7 @@ class WikiDB_backend_search
 {
     public function __construct($search, &$dbh)
     {
-        $this->_dbh = $dbh;
+        $this->_dbh        = $dbh;
         $this->_case_exact =  $search->_case_exact;
         $this->_stoplist   = $search->_stoplist;
         $this->_stoplisted = [];
@@ -698,7 +698,7 @@ class WikiDB_backend_search
     public function _pagename_match_clause($node)
     {
         $method = $node->op;
-        $word = $this->$method($node->word);
+        $word   = $this->$method($node->word);
         return "preg_match(\"/\".$word.\"/\"" . ($this->_case_exact ? "i" : "") . ")";
     }
     /* Eliminate stoplist words.

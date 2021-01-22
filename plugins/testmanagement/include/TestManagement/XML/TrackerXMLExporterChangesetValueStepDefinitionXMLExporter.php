@@ -69,7 +69,7 @@ class TrackerXMLExporterChangesetValueStepDefinitionXMLExporter extends Tracker_
 
     private function exportValues(Step $value, SimpleXMLElement $field_change): void
     {
-        $step        = $field_change->addChild('step');
+        $step = $field_change->addChild('step');
 
         $this->simple_XMLCDATA_factory->insertWithAttributes(
             $step,

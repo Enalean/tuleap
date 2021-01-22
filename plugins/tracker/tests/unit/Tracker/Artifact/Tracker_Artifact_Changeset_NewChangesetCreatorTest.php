@@ -110,8 +110,8 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
         $field_initializator->shouldReceive('process')->andReturn([]);
         $field_retriever = Mockery::mock(FieldsToBeSavedInSpecificOrderRetriever::class);
         $field_retriever->shouldReceive('getFields')->andReturn([]);
-        $this->changeset_saver          = Mockery::mock(ArtifactChangesetSaver::class);
-        $this->creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
+        $this->changeset_saver = Mockery::mock(ArtifactChangesetSaver::class);
+        $this->creator         = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
             $field_retriever,
             $this->changeset_dao,

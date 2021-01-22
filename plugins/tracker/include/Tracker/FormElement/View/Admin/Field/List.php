@@ -38,8 +38,8 @@ class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View
      */
     public function fetchAfterAdminCreateForm()
     {
-        $bf = new Tracker_FormElement_Field_List_BindFactory();
-        $html = '';
+        $bf    = new Tracker_FormElement_Field_List_BindFactory();
+        $html  = '';
         $html .= '<tr valign="top"><td colspan="2">';
         $html .= $bf->fetchCreateABind($this->formElement);
         $html .= '</td></tr>';

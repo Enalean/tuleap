@@ -25,9 +25,9 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
 
     public function testIsActive()
     {
-        $active_value = 1;
+        $active_value  = 1;
         $deleted_value = 2;
-        $hidden_value = 3;
+        $hidden_value  = 3;
 
         $r = new FRSRelease();
         $r->setStatusId($active_value);
@@ -42,9 +42,9 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
 
     public function testIsHidden()
     {
-        $active_value = 1;
+        $active_value  = 1;
         $deleted_value = 2;
-        $hidden_value = 3;
+        $hidden_value  = 3;
 
         $r = new FRSRelease();
         $r->setStatusId($hidden_value);
@@ -59,9 +59,9 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
 
     public function testIsDeleted()
     {
-        $active_value = 1;
+        $active_value  = 1;
         $deleted_value = 2;
-        $hidden_value = 3;
+        $hidden_value  = 3;
 
         $r = new FRSRelease();
         $r->setStatusId($deleted_value);
@@ -110,7 +110,7 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $pf->shouldReceive('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->once()->andReturns($pkg);
         $r->shouldReceive('_getFRSPackageFactory')->andReturns($pf);
 
-        $p = new Project(['group_id' => 101]);
+        $p  = new Project(['group_id' => 101]);
         $pm = \Mockery::spy(\ProjectManager::class);
         $pm->shouldReceive('getProject')->with(123)->once()->andReturns($p);
         $r->shouldReceive('_getProjectManager')->andReturns($pm);

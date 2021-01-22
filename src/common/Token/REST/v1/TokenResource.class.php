@@ -70,7 +70,7 @@ class TokenResource
     {
         try {
             $password_handler = PasswordHandlerFactory::getPasswordHandler();
-            $user_login = new User_LoginManager(
+            $user_login       = new User_LoginManager(
                 EventManager::instance(),
                 $this->user_manager,
                 new PasswordVerifier($password_handler),
@@ -78,7 +78,7 @@ class TokenResource
                 $password_handler
             );
 
-            $user  = $user_login->authenticate($username, new ConcealedString($password));
+            $user = $user_login->authenticate($username, new ConcealedString($password));
             sodium_memzero($password);
             $this->sendAllowHeaders();
 

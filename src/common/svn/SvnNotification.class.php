@@ -98,7 +98,7 @@ class SvnNotification
     public function removeSvnNotification($projectId, $selectedPaths)
     {
         if (is_array($selectedPaths) && ! empty($selectedPaths)) {
-            $dao = $this->_getDao();
+            $dao   = $this->_getDao();
             $paths = [];
             foreach ($selectedPaths as $pathToDelete) {
                 if ($dao->deleteSvnMailingList($projectId, $pathToDelete)) {

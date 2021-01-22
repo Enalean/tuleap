@@ -62,8 +62,8 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
             $field_initializator
         );
 
-        $this->changeset_dao = $changeset_dao;
-        $this->logger        = $logger;
+        $this->changeset_dao            = $changeset_dao;
+        $this->logger                   = $logger;
         $this->artifact_changeset_saver = $artifact_changeset_saver;
     }
 

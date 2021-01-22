@@ -103,7 +103,7 @@ class VelocityPluginComputationTest extends \PHPUnit\Framework\TestCase
     {
         $already_computed_velocity = [];
 
-        $artifact_id = 101;
+        $artifact_id  = 101;
         $changeset_id = 1001;
         $before_event = Mockery::mock(BeforeEvent::class);
         $before_event->shouldReceive('getArtifact')->andReturn($this->artifact);
@@ -136,7 +136,7 @@ class VelocityPluginComputationTest extends \PHPUnit\Framework\TestCase
 
     public function testItRetrieveAlreadyComputedVelocity()
     {
-        $artifact_id = 101;
+        $artifact_id  = 101;
         $changeset_id = 1001;
 
         $already_computed_velocity[$artifact_id][$changeset_id] = 30;

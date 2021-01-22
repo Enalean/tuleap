@@ -64,7 +64,7 @@ final class AccessTokenGrantRepresentationBuilderTest extends TestCase
         $this->refresh_token_creator = \Mockery::mock(OAuth2RefreshTokenCreator::class);
         $this->id_token_creator      = \Mockery::mock(OpenIDConnectIDTokenCreator::class);
 
-        $this->builder               = new AccessTokenGrantRepresentationBuilder(
+        $this->builder = new AccessTokenGrantRepresentationBuilder(
             $this->access_token_creator,
             $this->refresh_token_creator,
             $this->id_token_creator

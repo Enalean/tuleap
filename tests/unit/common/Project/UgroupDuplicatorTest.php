@@ -67,11 +67,11 @@ class UgroupDuplicatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dao = M::mock(UGroupDao::class);
-        $this->manager = M::mock(UGroupManager::class);
-        $this->binding = M::mock(UGroupBinding::class);
-        $this->member_adder = M::mock(MemberAdder::class);
-        $this->event_manager = M::mock(EventManager::class);
+        $this->dao               = M::mock(UGroupDao::class);
+        $this->manager           = M::mock(UGroupManager::class);
+        $this->binding           = M::mock(UGroupBinding::class);
+        $this->member_adder      = M::mock(MemberAdder::class);
+        $this->event_manager     = M::mock(EventManager::class);
         $this->ugroup_duplicator = new UgroupDuplicator($this->dao, $this->manager, $this->binding, $this->member_adder, $this->event_manager);
     }
 
@@ -79,7 +79,7 @@ class UgroupDuplicatorTest extends TestCase
     {
         $template       = M::mock(\Project::class);
         $new_project_id = 120;
-        $ugroup_mapping  = [];
+        $ugroup_mapping = [];
 
         $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns([]);
 
@@ -92,10 +92,10 @@ class UgroupDuplicatorTest extends TestCase
     {
         $template       = M::mock(\Project::class);
         $new_project_id = 120;
-        $ugroup_mapping  = [];
+        $ugroup_mapping = [];
 
         $source_ugroup_id = 201;
-        $source_ugroup = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [ ]]);
+        $source_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [ ]]);
         $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns(
             [
                 $source_ugroup,
@@ -103,7 +103,7 @@ class UgroupDuplicatorTest extends TestCase
         );
 
         $new_ugroup_id = 301;
-        $new_ugroup = M::mock(ProjectUGroup::class, ['getId' => $new_ugroup_id]);
+        $new_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $new_ugroup_id]);
         $this->dao->shouldReceive('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->once()->andReturns($new_ugroup_id);
         $this->manager->shouldReceive('getById')->with($new_ugroup_id)->once()->andReturn($new_ugroup);
 
@@ -122,9 +122,9 @@ class UgroupDuplicatorTest extends TestCase
         $ugoup_mapping  = [];
 
         $source_ugroup_id = 201;
-        $user1 = new \PFUser(['user_id' => 1]);
-        $user2 = new \PFUser(['user_id' => 2]);
-        $source_ugroup = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [$user1, $user2]]);
+        $user1            = new \PFUser(['user_id' => 1]);
+        $user2            = new \PFUser(['user_id' => 2]);
+        $source_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [$user1, $user2]]);
         $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns(
             [
                 $source_ugroup,
@@ -132,7 +132,7 @@ class UgroupDuplicatorTest extends TestCase
         );
 
         $new_ugroup_id = 301;
-        $new_ugroup = M::mock(ProjectUGroup::class, ['getId' => $new_ugroup_id]);
+        $new_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $new_ugroup_id]);
         $this->dao->shouldReceive('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->once()->andReturns($new_ugroup_id);
         $this->manager->shouldReceive('getById')->with($new_ugroup_id)->once()->andReturn($new_ugroup);
 
@@ -153,9 +153,9 @@ class UgroupDuplicatorTest extends TestCase
         $ugoup_mapping  = [];
 
         $source_ugroup_id = 201;
-        $user1 = new \PFUser(['user_id' => 1]);
-        $user2 = new \PFUser(['user_id' => 2]);
-        $source_ugroup = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [$user1, $user2]]);
+        $user1            = new \PFUser(['user_id' => 1]);
+        $user2            = new \PFUser(['user_id' => 2]);
+        $source_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [$user1, $user2]]);
         $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns(
             [
                 $source_ugroup,
@@ -163,7 +163,7 @@ class UgroupDuplicatorTest extends TestCase
         );
 
         $new_ugroup_id = 301;
-        $new_ugroup = M::mock(ProjectUGroup::class, ['getId' => $new_ugroup_id]);
+        $new_ugroup    = M::mock(ProjectUGroup::class, ['getId' => $new_ugroup_id]);
         $this->dao->shouldReceive('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->once()->andReturns($new_ugroup_id);
         $this->manager->shouldReceive('getById')->with($new_ugroup_id)->once()->andReturn($new_ugroup);
 

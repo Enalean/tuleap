@@ -165,17 +165,17 @@ class TroveCatDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDecl
         $nb_max_values,
         $is_project_flag
     ) {
-        $shortname    = $this->da->quoteSmart($shortname);
-        $fullname     = $this->da->quoteSmart($fullname);
-        $description  = $this->da->quoteSmart($description);
-        $parent       = $this->da->escapeInt($parent);
-        $newroot      = $this->da->escapeInt($newroot);
-        $mandatory    = $this->da->escapeInt($mandatory);
-        $display      = $this->da->escapeInt($display);
-        $trove_cat_id = $this->da->escapeInt($trove_cat_id);
-        $fullpath     = $this->da->quoteSmart($fullpath);
-        $fullpath_ids = $this->da->quoteSmart($fullpath_ids);
-        $nb_max_values = $this->da->escapeInt($nb_max_values);
+        $shortname       = $this->da->quoteSmart($shortname);
+        $fullname        = $this->da->quoteSmart($fullname);
+        $description     = $this->da->quoteSmart($description);
+        $parent          = $this->da->escapeInt($parent);
+        $newroot         = $this->da->escapeInt($newroot);
+        $mandatory       = $this->da->escapeInt($mandatory);
+        $display         = $this->da->escapeInt($display);
+        $trove_cat_id    = $this->da->escapeInt($trove_cat_id);
+        $fullpath        = $this->da->quoteSmart($fullpath);
+        $fullpath_ids    = $this->da->quoteSmart($fullpath_ids);
+        $nb_max_values   = $this->da->escapeInt($nb_max_values);
         $is_project_flag = $is_project_flag ? 1 : 0;
 
         $version = date("Ymd", time()) . '01';
@@ -211,15 +211,15 @@ class TroveCatDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDecl
         $nb_max_values,
         $is_project_flag
     ) {
-        $escaped_shortname    = $this->da->quoteSmart($shortname);
-        $escaped_fullname     = $this->da->quoteSmart($fullname);
-        $escaped_description  = $this->da->quoteSmart($description);
-        $escaped_parent       = $this->da->escapeInt($parent);
-        $escaped_root_parent  = $this->da->escapeInt($root_parent);
-        $escaped_mandatory    = $this->da->escapeInt($mandatory);
-        $escaped_display      = $this->da->escapeInt($display);
-        $escaped_fullpath     = $this->da->quoteSmart($fullpath);
-        $escaped_fullpath_ids = $this->da->quoteSmart($fullpath_ids);
+        $escaped_shortname     = $this->da->quoteSmart($shortname);
+        $escaped_fullname      = $this->da->quoteSmart($fullname);
+        $escaped_description   = $this->da->quoteSmart($description);
+        $escaped_parent        = $this->da->escapeInt($parent);
+        $escaped_root_parent   = $this->da->escapeInt($root_parent);
+        $escaped_mandatory     = $this->da->escapeInt($mandatory);
+        $escaped_display       = $this->da->escapeInt($display);
+        $escaped_fullpath      = $this->da->quoteSmart($fullpath);
+        $escaped_fullpath_ids  = $this->da->quoteSmart($fullpath_ids);
         $escaped_nb_max_values = $this->da->escapeInt($nb_max_values);
 
         $is_project_flag = $is_project_flag ? 1 : 0;

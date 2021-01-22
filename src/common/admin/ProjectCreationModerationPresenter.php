@@ -31,7 +31,7 @@ class ProjectCreationModerationPresenter
     public $projects_must_be_approved = false;
     public $platform_have_restricted;
     public $restricted_users_can_create_projects;
-    public $nb_max_projects_waiting_for_validation = -1;
+    public $nb_max_projects_waiting_for_validation          = -1;
     public $nb_max_projects_waiting_for_validation_per_user = -1;
     public $navbar;
     public $csrf_token;

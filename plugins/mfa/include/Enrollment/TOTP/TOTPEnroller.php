@@ -74,7 +74,7 @@ class TOTPEnroller
      */
     public function prepareSessionForEnrollment(array &$session_storage)
     {
-        $secret = new ConcealedString(random_bytes(self::SECRET_SIZE));
+        $secret                             = new ConcealedString(random_bytes(self::SECRET_SIZE));
         $session_storage[self::SESSION_KEY] = SymmetricCrypto::encrypt($secret, $this->encryption_key);
         return $secret;
     }

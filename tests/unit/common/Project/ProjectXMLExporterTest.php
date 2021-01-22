@@ -48,7 +48,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $user_xml_exporter    = new UserXMLExporter(M::spy(UserManager::class), M::spy(UserXMLExportedCollection::class));
         $this->project        = M::spy(Project::class, ['getPublicName' => 'Project01']);
 
-        $this->xml_exporter   = new ProjectXMLExporter(
+        $this->xml_exporter = new ProjectXMLExporter(
             $this->event_manager,
             $this->ugroup_manager,
             $xml_validator,
@@ -57,7 +57,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
             M::spy(\Psr\Log\LoggerInterface::class)
         );
 
-        $this->options = [
+        $this->options    = [
             'tracker_id' => 10
         ];
         $this->export_dir = "__fixtures";
@@ -154,9 +154,9 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
     public function testItExportsDynamicUgroupsForTheGivenProject(): void
     {
         $user_admin_1 = B\UserTestBuilder::aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
-        $user_1 = B\UserTestBuilder::aUser()->withId(102)->withLdapId('ldap_02')->withUserName('user_02')->build();
-        $user_2 = B\UserTestBuilder::aUser()->withId(103)->withLdapId('ldap_03')->withUserName('user_03')->build();
-        $user_3 = B\UserTestBuilder::aUser()->withId(104)->withUserName('user_04')->build();
+        $user_1       = B\UserTestBuilder::aUser()->withId(102)->withLdapId('ldap_02')->withUserName('user_02')->build();
+        $user_2       = B\UserTestBuilder::aUser()->withId(103)->withLdapId('ldap_03')->withUserName('user_03')->build();
+        $user_3       = B\UserTestBuilder::aUser()->withId(104)->withUserName('user_04')->build();
 
         $project_ugroup_project_admins = M::spy(
             ProjectUGroup::class,

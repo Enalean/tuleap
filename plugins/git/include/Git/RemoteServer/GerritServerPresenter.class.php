@@ -54,8 +54,8 @@ class Git_RemoteServer_GerritServerPresenter
         $this->replication_password           = $server->getReplicationPassword();
         $this->replication_key_ellipsis_value = substr($this->replication_key, 0, 40) . '...' . substr($this->replication_key, -40);
 
-        $this->edit_title           = sprintf(dgettext('tuleap-git', 'Edit %1$s'), $server->getHost());
-        $this->delete_title         = sprintf(dgettext('tuleap-git', 'Delete %1$s'), $server->getHost());
+        $this->edit_title   = sprintf(dgettext('tuleap-git', 'Edit %1$s'), $server->getHost());
+        $this->delete_title = sprintf(dgettext('tuleap-git', 'Delete %1$s'), $server->getHost());
 
         $this->purified_delete_desc = Codendi_HTMLPurifier::instance()->purify(
             sprintf(dgettext('tuleap-git', 'Wow, wait a minute. You are about to delete the <b>%1$s</b> server. Please confirm your action.'), $server->getHost()),

@@ -31,7 +31,7 @@ class Docman_ReportColumnFactory
 
     public function getColumnFromLabel($colLabel)
     {
-        $col = null;
+        $col       = null;
         $mdFactory = $this->_getMetadataFactory();
         switch ($colLabel) {
             case 'location':
@@ -44,7 +44,7 @@ class Docman_ReportColumnFactory
                 break;
 
             default:
-                $md  = $mdFactory->getFromLabel($colLabel);
+                $md = $mdFactory->getFromLabel($colLabel);
                 switch ($md->getType()) {
                     case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                         $col = new Docman_ReportColumnList($md);

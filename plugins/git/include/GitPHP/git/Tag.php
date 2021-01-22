@@ -273,7 +273,7 @@ class Tag extends Ref
     public function GetTaggerLocalEpoch() // @codingStandardsIgnoreLine
     {
         $epoch = $this->GetTaggerEpoch();
-        $tz = $this->GetTaggerTimezone();
+        $tz    = $this->GetTaggerTimezone();
         if (preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $tz, $regs)) {
             $local = $epoch + ((((int) $regs[1]) + ($regs[2] / 60)) * 3600);
             return $local;
@@ -385,7 +385,7 @@ class Tag extends Ref
             /* light tag */
             $this->object = $this->GetProject()->GetCommit($this->GetHash());
             $this->commit = $this->object;
-            $this->type = 'commit';
+            $this->type   = 'commit';
             return;
         }
 
@@ -409,8 +409,8 @@ class Tag extends Ref
                 } elseif (preg_match('/^tag (.+)$/', $line, $regs)) {
                     continue;
                 } elseif (preg_match('/^tagger (.*) ([0-9]+) (.*)$/', $line, $regs)) {
-                    $this->tagger = $regs[1];
-                    $this->taggerEpoch = $regs[2];
+                    $this->tagger         = $regs[1];
+                    $this->taggerEpoch    = $regs[2];
                     $this->taggerTimezone = $regs[3];
                     continue;
                 }
@@ -434,10 +434,10 @@ class Tag extends Ref
                 break;
             case 'tag':
                 $objectData = $this->GetProject()->GetObject($objectHash ?? '');
-                $lines = explode("\n", $objectData);
+                $lines      = explode("\n", $objectData);
                 foreach ($lines as $i => $line) {
                     if (preg_match('/^tag (.+)$/', $line, $regs)) {
-                        $name = trim($regs[1]);
+                        $name         = trim($regs[1]);
                         $this->object = $this->GetProject()->GetTag($name);
                         if ($this->object) {
                             $this->object->SetHash($objectHash);
@@ -554,7 +554,7 @@ class Tag extends Ref
                  * and object are the same, in which case
                  * no need to fetch the object again
                  */
-                $this->commit = $obj;
+                $this->commit           = $obj;
                 $this->commitReferenced = false;
                 return;
             }

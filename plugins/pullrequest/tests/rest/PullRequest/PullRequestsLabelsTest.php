@@ -126,7 +126,7 @@ final class PullRequestsLabelsTest extends RestBase
     public function testNewLabelIsAddedToProject()
     {
         $project_id = $this->getProjectId('test-git');
-        $response = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
+        $response   = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
         $this->assertCount(1, $response['labels']);
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }
@@ -136,7 +136,7 @@ final class PullRequestsLabelsTest extends RestBase
      */
     public function testPATCHRemoveLabel()
     {
-        $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
+        $response  = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
         $label_ids = array_map(
             function ($label) {
                 return ['id' => $label['id']];
@@ -161,7 +161,7 @@ final class PullRequestsLabelsTest extends RestBase
     public function testRemovedLabelsAreNotRemovedInProject()
     {
         $project_id = $this->getProjectId('test-git');
-        $response = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
+        $response   = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
         $this->assertCount(1, $response['labels']);
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }
@@ -171,8 +171,8 @@ final class PullRequestsLabelsTest extends RestBase
      */
     public function testPATCHAddProjectLabel()
     {
-        $project_id = $this->getProjectId('test-git');
-        $response = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
+        $project_id     = $this->getProjectId('test-git');
+        $response       = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
         $expected_label = $response['labels'][0];
 
         $response = $this->getResponse($this->client->patch('pull_requests/1/labels', null, json_encode(

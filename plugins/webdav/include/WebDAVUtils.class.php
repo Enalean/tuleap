@@ -137,7 +137,7 @@ class WebDAVUtils
     public function userIsAdmin($user, $project_id)
     {
         $permission_manager = $this->getFRSPermissionManager();
-        $project = $this->getProjectManager()->getProject($project_id);
+        $project            = $this->getProjectManager()->getProject($project_id);
 
         return ($user->isSuperUser() || $permission_manager->isAdmin($project, $user));
     }
@@ -153,7 +153,7 @@ class WebDAVUtils
     public function userCanWrite($user, $project_id)
     {
         $permission_manager = $this->getFRSPermissionManager();
-        $project = $this->getProjectManager()->getProject($project_id);
+        $project            = $this->getProjectManager()->getProject($project_id);
         return $this->isWriteEnabled() && ($user->isSuperUser() || $permission_manager->isAdmin($project, $user));
     }
 
@@ -309,14 +309,14 @@ class WebDAVUtils
     public function processDocmanRequest(WebDAV_Request $request)
     {
         if (! $this->docmanPlugin) {
-            $pluginMgr = PluginManager::instance();
+            $pluginMgr          = PluginManager::instance();
             $this->docmanPlugin = $pluginMgr->getPluginByName('docman');
             if (! $this->docmanPlugin || ($this->docmanPlugin && ! $pluginMgr->isPluginAvailable($this->docmanPlugin))) {
                 throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_common', 'plugin_not_available'));
             }
         }
         $GLOBALS['Response'] = new WebDAV_Response();
-        $controller = new WebDAV_DocmanController($this->docmanPlugin, $request);
+        $controller          = new WebDAV_DocmanController($this->docmanPlugin, $request);
         $controller->process();
 
         if ($GLOBALS['Response']->feedbackHasErrors()) {

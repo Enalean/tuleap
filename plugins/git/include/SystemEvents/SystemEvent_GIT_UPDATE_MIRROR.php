@@ -28,7 +28,7 @@ class SystemEvent_GIT_UPDATE_MIRROR extends SystemEvent
     public function injectDependencies(
         Git_GitoliteDriver $gitolite_driver
     ) {
-        $this->gitolite_driver  = $gitolite_driver;
+        $this->gitolite_driver = $gitolite_driver;
     }
 
     public function process()
@@ -48,14 +48,14 @@ class SystemEvent_GIT_UPDATE_MIRROR extends SystemEvent
 
     private function getMirrorIdFromParameters()
     {
-        $parameters    = $this->getParametersAsArray();
+        $parameters = $this->getParametersAsArray();
 
         return $parameters[0];
     }
 
     private function getMirrorOldHostnameFromParameters()
     {
-        $parameters    = $this->getParametersAsArray();
+        $parameters = $this->getParametersAsArray();
 
         return $parameters[1];
     }

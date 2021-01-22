@@ -35,7 +35,7 @@ class InviteBuddyConfigurationTest extends TestCase
 
     public function testBuddiesCannotBeInvitedIfUserIsAnonymous(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => true])->getMock();
+        $user          = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => true])->getMock();
         $event_manager = \Mockery::mock(EventDispatcherInterface::class);
         $event_manager
             ->shouldReceive('dispatch')
@@ -46,7 +46,7 @@ class InviteBuddyConfigurationTest extends TestCase
 
     public function testBuddiesCanBeInvitedIfTheUserIsLoggedIn(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
+        $user          = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
         $event_manager = \Mockery::mock(EventDispatcherInterface::class);
         $event_manager
             ->shouldReceive('dispatch')
@@ -57,9 +57,9 @@ class InviteBuddyConfigurationTest extends TestCase
 
     public function testBuddiesCannotBeInvitedIfThePlatformPreventsUsersToRegister(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
+        $user          = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
         $event_manager = \Mockery::mock(EventDispatcherInterface::class);
-        $guard_event = new RegistrationGuardEvent();
+        $guard_event   = new RegistrationGuardEvent();
         $guard_event->disableRegistration();
         $event_manager
             ->shouldReceive('dispatch')
@@ -70,7 +70,7 @@ class InviteBuddyConfigurationTest extends TestCase
 
     public function testBuddiesCannotBeInvitedIfNbMaxIsLesserOrEqualThanOne(): void
     {
-        $user = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
+        $user          = \Mockery::mock(\PFUser::class)->shouldReceive(['isAnonymous' => false])->getMock();
         $event_manager = \Mockery::mock(EventDispatcherInterface::class);
         $event_manager
             ->shouldReceive('dispatch')

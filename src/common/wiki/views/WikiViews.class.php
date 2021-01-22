@@ -28,8 +28,8 @@ function exit_wiki_empty()
     global $HTML;
     global $group_id;
 
-    $pm = ProjectManager::instance();
-    $go = $pm->getProject($group_id);
+    $pm    = ProjectManager::instance();
+    $go    = $pm->getProject($group_id);
     $uname = $go->getUnixName();
 
     $HTML->header(['title' => $GLOBALS['Language']->getText('wiki_views_wikiviews', 'title_error')]);
@@ -52,12 +52,12 @@ function hide_url($svc, $db_item_id, $defaultHide = false, $hide = null)
         $hide = $_REQUEST['hide_' . $svc];
     }
 
-    $noPref = false;
+    $noPref   = false;
     $old_hide = user_get_preference($pref_name);
 
   // Make sure they are both 0 if never set before
     if ($old_hide == false) {
-        $noPref = true;
+        $noPref   = true;
         $old_hide = 0;
     }
 
@@ -119,8 +119,8 @@ class WikiViews extends Views
         $this->html_params['toptab'] = 'wiki';
 
       // Wikize project name
-        $pm = ProjectManager::instance();
-        $go = $pm->getProject($this->gid);
+        $pm             = ProjectManager::instance();
+        $go             = $pm->getProject($this->gid);
         $this->wikiname = ucfirst($go->getUnixName()) . 'Wiki';
 
       // Build convenients URL
@@ -162,10 +162,10 @@ class WikiViews extends Views
     */
     public function _pagePerms($postUrl = '')
     {
-        $wp = new WikiPage($_REQUEST['id']);
+        $wp       = new WikiPage($_REQUEST['id']);
         $pagename = $wp->getPagename();
 
-        $eM = EventManager::instance();
+        $eM         = EventManager::instance();
         $referenced = false;
         $eM->processEvent('isWikiPageReferenced', [
                           'referenced' => &$referenced,

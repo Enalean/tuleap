@@ -40,8 +40,8 @@ class EndpointCreatorController implements DispatchableWithRequest, Dispatchable
 
     public function __construct(EndpointChecker $endpoint_checker, EndpointUpdater $endpoint_updater)
     {
-        $this->checker                        = $endpoint_checker;
-        $this->endpoint_updater               = $endpoint_updater;
+        $this->checker          = $endpoint_checker;
+        $this->endpoint_updater = $endpoint_updater;
     }
 
     /**

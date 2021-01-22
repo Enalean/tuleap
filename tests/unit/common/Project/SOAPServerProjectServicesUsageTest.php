@@ -40,20 +40,20 @@ class SOAPServerProjectServicesUsageTest extends TestCase
     {
         parent::setUp();
 
-        $this->group_id                   = 101;
-        $this->project                    = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns($this->group_id)->getMock();
-        $this->session_key                = 'abcde123';
-        $this->project_manager            = \Mockery::spy(\ProjectManager::class)->shouldReceive('getProject')->andReturns($this->project)->getMock();
-        $this->project_creator            = Mockery::mock(ProjectCreator::class);
-        $this->user_manager               = Mockery::mock(UserManager::class);
-        $this->generic_user_factory       = \Mockery::spy(\GenericUserFactory::class);
-        $this->limitator                  = Mockery::mock(SOAP_RequestLimitator::class);
-        $this->description_factory        = \Mockery::spy(\Project_CustomDescription_CustomDescriptionFactory::class);
-        $this->description_manager        = \Mockery::spy(\Project_CustomDescription_CustomDescriptionValueManager::class);
-        $this->description_value_factory  = \Mockery::spy(\Project_CustomDescription_CustomDescriptionValueFactory::class);
-        $this->service_usage_factory      = \Mockery::spy(\Project_Service_ServiceUsageFactory::class);
-        $this->service_usage_manager      = \Mockery::spy(\Project_Service_ServiceUsageManager::class);
-        $this->forge_ugroup_perm_manager  = \Mockery::spy(\User_ForgeUserGroupPermissionsManager::class);
+        $this->group_id                  = 101;
+        $this->project                   = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns($this->group_id)->getMock();
+        $this->session_key               = 'abcde123';
+        $this->project_manager           = \Mockery::spy(\ProjectManager::class)->shouldReceive('getProject')->andReturns($this->project)->getMock();
+        $this->project_creator           = Mockery::mock(ProjectCreator::class);
+        $this->user_manager              = Mockery::mock(UserManager::class);
+        $this->generic_user_factory      = \Mockery::spy(\GenericUserFactory::class);
+        $this->limitator                 = Mockery::mock(SOAP_RequestLimitator::class);
+        $this->description_factory       = \Mockery::spy(\Project_CustomDescription_CustomDescriptionFactory::class);
+        $this->description_manager       = \Mockery::spy(\Project_CustomDescription_CustomDescriptionValueManager::class);
+        $this->description_value_factory = \Mockery::spy(\Project_CustomDescription_CustomDescriptionValueFactory::class);
+        $this->service_usage_factory     = \Mockery::spy(\Project_Service_ServiceUsageFactory::class);
+        $this->service_usage_manager     = \Mockery::spy(\Project_Service_ServiceUsageManager::class);
+        $this->forge_ugroup_perm_manager = \Mockery::spy(\User_ForgeUserGroupPermissionsManager::class);
         $this->permission_checker        = \Mockery::mock(ProjectRegistrationUserPermissionChecker::class);
         $this->permission_checker->shouldReceive('checkUserCreateAProject')->byDefault();
 

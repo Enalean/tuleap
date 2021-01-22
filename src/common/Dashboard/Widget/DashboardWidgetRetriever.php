@@ -42,7 +42,7 @@ class DashboardWidgetRetriever
         $widgets_by_line = [];
 
         foreach ($this->dao->searchAllLinesByDashboardIdOrderedByRank($dashboard_id, $dashboard_type) as $line) {
-            $widget_line = new DashboardWidgetLine(
+            $widget_line       = new DashboardWidgetLine(
                 $line['id'],
                 $line['layout'],
                 []

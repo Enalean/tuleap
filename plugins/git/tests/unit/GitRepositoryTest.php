@@ -59,8 +59,8 @@ class GitRepositoryTest extends TestCase
 
     public function testGetRepositoryIDByNameSuccess(): void
     {
-        $repo = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $pm = \Mockery::spy(\ProjectManager::class);
+        $repo    = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $pm      = \Mockery::spy(\ProjectManager::class);
         $project = \Mockery::spy(\Project::class);
         $pm->shouldReceive('getProjectByUnixName')->andReturns($project);
         $dao = \Mockery::mock(GitDao::class);
@@ -75,8 +75,8 @@ class GitRepositoryTest extends TestCase
 
     public function testGetRepositoryIDByNameNoRepository(): void
     {
-        $repo = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $pm = \Mockery::spy(\ProjectManager::class);
+        $repo    = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $pm      = \Mockery::spy(\ProjectManager::class);
         $project = \Mockery::spy(\Project::class);
         $pm->shouldReceive('getProjectByUnixName')->andReturns($project);
         $dao = \Mockery::mock(GitDao::class);
@@ -91,8 +91,8 @@ class GitRepositoryTest extends TestCase
 
     public function testGetRepositoryIDByNameNoProjectID(): void
     {
-        $repo = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $pm = \Mockery::spy(\ProjectManager::class);
+        $repo    = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $pm      = \Mockery::spy(\ProjectManager::class);
         $project = \Mockery::spy(\Project::class);
         $pm->shouldReceive('getProjectByUnixName')->andReturns(false);
 

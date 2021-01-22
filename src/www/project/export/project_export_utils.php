@@ -103,7 +103,7 @@ function display_exported_fields($col_list, $lbl_list, $dsc_list, $sample_val, $
 {
     global $Language;
 
-    $title_arr = [];
+    $title_arr   = [];
     $title_arr[] = $Language->getText('project_export_utils', 'label');
     $title_arr[] = $Language->getText('project_export_utils', 'sample_val');
     $title_arr[] = $Language->getText('project_admin_editugroup', 'desc');
@@ -177,7 +177,7 @@ function prepare_artifact_record($at, $fields, $group_artifact_id, &$record, $ex
             } else {
                 $values = $field->getValues($record['artifact_id']);
             }
-            $label_values = $field->getLabelValues($group_artifact_id, $values);
+            $label_values              = $field->getLabelValues($group_artifact_id, $values);
             $record[$field->getName()] = SimpleSanitizer::unsanitize(join(",", $label_values));
         } elseif ($field->isTextArea() || ($field->isTextField() && $field->getDataType() == $field->DATATYPE_TEXT)) {
             // all text fields converted from HTML to ASCII
@@ -203,29 +203,29 @@ function prepare_artifact_record($at, $fields, $group_artifact_id, &$record, $ex
     }
 
     // Follow ups
-    $ah = new ArtifactHtml($at, $record['artifact_id']);
-    $sys_lf_sav = $sys_lf;
-    $sys_lf = "\n";
+    $ah                   = new ArtifactHtml($at, $record['artifact_id']);
+    $sys_lf_sav           = $sys_lf;
+    $sys_lf               = "\n";
     $record['follow_ups'] = $ah->showFollowUpComments($at->Group->getID(), true, Artifact::OUTPUT_EXPORT);
-    $sys_lf = $sys_lf_sav;
+    $sys_lf               = $sys_lf_sav;
 
     // Dependencies
-    $result = $ah->getDependencies();
-    $rows = db_numrows($result);
+    $result    = $ah->getDependencies();
+    $rows      = db_numrows($result);
     $dependent = '';
     for ($i = 0; $i < $rows; $i++) {
         $dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
-        $dependent .= $dependent_on_artifact_id . ",";
+        $dependent               .= $dependent_on_artifact_id . ",";
     }
     $record['is_dependent_on'] = (($dependent !== '') ? substr($dependent, 0, strlen($dependent) - 1) : $Language->getText('global', 'none'));
 
     //CC
     $cc_list = $ah->getCCList();
-    $rows = db_numrows($cc_list);
-    $cc = [];
+    $rows    = db_numrows($cc_list);
+    $cc      = [];
     for ($i = 0; $i < $rows; $i++) {
         $cc_email = db_result($cc_list, $i, 'email');
-        $cc[] = $cc_email;
+        $cc[]     = $cc_email;
     }
     $record['cc'] = implode(',', $cc);
 }
@@ -251,7 +251,7 @@ function prepare_artifact_history_record($at, $art_field_fact, &$record)
     } else {
         if (preg_match("/^(lbl_)/", $record['field_name']) && preg_match("/(_comment)$/", $record['field_name'])) {
             $record['field_name'] = "comment";
-            $record['label'] = "comment";
+            $record['label']      = "comment";
         }
     }
 
@@ -260,8 +260,8 @@ function prepare_artifact_history_record($at, $art_field_fact, &$record)
     if (isset($record['type'])) {
         $field = $art_field_fact->getFieldFromName('comment_type_id');
         if ($field) {
-            $values[] = $record['type'];
-            $label_values = $field->getLabelValues($at->getID(), $values);
+            $values[]       = $record['type'];
+            $label_values   = $field->getLabelValues($at->getID(), $values);
             $record['type'] = join(",", $label_values);
         }
     } else {
@@ -303,11 +303,11 @@ function prepare_historic_value(&$record, $field, $group_artifact_id, $name)
 function prepare_access_logs_record($group_id, &$record)
 {
     if (isset($record['time'])) {
-        $time = $record['time'];
-        $record['time'] = format_date('Y-m-d', $time);
+        $time                 = $record['time'];
+        $record['time']       = format_date('Y-m-d', $time);
         $record['local_time'] = strftime("%H:%M", $time);
     }
-    $um = UserManager::instance();
+    $um   = UserManager::instance();
     $user = $um->getUserByUserName($record['user_name']);
     if ($user) {
         $record['user'] = $user->getRealName() . "(" . $user->getName() . ")";
@@ -316,7 +316,7 @@ function prepare_access_logs_record($group_id, &$record)
     }
     //for cvs & svn access logs
     if (isset($record['day'])) {
-        $day = $record['day'];
+        $day           = $record['day'];
         $record['day'] = substr($day, 0, 4) . "-" . substr($day, 4, 2) . "-" . substr($day, 6, 2);
     }
 }

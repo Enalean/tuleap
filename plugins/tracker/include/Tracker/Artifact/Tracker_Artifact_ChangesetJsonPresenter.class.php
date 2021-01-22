@@ -35,8 +35,8 @@ class Tracker_Artifact_ChangesetJsonPresenter
 
     public function __construct(Tracker_Artifact_Changeset $changeset, \PFUser $current_user)
     {
-        $this->changeset      = $changeset;
-        $this->current_user   = $current_user;
+        $this->changeset     = $changeset;
+        $this->current_user  = $current_user;
         $this->purified_time = DateHelper::relativeDateInlineContext((int) $this->changeset->getSubmittedOn(), $this->current_user);
     }
 

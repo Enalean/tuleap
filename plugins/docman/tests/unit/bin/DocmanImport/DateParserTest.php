@@ -29,7 +29,7 @@ class DateParserTest extends TestCase
     public function testParseIso8601(): void
     {
         $currentTimeStamp = time();
-        $curentIsoDate = date('c', $currentTimeStamp);
+        $curentIsoDate    = date('c', $currentTimeStamp);
         $this->assertEquals($currentTimeStamp, DateParser::parseIso8601($curentIsoDate));
 
         $date1 = "20001201T0154+0100";

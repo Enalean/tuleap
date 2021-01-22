@@ -57,7 +57,7 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
             return false;
         }
 
-        $active_repository  = $this->repository_factory->getRepositoryByPath($repository->getProject()->getId(), $repository->getPath());
+        $active_repository = $this->repository_factory->getRepositoryByPath($repository->getProject()->getId(), $repository->getPath());
 
         if ($active_repository instanceof GitRepository) {
             $this->error('Repository with the same name already exsit');

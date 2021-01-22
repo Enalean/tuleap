@@ -47,9 +47,9 @@ class FieldListStaticValueRepresentation
 
     public function build(Tracker_FormElement_Field_List_Value $value, ?string $value_color)
     {
-        $this->id               = JsonCast::toInt($value->getId());
-        $this->label            = $value->getLabel();
-        $this->is_hidden        = (bool) $value->isHidden();
-        $this->value_color      = $value_color;
+        $this->id          = JsonCast::toInt($value->getId());
+        $this->label       = $value->getLabel();
+        $this->is_hidden   = (bool) $value->isHidden();
+        $this->value_color = $value_color;
     }
 }

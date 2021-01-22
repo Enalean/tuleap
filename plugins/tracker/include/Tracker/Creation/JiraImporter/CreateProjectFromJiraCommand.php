@@ -68,9 +68,9 @@ final class CreateProjectFromJiraCommand extends Command
         CreateProjectFromJira $create_project_from_jira
     ) {
         parent::__construct(self::NAME);
-        $this->user_manager               = $user_manager;
-        $this->jira_project_builder       = $jira_project_builder;
-        $this->create_project_from_jira   = $create_project_from_jira;
+        $this->user_manager             = $user_manager;
+        $this->jira_project_builder     = $jira_project_builder;
+        $this->create_project_from_jira = $create_project_from_jira;
     }
 
     protected function configure(): void
@@ -90,11 +90,11 @@ final class CreateProjectFromJiraCommand extends Command
     {
         $output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
 
-        $logger = new ConsoleLogger($output);
+        $logger          = new ConsoleLogger($output);
         $question_helper = $this->getHelper('question');
         assert($question_helper instanceof QuestionHelper);
 
-        $jira_host = $this->getStringOption($input, self::OPT_JIRA_HOST);
+        $jira_host     = $this->getStringOption($input, self::OPT_JIRA_HOST);
         $jira_username = $this->getStringOption($input, self::OPT_JIRA_USER);
         if (! $input->getOption(self::OPT_JIRA_TOKEN)) {
             do {
@@ -127,7 +127,7 @@ final class CreateProjectFromJiraCommand extends Command
 
         if (! $input->getOption(self::OPT_JIRA_PROJECT)) {
             $jira_projects = $this->jira_project_builder->build($jira_client);
-            $autocomplete = [];
+            $autocomplete  = [];
             $output->writeln('');
             foreach ($jira_projects as $project) {
                 $autocomplete[] = $project['id'];

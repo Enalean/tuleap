@@ -56,7 +56,7 @@ final class PluginFactoryTest extends TestCase
         ForgeConfig::set('sys_pluginsroot', __DIR__ . '/_fixtures/plugins');
         ForgeConfig::set('sys_custompluginsroot', __DIR__ . '/_fixtures/customplugins');
 
-        $this->dao = Mockery::mock(PluginDao::class);
+        $this->dao        = Mockery::mock(PluginDao::class);
         $this->restrictor = Mockery::mock(PluginResourceRestrictor::class);
 
         $this->factory = new PluginFactory($this->dao, $this->restrictor);
@@ -215,12 +215,12 @@ final class PluginFactoryTest extends TestCase
             ->with('official')
             ->andReturns(\TestHelper::arrayToDar(['id' => '124', 'name' => 'official', 'available' => 1]));
 
-        $factory = \Mockery::mock(\PluginFactory::class . '[_getClassNameForPluginName]', [$this->dao, $this->restrictor]);
-        $custom_plugin = new class extends Plugin {
+        $factory                 = \Mockery::mock(\PluginFactory::class . '[_getClassNameForPluginName]', [$this->dao, $this->restrictor]);
+        $custom_plugin           = new class extends Plugin {
         };
         $custom_plugin_classname = get_class($custom_plugin);
         $factory->shouldReceive('_getClassNameForPluginName')->with('custom')->andReturns(['class' => $custom_plugin_classname, 'custom' => true]);
-        $official_plugin = new class extends Plugin {
+        $official_plugin           = new class extends Plugin {
         };
         $official_plugin_classname = get_class($official_plugin);
         $factory->shouldReceive('_getClassNameForPluginName')->with('official')->andReturns(['class' => $official_plugin_classname, 'custom' => false]);

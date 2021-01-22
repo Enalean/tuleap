@@ -49,8 +49,8 @@ final class ConcealedBotApiTokenPatchRepresentation
         string $gitlab_repository_url,
         ConcealedString $gitlab_bot_api_token
     ) {
-        $this->gitlab_repository_id = $gitlab_repository_id;
+        $this->gitlab_repository_id  = $gitlab_repository_id;
         $this->gitlab_repository_url = $gitlab_repository_url;
-        $this->gitlab_bot_api_token = $gitlab_bot_api_token;
+        $this->gitlab_bot_api_token  = $gitlab_bot_api_token;
     }
 }

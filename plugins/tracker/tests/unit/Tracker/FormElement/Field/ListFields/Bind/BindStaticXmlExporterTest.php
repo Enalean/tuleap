@@ -50,17 +50,17 @@ final class BindStaticXmlExporterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
+        $this->xml            = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
         $this->default_values = [1 => true];
 
-        $this->exporter = new BindStaticXmlExporter(new \XML_SimpleXMLCDATAFactory());
-        $GLOBALS['Language']  = Mockery::spy(BaseLanguage::class);
+        $this->exporter      = new BindStaticXmlExporter(new \XML_SimpleXMLCDATAFactory());
+        $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
         $GLOBALS['Language']->shouldReceive('getText')->andReturn("None");
     }
 
     public function testItExportBindWithoutNoneValue(): void
     {
-        $values = [
+        $values     = [
             new Tracker_FormElement_Field_List_Bind_StaticValue(1, "Value A", "description", 1, false),
             new Tracker_FormElement_Field_List_Bind_StaticValue(2, "Value B", "description", 1, true),
         ];
@@ -94,7 +94,7 @@ final class BindStaticXmlExporterTest extends TestCase
 
     public function testItExportBindWithTLPNoneValue(): void
     {
-        $values = [
+        $values     = [
             new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, "None", "description", 1, false)
         ];
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, null, null, null, 'inca-silver')];
@@ -117,7 +117,7 @@ final class BindStaticXmlExporterTest extends TestCase
 
     public function testItExportBindWithLegacyNoneValue(): void
     {
-        $values = [
+        $values     = [
             new Tracker_FormElement_Field_List_Bind_StaticValue(\Tracker_FormElement_Field_List::NONE_VALUE, "None", "description", 1, false)
         ];
         $decorators = [new Tracker_FormElement_Field_List_BindDecorator(\Tracker_FormElement_Field_List::NONE_VALUE, 100, "123", "456", "789", null)];

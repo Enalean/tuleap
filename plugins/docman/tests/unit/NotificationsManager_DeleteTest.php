@@ -73,7 +73,7 @@ class NotificationsManager_DeleteTest extends TestCase
         $ugroups_remover = \Mockery::spy(\Tuleap\Docman\Notifications\UgroupsUpdater::class);
 
         $notifications_manager = \Mockery::mock(\Docman_NotificationsManager_Delete::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $link_url_provider                  = Mockery::mock(ILinkUrlProvider::class);
+        $link_url_provider     = Mockery::mock(ILinkUrlProvider::class);
         $notifications_manager->__construct(
             $project,
             $link_url_provider,

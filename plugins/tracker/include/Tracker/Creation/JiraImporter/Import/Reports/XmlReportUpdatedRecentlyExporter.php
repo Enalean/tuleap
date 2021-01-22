@@ -62,7 +62,7 @@ class XmlReportUpdatedRecentlyExporter implements IExportJiraLikeXmlReport
                 $updated_field
             ]
         );
-        $column_fields = array_filter(
+        $column_fields      = array_filter(
             [
                 $summary_field,
                 $status_field,

@@ -26,10 +26,10 @@ class DbaDatabase
 {
     public function __construct($filename, $mode = false, $handler = 'gdbm')
     {
-        $this->_file = $filename;
+        $this->_file    = $filename;
         $this->_handler = $handler;
         $this->_timeout = DBA_DATABASE_DEFAULT_TIMEOUT;
-        $this->_dbh = false;
+        $this->_dbh     = false;
         if (function_exists("dba_handlers")) { // since 4.3.0
             if (! in_array($handler, dba_handlers())) {
                 $this->_error(
@@ -98,7 +98,7 @@ class DbaDatabase
 
         if (! $dbh) {
             if (($error = $this->_dba_open_error)) {
-                $error->errno = E_USER_ERROR;
+                $error->errno   = E_USER_ERROR;
                 $error->errstr .= "\nfile: " . $this->_file
                                .  "\nmode: " . $mode
                                .  "\nhandler: " . $this->_handler;

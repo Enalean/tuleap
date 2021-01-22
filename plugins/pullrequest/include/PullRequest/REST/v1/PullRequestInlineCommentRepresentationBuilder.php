@@ -45,7 +45,7 @@ class PullRequestInlineCommentRepresentationBuilder
 
         $inline_comments = [];
         foreach ($res as $row) {
-            $user_id = $row['user_id'];
+            $user_id             = $row['user_id'];
             $user_representation = MinimalUserRepresentation::build($this->user_manager->getUserById($user_id));
 
             $inline_comments[] = new PullRequestInlineCommentRepresentation(

@@ -55,7 +55,7 @@ final class TrackerFormElementFieldFileTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tmp_name         = $this->getTmpDir() . '/uploaded_file.txt';
+        $this->tmp_name = $this->getTmpDir() . '/uploaded_file.txt';
         touch($this->tmp_name);
         $this->another_tmp_name = $this->getTmpDir() . '/another_uploaded_file.txt';
         touch($this->another_tmp_name);

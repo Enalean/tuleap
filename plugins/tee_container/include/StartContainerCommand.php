@@ -61,8 +61,8 @@ final class StartContainerCommand extends Command
         '/var/lib/tuleap',
     ];
 
-    private const OPTION_NO_SUPERVISORD  = 'no-supervisord';
-    private const OPTION_EXEC            = 'exec';
+    private const OPTION_NO_SUPERVISORD = 'no-supervisord';
+    private const OPTION_EXEC           = 'exec';
 
     /**
      * @var ProcessFactory
@@ -75,7 +75,7 @@ final class StartContainerCommand extends Command
 
     public function __construct(ProcessFactory $process_factory)
     {
-        $this->process_factory = $process_factory;
+        $this->process_factory  = $process_factory;
         $this->data_persistence = new DataPersistence($this->process_factory, ...self::PERSISTENT_DATA);
 
         parent::__construct();
@@ -109,7 +109,7 @@ final class StartContainerCommand extends Command
                 $tuleap->update($output);
             }
             $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
-            $realtime = new Realtime($console_logger);
+            $realtime       = new Realtime($console_logger);
             $realtime->setup($tuleap_fqdn);
 
             $rsyslog = new Rsyslog();

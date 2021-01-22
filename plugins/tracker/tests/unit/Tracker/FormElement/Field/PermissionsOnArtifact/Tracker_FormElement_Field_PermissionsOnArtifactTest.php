@@ -47,7 +47,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase //php
     {
         $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);
-        $this->field    = Mockery::mock(\Tracker_FormElement_Field_PermissionsOnArtifact::class)
+        $this->field = Mockery::mock(\Tracker_FormElement_Field_PermissionsOnArtifact::class)
                                  ->makePartial()
                                  ->shouldAllowMockingProtectedMethods();
     }

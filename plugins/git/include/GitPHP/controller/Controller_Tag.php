@@ -106,7 +106,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
 
         $tagger_name  = $matches['name'] ?? '';
         $tagger_email = $matches['email'] ?? '';
-        $user = $tagger_email ? \UserManager::instance()->getUserByEmail($tagger_email) : null;
+        $user         = $tagger_email ? \UserManager::instance()->getUserByEmail($tagger_email) : null;
 
         $this->tpl->assign('author', CommitUserPresenter::buildFromTuleapUser($user));
         $this->tpl->assign('tagger_name', $tagger_name);

@@ -57,7 +57,7 @@ class TopBacklogElementsToAddChecker
             throw new NoRootPlanningException();
         }
 
-        $ids_in_error  = [];
+        $ids_in_error = [];
         foreach ($added_artifact_ids as $added_artifact_id) {
             $artifact = $this->artifact_factory->getArtifactById($added_artifact_id);
 

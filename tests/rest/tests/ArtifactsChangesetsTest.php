@@ -32,8 +32,8 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
     {
         parent::setUp();
 
-        $artifacts  = $this->getArtifactIdsIndexedByTitle('private-member', 'task');
-        $artifact_id = $artifacts['A task to do'];
+        $artifacts                      = $this->getArtifactIdsIndexedByTitle('private-member', 'task');
+        $artifact_id                    = $artifacts['A task to do'];
         $this->artifact_resource['uri'] = 'artifacts/' . $artifact_id;
     }
 

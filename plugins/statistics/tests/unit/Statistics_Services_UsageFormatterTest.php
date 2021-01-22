@@ -45,8 +45,8 @@ final class Statistics_Services_UsageFormatterTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $stats_formatter        = Mockery::mock(Statistics_Formatter::class);
-        $this->usage_formatter  = new Statistics_Services_UsageFormatter($stats_formatter);
+        $stats_formatter       = Mockery::mock(Statistics_Formatter::class);
+        $this->usage_formatter = new Statistics_Services_UsageFormatter($stats_formatter);
 
         $this->first_input_datas = [
             [

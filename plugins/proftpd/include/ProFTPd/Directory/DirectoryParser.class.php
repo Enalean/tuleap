@@ -53,7 +53,7 @@ class DirectoryParser
      */
     public function parseDirectory($path, $remove_parent_directory_listing)
     {
-        $items = [
+        $items              = [
             'folders' => [],
             'files'   => [],
         ];

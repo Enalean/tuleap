@@ -201,7 +201,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
             return $text;
         }
 
-        $this->_locales = [];
+        $this->_locales         = [];
         $this->_reverse_locales = [];
 
         if (! isset($this->_locales[$lang])) {
@@ -329,7 +329,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
                 $url = '';
                 // google can only translate from english and french
                 if (in_array($from_lang, ['en', 'fr'])) {
-                    $url = "http://translate.google.com/translate";
+                    $url  = "http://translate.google.com/translate";
                     $url .= "?langpair=" . urlencode($from_lang . "|" . $to_lang);
                     $url .= "&u=" . urlencode(WikiURL($pagename, false, true));
                 }
@@ -347,7 +347,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
             }
         }
 
-        $pagelist = new PageList('', $exclude, $this->args);
+        $pagelist                        = new PageList('', $exclude, $this->args);
         $pagelist->_columns[0]->_heading = "$from_lang";
         foreach ($languages as $lang) {
             if ($lang == $from_lang) {
@@ -382,7 +382,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
                         $exclude
                     );
                 }
-                $path = FindLocalizedFile(WIKI_PGSRC);
+                $path  = FindLocalizedFile(WIKI_PGSRC);
                 $pgsrc = new fileSet($path);
                 foreach ($pgsrc->getFiles($exclude, $sortby, $limit) as $pagename) {
                     $pagename = urldecode($pagename);
@@ -453,13 +453,13 @@ class _PageList_Column_customlang extends _PageList_Column
 {
     public function __construct($field, $from_lang, $plugin)
     {
-        $this->_field = $field;
+        $this->_field     = $field;
         $this->_from_lang = $from_lang;
-        $this->_plugin = $plugin;
-        $this->_what = $plugin->args['what'];
-        $this->_noT = $plugin->args['noT'];
-        $this->_nolinks = $plugin->args['nolinks'];
-        $this->_iscustom = substr($field, 0, 7) == 'custom:';
+        $this->_plugin    = $plugin;
+        $this->_what      = $plugin->args['what'];
+        $this->_noT       = $plugin->args['noT'];
+        $this->_nolinks   = $plugin->args['nolinks'];
+        $this->_iscustom  = substr($field, 0, 7) == 'custom:';
         if ($this->_iscustom) {
             $this->_field = substr($field, 7);
         }
@@ -499,7 +499,7 @@ class _PageList_Column_customlang extends _PageList_Column
                 ! ($this->_noT or $this->_nolinks)
                 and $this->dbi->isWikiPage($trans)
             ) {
-                $url = WikiURL($trans, ['action' => 'TranslateText',
+                $url    = WikiURL($trans, ['action' => 'TranslateText',
                                              'lang' => $this->_field]);
                 $button = $WikiTheme->makeButton('T', $url);
                 $button->addTooltip(sprintf(

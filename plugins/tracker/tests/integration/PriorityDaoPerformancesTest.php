@@ -43,7 +43,7 @@ class PriorityDaoPerformancesTest extends TestCase
     public function setUp(): void
     {
         $this->dao = new Tracker_Artifact_PriorityDao();
-        $this->db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $this->db  = DBFactory::getMainTuleapDBConnection()->getDB();
     }
 
     public function testBenchmark()
@@ -87,14 +87,14 @@ class PriorityDaoPerformancesTest extends TestCase
     {
         $title = "Time taken for put at the end";
         echo "$title for $n artifacts\n";
-        $k = 10;
+        $k     = 10;
         $times = [];
         for ($i = 1; $i <= $k; $i++) {
             $this->progress($i, $k);
             $this->generateRandomArtifactPriorities($n);
             $start = microtime(true);
             $this->dao->putArtifactAtTheEndWithoutTransaction($n + $i);
-            $end = microtime(true);
+            $end     = microtime(true);
             $times[] = $end - $start;
         }
         echo "\n";
@@ -131,18 +131,18 @@ class PriorityDaoPerformancesTest extends TestCase
 
     private function benchmarkMoveBeforeRank($n, $new_rank)
     {
-        $k = 10;
+        $k     = 10;
         $times = [];
         for ($i = 1; $i <= $k; $i++) {
             $this->progress($i, $k);
             $this->generateRandomArtifactPriorities($n);
-            $row = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $n - 1")->getRow();
-            $artifact_id = $row['artifact_id'];
-            $row = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $new_rank")->getRow();
+            $row          = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $n - 1")->getRow();
+            $artifact_id  = $row['artifact_id'];
+            $row          = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $new_rank")->getRow();
             $successor_id = $row['artifact_id'];
-            $start = microtime(true);
+            $start        = microtime(true);
             $this->dao->moveListOfArtifactsBefore([$artifact_id], $successor_id);
-            $end = microtime(true);
+            $end     = microtime(true);
             $times[] = $end - $start;
         }
         echo "\n";
@@ -151,7 +151,7 @@ class PriorityDaoPerformancesTest extends TestCase
 
     private function benchmarkMove10BeforeRank($n, $new_rank)
     {
-        $k = 10;
+        $k     = 10;
         $times = [];
         for ($i = 1; $i <= $k; $i++) {
             $this->progress($i, $k);
@@ -160,11 +160,11 @@ class PriorityDaoPerformancesTest extends TestCase
             foreach ($this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank >= $n - 10") as $row) {
                 $artifact_ids[] = $row['artifact_id'];
             }
-            $row = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $new_rank")->getRow();
+            $row          = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $new_rank")->getRow();
             $successor_id = $row['artifact_id'];
-            $start = microtime(true);
+            $start        = microtime(true);
             $this->dao->moveListOfArtifactsBefore($artifact_ids, $successor_id);
-            $end = microtime(true);
+            $end     = microtime(true);
             $times[] = $end - $start;
         }
         echo "\n";
@@ -196,7 +196,7 @@ class PriorityDaoPerformancesTest extends TestCase
 
         shuffle($inserts);
         foreach (array_chunk($inserts, 10000) as $chunk) {
-            $sql = "INSERT INTO tracker_artifact_priority_rank (artifact_id, rank) VALUES ";
+            $sql  = "INSERT INTO tracker_artifact_priority_rank (artifact_id, rank) VALUES ";
             $sql .= implode(',', $chunk);
             $this->db->run($sql);
         }
@@ -207,7 +207,7 @@ class PriorityDaoPerformancesTest extends TestCase
     {
         $bar_size = (int) floor($done * 30 / $total);
 
-        $status_bar = "\r[";
+        $status_bar  = "\r[";
         $status_bar .= str_repeat("=", $bar_size);
         if ($bar_size < 30) {
             $status_bar .= ">";

@@ -66,15 +66,15 @@ class AgileDashboard_FirstKanbanCreator
         TrackerReportUpdater $tracker_report_updater,
         Tracker_ReportFactory $report_factory
     ) {
-        $this->project          = $project;
-        $this->kanban_manager   = $kanban_manager;
-        $this->tracker_factory  = $tracker_factory;
-        $this->xml_import       = $xml_import;
-        $this->template_path    = __DIR__ . '/../../resources/templates/Tracker_activity.xml';
-        $this->tracker_itemname = $this->xml_import->getTrackerItemNameFromXMLFile($this->template_path);
+        $this->project                = $project;
+        $this->kanban_manager         = $kanban_manager;
+        $this->tracker_factory        = $tracker_factory;
+        $this->xml_import             = $xml_import;
+        $this->template_path          = __DIR__ . '/../../resources/templates/Tracker_activity.xml';
+        $this->tracker_itemname       = $this->xml_import->getTrackerItemNameFromXMLFile($this->template_path);
         $this->tracker_report_updater = $tracker_report_updater;
-        $this->kanban_factory = $kanban_factory;
-        $this->report_factory = $report_factory;
+        $this->kanban_factory         = $kanban_factory;
+        $this->report_factory         = $report_factory;
     }
 
     public function createFirstKanban(PFUser $user)

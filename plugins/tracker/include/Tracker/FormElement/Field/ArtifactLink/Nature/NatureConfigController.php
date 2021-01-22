@@ -71,7 +71,7 @@ class NatureConfigController
 
     public function index(CSRFSynchronizerToken $csrf, BaseLayout $base_layout)
     {
-        $title  = dgettext('tuleap-tracker', 'Trackers');
+        $title = dgettext('tuleap-tracker', 'Trackers');
 
         $assets = new IncludeAssets(
             __DIR__ . '/../../../../../../../../src/www/assets/trackers',

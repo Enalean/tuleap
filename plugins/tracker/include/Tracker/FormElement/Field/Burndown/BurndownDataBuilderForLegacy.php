@@ -140,7 +140,7 @@ class BurndownDataBuilderForLegacy
         $capacity,
         $is_burndown_under_calculation
     ) {
-        $user_time_period = $this->getTimePeriod($time_period);
+        $user_time_period   = $this->getTimePeriod($time_period);
         $user_burndown_data = new Tracker_Chart_Data_Burndown($user_time_period, $capacity);
 
         if ($is_burndown_under_calculation === false) {

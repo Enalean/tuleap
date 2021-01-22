@@ -530,7 +530,7 @@ class GitActions extends PluginActions
 
     public function getRepositoryDetails($projectId, $repositoryId)
     {
-        $c = $this->getController();
+        $c            = $this->getController();
         $projectId    = intval($projectId);
         $repositoryId = intval($repositoryId);
         if (empty($repositoryId)) {
@@ -657,7 +657,7 @@ class GitActions extends PluginActions
             return false;
         }
 
-        $user_helper = UserHelper::instance();
+        $user_helper   = UserHelper::instance();
         $great_success = true;
         foreach ($users as $user) {
             \assert($user instanceof PFUser);
@@ -902,7 +902,7 @@ class GitActions extends PluginActions
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
             return false;
         }
-        $repository = $this->_loadRepository($projectId, $repoId);
+        $repository    = $this->_loadRepository($projectId, $repoId);
         $mailsToDelete = $repository->getNonMemberMails();
         foreach ($mailsToDelete as $mail) {
             $repository->notificationRemoveMail($mail);

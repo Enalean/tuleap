@@ -130,13 +130,13 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
         }
 
         $pathtree = [];
-        $path = dirname($blob->GetPath());
+        $path     = dirname($blob->GetPath());
         while ($path !== '.') {
-            $name = basename($path);
-            $pathtreepiece = new \stdClass();
+            $name                = basename($path);
+            $pathtreepiece       = new \stdClass();
             $pathtreepiece->name = $name;
             $pathtreepiece->path = $path;
-            $pathtree[] = $pathtreepiece;
+            $pathtree[]          = $pathtreepiece;
 
             $path = dirname($path);
         }

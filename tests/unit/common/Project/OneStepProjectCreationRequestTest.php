@@ -34,13 +34,13 @@ class OneStepProjectCreationRequestTest extends TestCase
 
     protected function aCreationRequest($request_data): Project_OneStepCreation_OneStepCreationRequest
     {
-        $request = new Codendi_Request($request_data);
+        $request          = new Codendi_Request($request_data);
         $creation_request = new Project_OneStepCreation_OneStepCreationRequest(
             $request,
             new DefaultProjectVisibilityRetriever()
         );
-        $service_git = Mockery::mock(Service::class, ['getId' => $this->service_git_id, 'isUsed' => false]);
-        $service_tracker = Mockery::mock(Service::class, ['getId' => $this->service_tracker_id, 'isUsed' => true]);
+        $service_git      = Mockery::mock(Service::class, ['getId' => $this->service_git_id, 'isUsed' => false]);
+        $service_tracker  = Mockery::mock(Service::class, ['getId' => $this->service_tracker_id, 'isUsed' => true]);
 
         $project_used_as_template = Mockery::mock(Project::class);
         $project_used_as_template->shouldReceive('getID')->andReturn($this->template_id);
@@ -114,7 +114,7 @@ class OneStepProjectCreationRequestTest extends TestCase
         ];
 
         $creation_request = $this->aCreationRequest($request_data);
-        $values = $creation_request->getProjectValues();
+        $values           = $creation_request->getProjectValues();
 
         $this->assertEquals(1, $values['project']['services'][$this->service_tracker_id]['is_used']);
         $this->assertEquals(0, $values['project']['services'][$this->service_git_id]['is_used']);

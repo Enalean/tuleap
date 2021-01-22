@@ -44,7 +44,7 @@ class MappingFileOptimusPrimeTransformer
 
     public function __construct(UserManager $user_manager, $use_lame_password = false)
     {
-        $this->user_manager = $user_manager;
+        $this->user_manager      = $user_manager;
         $this->use_lame_password = $use_lame_password;
     }
 

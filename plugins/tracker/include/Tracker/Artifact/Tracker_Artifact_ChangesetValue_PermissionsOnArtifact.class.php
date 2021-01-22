@@ -40,7 +40,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->perms = $perms;
-        $this->used = $used;
+        $this->used  = $used;
     }
 
     /**
@@ -147,21 +147,21 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         $previous = $changeset_value->getPerms();
-        $next = $this->getPerms();
-        $changes = false;
+        $next     = $this->getPerms();
+        $changes  = false;
         if ($previous !== $next) {
             $removed_elements = array_diff($previous, $next);
-            $removed_arr = [];
+            $removed_arr      = [];
             foreach ($removed_elements as $removed_element) {
                 $removed_arr[] = $this->getUgroupLabel($removed_element);
             }
-            $removed = $this->format(implode(', ', $removed_arr), $format);
+            $removed        = $this->format(implode(', ', $removed_arr), $format);
             $added_elements = array_diff($next, $previous);
-            $added_arr = [];
+            $added_arr      = [];
             foreach ($added_elements as $added_element) {
                 $added_arr[] = $this->getUgroupLabel($added_element);
             }
-            $added   = $this->format(implode(', ', $added_arr), $format);
+            $added = $this->format(implode(', ', $added_arr), $format);
             if (empty($next)) {
                 $changes = ' ' . dgettext('tuleap-tracker', 'cleared');
             } elseif (empty($previous)) {
@@ -185,7 +185,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
 
     public function nodiff($format = 'html')
     {
-        $next = $this->getPerms();
+        $next      = $this->getPerms();
         $added_arr = [];
         foreach ($next as $element) {
                 $added_arr[] = $this->getUgroupLabel($element);

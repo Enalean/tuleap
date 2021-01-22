@@ -381,9 +381,9 @@ class Project_OneStepCreation_OneStepCreationRequest
             throw new LogicException('Template ID has not been validated');
         }
         $services = [];
-        $project = $this->template_for_project_creation->getProject();
+        $project  = $this->template_for_project_creation->getProject();
         foreach ($project->getServices() as $service) {
-            $id = $service->getId();
+            $id                       = $service->getId();
             $services[$id]['is_used'] = $service->isUsed();
         }
         return $services;

@@ -103,7 +103,7 @@ class Docman_ImportFromDocmanV1
 
     private function importDump(Project $project, $folder_id)
     {
-        $logger = new WrapperLogger(new Log_ConsoleLogger(), 'Import Docman');
+        $logger     = new WrapperLogger(new Log_ConsoleLogger(), 'Import Docman');
         $xml_import = new XMLDocmanImport(
             'import:',
             $project->getUnixNameLowerCase(),

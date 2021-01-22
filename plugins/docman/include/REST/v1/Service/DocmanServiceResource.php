@@ -57,7 +57,7 @@ final class DocmanServiceResource extends AuthenticatedResource
     {
         $this->checkAccess();
         $project_manager = ProjectManager::instance();
-        $project = $project_manager->getProject($id);
+        $project         = $project_manager->getProject($id);
         if ($project === null) {
             throw new RestException(404);
         }

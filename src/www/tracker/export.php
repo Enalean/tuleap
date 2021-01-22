@@ -32,11 +32,11 @@ if (! $ath->isValid()) {
 
 $request     = HTTPRequest::instance();
 $export_aids = $request->get('export_aids');
-$constraint = 'AND a.artifact_id IN (' . db_es($export_aids) . ')';
+$constraint  = 'AND a.artifact_id IN (' . db_es($export_aids) . ')';
 
-$export_select = $export_from = $export_where = '';
+$export_select    = $export_from = $export_where = '';
 $multiple_queries = false;
-$fields = $col_list = $lbl_list = $dsc_list = $all_queries      = [];
+$fields           = $col_list = $lbl_list = $dsc_list = $all_queries      = [];
 
 $sql = $ath->buildExportQuery($fields, $col_list, $lbl_list, $dsc_list, $export_select, $export_from, $export_where, $multiple_queries, $all_queries, $constraint);
 assert(is_bool($multiple_queries));
@@ -70,7 +70,7 @@ $eol = "\n";
 // so we simply remove the non-displayed fields from these arrays.
 if ($request->get('only_displayed_fields') == 'on') {
     assert(isset($atid));
-    $artifact_report = new ArtifactReport($request->get('report_id'), $atid);
+    $artifact_report  = new ArtifactReport($request->get('report_id'), $atid);
     $displayed_fields = $artifact_report->getResultFields();
     // array_intersect_key is a PHP 5 function (implemented here in src/www/include/utils.php)
     $col_list = array_intersect_key($col_list, $displayed_fields);
@@ -82,18 +82,18 @@ if ($request->get('only_displayed_fields') == 'on') {
 if ($multiple_queries) {
     $all_results = [];
     foreach ($all_queries as $q) {
-        $result = db_query($q);
+        $result        = db_query($q);
         $all_results[] = $result;
-        $rows = db_numrows($result);
+        $rows          = db_numrows($result);
     }
 } else {
     $result = db_query($sql);
-    $rows = db_numrows($result);
+    $rows   = db_numrows($result);
 }
 
 // Send the result in CSV format
 if ($result && $rows > 0) {
-    $http = Codendi_HTTPPurifier::instance();
+    $http      = Codendi_HTTPPurifier::instance();
     $file_name = str_replace(' ', '_', 'artifact_' . $ath->getItemName());
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=' . $http->purify($file_name) . '_' . $ath->Group->getUnixName() . '.csv');
@@ -126,12 +126,12 @@ if ($result && $rows > 0) {
         }
     }
 } else {
-    $params['group'] = $group_id;
-    $params['toptab'] = 'tracker';
+    $params['group']    = $group_id;
+    $params['toptab']   = 'tracker';
     $params['pagename'] = 'trackers';
-    $params['title'] = $Language->getText('tracker_index', 'trackers_for');
-    $params['help'] = 'tracker-v3.html';
-    $params['pv']  = $request->exist('pv') ? $request->get('pv') : '';
+    $params['title']    = $Language->getText('tracker_index', 'trackers_for');
+    $params['help']     = 'tracker-v3.html';
+    $params['pv']       = $request->exist('pv') ? $request->get('pv') : '';
     site_project_header($params);
 
     echo '<h3>' . $Language->getText('project_export_artifact_export', 'art_export') . '</h3>';

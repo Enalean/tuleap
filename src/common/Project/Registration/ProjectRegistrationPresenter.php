@@ -88,19 +88,19 @@ class ProjectRegistrationPresenter
         array $company_templates,
         TemplatePresenter ...$tuleap_templates
     ) {
-        $this->tuleap_templates                      = json_encode($tuleap_templates);
-        $this->are_restricted_users_allowed          = (bool) ForgeConfig::areRestrictedUsersAllowed();
-        $this->project_default_visibility            = $project_default_visibility;
-        $this->projects_must_be_approved             = (bool) ForgeConfig::get(
+        $this->tuleap_templates             = json_encode($tuleap_templates);
+        $this->are_restricted_users_allowed = (bool) ForgeConfig::areRestrictedUsersAllowed();
+        $this->project_default_visibility   = $project_default_visibility;
+        $this->projects_must_be_approved    = (bool) ForgeConfig::get(
             ProjectManager::CONFIG_PROJECT_APPROVAL,
             true
         );
-        $this->trove_categories                      = json_encode($trove_categories, JSON_THROW_ON_ERROR);
-        $this->is_description_mandatory              = ProjectDescriptionUsageRetriever::isDescriptionMandatory();
-        $this->field_list                            = json_encode($field_list);
-        $this->company_templates                     = json_encode($company_templates);
-        $this->company_name                          = ForgeConfig::get('sys_org_name');
-        $this->can_user_choose_privacy               = (bool) ForgeConfig::get(
+        $this->trove_categories             = json_encode($trove_categories, JSON_THROW_ON_ERROR);
+        $this->is_description_mandatory     = ProjectDescriptionUsageRetriever::isDescriptionMandatory();
+        $this->field_list                   = json_encode($field_list);
+        $this->company_templates            = json_encode($company_templates);
+        $this->company_name                 = ForgeConfig::get('sys_org_name');
+        $this->can_user_choose_privacy      = (bool) ForgeConfig::get(
             ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY
         );
     }

@@ -54,7 +54,7 @@ class Tracker_Rule_List extends Tracker_Rule
     public function applyTo($tracker_id, $source_field, $source_value, $target_field, $target_value)
     {
         $can_apply_to = $this->canApplyTo($tracker_id, $source_field, $source_value, $target_field, $target_value);
-        $pass = $can_apply_to && $target_value == $this->target_value;
+        $pass         = $can_apply_to && $target_value == $this->target_value;
         return $pass;
     }
 

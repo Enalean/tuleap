@@ -61,7 +61,7 @@ class SVNRefreshAllAccessFilesCommand extends Command
     {
         $output->writeln("<comment>Start refresh access files:</comment>");
 
-        $collection = $this->repository_manager->getRepositoriesOfNonDeletedProjects();
+        $collection              = $this->repository_manager->getRepositoriesOfNonDeletedProjects();
         $number_updated_projects = count($collection);
 
         if ($number_updated_projects === 0) {

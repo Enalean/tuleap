@@ -26,14 +26,14 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const FUNC_ADMIN_RULES       = 'admin-workflow';
-    public const FUNC_ADMIN_TRANSITIONS = 'admin-workflow-transitions';
-    public const FUNC_ADMIN_CROSS_TRACKER_TRIGGERS = 'admin-workflow-triggers';
+    public const FUNC_ADMIN_RULES                           = 'admin-workflow';
+    public const FUNC_ADMIN_TRANSITIONS                     = 'admin-workflow-transitions';
+    public const FUNC_ADMIN_CROSS_TRACKER_TRIGGERS          = 'admin-workflow-triggers';
     public const FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA = 'admin-get-triggers-rules-builder-data';
-    public const FUNC_ADMIN_ADD_TRIGGER = 'admin-workflow-add-trigger';
-    public const FUNC_ADMIN_DELETE_TRIGGER = 'admin-workflow-delete-trigger';
+    public const FUNC_ADMIN_ADD_TRIGGER                     = 'admin-workflow-add-trigger';
+    public const FUNC_ADMIN_DELETE_TRIGGER                  = 'admin-workflow-delete-trigger';
 
-    public const BASE_PATH = '/workflow';
+    public const BASE_PATH       = '/workflow';
     public const TRANSITION_PATH = '/transitions';
 
     public $workflow_id;
@@ -310,7 +310,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $root->addChild('field_id')->addAttribute('REF', array_search($this->field_id, $xmlMapping));
         $cdata = new \XML_SimpleXMLCDATAFactory();
         $cdata->insert($root, 'is_used', $this->is_used);
-        $child = $root->addChild('transitions');
+        $child       = $root->addChild('transitions');
         $transitions = $this->getTransitions();
         foreach ($transitions as $transition) {
             $transition->exportToXml($child, $xmlMapping);

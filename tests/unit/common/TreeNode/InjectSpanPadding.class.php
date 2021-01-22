@@ -103,7 +103,7 @@ abstract class InjectSpanPadding extends TestCase
         if (is_array($artifactLinks)) {
             $artifactLinks = implode(', ', $artifactLinks);
         }
-        $nodeData = $node->getData();
+        $nodeData                  = $node->getData();
         $nodeData['artifactlinks'] = $artifactLinks;
         $node->setData($nodeData);
         return $node;

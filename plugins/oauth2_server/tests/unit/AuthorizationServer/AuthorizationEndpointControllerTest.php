@@ -366,7 +366,7 @@ final class AuthorizationEndpointControllerTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+        $project        = M::mock(\Project::class)->shouldReceive('getPublicName')
             ->andReturn('Test Project')
             ->getMock();
         $request_params = [
@@ -510,7 +510,7 @@ final class AuthorizationEndpointControllerTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+        $project        = M::mock(\Project::class)->shouldReceive('getPublicName')
             ->andReturn('Test Project')
             ->getMock();
         $request        = (new NullServerRequest())->withMethod($request_http_method);

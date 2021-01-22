@@ -47,7 +47,7 @@ class RecentlyVisitedDao extends DataAccessObject
             throw new \RuntimeException('Recently updated was to saved');
         }
 
-        $sql_clean_history     = "DELETE FROM plugin_tracker_recently_visited WHERE user_id = $user_id AND created_on <= (
+        $sql_clean_history        = "DELETE FROM plugin_tracker_recently_visited WHERE user_id = $user_id AND created_on <= (
                                     SELECT created_on FROM (
                                       SELECT created_on FROM plugin_tracker_recently_visited WHERE user_id = $user_id ORDER BY created_on DESC LIMIT 1 OFFSET 30
                                     ) oldest_entry_to_keep

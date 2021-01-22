@@ -80,7 +80,7 @@ class DefinitionRepresentationBuilder
     public function getDefinitionRepresentation(PFUser $user, Artifact $definition_artifact, ?Tracker_Artifact_Changeset $changeset): DefinitionRepresentation
     {
         $requirement = $this->requirement_retriever->getRequirementForDefinition($definition_artifact, $user);
-        $changeset = $changeset ?: $definition_artifact->getLastChangeset();
+        $changeset   = $changeset ?: $definition_artifact->getLastChangeset();
 
         $description_text_field = self::getTextField(
             $this->tracker_form_element_factory,

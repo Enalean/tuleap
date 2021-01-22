@@ -133,7 +133,7 @@ class FRSReleaseController
 
     private function getFrsUGroupsByPermission($permission_type, array $project_ugroups, $release_id = null)
     {
-        $options         = [];
+        $options = [];
         foreach ($project_ugroups as $project_ugroup) {
             if ($this->isUgroupHidden($project_ugroup)) {
                 continue;

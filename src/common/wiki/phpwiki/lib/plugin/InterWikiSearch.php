@@ -104,7 +104,7 @@ if (defined('DEBUG') && DEBUG) {
 
         public function _arrayToTable($array, &$request)
         {
-            $thead = HTML::thead();
+            $thead    = HTML::thead();
             $label[0] = _("Wiki Name");
             $label[1] = _("Search");
             $thead->pushContent(HTML::tr(
@@ -113,7 +113,7 @@ if (defined('DEBUG') && DEBUG) {
             ));
 
             $tbody = HTML::tbody();
-            $dbi = $request->getDbh();
+            $dbi   = $request->getDbh();
             if ($array) {
                 foreach ($array as $moniker => $interurl) {
                     $monikertd = HTML::td(
@@ -123,9 +123,9 @@ if (defined('DEBUG') && DEBUG) {
                         : $moniker
                     );
 
-                    $w = new WikiPluginLoader();
-                    $p = $w->getPlugin('ExternalSearch');
-                    $argstr = sprintf('url="%s"', addslashes($interurl));
+                    $w        = new WikiPluginLoader();
+                    $p        = $w->getPlugin('ExternalSearch');
+                    $argstr   = sprintf('url="%s"', addslashes($interurl));
                     $searchtd = HTML::td($p->run($dbi, $argstr, $request, $basepage));
 
                     $tbody->pushContent(HTML::tr($monikertd, $searchtd));

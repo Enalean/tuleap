@@ -69,9 +69,9 @@ class IDTokenVerifierTest extends TestCase
 
     public function testItRejectsIDTokenIfPartsAreMissingInTheJWT(): void
     {
-        $provider          = Mockery::mock(Provider::class);
-        $nonce             = 'random_string';
-        $fake_id_token     = 'aaaaa.aaaaa';
+        $provider      = Mockery::mock(Provider::class);
+        $nonce         = 'random_string';
+        $fake_id_token = 'aaaaa.aaaaa';
 
         $this->expectException(MalformedIDTokenException::class);
         $this->id_token_verifier->validate($provider, $nonce, $fake_id_token);
@@ -79,9 +79,9 @@ class IDTokenVerifierTest extends TestCase
 
     public function testItRejectsIDTokenIfPayloadCantBeRead(): void
     {
-        $provider          = Mockery::mock(Provider::class);
-        $nonce             = 'random_string';
-        $fake_id_token     = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.' .
+        $provider      = Mockery::mock(Provider::class);
+        $nonce         = 'random_string';
+        $fake_id_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.' .
             'fail.' .
             'EkN-DOsnsuRjRO6BxXemmJDm3HbxrbRzXglbN2S4sOkopdU4IsDxTI8jO19W_A4K8ZPJijNLis4EZsHeY559a4DFOd50_OqgHGuERTqY' .
             'ZyuhtF39yxJPAjUESwxk2J5k_4zM3O-vtd1Ghyo4IbqKKSy6J9mTniYJPenn5-HIirE';
@@ -95,7 +95,7 @@ class IDTokenVerifierTest extends TestCase
         $provider = Mockery::mock(Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id');
-        $nonce    = 'random_string';
+        $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
             (new Builder())->issuedBy('example.com')->permittedFor('client_id')
@@ -110,7 +110,7 @@ class IDTokenVerifierTest extends TestCase
         $provider = Mockery::mock(Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id');
-        $nonce    = 'random_string';
+        $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
             (new Builder())
@@ -128,7 +128,7 @@ class IDTokenVerifierTest extends TestCase
         $provider = Mockery::spy(Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id');
-        $nonce    = 'random_string';
+        $nonce = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier(new Parser(), $this->generateIssuerValidatorInvalid(), $this->jwks_key_fetcher, new Sha256(), new Validator());
         $id_token          = $this->buildIDToken(
@@ -148,7 +148,7 @@ class IDTokenVerifierTest extends TestCase
         $provider = Mockery::mock(Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id');
-        $nonce    = 'random_string';
+        $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
             (new Builder())
@@ -167,7 +167,7 @@ class IDTokenVerifierTest extends TestCase
         $provider = Mockery::mock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id_2');
-        $nonce    = 'random_string';
+        $nonce = 'random_string';
 
         $id_token_builder = new Builder();
         $id_token_builder->issuedBy('example.com');
@@ -191,7 +191,7 @@ class IDTokenVerifierTest extends TestCase
         $provider = Mockery::mock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id_2');
-        $nonce    = 'random_string';
+        $nonce = 'random_string';
 
         $id_token = $this->buildIDToken(
             (new Builder())

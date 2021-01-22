@@ -11,7 +11,7 @@
 class ImgData_PushPins extends ImgData
 {
     protected $name = 'Push pins';
-    protected $an = [MARK_IMG_PUSHPIN => 'imgdata_small',
+    protected $an   = [MARK_IMG_PUSHPIN => 'imgdata_small',
     MARK_IMG_SPUSHPIN => 'imgdata_small',
     MARK_IMG_LPUSHPIN => 'imgdata_large'];
 

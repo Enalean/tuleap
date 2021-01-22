@@ -67,7 +67,7 @@ class LockDestructorTest extends TestCase
 
     public function testLockIsDeletedIfUserIsOwner()
     {
-        $lock_owner   = \Mockery::mock(\PFUser::class);
+        $lock_owner = \Mockery::mock(\PFUser::class);
 
         $lock_owner->shouldReceive('getId')->andReturn(103);
 
@@ -85,7 +85,7 @@ class LockDestructorTest extends TestCase
 
     public function testLockIsDeletedEvenIfUserIsNotOwnerIfForced()
     {
-        $lock_owner   = \Mockery::mock(\PFUser::class);
+        $lock_owner = \Mockery::mock(\PFUser::class);
 
         $lock_owner->shouldReceive('getId')->andReturn(103);
 

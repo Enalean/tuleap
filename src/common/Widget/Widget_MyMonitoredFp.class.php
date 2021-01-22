@@ -40,34 +40,34 @@ class Widget_MyMonitoredFp extends Widget
     }
     public function getContent()
     {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $frsrf = new FRSReleaseFactory();
+        $purifier             = Codendi_HTMLPurifier::instance();
+        $frsrf                = new FRSReleaseFactory();
         $html_my_monitored_fp = '';
-        $sql = "SELECT groups.group_name,groups.group_id " .
+        $sql                  = "SELECT groups.group_name,groups.group_id " .
             "FROM groups,filemodule_monitor,frs_package " .
             "WHERE groups.group_id=frs_package.group_id " .
             "AND frs_package.status_id !=" . db_ei($frsrf->STATUS_DELETED) . " " .
             "AND frs_package.package_id=filemodule_monitor.filemodule_id " .
             "AND filemodule_monitor.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' ";
-        $um = UserManager::instance();
-        $current_user = $um->getCurrentUser();
+        $um                   = UserManager::instance();
+        $current_user         = $um->getCurrentUser();
         if ($current_user->isRestricted()) {
             $projects = $current_user->getProjects();
-            $sql .= "AND groups.group_id IN (" . db_ei_implode($projects) . ") ";
+            $sql     .= "AND groups.group_id IN (" . db_ei_implode($projects) . ") ";
         }
         $sql .= "GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
 
         $result = db_query($sql);
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
         if (! $result || $rows < 1) {
             $html_my_monitored_fp .= $GLOBALS['Language']->getText('my_index', 'my_files_msg');
         } else {
             $html_my_monitored_fp .= '<table class="tlp-table" style="width:100%">';
-            $request = HTTPRequest::instance();
+            $request               = HTTPRequest::instance();
             for ($j = 0; $j < $rows; $j++) {
                 $group_id = db_result($result, $j, 'group_id');
 
-                $sql2 = "SELECT frs_package.name,filemodule_monitor.filemodule_id " .
+                $sql2    = "SELECT frs_package.name,filemodule_monitor.filemodule_id " .
                     "FROM groups,filemodule_monitor,frs_package " .
                     "WHERE groups.group_id=frs_package.group_id " .
                     "AND groups.group_id=" . db_ei($group_id) . " " .
@@ -75,7 +75,7 @@ class Widget_MyMonitoredFp extends Widget
                     "AND frs_package.package_id=filemodule_monitor.filemodule_id " .
                     "AND filemodule_monitor.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "'  LIMIT 100";
                 $result2 = db_query($sql2);
-                $rows2 = db_numrows($result2);
+                $rows2   = db_numrows($result2);
 
                 $vItemId = new Valid_UInt('hide_item_id');
                 $vItemId->required();
@@ -99,7 +99,7 @@ class Widget_MyMonitoredFp extends Widget
                     $hide_url . '<A HREF="/project/?group_id=' . $group_id . '">' .
                     $purifier->purify(db_result($result, $j, 'group_name')) . '</A>&nbsp;&nbsp;&nbsp;&nbsp;';
 
-                $html = '';
+                $html      = '';
                 $count_new = max(0, $count_diff);
                 for ($i = 0; $i < $rows2; $i++) {
                     if (! $hide_now) {
@@ -114,7 +114,7 @@ class Widget_MyMonitoredFp extends Widget
                     }
                 }
 
-                $html_hdr .= my_item_count($rows2, $count_new) . '</td></tr>';
+                $html_hdr             .= my_item_count($rows2, $count_new) . '</td></tr>';
                 $html_my_monitored_fp .= $html_hdr . $html;
             }
             $html_my_monitored_fp .= '</table>';

@@ -25,7 +25,7 @@ class TrackerDao extends DataAccessObject
 {
     public function searchById($id)
     {
-        $id      = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT *
                 FROM tracker
                 WHERE id = $id ";
@@ -35,7 +35,7 @@ class TrackerDao extends DataAccessObject
     public function searchByGroupId($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);
-        $sql = "SELECT *
+        $sql      = "SELECT *
                 FROM tracker
                 WHERE group_id = $group_id
                   AND deletion_date IS NULL
@@ -48,7 +48,7 @@ class TrackerDao extends DataAccessObject
      */
     public function searchByGroupIdWithExcludedIds($group_id, array $excluded_tracker_ids)
     {
-        $group_id             = $this->da->escapeInt($group_id);
+        $group_id        = $this->da->escapeInt($group_id);
         $excluded_clause = $this->restrict("AND id NOT IN", $excluded_tracker_ids);
 
         // TODO: escape $excluded_tracker_ids ?
@@ -101,7 +101,7 @@ class TrackerDao extends DataAccessObject
     */
     public function searchByItemNameAndProjectId($item_name, $project_id)
     {
-        $item_name = $this->da->quoteSmart($item_name);
+        $item_name  = $this->da->quoteSmart($item_name);
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT *
@@ -115,7 +115,7 @@ class TrackerDao extends DataAccessObject
     public function doesTrackerNameAlreadyExist(string $public_name, int $project_id): bool
     {
         $public_name = $this->da->quoteSmart($public_name);
-        $project_id = $this->da->escapeInt($project_id);
+        $project_id  = $this->da->escapeInt($project_id);
 
         $sql = "SELECT *
                 FROM tracker
@@ -295,7 +295,7 @@ class TrackerDao extends DataAccessObject
 
     public function save(Tracker $tracker)
     {
-        $id                  = $this->da->escapeInt($tracker->id);
+        $id                           = $this->da->escapeInt($tracker->id);
         $group_id                     = $this->da->escapeInt($tracker->group_id);
         $name                         = $this->da->quoteSmart($tracker->name);
         $description                  = $this->da->quoteSmart($tracker->description);
@@ -310,7 +310,7 @@ class TrackerDao extends DataAccessObject
         $instantiate_for_new_projects = $this->da->quoteSmart($tracker->instantiate_for_new_projects);
         $log_priority_changes         = $this->da->quoteSmart($tracker->log_priority_changes);
         $notifications_level          = $this->da->escapeInt($tracker->getNotificationsLevel());
-        $sql = "UPDATE tracker SET
+        $sql                          = "UPDATE tracker SET
                    group_id                     = $group_id,
                    name                         = $name,
                    description                  = $description,
@@ -337,10 +337,10 @@ class TrackerDao extends DataAccessObject
 
     public function updateItemName($group_id, $oldItemname, $itemname)
     {
-        $group_id = $this->da->quoteSmart($group_id);
-        $itemname = $this->da->quoteSmart($itemname);
+        $group_id    = $this->da->quoteSmart($group_id);
+        $itemname    = $this->da->quoteSmart($itemname);
         $oldItemname = $this->da->quoteSmart($oldItemname);
-        $sql = "UPDATE tracker SET
+        $sql         = "UPDATE tracker SET
 			item_name=$itemname
             WHERE item_name=$oldItemname AND group_id=$group_id";
         return $this->update($sql);

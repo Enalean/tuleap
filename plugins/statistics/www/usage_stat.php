@@ -29,7 +29,7 @@ function csv_output($string)
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if (! $p || ! $pluginManager->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }
@@ -42,8 +42,8 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 $sep = get_csv_separator();
 $eol = "\r\n";
 
-$min_year = 99999;
-$max_year = 0;
+$min_year  = 99999;
+$max_year  = 0;
 $min_month = 13;
 $max_month = 0;
 
@@ -56,7 +56,7 @@ while ($row = db_fetch_array($res)) {
         $min_year = $row['year'];
     }
     if ($row['year'] > $max_year) {
-        $max_year = $row['year'];
+        $max_year  = $row['year'];
         $max_month = 0; // Reset max month
     }
 

@@ -43,7 +43,7 @@ class AccountTabPresenterCollection implements Dispatchable, \Iterator
 
     public function __construct(PFUser $user, string $current_href)
     {
-        $this->all_tabs = [
+        $this->all_tabs     = [
             new AccountTabPresenter(_('Account'), DisplayAccountInformationController::URL, 'fa-address-card-o', $current_href),
             new AccountTabPresenter(_('Security'), DisplaySecurityController::URL, 'fa-lock', $current_href),
             new AccountTabPresenter(_('Notifications'), DisplayNotificationsController::URL, 'fa-bell-o', $current_href),
@@ -53,7 +53,7 @@ class AccountTabPresenterCollection implements Dispatchable, \Iterator
             new AccountTabPresenter(_('Experimental'), DisplayExperimentalController::URL, 'fa-flask', $current_href),
         ];
         $this->current_href = $current_href;
-        $this->user = $user;
+        $this->user         = $user;
     }
 
     /**

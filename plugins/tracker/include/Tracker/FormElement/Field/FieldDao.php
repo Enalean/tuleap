@@ -373,7 +373,7 @@ class FieldDao extends DataAccessObject
 
     public function doesTrackerHaveSourceSharedFields(int $tracker_id): bool
     {
-        $tracker_id  = $this->da->escapeInt($tracker_id);
+        $tracker_id = $this->da->escapeInt($tracker_id);
 
         $sql = "SELECT NULL
                 FROM tracker_field AS target_field
@@ -557,7 +557,7 @@ class FieldDao extends DataAccessObject
         $sql = "INSERT INTO tracker_field (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id) ";
         if ($name) {
             $name = $this->da->quoteSmart($name);
-            $sql  .= "
+            $sql .= "
                 VALUES ($tracker_id, $parent_id, $name, $type, $label, $description, $scope, $required, $use_it, $rank, $notifications, $original_field_id)";
         } else {
             $sql .= "

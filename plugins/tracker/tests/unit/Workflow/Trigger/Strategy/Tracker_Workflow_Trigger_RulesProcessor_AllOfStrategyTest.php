@@ -65,7 +65,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
         $target_field_id = 569;
         $target_field    = $this->buildSelectBoxField($target_field_id, $story_tracker);
         $target_value_id = 7;
-        $target_value = new Tracker_FormElement_Field_List_Bind_StaticValue($target_value_id, 'label', 'description', 0, false);
+        $target_value    = new Tracker_FormElement_Field_List_Bind_StaticValue($target_value_id, 'label', 'description', 0, false);
 
         $this->trigger_field = $this->buildSelectBoxField(965, $this->task_tracker);
         $this->trigger_value = new Tracker_FormElement_Field_List_Bind_StaticValue(14, 'label', 'description', 0, false);
@@ -86,7 +86,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \P
         );
 
         $this->siblings_retriever = Mockery::mock(SiblingsRetriever::class);
-        $this->strategy = new Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy(
+        $this->strategy           = new Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy(
             $this->artifact,
             $rule,
             $this->siblings_retriever

@@ -62,8 +62,8 @@ class GroupAutocompleteController implements DispatchableWithRequest
             $lri = $this->ldap->searchGroupAsYouType($request->get('ldap_group_name'), 15);
             if ($lri !== false) {
                 while ($lri->valid()) {
-                    $lr = $lri->current();
-                    $common_name = $lr->getGroupCommonName();
+                    $lr           = $lri->current();
+                    $common_name  = $lr->getGroupCommonName();
                     $display_name = $lr->getGroupDisplayName();
 
                     $group_list[] = [

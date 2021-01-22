@@ -45,7 +45,7 @@ class LegacyRoutesController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $Language = $GLOBALS['Language'];
-        $HTML = $layout;
+        $HTML     = $layout;
 
         include $this->script_location;
     }

@@ -143,11 +143,11 @@ class NotEqualFieldComparisonVisitor implements
 
     private function visitList(Tracker_FormElement_Field_List $field)
     {
-        $static_bind_builder = new NotEqualComparison\ForListBindStatic(
+        $static_bind_builder  = new NotEqualComparison\ForListBindStatic(
             new FromWhereEmptyNotEqualComparisonFieldBuilder(),
             new FromWhereNotEqualComparisonListFieldBuilder()
         );
-        $users_bind_builder = new NotEqualComparison\ForListBindUsers(
+        $users_bind_builder   = new NotEqualComparison\ForListBindUsers(
             new CollectionOfListValuesExtractor(),
             new FromWhereEmptyNotEqualComparisonFieldBuilder(),
             new FromWhereNotEqualComparisonListFieldBuilder()

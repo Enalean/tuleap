@@ -51,7 +51,7 @@ class MailBuilder
      */
     public function buildAndSendEmail(Project $project, Notification $notification, MailEnhancer $mail_enhancer)
     {
-        $sent_status = true;
+        $sent_status     = true;
         $filtered_emails = $this->mail_filter->filter($project, $notification->getEmails());
         foreach ($filtered_emails as $email) {
             $mail = $this->buildEmail($project, $notification, $mail_enhancer, $email);

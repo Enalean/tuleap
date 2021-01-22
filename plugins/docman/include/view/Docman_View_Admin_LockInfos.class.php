@@ -47,7 +47,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
     public function getTable($params)
     {
         $this->defaultUrl = $params['default_url'];
-        $content = '';
+        $content          = '';
 
         $content .= html_build_list_table_top([dgettext('tuleap-docman', 'Title'),
                                                     dgettext('tuleap-docman', 'Location'),
@@ -56,7 +56,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
                                             ]);
 
         // Get list of all locked documents in the project.
-        $dPM = Docman_PermissionsManager::instance($params['group_id']);
+        $dPM       = Docman_PermissionsManager::instance($params['group_id']);
         $lockInfos = $dPM->getLockFactory()->getProjectLockInfos($params['group_id']);
 
         $uH = UserHelper::instance();
@@ -68,11 +68,11 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra
         if ($lockInfos !== false) {
             foreach ($lockInfos as $row) {
                 $trclass = html_get_alt_row_color($altRowClass++);
-                $item = $dIF->getItemFromDb($row['item_id']);
+                $item    = $dIF->getItemFromDb($row['item_id']);
                 if ($item === null) {
                     return '</table>';
                 }
-                $parent = $dIF->getItemFromDb($item->getParentId());
+                $parent   = $dIF->getItemFromDb($item->getParentId());
                 $content .= '<tr class="' . $trclass . '">';
                 $content .= '<td>' . '<a href="/plugins/docman/?group_id=' . $params['group_id'] . '&action=details&id=' . $item->getId() . '">' . $item->getTitle() . '</a></td>';
                 $content .= '<td>';

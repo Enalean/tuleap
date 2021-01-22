@@ -31,8 +31,8 @@ class Cardwall_Column_canContainStatusTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $id = 100;
-        $label = $header_color = 'whatever';
+        $id           = 100;
+        $label        = $header_color = 'whatever';
         $this->column = new Cardwall_Column($id, $label, $header_color);
     }
 

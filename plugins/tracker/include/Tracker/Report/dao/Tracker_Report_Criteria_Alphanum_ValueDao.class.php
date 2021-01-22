@@ -28,9 +28,9 @@ class Tracker_Report_Criteria_Alphanum_ValueDao extends Tracker_Report_Criteria_
 
     public function save($id, $value)
     {
-        $id = $this->da->escapeInt($id);
+        $id    = $this->da->escapeInt($id);
         $value = trim($value);
-        $v  = $this->da->quoteSmart($value);
+        $v     = $this->da->quoteSmart($value);
         if ($value) {
             $sql = "REPLACE INTO $this->table_name(criteria_id, value) VALUES ($id, $v)";
         } else {
@@ -41,7 +41,7 @@ class Tracker_Report_Criteria_Alphanum_ValueDao extends Tracker_Report_Criteria_
 
     public function delete($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
         return $this->update($sql);
     }

@@ -35,8 +35,8 @@ class SystemEvent_GIT_DUMP_ALL_SSH_KEYS extends SystemEvent
         MassDumper $mass_dumper,
         \Psr\Log\LoggerInterface $logger
     ) {
-        $this->mass_dumper      = $mass_dumper;
-        $this->logger           = $logger;
+        $this->mass_dumper = $mass_dumper;
+        $this->logger      = $logger;
     }
 
     public function process()

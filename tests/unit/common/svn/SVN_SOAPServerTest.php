@@ -75,7 +75,7 @@ class SVN_SOAPServerTest extends TestCase
 
     public function testItThrowsSoapFaultIfUserHasWrongPermissions(): void
     {
-        $soap_request_valid     = Mockery::mock(SOAPRequestValidator::class);
+        $soap_request_valid = Mockery::mock(SOAPRequestValidator::class);
         $soap_request_valid->shouldReceive('getProjectById')->with($this->group_id, \Mockery::any())->andReturns($this->project);
         $soap_request_valid->shouldReceive('continueSession')->with($this->session_key)->andReturns($this->user);
         $soap_request_valid->shouldReceive('assertUserCanAccessProject')->with($this->user, $this->project)->andReturns(new Exception());
@@ -105,7 +105,7 @@ class SVN_SOAPServerTest extends TestCase
         $event_manager->addListener(SvnCoreAccess::NAME, $plugin, SvnCoreAccess::NAME, false);
 
         $svn_soap = new SVN_SOAPServer($this->soap_request_valid, $this->svn_repository_listing, $event_manager);
-        $result = $svn_soap->getSvnLog($this->session_key, $this->group_id, 10, 120);
+        $result   = $svn_soap->getSvnLog($this->session_key, $this->group_id, 10, 120);
 
         self::assertInstanceOf(SoapFault::class, $result);
         self::assertStringContainsString('Repository migrated to SVN plugin', $result->getMessage());

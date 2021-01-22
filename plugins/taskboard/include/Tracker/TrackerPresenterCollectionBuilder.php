@@ -71,8 +71,8 @@ class TrackerPresenterCollectionBuilder
                 if ($mapped_fields_collection->hasKey($tracker)) {
                     $mapped_field = $mapped_fields_collection->get($tracker);
                 }
-                $title_field  = $this->getTitleField($taskboard_tracker, $user);
-                $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+                $title_field     = $this->getTitleField($taskboard_tracker, $user);
+                $add_in_place    = $this->add_in_place_retriever->retrieveAddInPlace(
                     $taskboard_tracker,
                     $user,
                     $mapped_fields_collection

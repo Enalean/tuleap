@@ -30,7 +30,7 @@ class HomepagePanePresenter
 
     public function __construct(array $sections)
     {
-        $this->sections       = $sections;
+        $this->sections = $sections;
 
         $this->pane_title     = $GLOBALS['Language']->getText('admin_main', 'system_events_pane_title');
         $this->view_all_label = $GLOBALS['Language']->getText('admin_main', 'system_events_view_all_label');

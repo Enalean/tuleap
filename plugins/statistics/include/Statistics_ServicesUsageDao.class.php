@@ -216,7 +216,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject
         $end_date   = new DateTime('@' . $this->end_date);
         $start_day  = $start_date->format('Ymd');
         $end_day    = $end_date->format('Ymd');
-        $sql = "SELECT project_id AS group_id, SUM(git_read) AS result
+        $sql        = "SELECT project_id AS group_id, SUM(git_read) AS result
                 FROM  plugin_git_log_read_daily
                     INNER JOIN plugin_git USING(repository_id)
                 WHERE day <= $end_day

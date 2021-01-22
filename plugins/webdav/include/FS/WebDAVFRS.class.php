@@ -45,8 +45,8 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function __construct($user, $project, $maxFileSize)
     {
-        $this->user = $user;
-        $this->project = $project;
+        $this->user        = $user;
+        $this->project     = $project;
         $this->maxFileSize = $maxFileSize;
     }
 
@@ -83,7 +83,7 @@ class WebDAVFRS extends Sabre_DAV_Directory
     public function getChild($packageName)
     {
         $packageName = $this->getUtils()->retrieveName($packageName);
-        $package = $this->getWebDAVPackage($this->getFRSPackageFromName($packageName));
+        $package     = $this->getWebDAVPackage($this->getFRSPackageFromName($packageName));
 
         // Check for errors
 
@@ -258,10 +258,10 @@ class WebDAVFRS extends Sabre_DAV_Directory
         if ($this->userCanWrite()) {
             $utils = $this->getUtils();
             if (! $utils->getPackageFactory()->isPackageNameExist($name, $this->getGroupId())) {
-                $packageData['name'] = htmlspecialchars($name);
-                $packageData['group_id'] = $this->getGroupId();
+                $packageData['name']      = htmlspecialchars($name);
+                $packageData['group_id']  = $this->getGroupId();
                 $packageData['status_id'] = 1;
-                $packageId = $utils->getPackageFactory()->create($packageData);
+                $packageId                = $utils->getPackageFactory()->create($packageData);
             } else {
                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'package_name_exist'));
             }

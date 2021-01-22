@@ -42,7 +42,7 @@ class UserAvatarSaver
      */
     public function saveAvatar(\PFUser $user, $temporary_path_avatar)
     {
-        $image = new ImageResize($temporary_path_avatar);
+        $image                    = new ImageResize($temporary_path_avatar);
         $image->quality_truecolor = false;
         $image->crop(self::AVATAR_MAX_SIZE, self::AVATAR_MAX_SIZE);
         // Replace transparent background by white color to avoid strange rendering in Tuleap.

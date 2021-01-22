@@ -63,12 +63,12 @@ final class DailyUsageRowPresenter
 
     public function __construct(string $real_name, string $login, string $email, int $actions, int $connexions, \DateTimeImmutable $last_seen, \DateInterval $elapsed_time)
     {
-        $this->real_name = $real_name;
-        $this->login = $login;
-        $this->email = $email;
-        $this->actions = $actions;
+        $this->real_name  = $real_name;
+        $this->login      = $login;
+        $this->email      = $email;
+        $this->actions    = $actions;
         $this->connexions = $connexions;
-        $this->last_seen = $last_seen->format('Y-m-d H:i');
+        $this->last_seen  = $last_seen->format('Y-m-d H:i');
         if ($elapsed_time->days > 0) {
             $this->elapsed_time = $elapsed_time->format('%a days %H:%I');
         } else {

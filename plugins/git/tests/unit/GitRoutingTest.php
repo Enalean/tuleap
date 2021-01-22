@@ -177,7 +177,7 @@ class GitRoutingTest extends TestCase
 
         $this->assertEquals($expected_dispatch_status, $route_info[0]);
         $handler_name = $route_info[1]['handler'];
-        $controller = $git_plugin->$handler_name();
+        $controller   = $git_plugin->$handler_name();
         $this->assertInstanceOf($expected_dispatch_handler, $controller);
     }
 }

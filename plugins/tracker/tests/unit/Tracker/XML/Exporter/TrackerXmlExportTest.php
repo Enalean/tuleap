@@ -74,7 +74,7 @@ class TrackerXmlExportTest extends TestCase
 
         $this->nature_presenter_factory = Mockery::mock(NaturePresenterFactory::class);
 
-        $this->artifact_link_dao        = Mockery::mock(ArtifactLinksUsageDao::class);
+        $this->artifact_link_dao = Mockery::mock(ArtifactLinksUsageDao::class);
         $this->artifact_link_dao->shouldReceive('isTypeDisabledInProject');
 
         $this->tracker_artifact_XMLexport = Mockery::mock(Tracker_Artifact_XMLExport::class);

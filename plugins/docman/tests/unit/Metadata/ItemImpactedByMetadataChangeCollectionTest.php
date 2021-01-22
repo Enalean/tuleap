@@ -48,17 +48,17 @@ class ItemImpactedByMetadataChangeCollectionTest extends TestCase
         $representation->status->value     = 'draft';
         $representation->status->recursion = PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS;
 
-        $custom_metadata    = new PUTCustomMetadataRepresentation();
+        $custom_metadata             = new PUTCustomMetadataRepresentation();
         $custom_metadata->short_name = "field_1";
-        $custom_metadata->value = "some_value";
-        $custom_metadata->recursion = PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS;
+        $custom_metadata->value      = "some_value";
+        $custom_metadata->recursion  = PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS;
 
-        $other_custom_metadata    = new PUTCustomMetadataRepresentation();
+        $other_custom_metadata             = new PUTCustomMetadataRepresentation();
         $other_custom_metadata->short_name = "field_2";
-        $other_custom_metadata->value = "";
-        $other_custom_metadata->recursion = "none";
+        $other_custom_metadata->value      = "";
+        $other_custom_metadata->recursion  = "none";
 
-        $metadata           = Mockery::mock(\Docman_Metadata::class);
+        $metadata = Mockery::mock(\Docman_Metadata::class);
         $metadata->shouldReceive('getLabel')->andReturn('field_1');
         $metadata_to_update = [
             MetadataToUpdate::buildMetadataRepresentation(

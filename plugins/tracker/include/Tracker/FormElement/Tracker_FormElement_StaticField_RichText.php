@@ -39,7 +39,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     public function getRichText()
     {
         if ($row = $this->getDao()->searchByFieldId($this->id)->getRow()) {
-            $hp = Codendi_HTMLPurifier::instance();
+            $hp    = Codendi_HTMLPurifier::instance();
             $value = $row['static_value'];
             return $hp->purify($value, CODENDI_PURIFIER_FULL);
         } else {
@@ -55,7 +55,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
 
     protected function fetchReadOnly()
     {
-        $html = '';
+        $html  = '';
         $html .= '<div class="tracker-admin-staticrichtext" id="tracker-admin-formElements_' . $this->id . '" />';
         $html .= $this->getRichText();
         $html .= '</div>';
@@ -64,7 +64,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
 
     public function fetchAdmin($tracker)
     {
-        $html = '';
+        $html  = '';
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '">';
         $html .= '<div class="tracker-admin-field-controls">';
         $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
@@ -86,7 +86,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
      */
     protected function fetchAdminFormElement()
     {
-        $html = '';
+        $html  = '';
         $html .= '<div class="tracker-admin-staticrichtext" id="tracker-admin-formElements_' . $this->id . '" />';
         $html .= $this->getRichText();
         $html .= '</div>';

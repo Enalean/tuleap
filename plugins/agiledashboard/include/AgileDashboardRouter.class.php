@@ -350,7 +350,7 @@ class AgileDashboardRouter
                 $this->executeAction($this->buildController($request), 'createKanban');
                 break;
             case 'showKanban':
-                $header_options = [
+                $header_options  = [
                     'body_class'                 => ['agiledashboard_kanban', 'agiledashboard-body'],
                     Layout::INCLUDE_FAT_COMBINED => false,
                 ];
@@ -363,7 +363,7 @@ class AgileDashboardRouter
                 }
 
                 $tracker_factory = TrackerFactory::instance();
-                $controller = new ShowKanbanController(
+                $controller      = new ShowKanbanController(
                     $request,
                     $this->kanban_factory,
                     TrackerFactory::instance(),
@@ -444,7 +444,7 @@ class AgileDashboardRouter
     private function getService(Codendi_Request $request)
     {
         if ($this->service == null) {
-            $project = $request->getProject();
+            $project       = $request->getProject();
             $this->service = $project->getService('plugin_agiledashboard');
             assert($this->service instanceof Service);
         }
@@ -567,7 +567,7 @@ class AgileDashboardRouter
         array $args = [],
         array $header_options = []
     ) {
-        $content = $this->executeAction($controller, $action_name, $args);
+        $content        = $this->executeAction($controller, $action_name, $args);
         $header_options = array_merge_recursive($header_options, $controller->getHeaderOptions($request->getCurrentUser()));
 
         $this->displayHeader($controller, $request, $this->getHeaderTitle($request, $action_name), $header_options);
@@ -607,7 +607,7 @@ class AgileDashboardRouter
                 $this->executeAction($controller, 'show');
                 /* no break */
             default:
-                $controller = $this->milestone_controller_factory->getMilestoneController($request);
+                $controller       = $this->milestone_controller_factory->getMilestoneController($request);
                 $action_arguments = [];
                 $this->renderAction($controller, 'show', $request, $action_arguments, ['body_class' => ['agiledashboard_planning']]);
         }
@@ -637,7 +637,7 @@ class AgileDashboardRouter
             ['body_class' => ['agiledashboard_planning']],
             $controller->getHeaderOptions($user)
         );
-        $breadcrumbs = $controller->getBreadcrumbs();
+        $breadcrumbs    = $controller->getBreadcrumbs();
 
         $top_planning_rendered = $this->executeAction($controller, 'showTop', []);
         $service->displayHeader(

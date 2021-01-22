@@ -46,7 +46,7 @@ abstract class SystemEvent
     public const TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH = "PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH";
     public const TYPE_PROJECT_RENAME                           = "PROJECT_RENAME";
     public const TYPE_UGROUP_MODIFY                            = "UGROUP_MODIFY";
-    public const TYPE_USER_ACTIVE_STATUS_CHANGE         = "ACTIVE_USER_STATUS_CHANGE";
+    public const TYPE_USER_ACTIVE_STATUS_CHANGE                = "ACTIVE_USER_STATUS_CHANGE";
     public const TYPE_USER_DELETE                              = "USER_DELETE";
     public const TYPE_USER_MODIFY                              = "USER_MODIFY";
     public const TYPE_USER_RENAME                              = "USER_RENAME";
@@ -70,12 +70,12 @@ abstract class SystemEvent
     public const TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES          = 'UPDATE_SVN_ACCESS_FILE';
 
     // Define status value (in sync with DB enum)
-    public const STATUS_NONE       = "NONE";
-    public const STATUS_NEW        = "NEW";
-    public const STATUS_RUNNING    = "RUNNING";
-    public const STATUS_DONE       = "DONE";
-    public const STATUS_WARNING    = "WARNING";
-    public const STATUS_ERROR      = "ERROR";
+    public const STATUS_NONE    = "NONE";
+    public const STATUS_NEW     = "NEW";
+    public const STATUS_RUNNING = "RUNNING";
+    public const STATUS_DONE    = "DONE";
+    public const STATUS_WARNING = "WARNING";
+    public const STATUS_ERROR   = "ERROR";
 
     public const ALL_STATUS = [
         self::STATUS_NONE,
@@ -458,7 +458,7 @@ abstract class SystemEvent
         }
         if (count($listeners)) {
             $listeners = array_unique($listeners);
-            $m = new Codendi_Mail();
+            $m         = new Codendi_Mail();
             $m->setFrom(ForgeConfig::get('sys_noreply'));
             $m->setTo(implode(',', $listeners));
             $m->setSubject('[' . $this->getstatus() . '] ' . $this->getType());

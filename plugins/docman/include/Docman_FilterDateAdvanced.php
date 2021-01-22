@@ -30,11 +30,11 @@ class Docman_FilterDateAdvanced extends \Docman_FilterDate
     public function __construct($md)
     {
         parent::__construct($md);
-        $base = $md->getLabel() . '_value';
+        $base                 = $md->getLabel() . '_value';
         $this->fieldNameStart = $base . '_start';
-        $this->fieldNameEnd = $base . '_end';
-        $this->valueStart = '';
-        $this->valueEnd = '';
+        $this->fieldNameEnd   = $base . '_end';
+        $this->valueStart     = '';
+        $this->valueEnd       = '';
     }
     public function setValueStart($v)
     {
@@ -67,9 +67,9 @@ class Docman_FilterDateAdvanced extends \Docman_FilterDate
     }
     public function getUrlParameters()
     {
-        $param = [];
+        $param                        = [];
         $param[$this->fieldNameStart] = $this->valueStart;
-        $param[$this->fieldNameEnd] = $this->valueEnd;
+        $param[$this->fieldNameEnd]   = $this->valueEnd;
         return $param;
     }
     public function _urlMatchUpdate($request)

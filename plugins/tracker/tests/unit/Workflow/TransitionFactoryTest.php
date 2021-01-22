@@ -107,9 +107,9 @@ final class TransitionFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:i
         $field_value_accepted = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $field_value_accepted->shouldReceive('getId')->andReturns(2068);
 
-        $t1  = new Transition(1, 1, $field_value_new, $field_value_analyzed);
-        $t2  = new Transition(2, 1, $field_value_analyzed, $field_value_accepted);
-        $t3  = new Transition(3, 1, $field_value_analyzed, $field_value_new);
+        $t1          = new Transition(1, 1, $field_value_new, $field_value_analyzed);
+        $t2          = new Transition(2, 1, $field_value_analyzed, $field_value_accepted);
+        $t3          = new Transition(3, 1, $field_value_analyzed, $field_value_new);
         $transitions = [$t1, $t2, $t3];
 
         $tf = \Mockery::mock(

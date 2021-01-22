@@ -139,7 +139,7 @@ class IndexPresenter
         $this->project_url  = $project->getUrl();
 
         $user_representation = UserRepresentation::build($current_user);
-        $this->current_user = json_encode($user_representation);
+        $this->current_user  = json_encode($user_representation);
         if ($current_user->isAdmin($project->getID())) {
             $this->ttm_admin_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query([
                 'group_id' => $this->project_id,
@@ -152,7 +152,7 @@ class IndexPresenter
         $this->campaign_tracker_id        = intval($campaign_tracker_id);
         $this->issue_tracker_id           = $issue_tracker_id ? intval($issue_tracker_id) : null;
         $this->nodejs_server              = TuleapConfig::get('nodejs_server');
-        $this->tracker_ids = json_encode(
+        $this->tracker_ids                = json_encode(
             [
                 'definition_tracker_id' => $this->test_definition_tracker_id,
                 'execution_tracker_id'  => $this->test_execution_tracker_id,
@@ -165,10 +165,10 @@ class IndexPresenter
 
         $this->current_milestone = json_encode($milestone_representation, JSON_THROW_ON_ERROR);
 
-        $this->privacy                    = ProjectPrivacyPresenter::fromProject($project);
-        $this->project_flags              = $project_flags;
-        $this->json_encoded_project_flags = json_encode($project_flags, JSON_THROW_ON_ERROR);
-        $this->has_project_flags          = count($project_flags) > 0;
+        $this->privacy                        = ProjectPrivacyPresenter::fromProject($project);
+        $this->project_flags                  = $project_flags;
+        $this->json_encoded_project_flags     = json_encode($project_flags, JSON_THROW_ON_ERROR);
+        $this->has_project_flags              = count($project_flags) > 0;
         $this->trackers_ids_using_list_picker = $this->getTrackersUsingListPicker(
             $test_definition_tracker_id,
             $issue_tracker_id

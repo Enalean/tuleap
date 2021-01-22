@@ -162,7 +162,7 @@ class Planning_MilestoneController extends BaseController
 
     private function inconsistentArtifactsIdsAreValid(array $artifact_ids)
     {
-        $validator        = new Valid_UInt();
+        $validator = new Valid_UInt();
         $validator->required();
         $artifact_factory = Tracker_ArtifactFactory::instance();
 

@@ -40,7 +40,7 @@ final class User_ForgeUserGroupManagerTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao = \Mockery::spy(\UserGroupDao::class);
+        $this->dao     = \Mockery::spy(\UserGroupDao::class);
         $this->manager = new User_ForgeUserGroupManager(
             $this->dao,
             \Mockery::spy(SiteAdministratorPermissionChecker::class)

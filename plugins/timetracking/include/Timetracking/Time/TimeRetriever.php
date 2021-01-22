@@ -81,7 +81,7 @@ class TimeRetriever
      */
     public function getProjectsWithTimetracking(PFUser $user, $limit, $offset)
     {
-        $projects        = [];
+        $projects = [];
         foreach ($this->admin_dao->getProjectstWithEnabledTimetracking($limit, $offset) as $project_id) {
             if ($user->isMember($project_id["group_id"])) {
                 $projects[] = $this->project_manager->getProject($project_id["group_id"]);
@@ -96,7 +96,7 @@ class TimeRetriever
      */
     public function getPaginatedTimesForUserInTimePeriodByArtifact(PFUser $user, $start_date, $end_date, $limit, $offset)
     {
-        $times = [];
+        $times              = [];
         $matching_times_ids = $this->dao->searchTimesIdsForUserInTimePeriodByArtifact(
             $user->getId(),
             $start_date,

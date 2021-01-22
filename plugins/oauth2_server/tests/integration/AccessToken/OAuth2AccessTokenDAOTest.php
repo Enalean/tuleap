@@ -63,17 +63,17 @@ final class OAuth2AccessTokenDAOTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        self::$active_project_id = (int) $db->insertReturnId(
+        $db                                 = DBFactory::getMainTuleapDBConnection()->getDB();
+        self::$active_project_id            = (int) $db->insertReturnId(
             'groups',
             ['group_name' => 'access_token_dao_active_test', 'status' => Project::STATUS_ACTIVE]
         );
-        self::$deleted_project_id = (int) $db->insertReturnId(
+        self::$deleted_project_id           = (int) $db->insertReturnId(
             'groups',
             ['group_name' => 'access_token_dao_deleted_test', 'status' => Project::STATUS_DELETED]
         );
-        $app_dao = new AppDao();
-        self::$active_project_app_id = $app_dao->create(
+        $app_dao                            = new AppDao();
+        self::$active_project_app_id        = $app_dao->create(
             NewOAuth2App::fromProjectAdministrationAppData(
                 'Name',
                 'https://example.com',
@@ -82,7 +82,7 @@ final class OAuth2AccessTokenDAOTest extends TestCase
                 new SplitTokenVerificationStringHasher()
             )
         );
-        self::$deleted_project_app_id = $app_dao->create(
+        self::$deleted_project_app_id       = $app_dao->create(
             NewOAuth2App::fromProjectAdministrationAppData(
                 'Name',
                 'https://example.com',
@@ -91,8 +91,8 @@ final class OAuth2AccessTokenDAOTest extends TestCase
                 new SplitTokenVerificationStringHasher()
             )
         );
-        $auth_code_dao = new OAuth2AuthorizationCodeDAO();
-        self::$active_project_auth_code_id = $auth_code_dao->create(
+        $auth_code_dao                      = new OAuth2AuthorizationCodeDAO();
+        self::$active_project_auth_code_id  = $auth_code_dao->create(
             self::$active_project_app_id,
             102,
             'hashed_verification_string',
@@ -168,7 +168,7 @@ final class OAuth2AccessTokenDAOTest extends TestCase
 
     public function testRemovesExpiredAccessTokens(): void
     {
-        $current_time    = 60;
+        $current_time            = 60;
         $expired_access_token_id = $this->dao->create(self::$active_project_auth_code_id, 'hashed_verification_string', 30);
         $active_access_token_id  = $this->dao->create(self::$active_project_auth_code_id, 'hashed_verification_string', 120);
 

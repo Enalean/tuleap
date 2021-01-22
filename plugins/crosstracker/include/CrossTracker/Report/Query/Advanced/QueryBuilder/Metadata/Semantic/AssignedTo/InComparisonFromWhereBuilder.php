@@ -58,13 +58,13 @@ class InComparisonFromWhereBuilder implements FromWhereBuilder
             $this->getUserIdsByUserNames($values)
         );
 
-        $from = "INNER JOIN tracker_semantic_contributor AS equal_assigned_to_field
+        $from            = "INNER JOIN tracker_semantic_contributor AS equal_assigned_to_field
             ON (
                 equal_assigned_to_field.tracker_id = tracker_artifact.tracker_id
             )";
         $from_parameters = [];
 
-        $where = "tracker_artifact.last_changeset_id IN (
+        $where            = "tracker_artifact.last_changeset_id IN (
             SELECT changeset_value_assigned_to.changeset_id
             FROM tracker_changeset_value AS changeset_value_assigned_to
             INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_assigned_to

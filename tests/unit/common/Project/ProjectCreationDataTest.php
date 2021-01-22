@@ -71,7 +71,7 @@ final class ProjectCreationDataTest extends TestCase
             ]
         );
 
-        $this->project_manager  = M::mock(ProjectManager::class);
+        $this->project_manager = M::mock(ProjectManager::class);
         $this->project_manager->shouldReceive('getProject')->with(100)->andReturns(M::mock(Project::class));
         ForgeConfig::store();
     }
@@ -83,7 +83,7 @@ final class ProjectCreationDataTest extends TestCase
 
     public function testItHasBasicMetadataFromProject(): void
     {
-        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
+        $xml          = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
         $this->assertEquals('kanbansampleproject', $project_data->getUnixName());
         $this->assertEquals('Kanban Sample project', $project_data->getFullName());
@@ -93,8 +93,8 @@ final class ProjectCreationDataTest extends TestCase
 
     public function testItLoadsPrivateProjects(): void
     {
-        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
-        $xml['access'] = 'private';
+        $xml                      = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
+        $xml['access']            = 'private';
         $external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
         $external_field_extractor->shouldReceive('extractExternalFieldFromProjectElement');
 
@@ -106,9 +106,9 @@ final class ProjectCreationDataTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
+        $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'unrestricted';
-        $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
+        $project_data  = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
         $this->assertEquals(Project::ACCESS_PUBLIC_UNRESTRICTED, $project_data->getAccess());
     }
 
@@ -116,9 +116,9 @@ final class ProjectCreationDataTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
+        $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'private-wo-restr';
-        $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
+        $project_data  = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
         $this->assertEquals(Project::ACCESS_PRIVATE_WO_RESTRICTED, $project_data->getAccess());
     }
 
@@ -126,7 +126,7 @@ final class ProjectCreationDataTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
+        $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'unrestricted';
 
         $this->expectException(Tuleap\Project\XML\Import\ImportNotValidException::class);
@@ -138,7 +138,7 @@ final class ProjectCreationDataTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
+        $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'private-wo-restr';
 
         $this->expectException(Tuleap\Project\XML\Import\ImportNotValidException::class);

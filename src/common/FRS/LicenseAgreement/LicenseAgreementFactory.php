@@ -182,7 +182,7 @@ class LicenseAgreementFactory
             if (! $template_package) {
                 continue;
             }
-            $target_package   = $package_factory->getFRSPackageFromDb($target_package_id);
+            $target_package = $package_factory->getFRSPackageFromDb($target_package_id);
             if (! $target_package) {
                 continue;
             }
@@ -199,7 +199,7 @@ class LicenseAgreementFactory
     {
         $agreement_mapping = [];
         foreach ($this->getProjectLicenseAgreements($template_project) as $template_agreement) {
-            $new_agreement = $this->save(
+            $new_agreement                                   = $this->save(
                 $project,
                 new NewLicenseAgreement($template_agreement->getTitle(), $template_agreement->getContent())
             );

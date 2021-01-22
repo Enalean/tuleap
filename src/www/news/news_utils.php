@@ -48,7 +48,7 @@ function news_header($params)
     \Tuleap\Project\ServiceInstrumentation::increment('news');
 
     $params['toptab'] = 'news';
-    $params['group'] = $group_id;
+    $params['group']  = $group_id;
 
     if (isset($params['project_id'])) {
         $params['group'] = $params['project_id'];
@@ -106,7 +106,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
     global $Language;
     $sys_news_group = ForgeConfig::get('sys_news_group');
 
-    $return  = "";
+    $return = "";
     if (! $group_id) {
         $group_id = $sys_news_group;
     }
@@ -193,10 +193,10 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
 function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_projectname, $hide_nb_comments)
 {
     global $Language;
-    $purifier  = Codendi_HTMLPurifier::instance();
-    $uh        = new UserHelper();
-    $html      = '';
-    $arr       = explode("\n", $data['details']);
+    $purifier = Codendi_HTMLPurifier::instance();
+    $uh       = new UserHelper();
+    $html     = '';
+    $arr      = explode("\n", $data['details']);
     if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1] . $arr[2]) < 300) && (strlen($arr[2]) > 5)) {
         $details = $purifier->purify($arr[0] . "\n" . $arr[1] . "\n" . $arr[2], CODENDI_PURIFIER_BASIC, $group_id);
     } else {
@@ -218,7 +218,7 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
     } else {
         $comments_txt = '';
         if (! $hide_nb_comments) {
-            $num_comments = (int) $data['num_comments'];
+            $num_comments  = (int) $data['num_comments'];
             $comments_txt .= ' <a href="' . $purifier->purify($forum_url) . '">(' . $purifier->purify($num_comments) . ' ';
             if ($num_comments == 1) {
                 $comments_txt .= $Language->getText('news_utils', 'comment');
@@ -251,7 +251,7 @@ function get_news_name($id)
     /*
         Takes an ID and returns the corresponding forum name
     */
-    $sql = "SELECT summary FROM news_bytes WHERE id=" . db_ei($id);
+    $sql    = "SELECT summary FROM news_bytes WHERE id=" . db_ei($id);
     $result = db_query($sql);
     if (! $result || db_numrows($result) < 1) {
         return "Not Found";
@@ -265,7 +265,7 @@ function get_news_name_from_forum_id($id)
     /*
         Takes an ID and returns the corresponding forum name
     */
-    $sql = "SELECT summary FROM news_bytes WHERE forum_id=" . db_ei($id);
+    $sql    = "SELECT summary FROM news_bytes WHERE forum_id=" . db_ei($id);
     $result = db_query($sql);
     if (! $result || db_numrows($result) < 1) {
         return "Not Found";
@@ -281,11 +281,11 @@ function news_submit($group_id, $summary, $details, $private_news, $send_news_to
     */
 
     $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-    $new_id = forum_create_forum(ForgeConfig::get('sys_news_group'), $summary, 1, 0, '', $need_feedback = false);
-    $sql = "INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details)
+    $new_id             = forum_create_forum(ForgeConfig::get('sys_news_group'), $summary, 1, 0, '', $need_feedback = false);
+    $sql                = "INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details)
           VALUES (" . db_ei($group_id) . ", '" . $db_escaped_user_id . "', " . db_ei($promote_news) . ", '" . time() . "',
                  '$new_id', '" . db_es($summary) . "', '" . db_es($details) . "')";
-    $result = db_query($sql);
+    $result             = db_query($sql);
 
     if (! $result) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit', 'insert_err'));
@@ -394,7 +394,7 @@ function news_notify_promotion_request($group_id, $news_bytes_id, $summary, $det
 {
     global $Language;
 
-    $pm = ProjectManager::instance();
+    $pm    = ProjectManager::instance();
     $group = $pm->getProject($group_id);
     // retrieve the user that submit the news
     $user = UserManager::instance()->getCurrentUser();
@@ -403,7 +403,7 @@ function news_notify_promotion_request($group_id, $news_bytes_id, $summary, $det
     $mail->setFrom(ForgeConfig::get('sys_noreply'));
     $mail->setTo(ForgeConfig::get('sys_email_admin'), true); // Don't invalidate admin email!
     $mail->setSubject($Language->getText('news_utils', 'news_request', [ForgeConfig::get('sys_name')]));
-    $body = '';
+    $body  = '';
     $body .= $Language->getText('news_utils', 'news_request_mail_intro', [ForgeConfig::get('sys_name')]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_project', [$group->getPublicName(), $group->getUnixName()]) . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_submitted_by', [$user->getName()]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
@@ -423,13 +423,13 @@ function news_notify_promotion_request($group_id, $news_bytes_id, $summary, $det
 
 function news_send_to_ugroups($ugroups, $summary, $details, $group_id)
 {
-    $hp      = Codendi_HTMLPurifier::instance();
-    $pm      = ProjectManager::instance();
-    $project = $pm->getProject($group_id);
-    $user    = HTTPRequest::instance()->getCurrentUser();
+    $hp             = Codendi_HTMLPurifier::instance();
+    $pm             = ProjectManager::instance();
+    $project        = $pm->getProject($group_id);
+    $user           = HTTPRequest::instance()->getCurrentUser();
     $ugroup_manager = new UGroupManager();
 
-    $html_body = '<h1>' . $hp->purify($summary, CODENDI_PURIFIER_BASIC) . '</h1>';
+    $html_body  = '<h1>' . $hp->purify($summary, CODENDI_PURIFIER_BASIC) . '</h1>';
     $html_body .= '<p>' . $hp->purify($details, CODENDI_PURIFIER_BASIC) . '</p>';
 
     $users = [];
@@ -441,7 +441,7 @@ function news_send_to_ugroups($ugroups, $summary, $details, $group_id)
     }
 
     $massmail_sender = new MassmailSender();
-    $is_sent = $massmail_sender->sendMassmail($project, $user, $summary, $html_body, $users);
+    $is_sent         = $massmail_sender->sendMassmail($project, $user, $summary, $html_body, $users);
 
     if ($is_sent) {
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_utils', 'news_sent'));
@@ -462,8 +462,8 @@ function news_fetch_ugroups($project)
     ];
 
     $ugroups = $ugroup_manager->getUGroups($project, $excluded_ugroups);
-    $html  = '';
-    $html .= '<select multiple="multiple" name="send_news_to[]">';
+    $html    = '';
+    $html   .= '<select multiple="multiple" name="send_news_to[]">';
 
     foreach ($ugroups as $ugroup) {
         $html .= '<option value="' . $ugroup->getId() . '">';

@@ -48,9 +48,9 @@ class JiraCredentials
         string $jira_username,
         ConcealedString $jira_token
     ) {
-        $this->jira_token = $jira_token;
+        $this->jira_token    = $jira_token;
         $this->jira_username = $jira_username;
-        $this->jira_url = $jira_url;
+        $this->jira_url      = $jira_url;
     }
 
     public function getJiraToken(): ConcealedString

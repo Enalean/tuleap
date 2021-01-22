@@ -63,7 +63,7 @@ final class MediawikiUserGroupsMapperTest extends TestCase
     {
         parent::setUp();
 
-        $this->tuleap_user     = Mockery::mock(\PFUser::class);
+        $this->tuleap_user = Mockery::mock(\PFUser::class);
         $this->tuleap_user->shouldReceive('getId')->andReturn(101);
 
         $this->dao             = \Mockery::spy(\MediawikiDao::class);

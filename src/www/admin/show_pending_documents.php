@@ -96,7 +96,7 @@ switch ($func) {
         break;
 }
 
-$core_assets = new IncludeAssets(
+$core_assets      = new IncludeAssets(
     __DIR__ . '/../../../src/www/assets/core',
     '/assets/core'
 );
@@ -174,7 +174,7 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, Pen
     $deletedFiles      = $fileFactory->listStagingCandidates($group_id);
     $purifier          = Codendi_HTMLPurifier::instance();
 
-    $html = '';
+    $html  = '';
     $html .= '<section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
@@ -196,30 +196,30 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, Pen
     if ($files->rowCount() > 0) {
         foreach ($files as $file) {
             $purgeDate = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $file['delete_date']);
-            $html .= '<tr>';
-            $html .= '<td>' . $purifier->purify($file['filename']) . '</td>';
-            $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode(
+            $html     .= '<tr>';
+            $html     .= '<td>' . $purifier->purify($file['filename']) . '</td>';
+            $url       = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode(
                 $file['package_id']
             ) . 'r_' . urlencode($file['release_id']);
-            $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['release_name']) . '</a></td>';
-            $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode($file['package_id']);
-            $html .= '<td><a href="' . $url . '">' . $purifier->purify(
+            $html     .= '<td><a href="' . $url . '">' . $purifier->purify($file['release_name']) . '</a></td>';
+            $url       = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode($file['package_id']);
+            $html     .= '<td><a href="' . $url . '">' . $purifier->purify(
                 html_entity_decode($file['package_name'])
             ) . '</a></td>';
-            $html .= '<td>' . DateHelper::relativeDateInlineContext((int) $file['delete_date'], $user) . '</td>';
-            $html .= '<td>' . DateHelper::relativeDateInlineContext((int) $purgeDate, $user) . '</td>';
-            $html .= '<td class="tlp-table-cell-actions">';
-            $html .= '<form method="post" onsubmit="return confirm(\'' . $GLOBALS['Language']->getText(
+            $html     .= '<td>' . DateHelper::relativeDateInlineContext((int) $file['delete_date'], $user) . '</td>';
+            $html     .= '<td>' . DateHelper::relativeDateInlineContext((int) $purgeDate, $user) . '</td>';
+            $html     .= '<td class="tlp-table-cell-actions">';
+            $html     .= '<form method="post" onsubmit="return confirm(\'' . $GLOBALS['Language']->getText(
                 'admin_show_pending_documents',
                 'frs_confirm_message'
             ) . '\')">';
-            $html .= $csrf_token->fetchHTMLInput();
-            $html .= '<input type="hidden" name="func" value="confirm_restore_frs_file">';
-            $html .= '<input type="hidden" name="id" value="' . $purifier->purify($file['file_id']) . '">';
-            $html .= '<button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
+            $html     .= $csrf_token->fetchHTMLInput();
+            $html     .= '<input type="hidden" name="func" value="confirm_restore_frs_file">';
+            $html     .= '<input type="hidden" name="id" value="' . $purifier->purify($file['file_id']) . '">';
+            $html     .= '<button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
                         <i class="fas fa-redo tlp-button-icon"></i> ' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'frs_restore') . '</button>';
-            $html .= '</form></td>';
-            $html .= '</tr>';
+            $html     .= '</form></td>';
+            $html     .= '</tr>';
         }
     } else {
         $html .= '<tr>
@@ -247,11 +247,11 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, Pen
         foreach ($toBeRestoredFiles as $file) {
             $html .= '<tr>';
             $html .= '<td>' . $purifier->purify($file['filename']) . '</td>';
-            $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode(
+            $url   = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode(
                 $file['package_id']
             ) . 'r_' . urlencode($file['release_id']);
             $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['release_name']) . '</a></td>';
-            $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode($file['package_id']);
+            $url   = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode($file['package_id']);
             $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['package_name']) . '</a></td>';
             if (
                 $file['release_status'] != FRSRelease::STATUS_DELETED
@@ -289,11 +289,11 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, Pen
         foreach ($deletedFiles as $file) {
             $html .= '<tr>';
             $html .= '<td>' . $purifier->purify($file['filename']) . '</td>';
-            $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode(
+            $url   = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode(
                 $file['package_id']
             ) . 'r_' . urlencode($file['release_id']);
             $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['release_name']) . '</a></td>';
-            $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode($file['package_id']);
+            $url   = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode($file['package_id']);
             $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['package_name']) . '</a></td>';
             $html .= '<td>' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'frs_not_yet') . '</td>';
             $html .= '</tr>';
@@ -378,13 +378,13 @@ function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_tok
 
     if ($attachments->rowCount() > 0) {
         foreach ($attachments as $wiki_attachment) {
-            $purgeDate = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $wiki_attachment['delete_date']);
+            $purgeDate                = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $wiki_attachment['delete_date']);
             $nonRestorableAttachments = $wikiAttachment->getDao()->getIdFromFilename($group_id, $wiki_attachment['name']);
-            $tabbed_content .= '<tr>';
-            $tabbed_content .= '<td>' . $purifier->purify($wiki_attachment['name']) . '</td>';
-            $tabbed_content .= '<td>' . DateHelper::relativeDateInlineContext((int) $wiki_attachment['delete_date'], $user) . '</td>';
-            $tabbed_content .= '<td>' . DateHelper::relativeDateInlineContext((int) $purgeDate, $user)  . '</td>';
-            $tabbed_content .= '<td class="tlp-table-cell-actions">';
+            $tabbed_content          .= '<tr>';
+            $tabbed_content          .= '<td>' . $purifier->purify($wiki_attachment['name']) . '</td>';
+            $tabbed_content          .= '<td>' . DateHelper::relativeDateInlineContext((int) $wiki_attachment['delete_date'], $user) . '</td>';
+            $tabbed_content          .= '<td>' . DateHelper::relativeDateInlineContext((int) $purgeDate, $user)  . '</td>';
+            $tabbed_content          .= '<td class="tlp-table-cell-actions">';
             if ($nonRestorableAttachments->rowCount()) {
                 $tabbed_content .= '<button type="button"
                             class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline tlp-tooltip tlp-tooltip-left"

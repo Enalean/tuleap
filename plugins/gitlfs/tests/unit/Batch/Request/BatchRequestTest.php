@@ -26,7 +26,7 @@ class BatchRequestTest extends TestCase
 {
     public function testParsingRequestWithAllProperties()
     {
-        $json = <<<JSON
+        $json          = <<<JSON
 {
   "operation": "upload",
   "transfers": [ "basic" ],

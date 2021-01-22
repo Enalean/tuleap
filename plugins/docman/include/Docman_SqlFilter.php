@@ -50,15 +50,15 @@ class Docman_SqlFilter extends \Docman_MetadataSqlQueryChunk
         $stmt = [];
         if ($this->filter->getValue() !== \null && $this->filter->getValue() != '') {
             $data_access = \CodendiDataAccess::instance();
-            $stmt[] = $this->field . ' = ' . $data_access->quoteSmart($this->filter->getValue());
+            $stmt[]      = $this->field . ' = ' . $data_access->quoteSmart($this->filter->getValue());
         }
         return $stmt;
     }
     public function getWhere()
     {
-        $where = '';
+        $where      = '';
         $whereArray = $this->_getSpecificSearchChunk();
-        $where = \implode(' AND ', $whereArray);
+        $where      = \implode(' AND ', $whereArray);
         return $where;
     }
     /*
@@ -81,15 +81,15 @@ class Docman_SqlFilter extends \Docman_MetadataSqlQueryChunk
     {
         $res = [];
         if (\preg_match('/^\*(.+)$/', $qv)) {
-            $matches = [];
+            $matches     = [];
             $data_access = \CodendiDataAccess::instance();
             if (\preg_match('/^\*(.+)\*$/', $qv, $matches)) {
                 $pattern = $data_access->quoteLikeValueSurround($matches[1]);
             } else {
                 $qv_without_star = \substr($qv, 1);
-                $pattern = $data_access->quoteLikeValuePrefix($qv_without_star);
+                $pattern         = $data_access->quoteLikeValuePrefix($qv_without_star);
             }
-            $res['like'] = \true;
+            $res['like']    = \true;
             $res['pattern'] = $pattern;
         } else {
             $res['like'] = \false;

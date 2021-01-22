@@ -56,10 +56,10 @@ class ListLicenseAgreementsPresenter
 
     public function __construct(\Project $project, CSRFSynchronizerToken $csrf_token, LicenseAgreementPresenter ...$license_agreements)
     {
-        $this->project_id = (int) $project->getID();
-        $this->license_agreements = $license_agreements;
-        $this->create_url = AddLicenseAgreementController::getUrl($project);
+        $this->project_id                = (int) $project->getID();
+        $this->license_agreements        = $license_agreements;
+        $this->create_url                = AddLicenseAgreementController::getUrl($project);
         $this->set_default_agreement_url = SetDefaultLicenseAgreementController::getUrl($project);
-        $this->csrf_token = $csrf_token;
+        $this->csrf_token                = $csrf_token;
     }
 }

@@ -43,8 +43,8 @@ class DocumentMetadataCreator
         MetadataValueCreator $value_creator,
         Docman_MetadataDao $metadata_dao
     ) {
-        $this->value_creator       = $value_creator;
-        $this->metadata_dao        = $metadata_dao;
+        $this->value_creator = $value_creator;
+        $this->metadata_dao  = $metadata_dao;
     }
 
     public function storeItemCustomMetadata(int $item_id, array $metadata_list): void

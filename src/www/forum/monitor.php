@@ -65,7 +65,7 @@ if (user_isloggedin()) {
      */
         $result = db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=" . db_ei($forum_id));
 
-        $group_id = db_result($result, 0, 'group_id');
+        $group_id   = db_result($result, 0, 'group_id');
         $forum_name = db_result($result, 0, 'forum_name');
 
         forum_header(['title' => _('Monitor a forum')]);

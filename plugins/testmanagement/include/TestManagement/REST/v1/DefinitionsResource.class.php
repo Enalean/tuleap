@@ -54,10 +54,10 @@ class DefinitionsResource
 
     public function __construct()
     {
-        $config                = new Config(new Dao(), \TrackerFactory::instance());
+        $config                      = new Config(new Dao(), \TrackerFactory::instance());
         $this->conformance_validator = new ConfigConformanceValidator($config);
-        $artifact_dao          = new ArtifactDao();
-        $artifact_factory      = Tracker_ArtifactFactory::instance();
+        $artifact_dao                = new ArtifactDao();
+        $artifact_factory            = Tracker_ArtifactFactory::instance();
 
         $this->user_manager                    = UserManager::instance();
         $this->testmanagement_artifact_factory = new ArtifactFactory(
@@ -68,7 +68,7 @@ class DefinitionsResource
 
         $retriever = new RequirementRetriever($artifact_factory, $artifact_dao, $config);
 
-        $purifier = Codendi_HTMLPurifier::instance();
+        $purifier                                = Codendi_HTMLPurifier::instance();
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             Tracker_FormElementFactory::instance(),
             $this->conformance_validator,
@@ -102,7 +102,7 @@ class DefinitionsResource
      */
     protected function getId(int $id)
     {
-        $user       = $this->user_manager->getCurrentUser();
+        $user = $this->user_manager->getCurrentUser();
         if (! $user) {
             throw new RestException(404, 'User not found');
         }

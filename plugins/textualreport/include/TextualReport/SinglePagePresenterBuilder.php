@@ -92,7 +92,7 @@ class SinglePagePresenterBuilder
             'tlp' . $theme_variation->getFileColorCondensedSuffix()
         );
 
-        $stylesheets = file_get_contents(
+        $stylesheets  = file_get_contents(
             $tlp_framework_base_css->getFileURL($theme_variation)
         );
         $stylesheets .= file_get_contents(

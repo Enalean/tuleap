@@ -74,7 +74,7 @@ $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
 
 $event_manager = EventManager::instance();
-$event = new GetReferenceEvent(
+$event         = new GetReferenceEvent(
     $reference_manager,
     $project,
     $keyword,
@@ -109,8 +109,8 @@ if ($ref) {
     $cross_reference = $reference_manager->getCrossReferenceByKeyword($keyword);
 
     if (isset($cross_reference['source_id'])) {
-        $source_id   = (int) $cross_reference['source_id'];
-        $target_type = $cross_reference['target_type'];
+        $source_id                   = (int) $cross_reference['source_id'];
+        $target_type                 = $cross_reference['target_type'];
         $get_uri_from_crossreference = new GetUriFromCrossReference($source_id, $target_type);
 
         $event_manager->processEvent($get_uri_from_crossreference);
@@ -131,9 +131,9 @@ if ($request->isAjax()) {
         case 'svn':
             require_once __DIR__ . '/../www/svn/svn_data.php';
             $group_id = $request->get('group_id');
-            $rev_id = $request->get('val');
-            $result = svn_data_get_revision_detail($group_id, 0, $rev_id);
-            $date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'date'));
+            $rev_id   = $request->get('val');
+            $result   = svn_data_get_revision_detail($group_id, 0, $rev_id);
+            $date     = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'date'));
 
             $description = db_result($result, 0, 'description');
             $description = htmlspecialchars_decode($description, ENT_QUOTES);
@@ -153,11 +153,11 @@ if ($request->isAjax()) {
         case 'cvs':
             require_once __DIR__ . '/../www/cvs/commit_utils.php';
             $commit_id = $request->get('val');
-            $result =  cvs_get_revision_detail($commit_id);
+            $result    =  cvs_get_revision_detail($commit_id);
             if (db_numrows($result) < 1) {
                 echo sprintf(_('Commit #%1$s not found in this project'), $commit_id);
             } else {
-                $date = uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'c_when'));
+                $date     = uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'c_when'));
                 $list_log = util_line_wrap(db_result($result, 0, 'description'), $group_id);
                 echo '<table>';
                 echo ' <tr>';
@@ -175,21 +175,21 @@ if ($request->isAjax()) {
             $group_id = $request->get('group_id');
             switch ($ref->getNature()) {
                 case ReferenceManager::REFERENCE_NATURE_RELEASE:
-                    $rf = new FRSReleaseFactory();
+                    $rf         = new FRSReleaseFactory();
                     $release_id = $request->get('val');
-                    $release = $rf->getFRSReleaseFromDb($release_id);
+                    $release    = $rf->getFRSReleaseFromDb($release_id);
                     $package_id = $release->getPackageID();
                     if ($rf->userCanRead($group_id, $package_id, $release_id)) {
                         echo $release->getReferenceTooltip();
                     }
                     break;
                 case ReferenceManager::REFERENCE_NATURE_FILE:
-                    $ff = new FRSFileFactory();
-                    $file_id = $request->get('val');
-                    $file = $ff->getFRSFileFromDb($file_id);
-                    $rf = new FRSReleaseFactory();
+                    $ff         = new FRSFileFactory();
+                    $file_id    = $request->get('val');
+                    $file       = $ff->getFRSFileFromDb($file_id);
+                    $rf         = new FRSReleaseFactory();
                     $release_id = $file->getReleaseID();
-                    $release = $rf->getFRSReleaseFromDb($release_id);
+                    $release    = $rf->getFRSReleaseFromDb($release_id);
                     $package_id = $release->getPackageID();
                     if ($rf->userCanRead($group_id, $package_id, $release_id)) {
                         echo $file->getReferenceTooltip();
@@ -221,7 +221,7 @@ if ($request->isAjax()) {
             break;
     }
 } else {
-    $feed = isset($feed) ? $feed : "";
+    $feed     = isset($feed) ? $feed : "";
     $location = "Location: " . $ref->getLink() . $feed;
     header($location);
     exit;

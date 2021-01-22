@@ -53,7 +53,7 @@ class RepositoryPresenter
     {
         $this->repository = $repository;
         if ($repository->hasCommitActivity()) {
-            $this->commit_date = $repository->getLastCommitDate()->getTimestamp();
+            $this->commit_date          = $repository->getLastCommitDate()->getTimestamp();
             $this->purified_commit_date = DateHelper::relativeDateInlineContext(
                 $repository->getLastCommitDate()->getTimestamp(),
                 $user

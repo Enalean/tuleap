@@ -124,8 +124,8 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     }
     public function fetchAdminInGroup($tracker)
     {
-        $html = '';
-        $hp = Codendi_HTMLPurifier::instance();
+        $html  = '';
+        $hp    = Codendi_HTMLPurifier::instance();
         $html .= $this->fetchColumnPrefix('class="tracker-admin-container tracker-admin-column" id="tracker-admin-formElements_' . $this->id . '" style="min-width:200px; min-height:80px; border:1px dashed #ccc; margin: 1px; padding: 4px;"');
         $html .= '<div><label title="' . $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) . '">';
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
@@ -140,19 +140,19 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
             ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
         } else {
             $cannot_remove_message = $this->getCannotRemoveMessage();
-            $html .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
-            $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', ['alt' => 'remove']);
-            $html .= '</span>';
+            $html                 .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
+            $html                 .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', ['alt' => 'remove']);
+            $html                 .= '</span>';
         }
 
-        $html .= '</span></label>';
-        $html .= '</div>';
+        $html   .= '</span></label>';
+        $html   .= '</div>';
         $content = [];
         foreach ($this->getFormElements() as $formElement) {
             $content[] = $formElement->fetchAdmin($tracker);
         }
-        $html .= implode('', $content);
-        $html .= $this->fetchColumnSuffix();
+        $html                    .= implode('', $content);
+        $html                    .= $this->fetchColumnSuffix();
         $this->has_been_displayed = true;
         return $html;
     }
@@ -165,10 +165,10 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
             //search for next siblings
             $next = [];
             $tf   = Tracker_FormElementFactory::instance();
-            $cur = $this;
+            $cur  = $this;
             while ($cur instanceof \Tracker_FormElement_Container_Column) {
                 $next[] = $cur;
-                $cur = $tf->getNextSibling($cur);
+                $cur    = $tf->getNextSibling($cur);
             }
             //delegates the fetch to the group of next sibblings
             $group = new Tracker_FormElement_Container_Column_Group();

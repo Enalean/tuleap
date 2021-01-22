@@ -47,8 +47,8 @@ class CrossReferenceNewsOrganizerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->news_retriever  = Mockery::mock(NewsRetriever::class);
-        $this->organizer       = new CrossReferenceNewsOrganizer(
+        $this->news_retriever = Mockery::mock(NewsRetriever::class);
+        $this->organizer      = new CrossReferenceNewsOrganizer(
             $this->news_retriever
         );
     }

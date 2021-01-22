@@ -162,7 +162,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
                 $args .= ' -F ' . escapeshellarg($style);
             }
             $commandLine = HIGHLIGHT_EXE . "$args -q -f -S " . escapeshellarg($syntax);
-            $code = $this->filterThroughCmd($source, $commandLine);
+            $code        = $this->filterThroughCmd($source, $commandLine);
             if (empty($code)) {
                 return $this->error(fmt("Couldn't start commandline"));
             }

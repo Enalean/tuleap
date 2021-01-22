@@ -42,14 +42,14 @@ class CollectionTest extends TestCase
     }
     public function testContains()
     {
-        $col = new Collection();
-        $a = new stdClass();
+        $col     = new Collection();
+        $a       = new stdClass();
         $a->toto = 1;
-        $b = new stdClass();
+        $b       = new stdClass();
         $b->toto = 2;
-        $c = new stdClass();
+        $c       = new stdClass();
         $c->toto = 3;
-        $d = new stdClass();
+        $d       = new stdClass();
         $d->toto = 4;
         $col->add($a);
         $col->add($b);
@@ -61,23 +61,23 @@ class CollectionTest extends TestCase
 
         $key1 = 'key';
         $key2 = 'key';
-        $col = new Collection();
+        $col  = new Collection();
         $this->assertFalse($col->contains($key2));
         $col->add($key1);
         $this->assertTrue($col->contains($key2));
 
         $key3_val = 'key';
-        $key3 = $key3_val;
-        $col = new Collection();
+        $key3     = $key3_val;
+        $col      = new Collection();
         $col->add($key3);
         $this->assertTrue($col->contains($key3_val));
     }
     public function testReference()
     {
-        $col = new Collection();
-        $a = new stdClass();
+        $col     = new Collection();
+        $a       = new stdClass();
         $a->toto = 1;
-        $b = new stdClass();
+        $b       = new stdClass();
         $b->toto = 2;
         $col->add($a);
         $this->assertTrue($col->contains($a));
@@ -85,11 +85,11 @@ class CollectionTest extends TestCase
     }
     public function testSize()
     {
-        $a = new stdClass();
+        $a       = new stdClass();
         $a->toto = 1;
-        $b = new stdClass();
+        $b       = new stdClass();
         $b->toto = 2;
-        $col = new Collection();
+        $col     = new Collection();
         $this->assertEquals($col->size(), 0);
         $col->add($a);
         $this->assertEquals($col->size(), 1);
@@ -101,7 +101,7 @@ class CollectionTest extends TestCase
 
     public function testNotEqualsNotCollection()
     {
-        $a = 'a';
+        $a    = 'a';
         $col1 = new Collection();
         $this->assertFalse($col1->equals($a));
     }
@@ -115,7 +115,7 @@ class CollectionTest extends TestCase
 
     public function testNotEqualsOneElement()
     {
-        $a = new stdClass();
+        $a    = new stdClass();
         $col1 = new Collection();
         $col2 = new Collection();
         $col1->add($a);
@@ -124,12 +124,12 @@ class CollectionTest extends TestCase
 
     public function testEqualsOneElement()
     {
-        $a = new stdClass();
+        $a       = new stdClass();
         $a->toto = 1;
-        $b = new stdClass();
+        $b       = new stdClass();
         $b->toto = 2;
-        $col1 = new Collection();
-        $col2 = new Collection();
+        $col1    = new Collection();
+        $col2    = new Collection();
         $col1->add($a);
         $col2->add($a);
         $this->assertTrue($col1->equals($col2));
@@ -137,12 +137,12 @@ class CollectionTest extends TestCase
 
     public function testNotEqualsTwoElements()
     {
-        $a = new stdClass();
+        $a       = new stdClass();
         $a->toto = 1;
-        $b = new stdClass();
+        $b       = new stdClass();
         $b->toto = 2;
-        $col1 = new Collection();
-        $col2 = new Collection();
+        $col1    = new Collection();
+        $col2    = new Collection();
         $col1->add($a);
         $col2->add($a);
         $col1->add($b);
@@ -150,12 +150,12 @@ class CollectionTest extends TestCase
     }
     public function testEqualsTwoElements()
     {
-        $a = new stdClass();
+        $a       = new stdClass();
         $a->toto = 1;
-        $b = new stdClass();
+        $b       = new stdClass();
         $b->toto = 2;
-        $col1 = new Collection();
-        $col2 = new Collection();
+        $col1    = new Collection();
+        $col2    = new Collection();
         $col1->add($a);
         $col2->add($a);
         $col1->add($b);
@@ -165,12 +165,12 @@ class CollectionTest extends TestCase
 
     public function testEqualsDifferentOrder()
     {
-        $a = new stdClass();
+        $a       = new stdClass();
         $a->toto = 1;
-        $b = new stdClass();
+        $b       = new stdClass();
         $b->toto = 2;
-        $col1 = new Collection();
-        $col2 = new Collection();
+        $col1    = new Collection();
+        $col2    = new Collection();
         $col1->add($a);
         $col1->add($b);
         $col2->add($b);
@@ -180,7 +180,7 @@ class CollectionTest extends TestCase
 
     public function testEqualsDifferentSizes()
     {
-        $a = new stdClass();
+        $a    = new stdClass();
         $col1 = new Collection();
         $col2 = new Collection();
         $col1->add($a);
@@ -191,14 +191,14 @@ class CollectionTest extends TestCase
 
     public function testEqualsSameAndDifferentElements()
     {
-        $a = new stdClass();
+        $a       = new stdClass();
         $a->toto = 1;
-        $b = new stdClass();
+        $b       = new stdClass();
         $b->toto = 2;
-        $c = new stdClass();
+        $c       = new stdClass();
         $c->toto = 3;
-        $col1 = new Collection();
-        $col2 = new Collection();
+        $col1    = new Collection();
+        $col2    = new Collection();
         $col1->add($a);
         $col2->add($a);
         $col1->add($b);
@@ -208,12 +208,12 @@ class CollectionTest extends TestCase
 
     public function testEqualsUniqueAndNonUniqueElements()
     {
-        $a = new stdClass();
+        $a       = new stdClass();
         $a->toto = 1;
-        $b = new stdClass();
+        $b       = new stdClass();
         $b->toto = 2;
-        $col1 = new Collection();
-        $col2 = new Collection();
+        $col1    = new Collection();
+        $col2    = new Collection();
         $col1->add($a);
         $col1->add($a);
         $col2->add($a);
@@ -223,21 +223,21 @@ class CollectionTest extends TestCase
 
     public function testInitialArray()
     {
-        $a = new stdClass();
+        $a       = new stdClass();
         $a->toto = 1;
-        $b = new stdClass();
+        $b       = new stdClass();
         $b->toto = 2;
-        $arr = [];
-        $arr[] = $a;
-        $arr[] = $b;
-        $col = new Collection($arr);
+        $arr     = [];
+        $arr[]   = $a;
+        $arr[]   = $b;
+        $col     = new Collection($arr);
         $this->assertTrue($col->contains($a));
         $this->assertTrue($col->contains($b));
     }
 
     public function testRemove()
     {
-        $a = new stdClass();
+        $a   = new stdClass();
         $col = new Collection();
         $col->add($a);
         $this->assertTrue($col->contains($a));

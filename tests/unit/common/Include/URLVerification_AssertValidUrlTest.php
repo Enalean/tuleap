@@ -34,7 +34,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
     {
         parent::setUp();
 
-        $this->request = Mockery::mock(HTTPRequest::class);
+        $this->request       = Mockery::mock(HTTPRequest::class);
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
 
         $this->url_verification = Mockery::mock(URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -99,8 +99,8 @@ class URLVerification_AssertValidUrlTest extends TestCase
     public function testCheckNotActiveAndNotSuspendedProjectError()
     {
         $GLOBALS['group_id'] = 1;
-        $project = Mockery::mock(Project::class, ['getStatus' => 'S']);
-        $project_manager = Mockery::mock(ProjectManager::class);
+        $project             = Mockery::mock(Project::class, ['getStatus' => 'S']);
+        $project_manager     = Mockery::mock(ProjectManager::class);
         $project_manager->shouldReceive('getProject')->andReturn($project);
         $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
         $this->url_verification->shouldReceive('userCanAccessProject')->andThrow(new Project_AccessDeletedException($project));
@@ -115,8 +115,8 @@ class URLVerification_AssertValidUrlTest extends TestCase
     public function testCheckNotActiveBecauseSuspendedProjectError()
     {
         $GLOBALS['group_id'] = 1;
-        $project = Mockery::mock(Project::class, ['isActive' => false, 'isSuspended' => true, 'isPublic' => true, 'isError' => false, 'getStatus' => 'H']);
-        $project_manager = Mockery::mock(ProjectManager::class);
+        $project             = Mockery::mock(Project::class, ['isActive' => false, 'isSuspended' => true, 'isPublic' => true, 'isError' => false, 'getStatus' => 'H']);
+        $project_manager     = Mockery::mock(ProjectManager::class);
         $project_manager->shouldReceive('getProject')->andReturn($project);
         $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
         $this->url_verification->shouldReceive('userCanAccessProject')->andThrow(new ProjectAccessSuspendedException($project));
@@ -129,8 +129,8 @@ class URLVerification_AssertValidUrlTest extends TestCase
     public function testCheckActiveProjectNoError()
     {
         $GLOBALS['group_id'] = 1;
-        $project = Mockery::mock(Project::class, ['isActive' => true, 'isPublic' => true, 'isError' => false, 'getID' => 101]);
-        $project_manager = Mockery::mock(ProjectManager::class);
+        $project             = Mockery::mock(Project::class, ['isActive' => true, 'isPublic' => true, 'isError' => false, 'getID' => 101]);
+        $project_manager     = Mockery::mock(ProjectManager::class);
         $project_manager->shouldReceive('getProject')->andReturn($project);
         $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
         $this->url_verification->shouldReceive('userCanAccessProject');

@@ -140,10 +140,10 @@ class WebDAVTree extends Sabre_DAV_ObjectTree
      */
     public function move($sourcePath, $destinationPath)
     {
-        list($sourceDir, $sourceName) = Sabre_DAV_URLUtil::splitPath($sourcePath);
+        list($sourceDir, $sourceName)           = Sabre_DAV_URLUtil::splitPath($sourcePath);
         list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
 
-        $source = $this->getNodeForPath($sourcePath);
+        $source      = $this->getNodeForPath($sourcePath);
         $itemFactory = $this->getUtils()->getDocmanItemFactory();
         $destination = $this->getNodeForPath($destinationDir);
         // Check that write access is enabled for WebDAV

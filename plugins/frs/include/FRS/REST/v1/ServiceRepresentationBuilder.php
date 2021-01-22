@@ -51,7 +51,7 @@ class ServiceRepresentationBuilder
     {
         $this->permission_manager = $permission_manager;
         $this->permission_factory = $permission_factory;
-        $this->ugroup_manager = $ugroup_manager;
+        $this->ugroup_manager     = $ugroup_manager;
     }
 
     /**

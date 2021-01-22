@@ -36,8 +36,8 @@ class HookDao extends DataAccessObject
 
     public function save($id, $jenkins_server, bool $is_commit_reference_needed)
     {
-        $id             = $this->da->escapeInt($id);
-        $jenkins_server = $this->da->quoteSmart($jenkins_server);
+        $id                         = $this->da->escapeInt($id);
+        $jenkins_server             = $this->da->quoteSmart($jenkins_server);
         $is_commit_reference_needed = $this->da->escapeInt($is_commit_reference_needed ? 1 : 0);
 
         $sql = "REPLACE INTO plugin_hudson_git_server(repository_id, jenkins_server_url, is_commit_reference_needed)
@@ -48,7 +48,7 @@ class HookDao extends DataAccessObject
 
     public function searchById($id)
     {
-        $id  = $this->da->escapeInt($id);
+        $id = $this->da->escapeInt($id);
 
         $sql = "SELECT jenkins_server_url, is_commit_reference_needed
                 FROM plugin_hudson_git_server

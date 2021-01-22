@@ -35,7 +35,7 @@ class MediawikiSiteAdminResourceRestrictor
 
     public function __construct(MediawikiSiteAdminResourceRestrictorDao $dao, ProjectManager $project_manager)
     {
-        $this->dao = $dao;
+        $this->dao             = $dao;
         $this->project_manager = $project_manager;
     }
 

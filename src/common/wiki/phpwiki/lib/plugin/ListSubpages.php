@@ -84,7 +84,7 @@ class WikiPlugin_ListSubpages extends WikiPlugin
         }
         extract($args);
 
-        $content = HTML();
+        $content  = HTML();
         $subpages = array_reverse($subpages);
         if ($maxpages) {
             $subpages = array_slice($subpages, 0, $maxpages);
@@ -133,7 +133,7 @@ class _PageList_Column_ListSubpages_count extends _PageList_Column
 {
     public function _getValue($page, &$revision_handle)
     {
-        $iter = $page->getBackLinks();
+        $iter  = $page->getBackLinks();
         $count = $iter->count();
         return $count;
     }

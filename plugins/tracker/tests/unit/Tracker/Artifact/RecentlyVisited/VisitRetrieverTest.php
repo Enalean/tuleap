@@ -99,7 +99,7 @@ class VisitRetrieverTest extends TestCase
         $visit_retriever    = new VisitRetriever($recently_visited_dao, $artifact_factory, $glyph_finder);
         $max_length_history = 30;
 
-        $collection         = new HistoryEntryCollection($user);
+        $collection = new HistoryEntryCollection($user);
         $visit_retriever->getVisitHistory($collection, $max_length_history);
 
         $this->assertCount(0, $collection->getEntries());

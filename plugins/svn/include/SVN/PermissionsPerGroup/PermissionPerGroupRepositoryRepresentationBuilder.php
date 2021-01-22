@@ -39,7 +39,7 @@ class PermissionPerGroupRepositoryRepresentationBuilder
     public function build(Project $project)
     {
         $repositories = $this->repository_manager->getRepositoriesInProject($project);
-        $permissions   = [];
+        $permissions  = [];
         foreach ($repositories as $repository) {
             $permissions[] = new PermissionPerGroupRepositoryRepresentation(
                 $repository->getName(),

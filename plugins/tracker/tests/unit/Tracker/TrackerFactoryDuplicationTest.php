@@ -35,7 +35,7 @@ class TrackerFactoryDuplicationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tracker_factory   = \Mockery::mock(\TrackerFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->tracker_factory       = \Mockery::mock(\TrackerFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->hierarchy_factory     = \Mockery::spy(\Tracker_HierarchyFactory::class);
         $this->trigger_rules_manager = \Mockery::spy(\Tracker_Workflow_Trigger_RulesManager::class);
         $this->formelement_factory   = \Mockery::spy(\Tracker_FormElementFactory::class);
@@ -83,9 +83,9 @@ class TrackerFactoryDuplicationTest extends TestCase
             ['from' => '33', 'to' => '333'],
             ['from' => '44', 'to' => '444']
         ];
-        $full_field_mapping = array_merge($t_new1_field_mapping, $t_new2_field_mapping);
-        $to_project_id   = 999;
-        $from_project_id = 100;
+        $full_field_mapping   = array_merge($t_new1_field_mapping, $t_new2_field_mapping);
+        $to_project_id        = 999;
+        $from_project_id      = 100;
         $this->tracker_factory->shouldReceive('create')->with($to_project_id, $from_project_id, 123, Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), null)->andReturns([
             'tracker' => $t_new1,
             'field_mapping' => $t_new1_field_mapping,

@@ -109,12 +109,12 @@ final class SwaggerJsonPathsAndDefinitions
 
     private function paths(int $version): array
     {
-        $map = Routes::findAll([], self::EXCLUDED_HTTP_METHOD, $version);
+        $map   = Routes::findAll([], self::EXCLUDED_HTTP_METHOD, $version);
         $paths = [];
         foreach ($map as $path => $data) {
             foreach ($data as $item) {
-                $route = $item['route'];
-                $url = $route['url'];
+                $route                                            = $item['route'];
+                $url                                              = $route['url'];
                 $paths["/$url"][strtolower($route['httpMethod'])] = $this->operation($route);
             }
         }
@@ -124,18 +124,18 @@ final class SwaggerJsonPathsAndDefinitions
 
     private function operation(array $route): stdClass
     {
-        $r = new stdClass();
-        $m = $route['metadata'];
+        $r              = new stdClass();
+        $m              = $route['metadata'];
         $r->operationId = $this->operationId($route);
-        $base = strtok($route['url'], '/');
+        $base           = strtok($route['url'], '/');
         if (empty($base)) {
             $base = 'root';
         }
-        $r->tags = [$base];
+        $r->tags       = [$base];
         $r->parameters = $this->parameters($route);
 
-        $r->summary  = $m['description'] ?? '';
-        $r->summary .= $route['accessLevel'] > 2 ? self::API_DESCRIPTION_SUFFIX_SYMBOLS[2] : self::API_DESCRIPTION_SUFFIX_SYMBOLS[$route['accessLevel']];
+        $r->summary     = $m['description'] ?? '';
+        $r->summary    .= $route['accessLevel'] > 2 ? self::API_DESCRIPTION_SUFFIX_SYMBOLS[2] : self::API_DESCRIPTION_SUFFIX_SYMBOLS[$route['accessLevel']];
         $r->description = $m['longDescription'] ?? '';
         $r->responses   = $this->responses($route);
         //TODO: avoid hard coding. Properly detect security
@@ -149,7 +149,7 @@ final class SwaggerJsonPathsAndDefinitions
                     $r->description,
                     $this->html_purifier->purify($m['oauth2-scope'])
                 );
-                $r->description = trim($oauth2_token_description);
+                $r->description           = trim($oauth2_token_description);
             }
         }
 
@@ -158,18 +158,18 @@ final class SwaggerJsonPathsAndDefinitions
 
     private function parameters(array $route): array
     {
-        $r = [];
+        $r        = [];
         $children = [];
         $required = false;
         foreach ($route['metadata']['param'] as $param) {
-            $info = new ValidationInfo($param);
+            $info        = new ValidationInfo($param);
             $description = $param['description'] ?? '';
             if ('body' == $info->from) {
                 if ($info->required) {
                     $required = true;
                 }
                 $param['description'] = $description;
-                $children[] = $param;
+                $children[]           = $param;
             } else {
                 $r[] = $this->parameter($info, $description);
             }
@@ -179,7 +179,7 @@ final class SwaggerJsonPathsAndDefinitions
                 1 === count($children) &&
                 ! empty($children[0]['children'])
             ) {
-                $firstChild = $children[0];
+                $firstChild  = $children[0];
                 $description = ''; //'<section class="body-param">';
                 foreach ($firstChild['children'] as $child) {
                     $description .= isset($child['required']) && $child['required']
@@ -197,7 +197,7 @@ final class SwaggerJsonPathsAndDefinitions
 
                 //lets group all body parameters under a generated model name
                 $name = $this->modelName($route);
-                $r[] = $this->parameter(
+                $r[]  = $this->parameter(
                     new ValidationInfo(
                         [
                            'name'     => $name,
@@ -217,7 +217,7 @@ final class SwaggerJsonPathsAndDefinitions
 
     private function parameter(ValidationInfo $info, string $description = ''): stdClass
     {
-        $p = new stdClass();
+        $p       = new stdClass();
         $p->name = $info->name;
         $this->setType($p, $info);
         if (empty($info->children) || $info->type != 'array') {
@@ -237,8 +237,8 @@ final class SwaggerJsonPathsAndDefinitions
             //TODO: $p->items and $p->uniqueItems boolean
         }
         $p->description = $description;
-        $p->in = $info->from;
-        $p->required = $info->required;
+        $p->in          = $info->from;
+        $p->required    = $info->required;
 
         //$p->allowMultiple = false;
 
@@ -252,8 +252,8 @@ final class SwaggerJsonPathsAndDefinitions
 
     private function responses(array $route): array
     {
-        $code = '200';
-        $r = [
+        $code   = '200';
+        $r      = [
             $code => (object) [
                 'description' => 'Success',
                 'schema'      => new stdClass()
@@ -278,12 +278,12 @@ final class SwaggerJsonPathsAndDefinitions
         if (isset($this->models[$type])) {
             return $this->models[$type];
         }
-        $r = new stdClass();
+        $r             = new stdClass();
         $r->properties = [];
-        $required = [];
+        $required      = [];
         foreach ($children as $child) {
             $info = new ValidationInfo($child);
-            $p = new stdClass();
+            $p    = new stdClass();
             $this->setType($p, $info);
             $p->description = isset($child['description']) ? $child['description'] : '';
             if ($info->default) {
@@ -320,7 +320,7 @@ final class SwaggerJsonPathsAndDefinitions
         if ($info->type == 'array') {
             $object->type = 'array';
             if ($info->children) {
-                $contentType = Util::getShortName($info->contentType);
+                $contentType   = Util::getShortName($info->contentType);
                 $object->items = (object) [
                     '$ref' => "#/definitions/$contentType"
                 ];
@@ -348,7 +348,7 @@ final class SwaggerJsonPathsAndDefinitions
                         ];
                     }
                 } else {
-                    $contentType = Util::getShortName($info->contentType);
+                    $contentType   = Util::getShortName($info->contentType);
                     $object->items = (object) [
                         '$ref' => "#/definitions/$contentType"
                     ];
@@ -363,7 +363,7 @@ final class SwaggerJsonPathsAndDefinitions
             $object->{'$ref'} = "#/definitions/$type";
         } elseif (is_string($info->type) && $t = Util::nestedValue(self::DATA_TYPE_ALIAS, strtolower($info->type))) {
             if (is_array($t)) {
-                $object->type = $t[0];
+                $object->type   = $t[0];
                 $object->format = $t[1];
             } else {
                 $object->type = $t;
@@ -388,11 +388,11 @@ final class SwaggerJsonPathsAndDefinitions
     private function operationId(array $route): string
     {
         static $hash = [];
-        $id = $route['httpMethod'] . ' ' . $route['url'];
+        $id          = $route['httpMethod'] . ' ' . $route['url'];
         if (isset($hash[$id])) {
             return $hash[$id];
         }
-        $class = Util::getShortName($route['className']);
+        $class  = Util::getShortName($route['className']);
         $method = $route['methodName'];
 
         if (isset(self::PREFIXES[$method])) {

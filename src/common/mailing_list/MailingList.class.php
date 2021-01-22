@@ -39,13 +39,13 @@ class MailingList
 
     public function __construct($row = null)
     {
-        $this->id            = isset($row['group_list_id'])  ? $row['group_list_id'] : 0;
-        $this->group_id      = isset($row['group_id'])       ? $row['group_id']      : 0;
-        $this->list_name     = isset($row['list_name'])      ? $row['list_name']     : null;
-        $this->is_public     = isset($row['is_public'])      ? $row['is_public']     : 0;
-        $this->password      = isset($row['password'])       ? $row['password']      : null;
-        $this->description   = isset($row['description'])    ? $row['description']   : null;
-        $this->list_admin    = isset($row['list_admin'])     ? $row['list_admin']    : 0;
+        $this->id          = isset($row['group_list_id'])  ? $row['group_list_id'] : 0;
+        $this->group_id    = isset($row['group_id'])       ? $row['group_id']      : 0;
+        $this->list_name   = isset($row['list_name'])      ? $row['list_name']     : null;
+        $this->is_public   = isset($row['is_public'])      ? $row['is_public']     : 0;
+        $this->password    = isset($row['password'])       ? $row['password']      : null;
+        $this->description = isset($row['description'])    ? $row['description']   : null;
+        $this->list_admin  = isset($row['list_admin'])     ? $row['list_admin']    : 0;
     }
 
     protected function _getMailingListDao()

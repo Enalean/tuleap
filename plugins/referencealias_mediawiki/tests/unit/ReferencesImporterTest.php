@@ -53,14 +53,14 @@ class ReferencesImporterTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao        = \Mockery::spy(CompatibilityDao::class);
-        $this->logger     = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->importer   = new ReferencesImporter($this->dao, $this->logger);
+        $this->dao      = \Mockery::spy(CompatibilityDao::class);
+        $this->logger   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->importer = new ReferencesImporter($this->dao, $this->logger);
     }
 
     public function testItShouldAddMediaWikiLinks(): void
     {
-        $xml = <<<XML
+        $xml        = <<<XML
             <references>
                 <reference source="wiki76532" target="HomePage" />
             </references>
@@ -78,7 +78,7 @@ XML;
 
     public function testItShouldNotAddUnknownReferences(): void
     {
-        $xml = <<<XML
+        $xml        = <<<XML
             <references>
                 <reference source="stuff1234" target="1"/>
             </references>

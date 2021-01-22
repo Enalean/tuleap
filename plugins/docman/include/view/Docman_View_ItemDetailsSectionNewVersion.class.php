@@ -33,7 +33,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     public function __construct($item, $url, $controller, $force, $token)
     {
         parent::__construct($item, $url, false, true, $controller);
-        $this->force    = $force;
+        $this->force = $force;
         $this->token = $token;
     }
     public function getContent($params = [])
@@ -59,7 +59,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     public function _getReleaseLock()
     {
         $content = '';
-        $dPm = Docman_PermissionsManager::instance($this->item->getGroupId());
+        $dPm     = Docman_PermissionsManager::instance($this->item->getGroupId());
         if ($dPm->getLockFactory()->itemIsLocked($this->item)) {
             $content .= '<tr style="vertical-align:top;">';
             $content .= '<td><label>' . dgettext('tuleap-docman', 'Keep the lock:') . '</label></td>';
@@ -112,7 +112,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
                 []
             );
         }
-        $content = '';
+        $content  = '';
         $content .= '<form action="' . $this->url . '&amp;id=' . $this->item->getId() . '" method="post" enctype="multipart/form-data" id="plugin_docman_new_version_form" data-test="plugin_docman_new_version_form">';
 
         $content .= '<dl>';
@@ -120,7 +120,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $content .= '<table>';
         $content .= '<tr style="vertical-align:top"><td>' . dgettext('tuleap-docman', 'Version Label:') . '</td><td><input type="text" name="version[label]" value="' . $label . '" /></td></tr>';
         $content .= '<tr style="vertical-align:top"><td>' . dgettext('tuleap-docman', 'Change Log:') . '</td><td><textarea name="version[changelog]" rows="7" cols="80" data-test="docman_changelog">' . $changelog . '</textarea></td></tr>';
-        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), ['force_item' => $this->force, 'request' => $this->_controller->request]);
+        $fields   = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), ['force_item' => $this->force, 'request' => $this->_controller->request]);
         if ($fields !== null) {
             foreach ($fields as $field) {
                 $content .= '<tr style="vertical-align:top;">';
@@ -147,7 +147,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
 
         $content .= '</dl>';
         $content .= '</form>';
-        $snippet = '
+        $snippet  = '
         document.observe("dom:loaded", function () {
             $("plugin_docman_new_version_form").observe("submit", function (e) {
                 if (!docman.approvalTableCheck($("plugin_docman_new_version_form"))) {

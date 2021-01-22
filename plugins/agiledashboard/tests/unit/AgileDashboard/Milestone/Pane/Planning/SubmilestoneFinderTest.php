@@ -140,8 +140,8 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Test
         $this->release_planning     = \Mockery::spy(\Planning::class)->shouldReceive('getId')->andReturns(12)->getMock();
         $this->requirement_planning = \Mockery::spy(\Planning::class)->shouldReceive('getId')->andReturns(13)->getMock();
 
-        $this->release_milestone     = \Mockery::spy(\Planning_Milestone::class)->shouldReceive('getTrackerId')->andReturns($this->release_tracker_id)->getMock();
-        $this->sprint_milestone      = \Mockery::spy(\Planning_Milestone::class)->shouldReceive('getTrackerId')->andReturns($this->sprint_tracker_id)->getMock();
+        $this->release_milestone = \Mockery::spy(\Planning_Milestone::class)->shouldReceive('getTrackerId')->andReturns($this->release_tracker_id)->getMock();
+        $this->sprint_milestone  = \Mockery::spy(\Planning_Milestone::class)->shouldReceive('getTrackerId')->andReturns($this->sprint_tracker_id)->getMock();
 
         $this->release_milestone->shouldReceive('getPlanning')->andReturns($this->release_planning);
         $this->sprint_milestone->shouldReceive('getPlanning')->andReturns($this->sprint_planning);

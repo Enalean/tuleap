@@ -35,8 +35,8 @@ class AgileDashboard_KanbanManager
         AgileDashboard_KanbanDao $dao,
         TrackerFactory $tracker_factory
     ) {
-        $this->dao               = $dao;
-        $this->tracker_factory   = $tracker_factory;
+        $this->dao             = $dao;
+        $this->tracker_factory = $tracker_factory;
     }
 
     public function doesKanbanExistForTracker(Tracker $tracker)
@@ -66,12 +66,12 @@ class AgileDashboard_KanbanManager
 
             if ($this->doesKanbanExistForTracker($tracker)) {
                 $tracker_representation['used'] = true;
-                $trackers[] = $tracker_representation;
+                $trackers[]                     = $tracker_representation;
                 continue;
             }
 
             $tracker_representation['used'] = false;
-            $trackers[] = $tracker_representation;
+            $trackers[]                     = $tracker_representation;
         }
 
         return $trackers;

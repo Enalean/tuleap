@@ -102,7 +102,7 @@ class ActionAuthorizationVerifierTest extends TestCase
         $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
         $action_type = new ActionAuthorizationTypeUpload();
 
-        $oid  = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
+        $oid = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
 
         $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
             'id'              => 1,
@@ -124,7 +124,7 @@ class ActionAuthorizationVerifierTest extends TestCase
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
 
-        $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
+        $current_time        = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
         $authorization_token = \Mockery::mock(SplitToken::class);
         $authorization_token->shouldReceive('getID')->andReturns(1);
         $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
@@ -158,7 +158,7 @@ class ActionAuthorizationVerifierTest extends TestCase
         $action_type = \Mockery::mock(ActionAuthorizationType::class);
         $action_type->shouldReceive('getName')->andReturns('not_requested_action_type');
 
-        $oid  = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
+        $oid = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
 
         $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
             'id'              => 1,
@@ -186,7 +186,7 @@ class ActionAuthorizationVerifierTest extends TestCase
         $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
         $action_type = new ActionAuthorizationTypeUpload();
 
-        $oid  = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
+        $oid = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
 
         $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
             'id'              => 1,

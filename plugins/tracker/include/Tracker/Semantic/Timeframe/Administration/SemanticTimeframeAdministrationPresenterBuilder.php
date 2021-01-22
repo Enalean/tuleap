@@ -62,7 +62,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
             $duration_field
         );
 
-        $has_tracker_charts = $this->doesTrackerHaveCharts($tracker);
+        $has_tracker_charts                      = $this->doesTrackerHaveCharts($tracker);
         $is_semantic_in_start_date_duration_mode = $duration_field !== null;
 
         return new SemanticTimeframeAdministrationPresenter(

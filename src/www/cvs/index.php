@@ -28,11 +28,11 @@ switch ($func) {
         require('../cvs/admin_commit.php');
         break;
     case 'setAdmin':
-        $sql = "SELECT cvs_is_private FROM groups WHERE group_id=" . db_ei($group_id);
-        $result = db_query($sql);
+        $sql              = "SELECT cvs_is_private FROM groups WHERE group_id=" . db_ei($group_id);
+        $result           = db_query($sql);
         $initial_settings = db_fetch_array($result);
 
-        $status = _('successfully');
+        $status         = _('successfully');
         $feedback_level = \Feedback::INFO;
 
         $tracked               = $request->get('tracked');
@@ -50,8 +50,8 @@ switch ($func) {
             $mailing_list = 'NULL';
         } else {
             if (! validate_emails($mailing_list)) {
-                $mailing_list = 'NULL';
-                $status = _('partly<br>Email Address Appears Invalid, e-mail notification is off.');
+                $mailing_list   = 'NULL';
+                $status         = _('partly<br>Email Address Appears Invalid, e-mail notification is off.');
                 $feedback_level = \Feedback::WARN;
             }
         }
@@ -63,7 +63,7 @@ switch ($func) {
         $is_private = '';
         if ($request->exist('private')) {
            //TODO check that the project is public (else the cvs is always private)
-            $private = $request->get('private') ? 1 : 0;
+            $private    = $request->get('private') ? 1 : 0;
             $is_private = ', cvs_is_private = ' . $private;
            //Raise an event if needed
             if ($initial_settings['cvs_is_private'] != $private) {
@@ -82,7 +82,7 @@ switch ($func) {
         if ($mailing_header !== 'NULL') {
             $mailing_header_sql = '"' . db_es($mailing_header) . '"';
         }
-        $query = 'update groups
+        $query  = 'update groups
              set cvs_tracker="' . db_es($tracked) . '",
                  cvs_watch_mode="' . db_es($watches) . '",
                  cvs_events_mailing_list=' . $mailing_list_sql . ',

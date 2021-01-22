@@ -79,7 +79,7 @@ class TuleapWeb
     {
         $vhost_file = $this->httpd_conf_path . '/conf.d/tuleap-vhost.conf';
         if (is_file($vhost_file)) {
-            $new_content = '';
+            $new_content  = '';
             $in_ssl_vhost = false;
             $need_rewrite = false;
             foreach (file($vhost_file, FILE_IGNORE_NEW_LINES) as $line) {

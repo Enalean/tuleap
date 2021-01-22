@@ -39,7 +39,7 @@ class Docman_MetadataHtmlOwner extends \Docman_MetadataHtmlString
     }
     public function _getField()
     {
-        $name = $this->_getFieldName();
+        $name  = $this->_getFieldName();
         $value = $this->md->getValue();
         if ($value === \null) {
             $value = $this->md->getDefaultValue();

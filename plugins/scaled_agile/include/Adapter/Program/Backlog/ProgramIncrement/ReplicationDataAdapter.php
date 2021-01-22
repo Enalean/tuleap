@@ -110,8 +110,8 @@ final class ReplicationDataAdapter implements BuildReplicationData
         \Tracker_Artifact_Changeset $source_changeset
     ): ReplicationData {
         $artifact_data = new Artifact((int) $source_artifact->getId(), (int) $source_artifact->getSubmittedOn());
-        $tracker_data = new ScaledAgileTracker($source_artifact->getTracker());
-        $project_data = ProjectAdapter::build($source_artifact->getTracker()->getProject());
+        $tracker_data  = new ScaledAgileTracker($source_artifact->getTracker());
+        $project_data  = ProjectAdapter::build($source_artifact->getTracker()->getProject());
 
         return new ReplicationData($tracker_data, $source_changeset, $user, $artifact_data, $project_data);
     }

@@ -48,7 +48,7 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
             $this->storage
         );
-        $token = $csrf_token->getToken();
+        $token      = $csrf_token->getToken();
 
         $this->assertTrue($csrf_token->isValid($token));
     }
@@ -60,7 +60,7 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
             $this->storage
         );
-        $token = $csrf_token_creator->getToken();
+        $token              = $csrf_token_creator->getToken();
 
         $csrf_token_verifier = new CSRFSynchronizerToken(
             '/path/to/uri',
@@ -77,7 +77,7 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
             $this->storage
         );
-        $token = $csrf_token_1->getToken();
+        $token        = $csrf_token_1->getToken();
 
         $this->assertTrue($csrf_token_1->isValid($token));
 
@@ -154,7 +154,7 @@ class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ign
         ForgeConfig::set('codendi_dir', __DIR__ . '/../../../../');
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
 
-        $token1  = new CSRFSynchronizerToken(
+        $token1 = new CSRFSynchronizerToken(
             '/path/to/uri/1',
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME,
             $this->storage

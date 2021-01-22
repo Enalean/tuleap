@@ -32,11 +32,11 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
     use ForgeConfigSandbox;
     use TemporaryTestDirectory;
 
-    protected $contributors      = 'tuleap-localhost-mozilla/firefox-contributors';
-    protected $integrators       = 'tuleap-localhost-mozilla/firefox-integrators';
-    protected $supermen          = 'tuleap-localhost-mozilla/firefox-supermen';
-    protected $owners            = 'tuleap-localhost-mozilla/firefox-owners';
-    protected $replication       = 'tuleap.example.com-replication';
+    protected $contributors = 'tuleap-localhost-mozilla/firefox-contributors';
+    protected $integrators  = 'tuleap-localhost-mozilla/firefox-integrators';
+    protected $supermen     = 'tuleap-localhost-mozilla/firefox-supermen';
+    protected $owners       = 'tuleap-localhost-mozilla/firefox-owners';
+    protected $replication  = 'tuleap.example.com-replication';
 
     protected $contributors_uuid = '8bd90045412f95ff348f41fa63606171f2328db3';
     protected $integrators_uuid  = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
@@ -47,9 +47,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
     protected $project_members;
     protected $another_ugroup;
     protected $project_admins;
-    protected $project_members_uuid = '8bd90045412f95ff348f41fa63606171f2328db3';
-    protected $another_ugroup_uuid  = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
-    protected $project_admins_uuid  = '8a7e856ce3c55f555c228bd90045412f95ff348';
+    protected $project_members_uuid        = '8bd90045412f95ff348f41fa63606171f2328db3';
+    protected $another_ugroup_uuid         = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
+    protected $project_admins_uuid         = '8a7e856ce3c55f555c228bd90045412f95ff348';
     protected $project_members_gerrit_name = 'mozilla/project_members';
     protected $another_ugroup_gerrit_name  = 'mozilla/another_ugroup';
     protected $project_admins_gerrit_name  = 'mozilla/project_admins';
@@ -63,7 +63,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     /** @var Project */
     protected $project;
-    protected $project_id = 103;
+    protected $project_id        = 103;
     protected $project_unix_name = 'mozilla';
 
     /** @var UGroupManager */
@@ -82,7 +82,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
     protected $gerrit_git_url;
     protected $gerrit_admin_instance = 'admin-tuleap.example.com';
     protected $tuleap_instance       = 'tuleap.example.com';
-    protected $gitolite_project = 'gitolite_firefox.git';
+    protected $gitolite_project      = 'gitolite_firefox.git';
 
     /** @var Git_Driver_Gerrit_Template_TemplateFactory */
     protected $template_factory;
@@ -110,16 +110,16 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         ForgeConfig::set('tmp_dir', $this->getTmpDir());
         $this->fixtures = dirname(__FILE__) . '/_fixtures';
         do {
-            $this->tmpdir   = ForgeConfig::get('tmp_dir') . '/' . bin2hex(random_bytes(16));
+            $this->tmpdir = ForgeConfig::get('tmp_dir') . '/' . bin2hex(random_bytes(16));
         } while (is_dir($this->tmpdir));
         $zip_archive = new ZipArchive();
         $zip_archive->open("$this->fixtures/firefox.zip");
         $zip_archive->extractTo($this->tmpdir);
         `tar -xzf $this->fixtures/gitolite_firefox.git.tgz --directory $this->tmpdir`;
 
-        $host  = $this->tmpdir;
-        $login = $this->gerrit_admin_instance;
-        $id = $ssh_port = $http_port = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = 0;
+        $host         = $this->tmpdir;
+        $login        = $this->gerrit_admin_instance;
+        $id           = $ssh_port = $http_port = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = 0;
         $this->server = \Mockery::mock(
             \Git_RemoteServer_GerritServer::class,
             [
@@ -149,13 +149,13 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project->shouldReceive('getID')->andReturns($this->project_id);
         $private_project = \Mockery::spy(\Project::class)->shouldReceive('isPublic')->andReturns(false)->getMock();
 
-        $this->repository                      = \Mockery::spy(\GitRepository::class);
+        $this->repository = \Mockery::spy(\GitRepository::class);
         $this->repository->shouldReceive('getFullPath')->andReturns($this->tmpdir . '/' . $this->gitolite_project);
         $this->repository_in_a_private_project = \Mockery::spy(\GitRepository::class);
         $this->repository_in_a_private_project->shouldReceive('getFullPath')->andReturns($this->tmpdir . '/' . $this->gitolite_project);
-        $this->repository_without_registered   = \Mockery::spy(\GitRepository::class);
+        $this->repository_without_registered = \Mockery::spy(\GitRepository::class);
         $this->repository_without_registered->shouldReceive('getFullPath')->andReturns($this->tmpdir . '/' . $this->gitolite_project);
-        $this->repository_with_registered   = \Mockery::spy(\GitRepository::class);
+        $this->repository_with_registered = \Mockery::spy(\GitRepository::class);
         $this->repository_with_registered->shouldReceive('getFullPath')->andReturns($this->tmpdir . '/' . $this->gitolite_project);
 
         $this->driver = \Mockery::spy(\Git_Driver_Gerrit::class);
@@ -176,7 +176,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->membership_manager->shouldReceive('getGroupUUIDByNameOnServer')->with($this->server, $this->owners)->andReturns($this->owners_uuid);
         $this->membership_manager->shouldReceive('getGroupUUIDByNameOnServer')->with($this->server, $this->replication)->andReturns($this->replication_uuid);
 
-        $this->userfinder = \Mockery::spy(\Git_Driver_Gerrit_UserFinder::class);
+        $this->userfinder     = \Mockery::spy(\Git_Driver_Gerrit_UserFinder::class);
         $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
 
         $this->project_manager = \Mockery::spy(\ProjectManager::class);
@@ -555,7 +555,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     private function assertGroupsFileHasEverything(): void
     {
-        $groups_file = "$this->gerrit_tmpdir/groups";
+        $groups_file         = "$this->gerrit_tmpdir/groups";
         $group_file_contents = file_get_contents($groups_file);
 
         $this->assertMatchesRegularExpression("%$this->project_members_uuid\t$this->project_members_gerrit_name\n%", $group_file_contents);

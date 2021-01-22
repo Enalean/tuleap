@@ -55,7 +55,7 @@ class SimilarFieldsMatcher
 
         $similar_field_candidates = [];
         foreach ($rows as $row) {
-            $field      = $this->form_element_factory->getCachedInstanceFromRow($row);
+            $field                      = $this->form_element_factory->getCachedInstanceFromRow($row);
             $similar_field_candidates[] = $this->buildCandidate($field, $row['formElement_type']);
         }
         $similar_fields_without_permissions_verification = new SimilarFieldCollection(...$similar_field_candidates);
@@ -80,7 +80,7 @@ class SimilarFieldsMatcher
     {
         $bind_name = null;
         if ($field instanceof \Tracker_FormElement_Field_List) {
-            $bind = $field->getBind();
+            $bind      = $field->getBind();
             $bind_name = $bind->accept($this->bind_name_visitor, new BindParameters($field));
         }
         $type = new SimilarFieldType($type_shortname, $bind_name);

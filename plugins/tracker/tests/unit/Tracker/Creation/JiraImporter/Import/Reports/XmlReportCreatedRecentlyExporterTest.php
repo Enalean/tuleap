@@ -125,8 +125,8 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
             Tracker_FormElementFactory::FIELD_DATE_TYPE,
         );
 
-        $tracker_node       = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
-        $this->reports_node = $tracker_node->addChild('reports');
+        $tracker_node        = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
+        $this->reports_node  = $tracker_node->addChild('reports');
         $cdata_factory       = new \XML_SimpleXMLCDATAFactory();
         $this->report_export = new XmlReportCreatedRecentlyExporter(
             new XmlTQLReportExporter(

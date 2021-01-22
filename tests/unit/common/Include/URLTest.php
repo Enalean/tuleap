@@ -64,7 +64,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
     public function testProjectsExist()
     {
-        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $url->shouldReceive('getForumDao');
         $url->shouldReceive('getNewsBytesDao');
         $url->shouldReceive('getArtifactDao');
@@ -83,7 +83,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $rule->shouldReceive('containsIllegalChars')->andReturns(false);
         $url->shouldReceive('getProjectNameRule')->andReturns($rule);
 
-        $dao    = \Mockery::spy(\ProjectDao::class);
+        $dao = \Mockery::spy(\ProjectDao::class);
         $dao->shouldReceive('searchByUnixGroupName')->andReturns($exists)->ordered();
         $dao->shouldReceive('searchByUnixGroupName')->andReturns($exists1)->ordered();
 
@@ -94,8 +94,8 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
     public function testViewVcDontExist()
     {
-        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\ProjectDao::class);
+        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao    = \Mockery::spy(\ProjectDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
         $exists->shouldReceive('rowCount')->andReturns(0);
         $exists->shouldReceive('getRow')->andReturns(false);
@@ -111,8 +111,8 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
     public function testViewVcExist()
     {
-        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\ProjectDao::class);
+        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao    = \Mockery::spy(\ProjectDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
         $exists->shouldReceive('rowCount')->andReturns(1);
         $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
@@ -128,7 +128,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
     public function testViewVcNotValidProjectName()
     {
-        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $url  = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $rule = \Mockery::spy(\Rule_ProjectName::class);
         $url->shouldReceive('getProjectNameRule')->andReturns($rule);
         $rule->shouldReceive('containsIllegalChars')->andReturns(true);
@@ -138,8 +138,8 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
     public function testViewVcExistForProjectWithPoint()
     {
-        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\ProjectDao::class);
+        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao    = \Mockery::spy(\ProjectDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
         $exists->shouldReceive('rowCount')->andReturns(1);
         $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
@@ -155,8 +155,8 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
     public function testForumDontExist()
     {
-        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\ForumDao::class);
+        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao    = \Mockery::spy(\ForumDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
         $exists->shouldReceive('getRow')->andReturns(false);
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists);
@@ -167,8 +167,8 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
     public function testForumExist()
     {
-        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\ForumDao::class);
+        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao    = \Mockery::spy(\ForumDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
         $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
@@ -185,8 +185,8 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
     public function testNewsBytesDontExist()
     {
-        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\ForumDao::class);
+        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao    = \Mockery::spy(\ForumDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
 
         $exists->shouldReceive('getRow')->andReturns(['group_id' => '42'])->ordered();
@@ -199,17 +199,17 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
     public function testNewsBytesExist()
     {
-        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\ForumDao::class);
+        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao    = \Mockery::spy(\ForumDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
 
         $exists->shouldReceive('getRow')->andReturns(['group_id' => ForgeConfig::get('sys_news_group')])->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists)->ordered();
         $_REQUEST['forum_id'] = 1;
-        $group_id = $url->shouldReceive('getForumDao')->andReturns($dao);
+        $group_id             = $url->shouldReceive('getForumDao')->andReturns($dao);
 
-        $dao2 = \Mockery::spy(\NewsBytesDao::class);
+        $dao2    = \Mockery::spy(\NewsBytesDao::class);
         $exists2 = \Mockery::spy(\DataAccessResult::class);
         $exists2->shouldReceive('getRow')->andReturns(['group_id' => ForgeConfig::get('sys_news_group')])->ordered();
         $exists2->shouldReceive('getRow')->andReturns(false)->ordered();
@@ -220,8 +220,8 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
     public function testArtifactDontExist()
     {
-        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\ArtifactDao::class);
+        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao    = \Mockery::spy(\ArtifactDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
         $exists->shouldReceive('getRow')->andReturns(false);
         $dao->shouldReceive('searchArtifactId')->andReturns($exists);
@@ -232,8 +232,8 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
     public function testArtifactExist()
     {
-        $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\ArtifactDao::class);
+        $url    = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao    = \Mockery::spy(\ArtifactDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
         $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();

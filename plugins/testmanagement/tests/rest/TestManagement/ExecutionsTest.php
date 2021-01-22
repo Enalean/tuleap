@@ -178,7 +178,7 @@ final class ExecutionsTest extends BaseTest
         $all_artifacts_request  = $this->client->get('trackers/' . $tracker_id . '/artifacts');
         $all_artifacts_response = $this->getResponse($all_artifacts_request);
 
-        $artifacts      = $all_artifacts_response->json();
+        $artifacts     = $all_artifacts_response->json();
         $last_artifact = end($artifacts);
 
         return $last_artifact;

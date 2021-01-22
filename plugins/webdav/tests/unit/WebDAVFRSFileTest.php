@@ -51,7 +51,7 @@ final class WebDAVFRSFileTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->user = UserTestBuilder::aUser()->build();
+        $this->user    = UserTestBuilder::aUser()->build();
         $this->project = ProjectTestBuilder::aProject()->build();
     }
 

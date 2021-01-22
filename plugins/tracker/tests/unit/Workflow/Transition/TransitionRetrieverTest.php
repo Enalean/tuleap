@@ -70,7 +70,7 @@ final class TransitionRetrieverTest extends TestCase
         $previous_changeset = null;
 
         $workflow_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $workflow = Mockery::mock(Workflow::class)
+        $workflow       = Mockery::mock(Workflow::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -118,7 +118,7 @@ final class TransitionRetrieverTest extends TestCase
         $previous_changeset = null;
 
         $workflow_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $workflow = Mockery::mock(Workflow::class)
+        $workflow       = Mockery::mock(Workflow::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -172,7 +172,7 @@ final class TransitionRetrieverTest extends TestCase
         ];
 
         $workflow_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $workflow = Mockery::mock(Workflow::class)
+        $workflow       = Mockery::mock(Workflow::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -212,7 +212,7 @@ final class TransitionRetrieverTest extends TestCase
         $fields_data = [];
 
         $workflow_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $workflow = Mockery::mock(Workflow::class)
+        $workflow       = Mockery::mock(Workflow::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 

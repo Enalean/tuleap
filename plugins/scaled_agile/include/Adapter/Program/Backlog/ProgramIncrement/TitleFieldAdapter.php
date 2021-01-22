@@ -38,7 +38,7 @@ final class TitleFieldAdapter implements BuildField
     public function __construct(
         \Tracker_Semantic_TitleFactory $title_factory
     ) {
-        $this->title_factory        = $title_factory;
+        $this->title_factory = $title_factory;
     }
     /**
      * @throws FieldRetrievalException

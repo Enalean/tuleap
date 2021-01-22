@@ -55,7 +55,7 @@ class JiraSuccessImportNotifier
     ) {
         $this->jira_import_notifier = $jira_import_notifier;
         $this->base_url_builder     = $base_url_builder;
-        $this->locale_switcher           = $locale_switcher;
+        $this->locale_switcher      = $locale_switcher;
 
         $this->renderer = $template_renderer_factory->getRenderer(__DIR__);
     }

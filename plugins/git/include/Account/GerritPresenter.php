@@ -51,7 +51,7 @@ class GerritPresenter
     public function __construct(\CSRFSynchronizerToken $csrf_token, AccountTabPresenterCollection $tabs, array $gerrit_servers)
     {
         $this->csrf_token = $csrf_token;
-        $this->tabs = $tabs;
+        $this->tabs       = $tabs;
         foreach ($gerrit_servers as $server) {
             $this->gerrit_servers[] = new GerritServerPresenter($server->getBaseUrl());
         }

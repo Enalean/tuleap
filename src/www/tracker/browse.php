@@ -58,7 +58,7 @@ if (user_isloggedin()) {
         $report_id = user_get_preference('artifact_browse_report' . $atid);
         if ($report_id == "") {
             // Default value
-            $arf = new ArtifactReportFactory();
+            $arf       = new ArtifactReportFactory();
             $report_id = $arf->getDefaultReport($atid);
             if ($report_id == null) {
                 $report_id = 100;
@@ -75,7 +75,7 @@ if (user_isloggedin()) {
     }
 } else {
     if (! $request->exist('report_id')) {
-            $arf = new ArtifactReportFactory();
+            $arf       = new ArtifactReportFactory();
             $report_id = $arf->getDefaultReport($atid);
     } else {
             $report_id = $request->get('report_id');
@@ -248,7 +248,7 @@ if (! $request->exist('set')) {
           // Extract left and right parts of the assignment
           // and remove the '[]' array symbol from the left part
                 list($field,$value_id) = explode('=', $expr);
-                $field = str_replace('[]', '', $field);
+                $field                 = str_replace('[]', '', $field);
                 if ($field == 'advsrch') {
                     $advsrch = ($value_id ? 1 : 0);
                 } elseif ($field == 'msort') {
@@ -281,16 +281,16 @@ if ($set == 'my') {
     */
     $prefs['status_id'][] = 1; // Open status
     // Check if the current user is in the assigned_to list
-    $field_object = $art_field_fact->getFieldFromName('assigned_to');
+    $field_object       = $art_field_fact->getFieldFromName('assigned_to');
     $field_object_multi = $art_field_fact->getFieldFromName('multi_assigned_to');
-    $user_id = UserManager::instance()->getCurrentUser()->getId();
+    $user_id            = UserManager::instance()->getCurrentUser()->getId();
     if (($field_object) && ($field_object->checkValueInPredefinedValues($atid, $user_id))) {
         $prefs['assigned_to'][] = $user_id;
     } elseif (($field_object_multi) && ($field_object_multi->checkValueInPredefinedValues($atid, $user_id))) {
         $prefs['multi_assigned_to'][] = $user_id;
     } else {
       // Any value
-        $prefs['assigned_to'][] = 0;
+        $prefs['assigned_to'][]       = 0;
         $prefs['multi_assigned_to'][] = 0;
     }
 } elseif ($set == 'custom') {
@@ -331,14 +331,14 @@ if ($set == 'my') {
     }
 } elseif ($set == 'all') {
     // Any value for very field
-    $prefs['status_id'][] = 0;
-    $prefs['assigned_to'][] = 0;
+    $prefs['status_id'][]         = 0;
+    $prefs['assigned_to'][]       = 0;
     $prefs['multi_assigned_to'][] = 0;
 } else {
     // Open artifacts - backwards compat can be removed 9/10
     $prefs['status_id'][] = 1;
     // Any value for assigned to
-    $prefs['assigned_to'][] = 0;
+    $prefs['assigned_to'][]       = 0;
     $prefs['multi_assigned_to'][] = 0;
 }
 
@@ -348,15 +348,15 @@ if ($set == 'my') {
    as well as all the arguments that serves as selection criteria
    If not defined then defaults to ANY (0)
   ================================================== */
-$_title = $group->getPublicName() . ': \'' . $ath->getName() . '\' ';
+$_title     = $group->getPublicName() . ': \'' . $ath->getName() . '\' ';
 $masschange = isset($masschange) && $masschange;
 if ($pv != 2) {
     if ($masschange) {
         $_title .=  $Language->getText('tracker_masschange', 'mass_change_report');
-        $_help = 'ArtifactMassChange.html';
+        $_help   = 'ArtifactMassChange.html';
     } else {
         $_title .= $Language->getText('tracker_browse', 'search_report');
-        $_help = 'tracker-v3.html#artifact-browsing';
+        $_help   = 'tracker-v3.html#artifact-browsing';
     }
 } else {
     $_help = ''; // printer version without help
@@ -374,7 +374,7 @@ $params = ['title' => $_title,
 $ath->header($params);
 echo '<div id="tracker_toolbar_clear"></div>';
 
-$em = EventManager::instance();
+$em          = EventManager::instance();
 $pref_params = ['group_id'   => $group_id,
                      'atid'       => $atid,
                      'report_id'  => $report_id,

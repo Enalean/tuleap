@@ -87,8 +87,8 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
         $sp = HTML::Raw('&middot; ');
         if (! empty($args['month'])) {
             $prefix = $parent . $this->_blogPrefix('wikiblog') . SUBPAGE_SEPARATOR . $args['month'];
-            $pages = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
-            $html = HTML::ul();
+            $pages  = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
+            $html   = HTML::ul();
             while ($page = $pages->next()) {
                 $rev = $page->getCurrentRevision(false);
                 if ($rev->get('pagetype') != 'wikiblog') {
@@ -121,7 +121,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
             $months = [];
             foreach ($blogs as $rev) {
                 $blog = $this->_blog($rev);
-                $mon = $blog['month'];
+                $mon  = $blog['month'];
                 if (empty($months[$mon])) {
                     $months[$mon] =
                         ['title' => $this->_monthTitle($mon),

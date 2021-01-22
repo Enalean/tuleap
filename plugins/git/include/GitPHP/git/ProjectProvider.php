@@ -34,7 +34,7 @@ class ProjectProvider
         $project_root = $repository->getGitRootPath() . $repository->getProject()->getUnixName() . '/';
         $project_path = $repository->getFullName() . '.git';
 
-        $this->project     = new Project($project_root, $project_path);
+        $this->project    = new Project($project_root, $project_path);
         $this->repository = $repository;
     }
 

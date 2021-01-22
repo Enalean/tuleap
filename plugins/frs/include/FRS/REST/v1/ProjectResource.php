@@ -53,9 +53,9 @@ class ProjectResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->user_manager      = UserManager::instance();
-        $this->project_manager   = ProjectManager::instance();
-        $this->package_factory   = FRSPackageFactory::instance();
+        $this->user_manager    = UserManager::instance();
+        $this->project_manager = ProjectManager::instance();
+        $this->package_factory = FRSPackageFactory::instance();
     }
 
     /**
@@ -80,7 +80,7 @@ class ProjectResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $project = $this->getProjectForUser($id);
+        $project            = $this->getProjectForUser($id);
         $paginated_packages = $this->getPackages($project, $this->user_manager->getCurrentUser(), $limit, $offset);
 
         $this->sendAllowHeadersForFRSPackages();
@@ -121,7 +121,7 @@ class ProjectResource extends AuthenticatedResource
             throw new RestException(404, 'File Release System service is not used by the project');
         }
 
-        $packages = [];
+        $packages           = [];
         $paginated_packages = $this->package_factory->getPaginatedActivePackagesForUser(
             $project,
             $user,

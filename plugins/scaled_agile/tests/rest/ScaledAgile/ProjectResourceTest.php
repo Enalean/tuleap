@@ -39,9 +39,9 @@ class ProjectResourceTest extends \RestBase
     public function testPUTTeam(): void
     {
         $program_id = $this->getProgramProjectId();
-        $team_id = $this->getTeamProjectId();
+        $team_id    = $this->getTeamProjectId();
 
-        $team_definition  = json_encode(["team_ids" => [$team_id]]);
+        $team_definition = json_encode(["team_ids" => [$team_id]]);
 
         $response = $this->getResponse(
             $this->client->put('projects/' . $program_id . '/scaled_agile_teams', null, $team_definition),
@@ -58,7 +58,7 @@ class ProjectResourceTest extends \RestBase
     {
         $project_id = $this->getProgramProjectId();
 
-        $plan_definition  = json_encode(
+        $plan_definition = json_encode(
             [
                   "program_increment_tracker_id" => $this->tracker_ids[$project_id]['rel'],
                   "plannable_tracker_ids" => [$this->tracker_ids[$project_id]['bug'],$this->tracker_ids[$project_id]['story']]

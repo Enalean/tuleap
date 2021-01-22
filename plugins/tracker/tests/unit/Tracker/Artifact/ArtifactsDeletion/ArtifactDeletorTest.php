@@ -60,7 +60,7 @@ class ArtifactDeletorTest extends TestCase
         $artifact->shouldReceive('getTrackerId')->andReturn(4);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
-        $user     = Mockery::mock(\PFUser::class);
+        $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturn(110);
 
         $dao->shouldReceive("startTransaction");

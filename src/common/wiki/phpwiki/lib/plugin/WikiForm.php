@@ -58,7 +58,7 @@ class WikiPlugin_WikiForm extends WikiPlugin
     public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
-        $form = HTML::form(
+        $form  = HTML::form(
             ['action' => $request->getPostURL(),
                                  'method' => 'post',
                                  'class'  => 'wikiadmin',

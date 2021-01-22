@@ -61,7 +61,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
 
     public function testGETBacklogWithAllItems(): void
     {
-        $query = json_encode(['status' => 'all']);
+        $query    = json_encode(['status' => 'all']);
         $response = $this->getResponse(
             $this->client->get('milestones/' . $this->release_artifact_ids[1] . '/backlog?query=' . urlencode($query))
         );
@@ -178,7 +178,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/' . $this->release_artifact_ids[1] . '/backlog', null, '[' . $this->story_artifact_ids[4] . ',' . $this->story_artifact_ids[5] . ',' . $this->story_artifact_ids[3] . ']'));
         $this->assertEquals($response_put->getStatusCode(), 403);
 
-        $response_get = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1] . '/backlog'));
+        $response_get  = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1] . '/backlog'));
         $backlog_items = $response_get->json();
         $this->assertCount(3, $backlog_items);
 
@@ -256,7 +256,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
         );
         $this->assertEquals($response_post->getStatusCode(), 201);
 
-        $response_get = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1] . '/backlog'));
+        $response_get  = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1] . '/backlog'));
         $backlog_items = $response_get->json();
         $last_item     = count($backlog_items) - 1;
 
@@ -267,7 +267,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
 
     public function testPOSTBacklogWithoutPermissions(): void
     {
-        $post = [
+        $post          = [
             'artifact' => ['id' => $this->story_artifact_ids[6]]
         ];
         $response_post = $this->getResponseByName(

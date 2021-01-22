@@ -46,8 +46,8 @@ try {
     $repository_path = $argv[1];
     $transaction     = $argv[2];
 
-    $svnlook               = new Svnlook(new System_Command());
-    $hook                  = new PreCommit(
+    $svnlook = new Svnlook(new System_Command());
+    $hook    = new PreCommit(
         $repository_path,
         $transaction,
         new RepositoryManager(

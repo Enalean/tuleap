@@ -132,7 +132,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
 
         $this->trigger_value_id_1 = 369;
         $this->trigger_value_id_2 = 258;
-        $this->rule = new Tracker_Workflow_Trigger_TriggerRule(
+        $this->rule               = new Tracker_Workflow_Trigger_TriggerRule(
             null,
             new Tracker_Workflow_Trigger_FieldValue(
                 $this->buildSelectBoxField(12),
@@ -170,12 +170,12 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $template_tracker  = Mockery::spy(Tracker::class)->shouldReceive('getId')->andReturn(101)->getMock();
-        $new_field_01      = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(502)->getMock();
+        $template_tracker = Mockery::spy(Tracker::class)->shouldReceive('getId')->andReturn(101)->getMock();
+        $new_field_01     = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(502)->getMock();
         $new_field_01->shouldReceive('getTracker')->andReturn($template_tracker);
-        $new_field_02      = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(503)->getMock();
+        $new_field_02 = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(503)->getMock();
         $new_field_02->shouldReceive('getTracker')->andReturn($template_tracker);
-        $new_field_03      = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(501)->getMock();
+        $new_field_03 = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(501)->getMock();
         $new_field_03->shouldReceive('getTracker')->andReturn($template_tracker);
 
         $new_field_01->shouldReceive('getAllValues')->andReturn([
@@ -325,12 +325,12 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
         $this->rule_id = 6347;
 
         $this->tracker_id = 4656;
-        $this->tracker = Mockery::spy(Tracker::class);
+        $this->tracker    = Mockery::spy(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);
 
-        $this->target_field_id = 12;
+        $this->target_field_id    = 12;
         $this->target_field_value = $this->buildStaticValue($this->target_value_id);
-        $this->target_field = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
+        $this->target_field       = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
         $this->target_field->shouldReceive('getTracker')->andReturn($this->tracker);
         $this->target_field->shouldReceive('getAllValues')->andReturns([
                                                                            $this->buildStaticValue(9998),
@@ -339,10 +339,10 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
                                                                        ]);
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with($this->target_field_id)->andReturns($this->target_field);
 
-        $this->trigger_field_id_1 = 369;
-        $this->trigger_value_id_1 = 852;
+        $this->trigger_field_id_1    = 369;
+        $this->trigger_value_id_1    = 852;
         $this->trigger_field_value_1 = $this->buildStaticValue($this->trigger_value_id_1);
-        $this->trigger_field_1 = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
+        $this->trigger_field_1       = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
         $this->trigger_field_1->shouldReceive('getId')->andReturn($this->trigger_field_id_1);
         $this->trigger_field_1->shouldReceive('getAllValues')->andReturns([
                                                                               $this->trigger_field_value_1,
@@ -458,7 +458,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
             )
         );
 
-        $rule = $this->manager->getForTargetTracker($this->tracker)->current();
+        $rule    = $this->manager->getForTargetTracker($this->tracker)->current();
         $trigger = current($rule->getTriggers());
         $this->assertEquals($this->trigger_field_1, $trigger->getField());
         $this->assertEquals($this->trigger_field_value_1, $trigger->getValue());
@@ -527,7 +527,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \PHPUnit\Framework
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $trigger_1 = new Tracker_Workflow_Trigger_TriggerRule(
             1,

@@ -45,10 +45,10 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
             $log_string = "<strong>$message</strong>";
         }
         if (isset($context['exception']) && $context['exception'] instanceof Throwable) {
-            $exception      = $context['exception'];
-            $error_message  = $exception->getMessage();
-            $stack_trace    = $exception->getTraceAsString();
-            $log_string    .= ": $error_message:\n$stack_trace";
+            $exception     = $context['exception'];
+            $error_message = $exception->getMessage();
+            $stack_trace   = $exception->getTraceAsString();
+            $log_string   .= ": $error_message:\n$stack_trace";
         }
         return $log_string;
     }

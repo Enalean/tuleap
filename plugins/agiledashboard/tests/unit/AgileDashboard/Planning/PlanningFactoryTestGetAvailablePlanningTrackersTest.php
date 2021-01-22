@@ -46,8 +46,8 @@ final class PlanningFactoryTestGetAvailablePlanningTrackersTest extends TestCase
 
     protected function setUp(): void
     {
-        $planning_dao                       = Mockery::spy(PlanningDao::class);
-        $this->tracker_factory              = Mockery::spy(TrackerFactory::class);
+        $planning_dao                 = Mockery::spy(PlanningDao::class);
+        $this->tracker_factory        = Mockery::spy(TrackerFactory::class);
         $planning_permissions_manager = Mockery::spy(PlanningPermissionsManager::class);
 
         $this->partial_factory = Mockery::mock(

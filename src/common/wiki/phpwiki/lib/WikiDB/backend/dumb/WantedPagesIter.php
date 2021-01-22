@@ -14,9 +14,9 @@ class WikiDB_backend_dumb_WantedPagesIter extends WikiDB_backend_iterator
 {
     public function __construct(&$backend, &$all_pages, $exclude = '', $sortby = false, $limit = false)
     {
-        $this->_allpages   = $all_pages;
-        $this->_allpages_array   = $all_pages->asArray();
-        $this->_backend = &$backend;
+        $this->_allpages       = $all_pages;
+        $this->_allpages_array = $all_pages->asArray();
+        $this->_backend        = &$backend;
         if (! is_array($exclude)) {
             $this->exclude = $exclude ? PageList::explodePageList($exclude) : [];
         } else {
@@ -28,7 +28,7 @@ class WikiDB_backend_dumb_WantedPagesIter extends WikiDB_backend_iterator
     {
         while ($page = $this->_allpages->next()) {
             $pagename = $page['pagename'];
-            $links = $this->_backend->get_links($pagename, false);
+            $links    = $this->_backend->get_links($pagename, false);
             while ($link = $links->next()) {
                 if ($this->exclude and in_array($link['pagename'], $this->exclude)) {
                     continue;

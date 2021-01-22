@@ -46,7 +46,7 @@ final class AgileDashboard_XMLimporterTest extends \PHPUnit\Framework\TestCase
         $plan_title          = PlanningParameters::PLANNING_TITLE;
         $planning_tracker_id = PlanningParameters::PLANNING_TRACKER_ID;
 
-        $default_xml = '<?xml version="1.0" encoding="UTF-8"?>
+        $default_xml      = '<?xml version="1.0" encoding="UTF-8"?>
                  <agiledashboard>
                     <plannings>
                         <planning ' .

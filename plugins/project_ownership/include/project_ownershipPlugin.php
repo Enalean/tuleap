@@ -100,7 +100,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
     public function collectProjectAdminNavigationItems(NavigationPresenter $presenter)
     {
         $project_id = $presenter->getProjectId();
-        $html_url = $this->getPluginPath() . '/project/' . urlencode($project_id) . '/admin';
+        $html_url   = $this->getPluginPath() . '/project/' . urlencode($project_id) . '/admin';
         $presenter->addDropdownItem(
             NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
             new NavigationDropdownItemPresenter(
@@ -195,7 +195,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
     {
         switch ($params['type']) {
             case ProjectOwnerStatusNotificationSystemEvent::NAME:
-                $params['class'] = ProjectOwnerStatusNotificationSystemEvent::class;
+                $params['class']        = ProjectOwnerStatusNotificationSystemEvent::class;
                 $params['dependencies'] = [
                     new \Tuleap\ProjectOwnership\Notification\Sender(\ProjectManager::instance(), new \Tuleap\Language\LocaleSwitcher())
                 ];

@@ -28,10 +28,10 @@ class Docman_ValidateMetadataListIsNotEmpty extends \Docman_Validator
         $msg = \sprintf(\dgettext('tuleap-docman', '"%1$s" is required, please fill the field.'), $metadata->getName());
         if ($metadata !== \null) {
             $selected_elements = [];
-            $vIter = $metadata->getValue();
+            $vIter             = $metadata->getValue();
             $vIter->rewind();
             while ($vIter->valid()) {
-                $current_value = $vIter->current();
+                $current_value       = $vIter->current();
                 $selected_elements[] = $current_value->getId();
                 $vIter->next();
             }

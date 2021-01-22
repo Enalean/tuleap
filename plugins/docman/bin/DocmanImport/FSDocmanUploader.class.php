@@ -62,7 +62,7 @@ $id_dest    = $argv[3];
 
 // Server URL where all the stuff will be uploaded
 $codendi_url = "";
-$soap_url  = "http://serveur.codendi/soap/codendi.wsdl.php?wsdl";
+$soap_url    = "http://serveur.codendi/soap/codendi.wsdl.php?wsdl";
 
 //SOAP Authentication
 $soap = new SoapClient($soap_url);
@@ -89,9 +89,9 @@ if ($slashEnd) {
 $folderhash[$foldername] = $id_dest;
 
 foreach ($rii as $r) {
-    $foldername   = $r->getPathName();
-    $folderpath   = $r->getPath();
-    $name         = $r->getFilename();
+    $foldername = $r->getPathName();
+    $folderpath = $r->getPath();
+    $name       = $r->getFilename();
 
     if ($r->isDir()) {
         echo "Creating " . $r->getFilename() . " folder ..... ";

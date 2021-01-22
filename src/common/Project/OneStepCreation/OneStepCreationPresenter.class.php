@@ -36,17 +36,17 @@ class Project_OneStepCreation_OneStepCreationPresenter //phpcs:ignore PSR1.Class
     public const PROJECT_DESCRIPTION_PREFIX      = 'form_';
     public const TROVE_CAT_PREFIX                = 'trove';
 
-    public $full_name_label                        = self::FULL_NAME;
-    public $unix_name_label                        = self::UNIX_NAME;
-    public $user_can_choose_project_privacy_label  = self::USER_CAN_CHOOSE_PROJECT_PRIVACY;
-    public $is_public_label                        = self::IS_PUBLIC;
+    public $full_name_label                       = self::FULL_NAME;
+    public $unix_name_label                       = self::UNIX_NAME;
+    public $user_can_choose_project_privacy_label = self::USER_CAN_CHOOSE_PROJECT_PRIVACY;
+    public $is_public_label                       = self::IS_PUBLIC;
     /**
      * @var bool
      */
     public $has_project_without_restricted;
-    public $template_id_label                      = self::TEMPLATE_ID;
-    public $short_description_label                = self::SHORT_DESCRIPTION;
-    public $term_of_service_approval_label         = self::TOS_APPROVAL;
+    public $template_id_label              = self::TEMPLATE_ID;
+    public $short_description_label        = self::SHORT_DESCRIPTION;
+    public $term_of_service_approval_label = self::TOS_APPROVAL;
 
     /**
      * @var Project_CustomDescription_CustomDescriptionPresenter[]

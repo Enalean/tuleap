@@ -68,7 +68,7 @@ class PendingProjectBuilder
         $projects_id  = [];
 
         foreach ($this->project_manager->getAllPendingProjects() as $project) {
-            $admin         = $this->getProjectAdminWhichIsFirstProjectMember($project);
+            $admin = $this->getProjectAdminWhichIsFirstProjectMember($project);
             if (! $admin) {
                 $admin = $this->user_manager->getUserAnonymous();
             }

@@ -114,10 +114,10 @@ class SemanticDone extends Tracker_Semantic
      */
     public function display()
     {
-        $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR . '/semantic');
+        $renderer = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR . '/semantic');
 
         $semantic_status_field = $this->semantic_status->getField();
-        $selected_values         = [];
+        $selected_values       = [];
 
         if ($semantic_status_field) {
             $selected_values = $this->getFormattedDoneValues();

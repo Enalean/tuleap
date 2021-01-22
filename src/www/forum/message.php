@@ -61,7 +61,7 @@ if ($request->valid($vMsg)) {
 
     echo "<P>";
 
-    $title_arr = [];
+    $title_arr   = [];
     $title_arr[] = 'Message: ' . $msg_id;
 
     echo html_build_list_table_top($title_arr);

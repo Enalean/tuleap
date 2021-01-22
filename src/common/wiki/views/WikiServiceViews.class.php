@@ -42,20 +42,20 @@ class WikiServiceViews extends WikiViews
         parent::WikiView($controler, $id, $view);
         $pm = ProjectManager::instance();
         if (isset($_REQUEST['pagename']) && ! is_null($_REQUEST['pagename'])) {
-            $this->html_params['title']  = $GLOBALS['Language']->getText(
+            $this->html_params['title'] = $GLOBALS['Language']->getText(
                 'wiki_views_wikiserviceviews',
                 'wiki_page_title',
                 [ $this->purifier->purify($_REQUEST['pagename'], CODENDI_PURIFIER_CONVERT_HTML) ,
                 $pm->getProject($this->gid)->getPublicName()]
             );
-            $this->base_url = '/wiki/index.php?group_id=' . $this->gid . '&pagename=' . urlencode($_REQUEST['pagename']);
+            $this->base_url             = '/wiki/index.php?group_id=' . $this->gid . '&pagename=' . urlencode($_REQUEST['pagename']);
         } else {
-            $this->html_params['title']  = $GLOBALS['Language']->getText(
+            $this->html_params['title'] = $GLOBALS['Language']->getText(
                 'wiki_views_wikiserviceviews',
                 'wiki_title',
                 [$pm->getProject($this->gid)->getPublicName()]
             );
-            $this->base_url = '/wiki/index.php?group_id=' . $this->gid;
+            $this->base_url             = '/wiki/index.php?group_id=' . $this->gid;
         }
         $GLOBALS['wiki_view'] = $this;
     }
@@ -76,7 +76,7 @@ class WikiServiceViews extends WikiViews
     public function browse()
     {
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_documents', $this->gid);
-        $hurl = '<a href="' . $this->wikiLink . '&' . $hideUrl . '">' . $hideImg . '</a>';
+        $hurl                               = '<a href="' . $this->wikiLink . '&' . $hideUrl . '">' . $hideImg . '</a>';
         print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_docu', [$hurl]);
         if (! $hideFlag) {
             $this->_browseWikiDocuments();
@@ -98,21 +98,21 @@ class WikiServiceViews extends WikiViews
     public function browsePages()
     {
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_pages', $this->gid);
-        $hurl = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
+        $hurl                               = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
         print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_pages', [$hurl]);
         if (! $hideFlag) {
             $this->_browseProjectWikiPages();
         }
 
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_empty_pages', $this->gid);
-        $hurl = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
+        $hurl                               = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
         print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_empty', [$hurl]);
         if (! $hideFlag) {
             $this->_browseEmptyWikiPages();
         }
 
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_create_new_page', $this->gid);
-        $hurl = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
+        $hurl                               = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
         print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_create', [$hurl]);
         if (! $hideFlag) {
             $this->_newPageForm($this->wikiLink . '&view=browsePages');
@@ -157,7 +157,7 @@ class WikiServiceViews extends WikiViews
    */
     public function _browseEmptyWikiPages()
     {
-        $wpw = new WikiPageWrapper($this->gid);
+        $wpw      = new WikiPageWrapper($this->gid);
         $allPages = $wpw->getProjectEmptyLinks();
         $this->_browsePages($allPages);
     }
@@ -171,7 +171,7 @@ class WikiServiceViews extends WikiViews
     {
         print '<ul class="WikiEntries">';
         foreach ($pageList as $pagename) {
-            $wp = new WikiPage($this->gid, $pagename);
+            $wp   = new WikiPage($this->gid, $pagename);
             $href = $this->_buildPageLink($wp);
             if (! empty($href)) {
                 print '<li>' . $href . '</li>';
@@ -227,7 +227,7 @@ class WikiServiceViews extends WikiViews
           // Build Lock image if a permission is set on the corresponding page
             if ($wikiPage->permissionExist()) {
                 $permLink = $this->wikiLink . '&view=pagePerms&id=' . $wikiPage->getId();
-                $title = $title . '<img src="' . util_get_image_theme("ic/lock.png") . '" border="0" alt="Lock" />';
+                $title    = $title . '<img src="' . util_get_image_theme("ic/lock.png") . '" border="0" alt="Lock" />';
             }
 
             $href = '<a href="' . $link . '">' . $title . '</a>';
@@ -259,7 +259,7 @@ class WikiServiceViews extends WikiViews
         }
         switch ($language_id) {
             case 'fr_FR':
-                 $attatch_page     = "DéposerUnFichier";
+                 $attatch_page    = "DéposerUnFichier";
                 $preferences_page = "PréférencesUtilisateurs";
                 break;
             case 'en_US':
@@ -289,7 +289,7 @@ class WikiServiceViews extends WikiViews
   <td align="right" valign="top">';
 
         if (user_ismember($this->gid, 'W2') || user_ismember($this->gid, 'A')) {
-              $wiki = new Wiki($this->gid);
+              $wiki     = new Wiki($this->gid);
               $permInfo = "";
             if ('wiki' == $this->view) {
             // User is browsing a wiki page
@@ -348,7 +348,7 @@ class WikiServiceViews extends WikiViews
 
         $wp->log(UserManager::instance()->getCurrentUser()->getId());
 
-        $lite = false;
+        $lite        = false;
         $full_screen = false;
         if (isset($_GET['pv']) && ( $_GET['pv'] == 1)) {
             $lite = true;
@@ -424,7 +424,7 @@ class WikiServiceViews extends WikiViews
         // Make sure phpWiki instantiates the right pages corresponding the the given language
         define('DEFAULT_LANGUAGE', $language_id);
         $LANG = $language_id;
-        $wpw = new WikiPageWrapper($this->gid);
+        $wpw  = new WikiPageWrapper($this->gid);
         $wpw->install();
     }
 }

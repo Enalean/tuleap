@@ -75,7 +75,7 @@ class SVN_Hook_PostRevPropset
     private function removePreviousCrossReferences(Project $project, $revision, $old_commit_message)
     {
         $GLOBALS['group_id'] = $project->getID();
-        $references = $this->reference_manager->extractReferences($old_commit_message, $project->getID());
+        $references          = $this->reference_manager->extractReferences($old_commit_message, $project->getID());
         foreach ($references as $reference_instance) {
             $reference = $reference_instance->getReference();
             \assert($reference instanceof Reference);

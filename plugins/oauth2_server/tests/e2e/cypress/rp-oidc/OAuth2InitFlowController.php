@@ -108,7 +108,7 @@ final class OAuth2InitFlowController
 
     private function discoverEndpoints(): OAuth2TestFlowConfiguration
     {
-        $response  = $this->http_client->sendRequest(
+        $response = $this->http_client->sendRequest(
             $this->request_factory->createRequest('GET', OAuth2TestFlowConstants::DISCOVERY_ENDPOINT)
         );
         if ($response->getStatusCode() !== 200) {

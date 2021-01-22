@@ -27,7 +27,7 @@ class Account_RegisterByAdminPresenter extends Account_RegisterPresenter
     public $send_email;
     public $expiry_date;
     public $expiry_date_directions;
-    public $form_url = '/admin/register_admin.php?page=admin_creation';
+    public $form_url               = '/admin/register_admin.php?page=admin_creation';
     public $should_display_purpose = true;
 
     public function __construct(Account_RegisterAdminPrefillValuesPresenter $prefill_values, $extra_plugin_field)

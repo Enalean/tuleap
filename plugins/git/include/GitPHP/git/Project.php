@@ -313,8 +313,8 @@ class Project
     private function SetProject($project) // @codingStandardsIgnoreLine
     {
         $realProjectRoot = realpath($this->projectRoot);
-        $path = $this->projectRoot . $project;
-        $fullPath = realpath($path);
+        $path            = $this->projectRoot . $project;
+        $fullPath        = realpath($path);
 
         if (! is_dir($fullPath)) {
             throw new RepositoryNotExistingException(sprintf(dgettext("gitphp", '%1$s is not a directory'), $project));
@@ -841,7 +841,7 @@ class Project
 
             $hash = trim(file_get_contents($heads[$i]));
             if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
-                $head = substr($key, strlen('refs/heads/'));
+                $head              = substr($key, strlen('refs/heads/'));
                 $this->heads[$key] = new Head($this, $head, $hash);
             }
         }
@@ -857,7 +857,7 @@ class Project
 
             $hash = trim(file_get_contents($tags[$i]));
             if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
-                $tag = substr($key, strlen('refs/tags/'));
+                $tag              = substr($key, strlen('refs/tags/'));
                 $this->tags[$key] = $this->LoadTag($tag, $hash);
             }
         }
@@ -885,7 +885,7 @@ class Project
                     $key = 'refs/' . $regs[2] . '/' . $regs[3];
                     if ($regs[2] == 'tags') {
                         if (! isset($this->tags[$key])) {
-                            $lastRef = $this->LoadTag($regs[3], $regs[1]);
+                            $lastRef          = $this->LoadTag($regs[3], $regs[1]);
                             $this->tags[$key] = $lastRef;
                         }
                     } elseif ($regs[2] == 'heads') {
@@ -1159,15 +1159,15 @@ class Project
     {
         $total = $count + $skip;
 
-        $inc = [];
-        $num = 0;
+        $inc   = [];
+        $num   = 0;
         $queue = [$this->GetCommit($hash)];
         while (($commit = array_shift($queue)) !== null) {
             $parents = $commit->GetParents();
             foreach ($parents as $parent) {
                 if (! isset($inc[$parent->GetHash()])) {
                     $inc[$parent->GetHash()] = 1;
-                    $queue[] = $parent;
+                    $queue[]                 = $parent;
                     $num++;
                 } else {
                     $inc[$parent->GetHash()]++;
@@ -1179,8 +1179,8 @@ class Project
         }
 
         $queue = [$this->GetCommit($hash)];
-        $log = [];
-        $num = 0;
+        $log   = [];
+        $num   = 0;
         while (($commit = array_pop($queue)) !== null) {
             array_push($log, $commit);
             $num++;

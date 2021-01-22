@@ -49,34 +49,34 @@ class UgroupLabelConverter
 
     private function buildDynamicUgroupLabelsIndexForLanguage(BaseLanguage $base_language)
     {
-        $project_members_label = $this->getNormalizedTranslatedLabel(
+        $project_members_label               = $this->getNormalizedTranslatedLabel(
             $base_language->getText('project_ugroup', 'ugroup_project_members')
         );
         $this->index[$project_members_label] = 'ugroup_project_members_name_key';
 
-        $project_admins_label = $this->getNormalizedTranslatedLabel(
+        $project_admins_label               = $this->getNormalizedTranslatedLabel(
             $base_language->getText('project_ugroup', 'ugroup_project_admins')
         );
         $this->index[$project_admins_label] = 'ugroup_project_admins_name_key';
 
-        $authenticaded_users_label = $this->getNormalizedCustomizedLabel(
+        $authenticaded_users_label               = $this->getNormalizedCustomizedLabel(
             NameTranslator::CONFIG_AUTHENTICATED_LABEL,
             $base_language->getText('project_ugroup', 'ugroup_authenticated_users')
         );
         $this->index[$authenticaded_users_label] = 'ugroup_authenticated_users_name_key';
 
-        $registered_users_label = $this->getNormalizedCustomizedLabel(
+        $registered_users_label               = $this->getNormalizedCustomizedLabel(
             NameTranslator::CONFIG_REGISTERED_LABEL,
             $base_language->getText('project_ugroup', 'ugroup_registered_users')
         );
         $this->index[$registered_users_label] = 'ugroup_registered_users_name_key';
 
-        $wiki_admins_label = $this->getNormalizedTranslatedLabel(
+        $wiki_admins_label               = $this->getNormalizedTranslatedLabel(
             $base_language->getText('project_ugroup', 'ugroup_wiki_admin_name_key')
         );
         $this->index[$wiki_admins_label] = 'ugroup_wiki_admin_name_key';
 
-        $file_manager_admins_label = $this->getNormalizedTranslatedLabel(
+        $file_manager_admins_label               = $this->getNormalizedTranslatedLabel(
             $base_language->getText('project_ugroup', 'ugroup_file_manager_admin_name_key')
         );
         $this->index[$file_manager_admins_label] = 'ugroup_file_manager_admin_name_key';

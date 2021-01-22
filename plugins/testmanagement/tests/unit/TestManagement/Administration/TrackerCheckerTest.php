@@ -126,8 +126,8 @@ class TrackerCheckerTest extends TestCase
         $this->tracker_factory->shouldReceive('getTrackerById')->with(6)->andReturn($this->deleted_tracker);
         $this->deleted_tracker->shouldReceive('isDeleted')->andReturnTrue();
 
-        $this->frozen_field_dao    = Mockery::mock(FrozenFieldsDao::class);
-        $this->hidden_fieldset_dao = Mockery::mock(HiddenFieldsetsDao::class);
+        $this->frozen_field_dao         = Mockery::mock(FrozenFieldsDao::class);
+        $this->hidden_fieldset_dao      = Mockery::mock(HiddenFieldsetsDao::class);
         $this->ttm_field_usage_detector = Mockery::mock(FieldUsageDetector::class);
 
         $this->tracker_checker = new TrackerChecker(

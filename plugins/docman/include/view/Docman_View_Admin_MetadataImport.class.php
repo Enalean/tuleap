@@ -30,7 +30,7 @@ class Docman_View_Admin_MetadataImport extends Docman_View_Extra
 
     public function _title($params)
     {
-        $pm = ProjectManager::instance();
+        $pm          = ProjectManager::instance();
         $this->srcGo = $pm->getProject($params['sSrcGroupId']);
         $this->dstGo = $pm->getProject($params['group_id']);
 

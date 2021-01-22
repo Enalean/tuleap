@@ -38,7 +38,7 @@ class GitRepositoryWithPermissions
 
     public function __construct(GitRepository $repository, array $permissions = [])
     {
-        $this->repository  = $repository;
+        $this->repository = $repository;
         if (count($permissions) > 0) {
             $this->permissions = $permissions;
         }

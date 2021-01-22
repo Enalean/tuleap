@@ -39,7 +39,7 @@ class CollectionOfUserToBeNotifiedPresenterBuilder
     {
         $presenters = [];
         foreach ($this->dao->searchUsersByNotificationId($notification->getId()) as $row) {
-            $user = new \PFUser($row);
+            $user         = new \PFUser($row);
             $presenters[] = new UserInvolvedInNotificationPresenter(
                 $row['user_id'],
                 $row['user_name'],

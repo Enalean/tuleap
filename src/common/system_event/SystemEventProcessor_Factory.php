@@ -45,7 +45,7 @@ class SystemEventProcessor_Factory
 
     public function getProcessForQueue($request_queue)
     {
-        $owner         = SystemEvent::OWNER_APP;
+        $owner = SystemEvent::OWNER_APP;
         /** @var SystemEventQueue[] $custom_queues */
         $custom_queues = [];
         $this->event_manager->processEvent(

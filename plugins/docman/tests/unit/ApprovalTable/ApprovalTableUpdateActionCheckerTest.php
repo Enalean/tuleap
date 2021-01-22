@@ -58,8 +58,8 @@ class ApprovalTableUpdateActionCheckerTest extends TestCase
 
     public function testCheckApprovalTableThrowsExceptionWhenItemHasApprovalTableAndApprovalActionIsNull(): void
     {
-        $approval_checker                      = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
-        $item                                  = Mockery::mock(\Docman_Item::class);
+        $approval_checker = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
+        $item             = Mockery::mock(\Docman_Item::class);
         $item->shouldReceive('getTitle')->andReturn("my item title");
         $representation                        = new DocmanFilesPATCHRepresentation();
         $representation->approval_table_action = null;
@@ -74,8 +74,8 @@ class ApprovalTableUpdateActionCheckerTest extends TestCase
 
     public function testCheckApprovalTableThrowsExceptionWhenItemHasNoApprovalTableButApprovalAction(): void
     {
-        $approval_checker                      = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
-        $item                                  = Mockery::mock(\Docman_Item::class);
+        $approval_checker = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
+        $item             = Mockery::mock(\Docman_Item::class);
         $item->shouldReceive('getTitle')->andReturn("my item title");
         $representation                        = new DocmanFilesPATCHRepresentation();
         $representation->approval_table_action = 'reset';

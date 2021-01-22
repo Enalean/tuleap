@@ -44,7 +44,7 @@ class GitoliteFullLogsToAggregatedLogs extends \DataAccessObject
     {
         $start_timestamp = $this->getLastImportedTimestamp();
         do {
-            $end_timestamp   = $this->getEndDate($start_timestamp);
+            $end_timestamp = $this->getEndDate($start_timestamp);
             $this->logger->info(sprintf("Import between %s and %s", date('c', $start_timestamp), date('c', $end_timestamp)));
             $start_timestamp = $this->updateBetween($start_timestamp, $end_timestamp);
             $this->logger->info('Done, wait for 1 sec');

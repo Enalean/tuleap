@@ -33,17 +33,17 @@ class PolarPlot
     public $line_style = 'solid';
     public $mark;
     public $legendcsimtarget = '';
-    public $legendcsimalt = '';
-    public $legend = "";
-    public $csimtargets = []; // Array of targets for CSIM
-    public $csimareas = "";   // Resultant CSIM area tags
-    public $csimalts = null;   // ALT:s for corresponding target
-    public $scale = null;
-    private $numpoints = 0;
-    private $iColor = 'navy';
-    private $iFillColor = '';
-    private $iLineWeight = 1;
-    private $coord = null;
+    public $legendcsimalt    = '';
+    public $legend           = "";
+    public $csimtargets      = []; // Array of targets for CSIM
+    public $csimareas        = "";   // Resultant CSIM area tags
+    public $csimalts         = null;   // ALT:s for corresponding target
+    public $scale            = null;
+    private $numpoints       = 0;
+    private $iColor          = 'navy';
+    private $iFillColor      = '';
+    private $iLineWeight     = 1;
+    private $coord           = null;
 
     public function __construct($aData)
     {
@@ -53,8 +53,8 @@ class PolarPlot
             //('Polar plots must have an even number of data point. Each data point is a tuple (angle,radius).');
         }
         $this->numpoints = $n / 2;
-        $this->coord = $aData;
-        $this->mark = new PlotMark();
+        $this->coord     = $aData;
+        $this->mark      = new PlotMark();
     }
 
     public function SetWeight($aWeight)
@@ -86,7 +86,7 @@ class PolarPlot
     public function SetCSIMTargets($aTargets, $aAlts = null)
     {
         $this->csimtargets = $aTargets;
-        $this->csimalts = $aAlts;
+        $this->csimalts    = $aAlts;
     }
 
     // Get all created areas
@@ -97,9 +97,9 @@ class PolarPlot
 
     public function SetLegend($aLegend, $aCSIM = "", $aCSIMAlt = "")
     {
-        $this->legend = $aLegend;
+        $this->legend           = $aLegend;
         $this->legendcsimtarget = $aCSIM;
-        $this->legendcsimalt = $aCSIMAlt;
+        $this->legendcsimalt    = $aCSIMAlt;
     }
 
     // Private methods
@@ -133,12 +133,12 @@ class PolarPlot
 
     public function Stroke($img, $scale)
     {
-        $i = 0;
-        $p = [];
+        $i               = 0;
+        $p               = [];
         $this->csimareas = '';
         while ($i < $this->numpoints) {
-            list($x1,$y1) = $scale->PTranslate($this->coord[2 * $i], $this->coord[2 * $i + 1]);
-            $p[2 * $i] = $x1;
+            list($x1,$y1)  = $scale->PTranslate($this->coord[2 * $i], $this->coord[2 * $i + 1]);
+            $p[2 * $i]     = $x1;
             $p[2 * $i + 1] = $y1;
 
             if (isset($this->csimtargets[$i])) {
@@ -169,23 +169,23 @@ class PolarPlot
 //--------------------------------------------------------------------------
 class PolarAxis extends Axis
 {
-    private $angle_step = 15;
-    private $angle_color = 'lightgray';
-    private $angle_fontfam = FF_FONT1;
-    private $angle_fontstyle = FS_NORMAL;
-    private $angle_fontsize = 10;
-    private $angle_fontcolor = 'navy';
-    private $gridminor_color = 'lightgray';
-    private $gridmajor_color = 'lightgray';
-    private $show_minor_grid = false;
-    private $show_major_grid = true;
-    private $show_angle_mark = true;
-    private $show_angle_grid = true;
-    private $show_angle_label = true;
-    private $angle_tick_len = 3;
-    private $angle_tick_len2 = 3;
-    private $angle_tick_color = 'black';
-    private $show_angle_tick = true;
+    private $angle_step        = 15;
+    private $angle_color       = 'lightgray';
+    private $angle_fontfam     = FF_FONT1;
+    private $angle_fontstyle   = FS_NORMAL;
+    private $angle_fontsize    = 10;
+    private $angle_fontcolor   = 'navy';
+    private $gridminor_color   = 'lightgray';
+    private $gridmajor_color   = 'lightgray';
+    private $show_minor_grid   = false;
+    private $show_major_grid   = true;
+    private $show_angle_mark   = true;
+    private $show_angle_grid   = true;
+    private $show_angle_label  = true;
+    private $angle_tick_len    = 3;
+    private $angle_tick_len2   = 3;
+    private $angle_tick_color  = 'black';
+    private $show_angle_tick   = true;
     private $radius_tick_color = 'black';
 
     public function __construct($img, $aScale)
@@ -223,9 +223,9 @@ class PolarAxis extends Axis
 
     public function SetAngleFont($aFontFam, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
-        $this->angle_fontfam = $aFontFam;
+        $this->angle_fontfam   = $aFontFam;
         $this->angle_fontstyle = $aFontStyle;
-        $this->angle_fontsize = $aFontSize;
+        $this->angle_fontsize  = $aFontSize;
     }
 
     public function SetColor($aColor, $aRadColor = '', $aAngleColor = '')
@@ -248,13 +248,13 @@ class PolarAxis extends Axis
 
         $this->gridminor_color = $aMinorColor;
         $this->gridmajor_color = $aMajorColor;
-        $this->angle_color = $aAngleColor;
+        $this->angle_color     = $aAngleColor;
     }
 
     public function SetTickColors($aRadColor, $aAngleColor = '')
     {
         $this->radius_tick_color = $aRadColor;
-        $this->angle_tick_color = $aAngleColor;
+        $this->angle_tick_color  = $aAngleColor;
     }
 
     // Private methods
@@ -265,12 +265,12 @@ class PolarAxis extends Axis
 
         // Stroke the minor arcs
         $pmin = [];
-        $p = $this->scale->ticks->ticks_pos;
-        $n = count($p);
-        $i = 0;
+        $p    = $this->scale->ticks->ticks_pos;
+        $n    = count($p);
+        $i    = 0;
         $this->img->SetColor($this->gridminor_color);
         while ($i < $n) {
-            $r = $p[$i] - $x + 1;
+            $r      = $p[$i] - $x + 1;
             $pmin[] = $r;
             if ($this->show_minor_grid) {
                 $this->img->Circle($x, $pos, $r);
@@ -281,10 +281,10 @@ class PolarAxis extends Axis
         $limit = max($this->img->plotwidth, $this->img->plotheight) * 1.4;
         while ($r < $limit) {
             $off = $r;
-            $i = 1;
-            $r = $off + round($p[$i] - $x + 1);
+            $i   = 1;
+            $r   = $off + round($p[$i] - $x + 1);
             while ($r < $limit && $i < $n) {
-                $r = $off + $p[$i] - $x;
+                $r      = $off + $p[$i] - $x;
                 $pmin[] = $r;
                 if ($this->show_minor_grid) {
                     $this->img->Circle($x, $pos, $r);
@@ -301,7 +301,7 @@ class PolarAxis extends Axis
             // to avoid rounding errors if we were to recalculate the
             // different major radius.
             $pmaj = $this->scale->ticks->maj_ticks_pos;
-            $p = $this->scale->ticks->ticks_pos;
+            $p    = $this->scale->ticks->ticks_pos;
             if ($this->scale->name == 'lin') {
                 $step = round(($pmaj[1] - $pmaj[0]) / ($p[1] - $p[0]));
             } else {
@@ -311,9 +311,9 @@ class PolarAxis extends Axis
             $i = 0;
             $this->img->SetColor($this->gridmajor_color);
             $limit = max($this->img->plotwidth, $this->img->plotheight) * 1.4;
-            $off = $r;
-            $i = 0;
-            $r = $pmin[$i * $step];
+            $off   = $r;
+            $i     = 0;
+            $r     = $pmin[$i * $step];
             while ($r < $limit && $i < $n) {
                 $r = $pmin[$i * $step];
                 $this->img->Circle($x, $pos, $r);
@@ -324,9 +324,9 @@ class PolarAxis extends Axis
         // Draw angles
         if ($this->show_angle_grid) {
             $this->img->SetColor($this->angle_color);
-            $d = max($this->img->plotheight, $this->img->plotwidth) * 1.4;
-            $a = 0;
-            $p = $this->scale->ticks->ticks_pos;
+            $d            = max($this->img->plotheight, $this->img->plotwidth) * 1.4;
+            $a            = 0;
+            $p            = $this->scale->ticks->ticks_pos;
             $start_radius = $p[1] - $x;
             while ($a < 360) {
                 if ($a == 90 || $a == 270) {
@@ -364,17 +364,17 @@ class PolarAxis extends Axis
         $t = new Text();
         $t->SetColor($this->angle_fontcolor);
         $t->SetFont($this->angle_fontfam, $this->angle_fontstyle, $this->angle_fontsize);
-        $xright = $this->img->width - $this->img->right_margin;
-        $ytop = $this->img->top_margin;
-        $xleft = $this->img->left_margin;
+        $xright  = $this->img->width - $this->img->right_margin;
+        $ytop    = $this->img->top_margin;
+        $xleft   = $this->img->left_margin;
         $ybottom = $this->img->height - $this->img->bottom_margin;
-        $ha = 'left';
-        $va = 'center';
-        $w = $this->img->plotwidth / 2;
-        $h = $this->img->plotheight / 2;
-        $xt = $x0;
-        $yt = $pos;
-        $margin = 5;
+        $ha      = 'left';
+        $va      = 'center';
+        $w       = $this->img->plotwidth / 2;
+        $h       = $this->img->plotheight / 2;
+        $xt      = $x0;
+        $yt      = $pos;
+        $margin  = 5;
 
         $tl  = $this->angle_tick_len; // Outer len
         $tl2 = $this->angle_tick_len2; // Interior len
@@ -393,8 +393,8 @@ class PolarAxis extends Axis
             while ($a < $end) {
                 $ca = cos($a / 180 * M_PI);
                 $sa = sin($a / 180 * M_PI);
-                $x = $d * $ca;
-                $y = $d * $sa;
+                $x  = $d * $ca;
+                $y  = $d * $sa;
                 $xt = 1000;
                 $yt = 1000;
                 if ($a <= $ca1 || $a >= $ca4) {
@@ -465,7 +465,7 @@ class PolarAxis extends Axis
                         $this->img->Line($x1, $y1, $x2, $y2);
                     }
                 }
-                $a = (int) $a;
+                $a  = (int) $a;
                 $a += $this->angle_step;
             }
         } else {
@@ -476,8 +476,8 @@ class PolarAxis extends Axis
             while ($a < $end) {
                 $ca = cos($a / 180 * M_PI);
                 $sa = sin($a / 180 * M_PI);
-                $x = $d * $ca;
-                $y = $d * $sa;
+                $x  = $d * $ca;
+                $y  = $d * $sa;
                 if ($a <= $ca1) {
                     $yt = $pos - $w * $y / $x;
                     $xt = $xright + $margin;
@@ -527,7 +527,7 @@ class PolarAxis extends Axis
                 if ($this->show_angle_tick) {
                     $this->img->Line($x1, $y1, $x2, $y2);
                 }
-                $a = (int) $a;
+                $a  = (int) $a;
                 $a += $this->angle_step;
             }
         }
@@ -571,8 +571,8 @@ class PolarAxis extends Axis
 
         // Mirror the positions for the left side of the scale
         $mid = 2 * ($this->img->left_margin + $this->img->plotwidth / 2);
-        $n = count($this->scale->ticks->ticks_pos);
-        $i = 0;
+        $n   = count($this->scale->ticks->ticks_pos);
+        $i   = 0;
         while ($i < $n) {
             $this->scale->ticks->ticks_pos[$i] =
             $mid - $this->scale->ticks->ticks_pos[$i];
@@ -596,7 +596,7 @@ class PolarAxis extends Axis
         }
 
         // Draw the left side of the scale
-        $n = count($this->scale->ticks->ticks_pos);
+        $n  = count($this->scale->ticks->ticks_pos);
         $yu = $pos - $this->scale->ticks->direction * $this->scale->ticks->GetMinTickAbsSize();
 
         // Minor ticks
@@ -609,7 +609,7 @@ class PolarAxis extends Axis
             }
         }
 
-        $n = count($this->scale->ticks->maj_ticks_pos);
+        $n  = count($this->scale->ticks->maj_ticks_pos);
         $yu = $pos - $this->scale->ticks->direction * $this->scale->ticks->GetMajTickAbsSize();
 
         // Major ticks
@@ -636,7 +636,7 @@ class PolarScale extends LinearScale
     public function __construct($aMax, $graph, $aClockwise)
     {
         parent::__construct(0, $aMax, 'x');
-        $this->graph = $graph;
+        $this->graph     = $graph;
         $this->clockwise = $aClockwise;
     }
 
@@ -652,8 +652,8 @@ class PolarScale extends LinearScale
 
     public function PTranslate($aAngle, $aRad)
     {
-        $m = $this->scale[1];
-        $w = $this->graph->img->plotwidth / 2;
+        $m    = $this->scale[1];
+        $w    = $this->graph->img->plotwidth / 2;
         $aRad = $aRad / $m * $w;
 
         $a = $aAngle / 180 * M_PI;
@@ -699,8 +699,8 @@ class PolarLogScale extends LogScale
             $aRad = 1;
         }
         $aRad = log10($aRad);
-        $m = $this->scale[1];
-        $w = $this->graph->img->plotwidth / 2;
+        $m    = $this->scale[1];
+        $w    = $this->graph->img->plotwidth / 2;
         $aRad = $aRad / $m * $w;
 
         $a = $aAngle / 180 * M_PI;
@@ -725,7 +725,7 @@ class PolarGraph extends Graph
 {
     public $scale;
     public $axis;
-    public $iType = POLAR_360;
+    public $iType       = POLAR_360;
     private $iClockwise = false;
 
     public function __construct($aWidth = 300, $aHeight = 200, $aCachedName = "", $aTimeOut = 0, $aInline = true)
@@ -822,10 +822,10 @@ class PolarGraph extends Graph
 
         //Check if we should autoscale axis
         if (! $this->scale->IsSpecified() && count($this->plots) > 0) {
-            $max = $this->GetPlotsMax();
-            $t1 = $this->img->plotwidth;
-            $this->img->plotwidth /= 2;
-            $t2 = $this->img->left_margin;
+            $max                     = $this->GetPlotsMax();
+            $t1                      = $this->img->plotwidth;
+            $this->img->plotwidth   /= 2;
+            $t2                      = $this->img->left_margin;
             $this->img->left_margin += $this->img->plotwidth + 1;
             $this->scale->AutoScale(
                 $this->img,
@@ -833,7 +833,7 @@ class PolarGraph extends Graph
                 $max,
                 $this->img->plotwidth / $this->xtick_factor / 2
             );
-            $this->img->plotwidth = $t1;
+            $this->img->plotwidth   = $t1;
             $this->img->left_margin = $t2;
         } else {
             // The tick calculation will use the user suplied min/max values to determine
@@ -842,10 +842,10 @@ class PolarGraph extends Graph
             // If auto_ticks is true then the scale might be slightly adjusted
             // so that the min and max values falls on an even major step.
             //$min = 0;
-            $max = $this->scale->scale[1];
-            $t1 = $this->img->plotwidth;
-            $this->img->plotwidth /= 2;
-            $t2 = $this->img->left_margin;
+            $max                     = $this->scale->scale[1];
+            $t1                      = $this->img->plotwidth;
+            $this->img->plotwidth   /= 2;
+            $t2                      = $this->img->left_margin;
             $this->img->left_margin += $this->img->plotwidth + 1;
             $this->scale->AutoScale(
                 $this->img,
@@ -853,7 +853,7 @@ class PolarGraph extends Graph
                 $max,
                 $this->img->plotwidth / $this->xtick_factor / 2
             );
-            $this->img->plotwidth = $t1;
+            $this->img->plotwidth   = $t1;
             $this->img->left_margin = $t2;
         }
 
@@ -898,10 +898,10 @@ class PolarGraph extends Graph
             } elseif ($this->img->a == 90) {
                 $adj1 = round(($this->img->height - $this->img->width) / 2);
                 $adj2 = round(($this->img->width - $this->img->height) / 2);
-                $lm = $this->img->left_margin;
-                $rm = $this->img->right_margin;
-                $tm = $this->img->top_margin;
-                $bm = $this->img->bottom_margin;
+                $lm   = $this->img->left_margin;
+                $rm   = $this->img->right_margin;
+                $tm   = $this->img->top_margin;
+                $bm   = $this->img->bottom_margin;
                 $this->img->CopyCanvasH(
                     $oldimage,
                     $this->img->img,

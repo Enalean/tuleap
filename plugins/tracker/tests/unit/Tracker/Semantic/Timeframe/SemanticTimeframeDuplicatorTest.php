@@ -40,7 +40,7 @@ class SemanticTimeframeDuplicatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(SemanticTimeframeDao::class);
+        $this->dao        = \Mockery::mock(SemanticTimeframeDao::class);
         $this->duplicator = new SemanticTimeframeDuplicator($this->dao);
     }
 

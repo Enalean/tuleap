@@ -46,7 +46,7 @@ class ProjectRegistrationActivateService implements Dispatchable
     {
         $this->template = $template;
         $this->project  = $project;
-        $this->legacy = $legacy;
+        $this->legacy   = $legacy;
     }
 
     /**

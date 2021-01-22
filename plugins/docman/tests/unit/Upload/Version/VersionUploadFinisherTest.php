@@ -97,7 +97,7 @@ class VersionUploadFinisherTest extends TestCase
         );
 
         $item_id_being_created    = 12;
-        $file_information = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
+        $file_information         = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);
@@ -202,7 +202,7 @@ class VersionUploadFinisherTest extends TestCase
         );
 
         $item_id_being_created    = 12;
-        $file_information = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
+        $file_information         = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);
@@ -307,7 +307,7 @@ class VersionUploadFinisherTest extends TestCase
         );
 
         $item_id_being_created    = 12;
-        $file_information = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
+        $file_information         = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);

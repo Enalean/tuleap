@@ -125,8 +125,8 @@ class ArtifactPresenterBuilder
             PHP_INT_MAX,
             0
         );
-        $already_visited[] = $artifact_id;
-        $children_ids      = $children_ids_for_current_artifact;
+        $already_visited[]                 = $artifact_id;
+        $children_ids                      = $children_ids_for_current_artifact;
         foreach ($children_ids_for_current_artifact as $child_id) {
             if (! in_array($child_id, $already_visited)) {
                 $children_ids = array_merge($children_ids, $this->collectChildrenIds($child_id, $already_visited));

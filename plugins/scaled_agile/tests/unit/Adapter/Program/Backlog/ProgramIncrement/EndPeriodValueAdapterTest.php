@@ -134,7 +134,7 @@ final class EndPeriodValueAdapterTest extends TestCase
         $expected_data = new EndPeriodValue("12");
 
         $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
-        $data = $adapter->build($this->duration_field_data, $replication_data);
+        $data             = $adapter->build($this->duration_field_data, $replication_data);
 
         $this->assertEquals($expected_data, $data);
     }
@@ -167,7 +167,7 @@ final class EndPeriodValueAdapterTest extends TestCase
         $expected_data = new EndPeriodValue("2020-10-31");
 
         $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
-        $data = $adapter->build($this->end_date_field_data, $replication_data);
+        $data             = $adapter->build($this->end_date_field_data, $replication_data);
 
         $this->assertEquals($expected_data, $data);
     }

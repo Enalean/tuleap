@@ -73,11 +73,11 @@ final class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->um = \Mockery::spy(\UserManager::class);
-        $this->project_manager = \Mockery::spy(\ProjectManager::class);
-        $this->backend = \Mockery::spy(\BackendSVN::class);
+        $this->um                   = \Mockery::spy(\UserManager::class);
+        $this->project_manager      = \Mockery::spy(\ProjectManager::class);
+        $this->backend              = \Mockery::spy(\BackendSVN::class);
         $this->ldap_project_manager = \Mockery::spy(\LDAP_ProjectManager::class);
-        $this->system_event = new SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN(
+        $this->system_event         = new SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN(
             null,
             null,
             null,

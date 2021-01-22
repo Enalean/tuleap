@@ -50,10 +50,10 @@ class TrackerSemanticCollectionTest extends TestCase
         $this->status_semantic = Mockery::mock(\Tracker_Semantic::class);
         $this->status_semantic->shouldReceive('getShortName')->andReturn('status');
 
-        $this->title  = Mockery::mock(\Tracker_Semantic::class);
+        $this->title = Mockery::mock(\Tracker_Semantic::class);
         $this->title->shouldReceive('getShortName')->andReturn('title');
 
-        $this->done  = Mockery::mock(\Tracker_Semantic::class);
+        $this->done = Mockery::mock(\Tracker_Semantic::class);
         $this->done->shouldReceive('getShortName')->andReturn('done');
     }
 

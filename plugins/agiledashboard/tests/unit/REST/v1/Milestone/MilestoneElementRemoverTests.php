@@ -75,7 +75,7 @@ final class MilestoneElementRemoverTests extends TestCase
             $this->artifacts_in_explicit_backlog_dao
         );
 
-        $this->backlog_remove_representation = new BacklogRemoveRepresentation();
+        $this->backlog_remove_representation     = new BacklogRemoveRepresentation();
         $this->backlog_remove_representation->id = 124;
     }
 

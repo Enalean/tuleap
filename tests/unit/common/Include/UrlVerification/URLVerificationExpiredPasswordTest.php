@@ -45,8 +45,8 @@ final class URLVerificationExpiredPasswordTest extends TestCase
     protected function setUp(): void
     {
         $fiveteen_days_ago = new \DateTimeImmutable('15 days ago');
-        $user = UserTestBuilder::aUser()->withId(110)->withLastPwdUpdate((string) $fiveteen_days_ago->getTimestamp())->build();
-        $user_manager = M::mock(UserManager::class, ['getCurrentUser' => $user]);
+        $user              = UserTestBuilder::aUser()->withId(110)->withLastPwdUpdate((string) $fiveteen_days_ago->getTimestamp())->build();
+        $user_manager      = M::mock(UserManager::class, ['getCurrentUser' => $user]);
         UserManager::setInstance($user_manager);
 
         \ForgeConfig::set('sys_password_lifetime', '10');

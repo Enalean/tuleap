@@ -11,12 +11,12 @@ class WikiDB_backend_dumb_TextSearchIter extends WikiDB_backend_iterator
         $fulltext = false,
         $options = []
     ) {
-        $this->_backend = &$backend;
-        $this->_pages = $pages;
-        $this->_fulltext = $fulltext;
-        $this->_search  = $search;
-        $this->_index   = 0;
-        $this->_stoplist = $search->_stoplist;
+        $this->_backend   = &$backend;
+        $this->_pages     = $pages;
+        $this->_fulltext  = $fulltext;
+        $this->_search    = $search;
+        $this->_index     = 0;
+        $this->_stoplist  = $search->_stoplist;
         $this->stoplisted = [];
 
         if (isset($options['limit'])) {
@@ -33,11 +33,11 @@ class WikiDB_backend_dumb_TextSearchIter extends WikiDB_backend_iterator
 
     public function _get_content(&$page)
     {
-        $backend = $this->_backend;
+        $backend  = $this->_backend;
         $pagename = $page['pagename'];
 
         if (! isset($page['versiondata'])) {
-            $version = $backend->get_latest_version($pagename);
+            $version             = $backend->get_latest_version($pagename);
             $page['versiondata'] = $backend->get_versiondata($pagename, $version, true);
         }
         return $page['versiondata']['%content'];

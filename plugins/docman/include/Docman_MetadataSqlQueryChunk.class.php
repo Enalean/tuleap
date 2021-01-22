@@ -32,7 +32,7 @@ class Docman_MetadataSqlQueryChunk
 
     public function __construct($md)
     {
-        $this->mdv = 'mdv_' . $md->getLabel();
+        $this->mdv  = 'mdv_' . $md->getLabel();
         $this->mdId = $md->getId();
 
         $this->isRealMetadata = Docman_MetadataFactory::isRealMetadata($md->getLabel());
@@ -81,10 +81,10 @@ class Docman_MetadataSqlQueryChunk
     public function _getMdvJoin($label = null)
     {
         if ($label !== null) {
-            $mdv = 'mdv_' . $label;
+            $mdv     = 'mdv_' . $label;
             $fieldId = substr($label, 6);
         } else {
-            $mdv = $this->mdv;
+            $mdv     = $this->mdv;
             $fieldId = $this->mdId;
         }
         $stmt = 'plugin_docman_metadata_value AS ' . $mdv .

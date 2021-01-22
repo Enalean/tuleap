@@ -36,7 +36,7 @@ class ExplicitBacklogDao extends DataAccessObject
 
     public function setProjectIsUsingExplicitBacklog(int $project_id): void
     {
-        $sql  = 'INSERT INTO plugin_agiledashboard_planning_explicit_backlog_usage (project_id)
+        $sql = 'INSERT INTO plugin_agiledashboard_planning_explicit_backlog_usage (project_id)
                  VALUES (?)
                  ON DUPLICATE KEY UPDATE project_id=?';
 

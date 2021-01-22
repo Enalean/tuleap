@@ -45,7 +45,7 @@ class ImmutableTagDao extends DataAccessObject
     public function searchByRepositoryId($repository_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);
-        $sql = "SELECT *
+        $sql           = "SELECT *
                 FROM plugin_svn_immutable_tag
                 WHERE repository_id=$repository_id";
 

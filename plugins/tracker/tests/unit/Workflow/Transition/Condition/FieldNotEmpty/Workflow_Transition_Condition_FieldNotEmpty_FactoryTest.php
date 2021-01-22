@@ -37,8 +37,8 @@ final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \PHP
     protected function setUp(): void
     {
         parent::setUp();
-        $this->field            = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns($this->field_id)->getMock();
-        $element_factory        = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->field     = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns($this->field_id)->getMock();
+        $element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         $element_factory->shouldReceive('getFormElementById')->with($this->field_id)->andReturns($this->field);
         Tracker_FormElementFactory::setInstance($element_factory);
         $this->dao              = \Mockery::spy(\Workflow_Transition_Condition_FieldNotEmpty_Dao::class);
@@ -46,7 +46,7 @@ final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \PHP
         $this->transition       = \Mockery::spy(\Transition::class)->shouldReceive('getId')->andReturns(42)->getMock();
         $this->field_string     = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(0)->getMock();
         $this->field_string_f15 = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(1)->getMock();
-        $this->xml_mapping  = [
+        $this->xml_mapping      = [
             'F14' => $this->field_string,
             'F15' => $this->field_string_f15
         ];
@@ -66,7 +66,7 @@ final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \PHP
             </condition>
         ');
 
-        $expected  = new Workflow_Transition_Condition_FieldNotEmpty($this->transition, $this->dao);
+        $expected = new Workflow_Transition_Condition_FieldNotEmpty($this->transition, $this->dao);
         $expected->addField($this->field_string);
         $expected->addField($this->field_string_f15);
 

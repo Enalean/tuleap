@@ -72,8 +72,8 @@ class WikiPlugin_text2png extends WikiPlugin
             return $this->text2png($text, $l);
         } else {
             // we don't have png and/or gd.
-            $error_html = _("Sorry, this version of PHP cannot create PNG image files.");
-            $link = "http://www.php.net/manual/pl/ref.image.php";
+            $error_html  = _("Sorry, this version of PHP cannot create PNG image files.");
+            $link        = "http://www.php.net/manual/pl/ref.image.php";
             $error_html .= sprintf(_("See %s"), $link) . ".";
             trigger_error($error_html, E_USER_NOTICE);
             return;
@@ -125,7 +125,7 @@ class WikiPlugin_text2png extends WikiPlugin
                 $error_html = _("PHP was unable to create a new GD image stream. Read 'lib/plugin/text2png.php' for details.");
                 // FIXME: Error manager does not transform URLs passed
                 //        through it.
-                $link = "http://www.php.net/manual/en/function.imagecreate.php";
+                $link        = "http://www.php.net/manual/en/function.imagecreate.php";
                 $error_html .= sprintf(_("See %s"), $link) . ".";
                 trigger_error($error_html, E_USER_NOTICE);
                 return;
@@ -162,7 +162,7 @@ class WikiPlugin_text2png extends WikiPlugin
             $success = ImagePng($im, $filepath . $filename);
         } else {
             $filepath .= "/";
-            $success = 2;
+            $success   = 2;
         }
 
         // create an <img src= tag to show the image!

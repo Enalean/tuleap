@@ -25,11 +25,11 @@ class Docman_ItemActionCopy extends \Docman_ItemAction
     public function __construct(&$item, $params)
     {
         parent::__construct($item);
-        $this->action = 'action_copy';
-        $this->classes = 'docman_item_option_copy';
-        $this->title = \dgettext('tuleap-docman', 'Copy');
-        $currentItem = $params['item'];
-        $origAction = isset($params['action']) ? $params['action'] : 'show';
+        $this->action         = 'action_copy';
+        $this->classes        = 'docman_item_option_copy';
+        $this->title          = \dgettext('tuleap-docman', 'Copy');
+        $currentItem          = $params['item'];
+        $origAction           = isset($params['action']) ? $params['action'] : 'show';
         $this->extraUrlParams = ['orig_id' => $currentItem->getId(), 'orig_action' => $origAction];
     }
 }

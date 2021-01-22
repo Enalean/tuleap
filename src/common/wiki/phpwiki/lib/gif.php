@@ -172,7 +172,7 @@ class CGIFLZW
     {
         if ($bInit) {
             $this->SetCodeSize = ord($data[0]);
-            $data = substr($data, 1);
+            $data              = substr($data, 1);
 
             $this->CodeSize    = $this->SetCodeSize + 1;
             $this->ClearCode   = 1 << $this->SetCodeSize;
@@ -256,7 +256,7 @@ class CGIFLZW
                 $Code = $this->Next[$Code];
             }
 
-            $this->FirstCode = $this->Vals[$Code];
+            $this->FirstCode        = $this->Vals[$Code];
             $this->Stack[$this->sp] = $this->FirstCode;
             $this->sp++;
 
@@ -392,11 +392,11 @@ class CGIFCOLORTABLE
 
     public function colorIndex($rgb)
     {
-        $rgb  = intval($rgb) & 0xFFFFFF;
-        $r1   = ($rgb & 0x0000FF);
-        $g1   = ($rgb & 0x00FF00) >>  8;
-        $b1   = ($rgb & 0xFF0000) >> 16;
-        $idx  = -1;
+        $rgb = intval($rgb) & 0xFFFFFF;
+        $r1  = ($rgb & 0x0000FF);
+        $g1  = ($rgb & 0x00FF00) >>  8;
+        $b1  = ($rgb & 0xFF0000) >> 16;
+        $idx = -1;
 
         for ($i = 0; $i < $this->m_nColors; $i++) {
             $r2 = ($this->m_arColors[$i] & 0x000000FF);
@@ -458,14 +458,14 @@ class CGIFFILEHEADER
             return false;
         }
 
-        $b = ord(substr($lpData, 10, 1));
+        $b                   = ord(substr($lpData, 10, 1));
         $this->m_bGlobalClr  = ($b & 0x80) ? true : false;
         $this->m_nColorRes   = ($b & 0x70) >> 4;
         $this->m_bSorted     = ($b & 0x08) ? true : false;
         $this->m_nTableSize  = 2 << ($b & 0x07);
         $this->m_nBgColor    = ord(substr($lpData, 11, 1));
         $this->m_nPixelRatio = ord(substr($lpData, 12, 1));
-        $hdrLen = 13;
+        $hdrLen              = 13;
 
         if ($this->m_bGlobalClr) {
             $this->m_colorTable = new CGIFCOLORTABLE();
@@ -523,12 +523,12 @@ class CGIFIMAGEHEADER
             return false;
         }
 
-        $b = ord($lpData[8]);
+        $b                  = ord($lpData[8]);
         $this->m_bLocalClr  = ($b & 0x80) ? true : false;
         $this->m_bInterlace = ($b & 0x40) ? true : false;
         $this->m_bSorted    = ($b & 0x20) ? true : false;
         $this->m_nTableSize = 2 << ($b & 0x07);
-        $hdrLen = 9;
+        $hdrLen             = 9;
 
         if ($this->m_bLocalClr) {
             $this->m_colorTable = new CGIFCOLORTABLE();
@@ -577,7 +577,7 @@ class CGIFIMAGE
         $datLen = 0;
 
         while (true) {
-            $b = ord($data[0]);
+            $b    = ord($data[0]);
             $data = substr($data, 1);
             $datLen++;
 
@@ -594,14 +594,14 @@ class CGIFIMAGE
                     if (! $this->m_gih->load($data, $len = 0)) {
                         return false;
                     }
-                    $data = substr($data, $len);
+                    $data    = substr($data, $len);
                     $datLen += $len;
 
                     // ALLOC BUFFER
                     if (! ($this->m_data = $this->m_lzw->deCompress($data, $len = 0))) {
                         return false;
                     }
-                    $data = substr($data, $len);
+                    $data    = substr($data, $len);
                     $datLen += $len;
 
                     if ($this->m_gih->m_bInterlace) {
@@ -621,13 +621,13 @@ class CGIFIMAGE
     {
         $extLen = 0;
 
-        $b = ord($data[0]);
+        $b    = ord($data[0]);
         $data = substr($data, 1);
         $extLen++;
 
         switch ($b) {
             case 0xF9: // Graphic Control
-                $b = ord($data[1]);
+                $b              = ord($data[1]);
                 $this->m_disp   = ($b & 0x1C) >> 2;
                 $this->m_bUser  = ($b & 0x02) ? true : false;
                 $this->m_bTrans = ($b & 0x01) ? true : false;
@@ -647,14 +647,14 @@ class CGIFIMAGE
         }
 
         // SKIP DEFAULT AS DEFS MAY CHANGE
-        $b = ord($data[0]);
+        $b    = ord($data[0]);
         $data = substr($data, 1);
         $extLen++;
         while ($b > 0) {
-            $data = substr($data, $b);
+            $data    = substr($data, $b);
             $extLen += $b;
-            $b    = ord($data[0]);
-            $data = substr($data, 1);
+            $b       = ord($data[0]);
+            $data    = substr($data, 1);
             $extLen++;
         }
         return true;
@@ -693,7 +693,7 @@ class CGIFIMAGE
             }
 
             for (; $y < $this->m_gih->m_nHeight; $y += $s) {
-                $lne = substr($this->m_data, 0, $this->m_gih->m_nWidth);
+                $lne          = substr($this->m_data, 0, $this->m_gih->m_nWidth);
                 $this->m_data = substr($this->m_data, $this->m_gih->m_nWidth);
 
                 $data =

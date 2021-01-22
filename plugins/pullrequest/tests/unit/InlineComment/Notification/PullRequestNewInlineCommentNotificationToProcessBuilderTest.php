@@ -98,12 +98,12 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
 
     public function testBuildNewInlineCommentNotificationFromPullRequestNewInlineCommentEvent(): void
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);
         $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
-        $change_user   = $this->buildUser(102);
-        $owners        = [$change_user, $this->buildUser(104), $this->buildUser(105)];
-        $comment       = $this->buildInlineComment(41, $change_user->getId(), $pull_request->getId());
+        $change_user = $this->buildUser(102);
+        $owners      = [$change_user, $this->buildUser(104), $this->buildUser(105)];
+        $comment     = $this->buildInlineComment(41, $change_user->getId(), $pull_request->getId());
 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 
@@ -149,7 +149,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilderTest extends 
 
     public function testNoNotificationIsBuiltWhenTheUserCommentingCannotBeFound(): void
     {
-        $comment     = $this->buildInlineComment(14, 404, 16);
+        $comment = $this->buildInlineComment(14, 404, 16);
 
         $event = PullRequestNewInlineCommentEvent::fromInlineCommentID($comment->getId());
 

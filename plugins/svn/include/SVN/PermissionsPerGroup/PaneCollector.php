@@ -35,7 +35,7 @@ class PaneCollector
     public function __construct(
         PermissionPerGroupSVNServicePaneBuilder $group_pane_builder
     ) {
-        $this->group_pane_builder      = $group_pane_builder;
+        $this->group_pane_builder = $group_pane_builder;
     }
 
     public function collectPane(PermissionPerGroupPaneCollector $event)

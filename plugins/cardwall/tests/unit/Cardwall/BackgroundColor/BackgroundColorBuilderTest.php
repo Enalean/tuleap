@@ -56,12 +56,12 @@ class BackgroundColorBuilderTest extends TestCase
     {
         parent::setUp();
 
-        $this->card_fields_semantic = $this->createMock(Cardwall_Semantic_CardFields::class);
-        $this->artifact = $this->createMock(Artifact::class);
-        $this->current_user = $this->createMock(PFUser::class);
-        $this->decorator_retriever = $this->createMock(BindDecoratorRetriever::class);
-        $this->field = $this->createMock(Tracker_FormElement_Field_List::class);
-        $this->decorator = $this->createMock(Tracker_FormElement_Field_List_BindDecorator::class);
+        $this->card_fields_semantic     = $this->createMock(Cardwall_Semantic_CardFields::class);
+        $this->artifact                 = $this->createMock(Artifact::class);
+        $this->current_user             = $this->createMock(PFUser::class);
+        $this->decorator_retriever      = $this->createMock(BindDecoratorRetriever::class);
+        $this->field                    = $this->createMock(Tracker_FormElement_Field_List::class);
+        $this->decorator                = $this->createMock(Tracker_FormElement_Field_List_BindDecorator::class);
         $this->background_color_builder = new BackgroundColorBuilder($this->decorator_retriever);
     }
 

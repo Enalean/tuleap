@@ -50,8 +50,8 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         \assert($backendSystem instanceof BackendSystem);
         $backendAliases = Backend::instance('Aliases');
         \assert($backendAliases instanceof BackendAliases);
-        $backendSVN = Backend::instanceSVN();
-        $backendCVS = Backend::instanceCVS();
+        $backendSVN         = Backend::instanceSVN();
+        $backendCVS         = Backend::instanceCVS();
         $backendMailingList = Backend::instance('MailingList');
         \assert($backendMailingList instanceof BackendMailingList);
 

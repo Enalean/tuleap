@@ -36,7 +36,7 @@ class JenkinsServersTest extends RestBase
         $this->assertEquals(200, $response->getStatusCode());
 
         $collection = $response->json();
-        $servers = $collection['git_jenkins_servers_representations'];
+        $servers    = $collection['git_jenkins_servers_representations'];
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(2, count($servers));
         $this->assertEquals('https://example.com/bar', $servers[1]['url']);

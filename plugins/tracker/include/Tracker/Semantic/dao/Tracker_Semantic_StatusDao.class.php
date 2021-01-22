@@ -32,7 +32,7 @@ class Tracker_Semantic_StatusDao extends DataAccessObject
     public function searchByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT *
+        $sql        = "SELECT *
                 FROM tracker_semantic_status
                 WHERE tracker_id = $tracker_id";
         return $this->retrieve($sql);
@@ -51,7 +51,7 @@ class Tracker_Semantic_StatusDao extends DataAccessObject
         // Now save the new values
         $values = [];
         foreach ($open_value_ids as $vid) {
-            $vid = $this->da->escapeInt($vid);
+            $vid      = $this->da->escapeInt($vid);
             $values[] = "($tracker_id, $field_id, $vid)";
         }
         if ($values = implode(', ', $values)) {
@@ -65,7 +65,7 @@ class Tracker_Semantic_StatusDao extends DataAccessObject
     public function delete($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "DELETE FROM tracker_semantic_status
+        $sql        = "DELETE FROM tracker_semantic_status
                 WHERE tracker_id = $tracker_id";
         return $this->update($sql);
     }

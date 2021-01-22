@@ -81,7 +81,7 @@ class ExecutionStatusUpdater
             $this->artifact_updater->update($user, $execution_artifact, $changes);
 
             $new_status = $this->getCurrentStatus($execution_artifact);
-            $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($execution_artifact);
+            $campaign   = $this->testmanagement_artifact_factory->getCampaignForExecution($execution_artifact);
             if ($campaign) {
                 $this->realtime_message_sender->sendExecutionUpdated(
                     $user,
@@ -123,7 +123,7 @@ class ExecutionStatusUpdater
             return null;
         }
 
-        $submitted_by        = $this->user_manager->getUserById($last_changeset->getSubmittedBy());
+        $submitted_by = $this->user_manager->getUserById($last_changeset->getSubmittedBy());
         if (! $submitted_by) {
             return null;
         }

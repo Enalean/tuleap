@@ -86,7 +86,7 @@ class ListFieldCheckerWithBindUsersTest extends TestCase
         $value_101 = new Tracker_FormElement_Field_List_Bind_UsersValue(101, 'admin');
         $value_103 = new Tracker_FormElement_Field_List_Bind_UsersValue(101, 'mandrew');
 
-        $list_values      = [
+        $list_values = [
             101 => $value_101,
             103 => $value_103
         ];

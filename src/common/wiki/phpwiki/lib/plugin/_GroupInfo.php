@@ -55,7 +55,7 @@ class WikiPlugin__GroupInfo extends WikiPlugin
 
         $output = HTML(HTML::h1("Group Info"));
 
-        $group = WikiGroup::getGroup();
+        $group     = WikiGroup::getGroup();
         $allGroups = $group->getAllGroupsIn();
 
         foreach ($allGroups as $g) {

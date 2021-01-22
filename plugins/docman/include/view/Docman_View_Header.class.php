@@ -35,7 +35,7 @@
             $htmlParams['title'] = $this->_getTitle($params);
         }
 
-        $htmlParams                 = array_merge($htmlParams, $this->_getAdditionalHtmlParams($params));
+        $htmlParams = array_merge($htmlParams, $this->_getAdditionalHtmlParams($params));
         if (isset($params['docman'])) {
             $htmlParams['service_name'] = $params['docman']->plugin->getServiceShortname();
         }
@@ -69,7 +69,7 @@
 
     /* protected */ public function _getTitle($params)
     {
-        $title = '';
+        $title   = '';
         $project = $this->getProjectFromParams($params);
         if ($project) {
             $title .= Codendi_HTMLPurifier::instance()->purify($project->getPublicName()) . ' - ';

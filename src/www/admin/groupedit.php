@@ -53,7 +53,7 @@ $fields_factory            = new Tuleap\Project\DescriptionFieldsFactory(new Tul
 $description_field_builder = new ProjectDescriptionFieldBuilder($fields_factory);
 $all_custom_fields         = $description_field_builder->build($project);
 
-$access_presenter     = new ProjectAccessPresenter($project->getAccess());
+$access_presenter = new ProjectAccessPresenter($project->getAccess());
 
 $suspended_and_not_blocked_warnings = new ProjectSuspendedAndNotBlockedWarningCollector($project);
 $event_manager->processEvent($suspended_and_not_blocked_warnings);

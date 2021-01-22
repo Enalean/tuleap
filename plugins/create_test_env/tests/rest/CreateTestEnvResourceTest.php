@@ -26,7 +26,7 @@ class CreateTestEnvResourceTest extends \RestBase
 
     public function testOptions()
     {
-        $response  = $this->getResponseWithoutAuth($this->client->options(
+        $response = $this->getResponseWithoutAuth($this->client->options(
             'create_test_env/'
         ));
 
@@ -84,7 +84,7 @@ class CreateTestEnvResourceTest extends \RestBase
         $exception_json  = $response->json();
         $exception_class = $exception_json['error']['exception'];
         $this->assertEquals('Tuleap\\CreateTestEnv\\Exception\\InvalidPasswordException', $exception_class);
-        $exception_msgs  = $exception_json['error']['password_exceptions'];
+        $exception_msgs = $exception_json['error']['password_exceptions'];
         $this->assertCount(1, $exception_msgs);
     }
 }

@@ -23,15 +23,15 @@ use Tuleap\Git\PathJoinUtil;
 
 class GitRepository
 {
-    public const REPO_EXT       = '.git';
+    public const REPO_EXT = '.git';
 
-    public const PRIVATE_ACCESS       = 'private';
-    public const PUBLIC_ACCESS        = 'public';
+    public const PRIVATE_ACCESS = 'private';
+    public const PUBLIC_ACCESS  = 'public';
 
-    public const DEFAULT_MAIL_PREFIX = '[SCM]';
-    public const REPO_SCOPE_PROJECT  = 'P';
+    public const DEFAULT_MAIL_PREFIX   = '[SCM]';
+    public const REPO_SCOPE_PROJECT    = 'P';
     public const REPO_SCOPE_INDIVIDUAL = 'I';
-    public const DEFAULT_DESCRIPTION = "-- Default description --";
+    public const DEFAULT_DESCRIPTION   = "-- Default description --";
 
     private $id;
     private $parentId;
@@ -69,24 +69,24 @@ class GitRepository
 
     public function __construct()
     {
-        $this->hash            = '';
-        $this->rootPath        = '';
-        $this->path            = '';
+        $this->hash     = '';
+        $this->rootPath = '';
+        $this->path     = '';
 
-        $this->name            = '';
-        $this->description     = '';
-        $this->creationDate    = '';
-        $this->creator         = null;
-        $this->deletionDate    = '';
-        $this->isInitialized   = 0;
-        $this->access          = 'private';
-        $this->mailPrefix      = self::DEFAULT_MAIL_PREFIX;
+        $this->name          = '';
+        $this->description   = '';
+        $this->creationDate  = '';
+        $this->creator       = null;
+        $this->deletionDate  = '';
+        $this->isInitialized = 0;
+        $this->access        = 'private';
+        $this->mailPrefix    = self::DEFAULT_MAIL_PREFIX;
         $this->notifiedMails;
-        $this->parent          = null;
-        $this->parentId        = 0;
-        $this->loaded          = false;
-        $this->scope           = self::REPO_SCOPE_PROJECT;
-        $this->is_mirrored     = false;
+        $this->parent      = null;
+        $this->parentId    = 0;
+        $this->loaded      = false;
+        $this->scope       = self::REPO_SCOPE_PROJECT;
+        $this->is_mirrored = false;
     }
 
     /**
@@ -209,7 +209,7 @@ class GitRepository
     public function getBackend()
     {
         if (empty($this->backend)) {
-            $git_plugin  = PluginManager::instance()->getPluginByName('git');
+            $git_plugin = PluginManager::instance()->getPluginByName('git');
             \assert($git_plugin instanceof GitPlugin);
             $url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
             switch ($this->getBackendType()) {
@@ -278,7 +278,7 @@ class GitRepository
     public function getParent()
     {
         if (empty($this->parent)) {
-            $factory = new GitRepositoryFactory($this->getDao(), $this->_getProjectManager());
+            $factory      = new GitRepositoryFactory($this->getDao(), $this->_getProjectManager());
             $this->parent = $factory->getRepositoryById($this->getParentId());
         }
         return $this->parent;
@@ -324,12 +324,12 @@ class GitRepository
      */
     public function getRepositoryIDByName($repositoryName, $projectName)
     {
-        $pm = $this->_getProjectManager();
+        $pm      = $this->_getProjectManager();
         $project = $pm->getProjectByUnixName($projectName);
-        $repoId = 0;
+        $repoId  = 0;
         if ($project) {
             $projectId = $project->getID();
-            $row = $this->getDao()->getProjectRepositoryByName($repositoryName, $projectId);
+            $row       = $this->getDao()->getProjectRepositoryByName($repositoryName, $projectId);
             if ($row && ! empty($row)) {
                      $repoId = $row[GitDao::REPOSITORY_ID];
             }
@@ -534,8 +534,8 @@ class GitRepository
     public function getPath()
     {
         if (empty($this->path)) {
-            $rootPath   = $this->getRootPath();
-            $name       = $this->getName();
+            $rootPath = $this->getRootPath();
+            $name     = $this->getName();
             //can not return a bad path
             if (empty($rootPath) || empty($name)) {
                 $this->path = '';
@@ -639,7 +639,7 @@ class GitRepository
      */
     public function getPostReceiveShowRev(Git_GitRepositoryUrlManager $url_manager)
     {
-        $url  = $this->getDiffLink($url_manager, '%%H');
+        $url = $this->getDiffLink($url_manager, '%%H');
 
         $format = 'format:URL:    ' . $url . '%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
 
@@ -677,7 +677,7 @@ class GitRepository
 
     public function loadNotifiedMails()
     {
-        $postRecMailManager = $this->getPostReceiveMailManager();
+        $postRecMailManager  = $this->getPostReceiveMailManager();
         $this->notifiedMails = $postRecMailManager->getNotificationMailsByRepositoryId($this->getId());
     }
 
@@ -783,7 +783,7 @@ class GitRepository
     public function notificationAddMail($mail)
     {
         $this->notifiedMails[] = $mail;
-        $postRecMailManager = $this->getPostReceiveMailManager();
+        $postRecMailManager    = $this->getPostReceiveMailManager();
         if ($postRecMailManager->addMail($this->getId(), $mail)) {
             return $this->getBackend()->changeRepositoryMailingList($this);
         }
@@ -812,9 +812,9 @@ class GitRepository
      */
     public function getNonMemberMails()
     {
-        $mails = $this->getNotifiedMails();
+        $mails         = $this->getNotifiedMails();
         $mailsToDelete = [];
-        $um = UserManager::instance();
+        $um            = UserManager::instance();
         foreach ($mails as $mail) {
             try {
                 $user = $um->getUserByEmail($mail);

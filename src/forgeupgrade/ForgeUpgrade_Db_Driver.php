@@ -31,7 +31,7 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
     private $ssl_ca_file;
     private $ssl_verify_cert = false;
 
-    protected $platform_name = "tuleap";
+    protected $platform_name     = "tuleap";
     protected $env_variable_name = "TULEAP_LOCAL_INC";
 
     protected function initOptions()
@@ -53,7 +53,7 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
                         $socket = ';unix_socket=' . $socket;
                     }
                 } else {
-                    $host   = $sys_dbhost;
+                    $host = $sys_dbhost;
                 }
 
                 $this->dsn      = 'mysql:host=' . $host . $socket . $port . ';dbname=' . $sys_dbname;
@@ -112,7 +112,7 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
             PDO::MYSQL_ATTR_INIT_COMMAND =>  "SET NAMES 'UTF8'",
         ];
         if ($this->enable_ssl) {
-            $options[PDO::MYSQL_ATTR_SSL_CA] = $this->ssl_ca_file;
+            $options[PDO::MYSQL_ATTR_SSL_CA]                 = $this->ssl_ca_file;
             $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = $this->ssl_verify_cert;
         }
         return $options;

@@ -40,9 +40,9 @@ class Admin_ProjectListExporter
      */
     public function exportProjectList($group_name_search, $status)
     {
-        $dao             = new ProjectDao();
-        $result          = $dao->returnAllProjects(0, 0, $status, $group_name_search);
-        $projects        = $result['projects'];
+        $dao      = new ProjectDao();
+        $result   = $dao->returnAllProjects(0, 0, $status, $group_name_search);
+        $projects = $result['projects'];
         return $this->exportCsv($projects);
     }
 
@@ -53,7 +53,7 @@ class Admin_ProjectListExporter
      */
     private function buildCsvHeader()
     {
-        $csv_header = "";
+        $csv_header      = "";
         $documents_title =  ['group_id'     => $GLOBALS['Language']->getText('admin_grouplist', 'id_group'),
                                   'project_name' => $GLOBALS['Language']->getText('admin_groupedit', 'grp_name'),
                                   'unix_name'    => $GLOBALS['Language']->getText('admin_groupedit', 'unix_grp'),
@@ -61,7 +61,7 @@ class Admin_ProjectListExporter
                                   'type'         => $GLOBALS['Language']->getText('admin_groupedit', 'group_type'),
                                   'public'       => $GLOBALS['Language']->getText('admin_groupedit', 'public'),
                                   'members'      => $GLOBALS['Language']->getText('admin_grouplist', 'members')];
-        $csv_header .= build_csv_header($this->column_list, $documents_title);
+        $csv_header     .= build_csv_header($this->column_list, $documents_title);
         return $csv_header;
     }
 

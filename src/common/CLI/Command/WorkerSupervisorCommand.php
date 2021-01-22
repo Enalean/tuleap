@@ -66,7 +66,7 @@ class WorkerSupervisorCommand extends Command
     {
         parent::__construct(self::NAME);
         $this->process_factory = $process_factory;
-        $this->lock_factory = $lock_factory;
+        $this->lock_factory    = $lock_factory;
     }
 
     protected function configure()

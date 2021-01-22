@@ -71,13 +71,13 @@ class Tracker_ArtifactByEmailStatusTest extends \PHPUnit\Framework\TestCase //ph
         $this->tracker_plugin_conf->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturns(false);
         $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
         $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
-        $field_title       = \Mockery::spy(\Tracker_FormElement_Field_String::class);
+        $field_title = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $field_title->shouldReceive('getId')->andReturns(1);
         $this->tracker->shouldReceive('getTitleField')->andReturns($field_title);
         $field_description = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         $field_description->shouldReceive('getId')->andReturns(2);
         $this->tracker->shouldReceive('getDescriptionField')->andReturns($field_description);
-        $another_field     = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
+        $another_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         $another_field->shouldReceive('getId')->andReturns(3);
         $another_field->shouldReceive('isRequired')->andReturns(true);
         $this->tracker->shouldReceive('getFormElementFields')->andReturns([$field_title, $another_field, $field_description]);
@@ -170,11 +170,11 @@ class Tracker_ArtifactByEmailStatusTest extends \PHPUnit\Framework\TestCase //ph
         $this->tracker_plugin_conf->shouldReceive('isInsecureEmailgatewayEnabled')->andReturns(true);
         $this->tracker->shouldReceive('isEmailgatewayEnabled')->andReturns(true);
 
-        $field_title       = \Mockery::spy(\Tracker_FormElement_Field_String::class);
+        $field_title = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $field_title->shouldReceive('getId')->andReturns(1);
         $field_description = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         $field_description->shouldReceive('getId')->andReturns(2);
-        $another_field     = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
+        $another_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         $another_field->shouldReceive('getId')->andReturns(3);
         $this->tracker->shouldReceive('getTitleField')->andReturns($field_title);
         $this->tracker->shouldReceive('getDescriptionField')->andReturns($field_description);

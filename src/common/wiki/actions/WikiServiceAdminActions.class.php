@@ -105,10 +105,10 @@ class WikiServiceAdminActions extends WikiActions
     {
         $request = HTTPRequest::instance();
         if ($request->isPost() && $request->exist('attachments_to_delete')) {
-            $args = $request->get('attachments_to_delete');
+            $args         = $request->get('attachments_to_delete');
             $deleteStatus = true;
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
+            $um           = UserManager::instance();
+            $user         = $um->getCurrentUser();
             foreach ($args as $id) {
                 $valid = new Valid_UInt('repo_id');
                 $valid->required();

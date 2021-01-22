@@ -32,7 +32,7 @@ class GitActionsProjectPrivacyTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao = \Mockery::spy(\GitDao::class);
+        $this->dao     = \Mockery::spy(\GitDao::class);
         $this->factory = \Mockery::spy(\GitRepositoryFactory::class);
     }
 
@@ -48,8 +48,8 @@ class GitActionsProjectPrivacyTest extends TestCase
     {
         $project_id = 99;
         $is_private = false;
-        $repo_id = 333;
-        $repo = Mockery::mock(\GitRepository::class)->shouldReceive('setAccess')->never()->getMock();
+        $repo_id    = 333;
+        $repo       = Mockery::mock(\GitRepository::class)->shouldReceive('setAccess')->never()->getMock();
         $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([$repo_id => null]);
         $this->factory->shouldReceive('getRepositoryById')->with($repo_id)->andReturns($repo);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
@@ -59,8 +59,8 @@ class GitActionsProjectPrivacyTest extends TestCase
     {
         $project_id = 99;
         $is_private = true;
-        $repo_id = 333;
-        $repo = Mockery::mock(\GitRepository::class)
+        $repo_id    = 333;
+        $repo       = Mockery::mock(\GitRepository::class)
             ->shouldReceive('setAccess')
             ->with(GitRepository::PRIVATE_ACCESS)
             ->once()
@@ -79,8 +79,8 @@ class GitActionsProjectPrivacyTest extends TestCase
     {
         $project_id = 99;
         $is_private = true;
-        $repo_id = 333;
-        $repo = Mockery::mock(\GitRepository::class)->shouldReceive('setAccess')->never()->getMock();
+        $repo_id    = 333;
+        $repo       = Mockery::mock(\GitRepository::class)->shouldReceive('setAccess')->never()->getMock();
         $repo->shouldReceive('getAccess')->andReturns(GitRepository::PRIVATE_ACCESS);
         $repo->shouldReceive('changeAccess')->andReturns("whatever");
         $this->dao->shouldReceive('getProjectRepositoryList')->with($project_id)->andReturns([$repo_id => null]);
@@ -92,8 +92,8 @@ class GitActionsProjectPrivacyTest extends TestCase
     {
         $project_id = 99;
         $is_private = true;
-        $repo_id1 = 333;
-        $repo_id2 = 444;
+        $repo_id1   = 333;
+        $repo_id2   = 444;
 
         $repo1 = Mockery::mock(\GitRepository::class)
             ->shouldReceive('setAccess')

@@ -70,7 +70,7 @@ use AgileDashboardPlugin;
 class ProjectMilestonesPresenterBuilder
 {
     private const COUNT_ELEMENTS_MODE = "count";
-    private const EFFORT_MODE = "effort";
+    private const EFFORT_MODE         = "effort";
 
     /**
      * @var HTTPRequest

@@ -362,7 +362,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
      */
     public function trackerUsage(array $params): void
     {
-        $tracker    = $params['tracker'];
+        $tracker = $params['tracker'];
         $project = $tracker->getProject();
         if (! $project->usesService($this->getServiceShortname())) {
             return;
@@ -406,10 +406,10 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     public function routeViaLegacyRouter(): LegacyRoutingController
     {
-        $config               = $this->getConfig();
-        $tracker_factory      = TrackerFactory::instance();
-        $user_manager         = UserManager::instance();
-        $event_manager        = EventManager::instance();
+        $config          = $this->getConfig();
+        $tracker_factory = TrackerFactory::instance();
+        $user_manager    = UserManager::instance();
+        $event_manager   = EventManager::instance();
 
         $router = new Tuleap\TestManagement\Router(
             $config,
@@ -507,7 +507,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     public function importValidateExternalFields(ImportValidateExternalFields $validate_external_fields): void
     {
-        $xml = $validate_external_fields->getXml();
+        $xml        = $validate_external_fields->getXml();
         $attributes = $xml->attributes();
         if ($this->isStepField($attributes)) {
             $validator = $this->getImportXmlFromTracker();
@@ -529,7 +529,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     }
     public function importValidateChangesetExternalField(ImportValidateChangesetExternalField $validate_external_fields): void
     {
-        $xml = $validate_external_fields->getXml();
+        $xml        = $validate_external_fields->getXml();
         $attributes = $xml->attributes();
         if ($attributes && isset($attributes['type']) && (string) $attributes['type'] === StepDefinition::TYPE) {
             $validator = $this->getImportXmlFromTracker();
@@ -725,8 +725,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
      */
     private function addXMLFileIntoArchive(SimpleXMLElement $xml_content, Project $project, ArchiveInterface $archive): void
     {
-        $temporary_file  = self::getTemporaryFileNameForProjectExport($project);
-        $temporary_path  = $this->getTmpDir() . "/$temporary_file";
+        $temporary_file = self::getTemporaryFileNameForProjectExport($project);
+        $temporary_path = $this->getTmpDir() . "/$temporary_file";
 
         $dom = dom_import_simplexml($xml_content);
         if (! $dom) {

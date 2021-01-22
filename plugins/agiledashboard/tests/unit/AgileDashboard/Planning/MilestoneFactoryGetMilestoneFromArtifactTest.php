@@ -74,18 +74,18 @@ class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
         $this->project          = Mockery::spy(Project::class);
         $this->release_planning = Mockery::spy(Planning::class);
 
-        $release_tracker  = Mockery::mock(Tracker::class);
+        $release_tracker = Mockery::mock(Tracker::class);
         $release_tracker->shouldReceive('getProject')->andReturn($this->project);
         $this->release_artifact = Mockery::mock(Artifact::class);
         $this->release_artifact->shouldReceive('getTracker')->andReturn($release_tracker);
 
-        $task_tracker  = Mockery::mock(Tracker::class);
+        $task_tracker = Mockery::mock(Tracker::class);
         $task_tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
 
         $this->task_artifact = Mockery::mock(Artifact::class);
         $this->task_artifact->shouldReceive('getTracker')->andReturn($task_tracker);
 
-        $this->planning_factory        = Mockery::mock(PlanningFactory::class);
+        $this->planning_factory = Mockery::mock(PlanningFactory::class);
 
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,

@@ -28,7 +28,7 @@ class Tracker_Rule_ListTest extends TestCase
 {
     public function testApplyTo()
     {
-        $trv  = new Tracker_Rule_List();
+        $trv = new Tracker_Rule_List();
         $trv->setSourceValue('source_value')
                 ->setTargetValue('target_value')
                 ->setId('id')
@@ -49,7 +49,7 @@ class Tracker_Rule_ListTest extends TestCase
 
     public function testCanApplyTo()
     {
-        $trv  = new Tracker_Rule_List();
+        $trv = new Tracker_Rule_List();
         $trv->setSourceValue('source_value')
                 ->setTargetValue('target_value')
                 ->setId('id')

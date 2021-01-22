@@ -48,8 +48,8 @@ class PermissionPerGroupPanePresenter
         Project $project,
         ?ProjectUGroup $ugroup = null
     ) {
-        $this->project_id  = $project->getID();
-        $this->ugroup_id   = ($ugroup)
+        $this->project_id = $project->getID();
+        $this->ugroup_id  = ($ugroup)
             ? $ugroup->getId()
             : '';
 

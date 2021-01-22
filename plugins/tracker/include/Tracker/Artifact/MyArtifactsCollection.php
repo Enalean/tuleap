@@ -33,9 +33,9 @@ class MyArtifactsCollection implements \Countable
     /**
      * @var array<int, \Tracker>
      */
-    private $trackers = [];
+    private $trackers           = [];
     private $trackers_has_title = [];
-    private $artifacts = [];
+    private $artifacts          = [];
     /**
      * @var TrackerFactory
      */
@@ -110,7 +110,7 @@ class MyArtifactsCollection implements \Countable
                 $with_title = true;
             }
 
-            $this->trackers[(int) $tracker->getId()] = $tracker;
+            $this->trackers[(int) $tracker->getId()]           = $tracker;
             $this->trackers_has_title[(int) $tracker->getId()] = $with_title;
 
             return $tracker;

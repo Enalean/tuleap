@@ -37,7 +37,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
 
     public function displayConfirmDelete()
     {
-        $html = '';
+        $html  = '';
         $html .= '<form action="' . $this->url . '" method="POST" class="docman_confirm_delete">';
         $html .= dgettext('tuleap-docman', '<h3>Confirm deletion of approval table</h3><p>You are going to delete an approval table. Please note that all the data (reviewer list, current reviews, settings) will be deleted.</p><p>Are you sure that you want to continue?</p>');
         $html .= '<div class="docman_confirm_delete_buttons">';
@@ -55,7 +55,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
 
     public function displayNotificationEmail()
     {
-        $html = '';
+        $html  = '';
         $html .= '<h3>' . dgettext('tuleap-docman', 'Notification email') . '</h3>';
 
         $atsm = new Docman_ApprovalTableNotificationCycle(
@@ -76,11 +76,11 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         );
         $atsm->setItem($this->item);
 
-        $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
+        $atf   = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
         $table = $atf->getTable(false);
         $atsm->setTable($table);
 
-        $um = UserManager::instance();
+        $um    = UserManager::instance();
         $owner = $um->getUserById($table->getOwner());
         $atsm->setOwner($owner);
 
@@ -93,9 +93,9 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         } else {
             $html .= htmlentities(quoted_printable_decode($atsm->getNotificationBodyText()), ENT_COMPAT, 'UTF-8');
         }
-        $html .= '</p>';
+        $html   .= '</p>';
         $backurl = $this->url . '&action=approval_create&id=' . $this->item->getId();
-        $html .= '<a href="' . $backurl . '">' . dgettext('tuleap-docman', 'Back to the approval settings.') . '</a>';
+        $html   .= '<a href="' . $backurl . '">' . dgettext('tuleap-docman', 'Back to the approval settings.') . '</a>';
         return $html;
     }
 
@@ -142,9 +142,9 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         // Status
         $html .= '<tr>';
         $html .= '<td>' . dgettext('tuleap-docman', 'Table status:') . '</td>';
-        $vals = [0 => PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED,
+        $vals  = [0 => PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED,
                       1 => PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED];
-        $txts = [0 => dgettext('tuleap-docman', 'Closed'),
+        $txts  = [0 => dgettext('tuleap-docman', 'Closed'),
                       1 => dgettext('tuleap-docman', 'Deleted')];
         if ($this->table->isCustomizable()) {
             $vals[2] = PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED;
@@ -183,10 +183,10 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         $html .= '<table>';
         $html .= '<tr>';
         $html .= '<td>' . dgettext('tuleap-docman', 'Notification Type:') . '</td>';
-        $vals = [PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED,
+        $vals  = [PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED,
                       PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE,
                       PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL];
-        $txts = [dgettext('tuleap-docman', 'Disabled'),
+        $txts  = [dgettext('tuleap-docman', 'Disabled'),
                       dgettext('tuleap-docman', 'All at once'),
                       dgettext('tuleap-docman', 'Sequential')];
         $html .= '<td>';
@@ -213,9 +213,9 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
                 if ($this->table->isEnabled()) {
                     $html .= '<tr>';
                     $html .= '<td>' . dgettext('tuleap-docman', 'Relaunch notification:') . '</td>';
-                    $vals = ['no',
+                    $vals  = ['no',
                                   'yes'];
-                    $txts = [$GLOBALS['Language']->getText('global', 'no'),
+                    $txts  = [$GLOBALS['Language']->getText('global', 'no'),
                                   $GLOBALS['Language']->getText('global', 'yes')];
                     $html .= '<td>' . html_build_select_box_from_arrays($vals, $txts, 'resend_notif', 'no', false) . '</td>';
                     $html .= '</tr>';
@@ -237,13 +237,13 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
 
     public function _displayNotificationOccurence()
     {
-        $html = '<tr>';
-        $html .= '<td>';
-        $html .= '<h4>' . dgettext('tuleap-docman', 'Mail reminder occurence') . '</h4>';
-        $html .= '</td>';
-        $html .= '</tr>';
-        $html .= '<tr>';
-        $html .= '<td>';
+        $html      = '<tr>';
+        $html     .= '<td>';
+        $html     .= '<h4>' . dgettext('tuleap-docman', 'Mail reminder occurence') . '</h4>';
+        $html     .= '</td>';
+        $html     .= '</tr>';
+        $html     .= '<tr>';
+        $html     .= '<td>';
         $occurence = $this->table->getNotificationOccurence();
         if ($occurence) {
             $checked = 'checked="true"';
@@ -279,7 +279,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         if ($rIter !== null) {
             $docmanIcons = $this->_getDocmanIcons();
 
-            $html .= html_build_list_table_top(
+            $html       .= html_build_list_table_top(
                 [dgettext('tuleap-docman', 'Select'),
                                                      dgettext('tuleap-docman', 'Name'),
                                                      dgettext('tuleap-docman', 'Review'),
@@ -288,10 +288,10 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
                 false,
                 false
             );
-            $isFirst = true;
-            $isLast  = false;
+            $isFirst     = true;
+            $isLast      = false;
             $nbReviewers = $rIter->count();
-            $i = 0;
+            $i           = 0;
             $rIter->rewind();
             while ($rIter->valid()) {
                 $isLast = ($i == ($nbReviewers - 1));
@@ -316,8 +316,8 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
 
                 // Rank
                 if (! $this->table->isClosed()) {
-                    $rank = $reviewer->getRank();
-                    $baseUrl  = '?group_id=' . $this->item->getGroupId() . '&action=approval_upd_user&id=' . $this->item->getId() . '&user_id=' . $reviewer->getId() . '&rank=';
+                    $rank    = $reviewer->getRank();
+                    $baseUrl = '?group_id=' . $this->item->getGroupId() . '&action=approval_upd_user&id=' . $this->item->getId() . '&user_id=' . $reviewer->getId() . '&rank=';
 
                     $begLink = '';
                     $upLink  = '';
@@ -353,9 +353,9 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
             if (! $this->table->isClosed()) {
                 $html .= '<p>';
                 $html .= dgettext('tuleap-docman', '<strong>Actions</strong> with selected reviewers:');
-                $vals = ['del',
+                $vals  = ['del',
                               'mail'];
-                $txts = [dgettext('tuleap-docman', 'Remove from table'),
+                $txts  = [dgettext('tuleap-docman', 'Remove from table'),
                               dgettext('tuleap-docman', 'Force notification')];
                 $html .= html_build_select_box_from_arrays($vals, $txts, 'sel_user_act', 100, true);
                 $html .= '</p>';
@@ -373,21 +373,21 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
             ($this->table !== null && ! $this->table->isClosed())
             || $this->table === null
         ) {
-            $atrf = new Docman_ApprovalTableReviewerFactory($this->table, $this->item);
+            $atrf    = new Docman_ApprovalTableReviewerFactory($this->table, $this->item);
             $ugroups = $atrf->getUgroupsAllowedForTable($this->item->getGroupId());
-            $html .= '<div id="docman_approval_table_create_add_reviewers">';
-            $html .= '<table>';
-            $html .= '<tr>';
-            $html .= '<td>' . dgettext('tuleap-docman', 'Enter list by hand (separate by \',\'):') . '</td>';
-            $html .= '<td><input type="text" name="user_list" value="" id="user_list" class="text_field"/></td>';
-            $html .= '</tr>';
-            $html .= '<tr>';
-            $html .= '<td>' . dgettext('tuleap-docman', 'Append the members to the table:') . '</td>';
-            $html .= '<td>' . html_build_multiple_select_box_from_array($ugroups, 'ugroup_list[]', [], 8, true, '', false, '', false, '', false) . '</td>';
-            $html .= '</tr>';
-            $html .= '</table>';
-            $html .= '</div>';
-            $js   = "new UserAutoCompleter('user_list', '" . util_get_dir_image_theme() . "', true);";
+            $html   .= '<div id="docman_approval_table_create_add_reviewers">';
+            $html   .= '<table>';
+            $html   .= '<tr>';
+            $html   .= '<td>' . dgettext('tuleap-docman', 'Enter list by hand (separate by \',\'):') . '</td>';
+            $html   .= '<td><input type="text" name="user_list" value="" id="user_list" class="text_field"/></td>';
+            $html   .= '</tr>';
+            $html   .= '<tr>';
+            $html   .= '<td>' . dgettext('tuleap-docman', 'Append the members to the table:') . '</td>';
+            $html   .= '<td>' . html_build_multiple_select_box_from_array($ugroups, 'ugroup_list[]', [], 8, true, '', false, '', false, '', false) . '</td>';
+            $html   .= '</tr>';
+            $html   .= '</table>';
+            $html   .= '</div>';
+            $js      = "new UserAutoCompleter('user_list', '" . util_get_dir_image_theme() . "', true);";
             $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         } else {
             return dgettext('tuleap-docman', 'You cannot add people to an old approval table.');
@@ -418,7 +418,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
 
     public function displayUpdateForm()
     {
-        $html = '';
+        $html  = '';
         $html .= '<form name="docman_approval_settings" method="post" action="?" class="docman_form">';
         $html .= '<input type="hidden" name="group_id" value="' . $this->item->getGroupId() . '" />';
         $html .= '<input type="hidden" name="id" value="' . $this->item->getId() . '" />';
@@ -460,10 +460,10 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
             $lastTable = $this->atf->getLastTableForItem();
             if ($lastTable !== null) {
                 $noImport = false;
-                $html .= '<input type="hidden" name="action" value="approval_update" />';
-                $html .= '<h3>' . dgettext('tuleap-docman', 'Import an old approval table') . '</h3>';
-                $html .= dgettext('tuleap-docman', 'There is an approval table on the previous version of the document. You can either:') . '<br />';
-                $html .= $this->displayImportLastTable();
+                $html    .= '<input type="hidden" name="action" value="approval_update" />';
+                $html    .= '<h3>' . dgettext('tuleap-docman', 'Import an old approval table') . '</h3>';
+                $html    .= dgettext('tuleap-docman', 'There is an approval table on the previous version of the document. You can either:') . '<br />';
+                $html    .= $this->displayImportLastTable();
             }
         }
 

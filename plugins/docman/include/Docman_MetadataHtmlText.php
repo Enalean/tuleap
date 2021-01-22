@@ -33,7 +33,7 @@ class Docman_MetadataHtmlText extends \Docman_MetadataHtml
     }
     public function _getField()
     {
-        $name = $this->_getFieldName();
+        $name  = $this->_getFieldName();
         $value = $this->md->getValue();
         if ($value === \null) {
             $value = $this->md->getDefaultValue();

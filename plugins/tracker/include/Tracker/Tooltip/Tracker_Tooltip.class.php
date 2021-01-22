@@ -32,7 +32,7 @@ class Tracker_Tooltip extends Tracker_Semantic
     public function getFields()
     {
         if (empty($this->fields)) {
-            $tf = Tracker_FormElementFactory::instance();
+            $tf           = Tracker_FormElementFactory::instance();
             $this->fields = [];
             foreach ($this->getDao()->searchByTrackerId($this->tracker->id) as $row) {
                 if ($field = $tf->getUsedFormElementById($row['field_id'])) {
@@ -199,7 +199,7 @@ class Tracker_Tooltip extends Tracker_Semantic
         $html   = '';
         $hp     = Codendi_HTMLPurifier::instance();
         $fields = $this->getFields();
-        $html .= '<p>';
+        $html  .= '<p>';
         if (! count($fields)) {
             $html .= dgettext('tuleap-tracker', 'There isn\'t any fields in the tooltip yet.');
         } else {

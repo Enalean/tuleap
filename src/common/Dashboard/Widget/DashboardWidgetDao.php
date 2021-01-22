@@ -771,7 +771,7 @@ class DashboardWidgetDao extends DataAccessObject
             $dashboard_id = $this->createUserDashboard($user_id);
 
             $nb_widgets = count($widgets);
-            $line_id = $this->createDefaultLine($dashboard_id, $nb_widgets);
+            $line_id    = $this->createDefaultLine($dashboard_id, $nb_widgets);
 
             $rank = 0;
             foreach ($widgets as $widget_name) {

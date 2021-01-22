@@ -114,7 +114,7 @@ class ColumnsGetter
     {
         $columns = [];
         foreach ($this->column_dao->searchColumnsByTrackerId($planning->getPlanningTrackerId()) as $row) {
-            $column = new ColumnRepresentation();
+            $column       = new ColumnRepresentation();
             $header_color = ColumnColorRetriever::getHeaderColorNameOrHex($row);
             $column->build(JsonCast::toInt($row['id']), $row['label'], $header_color);
             $columns[] = $column;

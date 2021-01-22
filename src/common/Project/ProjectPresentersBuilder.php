@@ -69,10 +69,10 @@ class ProjectPresentersBuilder
 
     private function getProjectPresenter(Project $project): ProjectPresenter
     {
-        $project_id         = $project->getID();
-        $project_name       = $project->getPublicName();
-        $project_config_uri = '/project/admin/?group_id=' . $project_id;
-        $is_current_user_admin   = $this->current_user->isAdmin($project_id);
+        $project_id            = $project->getID();
+        $project_name          = $project->getPublicName();
+        $project_config_uri    = '/project/admin/?group_id=' . $project_id;
+        $is_current_user_admin = $this->current_user->isAdmin($project_id);
 
         return new ProjectPresenter(
             $project_name,

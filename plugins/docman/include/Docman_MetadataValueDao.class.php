@@ -93,9 +93,9 @@ class Docman_MetadataValueDao extends DataAccessObject
         $fields = ['field_id', 'item_id'];
         $types  = ['%d', '%d'];
 
-        $val     = null;
-        $dtype   = null;
-        $field   = null;
+        $val   = null;
+        $dtype = null;
+        $field = null;
         $this->_matchSqlType($type, $value, $field, $dtype, $val);
 
         if ($field !== false) {
@@ -133,9 +133,9 @@ class Docman_MetadataValueDao extends DataAccessObject
 
     public function updateValue($itemId, $fieldId, $type, $value)
     {
-        $val     = null;
-        $dtype   = null;
-        $field   = null;
+        $val   = null;
+        $dtype = null;
+        $field = null;
         $this->_matchSqlType($type, $value, $field, $dtype, $val);
 
         if ($field !== false) {

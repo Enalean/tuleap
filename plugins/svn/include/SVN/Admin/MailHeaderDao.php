@@ -28,7 +28,7 @@ class MailHeaderDao extends DataAccessObject
     public function searchByRepositoryId($repository_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);
-        $sql = "SELECT *
+        $sql           = "SELECT *
                 FROM plugin_svn_mailing_header
                 WHERE repository_id=$repository_id";
 

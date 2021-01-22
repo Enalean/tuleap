@@ -76,7 +76,7 @@ class SessionDao extends DataAccessObject
     {
         $user_id            = $this->getDa()->escapeInt($user_id);
         $current_session_id = $this->getDa()->escapeInt($current_session_id);
-        $sql     = "DELETE FROM session WHERE user_id = $user_id AND id != $current_session_id";
+        $sql                = "DELETE FROM session WHERE user_id = $user_id AND id != $current_session_id";
         return $this->update($sql);
     }
 

@@ -17,30 +17,30 @@
 class Text
 {
     public $t;
-    public $x = 0;
-    public $y = 0;
-    public $halign = "left";
-    public $valign = "top";
-    public $color = [0, 0, 0];
-    public $hide = false;
-    public $dir = 0;
-    public $iScalePosY = null;
-    public $iScalePosX = null;
-    public $iWordwrap = 0;
-    public $font_family = FF_DEFAULT;
-    public $font_style = FS_NORMAL; // old. FF_FONT1
-    protected $boxed = false; // Should the text be boxed
+    public $x                  = 0;
+    public $y                  = 0;
+    public $halign             = "left";
+    public $valign             = "top";
+    public $color              = [0, 0, 0];
+    public $hide               = false;
+    public $dir                = 0;
+    public $iScalePosY         = null;
+    public $iScalePosX         = null;
+    public $iWordwrap          = 0;
+    public $font_family        = FF_DEFAULT;
+    public $font_style         = FS_NORMAL; // old. FF_FONT1
+    protected $boxed           = false; // Should the text be boxed
     protected $paragraph_align = "left";
-    protected $icornerradius = 0;
-    protected $ishadowwidth = 3;
-    protected $fcolor = 'white';
-    protected $bcolor = 'black';
-    protected $shadow = false;
-    protected $iCSIMarea = '';
-    protected $iCSIMalt = '';
-    protected $iCSIMtarget = '';
-    protected $iCSIMWinTarget = '';
-    private $iBoxType = 1; // Which variant of filled box around text we want
+    protected $icornerradius   = 0;
+    protected $ishadowwidth    = 3;
+    protected $fcolor          = 'white';
+    protected $bcolor          = 'black';
+    protected $shadow          = false;
+    protected $iCSIMarea       = '';
+    protected $iCSIMalt        = '';
+    protected $iCSIMtarget     = '';
+    protected $iCSIMWinTarget  = '';
+    private $iBoxType          = 1; // Which variant of filled box around text we want
 
     // for __get, __set
     private $_margin;
@@ -55,9 +55,9 @@ class Text
         if (! is_string($aTxt)) {
             JpGraphError::RaiseL(25050);//('First argument to Text::Text() must be s atring.');
         }
-        $this->t = $aTxt;
-        $this->x = round($aXAbsPos);
-        $this->y = round($aYAbsPos);
+        $this->t      = $aTxt;
+        $this->x      = round($aXAbsPos);
+        $this->y      = round($aYAbsPos);
         $this->margin = 0;
     }
     //---------------
@@ -72,8 +72,8 @@ class Text
     public function SetPos($aXAbsPos = 0, $aYAbsPos = 0, $aHAlign = "left", $aVAlign = "top")
     {
     //$this->Pos($aXAbsPos,$aYAbsPos,$aHAlign,$aVAlign);
-        $this->x = $aXAbsPos;
-        $this->y = $aYAbsPos;
+        $this->x      = $aXAbsPos;
+        $this->y      = $aYAbsPos;
         $this->halign = $aHAlign;
         $this->valign = $aVAlign;
     }
@@ -115,8 +115,8 @@ class Text
     public function SetShadow($aShadowColor = 'gray', $aShadowWidth = 3)
     {
         $this->ishadowwidth = $aShadowWidth;
-        $this->shadow = $aShadowColor;
-        $this->boxed = true;
+        $this->shadow       = $aShadowColor;
+        $this->boxed        = true;
     }
 
     public function SetWordWrap($aCol)
@@ -139,9 +139,9 @@ class Text
         if ($aShadowColor === true) {
             $aShadowColor = 'gray';
         }
-        $this->shadow = $aShadowColor;
+        $this->shadow        = $aShadowColor;
         $this->icornerradius = $aCornerRadius;
-        $this->ishadowwidth = $aShadowWidth;
+        $this->ishadowwidth  = $aShadowWidth;
     }
 
     public function SetBox2($aFrameColor = [255, 255, 255], $aBorderColor = [0, 0, 0], $aShadowColor = false, $aCornerRadius = 4, $aShadowWidth = 3)
@@ -169,14 +169,14 @@ class Text
     public function SetFont($aFamily, $aStyle = FS_NORMAL, $aSize = 10)
     {
         $this->font_family = $aFamily;
-        $this->font_style = $aStyle;
-        $this->font_size = $aSize;
+        $this->font_style  = $aStyle;
+        $this->font_size   = $aSize;
     }
 
     // Center the text between $left and $right coordinates
     public function Center($aLeft, $aRight, $aYAbsPos = false)
     {
-        $this->x = $aLeft + ($aRight - $aLeft ) / 2;
+        $this->x      = $aLeft + ($aRight - $aLeft ) / 2;
         $this->halign = "center";
         if (is_numeric($aYAbsPos)) {
             $this->y = $aYAbsPos;
@@ -261,8 +261,8 @@ class Text
 
     public function SetCSIMTarget($aURITarget, $aAlt = '', $aWinTarget = '')
     {
-        $this->iCSIMtarget = $aURITarget;
-        $this->iCSIMalt = $aAlt;
+        $this->iCSIMtarget    = $aURITarget;
+        $this->iCSIMalt       = $aAlt;
         $this->iCSIMWinTarget = $aWinTarget;
     }
 
@@ -345,11 +345,11 @@ class Text
             $aImg->SetLineWeight($oldweight);
         } else {
             $debug = false;
-            $bbox = $aImg->StrokeText($this->x, $this->y, $this->t, $this->dir, $this->paragraph_align, $debug);
+            $bbox  = $aImg->StrokeText($this->x, $this->y, $this->t, $this->dir, $this->paragraph_align, $debug);
         }
 
         // Create CSIM targets
-        $coords = $bbox[0] . ',' . $bbox[1] . ',' . $bbox[2] . ',' . $bbox[3] . ',' . $bbox[4] . ',' . $bbox[5] . ',' . $bbox[6] . ',' . $bbox[7];
+        $coords          = $bbox[0] . ',' . $bbox[1] . ',' . $bbox[2] . ',' . $bbox[3] . ',' . $bbox[4] . ',' . $bbox[5] . ',' . $bbox[6] . ',' . $bbox[7];
         $this->iCSIMarea = "<area shape=\"poly\" coords=\"$coords\" href=\"" . htmlentities($this->iCSIMtarget) . "\" ";
         if (trim($this->iCSIMalt) != '') {
             $this->iCSIMarea .= " alt=\"" . $this->iCSIMalt . "\" ";

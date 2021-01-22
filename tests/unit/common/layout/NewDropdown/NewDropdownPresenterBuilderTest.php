@@ -168,7 +168,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
         $current_context_section = new NewDropdownLinkSectionPresenter("Current context", [
             new \Tuleap\layout\NewDropdown\NewDropdownLinkPresenter('/path/to/submit/story', 'New story', 'fa-plus', [])
         ]);
-        $presenter = $this->builder->getPresenter($this->user, $this->project, $current_context_section);
+        $presenter               = $this->builder->getPresenter($this->user, $this->project, $current_context_section);
 
         $this->assertTrue($presenter->has_sections);
         $this->assertCount(3, $presenter->sections);

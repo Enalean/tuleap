@@ -198,7 +198,7 @@ class Docman_ApprovalTableNotificationCycle
         // enable item monitoring
         $this->enableMonitorForReviewer($reviewerId);
 
-        $um = $this->_getUserManager();
+        $um       = $this->_getUserManager();
         $reviewer = $um->getUserById($reviewerId);
 
         return $this->sendNotifReviewer($reviewer);
@@ -225,7 +225,7 @@ class Docman_ApprovalTableNotificationCycle
 
     public function getReviewUrl()
     {
-        $baseUrl = HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
+        $baseUrl   = HTTPRequest::instance()->getServerUrl() . '/plugins/docman/?group_id=' . $this->item->getGroupId();
         $reviewUrl = $baseUrl . '&action=details&section=approval&id=' . $this->item->getId();
         return $reviewUrl;
     }
@@ -386,7 +386,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
 
         $commentSeq = '';
         if ($this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL) {
-            $commentSeq = sprintf(dgettext('tuleap-docman', 'Important note: this approval table is configured in \'Sequential\' mode.
+            $commentSeq  = sprintf(dgettext('tuleap-docman', 'Important note: this approval table is configured in \'Sequential\' mode.
 The notification sequence is on hold until %1$s approves or rejects the document.'), $reviewer->getRealName());
             $commentSeq .= "\n";
         }
@@ -416,7 +416,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
     public function sendNotifReviewer($reviewer)
     {
         // Project
-        $pm = ProjectManager::instance();
+        $pm    = ProjectManager::instance();
         $group = $pm->getProject($this->item->getGroupId());
 
         // Url
@@ -442,9 +442,9 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
      */
     public function getTableState()
     {
-        $nbApproved = 0;
-        $nbDeclined = 0;
-        $rejected = false;
+        $nbApproved  = 0;
+        $nbDeclined  = 0;
+        $rejected    = false;
         $revIterator = $this->table->getReviewerIterator();
         while (! $rejected && $revIterator->valid()) {
             $reviewer = $revIterator->current();
@@ -547,7 +547,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
         $userComment     = $this->table->getDescription();
 
         if ($userComment != '') {
-            $comment = sprintf(dgettext('tuleap-docman', 'Message:
+            $comment  = sprintf(dgettext('tuleap-docman', 'Message:
 ------------
 %1$s
 ------------'), $userComment);

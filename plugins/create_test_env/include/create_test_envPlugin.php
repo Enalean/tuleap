@@ -178,8 +178,8 @@ class create_test_envPlugin extends Plugin
         if ($current_user->isSuperUser()) {
             return;
         }
-        $artifact     = $event->getArtifact();
-        $project      = $artifact->getTracker()->getProject();
+        $artifact = $event->getArtifact();
+        $project  = $artifact->getTracker()->getProject();
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Created artifact #" . $artifact->getId());
     }
 
@@ -190,8 +190,8 @@ class create_test_envPlugin extends Plugin
         if ($current_user->isSuperUser()) {
             return;
         }
-        $artifact     = $event->getArtifact();
-        $project      = $artifact->getTracker()->getProject();
+        $artifact = $event->getArtifact();
+        $project  = $artifact->getTracker()->getProject();
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Updated artifact #" . $artifact->getId());
     }
 
@@ -220,26 +220,26 @@ class create_test_envPlugin extends Plugin
     // @codingStandardsIgnoreLine
     public function service_is_used(array $params)
     {
-        $request = HTTPRequest::instance();
+        $request      = HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
         if ($current_user->isSuperUser()) {
             return;
         }
         $platform_url = $request->getServerUrl();
-        $project = ProjectManager::instance()->getProject($params['group_id']);
-        $verb = $params['is_used'] ? 'activated' : 'desactivated';
+        $project      = ProjectManager::instance()->getProject($params['group_id']);
+        $verb         = $params['is_used'] ? 'activated' : 'desactivated';
         $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) $verb service {$params['shortname']} in [{$project->getPublicName()}]({$platform_url}/project/{$project->getID()}/admin/services. #project-admin #{$current_user->getUnixName()}");
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'project_admin', "$verb service {$params['shortname']}");
     }
 
     public function serviceAccessEvent(ServiceAccessEvent $event)
     {
-        $request = HTTPRequest::instance();
+        $request      = HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
         if ($current_user->isSuperUser()) {
             return;
         }
-        $project = $request->getProject();
+        $project    = $request->getProject();
         $project_id = 0;
         if ($project && ! $project->isError()) {
             $project_id = $project->getID();
@@ -259,9 +259,9 @@ class create_test_envPlugin extends Plugin
         if (count($emails) === 0) {
             return;
         }
-        $dao = new ActivityLoggerDao();
-        $now = new DateTimeImmutable();
-        $yesterday = $now->sub(new DateInterval('P1DT30M'));
+        $dao        = new ActivityLoggerDao();
+        $now        = new DateTimeImmutable();
+        $yesterday  = $now->sub(new DateInterval('P1DT30M'));
         $csv_handle = fopen('php://temp', 'w+');
         fputcsv($csv_handle, ['user_id', 'login', 'email', 'service', 'action', 'time']);
         foreach ($dao->fetchActivityBetweenDates($yesterday->getTimestamp(), $now->getTimestamp()) as $row) {
@@ -272,7 +272,7 @@ class create_test_envPlugin extends Plugin
         $zip_file_name = tempnam(ForgeConfig::get('codendi_cache_dir'), 'create_test_env_daily_zip_');
         try {
             $date_tag = $now->format('Y-m-d');
-            $zip = new ZipArchive();
+            $zip      = new ZipArchive();
             $zip->open($zip_file_name, ZipArchive::CREATE);
             $zip->addFromString("csv-export-$date_tag.csv", stream_get_contents($csv_handle));
             $zip->close();

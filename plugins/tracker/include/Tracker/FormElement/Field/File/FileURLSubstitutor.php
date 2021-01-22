@@ -39,7 +39,7 @@ class FileURLSubstitutor
             return $html;
         }
 
-        $document = new DOMDocument();
+        $document            = new DOMDocument();
         $previous_use_errors = libxml_use_internal_errors(true);
         libxml_clear_errors();
         $document->loadHTML($html, self::LIBXML_HTML_NODEFDTD);

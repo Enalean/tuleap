@@ -128,8 +128,8 @@ class ArtifactFile
                         $this->createOnFileSystem($id, $bin_data);
 
             $changes['attach']['description'] = $description;
-            $changes['attach']['name'] = $filename;
-            $changes['attach']['size'] = $filesize;
+            $changes['attach']['name']        = $filename;
+            $changes['attach']['size']        = $filesize;
 
             if ($old_value == '') {
                     $new_value = $filename;
@@ -189,7 +189,7 @@ class ArtifactFile
         global $Language;
 
         $old_value = $this->Artifact->getAttachedFileNames();
-        $sql = "DELETE FROM artifact_file WHERE id=" . db_ei($this->getID());
+        $sql       = "DELETE FROM artifact_file WHERE id=" . db_ei($this->getID());
      //echo "sql=$sql<br>";
         $res = db_query($sql);
         if (! $res || db_affected_rows($res) < 1) {
@@ -367,13 +367,13 @@ class ArtifactFile
      */
     public function setError($string)
     {
-        $this->error_state = true;
+        $this->error_state   = true;
         $this->error_message = $string;
     }
 
     public function clearError()
     {
-        $this->error_state = false;
+        $this->error_state   = false;
         $this->error_message = '';
     }
 

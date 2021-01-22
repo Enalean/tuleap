@@ -49,7 +49,7 @@ class MilestoneTrackerRetriever
         if ($dar === false) {
             throw new InvalidColumnException();
         }
-        $row = $dar->getRow();
+        $row     = $dar->getRow();
         $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
         if ($tracker === null) {
             throw new \RuntimeException('Tracker does not exist');

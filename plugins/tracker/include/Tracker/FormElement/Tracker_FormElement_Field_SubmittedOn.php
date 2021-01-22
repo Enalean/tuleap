@@ -231,7 +231,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
         $timestamp = $value->getTimestamp();
         $value     = $timestamp ? $this->formatDateForDisplay($timestamp) : '';
-        $html .= $value;
+        $html     .= $value;
 
         return $html;
     }
@@ -340,7 +340,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
      */
     protected function fetchAdminFormElement()
     {
-        $html = '';
+        $html  = '';
         $html .= '<div>' . $this->formatDateTime(time()) . '</div>';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= dgettext('tuleap-tracker', 'The field is automatically set to artifact submission date');
@@ -375,8 +375,8 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
     public function getArtifactsByCriterias($date, $trackerId = null)
     {
         $artifacts = [];
-        $dao = new Tracker_ArtifactDao();
-        $dar = $dao->getArtifactsBySubmittedOnDate($trackerId, $date);
+        $dao       = new Tracker_ArtifactDao();
+        $dar       = $dao->getArtifactsBySubmittedOnDate($trackerId, $date);
 
         if ($dar && ! $dar->isError()) {
             $artifactFactory = Tracker_ArtifactFactory::instance();

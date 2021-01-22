@@ -189,7 +189,7 @@ class PostCommit
     ) {
         $commit_info = $this->commit_info_enhancer->getCommitInfo();
 
-        $body = "SVN Repository: " . $system_path;
+        $body  = "SVN Repository: " . $system_path;
         $body .= "\n";
         $body .= "Changes by: " . $committer->getName() . " <" . $committer->getEmail() . "> on " . $commit_info->getDate() . "\n";
         $body .= "New Revision:   $new_revision  $goto_link \n";
@@ -232,7 +232,7 @@ class PostCommit
         $commit_info = $this->commit_info_enhancer->getCommitInfo();
         if (count($commit_info->getDirectories()) > 3) {
             $directories = $commit_info->getDirectories();
-            $subject     .= $directories[0] . " " . $directories[1] . " " . $directories[2] . "...";
+            $subject    .= $directories[0] . " " . $directories[1] . " " . $directories[2] . "...";
         } else {
             $subject .= join(' ', $commit_info->getDirectories());
         }

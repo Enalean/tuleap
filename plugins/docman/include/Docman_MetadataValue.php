@@ -33,8 +33,8 @@ class Docman_MetadataValue
     public function __construct()
     {
         $this->fieldId = \null;
-        $this->itemId = \null;
-        $this->type = \null;
+        $this->itemId  = \null;
+        $this->type    = \null;
     }
     public function setFieldId($v)
     {

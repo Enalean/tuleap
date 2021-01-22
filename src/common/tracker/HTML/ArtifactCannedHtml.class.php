@@ -33,8 +33,8 @@ class ArtifactCannedHtml extends ArtifactCanned
         global $Language;
 
         echo '<h3>' . $Language->getText('tracker_include_canned', 'create_response') . '</h3>';
-        $atid = $this->ArtifactType->getID();
-        $g = $this->ArtifactType->getGroup();
+        $atid     = $this->ArtifactType->getID();
+        $g        = $this->ArtifactType->getGroup();
         $group_id = $g->getID();
         echo '<P>';
         echo $Language->getText('tracker_include_canned', 'save_time');
@@ -64,11 +64,11 @@ class ArtifactCannedHtml extends ArtifactCanned
     {
         global $Language;
         echo "<P>";
-        $atid = $this->ArtifactType->getID();
-        $id =
-        $g = $this->ArtifactType->getGroup();
+        $atid     = $this->ArtifactType->getID();
+        $id       =
+        $g        = $this->ArtifactType->getGroup();
         $group_id = $g->getID();
-        $id = $this->getID();
+        $id       = $this->getID();
          echo $Language->getText('tracker_include_canned', 'save_time');
          echo '<P>';
          echo '<FORM ACTION="/tracker/admin/" METHOD="POST">';
@@ -99,13 +99,13 @@ class ArtifactCannedHtml extends ArtifactCanned
     {
         global $Language;
         $group_id = $this->ArtifactType->Group->getID();
-        $atid = $this->ArtifactType->getID();
-        $hp = Codendi_HTMLPurifier::instance();
+        $atid     = $this->ArtifactType->getID();
+        $hp       = Codendi_HTMLPurifier::instance();
         echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') .
          ' \'<a href="/tracker?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '">' . $hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</a>\' - ' .
         $Language->getText('tracker_admin_index', 'create_modify_cannedresponse') . '</a></H2>';
         $result = $this->ArtifactType->getCannedResponses();
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
         echo "<P>";
 
         if ($result && $rows > 0) {
@@ -114,14 +114,14 @@ class ArtifactCannedHtml extends ArtifactCanned
            */
             echo "\n<H3>" . $Language->getText('tracker_include_canned', 'existing_responses') . "</H3><P>";
 
-            $title_arr = [];
+            $title_arr   = [];
             $title_arr[] = $Language->getText('tracker_include_canned', 'title');
             $title_arr[] = $Language->getText('tracker_include_canned', 'body_extract');
             $title_arr[] = $Language->getText('tracker_include_canned', 'delete');
 
             echo html_build_list_table_top($title_arr);
-            $atid = $this->ArtifactType->getID();
-            $g = $this->ArtifactType->getGroup();
+            $atid     = $this->ArtifactType->getID();
+            $g        = $this->ArtifactType->getGroup();
             $group_id = $g->getID();
             for ($i = 0; $i < $rows; $i++) {
                   echo '<TR class="' . util_get_alt_row_color($i) . '">' .

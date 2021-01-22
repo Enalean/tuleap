@@ -86,8 +86,8 @@ class WikiAttachment /* implements UGroupPermission */
     public function __construct($gid = 0)
     {
         $this->setGid($gid);
-        $this->filetype = null;
-        $this->filesize = null;
+        $this->filetype        = null;
+        $this->filesize        = null;
         $this->revisionCounter = null;
     }
 
@@ -160,10 +160,10 @@ class WikiAttachment /* implements UGroupPermission */
         $dao = self::getDao();
         $dar = $dao->getListWithCounterOrderedByRevDate($gid);
 
-        $i = 0;
-        $j = 0; // count viewable attch for offset
+        $i       = 0;
+        $j       = 0; // count viewable attch for offset
         $waArray = [];
-        $stop = false;
+        $stop    = false;
         while (($row = $dar->getRow()) && ! $stop) {
             if ($max !== null && $i >= $max) {
                 $stop = true;
@@ -196,7 +196,7 @@ class WikiAttachment /* implements UGroupPermission */
      */
     public function setGid($id = 0)
     {
-        $this->gid      = (int) $id;
+        $this->gid     = (int) $id;
         $this->basedir = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->gid;
     }
 
@@ -368,7 +368,7 @@ class WikiAttachment /* implements UGroupPermission */
 
     public function dbadd()
     {
-        $dao = self::getDao();
+        $dao     = self::getDao();
         $created = $dao->create($this->gid, $this->getFilename(), $this->getFilesystemName());
 
         if (! $created) {
@@ -418,7 +418,7 @@ class WikiAttachment /* implements UGroupPermission */
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_multi_id'), E_USER_ERROR);
                 return -1;
             } else {
-                $row = $dar->getRow();
+                $row      = $dar->getRow();
                 $this->id = $row['id'];
             }
         }
@@ -472,14 +472,14 @@ class WikiAttachment /* implements UGroupPermission */
     public function initWithId($id = 0)
     {
         $this->id = (int) $id;
-        $dao = self::getDao();
-        $dar = $dao->read($this->id);
+        $dao      = self::getDao();
+        $dar      = $dao->read($this->id);
         $this->setFromRow($dar->getRow());
     }
 
     public function setFromRow($row)
     {
-        $this->id       = $row['id'];
+        $this->id = $row['id'];
         $this->setGid($row['group_id']);
         $this->filename = $row['name'];
         if (isset($row['filesystem_name'])) {
@@ -524,7 +524,7 @@ class WikiAttachment /* implements UGroupPermission */
     {
         if ($this->revisionCounter === null) {
             $this->getId();
-            $waIter = WikiAttachmentRevision::getRevisionIterator($this->gid, $this->id);
+            $waIter                = WikiAttachmentRevision::getRevisionIterator($this->gid, $this->id);
             $this->revisionCounter = $waIter->count();
         }
         return $this->revisionCounter;
@@ -670,7 +670,7 @@ class WikiAttachment /* implements UGroupPermission */
     {
         if ($this->exist()) {
             $attachmentPath = $this->basedir . '/' . $this->getFilesystemName();
-            $dirAttachment = new DirectoryIterator($attachmentPath);
+            $dirAttachment  = new DirectoryIterator($attachmentPath);
             foreach ($dirAttachment as $version) {
                 if (! $version->isDot()) {
                     if (! unlink($version->getPathname())) {

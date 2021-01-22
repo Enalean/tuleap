@@ -77,7 +77,7 @@ final class PermissionsRepresentationBuilderTest extends TestCase
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members_ugroup);
 
         $this->permissions_functions_wrapper = M::mock(PermissionsFunctionsWrapper::class);
-        $this->builder = new PermissionsRepresentationBuilder($this->ugroup_manager, $this->permissions_functions_wrapper);
+        $this->builder                       = new PermissionsRepresentationBuilder($this->ugroup_manager, $this->permissions_functions_wrapper);
     }
 
     public function testItReturnsNullWhenUserIsNotAdmin(): void
@@ -208,18 +208,18 @@ final class PermissionsRepresentationBuilderTest extends TestCase
 
     public function testItReturnsAMixOfPermissions(): void
     {
-        $anonymous_ugroup = new ProjectUGroup([
+        $anonymous_ugroup     = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
-        $developers_id = 501;
-        $developers_ugroup = new ProjectUGroup([
+        $developers_id        = 501;
+        $developers_ugroup    = new ProjectUGroup([
             'ugroup_id' => $developers_id,
             'name' => 'Developers',
             'group_id' => 202,
         ]);
-        $tracker_admin_id = 502;
+        $tracker_admin_id     = 502;
         $tracker_admin_ugroup = new ProjectUGroup([
             'ugroup_id' => $tracker_admin_id,
             'name' => 'TrackerAdmins',

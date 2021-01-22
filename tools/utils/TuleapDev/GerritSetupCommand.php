@@ -59,7 +59,7 @@ class GerritSetupCommand extends Command
 
         $client = Client::createWithConfig(['timeout' => 5]);
 
-        $authentication = new BasicAuth($input->getOption('gerrit-admin-login'), $input->getOption('gerrit-admin-password'));
+        $authentication       = new BasicAuth($input->getOption('gerrit-admin-login'), $input->getOption('gerrit-admin-password'));
         $authenticationPlugin = new AuthenticationPlugin($authentication);
 
         $plugin_client = new PluginClient(
@@ -105,7 +105,7 @@ class GerritSetupCommand extends Command
     {
         $ssh_key_path = $input->getOption('ssh-private-key-path');
         if (! file_exists($ssh_key_path)) {
-            $cmd_output = [];
+            $cmd_output   = [];
             $return_value = -1;
             exec('ssh-keygen -P "" -f ' . escapeshellarg($ssh_key_path), $output_cmd, $return_value);
             if ($return_value !== 0) {
@@ -145,7 +145,7 @@ class GerritSetupCommand extends Command
         string $gerrit_server,
         ClientInterface $plugin_client
     ): void {
-        $request  = $message_factory->createRequest(
+        $request = $message_factory->createRequest(
             'PUT',
             $gerrit_server . '/a/groups/' . $input->getOption('tuleap-server') . '-replication',
             ['Content-Type' => 'application/json;charset=UTF-8'],
@@ -170,7 +170,7 @@ class GerritSetupCommand extends Command
         ClientInterface $plugin_client
     ): void {
         $admin_group_uuid = $this->getAdministratorGroupUUID($message_factory, $gerrit_server, $plugin_client);
-        $permission = [
+        $permission       = [
             'add' => [
                 'refs/meta/*' => [
                     'permissions' => [
@@ -211,7 +211,7 @@ class GerritSetupCommand extends Command
             ]
         ];
 
-        $request  = $message_factory->createRequest(
+        $request = $message_factory->createRequest(
             'POST',
             $gerrit_server . '/a/projects/All-Projects/access',
             ['Content-Type' => 'application/json;charset=UTF-8'],
@@ -252,7 +252,7 @@ class GerritSetupCommand extends Command
         string $gerrit_server,
         ClientInterface $plugin_client
     ): void {
-        $request  = $message_factory->createRequest(
+        $request = $message_factory->createRequest(
             'POST',
             $gerrit_server . '/a/plugins/replication/gerrit~reload',
             ['Content-Type' => 'application/json;charset=UTF-8'],
@@ -270,8 +270,8 @@ class GerritSetupCommand extends Command
 
     private function pairWithGerritServer(InputInterface $input, OutputInterface $output, string $gerrit_server): void
     {
-        $url_parts = parse_url($gerrit_server);
-        $cmd_output = [];
+        $url_parts    = parse_url($gerrit_server);
+        $cmd_output   = [];
         $return_value = -1;
         exec(
             'ssh -i ' . escapeshellarg($input->getOption('ssh-private-key-path')) . ' -oStrictHostKeyChecking=no -p 29418 ' . escapeshellarg($input->getOption('gerrit-admin-login') . '@' . $url_parts['host']) . ' gerrit version',

@@ -49,11 +49,11 @@ class WebDAVDocmanFile extends Sabre_DAV_File
 
     public function __construct(PFUser $user, Project $project, Docman_File $item, DocumentDownloader $document_downloader, WebDAVUtils $utils)
     {
-        $this->user = $user;
-        $this->project = $project;
-        $this->item = $item;
+        $this->user                = $user;
+        $this->project             = $project;
+        $this->item                = $item;
         $this->document_downloader = $document_downloader;
-        $this->utils = $utils;
+        $this->utils               = $utils;
     }
 
     /**
@@ -160,7 +160,7 @@ class WebDAVDocmanFile extends Sabre_DAV_File
     {
         if ($this->utils->isWriteEnabled()) {
             // Request
-            $params = [];
+            $params             = [];
             $params['action']   = 'new_version';
             $params['group_id'] = $this->project->getID();
             $params['confirm']  = true;
@@ -207,7 +207,7 @@ class WebDAVDocmanFile extends Sabre_DAV_File
         if ($this->utils->isWriteEnabled()) {
             try {
                 // Request
-                $params = [];
+                $params             = [];
                 $params['action']   = 'update';
                 $params['group_id'] = $this->project->getID();
                 $params['confirm']  = true;

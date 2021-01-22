@@ -260,7 +260,7 @@ class PHP_BigFile
     {
         $cmd = 'perl -e "use MIME::Base64; open FH, ' . escapeshellarg('>>' . $this->path) . '; print syswrite(FH, decode_base64(\'' . base64_encode($data) . '\')); close FH;"';
         //echo $cmd.PHP_EOL;
-        $c   = `$cmd`;
+        $c = `$cmd`;
         return $c;
     }
 

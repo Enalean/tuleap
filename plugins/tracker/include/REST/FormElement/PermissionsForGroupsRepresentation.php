@@ -35,7 +35,7 @@ class PermissionsForGroupsRepresentation
     /**
      * @var array {@type Tuleap\Project\REST\UserGroupRepresentation}
      */
-    public $can_read   = [];
+    public $can_read = [];
     /**
      * @var array {@type Tuleap\Project\REST\UserGroupRepresentation}
      */

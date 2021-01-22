@@ -69,13 +69,13 @@ function get_all_attachment_ids()
     $attachments = [];
 
     $file_ids = [];
-    $res = db_query('
+    $res      = db_query('
         SELECT id, artifact_id
         FROM artifact_file
     ');
     while ($row = db_fetch_array($res)) {
         $file_ids[$row['artifact_id']][] = $row['id'];
-        $attachments[$row['id']] = false;
+        $attachments[$row['id']]         = false;
     }
     db_free_result($res);
 
@@ -99,7 +99,7 @@ function dump_attachments(array $attachments)
 {
     echo "----- Start Dump -----\n";
     foreach ($attachments as $attachment_id => $artifact_type_id) {
-        $parent_path = ArtifactFile::getParentDirectoryForArtifactTypeId($artifact_type_id);
+        $parent_path     = ArtifactFile::getParentDirectoryForArtifactTypeId($artifact_type_id);
         $attachment_path = $parent_path . DIRECTORY_SEPARATOR . $attachment_id;
         if (! is_file($attachment_path)) {
             if (! is_dir($parent_path)) {
@@ -120,7 +120,7 @@ function check_attachments(array $attachments)
 {
     echo "----- Start Check -----\n";
     foreach ($attachments as $attachment_id => $artifact_type_id) {
-        $parent_path = ArtifactFile::getParentDirectoryForArtifactTypeId($artifact_type_id);
+        $parent_path     = ArtifactFile::getParentDirectoryForArtifactTypeId($artifact_type_id);
         $attachment_path = $parent_path . DIRECTORY_SEPARATOR . $attachment_id;
         if (! is_file($attachment_path)) {
             echo "$attachment_id doesn't exist on file system\n";
@@ -150,7 +150,7 @@ function delete_equal_attachments(array $attachments)
 {
     echo "----- Start Purge -----\n";
     foreach ($attachments as $attachment_id => $artifact_type_id) {
-        $parent_path = ArtifactFile::getParentDirectoryForArtifactTypeId($artifact_type_id);
+        $parent_path     = ArtifactFile::getParentDirectoryForArtifactTypeId($artifact_type_id);
         $attachment_path = $parent_path . DIRECTORY_SEPARATOR . $attachment_id;
         if (is_file($attachment_path)) {
             $res = db_query('SELECT filesize, md5(bin_data) as md5 FROM artifact_file WHERE id = ' . $attachment_id);

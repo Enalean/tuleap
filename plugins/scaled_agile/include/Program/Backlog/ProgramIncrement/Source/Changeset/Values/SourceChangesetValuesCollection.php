@@ -72,13 +72,13 @@ final class SourceChangesetValuesCollection
         EndPeriodValue $end_period_value,
         ArtifactLinkValue $artifact_link_value_data
     ) {
-        $this->title_value        = $title_value;
-        $this->description_value  = $description_value;
-        $this->status_value       = $status_value;
-        $this->submitted_on       = $submitted_on;
-        $this->source_artifact_id = $source_artifact_id;
-        $this->start_date_value   = $start_date_value;
-        $this->end_period_value   = $end_period_value;
+        $this->title_value              = $title_value;
+        $this->description_value        = $description_value;
+        $this->status_value             = $status_value;
+        $this->submitted_on             = $submitted_on;
+        $this->source_artifact_id       = $source_artifact_id;
+        $this->start_date_value         = $start_date_value;
+        $this->end_period_value         = $end_period_value;
         $this->artifact_link_value_data = $artifact_link_value_data;
     }
 

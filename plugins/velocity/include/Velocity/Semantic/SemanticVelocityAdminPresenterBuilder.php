@@ -56,7 +56,7 @@ class SemanticVelocityAdminPresenterBuilder
         array $possible_fields,
         $semantic_velocity_field_id
     ) {
-        $backlog_trackers = $this->backlog_retriever->getBacklogTrackers($tracker);
+        $backlog_trackers                     = $this->backlog_retriever->getBacklogTrackers($tracker);
         $backlog_required_trackers_collection = $this->missing_requirement_retriever->buildCollectionFromBacklogTrackers(
             $backlog_trackers
         );

@@ -128,10 +128,10 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         if ($newItemId > 0) {
             // Clone physical file of the last version in the template item
             $srcVersion = $item->getCurrentVersion();
-            $srcPath = $srcVersion->getPath();
-            $dstName = basename($srcPath);
+            $srcPath    = $srcVersion->getPath();
+            $dstName    = basename($srcPath);
             //print $srcPath.'-'.$dstName."-<br>";
-            $fs = $this->_getFileStorage($params['data_root']);
+            $fs      = $this->_getFileStorage($params['data_root']);
             $dstPath = $fs->copy(
                 $srcPath,
                 $dstName,
@@ -142,7 +142,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
 
             // Register a new file
             $versionFactory = $this->_getVersionFactory();
-            $user = $params['user'];
+            $user           = $params['user'];
 
             $newVersionArray = ['item_id'   => $newItemId,
                                      'number'    => 0,
@@ -187,9 +187,9 @@ class Docman_CloneItemsVisitor implements ItemVisitor
 
     public function _cloneItem($item, $params)
     {
-        $parentId = $params['parentId'];
+        $parentId        = $params['parentId'];
         $metadataMapping = $params['metadataMapping'];
-        $ugroupsMapping = $params['ugroupsMapping'];
+        $ugroupsMapping  = $params['ugroupsMapping'];
 
         // Clone Item
         $itemFactory = $this->_getItemFactory();
@@ -245,7 +245,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         // * change the fieldId (use mapping between template metadata and
         //   project metadata)
         // * for list of values change the values (use mapping as behind).
-        $newMdvFactory = $this->_getMetadataValueFactory($this->dstGroupId);
+        $newMdvFactory      = $this->_getMetadataValueFactory($this->dstGroupId);
         $type_value_factory = new DocmanMetadataTypeValueFactory();
 
         $oldMdFactory = $this->_getMetadataFactory($item->getGroupId());
@@ -299,8 +299,8 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     public function _metadataEnabled($srcGroupId, $mdLabel)
     {
         if (! isset($this->_cacheMetadataUsage[$mdLabel])) {
-            $srcSettingsBo = $this->_getSettingsBo($srcGroupId);
-            $dstSettingsBo = $this->_getSettingsBo($this->dstGroupId);
+            $srcSettingsBo                       = $this->_getSettingsBo($srcGroupId);
+            $dstSettingsBo                       = $this->_getSettingsBo($this->dstGroupId);
             $this->_cacheMetadataUsage[$mdLabel] = ($srcSettingsBo->getMetadataUsage($mdLabel)
                                                     && $dstSettingsBo->getMetadataUsage($mdLabel));
         }

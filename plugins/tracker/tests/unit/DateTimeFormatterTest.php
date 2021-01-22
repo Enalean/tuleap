@@ -39,8 +39,8 @@ class Tracker_FormElement_DateTimeFormatterTest extends \PHPUnit\Framework\TestC
         $this->field          = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->date_formatter = new Tracker_FormElement_DateTimeFormatter($this->field);
 
-        $user                 = Mockery::mock(PFUser::class);
-        $user_manager         =  Mockery::mock(\UserManager::class);
+        $user         = Mockery::mock(PFUser::class);
+        $user_manager =  Mockery::mock(\UserManager::class);
         $user_manager->shouldReceive('getCurrentUser')->andReturn($user);
     }
 
@@ -62,14 +62,14 @@ class Tracker_FormElement_DateTimeFormatterTest extends \PHPUnit\Framework\TestC
 
     public function testItValidatesWellFormedValue(): void
     {
-        $value    = '2014-09-03 03:49';
+        $value = '2014-09-03 03:49';
 
         $this->assertTrue($this->date_formatter->validate($value));
     }
 
     public function testItDoesNotValidateNotWellFormedDate(): void
     {
-        $value    = '2014/09/03 03:49';
+        $value = '2014/09/03 03:49';
 
         $this->field->shouldReceive('getLabel')->once();
 
@@ -78,7 +78,7 @@ class Tracker_FormElement_DateTimeFormatterTest extends \PHPUnit\Framework\TestC
 
     public function testItDoesNotValidateNotWellFormedTime(): void
     {
-        $value    = '2014-09-03 03-49-34';
+        $value = '2014-09-03 03-49-34';
 
         $this->field->shouldReceive('getLabel')->once();
 
@@ -87,7 +87,7 @@ class Tracker_FormElement_DateTimeFormatterTest extends \PHPUnit\Framework\TestC
 
     public function testItDoesNotValidateDateIfNoSpaceBetweenDateAndTime(): void
     {
-        $value    = '2014-09-0303:49';
+        $value = '2014-09-0303:49';
 
         $this->field->shouldReceive('getLabel')->once();
 
@@ -96,7 +96,7 @@ class Tracker_FormElement_DateTimeFormatterTest extends \PHPUnit\Framework\TestC
 
     public function testItDoesNotValidateDateIfNoTime(): void
     {
-        $value    = '2014-09-03';
+        $value = '2014-09-03';
 
         $this->field->shouldReceive('getLabel')->once();
 

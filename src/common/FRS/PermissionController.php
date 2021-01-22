@@ -140,7 +140,7 @@ class PermissionController extends BaseFrsPresenter
     {
         $project = $service->getProject();
 
-        $title = _('Files Administration');
+        $title             = _('Files Administration');
         $toolbar_presenter = new ToolbarPresenter($project);
 
         $toolbar_presenter->setPermissionIsActive();

@@ -218,7 +218,7 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         }
 
         if (! $user_is_allowed) {
-            $event = $this->event_manager->dispatch(new RestrictedUsersAreHandledByPluginEvent($this->request_uri));
+            $event           = $this->event_manager->dispatch(new RestrictedUsersAreHandledByPluginEvent($this->request_uri));
             $user_is_allowed = $event->getPluginHandleRestricted();
         }
 

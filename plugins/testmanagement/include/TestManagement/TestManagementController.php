@@ -60,9 +60,9 @@ abstract class TestManagementController extends MVC2_PluginController
     ) {
         parent::__construct(self::NAME, $request);
 
-        $this->project         = $request->getProject();
-        $this->config          = $config;
-        $this->event_manager   = $event_manager;
+        $this->project       = $request->getProject();
+        $this->config        = $config;
+        $this->event_manager = $event_manager;
 
         $event = new \Tuleap\TestManagement\Event\GetMilestone(
             $request->getCurrentUser(),

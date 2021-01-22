@@ -76,7 +76,7 @@ class MessageArchiver
     private function insertHeader($header)
     {
         // Search if the header is already in the table
-        $qry = sprintf(
+        $qry    = sprintf(
             'SELECT id_header' .
                         ' FROM plugin_forumml_header' .
                         ' WHERE name = "%s"',
@@ -102,7 +102,7 @@ class MessageArchiver
 
     private function getParentMessageFromHeader($messageIdHeader)
     {
-        $qry = 'SELECT id_message' .
+        $qry    = 'SELECT id_message' .
             ' FROM plugin_forumml_messageheader' .
             ' WHERE id_header = 1' .
             ' AND value = "' . db_es($messageIdHeader) . '"';
@@ -141,7 +141,7 @@ class MessageArchiver
         if (isset($headers["in-reply-to"])) {
             // special case: 'in-reply-to' header may contain "Message from ... "
             if (preg_match('/^Message from.*$/', $headers["in-reply-to"])) {
-                $arr = explode(" ", $headers["in-reply-to"]);
+                $arr      = explode(" ", $headers["in-reply-to"]);
                 $reply_to = $arr[count($headers["in-reply-to"]) - 1];
             } else {
                 $reply_to = $headers["in-reply-to"];
@@ -149,7 +149,7 @@ class MessageArchiver
         } else {
             if (isset($headers["references"])) {
                 // special case: 'in-reply-to' header is not set, but 'references' - which contain list of parent messages ids - is set
-                $ref_arr = explode(" ", $headers["references"]);
+                $ref_arr  = explode(" ", $headers["references"]);
                 $reply_to = $ref_arr[count($headers["references"]) - 1];
             } else {
                 $reply_to = "";
@@ -171,8 +171,8 @@ class MessageArchiver
             $this->updateParentDate($id_parent, $messageDate);
         }
 
-        $body = $incoming_mail->getBody();
-        $sql  = sprintf(
+        $body       = $incoming_mail->getBody();
+        $sql        = sprintf(
             'INSERT INTO plugin_forumml_message' .
                         ' (id_message, id_list, id_parent, body, last_thread_update, msg_type)' .
                         ' VALUES (%d, %d, %d, "%s", %d, "%s")',
@@ -183,7 +183,7 @@ class MessageArchiver
             db_ei($messageDate),
             db_es($body->getContentType())
         );
-        $res = db_query($sql);
+        $res        = db_query($sql);
         $id_message = db_insertid($res);
 
         // All headers of the current mail are stored in the forumml_messageheader table

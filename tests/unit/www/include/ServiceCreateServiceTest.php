@@ -37,7 +37,7 @@ class ServiceCreateServiceTest extends TestCase
             'name' => 'template-name',
             'id'   => 120
         ];
-        $this->project = Mockery::mock(Project::class);
+        $this->project  = Mockery::mock(Project::class);
         $this->project->shouldReceive('getGroupId')->andReturn(101);
         $this->project->shouldReceive('getUnixName')->andReturn('h1tst');
     }
@@ -93,8 +93,8 @@ class ServiceCreateServiceTest extends TestCase
     public function testItDoesntReplaceWhenNameIsPartOfAPluginName()
     {
         $this->template['name'] = 'agile';
-        $link     = '/plugins/agiledashboard/';
-        $expected = '/plugins/agiledashboard/';
+        $link                   = '/plugins/agiledashboard/';
+        $expected               = '/plugins/agiledashboard/';
         $this->assertLinkEquals($link, $expected);
     }
 }

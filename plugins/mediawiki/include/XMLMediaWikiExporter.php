@@ -156,7 +156,7 @@ class XMLMediaWikiExporter
 
     private function exportMediawikiPermissions(SimpleXMLElement $xml_content)
     {
-        $cdata = new XML_SimpleXMLCDATAFactory();
+        $cdata   = new XML_SimpleXMLCDATAFactory();
         $readers = $this->manager->getReadAccessControl($this->project);
         if ($readers) {
             $reader_node = $xml_content->addChild('read-access');

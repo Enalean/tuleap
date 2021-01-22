@@ -39,9 +39,9 @@ class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent
      */
     public function verbalizeParameters($with_link)
     {
-        $txt = '';
+        $txt                                  = '';
         list($group_id, $shortname, $is_used) = $this->getParametersAsArray();
-        $txt .= 'project: ' . $this->verbalizeProjectId($group_id, $with_link) . ', service: ' . $shortname . ', service is used: ' . ($is_used ? 'true' : 'false');
+        $txt                                 .= 'project: ' . $this->verbalizeProjectId($group_id, $with_link) . ', service: ' . $shortname . ', service is used: ' . ($is_used ? 'true' : 'false');
         return $txt;
     }
 
@@ -66,7 +66,7 @@ class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent
 
             // Same as for CVS.
             if (($shortname == 'svn') && ($is_used)) {
-                $backendSVN    = Backend::instanceSVN();
+                $backendSVN = Backend::instanceSVN();
                 if (! $backendSVN->createProjectSVN($group_id)) {
                     $this->error("Could not create SVN repo for project $group_id after service activation");
                     return false;

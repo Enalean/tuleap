@@ -58,7 +58,7 @@ class Chart
     {
         $this->colors_for_charts = new ColorsForCharts();
 
-        $classname = $this->getGraphClass();
+        $classname              = $this->getGraphClass();
         $this->jpgraph_instance = new $classname($aWidth, $aHeight, $aCachedName, $aTimeOut, $aInline);
         $this->jpgraph_instance->SetMarginColor($this->getChartBackgroundColor());
         $this->jpgraph_instance->SetFrame(true, $this->getMainColor(), 0);
@@ -273,17 +273,17 @@ class Chart
         //Calculate the baseline
         // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
         //this should be above baseline
-        $test2    = "H";
+        $test2 = "H";
         //some of these additional letters should go below it
-        $test3    = "Hjgqp";
+        $test3 = "Hjgqp";
         //get the dimension for these two:
         $box2     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
         $box3     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);
         $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
         $bbox     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $msg);
         if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
-            $backgroundColor  = imagecolorallocate($im, 255, 255, 255);
-            $textColor        = imagecolorallocate($im, 64, 64, 64);
+            $backgroundColor = imagecolorallocate($im, 255, 255, 255);
+            $textColor       = imagecolorallocate($im, 64, 64, 64);
             imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $textColor, $ttf->File(FF_USERFONT), $msg);
             header("Content-type: image/png");
             imagepng($im);

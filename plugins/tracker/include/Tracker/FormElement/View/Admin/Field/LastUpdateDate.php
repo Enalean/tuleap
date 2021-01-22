@@ -23,7 +23,7 @@ class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormEl
 
     public function fetchCustomHelp()
     {
-        $html = '';
+        $html  = '';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= dgettext('tuleap-tracker', 'The field is automatically set to last artifact update date');
         $html .= '</span>';

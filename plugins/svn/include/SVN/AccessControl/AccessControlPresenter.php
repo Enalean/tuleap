@@ -64,16 +64,16 @@ class AccessControlPresenter extends BaseAdminPresenter
 
         $this->default_content = $default_content;
 
-        $this->csrf                     = $token->fetchHTMLInput();
-        $this->repository               = $repository;
-        $this->project_id               = $repository->getProject()->getID();
-        $this->auth_file                = $auth_file;
-        $this->versions                 = $versions;
-        $this->repository_id            = $this->repository->getId();
-        $this->repository_name          = $this->repository->getName();
-        $this->repository_full_name     = $repository->getFullName();
-        $this->title                    = $title;
-        $this->access_control_active    = true;
+        $this->csrf                  = $token->fetchHTMLInput();
+        $this->repository            = $repository;
+        $this->project_id            = $repository->getProject()->getID();
+        $this->auth_file             = $auth_file;
+        $this->versions              = $versions;
+        $this->repository_id         = $this->repository->getId();
+        $this->repository_name       = $this->repository->getName();
+        $this->repository_full_name  = $repository->getFullName();
+        $this->title                 = $title;
+        $this->access_control_active = true;
 
         $this->edit_access_file_title   = dgettext('tuleap-svn', 'Edit access control file');
         $this->default_text             = sprintf(dgettext('tuleap-svn', 'The default policy is to allow read-write access to all project members on the entire repository and read-only access to all other %1$s users. You can tune or even redefine the access permissions below to suit your needs.'), ForgeConfig::get('sys_name'));

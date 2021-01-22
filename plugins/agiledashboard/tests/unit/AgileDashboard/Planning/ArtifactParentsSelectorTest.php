@@ -130,17 +130,17 @@ final class ArtifactParentsSelectorTest extends \PHPUnit\Framework\TestCase //ph
     private $theme_tracker;
 
 
-    private $faq_id = 13;
-    private $corp_id = 42;
-    private $product_id = 56;
+    private $faq_id      = 13;
+    private $corp_id     = 42;
+    private $product_id  = 56;
     private $product2_id = 57;
-    private $release_id = 7777;
+    private $release_id  = 7777;
     private $release2_id = 7778;
-    private $sprint_id = 9001;
-    private $theme_id = 750;
-    private $theme2_id = 751;
-    private $epic_id = 2;
-    private $epic2_id = 3;
+    private $sprint_id   = 9001;
+    private $theme_id    = 750;
+    private $theme2_id   = 751;
+    private $epic_id     = 2;
+    private $epic2_id    = 3;
 
     protected function setUp(): void
     {
@@ -154,21 +154,21 @@ final class ArtifactParentsSelectorTest extends \PHPUnit\Framework\TestCase //ph
          │    ┕ release2
          ┕ faq
         ';
-        $this->corp_tracker    = Mockery::mock(Tracker::class);
+        $this->corp_tracker = Mockery::mock(Tracker::class);
         $this->corp_tracker->shouldReceive('getId')->andReturn(100);
         $this->product_tracker = Mockery::mock(Tracker::class);
         $this->product_tracker->shouldReceive('getId')->andReturn(101);
         $this->release_tracker = Mockery::mock(Tracker::class);
         $this->release_tracker->shouldReceive('getId')->andReturn(102);
-        $sprint_tracker  = Mockery::mock(Tracker::class);
+        $sprint_tracker = Mockery::mock(Tracker::class);
         $sprint_tracker->shouldReceive('getId')->andReturn(103);
-        $this->epic_tracker    = Mockery::mock(Tracker::class);
+        $this->epic_tracker = Mockery::mock(Tracker::class);
         $this->epic_tracker->shouldReceive('getId')->andReturn(104);
-        $this->theme_tracker   = Mockery::mock(Tracker::class);
+        $this->theme_tracker = Mockery::mock(Tracker::class);
         $this->theme_tracker->shouldReceive('getId')->andReturn(105);
-        $faq_tracker     = Mockery::mock(Tracker::class);
+        $faq_tracker = Mockery::mock(Tracker::class);
         $faq_tracker->shouldReceive('getId')->andReturn(106);
-        $story_tracker   = Mockery::mock(Tracker::class);
+        $story_tracker = Mockery::mock(Tracker::class);
 
         $hierarchy_factory = \Mockery::mock(\Tracker_HierarchyFactory::class);
         $hierarchy_factory->shouldReceive('getParent')->with($this->product_tracker)->andReturns($this->corp_tracker);
@@ -234,37 +234,37 @@ final class ArtifactParentsSelectorTest extends \PHPUnit\Framework\TestCase //ph
         $this->artifact_factory  = \Mockery::mock(\Tracker_ArtifactFactory::class);
         $this->milestone_factory = \Mockery::mock(\Planning_MilestoneFactory::class);
 
-        [$this->faq, $this->faq_milestone] = $this->getArtifact($this->faq_id, $faq_tracker, []);
-        [$this->corp, $corp_milestone] = $this->getArtifact($this->corp_id, $this->corp_tracker, []);
+        [$this->faq, $this->faq_milestone]         = $this->getArtifact($this->faq_id, $faq_tracker, []);
+        [$this->corp, $corp_milestone]             = $this->getArtifact($this->corp_id, $this->corp_tracker, []);
         [$this->product, $this->product_milestone] = $this->getArtifact(
             $this->product_id,
             $this->product_tracker,
             [$this->corp]
         );
-        [$product2, $this->product2_milestone] = $this->getArtifact(
+        [$product2, $this->product2_milestone]     = $this->getArtifact(
             $this->product2_id,
             $this->product_tracker,
             [$this->corp]
         );
-        [$this->release, $release_milestone] = $this->getArtifact(
+        [$this->release, $release_milestone]       = $this->getArtifact(
             $this->release_id,
             $this->release_tracker,
             [$this->product, $this->corp]
         );
-        [$release2, $this->release2_milestone] = $this->getArtifact(
+        [$release2, $this->release2_milestone]     = $this->getArtifact(
             $this->release2_id,
             $this->release_tracker,
             [$product2, $this->corp]
         );
-        [$this->sprint, $this->sprint_milestone] = $this->getArtifact(
+        [$this->sprint, $this->sprint_milestone]   = $this->getArtifact(
             $this->sprint_id,
             $sprint_tracker,
             [$this->release, $this->product, $this->corp]
         );
-        [$theme, $this->theme_milestone] = $this->getArtifact($this->theme_id, $this->theme_tracker, []);
-        [$theme2, $this->theme2_milestone] = $this->getArtifact($this->theme2_id, $this->theme_tracker, []);
-        [$this->epic, $this->epic_milestone] = $this->getArtifact($this->epic_id, $this->epic_tracker, [$theme]);
-        [$this->epic2, $this->epic2_milestone] = $this->getArtifact(
+        [$theme, $this->theme_milestone]           = $this->getArtifact($this->theme_id, $this->theme_tracker, []);
+        [$theme2, $this->theme2_milestone]         = $this->getArtifact($this->theme2_id, $this->theme_tracker, []);
+        [$this->epic, $this->epic_milestone]       = $this->getArtifact($this->epic_id, $this->epic_tracker, [$theme]);
+        [$this->epic2, $this->epic2_milestone]     = $this->getArtifact(
             $this->epic2_id,
             $this->epic_tracker,
             [$theme]

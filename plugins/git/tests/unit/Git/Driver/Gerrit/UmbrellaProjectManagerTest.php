@@ -40,7 +40,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
 
     /** @var Project */
     protected $project;
-    protected $project_id = 103;
+    protected $project_id        = 103;
     protected $project_unix_name = 'mozilla';
 
     /** @var UGroupManager */
@@ -55,7 +55,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
     /** @var Git_Driver_Gerrit_UmbrellaProjectManager */
     protected $umbrella_manager;
 
-    protected $project_admins_gerrit_name  = 'mozilla/project_admins';
+    protected $project_admins_gerrit_name = 'mozilla/project_admins';
 
     protected function setUp(): void
     {
@@ -68,7 +68,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->project->shouldReceive('isPublic')->andReturnTrue();
 
         $this->project_admins_gerrit_parent_name = 'grozilla/project_admins';
-        $this->parent_project = Mockery::mock(Project::class);
+        $this->parent_project                    = Mockery::mock(Project::class);
         $this->parent_project->shouldReceive('getId')->andReturn(104);
         $this->parent_project->shouldReceive('getUnixName')->andReturn('grozilla');
 

@@ -75,7 +75,7 @@ class RelativeDatesDisplaySaveController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
-        $new_relative_dates_display = (string) $request->get('relative-dates-display');
+        $new_relative_dates_display   = (string) $request->get('relative-dates-display');
         $is_provided_preference_valid = $this->date_display_preference_validator->validateSelectedUserPreference(
             $new_relative_dates_display
         );

@@ -38,10 +38,10 @@ $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('site-
 define('ADMIN_APPROVE_PENDING_PAGE_PENDING', 'pending');
 define('ADMIN_APPROVE_PENDING_PAGE_VALIDATED', 'validated');
 
-$hp = Codendi_HTMLPurifier::instance();
+$hp            = Codendi_HTMLPurifier::instance();
 $action_select = '';
-$status = '';
-$users_array = [];
+$status        = '';
+$users_array   = [];
 if ($request->exist('action_select')) {
     $action_select = $request->get('action_select');
 }
@@ -52,18 +52,18 @@ if ($request->exist('list_of_users')) {
     $users_array = array_filter(array_map('intval', explode(",", $request->get('list_of_users'))));
 }
 
-$valid_page = new Valid_WhiteList('page', [ADMIN_APPROVE_PENDING_PAGE_PENDING, ADMIN_APPROVE_PENDING_PAGE_VALIDATED]);
-$page = $request->getValidated('page', $valid_page, '');
-$csrf_token = new CSRFSynchronizerToken('/admin/approve_pending_users.php?page=' . $page);
+$valid_page  = new Valid_WhiteList('page', [ADMIN_APPROVE_PENDING_PAGE_PENDING, ADMIN_APPROVE_PENDING_PAGE_VALIDATED]);
+$page        = $request->getValidated('page', $valid_page, '');
+$csrf_token  = new CSRFSynchronizerToken('/admin/approve_pending_users.php?page=' . $page);
 $expiry_date = 0;
 if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
     $feedback .= ' ' . $Language->getText('admin_approve_pending_users', 'data_not_parsed');
 } else {
     $vDate = new Valid_String();
     if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && $vDate->validate($request->get('form_expiry'))) {
-        $date_list = explode("-", $request->get('form_expiry'), 3);
+        $date_list        = explode("-", $request->get('form_expiry'), 3);
         $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
-        $expiry_date = $unix_expiry_time;
+        $expiry_date      = $unix_expiry_time;
     }
 
     if (($action_select == 'activate')) {
@@ -72,7 +72,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         $shell = "";
         if ($status == 'restricted') {
             $newstatus = 'R';
-            $shell = ",shell='" . ForgeConfig::get('codendi_bin_prefix') . "/cvssh-restricted'";
+            $shell     = ",shell='" . ForgeConfig::get('codendi_bin_prefix') . "/cvssh-restricted'";
         } else {
             $newstatus = 'A';
         }

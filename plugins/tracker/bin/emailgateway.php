@@ -25,7 +25,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
-$fd = fopen("php://stdin", "r");
+$fd       = fopen("php://stdin", "r");
 $raw_mail = "";
 while (! feof($fd)) {
     $raw_mail .= fread($fd, 1024);
@@ -46,12 +46,12 @@ $incoming_message_insecure_builder = new Tracker_Artifact_IncomingMessageInsecur
     $tracker_factory,
     $artifact_factory
 );
-$incoming_message_factory = new Tracker_Artifact_MailGateway_IncomingMessageFactory(
+$incoming_message_factory          = new Tracker_Artifact_MailGateway_IncomingMessageFactory(
     $tracker_config,
     $incoming_message_token_builder,
     $incoming_message_insecure_builder
 );
-$incoming_mail_dao = new Tracker_Artifact_Changeset_IncomingMailDao();
+$incoming_mail_dao                 = new Tracker_Artifact_Changeset_IncomingMailDao();
 
 $citation_stripper   = new Tracker_Artifact_MailGateway_CitationStripper();
 $notifier            = new Tracker_Artifact_MailGateway_Notifier();
@@ -67,8 +67,8 @@ $mailgateway_builder = new Tracker_Artifact_MailGateway_MailGatewayBuilder(
     $logger,
     $filter
 );
-$incoming_mail = new \Tuleap\Tracker\Artifact\MailGateway\IncomingMail($raw_mail);
-$mailgateway   = $mailgateway_builder->build($incoming_mail);
+$incoming_mail       = new \Tuleap\Tracker\Artifact\MailGateway\IncomingMail($raw_mail);
+$mailgateway         = $mailgateway_builder->build($incoming_mail);
 
 try {
     $mailgateway->process($incoming_mail);

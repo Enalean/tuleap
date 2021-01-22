@@ -23,9 +23,9 @@ class SimpleSanitizerTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
     public function testSanitize()
     {
-        $bad_tag   = "<tag";
-        $html      = "Lorem ipsum dolor sit amet," . $bad_tag . " consectetuer adipiscing elit.";
-        $result    = SimpleSanitizer::sanitize($html);
+        $bad_tag = "<tag";
+        $html    = "Lorem ipsum dolor sit amet," . $bad_tag . " consectetuer adipiscing elit.";
+        $result  = SimpleSanitizer::sanitize($html);
 
         $this->assertStringNotContainsString($bad_tag, $result);
     }

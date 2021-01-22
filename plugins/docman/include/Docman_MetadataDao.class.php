@@ -85,7 +85,7 @@ class Docman_MetadataDao extends DataAccessObject
     public function updateFromRow($row)
     {
         $updated = false;
-        $id = false;
+        $id      = false;
         if (! isset($row['field_id'])) {
             return false;
         }
@@ -93,7 +93,7 @@ class Docman_MetadataDao extends DataAccessObject
         if ($id) {
             $dar = $this->searchById($id);
             if (! $dar->isError() && $dar->valid()) {
-                $current = $dar->current();
+                $current   = $dar->current();
                 $set_array = [];
                 foreach ($row as $key => $value) {
                     if ($key != 'field_id' && $value != $current[$key]) {
@@ -101,7 +101,7 @@ class Docman_MetadataDao extends DataAccessObject
                     }
                 }
                 if (count($set_array)) {
-                    $sql = 'UPDATE plugin_docman_metadata'
+                    $sql     = 'UPDATE plugin_docman_metadata'
                         . ' SET ' . implode(' , ', $set_array)
                         . ' WHERE field_id=' . $id;
                     $updated = $this->update($sql);
@@ -146,7 +146,7 @@ class Docman_MetadataDao extends DataAccessObject
         $mdId = $this->_createAndReturnId($sql);
         if ($mdId !== false) {
             //update label
-            $row = ['field_id' => $mdId,
+            $row     = ['field_id' => $mdId,
                          'label'    => 'field_' . $mdId];
             $updated = $this->updateFromRow($row);
             if (! $updated) {

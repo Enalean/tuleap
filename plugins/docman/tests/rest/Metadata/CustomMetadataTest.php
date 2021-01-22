@@ -73,8 +73,8 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals("list", $list_metadata["type"]);
 
         $list_values = $list_metadata["allowed_list_values"];
-        $value = $this->findValueByValueName($list_values, "value 1");
-        $value_two = $this->findValueByValueName($list_values, "value 2");
+        $value       = $this->findValueByValueName($list_values, "value 1");
+        $value_two   = $this->findValueByValueName($list_values, "value 2");
 
         $this->assertEquals("value 1", $value["value"]);
         $this->assertEquals("value 2", $value_two["value"]);
@@ -86,8 +86,8 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
      */
     public function testEmptyCanManipulateMetadata(int $root_id, array $project_metadata): void
     {
-        $text_metadata = $this->findMetadataByName($project_metadata, "text metadata");
-        $list_metadata = $this->findMetadataByName($project_metadata, "list metadata");
+        $text_metadata       = $this->findMetadataByName($project_metadata, "text metadata");
+        $list_metadata       = $this->findMetadataByName($project_metadata, "list metadata");
         $other_list_metadata = $this->findMetadataByName($project_metadata, "other list metadata");
 
         $list_values   = $list_metadata["allowed_list_values"];
@@ -204,9 +204,9 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $list_metadata       = $this->findMetadataByName($project_metadata, "list metadata");
         $other_list_metadata = $this->findMetadataByName($project_metadata, "other list metadata");
 
-        $other_list_values = $other_list_metadata["allowed_list_values"];
-        $other_value       = $this->findValueByValueName($other_list_values, "list A");
-        $other_updated_value       = $this->findValueByValueName($other_list_values, "list B");
+        $other_list_values   = $other_list_metadata["allowed_list_values"];
+        $other_value         = $this->findValueByValueName($other_list_values, "list A");
+        $other_updated_value = $this->findValueByValueName($other_list_values, "list B");
 
         $file_name = 'file_' . random_int(0, 100000);
         $file_size = 123;
@@ -384,8 +384,8 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
      */
     public function testFolderCanManipulateMetadata(int $root_id, array $project_metadata): void
     {
-        $text_metadata = $this->findMetadataByName($project_metadata, "text metadata");
-        $list_metadata = $this->findMetadataByName($project_metadata, "list metadata");
+        $text_metadata       = $this->findMetadataByName($project_metadata, "text metadata");
+        $list_metadata       = $this->findMetadataByName($project_metadata, "list metadata");
         $other_list_metadata = $this->findMetadataByName($project_metadata, "other list metadata");
 
         $query = json_encode(
@@ -474,10 +474,10 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             DocmanDataBuilder::ADMIN_USER_NAME
         );
 
-        $folder_content  = $response->json();
+        $folder_content = $response->json();
         $folder_content = $folder_content['metadata'];
 
-        $folder_text_metadata       = $this->findMetadataByName($folder_content, "text metadata");
+        $folder_text_metadata = $this->findMetadataByName($folder_content, "text metadata");
         $this->assertEquals('updated value', $folder_text_metadata['value']);
 
         $response = $this->getResponse(
@@ -485,10 +485,10 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             DocmanDataBuilder::ADMIN_USER_NAME
         );
 
-        $empty_content  = $response->json();
+        $empty_content = $response->json();
         $empty_content = $empty_content['metadata'];
 
-        $empty_text_metadata       = $this->findMetadataByName($empty_content, "text metadata");
+        $empty_text_metadata = $this->findMetadataByName($empty_content, "text metadata");
         $this->assertEquals('updated value', $empty_text_metadata['value']);
 
         $response_delete_with_rest_read_only_user = $this->getResponse(

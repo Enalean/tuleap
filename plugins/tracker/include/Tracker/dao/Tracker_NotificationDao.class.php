@@ -31,7 +31,7 @@ class Tracker_NotificationDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $user_id    = $this->da->escapeInt($user_id);
-        $sql = "SELECT role_label,event_label,notify 
+        $sql        = "SELECT role_label,event_label,notify 
                 FROM $this->table_name" . "_role AS r, $this->table_name" . "_event AS e, $this->table_name AS n 
                 WHERE n.tracker_id=" . db_ei($tracker_id) . " 
                   AND n.user_id=" . db_ei($user_id) . " 
@@ -45,7 +45,7 @@ class Tracker_NotificationDao extends DataAccessObject
     public function searchRoles($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT *
+        $sql        = "SELECT *
                 FROM $this->table_name" . "_role
                 WHERE tracker_id = $tracker_id 
                 ORDER BY rank ASC";
@@ -55,7 +55,7 @@ class Tracker_NotificationDao extends DataAccessObject
     public function searchEvents($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT *
+        $sql        = "SELECT *
                 FROM $this->table_name" . "_event
                 WHERE tracker_id = $tracker_id 
                 ORDER BY rank ASC";

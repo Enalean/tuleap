@@ -45,8 +45,8 @@ class LicenseOptionPresenter
 
     public function __construct(int $value, string $label, bool $is_selected)
     {
-        $this->value = $value;
-        $this->label = $label;
+        $this->value       = $value;
+        $this->label       = $label;
         $this->is_selected = $is_selected;
     }
 }

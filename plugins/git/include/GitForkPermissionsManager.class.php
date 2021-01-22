@@ -163,21 +163,21 @@ class GitForkPermissionsManager
     {
         $repository_ids  = explode(',', $params['repos']);
         $sourceReposHTML = $this->displayForkSourceRepositories($repository_ids);
-        $form  = '<h1 class="almost-tlp-title administration-title">' . dgettext('tuleap-git', 'Fork repositories') . '</h1>';
-        $form .= '<div class="git-fork-creation-content">';
-        $form .= sprintf(dgettext('tuleap-git', 'You are going to fork repository: %1$s'), $sourceReposHTML);
-        $form .= $this->displayForkDestinationMessage($params);
-        $form .= '<h3>Set permissions for the repository to be created</h3>';
-        $form .= '<form action="" method="POST">';
-        $form .= '<input type="hidden" name="group_id" value="' . (int) $groupId . '" />';
-        $form .= '<input type="hidden" name="action" value="do_fork_repositories" />';
-        $token = new CSRFSynchronizerToken('/plugins/git/?group_id=' . (int) $groupId . '&action=fork_repositories');
-        $form .= $token->fetchHTMLInput();
-        $form .= '<input id="fork_repositories_repo" type="hidden" name="repos" value="' . $this->getPurifier()->purify($params['repos']) . '" />';
-        $form .= '<input id="choose_personal" type="hidden" name="choose_destination" value="' . $this->getPurifier()->purify($params['scope']) . '" />';
-        $form .= '<input id="to_project" type="hidden" name="to_project" value="' . $this->getPurifier()->purify($params['group_id']) . '" />';
-        $form .= '<input type="hidden" id="fork_repositories_path" name="path" value="' . $this->getPurifier()->purify($params['namespace']) . '" />';
-        $form .= '<input type="hidden" id="fork_repositories_prefix" value="u/' . $userName . '" />';
+        $form            = '<h1 class="almost-tlp-title administration-title">' . dgettext('tuleap-git', 'Fork repositories') . '</h1>';
+        $form           .= '<div class="git-fork-creation-content">';
+        $form           .= sprintf(dgettext('tuleap-git', 'You are going to fork repository: %1$s'), $sourceReposHTML);
+        $form           .= $this->displayForkDestinationMessage($params);
+        $form           .= '<h3>Set permissions for the repository to be created</h3>';
+        $form           .= '<form action="" method="POST">';
+        $form           .= '<input type="hidden" name="group_id" value="' . (int) $groupId . '" />';
+        $form           .= '<input type="hidden" name="action" value="do_fork_repositories" />';
+        $token           = new CSRFSynchronizerToken('/plugins/git/?group_id=' . (int) $groupId . '&action=fork_repositories');
+        $form           .= $token->fetchHTMLInput();
+        $form           .= '<input id="fork_repositories_repo" type="hidden" name="repos" value="' . $this->getPurifier()->purify($params['repos']) . '" />';
+        $form           .= '<input id="choose_personal" type="hidden" name="choose_destination" value="' . $this->getPurifier()->purify($params['scope']) . '" />';
+        $form           .= '<input id="to_project" type="hidden" name="to_project" value="' . $this->getPurifier()->purify($params['group_id']) . '" />';
+        $form           .= '<input type="hidden" id="fork_repositories_path" name="path" value="' . $this->getPurifier()->purify($params['namespace']) . '" />';
+        $form           .= '<input type="hidden" id="fork_repositories_prefix" value="u/' . $userName . '" />';
         if (count($repository_ids) > 1) {
             $form .= $this->displayDefaultAccessControlWhileForkingMultipleRepositories($groupId);
         } else {
@@ -279,9 +279,9 @@ class GitForkPermissionsManager
         $branches_permissions = $this->fine_grained_factory->getBranchesFineGrainedPermissionsForRepository($this->repository);
         $tags_permissions     = $this->fine_grained_factory->getTagsFineGrainedPermissionsForRepository($this->repository);
 
-        $delete_url = '?action=delete-permissions&pane=perms&repo_id=' . $this->repository->getId() . '&group_id=' . $project->getID();
-        $url        = '?action=repo_management&pane=perms&group_id=' . $project->getID();
-        $csrf       = new CSRFSynchronizerToken($url);
+        $delete_url                          = '?action=delete-permissions&pane=perms&repo_id=' . $this->repository->getId() . '&group_id=' . $project->getID();
+        $url                                 = '?action=repo_management&pane=perms&group_id=' . $project->getID();
+        $csrf                                = new CSRFSynchronizerToken($url);
         $branches_permissions_representation = [];
         foreach ($branches_permissions as $permission) {
             $branches_permissions_representation[] = $this->fine_grained_builder->buildRepositoryPermission(

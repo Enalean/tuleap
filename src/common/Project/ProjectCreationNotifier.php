@@ -38,7 +38,7 @@ class ProjectCreationNotifier
     public function __construct(TuleapRegisterMail $register_mail, LoggerInterface $logger)
     {
         $this->register_mail = $register_mail;
-        $this->logger = $logger;
+        $this->logger        = $logger;
     }
 
     public function notifySiteAdmin(Project $project): void

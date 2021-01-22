@@ -52,7 +52,7 @@ class Admin_PermissionDelegationGroupModalPresenter
             $this->id          = $group->id;
             $this->name        = $group->name;
             $this->description = $group->description;
-            $this->is_new            = false;
+            $this->is_new      = false;
         }
     }
 

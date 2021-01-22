@@ -79,7 +79,7 @@ if ($pluginManager->isPluginAvailable($ldapPlugin)) {
         }
 
         $time_end = microtime(true);
-        $time = $time_end - $time_start;
+        $time     = $time_end - $time_start;
 
         echo "Time elapsed: " . $time . "\n";
         echo "LDAP time: " . $ldapQuery->getElapsedLdapTime() . "\n";

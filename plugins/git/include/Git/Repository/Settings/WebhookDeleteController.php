@@ -41,7 +41,7 @@ class WebhookDeleteController extends WebhookController
 
     public function removeWebhook(HTTPRequest $request)
     {
-        $repository = $this->getRepositoryUserCanAdministrate($request);
+        $repository   = $this->getRepositoryUserCanAdministrate($request);
         $redirect_url = $this->getWebhookSettingsURL($repository);
 
         $this->checkCSRF($redirect_url);

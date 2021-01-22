@@ -101,7 +101,7 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Snapshot(
+        $snapshot       = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
@@ -130,7 +130,7 @@ class FieldChangeXMLExporterTest extends TestCase
 
     public function testItExportsTheSelectedValueInASelectBoxField(): void
     {
-        $jira_value_id = 3;
+        $jira_value_id       = 3;
         $generated_tuleap_id = 15;
 
         $mapping = new ListFieldMapping(
@@ -148,7 +148,7 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Snapshot(
+        $snapshot       = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
@@ -178,7 +178,7 @@ class FieldChangeXMLExporterTest extends TestCase
 
     public function testItExportsTheSelectedValueInARadioButtonField(): void
     {
-        $jira_value_id = 10005;
+        $jira_value_id       = 10005;
         $generated_tuleap_id = 15;
 
         $mapping = new ListFieldMapping(
@@ -196,7 +196,7 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Snapshot(
+        $snapshot       = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
@@ -228,8 +228,8 @@ class FieldChangeXMLExporterTest extends TestCase
 
     public function testItExportsTheSelectedValuesInAMultiSelectboxField(): void
     {
-        $jira_value_id_1 = 10009;
-        $jira_value_id_2 = 10010;
+        $jira_value_id_1       = 10009;
+        $jira_value_id_2       = 10010;
         $generated_tuleap_id_1 = 15;
         $generated_tuleap_id_2 = 16;
 
@@ -252,7 +252,7 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Snapshot(
+        $snapshot       = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
@@ -290,7 +290,7 @@ class FieldChangeXMLExporterTest extends TestCase
 
     public function testItExportsTheStatusValuesInASelectboxFieldWithTransformedIDs(): void
     {
-        $jira_value_id = 10001;
+        $jira_value_id       = 10001;
         $generated_tuleap_id = 15;
 
         $mapping = new ListFieldMapping(
@@ -308,7 +308,7 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Snapshot(
+        $snapshot       = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
@@ -357,7 +357,7 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Snapshot(
+        $snapshot       = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
@@ -399,7 +399,7 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Snapshot(
+        $snapshot       = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
@@ -440,7 +440,7 @@ class FieldChangeXMLExporterTest extends TestCase
 
     private function getPreWiredIDGenerator(int $pre_defined_id): IDGenerator
     {
-        $id_generator = new class implements IDGenerator {
+        $id_generator     = new class implements IDGenerator {
             /** @var int */
             public $id;
 

@@ -152,7 +152,7 @@ class EventManagerTest extends TestCase // phpcs:ignore
             public function handleFoo(object $event)
             {
                 $this->was_called = true;
-                $event->stop = true;
+                $event->stop      = true;
             }
         };
 

@@ -62,7 +62,7 @@ final class NotificationsPresenter
     public function __construct(CSRFSynchronizerToken $csrf_token, AccountTabPresenterCollection $tabs, \PFUser $user, string $mail_format_preference)
     {
         $this->csrf_token = $csrf_token;
-        $this->tabs = $tabs;
+        $this->tabs       = $tabs;
         if ($user->getMailSiteUpdates()) {
             $this->site_email_updates_checked = true;
         }

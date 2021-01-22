@@ -183,7 +183,7 @@ class WidgetDashboardController
         array $new_ids
     ) {
         if (empty($new_line_id) && empty($new_column_id)) {
-            $new_line_id = strval(
+            $new_line_id            = strval(
                 $this->widget_creator->createLine(
                     $dashboard_id,
                     $dashboard_type,
@@ -206,8 +206,8 @@ class WidgetDashboardController
     private function createColumnIfDoesNotExist($new_line_id, $new_column_id, $new_column_rank, array $new_ids)
     {
         if ($new_line_id && empty($new_column_id)) {
-            $columns       = $this->widget_retriever->getColumnsByLineById($new_line_id);
-            $new_column_id = strval(
+            $columns                  = $this->widget_retriever->getColumnsByLineById($new_line_id);
+            $new_column_id            = strval(
                 $this->widget_creator->createColumn(
                     $new_line_id,
                     $columns,

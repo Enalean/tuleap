@@ -31,7 +31,7 @@ class UsersToBeImportedCollection
 
     public function toCSV($filename)
     {
-        $file = fopen($filename, 'w');
+        $file    = fopen($filename, 'w');
         $headers = ['name', 'action', 'comments'];
         fputcsv($file, $headers);
         foreach ($this->users as $user) {

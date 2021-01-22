@@ -60,8 +60,8 @@ class TrackerDateReminder_ArtifactType
         if (db_numrows($res) > 0) {
             while ($rows = db_fetch_array($res)) {
                 $reminder_id = $rows['reminder_id'];
-                $fid = $rows['field_id'];
-                $field = $art_field_fact->getFieldFromId($fid);
+                $fid         = $rows['field_id'];
+                $field       = $art_field_fact->getFieldFromId($fid);
 
                 $sql1 = sprintf(
                     'SELECT valueDate FROM artifact_field_value'
@@ -77,7 +77,7 @@ class TrackerDateReminder_ArtifactType
                         $valueDate = db_result($res1, 0, 'valueDate');
                         if ($valueDate <> 0 && $valueDate <> null) {
                             //the date field is not special (value is stored in 'artifact_field_value' table)
-                            $ins = sprintf(
+                            $ins    = sprintf(
                                 'INSERT INTO artifact_date_reminder_processing'
                                             . ' (reminder_id,artifact_id,field_id,group_artifact_id,notification_sent)'
                                             . ' VALUES(%d,%d,%d,%d,%d)',
@@ -103,7 +103,7 @@ class TrackerDateReminder_ArtifactType
                     if (db_numrows($res2) > 0) {
                         $close_date = db_result($res2, 0, 'close_date');
                         if ($close_date <> 0 && $close_date <> null) {
-                            $ins = sprintf(
+                            $ins    = sprintf(
                                 'INSERT INTO artifact_date_reminder_processing'
                                             . ' (reminder_id,artifact_id,field_id,group_artifact_id,notification_sent)'
                                             . ' VALUES(%d,%d,%d,%d,%d)',

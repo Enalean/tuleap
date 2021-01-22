@@ -38,7 +38,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         $html  = '<div class="input-append encrypted-field">';
         $html .= $this->fetchInput($value, 'password');
         $html .= $this->fetchButton();
-        $html  .= '</div>';
+        $html .= '</div>';
 
         return $html;
     }
@@ -106,10 +106,10 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
 
     private function getMaxSizeAllowed()
     {
-        $dao_pub_key        = new TrackerPublicKeyDao();
-        $value_dao          = new ValueDao();
-        $tracker_key        = new Tracker_Key($dao_pub_key, $value_dao, $this->getTrackerId());
-        $key                = $tracker_key->getKey();
+        $dao_pub_key = new TrackerPublicKeyDao();
+        $value_dao   = new ValueDao();
+        $tracker_key = new Tracker_Key($dao_pub_key, $value_dao, $this->getTrackerId());
+        $key         = $tracker_key->getKey();
 
         return $tracker_key->getFieldSize($key);
     }
@@ -122,9 +122,9 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         CreatedFileURLMapping $url_mapping
     ) {
         if ($value != "") {
-            $dao_pub_key        = new TrackerPublicKeyDao();
-            $value_dao          = new ValueDao();
-            $tracker_key        = new Tracker_Key($dao_pub_key, $value_dao, $artifact->tracker_id);
+            $dao_pub_key = new TrackerPublicKeyDao();
+            $value_dao   = new ValueDao();
+            $tracker_key = new Tracker_Key($dao_pub_key, $value_dao, $artifact->tracker_id);
             try {
                 $encryption_manager = new Encryption_Manager($tracker_key);
                 return $this->getValueDao()->create($changeset_value_id, $encryption_manager->encrypt($value));

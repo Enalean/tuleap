@@ -78,9 +78,9 @@ class ErrorManager
      */
     public function __construct()
     {
-        $this->_handlers = [];
-        $this->_fatal_handler = false;
-        $this->_postpone_mask = 0;
+        $this->_handlers         = [];
+        $this->_fatal_handler    = false;
+        $this->_postpone_mask    = 0;
         $this->_postponed_errors = [];
 
         set_error_handler('ErrorManager_errorHandler');
@@ -157,7 +157,7 @@ class ErrorManager
             return $flushed;
         }
         $class = $worst_err->getHtmlClass();
-        $html = HTML::div(
+        $html  = HTML::div(
             ['style' => 'border: none', 'class' => $class],
             HTML::h4(
                 ['class' => 'errors'],
@@ -364,7 +364,7 @@ class ErrorManager
         static $already = false;
 
         if (isset($request) and isset($request->_validators)) {
-            $request->_validators->_tag = false;
+            $request->_validators->_tag   = false;
             $request->_validators->_mtime = false;
         }
         if ($already) {
@@ -498,14 +498,14 @@ class PhpError
     {
         $dir = defined('PHPWIKI_DIR') ? PHPWIKI_DIR : substr(dirname(__FILE__), 0, -4);
         if (substr(PHP_OS, 0, 3) == 'WIN') {
-            $dir = str_replace('/', '\\', $dir);
+            $dir           = str_replace('/', '\\', $dir);
             $this->errfile = str_replace('/', '\\', $this->errfile);
-            $dir .= "\\";
+            $dir          .= "\\";
         } else {
             $dir .= '/';
         }
         $errfile = preg_replace('|^' . preg_quote($dir, '|') . '|', '', $this->errfile);
-        $lines = explode("\n", $this->errstr);
+        $lines   = explode("\n", $this->errstr);
         if (DEBUG & _DEBUG_VERBOSE) {
             $msg = sprintf(
                 "%s:%d: %s[%d]: %s",
@@ -657,9 +657,9 @@ class PhpErrorOnce extends PhpError
         }
         $dir = defined('PHPWIKI_DIR') ? PHPWIKI_DIR : substr(dirname(__FILE__), 0, -4);
         if (substr(PHP_OS, 0, 3) == 'WIN') {
-            $dir = str_replace('/', '\\', $dir);
+            $dir           = str_replace('/', '\\', $dir);
             $this->errfile = str_replace('/', '\\', $this->errfile);
-            $dir .= "\\";
+            $dir          .= "\\";
         } else {
             $dir .= '/';
         }
@@ -671,7 +671,7 @@ class PhpErrorOnce extends PhpError
         }
         $errtype = (DEBUG & _DEBUG_VERBOSE) ? sprintf("%s[%d]", $this->getDescription(), $this->errno)
                                             : sprintf("%s", $this->getDescription());
-        $msg = sprintf(
+        $msg     = sprintf(
             "%s:%d: %s: %s %s",
             $errfile,
             $this->errline,
@@ -679,7 +679,7 @@ class PhpErrorOnce extends PhpError
             array_shift($lines),
             $count > 1 ? sprintf(" (...repeated %d times)", $count) : ""
         );
-        $html = HTML::div(
+        $html    = HTML::div(
             ['class' => $this->getHtmlClass()],
             HTML::p($msg)
         );

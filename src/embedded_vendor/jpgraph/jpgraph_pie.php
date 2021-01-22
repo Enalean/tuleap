@@ -23,58 +23,58 @@ define("PIE_VALUE_ADJPER", 2);
 //===================================================
 class PiePlot
 {
-    public $posx = 0.5;
-    public $posy = 0.5;
-    public $is_using_plot_theme = false;
-    public $theme = "earth";
+    public $posx                     = 0.5;
+    public $posy                     = 0.5;
+    public $is_using_plot_theme      = false;
+    public $theme                    = "earth";
     protected $use_plot_theme_colors = false;
-    protected $radius = 0.3;
-    protected $explode_radius = [];
-    protected $explode_all = false;
-    protected $explode_r = 20;
-    protected $labels = null;
-    protected $legends = null;
-    protected $csimtargets = null;
-    protected $csimwintargets = null;  // Array of targets for CSIM
-    protected $csimareas = '';  // Generated CSIM text
-    protected $csimalts = null;  // ALT tags for corresponding target
-    protected $data = null;
+    protected $radius                = 0.3;
+    protected $explode_radius        = [];
+    protected $explode_all           = false;
+    protected $explode_r             = 20;
+    protected $labels                = null;
+    protected $legends               = null;
+    protected $csimtargets           = null;
+    protected $csimwintargets        = null;  // Array of targets for CSIM
+    protected $csimareas             = '';  // Generated CSIM text
+    protected $csimalts              = null;  // ALT tags for corresponding target
+    protected $data                  = null;
     public $title;
-    protected $startangle = 0;
-    protected $weight = 1;
-    protected $color = "black";
-    protected $legend_margin = 6;
-    protected $show_labels = true;
-    protected $themearr = [
+    protected $startangle          = 0;
+    protected $weight              = 1;
+    protected $color               = "black";
+    protected $legend_margin       = 6;
+    protected $show_labels         = true;
+    protected $themearr            = [
     "earth"  => [136,34,40,45,46,62,63,134,74,10,120,136,141,168,180,77,209,218,346,395,89,430],
     "pastel" => [27,415,128,59,66,79,105,110,42,147,152,230,236,240,331,337,405,38],
     "water"  => [8,370,24,40,335,56,213,237,268,14,326,387,10,388],
     "sand"   => [27,168,34,170,19,50,65,72,131,209,46,393]];
-    protected $setslicecolors = [];
-    protected $labeltype = 0; // Default to percentage
-    protected $pie_border = true;
+    protected $setslicecolors      = [];
+    protected $labeltype           = 0; // Default to percentage
+    protected $pie_border          = true;
     protected $pie_interior_border = true;
     public $value;
-    protected $ishadowcolor = '';
-    protected $ishadowdrop = 4;
-    protected $ilabelposadj = 1;
-    protected $legendcsimtargets = [];
-    protected $legendcsimwintargets = [];
-    protected $legendcsimalts = [];
-    protected $adjusted_data = [];
-    public $guideline = null;
-    protected $guidelinemargin = 10;
+    protected $ishadowcolor            = '';
+    protected $ishadowdrop             = 4;
+    protected $ilabelposadj            = 1;
+    protected $legendcsimtargets       = [];
+    protected $legendcsimwintargets    = [];
+    protected $legendcsimalts          = [];
+    protected $adjusted_data           = [];
+    public $guideline                  = null;
+    protected $guidelinemargin         = 10;
     protected $iShowGuideLineForSingle = false;
-    protected $iGuideLineCurve = false;
-    protected $iGuideVFactor = 1.4;
-    protected $iGuideLineRFactor = 0.8;
-    protected $la = []; // Holds the exact angle for each label
+    protected $iGuideLineCurve         = false;
+    protected $iGuideVFactor           = 1.4;
+    protected $iGuideLineRFactor       = 0.8;
+    protected $la                      = []; // Holds the exact angle for each label
 
     //---------------
     // CONSTRUCTOR
     public function __construct($data)
     {
-        $this->data = array_reverse($data);
+        $this->data  = array_reverse($data);
         $this->title = new Text("");
         $this->title->SetFont(FF_DEFAULT, FS_BOLD);
         $this->value = new DisplayValue();
@@ -96,13 +96,13 @@ class PiePlot
     {
         $this->guideline->Show($aFlg);
         $this->iShowGuideLineForSingle = $aAlways;
-        $this->iGuideLineCurve = $aCurved;
+        $this->iGuideLineCurve         = $aCurved;
     }
 
     // Adjuste the distance between labels and labels and pie
     public function SetGuideLinesAdjust($aVFactor, $aRFactor = 0.8)
     {
-        $this->iGuideVFactor = $aVFactor;
+        $this->iGuideVFactor     = $aVFactor;
         $this->iGuideLineRFactor = $aRFactor;
     }
 
@@ -119,7 +119,7 @@ class PiePlot
     public function SetShadow($aColor = 'darkgray', $aDropWidth = 4)
     {
         $this->ishadowcolor = $aColor;
-        $this->ishadowdrop = $aDropWidth;
+        $this->ishadowdrop  = $aDropWidth;
     }
 
     public function SetCSIMTargets($aTargets, $aAlts = '', $aWinTargets = '')
@@ -159,13 +159,13 @@ class PiePlot
         }
 
         //add coordinates of the centre to the map
-        $xc = floor($xc);
-        $yc = floor($yc);
+        $xc     = floor($xc);
+        $yc     = floor($yc);
         $coords = "$xc, $yc";
 
         //add coordinates of the first point on the arc to the map
-        $xp = floor(($radius * cos($ea)) + $xc);
-        $yp = floor($yc - $radius * sin($ea));
+        $xp      = floor(($radius * cos($ea)) + $xc);
+        $yp      = floor($yc - $radius * sin($ea));
         $coords .= ", $xp, $yp";
 
         //add coordinates every 0.2 radians
@@ -175,33 +175,33 @@ class PiePlot
         // the fact that end angle is smaller than start
         if ($sa < $ea) {
             while ($a <= 2 * M_PI) {
-                $xp = floor($radius * cos($a) + $xc);
-                $yp = floor($yc - $radius * sin($a));
+                $xp      = floor($radius * cos($a) + $xc);
+                $yp      = floor($yc - $radius * sin($a));
                 $coords .= ", $xp, $yp";
-                $a += 0.2;
+                $a      += 0.2;
             }
             $a -= 2 * M_PI;
         }
 
         while ($a < $sa) {
-            $xp = floor($radius * cos($a) + $xc);
-            $yp = floor($yc - $radius * sin($a));
+            $xp      = floor($radius * cos($a) + $xc);
+            $yp      = floor($yc - $radius * sin($a));
             $coords .= ", $xp, $yp";
-            $a += 0.2;
+            $a      += 0.2;
         }
 
         //Add the last point on the arc
-        $xp = floor($radius * cos($sa) + $xc);
-        $yp = floor($yc - $radius * sin($sa));
+        $xp      = floor($radius * cos($sa) + $xc);
+        $yp      = floor($yc - $radius * sin($sa));
         $coords .= ", $xp, $yp";
         if (! empty($this->csimtargets[$i])) {
             $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . $this->csimtargets[$i] . "\"";
-            $tmp = "";
+            $tmp              = "";
             if (! empty($this->csimwintargets[$i])) {
                 $this->csimareas .= " target=\"" . $this->csimwintargets[$i] . "\" ";
             }
             if (! empty($this->csimalts[$i])) {
-                $tmp = sprintf($this->csimalts[$i], $this->data[$i]);
+                $tmp              = sprintf($this->csimalts[$i], $this->data[$i]);
                 $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\" ";
             }
             $this->csimareas .= " />\n";
@@ -215,7 +215,7 @@ class PiePlot
 //        return;
 
         if (in_array($aTheme, array_keys($this->themearr))) {
-            $this->theme = $aTheme;
+            $this->theme               = $aTheme;
             $this->is_using_plot_theme = true;
         } else {
             JpGraphError::RaiseL(15001, $aTheme);//("PiePLot::SetTheme() Unknown theme: $aTheme");
@@ -233,7 +233,7 @@ class PiePlot
     public function ExplodeAll($radius = 20)
     {
         $this->explode_all = true;
-        $this->explode_r = $radius;
+        $this->explode_r   = $radius;
     }
 
     public function Explode($aExplodeArr)
@@ -253,7 +253,7 @@ class PiePlot
         if ($aStart == 0) {
             $this->startangle = 0;
         } else {
-            $this->startangle = 360 - $aStart;
+            $this->startangle  = 360 - $aStart;
             $this->startangle *= M_PI / 180;
         }
     }
@@ -278,7 +278,7 @@ class PiePlot
     // Set text labels for slices
     public function SetLabels($aLabels, $aLblPosAdj = "auto")
     {
-        $this->labels = array_reverse($aLabels);
+        $this->labels       = array_reverse($aLabels);
         $this->ilabelposadj = $aLblPosAdj;
     }
 
@@ -306,7 +306,7 @@ class PiePlot
     // Should the circle around a pie plot be displayed
     public function ShowBorder($exterior = true, $interior = true)
     {
-        $this->pie_border = $exterior;
+        $this->pie_border          = $exterior;
         $this->pie_interior_border = $interior;
     }
 
@@ -316,7 +316,7 @@ class PiePlot
         $colors = array_keys($graph->img->rgb->rgb_table);
         sort($colors);
         $ta = $this->themearr[$this->theme];
-        $n = count($this->data);
+        $n  = count($this->data);
 
         if ($this->setslicecolors == null) {
             $numcolors = count($ta);
@@ -325,7 +325,7 @@ class PiePlot
             }
         } else {
             $this->setslicecolors = array_slice($this->setslicecolors, 0, $n);
-            $numcolors = count($this->setslicecolors);
+            $numcolors            = count($this->setslicecolors);
             if ($graph->pieaa && ! ($this instanceof PiePlot3D)) {
                 $this->setslicecolors = array_reverse($this->setslicecolors);
             }
@@ -344,7 +344,7 @@ class PiePlot
         // Make sure we don't plot more values than data points
         // (in case the user added more legends than data points)
         $legendsCount = is_array($this->legends) ? count($this->legends) : 0;
-        $n = min($legendsCount, count($this->data));
+        $n            = min($legendsCount, count($this->data));
         if ($this->legends != "") {
             $this->legends = array_reverse(array_slice($this->legends, 0, $n));
         }
@@ -358,13 +358,13 @@ class PiePlot
                 $fmt = "%d"; // Deafult Alt if no other has been specified
             }
             if ($this->labeltype == 0) {
-                $l = sprintf($l, 100 * $this->data[$i] / $sum);
+                $l   = sprintf($l, 100 * $this->data[$i] / $sum);
                 $alt = sprintf($fmt, $this->data[$i]);
             } elseif ($this->labeltype == 1) {
-                $l = sprintf($l, $this->data[$i]);
+                $l   = sprintf($l, $this->data[$i]);
                 $alt = sprintf($fmt, $this->data[$i]);
             } else {
-                $l = sprintf($l, $this->adjusted_data[$i]);
+                $l   = sprintf($l, $this->adjusted_data[$i]);
                 $alt = sprintf($fmt, $this->adjusted_data[$i]);
             }
 
@@ -396,18 +396,18 @@ class PiePlot
             }
         }
 
-        $tmp = [];
-        $result = [];
+        $tmp       = [];
+        $result    = [];
         $quote_sum = 0;
-        $n = count($aData);
+        $n         = count($aData);
         for ($i = 0, $sum = 0; $i < $n; ++$i) {
             $sum += $aData[$i];
         }
         foreach ($aData as $index => $value) {
             $tmp_percentage = $value / $sum * $mul;
             $result[$index] = floor($tmp_percentage);
-            $tmp[$index] = $tmp_percentage - $result[$index];
-            $quote_sum += $result[$index];
+            $tmp[$index]    = $tmp_percentage - $result[$index];
+            $quote_sum     += $result[$index];
         }
         if ($quote_sum == $mul) {
             if ($mul > 100) {
@@ -457,7 +457,7 @@ class PiePlot
         $colors = array_keys($img->rgb->rgb_table);
         sort($colors);
         $ta = $this->themearr[$this->theme];
-        $n = count($this->data);
+        $n  = count($this->data);
 
         if ($this->setslicecolors == null) {
             $numcolors = count($ta);
@@ -465,12 +465,12 @@ class PiePlot
             // We need to create an array of colors as long as the data
             // since we need to reverse it to get the colors in the right order
             $numcolors = count($this->setslicecolors);
-            $i = 2 * $numcolors;
+            $i         = 2 * $numcolors;
             while ($n > $i) {
                 $this->setslicecolors = array_merge($this->setslicecolors, $this->setslicecolors);
-                $i += $n;
+                $i                   += $n;
             }
-            $tt = array_slice($this->setslicecolors, 0, $n % $numcolors);
+            $tt                   = array_slice($this->setslicecolors, 0, $n % $numcolors);
             $this->setslicecolors = array_merge($this->setslicecolors, $tt);
             $this->setslicecolors = array_reverse($this->setslicecolors);
         }
@@ -519,11 +519,11 @@ class PiePlot
             $angle2 = $this->startangle;
             $img->SetColor($this->ishadowcolor);
             for ($i = 0; $sum > 0 && $i < $n; ++$i) {
-                $j = $n - $i - 1;
-                $d = $this->data[$i];
-                $angle1 = $angle2;
+                $j       = $n - $i - 1;
+                $d       = $this->data[$i];
+                $angle1  = $angle2;
                 $accsum += $d;
-                $angle2 = $this->startangle + 2 * M_PI * $accsum / $sum;
+                $angle2  = $this->startangle + 2 * M_PI * $accsum / $sum;
                 if (empty($this->explode_radius[$j])) {
                     $this->explode_radius[$j] = 0;
                 }
@@ -742,17 +742,17 @@ class PiePlot
         // that has an angular distance less than the treshold
         //-----------------------------------------------------------------------
         $tresh_hold = 25 * M_PI / 180; // 25 degrees difference to be in a cluster
-        $incluster = false; // flag if we are currently in a cluster or not
-        $clusters = []; // array of clusters
-        $cidx = -1;  // running cluster index
+        $incluster  = false; // flag if we are currently in a cluster or not
+        $clusters   = []; // array of clusters
+        $cidx       = -1;  // running cluster index
 
         // Go through all the labels and construct a number of clusters
         for ($i = 0; $i < $n - 1; ++$i) {
             // Calc the angle distance between two consecutive slices
-            $a1 = $this->la[$i];
-            $a2 = $this->la[$i + 1];
-            $q1 = $this->Quadrant($a1);
-            $q2 = $this->Quadrant($a2);
+            $a1   = $this->la[$i];
+            $a2   = $this->la[$i + 1];
+            $q1   = $this->Quadrant($a1);
+            $q2   = $this->Quadrant($a2);
             $diff = abs($a1 - $a2);
             if ($diff < $tresh_hold) {
                 if ($incluster) {
@@ -863,7 +863,7 @@ class PiePlot
         // We use the font height as the base factor for how far we need to
         // spread the labels in the Y-direction.
         $this->value->ApplyFont($img);
-        $fh = $img->GetFontHeight();
+        $fh        = $img->GetFontHeight();
         $origvstep = $fh * $this->iGuideVFactor;
         $this->value->SetMargin(0);
 
@@ -874,8 +874,8 @@ class PiePlot
         for ($i = 0; $i < $nc; ++$i) {
             // Start angle and number of slices in this cluster
             $csize = $clusters[$i][1];
-            $a = $this->la[$clusters[$i][0]];
-            $q = $this->Quadrant($a);
+            $a     = $this->la[$clusters[$i][0]];
+            $q     = $this->Quadrant($a);
 
             // Now set up the start and end conditions to make sure that
             // in each cluster we walk through the all the slices starting with the slice
@@ -883,23 +883,23 @@ class PiePlot
             // we have different conditions depending on in which quadrant the slice lies within.
             if ($q == 0) {
                 $start = $csize - 1;
-                $idx = $start;
-                $step = -1;
+                $idx   = $start;
+                $step  = -1;
                 $vstep = -$origvstep;
             } elseif ($q == 1) {
                 $start = 0;
-                $idx = $start;
-                $step = 1;
+                $idx   = $start;
+                $step  = 1;
                 $vstep = -$origvstep;
             } elseif ($q == 2) {
                 $start = $csize - 1;
-                $idx = $start;
-                $step = -1;
+                $idx   = $start;
+                $step  = -1;
                 $vstep = $origvstep;
             } elseif ($q == 3) {
                 $start = 0;
-                $idx = $start;
-                $step = 1;
+                $idx   = $start;
+                $step  = 1;
                 $vstep = $origvstep;
             }
 
@@ -938,7 +938,7 @@ class PiePlot
                     // so it doesn't collide with
                     // the slice in the previous cluster
                     $prevcluster = ($i + ($nc - 1) ) % $nc;
-                    $previdx = $clusters[$prevcluster][0] + $clusters[$prevcluster][1] - 1;
+                    $previdx     = $clusters[$prevcluster][0] + $clusters[$prevcluster][1] - 1;
                     if ($q == 1 && $a > 160 * M_PI / 180) {
                         // Get the angle for the previous clusters last slice
                         $diff = abs($a - $this->la[$previdx]);
@@ -958,7 +958,7 @@ class PiePlot
                     // we make sure that we add at least a step that corresponds to the vertical
                     // distance between the centers at the arc on the slice
                     $prev_a = $this->la[$clusters[$i][0] + ($idx - $step)];
-                    $dy = abs($radius * (sin($a) - sin($prev_a)) * 1.2);
+                    $dy     = abs($radius * (sin($a) - sin($prev_a)) * 1.2);
                     if ($vstep > 0) {
                         $yt += max($vstep, $dy);
                     } else {
@@ -970,7 +970,7 @@ class PiePlot
 
                 if ($csize == 1) {
                     // A "meta" cluster with only one slice
-                    $r = $radius + $this->explode_radius[$n - 1 - ($clusters[$i][0] + $idx)];
+                    $r  = $radius + $this->explode_radius[$n - 1 - ($clusters[$i][0] + $idx)];
                     $rr = $r + $img->GetFontHeight() / 2;
                     $xt = round($rr * cos($a) + $xc);
                     $yt = round($yc - $rr * sin($a));
@@ -983,13 +983,13 @@ class PiePlot
                     if ($q == 1 || $q == 2) {
                         // Left side of Pie
                         $this->guideline->Stroke($img, $xt, $yt, $xt - $this->guidelinemargin, $yt);
-                        $lbladj = -$this->guidelinemargin - 5;
+                        $lbladj              = -$this->guidelinemargin - 5;
                         $this->value->halign = "right";
                         $this->value->valign = "center";
                     } else {
                         // Right side of pie
                         $this->guideline->Stroke($img, $xt, $yt, $xt + $this->guidelinemargin, $yt);
-                        $lbladj = $this->guidelinemargin + 5;
+                        $lbladj              = $this->guidelinemargin + 5;
                         $this->value->halign = "left";
                         $this->value->valign = "center";
                     }
@@ -1132,12 +1132,12 @@ class PiePlot
 //===================================================
 class PiePlotC extends PiePlot
 {
-    private $imidsize = 0.5;  // Fraction of total width
-    private $imidcolor = 'white';
-    public $midtitle = '';
-    private $middlecsimtarget = '';
+    private $imidsize            = 0.5;  // Fraction of total width
+    private $imidcolor           = 'white';
+    public $midtitle             = '';
+    private $middlecsimtarget    = '';
     private $middlecsimwintarget = '';
-    private $middlecsimalt = '';
+    private $middlecsimalt       = '';
 
     public function __construct($data, $aCenterTitle = '')
     {
@@ -1150,7 +1150,7 @@ class PiePlotC extends PiePlot
     {
         $this->midtitle->Set($aTitle);
 
-        $this->imidsize = $aSize;
+        $this->imidsize  = $aSize;
         $this->imidcolor = $aColor;
     }
 
@@ -1171,9 +1171,9 @@ class PiePlotC extends PiePlot
 
     public function SetMidCSIM($aTarget, $aAlt = '', $aWinTarget = '')
     {
-        $this->middlecsimtarget = $aTarget;
+        $this->middlecsimtarget    = $aTarget;
         $this->middlecsimwintarget = $aWinTarget;
-        $this->middlecsimalt = $aAlt;
+        $this->middlecsimalt       = $aAlt;
     }
 
     public function AddSliceToCSIM($i, $xc, $yc, $radius, $sa, $ea)
@@ -1197,8 +1197,8 @@ class PiePlotC extends PiePlot
         }
 
         // Add inner circle first point
-        $xp = floor(($this->imidsize * $radius * cos($ea)) + $xc);
-        $yp = floor($yc - ($this->imidsize * $radius * sin($ea)));
+        $xp     = floor(($this->imidsize * $radius * cos($ea)) + $xc);
+        $yp     = floor($yc - ($this->imidsize * $radius * sin($ea)));
         $coords = "$xp, $yp";
 
         //add coordinates every 0.25 radians
@@ -1208,48 +1208,48 @@ class PiePlotC extends PiePlot
         // the fact that end angle is smaller than start
         if ($sa < $ea) {
             while ($a <= 2 * M_PI) {
-                $xp = floor($radius * cos($a) + $xc);
-                $yp = floor($yc - $radius * sin($a));
+                $xp      = floor($radius * cos($a) + $xc);
+                $yp      = floor($yc - $radius * sin($a));
                 $coords .= ", $xp, $yp";
-                $a += 0.25;
+                $a      += 0.25;
             }
             $a -= 2 * M_PI;
         }
 
         while ($a < $sa) {
-            $xp = floor(($this->imidsize * $radius * cos($a) + $xc));
-            $yp = floor($yc - ($this->imidsize * $radius * sin($a)));
+            $xp      = floor(($this->imidsize * $radius * cos($a) + $xc));
+            $yp      = floor($yc - ($this->imidsize * $radius * sin($a)));
             $coords .= ", $xp, $yp";
-            $a += 0.25;
+            $a      += 0.25;
         }
 
         // Make sure we end at the last point
-        $xp = floor(($this->imidsize * $radius * cos($sa) + $xc));
-        $yp = floor($yc - ($this->imidsize * $radius * sin($sa)));
+        $xp      = floor(($this->imidsize * $radius * cos($sa) + $xc));
+        $yp      = floor($yc - ($this->imidsize * $radius * sin($sa)));
         $coords .= ", $xp, $yp";
 
         // Straight line to outer circle
-        $xp = floor($radius * cos($sa) + $xc);
-        $yp = floor($yc - $radius * sin($sa));
+        $xp      = floor($radius * cos($sa) + $xc);
+        $yp      = floor($yc - $radius * sin($sa));
         $coords .= ", $xp, $yp";
 
         //add coordinates every 0.25 radians
         $a = $sa - 0.25;
         while ($a > $ea) {
-            $xp = floor($radius * cos($a) + $xc);
-            $yp = floor($yc - $radius * sin($a));
+            $xp      = floor($radius * cos($a) + $xc);
+            $yp      = floor($yc - $radius * sin($a));
             $coords .= ", $xp, $yp";
-            $a -= 0.25;
+            $a      -= 0.25;
         }
 
         //Add the last point on the arc
-        $xp = floor($radius * cos($ea) + $xc);
-        $yp = floor($yc - $radius * sin($ea));
+        $xp      = floor($radius * cos($ea) + $xc);
+        $yp      = floor($yc - $radius * sin($ea));
         $coords .= ", $xp, $yp";
 
         // Close the arc
-        $xp = floor(($this->imidsize * $radius * cos($ea)) + $xc);
-        $yp = floor($yc - ($this->imidsize * $radius * sin($ea)));
+        $xp      = floor(($this->imidsize * $radius * cos($ea)) + $xc);
+        $yp      = floor($yc - ($this->imidsize * $radius * sin($ea)));
         $coords .= ", $xp, $yp";
 
         if (! empty($this->csimtargets[$i])) {
@@ -1259,7 +1259,7 @@ class PiePlotC extends PiePlot
                 $this->csimareas .= " target=\"" . $this->csimwintargets[$i] . "\" ";
             }
             if (! empty($this->csimalts[$i])) {
-                $tmp = sprintf($this->csimalts[$i], $this->data[$i]);
+                $tmp              = sprintf($this->csimalts[$i], $this->data[$i]);
                 $this->csimareas .= " title=\"$tmp\"  alt=\"$tmp\" ";
             }
             $this->csimareas .= " />\n";
@@ -1270,7 +1270,7 @@ class PiePlotC extends PiePlot
     public function Stroke($img, $aaoption = 0)
     {
         // Stroke the pie but don't stroke values
-        $tmp =  $this->value->show;
+        $tmp               =  $this->value->show;
         $this->value->show = false;
         parent::Stroke($img, $aaoption);
         $this->value->show = $tmp;
@@ -1312,16 +1312,16 @@ class PiePlotC extends PiePlot
 
     public function AddMiddleCSIM($xc, $yc, $r)
     {
-        $xc = round($xc);
-        $yc = round($yc);
-        $r = round($r);
+        $xc               = round($xc);
+        $yc               = round($yc);
+        $r                = round($r);
         $this->csimareas .= "<area shape=\"circle\" coords=\"$xc,$yc,$r\" href=\"" .
         $this->middlecsimtarget . "\"";
         if (! empty($this->middlecsimwintarget)) {
             $this->csimareas .= " target=\"" . $this->middlecsimwintarget . "\"";
         }
         if (! empty($this->middlecsimalt)) {
-            $tmp = $this->middlecsimalt;
+            $tmp              = $this->middlecsimalt;
             $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\" ";
         }
         $this->csimareas .= " />\n";
@@ -1475,8 +1475,8 @@ class PieGraph extends Graph
                 }
             }
 
-            $w = $this->img->width;
-            $h = $this->img->height;
+            $w      = $this->img->width;
+            $h      = $this->img->height;
             $oldimg = $this->img->img;
 
             $this->img->CreateImgCanvas(2 * $w, 2 * $h);
@@ -1517,7 +1517,7 @@ class PieGraph extends Graph
                 }
             }
 
-            $indent = $this->doframe ? ($this->frame_weight + ($this->doshadow ? $this->shadow_width : 0 )) : 0;
+            $indent  = $this->doframe ? ($this->frame_weight + ($this->doshadow ? $this->shadow_width : 0 )) : 0;
             $indent += $this->framebevel ? $this->framebeveldepth + 1 : 0;
             $this->img->CopyCanvasH(
                 $oldimg,
@@ -1532,8 +1532,8 @@ class PieGraph extends Graph
                 2 * ($h - $indent)
             );
 
-            $this->img->img = $oldimg;
-            $this->img->width = $w;
+            $this->img->img    = $oldimg;
+            $this->img->width  = $w;
             $this->img->height = $h;
 
             for ($i = 0; $i < $n; ++$i) {
@@ -1582,7 +1582,7 @@ class PieGraph extends Graph
                     //JpGraphError::Raise('In order to use image transformation you must include the file jpgraph_imgtrans.php in your script.');
                 }
 
-                $tform = new ImgTrans($this->img->img);
+                $tform          = new ImgTrans($this->img->img);
                 $this->img->img = $tform->Skew3D(
                     $this->iImgTransHorizon,
                     $this->iImgTransSkewDist,

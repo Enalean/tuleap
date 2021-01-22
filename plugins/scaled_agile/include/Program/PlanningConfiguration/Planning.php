@@ -63,7 +63,7 @@ final class Planning
         $this->planning_tracker    = $planning_tracker;
         $this->name                = $name;
         $this->backlog_tracker_ids = $backlog_tracker_ids;
-        $this->project_data = $project_data;
+        $this->project_data        = $project_data;
     }
 
     public function getId(): int

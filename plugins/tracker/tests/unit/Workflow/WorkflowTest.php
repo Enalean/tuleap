@@ -32,7 +32,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     private $transition_factory_instance;
     private $transition_null_to_open;
     private $transition_open_to_close;
-    private $open_value_id = 801;
+    private $open_value_id  = 801;
     private $close_value_id = 802;
     private $trigger_rules_manager;
     private $status_field;
@@ -79,14 +79,14 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $this->transition_open_to_close->shouldReceive('getFieldValueTo')->andReturns($close_value);
 
         $this->trigger_rules_manager = \Mockery::spy(\Tracker_Workflow_Trigger_RulesManager::class);
-        $workflow_id = 1;
-        $tracker_id  = 2;
-        $field_id    = 103;
-        $is_used     = 1;
-        $is_legacy   = 0;
-        $is_advanced = 1;
-        $transitions = [$this->transition_null_to_open, $this->transition_open_to_close];
-        $this->workflow = Mockery::mock(
+        $workflow_id                 = 1;
+        $tracker_id                  = 2;
+        $field_id                    = 103;
+        $is_used                     = 1;
+        $is_legacy                   = 0;
+        $is_advanced                 = 1;
+        $transitions                 = [$this->transition_null_to_open, $this->transition_open_to_close];
+        $this->workflow              = Mockery::mock(
             Workflow::class . '[getTracker]',
             [
                 Mockery::mock(Tracker_RulesManager::class),
@@ -250,7 +250,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $t3->shouldReceive('getFieldValueTo')->andReturns($ft3);
         $t3->shouldReceive('getTransitionId')->andReturns(3);
 
-        $transitions = [$t1, $t2, $t3];
+        $transitions        = [$t1, $t2, $t3];
         $ugroups_transition = ['ugroup' => 'UGROUP_PROJECT_MEMBERS'];
 
         $global_rules_manager  = \Mockery::spy(\Tracker_RulesManager::class);
@@ -265,7 +265,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
         $workflow->shouldReceive('getPermissionsManager')->andReturns($pm);
 
-        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/importWorkflow.xml'));
+        $xml  = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/importWorkflow.xml'));
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
         $array_xml_mapping = ['F32' => 103,
@@ -409,7 +409,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $previous_changeset = null;
         $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
-        $fields_data        = [];
+        $fields_data = [];
 
         $this->trigger_rules_manager->shouldReceive('processTriggers')->with($new_changeset)->once();
 
@@ -460,14 +460,14 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testItRaisesExceptionIfWorkflowIsEnabledAndTransitionNotValid(): void
     {
-        $value_from  = null;
-        $value_to    = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class)->shouldReceive('getId')->andReturns(66)->getMock();
-        $transition  = \Mockery::spy(\Transition::class);
+        $value_from = null;
+        $value_to   = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class)->shouldReceive('getId')->andReturns(66)->getMock();
+        $transition = \Mockery::spy(\Transition::class);
         $transition->shouldReceive('getFieldValueFrom')->andReturns($value_from);
         $transition->shouldReceive('getFieldValueTo')->andReturns($value_to);
-        $is_used     = 1;
-        $field_id    = 42;
-        $workflow    = Mockery::mock(
+        $is_used  = 1;
+        $field_id = 42;
+        $workflow = Mockery::mock(
             Workflow::class,
             [
                 Mockery::mock(Tracker_RulesManager::class),
@@ -504,7 +504,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $rules_manager = \Mockery::spy(\Tracker_RulesManager::class);
         $rules_manager->shouldReceive('validate')->with(123, $fields_data)->once()->andReturns(true);
 
-        $workflow    = new Workflow(
+        $workflow = new Workflow(
             $rules_manager,
             $this->trigger_rules_manager,
             new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),
@@ -524,7 +524,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     {
         $fields_data = [42 => 66];
 
-        $transition  = \Mockery::spy(\Transition::class);
+        $transition = \Mockery::spy(\Transition::class);
         $transition->shouldReceive('getFieldValueFrom')->andReturns(null);
         $transition->shouldReceive('getFieldValueTo')->andReturns(\Mockery::spy(\Tracker_FormElement_Field_List_Value::class)->shouldReceive('getId')->andReturns(66)->getMock());
         $transition->shouldReceive('validate')->andReturns(false);
@@ -556,11 +556,11 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testItDisablesTheValidationOfTransitions(): void
     {
-        $transition  = \Mockery::spy(\Transition::class);
+        $transition = \Mockery::spy(\Transition::class);
         $transition->shouldReceive('getFieldValueFrom')->andReturns(null);
         $transition->shouldReceive('getFieldValueTo')->andReturns(\Mockery::spy(\Tracker_FormElement_Field_List_Value::class)->shouldReceive('getId')->andReturns(66)->getMock());
         $transition->shouldReceive('validate')->andReturns(false);
-        $workflow    = new Workflow(
+        $workflow = new Workflow(
             Mockery::mock(Tracker_RulesManager::class),
             $this->trigger_rules_manager,
             new WorkflowBackendLogger(Mockery::spy(\Psr\Log\LoggerInterface::class), \Psr\Log\LogLevel::DEBUG),

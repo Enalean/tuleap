@@ -94,7 +94,7 @@ class TrackerFormElementTest extends TestCase
     public function testDisplayUpdateFormShouldDisplayAForm()
     {
         $formElement = $this->GivenAFormElementWithIdAndOriginalField(null, null);
-        $factory = Mockery::mock(Tracker_FormElementFactory::class);
+        $factory     = Mockery::mock(Tracker_FormElementFactory::class);
         $factory->shouldReceive('getUsedFormElementForTracker')->andReturns([]);
         $factory->shouldReceive('getSharedTargets');
         $tracker = Mockery::mock(Tracker::class);

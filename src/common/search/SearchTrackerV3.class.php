@@ -59,7 +59,7 @@ class Search_SearchTrackerV3
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'error'));
         }
 
-        $results = $this->dao->searchGlobalPaginated($words, $exact, $offset, $atid, UserManager::instance()->getCurrentUser()->getUgroups($group_id, $atid), $query->getNumberOfResults());
+        $results       = $this->dao->searchGlobalPaginated($words, $exact, $offset, $atid, UserManager::instance()->getCurrentUser()->getUgroups($group_id, $atid), $query->getNumberOfResults());
         $rows_returned = $this->dao->foundRows();
 
         $art_displayed = 0;
@@ -95,7 +95,7 @@ class Search_SearchTrackerV3
             echo "\n";
 
             $purifier = Codendi_HTMLPurifier::instance();
-            $rows = 0;
+            $rows     = 0;
             foreach ($results as $arr) {
                 $rows++;
                 $curArtifact = new Artifact($ath, $arr['artifact_id']);

@@ -110,13 +110,13 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
 
             $used_in_other_services_infos = $tracker->getInformationsFromOtherServicesAboutUsage();
             if (isset($used_in_other_services_infos['can_be_deleted']) && $used_in_other_services_infos['can_be_deleted'] === false) {
-                $can_be_deleted = false;
+                $can_be_deleted        = false;
                 $cannot_delete_message = sprintf(
                     dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'),
                     $used_in_other_services_infos['message']
                 );
             } elseif ($this->field_dao->doesTrackerHaveSourceSharedFields($tracker_id) === true) {
-                $can_be_deleted = false;
+                $can_be_deleted        = false;
                 $cannot_delete_message = dgettext('tuleap-tracker', 'You can\'t delete this tracker because it has at least one source shared field.');
             }
 

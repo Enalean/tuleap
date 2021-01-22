@@ -30,7 +30,7 @@ class Docman_HtmlFilterText extends \Docman_HtmlFilter
     }
     public function _valueSelectorHtml($formName = 0)
     {
-        $html = '';
+        $html  = '';
         $html .= '<input type="text" name="' . $this->filter->md->getLabel() . '" value="' . $this->hp->purify($this->filter->getValue()) . '" class="text_field"/>';
         return $html;
     }

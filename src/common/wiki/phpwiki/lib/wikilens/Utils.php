@@ -27,11 +27,11 @@ function addPageTextData($user, $dbi, $new_data, $START_DELIM, $DELIM)
     // This is largely lifted from the TranslateText plugin, which performs a
     // similar set of functions (retrieves a user's homepage, modifies it
     // progmatically, and saves the changes)
-    $homepage = $user->_HomePagehandle;
+    $homepage      = $user->_HomePagehandle;
     $transpagename = $homepage->getName();
-    $page    = $dbi->getPage($transpagename);
-    $current = $page->getCurrentRevision();
-    $version = $current->getVersion();
+    $page          = $dbi->getPage($transpagename);
+    $current       = $page->getCurrentRevision();
+    $version       = $current->getVersion();
     if ($version) {
         $text = $current->getPackedContent() . "\n";
         $meta = $current->_data;
@@ -74,10 +74,10 @@ function getPageTextData($fromUser, $dbi, $START_DELIM)
     if ($fromUser == "") {
         return "";
     }
-    $userPage = $dbi->getPage($fromUser);
+    $userPage    = $dbi->getPage($fromUser);
     $transformed = $userPage->getCurrentRevision();
-    $pageArray = $transformed->getContent();
-    $p = -1;
+    $pageArray   = $transformed->getContent();
+    $p           = -1;
     for ($i = 0; $i < count($pageArray); $i++) {
         if ($pageArray[$i] != "") {
             if (! ((strpos($pageArray[$i], $START_DELIM)) === false)) {

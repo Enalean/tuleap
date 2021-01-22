@@ -154,8 +154,8 @@ class Statistics_DiskUsagePurger
             return false;
         }
 
-        $first_day_of_each_months  = [];
-        $first_day_of_month        = date('Y-m-01 00:00:00', strtotime($date_min));
+        $first_day_of_each_months = [];
+        $first_day_of_month       = date('Y-m-01 00:00:00', strtotime($date_min));
 
         do {
             $first_day_of_each_months[] = $first_day_of_month;

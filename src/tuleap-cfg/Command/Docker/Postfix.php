@@ -28,7 +28,7 @@ use TuleapCfg\Command\ProcessFactory;
 
 final class Postfix
 {
-    private const ENV_RELAYHOST = 'TULEAP_EMAIL_RELAYHOST';
+    private const ENV_RELAYHOST   = 'TULEAP_EMAIL_RELAYHOST';
     private const ENV_ADMIN_EMAIL = 'TULEAP_EMAIL_ADMIN';
 
     /**

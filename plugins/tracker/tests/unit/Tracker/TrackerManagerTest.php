@@ -44,7 +44,7 @@ class TrackerManagerTest extends TestCase
         parent::setUp();
 
         $this->backup_globals = array_merge([], $GLOBALS);
-        $GLOBALS['HTML']     = Mockery::spy(\Layout::class);
+        $GLOBALS['HTML']      = Mockery::spy(\Layout::class);
 
         $this->user = \Mockery::spy(\PFUser::class);
         $this->user->shouldReceive('getId')->andReturns(666);
@@ -54,25 +54,25 @@ class TrackerManagerTest extends TestCase
         $project = \Mockery::spy(\Project::class);
 
         $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $af             = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $af->shouldReceive('getArtifactById')->with('1')->andReturns($this->artifact);
 
         $this->report = \Mockery::spy(\Tracker_Report::class);
-        $rf = \Mockery::spy(\Tracker_ReportFactory::class);
+        $rf           = \Mockery::spy(\Tracker_ReportFactory::class);
         $rf->shouldReceive('getReportById')->with('2', $this->user->getId(), true)->andReturns($this->report);
 
         $this->tracker = \Mockery::spy(\Tracker::class);
         $this->tracker->shouldReceive('isActive')->andReturns(true);
         $this->tracker->shouldReceive('getTracker')->andReturns($this->tracker);
 
-        $trackers       = [$this->tracker];
+        $trackers = [$this->tracker];
 
         $tf = \Mockery::spy(\TrackerFactory::class);
         $tf->shouldReceive('getTrackerById')->with(3)->andReturns($this->tracker);
         $tf->shouldReceive('getTrackersByGroupId')->andReturns($trackers);
 
         $this->formElement = \Mockery::spy(\Tracker_FormElement_Interface::class);
-        $ff = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $ff                = \Mockery::spy(\Tracker_FormElementFactory::class);
         $ff->shouldReceive('getFormElementById')->with('4')->andReturns($this->formElement);
 
         $this->artifact->shouldReceive('getTracker')->andReturns($this->tracker);
@@ -175,7 +175,7 @@ class TrackerManagerTest extends TestCase
     {
         $request_artifact = Mockery::spy(HTTPRequest::class);
 
-        $tm = Mockery::mock(TrackerManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $tm      = Mockery::mock(TrackerManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $project = Mockery::spy(Project::class);
         $tm->shouldReceive('getProject')->with(5)->andReturn($project)->once();
         $tm->shouldReceive('checkServiceEnabled')->with($project, $request_artifact)->andReturn(true);

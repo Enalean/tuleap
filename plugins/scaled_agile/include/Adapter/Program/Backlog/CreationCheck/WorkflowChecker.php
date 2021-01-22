@@ -52,10 +52,10 @@ final class WorkflowChecker implements CheckWorkflow
         \Tracker_Rule_List_Dao $tracker_rule_list_dao,
         LoggerInterface $logger
     ) {
-        $this->workflow_dao = $workflow_dao;
+        $this->workflow_dao          = $workflow_dao;
         $this->tracker_rule_date_dao = $tracker_rule_date_dao;
         $this->tracker_rule_list_dao = $tracker_rule_list_dao;
-        $this->logger = $logger;
+        $this->logger                = $logger;
     }
 
     public function areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(

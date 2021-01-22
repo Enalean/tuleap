@@ -38,7 +38,7 @@ use TemplateRendererFactory;
 
 class Hooks extends Pane
 {
-    public const ID = 'hooks';
+    public const ID            = 'hooks';
     public const CSRF_TOKEN_ID = 'GIT-WEBHOOK-SETTINGS';
 
     /**

@@ -73,7 +73,7 @@ class SessionState
 
     public function convertToMinimalRepresentation(): \stdClass
     {
-        $representation = new \stdClass();
+        $representation                     = new \stdClass();
         $representation->secret_key         = $this->secret_key;
         $representation->return_to          = $this->return_to;
         $representation->nonce              = $this->nonce;

@@ -118,7 +118,7 @@ class AdminScrumPresenter
         $this->does_configuration_allows_planning_creation = $does_configuration_allows_planning_creation;
         $this->additional_content                          = $additional_content;
 
-        $this->cannot_create_planning_in_scrum_v2          = dgettext('tuleap-agiledashboard', 'You cannot create more than one planning in scrum V2.');
+        $this->cannot_create_planning_in_scrum_v2 = dgettext('tuleap-agiledashboard', 'You cannot create more than one planning in scrum V2.');
 
         foreach ($hierarchy as $tracker) {
             $this->planning_hierarchy[] = $tracker->getName();

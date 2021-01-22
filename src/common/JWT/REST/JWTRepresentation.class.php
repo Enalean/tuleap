@@ -30,6 +30,6 @@ class JWTRepresentation
 
     public function build($token)
     {
-        $this->token   = $token;
+        $this->token = $token;
     }
 }

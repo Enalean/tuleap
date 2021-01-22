@@ -37,7 +37,7 @@ final class TestLayout extends BaseLayout
     public function __construct(LayoutInspector $inspector)
     {
         $this->css_assets = new CssAssetCollection([]);
-        $this->inspector = $inspector;
+        $this->inspector  = $inspector;
     }
 
     public function header(array $params)

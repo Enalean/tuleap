@@ -69,7 +69,7 @@ class Git_Mirror_ManifestFileGenerator
         $filename = $this->getManifestFilenameForMirror($mirror);
 
         $list_of_repositories = $this->getListOfRepositoriesFromManifest($filename);
-        $key = $this->getRepositoryKeyFromPathName($repository_path);
+        $key                  = $this->getRepositoryKeyFromPathName($repository_path);
         if (isset($list_of_repositories[$key])) {
             $this->removeRepository($mirror, $list_of_repositories, $key);
             $this->setCurrentTimeForGitoliteAdminRepository($mirror, $list_of_repositories);
@@ -192,7 +192,7 @@ class Git_Mirror_ManifestFileGenerator
             return [];
         }
 
-        $content = file_get_contents("compress.zlib://$filename");
+        $content              = file_get_contents("compress.zlib://$filename");
         $list_of_repositories = json_decode($content, true);
         if (! $list_of_repositories) {
             return [];

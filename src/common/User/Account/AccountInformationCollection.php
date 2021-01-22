@@ -48,7 +48,7 @@ class AccountInformationCollection implements Dispatchable
 
     public function __construct(PFUser $user)
     {
-        $this->user = $user;
+        $this->user              = $user;
         $this->extra_information = [
             new AccountInformationPresenter(
                 _('Member since'),

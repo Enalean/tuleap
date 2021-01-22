@@ -187,7 +187,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         );
 
         $project_members_identifier = $this->project_id . '_3';
-        $put_body_content = json_encode(
+        $put_body_content           = json_encode(
             ['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]]
         );
 

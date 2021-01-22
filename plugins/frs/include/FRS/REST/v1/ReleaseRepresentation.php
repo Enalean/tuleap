@@ -139,7 +139,7 @@ final class ReleaseRepresentation
                 "uri" => $this->uri . "/artifacts"
             ]
         ];
-        $this->project = self::getProjectReference($release);
+        $this->project   = self::getProjectReference($release);
 
         $this->files = self::getFiles($release);
 
@@ -169,8 +169,8 @@ final class ReleaseRepresentation
             return null;
         }
 
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $tracker_artifact_builder     = new ArtifactRepresentationBuilder(
+        $form_element_factory     = Tracker_FormElementFactory::instance();
+        $tracker_artifact_builder = new ArtifactRepresentationBuilder(
             $form_element_factory,
             Tracker_ArtifactFactory::instance(),
             new NatureDao(),
@@ -211,7 +211,7 @@ final class ReleaseRepresentation
         $files = [];
         foreach ($release->getFiles() as $file) {
             $file_representation = new FileRepresentation($file);
-            $files[] = $file_representation;
+            $files[]             = $file_representation;
         }
 
         return $files;
@@ -225,7 +225,7 @@ final class ReleaseRepresentation
         $links = [];
         foreach ($uploaded_links_retriever->getLinksForRelease($release) as $link) {
             $link_representation = new UploadedLinkRepresentation($link);
-            $links[] = $link_representation;
+            $links[]             = $link_representation;
         }
 
         return $links;

@@ -25,20 +25,20 @@ class RadarLogTicks extends Ticks
 
     public function Stroke($aImg, &$grid, $aPos, $aAxisAngle, $aScale, &$aMajPos, &$aMajLabel)
     {
-        $start = $aScale->GetMinVal();
-        $limit = $aScale->GetMaxVal();
+        $start     = $aScale->GetMinVal();
+        $limit     = $aScale->GetMaxVal();
         $nextMajor = 10 * $start;
-        $step = $nextMajor / 10.0;
-        $count = 1;
+        $step      = $nextMajor / 10.0;
+        $count     = 1;
 
         $ticklen_maj = 5;
-        $dx_maj = round(sin($aAxisAngle) * $ticklen_maj);
-        $dy_maj = round(cos($aAxisAngle) * $ticklen_maj);
+        $dx_maj      = round(sin($aAxisAngle) * $ticklen_maj);
+        $dy_maj      = round(cos($aAxisAngle) * $ticklen_maj);
         $ticklen_min = 3;
-        $dx_min = round(sin($aAxisAngle) * $ticklen_min);
-        $dy_min = round(cos($aAxisAngle) * $ticklen_min);
+        $dx_min      = round(sin($aAxisAngle) * $ticklen_min);
+        $dy_min      = round(cos($aAxisAngle) * $ticklen_min);
 
-        $aMajPos = [];
+        $aMajPos   = [];
         $aMajLabel = [];
 
         if ($this->supress_first) {
@@ -47,13 +47,13 @@ class RadarLogTicks extends Ticks
             $aMajLabel[] = $start;
         }
 
-        $yr = $aScale->RelTranslate($start);
-        $xt = round($yr * cos($aAxisAngle)) + $aScale->scale_abs[0];
-        $yt = $aPos - round($yr * sin($aAxisAngle));
+        $yr        = $aScale->RelTranslate($start);
+        $xt        = round($yr * cos($aAxisAngle)) + $aScale->scale_abs[0];
+        $yt        = $aPos - round($yr * sin($aAxisAngle));
         $aMajPos[] = $xt + 2 * $dx_maj;
         $aMajPos[] = $yt - $aImg->GetFontheight() / 2;
-        $grid[] = $xt;
-        $grid[] = $yt;
+        $grid[]    = $xt;
+        $grid[]    = $yt;
 
         $aImg->SetLineWeight($this->weight);
 
@@ -62,8 +62,8 @@ class RadarLogTicks extends Ticks
             $xt = round($yr * cos($aAxisAngle)) + $aScale->scale_abs[0];
             $yt = $aPos - round($yr * sin($aAxisAngle));
             if ($count % 10 == 0) {
-                $grid[] = $xt;
-                $grid[] = $yt;
+                $grid[]    = $xt;
+                $grid[]    = $yt;
                 $aMajPos[] = $xt + 2 * $dx_maj;
                 $aMajPos[] = $yt - $aImg->GetFontheight() / 2;
                 if (! $this->supress_tickmarks) {
@@ -83,9 +83,9 @@ class RadarLogTicks extends Ticks
                 }
 
                 $aMajLabel[] = $l;
-                $nextMajor *= 10;
-                $step *= 10;
-                $count = 1;
+                $nextMajor  *= 10;
+                $step       *= 10;
+                $count       = 1;
             } else {
                 if (! $this->supress_minor_tickmarks) {
                     if ($this->mincolor != '') {
@@ -142,7 +142,7 @@ class RadarLinearTicks extends Ticks
 
         $this->major_step = $aMajStep;
         $this->minor_step = $aMinStep;
-        $this->is_set = true;
+        $this->is_set     = true;
     }
 
     public function Stroke($aImg, &$grid, $aPos, $aAxisAngle, $aScale, &$aMajPos, &$aMajLabel)
@@ -150,19 +150,19 @@ class RadarLinearTicks extends Ticks
         // Prepare to draw linear ticks
         $maj_step_abs = abs($aScale->scale_factor * $this->major_step);
         $min_step_abs = abs($aScale->scale_factor * $this->minor_step);
-        $nbrmaj = round($aScale->world_abs_size / $maj_step_abs);
-        $nbrmin = round($aScale->world_abs_size / $min_step_abs);
-        $skip = round($nbrmin / $nbrmaj); // Don't draw minor on top of major
+        $nbrmaj       = round($aScale->world_abs_size / $maj_step_abs);
+        $nbrmin       = round($aScale->world_abs_size / $min_step_abs);
+        $skip         = round($nbrmin / $nbrmaj); // Don't draw minor on top of major
 
         // Draw major ticks
         $ticklen2 = $this->major_abs_size;
-        $dx = round(sin($aAxisAngle) * $ticklen2);
-        $dy = round(cos($aAxisAngle) * $ticklen2);
-        $label = $aScale->scale[0] + $this->major_step;
+        $dx       = round(sin($aAxisAngle) * $ticklen2);
+        $dy       = round(cos($aAxisAngle) * $ticklen2);
+        $label    = $aScale->scale[0] + $this->major_step;
 
         $aImg->SetLineWeight($this->weight);
 
-        $aMajPos = [];
+        $aMajPos   = [];
         $aMajLabel = [];
 
         for ($i = 1; $i <= $nbrmaj; ++$i) {
@@ -176,11 +176,11 @@ class RadarLinearTicks extends Ticks
                 $l = $label;
             }
 
-            $aMajLabel[] = $l;
-            $label += $this->major_step;
-            $grid[] = $xt;
-            $grid[] = $yt;
-            $aMajPos[($i - 1) * 2] = $xt + 2 * $dx;
+            $aMajLabel[]               = $l;
+            $label                    += $this->major_step;
+            $grid[]                    = $xt;
+            $grid[]                    = $yt;
+            $aMajPos[($i - 1) * 2]     = $xt + 2 * $dx;
             $aMajPos[($i - 1) * 2 + 1] = $yt - $aImg->GetFontheight() / 2;
             if (! $this->supress_tickmarks) {
                 if ($this->majcolor != '') {
@@ -195,8 +195,8 @@ class RadarLinearTicks extends Ticks
 
         // Draw minor ticks
         $ticklen2 = $this->minor_abs_size;
-        $dx = round(sin($aAxisAngle) * $ticklen2);
-        $dy = round(cos($aAxisAngle) * $ticklen2);
+        $dx       = round(sin($aAxisAngle) * $ticklen2);
+        $dy       = round(cos($aAxisAngle) * $ticklen2);
         if (! $this->supress_tickmarks && ! $this->supress_minor_tickmarks) {
             if ($this->mincolor != '') {
                 $aImg->PushColor($this->mincolor);
@@ -289,8 +289,8 @@ class RadarAxis extends AxisPrototype
     {
         $this->title->Set($title);
         $marg = 6 + $this->title->margin;
-        $xt = round(($this->scale->world_abs_size + $marg) * cos($aAxisAngle) + $this->scale->scale_abs[0]);
-        $yt = round($pos - ($this->scale->world_abs_size + $marg) * sin($aAxisAngle));
+        $xt   = round(($this->scale->world_abs_size + $marg) * cos($aAxisAngle) + $this->scale->scale_abs[0]);
+        $yt   = round($pos - ($this->scale->world_abs_size + $marg) * sin($aAxisAngle));
 
         // Position the axis title.
         // dx, dy is the offset from the top left corner of the bounding box that sorrounds the text
@@ -361,10 +361,10 @@ class RadarAxis extends AxisPrototype
 class RadarGrid
 {
  //extends Grid {
-    private $type = 'solid';
+    private $type       = 'solid';
     private $grid_color = '#DDDDDD';
-    private $show = false;
-    private $weight = 1;
+    private $show       = false;
+    private $weight     = 1;
 
     public function __construct()
     {
@@ -400,13 +400,13 @@ class RadarGrid
         }
 
         $nbrticks = count($grid[0]) / 2;
-        $nbrpnts = count($grid);
+        $nbrpnts  = count($grid);
         $img->SetColor($this->grid_color);
         $img->SetLineWeight($this->weight);
 
         for ($i = 0; $i < $nbrticks; ++$i) {
             for ($j = 0; $j < $nbrpnts; ++$j) {
-                $pnts[$j * 2] = $grid[$j][$i * 2];
+                $pnts[$j * 2]     = $grid[$j][$i * 2];
                 $pnts[$j * 2 + 1] = $grid[$j][$i * 2 + 1];
             }
             for ($k = 0; $k < $nbrpnts; ++$k) {
@@ -433,19 +433,19 @@ class RadarGrid
 //===================================================
 class RadarPlot
 {
-    public $mark = null;
-    public $legend = '';
+    public $mark             = null;
+    public $legend           = '';
     public $legendcsimtarget = '';
-    public $legendcsimalt = '';
-    public $csimtargets = []; // Array of targets for CSIM
-    public $csimareas = "";   // Resultant CSIM area tags
-    public $csimalts = null;   // ALT:s for corresponding target
-    private $data = [];
-    private $fill = false;
-    private $fill_color = [200, 170, 180];
-    private $color = [0, 0, 0];
-    private $weight = 1;
-    private $linestyle = 'solid';
+    public $legendcsimalt    = '';
+    public $csimtargets      = []; // Array of targets for CSIM
+    public $csimareas        = "";   // Resultant CSIM area tags
+    public $csimalts         = null;   // ALT:s for corresponding target
+    private $data            = [];
+    private $fill            = false;
+    private $fill_color      = [200, 170, 180];
+    private $color           = [0, 0, 0];
+    private $weight          = 1;
+    private $linestyle       = 'solid';
 
     //---------------
     // CONSTRUCTOR
@@ -483,7 +483,7 @@ class RadarPlot
     public function SetFillColor($aColor)
     {
         $this->fill_color = $aColor;
-        $this->fill = true;
+        $this->fill       = true;
     }
 
     public function SetFill($f = true)
@@ -504,7 +504,7 @@ class RadarPlot
     public function SetCSIMTargets($aTargets, $aAlts = null)
     {
         $this->csimtargets = $aTargets;
-        $this->csimalts = $aAlts;
+        $this->csimalts    = $aAlts;
     }
 
     // Get all created areas
@@ -516,16 +516,16 @@ class RadarPlot
     public function Stroke($img, $pos, $scale, $startangle)
     {
         $nbrpnts = count($this->data);
-        $astep = 2 * M_PI / $nbrpnts;
-        $a = $startangle;
+        $astep   = 2 * M_PI / $nbrpnts;
+        $a       = $startangle;
 
         for ($i = 0; $i < $nbrpnts; ++$i) {
             // Rotate each non null point to the correct axis-angle
             $cs = $scale->RelTranslate($this->data[$i]);
-            $x = round($cs * cos($a) + $scale->scale_abs[0]);
-            $y = round($pos - $cs * sin($a));
+            $x  = round($cs * cos($a) + $scale->scale_abs[0]);
+            $y  = round($pos - $cs * sin($a));
 
-            $pnts[$i * 2] = $x;
+            $pnts[$i * 2]     = $x;
             $pnts[$i * 2 + 1] = $y;
 
             // If the next point is null then we draw this polygon segment
@@ -535,12 +535,12 @@ class RadarPlot
             // to handle the boundary conditions
             if ($i < $nbrpnts - 1) {
                 if (is_null($this->data[$i + 1])) {
-                    $cs = 0;
-                    $x = round($cs * cos($a) + $scale->scale_abs[0]);
-                    $y = round($pos - $cs * sin($a));
-                    $pnts[$i * 2] = $x;
+                    $cs               = 0;
+                    $x                = round($cs * cos($a) + $scale->scale_abs[0]);
+                    $y                = round($pos - $cs * sin($a));
+                    $pnts[$i * 2]     = $x;
                     $pnts[$i * 2 + 1] = $y;
-                    $a += $astep;
+                    $a               += $astep;
                 }
             }
 
@@ -612,7 +612,7 @@ class RadarGraph extends Graph
         parent::__construct($width, $height, $cachedName, $timeout, $inline);
         $this->posx = $width / 2;
         $this->posy = $height / 2;
-        $this->len = min($width, $height) * 0.35;
+        $this->len  = min($width, $height) * 0.35;
         $this->SetColor([255, 255, 255]);
         $this->SetTickDensity(TICKD_NORMAL);
         $this->SetScale('lin');
@@ -636,11 +636,11 @@ class RadarGraph extends Graph
             //("Illegal scale for radarplot ($axtype). Must be \"lin\" or \"log\"");
         }
         if ($axtype == 'lin') {
-            $this->yscale = new LinearScale($ymin, $ymax);
+            $this->yscale        = new LinearScale($ymin, $ymax);
             $this->yscale->ticks = new RadarLinearTicks();
             $this->yscale->ticks->SupressMinorTickMarks();
         } elseif ($axtype == 'log') {
-            $this->yscale = new LogScale($ymin, $ymax);
+            $this->yscale        = new LogScale($ymin, $ymax);
             $this->yscale->ticks = new RadarLogTicks();
         }
 
@@ -898,7 +898,7 @@ class RadarGraph extends Graph
                 require_once('jpgraph_imgtrans.php');
             }
 
-            $tform = new ImgTrans($this->img->img);
+            $tform          = new ImgTrans($this->img->img);
             $this->img->img = $tform->Skew3D(
                 $this->iImgTransHorizon,
                 $this->iImgTransSkewDist,

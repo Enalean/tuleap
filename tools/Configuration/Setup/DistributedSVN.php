@@ -101,8 +101,8 @@ class DistributedSVN
 
     public function reverseProxy()
     {
-        $vars = $this->getVars();
-        $reverse_proxy        = new Configuration\Nginx\ReverseProxy(
+        $vars          = $this->getVars();
+        $reverse_proxy = new Configuration\Nginx\ReverseProxy(
             $this->logger,
             $this->tuleap_base_dir,
             '/etc/nginx',

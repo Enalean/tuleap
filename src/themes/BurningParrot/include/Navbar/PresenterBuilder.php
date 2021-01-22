@@ -48,11 +48,11 @@ class PresenterBuilder
         bool $is_svg_logo_customized,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
     ) {
-        $this->current_user    = $current_user;
+        $this->current_user = $current_user;
 
         $event_manager = EventManager::instance();
 
-        $widget_factory = new WidgetFactory(
+        $widget_factory           = new WidgetFactory(
             UserManager::instance(),
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
             $event_manager

@@ -47,15 +47,15 @@ class XMLNode
 
     public function __construct($id = null)
     {
-        $this->_id = isset($id) ? $id : bin2hex(random_bytes(16));
-        $this->_name = '';
-        $this->_content = '';
+        $this->_id          = isset($id) ? $id : bin2hex(random_bytes(16));
+        $this->_name        = '';
+        $this->_content     = '';
         $this->_mt_elem_flg = false;
-        $this->_attr_arr = [];
-        $this->_child_arr = [];
-        $this->_nmspc = '';
+        $this->_attr_arr    = [];
+        $this->_child_arr   = [];
+        $this->_nmspc       = '';
         $this->_nmspc_alias = '';
-        $this->_parent_id = false;
+        $this->_parent_id   = false;
         $this->_parent_node = null;
     }
 
@@ -217,7 +217,7 @@ class XMLNode
 
     public function getFirstChild()
     {
-        $id_arr = array_keys($this->_child_arr);
+        $id_arr    = array_keys($this->_child_arr);
         $num_child = count($id_arr);
 
         if ($num_child > 0) {
@@ -229,7 +229,7 @@ class XMLNode
 
     public function getLastChild()
     {
-        $id_arr = array_keys($this->_child_arr);
+        $id_arr    = array_keys($this->_child_arr);
         $num_child = count($id_arr);
 
         if ($num_child > 0) {
@@ -281,16 +281,16 @@ class XMLNode
     public function dumpXML($indent_str = "\t")
     {
         $attr_txt = $this->_dumpAttr();
-        $name = $this->_dumpName();
-        $xmlns = $this->_dumpXmlns();
-        $lvl = $this->_getCurrentLevel();
-        $indent = str_pad('', $lvl, $indent_str);
+        $name     = $this->_dumpName();
+        $xmlns    = $this->_dumpXmlns();
+        $lvl      = $this->_getCurrentLevel();
+        $indent   = str_pad('', $lvl, $indent_str);
 
         if ($this->_mt_elem_flg) {
             $tag = "$indent<$name$xmlns$attr_txt />";
             return($tag);
         } else {
-            $key_arr = array_keys($this->_child_arr);
+            $key_arr   = array_keys($this->_child_arr);
             $num_child = count($key_arr);
 
             $tag = "$indent<$name$xmlns$attr_txt>$this->_content";
@@ -299,7 +299,7 @@ class XMLNode
                 $node = $this->_child_arr[$key_arr[$i]];
 
                 $child_txt = $node->dumpXML($indent_str);
-                $tag .= "\n$child_txt";
+                $tag      .= "\n$child_txt";
             }
 
             $tag .= ($num_child > 0 ? "\n$indent</$name>" : "</$name>");
@@ -309,12 +309,12 @@ class XMLNode
 
     public function _dumpAttr()
     {
-        $id_arr = array_keys($this->_attr_arr);
+        $id_arr     = array_keys($this->_attr_arr);
         $id_arr_cnt = count($id_arr);
-        $attr_txt = '';
+        $attr_txt   = '';
 
         for ($i = 0; $i < $id_arr_cnt; $i++) {
-            $key = $id_arr[$i];
+            $key       = $id_arr[$i];
             $attr_txt .= " $key=\"{$this->_attr_arr[$key]}\"";
         }
 
@@ -353,7 +353,7 @@ class XMLNode
             return(0);
         } else {
             $node = $this->getParentNode();
-            $lvl = $node->_getCurrentLevel();
+            $lvl  = $node->_getCurrentLevel();
             $lvl++;
             return($lvl);
         }
@@ -424,11 +424,11 @@ class ASCIIMathPHP
 
     public function setExpr($expr)
     {
-        $this->_expr = $expr;
+        $this->_expr      = $expr;
         $this->_curr_expr = $expr;
         $this->_prev_expr = $expr;
 
-        $this->_node_arr = [];
+        $this->_node_arr  = [];
         $this->_node_cntr = 0;
     }
 
@@ -464,9 +464,9 @@ class ASCIIMathPHP
 
      // Deal whole expressions like 'ax + by + c = 0' etc.
         do {
-            $sym_0 = $this->getSymbol();
+            $sym_0  = $this->getSymbol();
             $node_0 = $this->parseSmplExpr();
-            $sym = $this->getSymbol();
+            $sym    = $this->getSymbol();
          // var_dump($sym);
 
             if (isset($sym['infix'])) {
@@ -529,7 +529,7 @@ class ASCIIMathPHP
      //var_dump($sym);
      // Possibly to deal with matrices
         if (isset($sym['right_bracket'])) {
-            $node_cnt = count($node_arr);
+            $node_cnt     = count($node_arr);
             $key_node_arr = array_keys($node_arr);
 
             if ($node_cnt > 1) {
@@ -570,7 +570,7 @@ class ASCIIMathPHP
                         (($node_8_cntnt == '(' && $node_7_cntnt == ')' && $sym['output'] != '}') ||
                         ($node_8_cntnt == '[' && $node_7_cntnt == ']'))
                     ) {
-                                $is_mtrx_flg = true;
+                                $is_mtrx_flg   = true;
                                 $comma_pos_arr = [];
 
                                 $i = 0;
@@ -592,8 +592,8 @@ class ASCIIMathPHP
 
                             if (isset($key_node_arr[$i + 1])) {
                                     $next_tmp_node = $node_arr[$key_node_arr[$i + 1]];
-                                    $ntnn = $next_tmp_node->getName();
-                                    $ntnc = $next_tmp_node->getContent();
+                                    $ntnn          = $next_tmp_node->getName();
+                                    $ntnc          = $next_tmp_node->getContent();
                             } else {
                                         $ntnn = false;
                                         $ntnc = false;
@@ -617,8 +617,8 @@ class ASCIIMathPHP
                             }
 
                             if ($is_mtrx_flg && $i > 1) {
-                                                     $cnt_cpan = isset($comma_pos_arr[$i]) ? count($comma_pos_arr[$i]) : null;
-                                                     $cnt_cpap = isset($comma_pos_arr[$i - 2]) ? count($comma_pos_arr[$i - 2]) : null;
+                                                     $cnt_cpan    = isset($comma_pos_arr[$i]) ? count($comma_pos_arr[$i]) : null;
+                                                     $cnt_cpap    = isset($comma_pos_arr[$i - 2]) ? count($comma_pos_arr[$i - 2]) : null;
                                                      $is_mtrx_flg = $cnt_cpan == $cnt_cpap;
                             }
 
@@ -635,11 +635,11 @@ class ASCIIMathPHP
                                     break;
                                 }
                                 $num_child = $tmp_node->getNumChild();
-                                $k = 0;
+                                $k         = 0;
 
                                 $tmp_node->removeFirstChild();
 
-                                $row_node_arr = [];
+                                $row_node_arr      = [];
                                 $row_frag_node_arr = [];
 
                                 for ($j = 1; $j < ($num_child - 1); $j++) {
@@ -934,24 +934,24 @@ class ASCIIMathPHP
                 }
             } elseif (isset($this->_symbol_arr[$sym_0]) && ! isset($this->_symbol_arr[$sym_1])) {
                 $chop_flg ? $this->chopExpr($i) : 0;
-                $sym_arr = $this->_symbol_arr[$sym_0];
+                $sym_arr           = $this->_symbol_arr[$sym_0];
                 $sym_arr['symlen'] = $i;
                 return($sym_arr);
             } elseif (isset($this->_symbol_arr[$sym_1]) && $i == ($chr_cnt - 1)) {
                 $chop_flg ? $this->chopExpr($i + 1) : 0;
-                $sym_arr = $this->_symbol_arr[$sym_1];
+                $sym_arr           = $this->_symbol_arr[$sym_1];
                 $sym_arr['symlen'] = $i + 1;
                 return($sym_arr);
             }
         }
 
      // Reading string for alphabetic constants and the minus sign
-        $char = $this->_curr_expr[0];
+        $char     = $this->_curr_expr[0];
         $len_left = $chop_flg ? $this->chopExpr(1) : strlen($this->_curr_expr) - 1;
 
      // Deals with expressions of length 1
         if ($len_left == 0 && isset($this->_symbol_arr[$char])) {
-            $sym_arr = $this->_symbol_arr[$char];
+            $sym_arr           = $this->_symbol_arr[$char];
             $sym_arr['symlen'] = 1;
             return($sym_arr);
         } else {

@@ -25,8 +25,8 @@ class Docman_ItemActionNotifications extends \Docman_ItemAction
     public function __construct(&$item)
     {
         parent::__construct($item);
-        $this->action = 'details&section=notifications';
+        $this->action  = 'details&section=notifications';
         $this->classes = 'docman_item_option_notifications';
-        $this->title = \dgettext('tuleap-docman', 'Notifications');
+        $this->title   = \dgettext('tuleap-docman', 'Notifications');
     }
 }

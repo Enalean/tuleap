@@ -43,13 +43,13 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject
         $fields = [];
         foreach ($list_field_id as $field_id) {
             if ($field_id != 0) {
-                $field_id = $this->da->escapeInt($field_id);
+                $field_id  = $this->da->escapeInt($field_id);
                 $fields[] .= " ($transition_id, $field_id)";
             }
         }
 
         if (count($fields) > 0) {
-            $sql = "INSERT INTO $this->table_name (`transition_id`, `field_id`) VALUES ";
+            $sql  = "INSERT INTO $this->table_name (`transition_id`, `field_id`) VALUES ";
             $sql .= implode(",", $fields);
             return $this->update($sql);
         }
@@ -79,7 +79,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject
     public function deleteByTransitionId($transition_id)
     {
         $transition_id = $this->da->escapeInt($transition_id);
-        $sql = "DELETE
+        $sql           = "DELETE
                 FROM $this->table_name
                 WHERE transition_id = $transition_id";
 
@@ -106,7 +106,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject
         if (count($case)) {
             $from_field_ids = implode(', ', $from_field_ids);
             $new_field_id   = 'CASE field_id ' . implode(' ', $case) . ' END';
-            $sql = "INSERT INTO tracker_workflow_transition_condition_field_notempty (transition_id, field_id)
+            $sql            = "INSERT INTO tracker_workflow_transition_condition_field_notempty (transition_id, field_id)
                     SELECT $to_transition_id, $new_field_id
                     FROM tracker_workflow_transition_condition_field_notempty
                     WHERE transition_id = $from_transition_id

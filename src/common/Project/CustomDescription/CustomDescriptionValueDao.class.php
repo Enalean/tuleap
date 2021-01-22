@@ -24,7 +24,7 @@ class Project_CustomDescription_CustomDescriptionValueDao extends DataAccessObje
 
     public function setDescriptionFieldValue($group_id, $field_id_to_update, $value)
     {
-        $id       = $this->getDescriptionFieldValueId($group_id, $field_id_to_update);
+        $id = $this->getDescriptionFieldValueId($group_id, $field_id_to_update);
 
         if ($id) {
             $this->updateDescriptionFieldValue($id, $value);
@@ -35,7 +35,7 @@ class Project_CustomDescription_CustomDescriptionValueDao extends DataAccessObje
 
     private function updateDescriptionFieldValue($id, $value)
     {
-        $value                = $this->da->quoteSmart($value);
+        $value = $this->da->quoteSmart($value);
 
         $sql = "UPDATE group_desc_value
                 SET value = $value

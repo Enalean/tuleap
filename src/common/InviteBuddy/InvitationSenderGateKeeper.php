@@ -39,7 +39,7 @@ class InvitationSenderGateKeeper
 
     public function __construct(\Valid_Email $valid_email, InviteBuddyConfiguration $configuration, InvitationLimitChecker $limit_checker)
     {
-        $this->valid_email = $valid_email;
+        $this->valid_email   = $valid_email;
         $this->configuration = $configuration;
         $this->limit_checker = $limit_checker;
     }

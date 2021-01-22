@@ -26,9 +26,9 @@ require_once __DIR__ . '/../../lib/TestDataBuilder.php';
 
 class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLine
 {
-    public const STANDARD_PASSWORD       = 'welcome0';
+    public const STANDARD_PASSWORD = 'welcome0';
 
-    public const TEST_USER_4_NAME        = 'rest_api_tester_4';
+    public const TEST_USER_4_NAME = 'rest_api_tester_4';
 
     public const TEST_BOT_USER_NAME   = 'rest_bot_read_only_admin';
     public const TEST_BOT_USER_PASS   = 'welcome0';
@@ -43,10 +43,10 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
     public const DELETED_TRACKER_SHORTNAME      = 'delete';
     public const KANBAN_TRACKER_SHORTNAME       = 'kanbantask';
 
-    public const LEVEL_ONE_TRACKER_SHORTNAME    = 'LevelOne';
-    public const LEVEL_TWO_TRACKER_SHORTNAME    = 'LevelTwo';
-    public const LEVEL_THREE_TRACKER_SHORTNAME  = 'LevelThree';
-    public const LEVEL_FOUR_TRACKER_SHORTNAME   = 'LevelFour';
+    public const LEVEL_ONE_TRACKER_SHORTNAME   = 'LevelOne';
+    public const LEVEL_TWO_TRACKER_SHORTNAME   = 'LevelTwo';
+    public const LEVEL_THREE_TRACKER_SHORTNAME = 'LevelThree';
+    public const LEVEL_FOUR_TRACKER_SHORTNAME  = 'LevelFour';
 
     public const EPICS_TRACKER_LABEL         = 'Epics';
     public const KANBAN_TRACKER_LABEL        = 'Kanban Tasks';
@@ -58,15 +58,15 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
 
     public const KANBAN_ID = 1;
 
-    public const KANBAN_TO_BE_DONE_COLUMN_ID = 230;
-    public const KANBAN_ONGOING_COLUMN_ID    = 231;
-    public const KANBAN_REVIEW_COLUMN_ID     = 232;
+    public const KANBAN_TO_BE_DONE_COLUMN_ID  = 230;
+    public const KANBAN_ONGOING_COLUMN_ID     = 231;
+    public const KANBAN_REVIEW_COLUMN_ID      = 232;
     public const KANBAN_OTHER_VALUE_COLUMN_ID = 233;
 
     public const PLANNING_ID = 2;
 
-    public const PHPWIKI_PAGE_ID          = 6097;
-    public const PHPWIKI_SPACE_PAGE_ID    = 6100;
+    public const PHPWIKI_PAGE_ID       = 6097;
+    public const PHPWIKI_SPACE_PAGE_ID = 6100;
 
     /** @var TrackerFactory */
     protected $tracker_factory;

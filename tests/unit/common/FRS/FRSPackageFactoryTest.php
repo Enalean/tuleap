@@ -50,7 +50,7 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
 
     public function testGetFRSPackageFromDb()
     {
-        $packageArray1 = ['package_id'       => 1,
+        $packageArray1       = ['package_id'       => 1,
                                'group_id'         => 1,
                                'name'             => 'pkg1',
                                'status_id'        => 2,
@@ -75,7 +75,7 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
                                'error_state'      => null,
                                'error_message'    => null
                                ];
-        $package2 = $frs_package_factory->getFRSPackageFromArray($packageArray2);
+        $package2      = $frs_package_factory->getFRSPackageFromArray($packageArray2);
 
         $data_access = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $data_access->shouldReceive('query')
@@ -170,7 +170,7 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
     public function testDeleteProjectPackagesFail()
     {
         $packageFactory = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = \Mockery::spy(FRSPackage::class);
+        $package        = \Mockery::spy(FRSPackage::class);
         $packageFactory->shouldReceive('getFRSPackagesFromDb')->andReturns([$package, $package, $package]);
         $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);
         $packageFactory->shouldReceive('delete_package')->once()->andReturns(false);
@@ -181,7 +181,7 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
     public function testDeleteProjectPackagesSuccess()
     {
         $packageFactory = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = \Mockery::spy(FRSPackage::class);
+        $package        = \Mockery::spy(FRSPackage::class);
         $packageFactory->shouldReceive('getFRSPackagesFromDb')->andReturns([$package, $package, $package]);
         $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);
         $packageFactory->shouldReceive('delete_package')->once()->andReturns(true);

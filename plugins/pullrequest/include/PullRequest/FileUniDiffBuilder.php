@@ -51,7 +51,7 @@ class FileUniDiffBuilder
         $new_offset     = 0;
         $unidiff_offset = 0;
 
-        $i = $this->getUniDiffStartLineIndex($raw_diff);
+        $i              = $this->getUniDiffStartLineIndex($raw_diff);
         $raw_diff_count = count($raw_diff);
         while ($i < $raw_diff_count) {
             $line = $raw_diff[$i];
@@ -86,7 +86,7 @@ class FileUniDiffBuilder
 
     private function getUniDiffStartLineIndex($raw_diff)
     {
-        $i = 0;
+        $i              = 0;
         $raw_diff_count = count($raw_diff);
         while ($i < $raw_diff_count) {
             $line = substr($raw_diff[$i], 0, 2);

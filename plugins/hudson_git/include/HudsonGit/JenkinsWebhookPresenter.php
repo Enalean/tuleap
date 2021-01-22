@@ -34,7 +34,7 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
         $use_default_edit_modal = false;
         parent::__construct($repository, 'jenkins', $url, [], $csrf, $use_default_edit_modal);
 
-        $this->remove_form_action   = '/plugins/hudson_git/?group_id=' . (int) $repository->getProjectId();
+        $this->remove_form_action = '/plugins/hudson_git/?group_id=' . (int) $repository->getProjectId();
 
         $this->remove_webhook_desc   = dgettext('tuleap-hudson_git', 'You are about to remove the Jenkins server. Please confirm your action.');
         $this->modal_logs_time_label = dgettext('tuleap-hudson_git', 'Push date');
@@ -54,12 +54,12 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
         $hp = Codendi_HTMLPurifier::instance();
         foreach ($hooklogs as $log) {
             $purified_information = '';
-            $job_list = $log->getJobUrlList();
+            $job_list             = $log->getJobUrlList();
             if (count($job_list) > 0) {
                 $purified_information .= '<div class="hook-log-triggered-jobs">';
                 $purified_information .= '<h4>' . dgettext("tuleap-hudson_git", "Git plugin triggered jobs:") . '</h4>';
                 foreach ($job_list as $triggered_job_url) {
-                    $purfied_job_url = $hp->purify($triggered_job_url);
+                    $purfied_job_url       = $hp->purify($triggered_job_url);
                     $purified_information .= '<a href="' . $purfied_job_url . '">' . $purfied_job_url . '</a><br>';
                 }
                 $purified_information .= '</div>';

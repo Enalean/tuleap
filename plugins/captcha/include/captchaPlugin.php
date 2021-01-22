@@ -128,8 +128,8 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         } catch (\Tuleap\Captcha\ConfigurationNotFoundException $ex) {
             return;
         }
-        $secret_key  = $configuration->getSecretKey();
-        $challenge   = $request->get('g-recaptcha-response');
+        $secret_key = $configuration->getSecretKey();
+        $challenge  = $request->get('g-recaptcha-response');
 
         $recaptcha_client = new \Tuleap\Captcha\Client(
             $secret_key,

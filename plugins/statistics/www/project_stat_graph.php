@@ -30,7 +30,7 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if (! $p || ! $pluginManager->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }
@@ -95,7 +95,7 @@ $duration = strtotime($endDate) - strtotime($startDate);
 $error = false;
 if ($duration <= 0) {
     $feedback[] = 'You made a mistake in selecting period. Please try again!';
-    $error = true;
+    $error      = true;
 } elseif ($duration < 31536000) {
     $groupBy = 'week';
 } else {

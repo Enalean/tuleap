@@ -60,8 +60,8 @@ final class ConfirmNewEmailController implements DispatchableWithRequest
         $confirmation_hash = $request->getValidated('confirm_hash', 'string', '');
         $current_user      = $request->getCurrentUser();
         if ($current_user->isAnonymous()) {
-            $url_redirect  = new \URLRedirect($this->event_manager);
-            $return_to     = self::getUrlToSelf($confirmation_hash);
+            $url_redirect = new \URLRedirect($this->event_manager);
+            $return_to    = self::getUrlToSelf($confirmation_hash);
             $layout->redirect($url_redirect->makeReturnToUrl('/account/login.php', $return_to));
         }
 

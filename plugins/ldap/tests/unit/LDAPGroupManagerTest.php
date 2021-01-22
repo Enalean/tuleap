@@ -81,7 +81,7 @@ class LDAPGroupManagerTest extends TestCase
         $prjm = \Mockery::spy(\ProjectManager::class);
         $prjm->shouldReceive('getProject')->andReturn(\Mockery::spy(\Project::class));
 
-        $grpManager        = Mockery::mock(
+        $grpManager = Mockery::mock(
             LDAP_GroupManager::class,
             [
                 $ldap,

@@ -31,14 +31,14 @@ class GraphOnTrackersV5_Chart_CumulativeFlowDao extends DataAccessObject
 
     public function searchById($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT * FROM $this->table_name WHERE id = $id";
         return $this->retrieve($sql);
     }
 
     public function delete($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name WHERE id = $id";
         return $this->update($sql);
     }
@@ -50,7 +50,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlowDao extends DataAccessObject
         $start_date = $this->da->escapeInt($start_date);
         $stop_date  = $this->da->escapeInt($stop_date);
         $scale      = $this->da->escapeInt($scale);
-        $sql = "REPLACE INTO $this->table_name (id, field_id, start_date, stop_date, scale)
+        $sql        = "REPLACE INTO $this->table_name (id, field_id, start_date, stop_date, scale)
                 VALUES ($id, $field_id, $start_date, $stop_date, $scale)";
         return $this->update($sql);
     }
@@ -59,16 +59,16 @@ class GraphOnTrackersV5_Chart_CumulativeFlowDao extends DataAccessObject
     {
         $from_chart_id = $this->da->escapeInt($from_chart_id);
         $to_chart_id   = $this->da->escapeInt($to_chart_id);
-        $sql = "INSERT INTO $this->table_name (id, field_id, start_date, stop_date, scale)
+        $sql           = "INSERT INTO $this->table_name (id, field_id, start_date, stop_date, scale)
                 SELECT $to_chart_id, field_id, start_date, stop_date, scale
                 FROM $this->table_name
                 WHERE id = $from_chart_id";
 
         $this->update($sql);
         foreach ($field_mapping as $mapping) {
-            $from  = $this->da->escapeInt($mapping['from']);
-            $to    = $this->da->escapeInt($mapping['to']);
-            $sql = "UPDATE $this->table_name
+            $from = $this->da->escapeInt($mapping['from']);
+            $to   = $this->da->escapeInt($mapping['to']);
+            $sql  = "UPDATE $this->table_name
                     SET field_id = $to
                     WHERE id = $to_chart_id
                       AND field_id = $from";

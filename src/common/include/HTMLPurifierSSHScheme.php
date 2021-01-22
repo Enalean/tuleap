@@ -23,9 +23,9 @@ namespace Tuleap;
 class HTMLPurifierSSHScheme extends \HTMLPurifier_URIScheme
 {
     public $default_port = 22;
-    public $browsable = false;
+    public $browsable    = false;
     public $hierarchical = true;
-    public $secure = true;
+    public $secure       = true;
 
     public function doValidate(&$uri, $config, $context)
     {

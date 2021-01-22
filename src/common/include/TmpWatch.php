@@ -37,7 +37,7 @@ class TmpWatch
     public function __construct(string $target_directory, int $nb_hours)
     {
         $this->target_directory = $target_directory;
-        $this->nb_hours = $nb_hours;
+        $this->nb_hours         = $nb_hours;
     }
 
     /**
@@ -49,7 +49,7 @@ class TmpWatch
         if (! is_dir($this->target_directory)) {
             throw new InvalidDirectoryException('Cannot delete content of invalid directory: `' . $this->target_directory . '`');
         }
-        $now = new \DateTimeImmutable();
+        $now            = new \DateTimeImmutable();
         $some_hours_ago = $now->sub(new \DateInterval(sprintf('PT%dH', $this->nb_hours)));
         foreach (new \DirectoryIterator($this->target_directory) as $file) {
             assert($file instanceof \DirectoryIterator);

@@ -239,7 +239,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testItReturnsTrueWhenTheKeyIsPresent()
     {
-        $user = \Mockery::mock(PFUser::class, ['getLocale' => 'en_US']);
+        $user         = \Mockery::mock(PFUser::class, ['getLocale' => 'en_US']);
         $user_manager = \Mockery::mock(UserManager::class, ['getCurrentUser' => $user]);
         UserManager::setInstance($user_manager);
 
@@ -249,7 +249,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testItReturnsFalseWhenTheKeyIsNotPresent()
     {
-        $user = \Mockery::mock(PFUser::class, ['getLocale' => 'en_US']);
+        $user         = \Mockery::mock(PFUser::class, ['getLocale' => 'en_US']);
         $user_manager = \Mockery::mock(UserManager::class, ['getCurrentUser' => $user]);
         UserManager::setInstance($user_manager);
 

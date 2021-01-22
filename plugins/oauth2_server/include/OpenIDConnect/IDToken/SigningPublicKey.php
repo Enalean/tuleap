@@ -54,7 +54,7 @@ final class SigningPublicKey
             ['', '', ''],
             $pem_public_key
         );
-        $raw_key = sodium_base642bin($raw_key_base64, SODIUM_BASE64_VARIANT_ORIGINAL);
+        $raw_key        = sodium_base642bin($raw_key_base64, SODIUM_BASE64_VARIANT_ORIGINAL);
 
         return hash('sha256', $raw_key);
     }

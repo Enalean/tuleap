@@ -62,7 +62,7 @@ class CumulativeFlowChartTest extends TestCase
     {
         $this->report->shouldReceive('getCriteria')->once()->andReturn([]);
 
-        $all_columns = [
+        $all_columns       = [
             100 => [
                 'id' => 100,
                 'label' => 'None',

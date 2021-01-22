@@ -26,7 +26,7 @@ if (preg_match_all('/^\/plugins\/proftpd\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([
 }
 
 $plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('proftpd');
+$p              = $plugin_manager->getPluginByName('proftpd');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $request = new HTTPRequest();
     $p->process($request);

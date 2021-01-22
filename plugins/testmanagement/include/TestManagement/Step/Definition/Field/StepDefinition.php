@@ -41,7 +41,7 @@ use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 class StepDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
     public const START_RANK = 1;
-    public const TYPE = 'ttmstepdef';
+    public const TYPE       = 'ttmstepdef';
 
     /**
      * @return void

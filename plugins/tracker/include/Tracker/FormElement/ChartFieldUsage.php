@@ -35,11 +35,11 @@ class ChartFieldUsage
         $use_hierarchy,
         $use_remaining_effort
     ) {
-        $this->use_start_date        = $use_start_date;
-        $this->use_duration          = $use_duration;
-        $this->use_capacity          = $use_capacity;
-        $this->use_hierarchy         = $use_hierarchy;
-        $this->use_remaining_effort  = $use_remaining_effort;
+        $this->use_start_date       = $use_start_date;
+        $this->use_duration         = $use_duration;
+        $this->use_capacity         = $use_capacity;
+        $this->use_hierarchy        = $use_hierarchy;
+        $this->use_remaining_effort = $use_remaining_effort;
     }
 
     public function getUseStartDate()

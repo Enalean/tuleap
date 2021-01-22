@@ -80,7 +80,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
         $request = HTTPRequest::instance();
         $groupId = $request->get('group_id');
 
-        $html = '';
+        $html  = '';
         $html .= "\n<!-- PROJECT LINKS START -->\n";
         $html .= $this->getAllLinks($groupId);
         $html .= "\n<!-- PROJECT LINKS END -->\n";
@@ -120,14 +120,14 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
     {
         $html = '';
         if ($dar->rowCount() > 0) {
-            $linkTypeCmdId   = 'plugin_project_links_type_' . $way;
+            $linkTypeCmdId = 'plugin_project_links_type_' . $way;
 
             $title = dgettext('tuleap-projectlinks', 'Links');
             if ($way === 'back_links') {
                 $title = dgettext('tuleap-projectlinks', 'Reverse Links');
             }
 
-            $cssClass = Toggler::getClassName($linkTypeCmdId);
+            $cssClass  = Toggler::getClassName($linkTypeCmdId);
             $titleSpan = "<span id=\"" . $this->html_purifier->purify($linkTypeCmdId) .
                 "\" class=\"" . $this->html_purifier->purify($cssClass) . "\">" .
                 $this->html_purifier->purify($title) .
@@ -157,26 +157,26 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
      */
     private function getLinks($way, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $dar): string
     {
-        $html = '';
+        $html             = '';
         $previousLinkName = '';
-        $ulClosed = true;
+        $ulClosed         = true;
         foreach ($dar as $row) {
             if ($row['link_name'] != $previousLinkName) {
                 if (! $ulClosed) {
                     // Do not close the list when the list is not started
-                    $html .= "    </ul>\n";
-                    $html .= "  </li>\n";
+                    $html    .= "    </ul>\n";
+                    $html    .= "  </li>\n";
                     $ulClosed = true;
                 }
-                $spanId  = 'plugin_project_links_name_' . $way . '_' . $row['link_type_id'];
+                $spanId   = 'plugin_project_links_name_' . $way . '_' . $row['link_type_id'];
                 $cssClass = Toggler::getClassName($spanId);
 
                 // Link name title
-                $html     .= "  <li class='project-link-list'><span id=\""
+                $html    .= "  <li class='project-link-list'><span id=\""
                     . $this->html_purifier->purify($spanId) .
                     "\" class=\"" . $this->html_purifier->purify($cssClass) . "\">" .
                     $this->html_purifier->purify($row['link_name']) . "</span>\n";
-                $html     .= "    <ul class='project-link-list'>\n";
+                $html    .= "    <ul class='project-link-list'>\n";
                 $ulClosed = false;
             }
 
@@ -203,7 +203,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
     private function getOneLink(array $row): string
     {
         $url = str_replace('$projname', $row['unix_group_name'], $row['uri_plus']);
-        $ic = '';
+        $ic  = '';
         if ($row['type'] == 2) {
             $path = $this->html_purifier->purify($this->themePath . "/images/template.png");
             $alt  = $this->html_purifier->purify(dgettext('tuleap-projectlinks', 'template project'));

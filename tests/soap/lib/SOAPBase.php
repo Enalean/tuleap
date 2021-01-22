@@ -87,7 +87,7 @@ class SOAPBase extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.
 
     private function initUserIds()
     {
-        $session_hash = $this->getSessionHash();
+        $session_hash         = $this->getSessionHash();
         $all_user_information = $this->soap_base->checkUsersExistence($session_hash, [SOAP_TestDataBuilder::TEST_USER_1_NAME, SOAP_TestDataBuilder::TEST_USER_2_NAME]);
 
         self::$user_ids = [];

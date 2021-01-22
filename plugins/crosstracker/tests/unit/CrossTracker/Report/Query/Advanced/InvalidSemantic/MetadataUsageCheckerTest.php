@@ -107,7 +107,7 @@ class MetadataUsageCheckerTest extends \PHPUnit\Framework\TestCase
         $this->title_dao            = $this->createMock(Tracker_Semantic_TitleDao::class);
         $this->description_dao      = $this->createMock(Tracker_Semantic_DescriptionDao::class);
         $this->status_dao           = $this->createMock(Tracker_Semantic_StatusDao::class);
-        $this->assigned_to           = $this->createMock(Tracker_Semantic_ContributorDao::class);
+        $this->assigned_to          = $this->createMock(Tracker_Semantic_ContributorDao::class);
 
         $this->user = $this->createMock(PFUser::class);
 

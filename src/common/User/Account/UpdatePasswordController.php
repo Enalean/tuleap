@@ -85,11 +85,11 @@ final class UpdatePasswordController implements DispatchableWithRequest
         PasswordChanger $password_changer,
         PasswordSanityChecker $password_sanity_checker
     ) {
-        $this->event_dispatcher = $event_dispatcher;
-        $this->csrf_token = $csrf_token;
-        $this->password_verifier = $password_verifier;
-        $this->user_status_manager = $user_status_manager;
-        $this->password_changer = $password_changer;
+        $this->event_dispatcher        = $event_dispatcher;
+        $this->csrf_token              = $csrf_token;
+        $this->password_verifier       = $password_verifier;
+        $this->user_status_manager     = $user_status_manager;
+        $this->password_changer        = $password_changer;
         $this->password_sanity_checker = $password_sanity_checker;
     }
 
@@ -135,7 +135,7 @@ final class UpdatePasswordController implements DispatchableWithRequest
 
             $this->user_status_manager->checkStatus($user);
 
-            $new_password = new ConcealedString((string) $request->get('new_password'));
+            $new_password        = new ConcealedString((string) $request->get('new_password'));
             $repeat_new_password = new ConcealedString((string) $request->get('repeat_new_password'));
 
             if (! $new_password->isIdenticalTo($repeat_new_password)) {

@@ -37,9 +37,9 @@ class TreeNode_GetStateVisitor
 
     private function setState(TreeNode $node, $prefix)
     {
-        $children    = $node->getChildren();
-        $nb_children = count($children);
-        $i = 0;
+        $children        = $node->getChildren();
+        $nb_children     = count($children);
+        $i               = 0;
         $children_prefix = $this->getDefaultChildrenPrefix($prefix);
         $child_state     = $this->getDefaultState($prefix);
         foreach ($children as $child) {

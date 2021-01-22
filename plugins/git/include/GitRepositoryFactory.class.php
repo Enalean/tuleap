@@ -70,7 +70,7 @@ class GitRepositoryFactory
             throw new GitRepoNotFoundException();
         }
 
-        $project = $repository->getProject();
+        $project          = $repository->getProject();
         $url_verification = new URLVerification();
         try {
             $url_verification->userCanAccessProject($user, $project);
@@ -93,7 +93,7 @@ class GitRepositoryFactory
      */
     public function getAllRepositories(Project $project)
     {
-        $repositories = [];
+        $repositories    = [];
         $repository_list = $this->dao->getProjectRepositoryList($project->getID(), false, false);
         foreach ($repository_list as $row) {
             $repository = new GitRepository();
@@ -134,8 +134,8 @@ class GitRepositoryFactory
         $offset,
         &$total_number_repositories
     ) {
-        $repositories    = [];
-        $repository_list = $this->dao->getPaginatedOpenRepositories(
+        $repositories              = [];
+        $repository_list           = $this->dao->getPaginatedOpenRepositories(
             $project->getID(),
             $scope,
             $owner_id,
@@ -224,7 +224,7 @@ class GitRepositoryFactory
             if (isset($repositories[$row['repository_id']])) {
                 $repo_with_perms = $repositories[$row['repository_id']];
             } else {
-                $repo_with_perms = new GitRepositoryWithPermissions($this->instanciateFromRow($row));
+                $repo_with_perms                     = new GitRepositoryWithPermissions($this->instanciateFromRow($row));
                 $repositories[$row['repository_id']] = $repo_with_perms;
             }
             $repo_with_perms->addUGroupForPermissionType($row['permission_type'], $row['ugroup_id']);
@@ -244,7 +244,7 @@ class GitRepositoryFactory
         foreach ($all_repositories_dar as $row) {
             $all_repositories[$row['repository_id']] = new GitRepositoryWithPermissions($this->instanciateFromRow($row));
         }
-        $admin_ugroup = new ProjectUGroup(['ugroup_id' => ProjectUGroup::PROJECT_ADMIN]);
+        $admin_ugroup                        = new ProjectUGroup(['ugroup_id' => ProjectUGroup::PROJECT_ADMIN]);
         $repositories_with_admin_permissions = $this->getGerritRepositoriesWithPermissionsForUGroupAndProject($project, $admin_ugroup, $user);
 
         foreach ($repositories_with_admin_permissions as $repository_id => $repository) {

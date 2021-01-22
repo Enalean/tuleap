@@ -79,7 +79,7 @@ class SimilarFieldsFormatter
         }
 
         $form_element_visitor = new FormElementToValueVisitor($changeset_value, $this->bind_to_value_visitor);
-        $value_holder = $field->accept($form_element_visitor);
+        $value_holder         = $field->accept($form_element_visitor);
         \assert($value_holder instanceof ValueVisitable);
         return $value_holder->accept($this->csv_formatter_visitor, $parameters);
     }

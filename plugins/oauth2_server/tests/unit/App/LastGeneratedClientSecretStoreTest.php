@@ -37,7 +37,7 @@ final class LastGeneratedClientSecretStoreTest extends TestCase
 
     protected function setUp(): void
     {
-        $storage = [];
+        $storage     = [];
         $this->store = new LastGeneratedClientSecretStore(
             new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
             new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES))),
@@ -59,7 +59,7 @@ final class LastGeneratedClientSecretStoreTest extends TestCase
 
     public function testOnlyTheLastSecretIsRemembered(): void
     {
-        $secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+        $secret        = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $second_secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $this->store->storeLastGeneratedClientSecret(2, $secret);
         $this->store->storeLastGeneratedClientSecret(3, $second_secret);

@@ -101,15 +101,15 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
 
     public function testItDoesNothingIfBacklogItemCannotBeInstanciated(): void
     {
-        $request  = $this->aRequest(
+        $request        = $this->aRequest(
             [
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",
             ]
         );
-        $redirect = new Tracker_Artifact_Redirect();
+        $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
@@ -125,15 +125,15 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
 
     public function testItDoesNothingIfBacklogItemDoesNotHaveAnArtifactLinkField(): void
     {
-        $request  = $this->aRequest(
+        $request        = $this->aRequest(
             [
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",
             ]
         );
-        $redirect = new Tracker_Artifact_Redirect();
+        $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive(['getId' => 1001]);
 
         $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
@@ -163,15 +163,15 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
 
     public function testItDoesNothingIfBacklogItemCanotBeLinkedToNewArtifact(): void
     {
-        $request  = $this->aRequest(
+        $request        = $this->aRequest(
             [
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",
             ]
         );
-        $redirect = new Tracker_Artifact_Redirect();
+        $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive(['getId' => 1001]);
 
         $backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
@@ -205,15 +205,15 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
 
     public function testItRedirectsToTestPlanOfTheMilestone(): void
     {
-        $request  = $this->aRequest(
+        $request        = $this->aRequest(
             [
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",
             ]
         );
-        $redirect = new Tracker_Artifact_Redirect();
+        $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive([
             'getId' => 1001,
             'getTracker' => Mockery::mock(\Tracker::class)
@@ -250,15 +250,15 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
 
     public function testItRedirectsToTestPlanOfTheMilestoneWhenABacklogItemIsEdited(): void
     {
-        $request  = $this->aRequest(
+        $request        = $this->aRequest(
             [
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",
             ]
         );
-        $redirect = new Tracker_Artifact_Redirect();
+        $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive(
             [
                 'getId'      => 123,
@@ -291,15 +291,15 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
 
     public function testItInjectsRedirectParametersIfWeChooseToContinue(): void
     {
-        $request  = $this->aRequest(
+        $request        = $this->aRequest(
             [
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",
             ]
         );
-        $redirect = new Tracker_Artifact_Redirect();
+        $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_CONTINUE;
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive([
             'getId' => 1001,
             'getTracker' => Mockery::mock(\Tracker::class)
@@ -335,15 +335,15 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends Test
 
     public function testItDoesNotInjectAnythingIfWeChooseToStayInTracker(): void
     {
-        $request  = $this->aRequest(
+        $request        = $this->aRequest(
             [
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",
             ]
         );
-        $redirect = new Tracker_Artifact_Redirect();
+        $redirect       = new Tracker_Artifact_Redirect();
         $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
-        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive([
             'getId' => 1001,
             'getTracker' => Mockery::mock(\Tracker::class)

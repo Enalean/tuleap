@@ -63,7 +63,7 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
             return null;
         }
 
-        $item_id = (int) $item_id;
+        $item_id      = (int) $item_id;
         $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
         \assert($current_user instanceof PFUser);
 

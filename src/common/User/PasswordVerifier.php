@@ -37,7 +37,7 @@ class PasswordVerifier
 
     public function verifyPassword(PFUser $user, ConcealedString $password): bool
     {
-        $hashed_password        = $user->getUserPw();
+        $hashed_password = $user->getUserPw();
         if ($hashed_password === null) {
             return false;
         }

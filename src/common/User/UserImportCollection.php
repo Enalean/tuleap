@@ -107,7 +107,7 @@ class UserImportCollection
     {
         $users = [];
         foreach ($this->getUsers() as $user) {
-            $formatted_user = [];
+            $formatted_user                     = [];
             $formatted_user['has_avatar']       = $user->hasAvatar();
             $formatted_user['avatar_url']       = $user->getAvatarUrl();
             $formatted_user['user_name']        = $user->getUserName();

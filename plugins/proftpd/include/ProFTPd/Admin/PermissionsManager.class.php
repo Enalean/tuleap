@@ -71,13 +71,13 @@ class PermissionsManager
 
     private function duplicateReaders(Project $project_template, Project $new_project, array $ugroup_mapping)
     {
-        $ugroup_read      = $this->getSelectUGroupFor($project_template, self::PERM_READ);
+        $ugroup_read = $this->getSelectUGroupFor($project_template, self::PERM_READ);
 
         if ($ugroup_read ===  ProjectUGroup::NONE) {
             return;
         }
 
-        $new_ugroup_read  = $ugroup_mapping[$ugroup_read];
+        $new_ugroup_read = $ugroup_mapping[$ugroup_read];
 
         $this->savePermission(
             $new_project,
@@ -88,7 +88,7 @@ class PermissionsManager
 
     private function duplicateWriters(Project $project_template, Project $new_project, array $ugroup_mapping)
     {
-        $ugroup_write     = $this->getSelectUGroupFor($project_template, self::PERM_WRITE);
+        $ugroup_write = $this->getSelectUGroupFor($project_template, self::PERM_WRITE);
 
         if ($ugroup_write ===  ProjectUGroup::NONE) {
             return;

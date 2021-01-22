@@ -46,7 +46,7 @@ class MediawikiBreadcrumbBuilder
 
     public function getBreadcrumbs(Project $project, \PFUser $current_user): BreadCrumbCollection
     {
-        $mediawiki_link       = new BreadCrumbLink(
+        $mediawiki_link = new BreadCrumbLink(
             dgettext('tuleap-mediawiki', 'Mediawiki'),
             '/plugins/mediawiki/wiki/' . $project->getUnixName(),
         );

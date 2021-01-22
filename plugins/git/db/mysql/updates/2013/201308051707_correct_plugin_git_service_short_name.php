@@ -50,7 +50,7 @@ EOT;
      */
     public function up()
     {
-        $sql    = "UPDATE reference
+        $sql = "UPDATE reference
                    SET service_short_name = 'plugin_git'
                    WHERE id = 30
                      AND keyword = 'git'

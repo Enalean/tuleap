@@ -64,7 +64,7 @@ class DateUpdater
             }
 
             $default_field_timestamp = (int) $form_element_node->properties['default_value'];
-            $new_timestamp = $this->convertTimestamp($default_field_timestamp);
+            $new_timestamp           = $this->convertTimestamp($default_field_timestamp);
 
             $form_element_node->properties['default_value'] = (int) $new_timestamp;
         }
@@ -106,11 +106,11 @@ class DateUpdater
 
     private function updateXMLNodeDateValue(SimpleXMLElement $node)
     {
-        $date_iso = (string) $node;
+        $date_iso  = (string) $node;
         $date_time = new DateTime($date_iso);
 
         $new_timestamp = $this->convertTimestamp($date_time->getTimestamp());
-        $new_iso_date = date('c', $new_timestamp);
+        $new_iso_date  = date('c', $new_timestamp);
 
         $node[0] = (string) $new_iso_date;
     }

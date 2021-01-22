@@ -58,9 +58,9 @@ class RepositoryResource
 
     public function __construct()
     {
-        $this->pull_request_dao       = new PullRequestDao();
-        $this->pull_request_factory   = new PullRequestFactory($this->pull_request_dao, ReferenceManager::instance());
-        $this->git_repository_factory = new GitRepositoryFactory(
+        $this->pull_request_dao             = new PullRequestDao();
+        $this->pull_request_factory         = new PullRequestFactory($this->pull_request_dao, ReferenceManager::instance());
+        $this->git_repository_factory       = new GitRepositoryFactory(
             new GitDao(),
             ProjectManager::instance()
         );
@@ -85,7 +85,7 @@ class RepositoryResource
 
         $collection = [];
         foreach ($result as $row) {
-            $pull_request      = $this->pull_request_factory->getInstanceFromRow($row);
+            $pull_request = $this->pull_request_factory->getInstanceFromRow($row);
 
             $repository_src  = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
             $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());

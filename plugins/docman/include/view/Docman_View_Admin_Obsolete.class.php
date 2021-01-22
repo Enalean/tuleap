@@ -38,7 +38,7 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
 
         // Get root
         $itemFactory = new Docman_ItemFactory($params['group_id']);
-        $rootItem = $itemFactory->getRoot($params['group_id']);
+        $rootItem    = $itemFactory->getRoot($params['group_id']);
 
         $nbItemsFound = 0;
 
@@ -65,27 +65,27 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
             $type = $itemFactory->getItemTypeForItem($item);
             if ($type != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
                 $trclass = html_get_alt_row_color($altRowClass++);
-                $table .= "<tr class=\"" . $trclass . "\">\n";
+                $table  .= "<tr class=\"" . $trclass . "\">\n";
 
                 // Name
                 $docmanIcons = $this->_getDocmanIcons($params);
-                $icon_src = $docmanIcons->getIconForItem($item, $params);
-                $icon = '<img src="' . $icon_src . '" class="docman_item_icon" />';
-                $table .= "<td>";
-                $table .= '<span style="white-space: nowrap;">';
-                $table .= $icon;
-                $url    = DocmanViewURLBuilder::buildActionUrl(
+                $icon_src    = $docmanIcons->getIconForItem($item, $params);
+                $icon        = '<img src="' . $icon_src . '" class="docman_item_icon" />';
+                $table      .= "<td>";
+                $table      .= '<span style="white-space: nowrap;">';
+                $table      .= $icon;
+                $url         = DocmanViewURLBuilder::buildActionUrl(
                     $item,
                     $params,
                     ['action' => 'details', 'id' => $item->getId()],
                     false,
                     true
                 );
-                $table .= '<a href="' . $url . '">';
-                $table .= htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
-                $table .= '</a>';
-                $table .= '</span>';
-                $table .= "</td>\n";
+                $table      .= '<a href="' . $url . '">';
+                $table      .= htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
+                $table      .= '</a>';
+                $table      .= '</span>';
+                $table      .= "</td>\n";
 
                 // Obsolete date
                 $table .= "<td>";

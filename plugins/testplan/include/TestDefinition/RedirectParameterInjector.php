@@ -73,7 +73,7 @@ class RedirectParameterInjector
             $current_user,
             $ttm_backlog_item_id
         );
-        $milestone = $this->artifact_factory->getArtifactByIdUserCanView(
+        $milestone    = $this->artifact_factory->getArtifactByIdUserCanView(
             $current_user,
             $ttm_milestone_id
         );

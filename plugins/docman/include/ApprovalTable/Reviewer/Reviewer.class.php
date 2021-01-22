@@ -32,11 +32,11 @@ class Docman_ApprovalReviewer
     public function __construct()
     {
         $this->reviewerId = null;
-        $this->rank = null;
+        $this->rank       = null;
         $this->reviewDate = null;
-        $this->state = null;
-        $this->comment = null;
-        $this->version = null;
+        $this->state      = null;
+        $this->comment    = null;
+        $this->version    = null;
     }
 
     public function setId($v)

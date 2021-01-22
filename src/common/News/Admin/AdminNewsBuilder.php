@@ -59,7 +59,7 @@ class AdminNewsBuilder
 
     public function getRejectedNewsPresenter()
     {
-        $old_date   = (time() - $this->one_week);
+        $old_date = (time() - $this->one_week);
 
         $title     = $GLOBALS['Language']->getText('news_admin_index', 'title');
         $presenter = new AdminRejectedNewsPresenter(
@@ -73,7 +73,7 @@ class AdminNewsBuilder
 
     public function getPublishedNewsPresenter()
     {
-        $old_date   = (time() - $this->one_week);
+        $old_date = (time() - $this->one_week);
 
         $title     = $GLOBALS['Language']->getText('news_admin_index', 'title');
         $presenter = new AdminPublishedNewsPresenter(

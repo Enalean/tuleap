@@ -31,7 +31,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
     public function _title($params)
     {
         $request = HTTPRequest::instance();
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp      = Codendi_HTMLPurifier::instance();
         if ($request->exist('report_id')) {
             echo '<h2 class="project-header-title">' . dgettext('tuleap-docman', 'Report') . ' "' . $hp->purify($params['filter']->getName(), CODENDI_PURIFIER_CONVERT_HTML) . '"</h2>';
         } else {
@@ -41,20 +41,20 @@ class Docman_View_ReportSettings extends Docman_View_Extra
 
     private function init($params)
     {
-        $this->groupId     =  $params['group_id'];
-        $this->defaultUrl  =  $params['default_url'];
-        $this->controller  = $params['docman'];
+        $this->groupId    =  $params['group_id'];
+        $this->defaultUrl =  $params['default_url'];
+        $this->controller = $params['docman'];
     }
 
     public function _getReportTableContent($reportIter, $isAdmin, &$altRowClass)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
         $reportIter->rewind();
         while ($reportIter->valid()) {
-            $r = $reportIter->current();
+            $r       = $reportIter->current();
             $trclass = html_get_alt_row_color($altRowClass++);
-            $html .=  '<tr class="' . $trclass . '">';
+            $html   .=  '<tr class="' . $trclass . '">';
 
             // Name
             $rUrl  = $this->defaultUrl . '&action=report_settings&report_id=' . $r->getId();
@@ -77,9 +77,9 @@ class Docman_View_ReportSettings extends Docman_View_Extra
             $trashLink = $this->defaultUrl . '&action=report_del&report_id=' . $r->getId();
             $trashWarn = sprintf(dgettext('tuleap-docman', 'Are your sure you want to delete report \'%1$s\'?'), $hp->purify(addslashes($r->getName()), CODENDI_PURIFIER_CONVERT_HTML));
             $trashAlt  = sprintf(dgettext('tuleap-docman', 'Delete report \'%1$s\''), $hp->purify($r->getName(), CODENDI_PURIFIER_CONVERT_HTML));
-            $delUrl = $this->defaultUrl . '&action=report_del&report_id=' . $r->getId();
-            $delName = html_trash_link($trashLink, $trashWarn, $trashAlt);
-            $html .= '<td align="center">' . $delName . '</td>';
+            $delUrl    = $this->defaultUrl . '&action=report_del&report_id=' . $r->getId();
+            $delName   = html_trash_link($trashLink, $trashWarn, $trashAlt);
+            $html     .= '<td align="center">' . $delName . '</td>';
 
             $html .= "</tr>\n";
             $reportIter->next();
@@ -91,9 +91,9 @@ class Docman_View_ReportSettings extends Docman_View_Extra
     {
         $html = '';
 
-        $um   = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $dpm  = Docman_PermissionsManager::instance($this->groupId);
+        $um      = UserManager::instance();
+        $user    = $um->getCurrentUser();
+        $dpm     = Docman_PermissionsManager::instance($this->groupId);
         $isAdmin = $dpm->userCanAdmin($user);
 
         $html .= html_build_list_table_top([dgettext('tuleap-docman', 'Report'),
@@ -105,11 +105,11 @@ class Docman_View_ReportSettings extends Docman_View_Extra
         $altRowClass = 0;
         if ($isAdmin) {
             $reportIter = $reportFactory->getProjectReportsForGroup();
-            $html .= $this->_getReportTableContent($reportIter, $isAdmin, $altRowClass);
+            $html      .= $this->_getReportTableContent($reportIter, $isAdmin, $altRowClass);
         }
 
         $reportIter = $reportFactory->getPersonalReportsForUser($user);
-        $html .= $this->_getReportTableContent($reportIter, $isAdmin, $altRowClass);
+        $html      .= $this->_getReportTableContent($reportIter, $isAdmin, $altRowClass);
 
         $html .= "</table>\n";
         return $html;
@@ -119,13 +119,13 @@ class Docman_View_ReportSettings extends Docman_View_Extra
     {
         $html = '';
 
-        $um   = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $dpm  = Docman_PermissionsManager::instance($this->groupId);
+        $um      = UserManager::instance();
+        $user    = $um->getCurrentUser();
+        $dpm     = Docman_PermissionsManager::instance($this->groupId);
         $isAdmin = $dpm->userCanAdmin($user);
 
         $reportFactory = new Docman_ReportFactory($this->groupId);
-        $r = $reportFactory->getReportById($reportId);
+        $r             = $reportFactory->getReportById($reportId);
 
         if (
             $r != null
@@ -188,15 +188,15 @@ class Docman_View_ReportSettings extends Docman_View_Extra
             $html .= '</tr>';
 
             // Current image
-            $html .= '<tr>';
-            $html .= '<td>';
-            $html .= dgettext('tuleap-docman', 'Current image:');
-            $html .= '</td>';
+            $html      .= '<tr>';
+            $html      .= '<td>';
+            $html      .= dgettext('tuleap-docman', 'Current image:');
+            $html      .= '</td>';
             $reportHtml = new Docman_ReportHtml($r, $this, $this->defaultUrl);
-            $html .= '<td>';
-            $html .= $reportHtml->getReportImage();
-            $html .= '</td>';
-            $html .= '</tr>';
+            $html      .= '<td>';
+            $html      .= $reportHtml->getReportImage();
+            $html      .= '</td>';
+            $html      .= '</tr>';
 
             // Submit
             $html .= '<tr>';
@@ -262,7 +262,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra
         $request = HTTPRequest::instance();
         if ($request->exist('report_id')) {
             $reportId = (int) $request->get('report_id');
-            $html .= $this->_getReportSettings($reportId);
+            $html    .= $this->_getReportSettings($reportId);
         } else {
             // Default screen
             // Personal and project report list

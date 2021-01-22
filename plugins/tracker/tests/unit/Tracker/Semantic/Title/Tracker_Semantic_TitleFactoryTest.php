@@ -47,7 +47,7 @@ class Tracker_Semantic_TitleFactoryTest extends TestCase
         $f3 = Mockery::mock(Tracker_FormElement_Field_Text::class);
         $f3->shouldReceive('getId')->andReturn(113);
 
-        $mapping = [
+        $mapping        = [
             'F9'  => $f1,
             'F13' => $f2,
             'F16' => $f3

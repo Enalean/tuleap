@@ -46,9 +46,9 @@ final class RedirectAfterLogin implements Dispatchable
 
     public function __construct(\PFUser $user, string $return_to, bool $is_pv2)
     {
-        $this->user = $user;
+        $this->user      = $user;
         $this->return_to = $return_to;
-        $this->is_pv2 = $is_pv2;
+        $this->is_pv2    = $is_pv2;
     }
 
     public function getReturnTo(): string

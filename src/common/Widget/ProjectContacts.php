@@ -48,8 +48,8 @@ class ProjectContacts extends \Widget
         $pm       = \ProjectManager::instance();
         $project  = $pm->getProject($group_id);
 
-        $token     = new \CSRFSynchronizerToken('');
-        $presenter = new \MassmailFormPresenter(
+        $token            = new \CSRFSynchronizerToken('');
+        $presenter        = new \MassmailFormPresenter(
             $token,
             $GLOBALS['Language']->getText('contact_admins', 'title', [$project->getPublicName()]),
             '/include/massmail_to_project_admins.php'

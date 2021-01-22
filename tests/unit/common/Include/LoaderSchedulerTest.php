@@ -44,7 +44,7 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
     protected function setUp(): void
     {
         $this->cookie_manager = Mockery::mock(CookieManager::class);
-        $this->plugin_loader = Mockery::mock(PluginLoader::class);
+        $this->plugin_loader  = Mockery::mock(PluginLoader::class);
 
         $this->loader_scheduler = new LoaderScheduler($this->cookie_manager, $this->plugin_loader);
     }

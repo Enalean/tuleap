@@ -30,17 +30,17 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
 
     public function testEmptyListShouldReturnEmptyString(): void
     {
-        $view = \Mockery::spy(\GitViews::class);
-        $user = \Mockery::spy(\PFUser::class);
+        $view         = \Mockery::spy(\GitViews::class);
+        $user         = \Mockery::spy(\PFUser::class);
         $repositories = [];
-        $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($view);
+        $strategy     = new GitViewsRepositoriesTraversalStrategy_Selectbox($view);
         $this->assertSame('', $strategy->fetch($repositories, $user));
     }
 
     public function testFlatTreeShouldReturnRepresentation(): void
     {
-        $view = \Mockery::spy(\GitViews::class);
-        $user = \Mockery::spy(\PFUser::class);
+        $view     = \Mockery::spy(\GitViews::class);
+        $user     = \Mockery::spy(\PFUser::class);
         $strategy = \Mockery::mock(\GitViewsRepositoriesTraversalStrategy_Selectbox::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $repositories    = $this->getFlatTree($strategy);
@@ -66,8 +66,8 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
 
     public function testRepoIDShouldBeTheValue(): void
     {
-        $view = \Mockery::spy(\GitViews::class);
-        $user = \Mockery::spy(\PFUser::class);
+        $view     = \Mockery::spy(\GitViews::class);
+        $user     = \Mockery::spy(\PFUser::class);
         $strategy = \Mockery::mock(\GitViewsRepositoriesTraversalStrategy_Selectbox::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $repositories    = $this->getFlatTree($strategy);

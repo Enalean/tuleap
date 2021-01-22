@@ -136,7 +136,7 @@ use Tuleap\Layout\CssAssetCollection;
     }
     public function setOwner($owner_id, $owner_type)
     {
-        $this->owner_id = $owner_id;
+        $this->owner_id   = $owner_id;
         $this->owner_type = $owner_type;
     }
 

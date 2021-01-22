@@ -114,7 +114,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest
             throw new NotFoundException('Invalid license id');
         }
         $can_be_deleted = false;
-        $used_by = [];
+        $used_by        = [];
         if ($license->isModifiable()) {
             $can_be_deleted = $this->factory->canBeDeleted($project, $license);
             if (! $can_be_deleted) {

@@ -23,14 +23,14 @@ require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../forum_utils.php';
 
 $is_admin_page = 'y';
-$request = HTTPRequest::instance();
+$request       = HTTPRequest::instance();
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'))) {
-    $group_id = $request->get('group_id');
+    $group_id        = $request->get('group_id');
     $current_project = ProjectManager::instance()->getProject($group_id);
-    $vPostChanges = new Valid_WhiteList('post_changes', ['y']);
+    $vPostChanges    = new Valid_WhiteList('post_changes', ['y']);
     $vPostChanges->required();
     if ($request->isPost() && $request->valid($vPostChanges)) {
         /*
@@ -69,7 +69,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 
                 if (db_numrows($result) > 0) {
                     $message_group_id = db_result($result, 0, 'group_id');
-                    $forum_id =  db_result($result, 0, 'group_forum_id');
+                    $forum_id         =  db_result($result, 0, 'group_forum_id');
 
                     $authorized_to_delete_message = false;
 
@@ -146,7 +146,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     $description    = $request->get('description');
                     $group_forum_id = $request->get('group_forum_id');
 
-                    $sql = "UPDATE forum_group_list SET is_public=" . db_ei($is_public) . ",forum_name='" . db_es(htmlspecialchars($forum_name)) . "'," .
+                    $sql    = "UPDATE forum_group_list SET is_public=" . db_ei($is_public) . ",forum_name='" . db_es(htmlspecialchars($forum_name)) . "'," .
                     "description='" . db_es(htmlspecialchars($description)) . "' " .
                     "WHERE group_forum_id=" . db_ei($group_forum_id) . " AND group_id=" . db_ei($group_id);
                     $result = db_query($sql);
@@ -193,7 +193,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         forum_header(['title' => _('Add a Forum'),
         'help' => 'collaboration.html#web-forums']);
 
-        $sql = "SELECT forum_name FROM forum_group_list WHERE group_id=" . db_ei($group_id);
+        $sql    = "SELECT forum_name FROM forum_group_list WHERE group_id=" . db_ei($group_id);
         $result = db_query($sql);
         ShowResultSet($result, _('Existing Forums'), false);
 
@@ -234,9 +234,9 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         forum_header(['title' => _('Change Forum Status'),
         'help' => 'collaboration.html#web-forums']);
 
-        $sql = "SELECT * FROM forum_group_list WHERE group_id=" . db_ei($group_id);
+        $sql    = "SELECT * FROM forum_group_list WHERE group_id=" . db_ei($group_id);
         $result = db_query($sql);
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
 
         if (! $result || $rows < 1) {
             echo '
@@ -250,7 +250,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                 echo '<P>
 			         ' . _('You can make forums private from here. Please note that private forums can still be viewed by members of your project, not the general public.') . '<P>';
             }
-            $title_arr = [];
+            $title_arr   = [];
             $title_arr[] = _('Forum');
             $title_arr[] = $GLOBALS['Language']->getText('global', 'status');
             $title_arr[] = _('Update');

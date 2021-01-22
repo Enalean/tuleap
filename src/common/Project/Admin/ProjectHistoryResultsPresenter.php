@@ -90,7 +90,7 @@ class ProjectHistoryResultsPresenter
             || strstr($msg_key, "membership_request_updated")
         ) {
             $ugroup_list = explode(",", $val);
-            $val = '';
+            $val         = '';
             foreach ($ugroup_list as $ugroup) {
                 if ($val) {
                     $val .= ', ';

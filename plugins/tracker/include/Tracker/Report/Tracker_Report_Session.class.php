@@ -28,15 +28,15 @@ class Tracker_Report_Session extends Codendi_Session
     public function __construct($report_id)
     {
         parent::__construct();
-        $this->report_id         = $report_id;
-        $this->report_namespace  = $report_id;
+        $this->report_id        = $report_id;
+        $this->report_namespace = $report_id;
         if (! isset($this->session['trackers']['reports'][$this->report_namespace]['has_changed'])) {
             $this->session['trackers']['reports'][$this->report_namespace] = [
                 'has_changed'   => false,
                 'checkout_date' => $_SERVER['REQUEST_TIME'],
             ];
         }
-        $this->session_namespace = &$this->session['trackers']['reports'][$this->report_namespace];
+        $this->session_namespace      = &$this->session['trackers']['reports'][$this->report_namespace];
         $this->session_namespace_path = ".trackers.reports.$this->report_namespace";
     }
 
@@ -62,16 +62,16 @@ class Tracker_Report_Session extends Codendi_Session
         $previous_session_namespace_path = $this->getSessionNamespacePath();
         //going up to session root
         $this->changeSessionNamespace(".");
-        $report      = $this->get("trackers.reports.$id");
+        $report = $this->get("trackers.reports.$id");
         //copy
         $report_copy = $report;
         //now we need to reindex renderers
-        $i = 0;
+        $i                        = 0;
         $report_copy['renderers'] = ($report_copy['renderers']) ? $report_copy['renderers'] : [];
         foreach ($report_copy['renderers'] as $renderer_id => $renderer) {
             $i = $i - 1;
             //set new id for previously existing renderers (before adding new renderers in session)
-            $report_copy['renderers'][$i] = $report_copy['renderers'][$renderer_id];
+            $report_copy['renderers'][$i]       = $report_copy['renderers'][$renderer_id];
             $report_copy['renderers'][$i]['id'] = $i;
             //removing old id
             if ($renderer_id >= 0) {
@@ -80,8 +80,8 @@ class Tracker_Report_Session extends Codendi_Session
             if (isset($report_copy['renderers'][$i]['charts'])) {
                 $j = 0;
                 foreach ($report_copy['renderers'][$i]['charts'] as $chart_id => $chart) {
-                    $j = $j - 1;
-                    $report_copy['renderers'][$i]['charts'][$j] = $report_copy['renderers'][$i]['charts'][$chart_id];
+                    $j                                                = $j - 1;
+                    $report_copy['renderers'][$i]['charts'][$j]       = $report_copy['renderers'][$i]['charts'][$chart_id];
                     $report_copy['renderers'][$i]['charts'][$j]['id'] = $j;
                     if ($chart_id >= 0) {
                         unset($report_copy['renderers'][$i]['charts'][$chart_id]);
@@ -194,7 +194,7 @@ class Tracker_Report_Session extends Codendi_Session
     {
         $renderers =& $this->get("renderers.$renderer_id");
         if ($renderers) {
-            $renderers['name'] = $name;
+            $renderers['name']        = $name;
             $renderers['description'] = $description;
         }
     }

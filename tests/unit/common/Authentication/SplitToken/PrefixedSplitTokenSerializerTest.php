@@ -55,9 +55,9 @@ final class PrefixedSplitTokenSerializerTest extends TestCase
 
     public function testCanBeBuiltFromAnIdentifier(): void
     {
-        $expected_id                  = 15;
-        $hex_verification_string      = '7f2c5f68b1c802c21486cf88a7d4209d9685b43b5f1661fb1528759c5387fd13';
-        $identifier                   = self::TEST_PREFIX . "$expected_id.$hex_verification_string";
+        $expected_id             = 15;
+        $hex_verification_string = '7f2c5f68b1c802c21486cf88a7d4209d9685b43b5f1661fb1528759c5387fd13';
+        $identifier              = self::TEST_PREFIX . "$expected_id.$hex_verification_string";
 
         $serializer = new PrefixedSplitTokenSerializer($this->getPrefix());
 

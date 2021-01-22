@@ -89,10 +89,10 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
         $item->shouldReceive('getGroupId')->andReturn(102);
         $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
 
-        $ugroup_manager_1  = $this->getUGroupMock($user_group_management_representation_1->id, 136, 102, true);
-        $ugroup_manager_2  = $this->getUGroupMock($user_group_management_representation_2->id, 137, 102, true);
-        $project_members   = $this->getUGroupMock($project_member_write_representation->id, ProjectUGroup::PROJECT_MEMBERS, 102, false);
-        $registered_users  = $this->getUGroupMock($register_users_read_representation->id, ProjectUGroup::REGISTERED, null, false);
+        $ugroup_manager_1 = $this->getUGroupMock($user_group_management_representation_1->id, 136, 102, true);
+        $ugroup_manager_2 = $this->getUGroupMock($user_group_management_representation_2->id, 137, 102, true);
+        $project_members  = $this->getUGroupMock($project_member_write_representation->id, ProjectUGroup::PROJECT_MEMBERS, 102, false);
+        $registered_users = $this->getUGroupMock($register_users_read_representation->id, ProjectUGroup::REGISTERED, null, false);
 
         $this->ugroup_manager->shouldReceive('getUGroups')->andReturn([
             $ugroup_manager_1,

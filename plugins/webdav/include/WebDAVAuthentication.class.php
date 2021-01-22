@@ -61,7 +61,7 @@ class WebDAVAuthentication
     {
         $username = $this->getUsername();
         $password = $this->getPassword();
-        $user = $this->getUser($username, $password);
+        $user     = $this->getUser($username, $password);
         if ($user->isAnonymous()) {
             $this->setHeader();
         } else {

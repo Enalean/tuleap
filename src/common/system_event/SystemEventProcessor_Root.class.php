@@ -76,13 +76,13 @@ class SystemEventProcessor_Root extends SystemEventProcessor
         \Tuleap\DB\DBConnection $db_connection
     ) {
         parent::__construct($process, $system_event_manager, $dao, $logger);
-        $this->backend_aliases      = $backend_aliases;
-        $this->backend_cvs          = $backend_cvs;
-        $this->backend_svn          = $backend_svn;
-        $this->backend_system       = $backend_system;
-        $this->site_cache           = $site_cache;
-        $this->generator            = $generator;
-        $this->db_connection        = $db_connection;
+        $this->backend_aliases = $backend_aliases;
+        $this->backend_cvs     = $backend_cvs;
+        $this->backend_svn     = $backend_svn;
+        $this->backend_system  = $backend_system;
+        $this->site_cache      = $site_cache;
+        $this->generator       = $generator;
+        $this->db_connection   = $db_connection;
     }
 
     public function getOwner()
@@ -123,14 +123,14 @@ class SystemEventProcessor_Root extends SystemEventProcessor
 
     protected function triggerApplicationOwnerEventsProcessing()
     {
-        $app = new SystemEventProcessor_ApplicationOwner(new SystemEventProcessApplicationOwnerDefaultQueue(), $this->system_event_manager, $this->dao, $this->logger);
+        $app     = new SystemEventProcessor_ApplicationOwner(new SystemEventProcessApplicationOwnerDefaultQueue(), $this->system_event_manager, $this->dao, $this->logger);
         $command = sprintf('/usr/bin/tuleap %s %s', \Tuleap\CLI\Command\ProcessSystemEventsCommand::NAME, SystemEvent::OWNER_APP);
         $this->launchAs($app->getProcessOwner(), $command);
     }
 
     protected function launchAs(string $user, string $command): void
     {
-        $cmd    = 'sudo -E -u ' . $user . ' -- ' . $command;
+        $cmd     = 'sudo -E -u ' . $user . ' -- ' . $command;
         $process = Symfony\Component\Process\Process::fromShellCommandline($cmd);
         $process->start();
 

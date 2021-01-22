@@ -37,17 +37,17 @@ abstract class Docman_ApprovalTable
 
     public function __construct()
     {
-        $this->id                 = null;
-        $this->date               = null;
-        $this->owner              = null;
-        $this->description        = null;
-        $this->status             = null;
-        $this->notification       = null;
+        $this->id                    = null;
+        $this->date                  = null;
+        $this->owner                 = null;
+        $this->description           = null;
+        $this->status                = null;
+        $this->notification          = null;
         $this->notificationOccurence = null;
 
-        $this->approvalState      = null;
-        $this->customizable       = true;
-        $this->reviewers          = [];
+        $this->approvalState = null;
+        $this->customizable  = true;
+        $this->reviewers     = [];
     }
 
     public function setId($v)
@@ -147,13 +147,13 @@ abstract class Docman_ApprovalTable
     public function initFromRow($row)
     {
         if (isset($row['table_id'])) {
-            $this->id    = $row['table_id'];
+            $this->id = $row['table_id'];
         }
         if (isset($row['table_owner'])) {
             $this->owner = $row['table_owner'];
         }
         if (isset($row['date'])) {
-            $this->date  = $row['date'];
+            $this->date = $row['date'];
         }
         if (isset($row['description'])) {
             $this->description = $row['description'];

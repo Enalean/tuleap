@@ -50,12 +50,12 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
 
     protected function setUp(): void
     {
-        $tracker_id  = 112;
-        $project_id  = 34;
+        $tracker_id    = 112;
+        $project_id    = 34;
         $this->tracker = \Mockery::spy(\Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturns($tracker_id);
         $this->tracker->shouldReceive('getGroupId')->andReturns($project_id);
-        $this->permissions = [
+        $this->permissions         = [
             ProjectUGroup::ANONYMOUS => [
                 'ugroup'      => ['name' => 'whatever'],
                 'permissions' => []
@@ -74,8 +74,8 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
             ],
         ];
         $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
-        $this->permission_setter    = new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager);
-        $this->permission_manager   = new Tracker_Permission_PermissionManager();
+        $this->permission_setter   = new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager);
+        $this->permission_manager  = new Tracker_Permission_PermissionManager();
     }
 
     public function testItDisplaysAFeedbackErrorIfAssignedToSemanticIsNotDefined(): void

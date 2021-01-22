@@ -26,8 +26,8 @@ class Account_RegisterField
 
     public function __construct($value, $error)
     {
-        $this->has_error  = $error != null;
-        $this->value      = $value;
-        $this->error      = $error;
+        $this->has_error = $error != null;
+        $this->value     = $value;
+        $this->error     = $error;
     }
 }

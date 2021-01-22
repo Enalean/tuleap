@@ -30,9 +30,9 @@ class Codendi_HWLDF_WordAccumulator // phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function __construct()
     {
         $this->_lines = [];
-        $this->_line = \false;
+        $this->_line  = \false;
         $this->_group = \false;
-        $this->_tag = '~begin';
+        $this->_tag   = '~begin';
     }
     public function _flushGroup($new_tag)
     {
@@ -49,7 +49,7 @@ class Codendi_HWLDF_WordAccumulator // phpcs:ignore PSR1.Classes.ClassDeclaratio
             }
         }
         $this->_group = '';
-        $this->_tag = $new_tag;
+        $this->_tag   = $new_tag;
     }
     public function _flushLine($new_tag)
     {

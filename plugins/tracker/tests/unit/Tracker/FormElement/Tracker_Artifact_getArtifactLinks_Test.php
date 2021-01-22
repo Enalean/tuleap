@@ -55,7 +55,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         $this->tracker   = Mockery::spy(Tracker::class);
         $this->factory   = \Mockery::spy(\Tracker_FormElementFactory::class);
         $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $this->artifact = Mockery::mock(
+        $this->artifact  = Mockery::mock(
             Artifact::class,
             [$this->current_id + 100, $this->current_id, null, 10, null]
         )->makePartial()->shouldAllowMockingProtectedMethods();
@@ -110,7 +110,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         $artifact2 = $this->giveMeAnArtifactWithChildren();
         $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
 
-        $field     = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
+        $field = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
         $field->shouldReceive('getLinkedArtifacts')->with($this->changeset, $this->user)->andReturns([$artifact1, $artifact2]);
 
         $this->factory->shouldReceive('getAnArtifactLinkField')->with($this->user, $this->tracker)->andReturns($field);
@@ -134,7 +134,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         $artifact2 = $this->giveMeAnArtifactWithChildren();
         $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
 
-        $field     = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
+        $field = \Mockery::spy(\Tracker_FormElement_Field_ArtifactLink::class);
         $field->shouldReceive('getLinkedArtifacts')->with($this->changeset, $this->user)->andReturns([$artifact1, $artifact4]);
         $this->factory->shouldReceive('getAnArtifactLinkField')->with($this->user, $this->tracker)->andReturns($field);
 
@@ -162,11 +162,11 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
      */
     public function testItDoesNotReturnArtifactsThatAreNotInTheHierarchy(): void
     {
-        $us_tracker     = Mockery::mock(\Tracker::class);
+        $us_tracker = Mockery::mock(\Tracker::class);
         $us_tracker->shouldReceive('getId')->andReturns(101);
-        $task_tracker   = Mockery::mock(\Tracker::class);
+        $task_tracker = Mockery::mock(\Tracker::class);
         $task_tracker->shouldReceive('getId')->andReturns(102);
-        $bug_tracker    = Mockery::mock(\Tracker::class);
+        $bug_tracker = Mockery::mock(\Tracker::class);
         $bug_tracker->shouldReceive('getId')->andReturns(103);
         $sprint_tracker = Mockery::mock(\Tracker::class);
         $sprint_tracker->shouldReceive('getId')->andReturns(104);
@@ -273,7 +273,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
      */
     public function giveMeAnArtifactWithChildren()
     {
-        $children  = func_get_args();
+        $children     = func_get_args();
         $sub_trackers = [];
         foreach ($children as $child) {
             $child_tracker                           = $child->getTracker();
@@ -281,7 +281,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         }
 
         $this->current_id++;
-        $tracker   = Mockery::spy(Tracker::class);
+        $tracker = Mockery::spy(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn($this->current_id);
 
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
@@ -292,7 +292,7 @@ final class Tracker_Artifact_getArtifactLinks_Test extends \PHPUnit\Framework\Te
         $field->shouldReceive('getLinkedArtifacts')->with($changeset, $this->user)->andReturns($children);
         $this->factory->shouldReceive('getAnArtifactLinkField')->with($this->user, $tracker)->andReturns($field);
 
-        $artifact_id = $this->current_id + 100;
+        $artifact_id                                = $this->current_id + 100;
         $this->artifact_collaborators[$artifact_id] = [
             'field'     => $field,
             'changeset' => $changeset,

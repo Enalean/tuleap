@@ -94,16 +94,16 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
         $planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($product_tracker)->andReturns($product_planning);
         $planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($release_tracker)->andReturns($release_planning);
 
-        $this->user   = new PFUser(['language_id' => 'en']);
+        $this->user = new PFUser(['language_id' => 'en']);
 
         $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
-        $group   = $this->getArtifact($this->group_id, $group_tracker, []);
+        $group         = $this->getArtifact($this->group_id, $group_tracker, []);
         $this->corp    = $this->getArtifact($this->corp_id, $corp_tracker, [$group]);
         $this->product = $this->getArtifact($this->product_id, $product_tracker, [$this->corp, $group]);
         $this->release = $this->getArtifact($this->release_id, $release_tracker, [$this->product, $group]);
 
-        $this->theme   = $this->getArtifact($this->theme_id, $theme_tracker, []);
+        $this->theme = $this->getArtifact($this->theme_id, $theme_tracker, []);
         // Epic has no parent yet because the whole thing is to manage Theme creation after Epic
         $this->epic = $this->getArtifact($this->epic_id, $epic_tracker, []);
 
@@ -169,7 +169,7 @@ final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //ph
 
     public function testItLinksTheEpicWithAllMilestonesParentOfSprintThatCanPlanEpics(): void
     {
-        $sprint_tracker  = Mockery::mock(Tracker::class);
+        $sprint_tracker = Mockery::mock(Tracker::class);
         $this->getArtifact(9001, $sprint_tracker, [$this->release, $this->product]);
 
         $this->product->shouldReceive('linkArtifact')->withArgs([$this->epic_id, $this->user])->once();

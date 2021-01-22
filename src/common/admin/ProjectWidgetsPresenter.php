@@ -47,10 +47,10 @@ class ProjectWidgetsPresenter
 
     public function __construct(Widget $widget, DisabledProjectWidgetsChecker $checker)
     {
-        $this->id           = (string) $widget->getId();
-        $this->title        = (string) $widget->getTitle();
-        $this->is_disabled  = $checker->isWidgetDisabled($widget, ProjectDashboardController::DASHBOARD_TYPE);
-        $this->form_url     = $this->buildFormUrl();
+        $this->id          = (string) $widget->getId();
+        $this->title       = (string) $widget->getTitle();
+        $this->is_disabled = $checker->isWidgetDisabled($widget, ProjectDashboardController::DASHBOARD_TYPE);
+        $this->form_url    = $this->buildFormUrl();
     }
 
     private function buildFormUrl(): string

@@ -150,7 +150,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends TestCase
         $ugroupbinding = \Mockery::spy(\UGroupBinding::class);
         $ugroupbinding->shouldReceive('updateBindedUGroups')->andReturns(true);
         $ugroupbinding->shouldReceive('removeAllUGroupsBinding')->andReturns(true);
-        $projects     = [
+        $projects = [
             1 => ['group_id' => 101],
             2 => ['group_id' => 102]
         ];

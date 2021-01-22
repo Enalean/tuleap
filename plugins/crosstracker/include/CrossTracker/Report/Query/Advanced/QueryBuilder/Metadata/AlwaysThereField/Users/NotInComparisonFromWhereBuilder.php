@@ -49,9 +49,9 @@ class NotInComparisonFromWhereBuilder implements FromWhereBuilder
         UserManager $user_manager,
         $alias_field
     ) {
-        $this->extractor = $extractor;
+        $this->extractor    = $extractor;
         $this->user_manager = $user_manager;
-        $this->alias_field = $alias_field;
+        $this->alias_field  = $alias_field;
     }
 
     /**
@@ -60,7 +60,7 @@ class NotInComparisonFromWhereBuilder implements FromWhereBuilder
      */
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
-        $values = $this->extractor->extractCollectionOfValues($comparison);
+        $values       = $this->extractor->extractCollectionOfValues($comparison);
         $in_condition = EasyStatement::open()->in(
             "{$this->alias_field} NOT IN (?*)",
             $this->getUserIdsByUserNames($values)

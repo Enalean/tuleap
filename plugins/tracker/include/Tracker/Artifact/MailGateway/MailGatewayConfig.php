@@ -66,7 +66,7 @@ class MailGatewayConfig
     {
         if (! isset($this->cache_emailgateway_mode)) {
             $this->cache_emailgateway_mode = self::$DISABLED;
-            $row = $this->dao->searchEmailgatewayConfiguration()->getRow();
+            $row                           = $this->dao->searchEmailgatewayConfiguration()->getRow();
             if ($row && $this->isAllowedEmailgatewayMode($row['value'])) {
                 $this->cache_emailgateway_mode = $row['value'];
             }

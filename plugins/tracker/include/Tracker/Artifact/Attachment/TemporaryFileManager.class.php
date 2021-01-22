@@ -112,7 +112,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
      */
     private function getUniqueFileName(PFUser $user)
     {
-        $prefix = $this->getUserTemporaryFilePrefix($user);
+        $prefix    = $this->getUserTemporaryFilePrefix($user);
         $file_path = tempnam(ForgeConfig::get('codendi_cache_dir'), $prefix);
         return substr(basename($file_path), strlen($prefix));
     }
@@ -128,11 +128,11 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
         $chunk_size = 0;
         $this->checkThatChunkSizeIsNotOverTheQuota($user, $chunk_size);
 
-        $tempname  = $this->getUniqueFileName($user);
+        $tempname = $this->getUniqueFileName($user);
 
         $temporary_file = $this->transaction_executor->execute(function () use ($user, $name, $description, $mimetype, $tempname) {
             $timestamp = $_SERVER['REQUEST_TIME'];
-            $id = $this->dao->create($user->getId(), $name, $description, $mimetype, $timestamp, $tempname);
+            $id        = $this->dao->create($user->getId(), $name, $description, $mimetype, $timestamp, $tempname);
             if (! $id) {
                 throw new Tracker_Artifact_Attachment_CannotCreateException();
             }
@@ -198,7 +198,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
         }
 
         $this->checkThatChunkSizeIsNotOverTheQuota($user, $content);
-        $path = $this->getPath($user, $file->getTemporaryName());
+        $path          = $this->getPath($user, $file->getTemporaryName());
         $bytes_written = file_put_contents($path, base64_decode($content), FILE_APPEND);
 
         $size = (int) implode('', $this->system->exec('stat -c %s ' . escapeshellarg($path)));

@@ -111,7 +111,7 @@ class NaturePresenterFactory
     {
         $natures = [];
 
-        $params  = [
+        $params = [
             'natures' => &$natures
         ];
 
@@ -189,7 +189,7 @@ class NaturePresenterFactory
     {
         $presenter = null;
 
-        $params  = [
+        $params = [
             'presenter' => &$presenter,
             'shortname' => $shortname
         ];

@@ -34,9 +34,9 @@ class Cardwall_PaneBoardBuilder
     public function __construct(Cardwall_CardInCellPresenterBuilder $presenter_builder, Tracker_ArtifactFactory $artifact_factory, AgileDashboard_BacklogItemDao $dao, Cardwall_SwimlineFactory $swimline_factory)
     {
         $this->presenter_builder = $presenter_builder;
-        $this->artifact_factory = $artifact_factory;
-        $this->dao = $dao;
-        $this->swimline_factory = $swimline_factory;
+        $this->artifact_factory  = $artifact_factory;
+        $this->dao               = $dao;
+        $this->swimline_factory  = $swimline_factory;
     }
 
     /**

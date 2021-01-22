@@ -36,12 +36,12 @@ class SidebarServicePresenter
 
     public function __construct(string $id, string $name, string $link, string $icon, string $label, string $description, bool $enabled)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->link = $link;
-        $this->label = $label;
+        $this->id          = $id;
+        $this->name        = $name;
+        $this->link        = $link;
+        $this->label       = $label;
         $this->description = $description;
-        $this->enabled = $enabled;
-        $this->icon = $icon;
+        $this->enabled     = $enabled;
+        $this->icon        = $icon;
     }
 }

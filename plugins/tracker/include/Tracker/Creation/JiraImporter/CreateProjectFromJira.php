@@ -92,7 +92,7 @@ final class CreateProjectFromJira
     {
         try {
             $xml_element = $this->generateFromJira($logger, $jira_client, $jira_credentials, $jira_project, $shortname, $fullname);
-            $archive = new JiraProjectArchive($xml_element);
+            $archive     = new JiraProjectArchive($xml_element);
             return $this->createProject($logger, $xml_element, $archive);
         } catch (\XML_ParseException $exception) {
             $this->logParseErrors($logger, $exception);
@@ -161,7 +161,7 @@ final class CreateProjectFromJira
             $tracker_itemname = str_replace('-', '_', $jira_tracker['name']);
             $logger->info(sprintf("Import tracker %s", $jira_tracker['name']));
 
-            $tracker_xml  = $trackers_xml->addChild('tracker');
+            $tracker_xml = $trackers_xml->addChild('tracker');
             $tracker_xml->addAttribute('instantiate_for_new_projects', '0');
             $tracker_xml->addAttribute('id', "T" . $jira_tracker['id']);
             $tracker_xml->addAttribute('parent_id', "0");

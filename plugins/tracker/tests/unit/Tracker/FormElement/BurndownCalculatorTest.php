@@ -41,7 +41,7 @@ final class BurndownCalculatorTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->computed_dao = Mockery::mock(ComputedFieldDao::class);
+        $this->computed_dao        = Mockery::mock(ComputedFieldDao::class);
         $this->burndown_calculator = new BurndownCalculator($this->computed_dao);
     }
 

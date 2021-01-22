@@ -45,7 +45,7 @@ class ProjectStatusVerificatorTest extends TestCase
     protected function setUp(): void
     {
         $this->access_checker = \Mockery::mock(ProjectAccessChecker::class);
-        $this->verificator = new ProjectStatusVerificator($this->access_checker);
+        $this->verificator    = new ProjectStatusVerificator($this->access_checker);
     }
 
     public function testEverybodyCanAccessANotSuspendedProject()

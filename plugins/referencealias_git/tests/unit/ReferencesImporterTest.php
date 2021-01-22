@@ -66,7 +66,7 @@ class ReferencesImporterTest extends TestCase
 
     public function testItShouldAddGitLinks(): void
     {
-        $xml = <<<XML
+        $xml        = <<<XML
             <references>
                 <reference source="cmmt12" target="le_sha1"/>
             </references>
@@ -82,7 +82,7 @@ XML;
 
     public function testItShouldNotAddUnknownReferences(): void
     {
-        $xml = <<<XML
+        $xml        = <<<XML
             <references>
                 <reference source="stuff1234" target="whatever"/>
             </references>

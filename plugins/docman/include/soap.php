@@ -203,7 +203,7 @@ function _get_permissions_as_array($group_id, $item_id, $permissions)
 
     // Initialize the ugroup permissions to the same values as the parent folder
     foreach ($ugroups as $ugroup) {
-        $ugroup_id = $ugroup['ugroup']['id'];
+        $ugroup_id                     = $ugroup['ugroup']['id'];
         $permissions_array[$ugroup_id] = 100;
         foreach ($perms as $perm) {
             if (isset($ugroup['permissions'][$perm])) {
@@ -335,8 +335,8 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = [])
         }
 
         $params['group_id'] = $group_id;
-        $params['action'] = $action;
-        $params['confirm'] = true;
+        $params['action']   = $action;
+        $params['confirm']  = true;
 
         $request = new SOAPRequest($params);
 
@@ -432,9 +432,9 @@ function _safe_array_merge_recursive($array1, $array2)
  */
 function _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = [])
 {
-    $params = _buildItemParams($group_id, $parent_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date);
+    $params                      = _buildItemParams($group_id, $parent_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date);
     $params['item']['parent_id'] = $parent_id;
-    $params['ordering'] = $ordering;
+    $params['ordering']          = $ordering;
 
     return _makeDocmanRequest($sessionKey, $group_id, 'createItem', _safe_array_merge_recursive($params, $extraParams));
 }
@@ -455,12 +455,12 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
  */
 function _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = [])
 {
-    $params = _buildItemParams($group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date);
+    $params               = _buildItemParams($group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date);
     $params['item']['id'] = $item_id;
 
-    $permParams['id'] = $item_id;
+    $permParams['id']          = $item_id;
     $permParams['permissions'] = $params['permissions'];
-    $result = _makeDocmanRequest($sessionKey, $group_id, 'permissions', $permParams);
+    $result                    = _makeDocmanRequest($sessionKey, $group_id, 'permissions', $permParams);
     if ($result instanceof SoapFault) {
         return $result;
     }
@@ -536,7 +536,7 @@ function searchDocmanItem($sessionKey, $group_id, $item_id, $criterias)
         if (! isValidOperator($criteria->operator)) {
             return new SoapFault(INVALID_OPERATOR, 'This operator is not valid. Only <, >, = are valid.', 'searchDocmanItem');
         }
-        $params[$criteria->field_name . '_operator']  = operatorToValue($criteria->operator);
+        $params[$criteria->field_name . '_operator'] = operatorToValue($criteria->operator);
     }
     return _makeDocmanRequest($sessionKey, $group_id, 'search', $params);
 }
@@ -949,7 +949,7 @@ function _registerFunction($name, $doc, $response = 'xsd:int')
 {
     if (defined('NUSOAP')) {
         // WSDL generation
-        $function = new ReflectionFunction($name);
+        $function   = new ReflectionFunction($name);
         $parameters = $function->getParameters();
 
         $usedParameters = [];
@@ -960,11 +960,11 @@ function _registerFunction($name, $doc, $response = 'xsd:int')
         $soapParameters = $GLOBALS['soapParameters'];
 
         $parameters = [];
-        $paramsDoc = '<pre>';
+        $paramsDoc  = '<pre>';
 
         foreach ($usedParameters as $usedParameter) {
             $parameters[$usedParameter] = $soapParameters[$usedParameter][0];
-            $paramsDoc .= str_pad($usedParameter, 20) . $soapParameters[$usedParameter][1] . '<br/>';
+            $paramsDoc                 .= str_pad($usedParameter, 20) . $soapParameters[$usedParameter][1] . '<br/>';
         }
 
         $paramsDoc .= '</pre>';

@@ -93,7 +93,7 @@ final class PullRequestsCommentsTest extends RestBase
 
     public function testPostPullRequestComment(): void
     {
-        $response  = $this->getResponse($this->client->post('pull_requests/1/comments', null, json_encode(
+        $response = $this->getResponse($this->client->post('pull_requests/1/comments', null, json_encode(
             [
                 'content' => 'Shot down in flames'
             ]

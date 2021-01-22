@@ -64,7 +64,7 @@ class CardInCellPresenterFactoryTest extends TestCase
     public function testItHasACardInCellPresenterWithASemanticStatusFieldId(): void
     {
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, new Cardwall_MappingCollection());
-        $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
+        $cell_presenter                 = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
         $this->assertEquals(
             $cell_presenter,
@@ -80,7 +80,7 @@ class CardInCellPresenterFactoryTest extends TestCase
         $mapping_collection = new Cardwall_MappingCollection();
 
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, $mapping_collection);
-        $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
+        $cell_presenter                 = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
         $this->assertEquals(
             $cell_presenter,
@@ -100,7 +100,7 @@ class CardInCellPresenterFactoryTest extends TestCase
             ->getMock();
 
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, $mapping_collection);
-        $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
+        $cell_presenter                 = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
         $this->assertEquals(
             $cell_presenter,

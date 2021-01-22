@@ -24,7 +24,7 @@ class BackendAliases extends Backend
     public const ADMIN_ALIAS        = 'codendi-admin';
     public const ALIAS_ENTRY_FORMAT = "%-50s%-10s";
 
-    protected $need_update = false;
+    protected $need_update    = false;
     protected $mailinglistdao = null;
 
     /**
@@ -71,7 +71,7 @@ class BackendAliases extends Backend
      */
     public function update()
     {
-        $alias_file = ForgeConfig::get('alias_file');
+        $alias_file     = ForgeConfig::get('alias_file');
         $alias_file_new = $alias_file . ".new";
         $alias_file_old = $alias_file . ".old";
 

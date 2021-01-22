@@ -360,8 +360,8 @@ class SemanticTimeframeTest extends TestCase
     public function testItBuildsARESTRepresentationWithEndDateIfEndDateIsSet(): void
     {
         $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $end_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $user = Mockery::mock(\PFUser::class);
+        $end_date   = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $user       = Mockery::mock(\PFUser::class);
 
         $start_date->shouldReceive('getId')->andReturn('23');
         $end_date->shouldReceive('getId')->andReturn('24');

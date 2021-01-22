@@ -42,7 +42,7 @@ final class Tracker_FileInfoTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $field_id = 123;
+        $field_id                = 123;
         $this->fixture_data_dir  = __DIR__ . '/_fixtures/attachments';
         $this->working_directory = \org\bovigo\vfs\vfsStream::setup()->url();
         $this->thumbnails_dir    = $this->working_directory . '/thumbnails';
@@ -51,15 +51,15 @@ final class Tracker_FileInfoTest extends \PHPUnit\Framework\TestCase
         $this->field->shouldReceive('getId')->andReturns($field_id);
         $this->field->shouldReceive('getRootPath')->andReturns($this->working_directory);
 
-        $id           = 1;
-        $submitted_by = 103;
-        $description  = 'Screenshot of the issue';
-        $filename     = 'screenshot.png';
-        $filesize     = 285078;
-        $filetype     = 'image/png';
+        $id                = 1;
+        $submitted_by      = 103;
+        $description       = 'Screenshot of the issue';
+        $filename          = 'screenshot.png';
+        $filesize          = 285078;
+        $filetype          = 'image/png';
         $this->file_info_1 = new Tracker_FileInfo($id, $this->field, $submitted_by, $description, $filename, $filesize, $filetype);
 
-        $filetype     = 'image/tiff';
+        $filetype          = 'image/tiff';
         $this->file_info_2 = new Tracker_FileInfo($id, $this->field, $submitted_by, $description, $filename, $filesize, $filetype);
     }
 
@@ -113,7 +113,7 @@ final class Tracker_FileInfoTest extends \PHPUnit\Framework\TestCase
      */
     public function testHumanReadableFilesize(int $size, string $expected_human_readable_filesize): void
     {
-        $f  = new Tracker_FileInfo(1, Mockery::mock(Tracker_FormElement_Field::class), 102, 'description', 'name', $size, 'text/plain');
+        $f = new Tracker_FileInfo(1, Mockery::mock(Tracker_FormElement_Field::class), 102, 'description', 'name', $size, 'text/plain');
         $this->assertEquals($expected_human_readable_filesize, $f->getHumanReadableFilesize());
     }
 

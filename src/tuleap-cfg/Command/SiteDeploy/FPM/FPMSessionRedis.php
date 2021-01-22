@@ -114,7 +114,7 @@ final class FPMSessionRedis implements FPMSessionInterface
     private function getDSN(): string
     {
         $protocol = $this->use_tls ? 'tls' : 'tcp';
-        $base = sprintf('%s://%s:%d', $protocol, $this->server, $this->port);
+        $base     = sprintf('%s://%s:%d', $protocol, $this->server, $this->port);
         if ($this->password !== null && $this->password !== '') {
             return $base . '?auth=' . $this->password;
         }

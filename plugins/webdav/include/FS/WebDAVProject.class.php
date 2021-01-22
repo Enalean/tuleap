@@ -43,10 +43,10 @@ class WebDAVProject extends Sabre_DAV_Directory
 
     public function __construct(PFUser $user, Project $project, int $maxFileSize, WebDAVUtils $utils)
     {
-        $this->user = $user;
-        $this->project = $project;
+        $this->user        = $user;
+        $this->project     = $project;
         $this->maxFileSize = $maxFileSize;
-        $this->utils = $utils;
+        $this->utils       = $utils;
     }
 
     /**
@@ -67,7 +67,7 @@ class WebDAVProject extends Sabre_DAV_Directory
                                                            'roots'    => &$roots]);
         foreach ($roots as $service => $root) {
             if ($service === 'docman') {
-                $docman = new WebDAVDocmanFolder($this->user, $this->project, $root, $this->utils);
+                $docman                       = new WebDAVDocmanFolder($this->user, $this->project, $root, $this->utils);
                 $children[$docman->getName()] = $docman;
             }
         }

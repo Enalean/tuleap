@@ -113,7 +113,7 @@ class LDAP_UserDao extends DataAccessObject
      */
     public function setLoginDate($userId, $date)
     {
-        $sql = 'UPDATE plugin_ldap_user' .
+        $sql     = 'UPDATE plugin_ldap_user' .
             ' SET login_confirmation_date = ' . db_ei($date) .
             ' WHERE user_id = ' . db_ei($userId);
         $updated = $this->update($sql);

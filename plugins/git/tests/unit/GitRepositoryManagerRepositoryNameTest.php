@@ -50,8 +50,8 @@ class GitRepositoryManagerRepositoryNameTest extends TestCase
         $this->mirror_updater     = \Mockery::spy(\GitRepositoryMirrorUpdater::class);
         $this->mirror_data_mapper = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
 
-        $this->factory    = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->manager    = new GitRepositoryManager(
+        $this->factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->manager = new GitRepositoryManager(
             $this->factory,
             \Mockery::spy(\Git_SystemEventManager::class),
             $this->dao,

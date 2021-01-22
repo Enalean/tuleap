@@ -49,15 +49,15 @@ class b201608041530_migrate_existing_read_permissions extends ForgeUpgrade_Bucke
     {
         $permission_frs_reader = 'FRS_READ';
 
-        $restricted           = $this->getQueryAndProjectsByPlateformAccessAndProjectVisibility('restricted', 'unrestricted', 5);
-        $anonymous            = $this->getQueryAndProjectsByPlateformAccessAndProjectVisibility('anonymous', 'public', 1);
+        $restricted = $this->getQueryAndProjectsByPlateformAccessAndProjectVisibility('restricted', 'unrestricted', 5);
+        $anonymous  = $this->getQueryAndProjectsByPlateformAccessAndProjectVisibility('anonymous', 'public', 1);
 
         $already_set_projects = array_merge($restricted['projects'], $anonymous['projects']);
         $ugroups_query        = array_merge($restricted['ugroups'], $anonymous['ugroups']);
 
-        $already_set_sql   = "";
+        $already_set_sql = "";
         if (count($already_set_projects) > 0) {
-            $already_set_sql   = "AND group_id NOT IN (" . implode(',', $already_set_projects) . ")";
+            $already_set_sql = "AND group_id NOT IN (" . implode(',', $already_set_projects) . ")";
         }
 
         $sql = "SELECT group_id FROM groups

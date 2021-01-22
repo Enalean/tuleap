@@ -35,7 +35,7 @@ class OpenIDConnectIDTokenCreator
     // See https://openid.net/specs/openid-connect-core-1_0.html#IDToken
     private const CLAIM_AUTH_TIME = 'auth_time';
     // See https://tools.ietf.org/html/rfc7515#section-4.1.4
-    private const HEADER_KEY_ID   = 'kid';
+    private const HEADER_KEY_ID = 'kid';
 
     /**
      * @var OAuth2SignInScope

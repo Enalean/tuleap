@@ -62,18 +62,18 @@ class BacklogRequiredTrackerCollection
 
     public function addBacklogRequiredTracker(BacklogRequiredTracker $required_tracker)
     {
-        $misconfigured = [];
+        $misconfigured    = [];
         $is_misconfigured = false;
 
         if ($required_tracker->isDoneSemanticMissing()) {
             $is_misconfigured = true;
-            $misconfigured[] = $this->formatter->formatTrackerWithoutDoneSemantic($required_tracker->getTracker());
+            $misconfigured[]  = $this->formatter->formatTrackerWithoutDoneSemantic($required_tracker->getTracker());
             $this->nb_trackers_without_done_semantic++;
         }
 
         if ($required_tracker->isInitialEffortSemanticMissing()) {
             $is_misconfigured = true;
-            $misconfigured[] = $this->formatter->formatTrackerWithoutInitialEffortSemantic($required_tracker->getTracker());
+            $misconfigured[]  = $this->formatter->formatTrackerWithoutInitialEffortSemantic($required_tracker->getTracker());
             $this->nb_trackers_without_initial_effort_semantic++;
         }
 

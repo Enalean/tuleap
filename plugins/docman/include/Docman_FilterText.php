@@ -33,7 +33,7 @@ class Docman_FilterText extends \Docman_Filter
     }
     public function getUrlParameters()
     {
-        $hp = \Codendi_HTMLPurifier::instance();
+        $hp    = \Codendi_HTMLPurifier::instance();
         $param = [$this->md->getLabel() => $hp->purify($this->value)];
         return $param;
     }

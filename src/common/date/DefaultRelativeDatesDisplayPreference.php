@@ -40,7 +40,7 @@ class DefaultRelativeDatesDisplayPreference
     public function __construct(string $preference, string $placement)
     {
         $this->preference = $preference;
-        $this->placement = $placement;
+        $this->placement  = $placement;
     }
 
     public function getPreference(): string

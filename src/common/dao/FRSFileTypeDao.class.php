@@ -31,7 +31,7 @@ class FRSFileTypeDao extends DataAccessObject
      */
     public function searchTypeId($name)
     {
-        $sql = sprintf(
+        $sql      = sprintf(
             "SELECT type_id FROM frs_filetype WHERE name=%s ORDER BY type_id LIMIT 1",
             $this->da->quoteSmart((string) $name)
         );
@@ -45,7 +45,7 @@ class FRSFileTypeDao extends DataAccessObject
 
     public function searchById($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT * FROM frs_filetype WHERE type_id=$id ORDER BY type_id LIMIT 1";
         return $this->retrieveFirstRow($sql);
     }

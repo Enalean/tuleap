@@ -39,7 +39,7 @@ class PermissionItemUpdater
     public const PERMISSION_DEFINITION_WRITE  = 2;
     public const PERMISSION_DEFINITION_MANAGE = 3;
     public const PERMISSION_DEFINITION_NONE   = 100;
-    private const PERMISSIONS_DEFINITIONS = [
+    private const PERMISSIONS_DEFINITIONS     = [
         self::PERMISSION_DEFINITION_READ   => [
             'order' => 1,
             'type'  => Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ,
@@ -158,7 +158,7 @@ class PermissionItemUpdater
      */
     private function setPermissions(Docman_Item $item, bool $force, array $permissions): void
     {
-        $old_permissions = permission_get_ugroups_permissions(
+        $old_permissions  = permission_get_ugroups_permissions(
             $item->getGroupId(),
             $item->getId(),
             Docman_PermissionsManager::ITEM_PERMISSION_TYPES,
@@ -281,8 +281,8 @@ class PermissionItemUpdater
                     if ($permission != self::PERMISSIONS_DEFINITIONS[$wanted_permission]['type']) {
                         //The permission has been changed
                         permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
-                        $history[$permission] = true;
-                        $perms_cleared = true;
+                        $history[$permission]         = true;
+                        $perms_cleared                = true;
                         $done_permissions[$ugroup_id] = 100;
                     } else {
                         //keep the old permission

@@ -97,7 +97,7 @@ final class SemanticTimeframeDaoTest extends TestCase
 
     public function tearDown(): void
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db                    = DBFactory::getMainTuleapDBConnection()->getDB();
         $tracker_ids_statement = EasyStatement::open()->in(
             'tracker_id IN (?*)',
             [

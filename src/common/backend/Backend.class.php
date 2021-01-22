@@ -34,7 +34,7 @@ class Backend
     public const LOG_DEBUG   = \Psr\Log\LogLevel::DEBUG;
 
     public const SVN         = 'SVN';
-    private const CVS         = 'CVS';
+    private const CVS        = 'CVS';
     public const MAILINGLIST = 'MailingList';
     public const BACKEND     = 'Backend';
     public const SYSTEM      = 'System';
@@ -96,11 +96,11 @@ class Backend
 
             //Ask to the whole world if someone wants to provide its own backend
             //for example plugin ldap will override BackendSVN
-            $params   = [
+            $params = [
                 'base'  => &$base,
                 'setup' => &$setup
             ];
-            $event    = Event::BACKEND_FACTORY_GET_PREFIX . strtolower($type);
+            $event  = Event::BACKEND_FACTORY_GET_PREFIX . strtolower($type);
             EventManager::instance()->processEvent($event, $params);
 
             //make sure that there is no problem between the keyboard and the chair
@@ -397,7 +397,7 @@ class Backend
     private function initHTTPUserInfo()
     {
         if ($this->httpUserUID === null) {
-            $userinfo = posix_getpwnam($this->getHTTPUser());
+            $userinfo          = posix_getpwnam($this->getHTTPUser());
             $this->httpUserUID = $userinfo['uid'];
             $this->httpUserGID = $userinfo['gid'];
         }
@@ -453,7 +453,7 @@ class Backend
     {
         try {
             $no_filter_file_extension = [];
-            $iterator = $this->getRecurseDirectoryIterator($mypath, $no_filter_file_extension);
+            $iterator                 = $this->getRecurseDirectoryIterator($mypath, $no_filter_file_extension);
             foreach ($iterator as $filename => $file_information) {
                 if ($file_information->isDir()) {
                     rmdir($file_information->getPathname());
@@ -584,7 +584,7 @@ class Backend
                     $this->log("Won't install empty file $file_new", self::LOG_WARNING);
                     return false;
                 }
-                $new_string     = serialize($new_array);
+                $new_string = serialize($new_array);
             }
             if ($force || ($current_string !== $new_string)) {
                 if (is_file($file_old)) {

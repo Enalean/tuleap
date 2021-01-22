@@ -38,8 +38,8 @@ function extract_params($argv)
         $arg = $argv[$i];
         // If arg start by "--" this is the beginning of a new option
         if (strpos($arg, "--") === 0) {
-            $eqpos = strpos($arg, "=");
-            $argname = substr($arg, 2, $eqpos - 2);
+            $eqpos               = strpos($arg, "=");
+            $argname             = substr($arg, 2, $eqpos - 2);
             $arguments[$argname] = substr($arg, $eqpos + 1);
         } else {
             $arguments[$argname] .= " " . $arg;
@@ -75,7 +75,7 @@ if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
             exit;
         } else {
             $ldapUm = $ldapPlugin->getLdapUserManager();
-            $user = $ldapUm->createAccount($arg['ldapid'], $arg['uid'], $arg['realname'], $arg['email']);
+            $user   = $ldapUm->createAccount($arg['ldapid'], $arg['uid'], $arg['realname'], $arg['email']);
             if ($user) {
                 echo "ID=" . $user->getId() . ":STATUS=" . $user->getStatus() . "\n";
                 return 0;

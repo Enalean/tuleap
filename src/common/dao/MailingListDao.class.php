@@ -184,8 +184,8 @@ class MailingListDao extends DataAccessObject
 
     public function isThereAnExistingListInTheProject(string $name, int $project_id): bool
     {
-        $project_id  = $this->da->escapeInt($project_id);
-        $name        = $this->da->quoteSmart($name);
+        $project_id = $this->da->escapeInt($project_id);
+        $name       = $this->da->quoteSmart($name);
 
         $sql = "SELECT NULL FROM mail_group_list
                 WHERE group_id = $project_id

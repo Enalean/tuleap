@@ -42,14 +42,14 @@ class WikiEntry
     public function __construct($id = null)
     {
         if (empty($id)) {
-            $this->id   = 0;
-            $this->gid  = 0;
-            $this->rank = 0;
+            $this->id          = 0;
+            $this->gid         = 0;
+            $this->rank        = 0;
             $this->language_id = $GLOBALS['Language']->defaultLanguage;
-            $this->name = '';
-            $this->page = '';
-            $this->desc = '';
-            $this->wikiPage = null;
+            $this->name        = '';
+            $this->page        = '';
+            $this->desc        = '';
+            $this->wikiPage    = null;
         } else {
             $this->setId($id);
             $this->_setFromDb();
@@ -99,13 +99,13 @@ class WikiEntry
 
     public function setFromRow($row)
     {
-        $this->id   = $row['id'];
-        $this->gid  = $row['group_id'];
-        $this->rank = $row['rank'];
+        $this->id          = $row['id'];
+        $this->gid         = $row['group_id'];
+        $this->rank        = $row['rank'];
         $this->language_id = $row['language_id'];
-        $this->name = $row['wiki_name'];
-        $this->page = $row['wiki_link'];
-        $this->desc = $row['description'];
+        $this->name        = $row['wiki_name'];
+        $this->page        = $row['wiki_link'];
+        $this->desc        = $row['description'];
 
         $this->wikiPage = new WikiPage($this->gid, $this->page);
     }

@@ -73,7 +73,7 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
         $html             = '';
         if (sizeof($minimal_jobs) > 0) {
             $html .= '<table style="width:100%">';
-            $cpt = 1;
+            $cpt   = 1;
 
             $hudson_jobs_with_exception = $this->job_builder->getHudsonJobsWithException($minimal_jobs);
 

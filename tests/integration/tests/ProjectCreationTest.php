@@ -49,8 +49,8 @@ class ProjectCreationTest extends TestCase
     public function setUp(): void
     {
         $this->backup_project_can_be_created = ForgeConfig::get(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED);
-        $this->backup_codendi_log = ForgeConfig::get('codendi_log');
-        $this->backup_plogger_level = ForgeConfig::get('sys_logger_level');
+        $this->backup_codendi_log            = ForgeConfig::get('codendi_log');
+        $this->backup_plogger_level          = ForgeConfig::get('sys_logger_level');
 
         $this->backup_svn_prefix = ForgeConfig::get('svn_prefix');
         ForgeConfig::set('svn_prefix', $this->getTmpDir());
@@ -73,7 +73,7 @@ class ProjectCreationTest extends TestCase
 
         DBFactory::getMainTuleapDBConnection()->getDB()->run('DELETE FROM groups WHERE unix_group_name = "short-name"');
         unset($GLOBALS['feedback']);
-        $_GET = [];
+        $_GET     = [];
         $_REQUEST = [];
     }
 

@@ -39,6 +39,6 @@ class SemanticTimeframeWithDurationRepresentation
     public function build(int $start_date_field_id, int $duration_field_id): void
     {
         $this->start_date_field_id = JsonCast::toInt($start_date_field_id);
-        $this->duration_field_id = JsonCast::toInt($duration_field_id);
+        $this->duration_field_id   = JsonCast::toInt($duration_field_id);
     }
 }

@@ -33,7 +33,7 @@ class Tracker_NoChangeException extends Tracker_Exception
         if ($message === null) {
             $art_link = '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?aid=' . $artifact_id . '">' .
                      $artifact_xref . '</a>';
-            $message = sprintf(dgettext('tuleap-tracker', 'No changes for artifact %1$s'), $art_link);
+            $message  = sprintf(dgettext('tuleap-tracker', 'No changes for artifact %1$s'), $art_link);
         }
 
         parent::__construct($message, $code);

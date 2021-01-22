@@ -16,12 +16,12 @@ class Docman_View_Admin_View extends Docman_View_Extra
     }
     public function _content($params)
     {
-        $html = '';
+        $html  = '';
         $html .= '<p>' . dgettext('tuleap-docman', 'Please select the default view for browsing documents. Please note that this setting can be overridden by user preferences.') . '</p>';
         $html .= '<form action="' . $params['default_url'] . '" method="POST">';
         $html .= '<select name="selected_view" onchange="this.form.submit()">';
 
-        $sBo = Docman_SettingsBo::instance($params['group_id']);
+        $sBo    = Docman_SettingsBo::instance($params['group_id']);
         $actual = $sBo->getView();
 
         $html .= '<option value="Tree" ' . ($actual === 'Tree' ? 'selected="selected"' : '') . '>';

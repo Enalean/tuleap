@@ -60,7 +60,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
         $used_fields = $this->formelement_factory->getUsedFields($artifact->getTracker());
         foreach ($used_fields as $field) {
             if ($this->canValidateField($artifact, $field, $user)) {
-                $submitted_value = $this->getSubmittedValue($field, $fields_data);
+                $submitted_value    = $this->getSubmittedValue($field, $fields_data);
                 $is_one_field_valid = $this->validateOneField(
                     $artifact,
                     $user,

@@ -67,7 +67,7 @@ class WikiPlugin_RichTable extends WikiPlugin
         $table = HTML::table();
 
         if ($lines[0][0] == '*') {
-            $line = substr(array_shift($lines), 1);
+            $line  = substr(array_shift($lines), 1);
             $attrs = $this->_parse_attr($line);
             foreach ($attrs as $key => $value) {
                 if (
@@ -94,7 +94,7 @@ class WikiPlugin_RichTable extends WikiPlugin
                     }
                     $table->pushContent($row);
                 }
-                $row = HTML::tr();
+                $row   = HTML::tr();
                 $attrs = $this->_parse_attr(substr($line, 1));
                 foreach ($attrs as $key => $value) {
                     if (
@@ -154,7 +154,7 @@ class WikiPlugin_RichTable extends WikiPlugin
     public function _parse_attr($line)
     {
         $attr_chunks = preg_split("/\s*,\s*/", strtolower($line));
-        $options = [];
+        $options     = [];
         foreach ($attr_chunks as $attr_pair) {
             if (empty($attr_pair)) {
                 continue;

@@ -53,7 +53,7 @@ class Tracker_Migration_V3_ReportsDao extends DataAccessObject
 
     private function insertReportCriteria($tv5_id)
     {
-        $tv5_id   = $this->da->escapeInt($tv5_id);
+        $tv5_id = $this->da->escapeInt($tv5_id);
 
         $sql = "INSERT INTO tracker_report_criteria(report_id, field_id, rank, is_advanced)
                 SELECT R.id, F.id, place_query, 0

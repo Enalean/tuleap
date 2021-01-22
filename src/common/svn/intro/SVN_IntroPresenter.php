@@ -43,10 +43,10 @@ class SVN_IntroPresenter
 
     public function __construct(PFUser $user, $uses_ldap_info, $ldap_row, $svn_url)
     {
-        $this->user                   = $user;
-        $this->ldap_row               = $ldap_row;
-        $this->svn_url                = $svn_url;
-        $this->uses_ldap_info         = $uses_ldap_info;
+        $this->user           = $user;
+        $this->ldap_row       = $ldap_row;
+        $this->svn_url        = $svn_url;
+        $this->uses_ldap_info = $uses_ldap_info;
     }
 
     public function svn_intro_title()

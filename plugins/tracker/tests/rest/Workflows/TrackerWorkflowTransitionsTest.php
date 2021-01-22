@@ -40,7 +40,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
                 "field_id"
             )
         );
-        $all_field_values_ids = array_column($tracker["fields"][$tracker_workflow_field_key]["values"], "id");
+        $all_field_values_ids       = array_column($tracker["fields"][$tracker_workflow_field_key]["values"], "id");
 
         $all_transitions = [
             "transitions" => [],
@@ -393,7 +393,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $transition_id = $this->getResolvedToClosedTransition();
 
         $tracker_workflows_project_id = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
-        $a_user_group_id = $this->user_groups_ids[$tracker_workflows_project_id]['project_members'];
+        $a_user_group_id              = $this->user_groups_ids[$tracker_workflows_project_id]['project_members'];
 
         $params = json_encode([
             "authorized_user_group_ids" => [$a_user_group_id],

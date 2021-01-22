@@ -127,8 +127,8 @@ class Tracker_Semantic_Title extends Tracker_Semantic
         $html = '';
 
         if ($text_fields = Tracker_FormElementFactory::instance()->getUsedTextFields($this->tracker)) {
-            $html .= '<form method="POST" action="' . $this->getUrl() . '">';
-            $html .= $this->getCSRFToken()->fetchHTMLInput();
+            $html  .= '<form method="POST" action="' . $this->getUrl() . '">';
+            $html  .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="text_field_id">';
             if (! $this->getFieldId()) {
                 $select .= '<option value="-1" selected="selected">' . dgettext('tuleap-tracker', 'Choose a field...') . '</option>';
@@ -232,7 +232,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic
     {
         if (! isset(self::$_instances[$tracker->getId()])) {
             $field_id = null;
-            $dao = new Tracker_Semantic_TitleDao();
+            $dao      = new Tracker_Semantic_TitleDao();
             if ($row = $dao->searchByTrackerId($tracker->getId())->getRow()) {
                 $field_id = $row['field_id'];
             }

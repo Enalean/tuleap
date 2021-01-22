@@ -94,7 +94,7 @@ class ArtifactReportFactory
                 return false;
             }
 
-            $report_id = db_insertid($res_insert, 'artifact_report', 'report_id');
+            $report_id                                  = db_insertid($res_insert, 'artifact_report', 'report_id');
             $report_mapping[$report_array["report_id"]] = $report_id;
       // Copy artifact_report_field records
             $sql_fields = 'SELECT field_name,show_on_query,show_on_result,place_query,place_result,col_width ' .
@@ -106,11 +106,11 @@ class ArtifactReportFactory
             $res_fields = db_query($sql_fields);
 
             while ($field_array = db_fetch_array($res_fields)) {
-                $show_on_query = ($field_array["show_on_query"] == "" ? "null" : $field_array["show_on_query"]);
+                $show_on_query  = ($field_array["show_on_query"] == "" ? "null" : $field_array["show_on_query"]);
                 $show_on_result = ($field_array["show_on_result"] == "" ? "null" : $field_array["show_on_result"]);
-                $place_query = ($field_array["place_query"] == "" ? "null" : $field_array["place_query"]);
-                $place_result = ($field_array["place_result"] == "" ? "null" : $field_array["place_result"]);
-                $col_width = ($field_array["col_width"] == "" ? "null" : $field_array["col_width"]);
+                $place_query    = ($field_array["place_query"] == "" ? "null" : $field_array["place_query"]);
+                $place_result   = ($field_array["place_result"] == "" ? "null" : $field_array["place_result"]);
+                $col_width      = ($field_array["col_width"] == "" ? "null" : $field_array["col_width"]);
 
                 $sql_insert = 'INSERT INTO artifact_report_field VALUES (' . db_ei($report_id) . ',"' . db_es($field_array["field_name"]) .
                   '",' . db_ei($show_on_query) . ',' . db_ei($show_on_result) . ',' . db_ei($place_query) .
@@ -180,7 +180,7 @@ class ArtifactReportFactory
     public function getReports($group_artifact_id, $user_id)
     {
         $artifactreports = [];
-        $sql = 'SELECT report_id,name,description,scope,is_default FROM artifact_report WHERE ';
+        $sql             = 'SELECT report_id,name,description,scope,is_default FROM artifact_report WHERE ';
         if (! $user_id || ($user_id == 100)) {
             $sql .= "(group_artifact_id=" .  db_ei($group_artifact_id)  . " AND scope='P') OR scope='S' " .
             'ORDER BY report_id';
@@ -190,7 +190,7 @@ class ArtifactReportFactory
         }
 
         $result = db_query($sql);
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
         if (db_error()) {
             $this->setError($Language->getText('tracker_common_factory', 'db_err') . ': ' . db_error());
             return false;
@@ -212,8 +212,8 @@ class ArtifactReportFactory
     public function getDefaultReport($group_artifact_id)
     {
         $report_id = null;
-        $sql = "SELECT report_id FROM artifact_report WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND is_default = 1";
-        $result = db_query($sql);
+        $sql       = "SELECT report_id FROM artifact_report WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND is_default = 1";
+        $result    = db_query($sql);
         while ($arr = db_fetch_array($result)) {
             $report_id = $arr['report_id'];
         }
@@ -225,7 +225,7 @@ class ArtifactReportFactory
      */
     public function setError($string)
     {
-        $this->error_state = true;
+        $this->error_state   = true;
         $this->error_message = $string;
     }
 

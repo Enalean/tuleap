@@ -44,7 +44,7 @@ class LicenseAgreementDisplay
     {
         $this->purifier = $purifier;
         $this->renderer = $renderer_factory->getRenderer(__DIR__ . '/template');
-        $this->factory = $factory;
+        $this->factory  = $factory;
     }
 
     public function getModals(\Project $project): string
@@ -86,7 +86,7 @@ class LicenseAgreementDisplay
         } else {
             $package_agreement = $this->factory->getLicenseAgreementForPackage($package);
         }
-        $license_selector      = [];
+        $license_selector = [];
         if (ForgeConfig::get('sys_frs_license_mandatory') == 1) {
             if (count($all_custom_agreements) === 0) {
                 return '<input type="hidden" name="package[approve_license]" value="1">';

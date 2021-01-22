@@ -94,9 +94,9 @@ class WidgetReorderTest extends TestCase
 
     public function testItReordersWidgetsInNewColumn()
     {
-        $dao              = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
-        $remover          = new DashboardWidgetRemoverInList();
-        $widget_reorder   = new DashboardWidgetReorder($dao, $remover);
+        $dao            = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $remover        = new DashboardWidgetRemoverInList();
+        $widget_reorder = new DashboardWidgetReorder($dao, $remover);
 
         $dao->shouldReceive('searchAllWidgetByColumnId')->andReturns(\TestHelper::arrayToDar([
             'id'         => 3,

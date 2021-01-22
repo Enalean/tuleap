@@ -50,14 +50,14 @@ class NatureCoveredByOverriderTest extends TestCase
     {
         parent::setUp();
 
-        $this->artifact  = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn($this->artifact_id);
 
-        $this->project  = Mockery::spy(\Project::class);
+        $this->project = Mockery::spy(\Project::class);
         $this->project->shouldReceive('getID')->andReturn(101);
 
-        $this->config    = \Mockery::spy(\Tuleap\TestManagement\Config::class);
-        $this->dao       = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
+        $this->config = \Mockery::spy(\Tuleap\TestManagement\Config::class);
+        $this->dao    = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
 
         $this->overrider = new NatureCoveredByOverrider($this->config, $this->dao);
 

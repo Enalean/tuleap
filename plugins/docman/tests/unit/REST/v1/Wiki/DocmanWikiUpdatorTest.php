@@ -68,11 +68,11 @@ class DocmanWikiUpdatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->version_factory            = Mockery::mock(\Docman_VersionFactory::class);
-        $this->docman_item_factory        = Mockery::mock(Docman_ItemFactory::class);
-        $this->event_manager              = Mockery::mock(\EventManager::class);
-        $this->updator                    = Mockery::mock(DocmanItemUpdator::class);
-        $this->transaction_executor       = Mockery::mock(DBTransactionExecutor::class);
+        $this->version_factory      = Mockery::mock(\Docman_VersionFactory::class);
+        $this->docman_item_factory  = Mockery::mock(Docman_ItemFactory::class);
+        $this->event_manager        = Mockery::mock(\EventManager::class);
+        $this->updator              = Mockery::mock(DocmanItemUpdator::class);
+        $this->transaction_executor = Mockery::mock(DBTransactionExecutor::class);
 
         $this->wiki_updator = new DocmanWikiVersionCreator(
             $this->version_factory,

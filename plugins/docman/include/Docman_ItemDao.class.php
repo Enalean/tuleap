@@ -39,7 +39,7 @@ class Docman_ItemDao extends DataAccessObject
      */
     private static function getExcludeObsoleteItemsStmt(string $table): string
     {
-        $sql = '';
+        $sql  = '';
         $sql .= '(' . $table . '.obsolescence_date = 0 OR ';
         $sql .= ' ' . $table . '.obsolescence_date > ' . self::getObsoleteToday() . ')';
         return $sql;
@@ -108,8 +108,8 @@ class Docman_ItemDao extends DataAccessObject
 
     public function doesTitleCorrespondToExistingDocument($title, $parent_id)
     {
-        $title     = $this->da->quoteSmart($title);
-        $parent_id = $this->da->escapeInt($parent_id);
+        $title       = $this->da->quoteSmart($title);
+        $parent_id   = $this->da->escapeInt($parent_id);
         $type_folder = $this->da->escapeInt(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
 
         $sql = "SELECT *
@@ -141,7 +141,7 @@ class Docman_ItemDao extends DataAccessObject
 
     public function searchObsoleteByGroupId($groupId)
     {
-        $sql = '';
+        $sql  = '';
         $sql .= $this->_getItemSearchSelectStmt();
         $sql .= $this->_getItemSearchFromStmt();
         $sql .= sprintf(
@@ -160,9 +160,9 @@ class Docman_ItemDao extends DataAccessObject
      */
     public function searchPaginatedWithVersionByGroupId($groupId, $limit, $offset)
     {
-        $groupId  = $this->da->escapeInt($groupId);
-        $limit    = $this->da->escapeInt($limit);
-        $offset   = $this->da->escapeInt($offset);
+        $groupId = $this->da->escapeInt($groupId);
+        $limit   = $this->da->escapeInt($limit);
+        $offset  = $this->da->escapeInt($offset);
 
         $params = [
             'limit'           => $limit,
@@ -185,7 +185,7 @@ class Docman_ItemDao extends DataAccessObject
     {
         // Where clause
         // Select on group_id
-        $_id = (int) $id;
+        $_id       = (int) $id;
         $sql_where = ' i.group_id = ' . $_id;
 
         // Order clause
@@ -299,7 +299,7 @@ class Docman_ItemDao extends DataAccessObject
      */
     public function _searchWithCurrentVersion($where, $group = '', $order = '', $from = [], $params = [])
     {
-        $sql = '';
+        $sql  = '';
         $sql .= $this->_getItemSearchSelectStmt();
         $sql .= $this->_getItemSearchFromStmt();
         $sql .= (count($from) > 0 ? ' LEFT JOIN ' . implode(' LEFT JOIN ', $from) : '')
@@ -396,7 +396,7 @@ class Docman_ItemDao extends DataAccessObject
         if (isset($row['create_date']) && $row['create_date'] != '') {
             $updateParent = false;
         } else {
-            $updateParent = true;
+            $updateParent       = true;
             $row['create_date'] = time();
         }
 
@@ -522,7 +522,7 @@ class Docman_ItemDao extends DataAccessObject
     public function updateFromRow(array $row)
     {
         $updated = false;
-        $id = false;
+        $id      = false;
         if (isset($row['id'])) {
             $id = $row['id'];
         } elseif (isset($row['item_id'])) {
@@ -532,7 +532,7 @@ class Docman_ItemDao extends DataAccessObject
         if (isset($row['update_date']) && $row['update_date'] != '') {
             $updateParent = false;
         } else {
-            $updateParent = true;
+            $updateParent       = true;
             $row['update_date'] = time();
         }
 
@@ -546,7 +546,7 @@ class Docman_ItemDao extends DataAccessObject
             if (empty($set_array)) {
                 return true;
             }
-            $sql = 'UPDATE plugin_docman_item'
+            $sql     = 'UPDATE plugin_docman_item'
                 . ' SET ' . implode(' , ', $set_array)
                 . ' WHERE item_id=' . $this->da->quoteSmart($id);
             $updated = $this->update($sql);
@@ -563,7 +563,7 @@ class Docman_ItemDao extends DataAccessObject
         $dar = $this->retrieve($sql);
         if ($dar && ! $dar->isError() && $dar->valid()) {
             $item = $dar->current();
-            $sql = 'UPDATE plugin_docman_item SET update_date = ' . $item['update_date'] . ' WHERE item_id = ' . $item['parent_id'];
+            $sql  = 'UPDATE plugin_docman_item SET update_date = ' . $item['update_date'] . ' WHERE item_id = ' . $item['parent_id'];
             $this->update($sql);
         }
     }
@@ -611,7 +611,7 @@ class Docman_ItemDao extends DataAccessObject
     public function hasRootOnlyOneChild($groupId)
     {
         $cFilters = $this->_stmtArrayToString('AND', $this->_getCommonItemFilters());
-        $sql = sprintf(
+        $sql      = sprintf(
             'SELECT i.item_id' .
                        ' FROM plugin_docman_item i' .
                        ' JOIN plugin_docman_item r' .
@@ -622,7 +622,7 @@ class Docman_ItemDao extends DataAccessObject
                        ' LIMIT 2',
             $groupId
         );
-        $dar = $this->retrieve($sql);
+        $dar      = $this->retrieve($sql);
         return $dar;
     }
 
@@ -641,16 +641,16 @@ class Docman_ItemDao extends DataAccessObject
             case 'beginning':
             case 'end':
                 $_select = $ordering == 'end' ? 'MAX(rank)+1' : 'MIN(rank)-1';
-                $sql = sprintf(
+                $sql     = sprintf(
                     'SELECT %s AS rank' .
                                ' FROM plugin_docman_item' .
                                ' WHERE parent_id = %d',
                     $_select,
                     $parentId
                 );
-                $dar = $this->retrieve($sql);
+                $dar     = $this->retrieve($sql);
                 if ($dar && $dar->valid()) {
-                    $row = $dar->current();
+                    $row  = $dar->current();
                     $rank = $row['rank'];
                 }
                 break;
@@ -698,7 +698,7 @@ class Docman_ItemDao extends DataAccessObject
                 break;
             default:
                 $rank = $ordering ? $ordering : 0;
-                $sql = sprintf(
+                $sql  = sprintf(
                     'UPDATE plugin_docman_item' .
                                ' SET rank = rank + 1 ' .
                                ' WHERE  parent_id = %d ' .
@@ -767,10 +767,10 @@ class Docman_ItemDao extends DataAccessObject
             $this->da->quoteSmart($group_id)
         );
         $dar = $this->retrieve($sql);
-        $id = false;
+        $id  = false;
         if ($dar && $dar->valid()) {
             $row = $dar->current();
-            $id = $row['item_id'];
+            $id  = $row['item_id'];
         }
         return $id;
     }
@@ -855,7 +855,7 @@ class Docman_ItemDao extends DataAccessObject
     public function isWikiPageReferenced($wikipage, $group_id)
     {
         $obsoleteToday = $this->getObsoleteToday();
-        $sql = sprintf(
+        $sql           = sprintf(
             'SELECT item_id' .
             ' FROM plugin_docman_item' .
             ' WHERE wiki_page = \'%s\'' .
@@ -866,7 +866,7 @@ class Docman_ItemDao extends DataAccessObject
             db_ei($group_id),
             $obsoleteToday
         );
-        $res = $this->retrieve($sql);
+        $res           = $this->retrieve($sql);
         if ($res && ! $res->isError() && $res->rowCount() >= 1) {
             return true;
         } else {
@@ -899,7 +899,7 @@ class Docman_ItemDao extends DataAccessObject
             if ($res->rowCount() > 1) {
                 $res->rewind();
                 while ($res->valid()) {
-                    $row = $res->current();
+                    $row   = $res->current();
                     $ids[] = $row['item_id'];
                     $res->next();
                 }
@@ -908,7 +908,7 @@ class Docman_ItemDao extends DataAccessObject
                 $res->rewind();
                 if ($res->valid()) {
                     $row = $res->current();
-                    $id = $row['item_id'];
+                    $id  = $row['item_id'];
                     return $id;
                 }
             }
@@ -1007,7 +1007,7 @@ class Docman_ItemDao extends DataAccessObject
                 $pendings[] = $row;
             }
 
-            $sql = 'SELECT FOUND_ROWS() as nb';
+            $sql        = 'SELECT FOUND_ROWS() as nb';
             $resNumrows = $this->retrieve($sql);
             if ($resNumrows === false) {
                 return [];

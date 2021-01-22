@@ -45,7 +45,7 @@ class Docman_Widget_MyDocman extends Widget
 
     public function getContent()
     {
-        $html = '';
+        $html  = '';
         $html .= '<script type="text/javascript">';
         $html .= "
         function plugin_docman_approval_toggle(what, save) {
@@ -72,7 +72,7 @@ class Docman_Widget_MyDocman extends Widget
 
     private function _getReviews($reviewer = true)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
 
         $content_html_id = 'plugin_docman_approval_' . ($reviewer ? 'reviewer' : 'requester');
@@ -98,15 +98,15 @@ class Docman_Widget_MyDocman extends Widget
         if (count($reviewsArray) > 0) {
             $request = HTTPRequest::instance();
             // Get hide arguments
-            $hideItemId = (int) $request->get('hide_item_id');
+            $hideItemId   = (int) $request->get('hide_item_id');
             $hideApproval = null;
             if ($request->exist('hide_plugin_docman_approval')) {
                 $hideApproval = (int) $request->get('hide_plugin_docman_approval');
             }
 
             $prevGroupId = -1;
-            $hideNow = false;
-            $i = 0;
+            $hideNow     = false;
+            $i           = 0;
 
             $html .= '<table class="tlp-table">';
             foreach ($reviewsArray as $review) {
@@ -120,8 +120,8 @@ class Docman_Widget_MyDocman extends Widget
                             $hideApproval,
                             $request->get('dashboard_id')
                         );
-                    $docmanUrl = $this->pluginPath . '/?group_id=' . $review['group_id'];
-                    $docmanHref = '<a href="' . $docmanUrl . '">' . $hp->purify($review['group']) . '</a>';
+                    $docmanUrl                            = $this->pluginPath . '/?group_id=' . $review['group_id'];
+                    $docmanHref                           = '<a href="' . $docmanUrl . '">' . $hp->purify($review['group']) . '</a>';
 
                     if ($reviewer) {
                         $colspan = 2;
@@ -130,7 +130,7 @@ class Docman_Widget_MyDocman extends Widget
                     }
                     $html .= '<tr class="boxitem"><td colspan="' . $colspan . '">';
                     $html .= '<strong>' . $hideUrl . $docmanHref . '</strong></td></tr>';
-                    $i    = 0;
+                    $i     = 0;
                 }
 
                 if (! $hideNow) {

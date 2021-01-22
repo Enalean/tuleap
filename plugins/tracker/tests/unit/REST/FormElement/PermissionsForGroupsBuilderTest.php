@@ -72,10 +72,10 @@ final class PermissionsForGroupsBuilderTest extends TestCase
         $this->tracker = M::mock(\Tracker::class, ['getID' => 12, 'getProject' => $this->project]);
         $this->tracker->shouldReceive('userIsAdmin')->with($this->tracker_admin_user)->andReturnTrue();
 
-        $this->ugroup_manager = M::mock(\UGroupManager::class);
-        $this->frozen_detector = M::mock(FrozenFieldDetector::class);
+        $this->ugroup_manager        = M::mock(\UGroupManager::class);
+        $this->frozen_detector       = M::mock(FrozenFieldDetector::class);
         $this->permissions_functions = M::mock(PermissionsFunctionsWrapper::class);
-        $this->builder = new PermissionsForGroupsBuilder($this->ugroup_manager, $this->frozen_detector, $this->permissions_functions);
+        $this->builder               = new PermissionsForGroupsBuilder($this->ugroup_manager, $this->frozen_detector, $this->permissions_functions);
     }
 
     public function testItDoesntReturnFieldsForNonAdminUsers(): void
@@ -84,13 +84,13 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
         $this->tracker->shouldReceive('userIsAdmin')->with($a_random_user)->andReturnFalse();
 
-        $form_element  = M::mock(\Tracker_FormElement_Field::class, ['getTracker' => $this->tracker]);
+        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getTracker' => $this->tracker]);
         $this->assertNull($this->builder->getPermissionsForGroups($form_element, null, $a_random_user));
     }
 
     public function testItReturnsNullWhenThereAreNoPermissionsSet(): void
     {
-        $form_element  = M::mock(\Tracker_FormElement_Field::class, ['getId' => 1234, 'getTracker' => $this->tracker]);
+        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => 1234, 'getTracker' => $this->tracker]);
 
         $this->permissions_functions->shouldReceive('getFieldUGroupsPermissions')->with($form_element)->andReturn([]);
 
@@ -99,8 +99,8 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
     public function testItReturnsEmptyRepresentationWhenNoPermissionsMatches(): void
     {
-        $field_id = 1234;
-        $form_element  = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $field_id     = 1234;
+        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
 
         $this->permissions_functions->shouldReceive('getFieldUGroupsPermissions')->with($form_element)->andReturn(
             [
@@ -117,8 +117,8 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
     public function testItReturnsOneGroupThatCanRead(): void
     {
-        $field_id = 1234;
-        $form_element  = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $field_id     = 1234;
+        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
@@ -153,8 +153,8 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
     public function testItReturnsOneGroupThatCanSubmit(): void
     {
-        $field_id = 1234;
-        $form_element  = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $field_id     = 1234;
+        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
@@ -189,8 +189,8 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
     public function testItReturnsOneGroupThatCanUpdate(): void
     {
-        $field_id = 1234;
-        $form_element  = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $field_id     = 1234;
+        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
@@ -223,8 +223,8 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
     public function testItExcludedFromUpdateGroupsThatAreFrozenWhenThereIsAnArtifact()
     {
-        $field_id = 1234;
-        $form_element  = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $field_id     = 1234;
+        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
@@ -260,8 +260,8 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
     public function testItAllowUpdateWhenUseArifactButFieldIsNotFrozen()
     {
-        $field_id = 1234;
-        $form_element  = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $field_id     = 1234;
+        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
@@ -299,10 +299,10 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
     public function testItReturnsACompleteDefinitionOfGroups(): void
     {
-        $field_id = 1234;
-        $form_element  = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
+        $field_id     = 1234;
+        $form_element = M::mock(\Tracker_FormElement_Field::class, ['getId' => $field_id, 'getTracker' => $this->tracker]);
 
-        $anonymous_ugroup = new ProjectUGroup([
+        $anonymous_ugroup       = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
@@ -312,8 +312,8 @@ final class PermissionsForGroupsBuilderTest extends TestCase
             'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id' => 202,
         ]);
-        $developers_id = 501;
-        $static_ugroup = new ProjectUGroup([
+        $developers_id          = 501;
+        $static_ugroup          = new ProjectUGroup([
             'ugroup_id' => $developers_id,
             'name' => 'Developers',
             'group_id' => 202,

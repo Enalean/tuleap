@@ -48,7 +48,7 @@ final class DispatchablePSR15CompatibleTest extends TestCase
                 return $response->withHeader('middleware', 'OK');
             }
         };
-        $emitter = Mockery::mock(EmitterInterface::class);
+        $emitter    = Mockery::mock(EmitterInterface::class);
 
         $base_layout = Mockery::mock(BaseLayout::class);
 

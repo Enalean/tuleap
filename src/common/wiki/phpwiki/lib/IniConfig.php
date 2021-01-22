@@ -120,7 +120,7 @@ function IniConfig($file)
          'BLOG_EMPTY_DEFAULT_PREFIX', 'ENABLE_DISCUSSION_LINK'
          ];
 
-    $rs = @parse_ini_file($file);
+    $rs    = @parse_ini_file($file);
     $rsdef = @parse_ini_file(dirname(__FILE__) . "/../config/config-default.ini");
     foreach ($rsdef as $k => $v) {
         if (defined($k)) {
@@ -550,7 +550,7 @@ function fixup_dynamic_configs($file)
     //    then bindtextdomain() fails, but after chdir to the correct path it will work okay.
     // 2. But the weird error "Undefined variable: bindtextdomain" is generated then.
     $bindtextdomain_path = FindFile("locale", false, true);
-    $chback = 0;
+    $chback              = 0;
     if (isWindows()) {
         $bindtextdomain_path = str_replace("/", "\\", $bindtextdomain_path);
     }
@@ -558,7 +558,7 @@ function fixup_dynamic_configs($file)
     if (realpath($bindtextdomain_real) != realpath($bindtextdomain_path)) {
         // this will happen with virtual_paths. chdir and try again.
         chdir($bindtextdomain_path);
-        $chback = 1;
+        $chback              = 1;
         $bindtextdomain_real = @bindtextdomain("phpwiki", $bindtextdomain_path);
     }
     textdomain("phpwiki");

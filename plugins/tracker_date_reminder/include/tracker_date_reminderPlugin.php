@@ -109,13 +109,13 @@ class tracker_date_reminderPlugin extends Plugin
         if ($params['at']->userIsAdmin()) {
             echo '<br><h3>' . dgettext('tuleap-tracker_date_reminder', 'Date Fields Email Notification') . ' </h3>';
 
-            $title_arr = [];
+            $title_arr   = [];
             $title_arr[] = $GLOBALS['Language']->getText('tracker_include_type', 'df');
             $title_arr[] = dgettext('tuleap-tracker_date_reminder', 'Notification Status');
             $title_arr[] = dgettext('tuleap-tracker_date_reminder', 'Notification Settings');
 
-            $out = html_build_list_table_top($title_arr);
-            $fmt = "\n" . '<TR class=%s><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
+            $out       = html_build_list_table_top($title_arr);
+            $fmt       = "\n" . '<TR class=%s><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
             $row_color = 0;
 
             $tdrArtifactFieldFactory = new TrackerDateReminder_ArtifactFieldFactory();
@@ -219,7 +219,7 @@ class tracker_date_reminderPlugin extends Plugin
                         }
                         // now update the reminder settings
                         $tdrArtifactField = new TrackerDateReminder_ArtifactField();
-                        $res = $tdrArtifactField->updateDateFieldReminderSettings($params['ath'], $field, $params['ath']->getID(), $_REQUEST['start'], $_REQUEST['notif_type'], $_REQUEST['frequency'], $_REQUEST['recurse'], $notified);
+                        $res              = $tdrArtifactField->updateDateFieldReminderSettings($params['ath'], $field, $params['ath']->getID(), $_REQUEST['start'], $_REQUEST['notif_type'], $_REQUEST['frequency'], $_REQUEST['recurse'], $notified);
                         if ($res) {
                             $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker_date_reminder', '\'%1$s\' Reminder Settings Update Successful.'), $field->getLabel()));
                         } else {

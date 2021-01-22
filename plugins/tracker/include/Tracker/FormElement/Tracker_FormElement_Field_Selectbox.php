@@ -59,7 +59,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         if (isset($submitted_values[$this->id])) {
             if (! is_array($submitted_values[$this->id])) {
                 $submitted_values_array[] = $submitted_values[$this->id];
-                $values = $submitted_values_array;
+                $values                   = $submitted_values_array;
             } else {
                 $values = $submitted_values[$this->id];
             }
@@ -101,9 +101,9 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
 
     protected function displayArtifactJavascript($changeset_values)
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '<script type="text/javascript">';
-        $html .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $this->getName() . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
+        $hp     = Codendi_HTMLPurifier::instance();
+        $html   = '<script type="text/javascript">';
+        $html  .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $this->getName() . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
         $values = $this->getBind()->getAllValues();
 
         $html .= "\n\t.addOption('None'.escapeHTML(), '100', " . (empty($changeset_values) ? 'true' : 'false') . ", '')";
@@ -118,17 +118,17 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
 
     protected function displaySubmitJavascript()
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '<script type="text/javascript">';
-        $html .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE) . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
+        $hp            = Codendi_HTMLPurifier::instance();
+        $html          = '<script type="text/javascript">';
+        $html         .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE) . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
         $default_value = $this->getDefaultValue();
-        $values = $this->getBind()->getAllValues();
-        $html .= "\n\t.addOption('None'.escapeHTML(), '100', " . ($default_value == 100 ? 'true' : 'false') . ", '')";
-        $html .= "\n\t.addOption('" . $hp->purify($GLOBALS['Language']->getText('global', 'unchanged'), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . $hp->purify(BindStaticValueUnchanged::VALUE_ID, CODENDI_PURIFIER_JS_QUOTE) . "', false, '')";
+        $values        = $this->getBind()->getAllValues();
+        $html         .= "\n\t.addOption('None'.escapeHTML(), '100', " . ($default_value == 100 ? 'true' : 'false') . ", '')";
+        $html         .= "\n\t.addOption('" . $hp->purify($GLOBALS['Language']->getText('global', 'unchanged'), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . $hp->purify(BindStaticValueUnchanged::VALUE_ID, CODENDI_PURIFIER_JS_QUOTE) . "', false, '')";
 
         foreach ($values as $id => $value) {
             $dataset = $value->getDataset();
-            $html .= "\n\t.addOption('" . $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . ($id == $default_value ? 'true' : 'false') . ', ' . json_encode($dataset) . ")";
+            $html   .= "\n\t.addOption('" . $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . ($id == $default_value ? 'true' : 'false') . ', ' . json_encode($dataset) . ")";
         }
         $html .= ";\n";
         $html .= '</script>';

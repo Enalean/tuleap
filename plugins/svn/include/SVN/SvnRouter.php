@@ -277,7 +277,7 @@ class SvnRouter implements DispatchableWithRequest
 
     private function getProjectFromViewVcURL(HTTPRequest $request)
     {
-        $svn_root          = $request->get('root');
+        $svn_root = $request->get('root');
         if (strpos($svn_root, '/') !== false) {
             $project_shortname = substr($svn_root, 0, strpos($svn_root, '/'));
         } else {

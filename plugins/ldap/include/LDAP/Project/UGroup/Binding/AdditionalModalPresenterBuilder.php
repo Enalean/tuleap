@@ -57,8 +57,8 @@ class AdditionalModalPresenterBuilder
             LDAP_TEMPLATE_DIR . '/project/ugroup/binding'
         );
 
-        $this->user_group_manager = $user_group_manager;
-        $this->request            = $request;
+        $this->user_group_manager      = $user_group_manager;
+        $this->request                 = $request;
         $this->ldap_server_common_name = $ldap_server_common_name;
     }
 

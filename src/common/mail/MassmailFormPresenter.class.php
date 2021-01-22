@@ -32,14 +32,14 @@ class MassmailFormPresenter
 
     public function __construct(CSRFSynchronizerToken $token, $title, $action)
     {
-        $this->submit_button    = $GLOBALS['Language']->getText('global', 'btn_submit');
-        $this->close_button     = $GLOBALS['Language']->getText('global', 'btn_cancel');
-        $this->subject_label    = $GLOBALS['Language']->getText('my_index', 'subject_label');
-        $this->body_label       = $GLOBALS['Language']->getText('my_index', 'body_label');
-        $this->title            = $title;
-        $this->action           = $action;
+        $this->submit_button = $GLOBALS['Language']->getText('global', 'btn_submit');
+        $this->close_button  = $GLOBALS['Language']->getText('global', 'btn_cancel');
+        $this->subject_label = $GLOBALS['Language']->getText('my_index', 'subject_label');
+        $this->body_label    = $GLOBALS['Language']->getText('my_index', 'body_label');
+        $this->title         = $title;
+        $this->action        = $action;
 
-        $this->csrf_token       = $token->fetchHTMLInput();
+        $this->csrf_token = $token->fetchHTMLInput();
     }
 
     public function getTemplateDir()

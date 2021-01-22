@@ -54,7 +54,7 @@ class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent
 
     public function process()
     {
-        $parameters   = $this->getParametersAsArray();
+        $parameters = $this->getParametersAsArray();
 
         if (! empty($parameters[0])) {
             $repository_id = (int) $parameters[0];
@@ -76,7 +76,7 @@ class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent
             return false;
         }
 
-        $server  = $this->server_factory->getServerById($remote_server_id);
+        $server = $this->server_factory->getServerById($remote_server_id);
         if (! $server) {
             $this->error('Failed to find server ' . $remote_server_id);
             return false;

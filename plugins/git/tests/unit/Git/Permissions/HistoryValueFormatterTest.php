@@ -71,7 +71,7 @@ class HistoryValueFormatterTest extends TestCase
         $this->default_factory     = \Mockery::spy(\Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory::class);
         $this->factory             = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class);
 
-        $this->formatter           = new HistoryValueFormatter(
+        $this->formatter = new HistoryValueFormatter(
             $this->permissions_manager,
             $this->ugroup_manager,
             $this->retriever,

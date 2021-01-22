@@ -32,7 +32,7 @@ class Dao extends DataAccessObject
     public function searchByProject(Project $project)
     {
         $project_id = $this->da->escapeInt($project->getId());
-        $sql = 'SELECT *
+        $sql        = 'SELECT *
                 FROM plugin_svn_repositories
                 LEFT JOIN plugin_svn_last_access
                   ON plugin_svn_repositories.id = plugin_svn_last_access.repository_id
@@ -83,7 +83,7 @@ class Dao extends DataAccessObject
     {
         $id         = $this->da->escapeInt($id);
         $project_id = $this->da->escapeInt($project->getId());
-        $sql = "SELECT *
+        $sql        = "SELECT *
                 FROM plugin_svn_repositories
                 WHERE id=$id AND project_id=$project_id";
 
@@ -94,7 +94,7 @@ class Dao extends DataAccessObject
     {
         $name       = $this->da->quoteSmart($name);
         $project_id = $this->da->escapeInt($project->getId());
-        $sql = "SELECT *
+        $sql        = "SELECT *
                 FROM plugin_svn_repositories
                 WHERE name=$name AND project_id=$project_id
                 LIMIT 1";
@@ -172,7 +172,7 @@ class Dao extends DataAccessObject
     public function getDeletedRepositoriesToPurge($retention_date)
     {
         $retention_date = $this->da->escapeInt($retention_date);
-        $sql = "SELECT *
+        $sql            = "SELECT *
                   FROM plugin_svn_repositories
                   WHERE repository_deletion_date IS NOT NULL
                     AND FROM_UNIXTIME(repository_deletion_date) <= FROM_UNIXTIME($retention_date)";

@@ -28,12 +28,12 @@ use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushWebhookDataBuilder;
 
 class WebhookDataExtractor
 {
-    private const EVENT_NAME_KEY = 'event_name';
-    private const EVENT_TYPE_KEY = 'event_type';
-    private const PROJECT_KEY = 'project';
-    private const PROJECT_ID_KEY = 'id';
-    private const PROJECT_URL_KEY = 'web_url';
-    private const PUSH_EVENT = 'push';
+    private const EVENT_NAME_KEY      = 'event_name';
+    private const EVENT_TYPE_KEY      = 'event_type';
+    private const PROJECT_KEY         = 'project';
+    private const PROJECT_ID_KEY      = 'id';
+    private const PROJECT_URL_KEY     = 'web_url';
+    private const PUSH_EVENT          = 'push';
     private const MERGE_REQUEST_EVENT = 'merge_request';
 
     /**

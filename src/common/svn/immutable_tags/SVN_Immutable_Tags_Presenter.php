@@ -59,7 +59,7 @@ class SVN_ImmutableTagsPresenter
         );
         if ($existing_tree === self::$SO_MUCH_FOLDERS || count($existing_tree) > self::MAX_NUMBER_OF_FOLDERS) {
             $this->exceeds_max_number_of_folders = true;
-            $existing_tree = [];
+            $existing_tree                       = [];
         } else {
             $this->exceeds_max_number_of_folders = false;
             array_walk(

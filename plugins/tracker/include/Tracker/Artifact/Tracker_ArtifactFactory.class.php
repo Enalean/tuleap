@@ -85,7 +85,7 @@ class Tracker_ArtifactFactory
     {
         if (! isset($this->artifacts[$id])) {
             $this->artifacts[$id] = null;
-            $row = $this->getDao()->searchById($id)->getRow();
+            $row                  = $this->getDao()->searchById($id)->getRow();
             if ($row) {
                 $this->artifacts[$id] = $this->getInstanceFromRow($row);
             }
@@ -257,7 +257,7 @@ class Tracker_ArtifactFactory
     protected function getUserOpenArtifacts(PFUser $user, string $callback, ?int $offset, ?int $limit): MyArtifactsCollection
     {
         $my_artifacts = new MyArtifactsCollection(TrackerFactory::instance());
-        $dar = $this->getDao()->$callback($user, $offset, $limit);
+        $dar          = $this->getDao()->$callback($user, $offset, $limit);
         $my_artifacts->setTotalNumberOfArtifacts($this->getDao()->foundRows());
         foreach ($dar as $row) {
             $tracker_id  = (int) $row['tracker_id'];
@@ -505,7 +505,7 @@ class Tracker_ArtifactFactory
     public function setTitles(array $artifacts)
     {
         $artifact_ids = [];
-        $index_map = [];
+        $index_map    = [];
         foreach ($artifacts as $index_in_source_array => $artifact) {
             $artifact_ids[]                  = $artifact->getId();
             $index_map[$artifact->getId()][] = $index_in_source_array;

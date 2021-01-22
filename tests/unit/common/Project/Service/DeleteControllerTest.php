@@ -69,16 +69,16 @@ final class DeleteControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->service_dao     = M::mock(ServiceDao::class);
-        $project_admin         = M::mock(PFUser::class);
-        $this->service_manager = M::mock(ServiceManager::class);
-        $this->project_retriever = M::mock(ProjectRetriever::class);
+        $this->service_dao           = M::mock(ServiceDao::class);
+        $project_admin               = M::mock(PFUser::class);
+        $this->service_manager       = M::mock(ServiceManager::class);
+        $this->project_retriever     = M::mock(ProjectRetriever::class);
         $this->administrator_checker = M::mock(ProjectAdministratorChecker::class);
 
         $this->service_id = '14';
 
-        $this->project_id        = 120;
-        $this->project           = M::mock(Project::class, ['getID' => (string) $this->project_id]);
+        $this->project_id = 120;
+        $this->project    = M::mock(Project::class, ['getID' => (string) $this->project_id]);
         $this->project_retriever->shouldReceive('getProjectFromId')
             ->with((string) $this->project_id)
             ->andReturn($this->project);

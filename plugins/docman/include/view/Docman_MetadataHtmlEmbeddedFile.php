@@ -33,8 +33,8 @@ class Docman_MetadataHtmlEmbeddedFile extends \Docman_MetadataHtml
     }
     public function getField()
     {
-        $hp = \Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp    = \Codendi_HTMLPurifier::instance();
+        $html  = '';
         $html .= '<textarea id="embedded_content" name="content" cols="80" rows="20">' . $hp->purify($this->content) . '</textarea>';
         return $html;
     }

@@ -291,7 +291,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     protected function fetchActionButtons(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $readonly)
     {
-        $add_to_dashboard_params      = [
+        $add_to_dashboard_params = [
             'action' => 'add-widget',
             'chart'  => [
                 'title'    => $this->getTitle(),
@@ -320,7 +320,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
             );
 
         $project_dashboard_url = '';
-        $project = $renderer->report->getTracker()->getProject();
+        $project               = $renderer->report->getTracker()->getProject();
         if ($project->userIsAdmin($current_user)) {
             $csrf                  = new CSRFSynchronizerToken('/project/');
             $project_dashboard_url = '/widgets/?' .
@@ -628,7 +628,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     public function getWidgetContent()
     {
-        $content = $this->fetchAdditionnalButton();
+        $content  = $this->fetchAdditionnalButton();
         $content .= $this->getContent();
         $content .= $this->renderer->fetchWidgetGoToReport();
 
@@ -643,7 +643,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     private function fetchContentJPGraph($store_in_session)
     {
-        $content = $this->fetch($store_in_session);
+        $content  = $this->fetch($store_in_session);
         $content .= '<br />';
 
         return $content;

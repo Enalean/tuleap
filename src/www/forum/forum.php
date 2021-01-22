@@ -44,7 +44,7 @@ function forum_show_a_nested_message($result, $row = 0)
 
     if ($g_id == ForgeConfig::get('sys_news_group')) {
         $f_id =  db_result($result, $row, 'group_forum_id');
-        $gr = db_query("SELECT group_id FROM news_bytes WHERE forum_id=" . db_ei($f_id));
+        $gr   = db_query("SELECT group_id FROM news_bytes WHERE forum_id=" . db_ei($f_id));
         $g_id = db_result($gr, 0, 'group_id');
     }
 
@@ -96,7 +96,7 @@ function forum_show_nested_messages($thread_id, $msg_id)
     "ORDER BY forum.date ASC;";
 
     $result = db_query($sql);
-    $rows = db_numrows($result);
+    $rows   = db_numrows($result);
 
     $ret_val = '';
 
@@ -266,8 +266,8 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         } else {
             if (user_get_preference('forum_style')) {
                 $_pref_arr = explode('|', user_get_preference('forum_style'));
-                $style = $_pref_arr[0];
-                $max_rows = $_pref_arr[1];
+                $style     = $_pref_arr[0];
+                $max_rows  = $_pref_arr[1];
             } else {
                 //no saved pref and we're not setting
                 //one because this is all default settings
@@ -281,7 +281,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     */
     $result = db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=" . db_ei($forum_id));
 
-    $group_id = db_result($result, 0, 'group_id');
+    $group_id   = db_result($result, 0, 'group_id');
     $forum_name = db_result($result, 0, 'forum_name');
 
     $is_a_news = false;
@@ -289,7 +289,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         $is_a_news = true;
     }
 
-        $pm = ProjectManager::instance();
+        $pm     = ProjectManager::instance();
         $params = ['title' => $pm->getProject($group_id)->getPublicName() . ' forum: ' . $forum_name,
                       'pv'   => isset($pv) ? $pv : false];
         forum_header($params);
@@ -319,7 +319,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         "ORDER BY forum.date DESC LIMIT " . db_ei($offset) . "," . db_ei($max_rows + 1);
 
         $result = db_query($sql);
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
 
         if ($rows > $max_rows) {
             $rows = $max_rows;
@@ -349,23 +349,23 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
             if ($is_a_news) {
                 $forum_popup = '<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="' . $purifier->purify($forum_id) . '">';
             } else {
-                $res = db_query("SELECT group_forum_id,forum_name " .
+                $res   = db_query("SELECT group_forum_id,forum_name " .
                 "FROM forum_group_list " .
                 "WHERE group_id='" . db_ei($group_id) . "' AND is_public IN ($public_flag)");
-                $vals = util_result_column_to_array($res, 0);
+                $vals  = util_result_column_to_array($res, 0);
                 $texts = util_result_column_to_array($res, 1);
 
                 $forum_popup = html_build_select_box_from_arrays($vals, $texts, 'forum_id', $forum_id, false);
             }
         //create a pop-up select box showing options for viewing threads
 
-            $vals = forum_utils_get_styles();
+            $vals  = forum_utils_get_styles();
             $texts = [_('Nested'), _('Flat'), _('Threaded'), _('No Comments')];
 
             $options_popup = html_build_select_box_from_arrays($vals, $texts, 'style', $style, false);
 
         //create a pop-up select box showing options for max_row count
-            $vals = [25, 50, 75, 100];
+            $vals  = [25, 50, 75, 100];
             $texts = [sprintf(_('Show %1$s'), '25'), sprintf(_('Show %1$s'), '50'), sprintf(_('Show %1$s'), '75'), sprintf(_('Show %1$s'), '100')];
 
             $max_row_popup = html_build_select_box_from_arrays($vals, $texts, 'max_rows', $max_rows, false);
@@ -393,7 +393,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
               different header for default threading
              */
 
-                $title_arr = [];
+                $title_arr   = [];
                 $title_arr[] = _('Thread');
                 $title_arr[] = _('Author');
                 $title_arr[] = _('Date');

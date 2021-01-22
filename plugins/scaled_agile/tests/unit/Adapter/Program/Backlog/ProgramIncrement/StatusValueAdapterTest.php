@@ -57,7 +57,7 @@ final class StatusValueAdapterTest extends TestCase
     private $status_field;
     protected function setUp(): void
     {
-        $this->status_field       = new \Tracker_FormElement_Field_Selectbox(
+        $this->status_field      = new \Tracker_FormElement_Field_Selectbox(
             1,
             10,
             null,
@@ -101,7 +101,7 @@ final class StatusValueAdapterTest extends TestCase
     {
         $source_changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
-        $bind_values = new Tracker_FormElement_Field_List_Bind_StaticValue(1, "Planned", "planned", 1, false);
+        $bind_values    = new Tracker_FormElement_Field_List_Bind_StaticValue(1, "Planned", "planned", 1, false);
         $changset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue_List::class);
         $changset_value->shouldReceive('getListValues')->once()->andReturn([$bind_values]);
 
@@ -112,7 +112,7 @@ final class StatusValueAdapterTest extends TestCase
         $expected_data = new StatusValue([$bind_values]);
 
         $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
-        $data = $adapter->build($this->status_field_data, $replication_data);
+        $data             = $adapter->build($this->status_field_data, $replication_data);
 
         $this->assertEquals($expected_data, $data);
     }

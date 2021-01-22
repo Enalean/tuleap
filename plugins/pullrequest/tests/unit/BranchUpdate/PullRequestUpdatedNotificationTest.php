@@ -59,7 +59,7 @@ final class PullRequestUpdatedNotificationTest extends TestCase
         $pull_request->shouldReceive('getBranchDest')->andReturn('master');
 
         $git_resource_accessor = \Mockery::mock(Project::class);
-        $commit_a = \Mockery::mock(Commit::class);
+        $commit_a              = \Mockery::mock(Commit::class);
         $commit_a->shouldReceive('GetTitle')->andReturn('Commit A');
         $git_resource_accessor->shouldReceive('GetCommit')
             ->with('230549fc4be136fcae6ea6ed574c2f5c7b922346')->andReturn($commit_a);

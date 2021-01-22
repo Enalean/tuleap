@@ -55,7 +55,7 @@ final class MetricsControllerTest extends TestCase
                 }
             }
         );
-        $controller      = new MetricsController(
+        $controller        = new MetricsController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             Mockery::mock(EmitterInterface::class),

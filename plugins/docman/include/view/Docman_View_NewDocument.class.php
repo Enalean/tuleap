@@ -42,12 +42,12 @@ class Docman_View_NewDocument extends Docman_View_New
 
     public function _getSpecificProperties($params)
     {
-        $html = '';
+        $html            = '';
         $currentItemType = null;
         if (isset($params['force_item'])) {
             $currentItemType = Docman_ItemFactory::getItemTypeForItem($params['force_item']);
         }
-        $specifics = [
+        $specifics     = [
             [
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
                 'label'   => dgettext('tuleap-docman', 'Empty document'),
@@ -62,8 +62,8 @@ class Docman_View_NewDocument extends Docman_View_New
                 ]];
         $wikiAvailable = true;
         if (isset($params['group_id'])) {
-            $pm = ProjectManager::instance();
-            $go = $pm->getProject($params['group_id']);
+            $pm            = ProjectManager::instance();
+            $go            = $pm->getProject($params['group_id']);
             $wikiAvailable = $go->usesWiki();
         }
         if ($wikiAvailable) {
@@ -93,12 +93,12 @@ class Docman_View_NewDocument extends Docman_View_New
         $get_specific_fields = new Docman_View_GetSpecificFieldsVisitor();
 
         foreach ($specifics as $specific) {
-            $html .= '<div><label class="docman-create-doctype radio" for="item_item_type_' . $specific['type'] . '">';
-            $html .= '<input type="radio" name="item[item_type]" value="' . $specific['type'] . '" id="item_item_type_' . $specific['type'] . '" data-test="item_type_' . $specific['type'] . '" ' . ($specific['checked'] ? 'checked="checked"' : '') . '/>';
-            $html .= '<b>' . $specific['label'] . '</b></label></div>';
-            $html .= '<div style="padding-left:20px" id="item_item_type_' . $specific['type'] . '_specific_properties">';
+            $html  .= '<div><label class="docman-create-doctype radio" for="item_item_type_' . $specific['type'] . '">';
+            $html  .= '<input type="radio" name="item[item_type]" value="' . $specific['type'] . '" id="item_item_type_' . $specific['type'] . '" data-test="item_type_' . $specific['type'] . '" ' . ($specific['checked'] ? 'checked="checked"' : '') . '/>';
+            $html  .= '<b>' . $specific['label'] . '</b></label></div>';
+            $html  .= '<div style="padding-left:20px" id="item_item_type_' . $specific['type'] . '_specific_properties">';
             $fields = $specific['obj']->accept($get_specific_fields, ['request' => $this->_controller->request]);
-            $html .= '<table>';
+            $html  .= '<table>';
             foreach ($fields as $field) {
                 $html .= '<tr style="vertical-align:top;"><td><label>' . $field->getLabel() . '</label></td><td>' . $field->getField() . '</td></tr>';
             }

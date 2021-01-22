@@ -27,10 +27,10 @@ final class Cardwall_OnTop_Config_UpdaterTest extends \PHPUnit\Framework\TestCas
 
     public function testItScheduleExecuteOnCommands(): void
     {
-        $request  = \Mockery::spy(\Codendi_Request::class);
-        $c1       = \Mockery::spy(\Cardwall_OnTop_Config_Command::class);
-        $c2       = \Mockery::spy(\Cardwall_OnTop_Config_Command::class);
-        $updater  = new Cardwall_OnTop_Config_Updater();
+        $request = \Mockery::spy(\Codendi_Request::class);
+        $c1      = \Mockery::spy(\Cardwall_OnTop_Config_Command::class);
+        $c2      = \Mockery::spy(\Cardwall_OnTop_Config_Command::class);
+        $updater = new Cardwall_OnTop_Config_Updater();
         $updater->addCommand($c1);
         $updater->addCommand($c2);
 

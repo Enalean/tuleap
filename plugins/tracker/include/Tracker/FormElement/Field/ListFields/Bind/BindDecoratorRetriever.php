@@ -48,7 +48,7 @@ class BindDecoratorRetriever
             throw new \LogicException("Field "  . $field->getId() . " has no associate bind");
         }
 
-        $values                               = $list_bind->getChangesetValues($changeset->getId());
+        $values = $list_bind->getChangesetValues($changeset->getId());
         if (! $values) {
             if (! isset($decorators[Tracker_FormElement_Field_List::NONE_VALUE])) {
                 throw new NoChangesetValueException();

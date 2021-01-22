@@ -34,8 +34,8 @@ class ParametrizedOrFromWhere implements IProvideParametrizedFromAndWhereSQLFrag
         IProvideParametrizedFromAndWhereSQLFragments $left,
         IProvideParametrizedFromAndWhereSQLFragments $right
     ) {
-        $this->left       = $left;
-        $this->right      = $right;
+        $this->left  = $left;
+        $this->right = $right;
     }
 
     /**

@@ -47,9 +47,9 @@ class Tracker_Artifact_IncomingMessageTokenBuilder
             $references_header,
             $matches
         );
-        $recipient     = $this->recipient_factory->getFromEmail($matches[0]);
-        $subject       = $incoming_mail->getSubject();
-        $body          = $incoming_mail->getBodyText();
+        $recipient = $this->recipient_factory->getFromEmail($matches[0]);
+        $subject   = $incoming_mail->getSubject();
+        $body      = $incoming_mail->getBodyText();
 
         $incoming_message = new Tracker_Artifact_MailGateway_IncomingMessage(
             $subject,

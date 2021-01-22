@@ -32,8 +32,8 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
 
     public function __construct($admin_path, Git_Exec $git_exec)
     {
-        $this->admin_path   = $admin_path;
-        $this->git_exec     = $git_exec;
+        $this->admin_path = $admin_path;
+        $this->git_exec   = $git_exec;
     }
 
     /**

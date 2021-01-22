@@ -155,7 +155,7 @@ class FileModuleMonitorFactory
             if ($frspf->userCanRead($groupId, $fileModuleId, $user->getId())) {
                 if (! $this->isMonitoring($fileModuleId, $user, $publicly)) {
                     $anonymous = false;
-                    $result = $this->setMonitor($fileModuleId, $user, $anonymous);
+                    $result    = $this->setMonitor($fileModuleId, $user, $anonymous);
                     if ($result) {
                         $historyDao = new ProjectHistoryDao();
                         $historyDao->groupAddHistory("frs_add_monitor_package", $fileModuleId . "_" . $user->getId(), $groupId);
@@ -292,10 +292,10 @@ class FileModuleMonitorFactory
         $request   = HTTPRequest::instance();
         $goto_link = $request->getServerUrl() . '/file/showfiles.php?group_id=' . urlencode($package->getGroupID()) .
             '&package_id=' . urlencode($package->getPackageID());
-        $htmlBody = $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_monitor_mail');
+        $htmlBody  = $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_monitor_mail');
         $htmlBody .= ' <a href="' . $purifier->purify($goto_link) . '" >' . $purifier->purify($package->getName()) . '</a>';
 
-        $txtBody = $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_monitor_mail') . ' "' . $package->getName() . '" : ';
+        $txtBody  = $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_monitor_mail') . ' "' . $package->getName() . '" : ';
         $txtBody .= $goto_link;
         $txtBody .= "\n\n" . $GLOBALS['Language']->getText('file_showfiles', 'stop_monitoring') . ': ';
         $txtBody .= HTTPRequest::instance()->getServerUrl() . '/file/filemodule_monitor.php?group_id=' . urlencode($package->getGroupID()) . '&filemodule_id=' . urlencode($package->getPackageID());
@@ -340,7 +340,7 @@ class FileModuleMonitorFactory
         $htmlBody .= '<br /><br /><a href="' . $purifier->purify($server_url . '/file/filemodule_monitor.php?group_id=' . urlencode($package->getGroupID()) . '&filemodule_id=' . urlencode($package->getPackageID())) . '" >' .
             $GLOBALS['Language']->getText('file_showfiles', 'start_monitoring') . '</a>';
 
-        $txtBody = $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_monitor_mail') . ' "' . $package->getName() . '" : ';
+        $txtBody  = $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_monitor_mail') . ' "' . $package->getName() . '" : ';
         $txtBody .= $goto_link;
         $txtBody .= "\n\n" . $GLOBALS['Language']->getText('file_showfiles', 'start_monitoring') . ': ';
         $txtBody .= $server_url . '/file/filemodule_monitor.php?group_id=' . urlencode($package->getGroupID()) . '&filemodule_id=' . urlencode($package->getPackageID());
@@ -374,9 +374,9 @@ class FileModuleMonitorFactory
             $editContent .= '<form id="filemodule_monitor_form_delete" method="post" >';
             $editContent .= '<input type="hidden" name="action" value="delete_monitoring">';
             $editContent .= html_build_list_table_top([$GLOBALS['Language']->getText('file_filemodule_monitor', 'user'), $GLOBALS['Language']->getText('global', 'delete') . '?'], false, false, false);
-            $rowBgColor  = 0;
+            $rowBgColor   = 0;
             foreach ($list as $entry) {
-                $user        = $um->getUserById($entry['user_id']);
+                $user         = $um->getUserById($entry['user_id']);
                 $editContent .= '<tr class="' . html_get_alt_row_color(++$rowBgColor) . '"><td>' . $purifier->purify($userHelper->getDisplayName($user->getName(), $user->getRealName())) . '</td><td><input type="checkbox" name="delete_user[]" value="' . $purifier->purify($entry['user_id']) . '" /></td></tr>';
             }
             $editContent .= '<tr class="' . html_get_alt_row_color(++$rowBgColor) . '"><td>' . $GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count) . '</td><td></td></tr>';
@@ -396,8 +396,8 @@ class FileModuleMonitorFactory
      */
     public function getAddMonitoringForm($fileModuleId)
     {
-        $purifier    = Codendi_HTMLPurifier::instance();
-        $editContent = '<form id="filemodule_monitor_form_add" method="post" >';
+        $purifier     = Codendi_HTMLPurifier::instance();
+        $editContent  = '<form id="filemodule_monitor_form_add" method="post" >';
         $editContent .= '<input type="hidden" name="action" value="add_monitoring">';
         $editContent .= '<input type="hidden" name="package_id" value="' . $purifier->purify($fileModuleId) . '">';
         $editContent .= '<h3>' . $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_users') . '</h3>';
@@ -419,12 +419,12 @@ class FileModuleMonitorFactory
      */
     public function getSelfMonitoringForm($currentUser, $fileModuleId)
     {
-        $purifier    = Codendi_HTMLPurifier::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
 
-        $html = '<h3>' . $GLOBALS['Language']->getText('file_filemodule_monitor', 'my_monitoring') . '</h3>';
-        $html .= '<form id="filemodule_monitor_form" method="post" >';
-        $html .= '<input type="hidden" name="action" value="monitor_package">';
-        $html .= '<input type="hidden" id="filemodule_id" name="filemodule_id" value="' . $purifier->purify($fileModuleId) . '" />';
+        $html                  = '<h3>' . $GLOBALS['Language']->getText('file_filemodule_monitor', 'my_monitoring') . '</h3>';
+        $html                 .= '<form id="filemodule_monitor_form" method="post" >';
+        $html                 .= '<input type="hidden" name="action" value="monitor_package">';
+        $html                 .= '<input type="hidden" id="filemodule_id" name="filemodule_id" value="' . $purifier->purify($fileModuleId) . '" />';
         $notMonitring          = '';
         $monitoringPublicly    = '';
         $monitoringAnonymously = '';

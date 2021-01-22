@@ -48,7 +48,7 @@ class GitViews_GitPhpViewer
 
     public function __construct(GitRepository $repository)
     {
-        $this->repository   = $repository;
+        $this->repository = $repository;
     }
 
     public function displayContent(HTTPRequest $request)

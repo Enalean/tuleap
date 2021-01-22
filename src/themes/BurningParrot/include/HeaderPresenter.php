@@ -258,9 +258,9 @@ class HeaderPresenter
     private function buildFeedbacks($feedback_logs)
     {
         $this->feedbacks = [];
-        $old_level = null;
-        $purifier  = Codendi_HTMLPurifier::instance();
-        $index     = -1;
+        $old_level       = null;
+        $purifier        = Codendi_HTMLPurifier::instance();
+        $index           = -1;
         foreach ($feedback_logs as $feedback) {
             if ($old_level !== $feedback['level']) {
                 ++$index;
@@ -268,7 +268,7 @@ class HeaderPresenter
                     'level'             => $this->convertFeedbackLevel($feedback['level']),
                     'purified_messages' => []
                 ];
-                $old_level = $feedback['level'];
+                $old_level               = $feedback['level'];
             }
             $this->feedbacks[$index]['purified_messages'][] = $purifier->purify($feedback['msg'], $feedback['purify']);
         }

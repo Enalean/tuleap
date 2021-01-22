@@ -127,7 +127,7 @@ class ArtifactLinkValueSaver
             return $nature_by_hierarchy;
         }
 
-        $linked_artifact  = $artifactlinkinfo->getArtifact();
+        $linked_artifact = $artifactlinkinfo->getArtifact();
         if ($linked_artifact === null) {
             return null;
         }

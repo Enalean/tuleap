@@ -59,7 +59,7 @@ final class WorkflowCheckerTest extends TestCase
         $this->workflow_dao  = \Mockery::mock(\Workflow_Dao::class);
         $this->rule_date_dao = \Mockery::mock(\Tracker_Rule_Date_Dao::class);
         $this->rule_list_dao = \Mockery::mock(\Tracker_Rule_List_Dao::class);
-        $this->checker = new WorkflowChecker(
+        $this->checker       = new WorkflowChecker(
             $this->workflow_dao,
             $this->rule_date_dao,
             $this->rule_list_dao,
@@ -74,7 +74,7 @@ final class WorkflowCheckerTest extends TestCase
         $this->rule_list_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
 
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_fields);
 
         $this->assertTrue(
@@ -91,9 +91,9 @@ final class WorkflowCheckerTest extends TestCase
             [['tracker_id' => 758, 'field_id' => 963]]
         );
 
-        $tracker = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
+        $tracker             = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_fields);
 
         $this->assertFalse(
@@ -109,9 +109,9 @@ final class WorkflowCheckerTest extends TestCase
         $this->workflow_dao->shouldReceive('searchWorkflowsByFieldIDsAndTrackerIDs')->andReturn([]);
         $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([758]);
 
-        $tracker = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
+        $tracker             = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_fields);
 
         $this->assertFalse(
@@ -128,9 +128,9 @@ final class WorkflowCheckerTest extends TestCase
         $this->rule_date_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([]);
         $this->rule_list_dao->shouldReceive('searchTrackersWithRulesByFieldIDsAndTrackerIDs')->andReturn([758]);
 
-        $tracker = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
+        $tracker             = TrackerTestBuilder::aTracker()->withId(758)->withProject(new \Project(['group_id' => 147]))->build();
         $synchronized_fields = $this->buildSynchronizedFieldsCollectionFromProgramAndTeam();
-        $collection = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
+        $collection          = new SynchronizedFieldFromProgramAndTeamTrackersCollection();
         $collection->add($synchronized_fields);
 
         $this->assertFalse(

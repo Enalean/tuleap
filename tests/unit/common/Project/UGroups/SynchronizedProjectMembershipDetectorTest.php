@@ -40,7 +40,7 @@ final class SynchronizedProjectMembershipDetectorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dao = Mockery::mock(SynchronizedProjectMembershipDao::class);
+        $this->dao      = Mockery::mock(SynchronizedProjectMembershipDao::class);
         $this->detector = new SynchronizedProjectMembershipDetector($this->dao);
     }
 

@@ -38,21 +38,21 @@ class ArtifactFieldHtml extends ArtifactField
      */
     public function __construct($art_field)
     {
-        $this->field_id = $art_field->field_id;
-        $this->field_name = $art_field->field_name;
-        $this->data_type = $art_field->data_type;
-        $this->display_type = $art_field->display_type;
-        $this->display_size = $art_field->display_size;
-        $this->label = $art_field->label;
-        $this->description = $art_field->description;
-        $this->scope = $art_field->scope;
-        $this->required = $art_field->required;
-        $this->empty_ok = $art_field->empty_ok;
-        $this->keep_history = $art_field->keep_history;
-        $this->special = $art_field->special;
+        $this->field_id       = $art_field->field_id;
+        $this->field_name     = $art_field->field_name;
+        $this->data_type      = $art_field->data_type;
+        $this->display_type   = $art_field->display_type;
+        $this->display_size   = $art_field->display_size;
+        $this->label          = $art_field->label;
+        $this->description    = $art_field->description;
+        $this->scope          = $art_field->scope;
+        $this->required       = $art_field->required;
+        $this->empty_ok       = $art_field->empty_ok;
+        $this->keep_history   = $art_field->keep_history;
+        $this->special        = $art_field->special;
         $this->value_function = $art_field->value_function;
-        $this->use_it = $art_field->use_it;
-        $this->place = $art_field->place;
+        $this->use_it         = $art_field->use_it;
+        $this->place          = $art_field->place;
     }
 
     /**
@@ -76,7 +76,7 @@ class ArtifactFieldHtml extends ArtifactField
      */
     public function labelDisplay($break = false, $ascii = false, $tooltip = false)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp     = Codendi_HTMLPurifier::instance();
         $output = SimpleSanitizer::unsanitize($this->getLabel()) . ': ';
         if (! $ascii) {
             $output =  $hp->purify($output, CODENDI_PURIFIER_CONVERT_HTML);
@@ -122,7 +122,7 @@ class ArtifactFieldHtml extends ArtifactField
         if (! $group_artifact_id) {
             return $Language->getText('tracker_include_field', 'error_no_atid');
         } else {
-            $result = $this->getFieldPredefinedValues($group_artifact_id, $checked, false, true, false, true);
+            $result       = $this->getFieldPredefinedValues($group_artifact_id, $checked, false, true, false, true);
             $array_values = [];
             // $array_values is used to write javascript field dependencies
             // getFieldPredefinedValues doesn't always return the none value and the any value for the binded fields
@@ -134,7 +134,7 @@ class ArtifactFieldHtml extends ArtifactField
                 $array_values[] = [100, $text_none];
             }
             while ($row = db_fetch_array($result)) {
-                $array_values[]  = $row;
+                $array_values[] = $row;
             }
             if (db_numrows($result) > 0) {
                 db_reset_result($result);
@@ -145,7 +145,7 @@ class ArtifactFieldHtml extends ArtifactField
             }
             $output = '';
             if ($display) {
-                $output  .= html_build_multiple_select_box($result, $box_name, $checked, ($this->getDisplaySize() != "" ? $this->getDisplaySize() : "6"), $show_none, $text_none, $show_any, $text_any, $show_unchanged, $text_unchanged, $show_value);
+                $output .= html_build_multiple_select_box($result, $box_name, $checked, ($this->getDisplaySize() != "" ? $this->getDisplaySize() : "6"), $show_none, $text_none, $show_any, $text_any, $show_unchanged, $text_unchanged, $show_value);
             }
             if ($this->isJavascriptEnabled) {
                 $output .= '<script type="text/javascript">';
@@ -177,8 +177,8 @@ class ArtifactFieldHtml extends ArtifactField
     public function _getValuesAsJavascript($values, $default_value, $text_unchanged = false)
     {
         global $Language;
-        $hp = Codendi_HTMLPurifier::instance();
-            $output  = "";
+        $hp                        = Codendi_HTMLPurifier::instance();
+            $output                = "";
             $isDefaultValuePresent = false;
         foreach ($values as $row) {
             if ($row['0'] === $text_unchanged) {
@@ -227,7 +227,7 @@ class ArtifactFieldHtml extends ArtifactField
         if (! $group_artifact_id) {
             return $Language->getText('tracker_include_field', 'error_no_atid');
         } else {
-            $result = $this->getFieldPredefinedValues($group_artifact_id, $checked, false, true, false, true);
+            $result           = $this->getFieldPredefinedValues($group_artifact_id, $checked, false, true, false, true);
                 $array_values = [];
             // $array_values is used to write javascript field dependencies
             // getFieldPredefinedValues doesn't always return the none value and the any value for the binded fields
@@ -242,7 +242,7 @@ class ArtifactFieldHtml extends ArtifactField
                 $array_values[] = [$text_unchanged, $text_unchanged];
             }
             while ($row = db_fetch_array($result)) {
-                $array_values[]  = $row;
+                $array_values[] = $row;
             }
             if (db_numrows($result) > 0) {
                 db_reset_result($result);
@@ -253,7 +253,7 @@ class ArtifactFieldHtml extends ArtifactField
             }
             $output = '';
             if ($display) {
-                $output  .= html_build_select_box(
+                $output .= html_build_select_box(
                     $result,
                     $box_name,
                     $checked,
@@ -308,7 +308,7 @@ class ArtifactFieldHtml extends ArtifactField
                 list($size, $maxlength) = $this->getGlobalDisplaySize();
             }
 
-              $html = $Language->getText('tracker_include_field', 'start');
+              $html  = $Language->getText('tracker_include_field', 'start');
               $html .= $GLOBALS['HTML']->getDatePicker("field_" . $this->field_id, $this->getName(), $date_begin, $size, $maxlength);
               $html .= "<br />";
               $html .= $Language->getText('tracker_include_field', 'end');
@@ -567,7 +567,7 @@ class ArtifactFieldHtml extends ArtifactField
                 break;
 
             case 'MB':
-                $arr = ( is_array($value) ? $value : [$value]);
+                $arr        = ( is_array($value) ? $value : [$value]);
                 $valueArray = $arr;
                 if ($ro) {
                       // if multiple selected values return a list of , separated values
@@ -634,7 +634,7 @@ class ArtifactFieldHtml extends ArtifactField
             case 'DF':
                 if ($value == $Language->getText('global', 'unchanged')) {
                          //$value = 'Unchanged (e.g. '.format_date("Y-m-j",time()).')';
-                         $value = $Language->getText('global', 'unchanged');
+                         $value   = $Language->getText('global', 'unchanged');
                          $output .= $this->fieldDate($value, false, (strlen($value) + 1), (strlen($value) + 1), 'masschange_form', true);
                 } else {
                       // Default value

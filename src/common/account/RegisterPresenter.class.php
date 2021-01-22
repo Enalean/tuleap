@@ -60,7 +60,7 @@ class Account_RegisterPresenter
         $password_configuration           = $password_configuration_retriever->getPasswordConfiguration();
         $password_strategy                = new PasswordStrategy($password_configuration);
         include($GLOBALS['Language']->getContent('account/password_strategy'));
-        $this->json_password_strategy_keys = json_encode(array_keys($password_strategy->validators));
+        $this->json_password_strategy_keys  = json_encode(array_keys($password_strategy->validators));
         $this->password_strategy_validators = [];
         foreach ($password_strategy->validators as $key => $v) {
             $this->password_strategy_validators[] = [

@@ -77,7 +77,7 @@ class TrackerXMLFieldMappingFromExistingTracker
 
     private function addFormElementsInFieldMapping(SimpleXMLElement $form_element_xml, Tracker_FormElement $form_element_existing)
     {
-        $form_element_id = (string) $form_element_xml->attributes()['ID'];
+        $form_element_id                            = (string) $form_element_xml->attributes()['ID'];
         $this->xml_fields_mapping[$form_element_id] = $form_element_existing;
 
         if ($form_element_existing instanceof Tracker_FormElement_Field_Selectbox && isset($form_element_xml->bind)) {
@@ -95,7 +95,7 @@ class TrackerXMLFieldMappingFromExistingTracker
         }
         foreach ($form_element_existing->getBind()->getAllValues() as $bind) {
             if (isset($items[$bind->getLabel()])) {
-                    $bind_id = $items[$bind->getLabel()];
+                    $bind_id                            = $items[$bind->getLabel()];
                     $this->xml_fields_mapping[$bind_id] = $bind;
             }
         }

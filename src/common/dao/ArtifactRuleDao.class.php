@@ -132,7 +132,7 @@ class ArtifactRuleDao extends DataAccessObject
     */
     public function create($group_artifact_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id)
     {
-        $sql = sprintf(
+        $sql      = sprintf(
             "INSERT INTO artifact_rule (group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) VALUES (%s, %s, %s, %s, %s, %s)",
             $this->da->quoteSmart($group_artifact_id),
             $this->da->quoteSmart($source_field_id),
@@ -289,7 +289,7 @@ class ArtifactRuleDao extends DataAccessObject
     }
     public function copyRules($from_artifact_type, $to_artifact_type)
     {
-        $sql = sprintf(
+        $sql      = sprintf(
             'INSERT INTO artifact_rule (group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) ' .
                         ' SELECT %s, source_field_id, source_value_id, target_field_id, rule_type, target_value_id ' .
                         ' FROM artifact_rule ' .

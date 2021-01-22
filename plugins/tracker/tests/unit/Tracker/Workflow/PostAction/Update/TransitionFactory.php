@@ -47,7 +47,7 @@ class TransitionFactory
     public static function buildATransitionWithTracker(\Tracker $tracker): MockInterface
     {
         $transition = self::buildATransition();
-        $workflow      = Mockery::mock(\Workflow::class);
+        $workflow   = Mockery::mock(\Workflow::class);
         $workflow->shouldReceive('getTracker')
             ->andReturn($tracker);
         $transition->shouldReceive('getWorkflow')

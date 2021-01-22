@@ -122,8 +122,8 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      */
     public function getQuerySelectAggregate($functions)
     {
-        $R1  = 'R1_' . $this->id;
-        $R2  = 'R2_' . $this->id;
+        $R1       = 'R1_' . $this->id;
+        $R2       = 'R2_' . $this->id;
         $same     = [];
         $separate = [];
         foreach ($functions as $f) {
@@ -161,16 +161,16 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
             if (preg_match("/^(<|>|>=|<=)\s*($this->pattern)$/", $criteria_value, $matches)) {
                 // It's < or >,  = and a number then use as is
                 $matches[2] = (string) ($this->cast($matches[2]));
-                $expr = $field_name . ' ' . $matches[1] . ' ' . $matches[2];
+                $expr       = $field_name . ' ' . $matches[1] . ' ' . $matches[2];
             } elseif (preg_match("/^($this->pattern)$/", $criteria_value, $matches)) {
                 // It's a number so use  equality
                 $matches[1] = $this->cast($matches[1]);
-                $expr = $field_name . ' = ' . $matches[1];
+                $expr       = $field_name . ' = ' . $matches[1];
             } elseif (preg_match("/^($this->pattern)\s*-\s*($this->pattern)$/", $criteria_value, $matches)) {
                 // it's a range number1-number2
                 $matches[1] = (string) ($this->cast($matches[1]));
                 $matches[2] = (string) ($this->cast($matches[2]));
-                $expr = $field_name . ' >= ' . $matches[1] . ' AND ' . $field_name . ' <= ' . $matches[2];
+                $expr       = $field_name . ' >= ' . $matches[1] . ' AND ' . $field_name . ' <= ' . $matches[2];
             } else {
                 // Invalid syntax - no condition
                 $expr = '1';
@@ -212,9 +212,9 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      */
     protected function fetchSubmitValueMasschange()
     {
-        $html = '';
+        $html  = '';
         $value = dgettext('tuleap-tracker', 'Unchanged');
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text"
                          size="' . $this->getProperty('size') . '"
                          ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '')  . '
@@ -245,7 +245,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
                 $value = $value->getValue();
             }
         }
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text"
                          size="' . $this->getProperty('size') . '"
                          ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '')  . '
@@ -344,8 +344,8 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      */
     protected function fetchAdminFormElement()
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp    = Codendi_HTMLPurifier::instance();
+        $html  = '';
         $value = '';
         if ($this->hasDefaultValue()) {
             $value = $this->getDefaultValue();

@@ -76,7 +76,7 @@ class ProjectNote extends \Widget
      */
     public function loadContent($id)
     {
-        $row = $this->dao->get($id);
+        $row           = $this->dao->get($id);
         $this->title   = $row['title'];
         $this->content = $row['content'];
     }

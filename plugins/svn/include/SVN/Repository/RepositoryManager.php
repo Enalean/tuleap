@@ -232,7 +232,7 @@ class RepositoryManager
     private function getCoreRepositoryFromSystemPath(string $path): Repository
     {
         $project_name = basename($path);
-        $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($project_name);
+        $project      = $this->project_manager->getProjectByCaseInsensitiveUnixName($project_name);
         if (! $project instanceof Project || $project->getID() === null || $project->isError() || ! $project->isActive()) {
             throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Repository not found'));
         }
@@ -287,7 +287,7 @@ class RepositoryManager
 
     private function getArchivedRepositoriesToPurge($retention_date)
     {
-        $deleted_repositories  = $this->dao->getDeletedRepositoriesToPurge($retention_date);
+        $deleted_repositories = $this->dao->getDeletedRepositoriesToPurge($retention_date);
         return $this->instantiateRepositoriesFromRow($deleted_repositories);
     }
 

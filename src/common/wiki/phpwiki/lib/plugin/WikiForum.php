@@ -125,10 +125,10 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
     {
         global $WikiTheme;
 
-        $dbi = $request->getDbh();
+        $dbi    = $request->getDbh();
         $topics = $this->findBlogs($dbi, $args['pagename'], 'wikiforum');
-        $html = HTML::table(['border' => 0]);
-        $row = HTML::tr(
+        $html   = HTML::table(['border' => 0]);
+        $row    = HTML::tr(
             HTML::th('title'),
             HTML::th('last post'),
             HTML::th('author')
@@ -139,7 +139,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
             $meta = $rev->get('wikiforum');
             // format as list, not as wikiforum content
             $page = new WikiPageName($rev, $args['pagename']);
-            $row = HTML::tr(
+            $row  = HTML::tr(
                 HTML::td(WikiLink($page, 'if_known', $rev->get('summary'))),
                 HTML::td($WikiTheme->formatDateTime($meta['ctime'])),
                 HTML::td(WikiLink($meta['creator'], 'if_known'))

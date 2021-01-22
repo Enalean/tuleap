@@ -60,7 +60,7 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
 
     /*static*/ public function getTableStatusGroupBy($table = 'app_u')
     {
-        $groupBy  = $table . '.table_id ';
+        $groupBy = $table . '.table_id ';
         return $groupBy;
     }
 
@@ -68,9 +68,9 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
     {
         $groupBy = '';
         if ($status) {
-            $fields  .= ',' . $this->getTableStatusFields();
-            $join    .= ' LEFT JOIN ' . $this->getTableStatusJoin();
-            $groupBy  = ' GROUP BY ' . $this->getTableStatusGroupBy();
+            $fields .= ',' . $this->getTableStatusFields();
+            $join   .= ' LEFT JOIN ' . $this->getTableStatusJoin();
+            $groupBy = ' GROUP BY ' . $this->getTableStatusGroupBy();
         }
 
         $sql = ' SELECT ' . $fields .
@@ -180,7 +180,7 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
      */
     public function getTablesForReminder()
     {
-        $sql  = 'SELECT plugin_docman_approval.*, plugin_docman_link_version.item_id AS link_item_id
+        $sql = 'SELECT plugin_docman_approval.*, plugin_docman_link_version.item_id AS link_item_id
                  FROM plugin_docman_approval
                  LEFT JOIN plugin_docman_link_version ON (plugin_docman_link_version.id = plugin_docman_approval.link_version_id)
                  WHERE status = 1

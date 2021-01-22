@@ -52,10 +52,10 @@ class NewsCollectionBuilder
 
     public function __construct(NewsDao $dao, \ProjectManager $project_manager, \UserManager $user_manager, \Codendi_HTMLPurifier $purifier)
     {
-        $this->dao = $dao;
+        $this->dao             = $dao;
         $this->project_manager = $project_manager;
-        $this->user_manager = $user_manager;
-        $this->purifier = $purifier;
+        $this->user_manager    = $user_manager;
+        $this->purifier        = $purifier;
     }
 
     public function build()

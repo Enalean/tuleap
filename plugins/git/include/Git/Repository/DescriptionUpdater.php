@@ -37,7 +37,7 @@ class DescriptionUpdater
 
     public function __construct(ProjectHistoryDao $history_dao)
     {
-        $this->history_dao              = $history_dao;
+        $this->history_dao = $history_dao;
     }
 
     public function updateDescription(GitRepository $repository, $description)

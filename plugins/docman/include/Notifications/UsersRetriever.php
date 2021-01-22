@@ -41,8 +41,8 @@ class UsersRetriever
         UsersToNotifyDao $user_dao,
         Docman_ItemFactory $item_factory
     ) {
-        $this->user_dao       = $user_dao;
-        $this->item_factory   = $item_factory;
+        $this->user_dao     = $user_dao;
+        $this->item_factory = $item_factory;
     }
 
     public function getListeningUsers(Docman_Item $item, array $users, $type)

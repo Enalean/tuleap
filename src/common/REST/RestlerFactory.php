@@ -60,7 +60,7 @@ final class RestlerFactory
         JsonFormat::$unEscapedUnicode = false;
 
         Defaults::$cacheDirectory = $this->restler_cache->getAndInitiateCacheDirectory($api_version);
-        $restler = new Restler(true, false);
+        $restler                  = new Restler(true, false);
         $restler->setSupportedFormats('JsonFormat', 'XmlFormat');
         $restler->setAPIVersion($api_version);
 

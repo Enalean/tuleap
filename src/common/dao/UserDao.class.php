@@ -299,13 +299,13 @@ class UserDao extends DataAccessObject
             $values[]  = $last_pwd_update;
         }
 
-        $sql = 'INSERT INTO user (' . implode(',', $columns) . ') VALUES (' . $this->da->quoteSmartImplode(',', $values) . ')';
+        $sql      = 'INSERT INTO user (' . implode(',', $columns) . ') VALUES (' . $this->da->quoteSmartImplode(',', $values) . ')';
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {
                 $inserted = $row['id'];
-                $sql = 'INSERT INTO user_access (user_id) VALUES (' . $this->da->quoteSmart($inserted) . ')';
+                $sql      = 'INSERT INTO user_access (user_id) VALUES (' . $this->da->quoteSmart($inserted) . ')';
                 $this->update($sql);
             } else {
                 $inserted = $dar->isError();
@@ -454,7 +454,7 @@ class UserDao extends DataAccessObject
     {
         $name = $this->getDa()->quoteLikeValueSurround($name);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *" .
+        $sql  = "SELECT SQL_CALC_FOUND_ROWS *" .
             " FROM user" .
             " WHERE (realname LIKE $name" .
             " OR user_name LIKE $name)" .
@@ -536,9 +536,9 @@ class UserDao extends DataAccessObject
                 $res = true;
                 foreach ($dar as $row) {
                     $row['addresses'] = $this->replaceStringInList($row['addresses'], $user->getUserName(), $newName);
-                    $sqlArtgn = 'UPDATE artifact_global_notification SET addresses = ' . $this->da->quoteSmart($row['addresses']) . '
+                    $sqlArtgn         = 'UPDATE artifact_global_notification SET addresses = ' . $this->da->quoteSmart($row['addresses']) . '
                                  WHERE id = ' . $this->da->escapeInt($row['id']);
-                    $res = $res & $this->update($sqlArtgn);
+                    $res              = $res & $this->update($sqlArtgn);
                 }
                 return $res;
             } else {
@@ -584,7 +584,7 @@ class UserDao extends DataAccessObject
         }
         if ($pattern) {
             $pattern = $this->getDa()->quoteLikeValueSurround($pattern);
-            $where = "WHERE (
+            $where   = "WHERE (
                     user.user_name LIKE $pattern
                     OR user.user_id LIKE $pattern
                     OR user.realname LIKE $pattern
@@ -637,7 +637,7 @@ class UserDao extends DataAccessObject
     public function getUserAccessInfo($userId)
     {
         $sql = 'SELECT * FROM user_access WHERE user_id = ' . $this->da->escapeInt($userId);
-        $dar  = $this->retrieve($sql);
+        $dar = $this->retrieve($sql);
         if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
             return $row;
@@ -723,7 +723,7 @@ class UserDao extends DataAccessObject
     public function removeConfirmHash($confirm_hash)
     {
         $confirm_hash = $this->da->quoteSmart($confirm_hash);
-        $sql = "UPDATE user SET confirm_hash = null WHERE confirm_hash=$confirm_hash";
+        $sql          = "UPDATE user SET confirm_hash = null WHERE confirm_hash=$confirm_hash";
         return $this->update($sql);
     }
 

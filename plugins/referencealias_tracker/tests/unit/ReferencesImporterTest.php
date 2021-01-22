@@ -61,7 +61,7 @@ final class ReferencesImporterTest extends TestCase
 
     public function testItShouldAddArtifactAndTrackerLinks(): void
     {
-        $xml = <<<XML
+        $xml                = <<<XML
             <references>
                 <reference source="artf1234" target="1"/>
                 <reference source="plan678" target="5"/>
@@ -80,7 +80,7 @@ XML;
 
     public function testItShouldNotAddIfTargetIsUnknown(): void
     {
-        $xml = <<<XML
+        $xml                = <<<XML
             <references>
                 <reference source="artf1234" target="1"/>
                 <reference source="tracker12" target="T2"/>
@@ -98,7 +98,7 @@ XML;
 
     public function testItShouldNotAddUnknownReferences(): void
     {
-        $xml = <<<XML
+        $xml                = <<<XML
             <references>
                 <reference source="stuff1234" target="1"/>
             </references>

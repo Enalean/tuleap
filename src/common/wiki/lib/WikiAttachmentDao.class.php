@@ -158,9 +158,9 @@ class WikiAttachmentDao extends DataAccessObject
      */
     public function searchAttachmentToPurge($time, $groupId = 0, $offset = 0, $limit = 0)
     {
-        $where  = '';
+        $where = '';
         if ($groupId != 0) {
-            $where  .= ' AND attachment.group_id = ' . $this->da->escapeInt($groupId);
+            $where .= ' AND attachment.group_id = ' . $this->da->escapeInt($groupId);
         }
         $sql = 'SELECT attachment.* ' .
                ' FROM wiki_attachment_deleted attachment' .

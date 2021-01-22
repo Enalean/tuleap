@@ -86,11 +86,11 @@ class WikiGroup
     public function _getUserName()
     {
         global $request;
-        $user = (! empty($this->user)) ? $this->user : $request->getUser();
+        $user     = (! empty($this->user)) ? $this->user : $request->getUser();
         $username = $user->getID();
         if ($username != $this->username) {
             $this->membership = [];
-            $this->username = $username;
+            $this->username   = $username;
         }
         if (! $this->not_current) {
             $this->user = $user;
@@ -244,9 +244,9 @@ class WikiGroup
 
         global $request;
         /* WikiPage users: */
-        $dbh = $request->_dbi;
+        $dbh       = $request->_dbi;
         $page_iter = $dbh->getAllPages();
-        $users = [];
+        $users     = [];
         while ($page = $page_iter->next()) {
             if ($page->isUserPage()) {
                 $users[] = $page->_pagename;
@@ -338,7 +338,7 @@ class WikiGroup
     public function getSpecialMembersOf($group)
     {
         //$request = &$this->request;
-        $all = $this->_allUsers();
+        $all   = $this->_allUsers();
         $users = [];
         switch ($group) {
             case GROUP_EVERY:

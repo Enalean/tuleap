@@ -39,9 +39,9 @@ class GetStateVisitorTest extends TestCase
 
     public function testTwoNodesOnSameHierarchyShouldHaveStatesNodeThenLast(): void
     {
-        $root   = new TreeNode();
-        $node1  = $this->givenANodeInAparent($root);
-        $node2  = $this->givenANodeInAparent($root);
+        $root  = new TreeNode();
+        $node1 = $this->givenANodeInAparent($root);
+        $node2 = $this->givenANodeInAparent($root);
 
         $visitor = $this->givenAVisitor($root);
 
@@ -51,9 +51,9 @@ class GetStateVisitorTest extends TestCase
 
     public function testDeeperHierarchyShouldReturnLastThenEmptyLast(): void
     {
-        $root   = new TreeNode();
-        $node1  = $this->givenANodeInAparent($root);
-        $node2  = $this->givenANodeInAparent($node1);
+        $root  = new TreeNode();
+        $node1 = $this->givenANodeInAparent($root);
+        $node2 = $this->givenANodeInAparent($node1);
 
         $visitor = $this->givenAVisitor($root);
 

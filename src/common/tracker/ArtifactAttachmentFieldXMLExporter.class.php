@@ -20,8 +20,8 @@
 
 class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter
 {
-    public const TV3_TYPE            = 'attachment';
-    public const TV5_TYPE            = 'file';
+    public const TV3_TYPE        = 'attachment';
+    public const TV5_TYPE        = 'file';
     public const XML_FILE_PREFIX = 'File';
 
     /** @var ArtifactXMLExporterDao */

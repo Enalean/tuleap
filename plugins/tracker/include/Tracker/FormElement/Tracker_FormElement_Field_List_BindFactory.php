@@ -44,7 +44,7 @@ class Tracker_FormElement_Field_List_BindFactory
 
     public function __construct(?UGroupManager $ugroup_manager = null)
     {
-        $this->ugroup_manager    = $ugroup_manager ? $ugroup_manager : new UGroupManager();
+        $this->ugroup_manager = $ugroup_manager ? $ugroup_manager : new UGroupManager();
     }
 
     private function getUgroupsValueDao()
@@ -68,12 +68,12 @@ class Tracker_FormElement_Field_List_BindFactory
     public function getBind($field, $type)
     {
         $default_value = [];
-        $dao = new BindDefaultValueDao();
+        $dao           = new BindDefaultValueDao();
         foreach ($dao->searchByFieldId($field->id) as $row) {
             $default_value[$row['value_id']] = true;
         }
         $decorators = [];
-        $dao = new BindDecoratorDao();
+        $dao        = new BindDecoratorDao();
         foreach ($dao->searchByFieldId($field->id) as $row) {
             $decorators[$row['value_id']] = new Tracker_FormElement_Field_List_BindDecorator(
                 $row['field_id'],
@@ -91,7 +91,7 @@ class Tracker_FormElement_Field_List_BindFactory
                 $dao = new BindStaticDao();
                 if ($row = $dao->searchByFieldId($field->id)->getRow()) {
                     $values = [];
-                    $dao = new BindStaticValueDao();
+                    $dao    = new BindStaticValueDao();
                     foreach ($dao->searchByFieldId($field->id, $row['is_rank_alpha']) as $row_value) {
                         $values[$row_value['id']] = $this->getStaticValueInstance(
                             $row_value['id'],
@@ -265,16 +265,16 @@ class Tracker_FormElement_Field_List_BindFactory
         switch ($type) {
             case self::STATIK:
                 $row['is_rank_alpha'] = (int) $xml['is_rank_alpha'];
-                $values = [];
+                $values               = [];
                 if ($xml->items->item) {
                     $i = 0;
                     foreach ($xml->items->item as $item) {
-                        $ID = (string) $item['ID'];
+                        $ID          = (string) $item['ID'];
                         $description = '';
                         if (isset($item->description)) {
                             $description = (string) $item->description;
                         }
-                        $is_hidden = isset($item['is_hidden']) && (int) $item['is_hidden'] ? 1 : 0;
+                        $is_hidden   = isset($item['is_hidden']) && (int) $item['is_hidden'] ? 1 : 0;
                         $values[$ID] = $this->getStaticValueInstance($ID, (string) $item['label'], $description, $i++, $is_hidden);
 
                         $xmlMapping[$ID] = $values[$ID];
@@ -378,12 +378,12 @@ class Tracker_FormElement_Field_List_BindFactory
      */
     public function fetchCreateABind($field)
     {
-        $html = '';
+        $html  = '';
         $html .= '<h3>' . dgettext('tuleap-tracker', 'Values') . '</h3>';
         $html .= '<dl id="tracker-bind-factory">';
 
         $html .= '<dt class="tracker-bind-type">';
-        $h = new HTML_Element_Input_Radio(dgettext('tuleap-tracker', 'Choose values'), 'formElement_data[bind-type]', self::STATIK, 'checked');
+        $h     = new HTML_Element_Input_Radio(dgettext('tuleap-tracker', 'Choose values'), 'formElement_data[bind-type]', self::STATIK, 'checked');
         $h->addParam('autocomplete', 'off');
         $html .= $h->render();
         $html .= '</dt>';
@@ -393,7 +393,7 @@ class Tracker_FormElement_Field_List_BindFactory
         $html .= '</dd>';
 
         $html .= '<dt class="tracker-bind-type">';
-        $h = new HTML_Element_Input_Radio(dgettext('tuleap-tracker', 'Bind to users'), 'formElement_data[bind-type]', self::USERS, '');
+        $h     = new HTML_Element_Input_Radio(dgettext('tuleap-tracker', 'Bind to users'), 'formElement_data[bind-type]', self::USERS, '');
         $h->addParam('autocomplete', 'off');
         $html .= $h->render();
         $html .= '</dt>';
@@ -403,7 +403,7 @@ class Tracker_FormElement_Field_List_BindFactory
         $html .= '</dd>';
 
         $html .= '<dt class="tracker-bind-type">';
-        $h = new HTML_Element_Input_Radio(dgettext('tuleap-tracker', 'Bind to user groups'), 'formElement_data[bind-type]', self::UGROUPS, '');
+        $h     = new HTML_Element_Input_Radio(dgettext('tuleap-tracker', 'Bind to user groups'), 'formElement_data[bind-type]', self::UGROUPS, '');
         $h->addParam('autocomplete', 'off');
         $html .= $h->render();
         $html .= '</dt>';

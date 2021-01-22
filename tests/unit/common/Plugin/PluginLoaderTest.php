@@ -69,7 +69,7 @@ final class PluginLoaderTest extends TestCase
 
     public function testMissingHooksFileCacheIsCreated(): void
     {
-        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
+        $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
         $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
 
@@ -81,7 +81,7 @@ final class PluginLoaderTest extends TestCase
 
     public function testEmptyHooksFileCacheIsPopulated(): void
     {
-        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
+        $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
         $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
 
@@ -95,7 +95,7 @@ final class PluginLoaderTest extends TestCase
 
     public function testReadOnlyEmptyHooksFileCacheIsPopulatedWithoutWarning(): void
     {
-        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
+        $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
         $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
 
@@ -110,7 +110,7 @@ final class PluginLoaderTest extends TestCase
 
     public function testHooksFileCacheWithGarbageDataIsOverwritten(): void
     {
-        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
+        $plugin_loader = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
         $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
 

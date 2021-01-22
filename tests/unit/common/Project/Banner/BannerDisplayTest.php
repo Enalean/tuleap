@@ -29,7 +29,7 @@ final class BannerDisplayTest extends TestCase
     public function testVisibleBanner(): void
     {
         $expected_message = 'My message';
-        $banner = BannerDisplay::buildVisibleBanner($expected_message);
+        $banner           = BannerDisplay::buildVisibleBanner($expected_message);
 
         $this->assertEquals($expected_message, $banner->getMessage());
         $this->assertTrue($banner->isVisible());
@@ -38,7 +38,7 @@ final class BannerDisplayTest extends TestCase
     public function testHiddenBanner(): void
     {
         $expected_message = 'My message';
-        $banner = BannerDisplay::buildHiddenBanner($expected_message);
+        $banner           = BannerDisplay::buildHiddenBanner($expected_message);
 
         $this->assertEquals($expected_message, $banner->getMessage());
         $this->assertFalse($banner->isVisible());

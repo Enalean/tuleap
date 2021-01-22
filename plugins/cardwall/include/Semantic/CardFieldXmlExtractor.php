@@ -28,7 +28,7 @@ class CardFieldXmlExtractor
     {
         $fields = [];
         foreach ($xml->field as $field) {
-            $att      = $field->attributes();
+            $att = $field->attributes();
             if (! isset($xml_mapping[(string) $att['REF']])) {
                 continue;
             }

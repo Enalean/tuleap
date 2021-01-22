@@ -52,7 +52,7 @@ class AgileDashboard_Planning_NearestPlanningTrackerProvider
                 $current_backlog_tracker = $current_backlog_tracker->getParent();
                 continue;
             }
-            $nearest_planning = array_shift($plannings);
+            $nearest_planning         = array_shift($plannings);
             $nearest_planning_tracker = $nearest_planning->getPlanningTracker();
         }
         return $nearest_planning_tracker;
@@ -70,7 +70,7 @@ class AgileDashboard_Planning_NearestPlanningTrackerProvider
 
     private function getAllPlanningTrackersIds(array $planning_trackers)
     {
-        $trackers_ids      = [];
+        $trackers_ids = [];
 
         foreach ($planning_trackers as $planning_tracker) {
             $trackers_ids[] = $planning_tracker->getPlanningTrackerId();

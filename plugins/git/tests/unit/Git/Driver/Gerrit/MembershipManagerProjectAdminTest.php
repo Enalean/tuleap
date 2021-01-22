@@ -36,7 +36,7 @@ class MembershipManagerProjectAdminTest extends TestCase
     protected $project;
     protected $u_group_id = 115;
     protected $u_group;
-    protected $git_repository_id = 20;
+    protected $git_repository_id   = 20;
     protected $git_repository_name = 'some/git/project';
     protected $git_repository;
     protected $gerrit_user;
@@ -48,20 +48,20 @@ class MembershipManagerProjectAdminTest extends TestCase
     {
         parent::setUp();
 
-        $this->user                                  = \Mockery::spy(\PFUser::class)->shouldReceive('getLdapId')->andReturns('whatever')->getMock();
-        $this->driver                                = \Mockery::spy(\Git_Driver_Gerrit::class);
-        $this->driver_factory                        = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock();
-        $this->user_finder                           = \Mockery::spy(\Git_Driver_Gerrit_UserFinder::class);
-        $this->remote_server_factory                 = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->remote_server                         = \Mockery::spy(\Git_RemoteServer_GerritServer::class)->shouldReceive('getId')->andReturns(25)->getMock();
-        $this->gerrit_user                           = \Mockery::spy(\Git_Driver_Gerrit_User::class);
-        $this->gerrit_user_manager                   = \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class);
-        $this->project                               = \Mockery::spy(\Project::class);
-        $this->u_group                               = \Mockery::spy(\ProjectUGroup::class);
-        $this->u_group2                              = \Mockery::spy(\ProjectUGroup::class);
-        $this->u_group3                              = \Mockery::spy(\ProjectUGroup::class);
-        $this->git_repository                        = \Mockery::spy(\GitRepository::class);
-        $this->project_manager                       = \Mockery::spy(\ProjectManager::class);
+        $this->user                  = \Mockery::spy(\PFUser::class)->shouldReceive('getLdapId')->andReturns('whatever')->getMock();
+        $this->driver                = \Mockery::spy(\Git_Driver_Gerrit::class);
+        $this->driver_factory        = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock();
+        $this->user_finder           = \Mockery::spy(\Git_Driver_Gerrit_UserFinder::class);
+        $this->remote_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
+        $this->remote_server         = \Mockery::spy(\Git_RemoteServer_GerritServer::class)->shouldReceive('getId')->andReturns(25)->getMock();
+        $this->gerrit_user           = \Mockery::spy(\Git_Driver_Gerrit_User::class);
+        $this->gerrit_user_manager   = \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class);
+        $this->project               = \Mockery::spy(\Project::class);
+        $this->u_group               = \Mockery::spy(\ProjectUGroup::class);
+        $this->u_group2              = \Mockery::spy(\ProjectUGroup::class);
+        $this->u_group3              = \Mockery::spy(\ProjectUGroup::class);
+        $this->git_repository        = \Mockery::spy(\GitRepository::class);
+        $this->project_manager       = \Mockery::spy(\ProjectManager::class);
 
         $this->u_group->shouldReceive('getProject')->andReturns($this->project);
         $this->u_group2->shouldReceive('getProject')->andReturns($this->project);

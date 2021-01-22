@@ -54,14 +54,14 @@ class FieldsListPresenter
         $this->title              = $title;
         $this->description_fields = $description_fields;
 
-        $this->description_fields_header                = _('Project fields');
-        $this->btn_add_field                            = $GLOBALS['Language']->getText('admin_desc_fields', 'header_add');
-        $this->name_header                              = $GLOBALS['Language']->getText('admin_desc_fields', 'desc_name');
-        $this->description_header                       = $GLOBALS['Language']->getText('admin_desc_fields', 'desc_description');
-        $this->require_header                           = $GLOBALS['Language']->getText('admin_desc_fields', 'desc_required');
-        $this->type_header                              = $GLOBALS['Language']->getText('admin_desc_fields', 'desc_type');
-        $this->rank_header                              = $GLOBALS['Language']->getText('admin_desc_fields', 'rank');
-        $this->rank_tooltip                             = $GLOBALS['Language']->getText('admin_desc_fields', 'rank_on_screen');
+        $this->description_fields_header = _('Project fields');
+        $this->btn_add_field             = $GLOBALS['Language']->getText('admin_desc_fields', 'header_add');
+        $this->name_header               = $GLOBALS['Language']->getText('admin_desc_fields', 'desc_name');
+        $this->description_header        = $GLOBALS['Language']->getText('admin_desc_fields', 'desc_description');
+        $this->require_header            = $GLOBALS['Language']->getText('admin_desc_fields', 'desc_required');
+        $this->type_header               = $GLOBALS['Language']->getText('admin_desc_fields', 'desc_type');
+        $this->rank_header               = $GLOBALS['Language']->getText('admin_desc_fields', 'rank');
+        $this->rank_tooltip              = $GLOBALS['Language']->getText('admin_desc_fields', 'rank_on_screen');
 
         $this->modal_field_form_name_label              = $GLOBALS['Language']->getText('admin_desc_fields', 'modal_field_form_name_label');
         $this->modal_field_form_name_placeholder        = $GLOBALS['Language']->getText('admin_desc_fields', 'modal_field_form_name_placeholder');
@@ -74,18 +74,18 @@ class FieldsListPresenter
         $this->modal_field_form_description_placeholder = $GLOBALS['Language']->getText('admin_desc_fields', 'modal_field_form_description_placeholder');
         $this->modal_field_form_description_info        = $GLOBALS['Language']->getText('admin_desc_fields', 'modal_field_form_description_info');
 
-        $this->add_modal_title                          = $GLOBALS['Language']->getText('admin_desc_fields', 'add_modal_title');
-        $this->add_modal_cancel                         = $GLOBALS['Language']->getText('admin_desc_fields', 'add_modal_cancel');
-        $this->add_modal_submit                         = $GLOBALS['Language']->getText('admin_desc_fields', 'add_modal_submit');
+        $this->add_modal_title  = $GLOBALS['Language']->getText('admin_desc_fields', 'add_modal_title');
+        $this->add_modal_cancel = $GLOBALS['Language']->getText('admin_desc_fields', 'add_modal_cancel');
+        $this->add_modal_submit = $GLOBALS['Language']->getText('admin_desc_fields', 'add_modal_submit');
 
-        $this->edit_modal_title                         = $GLOBALS['Language']->getText('admin_desc_fields', 'edit_modal_title');
-        $this->edit_modal_cancel                        = $GLOBALS['Language']->getText('admin_desc_fields', 'edit_modal_cancel');
-        $this->edit_modal_submit                        = $GLOBALS['Language']->getText('admin_desc_fields', 'edit_modal_submit');
+        $this->edit_modal_title  = $GLOBALS['Language']->getText('admin_desc_fields', 'edit_modal_title');
+        $this->edit_modal_cancel = $GLOBALS['Language']->getText('admin_desc_fields', 'edit_modal_cancel');
+        $this->edit_modal_submit = $GLOBALS['Language']->getText('admin_desc_fields', 'edit_modal_submit');
 
-        $this->delete_modal_title                       = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_title');
-        $this->delete_modal_content                     = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_content');
-        $this->delete_modal_cancel                      = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_cancel');
-        $this->delete_modal_submit                      = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_submit');
+        $this->delete_modal_title   = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_title');
+        $this->delete_modal_content = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_content');
+        $this->delete_modal_cancel  = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_cancel');
+        $this->delete_modal_submit  = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_modal_submit');
 
         $this->csrf_token = $csrf_token;
     }

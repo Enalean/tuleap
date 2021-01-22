@@ -47,7 +47,7 @@ class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand exte
     private function recursivelyFindChildrenBelongingToTracker(Artifact $source_artifact, Tracker $expected_tracker, PFUser $user, array $hierarchy)
     {
         $artifacts = [];
-        $children = $source_artifact->getLinkedArtifactsOfHierarchy($user);
+        $children  = $source_artifact->getLinkedArtifactsOfHierarchy($user);
         if (isset($hierarchy[$source_artifact->getId()])) {
             array_walk($children, [$this, 'keepOnlyArtifactsBelongingToParentTracker'], $hierarchy[$source_artifact->getId()]);
             array_filter($children);

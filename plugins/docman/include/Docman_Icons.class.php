@@ -72,8 +72,8 @@ class Docman_Icons
                 break;
             case 'docman_file':
             case 'docman_embeddedfile':
-                $v = $item->getCurrentVersion();
-                $type = $v ? $v->getFiletype() : null;
+                $v     = $item->getCurrentVersion();
+                $type  = $v ? $v->getFiletype() : null;
                 $icon .= $this->getIconForMimeType($type);
                 break;
             case 'docman_empty':

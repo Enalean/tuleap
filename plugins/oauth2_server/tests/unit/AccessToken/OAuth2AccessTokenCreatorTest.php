@@ -54,8 +54,8 @@ final class OAuth2AccessTokenCreatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->access_token_dao                                 = \Mockery::mock(OAuth2AccessTokenDAO::class);
-        $this->scope_saver                                      = \Mockery::mock(OAuth2ScopeSaver::class);
+        $this->access_token_dao = \Mockery::mock(OAuth2AccessTokenDAO::class);
+        $this->scope_saver      = \Mockery::mock(OAuth2ScopeSaver::class);
 
         $formatter = new class implements SplitTokenFormatter
         {

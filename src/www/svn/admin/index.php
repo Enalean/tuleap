@@ -77,8 +77,8 @@ if ($request->valid($vFunc)) {
                 break;
             }
             $version_id = $request->get('accessfile_history_id');
-            $dao = new SVN_AccessFile_DAO();
-            $result = $dao->getVersionContent($version_id);
+            $dao        = new SVN_AccessFile_DAO();
+            $result     = $dao->getVersionContent($version_id);
 
             $GLOBALS['Response']->sendJSON(['content' => $result]);
 
@@ -89,7 +89,7 @@ if ($request->valid($vFunc)) {
     }
 } else {
    // get project object
-    $pm = ProjectManager::instance();
+    $pm      = ProjectManager::instance();
     $project = $pm->getProject($group_id);
     if (! $project || ! is_object($project) || $project->isError()) {
         exit_no_group();

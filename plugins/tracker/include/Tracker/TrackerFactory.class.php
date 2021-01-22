@@ -66,7 +66,7 @@ class TrackerFactory
     public static function instance()
     {
         if (! isset(self::$_instance)) {
-            $c = self::class;
+            $c               = self::class;
             self::$_instance = new $c();
         }
         return self::$_instance;
@@ -166,7 +166,7 @@ class TrackerFactory
     {
         $trackers = [];
         foreach ($this->getDao()->searchByGroupId($group_id) as $row) {
-            $tracker_id = $row['id'];
+            $tracker_id            = $row['id'];
             $trackers[$tracker_id] = $this->getCachedInstanceFromRow($row);
         }
         return $trackers;
@@ -328,7 +328,7 @@ class TrackerFactory
     public function isNameExists($name, $group_id)
     {
         $tracker_dao = $this->getDao();
-        $dar = $tracker_dao->searchByGroupId($group_id);
+        $dar         = $tracker_dao->searchByGroupId($group_id);
         while ($row = $dar->getRow()) {
             if ($name == $row['name']) {
                 return true;
@@ -478,7 +478,7 @@ class TrackerFactory
     */
     public function duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_type)
     {
-        $pm = PermissionsManager::instance();
+        $pm                      = PermissionsManager::instance();
         $permission_type_tracker = [Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_SUBMITTER_ONLY, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_FULL, Tracker::PERMISSION_NONE];
         //Duplicate tracker permissions
         $pm->duplicatePermissions($id_template, $id, $permission_type_tracker, $ugroup_mapping, $duplicate_type);
@@ -487,7 +487,7 @@ class TrackerFactory
         //Duplicate fields permissions
         foreach ($field_mapping as $f) {
             $from = $f['from'];
-            $to = $f['to'];
+            $to   = $f['to'];
             $pm->duplicatePermissions($from, $to, $permission_type_field, $ugroup_mapping, $duplicate_type);
         }
     }
@@ -519,13 +519,13 @@ class TrackerFactory
         $report_mapping         = [];
         $trackers_from_template = [];
 
-        $tracker_ids_list         = [];
-        $params = ['project_id' => $from_project_id, 'tracker_ids_list' => &$tracker_ids_list];
+        $tracker_ids_list = [];
+        $params           = ['project_id' => $from_project_id, 'tracker_ids_list' => &$tracker_ids_list];
         EventManager::instance()->processEvent(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED, $params);
         $tracker_ids_list = array_unique($tracker_ids_list);
         foreach ($this->getTrackersByGroupId($from_project_id) as $tracker) {
             if ($tracker->mustBeInstantiatedForNewProjects() || in_array($tracker->getId(), $tracker_ids_list)) {
-                $trackers_from_template[] = $tracker;
+                $trackers_from_template[]                           = $tracker;
                 [$tracker_mapping, $field_mapping, $report_mapping] = $this->duplicateTracker(
                     $tracker_mapping,
                     $field_mapping,
@@ -611,8 +611,8 @@ class TrackerFactory
 
         if ($tracker_and_field_and_report_mapping !== null) {
             $tracker_mapping[$tracker->getId()] = $tracker_and_field_and_report_mapping['tracker']->getId();
-            $field_mapping  = array_merge($field_mapping, $tracker_and_field_and_report_mapping['field_mapping']);
-            $report_mapping = $report_mapping + $tracker_and_field_and_report_mapping['report_mapping'];
+            $field_mapping                      = array_merge($field_mapping, $tracker_and_field_and_report_mapping['field_mapping']);
+            $report_mapping                     = $report_mapping + $tracker_and_field_and_report_mapping['report_mapping'];
         } else {
             $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Tracker %1$s not duplicated'), $tracker->getName()));
         }

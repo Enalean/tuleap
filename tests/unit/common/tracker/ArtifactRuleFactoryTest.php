@@ -28,7 +28,7 @@ final class ArtifactRuleFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testGetRuleById(): void
     {
-        $rules_dar             = \Mockery::spy(\DataAccessResult::class);
+        $rules_dar = \Mockery::spy(\DataAccessResult::class);
         $rules_dar->shouldReceive('getRow')->andReturns([
             'id'                => 123,
             'group_artifact_id' => 1,
@@ -39,7 +39,7 @@ final class ArtifactRuleFactoryTest extends \PHPUnit\Framework\TestCase
             'target_value_id'   => 100
         ]);
 
-        $rules_dao             = \Mockery::spy(\ArtifactRuleDao::class);
+        $rules_dao = \Mockery::spy(\ArtifactRuleDao::class);
         $rules_dao->shouldReceive('searchById')->with(123)->andReturns($rules_dar);
 
         $arf = new ArtifactRuleFactory($rules_dao);

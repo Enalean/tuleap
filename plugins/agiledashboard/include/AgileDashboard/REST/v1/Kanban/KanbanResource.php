@@ -99,7 +99,7 @@ use UserManager;
 
 class KanbanResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 100;
+    public const MAX_LIMIT        = 100;
     public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var AgileDashboard_KanbanFactory */
@@ -173,9 +173,9 @@ class KanbanResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
+        $this->kanban_item_dao     = new AgileDashboard_KanbanItemDao();
         $this->kanban_item_manager = new AgileDashboard_KanbanItemManager($this->kanban_item_dao);
-        $this->tracker_factory = TrackerFactory::instance();
+        $this->tracker_factory     = TrackerFactory::instance();
 
         $this->kanban_dao     = new AgileDashboard_KanbanDao();
         $this->kanban_factory = new AgileDashboard_KanbanFactory(
@@ -183,7 +183,7 @@ class KanbanResource extends AuthenticatedResource
             $this->kanban_dao
         );
 
-        $this->user_preferences = new AgileDashboard_KanbanUserPreferences();
+        $this->user_preferences      = new AgileDashboard_KanbanUserPreferences();
         $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(
             new AgileDashboard_KanbanColumnDao(),
             $this->user_preferences
@@ -413,7 +413,7 @@ class KanbanResource extends AuthenticatedResource
                 if ($tracker === null) {
                     throw new \RuntimeException('Tracker does not exist');
                 }
-                $rights = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
+                $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
                 $message = new MessageDataPresenter(
                     $user->getId(),
                     $_SERVER[self::HTTP_CLIENT_UUID],
@@ -711,8 +711,8 @@ class KanbanResource extends AuthenticatedResource
         $column_id
     ) {
         foreach ($add->ids as $artifact_id) {
-            $artifact        = $this->artifact_factory->getArtifactById($artifact_id);
-            $status_field    = $this->getStatusField($kanban, $user);
+            $artifact     = $this->artifact_factory->getArtifactById($artifact_id);
+            $status_field = $this->getStatusField($kanban, $user);
 
             if (! $artifact->userCanView($user)) {
                 throw new RestException(403, 'You cannot access this kanban item.');
@@ -1394,8 +1394,8 @@ class KanbanResource extends AuthenticatedResource
     public function getCumulativeFlow($id, $start_date, $end_date, $interval_between_point, $query = '')
     {
         $this->checkAccess();
-        $user             = $this->getCurrentUser();
-        $kanban           = $this->getKanban($user, $id);
+        $user   = $this->getCurrentUser();
+        $kanban = $this->getKanban($user, $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $user,

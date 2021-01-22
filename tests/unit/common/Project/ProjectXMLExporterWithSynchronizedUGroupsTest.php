@@ -66,9 +66,9 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
         $xml_validator        = new XML_RNGValidator();
         $user_xml_exporter    = new UserXMLExporter(M::spy(UserManager::class), M::spy(UserXMLExportedCollection::class));
         $this->project        = M::spy(Project::class, ['getPublicName' => 'Project01']);
-        $this->synch_detector   = M::mock(SynchronizedProjectMembershipDetector::class);
+        $this->synch_detector = M::mock(SynchronizedProjectMembershipDetector::class);
 
-        $this->xml_exporter   = new ProjectXMLExporter(
+        $this->xml_exporter = new ProjectXMLExporter(
             $this->event_manager,
             $this->ugroup_manager,
             $xml_validator,
@@ -77,7 +77,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
             M::spy(LoggerInterface::class)
         );
 
-        $this->options = [
+        $this->options    = [
             'tracker_id' => 10
         ];
         $this->export_dir = "__fixtures";

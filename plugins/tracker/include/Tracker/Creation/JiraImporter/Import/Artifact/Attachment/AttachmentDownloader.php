@@ -53,9 +53,9 @@ class AttachmentDownloader
 
     public function __construct(ClientInterface $client, RequestFactoryInterface $factory, LoggerInterface $logger)
     {
-        $this->client   = $client;
-        $this->factory  = $factory;
-        $this->logger = $logger;
+        $this->client  = $client;
+        $this->factory = $factory;
+        $this->logger  = $logger;
     }
 
     public function downloadAttachment(Attachment $attachment): string

@@ -27,7 +27,7 @@ use Tuleap\Layout\IncludeAssets;
  */
 function discoverSection(string $basepath): array
 {
-    $discovery = [];
+    $discovery     = [];
     $manifest_file = "$basepath/manifest.json";
     if (! is_file($manifest_file)) {
         return $discovery;
@@ -59,16 +59,16 @@ function discoverSection(string $basepath): array
     return $discovery;
 }
 
-$sections = discoverSection('resources');
+$sections        = discoverSection('resources');
 $current_section = key($sections);
 if (isset($_GET['section'], $sections[$_GET['section']])) {
     $current_section = key(array_intersect_key($sections, [$_GET['section'] => true]));
 }
 $sections[$current_section]['selected'] = true;
 
-$include_asset_framework  = new IncludeAssets(__DIR__ . '/../assets/core', '../assets/core');
-$tlp_script_tag = $include_asset_framework->getHTMLSnippet('tlp-en_US.js');
-$tlp_blue_css   = $include_asset_framework->getFileURL('tlp-blue.css');
+$include_asset_framework = new IncludeAssets(__DIR__ . '/../assets/core', '../assets/core');
+$tlp_script_tag          = $include_asset_framework->getHTMLSnippet('tlp-en_US.js');
+$tlp_blue_css            = $include_asset_framework->getFileURL('tlp-blue.css');
 
 $include_asset_doc   = new IncludeAssets(__DIR__ . '/dist', 'dist');
 $main_doc_stylesheet = $include_asset_doc->getFileURL('style.css');

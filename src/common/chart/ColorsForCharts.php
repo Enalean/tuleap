@@ -588,7 +588,7 @@ class ColorsForCharts
                 "lightgreen" => [144,238,144]];
 
             $rgb_arr = $rgb_table[$color_name];
-            $r = dechex($rgb_arr[0]);
+            $r       = dechex($rgb_arr[0]);
             if (strlen($r) < 2) {
                 $r = "0" . $r;
             }

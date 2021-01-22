@@ -176,7 +176,7 @@ class Docman_MetadataValueFactory
      */
     public function deleteLove($mdId, $loveId)
     {
-        $dao = $this->getDao();
+        $dao     = $this->getDao();
         $deleted = $dao->deleteLove($loveId);
         if ($deleted) {
             return $this->updateOrphansLoveItem($mdId);
@@ -223,7 +223,7 @@ class Docman_MetadataValueFactory
     public function validateInput(&$md, &$value)
     {
         $validator = new DocmanMetadataInputValidator();
-        $value = $validator->validateInput($md, $value);
+        $value     = $validator->validateInput($md, $value);
     }
 
     /**
@@ -231,7 +231,7 @@ class Docman_MetadataValueFactory
      */
     public function setError($string)
     {
-        $this->error_state = true;
+        $this->error_state   = true;
         $this->error_message = $string;
     }
 

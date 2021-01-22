@@ -68,7 +68,7 @@ final class WebhookUpdaterTest extends \PHPUnit\Framework\TestCase
 
     public function testItThrowsAnExceptionWhenDataCanNotBeProperlyAccessed(): void
     {
-        $dao     = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
+        $dao = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
         $dao->shouldReceive('createWebhook')->andReturns(false);
         $updater = new WebhookUpdater($dao);
 

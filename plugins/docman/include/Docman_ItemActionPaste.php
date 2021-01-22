@@ -25,8 +25,8 @@ class Docman_ItemActionPaste extends \Docman_ItemAction
     public function __construct(&$item, $params)
     {
         parent::__construct($item);
-        $this->action = 'action_paste';
+        $this->action  = 'action_paste';
         $this->classes = 'docman_item_option_paste';
-        $this->title = \dgettext('tuleap-docman', 'Paste');
+        $this->title   = \dgettext('tuleap-docman', 'Paste');
     }
 }

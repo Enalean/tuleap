@@ -32,7 +32,7 @@ class ProjectTest extends TestBase
 {
     public function testGETRepositories(): void
     {
-        $response  = $this->getResponse($this->client->get(
+        $response = $this->getResponse($this->client->get(
             'projects/' . $this->svn_project_id . '/svn'
         ));
 
@@ -41,7 +41,7 @@ class ProjectTest extends TestBase
 
     public function testGETRepositoriesWithRESTReadOnlyUser(): void
     {
-        $response  = $this->getResponse(
+        $response = $this->getResponse(
             $this->client->get('projects/' . $this->svn_project_id . '/svn'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -76,7 +76,7 @@ class ProjectTest extends TestBase
             ]
         );
 
-        $response  = $this->getResponse($this->client->get(
+        $response = $this->getResponse($this->client->get(
             "projects/$this->svn_project_id/svn?$query"
         ));
 
@@ -94,7 +94,7 @@ class ProjectTest extends TestBase
 
     public function testOPTIONS()
     {
-        $response  = $this->getResponse($this->client->options(
+        $response = $this->getResponse($this->client->options(
             'projects/' . $this->svn_project_id . '/svn'
         ));
 
@@ -103,7 +103,7 @@ class ProjectTest extends TestBase
 
     public function testOPTIONSWithRESTReadOnlyUser()
     {
-        $response  = $this->getResponse(
+        $response = $this->getResponse(
             $this->client->options('projects/' . $this->svn_project_id . '/svn'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );

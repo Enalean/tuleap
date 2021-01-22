@@ -95,11 +95,11 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
     {
         parent::setUp();
 
-        $this->explicit_backlog_dao           = Mockery::mock(ExplicitBacklogDao::class);
-        $this->planning_factory               = Mockery::mock(PlanningFactory::class);
-        $this->planning_permissions_manager   = Mockery::mock(PlanningPermissionsManager::class);
-        $this->artifacts_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
-        $this->planned_artifact_dao           = Mockery::mock(PlannedArtifactDao::class);
+        $this->explicit_backlog_dao             = Mockery::mock(ExplicitBacklogDao::class);
+        $this->planning_factory                 = Mockery::mock(PlanningFactory::class);
+        $this->planning_permissions_manager     = Mockery::mock(PlanningPermissionsManager::class);
+        $this->artifacts_explicit_backlog_dao   = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
+        $this->planned_artifact_dao             = Mockery::mock(PlannedArtifactDao::class);
         $this->planning_tracker_backlog_checker = Mockery::mock(PlanningTrackerBacklogChecker::class);
 
         $this->builder = new AdditionalArtifactActionBuilder(

@@ -51,7 +51,7 @@ final class UnplannedCriterionOptionsProviderTest extends TestCase
         parent::setUp();
 
         $this->explicit_backlog_dao = Mockery::mock(ExplicitBacklogDao::class);
-        $this->provider = new UnplannedCriterionOptionsProvider($this->explicit_backlog_dao);
+        $this->provider             = new UnplannedCriterionOptionsProvider($this->explicit_backlog_dao);
 
         $this->project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
     }

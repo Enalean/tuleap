@@ -41,7 +41,7 @@ class Tracker_ReportFactory
     public static function instance()
     {
         if (! isset(self::$_instance)) {
-            $c = self::class;
+            $c               = self::class;
             self::$_instance = new $c();
         }
         return self::$_instance;
@@ -56,7 +56,7 @@ class Tracker_ReportFactory
         $row = $this->getDao()
                     ->searchById($id, $user_id)
                     ->getRow();
-        $r = null;
+        $r   = null;
         if ($row) {
             $r = $this->getInstanceFromRow($row, $store_in_session);
         }
@@ -146,7 +146,7 @@ class Tracker_ReportFactory
     {
         $report_mapping = [];
         foreach ($this->getReportsByTrackerId($from_tracker_id, null) as $from_report) {
-            $new_report = $this->duplicateReport($from_report, $to_tracker_id, $field_mapping, null);
+            $new_report                            = $this->duplicateReport($from_report, $to_tracker_id, $field_mapping, null);
             $report_mapping[$from_report->getId()] = $new_report->getId();
         }
 
@@ -260,22 +260,22 @@ class Tracker_ReportFactory
         array &$renderers_xml_mapping,
         $group_id
     ) {
-        $att = $xml->attributes();
-        $row = ['name' => (string) $xml->name,
+        $att                        = $xml->attributes();
+        $row                        = ['name' => (string) $xml->name,
                      'description' => (string) $xml->description];
-        $row['is_default'] = isset($att['is_default']) ? (int) $att['is_default'] : 0;
-        $row['is_query_displayed'] = isset($att['is_query_displayed']) ? (int) $att['is_query_displayed'] : 1;
-        $row['is_in_expert_mode']  = isset($att['is_in_expert_mode']) ? (int) $att['is_in_expert_mode'] : 0;
-        $row['expert_query']       = isset($att['expert_query']) ? (string) $att['expert_query'] : "";
-        $row['id'] = 'XML_IMPORT_REPORT_' . bin2hex(random_bytes(32));
+        $row['is_default']          = isset($att['is_default']) ? (int) $att['is_default'] : 0;
+        $row['is_query_displayed']  = isset($att['is_query_displayed']) ? (int) $att['is_query_displayed'] : 1;
+        $row['is_in_expert_mode']   = isset($att['is_in_expert_mode']) ? (int) $att['is_in_expert_mode'] : 0;
+        $row['expert_query']        = isset($att['expert_query']) ? (string) $att['expert_query'] : "";
+        $row['id']                  = 'XML_IMPORT_REPORT_' . bin2hex(random_bytes(32));
         $row['current_renderer_id'] = 0;
-        $row['parent_report_id'] = 0;
-        $row['tracker_id'] = 0;
-        $row['user_id'] = null;
-        $row['group_id'] = $group_id;
-        $row['updated_by'] = null;
-        $row['updated_at'] = null;
-        $report = $this->getInstanceFromRow($row);
+        $row['parent_report_id']    = 0;
+        $row['tracker_id']          = 0;
+        $row['user_id']             = null;
+        $row['group_id']            = $group_id;
+        $row['updated_by']          = null;
+        $row['updated_at']          = null;
+        $report                     = $this->getInstanceFromRow($row);
         // create criteria
         $report->criterias = [];
         foreach ($xml->criterias->criteria as $criteria) {
@@ -296,7 +296,7 @@ class Tracker_ReportFactory
         // create renderers
         $report->renderers = [];
         foreach ($xml->renderers->renderer as $renderer) {
-            $rend = $this->getRendererFactory()->getInstanceFromXML($renderer, $report, $xmlMapping);
+            $rend                = $this->getRendererFactory()->getInstanceFromXML($renderer, $report, $xmlMapping);
             $report->renderers[] = $rend;
 
             if (isset($renderer['ID'])) {

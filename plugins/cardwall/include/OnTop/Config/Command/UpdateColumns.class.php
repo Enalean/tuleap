@@ -42,7 +42,7 @@ class Cardwall_OnTop_Config_Command_UpdateColumns extends Cardwall_OnTop_Config_
     {
         if ($request->get('column')) {
             foreach ($request->get('column') as $id => $column_definition) {
-                $column_label    = $column_definition['label'];
+                $column_label = $column_definition['label'];
 
                 $success = $this->saveColors($column_definition, $column_label, $id);
 

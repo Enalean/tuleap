@@ -63,7 +63,7 @@ class ArtifactXMLExporterArtifact
 
     public function exportArtifact($tracker_id, array $artifact_row)
     {
-        $artifact_id   = (int) $artifact_row['artifact_id'];
+        $artifact_id = (int) $artifact_row['artifact_id'];
         $this->logger->info("Export artifact: " . $artifact_id);
         $artifact_node = $this->node_helper->createElement('artifact');
         $artifact_node->setAttribute('id', $artifact_row['artifact_id']);
@@ -86,7 +86,7 @@ class ArtifactXMLExporterArtifact
         $artifact_node->appendChild($this->initial_changeset);
 
         $previous_changeset = $this->initial_changeset;
-        $history = $this->dao->searchHistory($artifact_id);
+        $history            = $this->dao->searchHistory($artifact_id);
         foreach ($history as $row) {
             try {
                 if (! $this->comment_exporter->updateComment($row)) {

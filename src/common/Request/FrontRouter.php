@@ -143,7 +143,7 @@ class FrontRouter
                 $exception->getMessage()
             );
         } catch (\Exception $exception) {
-            $code = 500;
+            $code           = 500;
             $exception_code = (int) $exception->getCode();
             if ($exception_code !== 0) {
                 $code = $exception_code;

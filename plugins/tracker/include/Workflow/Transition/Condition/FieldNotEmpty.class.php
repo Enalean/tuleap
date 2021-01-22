@@ -111,7 +111,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
 
     private function getFieldValueFromLastChangeset(Artifact $artifact, Tracker_FormElement_Field $field)
     {
-        $value = null;
+        $value          = null;
         $last_changeset = $artifact->getLastChangeset();
         if ($last_changeset) {
             $last_changeset_value = $last_changeset->getValue($field);

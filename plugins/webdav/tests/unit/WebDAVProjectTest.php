@@ -51,8 +51,8 @@ final class WebDAVProjectTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->user = UserTestBuilder::aUser()->build();
-        $this->utils = Mockery::mock(\WebDAVUtils::class);
+        $this->user    = UserTestBuilder::aUser()->build();
+        $this->utils   = Mockery::mock(\WebDAVUtils::class);
         $this->project = Mockery::mock(\Project::class);
         $this->project->shouldReceive('usesFile')->andReturnTrue()->byDefault();
 

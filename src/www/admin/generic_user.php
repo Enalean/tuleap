@@ -28,9 +28,9 @@ require_once __DIR__ . '/admin_utils.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$fake_project        = new Project(['group_id' => -1, 'unix_group_name' => $Language->getText('admin_generic_user', 'unix_name_template'), 'group_name' => $Language->getText('admin_generic_user', 'name_template')]);
-$sample_project      = new Project(['group_id' => -1, 'unix_group_name' => 'gpig', 'group_name' => 'Guinea Pig']);
-$fake_user           = new PFUser([]);
+$fake_project   = new Project(['group_id' => -1, 'unix_group_name' => $Language->getText('admin_generic_user', 'unix_name_template'), 'group_name' => $Language->getText('admin_generic_user', 'name_template')]);
+$sample_project = new Project(['group_id' => -1, 'unix_group_name' => 'gpig', 'group_name' => 'Guinea Pig']);
+$fake_user      = new PFUser([]);
 
 $generic_user_factory = new GenericUserFactory(
     UserManager::instance(),
@@ -41,7 +41,7 @@ $generic_user_factory = new GenericUserFactory(
 $fake_generic_user   = $generic_user_factory->getGenericUser($fake_project, $fake_user);
 $sample_generic_user = $generic_user_factory->getGenericUser($sample_project, $fake_user);
 
-$name_css = '';
+$name_css              = '';
 $valid_username_format = new Valid_GenericUserNameSuffix('');
 if (! $valid_username_format->validate($sample_generic_user->getUnixName())) {
     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_generic_user', 'invalid_suffix', [GenericUserFactory::CONFIG_KEY_SUFFIX]));

@@ -22,7 +22,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/proftpdPlugin.php';
 
 $plugin_manager = PluginManager::instance();
-$plugin = $plugin_manager->getPluginByName('proftpd');
+$plugin         = $plugin_manager->getPluginByName('proftpd');
 if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
     $file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter(
         new Tuleap\ProFTPd\Xferlog\Dao(),

@@ -34,11 +34,11 @@ class Docman_MetadataListOfValuesElement
 
     public function __construct()
     {
-        $this->id = null;
-        $this->name = null;
+        $this->id          = null;
+        $this->name        = null;
         $this->description = null;
-        $this->rank = null;
-        $this->status = null;
+        $this->rank        = null;
+        $this->status      = null;
     }
 
     public function setId($v)

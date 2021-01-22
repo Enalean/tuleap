@@ -116,8 +116,8 @@ class ArtifactLinksPresenter
         $this->table_title  = dgettext('tuleap-tracker', 'Artifact links types');
         $this->switch_label = dgettext('tuleap-tracker', 'Activate artifact links types for all the trackers of this project?');
 
-        $this->trackers_url = TrackersDisplayController::getURL($project);
-        $base_url = ArtifactLinksController::getURL($project);
+        $this->trackers_url       = TrackersDisplayController::getURL($project);
+        $base_url                 = ArtifactLinksController::getURL($project);
         $this->artifact_links_url = $base_url;
 
         $this->form_url = $base_url . '?' . http_build_query(

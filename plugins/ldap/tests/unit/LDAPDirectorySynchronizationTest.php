@@ -167,7 +167,7 @@ class LDAPDirectorySynchronizationTest extends TestCase
 
     public function testUserLdapUidUpdateIfLdapDoesntMatch(): void
     {
-        $row = ['user_id'  => '4321',
+        $row  = ['user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
                      'ldap_uid' => 'oula la'
                      ];

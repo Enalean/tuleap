@@ -114,7 +114,7 @@ final class HierarchicalTrackerFactoryTest extends \PHPUnit\Framework\TestCase /
                 return $event;
             }
         };
-        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $hierarchy_dao, $event_dispatcher);
+        $factory          = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $hierarchy_dao, $event_dispatcher);
 
         $current_tracker = TrackerTestBuilder::aTracker()->withId(102)->withProject(Project::buildForTest())->build();
         $other_tracker   = TrackerTestBuilder::aTracker()->withId(103)->build();

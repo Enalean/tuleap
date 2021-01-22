@@ -56,7 +56,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
 
         $day_offsets = self::getDayOffsetsFromStartDateAndDuration((int) $start_date, (int) $duration);
         $last_offset = end($day_offsets);
-        $end_date = (int) strtotime("+$last_offset days", (int) $start_date);
+        $end_date    = (int) strtotime("+$last_offset days", (int) $start_date);
 
         return new TimePeriodWithoutWeekEnd(
             $start_date,
@@ -214,7 +214,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
     private static function getDayOffsetsWithConsistentDuration(int $start_date, int $duration): array
     {
         $day_offsets_excluding_we = [];
-        $day_offset = 0;
+        $day_offset               = 0;
         while (count($day_offsets_excluding_we) - 1 !== $duration) {
             $day = self::getNextDay($day_offset, $start_date);
             if (self::isNotWeekendDay($day)) {
@@ -266,7 +266,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
     private static function getNumberOfDaysWithoutWeekEndBetweenTwoDates(int $start_date, int $end_date): int
     {
         $real_number_of_days_after_start = 0;
-        $day        = $start_date;
+        $day                             = $start_date;
         if (self::isNotWeekendDay($day)) {
             $day_offset = -1;
         } else {

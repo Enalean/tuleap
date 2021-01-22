@@ -46,7 +46,7 @@ $event_manager                            = EventManager::instance();
 $ugroup_manager                           = new UGroupManager();
 $ugroup_binding                           = new UGroupBinding(new UGroupUserDao(), $ugroup_manager);
 $project_manager                          = ProjectManager::instance();
-$edit_event_launcher    = new EditBindingUGroupEventLauncher($event_manager);
+$edit_event_launcher                      = new EditBindingUGroupEventLauncher($event_manager);
 $binding_controller                       = new BindingController(
     new ProjectHistoryDao(),
     $project_manager,

@@ -80,7 +80,7 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
             );
         $this->artifact_dao->shouldReceive('foundRows')->andReturn(2);
 
-        $artifact_user_can_view     = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact_user_can_view = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_user_can_view->shouldReceive('userCanView')->andReturn(true);
         $artifact_user_can_not_view = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_user_can_not_view->shouldReceive('userCanView')->andReturn(false);
@@ -91,12 +91,12 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
 
         $backlog_item = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $backlog_item->shouldReceive('getId')->andReturn(789);
-        $tracker      = \Mockery::mock(Tracker::class);
-        $project      = \Mockery::mock(\Project::class);
+        $tracker = \Mockery::mock(Tracker::class);
+        $project = \Mockery::mock(\Project::class);
         $tracker->shouldReceive('getProject')->andReturn($project);
         $backlog_item->shouldReceive('getTracker')->andReturn($tracker);
-        $milestone    = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $user         = UserTestBuilder::aUser()->build();
+        $milestone = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $user      = UserTestBuilder::aUser()->build();
 
         $test_definition_with_test_status = TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($artifact_user_can_view);
         $this->test_definition_with_test_status_retriever->shouldReceive('retrieveTestDefinitionWithTestStatus')

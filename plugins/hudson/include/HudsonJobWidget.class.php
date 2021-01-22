@@ -37,12 +37,12 @@ abstract class HudsonJobWidget extends HudsonWidget
     public function create(Codendi_Request $request)
     {
         $content_id = false;
-        $vId = new Valid_UInt($this->widget_id . '_job_id');
+        $vId        = new Valid_UInt($this->widget_id . '_job_id');
         $vId->setErrorMessage("Can't add empty job id");
         $vId->required();
         if ($request->valid($vId)) {
-            $job_id = $request->get($this->widget_id . '_job_id');
-            $db = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
+            $job_id     = $request->get($this->widget_id . '_job_id');
+            $db         = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
             $content_id = (int) $db->insertReturnId(
                 'plugin_hudson_widget',
                 [
@@ -128,7 +128,7 @@ abstract class HudsonJobWidget extends HudsonWidget
         $request->valid(new Valid_String('cancel'));
         if (! $request->exist('cancel')) {
             $job_id = $request->get($this->widget_id . '_job_id');
-            $db = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
+            $db     = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
             $db->run(
                 'UPDATE plugin_hudson_widget SET job_id=? WHERE owner_id = ? AND owner_type = ? AND id = ?',
                 $job_id,
@@ -147,7 +147,7 @@ abstract class HudsonJobWidget extends HudsonWidget
      */
     protected function getJobIdFromWidgetConfiguration()
     {
-        $db = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
+        $db     = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
         $job_id = $db->cell(
             'SELECT job_id FROM plugin_hudson_widget WHERE widget_name = ? AND owner_id = ? AND owner_type = ? AND id = ?',
             $this->widget_id,

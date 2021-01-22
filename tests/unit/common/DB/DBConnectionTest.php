@@ -69,8 +69,8 @@ final class DBConnectionTest extends TestCase
         $db_creator    = \Mockery::mock(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
 
-        $db_closed  = \Mockery::mock(EasyDB::class);
-        $db         = \Mockery::mock(EasyDB::class);
+        $db_closed = \Mockery::mock(EasyDB::class);
+        $db        = \Mockery::mock(EasyDB::class);
         $db_creator->shouldReceive('createDB')->andReturn($db_closed, $db);
 
         $db_closed->shouldReceive('run')->andReturnUsing(

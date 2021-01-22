@@ -83,7 +83,7 @@ class MediawikiSiteAdminController
         $token = new CSRFSynchronizerToken('/plugins/mediawiki/forge_admin.php?action=site_update_allowed_project_list');
         $token->check();
 
-        $project_to_add  = $request->get('project-to-allow');
+        $project_to_add = $request->get('project-to-allow');
         if ($request->get('allow-project') && ! empty($project_to_add)) {
             $this->allowProject($project_to_add);
         }

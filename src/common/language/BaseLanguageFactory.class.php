@@ -91,7 +91,7 @@ class BaseLanguageFactory
     protected function createBaseLanguage($locale)
     {
         $currentlocale = setlocale(LC_ALL, '0');
-        $language = new BaseLanguage($this->supported_languages, $locale);
+        $language      = new BaseLanguage($this->supported_languages, $locale);
         $language->loadLanguage($locale);
         setlocale(LC_ALL, $currentlocale);
         return $language;

@@ -69,7 +69,7 @@ class FileBeingUploadedLockerTest extends TestCase
         $path_allocator
             ->shouldReceive('getPathForItemBeingUploaded')
             ->andReturn("$this->tmp_dir/12");
-        $locker         = new FileBeingUploadedLocker($path_allocator);
+        $locker = new FileBeingUploadedLocker($path_allocator);
 
         $file_information = \Mockery::mock(TusFileInformation::class);
         $file_information->shouldReceive('getID')->andReturns(12);
@@ -85,7 +85,7 @@ class FileBeingUploadedLockerTest extends TestCase
         $path_allocator
             ->shouldReceive('getPathForItemBeingUploaded')
             ->andReturn("$this->tmp_dir/12");
-        $locker         = new FileBeingUploadedLocker($path_allocator);
+        $locker = new FileBeingUploadedLocker($path_allocator);
 
         $file_information = \Mockery::mock(TusFileInformation::class);
         $file_information->shouldReceive('getID')->andReturns(12);

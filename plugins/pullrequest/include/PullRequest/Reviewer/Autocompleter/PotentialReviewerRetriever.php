@@ -67,7 +67,7 @@ class PotentialReviewerRetriever
     ): array {
         $potential_reviewers = [];
 
-        $offset     = 0;
+        $offset = 0;
 
         while (count($potential_reviewers) < $max_number_reviewers) {
             $dar = $this->dao->searchUserNameLike($username_to_search->toString(), $max_number_reviewers, $offset);

@@ -46,9 +46,9 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
      */
     public function __construct($user, $project, $package, $maxFileSize)
     {
-        $this->user = $user;
-        $this->project = $project;
-        $this->package = $package;
+        $this->user        = $user;
+        $this->project     = $project;
+        $this->package     = $package;
         $this->maxFileSize = $maxFileSize;
     }
 
@@ -287,12 +287,12 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
     {
         if ($this->userCanWrite()) {
             // don't delete a package if it is not empty
-            $releases = $this->getReleaseList($this->getPackage());
+            $releases    = $this->getReleaseList($this->getPackage());
             $numReleases = count($releases);
             if ($numReleases > 0) {
                 throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_empty'));
             } else {
-                $utils = $this->getUtils();
+                $utils  = $this->getUtils();
                 $result = $utils->getPackageFactory()->delete_package($this->getProject()->getGroupId(), $this->getPackageId());
                 if ($result == 0) {
                     throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_available'));
@@ -364,18 +364,18 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
         if ($this->userCanWrite()) {
             $utils = $this->getUtils();
             if (! $utils->getReleaseFactory()->isReleaseNameExist($name, $this->getPackageId())) {
-                $releaseData['name'] = htmlspecialchars($name);
+                $releaseData['name']       = htmlspecialchars($name);
                 $releaseData['package_id'] = $this->getPackageId();
-                $releaseData['notes'] = '';
-                $releaseData['changes'] = '';
-                $releaseData['status_id'] = 1;
+                $releaseData['notes']      = '';
+                $releaseData['changes']    = '';
+                $releaseData['status_id']  = 1;
 
                 $relFactory = $utils->getReleaseFactory();
                 $releaseId  = $relFactory->create($releaseData);
                 if ($releaseId) {
                     // Set permissions
                     $releaseData['release_id'] = $releaseId;
-                    $release = new FRSRelease($releaseData);
+                    $release                   = new FRSRelease($releaseData);
                     $relFactory->setDefaultPermissions($release);
                 }
             } else {

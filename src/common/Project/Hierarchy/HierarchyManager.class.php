@@ -151,7 +151,7 @@ class Project_HierarchyManager
 
         while ($parent_project = $this->getParentProject($project_id)) {
             $parent_ids[] = $parent_project->getID();
-            $project_id = $parent_project->getID();
+            $project_id   = $parent_project->getID();
         }
 
         return $parent_ids;

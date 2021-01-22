@@ -553,7 +553,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, LegacyDataAccessResultInterface $sub_milestone_artifacts): array
     {
-        $sub_milestones          = [];
+        $sub_milestones = [];
 
         foreach ($sub_milestone_artifacts as $sub_milestone_artifact) {
             $artifact = $this->artifact_factory->getInstanceFromRow($sub_milestone_artifact);
@@ -755,7 +755,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getMilestoneFromArtifact(Artifact $artifact, ?TreeNode $planned_artifacts = null)
     {
-        $tracker = $artifact->getTracker();
+        $tracker  = $artifact->getTracker();
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
         if (! $planning) {
             return null;
@@ -832,7 +832,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getLastMilestoneCreated(PFUser $user, $planning_id)
     {
-        $planning  = $this->planning_factory->getPlanning($planning_id);
+        $planning = $this->planning_factory->getPlanning($planning_id);
         if ($planning === null) {
             throw new NotFoundException($planning_id);
         }
@@ -910,7 +910,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 continue;
             }
 
-            $end_date = $this->getMilestoneEndDate($artifact, $user);
+            $end_date                                         = $this->getMilestoneEndDate($artifact, $user);
             $milestones[$end_date . '_' . $artifact->getId()] = $this->getMilestoneFromArtifactWithBurndownInfo($artifact, $user);
         }
         ksort($milestones);

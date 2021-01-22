@@ -43,7 +43,7 @@ class referencealias_corePlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->dao = new Dao();
+        $this->dao                = new Dao();
         $this->references_builder = new ReferencesBuilder($this->dao, ProjectManager::instance());
         $this->setScope(self::SCOPE_SYSTEM);
         $this->addHook(Event::IMPORT_COMPAT_REF_XML, 'importCompatRefXML');
@@ -82,9 +82,9 @@ class referencealias_corePlugin extends Plugin
 
     public function getReference(GetReferenceEvent $event): void
     {
-        $keyword   = $event->getKeyword();
-        $value     = $event->getValue();
-        $project   = $event->getProject();
+        $keyword = $event->getKeyword();
+        $value   = $event->getValue();
+        $project = $event->getProject();
 
         $reference = $this->references_builder->getReference($project, $keyword, $value);
 

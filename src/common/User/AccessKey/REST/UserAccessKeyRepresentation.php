@@ -64,8 +64,8 @@ class UserAccessKeyRepresentation
 
     public function build(AccessKeyMetadata $access_key_metadata): void
     {
-        $this->id              = $access_key_metadata->getID();
-        $this->creation_date   = JsonCast::toDate($access_key_metadata->getCreationDate()->getTimestamp());
+        $this->id            = $access_key_metadata->getID();
+        $this->creation_date = JsonCast::toDate($access_key_metadata->getCreationDate()->getTimestamp());
 
         $expiration_date = $access_key_metadata->getExpirationDate();
         if ($expiration_date !== null) {

@@ -62,7 +62,7 @@ class SemanticTimeframeUpdatorTest extends TestCase
         $this->semantic_timeframe_dao = Mockery::mock(SemanticTimeframeDao::class);
         $this->tracker                = Mockery::mock(\Tracker::class);
         $this->formelement_factory    = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->updator = new SemanticTimeframeUpdator(
+        $this->updator                = new SemanticTimeframeUpdator(
             $this->semantic_timeframe_dao,
             $this->formelement_factory
         );
@@ -216,7 +216,7 @@ class SemanticTimeframeUpdatorTest extends TestCase
         $end_date_field_id   = 5678;
         $duration_field_id   = 345;
 
-        $request             = new \Codendi_Request([
+        $request = new \Codendi_Request([
             'start-date-field-id' => $start_date_field_id,
             'duration-field-id'   => $duration_field_id,
             'end-date-field-id'   => $end_date_field_id

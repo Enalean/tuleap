@@ -40,7 +40,7 @@ final class OAuth2ScopeDefinitionPresenter
 
     public function __construct(AuthenticationScopeDefinition $scope_definition)
     {
-        $this->name = $scope_definition->getName();
+        $this->name        = $scope_definition->getName();
         $this->description = $scope_definition->getDescription();
     }
 }

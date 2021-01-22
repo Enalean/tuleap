@@ -149,8 +149,8 @@ class ItemRepresentationBuilder
             $is_expanded = $preference !== false;
         }
 
-        $user_can_write      = $this->permissions_manager->userCanWrite($current_user, $item->getId());
-        $can_user_manage     = $this->permissions_manager->userCanManage($current_user, $item->getId());
+        $user_can_write  = $this->permissions_manager->userCanWrite($current_user, $item->getId());
+        $can_user_manage = $this->permissions_manager->userCanManage($current_user, $item->getId());
 
         $lock_info                 = $this->getLockInformation($item);
         $approval_table            = $this->getApprovalTable($item);
@@ -204,7 +204,7 @@ class ItemRepresentationBuilder
             return null;
         }
 
-        $table_owner    = $this->getMinimalUserRepresentation((int) $approval_table->getOwner());
+        $table_owner = $this->getMinimalUserRepresentation((int) $approval_table->getOwner());
 
         return new ItemApprovalTableRepresentation(
             $approval_table,

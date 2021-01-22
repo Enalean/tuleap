@@ -41,7 +41,7 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
         FrozenFieldsDao $frozen_dao,
         FrozenFieldsRetriever $frozen_fields_retriever
     ) {
-        $this->frozen_dao           = $frozen_dao;
+        $this->frozen_dao              = $frozen_dao;
         $this->frozen_fields_retriever = $frozen_fields_retriever;
     }
 

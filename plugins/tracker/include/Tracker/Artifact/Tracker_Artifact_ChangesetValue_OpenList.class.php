@@ -43,7 +43,7 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
     public function getValue()
     {
         $values = $this->getListValues();
-        $array = [];
+        $array  = [];
         foreach ($values as $value) {
             $array[] = $value->getJsonId();
         }
@@ -64,7 +64,7 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
             $labels[]      = $this->getLabel($list_value);
         }
 
-        $representation           = new ArtifactFieldValueOpenListFullRepresentation();
+        $representation = new ArtifactFieldValueOpenListFullRepresentation();
         $representation->build(
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),

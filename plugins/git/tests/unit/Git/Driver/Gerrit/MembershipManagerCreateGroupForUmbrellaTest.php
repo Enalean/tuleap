@@ -90,10 +90,10 @@ class MembershipManagerCreateGroupForUmbrellaTest extends TestCase
 
         $this->remote_server_factory  = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
         $this->git_repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->logger = \Mockery::spy(\Psr\Log\LoggerInterface::class);
-        $this->dao    = \Mockery::spy(Git_Driver_Gerrit_MembershipDao::class);
-        $this->user1 = \Mockery::spy(\PFUser::class);
-        $this->user2 = \Mockery::spy(\PFUser::class);
+        $this->logger                 = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->dao                    = \Mockery::spy(Git_Driver_Gerrit_MembershipDao::class);
+        $this->user1                  = \Mockery::spy(\PFUser::class);
+        $this->user2                  = \Mockery::spy(\PFUser::class);
 
         $this->membership_manager = \Mockery::mock(
             \Git_Driver_Gerrit_MembershipManager::class,

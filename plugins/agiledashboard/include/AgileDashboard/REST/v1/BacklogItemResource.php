@@ -164,8 +164,8 @@ class BacklogItemResource extends AuthenticatedResource
             $backlog_item,
             $semantics[AgileDashBoard_Semantic_InitialEffort::NAME]
         );
-        $backlog_item = $this->updateBacklogItemRemainingEffort($current_user, $backlog_item);
-        $parent_artifact = $artifact->getParent($current_user);
+        $backlog_item           = $this->updateBacklogItemRemainingEffort($current_user, $backlog_item);
+        $parent_artifact        = $artifact->getParent($current_user);
         if ($parent_artifact !== null) {
             $backlog_item->setParent($parent_artifact);
         }
@@ -323,7 +323,7 @@ class BacklogItemResource extends AuthenticatedResource
                 $this->resources_patcher->startTransaction();
                 $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
                 if (count($to_add)) {
-                    $validator = new PatchAddRemoveValidator(
+                    $validator         = new PatchAddRemoveValidator(
                         $indexed_children_ids,
                         new PatchAddBacklogItemsValidator(
                             $this->artifact_factory,

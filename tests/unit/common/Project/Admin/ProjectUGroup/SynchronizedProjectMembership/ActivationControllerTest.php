@@ -64,13 +64,13 @@ final class ActivationControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->layout            = M::mock(BaseLayout::class);
-        $this->request           = M::mock(\HTTPRequest::class);
-        $this->project_retriever = M::mock(ProjectRetriever::class);
-        $this->administrator_checker     = M::mock(ProjectAdministratorChecker::class);
-        $this->dao               = M::mock(SynchronizedProjectMembershipDao::class);
-        $this->csrf              = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller        = new ActivationController(
+        $this->layout                = M::mock(BaseLayout::class);
+        $this->request               = M::mock(\HTTPRequest::class);
+        $this->project_retriever     = M::mock(ProjectRetriever::class);
+        $this->administrator_checker = M::mock(ProjectAdministratorChecker::class);
+        $this->dao                   = M::mock(SynchronizedProjectMembershipDao::class);
+        $this->csrf                  = M::mock(\CSRFSynchronizerToken::class);
+        $this->controller            = new ActivationController(
             $this->project_retriever,
             $this->administrator_checker,
             $this->dao,

@@ -114,7 +114,7 @@ class Config
      */
     public function ClearConfig() // @codingStandardsIgnoreLine
     {
-        $this->values = [];
+        $this->values  = [];
         $this->configs = [];
     }
 

@@ -33,7 +33,7 @@ class FileImporter_PathTest extends \PHPUnit\Framework\TestCase
         $this->project_manager = $this->getMockBuilder('ProjectManager')->disableOriginalConstructor()->getMock();
         $this->user_dao        = $this->getMockBuilder(UserDao::class)->disableOriginalConstructor()->getMock();
 
-        $user    = $this->getMockBuilder('PFUser')->disableOriginalConstructor()->getMock();
+        $user          = $this->getMockBuilder('PFUser')->disableOriginalConstructor()->getMock();
         $this->project = $this->getMockBuilder('Project')->disableOriginalConstructor()->getMock();
 
         $this->user_manager->expects($this->any())->method('getUserByUserName')->will($this->returnValue($user));

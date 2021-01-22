@@ -63,7 +63,7 @@ class BackendCVS extends Backend
     public function repositoryExists($project)
     {
         $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
-        $cvs_dir = ForgeConfig::get('cvs_prefix') . "/" . $unix_group_name;
+        $cvs_dir         = ForgeConfig::get('cvs_prefix') . "/" . $unix_group_name;
         if (is_dir($cvs_dir)) {
             return true;
         } else {
@@ -135,7 +135,7 @@ class BackendCVS extends Backend
             if (! $this->useCVSNT()) {
                 // But to allow checkout/update to registered users we
                 // need to setup a world writable directory for CVS lock files
-                $lockdir = ForgeConfig::get('cvslock_prefix') . "/$unix_group_name";
+                $lockdir  = ForgeConfig::get('cvslock_prefix') . "/$unix_group_name";
                 $filename = "$cvs_dir/CVSROOT/config";
                 $this->_RcsCheckout($filename);
                 $this->system("echo  >> " . escapeshellarg($filename));
@@ -233,10 +233,10 @@ class BackendCVS extends Backend
     public function updatePostCommit($project)
     {
         $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
-        $cvs_dir = ForgeConfig::get('cvs_prefix') . "/" . $unix_group_name;
+        $cvs_dir         = ForgeConfig::get('cvs_prefix') . "/" . $unix_group_name;
         if ($project->isCVSTracked()) {
             // hook for commit tracking in cvs loginfo file
-            $filename = "$cvs_dir/CVSROOT/loginfo";
+            $filename   = "$cvs_dir/CVSROOT/loginfo";
             $file_array = file($filename);
             if (! in_array($this->block_marker_start, $file_array)) {
                 if ($this->useCVSNT()) {
@@ -257,7 +257,7 @@ class BackendCVS extends Backend
             }
 
             // hook for commit tracking in cvs commitinfo file
-            $filename = "$cvs_dir/CVSROOT/commitinfo";
+            $filename   = "$cvs_dir/CVSROOT/commitinfo";
             $file_array = file($filename);
             if (! in_array($this->block_marker_start, $file_array)) {
                 $this->_RcsCheckout($filename);
@@ -273,12 +273,12 @@ class BackendCVS extends Backend
             }
         } else {
             // Remove Codendi blocks if needed
-            $filename = "$cvs_dir/CVSROOT/loginfo";
+            $filename   = "$cvs_dir/CVSROOT/loginfo";
             $file_array = file($filename);
             if (in_array($this->block_marker_start, $file_array)) {
                 $this->removeBlock($filename);
             }
-            $filename = "$cvs_dir/CVSROOT/commitinfo";
+            $filename   = "$cvs_dir/CVSROOT/commitinfo";
             $file_array = file($filename);
             if (in_array($this->block_marker_start, $file_array)) {
                 $this->removeBlock($filename);
@@ -345,8 +345,8 @@ class BackendCVS extends Backend
     public function updateCVSWatchMode(\Project $project)
     {
         $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
-        $cvs_dir = ForgeConfig::get('cvs_prefix') . "/" . $unix_group_name;
-        $filename = "$cvs_dir/CVSROOT/notify";
+        $cvs_dir         = ForgeConfig::get('cvs_prefix') . "/" . $unix_group_name;
+        $filename        = "$cvs_dir/CVSROOT/notify";
         //If notify file does not exist, we should raise error in log
         //and return false
         if (! file_exists($filename)) {
@@ -407,7 +407,7 @@ class BackendCVS extends Backend
             $this->system("chmod 0700 $sandbox_dir_escaped"); // overwrite umask value
         }
 
-        $cvs_dir_escaped     = escapeshellarg($cvs_dir);
+        $cvs_dir_escaped = escapeshellarg($cvs_dir);
         if ($watch_mode == 1) {
             $this->system("cd $sandbox_dir_escaped;cvs -d$cvs_dir_escaped co . 2>/dev/null 1>&2;cvs -d$cvs_dir_escaped watch on 2>/dev/null 1>&2;");
         } else {
@@ -424,7 +424,7 @@ class BackendCVS extends Backend
      */
     public function _RcsCheckout($file, &$output = '')
     {
-        $rcode = 0;
+        $rcode  = 0;
         $output = $this->system("co -q -l " . escapeshellarg($file), $rcode);
         return $rcode;
     }
@@ -455,7 +455,7 @@ class BackendCVS extends Backend
         if (! $project) {
             return false;
         }
-        $mydir = ForgeConfig::get('cvs_prefix') . "/" . $project->getUnixName(false);
+        $mydir      = ForgeConfig::get('cvs_prefix') . "/" . $project->getUnixName(false);
         $backupfile = ForgeConfig::get('sys_project_backup_path') . "/" . $project->getUnixName(false) . "-cvs.tgz";
 
         if (is_dir($mydir)) {
@@ -475,17 +475,17 @@ class BackendCVS extends Backend
     public function CVSRootListUpdate()
     {
         $cvs_root_allow_array = [];
-        $projlist = [];
-        $repolist = [];
+        $projlist             = [];
+        $repolist             = [];
 
         $service_dao = $this->_getServiceDao();
-        $dar = $service_dao->searchActiveUnixGroupByUsedService('cvs');
+        $dar         = $service_dao->searchActiveUnixGroupByUsedService('cvs');
         foreach ($dar as $row) {
             $repolist[] = "/cvsroot/" . $row['unix_group_name'];
         }
 
         if ($this->useCVSNT()) {
-            $config_file = ForgeConfig::get('cvsnt_config_file');
+            $config_file  = ForgeConfig::get('cvsnt_config_file');
             $cvsnt_marker = "DON'T EDIT THIS LINE - END OF CODENDI BLOCK";
         } else {
             $config_file = ForgeConfig::get('cvs_root_allow_file');
@@ -588,7 +588,7 @@ class BackendCVS extends Backend
      */
     public function setCVSPrivacy($project, $is_private)
     {
-        $perms = $is_private ? 02770 : 02775;
+        $perms   = $is_private ? 02770 : 02775;
         $cvsroot = ForgeConfig::get('cvs_prefix') . '/' . $project->getUnixName(false);
         return is_dir($cvsroot) && $this->chmod($cvsroot, $perms);
     }
@@ -604,8 +604,8 @@ class BackendCVS extends Backend
     public function checkCVSMode($project)
     {
         $unix_group_name =  $project->getUnixName(false);
-        $cvsroot = ForgeConfig::get('cvs_prefix') . '/' . $unix_group_name;
-        $is_private = ! $project->isPublic() || $project->isCVSPrivate();
+        $cvsroot         = ForgeConfig::get('cvs_prefix') . '/' . $unix_group_name;
+        $is_private      = ! $project->isPublic() || $project->isCVSPrivate();
         if ($is_private) {
             $perms = fileperms($cvsroot);
             // 'others' should have no right on the repository
@@ -615,7 +615,7 @@ class BackendCVS extends Backend
             }
         }
         // Sometimes, there might be a bad ownership on file (e.g. chmod failed, maintenance done as root...)
-        $files_to_check = ['CVSROOT/loginfo', 'CVSROOT/commitinfo', 'CVSROOT/config'];
+        $files_to_check    = ['CVSROOT/loginfo', 'CVSROOT/commitinfo', 'CVSROOT/config'];
         $need_owner_update = false;
         foreach ($files_to_check as $file) {
             if (file_exists($cvsroot . '/' . $file)) {
@@ -654,7 +654,7 @@ class BackendCVS extends Backend
     {
         // TODO: test!
         $filelist = shell_exec("/usr/bin/find " . ForgeConfig::get('cvs_hook_tmp_dir') . ' -name "*.files.*" -amin +120;');
-        $files = explode("\n", $filelist);
+        $files    = explode("\n", $filelist);
         // Remove last (empty) element
         array_pop($files);
 

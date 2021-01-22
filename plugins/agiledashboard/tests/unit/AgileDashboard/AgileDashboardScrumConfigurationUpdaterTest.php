@@ -41,8 +41,8 @@ final class AgileDashboardScrumConfigurationUpdaterTest extends \PHPUnit\Framewo
                 return $event;
             }
         };
-        $request = Mockery::mock(Codendi_Request::class);
-        $project = Project::buildForTest();
+        $request          = Mockery::mock(Codendi_Request::class);
+        $project          = Project::buildForTest();
         $request->shouldReceive('get')->with('group_id')->andReturn($project->getID());
         $request->shouldReceive('getProject')->andReturn($project);
 

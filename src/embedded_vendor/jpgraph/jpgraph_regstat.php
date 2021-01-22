@@ -25,11 +25,11 @@ class Spline
 
     public function __construct($xdata, $ydata)
     {
-        $this->y2 = [];
+        $this->y2    = [];
         $this->xdata = $xdata;
         $this->ydata = $ydata;
 
-        $n = count($ydata);
+        $n       = count($ydata);
         $this->n = $n;
         if ($this->n !== count($xdata)) {
             JpGraphError::RaiseL(19001);
@@ -37,9 +37,9 @@ class Spline
         }
 
         // Natural spline 2:derivate == 0 at endpoints
-        $this->y2[0]    = 0.0;
+        $this->y2[0]      = 0.0;
         $this->y2[$n - 1] = 0.0;
-        $delta[0] = 0.0;
+        $delta[0]         = 0.0;
 
         // Calculate 2:nd derivate
         for ($i = 1; $i < $n - 1; ++$i) {
@@ -48,12 +48,12 @@ class Spline
                 JpGraphError::RaiseL(19002);
                 //('Invalid input data for spline. Two or more consecutive input X-values are equal. Each input X-value must differ since from a mathematical point of view it must be a one-to-one mapping, i.e. each X-value must correspond to exactly one Y-value.');
             }
-            $s = ($xdata[$i] - $xdata[$i - 1]) / $d;
-            $p = $s * $this->y2[$i - 1] + 2.0;
+            $s            = ($xdata[$i] - $xdata[$i - 1]) / $d;
+            $p            = $s * $this->y2[$i - 1] + 2.0;
             $this->y2[$i] = ($s - 1.0) / $p;
-            $delta[$i] = ($ydata[$i + 1] - $ydata[$i]) / ($xdata[$i + 1] - $xdata[$i]) -
+            $delta[$i]    = ($ydata[$i + 1] - $ydata[$i]) / ($xdata[$i + 1] - $xdata[$i]) -
             ($ydata[$i] - $ydata[$i - 1]) / ($xdata[$i] - $xdata[$i - 1]);
-            $delta[$i] = (6.0 * $delta[$i] / ($xdata[$i + 1] - $xdata[$i - 1]) - $s * $delta[$i - 1]) / $p;
+            $delta[$i]    = (6.0 * $delta[$i] / ($xdata[$i + 1] - $xdata[$i - 1]) - $s * $delta[$i - 1]) / $p;
         }
 
         // Backward substitution
@@ -65,10 +65,10 @@ class Spline
     // Return the two new data vectors
     public function Get($num = 50)
     {
-        $n = $this->n;
-        $step = ($this->xdata[$n - 1] - $this->xdata[0]) / ($num - 1);
-        $xnew = [];
-        $ynew = [];
+        $n       = $this->n;
+        $step    = ($this->xdata[$n - 1] - $this->xdata[0]) / ($num - 1);
+        $xnew    = [];
+        $ynew    = [];
         $xnew[0] = $this->xdata[0];
         $ynew[0] = $this->ydata[0];
         for ($j = 1; $j < $num; ++$j) {
@@ -122,7 +122,7 @@ class Bezier
      */
     private $datax = [];
     private $datay = [];
-    private $n = 0;
+    private $n     = 0;
 
     public function __construct($datax, $datay, $attraction_factor = 1)
     {
@@ -158,8 +158,8 @@ class Bezier
         $datay = [];
         for ($i = 0; $i < $steps; $i++) {
             list($datumx, $datumy) = $this->GetPoint((double) $i / (double) $steps);
-            $datax[$i] = $datumx;
-            $datay[$i] = $datumy;
+            $datax[$i]             = $datumx;
+            $datay[$i]             = $datumy;
         }
 
         $datax[] = end($this->datax);
@@ -178,24 +178,24 @@ class Bezier
      */
     public function GetPoint($mu)
     {
-        $n = $this->n - 1;
-        $k = 0;
-        $kn = 0;
-        $nn = 0;
-        $nkn = 0;
+        $n     = $this->n - 1;
+        $k     = 0;
+        $kn    = 0;
+        $nn    = 0;
+        $nkn   = 0;
         $blend = 0.0;
-        $newx = 0.0;
-        $newy = 0.0;
+        $newx  = 0.0;
+        $newy  = 0.0;
 
-        $muk = 1.0;
+        $muk  = 1.0;
         $munk = (double) pow(1 - $mu, (double) $n);
 
         for ($k = 0; $k <= $n; $k++) {
-            $nn = $n;
-            $kn = $k;
-            $nkn = $n - $k;
+            $nn    = $n;
+            $kn    = $k;
+            $nkn   = $n - $k;
             $blend = $muk * $munk;
-            $muk *= $mu;
+            $muk  *= $mu;
             $munk /= (1 - $mu);
             while ($nn >= 1) {
                 $blend *= $nn;

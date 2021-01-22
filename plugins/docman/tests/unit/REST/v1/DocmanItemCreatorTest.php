@@ -116,7 +116,7 @@ class DocmanItemCreatorTest extends TestCase
         $this->document_ongoing_upload_retriever = \Mockery::mock(DocumentOngoingUploadRetriever::class);
         $this->document_to_upload_creator        = \Mockery::mock(DocumentToUploadCreator::class);
 
-        $this->empty_file_to_upload_finisher     = \Mockery::mock(EmptyFileToUploadFinisher::class);
+        $this->empty_file_to_upload_finisher = \Mockery::mock(EmptyFileToUploadFinisher::class);
 
         $this->link_validity_checker = \Mockery::mock(DocmanLinksValidityChecker::class);
 
@@ -339,7 +339,7 @@ class DocmanItemCreatorTest extends TestCase
 
     public function testFileDocumentCanBeCreated(): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $parent_item = \Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(3);
         $user         = \Mockery::mock(\PFUser::class);
         $current_time = new \DateTimeImmutable();
@@ -464,12 +464,12 @@ class DocmanItemCreatorTest extends TestCase
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation                            = new DocmanLinkPOSTRepresentation();
-        $post_representation->title                     = 'Mie faboulouse linke';
-        $docman_link                                    = \Mockery::mock(Docman_LinkVersion::class);
+        $post_representation        = new DocmanLinkPOSTRepresentation();
+        $post_representation->title = 'Mie faboulouse linke';
+        $docman_link                = \Mockery::mock(Docman_LinkVersion::class);
         $docman_link->shouldReceive('getLink')->andReturn('https://my.example.test');
-        $post_representation->link_properties           = LinkPropertiesRepresentation::build($docman_link);
-        $post_representation->permissions_for_groups    = $permissions_for_groups_set;
+        $post_representation->link_properties        = LinkPropertiesRepresentation::build($docman_link);
+        $post_representation->permissions_for_groups = $permissions_for_groups_set;
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -689,14 +689,14 @@ class DocmanItemCreatorTest extends TestCase
 
     public function testItemAreRejectedIfItemWIthSameNameAlreadyExists(): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $parent_item = \Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturn(1);
         $user         = \Mockery::mock(\PFUser::class);
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation            = new DocmanEmptyPOSTRepresentation();
-        $post_representation->title     = 'Title';
+        $post_representation        = new DocmanEmptyPOSTRepresentation();
+        $post_representation->title = 'Title';
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
 
@@ -976,13 +976,13 @@ class DocmanItemCreatorTest extends TestCase
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation                            = new DocmanLinkPOSTRepresentation();
-        $post_representation->title                     = 'Link with status and Obsolescence date';
-        $docman_link                                    = \Mockery::mock(Docman_LinkVersion::class);
+        $post_representation        = new DocmanLinkPOSTRepresentation();
+        $post_representation->title = 'Link with status and Obsolescence date';
+        $docman_link                = \Mockery::mock(Docman_LinkVersion::class);
         $docman_link->shouldReceive('getLink')->andReturn('https://my.example.test');
-        $post_representation->link_properties           = LinkPropertiesRepresentation::build($docman_link);
-        $post_representation->status                    = 'approved';
-        $post_representation->obsolescence_date         = '2019-10-11';
+        $post_representation->link_properties   = LinkPropertiesRepresentation::build($docman_link);
+        $post_representation->status            = 'approved';
+        $post_representation->obsolescence_date = '2019-10-11';
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -1156,7 +1156,7 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->never();
 
-        $metadata_to_create = MetadataToCreate::buildMetadataRepresentation([], false);
+        $metadata_to_create          = MetadataToCreate::buildMetadataRepresentation([], false);
         $created_item_representation = $this->item_creator->createFileDocument(
             $parent_item,
             $user,

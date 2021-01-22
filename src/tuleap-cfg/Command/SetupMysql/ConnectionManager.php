@@ -119,7 +119,7 @@ class ConnectionManager implements ConnectionManagerInterface
 
     public function checkSQLModes(DBWrapperInterface $db): void
     {
-        $row = $db->row('SHOW VARIABLES LIKE \'sql_mode\'');
+        $row    = $db->row('SHOW VARIABLES LIKE \'sql_mode\'');
         $errors = [];
         foreach (explode(',', $row['Value']) as $sql_mode) {
             if (! isset(self::AUTHORISED_SQL_MODES[$sql_mode])) {

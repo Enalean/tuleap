@@ -44,8 +44,8 @@ class ColumnFactoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->dao        = Mockery::mock(\Cardwall_OnTop_ColumnDao::class);
-        $this->field      = Mockery::mock(Tracker_FormElement_Field_List::class)->makePartial();
+        $this->dao   = Mockery::mock(\Cardwall_OnTop_ColumnDao::class);
+        $this->field = Mockery::mock(Tracker_FormElement_Field_List::class)->makePartial();
 
         $this->column_factory = new \Cardwall_OnTop_Config_ColumnFactory($this->dao);
     }

@@ -56,7 +56,7 @@ class ProjectMembers extends Widget
         $request = \HTTPRequest::instance();
         $project = $request->getProject();
 
-        $builder = new AdministratorPresenterBuilder(
+        $builder        = new AdministratorPresenterBuilder(
             new \UGroupUserDao(),
             \UserManager::instance(),
             \UserHelper::instance(),

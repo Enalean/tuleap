@@ -74,7 +74,7 @@ class ExecutionWithAutomatedTestDataProvider
         }
 
         $automated_test = "";
-        $value = $definition->getValue($field, $changeset);
+        $value          = $definition->getValue($field, $changeset);
 
         if ($value instanceof Tracker_Artifact_ChangesetValue_Text) {
             $automated_test = $value->getText();

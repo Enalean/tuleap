@@ -33,7 +33,7 @@ class IssuesTemplate implements TuleapTemplate
     public const NAME = 'issues';
 
     private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/project.xml';
-    private const KANBAN_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/issue_template.xml';
+    private const KANBAN_XML  = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/issue_template.xml';
 
     /**
      * @var string
@@ -68,8 +68,8 @@ class IssuesTemplate implements TuleapTemplate
     {
         $this->title               = _('Issue tracking');
         $this->description         = _('Trace and Track all types of activities.');
-        $this->glyph_finder       = $glyph_finder;
-        $this->project_xml_merger = $project_xml_merger;
+        $this->glyph_finder        = $glyph_finder;
+        $this->project_xml_merger  = $project_xml_merger;
         $this->consistency_checker = $consistency_checker;
     }
 

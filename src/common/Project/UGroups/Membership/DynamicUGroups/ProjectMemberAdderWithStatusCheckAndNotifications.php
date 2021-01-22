@@ -46,8 +46,8 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
     public function __construct(AddProjectMember $project_member_adder, BaseLanguage $language, MailFactory $mail_factory)
     {
         $this->project_member_adder = $project_member_adder;
-        $this->language = $language;
-        $this->mail_factory = $mail_factory;
+        $this->language             = $language;
+        $this->mail_factory         = $mail_factory;
     }
 
     public static function build(): self
@@ -104,7 +104,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
         $base_url        = HTTPRequest::instance()->getServerUrl();
         $unix_group_name = $project->getUnixName();
         // $message is defined in the content file
-        $message         = '';
+        $message = '';
         include($this->language->getContent('include/add_user_to_group_email'));
 
         return $message;

@@ -199,9 +199,9 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
     /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
     public function tracker_artifact_editrenderer_add_view_in_collection(array $params) // @codingStandardsIgnoreLine
     {
-        $user       = $params['user'];
-        $request    = $params['request'];
-        $artifact   = $params['artifact'];
+        $user     = $params['user'];
+        $request  = $params['request'];
+        $artifact = $params['artifact'];
 
         $permissions_retriever = $this->getPermissionsRetriever();
         $time_retriever        = new TimeRetriever(new TimeDao(), $permissions_retriever, new AdminDao(), \ProjectManager::instance());

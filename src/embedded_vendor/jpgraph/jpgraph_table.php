@@ -25,44 +25,44 @@ DEFINE('TIMG_HEIGHT', 2);
 //---------------------------------------------------------------------
 class GTextTableCell
 {
-    public $iColSpan = 1;
-    public $iRowSpan = 1;
-    public $iMarginLeft = 5;
-    public $iMarginRight = 5;
-    public $iMarginTop = 5;
-    public $iMarginBottom = 5;
-    public $iVal = null;
-    private $iBGColor = '';
-    private $iFontColor = 'black';
-    private $iFF = FF_FONT1;
-    private $iFS = FS_NORMAL;
-    private $iFSize = 10;
-    private $iRow = 0;
-    private $iCol = 0;
-    private $iVertAlign = 'bottom';
-    private $iHorAlign = 'left';
-    private $iMerged = false;
-    private $iPRow = null;
-    private $iPCol = null;
-    private $iTable = null;
-    private $iGridColor = ['darkgray', 'darkgray', 'darkgray', 'darkgray'];
-    private $iGridWeight = [1, 1, 0, 0]; // left,top,bottom,right;
-    private $iGridStyle = [TGRID_SINGLE, TGRID_SINGLE, TGRID_SINGLE, TGRID_SINGLE]; // left,top,bottom,right;
-    private $iNumberFormat = null;
-    private $iIcon = null;
+    public $iColSpan        = 1;
+    public $iRowSpan        = 1;
+    public $iMarginLeft     = 5;
+    public $iMarginRight    = 5;
+    public $iMarginTop      = 5;
+    public $iMarginBottom   = 5;
+    public $iVal            = null;
+    private $iBGColor       = '';
+    private $iFontColor     = 'black';
+    private $iFF            = FF_FONT1;
+    private $iFS            = FS_NORMAL;
+    private $iFSize         = 10;
+    private $iRow           = 0;
+    private $iCol           = 0;
+    private $iVertAlign     = 'bottom';
+    private $iHorAlign      = 'left';
+    private $iMerged        = false;
+    private $iPRow          = null;
+    private $iPCol          = null;
+    private $iTable         = null;
+    private $iGridColor     = ['darkgray', 'darkgray', 'darkgray', 'darkgray'];
+    private $iGridWeight    = [1, 1, 0, 0]; // left,top,bottom,right;
+    private $iGridStyle     = [TGRID_SINGLE, TGRID_SINGLE, TGRID_SINGLE, TGRID_SINGLE]; // left,top,bottom,right;
+    private $iNumberFormat  = null;
+    private $iIcon          = null;
     private $iIconConstrain = [];
-    private $iCSIMtarget = '';
+    private $iCSIMtarget    = '';
     private $iCSIMwintarget = '';
-    private $iCSIMalt = '';
-    private $iCSIMArea = '';
+    private $iCSIMalt       = '';
+    private $iCSIMArea      = '';
 
     public function __construct($aVal = '', $aRow = 0, $aCol = 0)
     {
-        $this->iVal = new Text($aVal);
-        $this->iRow = $aRow;
-        $this->iCol = $aCol;
-        $this->iPRow = $aRow; // Initialiy each cell is its own parent
-        $this->iPCol = $aCol;
+        $this->iVal           = new Text($aVal);
+        $this->iRow           = $aRow;
+        $this->iCol           = $aCol;
+        $this->iPRow          = $aRow; // Initialiy each cell is its own parent
+        $this->iPCol          = $aCol;
         $this->iIconConstrain = [-1, -1];
     }
 
@@ -73,9 +73,9 @@ class GTextTableCell
 
     public function SetCSIMTarget($aTarget, $aAlt = '', $aWinTarget = '')
     {
-        $this->iCSIMtarget = $aTarget;
+        $this->iCSIMtarget    = $aTarget;
         $this->iCSIMwintarget = $aWinTarget;
-        $this->iCSIMalt = $aAlt;
+        $this->iCSIMalt       = $aAlt;
     }
 
     public function GetCSIMArea()
@@ -116,14 +116,14 @@ class GTextTableCell
     {
         $this->iRowSpan = $aRowSpan;
         $this->iColSpan = $aColSpan;
-        $this->iMerged = true;
+        $this->iMerged  = true;
     }
 
     public function SetMerged($aPRow, $aPCol, $aFlg = true)
     {
         $this->iMerged = $aFlg;
-        $this->iPRow = $aPRow;
-        $this->iPCol = $aPCol;
+        $this->iPRow   = $aPRow;
+        $this->iPCol   = $aPCol;
     }
 
     public function IsMerged()
@@ -143,8 +143,8 @@ class GTextTableCell
 
     public function SetFont($aFF, $aFS, $aFSize)
     {
-        $this->iFF = $aFF;
-        $this->iFS = $aFS;
+        $this->iFF    = $aFF;
+        $this->iFS    = $aFS;
         $this->iFSize = $aFSize;
         $this->iVal->SetFont($aFF, $aFS, $aFSize);
     }
@@ -215,9 +215,9 @@ class GTextTableCell
 
     public function SetMargin($aLeft, $aRight, $aTop, $aBottom)
     {
-        $this->iMarginLeft = $aLeft;
-        $this->iMarginRight = $aRight;
-        $this->iMarginTop = $aTop;
+        $this->iMarginLeft   = $aLeft;
+        $this->iMarginRight  = $aRight;
+        $this->iMarginTop    = $aTop;
         $this->iMarginBottom = $aBottom;
     }
 
@@ -233,7 +233,7 @@ class GTextTableCell
                 $tmp = $this->iIcon->GetWidthHeight();
                 $this->iIcon->SetScale($this->iIconConstrain[1] / $tmp[1]);
             }
-            $tmp = $this->iIcon->GetWidthHeight();
+            $tmp    = $this->iIcon->GetWidthHeight();
             $iwidth = $tmp[0];
         } else {
             $iwidth = 0;
@@ -262,7 +262,7 @@ class GTextTableCell
                 $tmp = $this->iIcon->GetWidthHeight();
                 $this->iIcon->SetScale($this->iIconConstrain[1] / $tmp[1]);
             }
-            $tmp = $this->iIcon->GetWidthHeight();
+            $tmp     = $this->iIcon->GetWidthHeight();
             $iheight =  $tmp[1];
         } else {
             $iheight = 0;
@@ -278,14 +278,14 @@ class GTextTableCell
 
     public function SetAlign($aHorAlign = 'left', $aVertAlign = 'bottom')
     {
-        $aHorAlign = strtolower($aHorAlign);
+        $aHorAlign  = strtolower($aHorAlign);
         $aVertAlign = strtolower($aVertAlign);
-        $chk = ['left', 'right', 'center', 'bottom', 'top', 'middle'];
+        $chk        = ['left', 'right', 'center', 'bottom', 'top', 'middle'];
         if (! in_array($aHorAlign, $chk) || ! in_array($aVertAlign, $chk)) {
             JpGraphError::RaiseL(27011, $aHorAlign, $aVertAlign);
         }
         $this->iVertAlign = $aVertAlign;
-        $this->iHorAlign = $aHorAlign;
+        $this->iHorAlign  = $aHorAlign;
     }
 
     public function AdjustMarginsForGrid()
@@ -473,16 +473,16 @@ class GTextTableCell
         if ($this->iIcon !== null) {
             switch ($this->iHorAlign) {
                 case 'left':
-                    $x = $aX + $this->iMarginLeft;
+                    $x       = $aX + $this->iMarginLeft;
                     $hanchor = 'left';
                     break;
                 case 'center':
                 case 'middle':
-                    $x = $aX + $this->iMarginLeft + round(($aWidth - $this->iMarginLeft - $this->iMarginRight) / 2);
+                    $x       = $aX + $this->iMarginLeft + round(($aWidth - $this->iMarginLeft - $this->iMarginRight) / 2);
                     $hanchor = 'center';
                     break;
                 case 'right':
-                    $x = $aX + $aWidth - $this->iMarginRight - 1;
+                    $x       = $aX + $aWidth - $this->iMarginRight - 1;
                     $hanchor = 'right';
                     break;
                 default:
@@ -491,16 +491,16 @@ class GTextTableCell
 
             switch ($this->iVertAlign) {
                 case 'top':
-                    $y = $aY + $this->iMarginTop;
+                    $y       = $aY + $this->iMarginTop;
                     $vanchor = 'top';
                     break;
                 case 'center':
                 case 'middle':
-                    $y = $aY + $this->iMarginTop + round(($aHeight - $this->iMarginTop - $this->iMarginBottom) / 2);
+                    $y       = $aY + $this->iMarginTop + round(($aHeight - $this->iMarginTop - $this->iMarginBottom) / 2);
                     $vanchor = 'center';
                     break;
                 case 'bottom':
-                    $y = $aY + $aHeight - 1 - $this->iMarginBottom;
+                    $y       = $aY + $aHeight - 1 - $this->iMarginBottom;
                     $vanchor = 'bottom';
                     break;
                 default:
@@ -563,20 +563,20 @@ class GTextTableCell
 //---------------------------------------------------------------------
 class GTextTable
 {
-    public $iCells = []; // Need to be public since they are used by the cell
-    public $iSize = [0, 0]; // Need to be public since they are used by the cell
-    private $iColWidth = null;
-    private $iRowHeight = null;
-    private $iXPos = 0;
-    private $iYPos = 0;
-    private $iScaleXPos = null;
-    private $iScaleYPos = null;
-    private $iBGColor = '';
-    private $iBorderColor = 'black';
+    public $iCells         = []; // Need to be public since they are used by the cell
+    public $iSize          = [0, 0]; // Need to be public since they are used by the cell
+    private $iColWidth     = null;
+    private $iRowHeight    = null;
+    private $iXPos         = 0;
+    private $iYPos         = 0;
+    private $iScaleXPos    = null;
+    private $iScaleYPos    = null;
+    private $iBGColor      = '';
+    private $iBorderColor  = 'black';
     private $iBorderWeight = 1;
-    private $iInit = false;
-    private $iYAnchor = 'top';
-    private $iXAnchor = 'left';
+    private $iInit         = false;
+    private $iYAnchor      = 'top';
+    private $iXAnchor      = 'left';
     /*-----------------------------------------------------------------
      * First and second phase constructors
      *-----------------------------------------------------------------
@@ -605,7 +605,7 @@ class GTextTable
      */
     public function SetBorder($aWeight = 1, $aColor = 'black')
     {
-        $this->iBorderColor = $aColor;
+        $this->iBorderColor  = $aColor;
         $this->iBorderWeight = $aWeight;
     }
 
@@ -684,10 +684,10 @@ class GTextTable
             if ($aMixR2 !== null) {
                 $aMix = $aMixR2;
             }
-            $aFile = $aFileR1;
-            $aMixR2 = $this->iSize[0] - 1;
-            $aFileR1 = 0;
-            $aC2 = $this->iSize[1] - 1;
+            $aFile    = $aFileR1;
+            $aMixR2   = $this->iSize[0] - 1;
+            $aFileR1  = 0;
+            $aC2      = $this->iSize[1] - 1;
             $aScaleC1 = 0;
         }
         for ($i = $aArgR1; $i <= $aR2; ++$i) {
@@ -755,7 +755,7 @@ class GTextTable
                     }
                     $this->iSize[0] = $m;
                     $this->iSize[1] = $n;
-                    $this->iInit = true;
+                    $this->iInit    = true;
                 } else {
                     JpGraphError::RaiseL(27001);
                     //('Illegal argument to GTextTable::Set(). Array must be 2 dimensional');
@@ -784,11 +784,11 @@ class GTextTable
             $this->_chkR($aR2);
             $this->_chkC($aC2);
         } else {
-            $aPad = $aArgR1;
-            $aR2 = $this->iSize[0] - 1;
+            $aPad   = $aArgR1;
+            $aR2    = $this->iSize[0] - 1;
             $aArgR1 = 0;
-            $aC2 = $this->iSize[1] - 1;
-            $aC1 = 0;
+            $aC2    = $this->iSize[1] - 1;
+            $aC1    = 0;
         }
         for ($i = $aArgR1; $i <= $aR2; ++$i) {
             for ($j = $aC1; $j <= $aC2; ++$j) {
@@ -833,11 +833,11 @@ class GTextTable
             $this->_chkR($aR2);
             $this->_chkC($aC2);
         } else {
-            $aO = $aArgR1;
-            $aR2 = $this->iSize[0] - 1;
+            $aO     = $aArgR1;
+            $aR2    = $this->iSize[0] - 1;
             $aArgR1 = 0;
-            $aC2 = $this->iSize[1] - 1;
-            $aC1 = 0;
+            $aC2    = $this->iSize[1] - 1;
+            $aC1    = 0;
         }
         for ($i = $aArgR1; $i <= $aR2; ++$i) {
             for ($j = $aC1; $j <= $aC2; ++$j) {
@@ -885,11 +885,11 @@ class GTextTable
             $this->_chkR($aR2);
             $this->_chkC($aC2);
         } else {
-            $aArg = $aArgR1;
-            $aR2 = $this->iSize[0] - 1;
+            $aArg   = $aArgR1;
+            $aR2    = $this->iSize[0] - 1;
             $aArgR1 = 0;
-            $aC2 = $this->iSize[1] - 1;
-            $aC1 = 0;
+            $aC2    = $this->iSize[1] - 1;
+            $aC1    = 0;
         }
         for ($i = $aArgR1; $i <= $aR2; ++$i) {
             for ($j = $aC1; $j <= $aC2; ++$j) {
@@ -1054,11 +1054,11 @@ class GTextTable
             if ($aC1VAlign === null) {
                 $aC1VAlign = 'center';
             }
-            $aHArg = $aR1HAlign;
-            $aVArg = $aC1VAlign === null ? 'center' : $aC1VAlign;
-            $aR2 = $this->iSize[0] - 1;
+            $aHArg     = $aR1HAlign;
+            $aVArg     = $aC1VAlign === null ? 'center' : $aC1VAlign;
+            $aR2       = $this->iSize[0] - 1;
             $aR1HAlign = 0;
-            $aC2 = $this->iSize[1] - 1;
+            $aC2       = $this->iSize[1] - 1;
             $aC1VAlign = 0;
         }
         for ($i = $aR1HAlign; $i <= $aR2; ++$i) {
@@ -1104,11 +1104,11 @@ class GTextTable
             $this->_chkR($aR2);
             $this->_chkC($aC2);
         } else {
-            $aArg = $aArgR1;
-            $aR2 = $this->iSize[0] - 1;
+            $aArg   = $aArgR1;
+            $aR2    = $this->iSize[0] - 1;
             $aArgR1 = 0;
-            $aC2 = $this->iSize[1] - 1;
-            $aC1 = 0;
+            $aC2    = $this->iSize[1] - 1;
+            $aC1    = 0;
         }
         if (! is_string($aArg)) {
             JpGraphError::RaiseL(27013); // argument must be a string
@@ -1163,11 +1163,11 @@ class GTextTable
         // columns get set to the same width
         if ($aWidth === null) {
             for ($i = 0; $i < $this->iSize[1]; ++$i) {
-                $this->iColWidth[$i]  = $aColWidth;
+                $this->iColWidth[$i] = $aColWidth;
             }
         } else {
             $this->_chkC($aColWidth);
-            $this->iColWidth[$aColWidth]  = $aWidth;
+            $this->iColWidth[$aColWidth] = $aWidth;
         }
     }
 
@@ -1177,11 +1177,11 @@ class GTextTable
         // rows get set to the same height
         if ($aHeight === null) {
             for ($i = 0; $i < $this->iSize[0]; ++$i) {
-                $this->iRowHeight[$i]  = $aRowHeight;
+                $this->iRowHeight[$i] = $aRowHeight;
             }
         } else {
             $this->_chkR($aRowHeight);
-            $this->iRowHeight[$aRowHeight]  = $aHeight;
+            $this->iRowHeight[$aRowHeight] = $aHeight;
         }
     }
 
@@ -1280,8 +1280,8 @@ class GTextTable
 
     public function SetCSIMTarget($aTarget, $aAlt = null, $aAutoTarget = false)
     {
-        $m = $this->iSize[0];
-        $n = $this->iSize[1];
+        $m    = $this->iSize[0];
+        $n    = $this->iSize[1];
         $csim = '';
         for ($i = 0; $i < $m; ++$i) {
             for ($j = 0; $j < $n; ++$j) {
@@ -1309,8 +1309,8 @@ class GTextTable
 
     public function GetCSIMAreas()
     {
-        $m = $this->iSize[0];
-        $n = $this->iSize[1];
+        $m    = $this->iSize[0];
+        $n    = $this->iSize[1];
         $csim = '';
         for ($i = 0; $i < $m; ++$i) {
             for ($j = 0; $j < $n; ++$j) {
@@ -1365,9 +1365,9 @@ class GTextTable
                 $h = max($h, $this->iCells[$i][$j]->GetHeight($aImg));
             }
             if (isset($this->iRowHeight[$i])) {
-                $this->iRowHeight[$i]  = max($h, $this->iRowHeight[$i]);
+                $this->iRowHeight[$i] = max($h, $this->iRowHeight[$i]);
             } else {
-                $this->iRowHeight[$i]  = $h;
+                $this->iRowHeight[$i] = $h;
             }
         }
 
@@ -1378,9 +1378,9 @@ class GTextTable
                 $w = max($w, $this->iCells[$i][$j]->GetWidth($aImg));
             }
             if (isset($this->iColWidth[$j])) {
-                $this->iColWidth[$j]  = max($w, $this->iColWidth[$j]);
+                $this->iColWidth[$j] = max($w, $this->iColWidth[$j]);
             } else {
-                $this->iColWidth[$j]  = $w;
+                $this->iColWidth[$j] = $w;
             }
         }
     }

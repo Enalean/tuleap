@@ -51,7 +51,7 @@ class ProjectOwnerRetrieverTest extends TestCase
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $retriever    = new ProjectOwnerRetriever($this->dao, $this->user_manager);
+        $retriever     = new ProjectOwnerRetriever($this->dao, $this->user_manager);
         $project_owner = $retriever->getProjectOwner($project);
 
         $this->assertSame($expected_user, $project_owner);

@@ -34,7 +34,7 @@ class AzureADProviderManager
 
     public function __construct(AzureADProviderDao $azure_provider_dao)
     {
-        $this->azure_provider_dao  = $azure_provider_dao;
+        $this->azure_provider_dao = $azure_provider_dao;
     }
 
     /**
@@ -121,7 +121,7 @@ class AzureADProviderManager
         string $color,
         string $tenant_id
     ): bool {
-        $string_validator   = new Valid_String();
+        $string_validator = new Valid_String();
 
         return $string_validator->validate($name)
             && $string_validator->validate($client_id)

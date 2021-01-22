@@ -76,11 +76,11 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
         NotificationEnhancedContent $enhanced_content,
         array $new_commits
     ) {
-        $this->pull_request              = $pull_request;
-        $this->change_user_display_name  = $change_user_display_name;
-        $this->owners                    = $owners_without_change_user;
-        $this->enhanced_content          = $enhanced_content;
-        $this->new_commits               = $new_commits;
+        $this->pull_request             = $pull_request;
+        $this->change_user_display_name = $change_user_display_name;
+        $this->owners                   = $owners_without_change_user;
+        $this->enhanced_content         = $enhanced_content;
+        $this->new_commits              = $new_commits;
     }
 
     /**

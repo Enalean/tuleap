@@ -79,7 +79,7 @@ class SemanticDoneFactory
         }
 
         foreach ($xml->closed_values->closed_value as $xml_closed_value) {
-            $ref   = (string) $xml_closed_value['REF'];
+            $ref = (string) $xml_closed_value['REF'];
 
             if (! isset($xmlMapping[$ref])) {
                 continue;

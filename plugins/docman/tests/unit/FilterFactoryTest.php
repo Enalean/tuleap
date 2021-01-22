@@ -41,7 +41,7 @@ class Docman_FilterFactoryTest extends TestCase
         $dstReport->setGroupId(123);
 
         $filterFactory = \Mockery::mock(Docman_FilterFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $gsMd = new Docman_Metadata();
+        $gsMd          = new Docman_Metadata();
         $filterFactory->allows(['getGlobalSearchMetadata' => $gsMd]);
         $gsMd->setLabel('global_txt');
         $itMd = new Docman_ListMetadata();
@@ -49,7 +49,7 @@ class Docman_FilterFactoryTest extends TestCase
         $itMd->setLabel('item_type');
 
         $itMd->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
-        $metadataMapping = ['md' => [], 'love' => []];
+        $metadataMapping  = ['md' => [], 'love' => []];
         $dstFilterFactory = \Mockery::mock(Docman_FilterFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $filterFactory->shouldReceive('getFilterFactory')->andReturns($dstFilterFactory);

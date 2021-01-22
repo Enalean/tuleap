@@ -57,9 +57,9 @@ final class SynchronizedFieldCollectionBuilderTest extends TestCase
 
     public function testBuildFromMilestoneTrackersReturnsACollection(): void
     {
-        $first_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(102)->build());
+        $first_tracker  = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(102)->build());
         $second_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(104)->build());
-        $milestones = new SourceTrackerCollection([$first_tracker, $second_tracker]);
+        $milestones     = new SourceTrackerCollection([$first_tracker, $second_tracker]);
 
         $first_synchronized_fields = $this->buildSynchronizedFieldsWithIds(1, 2, 3, 4, 5, 6);
         $this->fields_adapter->shouldReceive('build')->with($first_tracker)->andReturn($first_synchronized_fields);

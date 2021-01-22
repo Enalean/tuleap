@@ -70,13 +70,13 @@ class WikiPlugin_IncludePages extends WikiPlugin_IncludePage
 
         if (is_string($args['exclude']) and ! empty($args['exclude'])) {
             $args['exclude'] = explodePageList($args['exclude']);
-            $argstr = preg_replace("/exclude=\S*\s/", "", $argstr);
+            $argstr          = preg_replace("/exclude=\S*\s/", "", $argstr);
         } elseif (is_array($args['exclude'])) {
             $argstr = preg_replace("/exclude=<\?plugin-list.*?\>/", "", $argstr);
         }
         if (is_string($args['pages']) and ! empty($args['pages'])) {
             $args['pages'] = explodePageList($args['pages']);
-            $argstr = preg_replace("/pages=\S*\s/", "", $argstr);
+            $argstr        = preg_replace("/pages=\S*\s/", "", $argstr);
         } elseif (is_array($args['pages'])) {
             $argstr = preg_replace("/pages=<\?plugin-list.*?\>/", "", $argstr);
         }

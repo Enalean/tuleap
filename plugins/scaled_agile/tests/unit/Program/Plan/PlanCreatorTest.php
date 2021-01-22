@@ -36,7 +36,7 @@ final class PlanCreatorTest extends TestCase
         $program_adapter = \Mockery::mock(BuildProgram::class);
         $tracker_adapter = \Mockery::mock(BuildTracker::class);
 
-        $project_id = 101;
+        $project_id                   = 101;
         $program_increment_tracker_id = 1;
         $plannable_tracker_id         = 2;
 
@@ -67,7 +67,7 @@ final class PlanCreatorTest extends TestCase
 
         $user = UserTestBuilder::aUser()->build();
 
-        $project_id = 101;
+        $project_id                   = 101;
         $program_increment_tracker_id = 1;
         $plannable_tracker_id         = 1;
 

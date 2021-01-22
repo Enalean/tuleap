@@ -27,7 +27,7 @@ final class Cardwall_OnTop_MappedFieldProviderTest extends \PHPUnit\Framework\Te
 
     public function testItProvidesTheStatusFieldIfNoMapping(): void
     {
-        $tracker  = \Mockery::spy(\Tracker::class);
+        $tracker = \Mockery::spy(\Tracker::class);
 
         $status_field     = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
         $status_retriever = Mockery::mock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
@@ -39,11 +39,11 @@ final class Cardwall_OnTop_MappedFieldProviderTest extends \PHPUnit\Framework\Te
 
     public function testItProvidesTheMappedFieldIfThereIsAMapping(): void
     {
-        $tracker  = Mockery::mock(Tracker::class);
+        $tracker = Mockery::mock(Tracker::class);
 
-        $mapped_field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
+        $mapped_field     = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
         $status_retriever = \Mockery::spy(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
-        $mapping = Mockery::mock(\Cardwall_OnTop_Config_TrackerMapping::class);
+        $mapping          = Mockery::mock(\Cardwall_OnTop_Config_TrackerMapping::class);
         $mapping->shouldReceive('getField')->andReturn($mapped_field);
         $config = Mockery::mock(Cardwall_OnTop_Config::class);
         $config->shouldReceive('getMappingFor')->with($tracker)->andReturn($mapping);
@@ -54,9 +54,9 @@ final class Cardwall_OnTop_MappedFieldProviderTest extends \PHPUnit\Framework\Te
 
     public function testItReturnsNullIfThereIsACustomMappingButNoFieldChoosenYet(): void
     {
-        $tracker  = Mockery::mock(Tracker::class);
+        $tracker = Mockery::mock(Tracker::class);
 
-        $status_field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
+        $status_field     = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
         $status_retriever = Mockery::mock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
         $status_retriever->shouldReceive('getField')->andReturn($status_field);
         $mapping = Mockery::mock(\Cardwall_OnTop_Config_TrackerMapping::class);

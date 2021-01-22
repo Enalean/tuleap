@@ -78,7 +78,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
     protected function setChildState(TreeNode $child, $state)
     {
         parent::setChildState($child, $state);
-        $data = $child->getData();
+        $data                      = $child->getData();
         $data['tree-padding']      = $this->getHtmlPaddingFromStates($child, $state);
         $data['content-template']  = '<div class="node-content">%s';
         $data['content-template'] .= $child->hasChildren() ? '<span class="node-child">&nbsp;</span></div>' : '</div>';
@@ -93,7 +93,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         $lastIndex = count($states) - 1;
         foreach ($states as $state_id) {
             $isLastState = $curIndex == $lastIndex;
-            $html .= $this->getPaddingForAState($state_id, $showTree && $isLastState);
+            $html       .= $this->getPaddingForAState($state_id, $showTree && $isLastState);
             $curIndex++;
         }
         return $html;

@@ -68,7 +68,7 @@ class PermissionsTest extends TestCase
         $this->transition = Mockery::mock(Transition::class);
         $this->transition->shouldReceive('getId')->andReturn(303);
 
-        $this->condition  = new Workflow_Transition_Condition_Permissions($this->transition);
+        $this->condition = new Workflow_Transition_Condition_Permissions($this->transition);
     }
 
     protected function tearDown(): void

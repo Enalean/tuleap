@@ -26,11 +26,11 @@
  */
 abstract class Tracker_Rule
 {
-    public const RULETYPE_HIDDEN       = 1;
-    public const RULETYPE_DISABLED     = 2;
-    public const RULETYPE_MANDATORY    = 3;
-    public const RULETYPE_VALUE        = 4;
-    public const RULETYPE_DATE         = 5;
+    public const RULETYPE_HIDDEN    = 1;
+    public const RULETYPE_DISABLED  = 2;
+    public const RULETYPE_MANDATORY = 3;
+    public const RULETYPE_VALUE     = 4;
+    public const RULETYPE_DATE      = 5;
 
     /**
      *
@@ -115,7 +115,7 @@ abstract class Tracker_Rule
     public function setSourceField(Tracker_FormElement_Field $field)
     {
         $this->source_field_obj = $field;
-        $this->source_field = $field->getId();
+        $this->source_field     = $field->getId();
         return $this;
     }
 
@@ -135,7 +135,7 @@ abstract class Tracker_Rule
     public function setTargetField(Tracker_FormElement_Field $field)
     {
         $this->target_field_obj = $field;
-        $this->target_field = $field->getId();
+        $this->target_field     = $field->getId();
 
         return $this;
     }

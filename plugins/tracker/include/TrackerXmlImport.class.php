@@ -313,9 +313,9 @@ class TrackerXmlImport
         $xml_trackers = $this->getAllXmlTrackers($xml_input);
 
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
-            $tracker_created = $this->instantiateTrackerFromXml($project, $xml_tracker, $configuration);
+            $tracker_created                           = $this->instantiateTrackerFromXml($project, $xml_tracker, $configuration);
             $created_trackers_objects[$xml_tracker_id] = $tracker_created;
-            $created_trackers_mapping = array_merge($created_trackers_mapping, [$xml_tracker_id => $tracker_created->getId()]);
+            $created_trackers_mapping                  = array_merge($created_trackers_mapping, [$xml_tracker_id => $tracker_created->getId()]);
         }
 
         foreach ($this->renderers_xml_mapping as $xml_reference => $renderer_xml_mapping) {
@@ -447,13 +447,13 @@ class TrackerXmlImport
         $this->rng_validator->validate($partial_element->trackers, __DIR__ . '/../resources/trackers.rng');
 
         $xml_trackers = $this->getAllXmlTrackers($xml_input);
-        $trackers = [];
+        $trackers     = [];
 
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
-            $name = (string) $xml_tracker->name;
+            $name        = (string) $xml_tracker->name;
             $description = (string) $xml_tracker->description;
-            $item_name = (string) $xml_tracker->item_name;
-            $trackers[] = $this->getInstanceFromXML(
+            $item_name   = (string) $xml_tracker->item_name;
+            $trackers[]  = $this->getInstanceFromXML(
                 $xml_tracker,
                 $project,
                 $name,
@@ -472,7 +472,7 @@ class TrackerXmlImport
 
         if (! empty($trackers_name_error)) {
             $list_trackers_name = implode(', ', $trackers_name_error);
-            $errors = sprintf(dgettext('tuleap-tracker', 'The following trackers cannot be imported due to invalid data, name or short name already in use: %1$s'), $list_trackers_name);
+            $errors             = sprintf(dgettext('tuleap-tracker', 'The following trackers cannot be imported due to invalid data, name or short name already in use: %1$s'), $list_trackers_name);
         }
 
         return $errors;
@@ -746,7 +746,7 @@ class TrackerXmlImport
         string $itemname,
         ?string $color
     ): Tracker {
-        $tracker = null;
+        $tracker         = null;
         $partial_element = new SimpleXMLElement((string) $xml_element->asXML());
         $this->creation_data_checker->checkAtProjectCreation((int) $project->getId(), $name, $itemname);
 

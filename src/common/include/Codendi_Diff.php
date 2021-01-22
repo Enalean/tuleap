@@ -37,7 +37,7 @@ class Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
      */
     public function __construct($from_lines, $to_lines)
     {
-        $eng = new \Codendi_DiffEngine();
+        $eng         = new \Codendi_DiffEngine();
         $this->edits = $eng->diff($from_lines, $to_lines);
         //$this->_check($from_lines, $to_lines);
     }
@@ -53,7 +53,7 @@ class Codendi_Diff // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
      */
     public function reverse()
     {
-        $rev = $this;
+        $rev        = $this;
         $rev->edits = [];
         foreach ($this->edits as $edit) {
             $rev->edits[] = $edit->reverse();

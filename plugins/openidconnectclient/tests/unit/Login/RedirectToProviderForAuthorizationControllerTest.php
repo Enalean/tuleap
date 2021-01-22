@@ -56,7 +56,7 @@ final class RedirectToProviderForAuthorizationControllerTest extends TestCase
     {
         $this->provider_manager              = \Mockery::mock(ProviderManager::class);
         $this->authorization_request_creator = \Mockery::mock(AuthorizationRequestCreator::class);
-        $this->controller = new RedirectToProviderForAuthorizationController(
+        $this->controller                    = new RedirectToProviderForAuthorizationController(
             HTTPFactoryBuilder::responseFactory(),
             $this->provider_manager,
             $this->authorization_request_creator,
@@ -75,7 +75,7 @@ final class RedirectToProviderForAuthorizationControllerTest extends TestCase
         $authorization_request = new AuthorizationRequest('https://endpoint.example.com/authorization');
         $this->authorization_request_creator->shouldReceive('createAuthorizationRequest')->andReturn($authorization_request);
 
-        $request = (new NullServerRequest())->withQueryParams(['return_to' => '/my/'])->withAttribute('provider_id', '123');
+        $request  = (new NullServerRequest())->withQueryParams(['return_to' => '/my/'])->withAttribute('provider_id', '123');
         $response = $this->controller->handle($request);
 
         self::assertEquals(302, $response->getStatusCode());

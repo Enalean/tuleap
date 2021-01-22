@@ -63,9 +63,9 @@ class FormElementRepresentationsBuilder
         HiddenFieldsetChecker $hidden_fieldset_checker,
         PermissionsForGroupsBuilder $permissions_for_groups_builder
     ) {
-        $this->permissions_exporter    = $permissions_exporter;
-        $this->form_element_factory    = $form_element_factory;
-        $this->hidden_fieldset_checker = $hidden_fieldset_checker;
+        $this->permissions_exporter           = $permissions_exporter;
+        $this->form_element_factory           = $form_element_factory;
+        $this->hidden_fieldset_checker        = $hidden_fieldset_checker;
         $this->permissions_for_groups_builder = $permissions_for_groups_builder;
     }
 

@@ -78,7 +78,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     public function loadFromSession()
     {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
-        $chart_in_session = $this->report_session->get($this->id);
+        $chart_in_session     = $this->report_session->get($this->id);
         if (isset($chart_in_session['field_id']) && $chart_in_session['field_id'] !== '') {
             $this->field_id   = $chart_in_session['field_id'];
             $this->start_date = $chart_in_session['start_date'];
@@ -94,7 +94,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
      */
     public function loadFromDb()
     {
-        $arr = $this->getDao()->searchById($this->id)->getRow();
+        $arr              = $this->getDao()->searchById($this->id)->getRow();
         $this->field_id   = $arr['field_id'];
         $this->start_date = $arr['start_date'];
         $this->duration   = $arr['duration'];
@@ -189,7 +189,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
      */
     public function userCanVisualize()
     {
-        $ff = Tracker_FormElementFactory::instance();
+        $ff           = Tracker_FormElementFactory::instance();
         $effort_field = $ff->getFormElementById($this->field_id);
         if ($effort_field && $effort_field->userCanRead()) {
             return true;
@@ -228,7 +228,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
 
     public function createDb($id)
     {
-        $field_id   = $this->getFieldId();
+        $field_id = $this->getFieldId();
         if (! is_int($field_id) && ! is_string($field_id) && $field_id) {
             $field_id = $field_id->getid();
         }

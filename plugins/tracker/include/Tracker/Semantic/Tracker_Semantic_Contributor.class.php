@@ -134,8 +134,8 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
         $html = '';
 
         if ($list_fields = Tracker_FormElementFactory::instance()->searchUsedUserClosedListFields($this->tracker)) {
-            $html .= '<form method="POST" action="' . $this->getUrl() . '">';
-            $html .= $this->getCSRFToken()->fetchHTMLInput();
+            $html  .= '<form method="POST" action="' . $this->getUrl() . '">';
+            $html  .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="list_field_id">';
             if (! $this->getFieldId()) {
                 $select .= '<option value="" selected="selected">' . $purifier->purify(dgettext('tuleap-tracker', 'Choose a field...')) . '</option>';

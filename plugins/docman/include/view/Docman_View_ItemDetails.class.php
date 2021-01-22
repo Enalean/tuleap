@@ -31,10 +31,10 @@ class Docman_View_ItemDetails
 
     public function __construct($item, $url)
     {
-        $this->item             = $item;
-        $this->url              = $url;
-        $this->current_section  = null;
-        $this->sections         = [];
+        $this->item            = $item;
+        $this->url             = $url;
+        $this->current_section = null;
+        $this->sections        = [];
     }
 
     public function addSection($section)

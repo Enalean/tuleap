@@ -151,7 +151,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         );
         $this->metadata_representation_builder->shouldReceive('build')->andReturn([$metadata_representation]);
 
-        $docman_item    = new \Docman_Item();
+        $docman_item = new \Docman_Item();
         $docman_item->setId($docman_item_id);
         $docman_item->setTitle('My file.txt');
         $docman_item->setOwnerId($owner_id);

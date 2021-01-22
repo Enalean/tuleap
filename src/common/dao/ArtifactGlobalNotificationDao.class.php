@@ -106,7 +106,7 @@ class ArtifactGlobalNotificationDao extends DataAccessObject
     */
     public function create($tracker_id, $addresses, $all_updates, $check_permissions)
     {
-        $sql = sprintf(
+        $sql      = sprintf(
             "INSERT INTO artifact_global_notification (tracker_id, addresses, all_updates, check_permissions) VALUES (%s, %s, %s, %s)",
             $this->da->quoteSmart($tracker_id),
             $this->da->quoteSmart($addresses),

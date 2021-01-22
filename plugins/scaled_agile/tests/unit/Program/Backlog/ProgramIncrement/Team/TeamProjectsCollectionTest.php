@@ -29,9 +29,9 @@ final class TeamProjectsCollectionTest extends TestCase
 {
     public function testGetTeamProjectsReturnsProjects(): void
     {
-        $first_team_project = ProjectAdapter::build(new \Project(['group_id' => '103', 'unix_group_name' => 'project', 'group_name' => 'My project']));
+        $first_team_project  = ProjectAdapter::build(new \Project(['group_id' => '103', 'unix_group_name' => 'project', 'group_name' => 'My project']));
         $second_team_project = ProjectAdapter::build(new \Project(['group_id' => '125', 'unix_group_name' => 'other_project', 'group_name' => 'Other project']));
-        $collection = new TeamProjectsCollection(
+        $collection          = new TeamProjectsCollection(
             [$first_team_project, $second_team_project]
         );
         $this->assertContains($first_team_project, $collection->getTeamProjects());

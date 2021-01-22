@@ -55,7 +55,7 @@ if (strstr($submit, $Language->getText('tracker_masschange_detail', 'selected_it
     $report_fact = new ArtifactReportFactory();
   // Create the HTML report object
     $art_report_html = $report_fact->getArtifactReportHtml($report_id, $atid);
-    $query = $art_field_fact->extractFieldList();
+    $query           = $art_field_fact->extractFieldList();
     $ath->displayMassChange($ro, null, $query, $art_report_html, $advsrch);
 }
 

@@ -138,7 +138,7 @@ final class GetWhitelistedKeys implements Dispatchable
         foreach ($reflected_class->getReflectionConstants() as $const) {
             $const_comment = $const->getDocComment();
             if ($const_comment) {
-                $doc = $this->doc_block_factory->create($const_comment);
+                $doc         = $this->doc_block_factory->create($const_comment);
                 $const_value = $const->getValue();
                 if ($doc->hasTag(self::TLP_CONFIG_ATTRIBUTE) && is_string($const_value)) {
                     $this->white_listed_keys[$const_value] = $doc->getSummary();

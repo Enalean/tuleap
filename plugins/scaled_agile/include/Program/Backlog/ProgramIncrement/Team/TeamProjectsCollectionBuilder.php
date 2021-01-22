@@ -46,7 +46,7 @@ final class TeamProjectsCollectionBuilder
     public function getTeamProjectForAGivenProgramProject(Project $project): TeamProjectsCollection
     {
         $program_project_id = (int) $project->getID();
-        $team_projects  = [];
+        $team_projects      = [];
         foreach ($this->program_store->getTeamProjectIdsForGivenProgramProject($program_project_id) as $row) {
             $team_projects[] = $this->project_data_adapter->buildFromId((int) $row['team_project_id']);
         }

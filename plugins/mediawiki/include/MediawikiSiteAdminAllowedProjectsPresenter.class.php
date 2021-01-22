@@ -32,7 +32,7 @@ class MediawikiSiteAdminAllowedProjectsPresenter
 
     public function __construct($allowed_projects, $count_projects_to_migrate)
     {
-        $this->allowed_projects       = $allowed_projects;
+        $this->allowed_projects         = $allowed_projects;
         $this->count_project_to_migrate = $count_projects_to_migrate;
     }
 

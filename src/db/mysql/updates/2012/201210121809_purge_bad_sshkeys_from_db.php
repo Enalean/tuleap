@@ -35,14 +35,14 @@ EOT;
         $update_sql = 'UPDATE user SET authorized_keys = :authorized_keys WHERE user_id = :user_id';
         $update_sth = $this->db->dbh->prepare($update_sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
 
-        $sql = 'SELECT user_id, user_name, realname, email, authorized_keys FROM user WHERE authorized_keys != "" AND authorized_keys IS NOT NULL';
-        $res = $this->db->dbh->query($sql);
+        $sql      = 'SELECT user_id, user_name, realname, email, authorized_keys FROM user WHERE authorized_keys != "" AND authorized_keys IS NOT NULL';
+        $res      = $this->db->dbh->query($sql);
         $key_file = '/var/tmp/codendi_cache/ssh_key_check';
         foreach ($res->fetchAll() as $row) {
             $valid_keys = [];
-            $keys = array_filter(explode('###', $row['authorized_keys']));
+            $keys       = array_filter(explode('###', $row['authorized_keys']));
             foreach ($keys as $key) {
-                $written  = file_put_contents($key_file, $key);
+                $written = file_put_contents($key_file, $key);
                 if ($written === strlen($key)) {
                     $return = 1;
                     $output = [];

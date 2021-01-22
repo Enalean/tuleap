@@ -66,7 +66,7 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
 
         $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);
-        $this->user     = Mockery::mock(PFUser::class);
+        $this->user = Mockery::mock(PFUser::class);
         $this->user->shouldReceive('toRow');
     }
 

@@ -66,7 +66,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends TestCase
         $this->milestone->shouldReceive('getArtifact')
             ->andReturn($release_artifact);
         $this->artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->user = M::mock(\PFUser::class);
+        $this->user     = M::mock(\PFUser::class);
     }
 
     public function testReturnsNullWhenNoMappedField(): void

@@ -27,7 +27,7 @@ function RemovePage(&$request)
 {
     global $WikiTheme;
 
-    $page = $request->getPage();
+    $page     = $request->getPage();
     $pagelink = WikiLink($page);
 
     if ($request->getArg('cancel')) {
@@ -45,7 +45,7 @@ function RemovePage(&$request)
         $removeB = Button('submit:verify', _("Remove Page"), 'wikiadmin');
         $cancelB = Button('submit:cancel', _("Cancel"), 'button'); // use generic wiki button look
 
-        $html = HTML(
+        $html   = HTML(
             HTML::h2(fmt("You are about to remove '%s'!", $pagelink)),
             HTML::form(
                 ['method' => 'post',
@@ -79,7 +79,7 @@ function RemovePage(&$request)
     } else {
         // Codendi specific: remove the deleted wiki page from ProjectWantedPages
         $projectPageName = 'ProjectWantedPages';
-        $pagename = $page->getName();
+        $pagename        = $page->getName();
 
         $dbi = $request->getDbh();
         require_once(PHPWIKI_DIR . "/lib/loadsave.php");
@@ -87,8 +87,8 @@ function RemovePage(&$request)
         if ($pagehandle->exists()) {// don't replace default contents
             $current = $pagehandle->getCurrentRevision();
             $version = $current->getVersion();
-            $text = $current->getPackedContent();
-            $meta = $current->_data;
+            $text    = $current->getPackedContent();
+            $meta    = $current->_data;
         }
 
         $text = str_replace("* [$pagename]", "", $text);
@@ -98,7 +98,7 @@ function RemovePage(&$request)
             'page_added',
             [$pagename]
         );
-        $meta['author'] = user_getname();
+        $meta['author']  = user_getname();
         $pagehandle->save($text, $version + 1, $meta);
 
         //Codendi specific: remove permissions for this page @codenditodo: may be transferable otherwhere.

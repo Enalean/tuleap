@@ -86,7 +86,7 @@ class AdminTrackersRetrieverTest extends TestCase
 
         $this->tracker_factory = Mockery::mock(TrackerFactory::class);
         $this->tracker_checker = Mockery::mock(TrackerChecker::class);
-        $this->config = Mockery::mock(Config::class);
+        $this->config          = Mockery::mock(Config::class);
 
         $this->admin_trackers_retriever = new AdminTrackersRetriever(
             $this->tracker_factory,

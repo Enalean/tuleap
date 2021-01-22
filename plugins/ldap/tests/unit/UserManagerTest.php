@@ -40,7 +40,7 @@ final class UserManagerTest extends TestCase
     public function testGetLoginFromString(): void
     {
         $ldap = \Mockery::spy(\LDAP::class);
-        $lum = new LDAP_UserManager($ldap, \Mockery::spy(\LDAP_UserSync::class));
+        $lum  = new LDAP_UserManager($ldap, \Mockery::spy(\LDAP_UserSync::class));
 
         $this->assertEquals('coincoin', $lum->getLoginFromString('coincoin'));
 
@@ -105,7 +105,7 @@ final class UserManagerTest extends TestCase
         $user->shouldReceive('getId')->andReturns(105);
         $ldap_uid = 'johndoe';
 
-        $lum  = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $lum = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $dao = \Mockery::spy(\LDAP_UserDao::class);
         $dao->shouldReceive('updateLdapUid')->with(105, $ldap_uid)->once()->andReturns(true);
@@ -121,7 +121,7 @@ final class UserManagerTest extends TestCase
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(105);
 
-        $lum  = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $lum = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $sem = \Mockery::spy(\SystemEventManager::class);
         $sem->shouldReceive('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '105', SystemEvent::PRIORITY_MEDIUM)->once();
@@ -142,7 +142,7 @@ final class UserManagerTest extends TestCase
         $user3 = \Mockery::spy(\PFUser::class);
         $user3->shouldReceive('getId')->andReturns(103);
 
-        $lum  = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $lum = \Mockery::mock(\LDAP_UserManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $sem = \Mockery::spy(\SystemEventManager::class);
         $sem->shouldReceive('createEvent')->with('PLUGIN_LDAP_UPDATE_LOGIN', '101' . SystemEvent::PARAMETER_SEPARATOR . '102' . SystemEvent::PARAMETER_SEPARATOR . '103', SystemEvent::PRIORITY_MEDIUM)->once();

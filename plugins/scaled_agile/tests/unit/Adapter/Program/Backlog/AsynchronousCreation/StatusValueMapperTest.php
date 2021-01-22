@@ -53,7 +53,7 @@ final class StatusValueMapperTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         $this->matcher = M::mock(FieldValueMatcher::class);
-        $this->mapper = new StatusValueMapper($this->matcher);
+        $this->mapper  = new StatusValueMapper($this->matcher);
     }
 
     public function testItMapsValuesByDuckTyping(): void

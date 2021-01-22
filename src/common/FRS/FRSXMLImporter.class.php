@@ -183,7 +183,7 @@ class FRSXMLImporter
         $ugroup_ids = [];
         foreach ($permission_xmlnode->ugroup as $ugroup) {
             $ugroup_name = (string) $ugroup;
-            $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
+            $ugroup      = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
             if ($ugroup === null) {
                 $this->logger->warning("Could not find any ugroup named $ugroup_name, skip it.");
                 continue;
@@ -216,8 +216,8 @@ class FRSXMLImporter
         $this->logger->debug('Start import of package ' . $package->getName());
         $read_perms = [];
         foreach ($xml_pkg->{'read-access'} as $perm) {
-            $ugroup_name = (string) $perm->ugroup;
-            $ugroup = $this->getUGroupManager()->getUGroupByName($project, $ugroup_name);
+            $ugroup_name  = (string) $perm->ugroup;
+            $ugroup       = $this->getUGroupManager()->getUGroupByName($project, $ugroup_name);
             $read_perms[] = $ugroup->getId();
         }
         $this->getPermissionsManager()->savePermissions($project, $package->getPackageID(), FRSPackage::PERM_READ, $read_perms);
@@ -249,7 +249,7 @@ class FRSXMLImporter
         $user  = $this->user_finder->getUser($xml_rel->user);
         $attrs = $xml_rel->attributes();
         assert($attrs !== null);
-        $id    = isset($attrs['id']) ? (string) $attrs['id'] : null;
+        $id = isset($attrs['id']) ? (string) $attrs['id'] : null;
 
         $release = new FRSRelease();
         $release->setProject($project);
@@ -273,8 +273,8 @@ class FRSXMLImporter
 
         $read_perms = [];
         foreach ($xml_rel->{'read-access'} as $perm) {
-            $ugroup_name = (string) $perm->ugroup;
-            $ugroup = $this->getUGroupManager()->getUGroupByName($project, $ugroup_name);
+            $ugroup_name  = (string) $perm->ugroup;
+            $ugroup       = $this->getUGroupManager()->getUGroupByName($project, $ugroup_name);
             $read_perms[] = $ugroup->getId();
         }
         $this->getPermissionsManager()->savePermissions($project, $release->getReleaseID(), FRSRelease::PERM_READ, $read_perms);
@@ -348,7 +348,7 @@ class FRSXMLImporter
 
         $this->logger->debug('Copy file to incoming dir');
         $dirPath = $this->file_factory->getSrcDir($project);
-        $dest = "$dirPath/$name";
+        $dest    = "$dirPath/$name";
         if (! copy($src, $dest)) {
             throw new Exception("Could not copy $src to $dest");
         }

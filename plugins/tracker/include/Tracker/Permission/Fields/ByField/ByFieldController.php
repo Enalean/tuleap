@@ -114,7 +114,7 @@ class ByFieldController implements DispatchableWithRequest
         );
 
         $ugroups_for_selected_field = $this->getFieldsPermissionForGroupWithFirstMatchingGroup($ugroups_permissions, $selected_id);
-        $field_list               = [];
+        $field_list                 = [];
         foreach ($ugroups_permissions as $field_id => $value_field) {
             $field_id = (int) $field_id;
 

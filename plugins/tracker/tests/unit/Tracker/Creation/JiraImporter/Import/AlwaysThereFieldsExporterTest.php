@@ -78,13 +78,13 @@ class AlwaysThereFieldsExporterTest extends TestCase
         parent::setUp();
 
         $this->field_xml_exporter = Mockery::mock(FieldXmlExporter::class);
-        $this->exporter = new AlwaysThereFieldsExporter(
+        $this->exporter           = new AlwaysThereFieldsExporter(
             $this->field_xml_exporter
         );
 
         $field_id_generator = new FieldAndValueIDGenerator();
 
-        $root_form_elements = new SimpleXMLElement("<formElements/>");
+        $root_form_elements          = new SimpleXMLElement("<formElements/>");
         $this->containers_collection = new ContainersXMLCollection($field_id_generator);
 
         (new ContainersXMLCollectionBuilder(new XML_SimpleXMLCDATAFactory()))

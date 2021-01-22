@@ -27,7 +27,7 @@ class Docman_View_Embedded extends Docman_View_Display
     {
         if (isset($params['version_number'])) {
             $version_factory = $this->_getVersionFactory($params);
-            $version = $version_factory->getSpecificVersion($params['item'], $params['version_number']);
+            $version         = $version_factory->getSpecificVersion($params['item'], $params['version_number']);
         } else {
             $version = $params['item']->getCurrentVersion();
         }

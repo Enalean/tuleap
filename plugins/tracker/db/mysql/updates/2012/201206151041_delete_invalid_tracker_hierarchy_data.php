@@ -33,7 +33,7 @@ class b201206151041_delete_invalid_tracker_hierarchy_data extends ForgeUpgrade_B
 
     public function up()
     {
-        $sql = <<<SQL
+        $sql    = <<<SQL
             DELETE h.*
             
             FROM tracker_hierarchy AS h

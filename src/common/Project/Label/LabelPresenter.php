@@ -75,12 +75,12 @@ class LabelPresenter
             _('Delete %s'),
             $this->name
         );
-        $this->edit_title = sprintf(
+        $this->edit_title   = sprintf(
             _('Edit %s'),
             $this->name
         );
 
-        $purifier = Codendi_HTMLPurifier::instance();
+        $purifier                      = Codendi_HTMLPurifier::instance();
         $this->purified_delete_message = $purifier->purify(
             sprintf(
                 _("Wow, wait a minute. You're about to delete the label <b>%s</b>. Please confirm your action."),

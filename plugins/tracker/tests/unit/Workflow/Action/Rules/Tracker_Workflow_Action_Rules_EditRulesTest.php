@@ -35,7 +35,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     private const PARAMETER_TARGET_FIELD = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD;
     private const PARAMETER_COMPARATOR   = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR;
 
-    private $tracker_id       = 42;
+    private $tracker_id = 42;
     private $date_factory;
     private $tracker;
     private $token;
@@ -48,7 +48,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     private $target_field_id        = 22;
     private $actual_source_field_id = 66;
     private $actual_target_field_id = 55;
-    private $rule_42_id = 42;
+    private $rule_42_id             = 42;
     private $rule_42;
     private $rule_66_id = 66;
     private $rule_66;
@@ -79,10 +79,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
         $this->actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
         $this->planned_end_date   = $this->setUpField($this->actual_source_field_id, 'Planned End Date');
         $this->actual_end_date    = $this->setUpField($this->actual_target_field_id, 'Actual End Date');
-        $this->rule_1       = $this->setUpRule(123, $this->planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $this->planned_end_date);
-        $this->rule_2       = $this->setUpRule(456, $this->actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $this->actual_end_date);
-        $this->layout       = \Mockery::spy(\Tracker_IDisplayTrackerLayout::class);
-        $this->user         = \Mockery::spy(\PFUser::class);
+        $this->rule_1             = $this->setUpRule(123, $this->planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $this->planned_end_date);
+        $this->rule_2             = $this->setUpRule(456, $this->actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $this->actual_end_date);
+        $this->layout             = \Mockery::spy(\Tracker_IDisplayTrackerLayout::class);
+        $this->user               = \Mockery::spy(\PFUser::class);
         $this->date_factory->shouldReceive('getRule')->with($this->tracker, 123)->andReturns($this->rule_1);
         $this->date_factory->shouldReceive('getRule')->with($this->tracker, 456)->andReturns($this->rule_2);
         $this->date_factory->shouldReceive('searchByTrackerId')->with($this->tracker_id)->andReturns([$this->rule_1, $this->rule_2]);

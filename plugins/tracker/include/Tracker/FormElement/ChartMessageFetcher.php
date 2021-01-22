@@ -71,7 +71,7 @@ class ChartMessageFetcher
     {
         $tracker = $field->getTracker();
         assert($tracker instanceof Tracker);
-        $user    = $this->user_manager->getCurrentUser();
+        $user = $this->user_manager->getCurrentUser();
 
         $warnings = [];
         if ($usage->getUseStartDate()) {

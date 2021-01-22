@@ -83,7 +83,7 @@ final class LatestHeartbeatsCollectorTest extends TestCase
     public function testItDoesNotCollectAnythingWhenNoTestExecHaveBeenUpdated(): void
     {
         $project = \Project::buildForTest();
-        $user = \Mockery::mock(\PFUser::class);
+        $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getUgroups')->once()->andReturn([]);
 
         $collection = new HeartbeatsEntryCollection($project, $user);
@@ -98,7 +98,7 @@ final class LatestHeartbeatsCollectorTest extends TestCase
     public function testItCollectCampaign(): void
     {
         $project = \Project::buildForTest();
-        $user = \Mockery::mock(\PFUser::class);
+        $user    = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getUgroups')->once()->andReturn([]);
 
         $collection = new HeartbeatsEntryCollection($project, $user);
@@ -115,7 +115,7 @@ final class LatestHeartbeatsCollectorTest extends TestCase
 
         $this->dao->shouldReceive('searchLastTestExecUpdate')->once()->andReturn([$row_artifact]);
 
-        $color = TrackerColor::fromName('chrome-silver');
+        $color   = TrackerColor::fromName('chrome-silver');
         $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getColor')->andReturn($color);
 

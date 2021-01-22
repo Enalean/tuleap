@@ -74,28 +74,28 @@ class AdminSidebarPresenter
         $pending_news_count,
         $plugins
     ) {
-        $this->all_users_count              = $all_users_count;
-        $this->users_need_approval          = $users_need_approval;
-        $this->pending_users_count          = $pending_users_count;
-        $this->validated_users_count        = $validated_users_count;
-        $this->all_projects_count           = $all_projects_count;
-        $this->pending_projects_count       = $pending_projects_count;
-        $this->pending_news_count           = $pending_news_count;
-        $this->plugins                      = $plugins;
+        $this->all_users_count        = $all_users_count;
+        $this->users_need_approval    = $users_need_approval;
+        $this->pending_users_count    = $pending_users_count;
+        $this->validated_users_count  = $validated_users_count;
+        $this->all_projects_count     = $all_projects_count;
+        $this->pending_projects_count = $pending_projects_count;
+        $this->pending_news_count     = $pending_news_count;
+        $this->plugins                = $plugins;
 
-        $this->users_section_title                     = $GLOBALS['Language']->getText('admin_sidebar', 'users_section_title');
-        $this->users_search_placeholder                = $GLOBALS['Language']->getText('admin_sidebar', 'users_search_placeholder');
-        $this->users_nav_all_users                     = $GLOBALS['Language']->getText('admin_sidebar', 'users_nav_all_users');
-        $this->users_nav_new_user                      = $GLOBALS['Language']->getText('admin_sidebar', 'users_nav_new_user');
-        $this->users_nav_pending_users                 = $GLOBALS['Language']->getText('admin_sidebar', 'users_nav_pending_users');
-        $this->users_nav_validated_users               = $GLOBALS['Language']->getText('admin_sidebar', 'users_nav_validated_users');
-        $this->users_nav_permission_delegation         = $GLOBALS['Language']->getText('admin_sidebar', 'users_nav_permission_delegation');
+        $this->users_section_title             = $GLOBALS['Language']->getText('admin_sidebar', 'users_section_title');
+        $this->users_search_placeholder        = $GLOBALS['Language']->getText('admin_sidebar', 'users_search_placeholder');
+        $this->users_nav_all_users             = $GLOBALS['Language']->getText('admin_sidebar', 'users_nav_all_users');
+        $this->users_nav_new_user              = $GLOBALS['Language']->getText('admin_sidebar', 'users_nav_new_user');
+        $this->users_nav_pending_users         = $GLOBALS['Language']->getText('admin_sidebar', 'users_nav_pending_users');
+        $this->users_nav_validated_users       = $GLOBALS['Language']->getText('admin_sidebar', 'users_nav_validated_users');
+        $this->users_nav_permission_delegation = $GLOBALS['Language']->getText('admin_sidebar', 'users_nav_permission_delegation');
 
-        $this->projects_section_title                  = $GLOBALS['Language']->getText('admin_sidebar', 'projects_section_title');
-        $this->projects_search_placeholder             = $GLOBALS['Language']->getText('admin_sidebar', 'projects_search_placeholder');
-        $this->projects_nav_all_projects               = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_all_projects');
-        $this->projects_nav_pending_projects           = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_pending_projects');
-        $this->projects_nav_configuration              = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_configuration');
+        $this->projects_section_title        = $GLOBALS['Language']->getText('admin_sidebar', 'projects_section_title');
+        $this->projects_search_placeholder   = $GLOBALS['Language']->getText('admin_sidebar', 'projects_search_placeholder');
+        $this->projects_nav_all_projects     = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_all_projects');
+        $this->projects_nav_pending_projects = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_pending_projects');
+        $this->projects_nav_configuration    = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_configuration');
 
         $this->configuration_section_title             = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_section_title');
         $this->configuration_nav_global_access_rights  = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_global_access_rights');
@@ -106,12 +106,12 @@ class AdminSidebarPresenter
         $this->configuration_nav_tracker_restore       = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_tracker_restore');
         $this->configuration_nav_svn                   = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_svn');
 
-        $this->utils_section_title                     = $GLOBALS['Language']->getText('admin_sidebar', 'utils_section_title');
-        $this->utils_nav_system_events                 = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_system_events');
-        $this->utils_nav_news                          = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_news');
-        $this->utils_nav_mass_mail                     = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_mass_mail');
+        $this->utils_section_title     = $GLOBALS['Language']->getText('admin_sidebar', 'utils_section_title');
+        $this->utils_nav_system_events = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_system_events');
+        $this->utils_nav_news          = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_news');
+        $this->utils_nav_mass_mail     = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_mass_mail');
 
-        $this->links_nav_doc                           = $GLOBALS['Language']->getText('admin_sidebar', 'links_nav_doc');
+        $this->links_nav_doc = $GLOBALS['Language']->getText('admin_sidebar', 'links_nav_doc');
 
         $this->plugins_section_title = $GLOBALS['Language']->getText('admin_main', 'header_plugins');
         $this->plugins_manage_all    = $GLOBALS['Language']->getText('admin_main', 'manage_all_plugins');

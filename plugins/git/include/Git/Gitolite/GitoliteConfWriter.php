@@ -231,7 +231,7 @@ class Git_Gitolite_GitoliteConfWriter
         $repositories = $this->mirror_data_mapper->fetchAllProjectRepositoriesForMirror($mirror, [$project->getGroupId()]);
         $this->createConfFolderForMirrorIfNeeded($mirror);
 
-        $config_file  = $this->getProjectPermissionConfFileForMirror($project, $mirror);
+        $config_file = $this->getProjectPermissionConfFileForMirror($project, $mirror);
         $this->writeGitConfig($config_file, $this->project_serializer->dumpPartialProjectRepoConf($project, $repositories), $git_modifications);
     }
 
@@ -247,7 +247,7 @@ class Git_Gitolite_GitoliteConfWriter
         $repositories = $this->mirror_data_mapper->fetchAllProjectRepositoriesForMirror($mirror, [$project->getGroupId()]);
         $this->createConfFolderForMirrorIfNeeded($mirror);
 
-        $config_file  = $this->getProjectPermissionConfFileForMirror($project, $mirror);
+        $config_file = $this->getProjectPermissionConfFileForMirror($project, $mirror);
         $this->writeGitConfig(
             $config_file,
             $this->project_serializer->dumpPartialSuspendedProjectRepositoriesConfiguration(

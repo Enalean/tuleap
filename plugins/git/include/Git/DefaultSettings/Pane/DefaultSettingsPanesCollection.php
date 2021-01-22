@@ -42,7 +42,7 @@ class DefaultSettingsPanesCollection implements Dispatchable
 
     public function __construct(Project $project, $current_pane)
     {
-        $this->project = $project;
+        $this->project      = $project;
         $this->current_pane = $current_pane;
     }
 

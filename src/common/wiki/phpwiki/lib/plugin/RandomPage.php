@@ -69,7 +69,7 @@ class WikiPlugin_RandomPage extends WikiPlugin
         // fix deprecated arg
         if (is_integer($pages)) {
             $numpages = $pages;
-            $pages = false;
+            $pages    = false;
         // fix new pages handling in arg preprozessor.
         } elseif (is_array($pages)) {
             $numpages = (int) $pages[0];
@@ -80,11 +80,11 @@ class WikiPlugin_RandomPage extends WikiPlugin
             }
         }
 
-        $allpages = $dbi->getAllPages(false, $sortby, $limit, $exclude);
+        $allpages  = $dbi->getAllPages(false, $sortby, $limit, $exclude);
         $pagearray = $allpages->asArray();
 
         if (($numpages == 1) && $pagearray) {
-            $page = $pagearray[array_rand($pagearray)];
+            $page     = $pagearray[array_rand($pagearray)];
             $pagename = $page->getName();
             if ($redirect) {
                 $request->redirect(WikiURL($pagename, false, 'absurl')); // noreturn
@@ -98,7 +98,7 @@ class WikiPlugin_RandomPage extends WikiPlugin
 
         $numpages = min(max(1, (int) $numpages), 20, count($pagearray));
         $pagelist = new PageList($info, $exclude, $args);
-        $shuffle = array_rand($pagearray, $numpages);
+        $shuffle  = array_rand($pagearray, $numpages);
         if (is_array($shuffle)) {
             foreach ($shuffle as $i) {
                 if (isset($pagearray[$i])) {

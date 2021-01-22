@@ -40,7 +40,7 @@ class DBWriterUserCache
     {
         if (! isset($this->users_cache[$user_name])) {
             $this->users_cache[$user_name] = 0;
-            $user = $this->user_manager->findUser($user_name);
+            $user                          = $this->user_manager->findUser($user_name);
             if ($user !== null) {
                 $this->users_cache[$user_name] = $user->getId();
             }

@@ -98,7 +98,7 @@ class AsynchronousActionsRunnerTest extends TestCase
         $worker_event->shouldReceive('getPayload')->andReturns(['artifact_id' => 1, 'changeset_id' => 1]);
         $worker_event->shouldReceive('getEventName')->andReturns('Event name');
 
-        $artifact  = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getChangeset')->andReturns(null);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($artifact);
 
