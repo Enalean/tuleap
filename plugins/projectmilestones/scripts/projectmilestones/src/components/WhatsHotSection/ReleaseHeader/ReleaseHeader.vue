@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { formatDateYearMonthDay } from "../../../helpers/date-formatters";
+import { formatDateYearMonthDay } from "@tuleap/date-helper";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
 import Vue from "vue";
@@ -58,6 +58,7 @@ import { Component, Prop } from "vue-property-decorator";
 import PastReleaseHeaderInitialPoints from "./PastReleaseHeaderInitialPoints.vue";
 import PastReleaseHeaderTestsDisplayer from "./PastReleaseHeaderTestsDisplayer.vue";
 import { is_testplan_activated } from "../../../helpers/test-management-helper";
+import { getUserLocale } from "../../../helpers/user-locale-helper";
 
 @Component({
     components: {
@@ -75,7 +76,7 @@ export default class ReleaseHeader extends Vue {
     @Prop()
     readonly isPastRelease!: boolean;
 
-    formatDate = (date: string): string => formatDateYearMonthDay(date);
+    formatDate = (date: string): string => formatDateYearMonthDay(getUserLocale(), date);
 
     startDateExist(): boolean {
         return this.release_data.start_date !== null;
