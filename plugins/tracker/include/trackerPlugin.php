@@ -389,7 +389,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         return new AsynchronousSupervisor(
             $logger,
-            new ActionsRunnerDao()
+            new ActionsRunnerDao(),
+            new \Tuleap\Queue\WorkerAvailability()
         );
     }
 
@@ -1660,10 +1661,12 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             new JiraTuleapUsersMapping(),
             $forge_user
         );
+        $worker_availability       = new \Tuleap\Queue\WorkerAvailability();
 
         AsynchronousJiraRunner::addListener(
             $event,
             new QueueFactory($event->getLogger()),
+            $worker_availability,
             new KeyFactory(),
             new PendingJiraImportDao(),
             new PendingJiraImportBuilder(ProjectManager::instance(), $user_manager),
@@ -1683,6 +1686,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $logger,
             $user_manager,
             new QueueFactory($logger),
+            $worker_availability,
             new ArchiveAndDeleteArtifactTaskBuilder()
         );
         $async_artifact_archive_runner->addListener($event);
@@ -2434,6 +2438,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return new JiraRunner(
             $logger,
             new QueueFactory($logger),
+            new \Tuleap\Queue\WorkerAvailability(),
             new KeyFactory(),
             FromJiraTrackerCreator::build($jira_user_on_tuleap_cache),
             new PendingJiraImportDao(),

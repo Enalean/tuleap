@@ -462,17 +462,6 @@ $sys_mail_secure_mode = 0;
 // Should be toggled to 1 in dev only otherwise it means that your server is exposed to security vulnerabilities
 $sys_use_unsecure_ssl_certificate = 0;
 
-// Allow backend processing of emails
-// /!\ WARNING /!\
-// Only enable this if you have
-// Backend workers (below) is set to a positive value
-// Otherwise you will loose email notifications.
-//
-// Possible values:
-// - 'all' => all projects will use async emails
-// - "X, Y, Z" => ids of projects that use async emails (progressive deployment)
-// $sys_async_emails = 0;
-
 // Backend workers
 //
 // Number of backend workers to process background jobs.

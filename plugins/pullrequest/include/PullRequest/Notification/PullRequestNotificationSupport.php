@@ -64,6 +64,7 @@ use Tuleap\PullRequest\StateStatus\PullRequestMergedEvent;
 use Tuleap\PullRequest\StateStatus\PullRequestMergedNotificationToProcessBuilder;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDAO;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Queue\WorkerEvent;
 
 final class PullRequestNotificationSupport
@@ -388,7 +389,8 @@ final class PullRequestNotificationSupport
         return new EventDispatcherWithFallback(
             $logger,
             new EventSubjectToNotificationAsynchronousRedisDispatcher(
-                new QueueFactory($logger)
+                new QueueFactory($logger),
+                new WorkerAvailability()
             ),
             self::buildSynchronousDispatcher()
         );

@@ -25,14 +25,12 @@ use EventManager;
 use ProjectHistoryDao;
 use Tracker_ArtifactDao;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\Queue\WorkerAvailability;
 use WrapperLogger;
 
 class ArtifactDeletorBuilder
 {
-    /**
-     * @return ArtifactDeletor
-     */
-    public static function build()
+    public static function build(): ArtifactDeletor
     {
         $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
 
@@ -41,6 +39,7 @@ class ArtifactDeletorBuilder
             $logger,
             \UserManager::instance(),
             new QueueFactory($logger),
+            new WorkerAvailability(),
             new ArchiveAndDeleteArtifactTaskBuilder()
         );
 

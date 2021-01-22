@@ -33,22 +33,21 @@ use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
 use UserManager;
 use XML_ParseException;
 
-class JiraRunnerTest extends TestCase
+final class JiraRunnerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ForgeConfigSandbox;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
@@ -58,6 +57,10 @@ class JiraRunnerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|QueueFactory
      */
     private $queue_factory;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WorkerAvailability
+     */
+    private $worker_availability;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingJiraImportDao
      */
@@ -100,6 +103,7 @@ class JiraRunnerTest extends TestCase
     {
         $this->logger                    = Mockery::mock(LoggerInterface::class);
         $this->queue_factory             = Mockery::mock(QueueFactory::class);
+        $this->worker_availability       = Mockery::mock(WorkerAvailability::class);
         $this->dao                       = Mockery::mock(PendingJiraImportDao::class);
         $this->key_factory               = Mockery::mock(KeyFactory::class);
         $this->creator                   = Mockery::mock(FromJiraTrackerCreator::class);
@@ -114,6 +118,7 @@ class JiraRunnerTest extends TestCase
         $this->runner = new JiraRunner(
             $this->logger,
             $this->queue_factory,
+            $this->worker_availability,
             $this->key_factory,
             $this->creator,
             $this->dao,
@@ -507,7 +512,6 @@ class JiraRunnerTest extends TestCase
             ->once()
             ->andReturn($encryption_key);
 
-        $tracker = Mockery::mock(Tracker::class);
         $this->creator
             ->shouldReceive('createFromJira')
             ->once()
@@ -537,28 +541,28 @@ class JiraRunnerTest extends TestCase
 
     public function testItCanBeProcessedAsynchronously(): void
     {
-        \ForgeConfig::set('sys_nb_backend_workers', 1);
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(true);
         $this->queue_factory->shouldReceive(['getPersistentQueue' => Mockery::mock(PersistentQueue::class)]);
         $this->assertTrue($this->runner->canBeProcessedAsynchronously());
     }
 
     public function testItCannotBeProcessedAsynchronouslyIfNbOfBackendWorkersIsZero(): void
     {
-        \ForgeConfig::set('sys_nb_backend_workers', 0);
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(false);
         $this->queue_factory->shouldReceive(['getPersistentQueue' => Mockery::mock(PersistentQueue::class)]);
         $this->assertFalse($this->runner->canBeProcessedAsynchronously());
     }
 
     public function testItCannotBeProcessedAsynchronouslyIfNoopPersistentQueue(): void
     {
-        \ForgeConfig::set('sys_nb_backend_workers', 1);
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(true);
         $this->queue_factory->shouldReceive(['getPersistentQueue' => Mockery::mock(\Tuleap\Queue\Noop\PersistentQueue::class)]);
         $this->assertFalse($this->runner->canBeProcessedAsynchronously());
     }
 
     public function testItCannotBeProcessedAsynchronouslyIfNoQueueSystemAvailableException(): void
     {
-        \ForgeConfig::set('sys_nb_backend_workers', 1);
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(true);
         $this->queue_factory->shouldReceive('getPersistentQueue')->andThrow(NoQueueSystemAvailableException::class);
         $this->assertFalse($this->runner->canBeProcessedAsynchronously());
     }

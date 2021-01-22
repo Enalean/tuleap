@@ -25,13 +25,12 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\Queue\WorkerAvailability;
 
 final class AsynchronousArtifactsDeletionActionsRunnerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ForgeConfigSandbox;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArchiveAndDeleteArtifactTaskBuilder
@@ -42,20 +41,26 @@ final class AsynchronousArtifactsDeletionActionsRunnerTest extends TestCase
      */
     private $queue_factory;
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|WorkerAvailability
+     */
+    private $worker_availability;
+    /**
      * @var AsynchronousArtifactsDeletionActionsRunner
      */
     private $runner;
 
     protected function setUp(): void
     {
-        $this->queue_factory = \Mockery::mock(QueueFactory::class);
-        $this->task_builder  = \Mockery::mock(ArchiveAndDeleteArtifactTaskBuilder::class);
+        $this->queue_factory       = \Mockery::mock(QueueFactory::class);
+        $this->task_builder        = \Mockery::mock(ArchiveAndDeleteArtifactTaskBuilder::class);
+        $this->worker_availability = \Mockery::mock(WorkerAvailability::class);
 
         $this->runner = new AsynchronousArtifactsDeletionActionsRunner(
             \Mockery::mock(PendingArtifactRemovalDao::class),
             new NullLogger(),
             \Mockery::mock(\UserManager::class),
             $this->queue_factory,
+            $this->worker_availability,
             $this->task_builder
         );
     }
@@ -67,7 +72,7 @@ final class AsynchronousArtifactsDeletionActionsRunnerTest extends TestCase
         $this->task_builder->shouldReceive('build')->once()->andReturn($task);
         $task->shouldReceive('archive')->once();
 
-        \ForgeConfig::set('sys_nb_backend_workers', 0);
+        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(false);
 
         $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(1234);

@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
@@ -56,6 +57,7 @@ class AsynchronousJiraRunner
     public static function addListener(
         WorkerEvent $event,
         QueueFactory $queue_factory,
+        WorkerAvailability $worker_availability,
         KeyFactory $key_factory,
         PendingJiraImportDao $dao,
         PendingJiraImportBuilder $builder,
@@ -73,6 +75,7 @@ class AsynchronousJiraRunner
             new JiraRunner(
                 $event->getLogger(),
                 $queue_factory,
+                $worker_availability,
                 $key_factory,
                 $tracker_creator,
                 $dao,
