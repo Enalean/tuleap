@@ -25,12 +25,11 @@ body {
     padding: 0;
 }
 
-/* Start NAVBAR */
-.navbar .navbar-inner {
-    display: none;
+.header-container,
+.project-banner,
+.platform-banner {
+    display: none !important;
 }
-
-/* End */
 
 /* Start SIDEBAR */
 .sidebar-nav {
@@ -52,3 +51,7 @@ footer {
 }
 
 /* End */
+
+.help-dropdown {
+    display: none;
+}
