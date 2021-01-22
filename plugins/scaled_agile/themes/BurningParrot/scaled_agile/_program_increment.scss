@@ -68,6 +68,11 @@
     box-shadow: inset 1px 1px 1px $tlp-ui-border-normal;
 }
 
+.program-increment-info-hidden,
+.program-increment-content-hidden {
+    display: none;
+}
+
 .program-increment-content {
     position: relative;
     border-radius: 0 0 3px 3px;
