@@ -54,16 +54,19 @@ final class CSPViolationReportToControllerTest extends TestCase
 
     public function testLogsCSPViolationReport(): void
     {
-        $request = (new NullServerRequest())->withBody(
-            $this->stream_factory->createStream(
-                "{\"csp-report\":{\"blocked-uri\":\"https://tuleap.example.com/picture.png\",\"document-uri\":\"https://tuleap.example.com/somepage\",\"original-policy\":\"default-src 'none'; report-uri https://tuleap.example.com/csp-violation\",\"referrer\":\"\",\"violated-directive\":\"default-src\"}}"
-            )
-        );
+        $expected_user_agent = 'My User Agent';
+        $request             = (new NullServerRequest())
+            ->withHeader('User-Agent', $expected_user_agent)
+            ->withBody(
+                $this->stream_factory->createStream(
+                    "{\"csp-report\":{\"blocked-uri\":\"https://tuleap.example.com/picture.png\",\"document-uri\":\"https://tuleap.example.com/somepage\",\"original-policy\":\"default-src 'none'; report-uri https://tuleap.example.com/csp-violation\",\"referrer\":\"\",\"violated-directive\":\"default-src\"}}"
+                )
+            );
 
         $response = $this->controller->handle($request);
 
         self::assertEquals(204, $response->getStatusCode());
-        self::assertTrue($this->logger->hasInfoRecords());
+        self::assertTrue($this->logger->hasInfoThatContains('My User Agent'));
     }
 
     public function testRejectsIncorrectlyFormattedCSPViolationReport(): void

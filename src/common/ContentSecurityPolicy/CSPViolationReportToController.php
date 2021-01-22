@@ -54,17 +54,19 @@ final class CSPViolationReportToController extends DispatchablePSR15Compatible i
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            $csp_report = json_decode($request->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            $csp_raw_report = json_decode($request->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             return $this->response_factory->createResponse(400);
         }
 
-        if (! isset($csp_report['csp-report'])) {
+        if (! isset($csp_raw_report['csp-report'])) {
             return $this->response_factory->createResponse(400);
         }
 
+        $csp_report = $csp_raw_report['csp-report'] + ['user-agent' => $request->getHeaderLine('User-Agent')];
+
         $this->logger->info(
-            json_encode($csp_report['csp-report'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
+            json_encode($csp_report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
         );
 
         return $this->response_factory->createResponse(204);
