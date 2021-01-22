@@ -33,6 +33,7 @@ use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenter;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
+use Tuleap\Gitlab\Repository\Webhook\Bot\CommentSender;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 use Tuleap\InstanceBaseURLBuilder;
@@ -92,7 +93,7 @@ class PostMergeRequestBotCommenterTest extends TestCase
         $this->template_factory = new TemplateRendererFactory($template_cache);
 
         $this->commenter = new PostMergeRequestBotCommenter(
-            $this->client_wrapper,
+            new CommentSender($this->client_wrapper),
             $this->credentials_retriever,
             $this->logger,
             $this->bot_comment_reference_presenter_builder,

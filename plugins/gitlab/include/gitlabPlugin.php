@@ -41,6 +41,7 @@ use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
+use Tuleap\Gitlab\Repository\Webhook\Bot\CommentSender;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestBotCommenter;
@@ -203,7 +204,7 @@ class gitlabPlugin extends Plugin
                     ),
                     $logger,
                     new PostPushCommitBotCommenter(
-                        $gitlab_api_client,
+                        new CommentSender($gitlab_api_client),
                         new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
                         $logger,
                         new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
@@ -224,7 +225,7 @@ class gitlabPlugin extends Plugin
                     ),
                     $logger,
                     new PostMergeRequestBotCommenter(
-                        $gitlab_api_client,
+                        new CommentSender($gitlab_api_client),
                         new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
                         $logger,
                         new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
