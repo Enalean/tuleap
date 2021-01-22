@@ -20,6 +20,7 @@
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
+use DateTimeImmutable;
 use Tuleap\Gitlab\Repository\Webhook\WebhookData;
 
 class PostMergeRequestWebhookData implements WebhookData
@@ -52,6 +53,10 @@ class PostMergeRequestWebhookData implements WebhookData
      * @var string
      */
     private $state;
+    /**
+     * @var DateTimeImmutable
+     */
+    private $created_at;
 
     public function __construct(
         string $event_name,
@@ -60,7 +65,8 @@ class PostMergeRequestWebhookData implements WebhookData
         int $merge_request_id,
         string $title,
         string $description,
-        string $state
+        string $state,
+        DateTimeImmutable $created_at
     ) {
         $this->event_name        = $event_name;
         $this->gitlab_project_id = $gitlab_project_id;
@@ -69,6 +75,7 @@ class PostMergeRequestWebhookData implements WebhookData
         $this->description       = $description;
         $this->merge_request_id  = $merge_request_id;
         $this->state             = $state;
+        $this->created_at        = $created_at;
     }
 
     public function getEventName(): string
@@ -104,5 +111,10 @@ class PostMergeRequestWebhookData implements WebhookData
     public function getState(): string
     {
         return $this->state;
+    }
+
+    public function getCreatedAtDate(): DateTimeImmutable
+    {
+        return $this->created_at;
     }
 }

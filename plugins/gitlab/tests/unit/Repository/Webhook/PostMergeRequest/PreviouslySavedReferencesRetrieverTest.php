@@ -82,6 +82,7 @@ class PreviouslySavedReferencesRetrieverTest extends TestCase
             "My Title TULEAP-58",
             'TULEAP-666 TULEAP-45',
             'opened',
+            (new \DateTimeImmutable())->setTimestamp(1611315112)
         );
 
         $this->dao
@@ -113,6 +114,7 @@ class PreviouslySavedReferencesRetrieverTest extends TestCase
             "My Title TULEAP-58",
             'TULEAP-666 TULEAP-45',
             'opened',
+            (new \DateTimeImmutable())->setTimestamp(1611315112)
         );
 
         $this->dao
@@ -149,6 +151,7 @@ class PreviouslySavedReferencesRetrieverTest extends TestCase
             "My Title TULEAP-58",
             'TULEAP-666 TULEAP-45',
             'opened',
+            (new \DateTimeImmutable())->setTimestamp(1611315112)
         );
 
         $this->dao
@@ -191,6 +194,7 @@ class PreviouslySavedReferencesRetrieverTest extends TestCase
             "My Title TULEAP-58",
             'TULEAP-666 TULEAP-45',
             'opened',
+            (new \DateTimeImmutable())->setTimestamp(1611315112)
         );
 
         $this->dao
@@ -233,6 +237,7 @@ class PreviouslySavedReferencesRetrieverTest extends TestCase
             "My Title TULEAP-58",
             'TULEAP-666 TULEAP-45',
             'opened',
+            (new \DateTimeImmutable())->setTimestamp(1611315112)
         );
 
         $this->dao

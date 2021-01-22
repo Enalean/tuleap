@@ -30,8 +30,10 @@ use Tuleap\Reference\Metadata\CreatedByPresenter;
  */
 final class CreationMetadataPresenter
 {
+    public const NO_CREATED_BY_PRESENTER = null;
+
     /**
-     * @var CreatedByPresenter
+     * @var ?CreatedByPresenter
      */
     public $created_by;
     /**
@@ -39,7 +41,7 @@ final class CreationMetadataPresenter
      */
     public $created_on;
 
-    public function __construct(CreatedByPresenter $created_by, TlpRelativeDatePresenter $created_on)
+    public function __construct(?CreatedByPresenter $created_by, TlpRelativeDatePresenter $created_on)
     {
         $this->created_by = $created_by;
         $this->created_on = $created_on;

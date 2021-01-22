@@ -85,6 +85,22 @@ class PostMergeRequestWebhookDataBuilderTest extends TestCase
         $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
     }
 
+    public function testItThrowsAnExceptionIfMergeRequestCreatedAtKeyIsMissing(): void
+    {
+        $this->expectException(MissingKeyException::class);
+        $this->expectExceptionMessage("key created_at in object_attributes is missing");
+
+        $webhook_content = [
+            'object_attributes' => [
+                'iid'         => 1,
+                'title'       => 'My Title',
+                'description' => 'My description',
+                'state'       => 'closed',
+            ],
+        ];
+        $this->builder->build("merge_request", 123, "https://example.com", $webhook_content);
+    }
+
     public function testItReturnsPostMergeRequestWebhookData(): void
     {
         $webhook_content = [

@@ -146,6 +146,7 @@ class PostMergeRequestWebhookActionProcessor
             $webhook_data->getTitle(),
             $webhook_data->getDescription(),
             $webhook_data->getState(),
+            $webhook_data->getCreatedAtDate()->getTimestamp()
         );
 
         $this->logger->info("Merge request data for $merge_request_id saved in database");

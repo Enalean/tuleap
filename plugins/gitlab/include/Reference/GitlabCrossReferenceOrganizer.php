@@ -22,6 +22,8 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Reference;
 
 use Project;
+use Tuleap\Date\TlpRelativeDatePresenter;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitReference;
@@ -31,6 +33,7 @@ use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Reference\AdditionalBadgePresenter;
+use Tuleap\Reference\CreationMetadataPresenter;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 
@@ -56,19 +59,25 @@ class GitlabCrossReferenceOrganizer
      * @var GitlabMergeRequestReferenceRetriever
      */
     private $gitlab_merge_request_reference_retriever;
+    /**
+     * @var TlpRelativeDatePresenterBuilder
+     */
+    private $relative_date_builder;
 
     public function __construct(
         GitlabRepositoryFactory $gitlab_repository_factory,
         GitlabCommitFactory $gitlab_commit_factory,
         GitlabCommitCrossReferenceEnhancer $gitlab_cross_reference_enhancer,
         GitlabMergeRequestReferenceRetriever $gitlab_merge_request_reference_retriever,
-        \ProjectManager $project_manager
+        \ProjectManager $project_manager,
+        TlpRelativeDatePresenterBuilder $relative_date_builder
     ) {
         $this->gitlab_repository_factory                = $gitlab_repository_factory;
         $this->gitlab_commit_factory                    = $gitlab_commit_factory;
         $this->gitlab_cross_reference_enhancer          = $gitlab_cross_reference_enhancer;
         $this->gitlab_merge_request_reference_retriever = $gitlab_merge_request_reference_retriever;
         $this->project_manager                          = $project_manager;
+        $this->relative_date_builder                    = $relative_date_builder;
     }
 
     public function organizeGitLabReferences(CrossReferenceByNatureOrganizer $by_nature_organizer): void
@@ -178,10 +187,15 @@ class GitlabCrossReferenceOrganizer
         }
 
         $additional_badge_presenters = $this->getMergeRequestAdditionalBadges($gitlab_merge_request);
+        $user                        = $by_nature_organizer->getCurrentUser();
 
         $by_nature_organizer->moveCrossReferenceToSection(
             $cross_reference_presenter
                 ->withTitle($gitlab_merge_request->getTitle(), null)
+                ->withCreationMetadata(
+                    CreationMetadataPresenter::NO_CREATED_BY_PRESENTER,
+                    $this->getCreatedOnPresenter($gitlab_merge_request, $user)
+                )
                 ->withAdditionalBadges($additional_badge_presenters),
             $project->getUnixNameLowerCase() . '/' . $repository->getName()
         );
@@ -211,5 +225,13 @@ class GitlabCrossReferenceOrganizer
         }
 
         return $additional_badge_presenters;
+    }
+
+    private function getCreatedOnPresenter(GitlabMergeRequest $gitlab_merge_request, \PFUser $user): TlpRelativeDatePresenter
+    {
+        return $this->relative_date_builder->getTlpRelativeDatePresenterInInlineContext(
+            $gitlab_merge_request->getCreatedAtDate(),
+            $user
+        );
     }
 }

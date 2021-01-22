@@ -56,8 +56,13 @@
                                             {{/ has_avatar }}
                                         </span>
                                         <span>
-                                            {{ display_name }},
-                                            {{# created_on }}
+                                        {{ display_name }}
+                                        </span>
+                                    {{/ created_by }}
+                                    {{# created_on }}
+                                        <span>
+                                            {{# created_by}},
+                                            {{/ created_by}}
                                                 <tlp-relative-date
                                                     date="{{ date }}"
                                                     absolute-date="{{ absolute_date }}"
@@ -65,9 +70,8 @@
                                                     preference="{{ preference }}"
                                                     locale="{{ locale }}"
                                                 ></tlp-relative-date>
-                                            {{/ created_on }}
                                         </span>
-                                    {{/ created_by }}
+                                    {{/ created_on }}
                                 </div>
                             {{/ creation_metadata }}
                         </a>

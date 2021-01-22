@@ -44,5 +44,6 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_merge_request_info (
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     state TEXT NOT NULL,
+    created_at INT(11) NOT NULL,
     UNIQUE KEY merge_request_id(repository_id, merge_request_id)
 ) ENGINE=InnoDB;

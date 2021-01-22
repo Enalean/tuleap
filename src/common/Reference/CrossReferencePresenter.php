@@ -133,7 +133,7 @@ final class CrossReferencePresenter
         );
     }
 
-    public function withCreationMetadata(CreatedByPresenter $created_by, TlpRelativeDatePresenter $created_on): self
+    public function withCreationMetadata(?CreatedByPresenter $created_by, TlpRelativeDatePresenter $created_on): self
     {
         return new self(
             $this->id,

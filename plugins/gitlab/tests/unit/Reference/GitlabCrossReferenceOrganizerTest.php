@@ -28,6 +28,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommit;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitCrossReferenceEnhancer;
 use Tuleap\Gitlab\Reference\Commit\GitlabCommitFactory;
@@ -35,12 +36,14 @@ use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequest;
 use Tuleap\Gitlab\Reference\MergeRequest\GitlabMergeRequestReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
 
 class GitlabCrossReferenceOrganizerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryFactory
@@ -67,6 +70,10 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabMergeRequestReferenceRetriever
      */
     private $gitlab_merge_request_reference_retriever;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TlpRelativeDatePresenterBuilder
+     */
+    private $relative_date_builder;
 
     protected function setUp(): void
     {
@@ -75,6 +82,12 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $this->gitlab_commit_cross_reference_enhancer   = Mockery::mock(GitlabCommitCrossReferenceEnhancer::class);
         $this->gitlab_merge_request_reference_retriever = Mockery::mock(GitlabMergeRequestReferenceRetriever::class);
         $this->project_manager                          = Mockery::mock(ProjectManager::class);
+        $this->relative_date_builder                    = new TlpRelativeDatePresenterBuilder();
+
+        $GLOBALS['Language']
+            ->shouldReceive('getText')
+            ->with('system', 'datefmt')
+            ->andReturn('d/m/Y H:i');
 
         $this->organizer = new GitlabCrossReferenceOrganizer(
             $this->gitlab_repository_factory,
@@ -82,6 +95,7 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             $this->gitlab_commit_cross_reference_enhancer,
             $this->gitlab_merge_request_reference_retriever,
             $this->project_manager,
+            $this->relative_date_builder,
         );
     }
 
@@ -374,11 +388,13 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
         $john_snow_merge_request = new GitlabMergeRequest(
             'The title of the MR 14',
             'merged',
+            new DateTimeImmutable()
         );
 
         $samwell_tarly_merge_request = new GitlabMergeRequest(
             'The title of MR #26',
             'closed',
+            new DateTimeImmutable()
         );
 
         $this->gitlab_merge_request_reference_retriever
@@ -405,10 +421,15 @@ class GitlabCrossReferenceOrganizerTest extends TestCase
             ->withProjectId(2)
             ->build();
 
+        $user = Mockery::mock(PFUser::class);
+        $user->shouldReceive('getPreference')->andReturn("relative_first-absolute_tooltip");
+        $user->shouldReceive('getLocale')->andReturn("en_US");
+
         $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
             ->shouldReceive(
                 [
                     'getCrossReferencePresenters' => [$a_ref, $another_ref],
+                    'getCurrentUser' => $user
                 ]
             )->getMock();
 

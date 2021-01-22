@@ -20,6 +20,7 @@
 
 namespace Tuleap\Gitlab\Repository\Webhook\PostMergeRequest;
 
+use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\Repository\Webhook\MissingKeyException;
 
@@ -30,6 +31,7 @@ class PostMergeRequestWebhookDataBuilder
     private const MERGE_REQUEST_TITLE_KEY       = "title";
     private const MERGE_REQUEST_DESCRIPTION_KEY = "description";
     private const MERGE_REQUEST_STATE_KEY       = 'state';
+    private const MERGE_REQUEST_CREATED_AT_KEY  = 'created_at';
 
     /**
      * @var LoggerInterface
@@ -54,6 +56,10 @@ class PostMergeRequestWebhookDataBuilder
         $description      = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_DESCRIPTION_KEY];
         $state            = $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_STATE_KEY];
 
+        $created_at = new DateTimeImmutable(
+            $webhook_content[self::OBJECT_ATTRIBUTES_KEY][self::MERGE_REQUEST_CREATED_AT_KEY]
+        );
+
         $this->logger->debug("Webhook merge request with id $merge_request_id retrieved.");
         $this->logger->debug("|_ Its title is: $title");
         $this->logger->debug("|_ Its description is: $description");
@@ -66,6 +72,7 @@ class PostMergeRequestWebhookDataBuilder
             $title,
             $description,
             $state,
+            $created_at
         );
     }
 
@@ -83,6 +90,7 @@ class PostMergeRequestWebhookDataBuilder
             self::MERGE_REQUEST_TITLE_KEY,
             self::MERGE_REQUEST_DESCRIPTION_KEY,
             self::MERGE_REQUEST_STATE_KEY,
+            self::MERGE_REQUEST_CREATED_AT_KEY,
         ];
 
         foreach ($required_keys as $required_key) {

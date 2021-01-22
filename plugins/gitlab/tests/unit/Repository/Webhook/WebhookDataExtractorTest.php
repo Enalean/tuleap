@@ -277,7 +277,8 @@ class WebhookDataExtractorTest extends TestCase
                     "iid": 2,
                     "title": "My Title",
                     "description": "My Description",
-                    "state": "opened"
+                    "state": "opened",
+                    "created_at": "2021-01-12 13:49:35 UTC"
                   }
                 }'
             )
