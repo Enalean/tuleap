@@ -28,6 +28,10 @@ namespace Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement;
 final class ProgramIncrement
 {
     /**
+     * @var int
+     */
+    public $id;
+    /**
      * @var string
      */
     public $title;
@@ -46,11 +50,13 @@ final class ProgramIncrement
      */
     public $end_date;
 
-    public function __construct(string $title, ?string $status, ?int $start_date, ?int $end_date)
+
+    public function __construct(int $id, string $title, ?string $status, ?int $start_date, ?int $end_date)
     {
         $this->title      = $title;
         $this->status     = $status;
         $this->start_date = $start_date;
         $this->end_date   = $end_date;
+        $this->id         = $id;
     }
 }

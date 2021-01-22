@@ -28,7 +28,7 @@
         <h1 class="scaled-agile-title-header" v-translate>Backlog</h1>
         <div class="program-backlog" data-test="backlog-section">
             <to-be-planned class="to-be-planned" />
-            <program-increment class="program-increment" />
+            <program-increment-list class="program-increment" />
         </div>
     </div>
 </template>
@@ -43,7 +43,7 @@ import {
     projectPrivacy,
     projectFlags,
 } from "../configuration";
-import ProgramIncrement from "./Backlog/ProgramIncrement/ProgramIncrement.vue";
+import ProgramIncrementList from "./Backlog/ProgramIncrement/ProgramIncrementList.vue";
 import ToBePlanned from "./Backlog/ToBePlanned/ToBePlanned.vue";
 import {
     ProjectFlag,
@@ -51,7 +51,7 @@ import {
 } from "@tuleap/core/scripts/project/privacy/project-privacy-helper";
 
 @Component({
-    components: { ToBePlanned, ProgramIncrement, Breadcrumb },
+    components: { ToBePlanned, ProgramIncrementList: ProgramIncrementList, Breadcrumb },
 })
 export default class App extends Vue {
     public projectPublicName(): string {

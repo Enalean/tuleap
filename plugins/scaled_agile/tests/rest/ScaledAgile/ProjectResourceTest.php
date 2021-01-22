@@ -107,10 +107,10 @@ class ProjectResourceTest extends \RestBase
         self::assertEquals(200, $response->getStatusCode());
         $program_increments = $response->json();
         self::assertCount(1, $program_increments);
-        self::assertEquals(
-            [['title' => '1.0.0', 'status' => 'In development', 'start_date' => null, 'end_date' => null]],
-            $program_increments
-        );
+        self::assertEquals('1.0.0', $program_increments[0]['title']);
+        self::assertEquals('In development', $program_increments[0]['status']);
+        self::assertNull($program_increments[0]['start_date']);
+        self::assertNull($program_increments[0]['end_date']);
     }
 
     private function getProgramProjectId(): int

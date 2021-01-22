@@ -15,6 +15,9 @@ msgstr ""
 msgid "Backlog"
 msgstr "Planification"
 
+msgid "Edit"
+msgstr "Modifier"
+
 msgid "Program Increment"
 msgstr "Programme Incrément"
 
@@ -23,6 +26,9 @@ msgstr "Agilité à l'échelle"
 
 msgid "The retrieval of the elements to be planned in program has failed"
 msgstr "La récupération des éléments à planifier dans le programme a échoué"
+
+msgid "The retrieval of the program increments has failed"
+msgstr "La récupération des incréments du programme a échoué"
 
 msgid "There are no iterations yet"
 msgstr "Il n'y a pas d'itération pour l'instant"
