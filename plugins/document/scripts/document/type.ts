@@ -41,7 +41,60 @@ export interface Metadata {
 
 export interface Item {
     id: number;
-    lock_info: LockInfo | null;
+    title: string;
+    description: string;
+    post_processed_description: string;
+    owner: User;
+    last_update_date: string;
+    creation_date: string;
+    user_can_write: boolean;
+    can_user_manage: boolean;
+    lock_info: LockInfo;
+    metadata: Array<Metadata>;
+}
+
+export interface Folder extends Item {
+    parent_id: number | null;
+    is_expanded: boolean;
+    permissions_for_groups: Permissions;
+    folder_properties: FolderProperties;
+    type: "Folder";
+}
+
+export interface ApprovableDocument extends Item {
+    has_approval_table: boolean;
+    is_approval_table_enabled: boolean;
+    approval_table: ApprovalTable | null;
+}
+
+export interface ItemFile extends Item, ApprovableDocument {
+    parent_id: number;
+    file_properties: FileProperties;
+    type: "File";
+}
+
+export interface Link extends Item, ApprovableDocument {
+    parent_id: number;
+    link_properties: LinkProperties;
+    type: "Link";
+}
+
+export interface Embedded extends Item, ApprovableDocument {
+    parent_id: number;
+    embedded_file_properties: EmbeddedProperties;
+    type: "Embedded";
+}
+
+export interface Wiki extends Item {
+    parent_id: number;
+    wiki_properties: WikiProperties;
+    type: "Wiki";
+}
+
+export interface Empty extends Item {
+    parent_id: number;
+    approval_table: ApprovalTable | null;
+    type: "empty";
 }
 
 export interface LockInfo {
@@ -69,4 +122,36 @@ export interface Permission {
     short_name: string;
     uri: string;
     users_uri: string;
+}
+
+export interface ApprovalTable {
+    id: number;
+    table_owner: User;
+    approval_state: string;
+    approval_request_date: string;
+    has_been_approved: boolean;
+}
+
+export interface FolderProperties {
+    total_size: number;
+    nb_files: number;
+}
+
+export interface FileProperties {
+    file_type: string;
+    download_href: string;
+    file_size: number;
+}
+
+export interface LinkProperties {
+    link_url: string;
+}
+
+export interface EmbeddedProperties {
+    file_type: string;
+}
+
+export interface WikiProperties {
+    page_name: string;
+    page_id: number | null;
 }

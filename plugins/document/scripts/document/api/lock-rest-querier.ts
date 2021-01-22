@@ -18,7 +18,7 @@
  */
 
 import { del, post } from "tlp";
-import { Item } from "../type";
+import { Embedded, Empty, ItemFile, Link, Wiki } from "../type";
 
 export {
     postLockFile,
@@ -33,7 +33,7 @@ export {
     deleteLockEmpty,
 };
 
-function postLockFile(item: Item): Promise<Response> {
+function postLockFile(item: ItemFile): Promise<Response> {
     const headers = {
         "content-type": "application/json",
     };
@@ -43,13 +43,13 @@ function postLockFile(item: Item): Promise<Response> {
     return post(`/api/docman_files/${escaped_item_id}/lock`, { headers });
 }
 
-function deleteLockFile(item: Item): Promise<Response> {
+function deleteLockFile(item: ItemFile): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
 
     return del(`/api/docman_files/${escaped_item_id}/lock`);
 }
 
-function postLockEmbedded(item: Item): Promise<Response> {
+function postLockEmbedded(item: Embedded): Promise<Response> {
     const headers = {
         "content-type": "application/json",
     };
@@ -59,13 +59,13 @@ function postLockEmbedded(item: Item): Promise<Response> {
     return post(`/api/docman_embedded_files/${escaped_item_id}/lock`, { headers });
 }
 
-function deleteLockEmbedded(item: Item): Promise<Response> {
+function deleteLockEmbedded(item: Embedded): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
 
     return del(`/api/docman_embedded_files/${escaped_item_id}/lock`);
 }
 
-function postLockWiki(item: Item): Promise<Response> {
+function postLockWiki(item: Wiki): Promise<Response> {
     const headers = {
         "content-type": "application/json",
     };
@@ -75,13 +75,13 @@ function postLockWiki(item: Item): Promise<Response> {
     return post(`/api/docman_wikis/${escaped_item_id}/lock`, { headers });
 }
 
-function deleteLockWiki(item: Item): Promise<Response> {
+function deleteLockWiki(item: Wiki): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
 
     return del(`/api/docman_wikis/${escaped_item_id}/lock`);
 }
 
-function postLockLink(item: Item): Promise<Response> {
+function postLockLink(item: Link): Promise<Response> {
     const headers = {
         "content-type": "application/json",
     };
@@ -91,13 +91,13 @@ function postLockLink(item: Item): Promise<Response> {
     return post(`/api/docman_links/${escaped_item_id}/lock`, { headers });
 }
 
-function deleteLockLink(item: Item): Promise<Response> {
+function deleteLockLink(item: Link): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
 
     return del(`/api/docman_links/${escaped_item_id}/lock`);
 }
 
-function postLockEmpty(item: Item): Promise<Response> {
+function postLockEmpty(item: Empty): Promise<Response> {
     const headers = {
         "content-type": "application/json",
     };
@@ -107,7 +107,7 @@ function postLockEmpty(item: Item): Promise<Response> {
     return post(`/api/docman_empty_documents/${escaped_item_id}/lock`, { headers });
 }
 
-function deleteLockEmpty(item: Item): Promise<Response> {
+function deleteLockEmpty(item: Empty): Promise<Response> {
     const escaped_item_id = encodeURIComponent(item.id);
 
     return del(`/api/docman_empty_documents/${escaped_item_id}/lock`);

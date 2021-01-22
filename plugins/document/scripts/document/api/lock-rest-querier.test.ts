@@ -29,7 +29,7 @@ import {
     postLockEmpty,
     deleteLockEmpty,
 } from "./lock-rest-querier";
-import { Item } from "../type";
+import { Embedded, Empty, ItemFile, Link } from "../type";
 
 jest.mock("tlp");
 
@@ -40,7 +40,7 @@ describe("metadata rest querier", () => {
         const tlpPost = jest.spyOn(tlp, "post");
         mockFetchSuccess(tlpPost);
 
-        await postLockFile({ id: id } as Item);
+        await postLockFile({ id: id } as ItemFile);
 
         expect(tlpPost).toHaveBeenCalledWith(`/api/docman_files/${id}/lock`, {
             headers: { "content-type": "application/json" },
@@ -51,7 +51,7 @@ describe("metadata rest querier", () => {
         const tlpPost = jest.spyOn(tlp, "post");
         mockFetchSuccess(tlpPost);
 
-        await postLockEmbedded({ id: id } as Item);
+        await postLockEmbedded({ id: id } as Embedded);
 
         expect(tlpPost).toHaveBeenCalledWith(`/api/docman_embedded_files/${id}/lock`, {
             headers: { "content-type": "application/json" },
@@ -62,7 +62,7 @@ describe("metadata rest querier", () => {
         const tlpPost = jest.spyOn(tlp, "post");
         mockFetchSuccess(tlpPost);
 
-        await postLockLink({ id: id } as Item);
+        await postLockLink({ id: id } as Link);
 
         expect(tlpPost).toHaveBeenCalledWith(`/api/docman_links/${id}/lock`, {
             headers: { "content-type": "application/json" },
@@ -73,7 +73,7 @@ describe("metadata rest querier", () => {
         const tlpPost = jest.spyOn(tlp, "post");
         mockFetchSuccess(tlpPost);
 
-        await postLockEmpty({ id: id } as Item);
+        await postLockEmpty({ id: id } as Empty);
 
         expect(tlpPost).toHaveBeenCalledWith(`/api/docman_empty_documents/${id}/lock`, {
             headers: { "content-type": "application/json" },
@@ -84,7 +84,7 @@ describe("metadata rest querier", () => {
         const tlpDel = jest.spyOn(tlp, "del");
         mockFetchSuccess(tlpDel);
 
-        await deleteLockFile({ id: id } as Item);
+        await deleteLockFile({ id: id } as ItemFile);
 
         expect(tlpDel).toHaveBeenCalledWith(`/api/docman_files/${id}/lock`);
     });
@@ -93,7 +93,7 @@ describe("metadata rest querier", () => {
         const tlpDel = jest.spyOn(tlp, "del");
         mockFetchSuccess(tlpDel);
 
-        await deleteLockEmbedded({ id: id } as Item);
+        await deleteLockEmbedded({ id: id } as Embedded);
 
         expect(tlpDel).toHaveBeenCalledWith(`/api/docman_embedded_files/${id}/lock`);
     });
@@ -102,7 +102,7 @@ describe("metadata rest querier", () => {
         const tlpDel = jest.spyOn(tlp, "del");
         mockFetchSuccess(tlpDel);
 
-        await deleteLockLink({ id: id } as Item);
+        await deleteLockLink({ id: id } as Link);
 
         expect(tlpDel).toHaveBeenCalledWith(`/api/docman_links/${id}/lock`);
     });
@@ -111,7 +111,7 @@ describe("metadata rest querier", () => {
         const tlpDel = jest.spyOn(tlp, "del");
         mockFetchSuccess(tlpDel);
 
-        await deleteLockEmpty({ id: id } as Item);
+        await deleteLockEmpty({ id: id } as Empty);
 
         expect(tlpDel).toHaveBeenCalledWith(`/api/docman_empty_documents/${id}/lock`);
     });
