@@ -5,17 +5,17 @@
                 <span class="trigger_condition_artifact_operator_updater"></span>
             </td>
             <td>
-                {{condition_of_type}}
+                {{# dgettext }} tuleap-tracker | of type{{/ dgettext }}
                 <select class="trigger_triggering_field_child_tracker_name">
-                    <option selected="selected" value="">{{condition_select_tracker_name}}</option>
+                    <option selected="selected" value="">{{# dgettext }} tuleap-tracker | select child tracker name{{/ dgettext }}</option>
                 </select>
                 <span class="trigger_triggering_have_field"></span>
                 <select class="trigger_triggering_field_child_tracker_field_name">
-                    <option selected="selected" value="">{{condition_select_tracker_field}}</option>
+                    <option selected="selected" value="">{{# dgettext }} tuleap-tracker | select child tracker field{{/ dgettext }}</option>
                 </select>
-                {{condition_set_to}}
+                {{# dgettext }} tuleap-tracker | set to{{/ dgettext }}
                 <select class="trigger_triggering_field_child_tracker_field_value">
-                    <option selected="selected" value="">{{condition_select_tracker_field_value}}</option>
+                    <option selected="selected" value="">{{# dgettext }} tuleap-tracker | select value{{/ dgettext }}</option>
                 </select>
                 <img border="0" alt="remove" src="/themes/common/images/ic/cross.png" class="trigger_triggering_field_remove">
             </td>
@@ -23,6 +23,6 @@
     </tbody>
 </table>
 <div style="display: none" id="trigger_quantity_template">
-    {{new_trigger_triggering_field_list_intro}} <select id="trigger_condition_quantity">
+    {{# dgettext }} tuleap-tracker | When{{/ dgettext }} <select id="trigger_condition_quantity">
     </select>
 </div>
