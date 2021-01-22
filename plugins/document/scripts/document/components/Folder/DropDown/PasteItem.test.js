@@ -23,7 +23,7 @@ import { createStoreMock } from "../../../../../../../src/scripts/vue-components
 import PasteItem from "./PasteItem.vue";
 import EventBus from "../../../helpers/event-bus.js";
 import * as check_item_title from "../../../helpers/metadata-helpers/check-item-title.js";
-import * as clipboard_helpers from "../../../helpers/clipboard/clipboard-helpers.js";
+import * as clipboard_helpers from "../../../helpers/clipboard/clipboard-helpers";
 import {
     TYPE_FOLDER,
     TYPE_EMPTY,

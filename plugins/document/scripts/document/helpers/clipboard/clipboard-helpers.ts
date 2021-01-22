@@ -18,7 +18,13 @@
  *
  */
 
-export function isItemDestinationIntoItself(folder_content, item_id, destination_id) {
+import { Item } from "../../type";
+
+export function isItemDestinationIntoItself(
+    folder_content: Array<Item>,
+    item_id: number,
+    destination_id: number | null
+): boolean {
     if (destination_id === item_id) {
         return true;
     }
