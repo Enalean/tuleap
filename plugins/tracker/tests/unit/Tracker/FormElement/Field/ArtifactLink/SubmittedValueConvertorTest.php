@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,13 +35,6 @@ final class SubmittedValueConvertorTest extends TestCase
      * @var SubmittedValueConvertor
      */
     private $convertor;
-    /**
-     * @var SourceOfAssociationCollection
-     */
-    private $source_of_association_collection;
-
-    /** @var SourceOfAssociationDetector */
-    private $source_of_association_detector;
 
     /** @var Tracker_Artifact_ChangesetValue_ArtifactLink */
     private $previous_changesetvalue;
@@ -83,8 +76,6 @@ final class SubmittedValueConvertorTest extends TestCase
 
         $artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
-        $this->source_of_association_detector = \Mockery::spy(SourceOfAssociationDetector::class);
-
         $this->previous_changesetvalue = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         $this->previous_changesetvalue->shouldReceive('getValue')->andReturns(
             [
@@ -96,35 +87,8 @@ final class SubmittedValueConvertorTest extends TestCase
         $artifact_factory->shouldReceive('getArtifactById')->with(124)->andReturns($this->art_124);
         $artifact_factory->shouldReceive('getArtifactById')->with(201)->andReturns($this->art_201);
 
-        $this->source_of_association_collection = new SourceOfAssociationCollection();
-        $this->convertor                        = new SubmittedValueConvertor(
+        $this->convertor = new SubmittedValueConvertor(
             $artifact_factory,
-            $this->source_of_association_detector
-        );
-    }
-
-    public function testItRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking(): void
-    {
-        $submitted_value = ['new_values' => '123, 124'];
-
-        $this->source_of_association_detector->shouldReceive('isChild')
-            ->with($this->art_123, $this->artifact)->andReturns(false);
-        $this->source_of_association_detector->shouldReceive('isChild')
-            ->with($this->art_124, $this->artifact)->andReturns(true);
-
-        $updated_submitted_value = $this->convertor->convert(
-            $submitted_value,
-            $this->source_of_association_collection,
-            $this->artifact,
-            $this->previous_changesetvalue
-        );
-
-        $this->assertEquals(
-            [
-                201 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->art_201, '_is_child'),
-                123 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->art_123, '')
-            ],
-            $updated_submitted_value['list_of_artifactlinkinfo']
         );
     }
 
@@ -139,8 +103,6 @@ final class SubmittedValueConvertorTest extends TestCase
 
         $updated_submitted_value = $this->convertor->convert(
             $submitted_value,
-            $this->source_of_association_collection,
-            $this->artifact,
             $this->previous_changesetvalue
         );
 
@@ -158,8 +120,6 @@ final class SubmittedValueConvertorTest extends TestCase
 
         $updated_submitted_value = $this->convertor->convert(
             $submitted_value,
-            $this->source_of_association_collection,
-            $this->artifact,
             $this->previous_changesetvalue
         );
 
@@ -177,8 +137,6 @@ final class SubmittedValueConvertorTest extends TestCase
 
         $updated_submitted_value = $this->convertor->convert(
             $submitted_value,
-            $this->source_of_association_collection,
-            $this->artifact,
             $this->previous_changesetvalue
         );
 
@@ -194,15 +152,8 @@ final class SubmittedValueConvertorTest extends TestCase
     {
         $submitted_value = ['new_values' => '123, 124'];
 
-        $this->source_of_association_detector->shouldReceive('isChild')
-            ->with($this->art_123, $this->artifact)->andReturns(false);
-        $this->source_of_association_detector->shouldReceive('isChild')
-            ->with($this->art_124, $this->artifact)->andReturns(false);
-
         $updated_submitted_value = $this->convertor->convert(
             $submitted_value,
-            $this->source_of_association_collection,
-            $this->artifact,
             $this->previous_changesetvalue
         );
         $this->assertEquals(null, $updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature());
@@ -216,15 +167,8 @@ final class SubmittedValueConvertorTest extends TestCase
             'natures'    => ['123' => '_is_child', '124' => '_is_child']
         ];
 
-        $this->source_of_association_detector->shouldReceive('isChild')
-            ->with($this->art_123, $this->artifact)->andReturns(false);
-        $this->source_of_association_detector->shouldReceive('isChild')
-            ->with($this->art_124, $this->artifact)->andReturns(false);
-
         $updated_submitted_value = $this->convertor->convert(
             $submitted_value,
-            $this->source_of_association_collection,
-            $this->artifact,
             $this->previous_changesetvalue
         );
         $this->assertEquals('_is_child', $updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature());
@@ -238,15 +182,8 @@ final class SubmittedValueConvertorTest extends TestCase
             'natures'    => ['123' => '_is_child', '124' => '_is_foo']
         ];
 
-        $this->source_of_association_detector->shouldReceive('isChild')
-            ->with($this->art_123, $this->artifact)->andReturns(false);
-        $this->source_of_association_detector->shouldReceive('isChild')
-            ->with($this->art_124, $this->artifact)->andReturns(false);
-
         $updated_submitted_value = $this->convertor->convert(
             $submitted_value,
-            $this->source_of_association_collection,
-            $this->artifact,
             $this->previous_changesetvalue
         );
         $this->assertEquals('_is_child', $updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature());

@@ -30,11 +30,11 @@ use Tracker_Hierarchy_HierarchicalTracker;
 use Tracker_Hierarchy_HierarchicalTrackerFactory;
 use Tracker_Hierarchy_Presenter;
 use Tracker_Workflow_Trigger_RulesDao;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Valid_UInt;
 
 class HierarchyController
 {
-
     /**
      * @var Codendi_Request
      */
@@ -66,6 +66,10 @@ class HierarchyController
      * @var EventDispatcherInterface
      */
     private $event_dispatcher;
+    /**
+     * @var ArtifactLinksUsageDao
+     */
+    private $artifact_links_usage_dao;
 
     public function __construct(
         Codendi_Request $request,
@@ -73,7 +77,8 @@ class HierarchyController
         Tracker_Hierarchy_HierarchicalTrackerFactory $factory,
         HierarchyDAO $dao,
         Tracker_Workflow_Trigger_RulesDao $tracker_workflow_trigger_rules_dao,
-        EventDispatcherInterface $event_dispatcher
+        EventDispatcherInterface $event_dispatcher,
+        ArtifactLinksUsageDao $artifact_links_usage_dao
     ) {
         $this->request                            = $request;
         $this->tracker                            = $tracker;
@@ -82,6 +87,7 @@ class HierarchyController
         $this->tracker_workflow_trigger_rules_dao = $tracker_workflow_trigger_rules_dao;
         $this->renderer                           = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
         $this->event_dispatcher                   = $event_dispatcher;
+        $this->artifact_links_usage_dao           = $artifact_links_usage_dao;
     }
 
     public function edit(): void
@@ -107,9 +113,10 @@ class HierarchyController
     private function getChildrenUsedInTriggerRules(): array
     {
         $rows = $this->tracker_workflow_trigger_rules_dao->searchTriggeringTrackersByTargetTrackerID($this->tracker->getId());
-        if ($rows === false) {
+        if ($rows === false || $rows === []) {
             return [];
         }
+
         $children_id_used_in_triggers_rules = [];
         foreach ($rows as $row) {
             $children_id_used_in_triggers_rules[$row['tracker_id']] = true;
@@ -160,10 +167,20 @@ class HierarchyController
 
         $children_used_in_trigger_rules = $this->getChildrenUsedInTriggerRules();
 
-        $this->dao->updateChildren(
-            $this->tracker->getId(),
-            array_merge($wanted_children, array_keys($children_used_in_trigger_rules))
-        );
+        if ($this->artifact_links_usage_dao->isProjectUsingArtifactLinkTypes((int) $this->tracker->getProject()->getID())) {
+            $this->dao->changeTrackerHierarchy(
+                $this->tracker->getId(),
+                array_merge($wanted_children, array_keys($children_used_in_trigger_rules))
+            );
+        } else {
+            //If project does not use the artifact link types yet, _is_child must continue
+            //to be automatically set to that when an admin will enable the types everything
+            //will be consistent
+            $this->dao->updateChildren(
+                $this->tracker->getId(),
+                array_merge($wanted_children, array_keys($children_used_in_trigger_rules))
+            );
+        }
 
         $this->redirectToAdminHierarchy();
     }

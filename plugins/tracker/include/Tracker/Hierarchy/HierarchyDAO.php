@@ -66,7 +66,7 @@ class HierarchyDAO extends DataAccessObject
         $this->removeIsChildNatureForTrackersThatHaveANewParent($parent_id, $child_ids);
     }
 
-    private function changeTrackerHierarchy(int $parent_id, array $child_ids): void
+    public function changeTrackerHierarchy(int $parent_id, array $child_ids): void
     {
         $this->deleteAllChildren($parent_id);
 

@@ -28,7 +28,6 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 /**
@@ -41,10 +40,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
 
     /** @var Tracker_Artifact_Changeset_CommentDao */
     protected $changeset_comment_dao;
-    /**
-     * @var SourceOfAssociationCollectionBuilder
-     */
-    private $source_of_association_collection_builder;
     /**
      * @var ReferenceManager
      */
@@ -66,7 +61,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
         ReferenceManager $reference_manager,
-        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder,
         Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
         DBTransactionExecutor $transaction_executor,
         ArtifactChangesetSaver $artifact_changeset_saver
@@ -79,12 +73,11 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             $field_initializator
         );
 
-        $this->changeset_dao                            = $changeset_dao;
-        $this->changeset_comment_dao                    = $changeset_comment_dao;
-        $this->reference_manager                        = $reference_manager;
-        $this->source_of_association_collection_builder = $source_of_association_collection_builder;
-        $this->transaction_executor                     = $transaction_executor;
-        $this->artifact_changeset_saver                 = $artifact_changeset_saver;
+        $this->changeset_dao            = $changeset_dao;
+        $this->changeset_comment_dao    = $changeset_comment_dao;
+        $this->reference_manager        = $reference_manager;
+        $this->transaction_executor     = $transaction_executor;
+        $this->artifact_changeset_saver = $artifact_changeset_saver;
     }
 
     /**
@@ -188,15 +181,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                     ArtifactInstrumentation::increment(ArtifactInstrumentation::TYPE_UPDATED);
                     return $new_changeset;
                 } catch (Tracker_NoChangeException $exception) {
-                    $collection = $this->source_of_association_collection_builder->getSourceOfAssociationCollection(
-                        $artifact,
-                        $fields_data
-                    );
-                    if (count($collection) > 0) {
-                        $collection->linkToArtifact($artifact, $submitter);
-
-                        return null;
-                    }
                     throw $exception;
                 } catch (Tracker_Exception $exception) {
                     throw $exception;

@@ -119,7 +119,6 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
             $this->artifact_factory,
             \Mockery::spy(\EventManager::class),
             \Mockery::spy(\ReferenceManager::class),
-            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder::class),
             $field_initializator,
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
             $this->changeset_saver
