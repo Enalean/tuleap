@@ -26,7 +26,7 @@
                     class="element-card-xref"
                     v-bind:class="`element-card-xref-${element.tracker.color_name}`"
                 >
-                    {{ element.tracker.label }} #{{ element.artifact_id }}
+                    {{ element.artifact_xref }}
                 </a>
                 <span class="element-card-label">{{ element.artifact_title }}</span>
             </div>

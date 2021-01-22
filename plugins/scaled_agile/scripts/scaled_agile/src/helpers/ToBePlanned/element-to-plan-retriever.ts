@@ -22,6 +22,7 @@ import { recursiveGet } from "tlp";
 export interface ToBePlannedElement {
     artifact_id: number;
     artifact_title: string;
+    artifact_xref: string;
     tracker: TrackerMinimalRepresentation;
     background_color: string;
 }

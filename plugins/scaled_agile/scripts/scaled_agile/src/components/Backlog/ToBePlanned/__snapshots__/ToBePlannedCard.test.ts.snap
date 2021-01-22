@@ -15,7 +15,7 @@ exports[`ToBePlannedCard Displays a card with accessibility pattern 1`] = `
         href="/plugins/tracker/?aid=100"
       >
         
-                bug #100
+                
             
       </a>
        
@@ -48,7 +48,7 @@ exports[`ToBePlannedCard Displays a card without accessibility pattern 1`] = `
         href="/plugins/tracker/?aid=100"
       >
         
-                bug #100
+                
             
       </a>
        
