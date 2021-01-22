@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { flatMapDeep } from "lodash";
 import { render } from "mustache";
 import { sanitize } from "dompurify";
 import { get } from "jquery";
@@ -167,9 +166,14 @@ function loadDynamicallyWidgetsContent(modal, modal_content, url) {
 }
 
 function initializeWidgets(table, data) {
-    const data_widgets = flatMapDeep(data, function (category) {
-        return category.map((cat) => cat.widgets);
+    let data_widgets = [];
+
+    data.widgets_categories.forEach((category) => {
+        category.widgets.forEach((widget) => {
+            data_widgets.push(widget);
+        });
     });
+
     const widgets_element = table.querySelectorAll(".dashboard-add-widget-list-table-widget");
     [].forEach.call(widgets_element, function (widget_element) {
         widget_element.addEventListener("click", function () {
