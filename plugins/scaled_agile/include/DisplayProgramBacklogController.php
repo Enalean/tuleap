@@ -124,6 +124,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
                 'title'                          => dgettext('tuleap-scaled_agile', "Scaled Agile Program"),
                 'group'                          => $project->getID(),
                 'toptab'                         => 'plugin_scaled_agile',
+                'body_class'                     => ['has-sidebar-with-pinned-header'],
                 'main_classes'                   => [],
                 'without-project-in-breadcrumbs' => true,
             ]
