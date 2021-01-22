@@ -42,6 +42,7 @@ class Tracker_Artifact_Changeset_Comment
     private static $available_comment_formats = [
         self::TEXT_COMMENT,
         self::HTML_COMMENT,
+        self::COMMONMARK_COMMENT,
     ];
 
     public $id;

@@ -26,6 +26,7 @@ import {
     formatDefaultValue as defaultForOpenListField,
     formatExistingValue as formatForOpenListField,
 } from "../tuleap-artifact-modal-fields/open-list-field/open-list-field-initializer.js";
+import { formatExistingValue as formatForTextFieldValue } from "../tuleap-artifact-modal-fields/text-field/text-field-value-formatter.js";
 
 export default TuleapArtifactFieldValuesService;
 
@@ -84,11 +85,9 @@ function TuleapArtifactFieldValuesService($sce) {
                     : [100];
                 break;
             case "text":
-                value_obj.value = {
-                    content: artifact_value.value,
-                    format: artifact_value.format,
-                };
+                value_obj.value = formatForTextFieldValue(artifact_value);
                 delete value_obj.format;
+                delete value_obj.commonmark;
                 break;
             case "perm":
                 value_obj.value = {
