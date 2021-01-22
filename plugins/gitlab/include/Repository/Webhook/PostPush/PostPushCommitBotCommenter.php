@@ -22,21 +22,21 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use Psr\Log\LoggerInterface;
 use TemplateRendererFactory;
-use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentPresenter;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
+use Tuleap\Gitlab\Repository\Webhook\Bot\CommentSender;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
 
 class PostPushCommitBotCommenter
 {
     /**
-     * @var ClientWrapper
+     * @var CommentSender
      */
-    private $gitlab_api_client;
+    private $comment_sender;
     /**
      * @var CredentialsRetriever
      */
@@ -55,13 +55,13 @@ class PostPushCommitBotCommenter
     private $template_renderer_factory;
 
     public function __construct(
-        ClientWrapper $gitlab_api_client,
+        CommentSender $comment_sender,
         CredentialsRetriever $credentials_retriever,
         LoggerInterface $logger,
         BotCommentReferencePresenterBuilder $bot_comment_reference_presenter_builder,
         TemplateRendererFactory $template_renderer_factory
     ) {
-        $this->gitlab_api_client                       = $gitlab_api_client;
+        $this->comment_sender                          = $comment_sender;
         $this->credentials_retriever                   = $credentials_retriever;
         $this->logger                                  = $logger;
         $this->bot_comment_reference_presenter_builder = $bot_comment_reference_presenter_builder;
@@ -94,7 +94,7 @@ class PostPushCommitBotCommenter
 
         try {
             $url = "/projects/{$gitlab_repository->getGitlabRepositoryId()}/repository/commits/{$commit->getSha1()}/comments";
-            $this->gitlab_api_client->postUrl(
+            $this->comment_sender->sendComment(
                 $credentials,
                 $url,
                 ["note" => $comment]
