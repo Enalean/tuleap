@@ -41,9 +41,6 @@ export async function init(mount_point: HTMLDivElement, button: HTMLElement): Pr
     }
     const is_tag = Boolean(button.dataset.isTag);
     const current_ref_name = button.dataset.currentRefName;
-    if (!current_ref_name) {
-        throw new Error("No Current Ref name");
-    }
 
     if (!button.dataset.urlParameters) {
         throw new Error("No URL parameters");
