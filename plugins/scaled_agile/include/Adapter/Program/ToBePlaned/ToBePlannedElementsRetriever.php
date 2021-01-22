@@ -92,6 +92,7 @@ final class ToBePlannedElementsRetriever implements RetrieveToBePlannedElements
             $elements[] = new ToBePlannedElementRepresentation(
                 (int) $artifact['artifact_id'],
                 $artifact['artifact_title'],
+                $full_artifact->getXRef(),
                 MinimalTrackerRepresentation::build($full_artifact->getTracker()),
                 $this->retrieve_background_color->retrieveBackgroundColor($full_artifact, $user)
             );

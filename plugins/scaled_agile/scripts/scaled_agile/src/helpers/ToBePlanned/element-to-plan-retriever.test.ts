@@ -30,6 +30,7 @@ describe("Tracker reports retriever", () => {
             {
                 artifact_id: 1,
                 artifact_title: "My bug name",
+                artifact_xref: "bug #1",
                 tracker: {
                     label: "bug",
                     color_name: "plum_crazy",
@@ -41,6 +42,7 @@ describe("Tracker reports retriever", () => {
             {
                 artifact_id: 2,
                 artifact_title: "My story",
+                artifact_xref: "story #2",
                 tracker: {
                     label: "story",
                     color_name: "flamingo_pink",

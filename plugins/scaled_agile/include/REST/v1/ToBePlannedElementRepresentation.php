@@ -39,6 +39,10 @@ final class ToBePlannedElementRepresentation
      */
     public $artifact_title;
     /**
+     * @var string
+     */
+    public $artifact_xref;
+    /**
      * @var MinimalTrackerRepresentation
      */
     public $tracker;
@@ -50,11 +54,13 @@ final class ToBePlannedElementRepresentation
     public function __construct(
         int $artifact_id,
         string $artifact_title,
+        string $artifact_xref,
         MinimalTrackerRepresentation $minimal_tracker_representation,
         BackgroundColor $background_color
     ) {
         $this->artifact_id      = $artifact_id;
         $this->artifact_title   = $artifact_title;
+        $this->artifact_xref    = $artifact_xref;
         $this->tracker          = $minimal_tracker_representation;
         $this->background_color = $background_color->getBackgroundColorName();
     }
