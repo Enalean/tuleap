@@ -13,7 +13,7 @@
     "d3-scale": "^3.2.3",
     "d3-selection": "^2.0.0",
     "d3-shape": "^2.0.0",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "node-gettext": "^3.0.0",
     "sprintf-js": "^1.1.2",
