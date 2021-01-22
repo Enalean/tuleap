@@ -57,11 +57,11 @@ use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretGenerator;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
+use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\REST\Header;
 use UserManager;
 
@@ -147,11 +147,10 @@ final class GitlabRepositoryResource
                 new GitlabRepositoryDao(),
                 new GitlabRepositoryProjectDao(),
                 new WebhookCreator(
-                    new SecretGenerator(
-                        new KeyFactory(),
-                        new SecretDao()
-                    ),
-                    $gitlab_api_client
+                    new KeyFactory(),
+                    new WebhookDao(),
+                    $gitlab_api_client,
+                    new InstanceBaseURLBuilder(),
                 ),
                 new GitlabBotApiTokenInserter(new GitlabBotApiTokenDao(), new KeyFactory())
             );
@@ -290,7 +289,7 @@ final class GitlabRepositoryResource
                 DBFactory::getMainTuleapDBConnection()
             ),
             new GitlabRepositoryProjectDao(),
-            new SecretDao(),
+            new WebhookDao(),
             new GitlabRepositoryDao(),
             new GitlabBotApiTokenDao(),
             new CommitTuleapReferenceDao(),

@@ -33,7 +33,7 @@ use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretDao;
+use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class GitlabRepositoryDeletorTest extends TestCase
@@ -61,9 +61,9 @@ class GitlabRepositoryDeletorTest extends TestCase
     private $gitlab_repository_project_dao;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SecretDao
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WebhookDao
      */
-    private $secret_dao;
+    private $webhook_dao;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|GitlabRepositoryDao
@@ -104,7 +104,7 @@ class GitlabRepositoryDeletorTest extends TestCase
         $this->git_permissions_manager       = Mockery::mock(GitPermissionsManager::class);
         $this->db_transaction_executor       = new DBTransactionExecutorPassthrough();
         $this->gitlab_repository_project_dao = Mockery::mock(GitlabRepositoryProjectDao::class);
-        $this->secret_dao                    = Mockery::mock(SecretDao::class);
+        $this->webhook_dao                   = Mockery::mock(WebhookDao::class);
         $this->gitlab_repository_dao         = Mockery::mock(GitlabRepositoryDao::class);
         $this->gitlab_bot_api_token_dao      = Mockery::mock(GitlabBotApiTokenDao::class);
         $this->commit_tuleap_reference_dao   = Mockery::mock(CommitTuleapReferenceDao::class);
@@ -114,7 +114,7 @@ class GitlabRepositoryDeletorTest extends TestCase
             $this->git_permissions_manager,
             $this->db_transaction_executor,
             $this->gitlab_repository_project_dao,
-            $this->secret_dao,
+            $this->webhook_dao,
             $this->gitlab_repository_dao,
             $this->gitlab_bot_api_token_dao,
             $this->commit_tuleap_reference_dao,
@@ -205,7 +205,7 @@ class GitlabRepositoryDeletorTest extends TestCase
         $this->gitlab_repository_project_dao->shouldReceive('removeGitlabRepositoryIntegrationInProject')
             ->once();
 
-        $this->secret_dao->shouldNotReceive('deleteGitlabRepositoryWebhookSecret');
+        $this->webhook_dao->shouldNotReceive('deleteGitlabRepositoryWebhook');
         $this->gitlab_repository_dao->shouldNotReceive('deleteGitlabRepository');
 
         $this->deletor->deleteRepositoryInProject(
@@ -229,7 +229,7 @@ class GitlabRepositoryDeletorTest extends TestCase
 
         $this->gitlab_repository_project_dao->shouldReceive('removeGitlabRepositoryIntegrationInProject')
             ->once();
-        $this->secret_dao->shouldReceive('deleteGitlabRepositoryWebhookSecret')->once();
+        $this->webhook_dao->shouldReceive('deleteGitlabRepositoryWebhook')->once();
         $this->gitlab_repository_dao->shouldReceive('deleteGitlabRepository')->once();
         $this->gitlab_bot_api_token_dao->shouldReceive('deleteGitlabBotToken')->once();
 

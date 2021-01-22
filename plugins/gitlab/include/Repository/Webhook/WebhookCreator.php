@@ -21,55 +21,97 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-use ForgeConfig;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\GitlabRepository;
-use Tuleap\Gitlab\Repository\Webhook\Secret\SecretGenerator;
+use Tuleap\InstanceBaseURLBuilder;
 
 class WebhookCreator
 {
     /**
-     * @var SecretGenerator
-     */
-    private $secret_generator;
-
-    /**
      * @var ClientWrapper
      */
     private $gitlab_api_client;
+    /**
+     * @var KeyFactory
+     */
+    private $key_factory;
+    /**
+     * @var WebhookDao
+     */
+    private $dao;
+    /**
+     * @var InstanceBaseURLBuilder
+     */
+    private $instance_base_url;
 
-    public function __construct(SecretGenerator $secret_generator, ClientWrapper $gitlab_api_client)
-    {
-        $this->secret_generator  = $secret_generator;
+    public function __construct(
+        KeyFactory $key_factory,
+        WebhookDao $dao,
+        ClientWrapper $gitlab_api_client,
+        InstanceBaseURLBuilder $instance_base_url
+    ) {
         $this->gitlab_api_client = $gitlab_api_client;
+        $this->key_factory       = $key_factory;
+        $this->dao               = $dao;
+        $this->instance_base_url = $instance_base_url;
     }
 
+    /**
+     * @throws WebhookCreationException
+     * @throws \Tuleap\Gitlab\API\GitlabRequestException
+     * @throws \Tuleap\Gitlab\API\GitlabResponseAPIException
+     */
     public function addWebhookInGitlabProject(Credentials $credentials, GitlabRepository $gitlab_repository): void
     {
-        $secret = $this->secret_generator->generateSecretForGitlabRepository($gitlab_repository->getId());
+        $secret = new ConcealedString(\sodium_bin2hex(\random_bytes(32)));
 
-        $webhook_configuration_content = $this->generateWebhookConfiguration($secret);
+        $webhook_id = $this->createGitlabWebhook($credentials, $gitlab_repository, $secret);
 
-        $gitlab_repository_id = $gitlab_repository->getGitlabRepositoryId();
-        $this->gitlab_api_client->postUrl(
-            $credentials,
-            "/projects/$gitlab_repository_id/hooks",
-            $webhook_configuration_content
+        $this->dao->storeWebhook(
+            $gitlab_repository->getId(),
+            $webhook_id,
+            SymmetricCrypto::encrypt($secret, $this->key_factory->getEncryptionKey())
         );
-
-        \sodium_memzero($webhook_configuration_content['token']);
     }
 
-    private function generateWebhookConfiguration(ConcealedString $secret): array
-    {
-        return [
-            'url'   => "https://" . ForgeConfig::get('sys_https_host') . "/plugins/gitlab/repository/webhook",
-            'token' => $secret->getString(),
-            'push_events' => true,
-            'merge_requests_events' => true,
+    /**
+     * @throws WebhookCreationException
+     * @throws \Tuleap\Gitlab\API\GitlabRequestException
+     * @throws \Tuleap\Gitlab\API\GitlabResponseAPIException
+     */
+    private function createGitlabWebhook(
+        Credentials $credentials,
+        GitlabRepository $gitlab_repository,
+        ConcealedString $secret
+    ): int {
+        $base_url = $this->instance_base_url->build();
+
+        $gitlab_repository_id = $gitlab_repository->getGitlabRepositoryId();
+
+        $webhook_configuration = [
+            'url'                     => "$base_url/plugins/gitlab/repository/webhook",
+            'token'                   => $secret->getString(),
+            'push_events'             => true,
+            'merge_requests_events'   => true,
             'enable_ssl_verification' => true
         ];
+
+        $webhook = $this->gitlab_api_client->postUrl(
+            $credentials,
+            "/projects/$gitlab_repository_id/hooks",
+            $webhook_configuration
+        );
+        \sodium_memzero($webhook_configuration['token']);
+
+
+        if (! is_array($webhook) || ! isset($webhook['id'])) {
+            throw new WebhookCreationException();
+        }
+
+        return (int) $webhook['id'];
     }
 }
