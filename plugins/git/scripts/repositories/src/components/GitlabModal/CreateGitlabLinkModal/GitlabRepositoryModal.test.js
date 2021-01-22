@@ -155,7 +155,7 @@ describe("GitlabRepositoryModal", () => {
         await wrapper.vm.$nextTick();
 
         const success_message =
-            "GitLab repository <strong>my-path/my-project</strong> has been successfully integrated!";
+            "GitLab repository my-path/my-project has been successfully integrated!";
         expect(store.commit).toHaveBeenCalledWith("setSuccessMessage", success_message);
     });
 

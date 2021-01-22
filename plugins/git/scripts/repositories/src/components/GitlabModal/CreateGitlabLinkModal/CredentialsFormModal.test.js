@@ -48,7 +48,7 @@ describe("CredentialsFormModal", () => {
         wrapper.setData({
             is_loading: false,
             gitlab_server: "https://example.com",
-            gitlab_project_token: "AFREZF546",
+            gitlab_token: "AFREZF546",
         });
 
         await wrapper.vm.$nextTick();
@@ -73,7 +73,7 @@ describe("CredentialsFormModal", () => {
         wrapper.setData({
             is_loading: false,
             gitlab_server: "https://example.com",
-            gitlab_project_token: "AFREZF546",
+            gitlab_token: "AFREZF546",
             error_message: "Error message",
         });
 
@@ -91,7 +91,7 @@ describe("CredentialsFormModal", () => {
         wrapper.setData({
             is_loading: false,
             gitlab_server: "https://example.com",
-            gitlab_project_token: "AFREZF546",
+            gitlab_token: "AFREZF546",
             gitlab_repositories: null,
         });
 
@@ -112,7 +112,7 @@ describe("CredentialsFormModal", () => {
         wrapper.setData({
             is_loading: false,
             gitlab_server: "",
-            gitlab_project_token: "",
+            gitlab_token: "",
         });
         await wrapper.vm.$nextTick();
         expect(
@@ -126,7 +126,7 @@ describe("CredentialsFormModal", () => {
         wrapper.setData({
             is_loading: false,
             gitlab_server: "",
-            gitlab_project_token: "",
+            gitlab_token: "",
             gitlab_repositories: [],
             empty_message: "No repository is available with your GitLab account",
         });
@@ -145,7 +145,7 @@ describe("CredentialsFormModal", () => {
         wrapper.setData({
             is_loading: false,
             gitlab_server: "https://example.com",
-            gitlab_project_token: "",
+            gitlab_token: "",
             gitlab_repositories: null,
         });
 
@@ -166,7 +166,7 @@ describe("CredentialsFormModal", () => {
         wrapper.setData({
             is_loading: false,
             gitlab_server: "htt://example.com",
-            gitlab_project_token: "Azer789",
+            gitlab_token: "Azer789",
             gitlab_repositories: null,
         });
 
@@ -187,7 +187,7 @@ describe("CredentialsFormModal", () => {
         wrapper.setData({
             is_loading: false,
             gitlab_server: "https://example.com",
-            gitlab_project_token: "AFREZF546",
+            gitlab_token: "AFREZF546",
             gitlab_repositories: null,
             empty_message: "",
         });

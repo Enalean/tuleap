@@ -45,13 +45,13 @@
             v-on:on-get-gitlab-repositories="getGitlabRepositories"
             v-on:on-close-modal="onCloseModal"
             ref="credentialsForm"
-            v-bind:gitlab_project_token="gitlab_project_token"
+            v-bind:gitlab_api_token="gitlab_api_token"
             v-bind:server_url="server_url"
         />
         <list-repositories-modal
             v-else
             v-bind:repositories="gitlab_repositories"
-            v-bind:gitlab_project_token="gitlab_project_token"
+            v-bind:gitlab_api_token="gitlab_api_token"
             v-bind:server_url="server_url"
             v-on:to-back-button="clickBackButton"
             v-on:on-success-close-modal="onSuccessCloseModal"
@@ -73,7 +73,7 @@ export default {
             gitlab_repositories: null,
             back_button_clicked: false,
             modal: null,
-            gitlab_project_token: "",
+            gitlab_api_token: "",
             server_url: "",
         };
     },
@@ -95,7 +95,7 @@ export default {
         getGitlabRepositories({ repositories, token, server_url }) {
             this.back_button_clicked = false;
             this.gitlab_repositories = repositories;
-            this.gitlab_project_token = token;
+            this.gitlab_api_token = token;
             this.server_url = server_url;
         },
         onCloseModal() {
@@ -105,9 +105,7 @@ export default {
         onSuccessCloseModal({ repository }) {
             this.onCloseModal();
             const success_message = this.$gettextInterpolate(
-                this.$gettext(
-                    "GitLab repository <strong>%{ label }</strong> has been successfully integrated!"
-                ),
+                this.$gettext("GitLab repository %{ label } has been successfully integrated!"),
                 {
                     label: repository.path_with_namespace,
                 }
@@ -125,7 +123,7 @@ export default {
             }
             this.gitlab_repositories = null;
             this.back_button_clicked = false;
-            this.gitlab_project_token = "";
+            this.gitlab_api_token = "";
             this.server_url = "";
         },
     },
