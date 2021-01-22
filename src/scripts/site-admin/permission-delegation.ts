@@ -42,8 +42,17 @@ document.addEventListener("DOMContentLoaded", function () {
         ),
         add_user = document.getElementById(
             "siteadmin-permission-delegation-group-details-users-actions-add-input"
-        ),
-        modal_add_group = createModal(add_group_modal_element, { keyboard: true });
+        );
+
+    if (!add_group_modal_element) {
+        return;
+    }
+
+    const modal_add_group = createModal(add_group_modal_element, { keyboard: true });
+
+    if (!add_group) {
+        return;
+    }
 
     add_group.addEventListener("click", () => {
         modal_add_group.toggle();
@@ -96,9 +105,16 @@ document.addEventListener("DOMContentLoaded", function () {
         "#siteadmin-permission-delegation-group-details-users-actions-delete"
     );
 
-    function handlePrimaryButtonState(source_selector, target_button_selector) {
+    function handlePrimaryButtonState(
+        source_selector: string,
+        target_button_selector: string
+    ): void {
         const source_elements = document.querySelectorAll(source_selector),
             target_button = document.querySelector(target_button_selector);
+
+        if (!target_button || !(target_button instanceof HTMLButtonElement)) {
+            return;
+        }
 
         for (const source of source_elements) {
             source.addEventListener("change", () => {
@@ -108,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function initFocus(target_modal) {
+    function initFocus(target_modal: Element): void {
         let first_element = target_modal.querySelector("input:nth-child(2)");
         if (!first_element) {
             first_element = target_modal.querySelector('input[type="submit"]');
@@ -118,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
             first_element = target_modal.querySelector('button[type="submit"]');
         }
 
-        if (first_element) {
+        if (first_element && first_element instanceof HTMLInputElement) {
             first_element.focus();
         }
     }
