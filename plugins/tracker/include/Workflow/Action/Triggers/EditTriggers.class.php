@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\Action\Triggers\TriggersPresenter;
+
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Action
 {
@@ -54,11 +56,11 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
         $this->displayPane($layout);
     }
 
-    private function displayPane(Tracker_IDisplayTrackerLayout $layout)
+    private function displayPane(Tracker_IDisplayTrackerLayout $layout): void
     {
         $this->displayHeader($layout, dgettext('tuleap-tracker', 'Define cross-tracker triggers'));
 
-        $presenter = new Tracker_Workflow_Action_Triggers_TriggersPresenter(
+        $presenter = new TriggersPresenter(
             $this->tracker->getId(),
             $this->url_query,
             $this->token
