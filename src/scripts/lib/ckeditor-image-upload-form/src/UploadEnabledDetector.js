@@ -17,28 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getGettextProvider } from "../gettext/gettext-factory.js";
+const UPLOAD_IS_ENABLED_DATA_SELECTOR = "[data-upload-is-enabled]";
 
-export function isUploadEnabled(element) {
-    return document.body.querySelector("[data-upload-is-enabled]") && element.dataset.uploadUrl;
-}
-
-export function informUsersThatTheyCanPasteImagesInEditor(element) {
-    if (typeof element.dataset.helpId === "undefined") {
-        return;
-    }
-    const help_block = document.getElementById(element.dataset.helpId);
-    if (!help_block) {
-        return;
+export class UploadEnabledDetector {
+    constructor(doc, element) {
+        this.doc = doc;
+        this.element = element;
     }
 
-    if (help_block.textContent) {
-        return;
+    isUploadEnabled() {
+        return Boolean(
+            this.doc.body.querySelector(UPLOAD_IS_ENABLED_DATA_SELECTOR) &&
+                this.element.dataset.uploadUrl
+        );
     }
-
-    const p = document.createElement("p");
-    p.innerText = getGettextProvider().gettext(
-        "You can drag 'n drop or paste image directly in the editor."
-    );
-    help_block.appendChild(p);
 }

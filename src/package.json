@@ -8,7 +8,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@juggle/resize-observer": "^3.2.0",
-    "@tuleap/ckeditor-image-upload": "file://./scripts/lib/ckeditor-image-upload",
+    "@tuleap/ckeditor-image-upload-form": "file:scripts/lib/ckeditor-image-upload-form",
     "@tuleap/date-helper": "file://./scripts/lib/date-helper",
     "@tuleap/filter-inline-table": "file://./scripts/lib/filter-table",
     "@tuleap/list-picker": "file://./scripts/lib/list-picker",
@@ -33,7 +33,6 @@
     "moment": "^2.29.1",
     "mustache": "^4.1.0",
     "node-gettext": "^3.0.0",
-    "pretty-kibibytes": "^4.0.4",
     "regenerator-runtime": "^0.13.5",
     "slugify": "^1.4.6",
     "smooth-scrollbar": "^7.4.1",

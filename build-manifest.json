@@ -13,9 +13,9 @@
             "src": "src/scripts/project/admin/src",
             "po": "src/scripts/project/admin/po"
         },
-        "rich-text-editor": {
-            "src": "src/scripts/tuleap/ckeditor",
-            "po": "src/scripts/tuleap/ckeditor/po"
+        "ckeditor-image-upload-form": {
+            "src": "src/scripts/lib/ckeditor-image-upload-form/src",
+            "po": "src/scripts/lib/ckeditor-image-upload-form/po"
         }
     },
     "gettext-ts": {
