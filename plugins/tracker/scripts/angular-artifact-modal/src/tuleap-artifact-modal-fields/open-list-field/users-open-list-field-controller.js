@@ -22,6 +22,7 @@ import { select2 } from "tlp";
 import { isDefined } from "angular";
 import { has, remove } from "lodash";
 import { searchUsers } from "../../rest/rest-service.js";
+import { initOpenListFieldLabelAndSelectIds } from "./open-list-field-ids-initializer";
 
 export default OpenListFieldController;
 
@@ -45,6 +46,12 @@ function OpenListFieldController($element, $compile, $rootScope, $templateCache)
         if (!open_list_element) {
             return;
         }
+
+        initOpenListFieldLabelAndSelectIds(
+            $element[0],
+            open_list_element,
+            self.value_model.field_id
+        );
 
         select2(open_list_element, {
             minimumInputLength: 3,
