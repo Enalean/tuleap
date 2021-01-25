@@ -1372,7 +1372,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     abstract public function canBeRemovedFromUsage();
 
-    protected $cache_permissions;
+    protected $cache_permissions = [];
     /**
      * get the permissions for this field
      *
@@ -1395,6 +1395,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function setCachePermission($ugroup_id, $permission_type)
     {
         $this->cache_permissions[$ugroup_id][] = $permission_type;
+    }
+
+    public function hasCachedPermissions(): bool
+    {
+        return ! empty($this->cache_permissions);
     }
 
     /**
