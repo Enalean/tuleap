@@ -44,9 +44,9 @@ class ClientBotMattermost
 
     public function __construct()
     {
-        $this->http_client = HttpClientFactory::createClient();
+        $this->http_client     = HttpClientFactory::createClient();
         $this->request_factory = HTTPFactoryBuilder::requestFactory();
-        $this->stream_factory = HTTPFactoryBuilder::streamFactory();
+        $this->stream_factory  = HTTPFactoryBuilder::streamFactory();
     }
 
     public function sendMessage(string $post_string, string $url): void

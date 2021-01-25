@@ -72,7 +72,7 @@ class BotMattermostPlugin extends Plugin
     public function burning_parrot_get_javascript_files($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $asset   = new IncludeAssets(
+            $asset                        = new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/botmattermost/',
                 '/assets/botmattermost'
             );
@@ -83,8 +83,8 @@ class BotMattermostPlugin extends Plugin
     public function burning_parrot_get_stylesheets(array $params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $variant = $params['variant'];
-            $asset   = new IncludeAssets(
+            $variant                 = $params['variant'];
+            $asset                   = new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/botmattermost/',
                 '/assets/botmattermost'
             );

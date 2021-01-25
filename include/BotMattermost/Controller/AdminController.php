@@ -57,10 +57,10 @@ class AdminController
         EventManager $event_manager,
         BaseLanguage $language
     ) {
-        $this->csrf                 = $csrf;
-        $this->bot_factory          = $bot_factory;
-        $this->event_manager        = $event_manager;
-        $this->language             = $language;
+        $this->csrf          = $csrf;
+        $this->bot_factory   = $bot_factory;
+        $this->event_manager = $event_manager;
+        $this->language      = $language;
     }
 
     public function displayIndex(BaseLayout $response)

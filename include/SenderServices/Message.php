@@ -25,7 +25,7 @@ use Tuleap\BotMattermostGit\SenderServices\Attachment;
 class Message
 {
 
-    private $text = '';
+    private $text        = '';
     private $attachments = [];
 
     public function getText()

@@ -33,9 +33,9 @@ class BotDao extends DataAccessObject
 
     public function addBot($bot_name, $bot_webhook_url, $bot_avatar_url)
     {
-        $name           = $this->da->quoteSmart($bot_name);
-        $webhook_url    = $this->da->quoteSmart($bot_webhook_url);
-        $avatar_url     = $this->da->quoteSmart($bot_avatar_url);
+        $name        = $this->da->quoteSmart($bot_name);
+        $webhook_url = $this->da->quoteSmart($bot_webhook_url);
+        $avatar_url  = $this->da->quoteSmart($bot_avatar_url);
 
         $sql = "INSERT INTO plugin_botmattermost_bot (name, webhook_url, avatar_url)
                 VALUES ($name, $webhook_url, $avatar_url)";

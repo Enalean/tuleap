@@ -49,17 +49,17 @@ class AdminControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->csrf                 = \Mockery::spy(CSRFSynchronizerToken::class);
-        $this->bot_factory          = \Mockery::spy(\Tuleap\BotMattermost\Bot\BotFactory::class);
-        $this->event_manager        = \Mockery::spy(EventManager::class);
-        $this->admin_controller     = new AdminController(
+        $this->csrf             = \Mockery::spy(CSRFSynchronizerToken::class);
+        $this->bot_factory      = \Mockery::spy(\Tuleap\BotMattermost\Bot\BotFactory::class);
+        $this->event_manager    = \Mockery::spy(EventManager::class);
+        $this->admin_controller = new AdminController(
             $this->csrf,
             $this->bot_factory,
             $this->event_manager,
             \Mockery::spy(BaseLanguage::class)
         );
 
-        $this->http_request     = \Mockery::spy(HTTPRequest::class);
+        $this->http_request = \Mockery::spy(HTTPRequest::class);
 
         HTTPRequest::setInstance($this->http_request);
     }

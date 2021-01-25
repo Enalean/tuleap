@@ -34,10 +34,10 @@ class Bot
         $webhook_url,
         $avatar_url
     ) {
-        $this->id             = $id;
-        $this->name           = $name;
-        $this->webhook_url    = $webhook_url;
-        $this->avatar_url     = $avatar_url;
+        $this->id          = $id;
+        $this->name        = $name;
+        $this->webhook_url = $webhook_url;
+        $this->avatar_url  = $avatar_url;
     }
 
     public function getId()
