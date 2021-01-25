@@ -128,7 +128,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
 
     public function burning_parrot_get_javascript_files(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $asset = $this->getIncludeAssets();
+        $asset                        = $this->getIncludeAssets();
         $params['javascript_files'][] = $asset->getFileURL('modal-burning-parrot.js');
 
         if (strpos($_SERVER['REQUEST_URI'], '/help/') === 0) {
