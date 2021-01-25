@@ -51,10 +51,10 @@ export interface Item {
     can_user_manage: boolean;
     lock_info: LockInfo;
     metadata: Array<Metadata>;
+    parent_id: number | null;
 }
 
 export interface Folder extends Item {
-    parent_id: number | null;
     is_expanded: boolean;
     permissions_for_groups: Permissions;
     folder_properties: FolderProperties;

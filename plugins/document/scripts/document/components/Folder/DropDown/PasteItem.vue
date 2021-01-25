@@ -49,7 +49,7 @@ import {
     doesFolderNameAlreadyExist,
     doesDocumentNameAlreadyExist,
 } from "../../../helpers/metadata-helpers/check-item-title.js";
-import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers.js";
+import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers";
 
 export default {
     name: "PasteItem",

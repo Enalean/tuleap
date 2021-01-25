@@ -18,7 +18,8 @@
  *
  */
 
-import { isItemDestinationIntoItself } from "./clipboard-helpers.js";
+import { isItemDestinationIntoItself } from "./clipboard-helpers";
+import { Folder, ItemFile } from "../../type";
 
 describe("isItemDestinationIntoItself", () => {
     it("Is into itself when destination and item are the same", () => {
@@ -30,19 +31,19 @@ describe("isItemDestinationIntoItself", () => {
             {
                 id: 1,
                 parent_id: 0,
-            },
+            } as Folder,
             {
                 id: 2,
                 parent_id: 1,
-            },
+            } as ItemFile,
             {
                 id: 3,
                 parent_id: 2,
-            },
+            } as ItemFile,
             {
                 id: 4,
                 parent_id: 3,
-            },
+            } as ItemFile,
         ];
         expect(isItemDestinationIntoItself(folder_content, 2, 4)).toEqual(true);
     });
@@ -52,7 +53,7 @@ describe("isItemDestinationIntoItself", () => {
             {
                 id: 3,
                 parent_id: 1,
-            },
+            } as ItemFile,
         ];
         expect(isItemDestinationIntoItself(folder_content, 2, 3)).toEqual(false);
     });
@@ -62,11 +63,11 @@ describe("isItemDestinationIntoItself", () => {
             {
                 id: 1,
                 parent_id: 0,
-            },
+            } as Folder,
             {
                 id: 2,
                 parent_id: 1,
-            },
+            } as ItemFile,
         ];
         expect(isItemDestinationIntoItself(folder_content, 3, 2)).toEqual(false);
     });
