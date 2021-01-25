@@ -595,6 +595,15 @@ msgid "Artifact %1$s successfully deleted"
 msgstr "L'artefact %1$s a été supprimé"
 
 #, php-format
+msgid ""
+"Artifact %s was linked as child of the current artifact but is not part of "
+"hierarchy. It will not be taken into account in triggers."
+msgstr ""
+"L'artéfact %s a été lié à cet artéfact en tant qu'enfant mais ne fait pas "
+"part de la hiérarchie définie. Il ne sera donc pas pris en compte par les "
+"déclencheurs."
+
+#, php-format
 msgid "Artifact (%s) does not belong to this tracker."
 msgstr "L'artéfact (%s) n'appartient pas à ce tracker."
 
@@ -2109,6 +2118,13 @@ msgid "One tracker or more is duplicated in list: %s"
 msgstr "Un tracker ou plus est dupliqué : %s"
 
 msgid ""
+"Only children that are part of the defined hierarchy will be taken into "
+"account by triggers."
+msgstr ""
+"Seuls les enfants qui font partis de la hiérarchie seront pris en compte "
+"par les déclencheurs."
+
+msgid ""
 "Only fields selected in title or description semantic can be required if you "
 "want to create artifacts by email."
 msgstr ""
@@ -3408,8 +3424,8 @@ msgid ""
 "There is a hierarchy defined between \"%s\" and \"%s\" but the link between "
 "this artifact and %s is not parent/child."
 msgstr ""
-"Il y'a une hiérarchie définie entre \"%s\" et \"%s\", mais le lien entre"
-"cet artéfact et %s n'est pas défini comme parent/enfant."
+"Il y'a une hiérarchie définie entre \"%s\" et \"%s\", mais le lien entre cet "
+"artéfact et %s n'est pas défini comme parent/enfant."
 
 #, php-format
 msgid "There is no field with ID:%1$s"
