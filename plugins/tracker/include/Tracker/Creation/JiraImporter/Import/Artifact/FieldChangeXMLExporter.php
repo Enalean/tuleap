@@ -27,9 +27,11 @@ use DateTimeImmutable;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ArtifactLinkValue;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
+use Tuleap\Tracker\XML\Exporter\FieldChange\ArtifactLinkChange;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
@@ -219,13 +221,16 @@ class FieldChangeXMLExporter
                 );
             }
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS) {
-            assert(is_array($value));
+            assert($value instanceof ArtifactLinkValue);
 
             $field_values = [];
-            foreach ($value as $link) {
+            foreach ($value->issuelinks as $link) {
                 if (isset($link['outwardIssue'])) {
-                    $field_values[] = (int) $link['outwardIssue']['id'];
+                    $field_values[] = new ArtifactLinkChange((int) $link['outwardIssue']['id']);
                 }
+            }
+            foreach ($value->subtasks as $link) {
+                $field_values[] = new ArtifactLinkChange((int) $link['id'], \Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
             }
             $this->field_change_artifact_links_builder->build($changeset_node, $mapping->getFieldName(), $field_values);
         }

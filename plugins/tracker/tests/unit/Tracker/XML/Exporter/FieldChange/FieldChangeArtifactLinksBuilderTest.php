@@ -40,7 +40,7 @@ final class FieldChangeArtifactLinksBuilderTest extends TestCase
         $this->builder = new FieldChangeArtifactLinksBuilder(new \XML_SimpleXMLCDATAFactory());
     }
 
-    public function testItExportOutwardLinks(): void
+    public function testItExportBareLinks(): void
     {
         $changeset_node = new \SimpleXMLElement('<changeset/>');
 
@@ -48,7 +48,7 @@ final class FieldChangeArtifactLinksBuilderTest extends TestCase
             $changeset_node,
             'Links',
             [
-                '10089', '10090'
+                new ArtifactLinkChange(10089), new ArtifactLinkChange(10090)
             ]
         );
 
@@ -58,5 +58,27 @@ final class FieldChangeArtifactLinksBuilderTest extends TestCase
         self::assertCount(2, $changeset_node->field_change->value);
         self::assertEquals('10089', (string) $changeset_node->field_change->value[0]);
         self::assertEquals('10090', (string) $changeset_node->field_change->value[1]);
+    }
+
+    public function testItExportLinksWithType(): void
+    {
+        $changeset_node = new \SimpleXMLElement('<changeset/>');
+
+        $this->builder->build(
+            $changeset_node,
+            'Links',
+            [
+                new ArtifactLinkChange(10089, 'child'), new ArtifactLinkChange(10090)
+            ]
+        );
+
+        self::assertNotNull($changeset_node->field_change);
+        self::assertEquals('art_link', (string) $changeset_node->field_change['type']);
+        self::assertEquals('Links', (string) $changeset_node->field_change['field_name']);
+        self::assertCount(2, $changeset_node->field_change->value);
+        self::assertEquals('10089', (string) $changeset_node->field_change->value[0]);
+        self::assertEquals('child', (string) $changeset_node->field_change->value[0]['nature']);
+        self::assertEquals('10090', (string) $changeset_node->field_change->value[1]);
+        self::assertFalse(isset($changeset_node->field_change->value[1]['nature']));
     }
 }

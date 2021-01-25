@@ -40,7 +40,7 @@ class FieldChangeArtifactLinksBuilder
     }
 
     /**
-     * @param int[] $values
+     * @param ArtifactLinkChange[] $values
      */
     public function build(
         SimpleXMLElement $changeset_xml,
@@ -52,7 +52,10 @@ class FieldChangeArtifactLinksBuilder
         $field_change_node->addAttribute('field_name', $field_name);
 
         foreach ($values as $value) {
-            $this->simple_xml_cdata_factory->insert($field_change_node, 'value', (string) $value);
+            $element = $this->simple_xml_cdata_factory->insert($field_change_node, 'value', $value->id);
+            if ($value->hasType()) {
+                $element->addAttribute('nature', $value->type);
+            }
         }
     }
 }

@@ -49,6 +49,7 @@ class AlwaysThereFieldsExporter
     public const JIRA_CREATED_BY      = "creator";
 
     public const JIRA_ISSUE_LINKS_NAME      = 'issuelinks';
+    public const JIRA_SUB_TASKS_NAME        = 'subtasks';
     public const JIRA_CROSS_REFERENCES_NAME = 'org.tuleap.crossreferences'; // doesn't exist at jira side
 
     private const JIRA_RESOLUTION_DATE_NAME = "resolutiondate";
