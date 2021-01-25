@@ -73,6 +73,12 @@ export interface GitLabData {
     gitlab_repository_id: number;
 }
 
+export interface GitLabDataWithToken {
+    gitlab_bot_api_token: string;
+    gitlab_repository_url: string;
+    gitlab_repository_id: number;
+}
+
 export interface Folder {
     is_folder: boolean;
     label: string;

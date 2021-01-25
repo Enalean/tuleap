@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,7 @@ export {
     getGitlabRepositoryList,
     deleteIntegrationGitlab,
     postGitlabRepository,
+    patchGitlabRepository,
 };
 
 const USER_PREFERENCE_KEY = "are_git_repositories_sorted_by_path";
@@ -153,5 +154,16 @@ function postGitlabRepository({
     return post("/api/gitlab_repositories", {
         headers,
         body,
+    });
+}
+
+function patchGitlabRepository(body) {
+    const headers = {
+        "content-type": "application/json",
+    };
+
+    return patch("/api/gitlab_repositories", {
+        headers,
+        body: JSON.stringify(body),
     });
 }

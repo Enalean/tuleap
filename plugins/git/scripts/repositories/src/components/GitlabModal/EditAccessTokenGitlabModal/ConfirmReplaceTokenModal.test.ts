@@ -19,12 +19,12 @@
 
 import { createStoreMock } from "@tuleap/core/scripts/vue-components/store-wrapper-jest";
 import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
-import AccessTokenFormModal from "./AccessTokenFormModal.vue";
+import ConfirmReplaceTokenModal from "./ConfirmReplaceTokenModal.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import { Store } from "vuex-mock-store";
 
-describe("AccessTokenFormModal", () => {
+describe("ConfirmReplaceTokenModal", () => {
     let store_options = {},
         propsData = {},
         localVue,
@@ -37,7 +37,7 @@ describe("AccessTokenFormModal", () => {
         };
     });
 
-    function instantiateComponent(): Wrapper<AccessTokenFormModal> {
+    function instantiateComponent(): Wrapper<ConfirmReplaceTokenModal> {
         localVue = createLocalVue();
         localVue.use(VueDOMPurifyHTML);
         localVue.use(GetTextPlugin, {
@@ -47,14 +47,14 @@ describe("AccessTokenFormModal", () => {
 
         store = createStoreMock(store_options);
 
-        return shallowMount(AccessTokenFormModal, {
+        return shallowMount(ConfirmReplaceTokenModal, {
             propsData,
             mocks: { $store: store },
             localVue,
         });
     }
 
-    it("When the user check token, Then the submit button is disabled and icon spin is displayed and api is called", async () => {
+    it("When the user confirms new token, Then api is called and event is emitted", async () => {
         propsData = {
             repository: {
                 gitlab_data: {
@@ -63,43 +63,32 @@ describe("AccessTokenFormModal", () => {
                 },
                 normalized_path: "my/repo",
             },
-            gitlab_token: "",
+            gitlab_new_token: "AZRERT123",
         };
 
         const wrapper = instantiateComponent();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeFalsy();
 
-        wrapper.setData({
-            gitlab_new_token: "AFREZF546",
-        });
-
-        await wrapper.vm.$nextTick();
-
-        wrapper
-            .find("[data-test=edit-token-gitlab-repository-modal-form]")
-            .trigger("submit.prevent");
+        wrapper.find("[data-test=button-confirm-edit-token-gitlab]").trigger("click");
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.find("[data-test=button-check-new-token-gitlab-repository]").attributes()
-                .disabled
+            wrapper.find("[data-test=button-confirm-edit-token-gitlab]").attributes().disabled
         ).toBeTruthy();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeTruthy();
 
-        expect(store.dispatch).toHaveBeenCalledWith("getGitlabRepositoryFromId", {
-            credentials: {
-                server_url: "https://example.com/",
-                token: "AFREZF546",
-            },
-            id: 12,
+        expect(store.dispatch).toHaveBeenCalledWith("updateBotApiTokenGitlab", {
+            gitlab_bot_api_token: "AZRERT123",
+            gitlab_repository_id: 12,
+            gitlab_repository_url: "https://example.com/my/repo",
         });
 
-        const on_get_new_token = wrapper.emitted()["on-get-new-token-gitlab"];
-        if (!on_get_new_token) {
-            throw new Error("Should have emitted on-get-new-token");
+        const on_success_edit_token = wrapper.emitted()["on-success-edit-token"];
+        if (!on_success_edit_token) {
+            throw new Error("Should have emitted on-success-edit-token");
         }
 
-        expect(on_get_new_token[0]).toEqual([{ token: "AFREZF546" }]);
+        expect(on_success_edit_token[0]).toEqual([]);
     });
 
     it("When there is an error message, Then it's displayed", async () => {
@@ -111,48 +100,26 @@ describe("AccessTokenFormModal", () => {
                 },
                 normalized_path: "my/repo",
             },
-            gitlab_token: "",
+            gitlab_new_token: "AZRERT123",
         };
 
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            error_message: "Error message",
+            message_error_rest: "Error message",
         });
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-fail-check-new-token]").text()).toEqual(
+        expect(wrapper.find("[data-test=gitlab-fail-patch-edit-token]").text()).toEqual(
             "Error message"
         );
-    });
-
-    it("When there are no token and server url, Then submit button is disabled", async () => {
-        propsData = {
-            repository: {
-                gitlab_data: {
-                    gitlab_repository_url: "https://example.com/my/repo",
-                    gitlab_repository_id: 12,
-                },
-                normalized_path: "my/repo",
-            },
-            gitlab_token: "",
-        };
-
-        const wrapper = instantiateComponent();
-        wrapper.setData({
-            gitlab_new_token: "",
-        });
-
-        await wrapper.vm.$nextTick();
-
         expect(
-            wrapper.find("[data-test=button-check-new-token-gitlab-repository]").attributes()
-                .disabled
+            wrapper.find("[data-test=button-confirm-edit-token-gitlab]").attributes().disabled
         ).toBeTruthy();
     });
 
-    it("When user submit but token is empty, Then error message is displayed", async () => {
+    it("When user submit but there are errors, Then nothing happens", async () => {
         propsData = {
             repository: {
                 gitlab_data: {
@@ -161,25 +128,21 @@ describe("AccessTokenFormModal", () => {
                 },
                 normalized_path: "my/repo",
             },
-            gitlab_token: "",
+            gitlab_new_token: "AZRERT123",
         };
 
         const wrapper = instantiateComponent();
 
         wrapper.setData({
-            gitlab_new_token: "",
+            message_error_rest: "Error message",
         });
 
         await wrapper.vm.$nextTick();
 
-        wrapper
-            .find("[data-test=edit-token-gitlab-repository-modal-form]")
-            .trigger("submit.prevent");
+        wrapper.find("[data-test=button-confirm-edit-token-gitlab]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=gitlab-fail-check-new-token]").text()).toEqual(
-            "You must provide a valid GitLab API token"
-        );
+        expect(store.dispatch).not.toHaveBeenCalled();
     });
 
     it("When api throws an error, Then error message is displayed", async () => {
@@ -191,28 +154,28 @@ describe("AccessTokenFormModal", () => {
                 },
                 normalized_path: "my/repo",
             },
-            gitlab_token: "",
+            gitlab_new_token: "AZRERT123",
         };
 
         const wrapper = instantiateComponent();
-        jest.spyOn(store, "dispatch").mockReturnValue(Promise.reject());
-
-        wrapper.setData({
-            gitlab_new_token: "AZERTY123",
-        });
-
-        await wrapper.vm.$nextTick();
-
-        wrapper
-            .find("[data-test=edit-token-gitlab-repository-modal-form]")
-            .trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.vm.$data.error_message).toEqual(
-            "Submitted token is invalid to access to this repository on this GitLab server."
+        jest.spyOn(store, "dispatch").mockReturnValue(
+            Promise.reject({
+                response: {
+                    status: 404,
+                    json: (): Promise<{ error: { code: number; message: string } }> =>
+                        Promise.resolve({ error: { code: 404, message: "Error on server" } }),
+                },
+            })
         );
+
+        wrapper.find("[data-test=button-confirm-edit-token-gitlab]").trigger("click");
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$data.message_error_rest).toEqual("404 Error on server");
     });
-    it("When user cancel, Then data are reset", async () => {
+
+    it("When user back to form, Then event is emitted", async () => {
         propsData = {
             repository: {
                 gitlab_data: {
@@ -221,31 +184,19 @@ describe("AccessTokenFormModal", () => {
                 },
                 normalized_path: "my/repo",
             },
-            gitlab_token: "",
+            gitlab_new_token: "AZRERT123",
         };
 
         const wrapper = instantiateComponent();
-        wrapper.setData({
-            gitlab_new_token: "AZERTY123",
-            error_message: "Error",
-        });
 
+        wrapper.find("[data-test=button-gitlab-edit-token-back]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.gitlab_new_token).toEqual("AZERTY123");
-        expect(wrapper.vm.$data.error_message).toEqual("Error");
-
-        wrapper.find("[data-test=button-cancel-new-token-gitlab-repository]").trigger("click");
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.vm.$data.gitlab_new_token).toEqual("");
-        expect(wrapper.vm.$data.error_message).toEqual("");
-
-        const on_close_modal = wrapper.emitted()["on-close-modal"];
-        if (!on_close_modal) {
-            throw new Error("Should have emitted on-close-modal");
+        const on_back_button = wrapper.emitted()["on-back-button"];
+        if (!on_back_button) {
+            throw new Error("Should have emitted on-back-button");
         }
 
-        expect(on_close_modal[0]).toStrictEqual([]);
+        expect(on_back_button[0]).toStrictEqual([]);
     });
 });

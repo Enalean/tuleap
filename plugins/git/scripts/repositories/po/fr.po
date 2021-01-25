@@ -144,6 +144,9 @@ msgstr "Aucun nom de dépôt ne correspond à votre recherche."
 msgid "Oops, an error occurred!"
 msgstr "Oups, une erreur s'est produite !"
 
+msgid "Please confirm your action."
+msgstr "Merci de confirmer votre action."
+
 msgid "Project not found"
 msgstr "Projet non trouvé"
 
@@ -168,6 +171,9 @@ msgstr ""
 "autorisés : a-zA-Z0-9/_.-, la longueur maximale est de 255 caractères, pas "
 "de slashes au début ou à la fin, les noms des repertoires ne doivent pas "
 "finir par \".git\"."
+
+msgid "Save new token"
+msgstr "Sauvegarder le nouveau jeton d'accés"
 
 msgid "Server url is invalid"
 msgstr "L'url du serveur est invalide"
@@ -203,6 +209,11 @@ msgstr ""
 msgid "This repository is already integrated."
 msgstr "Ce dépôt est déjà intégré."
 
+msgid "Token of remote repository %{ label } has been successfully updated."
+msgstr ""
+"Le jeton d'accés du dépot GitLab %{ label } a été mis à "
+"jour avec succés."
+
 msgid "Unlink GitLab repository?"
 msgstr "Voulez-vous supprimer l'intégration du dépôt GitLab ?"
 
@@ -221,6 +232,13 @@ msgid ""
 msgstr ""
 "Hé, une petite minute. Vous allez supprimer l'intégration du dépot GitLab "
 "<strong>%{ label }</strong>. Merci de confirmer votre action."
+
+msgid ""
+"You are about to update the token used to integrate %{ label } repository of "
+"%{ instance_url }."
+msgstr ""
+"Vous allez mettre à jours le jeton d'accès utilisé pour intégrer le dépôt "
+"%{ label } sur %{ instance_url }."
 
 msgid ""
 "You don't have permission to create Git repositories as you are not Git "

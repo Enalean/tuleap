@@ -24,6 +24,7 @@ import {
     deleteRepositoriesSortedByPathUserPreference,
     getGitlabRepositoryList as getGitlabRepository,
     postGitlabRepository,
+    patchGitlabRepository,
 } from "../api/rest-querier.js";
 import { getProjectId, getUserId } from "../repository-list-presenter";
 import {
@@ -220,4 +221,19 @@ export async function postIntegrationGitlab(context, data) {
     const response = await postGitlabRepository(data);
 
     return response.json();
+}
+
+export async function updateBotApiTokenGitlab(
+    context,
+    { gitlab_bot_api_token, gitlab_repository_id, gitlab_repository_url }
+) {
+    const body = {
+        update_bot_api_token: {
+            gitlab_bot_api_token,
+            gitlab_repository_id,
+            gitlab_repository_url,
+        },
+    };
+
+    await patchGitlabRepository(body);
 }
