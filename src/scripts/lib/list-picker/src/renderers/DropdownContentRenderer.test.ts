@@ -24,14 +24,14 @@ import {
 import { DropdownContentRenderer } from "./DropdownContentRenderer";
 import { BaseComponentRenderer } from "./BaseComponentRenderer";
 import { ItemsMapManager } from "../items/ItemsMapManager";
-import { GetText } from "../../../../tuleap/gettext/gettext-init";
+import { GettextProvider } from "@tuleap/gettext";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
 
 describe("DropDownContentRenderer", () => {
     let select: HTMLSelectElement,
         dropdown: Element,
         dropdown_list: Element,
-        gettext_provider: GetText,
+        gettext_provider: GettextProvider,
         items_map_manager: ItemsMapManager;
 
     function getDropdownContentRenderer(): DropdownContentRenderer {
@@ -47,7 +47,7 @@ describe("DropDownContentRenderer", () => {
         select = document.createElement("select");
         gettext_provider = {
             gettext: (english: string) => english,
-        } as GetText;
+        } as GettextProvider;
         items_map_manager = new ItemsMapManager(new ListItemMapBuilder(select));
     });
 

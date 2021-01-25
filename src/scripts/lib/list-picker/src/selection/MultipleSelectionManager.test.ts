@@ -22,7 +22,7 @@ import { ListPickerItem } from "../type";
 import { appendSimpleOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { MultipleSelectionManager } from "./MultipleSelectionManager";
-import { GetText } from "../../../../tuleap/gettext/gettext-init";
+import { GettextProvider } from "@tuleap/gettext";
 import { expectChangeEventToHaveBeenFiredOnSourceSelectBox } from "../test-helpers/selection-manager-test-helpers";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
@@ -33,7 +33,7 @@ describe("MultipleSelectionManager", () => {
         item_map_manager: ItemsMapManager,
         selection_container: Element,
         search_input: HTMLInputElement,
-        gettext_provider: GetText,
+        gettext_provider: GettextProvider,
         item_1: ListPickerItem,
         item_2: ListPickerItem,
         openListPicker: () => void;
@@ -61,7 +61,7 @@ describe("MultipleSelectionManager", () => {
 
         gettext_provider = {
             gettext: (english: string) => english,
-        } as GetText;
+        } as GettextProvider;
         search_input = search_field_element;
         selection_container = selection_element;
         openListPicker = jest.fn();

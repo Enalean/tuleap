@@ -18,24 +18,7 @@
  */
 
 declare module "*.po" {
-    // See https://github.com/smhg/gettext-parser for the file format reference
-    interface Translation {
-        readonly msgid: string;
-        readonly msgstr: string;
-    }
-
-    interface TranslatedStrings {
-        readonly [key: string]: Translation;
-    }
-
-    export interface Contexts {
-        readonly [key: string]: TranslatedStrings;
-    }
-
-    export interface GettextParserPoFile {
-        readonly translations: Contexts;
-    }
-
+    import { GettextParserPoFile } from "@tuleap/gettext";
     const content: GettextParserPoFile;
     export default content;
 }
