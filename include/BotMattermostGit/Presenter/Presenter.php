@@ -41,10 +41,10 @@ class Presenter
         array $bots,
         $bot_assigned
     ) {
-        $this->csrf_token    = $csrf_token;
-        $this->repository    = $repository;
-        $this->bots          = $bots;
-        $this->bot_assigned  = $bot_assigned;
+        $this->csrf_token   = $csrf_token;
+        $this->repository   = $repository;
+        $this->bots         = $bots;
+        $this->bot_assigned = $bot_assigned;
 
         $this->project_id    = $this->repository->getProjectId();
         $this->repository_id = $this->repository->getId();
@@ -54,17 +54,17 @@ class Presenter
         $this->description            = dgettext('tuleap-botmattermost_git', 'Choose a bot to send message in Mattermost when push occurs in this repository.');
         $this->description_create_bot = dgettext('tuleap-botmattermost_git', 'If you don\'t see a Bot linked to your Mattermost project/team, please contact your administrator.');
 
-        $this->modal_add_title          = dgettext('tuleap-botmattermost_git', 'Add notification');
-        $this->modal_edit_title         = dgettext('tuleap-botmattermost_git', 'Edit notification');
-        $this->modal_delete_title       = dgettext('tuleap-botmattermost_git', 'Delete notification');
-        $this->modal_delete_content     = dgettext('tuleap-botmattermost_git', 'You are about to remove the notification. Please confirm your action.');
+        $this->modal_add_title      = dgettext('tuleap-botmattermost_git', 'Add notification');
+        $this->modal_edit_title     = dgettext('tuleap-botmattermost_git', 'Edit notification');
+        $this->modal_delete_title   = dgettext('tuleap-botmattermost_git', 'Delete notification');
+        $this->modal_delete_content = dgettext('tuleap-botmattermost_git', 'You are about to remove the notification. Please confirm your action.');
 
-        $this->label_bot_list                  = dgettext('tuleap-botmattermost_git', 'Bot list:');
-        $this->label_bot_name                  = dgettext('tuleap-botmattermost_git', 'Bot name');
-        $this->label_avatar_url                = dgettext('tuleap-botmattermost_git', 'Avatar URL');
-        $this->label_channels_handles          = dgettext('tuleap-botmattermost_git', 'Channel handles list');
-        $this->input_channels_handles          = dgettext('tuleap-botmattermost_git', 'channel1, channel2, channel3');
-        $this->purified_info_channels_handles  = Codendi_HTMLPurifier::instance()->purify(
+        $this->label_bot_list                 = dgettext('tuleap-botmattermost_git', 'Bot list:');
+        $this->label_bot_name                 = dgettext('tuleap-botmattermost_git', 'Bot name');
+        $this->label_avatar_url               = dgettext('tuleap-botmattermost_git', 'Avatar URL');
+        $this->label_channels_handles         = dgettext('tuleap-botmattermost_git', 'Channel handles list');
+        $this->input_channels_handles         = dgettext('tuleap-botmattermost_git', 'channel1, channel2, channel3');
+        $this->purified_info_channels_handles = Codendi_HTMLPurifier::instance()->purify(
             dgettext('tuleap-botmattermost_git', 'The channel handle is display in its URL<br>example: https://example.com/myGroup/channels/mychannel<br>handle: mychannel'),
             CODENDI_PURIFIER_LIGHT
         );

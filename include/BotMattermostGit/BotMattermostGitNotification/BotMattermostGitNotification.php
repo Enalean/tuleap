@@ -31,8 +31,8 @@ class BotMattermostGitNotification
         Bot $bot,
         $channels
     ) {
-        $this->bot            = $bot;
-        $this->channels       = $channels;
+        $this->bot      = $bot;
+        $this->channels = $channels;
     }
 
     public function getBot()

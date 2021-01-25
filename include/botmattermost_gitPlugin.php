@@ -99,7 +99,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
     public function git_additional_notifications(array $params)
     {
         if ($this->isAllowed($params['repository']->getProjectId())) {
-            $render = $this->getController($params['request'])->render($params['repository']);
+            $render            = $this->getController($params['request'])->render($params['repository']);
             $params['output'] .= $render;
         }
     }
@@ -107,7 +107,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
     public function postReceiveExecuteEvent(PostReceiveExecuteEvent $event): void
     {
         $repository = $event->getRepository();
-        $logger = $this->getLogger();
+        $logger     = $this->getLogger();
         if ($this->isAllowed($repository->getProjectId()) && ! $event->isATechnicalReference()) {
             $git_notification_sender = new GitNotificationSender(
                 $this->getSender($logger),

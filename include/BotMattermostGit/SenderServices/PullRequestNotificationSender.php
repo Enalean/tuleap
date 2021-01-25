@@ -48,10 +48,10 @@ class PullRequestNotificationSender
         PullRequestNotificationBuilder $notification_builder,
         LoggerInterface $logger
     ) {
-        $this->sender                 = $sender;
-        $this->bot_git_factory        = $bot_git_factory;
-        $this->notification_builder   = $notification_builder;
-        $this->logger                 = $logger;
+        $this->sender               = $sender;
+        $this->bot_git_factory      = $bot_git_factory;
+        $this->notification_builder = $notification_builder;
+        $this->logger               = $logger;
     }
 
     public function send(

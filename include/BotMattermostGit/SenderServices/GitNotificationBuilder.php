@@ -39,7 +39,7 @@ class GitNotificationBuilder
     public function buildNotificationText(GitRepository $repository, PFUser $user, string $newrev, string $refname): string
     {
         $this->logger->debug('git repository: #' . $repository->getId() . ' ' . $repository->getName());
-        $link       = $this->makeLinkReview($repository, $newrev);
+        $link = $this->makeLinkReview($repository, $newrev);
 
         return $user->getName() . " " .
         dgettext('tuleap-botmattermost_git', 'pushed a new commit to') .
