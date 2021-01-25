@@ -59,6 +59,6 @@ final class ConfigurationChecker
             return null;
         }
 
-        return $this->plan_program_increment_builder->buildProgramIncrementFromProjectId($program->getId(), $user);
+        return $this->plan_program_increment_builder->buildTrackerProgramIncrementFromProjectId($program->getId(), $user);
     }
 }

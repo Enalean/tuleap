@@ -85,7 +85,7 @@ final class ArtifactCreatedHandlerTest extends TestCase
         $artifact->setTracker($tracker);
         $changeset = new \Tracker_Artifact_Changeset(21, $artifact, 36, 12345678, '');
 
-        $this->build_plan_configuration->shouldReceive('buildProgramIncrementFromProjectId')
+        $this->build_plan_configuration->shouldReceive('buildTrackerProgramIncrementFromProjectId')
             ->andReturn(new ScaledAgileTracker($tracker));
 
         $this->pending_artifact_creation_store->shouldReceive('addArtifactToPendingCreation')

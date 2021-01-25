@@ -38,6 +38,7 @@ use Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck\StatusSemanticCheck
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\CreationCheck\WorkflowChecker;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ArtifactLinkFieldAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\DescriptionFieldAdapter;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfigurationBuilder;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ReplicationDataAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\Source\NatureAnalyzerException;
 use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\Source\SourceArtifactNatureAnalyzer;
@@ -58,6 +59,7 @@ use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ScaledAgile\Adapter\ProjectAdapter;
 use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
 use Tuleap\ScaledAgile\DisplayProgramBacklogController;
+use Tuleap\ScaledAgile\EventRedirectAfterArtifactCreationOrUpdateHandler;
 use Tuleap\ScaledAgile\Program\Backlog\AsynchronousCreation\ArtifactCreatedHandler;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ArtifactCreatorChecker;
 use Tuleap\ScaledAgile\Program\Backlog\CreationCheck\ProgramIncrementArtifactCreatorChecker;
@@ -75,6 +77,8 @@ use Tuleap\ScaledAgile\Workspace\ComponentInvolvedVerifier;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
+use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
+use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Hierarchy\TrackerHierarchyDelegation;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -119,6 +123,8 @@ final class scaled_agilePlugin extends Plugin
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
+        $this->addHook(BuildArtifactFormActionEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -182,7 +188,10 @@ final class scaled_agilePlugin extends Plugin
                 ProjectManager::instance(),
                 new ProgramDao()
             ),
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates")
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
+            new ProgramIncrementTrackerConfigurationBuilder(
+                $this->getPlanConfigurationBuilder()
+            ),
         );
     }
 
@@ -383,6 +392,22 @@ final class scaled_agilePlugin extends Plugin
         if ($program_store->isProjectAProgramProject((int) $block_scrum_access->getProject()->getID())) {
             $block_scrum_access->disableScrumAccess();
         }
+    }
+
+    public function redirectAfterArtifactCreationOrUpdateEvent(RedirectAfterArtifactCreationOrUpdateEvent $event): void
+    {
+        $processor = new EventRedirectAfterArtifactCreationOrUpdateHandler();
+        $processor->process($event->getRequest(), $event->getRedirect(), $event->getArtifact());
+    }
+
+    public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
+    {
+        $redirect_in_service = $event->getRequest()->get('program_increment') && $event->getRequest()->get('program_increment') === "create";
+        if (! $redirect_in_service) {
+            return;
+        }
+
+        $event->getRedirect()->query_parameters['program_increment'] = "create";
     }
 
     private function getProjectIncrementCreatorChecker(): ProgramIncrementArtifactCreatorChecker

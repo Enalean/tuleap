@@ -12,8 +12,14 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Add a program increment"
+msgstr "Ajouter un programme incrément"
+
 msgid "Backlog"
 msgstr "Planification"
+
+msgid "Create the first program increment"
+msgstr "Ajouter un programme incrément"
 
 msgid "Edit"
 msgstr "Modifier"

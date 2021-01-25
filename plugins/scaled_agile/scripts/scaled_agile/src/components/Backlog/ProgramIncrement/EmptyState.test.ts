@@ -20,6 +20,7 @@
 import { shallowMount, ShallowMountOptions } from "@vue/test-utils";
 import EmptyState from "./EmptyState.vue";
 import { createScaledAgileLocalVue } from "../../../helpers/local-vue-for-test";
+import * as configuration from "../../../configuration";
 
 describe("EmptyState", () => {
     let component_options: ShallowMountOptions<EmptyState>;
@@ -35,5 +36,37 @@ describe("EmptyState", () => {
 
         const wrapper = shallowMount(EmptyState, component_options);
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Display the create new program increment button", async () => {
+        jest.spyOn(configuration, "canCreateProgramIncrement").mockImplementation(() => true);
+
+        component_options = {
+            propsData: {
+                project_public_name: "Public name",
+                project_short_name: "short-name",
+            },
+            localVue: await createScaledAgileLocalVue(),
+        };
+
+        const wrapper = shallowMount(EmptyState, component_options);
+
+        expect(wrapper.find("[data-test=create-program-increment-button]").exists()).toBe(true);
+    });
+
+    it("No button is displayed when user can not add program increments", async () => {
+        jest.spyOn(configuration, "canCreateProgramIncrement").mockImplementation(() => false);
+
+        component_options = {
+            propsData: {
+                project_public_name: "Public name",
+                project_short_name: "short-name",
+            },
+            localVue: await createScaledAgileLocalVue(),
+        };
+
+        const wrapper = shallowMount(EmptyState, component_options);
+
+        expect(wrapper.find("[data-test=create-program-increment-button]").exists()).toBe(false);
     });
 });

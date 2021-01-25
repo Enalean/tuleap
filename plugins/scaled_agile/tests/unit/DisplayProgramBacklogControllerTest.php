@@ -26,13 +26,16 @@ use ForgeAccess;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use TrackerFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\ScaledAgile\Adapter\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfigurationBuilder;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementTrackerConfiguration;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
 use Tuleap\ScaledAgile\Program\Program;
 use Tuleap\Test\Builders\LayoutBuilder;
@@ -42,6 +45,16 @@ final class DisplayProgramBacklogControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerFactory
+     */
+    private $tracker_factory;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProgramIncrementTrackerConfigurationBuilder
+     */
+    private $configuration_builder;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\TemplateRenderer
@@ -71,12 +84,14 @@ final class DisplayProgramBacklogControllerTest extends TestCase
         $this->project_flags_builder = \Mockery::mock(ProjectFlagsBuilder::class);
         $this->build_program         = \Mockery::mock(BuildProgram::class);
         $this->template_renderer     = \Mockery::mock(\TemplateRenderer::class);
+        $this->configuration_builder = \Mockery::mock(ProgramIncrementTrackerConfigurationBuilder::class);
 
         $this->controller = new DisplayProgramBacklogController(
             $this->project_manager,
             $this->project_flags_builder,
             $this->build_program,
-            $this->template_renderer
+            $this->template_renderer,
+            $this->configuration_builder,
         );
     }
 
@@ -144,6 +159,13 @@ final class DisplayProgramBacklogControllerTest extends TestCase
 
         $this->template_renderer->shouldReceive('renderToPage')->once()
             ->with('program-backlog', \Mockery::type(ProgramBacklogPresenter::class));
+
+        $this->configuration_builder->shouldReceive('build')->andReturn(
+            new ProgramIncrementTrackerConfiguration(
+                $project->getId(),
+                true
+            )
+        );
 
         $this->controller->process($request, $layout, $variables);
     }

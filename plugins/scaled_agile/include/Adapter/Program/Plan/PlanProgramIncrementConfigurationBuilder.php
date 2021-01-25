@@ -50,7 +50,7 @@ final class PlanProgramIncrementConfigurationBuilder implements BuildPlanProgram
      * @throws ProgramTrackerNotFoundException
      * @throws PlanCheckException
      */
-    public function buildProgramIncrementFromProjectId(int $project_id, \PFUser $user): ScaledAgileTracker
+    public function buildTrackerProgramIncrementFromProjectId(int $project_id, \PFUser $user): ScaledAgileTracker
     {
         $program_increment_tracker_id = $this->plan_store->getProgramIncrementTrackerId($project_id);
         if (! $program_increment_tracker_id) {

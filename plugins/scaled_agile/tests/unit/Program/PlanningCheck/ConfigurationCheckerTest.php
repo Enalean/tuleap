@@ -43,7 +43,7 @@ final class ConfigurationCheckerTest extends TestCase
         $program           = new Program(1);
         $program_increment = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->build());
         $planning_adapter->shouldReceive('buildProgramTrackerFromTeamProject')->andReturn($program);
-        $plan_adapter->shouldReceive('buildProgramIncrementFromProjectId')->andReturn($program_increment);
+        $plan_adapter->shouldReceive('buildTrackerProgramIncrementFromProjectId')->andReturn($program_increment);
 
         $user    = UserTestBuilder::aUser()->build();
         $project = new Project(['group_id' => 1]);

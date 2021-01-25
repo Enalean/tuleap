@@ -36,6 +36,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
+use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\BuildProgramIncrementTrackerConfiguration;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
 
 final class DisplayProgramBacklogController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
@@ -56,17 +57,23 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
      * @var \TemplateRenderer
      */
     private $template_renderer;
+    /**
+     * @var BuildProgramIncrementTrackerConfiguration
+     */
+    private $tracker_configuration_builder;
 
     public function __construct(
         \ProjectManager $project_manager,
         ProjectFlagsBuilder $project_flags_builder,
         BuildProgram $build_program,
-        \TemplateRenderer $template_renderer
+        \TemplateRenderer $template_renderer,
+        BuildProgramIncrementTrackerConfiguration $tracker_configuration_builder
     ) {
-        $this->project_manager       = $project_manager;
-        $this->project_flags_builder = $project_flags_builder;
-        $this->build_program         = $build_program;
-        $this->template_renderer     = $template_renderer;
+        $this->project_manager               = $project_manager;
+        $this->project_flags_builder         = $project_flags_builder;
+        $this->build_program                 = $build_program;
+        $this->template_renderer             = $template_renderer;
+        $this->tracker_configuration_builder = $tracker_configuration_builder;
     }
 
     public function getProject(array $variables): Project
@@ -87,10 +94,18 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         }
 
         try {
-            $this->build_program->buildExistingProgramProject((int) $project->getID(), $request->getCurrentUser());
+            $program = $this->build_program->buildExistingProgramProject((int) $project->getID(), $request->getCurrentUser());
         } catch (ProjectIsNotAProgramException $exception) {
-            throw new ForbiddenException(dgettext('tuleap-scaled_agile', 'The scaled agile service can only be used in a project defined as a program.'));
+            throw new ForbiddenException(
+                dgettext(
+                    'tuleap-scaled_agile',
+                    'The scaled agile service can only be used in a project defined as a program.'
+                )
+            );
         }
+
+        $user               = $request->getCurrentUser();
+        $plan_configuration = $this->tracker_configuration_builder->build($user, $program);
 
         \Tuleap\Project\ServiceInstrumentation::increment('scaled_agile');
 
@@ -110,7 +125,9 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
             new ProgramBacklogPresenter(
                 $project,
                 $this->project_flags_builder->buildProjectFlags($project),
-                (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE)
+                (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE),
+                $plan_configuration->canCreateProgramIncrement(),
+                $plan_configuration->getProgramIncrementTrackerId(),
             )
         );
 

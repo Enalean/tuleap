@@ -20,5 +20,12 @@ exports[`EmptyState Displays the empty state for Program Increment 1`] = `
         There are no iterations yet
     
   </p>
+   
+  <form
+    action="/plugins/tracker/?program_increment=create&tracker=undefined&func=new-artifact"
+    method="post"
+  >
+    <!---->
+  </form>
 </div>
 `;

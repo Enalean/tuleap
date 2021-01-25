@@ -83,7 +83,7 @@ final class PlanConfigurationBuilderTest extends TestCase
         $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturnNull();
 
         $this->expectException(ProgramNotFoundException::class);
-        $this->adapter->buildProgramIncrementFromProjectId(100, $user);
+        $this->adapter->buildTrackerProgramIncrementFromProjectId(100, $user);
     }
 
     public function testItThrowsAnExceptionIFUserCanNotSeeProgramTracker(): void
@@ -98,7 +98,7 @@ final class PlanConfigurationBuilderTest extends TestCase
 
         $this->expectException(ConfigurationUserCanNotSeeProgramException::class);
 
-        $this->adapter->buildProgramIncrementFromProjectId(100, $user);
+        $this->adapter->buildTrackerProgramIncrementFromProjectId(100, $user);
     }
 
     public function testItBuildProgramIncrementTracker(): void
@@ -113,6 +113,6 @@ final class PlanConfigurationBuilderTest extends TestCase
 
         $program_increment = new ScaledAgileTracker($tracker);
 
-        self::assertEquals($program_increment, $this->adapter->buildProgramIncrementFromProjectId(100, $user));
+        self::assertEquals($program_increment, $this->adapter->buildTrackerProgramIncrementFromProjectId(100, $user));
     }
 }

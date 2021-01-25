@@ -52,7 +52,7 @@ class ArtifactCreatorChecker
     public function canCreateAnArtifact(PFUser $user, ScaledAgileTracker $tracker_data, Project $project_data): bool
     {
         try {
-            $program_increment_tracker = $this->build_plan_configuration->buildProgramIncrementFromProjectId(
+            $program_increment_tracker = $this->build_plan_configuration->buildTrackerProgramIncrementFromProjectId(
                 $project_data->getId(),
                 $user
             );
