@@ -42,8 +42,8 @@ class Baseline extends TransientBaseline
         PFUser $author
     ) {
         parent::__construct($name, $artifact, $snapshot_date);
-        $this->id            = $id;
-        $this->author        = $author;
+        $this->id     = $id;
+        $this->author = $author;
     }
 
     public function getId(): int

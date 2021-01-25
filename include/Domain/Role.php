@@ -25,6 +25,6 @@ namespace Tuleap\Baseline\Domain;
 
 class Role
 {
-    public const ADMIN = 'BASELINE_ADMIN';
+    public const ADMIN  = 'BASELINE_ADMIN';
     public const READER = 'BASELINE_READER';
 }

@@ -171,8 +171,8 @@ class ComparisonsResourceTest extends RestBase
     public function testGetByProject(): void
     {
         $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];
-        $url = 'projects/' . $project_id . '/baselines_comparisons?limit=2';
-        $response = $this->getResponseByName(
+        $url        = 'projects/' . $project_id . '/baselines_comparisons?limit=2';
+        $response   = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
             $this->client->get($url)
         );
@@ -186,8 +186,8 @@ class ComparisonsResourceTest extends RestBase
     public function testGETByProjectWithReadOnlyAdministrator(): void
     {
         $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];
-        $url = 'projects/' . $project_id . '/baselines_comparisons?limit=2';
-        $response = $this->getResponseForReadOnlyUserAdmin(
+        $url        = 'projects/' . $project_id . '/baselines_comparisons?limit=2';
+        $response   = $this->getResponseForReadOnlyUserAdmin(
             $this->client->get($url)
         );
 

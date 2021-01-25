@@ -32,7 +32,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
 {
-    public const NAME = 'baseline';
+    public const NAME              = 'baseline';
     public const SERVICE_SHORTNAME = 'plugin_baseline';
 
     public function __construct($id)
