@@ -4,7 +4,6 @@
     'tlp-form-element-error': users_open_list_field.isRequiredAndEmpty()
 }">
     <label
-        for="{{ ::('tracker_field_'+ users_open_list_field.field.field_id) }}"
         class="tlp-label"
         ng-class="{ loading: users_open_list_field.field.loading }"
     >{{ ::users_open_list_field.field.label }} <i class="fa fa-asterisk" ng-if="::users_open_list_field.field.required"></i></label>
@@ -14,7 +13,6 @@
         ng-required="::users_open_list_field.field.required"
         ng-attr-title="::users_open_list_field.field.hint"
         class="tlp-select tuleap-artifact-modal-open-list-users"
-        id="{{ ::('tracker_field_' + users_open_list_field.field.field_id) }}"
         style="width: 100%"
     >
         <option

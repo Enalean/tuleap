@@ -19,6 +19,7 @@
 
 import { select2 } from "tlp";
 import { unique, union, remove } from "lodash";
+import { initOpenListFieldLabelAndSelectIds } from "./open-list-field-ids-initializer";
 
 export default StaticOpenListFieldController;
 
@@ -45,6 +46,12 @@ function StaticOpenListFieldController($element) {
         if (!open_list_element) {
             return;
         }
+
+        initOpenListFieldLabelAndSelectIds(
+            $element[0],
+            open_list_element,
+            self.value_model.field_id
+        );
 
         select2(open_list_element, {
             placeholder: self.field.hint,
@@ -83,7 +90,7 @@ function StaticOpenListFieldController($element) {
         };
 
         if (new_selection.isTag !== true) {
-            new_value_model_value["id"] = new_selection.id;
+            new_value_model_value.id = new_selection.id;
         }
 
         self.value_model.value.bind_value_objects.push(new_value_model_value);

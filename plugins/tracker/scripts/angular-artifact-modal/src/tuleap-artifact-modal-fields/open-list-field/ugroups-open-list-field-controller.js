@@ -1,5 +1,6 @@
 import { select2 } from "tlp";
 import { isUndefined } from "angular";
+import { initOpenListFieldLabelAndSelectIds } from "./open-list-field-ids-initializer";
 
 export default UgroupsOpenListFieldController;
 
@@ -18,6 +19,11 @@ function UgroupsOpenListFieldController($element) {
             return;
         }
 
+        initOpenListFieldLabelAndSelectIds(
+            $element[0],
+            open_list_element,
+            self.value_model.field_id
+        );
         select2(open_list_element, {
             placeholder: self.field.hint,
             allowClear: true,
