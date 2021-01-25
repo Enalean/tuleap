@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\REST\v1;
 
+use BackendLogger;
 use Git_PermissionsDao;
 use Git_SystemEventManager;
 use GitDao;
@@ -55,6 +56,8 @@ use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
+use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
@@ -151,6 +154,7 @@ final class GitlabRepositoryResource
                     new WebhookDao(),
                     $gitlab_api_client,
                     new InstanceBaseURLBuilder(),
+                    BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER),
                 ),
                 new GitlabBotApiTokenInserter(new GitlabBotApiTokenDao(), new KeyFactory())
             );
@@ -186,17 +190,32 @@ final class GitlabRepositoryResource
     /**
      * Update GitLab integration
      *
-     * Currently this allows to update the bot api token used for the integration.
-     * <br>
+     * <p>To update the bot api token, used by Tuleap to communicate with GitLab:</p>
      * <pre>
      * {<br>
      *   &nbsp;"update_bot_api_token": {<br>
      *   &nbsp;&nbsp;&nbsp;"gitlab_bot_api_token" : "The new token",<br>
      *   &nbsp;&nbsp;&nbsp;"gitlab_repository_id" : 145896<br>
-     *   &nbsp;&nbsp;&nbsp;"gitlab_repository_url" : "https://example.com/project/url",<br>
+     *   &nbsp;&nbsp;&nbsp;"gitlab_repository_url" : "https://example.com/project/url"<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
+     * <br>
+     *
+     * <p>To update the webhook secret, used by GitLab to communicate with Tuleap:</p>
+     * <pre>
+     * {<br>
+     *   &nbsp;"generate_new_secret": {<br>
+     *   &nbsp;&nbsp;&nbsp;"gitlab_repository_id" : 145896<br>
+     *   &nbsp;&nbsp;&nbsp;"gitlab_repository_url" : "https://example.com/project/url"<br>
+     *   &nbsp;}<br>
+     * }<br>
+     * </pre>
+     *
+     * <p>
+     * <strong>Note:</strong> You cannot at the same time update the token and update the secret.
+     * You will get a <code>400</code> if you send both <code>update_bot_api_token</code> and <code>generate_new_secret</code>.
+     * </p>
      *
      * @url    PATCH
      * @access protected
@@ -210,30 +229,66 @@ final class GitlabRepositoryResource
         $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
         $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
 
-        $bot_api_token_updater = new BotApiTokenUpdater(
-            new GitlabRepositoryFactory(
-                new GitlabRepositoryDao()
-            ),
-            new GitlabProjectBuilder($gitlab_api_client),
-            new GitlabRepositoryProjectRetriever(
-                new GitlabRepositoryProjectDao(),
-                ProjectManager::instance()
-            ),
-            $this->getGitPermissionsManager(),
-            new GitlabBotApiTokenInserter(
-                new GitlabBotApiTokenDao(),
-                new KeyFactory()
-            )
-        );
+        $current_user = UserManager::instance()->getCurrentUser();
 
-        $bot_api_token_updater->update(
-            new ConcealedBotApiTokenPatchRepresentation(
-                $patch_representation->update_bot_api_token->gitlab_repository_id,
-                $patch_representation->update_bot_api_token->gitlab_repository_url,
-                new ConcealedString($patch_representation->update_bot_api_token->gitlab_bot_api_token),
-            ),
-            UserManager::instance()->getCurrentUser(),
-        );
+        if ($patch_representation->update_bot_api_token && $patch_representation->generate_new_secret) {
+            throw new RestException(400, 'You cannot ask at the same time to update the api token and generate a new webhook secret');
+        }
+
+        if ($patch_representation->update_bot_api_token) {
+            $bot_api_token_updater = new BotApiTokenUpdater(
+                new GitlabRepositoryFactory(
+                    new GitlabRepositoryDao()
+                ),
+                new GitlabProjectBuilder($gitlab_api_client),
+                new GitlabRepositoryProjectRetriever(
+                    new GitlabRepositoryProjectDao(),
+                    ProjectManager::instance()
+                ),
+                $this->getGitPermissionsManager(),
+                new GitlabBotApiTokenInserter(
+                    new GitlabBotApiTokenDao(),
+                    new KeyFactory()
+                )
+            );
+
+            $bot_api_token_updater->update(
+                new ConcealedBotApiTokenPatchRepresentation(
+                    $patch_representation->update_bot_api_token->gitlab_repository_id,
+                    $patch_representation->update_bot_api_token->gitlab_repository_url,
+                    new ConcealedString($patch_representation->update_bot_api_token->gitlab_bot_api_token),
+                ),
+                $current_user,
+            );
+        }
+
+        if ($patch_representation->generate_new_secret) {
+            $generator = new WebhookSecretGenerator(
+                new GitlabRepositoryFactory(
+                    new GitlabRepositoryDao()
+                ),
+                new GitlabRepositoryProjectRetriever(
+                    new GitlabRepositoryProjectDao(),
+                    ProjectManager::instance()
+                ),
+                $this->getGitPermissionsManager(),
+                new CredentialsRetriever(
+                    new GitlabBotApiTokenRetriever(
+                        new GitlabBotApiTokenDao(),
+                        new KeyFactory()
+                    ),
+                ),
+                new WebhookCreator(
+                    new KeyFactory(),
+                    new WebhookDao(),
+                    $gitlab_api_client,
+                    new InstanceBaseURLBuilder(),
+                    BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER),
+                )
+            );
+
+            $generator->regenerate($patch_representation->generate_new_secret, $current_user);
+        }
     }
 
     /**

@@ -43,16 +43,18 @@ final class GitlabRepositoryFactoryTest extends TestCase
         $dao->shouldReceive('getGitlabRepositoriesForProject')
             ->once()
             ->with(101)
-            ->andReturn([
+            ->andReturn(
                 [
-                    'id' => 1,
-                    'gitlab_repository_id' => 1254652,
-                    'name' => 'proj/test01',
-                    'description' => '',
-                    'gitlab_repository_url' => 'https://example.com/proj/test01',
-                    'last_push_date' => 1603371803,
+                    [
+                        'id'                    => 1,
+                        'gitlab_repository_id'  => 1254652,
+                        'name'                  => 'proj/test01',
+                        'description'           => '',
+                        'gitlab_repository_url' => 'https://example.com/proj/test01',
+                        'last_push_date'        => 1603371803,
+                    ]
                 ]
-            ]);
+            );
 
         $gitlab_repositories = $factory->getGitlabRepositoriesForProject($project);
 

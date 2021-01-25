@@ -26,7 +26,7 @@ use Tuleap\DB\DataAccessObject;
 class WebhookDao extends DataAccessObject
 {
     /**
-     * @psalm-return array{repository_id:int, webhook_secret:string}
+     * @psalm-return array{repository_id:int, webhook_secret:string, gitlab_webhook_id: int}
      */
     public function getGitlabRepositoryWebhook(int $repository_id): ?array
     {
@@ -47,12 +47,16 @@ class WebhookDao extends DataAccessObject
 
     public function storeWebhook(int $repository_id, int $webhook_id, string $encrypted_secret): void
     {
-        $this->getDB()->insert(
+        $this->getDB()->insertOnDuplicateKeyUpdate(
             'plugin_gitlab_repository_webhook_secret',
             [
                 'repository_id'     => $repository_id,
                 'webhook_secret'    => $encrypted_secret,
                 'gitlab_webhook_id' => $webhook_id,
+            ],
+            [
+                'webhook_secret',
+                'gitlab_webhook_id',
             ]
         );
     }

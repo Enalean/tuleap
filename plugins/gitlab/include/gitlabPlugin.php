@@ -78,8 +78,8 @@ require_once __DIR__ . '/../../git/include/gitPlugin.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class gitlabPlugin extends Plugin
 {
-    public const SERVICE_NAME    = "gitlab";
-    private const LOG_IDENTIFIER = "gitlab_syslog";
+    public const SERVICE_NAME   = "gitlab";
+    public const LOG_IDENTIFIER = "gitlab_syslog";
 
     public function __construct(?int $id)
     {

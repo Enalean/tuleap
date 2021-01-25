@@ -228,7 +228,7 @@ class GitlabRepositoryCreatorTest extends TestCase
             ->once()
             ->with(1, 101);
 
-        $this->webhook_creator->shouldReceive('addWebhookInGitlabProject')
+        $this->webhook_creator->shouldReceive('generateWebhookInGitlabProject')
             ->once()
             ->with($this->credentials, $gitlab_repository);
 
