@@ -21,6 +21,7 @@ import tuleap_artifact_modal_module from "../tuleap-artifact-modal.js";
 import angular from "angular";
 import moment from "moment";
 import "angular-mocks";
+import * as text_field_formatter from "../tuleap-artifact-modal-fields/text-field/text-field-value-formatter.js";
 
 describe("TuleapArtifactFieldValuesService", () => {
     let FieldValuesService;
@@ -222,7 +223,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                 var artifact_values = {
                     901: {
                         field_id: 901,
-                        format: "HTML",
+                        format: "html",
                         type: "text",
                         value: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>",
                     },
@@ -238,7 +239,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                         },
                     ],
                 };
+                jest.spyOn(text_field_formatter, "formatExistingValue").mockReturnValue({
+                    content: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>",
+                    format: "html",
+                });
                 var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+
                 expect(output).toEqual({
                     901: {
                         field_id: 901,
@@ -246,7 +252,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         permissions: ["read", "update", "create"],
                         value: {
                             content: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>",
-                            format: "HTML",
+                            format: "html",
                         },
                     },
                 });

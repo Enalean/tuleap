@@ -52,6 +52,7 @@ export const LIST_BIND_USERS = "users";
 export const TEXT_FIELD = "text";
 export const TEXT_FORMAT_TEXT = "text";
 export const TEXT_FORMAT_HTML = "html";
+export const TEXT_FORMAT_COMMONMARK = "commonmark";
 
 export const FILE_FIELD = "file";
 

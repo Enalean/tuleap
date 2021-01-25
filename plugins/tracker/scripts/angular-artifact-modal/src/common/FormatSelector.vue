@@ -31,11 +31,16 @@
         >
             <option v-bind:value="text_format">Text</option>
             <option v-bind:value="html_format">HTML</option>
+            <option v-bind:value="commonmark_format">Markdown</option>
         </select>
     </div>
 </template>
 <script>
-import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../../constants/fields-constants.js";
+import {
+    TEXT_FORMAT_COMMONMARK,
+    TEXT_FORMAT_HTML,
+    TEXT_FORMAT_TEXT,
+} from "../../../constants/fields-constants.js";
 
 export default {
     name: "FormatSelector",
@@ -45,7 +50,7 @@ export default {
         value: {
             type: String,
             validator(value) {
-                return [TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT].includes(value);
+                return [TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT, TEXT_FORMAT_COMMONMARK].includes(value);
             },
         },
         disabled: Boolean,
@@ -65,6 +70,9 @@ export default {
         },
         html_format() {
             return TEXT_FORMAT_HTML;
+        },
+        commonmark_format() {
+            return TEXT_FORMAT_COMMONMARK;
         },
     },
 };

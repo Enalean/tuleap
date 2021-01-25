@@ -45,7 +45,11 @@ import {
     MaxSizeUploadExceededError,
     UploadError,
 } from "@tuleap/ckeditor-image-upload";
-import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../../constants/fields-constants.js";
+import {
+    TEXT_FORMAT_COMMONMARK,
+    TEXT_FORMAT_HTML,
+    TEXT_FORMAT_TEXT,
+} from "../../../constants/fields-constants.js";
 import {
     setIsNotUploadingInCKEditor,
     setIsUploadingInCKEditor,
@@ -58,7 +62,7 @@ export default {
         format: {
             type: String,
             validator(value) {
-                return [TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT].includes(value);
+                return [TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT, TEXT_FORMAT_COMMONMARK].includes(value);
             },
         },
         value: {
