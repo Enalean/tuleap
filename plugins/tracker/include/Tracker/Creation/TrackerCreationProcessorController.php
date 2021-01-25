@@ -146,6 +146,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
 
                 $jira_tracker_object  = json_decode($request->get('jira_tracker_name'), true);
                 $jira_issue_type_name = (string) $jira_tracker_object['name'];
+                $jira_issue_type_id   = (string) $jira_tracker_object['id'];
 
                 $this->async_jira_scheduler->scheduleCreation(
                     $project,
@@ -155,6 +156,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                     $jira_token,
                     $jira_project_id,
                     $jira_issue_type_name,
+                    $jira_issue_type_id,
                     (string) $tracker_name,
                     (string) $tracker_shortname,
                     (string) $tracker_color,

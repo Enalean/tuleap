@@ -62,7 +62,7 @@ class StatusValuesCollection
         $this->logger  = $logger;
     }
 
-    public function initCollectionForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_name, IDGenerator $id_generator): void
+    public function initCollectionForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_id, IDGenerator $id_generator): void
     {
         $this->logger->debug("Build status collection ...");
         $statuses_url = "project/" . urlencode($jira_project_key) . "/statuses";
@@ -76,7 +76,7 @@ class StatusValuesCollection
         }
 
         foreach ($statuses_content as $statuses_content_per_issue_type) {
-            if ($statuses_content_per_issue_type['name'] !== $jira_issue_type_name) {
+            if ($statuses_content_per_issue_type['id'] !== $jira_issue_type_id) {
                 continue;
             }
 

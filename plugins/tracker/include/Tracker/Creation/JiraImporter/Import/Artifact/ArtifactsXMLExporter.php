@@ -147,12 +147,12 @@ class ArtifactsXMLExporter
 
     private function getUrl(
         string $jira_project_id,
-        string $jira_issue_type_name,
+        string $jira_issue_type_id,
         ?int $start_at,
         ?int $max_results
     ): string {
         $params = [
-            'jql'    => 'project=' . $jira_project_id . ' AND issuetype=' . $jira_issue_type_name,
+            'jql'    => 'project=' . $jira_project_id . ' AND issuetype=' . $jira_issue_type_id,
             'fields' => '*all',
             'expand' => 'renderedFields'
         ];

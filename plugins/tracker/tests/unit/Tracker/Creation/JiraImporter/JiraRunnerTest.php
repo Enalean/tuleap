@@ -198,7 +198,7 @@ class JiraRunnerTest extends TestCase
                 'getJiraUser'           => 'user@example.com',
                 'getJiraServer'         => 'https://jira.example.com',
                 'getJiraProjectId'      => 'Jira project',
-                'getJiraIssueTypeName'  => 'Jira issue',
+                'getJiraIssueTypeId'    => '10003',
             ]
         );
 
@@ -229,7 +229,7 @@ class JiraRunnerTest extends TestCase
                 'user@example.com',
                 'https://jira.example.com',
                 'Jira project',
-                'Jira issue',
+                '10003',
                 $user,
             )
             ->once()
@@ -424,7 +424,7 @@ class JiraRunnerTest extends TestCase
                 'getJiraUser'           => 'user@example.com',
                 'getJiraServer'         => 'https://jira.example.com',
                 'getJiraProjectId'      => 'Jira project',
-                'getJiraIssueTypeName'  => 'Jira issue',
+                'getJiraIssueTypeId'    => '10003',
             ]
         );
 
@@ -497,6 +497,7 @@ class JiraRunnerTest extends TestCase
                 'getJiraServer'         => 'https://jira.example.com',
                 'getJiraProjectId'      => 'Jira project',
                 'getJiraIssueTypeName'  => 'Jira issue',
+                'getJiraIssueTypeId'    => '10003',
             ]
         );
 

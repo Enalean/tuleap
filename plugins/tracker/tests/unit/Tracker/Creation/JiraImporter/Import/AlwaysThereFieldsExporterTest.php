@@ -106,7 +106,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
 
         $this->status_values_collection->initCollectionForProjectAndIssueType(
             'TEST',
-            'Story',
+            '10002',
             $field_id_generator
         );
     }

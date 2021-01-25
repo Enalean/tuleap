@@ -349,10 +349,10 @@ class JiraXmlExporter
         SimpleXMLElement $node_tracker,
         string $jira_base_url,
         string $jira_project_key,
-        string $jira_issue_type_name,
+        string $jira_issue_type_id,
         IDGenerator $field_id_generator
     ): void {
-        $this->logger->debug("Start export Jira to XML: " . $jira_issue_type_name);
+        $this->logger->debug("Start export Jira to XML: " . $jira_issue_type_id);
 
         $this->logger->debug("Add root formelement");
         $root_form_elements = $node_tracker->addChild('formElements');
@@ -372,7 +372,7 @@ class JiraXmlExporter
         $this->logger->debug("Handle status");
         $status_values_collection->initCollectionForProjectAndIssueType(
             $jira_project_key,
-            $jira_issue_type_name,
+            $jira_issue_type_id,
             $field_id_generator,
         );
 
@@ -389,7 +389,7 @@ class JiraXmlExporter
             $jira_field_mapping_collection,
             $field_id_generator,
             $jira_project_key,
-            $jira_issue_type_name
+            $jira_issue_type_id
         );
 
         $this->logger->debug("Export semantics");
@@ -426,7 +426,7 @@ class JiraXmlExporter
             $jira_field_mapping_collection,
             $jira_base_url,
             $jira_project_key,
-            $jira_issue_type_name
+            $jira_issue_type_id
         );
 
         if ($this->error_collector->hasError()) {
@@ -441,9 +441,9 @@ class JiraXmlExporter
         FieldMappingCollection $jira_field_mapping_collection,
         IDGenerator $id_generator,
         string $jira_project_id,
-        string $jira_issue_type_name
+        string $jira_issue_type_id
     ): void {
-        $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $jira_issue_type_name, $id_generator);
+        $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $jira_issue_type_id, $id_generator);
         $this->logger->debug("Start exporting jira field structure ...");
         foreach ($fields as $key => $field) {
             $this->field_type_mapper->exportFieldToXml(

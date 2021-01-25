@@ -76,10 +76,7 @@ class ClientWrapper
         try {
             $response = $this->client->sendRequest($request);
             if ((int) $response->getStatusCode() !== 200) {
-                throw JiraConnectionException::connectionToServerFailed(
-                    (int) $response->getStatusCode(),
-                    $response->getReasonPhrase()
-                );
+                throw JiraConnectionException::responseIsNotOk($response);
             }
         } catch (ClientExceptionInterface $e) {
             throw JiraConnectionException::connectionToServerFailed((int) $e->getCode(), $e->getMessage());

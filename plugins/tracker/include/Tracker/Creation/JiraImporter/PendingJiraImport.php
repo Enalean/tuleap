@@ -51,6 +51,10 @@ class PendingJiraImport
     /**
      * @var string
      */
+    private $jira_issue_type_id;
+    /**
+     * @var string
+     */
     private $jira_issue_type_name;
     /**
      * @var string
@@ -81,6 +85,7 @@ class PendingJiraImport
      */
     private $tracker_description;
 
+
     public function __construct(
         int $id,
         Project $project,
@@ -91,6 +96,7 @@ class PendingJiraImport
         string $encrypted_jira_token,
         string $jira_project_id,
         string $jira_issue_type_name,
+        string $jira_issue_type_id,
         string $tracker_name,
         string $tracker_shortname,
         string $tracker_color,
@@ -104,6 +110,7 @@ class PendingJiraImport
         $this->jira_user            = $jira_user;
         $this->jira_project_id      = $jira_project_id;
         $this->jira_issue_type_name = $jira_issue_type_name;
+        $this->jira_issue_type_id   = $jira_issue_type_id;
         $this->tracker_name         = $tracker_name;
         $this->tracker_shortname    = $tracker_shortname;
         $this->tracker_color        = $tracker_color;
@@ -139,6 +146,11 @@ class PendingJiraImport
     public function getJiraIssueTypeName(): string
     {
         return $this->jira_issue_type_name;
+    }
+
+    public function getJiraIssueTypeId(): string
+    {
+        return $this->jira_issue_type_id;
     }
 
     public function getTrackerName(): string
