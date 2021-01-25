@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div v-if="hasSuccess" class="tlp-alert-info" v-dompurify-html="getSuccessMessage"></div>
+    <div v-if="hasSuccess" class="tlp-alert-success" v-dompurify-html="getSuccessMessage"></div>
 </template>
 <script>
 import { mapGetters } from "vuex";

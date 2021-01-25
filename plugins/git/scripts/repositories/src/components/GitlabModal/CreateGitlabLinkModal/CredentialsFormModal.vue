@@ -54,7 +54,7 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="gitlab_project_token">
-                    <translate>GitLab project token</translate>
+                    <translate>GitLab token (personal or project)</translate>
                     <i class="fas fa-asterisk"></i>
                 </label>
                 <input
@@ -62,12 +62,17 @@
                     class="tlp-input"
                     id="gitlab_project_token"
                     required
-                    v-model="gitlab_project_token"
+                    v-model="gitlab_token"
                     maxlength="255"
                     data-test="add_gitlab_project_token"
                 />
+                <p class="tlp-text-info gitlab-test-info-form-token-modal">
+                    <translate>
+                        The access token will be used to fetch repositories, configure project hooks
+                        and automatically write comments on GitLab commit and merge requests.
+                    </translate>
+                </p>
                 <p class="tlp-text-info">
-                    <i class="fas fa-info-circle"></i>
                     <translate>GitLab project token scope must contain at least: api.</translate>
                 </p>
             </div>
@@ -108,7 +113,7 @@ import { credentialsAreEmpty, serverUrlIsValid } from "../../../gitlab/gitlab-cr
 export default {
     name: "CredentialsFormModal",
     props: {
-        user_token: {
+        gitlab_api_token: {
             type: String,
             default: () => "",
         },
@@ -120,7 +125,7 @@ export default {
     data() {
         return {
             gitlab_server: this.server_url,
-            gitlab_project_token: this.user_token,
+            gitlab_token: this.gitlab_api_token,
             is_loading: false,
             error_message: "",
             empty_message: "",
@@ -129,14 +134,14 @@ export default {
     },
     computed: {
         disabled_button() {
-            return this.gitlab_server === "" || this.gitlab_project_token === "" || this.is_loading;
+            return this.gitlab_server === "" || this.gitlab_token === "" || this.is_loading;
         },
     },
     methods: {
         ...mapActions(["getGitlabRepositoryList"]),
         reset() {
             this.gitlab_server = "";
-            this.gitlab_project_token = "";
+            this.gitlab_token = "";
             this.is_loading = false;
             this.gitlab_repositories = null;
             this.resetMessages();
@@ -157,7 +162,7 @@ export default {
 
             const credentials = {
                 server_url: this.gitlab_server,
-                token: this.gitlab_project_token,
+                token: this.gitlab_token,
             };
 
             if (credentialsAreEmpty(credentials)) {
@@ -185,7 +190,7 @@ export default {
 
                 this.$emit("on-get-gitlab-repositories", {
                     repositories: this.gitlab_repositories,
-                    token: this.gitlab_project_token,
+                    token: this.gitlab_token,
                     server_url: this.gitlab_server,
                 });
             } catch (e) {
