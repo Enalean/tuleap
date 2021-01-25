@@ -74,6 +74,11 @@ export const showEditAccessTokenGitlabRepositoryModal = (context, repository) =>
     context.state.edit_access_token_gitlab_repository_modal.toggle();
 };
 
+export const showRegenerateGitlabWebhookModal = (context, repository) => {
+    context.commit("setRegenerateGitlabWebhookRepository", repository);
+    context.state.regenerate_gitlab_webhook_modal.toggle();
+};
+
 export const changeRepositories = async (context, new_owner_id) => {
     context.commit("setSelectedOwnerId", new_owner_id);
     context.commit("setFilter", "");
@@ -230,6 +235,20 @@ export async function updateBotApiTokenGitlab(
     const body = {
         update_bot_api_token: {
             gitlab_bot_api_token,
+            gitlab_repository_id,
+            gitlab_repository_url,
+        },
+    };
+
+    await patchGitlabRepository(body);
+}
+
+export async function regenerateGitlabWebhook(
+    context,
+    { gitlab_repository_id, gitlab_repository_url }
+) {
+    const body = {
+        generate_new_secret: {
             gitlab_repository_id,
             gitlab_repository_url,
         },

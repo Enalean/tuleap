@@ -128,7 +128,7 @@ describe("EditAccessTokenGitlabModal", () => {
 
         expect(store.commit).toHaveBeenCalledWith(
             "setSuccessMessage",
-            "Token of remote repository my/repo has been successfully updated."
+            "Token of GitLab repository my/repo has been successfully updated."
         );
     });
 

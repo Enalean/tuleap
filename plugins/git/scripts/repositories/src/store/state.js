@@ -39,5 +39,7 @@ const state = {
     unlink_gitlab_repository: null,
     edit_access_token_gitlab_repository_modal: null,
     edit_access_token_gitlab_repository: null,
+    regenerate_gitlab_webhook_modal: null,
+    regenerate_gitlab_webhook_repository: null,
 };
 export default state;

@@ -76,6 +76,12 @@ export default {
     setEditAccessTokenGitlabRepository(state, repository) {
         state.edit_access_token_gitlab_repository = repository;
     },
+    setRegenerateGitlabWebhookModal(state, modal) {
+        state.regenerate_gitlab_webhook_modal = modal;
+    },
+    setRegenerateGitlabWebhookRepository(state, repository) {
+        state.regenerate_gitlab_webhook_repository = repository;
+    },
     setDisplayMode(state, new_mode) {
         if (isUnknownMode(new_mode)) {
             state.display_mode = REPOSITORIES_SORTED_BY_LAST_UPDATE;
