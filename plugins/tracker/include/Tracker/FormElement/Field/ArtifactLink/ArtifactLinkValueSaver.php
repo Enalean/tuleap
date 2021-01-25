@@ -28,6 +28,7 @@ use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_ReferenceManager;
+use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -57,18 +58,25 @@ class ArtifactLinkValueSaver
      */
     private $artifact_links_usage_dao;
 
+    /**
+     * @var Tracker_Workflow_Trigger_RulesManager
+     */
+    private $rules_manager;
+
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         ArtifactLinkFieldValueDao $dao,
         Tracker_ReferenceManager $reference_manager,
         EventManager $event_manager,
-        ArtifactLinksUsageDao $artifact_links_usage_dao
+        ArtifactLinksUsageDao $artifact_links_usage_dao,
+        Tracker_Workflow_Trigger_RulesManager $rules_manager
     ) {
         $this->artifact_factory         = $artifact_factory;
         $this->dao                      = $dao;
         $this->reference_manager        = $reference_manager;
         $this->event_manager            = $event_manager;
         $this->artifact_links_usage_dao = $artifact_links_usage_dao;
+        $this->rules_manager            = $rules_manager;
     }
 
     /**
@@ -175,6 +183,20 @@ class ArtifactLinkValueSaver
                         dgettext('tuleap-tracker', 'There is a hierarchy defined between "%s" and "%s" but the link between this artifact and %s is not parent/child.'),
                         $from_tracker->getName(),
                         $to_tracker->getName(),
+                        $artifactlinkinfo->getLabel()
+                    )
+                );
+            }
+
+            if (
+                ! $is_child &&
+                $existing_nature === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD &&
+                $this->rules_manager->getForTargetTracker($from_tracker)->count() > 0
+            ) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::WARN,
+                    sprintf(
+                        dgettext('tuleap-tracker', 'Artifact %s was linked as child of the current artifact but is not part of hierarchy. It will not be taken into account in triggers.'),
                         $artifactlinkinfo->getLabel()
                     )
                 );

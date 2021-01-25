@@ -1659,7 +1659,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 Tracker_ArtifactFactory::instance()
             ),
             EventManager::instance(),
-            new ArtifactLinksUsageDao()
+            new ArtifactLinksUsageDao(),
+            $this->getTrackerFactory()->getTriggerRulesManager()
         );
     }
 

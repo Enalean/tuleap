@@ -25,6 +25,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
+use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\GlobalResponseMock;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
@@ -126,13 +127,15 @@ class ArtifactLinkValueSaverTest extends TestCase
         ]);
 
         $this->artifact_link_usage_dao = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
+        $this->rules_manager           = \Mockery::spy(Tracker_Workflow_Trigger_RulesManager::class);
 
         $this->saver = new ArtifactLinkValueSaver(
             $this->artifact_factory,
             $this->dao,
             $this->reference_manager,
             \Mockery::spy(\EventManager::class),
-            $this->artifact_link_usage_dao
+            $this->artifact_link_usage_dao,
+            $this->rules_manager
         );
 
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);
