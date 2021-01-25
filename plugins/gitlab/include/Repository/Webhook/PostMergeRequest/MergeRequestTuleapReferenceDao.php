@@ -51,12 +51,12 @@ class MergeRequestTuleapReferenceDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array{title: string, state: string}
+     * @psalm-return array{title: string, state: string, description: string}
      */
     public function searchMergeRequestInRepositoryWithId(int $repository_id, int $merge_request_id): ?array
     {
         $sql = "
-            SELECT title, state
+            SELECT title, state, description
             FROM plugin_gitlab_merge_request_info
             WHERE repository_id = ?
                 AND merge_request_id = ?

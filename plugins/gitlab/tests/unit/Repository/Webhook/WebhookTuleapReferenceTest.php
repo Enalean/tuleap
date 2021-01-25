@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,36 +15,24 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Gitlab\Repository\Webhook;
 
-/**
- * @psalm-immutable
- */
-class WebhookTuleapReference
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class WebhookTuleapReferenceTest extends TestCase
 {
-    /**
-     * @var int
-     */
-    private $id;
+    use MockeryPHPUnitIntegration;
 
-    public function __construct(int $id)
+    public function testItCanBeConvertedToStringForArrayDiffOperations(): void
     {
-        $this->id = $id;
-    }
+        $ref = new WebhookTuleapReference(123);
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->id;
+        self::assertEquals("123", (string) $ref);
     }
 }
