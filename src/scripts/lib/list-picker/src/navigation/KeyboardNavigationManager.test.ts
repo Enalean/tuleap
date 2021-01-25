@@ -21,7 +21,7 @@ import { KeyboardNavigationManager } from "./KeyboardNavigationManager";
 import { BaseComponentRenderer } from "../renderers/BaseComponentRenderer";
 import { appendGroupedOptionsToSourceSelectBox } from "../test-helpers/select-box-options-generator";
 import { DropdownContentRenderer } from "../renderers/DropdownContentRenderer";
-import { GetText } from "../../../../tuleap/gettext/gettext-init";
+import { GettextProvider } from "@tuleap/gettext";
 import { ListItemHighlighter } from "./ListItemHighlighter";
 import { ItemsMapManager } from "../items/ItemsMapManager";
 import { ListItemMapBuilder } from "../items/ListItemMapBuilder";
@@ -53,7 +53,7 @@ describe("KeyboardNavigationManager", () => {
             item_map_manager,
             {
                 gettext: (english: string) => english,
-            } as GetText
+            } as GettextProvider
         );
 
         dropdown_list = dropdown_list_element;

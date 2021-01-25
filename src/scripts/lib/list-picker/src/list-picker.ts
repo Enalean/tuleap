@@ -30,7 +30,7 @@ import { ListItemHighlighter } from "./navigation/ListItemHighlighter";
 import { ItemsMapManager } from "./items/ItemsMapManager";
 import { ListOptionsChangesObserver } from "./events/ListOptionsChangesObserver";
 import { ListItemMapBuilder } from "./items/ListItemMapBuilder";
-import { GettextProvider } from "../../../tuleap/gettext/gettext-sync";
+import { GettextProvider } from "@tuleap/gettext";
 import { ScrollingManager } from "./events/ScrollingManager";
 import { FieldFocusManager } from "./navigation/FieldFocusManager";
 

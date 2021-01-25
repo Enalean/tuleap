@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import french_translations from "../po/fr_FR.po";
-import { ListPicker, ListPickerOptions } from "./type";
-import { initGettextSync } from "@tuleap/gettext";
-import * as creator from "./list-picker";
-
-export { ListPicker, ListPickerOptions };
-export function createListPicker(
-    source_select_box: HTMLSelectElement,
-    options: ListPickerOptions
-): Promise<ListPicker> {
-    const gettext_provider = initGettextSync(
-        "tuleap-list-picker",
-        french_translations,
-        options.locale
-    );
-    return creator.createListPicker(source_select_box, gettext_provider, options);
-}
+export * from "./gettext-sync";
