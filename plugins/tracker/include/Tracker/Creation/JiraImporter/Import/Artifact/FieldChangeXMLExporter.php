@@ -30,6 +30,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
@@ -68,6 +69,10 @@ class FieldChangeXMLExporter
      * @var FieldChangeFileBuilder
      */
     private $field_change_file_builder;
+    /**
+     * @var FieldChangeArtifactLinksBuilder
+     */
+    private $field_change_artifact_links_builder;
 
     public function __construct(
         FieldChangeDateBuilder $field_change_date_builder,
@@ -75,14 +80,16 @@ class FieldChangeXMLExporter
         FieldChangeTextBuilder $field_change_text_builder,
         FieldChangeFloatBuilder $field_change_float_builder,
         FieldChangeListBuilder $field_change_list_builder,
-        FieldChangeFileBuilder $field_change_file_builder
+        FieldChangeFileBuilder $field_change_file_builder,
+        FieldChangeArtifactLinksBuilder $field_change_artifact_links_builder
     ) {
-        $this->field_change_date_builder   = $field_change_date_builder;
-        $this->field_change_string_builder = $field_change_string_builder;
-        $this->field_change_text_builder   = $field_change_text_builder;
-        $this->field_change_float_builder  = $field_change_float_builder;
-        $this->field_change_list_builder   = $field_change_list_builder;
-        $this->field_change_file_builder   = $field_change_file_builder;
+        $this->field_change_date_builder           = $field_change_date_builder;
+        $this->field_change_string_builder         = $field_change_string_builder;
+        $this->field_change_text_builder           = $field_change_text_builder;
+        $this->field_change_float_builder          = $field_change_float_builder;
+        $this->field_change_list_builder           = $field_change_list_builder;
+        $this->field_change_file_builder           = $field_change_file_builder;
+        $this->field_change_artifact_links_builder = $field_change_artifact_links_builder;
     }
 
     public function exportFieldChanges(
@@ -211,6 +218,16 @@ class FieldChangeXMLExporter
                     $value
                 );
             }
+        } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS) {
+            assert(is_array($value));
+
+            $field_values = [];
+            foreach ($value as $link) {
+                if (isset($link['outwardIssue'])) {
+                    $field_values[] = (int) $link['outwardIssue']['id'];
+                }
+            }
+            $this->field_change_artifact_links_builder->build($changeset_node, $mapping->getFieldName(), $field_values);
         }
     }
 }

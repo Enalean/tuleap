@@ -67,6 +67,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeArtifactLinksBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
@@ -268,6 +269,9 @@ class JiraXmlExporter
                             UserXMLExporter::build()
                         ),
                         new FieldChangeFileBuilder(),
+                        new FieldChangeArtifactLinksBuilder(
+                            new XML_SimpleXMLCDATAFactory(),
+                        ),
                     ),
                     new IssueSnapshotCollectionBuilder(
                         new ChangelogEntriesBuilder(
