@@ -49,10 +49,7 @@
             >
                 {{ message_error_rest }}
             </div>
-            <div
-                v-else-if="repository !== null"
-                class="git-repository-create-modal-body tlp-text-danger"
-            >
+            <div v-else-if="repository !== null" class="git-repository-create-modal-body">
                 <p
                     v-dompurify-html="confirmation_message"
                     data-test="confirm-unlink-gitlab-message"
@@ -62,7 +59,7 @@
         <div class="tlp-modal-footer">
             <button
                 type="reset"
-                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                class="tlp-button-danger tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
                 data-test="gitlab-unlink-cancel"
             >
@@ -70,7 +67,7 @@
             </button>
             <button
                 type="submit"
-                class="tlp-button-primary tlp-modal-action"
+                class="tlp-button-danger tlp-modal-action"
                 data-test="button-delete-gitlab-repository"
                 v-on:click="confirmUnlink"
                 v-bind:disabled="disabled_button"
