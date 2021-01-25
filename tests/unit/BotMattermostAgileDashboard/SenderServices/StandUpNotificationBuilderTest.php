@@ -42,10 +42,10 @@ final class StandUpNotificationBuilderTest extends TestCase
     public function testNotificationCanBeBuiltWhenTheParentOfTheMilestoneArtifactCanNotBeFound(): void
     {
         $planning_milestone_factory = Mockery::mock(Planning_MilestoneFactory::class);
-        $milestone_status_counter = Mockery::mock(AgileDashboard_Milestone_MilestoneStatusCounter::class);
-        $planning_factory = Mockery::mock(PlanningFactory::class);
-        $markdown_renderer = Mockery::mock(MarkdownMustacheRenderer::class);
-        $notification_builder = new StandUpNotificationBuilder(
+        $milestone_status_counter   = Mockery::mock(AgileDashboard_Milestone_MilestoneStatusCounter::class);
+        $planning_factory           = Mockery::mock(PlanningFactory::class);
+        $markdown_renderer          = Mockery::mock(MarkdownMustacheRenderer::class);
+        $notification_builder       = new StandUpNotificationBuilder(
             $planning_milestone_factory,
             $milestone_status_counter,
             $planning_factory,

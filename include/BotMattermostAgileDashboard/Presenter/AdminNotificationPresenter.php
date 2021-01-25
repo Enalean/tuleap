@@ -73,11 +73,11 @@ class AdminNotificationPresenter
         $project_id,
         $bot_assigned
     ) {
-        $this->csrf_token   = $csrf_token;
-        $this->bots         = $bots;
-        $this->project_id   = $project_id;
-        $this->bot_assigned = $bot_assigned;
-        $this->has_bots     = ! empty($bots);
+        $this->csrf_token             = $csrf_token;
+        $this->bots                   = $bots;
+        $this->project_id             = $project_id;
+        $this->bot_assigned           = $bot_assigned;
+        $this->has_bots               = ! empty($bots);
         $this->title                  = dgettext('tuleap-botmattermost_agiledashboard', 'Mattermost notifications');
         $this->description            = dgettext('tuleap-botmattermost_agiledashboard', 'Choose a bot to send a summary of the stand-up in Mattermost.');
         $this->description_create_bot = dgettext('tuleap-botmattermost_agiledashboard', 'If you don\'t see a Bot linked to your Mattermost project/team, please contact your administrator.');
@@ -90,7 +90,7 @@ class AdminNotificationPresenter
         $this->button_delete  = dgettext('tuleap-botmattermost_agiledashboard', 'Delete');
         $this->button_edit    = dgettext('tuleap-botmattermost_agiledashboard', 'Edit');
         $this->button_confirm = dgettext('tuleap-botmattermost_agiledashboard', 'Add');
-        $this->button_save = dgettext('tuleap-botmattermost_agiledashboard', 'Update');
+        $this->button_save    = dgettext('tuleap-botmattermost_agiledashboard', 'Update');
 
         $this->modal_add_title      = dgettext('tuleap-botmattermost_agiledashboard', 'Add notification');
         $this->modal_edit_title     = dgettext('tuleap-botmattermost_agiledashboard', 'Edit notification');

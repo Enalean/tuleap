@@ -50,7 +50,7 @@ class Dao extends DataAccessObject
 
     public function searchAgileDashboardBotsForSummary()
     {
-        $interval   = $this->da->quoteSmart(self::SEND_TIME_INTERVAL);
+        $interval = $this->da->quoteSmart(self::SEND_TIME_INTERVAL);
 
         $sql = "SELECT *
                 FROM plugin_botmattermost_bot

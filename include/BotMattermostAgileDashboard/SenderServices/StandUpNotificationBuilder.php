@@ -61,8 +61,8 @@ class StandUpNotificationBuilder
         $last_planning_name           = '';
 
         foreach ($last_plannings as $last_planning) {
-            $last_plannings_for_presenter['title']      = sprintf(dgettext('tuleap-botmattermost_agiledashboard', 'Stand-up summary of %1$s in project %2$s'), $last_planning->getName(), $project_name);
-            $last_plannings_for_presenter['milestones'] = $this->buildMilestonesForNotification(
+            $last_plannings_for_presenter['title']                 = sprintf(dgettext('tuleap-botmattermost_agiledashboard', 'Stand-up summary of %1$s in project %2$s'), $last_planning->getName(), $project_name);
+            $last_plannings_for_presenter['milestones']            = $this->buildMilestonesForNotification(
                 $http_request,
                 $last_planning,
                 $user

@@ -98,8 +98,8 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
             new Tracker_ArtifactDao(),
             $artifact_factory
         );
-        $planning_factory = PlanningFactory::build();
-        $logger = new BotMattermostLogger();
+        $planning_factory         = PlanningFactory::build();
+        $logger                   = new BotMattermostLogger();
 
         $planning_milestone_factory = Planning_MilestoneFactory::build();
 
