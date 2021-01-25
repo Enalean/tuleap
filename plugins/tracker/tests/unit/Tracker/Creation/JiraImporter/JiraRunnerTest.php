@@ -37,6 +37,8 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
@@ -401,36 +403,34 @@ class JiraRunnerTest extends TestCase
             str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
         );
 
-        $project = Mockery::mock(\Project::class);
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive(['getName' => 'Whalter White', 'isAlive' => true]);
+        $user = UserTestBuilder::anActiveUser()->withUserName('Whalter_White')->build();
 
-        $import          = Mockery::mock(PendingJiraImport::class);
         $encrypted_token = SymmetricCrypto::encrypt(
             new ConcealedString('secret'),
             $encryption_key
         );
-        $import->shouldReceive(
-            [
-                'getId'                 => 123,
-                'getUser'               => $user,
-                'getProject'            => $project,
-                'getTrackerName'        => 'Bugs',
-                'getTrackerShortname'   => 'bug',
-                'getTrackerDescription' => 'Imported issues from jira',
-                'getTrackerColor'       => 'inca-silver',
-                'getEncryptedJiraToken' => $encrypted_token,
-                'getJiraUser'           => 'user@example.com',
-                'getJiraServer'         => 'https://jira.example.com',
-                'getJiraProjectId'      => 'Jira project',
-                'getJiraIssueTypeId'    => '10003',
-            ]
+        $import          = new PendingJiraImport(
+            123,
+            $project,
+            $user,
+            new \DateTimeImmutable(),
+            'https://jira.example.com',
+            'user@example.com',
+            $encrypted_token,
+            'JP',
+            'Issues',
+            '10003',
+            'Bugs',
+            'bug',
+            'inca-silver',
+            'Imported issues from jira',
         );
 
         $this->user_manager
             ->shouldReceive('forceLogin')
-            ->with('Whalter White')
+            ->with('Whalter_White')
             ->andReturn($user);
 
         $this->key_factory
@@ -438,7 +438,6 @@ class JiraRunnerTest extends TestCase
             ->once()
             ->andReturn($encryption_key);
 
-        $tracker = Mockery::mock(Tracker::class);
         $this->creator
             ->shouldReceive('createFromJira')
             ->once()
@@ -473,37 +472,34 @@ class JiraRunnerTest extends TestCase
             str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
         );
 
-        $project = Mockery::mock(\Project::class);
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive(['getName' => 'Whalter White', 'isAlive' => true]);
+        $user = UserTestBuilder::anActiveUser()->withUserName('Whalter_White')->build();
 
-        $import          = Mockery::mock(PendingJiraImport::class);
         $encrypted_token = SymmetricCrypto::encrypt(
             new ConcealedString('secret'),
             $encryption_key
         );
-        $import->shouldReceive(
-            [
-                'getId'                 => 123,
-                'getUser'               => $user,
-                'getProject'            => $project,
-                'getTrackerName'        => 'Bugs',
-                'getTrackerShortname'   => 'bug',
-                'getTrackerDescription' => 'Imported issues from jira',
-                'getTrackerColor'       => 'inca-silver',
-                'getEncryptedJiraToken' => $encrypted_token,
-                'getJiraUser'           => 'user@example.com',
-                'getJiraServer'         => 'https://jira.example.com',
-                'getJiraProjectId'      => 'Jira project',
-                'getJiraIssueTypeName'  => 'Jira issue',
-                'getJiraIssueTypeId'    => '10003',
-            ]
+        $import          = new PendingJiraImport(
+            123,
+            $project,
+            $user,
+            new \DateTimeImmutable(),
+            'https://jira.example.com',
+            'user@example.com',
+            $encrypted_token,
+            'JP',
+            'Issues',
+            '10003',
+            'Bugs',
+            'bug',
+            'inca-silver',
+            'Imported issues from jira',
         );
 
         $this->user_manager
             ->shouldReceive('forceLogin')
-            ->with('Whalter White')
+            ->with('Whalter_White')
             ->andReturn($user);
 
         $this->key_factory
