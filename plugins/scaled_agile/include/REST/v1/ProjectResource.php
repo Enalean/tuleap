@@ -37,16 +37,16 @@ use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramMustHaveExplicitBacklogEnabledException;
 use Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ScaledAgile\Adapter\Program\ProgramDao;
-use Tuleap\ScaledAgile\Adapter\Program\ToBePlaned\BackgroundColorRetriever;
-use Tuleap\ScaledAgile\Adapter\Program\ToBePlaned\ToBePlannedElementsDao;
-use Tuleap\ScaledAgile\Adapter\Program\ToBePlaned\ToBePlannedElementsRetriever;
+use Tuleap\ScaledAgile\Adapter\Program\Feature\BackgroundColorRetriever;
+use Tuleap\ScaledAgile\Adapter\Program\Feature\FeaturesDao;
+use Tuleap\ScaledAgile\Adapter\Program\Feature\FeatureElementsRetriever;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerAdapter;
 use Tuleap\ScaledAgile\Adapter\Program\Tracker\ProgramTrackerException;
 use Tuleap\ScaledAgile\Adapter\Team\TeamAdapter;
 use Tuleap\ScaledAgile\Adapter\Team\TeamDao;
 use Tuleap\ScaledAgile\Adapter\Team\TeamException;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\RetrieveFeatures;
 use Tuleap\ScaledAgile\Program\Backlog\ProgramIncrement\ProgramIncrementBuilder;
-use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\RetrieveToBePlannedElements;
 use Tuleap\ScaledAgile\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ScaledAgile\Program\Plan\CreatePlan;
 use Tuleap\ScaledAgile\Program\Plan\PlanCreator;
@@ -61,9 +61,9 @@ final class ProjectResource extends AuthenticatedResource
     private const MAX_LIMIT = 50;
 
     /**
-     * @var RetrieveToBePlannedElements
+     * @var RetrieveFeatures
      */
-    private $to_be_planned_retriever;
+    private $features_retriever;
     /**
      * @var TeamCreator
      */
@@ -98,9 +98,9 @@ final class ProjectResource extends AuthenticatedResource
 
         $artifact_factory                 = \Tracker_ArtifactFactory::instance();
         $form_element_factory             = \Tracker_FormElementFactory::instance();
-        $this->to_be_planned_retriever    = new ToBePlannedElementsRetriever(
+        $this->features_retriever         = new FeatureElementsRetriever(
             $build_program,
-            new ToBePlannedElementsDao(),
+            new FeaturesDao(),
             $artifact_factory,
             $form_element_factory,
             new BackgroundColorRetriever(new BackgroundColorBuilder(new BindDecoratorRetriever()))
@@ -201,7 +201,7 @@ final class ProjectResource extends AuthenticatedResource
      * @param int $limit Number of elements displayed per page {@min 0} {@max 50}
      * @param int $offset Position of the first element to display {@min 0}
      *
-     * @return ToBePlannedElementRepresentation[]
+     * @return FeatureRepresentation[]
      *
      * @throws RestException 401
      * @throws RestException 400
@@ -210,11 +210,11 @@ final class ProjectResource extends AuthenticatedResource
     {
         $user = $this->user_manager->getCurrentUser();
         try {
-            $elements = $this->to_be_planned_retriever->retrieveElements($id, $user);
+            $elements = $this->features_retriever->retrieveFeaturesToBePlanned($id, $user);
 
-            Header::sendPaginationHeaders($limit, $offset, count($elements->to_be_planned_elements), self::MAX_LIMIT);
+            Header::sendPaginationHeaders($limit, $offset, count($elements), self::MAX_LIMIT);
 
-            return array_slice($elements->to_be_planned_elements, $offset, $limit);
+            return array_slice($elements, $offset, $limit);
         } catch (\Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException $e) {
             throw new RestException(404, $e->getMessage());
         } catch (\Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException $e) {

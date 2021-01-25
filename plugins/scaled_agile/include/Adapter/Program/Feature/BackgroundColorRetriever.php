@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\ToBePlaned;
+namespace Tuleap\ScaledAgile\Adapter\Program\Feature;
 
 use Cardwall_Semantic_CardFields;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\BackgroundColor;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class BackgroundColorRetriever

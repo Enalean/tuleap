@@ -20,24 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\ToBePlaned;
+namespace Tuleap\ScaledAgile\Adapter\Program\Feature;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_ArtifactFactory;
-use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\BackgroundColor;
-use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\ToBePlannedElementsStore;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\BackgroundColor;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
 use Tuleap\ScaledAgile\Program\Program;
-use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementCollectionRepresentation;
-use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementRepresentation;
+use Tuleap\ScaledAgile\REST\v1\FeatureRepresentation;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\TrackerColor;
 
-class ToBePlannedElementRetrieverTest extends TestCase
+class FeatureElementsRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -47,7 +46,7 @@ class ToBePlannedElementRetrieverTest extends TestCase
     private $retrieve_background;
 
     /**
-     * @var ToBePlannedElementsRetriever
+     * @var FeatureElementsRetriever
      */
     private $retriever;
 
@@ -62,9 +61,9 @@ class ToBePlannedElementRetrieverTest extends TestCase
     private $artifact_factory;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ToBePlannedElementsStore
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|FeaturesStore
      */
-    private $to_be_planned_element_dao;
+    private $features_dao;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|BuildProgram
@@ -73,15 +72,15 @@ class ToBePlannedElementRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->to_be_planned_element_dao = \Mockery::mock(ToBePlannedElementsStore::class);
-        $this->build_program             = \Mockery::mock(BuildProgram::class);
-        $this->artifact_factory          = \Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->form_element_factory      = \Mockery::mock(\Tracker_FormElementFactory::instance());
-        $this->retrieve_background       = \Mockery::mock(BackgroundColorRetriever::class);
+        $this->features_dao         = \Mockery::mock(FeaturesStore::class);
+        $this->build_program        = \Mockery::mock(BuildProgram::class);
+        $this->artifact_factory     = \Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->form_element_factory = \Mockery::mock(\Tracker_FormElementFactory::instance());
+        $this->retrieve_background  = \Mockery::mock(BackgroundColorRetriever::class);
 
-        $this->retriever = new ToBePlannedElementsRetriever(
+        $this->retriever = new FeatureElementsRetriever(
             $this->build_program,
-            $this->to_be_planned_element_dao,
+            $this->features_dao,
             $this->artifact_factory,
             $this->form_element_factory,
             $this->retrieve_background
@@ -93,7 +92,7 @@ class ToBePlannedElementRetrieverTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(202));
-        $this->to_be_planned_element_dao->shouldReceive('searchPlannableElements')->andReturn(
+        $this->features_dao->shouldReceive('searchPlannableFeatures')->andReturn(
             [
                 ['tracker_name' => 'User stories', 'artifact_id' => '1', 'artifact_title' => 'Artifact 1', 'field_title_id' => 1],
                 ['tracker_name' => 'Features', 'artifact_id' => '2', 'artifact_title' => 'Artifact 2', 'field_title_id' => 1],
@@ -133,26 +132,24 @@ class ToBePlannedElementRetrieverTest extends TestCase
         $this->retrieve_background->shouldReceive('retrieveBackgroundColor')
             ->andReturn(new BackgroundColor("lake-placid-blue"));
 
-        $collection = new ToBePlannedElementCollectionRepresentation(
-            [
-                new ToBePlannedElementRepresentation(
-                    1,
-                    'Artifact 1',
-                    'one #1',
-                    MinimalTrackerRepresentation::build($tracker_one),
-                    new BackgroundColor("lake-placid-blue")
-                ),
-                new ToBePlannedElementRepresentation(
-                    2,
-                    'Artifact 2',
-                    'two #2',
-                    MinimalTrackerRepresentation::build($tracker_two),
-                    new BackgroundColor("lake-placid-blue")
-                ),
-            ]
-        );
+        $collection = [
+            new FeatureRepresentation(
+                1,
+                'Artifact 1',
+                'one #1',
+                MinimalTrackerRepresentation::build($tracker_one),
+                new BackgroundColor("lake-placid-blue")
+            ),
+            new FeatureRepresentation(
+                2,
+                'Artifact 2',
+                'two #2',
+                MinimalTrackerRepresentation::build($tracker_two),
+                new BackgroundColor("lake-placid-blue")
+            ),
+        ];
 
-        self::assertEquals($collection, $this->retriever->retrieveElements(202, $user));
+        self::assertEquals($collection, $this->retriever->retrieveFeaturesToBePlanned(202, $user));
     }
 
     public function testItDoesNotReturnAnythingWhenUserCanNotReadArtifact(): void
@@ -160,7 +157,7 @@ class ToBePlannedElementRetrieverTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(202));
-        $this->to_be_planned_element_dao->shouldReceive('searchPlannableElements')->andReturn(
+        $this->features_dao->shouldReceive('searchPlannableFeatures')->andReturn(
             [
                 ['tracker_name' => 'Features', 'artifact_id' => '1', 'artifact_title' => 'Private', 'field_title_id' => 1],
             ]
@@ -170,10 +167,7 @@ class ToBePlannedElementRetrieverTest extends TestCase
         $artifact->shouldReceive('userCanView')->with($user)->andReturnFalse();
         $this->artifact_factory->shouldReceive('getArtifactById')->with(1)->andReturn($artifact);
 
-
-        $collection = new ToBePlannedElementCollectionRepresentation([]);
-
-        self::assertEquals($collection, $this->retriever->retrieveElements(202, $user));
+        self::assertEmpty($this->retriever->retrieveFeaturesToBePlanned(202, $user));
     }
 
     public function testItDoesNotReturnAnythingWhenUserCanNotReadField(): void
@@ -181,7 +175,7 @@ class ToBePlannedElementRetrieverTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $this->build_program->shouldReceive('buildExistingProgramProject')->andReturn(new Program(202));
-        $this->to_be_planned_element_dao->shouldReceive('searchPlannableElements')->andReturn(
+        $this->features_dao->shouldReceive('searchPlannableFeatures')->andReturn(
             [
                 ['tracker_name' => 'Features', 'artifact_id' => '1', 'artifact_title' => 'Private field', 'field_title_id' => 1],
             ]
@@ -195,8 +189,6 @@ class ToBePlannedElementRetrieverTest extends TestCase
         $this->form_element_factory->shouldReceive('getFieldById')->with(1)->andReturn($field);
         $field->shouldReceive('userCanRead')->andReturnFalse();
 
-        $collection = new ToBePlannedElementCollectionRepresentation([]);
-
-        self::assertEquals($collection, $this->retriever->retrieveElements(202, $user));
+        self::assertEmpty($this->retriever->retrieveFeaturesToBePlanned(202, $user));
     }
 }

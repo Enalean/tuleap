@@ -20,15 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\ToBePlaned;
+namespace Tuleap\ScaledAgile\Adapter\Program\Feature;
 
 use Tuleap\DB\DataAccessObject;
-use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\ToBePlannedElementsStore;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ScaledAgile\Program\Program;
 
-final class ToBePlannedElementsDao extends DataAccessObject implements ToBePlannedElementsStore
+final class FeaturesDao extends DataAccessObject implements FeaturesStore
 {
-    public function searchPlannableElements(Program $program): array
+    public function searchPlannableFeatures(Program $program): array
     {
         $sql = '
                 SELECT tracker.item_name AS tracker_name, artifact_id, title_value.value AS artifact_title, title.field_id AS field_title_id
