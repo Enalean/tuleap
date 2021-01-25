@@ -60,10 +60,11 @@ msgstr ""
 
 #, php-format
 msgid ""
-"Unable to contact the server with the provided token. GitLab server error: %s"
+"Unable to contact the server with the provided token. Please ensure that "
+"token has \"api\" scope. GitLab server error: %s"
 msgstr ""
-"Impossible de contacter le serveur avec le token fourni. Erreur du serveur "
-"GitLab : %s"
+"Impossible de contacter le serveur avec le token fourni. Vérifiez bien que "
+"le jeton a une portée de niveau \"api\". Erreur du serveur GitLab : %s"
 
 msgid ""
 "We managed to contact the server, but couldn't parse the response. We are "

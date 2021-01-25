@@ -201,6 +201,9 @@ final class GitlabRepositoryResource
      *  }<br>
      * </pre>
      * <br>
+     * <p>
+     * <strong>Note:</strong> To ensure that the new token has needed access, it will regenerate the webhook used by GitLab.
+     * </p>
      *
      * <p>To update the webhook secret, used by GitLab to communicate with Tuleap:</p>
      * <pre>
@@ -228,6 +231,7 @@ final class GitlabRepositoryResource
         $stream_factory        = HTTPFactoryBuilder::streamFactory();
         $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
         $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
+        $logger                = BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER);
 
         $current_user = UserManager::instance()->getCurrentUser();
 
@@ -249,7 +253,15 @@ final class GitlabRepositoryResource
                 new GitlabBotApiTokenInserter(
                     new GitlabBotApiTokenDao(),
                     new KeyFactory()
-                )
+                ),
+                new WebhookCreator(
+                    new KeyFactory(),
+                    new WebhookDao(),
+                    $gitlab_api_client,
+                    new InstanceBaseURLBuilder(),
+                    $logger,
+                ),
+                $logger,
             );
 
             $bot_api_token_updater->update(
@@ -283,7 +295,7 @@ final class GitlabRepositoryResource
                     new WebhookDao(),
                     $gitlab_api_client,
                     new InstanceBaseURLBuilder(),
-                    BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER),
+                    $logger,
                 )
             );
 

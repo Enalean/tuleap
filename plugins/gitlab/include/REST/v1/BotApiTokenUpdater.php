@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\Gitlab\REST\v1;
 
 use GitPermissionsManager;
 use Luracast\Restler\RestException;
+use Psr\Log\LoggerInterface;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProjectBuilder;
 use Tuleap\Gitlab\API\GitlabRequestException;
@@ -33,11 +33,11 @@ use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
+use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\REST\I18NRestException;
 
 class BotApiTokenUpdater
 {
-
     /**
      * @var GitlabProjectBuilder
      */
@@ -58,19 +58,31 @@ class BotApiTokenUpdater
      * @var GitlabBotApiTokenInserter
      */
     private $bot_api_token_inserter;
+    /**
+     * @var WebhookCreator
+     */
+    private $webhook_creator;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         GitlabRepositoryFactory $repository_factory,
         GitlabProjectBuilder $project_builder,
         GitlabRepositoryProjectRetriever $project_retriever,
         GitPermissionsManager $permissions_manager,
-        GitlabBotApiTokenInserter $bot_api_token_inserter
+        GitlabBotApiTokenInserter $bot_api_token_inserter,
+        WebhookCreator $webhook_creator,
+        LoggerInterface $logger
     ) {
         $this->project_builder        = $project_builder;
         $this->repository_factory     = $repository_factory;
         $this->project_retriever      = $project_retriever;
         $this->permissions_manager    = $permissions_manager;
         $this->bot_api_token_inserter = $bot_api_token_inserter;
+        $this->webhook_creator        = $webhook_creator;
+        $this->logger                 = $logger;
     }
 
     public function update(ConcealedBotApiTokenPatchRepresentation $patch_representation, \PFUser $current_user): void
@@ -91,19 +103,24 @@ class BotApiTokenUpdater
 
         try {
             $this->project_builder->getProjectFromGitlabAPI($credentials, $repository->getGitlabRepositoryId());
+            $this->webhook_creator->generateWebhookInGitlabProject($credentials, $repository);
             $this->bot_api_token_inserter->insertToken($repository, $patch_representation->gitlab_bot_api_token);
         } catch (GitlabRequestException $e) {
+            $this->logger->error('Unable to update the token', ['exception' => $e]);
+
             throw new I18NRestException(
                 400,
                 sprintf(
                     dgettext(
                         'tuleap-gitlab',
-                        'Unable to contact the server with the provided token. GitLab server error: %s'
+                        'Unable to contact the server with the provided token. Please ensure that token has "api" scope. GitLab server error: %s'
                     ),
                     $e->getGitlabServerMessage()
                 )
             );
         } catch (GitlabResponseAPIException $e) {
+            $this->logger->error('Unable to update the token', ['exception' => $e]);
+
             throw new I18NRestException(
                 500,
                 dgettext(
