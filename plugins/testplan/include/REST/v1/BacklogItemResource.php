@@ -81,9 +81,9 @@ final class BacklogItemResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $testmanagement_config       = new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), TrackerFactory::instance());
-        $testmanagement_artifact_dao = new ArtifactDao();
-        $formelement_factory         = Tracker_FormElementFactory::instance();
+        $testmanagement_config             = new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), TrackerFactory::instance());
+        $testmanagement_artifact_dao       = new ArtifactDao();
+        $formelement_factory               = Tracker_FormElementFactory::instance();
         $linked_test_definitions_retriever = new TestPlanLinkedTestDefinitionsRetriever(
             $testmanagement_config,
             $testmanagement_artifact_dao,
@@ -98,7 +98,7 @@ final class BacklogItemResource extends AuthenticatedResource
                 $user_manager
             )
         );
-        $linked_test_definitions = $linked_test_definitions_retriever->getDefinitionsLinkedToAnArtifact(
+        $linked_test_definitions           = $linked_test_definitions_retriever->getDefinitionsLinkedToAnArtifact(
             $backlog_item,
             $milestone,
             $user,

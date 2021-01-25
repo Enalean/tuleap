@@ -83,15 +83,15 @@ function html_image($src, $args, $display = 1)
  */
 function html_get_language_popup($Language, $title = 'language_id', $selected = 'xzxzxz')
 {
-    $hp   = Codendi_HTMLPurifier::instance();
+    $hp               = Codendi_HTMLPurifier::instance();
     $language_factory = new BaseLanguageFactory();
 
     $html = '<select name="' . $hp->purify($title) . '">';
     foreach ($language_factory->getAvailableLanguages() as $code => $lang) {
         $select = ($selected == $code) ? 'selected="selected"' : '';
-        $html .= '<option value="' .  $hp->purify($code, CODENDI_PURIFIER_CONVERT_HTML)  . '" ' . $select . '>';
-        $html .= $hp->purify($lang, CODENDI_PURIFIER_CONVERT_HTML);
-        $html .= '</option>';
+        $html  .= '<option value="' .  $hp->purify($code, CODENDI_PURIFIER_CONVERT_HTML)  . '" ' . $select . '>';
+        $html  .= $hp->purify($lang, CODENDI_PURIFIER_CONVERT_HTML);
+        $html  .= '</option>';
     }
     $html .= '</select>';
     return $html;
@@ -270,7 +270,7 @@ function html_build_select_box_from_arrays(
         Put in the Unchanged box
     */
     if ($show_unchanged) {
-        $return .= '<OPTION VALUE="' . $hp->purify($text_unchanged) . '" SELECTED>' . $hp->purify($text_unchanged, $purify_level) . '</OPTION>';
+        $return           .= '<OPTION VALUE="' . $hp->purify($text_unchanged) . '" SELECTED>' . $hp->purify($text_unchanged, $purify_level) . '</OPTION>';
          $isAValueSelected = true;
     }
 
@@ -278,7 +278,7 @@ function html_build_select_box_from_arrays(
     if ($show_any) {
         if (is_array($checked_val)) {
             if (in_array(0, $checked_val)) {
-                $selected = "SELECTED";
+                $selected         = "SELECTED";
                 $isAValueSelected = true;
             } else {
                 $selected = "";
@@ -296,7 +296,7 @@ function html_build_select_box_from_arrays(
     if ($show_100) {
         if (is_array($checked_val)) {
             if (in_array(100, $checked_val)) {
-                $selected = "SELECTED";
+                $selected         = "SELECTED";
                 $isAValueSelected = true;
             } else {
                 $selected = "";
@@ -327,12 +327,12 @@ function html_build_select_box_from_arrays(
 				<OPTION VALUE="' . $hp->purify($vals[$i]) . '"';
             if (is_array($checked_val)) {
                 if (in_array($vals[$i], $checked_val)) {
-                    $return .= ' SELECTED';
+                    $return          .= ' SELECTED';
                     $isAValueSelected = true;
                 }
             } else {
                 if ($vals[$i] == $checked_val) {
-                    $return .= ' SELECTED';
+                    $return          .= ' SELECTED';
                     $isAValueSelected = true;
                 }
             }
@@ -448,7 +448,7 @@ function html_build_multiple_select_box_from_array($array, $name, $checked_array
 
     $checked_count = count($checked_array);
 //      echo '-- '.$checked_count.' --';
-    $id = str_replace('[]', '', $name);
+    $id     = str_replace('[]', '', $name);
     $return = '
 		<SELECT NAME="' . $hp->purify($name) . '" id="' . $hp->purify($id) . '" MULTIPLE SIZE="' . $hp->purify($size) . '" ' . $disabled . '>';
 
@@ -523,7 +523,7 @@ function site_header($params)
     */
 
     if (isset($params['group'])) {
-        $pm = ProjectManager::instance();
+        $pm      = ProjectManager::instance();
         $project = $pm->getProject($params['group']);
         if ($project->isTemplate()) {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('include_layout', 'template_warning'));
@@ -558,7 +558,7 @@ function site_project_header($params)
     $group_id = $params['group'];
 
     //get the project object
-    $pm = ProjectManager::instance();
+    $pm      = ProjectManager::instance();
     $project = $pm->getProject($group_id);
 
     //group doesn't exist

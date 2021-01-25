@@ -86,8 +86,8 @@ class ReferenceFactoryTest extends TestCase
 
         $this->pull_request = new PullRequest(1, '', '', 42, 101, '', '', '', '', '', '');
 
-        $project            = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(101)->getMock();
-        $this->repository   = Mockery::mock(\GitRepository::class);
+        $project          = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(101)->getMock();
+        $this->repository = Mockery::mock(\GitRepository::class);
         $this->repository->shouldReceive('getProject')->andReturn($project);
         $this->repository->shouldReceive('getProjectId')->andReturn(101);
     }

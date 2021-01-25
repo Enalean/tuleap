@@ -34,9 +34,9 @@ class Tracker_Artifact_Presenter_ArtifactLinkPresenter
         $artifact_id,
         $title
     ) {
-        $this->tracker_name    = $tracker_name;
-        $this->group_id        = $group_id;
-        $this->artifact_id     = $artifact_id;
-        $this->title           = $title;
+        $this->tracker_name = $tracker_name;
+        $this->group_id     = $group_id;
+        $this->artifact_id  = $artifact_id;
+        $this->title        = $title;
     }
 }

@@ -94,7 +94,7 @@ class PullRequestMinimalRepresentation
         GitRepository $repository,
         GitRepository $repository_dest
     ) {
-        $this->id  = JsonCast::toInt($pull_request->getId());
+        $this->id = JsonCast::toInt($pull_request->getId());
 
         $project_id  = $repository->getProjectId();
         $purifier    = Codendi_HTMLPurifier::instance();

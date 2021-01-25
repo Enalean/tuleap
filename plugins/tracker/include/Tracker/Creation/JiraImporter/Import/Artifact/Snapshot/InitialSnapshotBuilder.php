@@ -69,7 +69,7 @@ class InitialSnapshotBuilder
         string $jira_base_url
     ): Snapshot {
         $already_parsed_fields_keys = [];
-        $field_snapshots          = [];
+        $field_snapshots            = [];
 
         $this->logger->debug("Build initial snapshot ... ");
 
@@ -192,7 +192,7 @@ class InitialSnapshotBuilder
             }
 
             $already_parsed_fields_keys[$jira_field_id] = true;
-            $field_snapshots[] = $field_snapshot;
+            $field_snapshots[]                          = $field_snapshot;
         }
     }
 

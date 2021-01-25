@@ -39,7 +39,7 @@ class TrackerTest extends TestCase
 
     public function setUp(): void
     {
-        $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
+        $GLOBALS['Response']    = Mockery::mock(BaseLayout::class);
         $this->workflow_factory = \Mockery::spy(\WorkflowFactory::class);
 
         $this->formelement_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
@@ -67,7 +67,7 @@ class TrackerTest extends TestCase
     public function testHasBlockingErrorWorkflowThrowException()
     {
         $header = ['summary', 'details'];
-        $lines = [
+        $lines  = [
             ['summary 1', 'details 1'],
             ['summary 2', 'details 2'],
         ];
@@ -102,7 +102,7 @@ class TrackerTest extends TestCase
         $this->tracker->shouldReceive('getWorkflow')->andReturns($this->workflow_factory);
 
         $user_manager = \Mockery::mock(\UserManager::class);
-        $user = \Mockery::mock(\PFUser::class);
+        $user         = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns('107');
         $this->tracker->shouldReceive('getUserManager')->andReturns($user_manager);
         $user_manager->shouldReceive('getCurrentUser')->andReturns($user);
@@ -118,7 +118,7 @@ class TrackerTest extends TestCase
     public function testHasBlockingErrorNoError(): void
     {
         $header = ['summary', 'details'];
-        $lines = [
+        $lines  = [
             ['summary 1', 'details 1'],
             ['summary 2', 'details 2'],
         ];
@@ -153,7 +153,7 @@ class TrackerTest extends TestCase
         $this->tracker->shouldReceive('getWorkflow')->andReturns($this->workflow_factory);
 
         $user_manager = \Mockery::mock(\UserManager::class);
-        $user = \Mockery::mock(\PFUser::class);
+        $user         = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns('107');
         $this->tracker->shouldReceive('getUserManager')->andReturns($user_manager);
         $user_manager->shouldReceive('getCurrentUser')->andReturns($user);
@@ -169,7 +169,7 @@ class TrackerTest extends TestCase
     public function testHasBlockingErrorReturnNoErrorWhenEmptyValue(): void
     {
         $header = ['summary', 'details'];
-        $lines = [
+        $lines  = [
             ['summary 1', 'details 1'],
             ['summary 2', ''],
         ];
@@ -204,7 +204,7 @@ class TrackerTest extends TestCase
         $this->tracker->shouldReceive('getWorkflow')->andReturns($this->workflow_factory);
 
         $user_manager = \Mockery::mock(\UserManager::class);
-        $user = \Mockery::mock(\PFUser::class);
+        $user         = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns('107');
         $this->tracker->shouldReceive('getUserManager')->andReturns($user_manager);
         $user_manager->shouldReceive('getCurrentUser')->andReturns($user);

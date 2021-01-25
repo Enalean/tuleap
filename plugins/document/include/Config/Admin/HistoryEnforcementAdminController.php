@@ -61,9 +61,9 @@ class HistoryEnforcementAdminController implements DispatchableWithRequest
         CSRFSynchronizerToken $token,
         DocmanSettingsTabsPresenterCollectionBuilder $tabs_presenter_collection_builder
     ) {
-        $this->admin_page_renderer = $admin_page_renderer;
-        $this->settings_builder = $settings_builder;
-        $this->token = $token;
+        $this->admin_page_renderer               = $admin_page_renderer;
+        $this->settings_builder                  = $settings_builder;
+        $this->token                             = $token;
         $this->tabs_presenter_collection_builder = $tabs_presenter_collection_builder;
     }
 

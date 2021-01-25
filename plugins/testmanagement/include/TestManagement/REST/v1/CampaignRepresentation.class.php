@@ -118,11 +118,11 @@ class CampaignRepresentation
         TestExecutionTestStatusDAO $test_execution_test_status_dao,
         PFUser $user
     ): self {
-        $artifact     = $campaign->getArtifact();
-        $id           = $artifact->getId();
-        $tracker_id   = $artifact->getTrackerId();
-        $label_field  = self::getLabelField($form_element_factory, $tracker_id, $user);
-        $field_value  = self::getFieldValue($artifact, $label_field);
+        $artifact    = $campaign->getArtifact();
+        $id          = $artifact->getId();
+        $tracker_id  = $artifact->getTrackerId();
+        $label_field = self::getLabelField($form_element_factory, $tracker_id, $user);
+        $field_value = self::getFieldValue($artifact, $label_field);
 
         $executions_status = self::getExecutionsStatus(
             $artifact,

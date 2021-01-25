@@ -188,7 +188,7 @@ class TaskboardCardResource extends AuthenticatedResource
         $artifact  = $this->getArtifact($user, $id);
 
         $card_representation_builder = CardRepresentationBuilder::buildSelf();
-        $priority_manager = Tracker_Artifact_PriorityManager::build();
+        $priority_manager            = Tracker_Artifact_PriorityManager::build();
 
         $rank = (int) $priority_manager->getGlobalRank($id);
         return $card_representation_builder->build($milestone, $artifact, $user, $rank);

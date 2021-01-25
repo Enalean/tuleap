@@ -56,7 +56,7 @@ class Docman_View_GetFieldsVisitor implements ItemVisitor
     public function visitFolder(Docman_Folder $item, $params = [])
     {
         $folderMetadata = ['title', 'description', 'create_date', 'update_date'];
-        $mda = [];
+        $mda            = [];
         foreach ($folderMetadata as $mdLabel) {
             $mda[] = $item->getMetadataFromLabel($mdLabel);
         }

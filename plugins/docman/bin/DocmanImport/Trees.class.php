@@ -99,7 +99,7 @@ class Trees
         if ($array1 != null && isset($array1['children'])) {
             foreach ($array1['children'] as $name1 => $node1) {
                 if (isset($array2['children']) && array_key_exists($name1, $array2['children'])) {
-                    $res['children'][$name1] = self::mergeTagRec($array1['children'][$name1], $array2['children'][$name1]);
+                    $res['children'][$name1]        = self::mergeTagRec($array1['children'][$name1], $array2['children'][$name1]);
                     $res['children'][$name1]['tag'] = 'IN_BOTH';
                 } else {
                     $res['children'][$name1] = $node1;
@@ -139,9 +139,9 @@ class Trees
     public static function mergeTag(array $array1, array $array2)
     {
         $array1_keys = array_keys($array1);
-        $root1 = array_pop($array1_keys);
+        $root1       = array_pop($array1_keys);
         $array2_keys = array_keys($array2);
-        $root2 = array_pop($array2_keys);
+        $root2       = array_pop($array2_keys);
 
         $res['(root)'] =  self::mergeTagRec($array1[$root1], $array2[$root2]);
 

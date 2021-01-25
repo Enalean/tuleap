@@ -37,7 +37,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
     {
         $field = $this->getTextFieldWithProject();
 
-        $text  = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $field, false, 'Problems during installation', 'text');
+        $text = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $field, false, 'Problems during installation', 'text');
         $this->assertEquals('Problems during installation', $text->getText());
         $this->assertEquals('Problems during installation', $text->getValue());
     }
@@ -45,7 +45,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
     public function testItReturnsTheValueWhenFormatIsText(): void
     {
         $field = $this->getTextFieldWithProject();
-        $text = new Tracker_Artifact_ChangesetValue_Text(
+        $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
             \Mockery::spy(\Tracker_Artifact_Changeset::class),
             $field,
@@ -59,7 +59,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
     public function testItStripHTMLWhenFormatIsHTML(): void
     {
         $field = $this->getTextFieldWithProject();
-        $text = new Tracker_Artifact_ChangesetValue_Text(
+        $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
             \Mockery::spy(\Tracker_Artifact_Changeset::class),
             $field,
@@ -73,7 +73,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
     public function testReturnsUnconvertedHTMLWhenFormatIsHTML(): void
     {
         $field = $this->getTextFieldWithProject();
-        $text = new Tracker_Artifact_ChangesetValue_Text(
+        $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
             \Mockery::spy(\Tracker_Artifact_Changeset::class),
             $field,
@@ -87,7 +87,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
     public function testReturnsUnconvertedTextWhenFormatIsText(): void
     {
         $field = $this->getTextFieldWithProject();
-        $text = new Tracker_Artifact_ChangesetValue_Text(
+        $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
             \Mockery::spy(\Tracker_Artifact_Changeset::class),
             $field,
@@ -120,7 +120,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
     public function testItReturnsTheTextValue(): void
     {
         $field = $this->getTextFieldWithProject();
-        $text = new Tracker_Artifact_ChangesetValue_Text(
+        $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
             \Mockery::spy(\Tracker_Artifact_Changeset::class),
             $field,
@@ -134,7 +134,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
     public function testItReturnsTheHTMLValue(): void
     {
         $field = $this->getTextFieldWithProject();
-        $text = new Tracker_Artifact_ChangesetValue_Text(
+        $text  = new Tracker_Artifact_ChangesetValue_Text(
             111,
             \Mockery::spy(\Tracker_Artifact_Changeset::class),
             $field,

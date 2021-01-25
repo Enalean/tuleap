@@ -30,7 +30,7 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends
         parent::setUp();
 
         $this->tracker_id = 666;
-        $this->tracker = \Mockery::spy(\Tracker::class);
+        $this->tracker    = \Mockery::spy(\Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturns($this->tracker_id);
 
         $this->task_tracker = \Mockery::spy(\Tracker::class);
@@ -59,7 +59,7 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends
 
         $this->dao       = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldDao::class);
         $this->value_dao = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
-        $this->command = new Cardwall_OnTop_Config_Command_UpdateMappingFields(
+        $this->command   = new Cardwall_OnTop_Config_Command_UpdateMappingFields(
             $this->tracker,
             $this->dao,
             $this->value_dao,

@@ -160,9 +160,9 @@ abstract class Widget_Rss extends Widget
         $sql = "SELECT * FROM widget_rss WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_es($id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
-            $data = db_fetch_array($res);
-            $this->rss_title = $data['title'];
-            $this->rss_url   = $data['url'];
+            $data             = db_fetch_array($res);
+            $this->rss_title  = $data['title'];
+            $this->rss_url    = $data['url'];
             $this->content_id = $id;
         }
     }
@@ -170,11 +170,11 @@ abstract class Widget_Rss extends Widget
     public function create(Codendi_Request $request)
     {
         $content_id = false;
-        $vUrl = new Valid_String('url');
+        $vUrl       = new Valid_String('url');
         $vUrl->setErrorMessage("Can't add empty rss url");
         $vUrl->required();
         if ($request->validInArray('rss', $vUrl)) {
-            $rss = $request->get('rss');
+            $rss    = $request->get('rss');
             $vTitle = new Valid_String('title');
             $vTitle->required();
             if (! $request->validInArray('rss', $vTitle)) {
@@ -185,15 +185,15 @@ abstract class Widget_Rss extends Widget
                     $rss['title'] = $request->get('title');
                 }
             }
-            $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($rss['title']) . "', '" . db_escape_string($rss['url']) . "')";
-            $res = db_query($sql);
+            $sql        = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($rss['title']) . "', '" . db_escape_string($rss['url']) . "')";
+            $res        = db_query($sql);
             $content_id = db_insertid($res);
         }
         return $content_id;
     }
     public function updatePreferences(Codendi_Request $request)
     {
-        $done = false;
+        $done       = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();
         if (($rss = $request->get('rss')) && $request->valid($vContentId)) {
@@ -212,8 +212,8 @@ abstract class Widget_Rss extends Widget
             }
 
             if ($url || $title) {
-                $sql = "UPDATE widget_rss SET " . $title . ", " . $url . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei((int) $request->get('content_id'));
-                $res = db_query($sql);
+                $sql  = "UPDATE widget_rss SET " . $title . ", " . $url . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei((int) $request->get('content_id'));
+                $res  = db_query($sql);
                 $done = true;
             }
         }
@@ -240,7 +240,7 @@ abstract class Widget_Rss extends Widget
         if (! is_dir($cache_dir) && ! mkdir($cache_dir) && ! is_dir($cache_dir)) {
             throw new \RuntimeException(sprintf('RSS cache directory "%s" was not created', $cache_dir));
         }
-        $cache     = Laminas\Cache\StorageFactory::factory([
+        $cache = Laminas\Cache\StorageFactory::factory([
             'adapter' => [
                 'name'    => 'filesystem',
                 'options' => ['cache_dir' => $cache_dir],

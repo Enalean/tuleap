@@ -81,8 +81,8 @@ class WikiPlugin_BackLinks extends WikiPlugin
             }
         }
         $args['dosort'] = ! empty($args['sortby']); // override DB sort (??)
-        $pagelist = new PageList($info, $exclude, $args);
-        $p = $dbi->getPage($page);
+        $pagelist       = new PageList($info, $exclude, $args);
+        $p              = $dbi->getPage($page);
         $pagelist->addPages($p->getBackLinks(false, $sortby, $limit, $exclude));
 
         // Localization note: In English, the differences between the
@@ -166,7 +166,7 @@ class _PageList_Column_BackLinks_count extends _PageList_Column
 {
     public function _getValue($page, &$revision_handle)
     {
-        $iter = $page->getPageLinks();
+        $iter  = $page->getPageLinks();
         $count = $iter->count();
         return $count;
     }

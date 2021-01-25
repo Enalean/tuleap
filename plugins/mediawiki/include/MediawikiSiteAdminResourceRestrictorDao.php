@@ -39,7 +39,7 @@ class MediawikiSiteAdminResourceRestrictorDao extends RestrictedResourceDao
     public function searchAllowedProjectsOnResource($resource_id)
     {
         $resource_id = $this->da->escapeInt($resource_id);
-        $sql = "SELECT groups.*
+        $sql         = "SELECT groups.*
                 FROM groups
                   JOIN plugin_mediawiki_site_restricted_features mwf ON (mwf.project_id = groups.group_id)
                 WHERE mwf.feature = $resource_id

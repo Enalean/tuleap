@@ -125,7 +125,7 @@ class PullRequestMerger
 
         is_dir($parent_tmp) || mkdir($parent_tmp, 0750, true);
 
-        $cmd = new System_Command();
+        $cmd        = new System_Command();
         $result_cmd = $cmd->exec('mktemp -d -p ' . escapeshellarg($parent_tmp) . ' pr_XXXXXX');
         return $result_cmd[0];
     }

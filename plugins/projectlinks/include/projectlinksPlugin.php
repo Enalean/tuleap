@@ -666,7 +666,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
             } else {
                 // same name - any differences?
                 $ltr_grp                               = db_fetch_array($rs_grp);
-                $basicURI                              .= "&link_type_id={$ltr_grp['link_type_id']}";
+                $basicURI                             .= "&link_type_id={$ltr_grp['link_type_id']}";
                 $typeMatch[$ltr_tmplt['link_type_id']] = $ltr_grp['link_type_id'];
                 foreach (['reverse_name', 'description', 'uri_plus'] as $param) {
                     if ($ltr_tmplt[$param] <> $ltr_grp[$param]) {
@@ -884,7 +884,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
      */
     public function _admin_links_table($link_type_id) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore, PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
 
         $dao   = $this->getProjectLinksDao();
@@ -906,9 +906,9 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $html .= '<td>' . $hp->purify($row['group_name']) . '</td>';
 
                 // Delete
-                $url  = "?func=pl_link_delete&amp;disp=edit_link_type&amp;link_type_id=" . $link_type_id . "&amp;group_id=" . $row['master_group_id'] . "&amp;link_id=" . $row['link_id'];
-                $warn = dgettext('tuleap-projectlinks', 'Delete project link');
-                $alt  = dgettext('tuleap-projectlinks', 'Delete project link');
+                $url   = "?func=pl_link_delete&amp;disp=edit_link_type&amp;link_type_id=" . $link_type_id . "&amp;group_id=" . $row['master_group_id'] . "&amp;link_id=" . $row['link_id'];
+                $warn  = dgettext('tuleap-projectlinks', 'Delete project link');
+                $alt   = dgettext('tuleap-projectlinks', 'Delete project link');
                 $html .= '<td>' . html_trash_link($url, $warn, $alt) . '</td>';
 
                 $html .= '</tr>';

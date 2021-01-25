@@ -82,7 +82,7 @@ class RestrictedPluginDao extends RestrictedResourceDao
 
     public function isPluginAllowedForProject($plugin_id, $project_id)
     {
-        $plugin_id = $this->da->escapeInt($plugin_id);
+        $plugin_id  = $this->da->escapeInt($plugin_id);
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT project_id

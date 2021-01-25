@@ -30,10 +30,10 @@ class BurnupCacheDao extends DataAccessObject
         $total_effort,
         $team_effort
     ) {
-        $artifact_id             = $this->da->escapeInt($artifact_id);
-        $timestamp               = $this->da->escapeInt($timestamp);
-        $team_effort             = $team_effort === null ? 'NULL' : $this->da->quoteSmart($team_effort);
-        $total_effort            = $total_effort === null ? 'NULL' : $this->da->quoteSmart($total_effort);
+        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $timestamp    = $this->da->escapeInt($timestamp);
+        $team_effort  = $team_effort === null ? 'NULL' : $this->da->quoteSmart($team_effort);
+        $total_effort = $total_effort === null ? 'NULL' : $this->da->quoteSmart($total_effort);
 
         $sql = "REPLACE INTO plugin_agiledashboard_tracker_field_burnup_cache
                     (artifact_id, timestamp, total_effort, team_effort)

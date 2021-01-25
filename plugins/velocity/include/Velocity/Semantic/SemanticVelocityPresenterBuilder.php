@@ -54,7 +54,7 @@ class SemanticVelocityPresenterBuilder
         SemanticDone $semantic_done,
         ?Tracker_FormElement_Field $velocity_field = null
     ) {
-        $backlog_trackers = $this->backlog_retriever->getBacklogTrackers($tracker);
+        $backlog_trackers                     = $this->backlog_retriever->getBacklogTrackers($tracker);
         $backlog_required_trackers_collection = $this->missing_requirement_retriever->buildCollectionFromBacklogTrackers(
             $backlog_trackers
         );

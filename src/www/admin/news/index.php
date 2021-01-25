@@ -45,7 +45,7 @@ if (user_ismember(ForgeConfig::get('sys_news_group'), 'A')) {
         ProjectManager::instance(),
         UserManager::instance()
     );
-    $admin_news_router  = new AdminNewsRouter(
+    $admin_news_router   = new AdminNewsRouter(
         new AdminNewsController(
             $admin_news_dao,
             $admin_news_renderer,

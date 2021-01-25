@@ -46,7 +46,7 @@ final class SSHKeyDeleteController implements DispatchableWithRequest
     public function __construct(CSRFSynchronizerToken $csrf_token, UserManager $user_manager)
     {
         $this->user_manager = $user_manager;
-        $this->csrf_token = $csrf_token;
+        $this->csrf_token   = $csrf_token;
     }
 
     /**

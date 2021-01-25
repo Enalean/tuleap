@@ -77,7 +77,7 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent
             }
         }
 
-        $server  = $this->server_factory->getServerById($remote_server_id);
+        $server = $this->server_factory->getServerById($remote_server_id);
         if (! $server) {
             $this->error('Failed to find server ' . $remote_server_id);
             return false;

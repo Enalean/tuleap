@@ -312,7 +312,7 @@ function UpgradeUser($olduser, $user)
             ! empty($user->_current_index) and
             $user->_current_index > $olduser->_current_index
         ) {
-            $olduser->_current_index = $user->_current_index;
+            $olduser->_current_index  = $user->_current_index;
             $olduser->_current_method = $user->_current_method;
         }
         if (! empty($user->_authmethod)) {
@@ -365,15 +365,15 @@ function UserExists($UserName)
  */
 class _WikiUser
 {
-     public $_userid = '';
-     public $_level = WIKIAUTH_ANON;
-     public $_prefs = false;
+     public $_userid         = '';
+     public $_level          = WIKIAUTH_ANON;
+     public $_prefs          = false;
      public $_HomePagehandle = false;
 
     // constructor
     public function __construct($UserName = '', $prefs = false)
     {
-        $this->_userid = $UserName;
+        $this->_userid         = $UserName;
         $this->_HomePagehandle = false;
         if ($UserName) {
             $this->hasHomePage();
@@ -461,7 +461,7 @@ class _WikiUser
         if (empty($this->_current_index)) {
             if (strtolower(static::class) != '_passuser') {
                 $this->_current_method = substr(static::class, 1, -8);
-                $this->_current_index = $this->array_position(
+                $this->_current_index  = $this->array_position(
                     $this->_current_method,
                     $this->_auth_methods
                 );
@@ -505,15 +505,15 @@ class _WikiUser
         if ($GLOBALS['LANG'] != DEFAULT_LANGUAGE) {
             update_locale(DEFAULT_LANGUAGE);
         }
-        $userid = $this->_userid;
+        $userid        = $this->_userid;
         $require_level = 0;
         extract($args); // fixme
 
         $require_level = max(0, min(WIKIAUTH_ADMIN, (int) $require_level));
 
         $pagename = $request->getArg('pagename');
-        $nocache = 1;
-        $login = Template(
+        $nocache  = 1;
+        $login    = Template(
             'login',
             compact(
                 'pagename',
@@ -527,7 +527,7 @@ class _WikiUser
         // check if the html template was already processed
         $seperate_page = $seperate_page ? true : ! alreadyTemplateProcessed('html');
         if ($seperate_page) {
-            $page = $request->getPage($pagename);
+            $page     = $request->getPage($pagename);
             $revision = $page->getCurrentRevision();
             return GeneratePage($login, _("Sign In"), $revision);
         } else {
@@ -624,9 +624,9 @@ class _WikiUser
             if (method_exists($GLOBALS['request']->_user, "logout")) { //_HttpAuthPassUser
                 $GLOBALS['request']->_user->logout();
             }
-            $user = new _AnonUser();
+            $user          = new _AnonUser();
             $user->_userid = '';
-            $user->_level = WIKIAUTH_ANON;
+            $user->_level  = WIKIAUTH_ANON;
             return $user;
         } elseif ($cancel) {
             return false;        // User hit cancel button.
@@ -650,12 +650,12 @@ class _WikiUser
                 // upgrade class
                 $class = "_" . $this->_current_method . "PassUser";
                 include_once("lib/WikiUser/" . $this->_current_method . ".php");
-                $user = new $class($userid, $this->_prefs);
+                $user         = new $class($userid, $this->_prefs);
                 $this->_level = $authlevel;
                 return $user;
             }
             $this->_userid = $userid;
-            $this->_level = $authlevel;
+            $this->_level  = $authlevel;
             return _("Insufficient permissions.");
         }
 
@@ -668,12 +668,12 @@ class _WikiUser
             // upgrade class
             $class = "_" . $this->_current_method . "PassUser";
             include_once("lib/WikiUser/" . $this->_current_method . ".php");
-            $user = new $class($userid, $this->_prefs);
+            $user         = new $class($userid, $this->_prefs);
             $user->_level = $authlevel;
             return $user;
         }
         $this->_userid = $userid;
-        $this->_level = $authlevel;
+        $this->_level  = $authlevel;
         return $this;
     }
 }
@@ -711,12 +711,12 @@ class _AnonUser extends _WikiUser
         if (! is_object($prefs)) {
             if (is_object($this->_prefs)) {
                 $updated = $this->_prefs->updatePrefs($prefs);
-                $prefs = $this->_prefs;
+                $prefs   = $this->_prefs;
             } else {
                 // update the prefs values from scratch. This could leed to unnecessary
                 // side-effects: duplicate emailVerified, ...
                 $this->_prefs = new UserPreferences($prefs);
-                $updated = true;
+                $updated      = true;
             }
         } else {
             if (! isset($this->_prefs)) {
@@ -725,7 +725,7 @@ class _AnonUser extends _WikiUser
                 $updated = $this->_prefs->isChanged($prefs);
             }
         }
-        $packed = $prefs->store();
+        $packed   = $prefs->store();
         $unpacked = $prefs->unpack($packed);
         if (count($unpacked)) {
             foreach (['_method', '_select', '_update', '_insert'] as $param) {
@@ -853,7 +853,7 @@ class _PassUser extends _AnonUser
         if ($dbi and ! isset($this->_prefs->_select) and $dbh->getAuthParam('pref_select')) {
             if (! $this->_prefs) {
                 $this->_prefs = new UserPreferences();
-                $need_pref = true;
+                $need_pref    = true;
             }
             $this->_prefs->_method = $dbh->getParam('dbtype');
             $this->_prefs->_select = $this->prepare($dbh->getAuthParam('pref_select'), "userid");
@@ -867,7 +867,7 @@ class _PassUser extends _AnonUser
         } else {
             if (! $this->_prefs) {
                 $this->_prefs = new CodendiUserPreferences();
-                $need_pref = true;
+                $need_pref    = true;
             }
             $this->_prefs->_method = 'HomePage';
         }
@@ -969,9 +969,9 @@ class _PassUser extends _AnonUser
             } elseif ($dbh->getAuthParam('auth_dsn') == $dbh->getParam('dsn')) {
                 $dbh = $request->getDbh(); // same phpwiki database
             } else { // use another external database handle. needs PHP >= 4.1
-                $local_params = array_merge($GLOBALS['DBParams'], $GLOBALS['DBAuthParams']);
+                $local_params        = array_merge($GLOBALS['DBParams'], $GLOBALS['DBAuthParams']);
                 $local_params['dsn'] = $local_params['auth_dsn'];
-                $dbh = WikiDB::open($local_params);
+                $dbh                 = WikiDB::open($local_params);
             }
             $this->_auth_dbi = $dbh->_backend->_dbh;
         }
@@ -1042,7 +1042,7 @@ class _PassUser extends _AnonUser
         ) {
             if (! stristr($stmt, $prefix)) {
                 $oldstmt = $stmt;
-                $stmt = str_replace(
+                $stmt    = str_replace(
                     [" user ", " pref ", " member "],
                     [" " . $prefix . "user ",
                                           " " . $prefix . "pref ",
@@ -1376,7 +1376,7 @@ class _UserPreference
     public function set($name, $value)
     {
         $return = 0;
-        $value = $this->sanify($value);
+        $value  = $this->sanify($value);
         if ($this->get($name) != $value) {
             $this->update($value);
             $return = 1;
@@ -1551,7 +1551,7 @@ class _UserPreference_notify extends _UserPreference
         if (! empty($this->_init)) {
             return;
         }
-        $dbh = $GLOBALS['request']->getDbh();
+        $dbh    = $GLOBALS['request']->getDbh();
         $notify = $dbh->get('notify');
         if (empty($notify)) {
             $data = [];
@@ -1567,8 +1567,8 @@ class _UserPreference_notify extends _UserPreference
             return;
         }
         // This fails with php5 and a WIKI_ID cookie:
-        $userid = $user->UserName();
-        $email  = $user->_prefs->get('email');
+        $userid   = $user->UserName();
+        $email    = $user->_prefs->get('email');
         $verified = $user->_prefs->_prefs['email']->getraw('emailVerified');
         // check existing notify hash and possibly delete pages for email
         if (! empty($data)) {
@@ -1690,24 +1690,24 @@ function ValidateMail($email, $noconnect = false)
     $specials = '()<>@,;:\\\\".\\[\\]';
     $controls = '\\000-\\031';
 
-    $dtext = "[^\\[\\]\\r\\\\]";
+    $dtext          = "[^\\[\\]\\r\\\\]";
     $domain_literal = "\\[(?:$dtext|\\\\.)*\\]$lwsp*";
 
     $quoted_string = "\"(?:[^\\\"\\r\\\\]|\\\\.|$lwsp)*\"$lwsp*";
 
-    $atom = "[^$specials $controls]+(?:$lwsp+|\\Z|(?=[\\[\"$specials]))";
-    $word = "(?:$atom|$quoted_string)";
+    $atom      = "[^$specials $controls]+(?:$lwsp+|\\Z|(?=[\\[\"$specials]))";
+    $word      = "(?:$atom|$quoted_string)";
     $localpart = "$word(?:\\.$lwsp*$word)*";
 
     $sub_domain = "(?:$atom|$domain_literal)";
-    $domain = "$sub_domain(?:\\.$lwsp*$sub_domain)*";
+    $domain     = "$sub_domain(?:\\.$lwsp*$sub_domain)*";
 
     $addr_spec = "$localpart\@$lwsp*$domain";
 
-    $phrase = "$word*";
-    $route = "(?:\@$domain(?:,\@$lwsp*$domain)*:$lwsp*)";
+    $phrase     = "$word*";
+    $route      = "(?:\@$domain(?:,\@$lwsp*$domain)*:$lwsp*)";
     $route_addr = "\\<$lwsp*$route?$addr_spec\\>$lwsp*";
-    $mailbox = "(?:$addr_spec|$phrase$route_addr)";
+    $mailbox    = "(?:$addr_spec|$phrase$route_addr)";
 
     $rfc822re = "/$lwsp*$mailbox/";
 
@@ -1914,8 +1914,8 @@ class UserPreferences
             $this->_init = $init;
         }
         if (is_object($prefs)) {
-            $type = 'emailVerified';
-            $obj = $this->_prefs['email'];
+            $type       = 'emailVerified';
+            $obj        = $this->_prefs['email'];
             $obj->_init = $init;
             if ($obj->get($type) !== $prefs->get($type)) {
                 if ($obj->set($type, $prefs->get($type))) {
@@ -1923,7 +1923,7 @@ class UserPreferences
                 }
             }
             foreach (array_keys($this->_prefs) as $type) {
-                $obj = $this->_prefs[$type];
+                $obj        = $this->_prefs[$type];
                 $obj->_init = $init;
                 if ($prefs->get($type) !== $obj->get($type)) {
                     // special systemdefault prefs: (probably not needed)
@@ -1953,8 +1953,8 @@ class UserPreferences
         }
         */
         // emailVerified at first, the rest later
-            $type = 'emailVerified';
-            $obj = $this->_prefs['email'];
+            $type       = 'emailVerified';
+            $obj        = $this->_prefs['email'];
             $obj->_init = $init;
             if (isset($prefs[$type]) and $obj->get($type) !== $prefs[$type]) {
                 if ($obj->set($type, $prefs[$type])) {
@@ -1962,7 +1962,7 @@ class UserPreferences
                 }
             }
             foreach (array_keys($this->_prefs) as $type) {
-                $obj = $this->_prefs[$type];
+                $obj        = $this->_prefs[$type];
                 $obj->_init = $init;
                 if (! isset($prefs[$type]) and isa($obj, "_UserPreference_bool")) {
                     $prefs[$type] = false;
@@ -2031,8 +2031,8 @@ class UserPreferences
             // fix old-style prefs
             } elseif (is_numeric($name) and is_array($packed_pref)) {
                 if (count($packed_pref) == 1) {
-                    $name  = key($packed_pref);
-                    $value = current($packed_pref);
+                    $name         = key($packed_pref);
+                    $value        = current($packed_pref);
                     $prefs[$name] = $value;
                 }
             } else {

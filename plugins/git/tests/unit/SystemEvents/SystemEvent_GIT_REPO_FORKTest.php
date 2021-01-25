@@ -36,7 +36,7 @@ class SystemEvent_GIT_REPO_FORKTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->backend    = \Mockery::spy(\Git_Backend_Gitolite::class);
+        $this->backend = \Mockery::spy(\Git_Backend_Gitolite::class);
 
         $this->old_repository = \Mockery::spy(\GitRepository::class);
         $this->old_repository->shouldReceive('getBackend')->andReturns($this->backend);

@@ -82,7 +82,7 @@ class ProjectEditControllerTests extends TestCase
 
     protected function setUp(): void
     {
-        $this->project              = Mockery::mock(Project::class);
+        $this->project = Mockery::mock(Project::class);
         $this->project->shouldReceive('getId')->andReturn(111);
 
         $this->details_presenter      = Mockery::mock(ProjectDetailsPresenter::class);

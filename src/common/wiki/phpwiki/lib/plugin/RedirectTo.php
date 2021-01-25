@@ -84,7 +84,7 @@ class WikiPlugin_RedirectTo extends WikiPlugin
              * Do we want some checking on href to avoid malicious
              * uses of the plugin? Like stripping tags or hexcode.
              */
-            $url = preg_replace('/%\d\d/', '', strip_tags($href));
+            $url      = preg_replace('/%\d\d/', '', strip_tags($href));
             $thispage = $request->getPage();
             if (! $thispage->get('locked')) {
                 return $this->disabled(fmt(

@@ -31,7 +31,7 @@ class Tracker_Semantic_ContributorDao extends DataAccessObject
     public function searchByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT *
+        $sql        = "SELECT *
                 FROM $this->table_name
                 WHERE tracker_id = $tracker_id";
         return $this->retrieve($sql);
@@ -41,7 +41,7 @@ class Tracker_Semantic_ContributorDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_id   = $this->da->escapeInt($field_id);
-        $sql = "REPLACE INTO $this->table_name (tracker_id, field_id) 
+        $sql        = "REPLACE INTO $this->table_name (tracker_id, field_id) 
                 VALUES ($tracker_id, $field_id)";
         return $this->update($sql);
     }

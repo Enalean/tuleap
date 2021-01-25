@@ -53,9 +53,9 @@ class CrossReferenceFactory
      */
     public function __construct($entity_id, $entity_type, $entity_group_id)
     {
-        $this->entity_id = $entity_id;
+        $this->entity_id   = $entity_id;
         $this->entity_type = $entity_type;
-        $this->entity_gid = $entity_group_id;
+        $this->entity_gid  = $entity_group_id;
     }
 
     /**
@@ -75,17 +75,17 @@ class CrossReferenceFactory
             $this->target_refs_datas = [];
 
             while ($field_array = db_fetch_array($res)) {
-                $target_id = $field_array['target_id'];
-                $target_gid = $field_array['target_gid'];
+                $target_id   = $field_array['target_id'];
+                $target_gid  = $field_array['target_gid'];
                 $target_type = $field_array['target_type'];
-                $target_key = $field_array['target_keyword'];
+                $target_key  = $field_array['target_keyword'];
 
-                $source_id = $field_array['source_id'];
-                $source_gid = $field_array['source_gid'];
+                $source_id   = $field_array['source_id'];
+                $source_gid  = $field_array['source_gid'];
                 $source_type = $field_array['source_type'];
-                $source_key = $field_array['source_keyword'];
+                $source_key  = $field_array['source_keyword'];
 
-                $user_id = $field_array['user_id'];
+                $user_id    = $field_array['user_id'];
                 $created_at = $field_array['created_at'];
 
                 if (
@@ -135,7 +135,7 @@ class CrossReferenceFactory
     public function getFormattedCrossReferences()
     {
         $crossRefArray = $this->getCrossReferences();
-        $refs = [];
+        $refs          = [];
         foreach ($crossRefArray as $nature => $refArraySourceTarget) {
             foreach (['both', 'target', 'source'] as $key) {
                 if (array_key_exists($key, $refArraySourceTarget)) {
@@ -198,7 +198,7 @@ class CrossReferenceFactory
 
         foreach ($cross_refs as $nature => $references_by_destination) {
             $html .= '<div>';
-            $refs = [];
+            $refs  = [];
             foreach ($references_by_destination as $key => $references) {
                 foreach ($references as $reference) {
                     if ($key === 'source') {
@@ -212,7 +212,7 @@ class CrossReferenceFactory
                     if (! $available_nature) {
                         continue;
                     }
-                    $title = $available_nature->label;
+                    $title  = $available_nature->label;
                     $refs[] = '<a title="' . $title . '" href="' . $url . '">' . $ref . '</a>';
                 }
             }
@@ -225,12 +225,12 @@ class CrossReferenceFactory
 
     public function getHTMLCrossRefsForCSVExport()
     {
-        $html              = '';
-        $cross_refs        = $this->getCrossReferences();
+        $html       = '';
+        $cross_refs = $this->getCrossReferences();
 
         foreach ($cross_refs as $nature => $references_by_destination) {
             $html .= '';
-            $refs = [];
+            $refs  = [];
             foreach ($references_by_destination as $key => $references) {
                 foreach ($references as $reference) {
                     if ($key === 'source') {
@@ -267,11 +267,11 @@ class CrossReferenceFactory
         for ($i = 0, $nb_target_refs = count($this->target_refs_datas); $i < $nb_target_refs; $i++) {
             $is_cross = false;
             // Check if the ref is cross referenced (means referenced by a source)
-            $j = 0;
+            $j               = 0;
             $source_position = 0;
             foreach ($this->source_refs_datas as $source_refs) {
                 if ($this->target_refs_datas[$i]->isCrossReferenceWith($source_refs)) {
-                    $is_cross = true;
+                    $is_cross        = true;
                     $source_position = $j;
                 }
                 $j++;

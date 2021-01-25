@@ -69,9 +69,9 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         if (! $request->exist('cancel')) {
             $monitored_jobs = $request->get('myhudsonjobs');
 
-            $user = UserManager::instance()->getCurrentUser();
-            $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-            $dar = $job_dao->searchByUserID($user->getId());
+            $user               = UserManager::instance()->getCurrentUser();
+            $job_dao            = new PluginHudsonJobDao(CodendiDataAccess::instance());
+            $dar                = $job_dao->searchByUserID($user->getId());
             $not_monitored_jobs = [];
             while ($dar->valid()) {
                 $row = $dar->current();
@@ -139,7 +139,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
             $monitored_jobs = $this->_getMonitoredJobsByUser();
             if (sizeof($monitored_jobs) > 0) {
                 $html .= '<table style="width:100%">';
-                $cpt = 1;
+                $cpt   = 1;
 
                 $job_dao             = new PluginHudsonJobDao(CodendiDataAccess::instance());
                 $minimal_hudson_jobs = [];
@@ -148,9 +148,9 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
                 foreach ($monitored_jobs as $monitored_job_id) {
                     $dar = $job_dao->searchByJobID($monitored_job_id);
                     if ($dar !== false && $dar->valid()) {
-                        $row                          = $dar->current();
-                        $job_url                      = $row['job_url'];
-                        $job_id                       = $row['job_id'];
+                        $row     = $dar->current();
+                        $job_url = $row['job_url'];
+                        $job_id  = $row['job_id'];
                         try {
                             $minimal_hudson_jobs[$job_id] = $this->factory->getMinimalHudsonJob($job_url, '');
                             $group_id_by_job_id[$job_id]  = $row['group_id'];
@@ -203,9 +203,9 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
 
     public function _getMonitoredJobsByUser()
     {
-        $user = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->searchByUserID($user->getId());
+        $user           = UserManager::instance()->getCurrentUser();
+        $job_dao        = new PluginHudsonJobDao(CodendiDataAccess::instance());
+        $dar            = $job_dao->searchByUserID($user->getId());
         $monitored_jobs = [];
         while ($dar->valid()) {
             $row = $dar->current();

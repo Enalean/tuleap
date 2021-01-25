@@ -53,8 +53,8 @@ final class AccountGerritController implements DispatchableWithRequest, Dispatch
 
     public function __construct(EventDispatcherInterface $dispatcher, \TemplateRendererFactory $renderer_factory, Git_RemoteServer_GerritServerFactory $gerrit_server_factory)
     {
-        $this->renderer   = $renderer_factory->getRenderer(__DIR__ . '/templates');
-        $this->dispatcher = $dispatcher;
+        $this->renderer              = $renderer_factory->getRenderer(__DIR__ . '/templates');
+        $this->dispatcher            = $dispatcher;
         $this->gerrit_server_factory = $gerrit_server_factory;
     }
 

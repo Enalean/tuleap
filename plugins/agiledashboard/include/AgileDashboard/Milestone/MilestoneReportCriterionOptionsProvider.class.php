@@ -80,8 +80,8 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
     /** @return string[] */
     private function formatAllMilestonesAsSelectboxOptions(array $planning_trackers_ids, $selected_milestone_id, Tracker $backlog_tracker, PFUser $user)
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $options = [];
+        $hp                = Codendi_HTMLPurifier::instance();
+        $options           = [];
         $current_milestone = [];
 
         $options[] = $this->addTopBacklogPlanningEntry($selected_milestone_id, $backlog_tracker, $user);
@@ -137,7 +137,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
     private function addTopBacklogPlanningEntry($selected_milestone_id, Tracker $backlog_tracker, PFUser $user)
     {
         try {
-            $top_planning  = $this->planning_factory->getVirtualTopPlanning($user, $backlog_tracker->getGroupId());
+            $top_planning = $this->planning_factory->getVirtualTopPlanning($user, $backlog_tracker->getGroupId());
         } catch (Planning_NoPlanningsException $exception) {
             return;
         }
@@ -181,9 +181,9 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
     /** @return Tracker[] */
     private function getParentsWithPlanningAndOrderedFromTopToBottom(Tracker $nearest_planning_tracker)
     {
-        $parents = $this->hierarchy_factory->getAllParents($nearest_planning_tracker);
-        $parents = $this->keepsTrackersUntilThereIsNoPlanning($parents);
-        $parents = array_reverse($parents);
+        $parents   = $this->hierarchy_factory->getAllParents($nearest_planning_tracker);
+        $parents   = $this->keepsTrackersUntilThereIsNoPlanning($parents);
+        $parents   = array_reverse($parents);
         $parents[] = $nearest_planning_tracker;
 
         return $parents;

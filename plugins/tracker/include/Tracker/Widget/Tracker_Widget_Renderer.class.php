@@ -159,23 +159,23 @@ abstract class Tracker_Widget_Renderer extends Widget
         $sql = "SELECT * FROM tracker_widget_renderer WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
-            $data = db_fetch_array($res);
+            $data                 = db_fetch_array($res);
             $this->renderer_title = $data['title'];
             $this->renderer_id    = $data['renderer_id'];
-            $this->content_id = $id;
+            $this->content_id     = $id;
         }
     }
 
     public function create(Codendi_Request $request)
     {
         $content_id = false;
-        $vId = new Valid_UInt('renderer_id');
+        $vId        = new Valid_UInt('renderer_id');
         $vId->setErrorMessage("Can't add empty renderer id");
         $vId->required();
         if ($request->validInArray('renderer', $vId)) {
-            $renderer = $request->get('renderer');
-            $sql = 'INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($renderer['title']) . "', " . db_escape_int($renderer['renderer_id']) . ")";
-            $res = db_query($sql);
+            $renderer   = $request->get('renderer');
+            $sql        = 'INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($renderer['title']) . "', " . db_escape_int($renderer['renderer_id']) . ")";
+            $res        = db_query($sql);
             $content_id = db_insertid($res);
         }
         return $content_id;
@@ -183,7 +183,7 @@ abstract class Tracker_Widget_Renderer extends Widget
 
     public function updatePreferences(Codendi_Request $request)
     {
-        $done = false;
+        $done       = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();
         if (($renderer = $request->get('renderer')) && $request->valid($vContentId)) {
@@ -202,8 +202,8 @@ abstract class Tracker_Widget_Renderer extends Widget
             }
 
             if ($id || $title) {
-                $sql = "UPDATE tracker_widget_renderer SET " . $title . ", " . $id . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei((int) $request->get('content_id'));
-                $res = db_query($sql);
+                $sql  = "UPDATE tracker_widget_renderer SET " . $title . ", " . $id . " WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei((int) $request->get('content_id'));
+                $res  = db_query($sql);
                 $done = true;
             }
         }

@@ -54,11 +54,11 @@ class TroveCatListPresenter
 
     public function __construct($navbar, array $trovecats, CSRFSynchronizerToken $csrf_token)
     {
-        $this->title                    = $GLOBALS['Language']->getText('admin_trove_cat_list', 'title');
-        $this->header_name              = $GLOBALS['Language']->getText('admin_trove_cat_list', 'header_name');
-        $this->header_description       = $GLOBALS['Language']->getText('admin_trove_cat_list', 'header_description');
-        $this->edit_button              = $GLOBALS['Language']->getText('admin_trove_cat_list', 'edit');
-        $this->delete_button            = $GLOBALS['Language']->getText('admin_trove_cat_list', 'delete');
+        $this->title              = $GLOBALS['Language']->getText('admin_trove_cat_list', 'title');
+        $this->header_name        = $GLOBALS['Language']->getText('admin_trove_cat_list', 'header_name');
+        $this->header_description = $GLOBALS['Language']->getText('admin_trove_cat_list', 'header_description');
+        $this->edit_button        = $GLOBALS['Language']->getText('admin_trove_cat_list', 'edit');
+        $this->delete_button      = $GLOBALS['Language']->getText('admin_trove_cat_list', 'delete');
 
         $this->edit_trove_cat        = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'header');
         $this->edit                  = $GLOBALS['Language']->getText('admin_trove_cat_edit', 'edit');
@@ -87,7 +87,7 @@ class TroveCatListPresenter
 
         $this->trovecats  = $trovecats;
         $this->csrf_token = $csrf_token;
-        $this->navbar = $navbar;
+        $this->navbar     = $navbar;
 
         $nb_categories_flagged_as_project_flag = 0;
         foreach ($trovecats as $trovecat) {

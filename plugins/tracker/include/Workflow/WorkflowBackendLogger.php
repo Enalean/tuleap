@@ -32,16 +32,16 @@ final class WorkflowBackendLogger extends TruncateLevelLogger
     private const WF_PREFIX = '[WF] ';
 
     /** @var string */
-    private const INDENTATION_START     = '┌ ';
+    private const INDENTATION_START = '┌ ';
 
     /** @var string */
     private const INDENTATION_INCREMENT = '│ ';
 
     /** @var string */
-    private const INDENTATION_END       = '└ ';
+    private const INDENTATION_END = '└ ';
 
     /** @var string */
-    private $indentation_prefix    = '';
+    private $indentation_prefix = '';
 
     /** @var string|int */
     private $fingerprint = '';
@@ -68,7 +68,7 @@ final class WorkflowBackendLogger extends TruncateLevelLogger
 
     private function getDecoratedMessage(string $message): string
     {
-        $prefix  = self::WF_PREFIX;
+        $prefix = self::WF_PREFIX;
         if ($this->fingerprint) {
             $prefix .= "[{$this->fingerprint}] ";
         }

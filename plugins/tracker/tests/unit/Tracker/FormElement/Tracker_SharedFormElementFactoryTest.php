@@ -47,7 +47,7 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
     {
         $field_id = 321;
 
-        $original_field = $this->givenASelectBoxField(321, null);
+        $original_field                                                     = $this->givenASelectBoxField(321, null);
         list($shared_factory, $form_element_factory, $user, $bound_factory) = $this->givenASharedFormElementFactory();
         $this->setFieldAndTrackerPermissions($original_field, true, true);
 
@@ -141,8 +141,8 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
 
     public function testUnreadableFieldCannotBeCopied()
     {
-        $field_id       = 321;
-        $original_field = $this->givenASelectBoxField($field_id, null);
+        $field_id                                                           = 321;
+        $original_field                                                     = $this->givenASelectBoxField($field_id, null);
         list($shared_factory, $form_element_factory, $user, $bound_factory) = $this->givenASharedFormElementFactory();
         $this->setFieldAndTrackerPermissions($original_field, false, true);
 
@@ -152,8 +152,8 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
 
     public function testFieldInInaccessibleTrackerCannotBeCopied()
     {
-        $field_id       = 321;
-        $original_field = $this->givenASelectBoxField($field_id, null);
+        $field_id                                                           = 321;
+        $original_field                                                     = $this->givenASelectBoxField($field_id, null);
         list($shared_factory, $form_element_factory, $user, $bound_factory) = $this->givenASharedFormElementFactory();
         $this->setFieldAndTrackerPermissions($original_field, true, false);
 
@@ -166,7 +166,7 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
         $field_id     = 321;
         $new_field_id = 999;
 
-        $original_field = $this->givenASelectBoxField($field_id, null);
+        $original_field                                                     = $this->givenASelectBoxField($field_id, null);
         list($shared_factory, $form_element_factory, $user, $bound_factory) = $this->givenASharedFormElementFactory();
         $this->setFieldAndTrackerPermissions($original_field, true, true);
 
@@ -185,7 +185,7 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
     public function testSharedFieldsShouldRespectChaslesTheorem()
     {
         list($field, $original_field, $shared_factory, $bound_factory, $user, $form_element_factory) = $this->givenTwoFieldsThatAreShared();
-        $form_element_data = $this->whenIShareTheCopy($field);
+        $form_element_data                                                                           = $this->whenIShareTheCopy($field);
         $this->thenTheOriginalShouldBeUsed(
             $form_element_factory,
             $original_field,
@@ -257,7 +257,7 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
 
     public function testCreateSharedFieldNotPossibleIfFieldNotSelectbox()
     {
-        $field = $this->givenAStringField();
+        $field                                      = $this->givenAStringField();
         list($decorator, $factory, $tracker, $user) = $this->givenASharedFormElementFactory();
         $this->setFieldAndTrackerPermissions($field, true, true);
 
@@ -275,7 +275,7 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
 
     public function testCreateSharedFieldNotPossibleIfFieldNotStaticSelectbox()
     {
-        $field = $this->givenASelectBoxBoundToUsers();
+        $field                                      = $this->givenASelectBoxBoundToUsers();
         list($decorator, $factory, $tracker, $user) = $this->givenASharedFormElementFactory();
         $this->setFieldAndTrackerPermissions($field, true, true);
 
@@ -295,7 +295,7 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
     {
         $field_id = 321;
 
-        $original_field = $this->givenASelectBoxField(321, null);
+        $original_field                                                     = $this->givenASelectBoxField(321, null);
         list($shared_factory, $form_element_factory, $user, $bound_factory) = $this->givenASharedFormElementFactory();
         $this->setFieldAndTrackerPermissions($original_field, true, true);
 

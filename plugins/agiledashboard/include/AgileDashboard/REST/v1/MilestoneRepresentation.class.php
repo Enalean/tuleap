@@ -245,9 +245,9 @@ class MilestoneRepresentation
         $this->number_days_until_end               = $number_days_until_end;
         $this->parent                              = $parent;
         $this->has_user_priority_change_permission = $has_user_priority_change_permission;
-        $this->sub_milestones_uri = $this->uri . '/' . self::ROUTE;
-        $this->backlog_uri        = $this->uri . '/' . BacklogItemRepresentation::BACKLOG_ROUTE;
-        $this->content_uri        = $this->uri . '/' . BacklogItemRepresentation::CONTENT_ROUTE;
+        $this->sub_milestones_uri                  = $this->uri . '/' . self::ROUTE;
+        $this->backlog_uri                         = $this->uri . '/' . BacklogItemRepresentation::BACKLOG_ROUTE;
+        $this->content_uri                         = $this->uri . '/' . BacklogItemRepresentation::CONTENT_ROUTE;
         $this->last_modified_date                  = $last_modified_date;
         $this->status_count                        = $status_count;
         $this->resources                           = $resources;
@@ -297,7 +297,7 @@ class MilestoneRepresentation
         }
 
         $original_project_provider = null;
-        $original_project = $original_project_collector->getOriginalProject();
+        $original_project          = $original_project_collector->getOriginalProject();
         if ($original_project) {
             $original_project_provider = ProjectReferenceWithBackground::fromProject($original_project, $project_background_configuration);
         }
@@ -310,7 +310,7 @@ class MilestoneRepresentation
         $submilestone_trackers = [];
         if ($sub_milestone_tracker) {
             $submilestone_tracker_ref = TrackerReference::build($sub_milestone_tracker);
-            $submilestone_trackers = [$submilestone_tracker_ref];
+            $submilestone_trackers    = [$submilestone_tracker_ref];
         }
 
         $resources = [];
@@ -321,24 +321,24 @@ class MilestoneRepresentation
                 'trackers' => $submilestone_trackers
             ]
         ];
-        $resources['backlog'] = [
+        $resources['backlog']    = [
             'uri'    => $uri . '/' . BacklogItemRepresentation::BACKLOG_ROUTE,
             'accept' => [
                 'trackers'        => self::getTrackersRepresentation($backlog_trackers),
                 'parent_trackers' => self::getTrackersRepresentation($parent_trackers)
             ]
         ];
-        $resources['content'] = [
+        $resources['content']    = [
             'uri'    => $uri . '/' . BacklogItemRepresentation::CONTENT_ROUTE,
             'accept' => [
                 'trackers' => self::getContentTrackersRepresentation($milestone)
             ]
         ];
-        $resources['siblings'] = [
+        $resources['siblings']   = [
             'uri' => $uri . '/siblings'
         ];
-        $resources['cardwall'] = null;
-        $resources['burndown'] = null;
+        $resources['cardwall']   = null;
+        $resources['burndown']   = null;
 
         $resources['additional_panes'] = [];
         foreach ($pane_info_collector->getPanes() as $pane_info) {
@@ -380,7 +380,7 @@ class MilestoneRepresentation
     {
         $representation_with_burndown = clone $representation;
 
-        $representation_with_burndown->burndown_uri = $representation_with_burndown->uri . '/' . BurndownRepresentation::ROUTE;
+        $representation_with_burndown->burndown_uri          = $representation_with_burndown->uri . '/' . BurndownRepresentation::ROUTE;
         $representation_with_burndown->resources['burndown'] = [
             'uri' => $representation_with_burndown->burndown_uri
         ];
@@ -392,7 +392,7 @@ class MilestoneRepresentation
     {
         $representation_with_cardwall = clone $representation;
 
-        $representation_with_cardwall->cardwall_uri = $representation_with_cardwall->uri . '/' . AgileDashboard_MilestonesCardwallRepresentation::ROUTE;
+        $representation_with_cardwall->cardwall_uri          = $representation_with_cardwall->uri . '/' . AgileDashboard_MilestonesCardwallRepresentation::ROUTE;
         $representation_with_cardwall->resources['cardwall'] = [
             'uri' => $representation_with_cardwall->cardwall_uri
         ];
@@ -411,7 +411,7 @@ class MilestoneRepresentation
     {
         $trackers_representation = [];
         foreach ($trackers as $tracker) {
-            $tracker_reference = TrackerReference::build($tracker);
+            $tracker_reference         = TrackerReference::build($tracker);
             $trackers_representation[] = $tracker_reference;
         }
         return $trackers_representation;

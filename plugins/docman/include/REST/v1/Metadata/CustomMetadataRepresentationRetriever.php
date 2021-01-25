@@ -224,8 +224,8 @@ class CustomMetadataRepresentationRetriever
         if (empty($metadata_representation->list_value)) {
             return;
         }
-        $error_unknown = [];
-        $possible_values_of_list  = $this->list_values_builder->build((int) $metadata->getId(), true);
+        $error_unknown           = [];
+        $possible_values_of_list = $this->list_values_builder->build((int) $metadata->getId(), true);
 
         foreach ($metadata_representation->list_value as $representation_value) {
             $value_exists = false;
@@ -256,7 +256,7 @@ class CustomMetadataRepresentationRetriever
             return;
         }
 
-        $possible_values_of_list  = $this->list_values_builder->build((int) $metadata->getId(), true);
+        $possible_values_of_list = $this->list_values_builder->build((int) $metadata->getId(), true);
         foreach ($possible_values_of_list as $project_list_value) {
             if ($project_list_value->getId() === $metadata_representation->value) {
                 return;
@@ -290,8 +290,8 @@ class CustomMetadataRepresentationRetriever
             return;
         }
 
-        $errors_required       = [];
-        $errors                = [];
+        $errors_required = [];
+        $errors          = [];
 
         foreach ($project_metadata_list->getMetadataRepresentations() as $project_metadata) {
             if (! $project_metadata->is_used) {

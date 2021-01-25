@@ -46,7 +46,7 @@ final class Docman_CloneItemsVisitorTest extends TestCase // phpcs:ignore Squiz.
         $project_manager      = Mockery::mock(ProjectManager::instance());
         $link_version_factory = Mockery::mock(Docman_LinkVersionFactory::class);
 
-        $visitor = Mockery::mock(
+        $visitor     = Mockery::mock(
             Docman_CloneItemsVisitor::class,
             [102, $project_manager, $link_version_factory]
         )->makePartial();

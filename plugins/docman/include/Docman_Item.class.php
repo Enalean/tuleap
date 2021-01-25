@@ -29,30 +29,30 @@ use Tuleap\Docman\Item\ItemVisitor;
  */
 class Docman_Item
 {
-    public $id               = null;
-    public $title            = null;
-    public $titlekey         = null;
-    public $description      = null;
+    public $id          = null;
+    public $title       = null;
+    public $titlekey    = null;
+    public $description = null;
 
-    public $createDate       = null;
-    public $updateDate       = null;
-    public $deleteDate       = null;
+    public $createDate = null;
+    public $updateDate = null;
+    public $deleteDate = null;
 
-    public $rank             = null;
+    public $rank = null;
 
-    public $parentId         = null;
-    public $groupId          = null;
-    public $ownerId          = null;
+    public $parentId = null;
+    public $groupId  = null;
+    public $ownerId  = null;
 
-    public $status           = null;
+    public $status = null;
 
     public $obsolescenceDate = null;
     public $isObsolete       = null;
 
-    protected $_actions      = [];
-    protected $_metadata     = [];
-    public $pathId           = [];
-    public $pathTitle        = [];
+    protected $_actions  = [];
+    protected $_metadata = [];
+    public $pathId       = [];
+    public $pathTitle    = [];
 
 
 
@@ -76,7 +76,7 @@ class Docman_Item
     public function setTitle($title)
     {
         if ('roottitle_lbl_key' === $title) {
-            $this->title = dgettext('tuleap-docman', 'Project Documentation');
+            $this->title    = dgettext('tuleap-docman', 'Project Documentation');
             $this->titlekey = $title;
         } else {
             $this->title = $title;
@@ -184,7 +184,7 @@ class Docman_Item
     public function setObsolescenceDate($v)
     {
         $this->obsolescenceDate = (int) $v;
-        $this->isObsolete = null; // Clear cache
+        $this->isObsolete       = null; // Clear cache
     }
 
     public function getObsolescenceDate()
@@ -199,10 +199,10 @@ class Docman_Item
     {
         if ($this->isObsolete == null) {
             $this->isObsolete = false;
-            $date = $this->getObsolescenceDate();
+            $date             = $this->getObsolescenceDate();
             if ($date > 0) {
-                $today = getdate();
-                $time  = mktime(0, 0, 1, $today['mon'], $today['mday'], $today['year']);
+                $today            = getdate();
+                $time             = mktime(0, 0, 1, $today['mon'], $today['mday'], $today['year']);
                 $this->isObsolete = ($date < $time);
             }
         }
@@ -256,18 +256,18 @@ class Docman_Item
 
     public function toRow()
     {
-        $row = [];
-        $row['item_id']     = $this->getId();
-        $row['title']       = $this->getTitle(true);
-        $row['description'] = $this->getDescription();
-        $row['create_date'] = $this->getCreateDate();
-        $row['update_date'] = $this->getUpdateDate();
-        $row['delete_date'] = $this->getDeleteDate();
-        $row['rank']        = $this->getRank();
-        $row['parent_id']   = $this->getParentId();
-        $row['group_id']    = $this->getGroupId();
-        $row['user_id']     = $this->getOwnerId();
-        $row['status']      = $this->getStatus();
+        $row                      = [];
+        $row['item_id']           = $this->getId();
+        $row['title']             = $this->getTitle(true);
+        $row['description']       = $this->getDescription();
+        $row['create_date']       = $this->getCreateDate();
+        $row['update_date']       = $this->getUpdateDate();
+        $row['delete_date']       = $this->getDeleteDate();
+        $row['rank']              = $this->getRank();
+        $row['parent_id']         = $this->getParentId();
+        $row['group_id']          = $this->getGroupId();
+        $row['user_id']           = $this->getOwnerId();
+        $row['status']            = $this->getStatus();
         $row['obsolescence_date'] = $this->getObsolescenceDate();
         return $row;
     }
@@ -359,7 +359,7 @@ class Docman_Item
         $metadata       = null; // can't refactor with early return as it returns value by ref :(
         if ($metadata_value !== null) {
             $metadata_factory = new Docman_MetadataFactory($this->groupId);
-            $metadata = $metadata_factory->getHardCodedMetadataFromLabel($label, $metadata_value);
+            $metadata         = $metadata_factory->getHardCodedMetadataFromLabel($label, $metadata_value);
         } elseif (isset($this->_metadata[$label])) {
             $metadata = $this->_metadata[$label];
         }

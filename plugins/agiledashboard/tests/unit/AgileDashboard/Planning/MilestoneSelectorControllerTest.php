@@ -44,8 +44,8 @@ final class Planning_MilestoneSelectorControllerTest extends \PHPUnit\Framework\
     protected function setUp(): void
     {
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR . '/../../..');
-        $planning_id = '321';
-        $user = Mockery::mock(PFUser::class);
+        $planning_id   = '321';
+        $user          = Mockery::mock(PFUser::class);
         $this->request = Mockery::mock(Codendi_Request::class);
         $this->request->shouldReceive('getCurrentUser')->andReturn($user);
         $this->request->shouldReceive('getValidated')->andReturn($planning_id);

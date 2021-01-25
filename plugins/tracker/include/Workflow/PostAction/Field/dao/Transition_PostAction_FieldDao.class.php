@@ -98,7 +98,7 @@ abstract class Transition_PostAction_FieldDao extends DataAccessObject
     public function searchByWorkflow(Workflow $workflow)
     {
         $workflow_id = $this->da->escapeInt($workflow->getId());
-        $sql = "SELECT pa.*
+        $sql         = "SELECT pa.*
                 FROM $this->table_name pa
                     JOIN tracker_workflow_transition USING (transition_id)
                 WHERE workflow_id = $workflow_id";

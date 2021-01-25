@@ -67,11 +67,11 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         Tracker_ArtifactFactory $tracker_artifact_factory,
         NatureDao $nature_dao
     ) {
-        $this->formelement_factory  = $formelement_factory;
-        $this->tracker              = $tracker;
-        $this->logger               = $logger;
-        $alphanum_strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric();
-        $this->strategies  = [
+        $this->formelement_factory = $formelement_factory;
+        $this->tracker             = $tracker;
+        $this->logger              = $logger;
+        $alphanum_strategy         = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric();
+        $this->strategies          = [
             self::FIELDTYPE_PERMS_ON_ARTIFACT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact(),
             self::FIELDTYPE_ATTACHEMENT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment(
                 $extraction_path,

@@ -40,28 +40,28 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
     public function testItHasNoChangesWhenSubmittedValuesAreTheSameAsStored(): void
     {
         $previous = $this->getPreviousCHangesetValue();
-        $field = $this->getCheckboxField();
+        $field    = $this->getCheckboxField();
         $this->assertFalse($field->hasChanges(Mockery::mock(Artifact::class), $previous, ['5123', '5125']));
     }
 
     public function testItHasNoChangesWhenSubmittedValuesContainsZero(): void
     {
         $previous = $this->getPreviousCHangesetValue();
-        $field = $this->getCheckboxField();
+        $field    = $this->getCheckboxField();
         $this->assertFalse($field->hasChanges(Mockery::mock(Artifact::class), $previous, ['5123', '0', '5125']));
     }
 
     public function testItDetectsChangesEvenWhenCSVImportValueIsNull(): void
     {
         $previous = $this->getPreviousCHangesetValue();
-        $field = $this->getCheckboxField();
+        $field    = $this->getCheckboxField();
         $this->assertTrue($field->hasChanges(Mockery::mock(Artifact::class), $previous, null));
     }
 
     public function testItHasChangesWhenSubmittedValuesContainsDifferentValues(): void
     {
         $previous = $this->getPreviousCHangesetValue();
-        $field = $this->getCheckboxField();
+        $field    = $this->getCheckboxField();
         $this->assertTrue($field->hasChanges(Mockery::mock(Artifact::class), $previous, ['5123', '0', '5122']));
     }
 
@@ -71,8 +71,8 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
         $value->shouldReceive('getId')->andReturn(1);
         $parameters = [$value, 'lename', false];
 
-        $field     = $this->getCheckboxField();
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $field = $this->getCheckboxField();
+        $bind  = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
         $bind->shouldReceive('formatChangesetValueWithoutLink')->once();
         $field->setBind($bind);
 
@@ -87,10 +87,10 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
 
     public function testItPresentsReadOnlyViewAsAList(): void
     {
-        $artifact   = Mockery::mock(Artifact::class);
-        $value      = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $bind       = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind_value = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $artifact     = Mockery::mock(Artifact::class);
+        $value        = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
+        $bind         = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind_value   = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $bind_value_2 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $bind_value_3 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
         $bind_value->shouldReceive('getId')->andReturn(523);

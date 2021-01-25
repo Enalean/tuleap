@@ -62,7 +62,7 @@ class SOAP_NusoapWSDL
 
     private function appendOneMethod(soap_server $server, ReflectionMethod $method)
     {
-        $wsdlGen    = new SOAP_WSDLMethodGenerator($method);
+        $wsdlGen = new SOAP_WSDLMethodGenerator($method);
         $server->register(
             $method->getName(),
             $wsdlGen->getParameters(),

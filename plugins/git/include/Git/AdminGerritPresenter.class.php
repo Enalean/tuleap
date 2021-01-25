@@ -85,11 +85,11 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter
         $this->empty_content                 = dgettext('tuleap-git', 'Empty');
         $this->not_specified_host            = dgettext('tuleap-git', 'Not specified host');
 
-        $this->gerrit_label_host                    = dgettext('tuleap-git', 'Host');
-        $this->gerrit_label_http_port               = dgettext('tuleap-git', 'HTTP port');
-        $this->gerrit_label_ssh_port                = dgettext('tuleap-git', 'SSH port');
-        $this->gerrit_label_replication_key         = dgettext('tuleap-git', 'Replication SSH Key');
-        $this->gerrit_label_replication_key_infos   = dgettext('tuleap-git', 'Replication SSH Key (SSH key of the user who runs gerrit server)');
+        $this->gerrit_label_host                  = dgettext('tuleap-git', 'Host');
+        $this->gerrit_label_http_port             = dgettext('tuleap-git', 'HTTP port');
+        $this->gerrit_label_ssh_port              = dgettext('tuleap-git', 'SSH port');
+        $this->gerrit_label_replication_key       = dgettext('tuleap-git', 'Replication SSH Key');
+        $this->gerrit_label_replication_key_infos = dgettext('tuleap-git', 'Replication SSH Key (SSH key of the user who runs gerrit server)');
 
         $this->gerrit_label_use_ssl              = dgettext('tuleap-git', 'Use SSL?');
         $this->gerrit_label_login                = dgettext('tuleap-git', 'Login');
@@ -101,9 +101,9 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter
         $this->gerrit_label_http_password_edit        = dgettext('tuleap-git', 'Change HTTP password');
         $this->gerrit_label_replication_password_edit = dgettext('tuleap-git', 'Change replication password');
 
-        $this->yes            = dgettext('tuleap-git', 'Yes');
-        $this->no             = dgettext('tuleap-git', 'No');
-        $this->btn_restrict   = $GLOBALS['Language']->getText('global', 'btn_restrict');
+        $this->yes          = dgettext('tuleap-git', 'Yes');
+        $this->no           = dgettext('tuleap-git', 'No');
+        $this->btn_restrict = $GLOBALS['Language']->getText('global', 'btn_restrict');
     }
 
     public function list_of_servers_is_empty()

@@ -80,7 +80,7 @@ class AgileDashboard_Milestone_Backlog_Backlog
         $this->offset                       = $offset;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
 
-        $this->items_finder = new AgileDashboard_Milestone_Backlog_DescendantItemsFinder(
+        $this->items_finder                = new AgileDashboard_Milestone_Backlog_DescendantItemsFinder(
             $item_dao,
             $artifact_factory->getDao(),
             $artifact_factory,

@@ -37,7 +37,7 @@ class FormElementRepresentationsBuilderTest extends TestCase
 
     public function testItReturnsAnArrayEvenWhenFieldsAreNotReadable()
     {
-        $user    = Mockery::mock(PFUser::class);
+        $user = Mockery::mock(PFUser::class);
 
         $field1 = Mockery::mock(Tracker_FormElement_Field_String::class);
         $field1->shouldReceive('getId')->andReturn(1);
@@ -81,9 +81,9 @@ class FormElementRepresentationsBuilderTest extends TestCase
             'bind_list' => []
         ]);
 
-        $form_element_factory    = Mockery::mock(Tracker_FormElementFactory::class);
-        $permission_exporter     = Mockery::mock(PermissionsExporter::class);
-        $hidden_fieldset_checker = Mockery::mock(HiddenFieldsetChecker::class);
+        $form_element_factory           = Mockery::mock(Tracker_FormElementFactory::class);
+        $permission_exporter            = Mockery::mock(PermissionsExporter::class);
+        $hidden_fieldset_checker        = Mockery::mock(HiddenFieldsetChecker::class);
         $permissions_for_groups_builder = Mockery::mock(PermissionsForGroupsBuilder::class);
 
         $permissions_for_groups_builder->shouldReceive('getPermissionsForGroups')->with($field1, null, $user)->once()->andReturn(new PermissionsForGroupsRepresentation([], [], []));

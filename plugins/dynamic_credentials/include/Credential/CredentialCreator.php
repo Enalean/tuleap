@@ -50,8 +50,8 @@ class CredentialCreator
      */
     public function create($username, ConcealedString $password, \DateTimeImmutable $expiration)
     {
-        $identifier          = $this->identifier_extractor->extract($username);
-        $hashed_password     = $this->password_handler->computeHashPassword($password);
+        $identifier      = $this->identifier_extractor->extract($username);
+        $hashed_password = $this->password_handler->computeHashPassword($password);
 
         try {
             $this->dao->save($identifier, $hashed_password, $expiration->getTimestamp());

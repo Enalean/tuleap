@@ -73,15 +73,15 @@ class FolderHierarchicalRepresentationCollection
 
         $purify = Codendi_HTMLPurifier::instance();
         foreach ($this->collection as $folder_representation) {
-            $folder = $folder_representation->getFolder();
+            $folder   = $folder_representation->getFolder();
             $selected = '';
             if ($current_folder && $current_folder->getId() === $folder->getId()) {
                 $selected = 'selected';
             }
-            $option = '<option value="' . $folder->getId() . '" ' . $selected . '>';
-            $option .= $prefix;
-            $option .= $purify->purify($folder->getTitle());
-            $option .= '</option>';
+            $option    = '<option value="' . $folder->getId() . '" ' . $selected . '>';
+            $option   .= $prefix;
+            $option   .= $purify->purify($folder->getTitle());
+            $option   .= '</option>';
             $options[] = $option;
 
             $folder_representation->getChildren()->collectOptions($options, $current_folder, $prefix_for_children);

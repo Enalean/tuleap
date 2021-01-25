@@ -115,7 +115,7 @@ class UGroupListPresenterBuilder
 
     private function injectDynamicUGroup(Project $project, $ugroup_id, &$ugroups)
     {
-        $ugroup         = $this->ugroup_manager->getUGroup($project, $ugroup_id);
+        $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
         if ($ugroup) {
             $can_be_deleted = false;
             $ugroups[]      = new UGroupPresenter($project, $ugroup, $can_be_deleted);

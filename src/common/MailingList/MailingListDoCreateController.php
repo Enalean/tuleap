@@ -214,7 +214,7 @@ Thank you for using %1$s.
             $list_password
         );
 
-        $hdrs = "From: " . ForgeConfig::get('sys_email_admin') . ForgeConfig::get('sys_lf');
+        $hdrs  = "From: " . ForgeConfig::get('sys_email_admin') . ForgeConfig::get('sys_lf');
         $hdrs .= 'Content-type: text/plain; charset=utf-8' . ForgeConfig::get('sys_lf');
 
         mail($current_user->getEmail(), ForgeConfig::get('sys_name') . " " . _('New mailing list'), $message, $hdrs);

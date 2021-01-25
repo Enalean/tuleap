@@ -44,8 +44,8 @@ class Codendi_Request
      */
     public function __construct($params, ?ProjectManager $project_manager = null)
     {
-        $this->params                = $params;
-        $this->project_manager       = $project_manager ? $project_manager : ProjectManager::instance();
+        $this->params          = $params;
+        $this->project_manager = $project_manager ? $project_manager : ProjectManager::instance();
     }
 
     public function isAjax()
@@ -173,7 +173,7 @@ class Codendi_Request
     public function validArray($validator)
     {
         $isValid = true;
-        $array = $this->get($validator->getKey());
+        $array   = $this->get($validator->getKey());
         if (is_array($array)) {
             if (count($array) > 0) {
                 foreach ($array as $key => $v) {

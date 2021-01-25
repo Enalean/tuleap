@@ -76,8 +76,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase
 
     public function testItReturnsContentOfDirectoryInformation()
     {
-        $path   = 'sftp_directory';
-        $items  = $this->parser->parseDirectory($path, false);
+        $path  = 'sftp_directory';
+        $items = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();
         $files   = $items->getFiles();
@@ -93,8 +93,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase
 
     public function testItReturnsContentOfDirectoryInformationIfPathEndsBySlash()
     {
-        $path   = 'sftp_directory';
-        $items  = $this->parser->parseDirectory($path, false);
+        $path  = 'sftp_directory';
+        $items = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();
         $files   = $items->getFiles();
@@ -108,8 +108,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesNotReturnDotFoldersWhenAskedNotTo()
     {
-        $path   = 'sftp_directory';
-        $items  = $this->parser->parseDirectory($path, true);
+        $path  = 'sftp_directory';
+        $items = $this->parser->parseDirectory($path, true);
 
         foreach ($items->getFolders() as $folder) {
             $this->assertFalse($folder->getName() == '..');
@@ -119,8 +119,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesReturnDotDotFolder()
     {
-        $path   = 'sftp_directory';
-        $items  = $this->parser->parseDirectory($path, false);
+        $path  = 'sftp_directory';
+        $items = $this->parser->parseDirectory($path, false);
 
         $dotdot_exists = false;
         foreach ($items->getFolders() as $folder) {
@@ -136,8 +136,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase
 
     public function testItReturnsFilesAndFoldersInANaturalOrder()
     {
-        $path   = 'sftp_directory';
-        $items  = $this->parser->parseDirectory($path, false);
+        $path  = 'sftp_directory';
+        $items = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();
 
@@ -154,8 +154,8 @@ class DirectoryParserTest extends \PHPUnit\Framework\TestCase
 
     public function testItReturnsContentOfSubDirectoryInformation()
     {
-        $path   = 'sftp_directory/folder01';
-        $items  = $this->parser->parseDirectory($path, false);
+        $path  = 'sftp_directory/folder01';
+        $items = $this->parser->parseDirectory($path, false);
 
         $folders = $items->getFolders();
         $files   = $items->getFiles();

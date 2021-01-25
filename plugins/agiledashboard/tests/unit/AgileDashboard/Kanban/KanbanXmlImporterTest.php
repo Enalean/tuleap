@@ -132,7 +132,7 @@ class KanbanXmlImporterTest extends TestCase
 
     public function testItImportsAKanbanWithItsOwnConfiguration(): void
     {
-        $xml = new SimpleXMLElement(
+        $xml           = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
             <project unix-name="kanban" full-name="kanban" description="kanban" access="public">
               <agiledashboard>
@@ -171,7 +171,7 @@ class KanbanXmlImporterTest extends TestCase
 
     public function testItImportsAKanbanWithASimpleConfiguration(): void
     {
-        $xml = new SimpleXMLElement(
+        $xml           = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
             <project unix-name="kanban" full-name="kanban" description="kanban" access="public">
               <agiledashboard>
@@ -200,7 +200,7 @@ class KanbanXmlImporterTest extends TestCase
 
     public function testItImportsMultipleKanban(): void
     {
-        $xml = new SimpleXMLElement(
+        $xml           = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
             <project unix-name="kanban" full-name="kanban" description="kanban" access="public">
               <agiledashboard>

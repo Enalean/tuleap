@@ -42,7 +42,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->curDir = getcwd();
+        $this->curDir        = getcwd();
         $this->fixtures_path = __DIR__ . '/_fixtures';
 
         $this->sourcePath = $this->getTmpDir() . '/source';

@@ -77,7 +77,7 @@ class BacklogRepresentation
     {
         $trackers_representation = [];
         foreach ($trackers as $tracker) {
-            $tracker_reference = TrackerReference::build($tracker);
+            $tracker_reference         = TrackerReference::build($tracker);
             $trackers_representation[] = $tracker_reference;
         }
         return $trackers_representation;

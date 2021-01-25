@@ -45,7 +45,7 @@ class ArtifactPermissionsXMLExporter
         }
 
         $last_changeset_node = $list_of_changesets->item($list_of_changesets->length - 1);
-        $field_node = $this->node_helper->createElement('field_change');
+        $field_node          = $this->node_helper->createElement('field_change');
         $field_node->setAttribute('field_name', 'permissions_on_artifact');
         $field_node->setAttribute('type', 'permissions_on_artifact');
         $field_node->setAttribute('use_perm', '1');

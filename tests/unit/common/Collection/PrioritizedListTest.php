@@ -38,7 +38,7 @@ class PrioritizedListTest extends TestCase
         $l->add($c);
         $l->add($b);
         $l->add($a);
-        $it = $l->iterator();
+        $it      = $l->iterator();
         $element = $it->current();
         $this->assertSame($element, $c);
         $it->next();
@@ -51,8 +51,8 @@ class PrioritizedListTest extends TestCase
 
     public function testEqualsDifferentOrder(): void
     {
-        $a = new stdClass();
-        $b = new stdClass();
+        $a  = new stdClass();
+        $b  = new stdClass();
         $l1 = new PrioritizedList();
         $l1->add($a);
         $l1->add($b);
@@ -73,7 +73,7 @@ class PrioritizedListTest extends TestCase
         $l->add($a1, 10);
         $l->add($c, 30);
         $l->add($b, 20);
-        $it = $l->iterator();
+        $it      = $l->iterator();
         $element = $it->current();
         $this->assertSame($element, $c);
         $it->next();
@@ -108,7 +108,7 @@ class PrioritizedListTest extends TestCase
         $l->add($b3, 20);
         $l->add($b2, 20);
         $l->add($b1, 20);
-        $it = $l->iterator();
+        $it      = $l->iterator();
         $element = $it->current();
         $this->assertSame($element, $c2);
         $it->next();
@@ -143,12 +143,12 @@ class PrioritizedListTest extends TestCase
         $b = new stdClass();
         $c = new stdClass();
         $d = new stdClass();
-        $l  = new PrioritizedList();
+        $l = new PrioritizedList();
         $l->add($a, 10);
         $l->add($b, -10);
         $l->add($d);
         $l->add($c);
-        $it = $l->iterator();
+        $it      = $l->iterator();
         $element = $it->current();
         $this->assertSame($element, $a);
         $it->next();
@@ -177,7 +177,7 @@ class PrioritizedListTest extends TestCase
         $l->add($e, -100);
         $l->add($f, -500);
         $l->add($c, -5);
-        $it = $l->iterator();
+        $it      = $l->iterator();
         $element = $it->current();
         $this->assertSame($element, $a);
         $it->next();

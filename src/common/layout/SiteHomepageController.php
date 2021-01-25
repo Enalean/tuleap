@@ -64,10 +64,10 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
 
     public function __construct(Admin_Homepage_Dao $dao, ProjectManager $project_manager, UserManager $user_manager, EventManager $event_manager)
     {
-        $this->dao = $dao;
+        $this->dao             = $dao;
         $this->project_manager = $project_manager;
-        $this->user_manager = $user_manager;
-        $this->event_manager = $event_manager;
+        $this->user_manager    = $user_manager;
+        $this->event_manager   = $event_manager;
     }
 
     /**
@@ -93,8 +93,8 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         ];
 
         $header_params['body_class'] = ['homepage'];
-        $news_collection_builder = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
-        $news_collection = $news_collection_builder->build();
+        $news_collection_builder     = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
+        $news_collection             = $news_collection_builder->build();
 
         $layout->header($header_params);
         $this->displayStandardHomepage(

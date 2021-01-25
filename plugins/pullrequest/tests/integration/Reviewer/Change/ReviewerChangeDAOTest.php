@@ -103,7 +103,7 @@ final class ReviewerChangeDAOTest extends TestCase
         $reviewer_dao->setReviewers(41, self::$pr_reviewer_2_id, 20, ...[self::$pr_reviewer_3_id]);
 
         $reviewer_change_dao = new ReviewerChangeDAO();
-        $changes = $reviewer_change_dao->searchByPullRequestID(41);
+        $changes             = $reviewer_change_dao->searchByPullRequestID(41);
 
         $expected_result = [
             [

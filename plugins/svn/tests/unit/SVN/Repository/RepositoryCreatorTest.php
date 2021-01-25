@@ -103,7 +103,7 @@ class RepositoryCreatorTest extends TestCase
         $this->project = \Mockery::mock(\Project::class);
         $this->project->shouldReceive('getId')->andReturn(101);
         $this->project->shouldReceive('getUnixNameMixedCase')->andReturn('project-unix-name');
-        $this->user       = \Mockery::mock(\PFUser::class);
+        $this->user = \Mockery::mock(\PFUser::class);
         $this->user->shouldReceive('getId')->andReturn(110);
         $this->repository = SvnRepository::buildActiveRepository(1, 'repo01', $this->project);
 

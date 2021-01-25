@@ -46,7 +46,7 @@ if ($request->valid($vReturnTo)) {
     $HTML->_serializeFeedback();
 
     $url_verifier = new URLVerification();
-    $return_url = '/';
+    $return_url   = '/';
     if ($url_verifier->isInternal($request->get('return_to'))) {
         $return_url = $request->get('return_to');
     }

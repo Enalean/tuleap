@@ -40,8 +40,8 @@ class ByFieldUGroup
 
     public function __construct(int $id, string $name, bool $might_not_have_access)
     {
-        $this->id = $id;
-        $this->name = $name;
+        $this->id                    = $id;
+        $this->name                  = $name;
         $this->might_not_have_access = $might_not_have_access;
     }
 

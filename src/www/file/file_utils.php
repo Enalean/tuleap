@@ -36,7 +36,7 @@ function file_utils_header($params)
     global $group_id,$Language;
 
     $params['toptab'] = 'file';
-    $params['group'] = $group_id;
+    $params['group']  = $group_id;
 
     if (! array_key_exists('pv', $params) || ! $params['pv']) {
         $project_manager = ProjectManager::instance();
@@ -75,8 +75,8 @@ function frs_show_status_popup($name = 'status_id', $checked_val = "xzxz")
     global $Language;
 
     $package_factory = new FRSPackageFactory();
-    $arr_id = [$package_factory->STATUS_ACTIVE, $package_factory->STATUS_HIDDEN];
-    $arr_status = [
+    $arr_id          = [$package_factory->STATUS_ACTIVE, $package_factory->STATUS_HIDDEN];
+    $arr_status      = [
         $Language->getText('file_admin_editpackages', 'status_active'),
         $Language->getText('file_admin_editpackages', 'status_hidden')
     ];
@@ -141,11 +141,11 @@ function frs_show_release_popup($group_id, $name = 'release_id', $checked_val = 
         return $Language->getText('file_file_utils', 'g_id_err');
     } else {
         if (! isset($FRS_RELEASE_ID_RES)) {
-            $res = $release_factory->getFRSReleasesInfoListFromDb($group_id);
-            $FRS_RELEASE_ID_RES = [];
+            $res                  = $release_factory->getFRSReleasesInfoListFromDb($group_id);
+            $FRS_RELEASE_ID_RES   = [];
             $FRS_RELEASE_NAME_RES = [];
             foreach ($res as $release) {
-                $FRS_RELEASE_ID_RES[] = $release['release_id'];
+                $FRS_RELEASE_ID_RES[]   = $release['release_id'];
                 $FRS_RELEASE_NAME_RES[] = $release['package_name'] . ':' . $release['release_name'];
             }
         }
@@ -161,9 +161,9 @@ function frs_show_release_popup2($group_id, $name = 'release_id', $checked_val =
     if (! $group_id) {
         return $GLOBALS['Language']->getText('file_file_utils', 'g_id_err');
     } else {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp  = Codendi_HTMLPurifier::instance();
         $res = $release_factory->getFRSReleasesInfoListFromDb($group_id);
-        $p = [];
+        $p   = [];
         foreach ($res as $release) {
             $p[$release['package_name']][$release['release_id']] = $release['release_name'];
         }
@@ -184,10 +184,10 @@ function frs_show_release_popup2($group_id, $name = 'release_id', $checked_val =
 function file_utils_show_processors($result)
 {
     global $group_id,$Language;
-    $hp = Codendi_HTMLPurifier::instance();
-    $rows  =  db_numrows($result);
+    $hp   = Codendi_HTMLPurifier::instance();
+    $rows =  db_numrows($result);
 
-    $title_arr = [];
+    $title_arr   = [];
     $title_arr[] = $Language->getText('file_file_utils', 'proc_name');
     $title_arr[] = $Language->getText('file_file_utils', 'proc_rank');
     $title_arr[] = $Language->getText('file_file_utils', 'del');
@@ -195,10 +195,10 @@ function file_utils_show_processors($result)
     echo html_build_list_table_top($title_arr);
 
     for ($j = 0; $j < $rows; $j++) {
-        $proc_id = db_result($result, $j, 'processor_id');
+        $proc_id   = db_result($result, $j, 'processor_id');
         $proc_name = db_result($result, $j, 'name');
         $proc_rank = db_result($result, $j, 'rank');
-        $gr_id = db_result($result, $j, 'group_id');
+        $gr_id     = db_result($result, $j, 'group_id');
 
         echo '<tr class="' . html_get_alt_row_color($j) . '">' . "\n";
 
@@ -229,7 +229,7 @@ function file_utils_add_proc($pname, $prank)
 {
     global $group_id,$Language;
 
-    $sql = sprintf(
+    $sql    = sprintf(
         'INSERT INTO frs_processor' .
            ' (name,group_id,rank)' .
            ' VALUES' .
@@ -251,7 +251,7 @@ function file_utils_update_proc($pid, $pname, $prank)
 {
     global $group_id,$Language;
 
-    $sql = sprintf(
+    $sql    = sprintf(
         'UPDATE frs_processor' .
            ' SET name = "%s",rank = %d' .
            ' WHERE processor_id=%d' .
@@ -274,7 +274,7 @@ function file_utils_delete_proc($pid)
 {
     global $group_id,$Language;
 
-    $sql = sprintf(
+    $sql    = sprintf(
         'DELETE FROM frs_processor' .
            ' WHERE group_id=%d' .
            ' AND processor_id=%d',
@@ -292,9 +292,9 @@ function file_utils_delete_proc($pid)
 
 function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
 {
-    $hp = Codendi_HTMLPurifier::instance();
-    $project = ProjectManager::instance()->getProject($package->getGroupID());
-    $license_agreement_display  = new LicenseAgreementDisplay(
+    $hp                        = Codendi_HTMLPurifier::instance();
+    $project                   = ProjectManager::instance()->getProject($package->getGroupID());
+    $license_agreement_display = new LicenseAgreementDisplay(
         $hp,
         TemplateRendererFactory::build(),
         new LicenseAgreementFactory(
@@ -386,8 +386,8 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         ), 'help' => 'frs.html#delivery-manager-administration']);
 
     echo '<H3>' . $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) . '</H3>';
-    $sql = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = " . db_ei($group_id) . ") ORDER BY rank";
-    $result = db_query($sql);
+    $sql          = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = " . db_ei($group_id) . ") ORDER BY rank";
+    $result       = db_query($sql);
     $processor_id = util_result_column_to_array($result, 0);
     foreach ($processor_id as $key => $id) {
         $processor_id[$key] = $hp->purify($id, CODENDI_PURIFIER_JS_QUOTE);
@@ -396,7 +396,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     foreach ($processor_name as $key => $value) {
         $processor_name[$key] = $hp->purify($value, CODENDI_PURIFIER_JS_QUOTE);
     }
-    $sql = "SELECT * FROM frs_filetype ORDER BY type_id";
+    $sql     = "SELECT * FROM frs_filetype ORDER BY type_id";
     $result1 = db_query($sql);
     $type_id = util_result_column_to_array($result1, 0);
     foreach ($type_id as $key => $id) {
@@ -474,7 +474,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 </TD>
                 <TD>
     <?php
-    $res = $package_factory->getFRSPackagesFromDb($group_id);
+    $res  = $package_factory->getFRSPackagesFromDb($group_id);
     $rows = count($res);
     if (! $res || $rows < 1) {
         echo '<p class="highlight">' . $hp->purify($GLOBALS['Language']->getText('file_admin_qrs', 'no_p_available')) . '</p>';
@@ -551,7 +551,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         <TR><TD><FIELDSET><LEGEND><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'fieldset_uploaded_files')); ?></LEGEND>
     <?php
 
-    $titles =  [];
+    $titles   =  [];
     $titles[] = $is_update ? $GLOBALS['Language']->getText('file_admin_editreleases', 'delete_col') : '';
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'filename');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'processor');
@@ -570,10 +570,10 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     <?php
         $files = $release->getFiles();
     for ($i = 0; $i < count($files); $i++) {
-        $fname = $files[$i]->getFileName();
-        $list = explode('/', $fname);
-        $fname = $list[sizeof($list) - 1];
-        $user_id = $files[$i]->getUserID();
+        $fname    = $files[$i]->getFileName();
+        $list     = explode('/', $fname);
+        $fname    = $list[sizeof($list) - 1];
+        $user_id  = $files[$i]->getUserID();
         $userName = (isset($user_id)) ? UserManager::instance()->getUserById($files[$i]->getUserID())->getRealName() : "";
         echo '<TR>';
         echo '<TD><INPUT TYPE="CHECKBOX" NAME="release_files_to_delete[]" VALUE="' . $hp->purify($files[$i]->getFileID()) . '"></TD>';
@@ -649,11 +649,11 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 );
 
                 $uploaded_links_retriever = new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
-                $existing_links = $uploaded_links_retriever->getLinksForRelease($release);
+                $existing_links           = $uploaded_links_retriever->getLinksForRelease($release);
 
                 $uploaded_link_spresenter_builder = new \Tuleap\FRS\UploadedLinkPresentersBuilder();
-                $existing_links_presenter = $uploaded_link_spresenter_builder->build($existing_links);
-                $uploaded_links_create_presenter = new UploadedLinkUpdateTablePresenter($existing_links_presenter);
+                $existing_links_presenter         = $uploaded_link_spresenter_builder->build($existing_links);
+                $uploaded_links_create_presenter  = new UploadedLinkUpdateTablePresenter($existing_links_presenter);
 
                 echo $renderer->renderToString('uploaded-links-form', $uploaded_links_create_presenter);
                 ?>
@@ -799,7 +799,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             </TD></TR>';
             }
 
-            $fmmf = new FileModuleMonitorFactory();
+            $fmmf  = new FileModuleMonitorFactory();
             $count = count($fmmf->getFilesModuleMonitorFromDb($release->getPackageId()));
             if ($count > 0) {
                 echo '<TR><TD><FIELDSET><LEGEND>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'fieldset_notification')) . '</LEGEND>';
@@ -846,19 +846,19 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     global $package_factory, $release_factory, $files_factory;
     $pm = ProjectManager::instance();
     //get and filter all inputs from $request
-    $release = [];
-    $res = $request->get('release');
-    $vName = new Valid_String();
+    $release     = [];
+    $res         = $request->get('release');
+    $vName       = new Valid_String();
     $vPackage_id = new Valid_UInt();
-    $vStatus_id =  new Valid_UInt();
+    $vStatus_id  =  new Valid_UInt();
 
     if (
         $vName->validate($res['name']) &&
         $vPackage_id->validate($res['package_id']) &&
         $vStatus_id->validate($res['status_id'])
     ) {
-        $release['status_id'] = $res['status_id'];
-        $release['name'] = $res['name'];
+        $release['status_id']  = $res['status_id'];
+        $release['name']       = $res['name'];
         $release['package_id'] = $res['package_id'];
     } else {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_update_failed'));
@@ -1056,8 +1056,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             $code = addslashes(fread(fopen($_FILES['uploaded_change_log']['tmp_name'], 'r'), \filesize($_FILES['uploaded_change_log']['tmp_name'])));
             if ((strlen($code) > 0) && (strlen($code) < ForgeConfig::get('sys_max_size_upload'))) {
                 //size is fine
-                $info[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'data_uploaded');
-                $data_uploaded = true;
+                $info[]                = $GLOBALS['Language']->getText('file_admin_editreleases', 'data_uploaded');
+                $data_uploaded         = true;
                 $release['change_log'] = $code;
             } else {
                 //too big or small
@@ -1090,12 +1090,12 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 // the date didn't change => don't update it
                 $unix_release_time = $rel->getReleaseDate();
             } else {
-                $date_list = explode("-", $release['date'], 3);
+                $date_list         = explode("-", $release['date'], 3);
                 $unix_release_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
             }
         } else {
             //parse the date
-            $date_list = explode("-", $release['date'], 3);
+            $date_list         = explode("-", $release['date'], 3);
             $unix_release_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
         }
 
@@ -1176,9 +1176,9 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
 
                 //remove files
                 foreach ($release_files_to_delete as $rel_file) {
-                    $res = $files_factory->getFRSFileFromDb($rel_file);
+                    $res   = $files_factory->getFRSFileFromDb($rel_file);
                     $fname = $res->getFileName();
-                    $res = $files_factory->delete_file($group_id, $rel_file);
+                    $res   = $files_factory->delete_file($group_id, $rel_file);
                     if ($res == 0) {
                         $error[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'f_not_yours', basename($fname));
                     } else {
@@ -1191,9 +1191,9 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 foreach ($release_files as $rel_file) {
                     if (! $release_files_to_delete || ! in_array($rel_file, $release_files_to_delete)) {
                         $package_id = $release['package_id'];
-                        $fname = $files[$index]->getFileName();
-                        $list  = explode('/', $fname);
-                        $fname = $list[sizeof($list) - 1];
+                        $fname      = $files[$index]->getFileName();
+                        $list       = explode('/', $fname);
+                        $fname      = $list[sizeof($list) - 1];
                         if (! isset($new_release_id)) {
                             continue;
                         }
@@ -1270,7 +1270,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             }
 
             $http_files_processor_type_list =  [];
-            $ftp_files_processor_type_list =  [];
+            $ftp_files_processor_type_list  =  [];
             if (isset($js) && $js == 'no_js') {
                 //if javascript is not allowed, there is maximum one file to upload
                 // TODO : fix warnings due to array instead of string for "file_processor", "file_type" & "reference_md5"
@@ -1395,7 +1395,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                         try {
                             $files_factory->createFile($newFile, ~FRSFileFactory::COMPUTE_MD5);
                             $addingFiles = true;
-                            $em = EventManager::instance();
+                            $em          = EventManager::instance();
                             $em->processEvent(Event::COMPUTE_MD5SUM, ['fileId' => $newFile->getFileID()]);
                             $info[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'offline_md5', $filename);
                         } catch (Exception $e) {
@@ -1408,8 +1408,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 }
             }
 
-            $error_edit  = '';
-            $params = [
+            $error_edit = '';
+            $params     = [
                 'release_id'      => $release_id,
                 'release_request' => $request->get('release'),
                 'error'           => &$error_edit

@@ -41,7 +41,7 @@ class ArtifactTimeframeHelperTest extends TestCase
         $semantic_timeframe_builder->shouldReceive('getSemantic')->with($tracker)->andReturn($semantic);
         $semantic->shouldReceive('isDefined')->andReturnFalse();
 
-        $artifact_timeframe_helper  = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
 
         $this->assertFalse($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
@@ -64,7 +64,7 @@ class ArtifactTimeframeHelperTest extends TestCase
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnFalse();
 
-        $artifact_timeframe_helper  = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
 
         $this->assertFalse($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
@@ -87,7 +87,7 @@ class ArtifactTimeframeHelperTest extends TestCase
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnFalse();
 
-        $artifact_timeframe_helper  = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
 
         $this->assertFalse($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
@@ -110,7 +110,7 @@ class ArtifactTimeframeHelperTest extends TestCase
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnTrue();
 
-        $artifact_timeframe_helper  = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
 
         $this->assertTrue($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
@@ -133,7 +133,7 @@ class ArtifactTimeframeHelperTest extends TestCase
         $semantic->shouldReceive('getStartDateField')->andReturn($start_date_field);
         $start_date_field->shouldReceive('userCanRead')->with($user)->andReturnTrue();
 
-        $artifact_timeframe_helper  = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
+        $artifact_timeframe_helper = new ArtifactTimeframeHelper($semantic_timeframe_builder, $timeframe_builder);
 
         $this->assertTrue($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }

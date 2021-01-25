@@ -59,7 +59,7 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \PHPUnit\Framew
     {
         $this->artifact_id = 123;
         $this->artifact    = Mockery::spy(Artifact::class);
-        $tracker              = Mockery::mock(Tracker::class);
+        $tracker           = Mockery::mock(Tracker::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
         $this->artifact->shouldReceive('getId')->andReturn($this->artifact_id);
         $tracker->shouldReceive('isProjectAllowedToUseNature')->andReturnFalse();
@@ -81,7 +81,7 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \PHPUnit\Framew
     {
         $artifact_id  = 345;
         $artifact_row = ['id' => $artifact_id];
-        $artifact         = Mockery::mock(Artifact::class);
+        $artifact     = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($artifact_id);
 
         $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($artifact_row)->andReturn(

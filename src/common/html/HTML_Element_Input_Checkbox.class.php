@@ -34,7 +34,7 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input
     }
     public function render()
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $html  = '<label class="checkbox inline">';
         $html .= $this->renderValue();
         $html .= ' ' . $hp->purify($this->label, CODENDI_PURIFIER_CONVERT_HTML);
@@ -43,8 +43,8 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input
     }
     public function renderValue()
     {
-        $hf = new HTML_Element_Input_Hidden('', $this->name, 0, '');
-        $html = $hf->render();
+        $hf    = new HTML_Element_Input_Hidden('', $this->name, 0, '');
+        $html  = $hf->render();
         $html .= parent::renderValue();
         return $html;
     }

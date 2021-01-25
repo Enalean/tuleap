@@ -299,7 +299,7 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         $this->csrf->check();
         $mirror_id = $request->get('mirror_id');
         try {
-            $update    = $this->git_mirror_mapper->update(
+            $update = $this->git_mirror_mapper->update(
                 $mirror_id,
                 $request->get('mirror_url'),
                 $request->get('mirror_hostname'),

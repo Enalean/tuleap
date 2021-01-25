@@ -52,13 +52,13 @@ class ByGroupFieldsPermissions
 
     public function __construct(int $ugroup_id, string $ugroup_name)
     {
-        $this->ugroup_id           = $ugroup_id;
-        $this->ugroup_name         = $ugroup_name;
+        $this->ugroup_id   = $ugroup_id;
+        $this->ugroup_name = $ugroup_name;
     }
 
     public function addField(\Tracker_FormElement_Field $field, array $permissions): void
     {
-        $this->fields[$field->getId()] = $field;
+        $this->fields[$field->getId()]             = $field;
         $this->fields_permissions[$field->getId()] = $permissions;
     }
 

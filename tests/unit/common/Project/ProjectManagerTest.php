@@ -193,7 +193,7 @@ final class ProjectManagerTest extends TestCase
         if (! defined('GET_GROUP_FAULT')) {
             define('GET_GROUP_FAULT', '3000');
         }
-        $pm = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $pm      = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('isError')->andReturns(true);
         $pm->shouldReceive('getProject')->andReturns($project);
@@ -206,7 +206,7 @@ final class ProjectManagerTest extends TestCase
         if (! defined('GET_GROUP_FAULT')) {
             define('GET_GROUP_FAULT', '3000');
         }
-        $pm = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $pm      = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('isError')->andReturns(false);
         $project->shouldReceive('isActive')->andReturns(false);
@@ -220,7 +220,7 @@ final class ProjectManagerTest extends TestCase
         if (! defined('GET_GROUP_FAULT')) {
             define('GET_GROUP_FAULT', '3000');
         }
-        $pm = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $pm      = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('isError')->andReturns(false);
         $project->shouldReceive('isActive')->andReturns(true);
@@ -235,7 +235,7 @@ final class ProjectManagerTest extends TestCase
         if (! defined('GET_GROUP_FAULT')) {
             define('GET_GROUP_FAULT', '3000');
         }
-        $pm = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $pm      = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('isError')->andReturns(false);
         $project->shouldReceive('isActive')->andReturns(true);

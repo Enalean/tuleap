@@ -71,9 +71,9 @@ class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject //
     public function updateRequiredCustomDescription(bool $required, int $id): void
     {
         $required = $this->da->escapeInt($required);
-        $id = $this->da->escapeInt($id);
+        $id       = $this->da->escapeInt($id);
 
-        $sql    = "UPDATE group_desc SET desc_required=$required where group_desc_id=$id";
+        $sql = "UPDATE group_desc SET desc_required=$required where group_desc_id=$id";
         $this->update($sql);
     }
 }

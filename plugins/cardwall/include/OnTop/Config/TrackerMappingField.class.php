@@ -35,8 +35,8 @@ abstract class Cardwall_OnTop_Config_TrackerMappingField extends Cardwall_OnTop_
     public function __construct(Tracker $tracker, array $available_fields, array $value_mappings, Tracker_FormElement_Field $field)
     {
         parent::__construct($tracker, $available_fields);
-        $this->value_mappings   = $value_mappings;
-        $this->field            = $field;
+        $this->value_mappings = $value_mappings;
+        $this->field          = $field;
     }
 
     public function getField()

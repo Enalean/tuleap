@@ -119,7 +119,7 @@ class taskboardPlugin extends Plugin
         }
 
         $tracker_new_dropdown_link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
-        $event_manager = EventManager::instance();
+        $event_manager                               = EventManager::instance();
 
         $tracker_dao                  = new TrackerDao();
         $planning_dao                 = new PlanningDao($tracker_dao);

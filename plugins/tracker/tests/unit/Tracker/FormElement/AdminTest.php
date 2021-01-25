@@ -24,7 +24,7 @@ final class Tracker_FormElement_View_AdminTest extends \PHPUnit\Framework\TestCa
 
     public function testForSharedFieldsItDisplaysOriginalTrackerAndProjectName(): void
     {
-        $admin = $this->givenAnAdminWithOriginalProjectAndTracker('Tuleap', 'Bugs');
+        $admin  = $this->givenAnAdminWithOriginalProjectAndTracker('Tuleap', 'Bugs');
         $result = $admin->fetchCustomHelpForShared();
         $this->assertMatchesRegularExpression("%Bugs%", $result);
         $this->assertMatchesRegularExpression("%Tuleap%", $result);

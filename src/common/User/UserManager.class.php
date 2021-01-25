@@ -47,8 +47,8 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public $_userid_bynames  = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     public $_userid_byldapid = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
-    private $_userdao         = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
-    private $_currentuser     = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    private $_userdao     = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    private $_currentuser = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     /**
      * @var User_PendingUserNotifier
@@ -67,7 +67,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public static function instance()
     {
         if (! isset(self::$_instance)) {
-            $userManager = self::class;
+            $userManager     = self::class;
             self::$_instance = new $userManager(
                 new User_PendingUserNotifier()
             );
@@ -122,7 +122,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                 } else {
                     $u = $this->getUserByIdWithoutCache($user_id);
                     if ($u) {
-                        $this->_users[$u->getId()] = $u;
+                        $this->_users[$u->getId()]                = $u;
                         $this->_userid_bynames[$u->getUserName()] = $user_id;
                     } else {
                         $this->_users[$user_id] = null;
@@ -176,8 +176,8 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if (! isset($this->_userid_bynames[$user_name])) {
             $dar = $this->getDao()->searchByUserName($user_name);
             if ($row = $dar->getRow()) {
-                $u = $this->getUserInstanceFromRow($row);
-                $this->_users[$u->getId()] = $u;
+                $u                                 = $this->getUserInstanceFromRow($row);
+                $this->_users[$u->getId()]         = $u;
                 $this->_userid_bynames[$user_name] = $u->getId();
             } else {
                 $this->_userid_bynames[$user_name] = null;
@@ -220,8 +220,8 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if (! isset($this->_userid_byldapid[$ldapId])) {
             $dar = $this->getDao()->searchByLdapId($ldapId);
             if ($row = $dar->getRow()) {
-                $u = $this->getUserInstanceFromRow($row);
-                $this->_users[$u->getId()] = $u;
+                $u                               = $this->getUserInstanceFromRow($row);
+                $this->_users[$u->getId()]       = $u;
                 $this->_userid_byldapid[$ldapId] = $u->getId();
             } else {
                 $this->_userid_byldapid[$ldapId] = null;
@@ -298,7 +298,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public function getUserIdsList($search)
     {
         $userArray = explode(',', $search);
-        $users = [];
+        $users     = [];
         foreach ($userArray as $user) {
             $user = $this->findUser($user);
             if ($user) {
@@ -378,9 +378,9 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     {
         $user = null;
 
-        $em = $this->_getEventManager();
+        $em                  = $this->_getEventManager();
         $tokenFoundInPlugins = false;
-        $params = ['identifier' => $identifier,
+        $params              = ['identifier' => $identifier,
                         'user'       => &$user,
                         'tokenFound' => &$tokenFoundInPlugins];
         $em->processEvent('user_manager_get_user_by_identifier', $params);
@@ -393,7 +393,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                 $user = $this->getUserByUserName($identifier);
             } else {
                 // identifier = type:value
-                $identifierType = substr($identifier, 0, $separatorPosition);
+                $identifierType  = substr($identifier, 0, $separatorPosition);
                 $identifierValue = substr($identifier, $separatorPosition + 1);
 
                 switch ($identifierType) {
@@ -431,8 +431,8 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     public function setCurrentUser(PFUser $user)
     {
-        $this->_currentuser = $user;
-        $this->_users[$user->getId()] = $user;
+        $this->_currentuser                          = $user;
+        $this->_users[$user->getId()]                = $user;
         $this->_userid_bynames[$user->getUserName()] = $user->getId();
 
         return $user;
@@ -460,7 +460,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                     $this->_currentuser = null;
                 } else {
                     $accessInfo = $this->getUserAccessInfo($this->_currentuser);
-                    $now = $_SERVER['REQUEST_TIME'];
+                    $now        = $_SERVER['REQUEST_TIME'];
                     $break_time = $now - ($accessInfo['last_access_date'] ?? 0);
                     //if the access is not later than 6 hours, it is not necessary to log it
                     if ($break_time > ForgeConfig::get('last_access_resolution')) {
@@ -477,7 +477,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                 $this->_currentuser = $this->getUserInstanceFromRow(['user_id' => 0]);
             }
             //cache the user
-            $this->_users[$this->_currentuser->getId()] = $this->_currentuser;
+            $this->_users[$this->_currentuser->getId()]                = $this->_currentuser;
             $this->_userid_bynames[$this->_currentuser->getUserName()] = $this->_currentuser->getId();
         }
         return $this->_currentuser;
@@ -668,7 +668,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     private function warnUserAboutAuthenticationAttempts(PFUser $user)
     {
         $access_info = $this->getUserAccessInfo($user);
-        $level = 'info';
+        $level       = 'info';
         if ($access_info['nb_auth_failure'] > 0) {
             $level = 'warning';
             $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_last_failure') . ' ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $access_info['last_auth_failure']));
@@ -777,7 +777,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         }
 
         //cache the user
-        $this->_users[$this->_currentuser->getId()] = $this->_currentuser;
+        $this->_users[$this->_currentuser->getId()]                = $this->_currentuser;
         $this->_userid_bynames[$this->_currentuser->getUserName()] = $this->_currentuser->getId();
         return $this->_currentuser;
     }
@@ -848,12 +848,12 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public function updateDb(PFUser $user)
     {
         if (! $user->isAnonymous()) {
-            $old_user = $this->getUserByIdWithoutCache($user->getId());
-            $userRow = $user->toRow();
+            $old_user      = $this->getUserByIdWithoutCache($user->getId());
+            $userRow       = $user->toRow();
             $user_password = $user->getPassword();
             if ($user_password !== null) {
                 $user_password_hash = $user->getUserPw();
-                $password_handler = PasswordHandlerFactory::getPasswordHandler();
+                $password_handler   = PasswordHandlerFactory::getPasswordHandler();
                 if (
                     $user_password_hash === null ||
                     ! $password_handler->verifyHashPassword($user_password, $user_password_hash) ||
@@ -962,7 +962,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function createAccount(PFUser $user): ?PFUser
     {
-        $dao = $this->getDao();
+        $dao     = $this->getDao();
         $user_id = $dao->create(
             $user->getUserName(),
             $user->getEmail(),

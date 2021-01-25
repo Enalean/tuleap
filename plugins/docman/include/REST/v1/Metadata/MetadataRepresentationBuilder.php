@@ -90,7 +90,7 @@ class MetadataRepresentationBuilder
     private function getMetadataValues(\Docman_Metadata $metadata): array
     {
         $metadata_type = (int) $metadata->getType();
-        $value = $metadata->getValue();
+        $value         = $metadata->getValue();
         if ($metadata_type === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $list_value = [];
             foreach ($value as $metadata_value) {

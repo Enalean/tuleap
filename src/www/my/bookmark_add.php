@@ -8,7 +8,7 @@ require_once __DIR__ . '/../include/bookmarks.php';
 require_once __DIR__ . '/my_utils.php';
 
 $request = HTTPRequest::instance();
-$vUrl = new Valid_String('bookmark_url');
+$vUrl    = new Valid_String('bookmark_url');
 $vUrl->required();
 $vTitle = new Valid_String('bookmark_title');
 $vTitle->required();
@@ -20,7 +20,7 @@ $csrf_token = new CSRFSynchronizerToken('/my/bookmark_add.php');
 if ($request->isPost() && $request->valid($vUrl) && $request->valid($vTitle)) {
     $csrf_token->check();
 
-    $bookmark_url = $request->get('bookmark_url');
+    $bookmark_url   = $request->get('bookmark_url');
     $bookmark_title = $request->get('bookmark_title');
 
     my_check_bookmark_URL($bookmark_url, '/my/bookmark_add.php');

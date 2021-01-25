@@ -61,7 +61,7 @@ class CollectorTest extends TestCase
         $this->git_log_dao        = Mockery::mock(Git_LogDao::class);
         $this->retriever          = Mockery::mock(Retriever::class);
 
-        $this->collector          = new Collector($this->disk_usage_manager, $this->git_log_dao, $this->retriever);
+        $this->collector = new Collector($this->disk_usage_manager, $this->git_log_dao, $this->retriever);
 
         $this->project = Mockery::mock(Project::class);
         $this->project->shouldReceive('getId')->andReturn(111);

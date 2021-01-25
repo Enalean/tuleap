@@ -53,7 +53,7 @@ abstract class GitViewsRepositoriesTraversalStrategy
         foreach ($repositories as $repository) {
             $repoName = $repository[GitDao::REPOSITORY_NAME];
             $delDate  = $repository[GitDao::REPOSITORY_DELETION_DATE];
-            $r = $this->getRepository($repository);
+            $r        = $this->getRepository($repository);
 
             if (! $r->userCanRead($user)) {
                 continue;

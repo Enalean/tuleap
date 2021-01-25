@@ -72,7 +72,7 @@ class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
 
     public function visitFile(Tracker_FormElement_Field_File $field): void
     {
-        $files = [];
+        $files                    = [];
         $artifact_changeset_value =  $this->artifact->getValue($field);
         if ($artifact_changeset_value instanceof Tracker_Artifact_ChangesetValue_File) {
             $files = $artifact_changeset_value->getFiles();

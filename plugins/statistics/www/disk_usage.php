@@ -40,7 +40,7 @@ require_once __DIR__ . '/../include/Statistics_DiskUsageHtml.class.php';
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if (! $p || ! $pluginManager->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }
@@ -66,10 +66,10 @@ $duMgr           = new Statistics_DiskUsageManager(
 
 $duHtml = new Statistics_DiskUsageHtml($duMgr);
 
-$disk_usage_output = new Statistics_DiskUsageOutput(
+$disk_usage_output                = new Statistics_DiskUsageOutput(
     $duMgr
 );
-$disk_usage_graph = new Statistics_DiskUsageGraph(
+$disk_usage_graph                 = new Statistics_DiskUsageGraph(
     $duMgr
 );
 $disk_usage_search_fields_builder = new SearchFieldsPresenterBuilder();
@@ -80,7 +80,7 @@ $disk_usage_services_builder      = new DiskUsageServicesPresenterBuilder(
     $disk_usage_graph,
     $disk_usage_search_fields_builder
 );
-$disk_usage_projects_builder = new DiskUsageProjectsPresenterBuilder(
+$disk_usage_projects_builder      = new DiskUsageProjectsPresenterBuilder(
     $duMgr,
     $disk_usage_output,
     $disk_usage_search_fields_builder,

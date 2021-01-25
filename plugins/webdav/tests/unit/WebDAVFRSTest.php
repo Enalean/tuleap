@@ -99,7 +99,7 @@ final class WebDAVFRSTest extends TestCase
     {
         $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $FRSPackage = Mockery::spy(FRSPackage::class);
+        $FRSPackage    = Mockery::spy(FRSPackage::class);
         $WebDAVPackage = Mockery::spy(WebDAVFRSPackage::class);
         $WebDAVPackage->shouldReceive('exist')->andReturns(false);
         $webDAVFRS->shouldReceive('getFRSPackageFromName')->andReturns($FRSPackage);
@@ -119,7 +119,7 @@ final class WebDAVFRSTest extends TestCase
     {
         $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $FRSPackage = Mockery::spy(FRSPackage::class);
+        $FRSPackage    = Mockery::spy(FRSPackage::class);
         $WebDAVPackage = Mockery::spy(WebDAVFRSPackage::class);
         $WebDAVPackage->shouldReceive('exist')->andReturns(true);
         $WebDAVPackage->shouldReceive('userCanRead')->andReturns(false);
@@ -141,7 +141,7 @@ final class WebDAVFRSTest extends TestCase
     {
         $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $FRSPackage = Mockery::spy(FRSPackage::class);
+        $FRSPackage    = Mockery::spy(FRSPackage::class);
         $WebDAVPackage = Mockery::spy(WebDAVFRSPackage::class);
         $WebDAVPackage->shouldReceive('exist')->andReturns(true);
         $WebDAVPackage->shouldReceive('userCanRead')->andReturns(true);

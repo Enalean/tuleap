@@ -90,22 +90,22 @@ final class Realtime
     private function updateRealtimeConf(string $jwt_private_key): void
     {
         $this->logger->debug('Update realtime configuration');
-        $realtime_conf_path = '/etc/tuleap-realtime/config.json';
-        $raw_content = file_get_contents($realtime_conf_path);
-        $json = \json_decode($raw_content, true, 512, JSON_THROW_ON_ERROR);
+        $realtime_conf_path                    = '/etc/tuleap-realtime/config.json';
+        $raw_content                           = file_get_contents($realtime_conf_path);
+        $json                                  = \json_decode($raw_content, true, 512, JSON_THROW_ON_ERROR);
         $json['nodejs_server_jwt_private_key'] = $jwt_private_key;
-        $json['full_path_ssl_cert'] = self::CERT_PATH;
-        $json['full_path_ssl_key']  = self::KEY_PATH;
-        $json['port']               = self::PORT;
+        $json['full_path_ssl_cert']            = self::CERT_PATH;
+        $json['full_path_ssl_key']             = self::KEY_PATH;
+        $json['port']                          = self::PORT;
         FileWriter::writeFile($realtime_conf_path, \json_encode($json, JSON_THROW_ON_ERROR));
     }
 
     private function updateLocalInc(string $tuleap_fqdn, string $jwt_private_key): void
     {
         $this->logger->debug('Update local.inc');
-        $local_inc_path = '/etc/tuleap/conf/local.inc';
+        $local_inc_path    = '/etc/tuleap/conf/local.inc';
         $local_inc_content = file_get_contents('/etc/tuleap/conf/local.inc');
-        $conf_string = preg_replace(
+        $conf_string       = preg_replace(
             [
                 '/\$nodejs_server .*/',
                 '/\$nodejs_server_int .*/',

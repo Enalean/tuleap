@@ -40,8 +40,8 @@ class MailRegisterByAdminNotificationPresenter extends MailNotificationPresenter
         $section_after_login
     ) {
         parent::__construct($logo_url, $title, $section_one, $thanks, $signature, $color_logo, $redirect_url, $redirect_button, $color_button);
-        $this->section_two          = $section_two;
-        $this->login                = $login;
-        $this->section_after_login  = $section_after_login;
+        $this->section_two         = $section_two;
+        $this->login               = $login;
+        $this->section_after_login = $section_after_login;
     }
 }

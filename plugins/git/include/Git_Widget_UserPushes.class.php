@@ -27,8 +27,8 @@ use Tuleap\date\RelativeDatesAssetsRetriever;
 class Git_Widget_UserPushes extends Widget
 {
 
-    public $offset     = 5;
-    public $pastDays   = 30;
+    public $offset   = 5;
+    public $pastDays = 30;
     public $pluginPath;
 
     /**
@@ -90,9 +90,9 @@ class Git_Widget_UserPushes extends Widget
                         if (! empty($project)) {
                             $content .= '</fieldset>';
                         }
-                        $project = $entry['group_name'];
+                        $project   = $entry['group_name'];
                         $unix_name = $hp->purify($entry['unix_group_name']);
-                        $content .= '<fieldset class="widget-last-git-pushes-project">
+                        $content  .= '<fieldset class="widget-last-git-pushes-project">
                             <legend id="plugin_git_user_pushes_widget_project_' . $unix_name . '" class="' . Toggler::getClassname('plugin_git_user_pushes_widget_project_' . $unix_name) . '">
                             <span title="' . dgettext('tuleap-git', 'Project') . '">
                             <b>' . $hp->purify($project) . '</b>
@@ -121,7 +121,7 @@ class Git_Widget_UserPushes extends Widget
                         </tr>
                         </thead>
                         <tbody>';
-                    $i   = 0;
+                    $i        = 0;
                     foreach ($rows as $row) {
                         $content .= '<tr class="' . html_get_alt_row_color(++$i) . '">
                                          <td>' . DateHelper::relativeDateInlineContext((int) $row['push_date'], $user) . '</td>
@@ -174,7 +174,7 @@ class Git_Widget_UserPushes extends Widget
         $request->valid(new Valid_String('cancel'));
         $vOffset = new Valid_UInt('plugin_git_user_pushes_offset');
         $vOffset->required();
-        $vDays   = new Valid_UInt('plugin_git_user_pushes_past_days');
+        $vDays = new Valid_UInt('plugin_git_user_pushes_past_days');
         $vDays->required();
         if (! $request->exist('cancel')) {
             if ($request->valid($vOffset)) {

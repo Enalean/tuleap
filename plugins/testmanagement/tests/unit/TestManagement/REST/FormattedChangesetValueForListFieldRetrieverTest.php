@@ -59,8 +59,8 @@ class FormattedChangesetValueForListFieldRetrieverTest extends TestCase
         $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getTrackerId')->andReturn(42);
 
-        $this->user                                              = Mockery::mock(PFUser::class);
-        $this->tracker_formelement_factory                       = Mockery::mock(Tracker_FormElementFactory::class);
+        $this->user                                               = Mockery::mock(PFUser::class);
+        $this->tracker_formelement_factory                        = Mockery::mock(Tracker_FormElementFactory::class);
         $this->formatted_changeset_value_for_list_field_retriever = new FormattedChangesetValueForListFieldRetriever(
             $this->tracker_formelement_factory
         );

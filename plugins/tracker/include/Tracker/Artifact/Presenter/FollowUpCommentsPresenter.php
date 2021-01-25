@@ -48,7 +48,7 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter
         $presenters = [];
         foreach ($followups as $followup) {
             $diff_to_previous = $followup->diffToPrevious();
-            $presenters[] = [
+            $presenters[]     = [
                 'getId'              => $followup->getId(),
                 'getAvatar'          => $followup->getAvatar(),
                 'getUserLink'        => $followup->getUserLink(),

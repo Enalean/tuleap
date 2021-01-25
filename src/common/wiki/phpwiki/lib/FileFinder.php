@@ -261,7 +261,7 @@ class FileFinder
         foreach ($this->_path as $dir) {
             // ensure we use the same pathsep
             if ($this->_isOtherPathsep()) {
-                $dir = $this->slashifyPath($dir);
+                $dir  = $this->slashifyPath($dir);
                 $file = $this->slashifyPath($file);
                 if (file_exists($dir . $this->_pathsep . $file)) {
                     return $dir;
@@ -466,8 +466,8 @@ class LocalizedFileFinder extends FileFinder
     public function __construct()
     {
         $this->_pathsep = $this->_get_syspath_separator();
-        $include_path = $this->_get_include_path();
-        $path = [];
+        $include_path   = $this->_get_include_path();
+        $path           = [];
 
         $lang = $this->_get_lang();
         assert(! empty($lang));
@@ -503,8 +503,8 @@ class LocalizedButtonFinder extends FileFinder
     {
         global $WikiTheme;
         $this->_pathsep = $this->_get_syspath_separator();
-        $include_path = $this->_get_include_path();
-        $path = [];
+        $include_path   = $this->_get_include_path();
+        $path           = [];
 
         $lang = $this->_get_lang();
         assert(! empty($lang));

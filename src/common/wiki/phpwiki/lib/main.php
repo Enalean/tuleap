@@ -131,12 +131,12 @@ class WikiRequest extends Request
                 }
                 $this->_prefs = & $this->_user->_prefs;
             } else {
-                $user = WikiUser($userid);
-                $this->_user = & $user;
+                $user         = WikiUser($userid);
+                $this->_user  = & $user;
                 $this->_prefs = & $this->_user->_prefs;
             }
         } else {
-            $this->_user = new WikiUser($this, $userid);
+            $this->_user  = new WikiUser($this, $userid);
             $this->_prefs = $this->_user->getPreferences();
         }
     }
@@ -352,13 +352,13 @@ class WikiRequest extends Request
         }
 
         $olduser = $this->_user;
-        $user = $this->_user->AuthCheck($auth_args);
+        $user    = $this->_user->AuthCheck($auth_args);
         if (isa($user, WikiUserClassname())) {
             // Successful login (or logout.)
             $this->_setUser($user);
         } elseif (is_string($user)) {
             // Login attempt failed.
-            $fail_message = $user;
+            $fail_message               = $user;
             $auth_args['pass_required'] = true;
             // if clicked just on to the "sign in as:" button dont print invalid username.
             if (! empty($auth_args['login']) and empty($auth_args['userid'])) {
@@ -419,7 +419,7 @@ class WikiRequest extends Request
         // Save userid to prefs..
         if (empty($this->_user->_prefs)) {
             $this->_user->_prefs = $this->_user->getPreferences();
-            $this->_prefs = $this->_user->_prefs;
+            $this->_prefs        = $this->_user->_prefs;
         }
         $this->_user->_group = $this->getGroup();
         $this->setSessionVar('wiki_user', $user);
@@ -469,7 +469,7 @@ class WikiRequest extends Request
         }
 
         // User does not have required authority.  Prompt for login.
-        $what = $this->getActionDescription($this->getArg('action'));
+        $what          = $this->getActionDescription($this->getArg('action'));
         $pass_required = ($require_level >= WIKIAUTH_USER);
         if ($require_level == WIKIAUTH_UNOBTAINABLE) {
             global $DisabledActions;
@@ -483,9 +483,9 @@ class WikiRequest extends Request
             }
         // Is the reason a missing ACL or just wrong user or password?
             if (class_exists('PagePermission')) {
-                $user = $this->_user;
+                $user   = $this->_user;
                 $status = $user->isAuthenticated() ? _("authenticated") : _("not authenticated");
-                $msg = fmt(
+                $msg    = fmt(
                     "%s %s %s is disallowed on this wiki for %s user '%s' (level: %s).",
                     _("Missing PagePermission:"),
                     action2access($this->getArg('action')),
@@ -652,7 +652,7 @@ class WikiRequest extends Request
                 // return WIKIAUTH_BOGO;
 
                 case 'create':
-                    $page = $this->getPage();
+                    $page    = $this->getPage();
                     $current = $page->getCurrentRevision();
                     if ($current->hasDefaultContents()) {
                         return $this->requiredAuthorityForAction('edit');
@@ -699,7 +699,7 @@ class WikiRequest extends Request
             return;
         }
 
-        $page = $this->getPage();
+        $page    = $this->getPage();
         $current = $page->getCurrentRevision();
         if ($current->getVersion() > 0) {
             return;             // Homepage exists.
@@ -809,8 +809,8 @@ class WikiRequest extends Request
         if (USE_PATH_INFO) {
             $pathinfo = $this->get('PATH_INFO');
             if (empty($pathinfo)) { // fix for CGI
-                $path = $this->get('REQUEST_URI');
-                $script = $this->get('SCRIPT_NAME');
+                $path     = $this->get('REQUEST_URI');
+                $script   = $this->get('SCRIPT_NAME');
                 $pathinfo = substr($path, strlen($script));
                 $pathinfo = preg_replace('/\?.+$/', '', $pathinfo);
             }
@@ -868,7 +868,7 @@ class WikiRequest extends Request
         // (people playing with switching languages)
         if (0 and $GLOBALS['LANG'] != 'en') {
             require_once("lib/plugin/_WikiTranslation.php");
-            $trans = new WikiPlugin__WikiTranslation();
+            $trans     = new WikiPlugin__WikiTranslation();
             $en_action = $trans->translate($action, 'en', $GLOBALS['LANG']);
             if ($this->isActionPage($en_action)) {
                 return $en_action;
@@ -891,7 +891,7 @@ class WikiRequest extends Request
 
     public function _isActionPage($pagename)
     {
-        $dbi = $this->getDbh();
+        $dbi  = $this->getDbh();
         $page = $dbi->getPage($pagename);
         if (! $page) {
             return false;
@@ -934,9 +934,9 @@ class WikiRequest extends Request
         if ($LANG != "en") {
             require_once("lib/WikiPlugin.php");
             require_once("lib/plugin/_WikiTranslation.php");
-            $trans = new WikiPlugin__WikiTranslation();
+            $trans       = new WikiPlugin__WikiTranslation();
             $trans->lang = $LANG;
-            $default = $trans->translate_to_en($action, $LANG);
+            $default     = $trans->translate_to_en($action, $LANG);
             if ($this->_isActionPage($default)) {
                 return $cache[$action] = $default;
             }
@@ -981,7 +981,7 @@ class WikiRequest extends Request
 
     public function adminActionSubpage($subpage)
     {
-        $page = _("PhpWikiAdministration") . "/" . $subpage;
+        $page   = _("PhpWikiAdministration") . "/" . $subpage;
         $action = $this->findActionPage($page);
         if ($action) {
             $this->setArg('s', $this->getArg('pagename'));
@@ -1045,9 +1045,9 @@ class WikiRequest extends Request
     public function action_edit()
     {
         // {{{ Codendi hook to check if this wiki page is editable
-        $em = EventManager::instance();
+        $em       = EventManager::instance();
         $response = false;
-        $html = HTML();
+        $html     = HTML();
         $em->processEvent('isWikiPageEditable', [
                         'action'    => 'is_wiki_page_editable',
                         'group_id'  => GROUP_ID,
@@ -1272,9 +1272,9 @@ function main()
                         'args'     => wikihash($request->getArgs()),
                         'prefs'    => wikihash($request->getPrefs())];
     if (CACHE_CONTROL == 'STRICT') {
-        $dbi = $request->getDbh();
-        $timestamp = $dbi->getTimestamp();
-        $validators['mtime'] = $timestamp;
+        $dbi                  = $request->getDbh();
+        $timestamp            = $dbi->getTimestamp();
+        $validators['mtime']  = $timestamp;
         $validators['%mtime'] = (int) $timestamp;
     }
     // FIXME: we should try to generate strong validators when possible,

@@ -105,7 +105,7 @@ final class DisplayProgramBacklogControllerTest extends TestCase
 
         $this->expectException(ForbiddenException::class);
 
-        $request   = \Mockery::mock(\HTTPRequest::class);
+        $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getCurrentUser')->andReturn(UserTestBuilder::aUser()->build());
         $variables = ['project_name' => 'test_project'];
 
@@ -125,14 +125,14 @@ final class DisplayProgramBacklogControllerTest extends TestCase
         $this->project_manager->shouldReceive('getProjectByUnixName')->andReturn($project);
         $this->project_flags_builder->shouldReceive('buildProjectFlags')->andReturn([]);
 
-        $request   = \Mockery::mock(\HTTPRequest::class);
-        $user      = UserTestBuilder::aUser()->build();
+        $request = \Mockery::mock(\HTTPRequest::class);
+        $user    = UserTestBuilder::aUser()->build();
         $request->shouldReceive('getCurrentUser')->andReturn($user);
         $this->build_program->shouldReceive('buildExistingProgramProject')
             ->with($project->getID(), $user)
             ->once()->andReturn(new Program(101));
 
-        $layout    = \Mockery::mock(BaseLayout::class);
+        $layout = \Mockery::mock(BaseLayout::class);
         $layout->shouldReceive('addCssAsset')->once();
         $layout->shouldReceive('header')->once();
         $layout->shouldReceive('includeFooterJavascriptFile')->once();

@@ -66,7 +66,7 @@ final class LegacyRestoreDocumentsController implements DispatchableWithRequest
             switch ($func) {
                 case 'confirm_restore_item':
                     $itemFactory = new Docman_ItemFactory($groupId);
-                    $item = $itemFactory->getItemFromDb($id, ['ignore_deleted' => true]);
+                    $item        = $itemFactory->getItemFromDb($id, ['ignore_deleted' => true]);
                     if ($item !== null && $itemFactory->restore($item)) {
                         $url = $this->plugin->getPluginPath() . '/?group_id=' . $groupId . '&action=details&id=' . $id . '&section=properties';
                         $layout->addFeedback('info', sprintf(dgettext('tuleap-docman', 'The <a href="%1$s">selected item</a> has been successfully restored.'), $url), CODENDI_PURIFIER_DISABLED);
@@ -77,7 +77,7 @@ final class LegacyRestoreDocumentsController implements DispatchableWithRequest
                     // This does not fall-through the next case because all the branches "never-return"
                 case 'confirm_restore_version':
                     $versionFactory = new Docman_VersionFactory();
-                    $version = $versionFactory->getSpecificVersionById($id);
+                    $version        = $versionFactory->getSpecificVersionById($id);
                     if ($version !== null && $versionFactory->restore($version)) {
                         $url = $this->plugin->getPluginPath() . '/?group_id=' . $groupId . '&action=details&id=' . $version->getItemId() . '&section=history';
                         $layout->addFeedback('info', sprintf(dgettext('tuleap-docman', 'The <a href="%1$s">selected version</a> has been successfully restored.'), $url), CODENDI_PURIFIER_DISABLED);

@@ -15,18 +15,18 @@ $id          = $request->get('id');
 $artifact_id = $request->get('artifact_id');
 
 // We have the artifact id, but not the tracker id
-$sql = "SELECT group_artifact_id, group_id FROM artifact INNER JOIN artifact_group_list USING (group_artifact_id) WHERE artifact_id= " . db_ei($artifact_id);
+$sql    = "SELECT group_artifact_id, group_id FROM artifact INNER JOIN artifact_group_list USING (group_artifact_id) WHERE artifact_id= " . db_ei($artifact_id);
 $result = db_query($sql);
 if (db_numrows($result) > 0) {
-    $row = db_fetch_array($result);
-    $atid = $row['group_artifact_id'];
-    $pm = ProjectManager::instance();
+    $row   = db_fetch_array($result);
+    $atid  = $row['group_artifact_id'];
+    $pm    = ProjectManager::instance();
     $group = $pm->getProject($row['group_id']);
 
     $at = new ArtifactType($group, $atid);
     if ($at->userCanView()) {
         $art_field_fact = new ArtifactFieldFactory($at); // Grrr! don't use global >_<
-        $a = new Artifact($at, $artifact_id);
+        $a              = new Artifact($at, $artifact_id);
         if ($a->userCanView()) {
             $sql = "SELECT description,bin_data,filename,filesize,filetype FROM artifact_file WHERE id='" . db_ei($id) . "' AND artifact_id ='" . db_ei($artifact_id) . "'";
             //echo $sql;

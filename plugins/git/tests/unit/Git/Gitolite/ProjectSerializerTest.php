@@ -197,8 +197,8 @@ class ProjectSerializerTest extends TestCase
         $this->version_detector->shouldReceive('isGitolite3')->andReturnTrue();
 
         // Ensure file is correct
-        $result     = $this->project_serializer->dumpProjectRepoConf($prj);
-        $expected   = file_get_contents($this->fix_dir . '/perms/project1-full.conf');
+        $result   = $this->project_serializer->dumpProjectRepoConf($prj);
+        $expected = file_get_contents($this->fix_dir . '/perms/project1-full.conf');
 
         $this->assertSame($expected, $result);
     }
@@ -242,7 +242,7 @@ class ProjectSerializerTest extends TestCase
         $this->version_detector->shouldReceive('isGitolite3')->andReturnTrue();
 
         // Ensure file is correct
-        $result     = $this->project_serializer->dumpProjectRepoConf($prj);
+        $result   = $this->project_serializer->dumpProjectRepoConf($prj);
         $expected = file_get_contents($this->fix_dir . '/perms/migrated_to_gerrit.conf');
 
         $this->assertSame($expected, $result);
@@ -275,8 +275,8 @@ class ProjectSerializerTest extends TestCase
             ->andReturn([$repo, $repo2]);
 
         // Ensure file is correct
-        $result     = $this->project_serializer->dumpSuspendedProjectRepositoriesConfiguration($project);
-        $expected   = <<<EOS
+        $result   = $this->project_serializer->dumpSuspendedProjectRepositoriesConfiguration($project);
+        $expected = <<<EOS
 repo project1/test_default
  - refs/.*$ = @all
 
@@ -349,8 +349,8 @@ EOS;
         $this->version_detector->shouldReceive('isGitolite3')->andReturnTrue();
 
         // Ensure file is correct
-        $result     = $this->project_serializer->dumpProjectRepoConf($prj);
-        $expected   = file_get_contents($this->fix_dir . '/perms/bigobject.conf');
+        $result   = $this->project_serializer->dumpProjectRepoConf($prj);
+        $expected = file_get_contents($this->fix_dir . '/perms/bigobject.conf');
 
         $this->assertSame($expected, $result);
     }
@@ -393,8 +393,8 @@ EOS;
         $this->version_detector->shouldReceive('isGitolite3')->andReturnFalse();
 
         // Ensure file is correct
-        $result     = $this->project_serializer->dumpProjectRepoConf($prj);
-        $expected   = file_get_contents($this->fix_dir . '/perms/notgitolite3.conf');
+        $result   = $this->project_serializer->dumpProjectRepoConf($prj);
+        $expected = file_get_contents($this->fix_dir . '/perms/notgitolite3.conf');
 
         $this->assertSame($expected, $result);
     }

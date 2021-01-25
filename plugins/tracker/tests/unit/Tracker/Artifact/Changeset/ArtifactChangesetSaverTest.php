@@ -101,7 +101,7 @@ final class ArtifactChangesetSaverTest extends TestCase
 
     public function testItStoreChangesetCreatedFromXML(): void
     {
-        $time    = new \DateTimeImmutable();
+        $time          = new \DateTimeImmutable();
         $import_config = new TrackerXmlImportConfig($this->user, $time);
 
         $this->changeset_dao->shouldReceive('create')->once()->andReturn(1234);

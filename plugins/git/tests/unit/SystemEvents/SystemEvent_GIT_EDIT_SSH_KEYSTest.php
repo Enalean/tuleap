@@ -84,7 +84,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
     public function testItTransformsEmptyKeyStringIntoArrayBeforeSendingToGitUserManager(): void
     {
         $original_keys = [];
-        $new_keys = [];
+        $new_keys      = [];
 
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::', '', '', '', '', '', '');
         $event->injectDependencies(

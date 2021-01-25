@@ -63,9 +63,9 @@ class TrackerChecker
         HiddenFieldsetsDao $hidden_fieldsets_dao,
         FieldUsageDetector $field_usage_detector
     ) {
-        $this->tracker_factory           = $tracker_factory;
-        $this->frozen_fields_dao         = $frozen_fields_dao;
-        $this->hidden_fieldsets_dao      = $hidden_fieldsets_dao;
+        $this->tracker_factory      = $tracker_factory;
+        $this->frozen_fields_dao    = $frozen_fields_dao;
+        $this->hidden_fieldsets_dao = $hidden_fieldsets_dao;
         $this->field_usage_detector = $field_usage_detector;
     }
 

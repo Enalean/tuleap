@@ -20,7 +20,7 @@
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey
 {
-    public const KEYNAME_PREFIX  = 'gerrit_';
+    public const KEYNAME_PREFIX = 'gerrit_';
     public const KEYNAME_SUFFIX = '@0.pub';
 
     /** @var string */

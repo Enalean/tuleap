@@ -50,10 +50,10 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
         Planning_Milestone $milestone,
         array $descendant_tracker_ids
     ) {
-        $this->item_dao               = $item_dao;
-        $this->artifact_dao           = $artifact_dao;
-        $this->artifact_factory       = $artifact_factory;
-        $this->milestone_id           = $milestone->getArtifactId() ?? 0;
+        $this->item_dao         = $item_dao;
+        $this->artifact_dao     = $artifact_dao;
+        $this->artifact_factory = $artifact_factory;
+        $this->milestone_id     = $milestone->getArtifactId() ?? 0;
 
         $this->descendant_tracker_ids = $descendant_tracker_ids;
         $this->backlog_tracker_ids    = $milestone->getPlanning()->getBacklogTrackersIds();

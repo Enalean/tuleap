@@ -30,7 +30,7 @@ if (! $group_id) {
     exit_no_group();
 }
 
-$pm = ProjectManager::instance();
+$pm      = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 $service = $project->getService(\Service::CVS);
 if (! ($service instanceof ServiceCVS)) {
@@ -91,8 +91,8 @@ if ($morder !== false) {
     }
 }
 
-$pm = ProjectManager::instance();
-$project = $pm->getProject($group_id);
+$pm          = ProjectManager::instance();
+$project     = $pm->getProject($group_id);
 $projectname = $project->getUnixName(false);
 
 // Memorize order by field as a user preference if explicitly specified.
@@ -134,14 +134,14 @@ if (! $set) {
     if (user_isloggedin()) {
         $custom_pref = user_get_preference('commits_browcust' . $group_id);
         if ($custom_pref) {
-            $pref_arr = explode('|', $custom_pref);
+            $pref_arr   = explode('|', $custom_pref);
             $_commit_id = $pref_arr[0];
-            $_commiter = $pref_arr[1];
-            $_tag = $pref_arr[2];
-            $_branch = $pref_arr[3];
-            $_srch = $pref_arr[4];
-            $chunksz = $pref_arr[5];
-            $set = 'custom';
+            $_commiter  = $pref_arr[1];
+            $_tag       = $pref_arr[2];
+            $_branch    = $pref_arr[3];
+            $_srch      = $pref_arr[4];
+            $chunksz    = $pref_arr[5];
+            $set        = 'custom';
         } else {
             $set = 'custom';
         }
@@ -174,11 +174,11 @@ if ($set == 'my') {
 /*
     Display commits based on the form post - by user or status or both
 */
-$_tag      = $request->exist('_tag') ? $request->get('_tag') : $_tag;
-$_branch   = $request->exist('_branch') ? $request->get('_branch') : $_branch;
+$_tag       = $request->exist('_tag') ? $request->get('_tag') : $_tag;
+$_branch    = $request->exist('_branch') ? $request->get('_branch') : $_branch;
 $_commit_id = $request->exist('_commit_id') ? $request->get('_commit_id') : $_commit_id;
-$_commiter = $request->exist('_commiter') ? $request->get('_commiter') : $_commiter;
-$_srch     = $request->exist('_srch') ? $request->get('_srch') : $_srch;
+$_commiter  = $request->exist('_commiter') ? $request->get('_commiter') : $_commiter;
+$_srch      = $request->exist('_srch') ? $request->get('_srch') : $_srch;
 
 [$result, $totalrows] = cvs_get_revisions($project, $offset, $chunksz, $_tag, $_branch, $_commit_id, $_commiter, $_srch, $order_by, $pv);
 

@@ -54,10 +54,10 @@ class OngoingCreationFeedbackNotifierTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tv3_migration_manager = Mockery::mock(\Tracker_Migration_MigrationManager::class);
+        $this->tv3_migration_manager   = Mockery::mock(\Tracker_Migration_MigrationManager::class);
         $this->pending_jira_import_dao = Mockery::mock(PendingJiraImportDao::class);
 
-        $this->project = Mockery::mock(\Project::class)->shouldReceive(['getId' => 42])->getMock();
+        $this->project  = Mockery::mock(\Project::class)->shouldReceive(['getId' => 42])->getMock();
         $this->response = Mockery::mock(\Response::class);
 
         $this->feedback_notifier = new OngoingCreationFeedbackNotifier(

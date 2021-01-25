@@ -91,7 +91,7 @@ class PlanningFactory
 
     protected function duplicatePriorityChangePermission($group_id, $source_planning_id, $new_planning_id, array $ugroups_mapping)
     {
-        $source_planning                       = $this->getPlanning($source_planning_id);
+        $source_planning = $this->getPlanning($source_planning_id);
         if ($source_planning === null) {
             throw new \Tuleap\AgileDashboard\Planning\NotFoundException($source_planning_id);
         }
@@ -168,8 +168,8 @@ class PlanningFactory
             throw new Planning_NoPlanningsException('No Root Plannings Exist');
         }
 
-        $planning_tracker_id  = $first_planning->getPlanningTrackerId();
-        $backlog_tracker_ids  = $first_planning->getBacklogTrackersIds();
+        $planning_tracker_id = $first_planning->getPlanningTrackerId();
+        $backlog_tracker_ids = $first_planning->getBacklogTrackersIds();
 
         $planning_tracker = $this->tracker_factory->getTrackerById($planning_tracker_id);
         if ($planning_tracker === null) {
@@ -326,13 +326,13 @@ class PlanningFactory
         if (! $plannings) {
             return;
         }
-        $tracker_ids = array_map(
+        $tracker_ids                       = array_map(
             static function (Planning $planning) {
                 return $planning->getPlanningTrackerId();
             },
             $plannings
         );
-        $hierarchy   = $this->tracker_factory->getHierarchy($tracker_ids);
+        $hierarchy                         = $this->tracker_factory->getHierarchy($tracker_ids);
         $tmp_tracker_ids_to_sort_plannings = $hierarchy->sortTrackerIds($tracker_ids);
         usort($plannings, static function (Planning $a, Planning $b) use ($tmp_tracker_ids_to_sort_plannings): int {
             return strcmp(
@@ -473,7 +473,7 @@ class PlanningFactory
     public function getBacklogTrackersIds($planning_id)
     {
         $tracker_ids = [];
-        $rows = $this->dao->searchBacklogTrackersByPlanningId($planning_id);
+        $rows        = $this->dao->searchBacklogTrackersByPlanningId($planning_id);
         foreach ($rows as $row) {
             $tracker_ids[] = $row['tracker_id'];
         }
@@ -484,7 +484,7 @@ class PlanningFactory
     public function getBacklogTrackersIdsIndexedByTrackerId($planning_id)
     {
         $tracker_ids = [];
-        $rows = $this->dao->searchBacklogTrackersByPlanningId($planning_id);
+        $rows        = $this->dao->searchBacklogTrackersByPlanningId($planning_id);
         foreach ($rows as $row) {
             $tracker_ids[$row['tracker_id']] = true;
         }
@@ -569,7 +569,7 @@ class PlanningFactory
     public function getAvailableBacklogTrackers(PFUser $user, $group_id)
     {
         $potential_planning_trackers = $this->getPotentialPlanningTrackerIds($user, $group_id);
-        $rows = $this->dao->searchNonPlanningTrackersByGroupId($group_id);
+        $rows                        = $this->dao->searchNonPlanningTrackersByGroupId($group_id);
         if ($rows === false) {
             return [];
         }
@@ -592,7 +592,7 @@ class PlanningFactory
         $potential_planning_trackers = $this->getPotentialPlanningTrackerIds($user, $group_id);
         if (count($potential_planning_trackers) > 0) {
             $existing_plannings = $this->getPlanningTrackerIdsByGroupId($group_id);
-            $trackers = [];
+            $trackers           = [];
             foreach ($potential_planning_trackers as $tracker_id) {
                 if (! in_array($tracker_id, $existing_plannings)) {
                     $trackers[] = $this->tracker_factory->getTrackerById($tracker_id);
@@ -652,7 +652,7 @@ class PlanningFactory
 
     public function getPlanningsOutOfRootPlanningHierarchy(PFUser $user, $group_id)
     {
-        $plannings = [];
+        $plannings                   = [];
         $potential_planning_trackers = $this->getPotentialPlanningTrackerIds($user, $group_id);
         if ($potential_planning_trackers) {
             $existing_planning_tracker_ids = $this->getPlanningTrackerIdsByGroupId($group_id);

@@ -512,8 +512,8 @@ class RGB
                 $g = $this->rgb_table[$matches[5]][1];
                 $b = $this->rgb_table[$matches[5]][2];
             }
-            $alpha    = isset($matches[7]) ? str_replace(',', '.', $matches[7]) : 0;
-            $adj    = isset($matches[9]) ? str_replace(',', '.', $matches[9]) : 1.0;
+            $alpha = isset($matches[7]) ? str_replace(',', '.', $matches[7]) : 0;
+            $adj   = isset($matches[9]) ? str_replace(',', '.', $matches[9]) : 1.0;
 
             if ($adj < 0) {
                 JpGraphError::RaiseL(25077);//('Adjustment factor for color must be > 0');
@@ -603,7 +603,7 @@ class RGB
         }
 
         $sat = round(255 * $aDynamicRange);
-        $a = 0.25;
+        $a   = 0.25;
         if ($aVal <= 0.25) {
             return [0, round($sat * $aVal / $a), $sat];
         } elseif ($aVal <= 0.5) {

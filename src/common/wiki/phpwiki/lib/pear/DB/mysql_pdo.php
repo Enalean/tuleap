@@ -39,9 +39,9 @@ class DB_mysql_pdo extends DB_common // @codingStandardsIgnoreLine
     public function __construct()
     {
         parent::__construct();
-        $this->phptype = 'mysql';
-        $this->dbsyntax = 'mysql';
-        $this->features = [
+        $this->phptype       = 'mysql';
+        $this->dbsyntax      = 'mysql';
+        $this->features      = [
             'prepare' => false,
             'pconnect' => true,
             'transactions' => true,
@@ -83,7 +83,7 @@ class DB_mysql_pdo extends DB_common // @codingStandardsIgnoreLine
     {
         $this->last_query        = $query;
         $this->num_affected_rows = 0;
-        $query                    = $this->modifyQuery($query);
+        $query                   = $this->modifyQuery($query);
 
         try {
             $this->connection->getPdo()->setAttribute(\PDO::ATTR_STRINGIFY_FETCHES, true);

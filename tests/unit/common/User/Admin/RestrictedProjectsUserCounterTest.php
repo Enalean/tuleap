@@ -39,7 +39,7 @@ final class RestrictedProjectsUserCounterTest extends TestCase
     public function testThereIsNoProjectNotAllowingRestrictedWhenRestrictedUsersAreDisabledAtTheInstanceLevel(): void
     {
         $user_group_dao = Mockery::mock(UserGroupDao::class);
-        $counter         = new RestrictedProjectsUserCounter($user_group_dao);
+        $counter        = new RestrictedProjectsUserCounter($user_group_dao);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 

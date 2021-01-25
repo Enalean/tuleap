@@ -66,12 +66,12 @@ class DiskUsageUserDetailsPresenterBuilder
         $end_date_value
     ) {
         if (! $start_date_value) {
-            $start_date = new DateTime();
+            $start_date       = new DateTime();
             $start_date_value = $start_date->sub(new DateInterval('P1W'))->format('Y-m-d');
         }
 
         if (! $end_date_value) {
-            $end_date = new DateTime();
+            $end_date       = new DateTime();
             $end_date_value = $end_date->format('Y-m-d');
         }
 

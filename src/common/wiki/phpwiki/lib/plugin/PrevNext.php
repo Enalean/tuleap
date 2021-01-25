@@ -86,7 +86,7 @@ class WikiPlugin_PrevNext extends WikiPlugin
         }
 
         global $WikiTheme;
-        $sep = $WikiTheme->getButtonSeparator();
+        $sep   = $WikiTheme->getButtonSeparator();
         $links = HTML();
         if ($style == 'text') {
             if (! $sep) {
@@ -94,7 +94,7 @@ class WikiPlugin_PrevNext extends WikiPlugin
             }
             $links->pushcontent(" [ ");
         }
-        $last_is_text = false;
+        $last_is_text  = false;
         $this_is_first = true;
         foreach ($directions as $dir => $label) {
             // if ($last_is_text) $links->pushContent($sep);

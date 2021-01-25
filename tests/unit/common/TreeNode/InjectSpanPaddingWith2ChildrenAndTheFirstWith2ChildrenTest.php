@@ -57,7 +57,7 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectS
         $given = $this->givenTwoChildrenWithTheFirstHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern = $this->getPatternSuite(" indent pipe tree indent minus-tree");
+        $pattern    = $this->getPatternSuite(" indent pipe tree indent minus-tree");
         $givenChild = $given->getChild(0);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
@@ -66,7 +66,7 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectS
 
     public function testItShouldSetDataToChild2ThatMatchesIndentPipeBlankIndentPipeIndentMinus(): void
     {
-        $given      = $this->givenTwoChildrenWithTheFirstHaving2Children();
+        $given = $this->givenTwoChildrenWithTheFirstHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
         $pattern    = $this->getPatternSuite(" indent pipe blank indent pipe indent minus");
@@ -77,7 +77,7 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectS
 
     public function testItShouldSetDataToChild3ThatMatchesIndentPipeBlankIndentLastLeftIndentLastRight(): void
     {
-        $given      = $this->givenTwoChildrenWithTheFirstHaving2Children();
+        $given = $this->givenTwoChildrenWithTheFirstHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
         $pattern    = $this->getPatternSuite(" indent pipe blank indent last-left indent last-right");
@@ -88,7 +88,7 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectS
 
     public function testItShouldSetDataToChild4ThatMatchesIndentLastLeftIndentLastRight(): void
     {
-        $given      = $this->givenTwoChildrenWithTheFirstHaving2Children();
+        $given = $this->givenTwoChildrenWithTheFirstHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
         $pattern    = $this->getPatternSuite(" indent last-left indent last-right");

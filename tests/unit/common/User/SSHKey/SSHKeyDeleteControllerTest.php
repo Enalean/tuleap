@@ -49,9 +49,9 @@ final class SSHKeyDeleteControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->csrf_token = M::mock(\CSRFSynchronizerToken::class);
+        $this->csrf_token   = M::mock(\CSRFSynchronizerToken::class);
         $this->user_manager = M::mock(\UserManager::class);
-        $this->controller = new SSHKeyDeleteController($this->csrf_token, $this->user_manager);
+        $this->controller   = new SSHKeyDeleteController($this->csrf_token, $this->user_manager);
     }
 
     public function testItForbidsAnonymousUsers()

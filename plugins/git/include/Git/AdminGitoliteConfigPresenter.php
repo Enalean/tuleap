@@ -44,9 +44,9 @@ class Git_AdminGitoliteConfigPresenter extends Git_AdminPresenter
     ) {
         parent::__construct($title, $csrf_token);
 
-        $this->regenerate_gitolite_configuration     = dgettext('tuleap-git', 'Regenerate configuration');
-        $this->authorized_projects                   = $authorized_projects;
-        $this->show_big_objects_config               = $show_big_objects_config;
+        $this->regenerate_gitolite_configuration = dgettext('tuleap-git', 'Regenerate configuration');
+        $this->authorized_projects               = $authorized_projects;
+        $this->show_big_objects_config           = $show_big_objects_config;
     }
 
     public function gitolite_config_title()

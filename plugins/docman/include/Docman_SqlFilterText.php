@@ -31,7 +31,7 @@ class Docman_SqlFilterText extends \Docman_SqlFilter
     {
         $stmt = [];
         if ($this->filter->getValue() !== \null && $this->filter->getValue() != '') {
-            $qv = $this->filter->getValue();
+            $qv         = $this->filter->getValue();
             $searchType = $this->getSearchType($qv);
             if ($searchType['like']) {
                 $stmt[] = $this->field . ' LIKE ' . $searchType['pattern'];

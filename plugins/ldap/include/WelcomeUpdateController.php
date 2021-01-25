@@ -50,8 +50,8 @@ class WelcomeUpdateController implements DispatchableWithRequest
 
     public function __construct(\UserManager $user_manager, LDAP_UserDao $ldap_user_dao, Account_TimezonesCollection $timezones_collection)
     {
-        $this->user_manager = $user_manager;
-        $this->ldap_user_dao = $ldap_user_dao;
+        $this->user_manager         = $user_manager;
+        $this->ldap_user_dao        = $ldap_user_dao;
         $this->timezones_collection = $timezones_collection;
     }
 
@@ -75,14 +75,14 @@ class WelcomeUpdateController implements DispatchableWithRequest
             return;
         }
 
-        $mailSite = 0;
+        $mailSite  = 0;
         $vMailSite = new Valid_WhiteList('form_mail_site', ['1']);
         $vMailSite->required();
         if ($request->valid($vMailSite)) {
             $mailSite = 1;
         }
 
-        $mailVa = 0;
+        $mailVa  = 0;
         $vMailVa = new Valid_WhiteList('form_mail_va', ['1']);
         $vMailVa->required();
         if ($request->valid($vMailVa)) {

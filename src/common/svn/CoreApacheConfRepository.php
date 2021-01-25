@@ -51,9 +51,9 @@ final class CoreApacheConfRepository implements ApacheConfRepository
 
     public function __construct(Project $project)
     {
-        $this->project = $project;
+        $this->project         = $project;
         $this->filesystem_path = rtrim(ForgeConfig::get('svn_prefix'), '/') . '/' . $project->getUnixNameMixedCase();
-        $this->url_path = '/svnroot/' . $project->getUnixNameMixedCase();
+        $this->url_path        = '/svnroot/' . $project->getUnixNameMixedCase();
     }
 
     public function getProject(): Project

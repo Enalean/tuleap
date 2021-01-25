@@ -48,8 +48,8 @@ class ArtifactsDeletionManager
         ArtifactDeletor $artifact_deletor,
         ArtifactDeletionLimitRetriever $deletion_limit_retriever
     ) {
-        $this->dao                     = $dao;
-        $this->artifact_deletor        = $artifact_deletor;
+        $this->dao                      = $dao;
+        $this->artifact_deletor         = $artifact_deletor;
         $this->deletion_limit_retriever = $deletion_limit_retriever;
     }
 

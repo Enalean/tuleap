@@ -72,8 +72,8 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function testPUTCardsForReadOnlyUser(): void
     {
-        $card_id        = REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1];
-        $response_put   = $this->getResponse(
+        $card_id      = REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1];
+        $response_put = $this->getResponse(
             $this->client->put(
                 "cards/$card_id",
                 null,

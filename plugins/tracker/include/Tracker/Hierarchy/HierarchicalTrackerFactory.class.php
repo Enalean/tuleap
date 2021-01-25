@@ -112,9 +112,9 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
      */
     public function getPossibleChildren(Tracker_Hierarchy_HierarchicalTracker $tracker)
     {
-        $project_trackers  = $this->getProjectTrackers($tracker->getProject());
-        $ids_to_remove     = $this->dao->searchAncestorIds($tracker->getId());
-        $ids_to_remove[]   = $tracker->getId();
+        $project_trackers = $this->getProjectTrackers($tracker->getProject());
+        $ids_to_remove    = $this->dao->searchAncestorIds($tracker->getId());
+        $ids_to_remove[]  = $tracker->getId();
 
         foreach ($this->removeIdsFromTrackerList($project_trackers, $ids_to_remove) as $project_tracker) {
             if ($this->isTrackerHierarchyDelegatedToAnotherResource($project_tracker)) {
@@ -189,11 +189,11 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
 
     public function getChildrenMapFromDar(array $hierarchy_rows, $project_trackers)
     {
-        $children  = [];
+        $children      = [];
         $hierarchy_map = [];
         foreach ($hierarchy_rows as $relationship) {
-            $parent_id = $relationship['parent_id'];
-            $child_id  = $relationship['child_id'];
+            $parent_id  = $relationship['parent_id'];
+            $child_id   = $relationship['child_id'];
             $children[] = $child_id;
 
             if (! isset($hierarchy_map[$child_id])) {

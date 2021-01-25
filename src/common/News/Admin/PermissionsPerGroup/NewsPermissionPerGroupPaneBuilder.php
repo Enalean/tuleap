@@ -49,7 +49,7 @@ class NewsPermissionPerGroupPaneBuilder
             return;
         }
 
-        $include_assets  = new IncludeAssets(
+        $include_assets = new IncludeAssets(
             __DIR__ . '/../../../../www/assets/core',
             '/assets/core'
         );

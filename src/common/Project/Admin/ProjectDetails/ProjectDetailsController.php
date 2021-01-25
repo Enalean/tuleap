@@ -160,7 +160,7 @@ class ProjectDetailsController
 
         $project_can_use_gerrit = new HierarchyDisplayer($project);
         $this->event_manager->processEvent($project_can_use_gerrit);
-        $is_hierarchy_shown  = $project_can_use_gerrit->canProjectDisplayHierarchy();
+        $is_hierarchy_shown = $project_can_use_gerrit->canProjectDisplayHierarchy();
 
         $hierarchy_presenter = new ProjectHierarchyPresenter(
             $parent_project_info,
@@ -413,9 +413,9 @@ class ProjectDetailsController
             $url = '/projects/' . urlencode($parent->getUnixName());
         }
 
-        $parent_project_info['url']    = $url;
+        $parent_project_info['url'] = $url;
 
-        $parent_project_info['is_active']    = $parent->isActive();
+        $parent_project_info['is_active'] = $parent->isActive();
         if (! $parent->isActive()) {
             switch ($parent->getStatus()) {
                 case Project::STATUS_SUSPENDED:
@@ -446,8 +446,8 @@ class ProjectDetailsController
                 $url = '/projects/' . urlencode($child->getUnixName());
             }
 
-            $purified_url  = $purifier->purify($url);
-            $purified_name = $purifier->purify($child->getPublicName());
+            $purified_url        = $purifier->purify($url);
+            $purified_name       = $purifier->purify($child->getPublicName());
             $children_projects[] = '<a href="' . $purified_url . '">' . $purified_name . '</a>';
         }
 

@@ -61,7 +61,7 @@ class ColumnPresenterCollectionRetriever
         $columns    = $this->column_factory->getDashboardColumns($planning->getPlanningTracker());
         foreach ($columns as $column) {
             \assert($column instanceof Cardwall_Column);
-            $mappings = $this->tracker_mapping_builder->buildMappings($milestone, $column);
+            $mappings     = $this->tracker_mapping_builder->buildMappings($milestone, $column);
             $collection[] = new ColumnPresenter(
                 $column,
                 $this->isCollapsed($user, $milestone, $column),

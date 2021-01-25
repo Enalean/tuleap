@@ -161,7 +161,7 @@ require_once 'constants.php';
  */
 class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    public const PLUGIN_NAME = 'agiledashboard';
+    public const PLUGIN_NAME      = 'agiledashboard';
     public const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
 
     /** @var AgileDashboard_SequenceIdManager */
@@ -397,9 +397,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             return;
         }
 
-        $planning_factory = $this->getPlanningFactory();
-        $user             = $this->getCurrentUser();
-        $provider         = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
+        $planning_factory     = $this->getPlanningFactory();
+        $user                 = $this->getCurrentUser();
+        $provider             = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
             new AgileDashboard_Milestone_SelectedMilestoneProvider(
                 $params['additional_criteria'],
                 $this->getMilestoneFactory(),
@@ -519,7 +519,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->getMilestoneFactory(),
             $this->getHierarchyFactory()
         );
-        $event_listener = new Planning_ArtifactParentsSelectorEventListener($this->getArtifactFactory(), $artifact_parents_selector, HTTPRequest::instance());
+        $event_listener            = new Planning_ArtifactParentsSelectorEventListener($this->getArtifactFactory(), $artifact_parents_selector, HTTPRequest::instance());
         $event_listener->process($params);
     }
 
@@ -533,7 +533,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function tracker_event_general_settings($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $hierarchyChecker = new AgileDashboard_HierarchyChecker(
+        $hierarchyChecker                                        = new AgileDashboard_HierarchyChecker(
             $this->getPlanningFactory(),
             $this->getKanbanFactory(),
             $this->getTrackerFactory()
@@ -543,7 +543,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function tracker_event_project_creation_trackers_required($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $hierarchyChecker = new AgileDashboard_HierarchyChecker(
+        $hierarchyChecker           = new AgileDashboard_HierarchyChecker(
             $this->getPlanningFactory(),
             $this->getKanbanFactory(),
             $this->getTrackerFactory()
@@ -618,10 +618,10 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $widget_kanban_creator    = new WidgetKanbanCreator(
             $widget_kanban_dao
         );
-        $widget_kanban_retriever = new WidgetKanbanRetriever(
+        $widget_kanban_retriever  = new WidgetKanbanRetriever(
             $widget_kanban_dao
         );
-        $widget_kanban_deletor   = new WidgetKanbanDeletor(
+        $widget_kanban_deletor    = new WidgetKanbanDeletor(
             $widget_kanban_dao
         );
 
@@ -629,8 +629,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $widget_kanban_config_dao
         );
 
-        $permission_manager      = new AgileDashboard_PermissionsManager();
-        $kanban_factory          = $this->getKanbanFactory();
+        $permission_manager = new AgileDashboard_PermissionsManager();
+        $kanban_factory     = $this->getKanbanFactory();
 
         $widget_kanban_config_updater = new WidgetKanbanConfigUpdater(
             $widget_kanban_config_dao
@@ -794,7 +794,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     private function isPlanningV2URL()
     {
-        $request = HTTPRequest::instance();
+        $request              = HTTPRequest::instance();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
 
         return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
@@ -851,7 +851,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         if ($params['request']->isAjax()) {
             $milestone_factory = $this->getMilestoneFactory();
-            $milestone = $milestone_factory->getBareMilestoneByArtifact($params['user'], $params['artifact']);
+            $milestone         = $milestone_factory->getBareMilestoneByArtifact($params['user'], $params['artifact']);
 
             $milestone_with_contextual_info = $milestone_factory->updateMilestoneContextualInfo($params['user'], $milestone);
 
@@ -895,7 +895,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
 
         if ($type == SemanticDone::NAME) {
-            $factory = $this->getSemanticDoneFactory();
+            $factory                = $this->getSemanticDoneFactory();
             $parameters['semantic'] = $factory->getInstanceFromXML($xml, $full_semantic_xml, $xmlMapping, $tracker);
         }
     }
@@ -1038,8 +1038,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             return $planning->getId();
         }
 
-        $artifact    = $this->getArtifactFactory()->getArtifactById($params['milestone_id']);
-        $milestone   = $this->getMilestoneFactory()->getMilestoneFromArtifact($artifact);
+        $artifact  = $this->getArtifactFactory()->getArtifactById($params['milestone_id']);
+        $milestone = $this->getMilestoneFactory()->getMilestoneFromArtifact($artifact);
 
         return $milestone->getPlanningId();
     }
@@ -1099,7 +1099,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function cardwall_event_use_standard_javascript($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $request = HTTPRequest::instance();
+        $request              = HTTPRequest::instance();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
         if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane')) || KanbanURL::isKanbanURL($request)) {
             $params['use_standard'] = false;
@@ -2009,7 +2009,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     public function projectXMLImportPreChecksEvent(ProjectXMLImportPreChecksEvent $event): void
     {
         $xml_content = $event->getXmlElement();
-        $checker = new CreateTrackerFromXMLChecker(new ExplicitBacklogDao());
+        $checker     = new CreateTrackerFromXMLChecker(new ExplicitBacklogDao());
 
         try {
             $checker->checkTrackersCanBeCreatedInProjectImportContext($xml_content);
@@ -2028,7 +2028,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $is_agile_dashboard_used  = $this->isAllowed($project_id);
         $is_explicit_backlog_used = (new ExplicitBacklogDao())->isProjectUsingExplicitBacklog($project_id);
 
-        $planning_tracker_backlog_checker = new PlanningTrackerBacklogChecker($this->getPlanningFactory());
+        $planning_tracker_backlog_checker    = new PlanningTrackerBacklogChecker($this->getPlanningFactory());
         $is_tracker_backlog_of_root_planning = $planning_tracker_backlog_checker->isTrackerBacklogOfProjectRootPlanning(
             $tracker,
             $this->getCurrentUser()
@@ -2049,8 +2049,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
     {
         $planning_tracker_backlog_checker = new PlanningTrackerBacklogChecker($this->getPlanningFactory());
-        $tracker = $event->getTracker();
-        $external_post_actions = $event->getPostActions()->getExternalPostActionsValue();
+        $tracker                          = $event->getTracker();
+        $external_post_actions            = $event->getPostActions()->getExternalPostActionsValue();
         foreach ($external_post_actions as $post_action) {
             if (
                 $post_action instanceof AddToTopBacklogValue &&

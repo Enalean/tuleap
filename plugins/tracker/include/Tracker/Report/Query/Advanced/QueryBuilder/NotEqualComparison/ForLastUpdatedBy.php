@@ -38,7 +38,7 @@ class ForLastUpdatedBy implements ListReadOnlyConditionBuilder
 
     public function getCondition(array $values)
     {
-        $value  = $values[0];
+        $value = $values[0];
         if ($value === '') {
             $condition = "1";
         } else {

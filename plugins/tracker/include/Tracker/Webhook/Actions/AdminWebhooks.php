@@ -66,7 +66,7 @@ class AdminWebhooks extends Tracker_Workflow_Action
             $this->tracker
         );
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/webhook');
+        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/webhook');
         $renderer->renderToPage('administration', $presenter);
 
         $this->displayFooter($layout);

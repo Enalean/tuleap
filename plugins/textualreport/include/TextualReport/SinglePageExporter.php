@@ -62,7 +62,7 @@ class SinglePageExporter
 
     private function sendFileDownloadHeaders(Tracker $tracker)
     {
-        $file_name = str_replace(' ', '_', 'artifact_' . $tracker->getItemName());
+        $file_name  = str_replace(' ', '_', 'artifact_' . $tracker->getItemName());
         $file_name .= '_' . $tracker->getProject()->getUnixName() . '.html';
         header('Content-Disposition: attachment; filename="' . $this->purifyFileName($file_name) . '"');
         header('Content-type: text/html');

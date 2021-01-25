@@ -140,7 +140,7 @@ class UserDetailsPresenter
 
         $this->has_additional_details = count($this->additional_details) > 0;
 
-        $this->is_in_limbo = in_array(
+        $this->is_in_limbo          = in_array(
             $user->getStatus(),
             [PFUser::STATUS_PENDING, PFUser::STATUS_VALIDATED, PFUser::STATUS_VALIDATED_RESTRICTED]
         );

@@ -48,8 +48,8 @@ use UserManager;
 
 class TimetrackingReportResource extends AuthenticatedResource
 {
-    public const DEFAULT_OFFSET  = 0;
-    public const MAX_LIMIT       = 50;
+    public const DEFAULT_OFFSET = 0;
+    public const MAX_LIMIT      = 50;
 
     /**
      * @var UserManager
@@ -88,15 +88,15 @@ class TimetrackingReportResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->user_manager      = UserManager::instance();
-        $this->report_dao        = new TimetrackingReportDao();
-        $this->report_factory    = new TimetrackingReportFactory(
+        $this->user_manager                   = UserManager::instance();
+        $this->report_dao                     = new TimetrackingReportDao();
+        $this->report_factory                 = new TimetrackingReportFactory(
             $this->report_dao,
             \TrackerFactory::instance()
         );
-        $this->tracker_extractor = new TrackerReportExtractor(\TrackerFactory::instance());
-        $this->json_decoder      = new JsonDecoder();
-        $this->date_extractor    = new TimetrackingDatesExtractor($this->json_decoder);
+        $this->tracker_extractor              = new TrackerReportExtractor(\TrackerFactory::instance());
+        $this->json_decoder                   = new JsonDecoder();
+        $this->date_extractor                 = new TimetrackingDatesExtractor($this->json_decoder);
         $this->tracker_representation_factory = new TrackerRepresentationFactory(
             new TimeDao(),
             new PermissionsRetriever(new TimetrackingUgroupRetriever(new TimetrackingUgroupDao())),

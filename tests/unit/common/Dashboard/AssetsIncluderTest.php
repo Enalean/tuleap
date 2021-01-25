@@ -186,14 +186,14 @@ class AssetsIncluderTest extends TestCase
             $widget_presenters[]                       = $widget_presenter;
         }
 
-        $widget_column = Mockery::mock(DashboardWidgetColumnPresenter::class);
-        $widget_column->widgets = $widget_presenters;
-        $widget_line = Mockery::mock(DashboardWidgetLinePresenter::class);
+        $widget_column               = Mockery::mock(DashboardWidgetColumnPresenter::class);
+        $widget_column->widgets      = $widget_presenters;
+        $widget_line                 = Mockery::mock(DashboardWidgetLinePresenter::class);
         $widget_line->widget_columns = [$widget_column];
 
-        $dashboard = Mockery::mock(ProjectDashboardPresenter::class);
+        $dashboard               = Mockery::mock(ProjectDashboardPresenter::class);
         $dashboard->widget_lines = [$widget_line];
-        $dashboard->is_active = true;
+        $dashboard->is_active    = true;
 
         return $dashboard;
     }

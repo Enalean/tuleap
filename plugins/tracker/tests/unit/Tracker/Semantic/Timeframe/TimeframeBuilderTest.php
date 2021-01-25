@@ -147,8 +147,8 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItBuildsATimePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoLastChangesetValueForStartDate(): void
     {
-        $duration = 10;
-        $start_date_field  = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $duration         = 10;
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $start_date_field->shouldReceive('userCanRead')->andReturn(true);
         $duration_field = Mockery::mock(Tracker_FormElement_Field_Numeric::class);
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
@@ -316,7 +316,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration          = 10;
         $start_date        = '07/01/2013';
         $expected_end_date = '07/15/2013';
-        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field  = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $start_date_field->shouldReceive('userCanRead')->andReturn(true);
         $duration_field = Mockery::mock(Tracker_FormElement_Field_Numeric::class);
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
@@ -631,7 +631,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration          = 10;
         $start_date        = '07/01/2013';
         $expected_end_date = '07/15/2013';
-        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field  = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $start_date_field->shouldReceive('userCanRead')->andReturn(true);
         $duration_field = Mockery::mock(Tracker_FormElement_Field_Numeric::class);
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
@@ -654,7 +654,7 @@ final class TimeframeBuilderTest extends TestCase
     {
         $duration         = 10;
         $start_date_field = null;
-        $duration_field = Mockery::mock(Tracker_FormElement_Field_Numeric::class);
+        $duration_field   = Mockery::mock(Tracker_FormElement_Field_Numeric::class);
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(

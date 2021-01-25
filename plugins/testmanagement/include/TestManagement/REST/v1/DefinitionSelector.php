@@ -157,7 +157,7 @@ class DefinitionSelector
     private function getReportById(PFUser $user, int $id): \Tracker_Report
     {
         $store_in_session = false;
-        $report = $this->tracker_report_factory->getReportById(
+        $report           = $this->tracker_report_factory->getReportById(
             $id,
             $user->getId(),
             $store_in_session

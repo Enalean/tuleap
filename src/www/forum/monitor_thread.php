@@ -70,22 +70,22 @@ if ($request->valid($vFrm)) {
         exit_error($GLOBALS['Language']->getText('global', 'error'), _('Forum is restricted'));
     }
 
-    $qry = sprintf(
+    $qry        = sprintf(
         'SELECT group_id,forum_name,is_public'
             . ' FROM forum_group_list'
             . ' WHERE group_forum_id=%d',
         db_ei($forum_id)
     );
-    $result = db_query($qry);
-    $group_id = db_result($result, 0, 'group_id');
+    $result     = db_query($qry);
+    $group_id   = db_result($result, 0, 'group_id');
     $forum_name = db_result($result, 0, 'forum_name');
 
-    $pm = ProjectManager::instance();
+    $pm     = ProjectManager::instance();
     $params = ['title' => $pm->getProject($group_id)->getPublicName() . ' forum: ' . $forum_name,
                       'pv'   => isset($pv) ? $pv : false];
     forum_header($params);
 
-    $sql = sprintf(
+    $sql    = sprintf(
         'SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id'
             . ' FROM forum,user,forum_group_list'
             . ' WHERE forum.group_forum_id=%d'
@@ -95,13 +95,13 @@ if ($request->valid($vFrm)) {
         db_ei($forum_id)
     );
     $result = db_query($sql);
-    $rows = db_numrows($result);
+    $rows   = db_numrows($result);
 
     if (! $result || $rows < 1) {
         //empty forum
         $ret_val = sprintf(_('No Messages in %1$s'), $forum_name) . '<P>' . db_error();
     } else {
-        $title_arr = [];
+        $title_arr   = [];
         $title_arr[] = _('Monitor?');
         $title_arr[] = _('Thread');
         $title_arr[] = _('Author');
@@ -141,7 +141,7 @@ if ($request->valid($vFrm)) {
 
             $purifier = Codendi_HTMLPurifier::instance();
 
-            $ret_val .= '
+            $ret_val  .= '
 		    	    <TR class="' . util_get_alt_row_color($i) . '">' .
             '<TD align="center"><FORM NAME="thread_monitor" action="?" METHOD="POST">' .
             '<INPUT TYPE="hidden" NAME="thread_id" VALUE="' . $purifier->purify($thr_id) . '">' .
@@ -152,7 +152,7 @@ if ($request->valid($vFrm)) {
             db_result($result, $i, 'msg_id') . '">' .
             '<IMG SRC="' . util_get_image_theme("msg.png") . '" BORDER=0 HEIGHT=12 WIDTH=10> ';
             $monitorer = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
-            $ret_val .= db_result($result, $i, 'subject') . '</A></TD>' .
+            $ret_val  .= db_result($result, $i, 'subject') . '</A></TD>' .
             '<TD>' . UserHelper::instance()->getLinkOnUser($monitorer) . '</TD>' .
             '<TD>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'date')) . '</TD></TR>';
             $i++;

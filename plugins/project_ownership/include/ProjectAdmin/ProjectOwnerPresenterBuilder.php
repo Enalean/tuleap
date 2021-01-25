@@ -49,7 +49,7 @@ class ProjectOwnerPresenterBuilder
 
     public function build(Project $project)
     {
-        $row = $this->dao->searchByProjectID($project->getID());
+        $row           = $this->dao->searchByProjectID($project->getID());
         $project_owner = $this->user_manager->getUserById($row['user_id']);
 
         $presenter = new ProjectOwnerPresenter($this->user_helper, $this->language);

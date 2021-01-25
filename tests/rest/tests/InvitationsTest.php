@@ -53,7 +53,7 @@ class InvitationsTest extends \RestBase
                 'emails' => ["john@example.com"],
             ],
         );
-        $response = $this->getResponseWithoutAuth($this->client->post('invitations', null, $invitation));
+        $response   = $this->getResponseWithoutAuth($this->client->post('invitations', null, $invitation));
 
         $this->assertEquals(401, $response->getStatusCode());
     }
@@ -67,7 +67,7 @@ class InvitationsTest extends \RestBase
                 'emails' => ["john@example.com"],
             ],
         );
-        $response = $this->getResponse($this->client->post('invitations', null, $invitation));
+        $response   = $this->getResponse($this->client->post('invitations', null, $invitation));
 
         $this->assertEquals(400, $response->getStatusCode());
     }
@@ -81,7 +81,7 @@ class InvitationsTest extends \RestBase
                 'emails' => ["john@example.com"],
             ],
         );
-        $response = $this->getResponse($this->client->post('invitations', null, $invitation));
+        $response   = $this->getResponse($this->client->post('invitations', null, $invitation));
 
         $body = json_decode((string) $response->getBody());
         $this->assertEquals("An error occurred while trying to send invitation", $body->error->i18n_error_message);

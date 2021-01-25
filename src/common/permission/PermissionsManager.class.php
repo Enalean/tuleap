@@ -200,7 +200,7 @@ class PermissionsManager implements IPermissionsManagerNG
     public function getAuthorizedUGroupIdsForProject(Project $project, $object_id, $permission_type)
     {
         $ugroups = [];
-        $dar = $this->getAuthorizedUgroups($object_id, $permission_type, false);
+        $dar     = $this->getAuthorizedUgroups($object_id, $permission_type, false);
         if ($dar && ! $dar->isError()) {
             $normalizer = new PermissionsUGroupMapper($project);
             foreach ($dar as $row) {
@@ -249,7 +249,7 @@ class PermissionsManager implements IPermissionsManagerNG
         $normalizer            = new PermissionsNormalizer();
         $override_collection   = new PermissionsNormalizerOverrideCollection();
         $normalized_ugroup_ids = $normalizer->getNormalizedUGroupIds($project, $ugroup_ids, $override_collection);
-        $cleared = $this->_permission_dao->clearPermission($permission_type, $object_id);
+        $cleared               = $this->_permission_dao->clearPermission($permission_type, $object_id);
         if (! $cleared) {
             throw new PermissionDaoException("Database issue while clearPermission $permission_type, $object_id: " . $this->_permission_dao->getDa()->getErrorMessage());
         }

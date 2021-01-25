@@ -86,7 +86,7 @@ class Cardwall_RawBoardBuilder
      */
     public function getDisplayPreferences(Planning_Milestone $milestone, PFUser $user)
     {
-        $pref_name = Cardwall_UserPreferences_UserPreferencesDisplayUser::ASSIGNED_TO_USERNAME_PREFERENCE_NAME . $milestone->getTrackerId();
+        $pref_name       = Cardwall_UserPreferences_UserPreferencesDisplayUser::ASSIGNED_TO_USERNAME_PREFERENCE_NAME . $milestone->getTrackerId();
         $display_avatars = $user->isAnonymous() || ! $user->getPreference($pref_name);
 
         return new Cardwall_UserPreferences_UserPreferencesDisplayUser($display_avatars);
@@ -113,7 +113,7 @@ class Cardwall_RawBoardBuilder
         foreach ($trackers as $tracker) {
             $status_fields = array_merge($status_fields, array_filter(array_map([$field_provider, 'getField'], $tracker)));
         }
-        $indexed_status_fields  = $this->indexById($status_fields);
+        $indexed_status_fields = $this->indexById($status_fields);
         return $indexed_status_fields;
     }
 

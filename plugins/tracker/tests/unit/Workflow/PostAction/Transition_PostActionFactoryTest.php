@@ -79,11 +79,11 @@ final class Transition_PostActionFactoryTest extends \PHPUnit\Framework\TestCase
         $this->transition->shouldReceive('getTransitionId')->andReturn($this->transition_id);
 
         $this->event_manager = Mockery::mock(EventManager::class);
-        $this->factory = new Transition_PostActionFactory($this->event_manager);
+        $this->factory       = new Transition_PostActionFactory($this->event_manager);
 
-        $this->field_factory        = \Mockery::spy(\Transition_PostAction_FieldFactory::class);
-        $this->cibuild_factory      = \Mockery::spy(\Transition_PostAction_CIBuildFactory::class);
-        $this->frozen_fields_actory = \Mockery::spy(FrozenFieldsFactory::class);
+        $this->field_factory           = \Mockery::spy(\Transition_PostAction_FieldFactory::class);
+        $this->cibuild_factory         = \Mockery::spy(\Transition_PostAction_CIBuildFactory::class);
+        $this->frozen_fields_actory    = \Mockery::spy(FrozenFieldsFactory::class);
         $this->hidden_fieldset_factory = \Mockery::spy(HiddenFieldsetsFactory::class);
 
         $this->factory->setFieldFactory($this->field_factory);
@@ -292,7 +292,7 @@ final class Transition_PostActionFactoryTest extends \PHPUnit\Framework\TestCase
         $this->field_factory->shouldReceive('loadPostActions')->with($this->transition)->andReturns([$this->post_action_2]);
         $this->hidden_fieldset_factory->shouldReceive('loadPostActions')->with($this->transition)->once()->andReturn([$this->post_action_3]);
 
-        $expected     = [$this->post_action_1, $this->post_action_2, $this->post_action_3];
+        $expected = [$this->post_action_1, $this->post_action_2, $this->post_action_3];
         $this->transition->shouldReceive('setPostActions')->with($expected)->once();
 
         $this->event_manager->shouldReceive('processEvent')->once();

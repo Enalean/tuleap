@@ -34,7 +34,7 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
 
     public function _content($params)
     {
-        $md = $params['md'];
+        $md   = $params['md'];
         $love = $params['love'];
         $html = '';
 
@@ -55,12 +55,12 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
 
         $html .= '</form>';
 
-        $backUrl  = DocmanViewURLBuilder::buildUrl(
+        $backUrl = DocmanViewURLBuilder::buildUrl(
             $params['default_url'],
             ['action' => 'admin_md_details',
             'md' => $md->getLabel()]
         );
-        $html .= '<p><a href="' . $backUrl . '">' . dgettext('tuleap-docman', 'Back to property details') . '</a></p>';
+        $html   .= '<p><a href="' . $backUrl . '">' . dgettext('tuleap-docman', 'Back to property details') . '</a></p>';
 
         echo $html;
     }

@@ -56,7 +56,7 @@ class TrackerReportExtractorTest extends TestCase
 
         $this->project      = \Mockery::spy(\Project::class);
         $this->tracker_id_1 = 1;
-        $this->tracker_1 = \Mockery::spy(\Tracker::class);
+        $this->tracker_1    = \Mockery::spy(\Tracker::class);
         $this->tracker_1->shouldReceive('getId')->andReturn($this->tracker_id_1);
     }
 

@@ -74,10 +74,10 @@ class WikiPluginCached extends WikiPlugin
         global $request;
         //$cacheparams = $GLOBALS['CacheParams'];
 
-        $plugincall = serialize([
+        $plugincall     = serialize([
             'pluginname' => $this->getName(),
             'arguments'  => $argarray ]);
-        $id = $cache->generateId($plugincall);
+        $id             = $cache->generateId($plugincall);
         $plugincall_arg = rawurlencode($plugincall);
         //$plugincall_arg = md5($plugincall); // will not work if plugin has to recreate content and cache is lost
 
@@ -383,7 +383,7 @@ class WikiPluginCached extends WikiPlugin
     public function staticUrl($tmpfile)
     {
         $content['file'] = $tmpfile;
-        $content['url'] = getUploadDataPath() . basename($tmpfile);
+        $content['url']  = getUploadDataPath() . basename($tmpfile);
         return $content;
     }
 

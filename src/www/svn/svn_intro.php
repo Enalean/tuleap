@@ -55,7 +55,7 @@ if ($svn_preamble != '') {
         $svn_url = 'http://svn.' . $project->getUnixNameMixedCase() . '.' . $host;
     }
     // Domain name must be lowercase (issue with some SVN clients)
-    $svn_url = strtolower($svn_url);
+    $svn_url  = strtolower($svn_url);
     $svn_url .= '/svnroot/' . $project->getUnixNameMixedCase();
 
     $event_manager       = EventManager::instance();

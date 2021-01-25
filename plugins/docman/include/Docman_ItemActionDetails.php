@@ -25,8 +25,8 @@ class Docman_ItemActionDetails extends \Docman_ItemAction
     public function __construct(&$item)
     {
         parent::__construct($item);
-        $this->action = 'details';
+        $this->action  = 'details';
         $this->classes = 'docman_item_option_details';
-        $this->title = \dgettext('tuleap-docman', 'Properties');
+        $this->title   = \dgettext('tuleap-docman', 'Properties');
     }
 }

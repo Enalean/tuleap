@@ -33,7 +33,7 @@ class ArtifactNodeDao extends DataAccessObject
     public function getTitlesStatusAndTypes(array $artifact_ids)
     {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-        $sql = "SELECT artifact.id, tracker.color, tracker.item_name, tracker.name as tracker_label, cvt_title.value as title, IF(cvl_status.bindvalue_id IS NULL, '" . Artifact::STATUS_CLOSED . "', '" . Artifact::STATUS_OPEN . "') AS status_semantic, lbsv_status.label AS status_label
+        $sql          = "SELECT artifact.id, tracker.color, tracker.item_name, tracker.name as tracker_label, cvt_title.value as title, IF(cvl_status.bindvalue_id IS NULL, '" . Artifact::STATUS_CLOSED . "', '" . Artifact::STATUS_OPEN . "') AS status_semantic, lbsv_status.label AS status_label
                     FROM tracker_artifact AS artifact
                 LEFT JOIN (
                     tracker_changeset_value AS cv_status

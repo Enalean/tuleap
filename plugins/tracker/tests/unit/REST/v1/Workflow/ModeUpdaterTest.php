@@ -116,9 +116,9 @@ class ModeUpdaterTest extends TestCase
         $transition_open_closed      = new Transition(3, 25, $open_value, $closed_value);
         $transition_open_cancelled   = new Transition(4, 25, $open_value, $cancelled_value);
         $transition_closed_cancelled = new Transition(5, 25, $closed_value, $cancelled_value);
-        $state_open      = new State(1, [$transition_new_open]);
-        $state_closed    = new State(2, [$transition_new_closed, $transition_open_closed]);
-        $state_cancelled = new State(3, [$transition_open_cancelled, $transition_closed_cancelled]);
+        $state_open                  = new State(1, [$transition_new_open]);
+        $state_closed                = new State(2, [$transition_new_closed, $transition_open_closed]);
+        $state_cancelled             = new State(3, [$transition_open_cancelled, $transition_closed_cancelled]);
 
         $this->state_factory->shouldReceive('getAllStatesForWorkflow')
             ->with($this->workflow)

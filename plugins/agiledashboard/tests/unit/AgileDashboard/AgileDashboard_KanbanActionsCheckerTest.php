@@ -76,8 +76,8 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\T
             $this->field_list,
         ];
 
-        $this->user           = \Mockery::spy(\PFUser::class);
-        $this->tracker        = Mockery::spy(Tracker::class);
+        $this->user    = \Mockery::spy(\PFUser::class);
+        $this->tracker = Mockery::spy(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(888);
         $this->semantic_title  = \Mockery::spy(\Tracker_Semantic_Title::class);
         $this->semantic_status = \Mockery::spy(\Tracker_Semantic_Status::class);

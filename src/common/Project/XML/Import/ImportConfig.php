@@ -22,8 +22,8 @@ namespace Tuleap\Project\XML\Import;
 
 class ImportConfig
 {
-    private $force               = [];
-    private $update              = false;
+    private $force  = [];
+    private $update = false;
 
     /**
      * @var ImportExtraConfiguration[]

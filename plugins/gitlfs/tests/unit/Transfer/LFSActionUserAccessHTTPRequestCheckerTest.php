@@ -58,7 +58,7 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         $repository = \Mockery::mock(\GitRepository::class);
         $repository->shouldReceive('getProject')->andReturns($project);
         $repository->shouldReceive('isCreated')->andReturns(true);
-        $authorized_action      = \Mockery::mock(AuthorizedAction::class);
+        $authorized_action = \Mockery::mock(AuthorizedAction::class);
         $authorized_action->shouldReceive('getRepository')->andReturns($repository);
         $this->authorization_verifier->shouldReceive('getAuthorization')->andReturns($authorized_action);
 

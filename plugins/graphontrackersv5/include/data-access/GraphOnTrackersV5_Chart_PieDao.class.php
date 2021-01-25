@@ -31,23 +31,23 @@ class GraphOnTrackersV5_Chart_PieDao extends DataAccessObject
 
     public function searchById($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT * FROM $this->table_name WHERE id = $id";
         return $this->retrieve($sql);
     }
 
     public function delete($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name WHERE id = $id";
         return $this->update($sql);
     }
 
     public function save($id, $field_base)
     {
-        $id          = $this->da->escapeInt($id);
-        $field_base  = $this->da->escapeInt($field_base);
-        $sql = "REPLACE INTO $this->table_name (id, field_base)
+        $id         = $this->da->escapeInt($id);
+        $field_base = $this->da->escapeInt($field_base);
+        $sql        = "REPLACE INTO $this->table_name (id, field_base)
                 VALUES ($id, $field_base)";
         return $this->update($sql);
     }
@@ -56,16 +56,16 @@ class GraphOnTrackersV5_Chart_PieDao extends DataAccessObject
     {
         $from_chart_id = $this->da->escapeInt($from_chart_id);
         $to_chart_id   = $this->da->escapeInt($to_chart_id);
-        $sql = "INSERT INTO $this->table_name (id, field_base)
+        $sql           = "INSERT INTO $this->table_name (id, field_base)
                 SELECT $to_chart_id, field_base
                 FROM $this->table_name
                 WHERE id = $from_chart_id";
 
         $this->update($sql);
         foreach ($field_mapping as $mapping) {
-            $from  = $this->da->escapeInt($mapping['from']);
-            $to    = $this->da->escapeInt($mapping['to']);
-            $sql = "UPDATE $this->table_name 
+            $from = $this->da->escapeInt($mapping['from']);
+            $to   = $this->da->escapeInt($mapping['to']);
+            $sql  = "UPDATE $this->table_name 
                     SET field_base = $to
                     WHERE id = $to_chart_id
                       AND field_base = $from";

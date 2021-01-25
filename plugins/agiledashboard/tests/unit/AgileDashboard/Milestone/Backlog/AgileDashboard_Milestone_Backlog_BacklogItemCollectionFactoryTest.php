@@ -329,7 +329,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $tracker->shouldReceive('getProject')->once()->andReturn($project);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
-        $top_backlog_collection           = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $top_backlog_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         $top_backlog_collection->push($artifact);
 
         $backlog->shouldReceive('getUnplannedArtifacts')->once()->andReturn($top_backlog_collection);
@@ -408,7 +408,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $tracker->shouldReceive('getProject')->once()->andReturn($project);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
-        $top_backlog_collection           = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $top_backlog_collection = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
         $top_backlog_collection->push($artifact);
 
         $backlog->shouldReceive('getUnplannedArtifacts')->once()->andReturn($top_backlog_collection);

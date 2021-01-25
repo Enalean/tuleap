@@ -22,7 +22,7 @@
 require_once __DIR__ . '/project_export_utils.php';
 
 //    get the Group object
-$pm = ProjectManager::instance();
+$pm    = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (! $group || ! is_object($group) || $group->isError()) {
     exit_no_group();
@@ -70,7 +70,7 @@ if ($atid) {
     $lbl_list['follow_ups']      = $GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments');
     $lbl_list['is_dependent_on'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on');
 
-    $dsc_list['follow_ups'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'all_followup_comments');
+    $dsc_list['follow_ups']      = $GLOBALS['Language']->getText('project_export_artifact_export', 'all_followup_comments');
     $dsc_list['is_dependent_on'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on_list');
 }
 
@@ -90,13 +90,13 @@ $eol = "\n";
 $all_results = [];
 if (isset($multiple_queries) && $multiple_queries) {
     foreach ($all_queries as $q) {
-        $result = db_query($q);
+        $result        = db_query($q);
         $all_results[] = $result;
-        $rows = db_numrows($result);
+        $rows          = db_numrows($result);
     }
 } else {
     $result = db_query($sql);
-    $rows = db_numrows($result);
+    $rows   = db_numrows($result);
 }
 
 assert(isset($export));

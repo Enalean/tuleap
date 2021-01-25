@@ -58,7 +58,7 @@ class TemplateFactoryTest extends TestCase
 
         $this->project_manager = M::mock(\ProjectManager::class);
 
-        $this->factory  = new TemplateFactory(
+        $this->factory = new TemplateFactory(
             new GlyphFinder(new \EventManager()),
             new ProjectXMLMerger(),
             $this->consistency_checker,
@@ -92,7 +92,7 @@ class TemplateFactoryTest extends TestCase
     public function testItReturnsScrumTemplateXML(): void
     {
         $template = $this->factory->getTemplate(ScrumTemplate::NAME);
-        $xml = simplexml_load_string(file_get_contents($template->getXMLPath()));
+        $xml      = simplexml_load_string(file_get_contents($template->getXMLPath()));
         $this->assertNotEmpty($xml->services);
         $this->assertNotEmpty($xml->agiledashboard);
         $this->assertNotEmpty($xml->trackers);

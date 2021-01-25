@@ -58,7 +58,7 @@ final class DisplayExperimentalController implements DispatchableWithRequest, Di
         CSRFSynchronizerToken $csrf_token
     ) {
         $this->dispatcher = $dispatcher;
-        $this->renderer = $renderer_factory->getRenderer(__DIR__ . '/templates');
+        $this->renderer   = $renderer_factory->getRenderer(__DIR__ . '/templates');
         $this->csrf_token = $csrf_token;
     }
 

@@ -54,7 +54,7 @@ class Docman_File extends Docman_Document
 
     public function toRow()
     {
-        $row = parent::toRow();
+        $row              = parent::toRow();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
         return $row;
     }

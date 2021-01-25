@@ -47,7 +47,7 @@ class ArtifactReportFieldDao extends DataAccessObject
     public function updateResultRanking($field_name, $report_id, $rank)
     {
         $rank = $this->prepareResultRanking($field_name, $report_id, $rank);
-        $sql = "UPDATE " . $this->table_name . "
+        $sql  = "UPDATE " . $this->table_name . "
                 SET place_result = " . $this->da->escapeInt($rank) . "
                 WHERE field_name = " . $this->da->quoteSmart($field_name) . "
                   AND report_id  = " . $this->da->escapeInt($report_id);
@@ -58,10 +58,10 @@ class ArtifactReportFieldDao extends DataAccessObject
     public function resizeColumns($report_id, $new_sizes)
     {
         if (is_array($new_sizes) && count($new_sizes)) {
-            $sql = '';
-            $set = '';
+            $sql   = '';
+            $set   = '';
             $where = '';
-            $i = 0;
+            $i     = 0;
             foreach ($new_sizes as $field_name => $col_width) {
                 if (! $sql) {
                     $sql .= " UPDATE ";

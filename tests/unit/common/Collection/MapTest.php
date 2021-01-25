@@ -37,34 +37,34 @@ class MapTest extends TestCase
     }
     public function testNonEmptyMap(): void
     {
-        $key = 'key';
-        $m = new Map();
+        $key   = 'key';
+        $m     = new Map();
         $value = 'value';
         $m->put($key, $value);
         $this->assertFalse($m->isEmpty());
     }
     public function testOneValue(): void
     {
-        $key = 'key';
-        $m = new Map();
+        $key   = 'key';
+        $m     = new Map();
         $value = new stdClass();
         $m->put($key, $value);
         $this->assertEquals($value, $m->get($key));
     }
     public function testNoValue(): void
     {
-        $key = 'key';
+        $key       = 'key';
         $false_key = 'false_key';
-        $m = new Map();
-        $value = new stdClass();
+        $m         = new Map();
+        $value     = new stdClass();
         $m->put($key, $value);
         $this->assertFalse($m->get($false_key));
     }
     public function testTwoValues(): void
     {
-        $key1 = 'key1';
-        $key2 = 'key2';
-        $m = new Map();
+        $key1   = 'key1';
+        $key2   = 'key2';
+        $m      = new Map();
         $value1 = new stdClass();
         $m->put($key1, $value1);
         $value2 = new stdClass();
@@ -74,9 +74,9 @@ class MapTest extends TestCase
     }
     public function testSize(): void
     {
-        $key1 = 'key1';
-        $key2 = 'key2';
-        $m = new Map();
+        $key1   = 'key1';
+        $key2   = 'key2';
+        $m      = new Map();
         $value1 = new stdClass();
         $m->put($key1, $value1);
         $value2 = new stdClass();
@@ -85,14 +85,14 @@ class MapTest extends TestCase
     }
     public function testGetKeys(): void
     {
-        $key1 = 'key1';
-        $key2 = 'key2';
-        $m = new Map();
+        $key1   = 'key1';
+        $key2   = 'key2';
+        $m      = new Map();
         $value1 = new stdClass();
         $m->put($key1, $value1);
         $value2 = new stdClass();
         $m->put($key2, $value2);
-        $keys = $m->getKeys();
+        $keys     = $m->getKeys();
         $expected = new Collection();
         $expected->add($key1);
         $expected->add($key2);
@@ -103,7 +103,7 @@ class MapTest extends TestCase
         $key            = 'key';
         $value          = 'value';
         $does_not_exist = 'does not exist';
-        $m = new Map();
+        $m              = new Map();
         $m->put($key, $value);
         $this->assertTrue($m->containsKey($key));
         $this->assertTrue($m->containsValue($value));
@@ -112,10 +112,10 @@ class MapTest extends TestCase
     }
     public function testEquals(): void
     {
-        $key            = 'key';
-        $value          = new stdClass();
-        $m1 = new Map();
-        $m2 = new Map();
+        $key   = 'key';
+        $value = new stdClass();
+        $m1    = new Map();
+        $m2    = new Map();
         $this->assertTrue($m1->equals($m2));
         $m1->put($key, $value);
         $this->assertFalse($m1->equals($m2));
@@ -128,9 +128,9 @@ class MapTest extends TestCase
     }
     public function testRemove(): void
     {
-        $key            = 'key';
-        $value          = new stdClass();
-        $m = new Map();
+        $key   = 'key';
+        $value = new stdClass();
+        $m     = new Map();
         $m->put($key, $value);
         $this->assertTrue($m->containsKey($key));
         $this->assertTrue($m->containsValue($value));
@@ -142,7 +142,7 @@ class MapTest extends TestCase
         $key    = 'key';
         $value1 = 'value';
         $value2 = 'value';
-        $m = new Map();
+        $m      = new Map();
         $m->put($key, $value1);
         $this->assertTrue($m->remove($key, $value2));
     }

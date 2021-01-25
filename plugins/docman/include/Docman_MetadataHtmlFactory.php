@@ -55,7 +55,7 @@ class Docman_MetadataHtmlFactory
     }
     public function buildFieldArray($mdIter, $mdla, $whitelist, $formName, $themePath)
     {
-        $fields = [];
+        $fields     = [];
         $formParams = ['form_name' => $formName, 'theme_path' => $themePath];
         foreach ($mdIter as $md) {
             if ($whitelist && isset($mdla[$md->getLabel()]) || ! $whitelist && ! isset($mdla[$md->getLabel()])) {

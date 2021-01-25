@@ -77,12 +77,12 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
         string $code_context,
         NotificationEnhancedContent $enhanced_content
     ) {
-        $this->pull_request              = $pull_request;
-        $this->change_user_display_name  = $change_user_display_name;
-        $this->owners                    = $owners_without_change_user;
-        $this->inline_comment            = $inline_comment;
-        $this->code_context              = $code_context;
-        $this->enhanced_content          = $enhanced_content;
+        $this->pull_request             = $pull_request;
+        $this->change_user_display_name = $change_user_display_name;
+        $this->owners                   = $owners_without_change_user;
+        $this->inline_comment           = $inline_comment;
+        $this->code_context             = $code_context;
+        $this->enhanced_content         = $enhanced_content;
     }
 
     /**

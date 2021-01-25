@@ -130,7 +130,7 @@ final class Tracker_FormElement_Field_List_BindTest extends \PHPUnit\Framework\T
         $field     = Mockery::mock(Tracker_FormElement_Field_OpenList::class);
         $decorator = Mockery::mock(Tracker_FormElement_Field_List_BindDecorator::class);
 
-        $bind              = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class, [$field, [], [], $decorator])
+        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class, [$field, [], [], $decorator])
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();
 

@@ -35,7 +35,7 @@ class Regressions_PutSoloCardTest extends RestBase
         $stories     = $this->getArtifactIdsIndexedByTitle('private-member', 'story');
         $planning_id = $this->getSprintPlanningId();
 
-        $put = json_encode(
+        $put      = json_encode(
             [
                 "label"     => "Whatever",
                 "column_id" => null,

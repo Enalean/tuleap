@@ -50,7 +50,7 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
     ) {
         $this->extractor    = $extractor;
         $this->user_manager = $user_manager;
-        $this->alias_field = $alias_field;
+        $this->alias_field  = $alias_field;
     }
 
     /**

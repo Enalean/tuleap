@@ -88,13 +88,13 @@ class HookTriggerController
         array &$already_called_jenkins_server_urls
     ): void {
         $date_job = $date_time->getTimestamp();
-        $dar = $this->dao->searchById($repository->getId());
+        $dar      = $this->dao->searchById($repository->getId());
         foreach ($dar as $row) {
             $jenkins_server_url = $row['jenkins_server_url'];
             $this->logger->debug('Trigger repository jenkins server: ' . $jenkins_server_url);
-            $commit_reference_to_send = $row['is_commit_reference_needed'] ? $commit_reference : null;
-            $polling_urls = [];
-            $status_code = $this->pushGitNotifications(
+            $commit_reference_to_send             = $row['is_commit_reference_needed'] ? $commit_reference : null;
+            $polling_urls                         = [];
+            $status_code                          = $this->pushGitNotifications(
                 $repository,
                 $jenkins_server_url,
                 $commit_reference_to_send,
@@ -140,8 +140,8 @@ class HookTriggerController
 
             $this->logger->debug('Trigger project jenkins server:' . $jenkins_server_url);
             $commit_reference_to_send = $commit_reference;
-            $polling_urls = [];
-            $status_code = $this->pushGitNotifications(
+            $polling_urls             = [];
+            $status_code              = $this->pushGitNotifications(
                 $repository,
                 $jenkins_server_url,
                 $commit_reference_to_send,

@@ -37,7 +37,7 @@ class ArchiveDeletedItemFileProvider implements ArchiveDeletedItemProvider
     public function __construct(string $archive_path, string $prefix)
     {
         $this->archive_path = $archive_path;
-        $this->prefix = $prefix;
+        $this->prefix       = $prefix;
     }
 
     public function getArchivePath(): string

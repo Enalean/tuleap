@@ -85,7 +85,7 @@ class DataFromRequestAugmentor
         if (strlen($fields_data['new_values'])) {
             $fields_data['new_values'] .= ',';
         }
-        $fields_data['new_values'] .= $new_artifact_folder_id;
+        $fields_data['new_values']                      .= $new_artifact_folder_id;
         $fields_data['natures'][$new_artifact_folder_id] = NatureInFolderPresenter::NATURE_IN_FOLDER;
     }
 }

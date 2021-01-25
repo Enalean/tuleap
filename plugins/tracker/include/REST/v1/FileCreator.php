@@ -45,7 +45,7 @@ final class FileCreator
         FileToUploadCreator $file_to_upload_creator,
         EmptyFileToUploadFinisher $empty_file_to_upload_finisher
     ) {
-        $this->file_to_upload_creator = $file_to_upload_creator;
+        $this->file_to_upload_creator        = $file_to_upload_creator;
         $this->empty_file_to_upload_finisher = $empty_file_to_upload_finisher;
     }
 

@@ -48,7 +48,7 @@ $project         = $project_manager->getProject($group_id);
 $event_manager = EventManager::instance();
 $event_manager->processEvent(new PermissionPerGroupDisplayEvent($GLOBALS['HTML']));
 
-$title = _('Permissions per group');
+$title                = _('Permissions per group');
 $navigation_displayer = new HeaderNavigationDisplayer();
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'permissions');
 

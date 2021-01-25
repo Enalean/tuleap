@@ -132,19 +132,19 @@ class Git_Gitolite_ProjectSerializer
     private function fetchSuspendedRepositoryConfiguration(Project $project, GitRepository $repository)
     {
         $repo_full_name = $this->repoFullName($repository, $project->getUnixName());
-        $repo_config  = 'repo ' . $repo_full_name . PHP_EOL;
-        $repo_config .= $this->permissions_serializer->denyAccessForRepository();
+        $repo_config    = 'repo ' . $repo_full_name . PHP_EOL;
+        $repo_config   .= $this->permissions_serializer->denyAccessForRepository();
 
         return $repo_config . PHP_EOL;
     }
 
     protected function fetchReposConfig(Project $project, GitRepository $repository)
     {
-        $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
-        $repo_config  = 'repo ' . $repo_full_name . PHP_EOL;
-        $repo_config .= $this->fetchMailHookConfig($project, $repository);
-        $repo_config .= $this->permissions_serializer->getForRepository($repository);
-        $repo_config .= $this->fetchObjectSizeLimit($project);
+        $repo_full_name = $this->repoFullName($repository, $project->getUnixName());
+        $repo_config    = 'repo ' . $repo_full_name . PHP_EOL;
+        $repo_config   .= $this->fetchMailHookConfig($project, $repository);
+        $repo_config   .= $this->permissions_serializer->getForRepository($repository);
+        $repo_config   .= $this->fetchObjectSizeLimit($project);
 
         return $repo_config . PHP_EOL;
     }

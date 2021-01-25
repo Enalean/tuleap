@@ -40,7 +40,7 @@ $ugroup_delete_token = new CSRFSynchronizerToken('/project/admin/ugroup.php');
 session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
 if ($request->existAndNonEmpty('func')) {
-    $ugroup_id   = $request->getValidated('ugroup_id', 'UInt', 0);
+    $ugroup_id = $request->getValidated('ugroup_id', 'UInt', 0);
 
     switch ($request->get('func')) {
         case 'delete':
@@ -70,7 +70,7 @@ if ($request->existAndNonEmpty('func')) {
     $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id=' . urlencode($group_id));
 }
 
-$pm = ProjectManager::instance();
+$pm      = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 
 $title = $Language->getText('project_admin_ugroup', 'manage_ug');

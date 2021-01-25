@@ -35,7 +35,7 @@ class BurndownCalculator implements IProvideArtifactChildrenForComputedCalculati
     public function __construct(
         ComputedFieldDao $computed_dao
     ) {
-        $this->computed_dao        = $computed_dao;
+        $this->computed_dao = $computed_dao;
     }
 
     public function fetchChildrenAndManualValuesOfArtifacts(

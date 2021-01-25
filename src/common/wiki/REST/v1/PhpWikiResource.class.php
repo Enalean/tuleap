@@ -88,7 +88,7 @@ class PhpWikiResource extends AuthenticatedResource
         $this->checkAccess();
         $this->checkPhpWikiPageExists($id);
 
-        $wiki_page    = new WikiPage($id);
+        $wiki_page = new WikiPage($id);
 
         $this->checkUserCanAccessProject($wiki_page->getGid());
 

@@ -128,7 +128,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null
     ) {
-        $html = $this->fetchBurndownReadOnly($artifact);
+        $html  = $this->fetchBurndownReadOnly($artifact);
         $html .= $this->fetchBurndownCacheGenerationButton($artifact);
 
         return $html;
@@ -310,7 +310,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset): ArtifactFieldValueFullRepresentation
     {
-        $artifact = $changeset->getArtifact();
+        $artifact     = $changeset->getArtifact();
         $form_element = $this->getFormElementFactory()->getFormElementById($this->getId());
 
         $artifact_field_value_representation = new ArtifactFieldValueFullRepresentation();
@@ -419,7 +419,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchAdminFormElement()
     {
-        $html = '';
+        $html  = '';
         $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this, $this->getChartFieldUsage());
         $html .= '<img src="' . TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
         $html .= '<a class="btn chart-cache-button-generate" disabled="disabled">' .
@@ -680,11 +680,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function getChartFieldUsage()
     {
-        $use_start_date        = true;
-        $use_duration          = true;
-        $use_capacity          = false;
-        $use_hierarchy         = true;
-        $use_remaining_effort  = true;
+        $use_start_date       = true;
+        $use_duration         = true;
+        $use_capacity         = false;
+        $use_hierarchy        = true;
+        $use_remaining_effort = true;
 
         return new ChartFieldUsage(
             $use_start_date,

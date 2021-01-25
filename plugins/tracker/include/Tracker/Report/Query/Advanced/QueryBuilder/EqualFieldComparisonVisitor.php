@@ -141,11 +141,11 @@ class EqualFieldComparisonVisitor implements
 
     private function visitList(Tracker_FormElement_Field_List $field)
     {
-        $static_bind_builder = new EqualComparison\ForListBindStatic(
+        $static_bind_builder  = new EqualComparison\ForListBindStatic(
             new FromWhereEmptyComparisonListFieldBuilder(),
             new FromWhereComparisonListFieldBuilder()
         );
-        $users_bind_builder = new EqualComparison\ForListBindUsers(
+        $users_bind_builder   = new EqualComparison\ForListBindUsers(
             new CollectionOfListValuesExtractor(),
             new FromWhereEmptyComparisonListFieldBuilder(),
             new FromWhereComparisonListFieldBuilder()

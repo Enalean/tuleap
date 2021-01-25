@@ -70,7 +70,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         if ($page->exists()) {// don't replace default contents
             $current = $page->getCurrentRevision();
             $version = $current->getVersion();
-            $text = $current->getPackedContent();
+            $text    = $current->getPackedContent();
             if ($regex) {
                 $newtext = preg_replace('/' . str_replace('/', '\/', $from) . '/' . ($case_exact ? '' : 'i'), $to, $text);
             } else {
@@ -82,7 +82,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
                 }
             }
             if ($text != $newtext) {
-                $meta = $current->_data;
+                $meta            = $current->_data;
                 $meta['summary'] = sprintf(_("WikiAdminSearchReplace %s by %s"), $from, $to);
                 return $page->save($newtext, $version + 1, $meta);
             }
@@ -95,11 +95,11 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         if (empty($from)) {
             return HTML::p(HTML::strong(fmt("Error: Empty search string.")));
         }
-        $ul = HTML::ul();
-        $count = 0;
-        $post_args = $request->getArg('admin_replace');
+        $ul         = HTML::ul();
+        $count      = 0;
+        $post_args  = $request->getArg('admin_replace');
         $case_exact = ! empty($post_args['case_exact']);
-        $regex = ! empty($post_args['regex']);
+        $regex      = ! empty($post_args['regex']);
         foreach ($pages as $pagename) {
             if (! mayAccessPage('edit', $pagename)) {
                 $ul->pushContent(HTML::li(fmt("Access denied to change page '%s'.", $pagename)));
@@ -135,7 +135,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
             return $this->disabled("(action != 'browse')");
         }
 
-        $args = $this->getArgs($argstr, $request);
+        $args        = $this->getArgs($argstr, $request);
         $this->_args = $args;
 
         //TODO: support p from <!plugin-list !>
@@ -145,9 +145,9 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         if (! $p) {
             $p = $this->_list;
         }
-        $post_args = $request->getArg('admin_replace');
+        $post_args   = $request->getArg('admin_replace');
         $next_action = 'select';
-        $pages = [];
+        $pages       = [];
         if ($p && ! $request->isPost()) {
             $pages = $p;
         }

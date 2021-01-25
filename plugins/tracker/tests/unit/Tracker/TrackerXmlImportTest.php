@@ -386,7 +386,7 @@ final class TrackerXmlImportTest extends TestCase
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/EmptyTracker.xml'));
 
-        $tracker            = Mockery::mock(Tracker::class);
+        $tracker = Mockery::mock(Tracker::class);
         $this->tracker_xml_importer->shouldReceive('setTrackerGeneralInformation')->once();
         $this->tracker_factory->shouldReceive('getInstanceFromRow')->once()->andReturn($tracker);
         $this->tracker_xml_importer->shouldReceive('setCannedResponses')->once()->withArgs([$xml, $tracker]);
@@ -728,7 +728,7 @@ final class TrackerXmlImportTest extends TestCase
 
     public function testItImportFormElementAndExternalField()
     {
-        $xml = new SimpleXMLElement(
+        $xml                = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
                      <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
                          <name>name10</name>
@@ -811,11 +811,11 @@ final class TrackerXmlImportTest extends TestCase
 
     public function testInstantiateTrackerFromXmlReturnsAlreadyExistingTracker(): void
     {
-        $project       = Mockery::mock(Project::class);
+        $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID');
-        $xml           = new SimpleXMLElement('<tracker><item_name>existing_tracker</item_name></tracker>');
-        $import_config = Mockery::mock(ImportConfig::class);
-        $extra_configuration          = Mockery::mock(TrackerExtraConfiguration::class);
+        $xml                 = new SimpleXMLElement('<tracker><item_name>existing_tracker</item_name></tracker>');
+        $import_config       = Mockery::mock(ImportConfig::class);
+        $extra_configuration = Mockery::mock(TrackerExtraConfiguration::class);
         $extra_configuration->shouldReceive('getServiceName')->andReturn(\trackerPlugin::SERVICE_SHORTNAME);
         $extra_configuration->shouldReceive('getValue')->andReturn(["existing_tracker"]);
 

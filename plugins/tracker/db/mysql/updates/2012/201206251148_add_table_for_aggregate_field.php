@@ -33,7 +33,7 @@ class b201206251148_add_table_for_aggregate_field extends ForgeUpgrade_Bucket
 
     public function up()
     {
-        $sql = <<<SQL
+        $sql    = <<<SQL
         CREATE TABLE tracker_field_aggregate (
           field_id INT(11) NOT NULL PRIMARY KEY,
           target_field_name VARCHAR(255) NULL

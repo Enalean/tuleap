@@ -47,13 +47,13 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     {
         parent::setUp();
 
-        $this->stories = $this->getArtifactIdsIndexedByTitle('dragndrop', 'story');
+        $this->stories         = $this->getArtifactIdsIndexedByTitle('dragndrop', 'story');
         $this->story_add['id'] = $this->stories["add two integers"];
         $this->story_sub['id'] = $this->stories["sub two integers"];
         $this->story_mul['id'] = $this->stories["mul two integers"];
         $this->story_div['id'] = $this->stories["div two integers"];
 
-        $this->epics = $this->getArtifactIdsIndexedByTitle('dragndrop', 'epic');
+        $this->epics            = $this->getArtifactIdsIndexedByTitle('dragndrop', 'epic');
         $this->epic_basic['id'] = $this->epics['Basic calculator'];
         $this->epic_adv['id']   = $this->epics['Advanced calculator'];
         $this->epic_log['id']   = $this->epics['Logarithm calculator'];
@@ -61,12 +61,12 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
         $this->epic_fin['id']   = $this->epics['Finance calculator'];
         $this->epic_sta['id']   = $this->epics['Stats calculator'];
 
-        $this->releases = $this->getArtifactIdsIndexedByTitle('dragndrop', 'rel');
+        $this->releases      = $this->getArtifactIdsIndexedByTitle('dragndrop', 'rel');
         $this->release['id'] = $this->releases['Release 2014 12 02'];
 
         $this->sprints = $this->getArtifactIdsIndexedByTitle('dragndrop', 'sprint');
 
-        $this->uri     = 'milestones/' . $this->release['id'] . '/backlog';
+        $this->uri = 'milestones/' . $this->release['id'] . '/backlog';
     }
 
     public function testPatchBacklogForbiddenForRESTReadOnlyUserNotInvolvedInProject(): void
@@ -236,7 +236,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     {
         $uri = 'milestones/' . $this->release['id'] . '/content';
 
-        $another_release_id = $this->releases['Another release'];
+        $another_release_id  = $this->releases['Another release'];
         $another_release_uri = 'milestones/' . $another_release_id . '/content';
 
         $response = $this->getResponse($this->client->patch($another_release_uri, null, json_encode([
@@ -306,7 +306,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     public function testPatchBacklogAddAndOrder()
     {
         $inconsistent_story['id'] = $this->stories['Created in sprint'];
-        $sprint_id = $this->sprints['Sprint 9001'];
+        $sprint_id                = $this->sprints['Sprint 9001'];
 
         $patch_body = json_encode([
             'order'  => [
@@ -341,7 +341,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
 
     private function getIdsOrderedByPriority($uri)
     {
-        $response = $this->getResponse($this->client->get($uri));
+        $response     = $this->getResponse($this->client->get($uri));
         $actual_order = [];
         foreach ($response->json() as $backlog_element) {
             $actual_order[] = $backlog_element['id'];

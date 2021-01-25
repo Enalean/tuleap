@@ -40,7 +40,7 @@ class PriorityDaoTest extends TestCase
     protected function setUp(): void
     {
         $this->dao = new Tracker_Artifact_PriorityDao();
-        $this->db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $this->db  = DBFactory::getMainTuleapDBConnection()->getDB();
     }
 
     protected function tearDown(): void
@@ -208,7 +208,7 @@ class PriorityDaoTest extends TestCase
 
     private function getArtifactIdsOrderedByRank(): array
     {
-        $ids = [];
+        $ids     = [];
         $results = $this->db->run('SELECT artifact_id FROM tracker_artifact_priority_rank ORDER BY rank');
         foreach ($results as $row) {
             $ids[] = $row['artifact_id'];

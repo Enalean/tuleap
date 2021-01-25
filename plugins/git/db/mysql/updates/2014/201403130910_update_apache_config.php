@@ -74,7 +74,7 @@ EOT;
                 $first_match = true;
             }
             if ($first_match) {
-                $had_match = true;
+                $had_match      = true;
                 $target_lines[] = '<Directory "/usr/share/' . $app_name . '/plugins/*/www/">';
                 $target_lines[] = '    Options MultiViews FollowSymlinks';
                 $target_lines[] = '    AllowOverride All';

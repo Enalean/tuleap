@@ -92,7 +92,7 @@ class Jenkins_Client
         $crumb_header_split = explode(':', $csrf_crumb_header);
         if (count($crumb_header_split) === 2) {
             [$crumb_header_name, $crumb_header_value] = $crumb_header_split;
-            $request = $request->withHeader($crumb_header_name, $crumb_header_value);
+            $request                                  = $request->withHeader($crumb_header_name, $crumb_header_value);
         }
 
         if (count($build_parameters) > 0) {

@@ -106,7 +106,7 @@ if ($request->isPost() && $request->existAndNonEmpty('add')) {
 
 $vProcId = new Valid_UInt('proc_id');
 $vProcId->required();
-$vUpdate = new Valid_String('update');
+$vUpdate      = new Valid_String('update');
 $vProcessName = new Valid_String('processname');
 $vProcessName->required();
 $vProcessRank = new Valid_UInt('processrank');
@@ -135,7 +135,7 @@ if ($request->isPost() && $request->existAndNonEmpty('update')) {
     }
 }
 
-$sql = "SELECT * FROM frs_processor WHERE group_id=" . db_ei($group_id) . " OR group_id=100 ORDER BY rank";
+$sql    = "SELECT * FROM frs_processor WHERE group_id=" . db_ei($group_id) . " OR group_id=100 ORDER BY rank";
 $result = db_query($sql);
 
 ?>

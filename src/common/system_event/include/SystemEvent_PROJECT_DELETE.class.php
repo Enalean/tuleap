@@ -51,7 +51,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      */
     public function verbalizeParameters($with_link)
     {
-        $txt = '';
+        $txt  = '';
         $txt .= 'project: ' . $this->verbalizeProjectId($this->getIdFromParam($this->parameters), $with_link);
         return $txt;
     }

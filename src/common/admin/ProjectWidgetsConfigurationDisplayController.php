@@ -80,7 +80,7 @@ class ProjectWidgetsConfigurationDisplayController implements DispatchableWithRe
     private function buildWidgetPresenters(array $project_widgets): array
     {
         $disabled_widget_checker = new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao());
-        $widget_presenters = [];
+        $widget_presenters       = [];
         foreach ($project_widgets as $project_widget) {
             $widget_presenters[] = new ProjectWidgetsPresenter($project_widget, $disabled_widget_checker);
         }

@@ -37,7 +37,7 @@ class LogEventAdder
     public function __construct(EventManager $event_manager, Docman_Log $logger)
     {
         $this->event_manager = $event_manager;
-        $this->logger = $logger;
+        $this->logger        = $logger;
     }
 
     public function addLogEventManagement()

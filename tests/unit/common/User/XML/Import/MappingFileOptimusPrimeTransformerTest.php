@@ -171,7 +171,7 @@ EOS;
 
     public function testItTransformsAnEmailDoesnotMatchToAWillBeMappedUser(): void
     {
-        $cstevens  = $this->user_manager->getUserByUserName('cstevens');
+        $cstevens = $this->user_manager->getUserByUserName('cstevens');
         $this->addEmailDoesNotMatchUserToCollection();
         $this->generateCSV('email.does.not.match', 'map:cstevens');
 
@@ -184,7 +184,7 @@ EOS;
 
     public function testItTransformsAToBeCreatedToAWillBeMappedUser(): void
     {
-        $cstevens  = $this->user_manager->getUserByUserName('cstevens');
+        $cstevens = $this->user_manager->getUserByUserName('cstevens');
         $this->addToBeCreatedUserToCollection();
         $this->generateCSV('to.be.created', 'map:cstevens');
 
@@ -197,7 +197,7 @@ EOS;
 
     public function testItTransformsAToBeActivatedToAWillBeMappedUser(): void
     {
-        $cstevens  = $this->user_manager->getUserByUserName('cstevens');
+        $cstevens = $this->user_manager->getUserByUserName('cstevens');
         $this->addToBeActivatedUserToCollection();
         $this->generateCSV('to.be.activated', 'map:cstevens');
 
@@ -210,7 +210,7 @@ EOS;
 
     public function testItTransformsAnAlreadyExistingToAWillBeMappedUser(): void
     {
-        $cstevens  = $this->user_manager->getUserByUserName('cstevens');
+        $cstevens = $this->user_manager->getUserByUserName('cstevens');
         $this->addAlreadyExistingUserToCollection();
         $this->generateCSV('already.existing', 'map:cstevens');
 

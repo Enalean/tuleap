@@ -35,7 +35,7 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
     public function getLastPushForRepositories($repository_ids)
     {
         $ids_condition = EasyStatement::open()->in('?*', $repository_ids);
-        $sql = "SELECT repository_id, push_date
+        $sql           = "SELECT repository_id, push_date
                 FROM plugin_git_log
                 WHERE repository_id IN ($ids_condition)";
         return $this->getDB()->safeQuery($sql, $ids_condition->values());
@@ -51,7 +51,7 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
      */
     public function getRepositoryPushesByWeek($repositoryId, $week, $year)
     {
-        $sql          = 'SELECT COUNT(*) AS pushes,
+        $sql = 'SELECT COUNT(*) AS pushes,
                              repository_id AS repo,
                              WEEK(FROM_UNIXTIME(push_date), 3) AS week,
                              YEAR(FROM_UNIXTIME(push_date)) AS year,

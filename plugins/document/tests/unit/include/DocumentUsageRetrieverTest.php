@@ -39,7 +39,7 @@ class DocumentUsageRetrieverTest extends TestCase
     {
         parent::setUp();
 
-        $this->retriever        = new DocumentUsageRetriever();
+        $this->retriever = new DocumentUsageRetriever();
 
         ForgeConfig::store();
     }

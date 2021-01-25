@@ -65,11 +65,11 @@ class CardFieldXmlExtractorTest extends TestCase
         $severity->shouldReceive('getId')->andReturn(102);
         $severity->shouldReceive('getLabel')->andReturn('severity');
 
-        $mapping   = [
+        $mapping                = [
             'F13' => $status,
             'F14' => $severity
         ];
-        $extractor = new CardFieldXmlExtractor();
+        $extractor              = new CardFieldXmlExtractor();
         $background_color_field = $extractor->extractBackgroundColorFromXml($xml, $mapping);
 
         $this->assertEquals(102, $background_color_field->getId());

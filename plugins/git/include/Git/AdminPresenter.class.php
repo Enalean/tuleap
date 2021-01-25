@@ -25,10 +25,10 @@ class Git_AdminPresenter
 
     public $csrf_token;
 
-    public $manage_gerrit                         = false;
-    public $manage_mirrors                        = false;
-    public $manage_gitolite_config                = false;
-    public $manage_general_settings               = false;
+    public $manage_gerrit           = false;
+    public $manage_mirrors          = false;
+    public $manage_gitolite_config  = false;
+    public $manage_general_settings = false;
 
     public $mirrors_active          = '';
     public $general_settings_active = '';

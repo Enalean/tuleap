@@ -63,7 +63,7 @@ class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits // phpc
     public function getLatestRevisions()
     {
         if (! $this->latest_revisions) {
-            $pm = ProjectManager::instance();
+            $pm      = ProjectManager::instance();
             $project = $pm->getProject($this->group_id);
             if ($project && $this->canBeUsedByProject($project)) {
                 [$this->latest_revisions,] = svn_get_revisions($project, 0, 5, '', '', '', [], 0, false);

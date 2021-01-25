@@ -55,13 +55,13 @@ class SidebarProjectDefinedServicePresenter
 
     public function __construct(ProjectDefinedService $service, string $link)
     {
-        $this->label = $service->getLabel();
-        $this->icon = $service->getIcon();
+        $this->label       = $service->getLabel();
+        $this->icon        = $service->getIcon();
         $this->description = $service->getDescription();
         if ($service->isOpenedInNewTab()) {
             $this->description = sprintf(_('%s (opens in a new tab)'), $this->description);
         }
         $this->open_in_new_tab = $service->isOpenedInNewTab();
-        $this->link = $link;
+        $this->link            = $link;
     }
 }

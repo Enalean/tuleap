@@ -67,7 +67,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
 
     public function chownPages(&$dbi, &$request, $pages, $newowner)
     {
-        $ul = HTML::ul();
+        $ul    = HTML::ul();
         $count = 0;
         foreach ($pages as $name) {
             $page = $dbi->getPage($name);
@@ -119,7 +119,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
             }
         }
 
-        $args = $this->getArgs($argstr, $request);
+        $args        = $this->getArgs($argstr, $request);
         $this->_args = $args;
         if (empty($args['user'])) {
             $args['user'] = $request->_user->UserName();
@@ -139,7 +139,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
             $post_args['user'] = $args['user'];
         }
         $next_action = 'select';
-        $pages = [];
+        $pages       = [];
         if ($p && ! $request->isPost()) {
             $pages = $p;
         }

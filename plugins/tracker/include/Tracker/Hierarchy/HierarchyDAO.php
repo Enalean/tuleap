@@ -221,7 +221,7 @@ class HierarchyDAO extends DataAccessObject
         $condition = EasyStatement::open()
             ->in('parent_id IN (?*)', $tracker_ids)
             ->orIn('child_id IN (?*)', $tracker_ids);
-        $sql = "SELECT DISTINCT parent_id, child_id
+        $sql       = "SELECT DISTINCT parent_id, child_id
                 FROM tracker_hierarchy
                     INNER JOIN tracker ON (parent_id = tracker.id OR child_id = tracker.id)
                 WHERE $condition

@@ -54,10 +54,10 @@ if (! ForgeConfig::get('sys_frs_license_mandatory')) {
 }
 
 if ($request->exist('popup')) {
-    $dlscript = 'opener.download';
+    $dlscript     = 'opener.download';
     $cancelscript = 'window.close()';
 } else {
-    $dlscript = 'download_local';
+    $dlscript     = 'download_local';
     $cancelscript = 'history.back()';
 }
 ?>

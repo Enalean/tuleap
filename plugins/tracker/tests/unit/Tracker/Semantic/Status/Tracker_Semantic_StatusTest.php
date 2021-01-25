@@ -52,11 +52,11 @@ class Tracker_Semantic_StatusTest extends TestCase
 
     public function testExport()
     {
-        $xml = simplexml_load_string(
+        $xml      = simplexml_load_string(
             file_get_contents(__DIR__ . '/../../_fixtures/Status/ImportTrackerSemanticStatusTest.xml')
         );
         $semantic = new Tracker_Semantic_Status($this->tracker, $this->field, [806, 807, 808, 809]);
-        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $root     = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
         $array_xml_mapping = [
             'F14' => 103,

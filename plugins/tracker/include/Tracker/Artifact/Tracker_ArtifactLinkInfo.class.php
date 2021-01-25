@@ -203,7 +203,7 @@ class Tracker_ArtifactLinkInfo
     public function shouldLinkBeHidden($nature)
     {
         $hide_artifact = false;
-        $params = [
+        $params        = [
             'nature'        => $nature,
             'hide_artifact' => &$hide_artifact
         ];

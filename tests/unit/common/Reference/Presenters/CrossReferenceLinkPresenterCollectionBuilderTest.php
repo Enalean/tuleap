@@ -43,7 +43,7 @@ class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->cross_ref_target_1          = $this->mockCrossReference(
+        $this->cross_ref_target_1 = $this->mockCrossReference(
             'git_commit',
             1,
             "/plugins/git/1",

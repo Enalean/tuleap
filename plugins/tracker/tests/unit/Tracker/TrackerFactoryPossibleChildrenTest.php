@@ -52,7 +52,7 @@ class TrackerFactoryPossibleChildrenTest extends TestCase
         $all_project_trackers      = $expected_children;
         $all_project_trackers['1'] = $current_tracker;
 
-        $tracker_factory   = \Mockery::mock(\TrackerFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $tracker_factory = \Mockery::mock(\TrackerFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $tracker_factory->shouldReceive('getTrackersByGroupId')->andReturns($all_project_trackers);
 
         $possible_children = $tracker_factory->getPossibleChildren($current_tracker);

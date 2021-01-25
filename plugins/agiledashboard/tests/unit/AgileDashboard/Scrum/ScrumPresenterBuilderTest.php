@@ -99,7 +99,7 @@ class ScrumPresenterBuilderTest extends TestCase
 
     public function testItBuildsPresenterWhenNoRootPlanning(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
+        $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('useLabFeatures')->andReturn('0');
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
@@ -154,7 +154,7 @@ class ScrumPresenterBuilderTest extends TestCase
 
     public function testItBuildsPresenterInMonoMilestoneContextWhenMonoMilestoneAreDisabled(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
+        $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('useLabFeatures')->andReturn('0');
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
@@ -216,7 +216,7 @@ class ScrumPresenterBuilderTest extends TestCase
 
     public function testItBuildsPresenterInMonoMilestoneContextWhenMonoMilestoneAreEnabled(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
+        $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('useLabFeatures')->andReturn('0');
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
@@ -280,7 +280,7 @@ class ScrumPresenterBuilderTest extends TestCase
 
     public function testItBuildsPresenterInExplicitBacklogContext(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
+        $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('useLabFeatures')->andReturn('0');
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->atLeast(1)->andReturn(101);

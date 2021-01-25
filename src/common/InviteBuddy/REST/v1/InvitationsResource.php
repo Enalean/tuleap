@@ -82,9 +82,9 @@ class InvitationsResource extends AuthenticatedResource
         $user_manager = \UserManager::instance();
         $current_user = $user_manager->getCurrentUser();
 
-        $dao = new InvitationDao();
+        $dao                        = new InvitationDao();
         $invite_buddy_configuration = new InviteBuddyConfiguration(\EventManager::instance());
-        $sender = new InvitationSender(
+        $sender                     = new InvitationSender(
             new InvitationSenderGateKeeper(
                 new \Valid_Email(),
                 $invite_buddy_configuration,

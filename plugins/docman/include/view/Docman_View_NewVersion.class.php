@@ -33,7 +33,7 @@ class Docman_View_NewVersion extends Docman_View_Details
 
     /* protected */ public function _content($params, $view = null, $section = null)
     {
-        $force    = isset($params['force_item']) ? $params['force_item'] : null;
+        $force = isset($params['force_item']) ? $params['force_item'] : null;
         $token = isset($params['token']) ? $params['token'] : null;
         parent::_content($params, new Docman_View_ItemDetailsSectionNewVersion($params['item'], $params['default_url'], $this->_controller, $force, $token), 'actions');
     }

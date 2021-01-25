@@ -29,20 +29,20 @@ class Statistics_DiskUsageManager
 {
     private $services = [];
 
-    public const SVN = 'svn';
-    public const CVS = 'cvs';
-    public const FRS = 'frs';
-    public const FTP = 'ftp';
-    public const GRP_HOME = 'grp_home';
-    public const USR_HOME = 'usr_home';
-    public const WIKI = 'wiki';
+    public const SVN           = 'svn';
+    public const CVS           = 'cvs';
+    public const FRS           = 'frs';
+    public const FTP           = 'ftp';
+    public const GRP_HOME      = 'grp_home';
+    public const USR_HOME      = 'usr_home';
+    public const WIKI          = 'wiki';
     public const PLUGIN_WEBDAV = 'plugin_webdav';
-    public const MAILMAN = 'mailman';
-    public const MYSQL = 'mysql';
-    public const CODENDI_LOGS = 'codendi_log';
-    public const BACKUP = 'backup';
-    public const BACKUP_OLD = 'backup_old';
-    public const PATH = 'path_';
+    public const MAILMAN       = 'mailman';
+    public const MYSQL         = 'mysql';
+    public const CODENDI_LOGS  = 'codendi_log';
+    public const BACKUP        = 'backup';
+    public const BACKUP_OLD    = 'backup_old';
+    public const PATH          = 'path_';
 
     /**
      * @var Statistics_DiskUsageDao
@@ -142,7 +142,7 @@ class Statistics_DiskUsageManager
                 return 'cornflowerblue';
             default:
                 // If plugins don't want to color themselves they are white
-                $color = 'white';
+                $color  = 'white';
                 $params = ['service' => $service, 'color' => &$color];
                 $this->event_manager->processEvent('plugin_statistics_color', $params);
                 return $color;
@@ -152,13 +152,13 @@ class Statistics_DiskUsageManager
     public function getGeneralData($date)
     {
         $res = [];
-        $dao  = $this->_getDao();
+        $dao = $this->_getDao();
         if ($date) {
             $res['date'] = $date;
 
             $dar = $dao->searchTotalUserSize($date);
             if ($dar && ! $dar->isError()) {
-                $row = $dar->getRow();
+                $row                            = $dar->getRow();
                 $res['service'][self::USR_HOME] = $row['size'];
             }
 
@@ -166,7 +166,7 @@ class Statistics_DiskUsageManager
             if ($dar && ! $dar->isError()) {
                 foreach ($dar as $row) {
                     if (strpos($row['service'], self::PATH) !== false) {
-                        $path = substr($row['service'], strlen(self::PATH . '_') - 1);
+                        $path               = substr($row['service'], strlen(self::PATH . '_') - 1);
                         $res['path'][$path] = $row['size'];
                     } else {
                         $res['service'][$row['service']] = $row['size'];
@@ -272,8 +272,8 @@ class Statistics_DiskUsageManager
         if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 if (isset($values[$row['service']])) {
-                    $values[$row['service']]['service']   = $row['service'];
-                    $values[$row['service']]['end_size']  = $row['size'];
+                    $values[$row['service']]['service']  = $row['service'];
+                    $values[$row['service']]['end_size'] = $row['size'];
                     if (isset($values[$row['service']]['start_size'])) {
                         $values[$row['service']]['evolution'] = $row['size'] - $values[$row['service']]['start_size'];
                         if ($values[$row['service']]['start_size'] != 0) {
@@ -321,10 +321,10 @@ class Statistics_DiskUsageManager
 
     public function returnTotalProjectSize($group_id)
     {
-        $dao            = $this->_getDao();
-        $recentDate     = $dao->searchMostRecentDate();
-        $dar            = $dao->searchServicesSizesPerProject($group_id, $recentDate);
-        $usage_refresh  = new StatisticsRefreshDiskUsage($group_id);
+        $dao           = $this->_getDao();
+        $recentDate    = $dao->searchMostRecentDate();
+        $dar           = $dao->searchServicesSizesPerProject($group_id, $recentDate);
+        $usage_refresh = new StatisticsRefreshDiskUsage($group_id);
 
         $this->event_manager->processEvent($usage_refresh);
 
@@ -423,8 +423,8 @@ class Statistics_DiskUsageManager
     public function getWeeklyEvolutionProjectTotalSize($groupId, $groupBy, $startDate, $endDate)
     {
         $groupBy = strtoupper($groupBy);
-        $dao  = $this->_getDao();
-        $dar = $dao->searchSizePerProjectForPeriod($groupId, $groupBy, $startDate, $endDate);
+        $dao     = $this->_getDao();
+        $dar     = $dao->searchSizePerProjectForPeriod($groupId, $groupBy, $startDate, $endDate);
         if ($dar && ! $dar->isError() && $dar->rowCount()) {
             foreach ($dar as $row) {
                 $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
@@ -437,8 +437,8 @@ class Statistics_DiskUsageManager
     public function getWeeklyEvolutionUserData($userId, $groupBy, $startDate, $endDate)
     {
         $groupBy = strtoupper($groupBy);
-        $dao  = $this->_getDao();
-        $dar = $dao->searchSizePerUserForPeriod($userId, $groupBy, $startDate, $endDate);
+        $dao     = $this->_getDao();
+        $dar     = $dao->searchSizePerUserForPeriod($userId, $groupBy, $startDate, $endDate);
         if ($dar && ! $dar->isError() && $dar->rowCount()) {
             foreach ($dar as $row) {
                 $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
@@ -451,8 +451,8 @@ class Statistics_DiskUsageManager
     public function getWeeklyEvolutionProjectData($services, $groupId, $groupBy, $startDate, $endDate)
     {
         $groupBy = strtoupper($groupBy);
-        $dao  = $this->_getDao();
-        $dar = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate, $groupId);
+        $dao     = $this->_getDao();
+        $dar     = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate, $groupId);
         if ($dar && ! $dar->isError() && $dar->rowCount()) {
             $dates = $this->getRangeDates($dar, $groupBy);
             foreach ($dar as $row) {
@@ -521,7 +521,7 @@ class Statistics_DiskUsageManager
      */
     public function collectAll()
     {
-        $collect_date = new DateTimeImmutable();
+        $collect_date    = new DateTimeImmutable();
         $time_to_collect = $this->collectProjects($collect_date);
         $this->collectUsers($collect_date);
         $this->collectSite($collect_date);
@@ -633,9 +633,9 @@ class Statistics_DiskUsageManager
         $mmArchivesPath = '/var/lib/mailman/archives/private';
         $dao            = $this->_getDao();
         $dao->startTransaction();
-        $dar            = $dao->searchAllLists();
-        $previous       = -1;
-        $sMailman       = 0;
+        $dar      = $dao->searchAllLists();
+        $previous = -1;
+        $sMailman = 0;
 
         foreach ($dar as $row) {
             if ($row['group_id'] != $previous) {
@@ -730,8 +730,8 @@ class Statistics_DiskUsageManager
     public function getProperty($name)
     {
         $pluginManager = PluginManager::instance();
-        $p = $pluginManager->getPluginByName('statistics');
-        $info = $p->getPluginInfo();
+        $p             = $pluginManager->getPluginByName('statistics');
+        $info          = $p->getPluginInfo();
         return $info->getPropertyValueForName($name);
     }
 }

@@ -49,7 +49,7 @@ class ProjectMilestonesPreferencesPresenter
         $this->widget_id   = $widget_id;
         $this->csrf_token  = $csrf_token;
         $this->placeholder = dgettext('tuleap-projectmilestones', 'Project name');
-        $data = [];
+        $data              = [];
         if ($project) {
             $data = [["id" => (int) $project->getID(), "text" => $project->getPublicName(), "selected" => true, "disabled" => false]];
         }

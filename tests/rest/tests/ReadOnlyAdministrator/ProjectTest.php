@@ -190,7 +190,7 @@ class ProjectTest extends ProjectBase
 
     public function testThatAdminGetEvenPrivateProjectThatSheIsNotMemberOf(): void
     {
-        $response = $this->getResponse($this->client->get('projects/'));
+        $response       = $this->getResponse($this->client->get('projects/'));
         $admin_projects = $response->json();
 
         foreach ($admin_projects as $project) {
@@ -201,7 +201,7 @@ class ProjectTest extends ProjectBase
             $this->assertFalse($project['is_member_of']);
 
             $project_members_uri = "user_groups/$this->project_private_id" . "_3/users";
-            $project_members = $this->getResponse($this->client->get($project_members_uri))->json();
+            $project_members     = $this->getResponse($this->client->get($project_members_uri))->json();
             foreach ($project_members as $member) {
                 $this->assertNotEquals('admin', $member['username']);
             }

@@ -96,7 +96,7 @@ class StreamFilterTest extends TestCase
         $source_resource = fopen('php://memory', 'rb+');
         fwrite($source_resource, 'Test data');
         rewind($source_resource);
-        $filter   = \Mockery::mock(FilterInterface::class);
+        $filter = \Mockery::mock(FilterInterface::class);
         $filter->shouldReceive('getFilteredChainIdentifier')->andReturns(STREAM_FILTER_READ);
         $filter->shouldReceive('process')->andThrows(\Exception::class);
         $filter->shouldReceive('filterDetachedEvent');

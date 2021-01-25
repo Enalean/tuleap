@@ -62,7 +62,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \PHPUnit
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->target_field_id = 569;
-        $this->target_field = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
+        $this->target_field    = Mockery::spy(Tracker_FormElement_Field_Selectbox::class);
         $this->target_field->shouldReceive('getId')->andReturn($this->target_field_id);
         $this->target_field->shouldReceive('getTracker')->andReturn($task_tracker);
         $this->target_value_id = 7;
@@ -90,7 +90,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \PHPUnit
 
     public function testItAlwaysApplyRuleWhenAtLeastOneValueIsSet(): void
     {
-        $fields_data = [
+        $fields_data       = [
             $this->target_field_id => $this->target_value_id
         ];
         $send_notification = true;

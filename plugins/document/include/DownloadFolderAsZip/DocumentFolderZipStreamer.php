@@ -156,7 +156,7 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
             $options->setLargeFileSize(0);
             $options->setZeroHeader(true);
 
-            $zip = new ZipStream(null, $options);
+            $zip                    = new ZipStream(null, $options);
             $errors_listing_builder = new ErrorsListingBuilder();
 
             ini_set('max_execution_time', '0');

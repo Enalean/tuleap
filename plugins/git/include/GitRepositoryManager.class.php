@@ -295,7 +295,7 @@ class GitRepositoryManager
         $project_destination               = $forked_repository->getProject();
         $allowed_mirrors_forked_repository = $this->mirror_data_mapper->fetchAllForProject($project_destination);
 
-        $repository_mirrors_ids            = [];
+        $repository_mirrors_ids = [];
         foreach ($base_repository_mirrors as $mirror) {
             if (in_array($mirror, $allowed_mirrors_forked_repository)) {
                 $repository_mirrors_ids[] = $mirror->id;

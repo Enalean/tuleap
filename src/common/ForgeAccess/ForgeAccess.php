@@ -35,7 +35,7 @@ class ForgeAccess
      *
      * @tlp-config-key
      */
-    public const ANONYMOUS_CAN_SEE_CONTACT       = 'anonymous_can_see_contact';
+    public const ANONYMOUS_CAN_SEE_CONTACT = 'anonymous_can_see_contact';
 
     public const CONFIG     = 'access_mode';
     public const ANONYMOUS  = 'anonymous';

@@ -45,8 +45,8 @@ final class PluginInfoTest extends \PHPUnit\Framework\TestCase
     {
         $name_d1 = 'd1';
         $name_d2 = 'd2';
-        $p  = \Mockery::spy(\Plugin::class);
-        $pi = new class ($p) extends PluginInfo
+        $p       = \Mockery::spy(\Plugin::class);
+        $pi      = new class ($p) extends PluginInfo
         {
             public function addPropertyDescriptor($desc): void
             {
@@ -58,7 +58,7 @@ final class PluginInfoTest extends \PHPUnit\Framework\TestCase
                 $this->_removePropertyDescriptor($desc);
             }
         };
-        $d1 = \Mockery::spy(\PropertyDescriptor::class);
+        $d1      = \Mockery::spy(\PropertyDescriptor::class);
         $d1->shouldReceive('getName')->andReturns($name_d1);
         $d2 = \Mockery::spy(\PropertyDescriptor::class);
         $d2->shouldReceive('getName')->andReturns($name_d2);

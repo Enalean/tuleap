@@ -35,10 +35,10 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
     {
         parent::__construct($item, $url, 'approval', dgettext('tuleap-docman', 'Approval Table'));
 
-        $this->themePath = $themePath;
-        $this->table = null;
-        $this->atf   = null;
-        $this->version = null;
+        $this->themePath            = $themePath;
+        $this->table                = null;
+        $this->atf                  = null;
+        $this->version              = null;
         $this->notificationsManager = $notificationManager;
     }
 
@@ -53,7 +53,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
             $this->version = $request->get('version');
         }
 
-        $this->atf = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item, $this->version);
+        $this->atf   = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item, $this->version);
         $this->table = $this->atf->getTable();
     }
 
@@ -70,7 +70,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
                 || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE
             ) {
                 $vFactory = new Docman_VersionFactory();
-                $v = $vFactory->getSpecificVersion($this->item, $version);
+                $v        = $vFactory->getSpecificVersion($this->item, $version);
                 if ($v) {
                     $url = DocmanViewURLBuilder::buildActionUrl(
                         $this->item,
@@ -162,13 +162,13 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
 
             $html .= '</table>';
 
-            $html .= html_build_list_table_top([dgettext('tuleap-docman', 'Name'),
+            $html         .= html_build_list_table_top([dgettext('tuleap-docman', 'Name'),
                                                      dgettext('tuleap-docman', 'Review'),
                                                      dgettext('tuleap-docman', 'Comment'),
                                                      dgettext('tuleap-docman', 'Date'),
                                                      dgettext('tuleap-docman', 'Version')]);
             $userIsInTable = false;
-            $rowColorIdx = 1;
+            $rowColorIdx   = 1;
             $rIter->rewind();
             while ($rIter->valid()) {
                 $reviewer = $rIter->current();
@@ -176,8 +176,8 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
                 $readOnly = true;
                 $_trClass = ' class="docman_approval_readonly"';
                 if (! $forceReadOnly && ($user->getId() == $reviewer->getId())) {
-                    $_trClass = ' class="docman_approval_highlight"';
-                    $readOnly = false;
+                    $_trClass      = ' class="docman_approval_highlight"';
+                    $readOnly      = false;
                     $userIsInTable = true;
                 }
 
@@ -189,7 +189,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
                 // Review
                 $_reviewHtml = $this->atf->getReviewStateName($reviewer->getState());
                 if (! $readOnly) {
-                    $_reviewUrl = DocmanViewURLBuilder::buildActionUrl(
+                    $_reviewUrl  = DocmanViewURLBuilder::buildActionUrl(
                         $this->item,
                         ['default_url' => $this->url],
                         ['action' => 'details', 'id' => $this->item->getId(), 'section' => 'approval', 'review'  => '1']
@@ -202,7 +202,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
                 $html .= '<td' . $_trClass . '>' . $this->hp->purify($reviewer->getComment(), CODENDI_PURIFIER_BASIC, $this->item->getGroupId()) . '</td>';
 
                 // Date
-                $date = $reviewer->getReviewDate();
+                $date      = $reviewer->getReviewDate();
                 $_dateHtml = '';
                 if ($date) {
                     $_dateHtml = DateHelper::formatForLanguage($GLOBALS['Language'], $date, true);
@@ -226,15 +226,15 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
 
     public function _getReviewCurrentVersion()
     {
-        $version = null;
+        $version     = null;
         $itemFactory = Docman_ItemFactory::instance($this->item->getGroupId());
-        $itemType = $itemFactory->getItemTypeForItem($this->item);
+        $itemType    = $itemFactory->getItemTypeForItem($this->item);
         // Get current version for file, embeddedfile and wiki
         switch ($itemType) {
             case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
             case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
                 $currentVersion = $this->item->getCurrentVersion();
-                $version = $currentVersion->getNumber();
+                $version        = $currentVersion->getNumber();
                 break;
             case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
                 $version = $itemFactory->getCurrentWikiVersion($this->item);
@@ -250,8 +250,8 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
 
         // Values
         $itemCurrentVersion = $this->_getReviewCurrentVersion();
-        $reviewer = $this->table->getReviewer($user->getId());
-        $reviewVersion = $reviewer->getVersion();
+        $reviewer           = $this->table->getReviewer($user->getId());
+        $reviewVersion      = $reviewer->getVersion();
 
         // Output
         $html .= '<h3>' . dgettext('tuleap-docman', 'Document under review') . '</h3>';
@@ -264,7 +264,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         $html .= '<td>';
         $html .=  $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML);
         if ($itemCurrentVersion == null) {
-            $url = DocmanViewURLBuilder::buildActionUrl(
+            $url   = DocmanViewURLBuilder::buildActionUrl(
                 $this->item,
                 ['default_url' => $this->url],
                 ['action' => 'show', 'id' => $this->item->getId()]
@@ -360,12 +360,12 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
 
         $html .= '<tr>';
         $html .= '<td>' . dgettext('tuleap-docman', 'Review:') . '</td>';
-        $vals = [PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET,
+        $vals  = [PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET,
                       PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
                       PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED,
                       PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED,
                       PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED];
-        $txts = [dgettext('tuleap-docman', 'Not Yet'),
+        $txts  = [dgettext('tuleap-docman', 'Not Yet'),
                       dgettext('tuleap-docman', 'Approved'),
                       dgettext('tuleap-docman', 'Rejected'),
                       dgettext('tuleap-docman', 'Comment only'),
@@ -407,14 +407,14 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         $html .= '</tr>';
 
         // Notification
-        $notifChecked  = ! $user->isAnonymous() && $this->notificationsManager->userExists($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
-        $html .= '<tr>';
-        $html .= '<td>' . dgettext('tuleap-docman', 'Notification:') . '</td>';
-        $html .= '<td>';
-        $html .= '<input type="checkbox" name="monitor" value="1"' . $notifChecked . ' />';
-        $html .= dgettext('tuleap-docman', 'Send me an email whenever this item is updated.');
-        $html .= '</td>';
-        $html .= '</tr>';
+        $notifChecked = ! $user->isAnonymous() && $this->notificationsManager->userExists($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
+        $html        .= '<tr>';
+        $html        .= '<td>' . dgettext('tuleap-docman', 'Notification:') . '</td>';
+        $html        .= '<td>';
+        $html        .= '<input type="checkbox" name="monitor" value="1"' . $notifChecked . ' />';
+        $html        .= dgettext('tuleap-docman', 'Send me an email whenever this item is updated.');
+        $html        .= '</td>';
+        $html        .= '</tr>';
 
         $html .= '<tr>';
         $html .= '<td colspan="2">';
@@ -434,18 +434,18 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         $html = '';
         $uh   = UserHelper::instance();
         if (is_a($this->table, 'Docman_ApprovalTableVersionned')) {
-            $html .= '<h3>' . dgettext('tuleap-docman', 'Approval table history') . '</h3>';
-            $html .= html_build_list_table_top([dgettext('tuleap-docman', 'Document version'),
+            $html       .= '<h3>' . dgettext('tuleap-docman', 'Approval table history') . '</h3>';
+            $html       .= html_build_list_table_top([dgettext('tuleap-docman', 'Document version'),
                                                      dgettext('tuleap-docman', 'Owner'),
                                                      dgettext('tuleap-docman', 'Status'),
                                                      dgettext('tuleap-docman', 'Start date'),
                                                      ]);
-            $allTables = $this->atf->getAllApprovalTable();
+            $allTables   = $this->atf->getAllApprovalTable();
             $rowColorIdx = 1;
             foreach ($allTables as $table) {
                 $html .= '<tr class="' . html_get_alt_row_color($rowColorIdx++) . '">';
                 if ($this->table->getVersionNumber() != $table->getVersionNumber()) {
-                    $url = DocmanViewURLBuilder::buildActionUrl(
+                    $url  = DocmanViewURLBuilder::buildActionUrl(
                         $this->item,
                         ['default_url' => $this->url],
                         [
@@ -495,13 +495,13 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         $user = $this->_getCurrentUser();
         $dpm  = $this->_getPermissionsManager();
         if ($dpm->userCanWrite($user, $this->item->getId())) {
-            $url = DocmanViewURLBuilder::buildActionUrl(
+            $url       = DocmanViewURLBuilder::buildActionUrl(
                 $this->item,
                 ['default_url' => $this->url],
                 ['action' => 'approval_create', 'id' => $this->item->getId()]
             );
             $adminLink = '<a href="' . $url . '">' . dgettext('tuleap-docman', 'Admin') . '</a>';
-            $html = '<strong>' . $adminLink . '</strong><br />';
+            $html      = '<strong>' . $adminLink . '</strong><br />';
         }
         return $html;
     }
@@ -533,13 +533,13 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
             $html .= '<p>';
             $html .= dgettext('tuleap-docman', 'No approval table for this document.');
             if ($dpm->userCanWrite($user, $this->item->getId())) {
-                $url = DocmanViewURLBuilder::buildActionUrl(
+                $url       = DocmanViewURLBuilder::buildActionUrl(
                     $this->item,
                     ['default_url' => $this->url],
                     ['action' => 'approval_create', 'id' => $this->item->getId()]
                 );
                 $adminLink = '<a href="' . $url . '">' . dgettext('tuleap-docman', 'Create a new one.') . '</a>';
-                $html .= ' <strong>' . $adminLink . '</strong><br />';
+                $html     .= ' <strong>' . $adminLink . '</strong><br />';
             }
             $html .= '</p>';
         } elseif ($this->table->isDisabled()) {

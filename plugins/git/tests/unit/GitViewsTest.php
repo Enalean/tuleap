@@ -34,7 +34,7 @@ class GitViewsTest extends TestCase
         $project = $this->givenAProject('123', 'Guinea Pig');
         $manager = $this->givenAProjectManager($project);
 
-        $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $view   = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $output = $view->getUserProjectsAsOptions($user, $manager, '50');
         $this->assertMatchesRegularExpression('/<option value="123"/', $output);
         $this->assertDoesNotMatchRegularExpression('/<option value="456"/', $output);

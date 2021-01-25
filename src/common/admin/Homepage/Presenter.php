@@ -74,18 +74,18 @@ class Admin_Homepage_Presenter
         $this->use_custom_logo = Admin_Homepage_LogoFinder::isCustomLogoUsed();
         $this->warn_local_inc  = ForgeConfig::get('sys_display_homepage_news', -1) === -1 ? false : true;
 
-        $this->save                        = $GLOBALS['Language']->getText('admin_main', 'save_conf');
-        $this->logo                        = $GLOBALS['Language']->getText('admin_main', 'homepage_logo');
-        $this->upload                      = $GLOBALS['Language']->getText('admin_main', 'homepage_upload_logo');
-        $this->replace_upload              = $GLOBALS['Language']->getText('admin_main', 'homepage_replace_logo');
-        $this->remove_custom_logo          = $GLOBALS['Language']->getText('admin_main', 'remove_custom_logo');
-        $this->or_label                    = $GLOBALS['Language']->getText('admin_main', 'homepage_or_label');
-        $this->headline                    = $GLOBALS['Language']->getText('admin_main', 'headline');
-        $this->logo_help                   = $GLOBALS['Language']->getText('admin_main', 'homepage_logo_help');
-        $this->logo_help_end               = $GLOBALS['Language']->getText('admin_main', 'homepage_logo_help_end');
-        $this->headline_help               = $GLOBALS['Language']->getText('admin_main', 'headline_help');
-        $this->placeholder_headline        = $GLOBALS['Language']->getText('admin_main', 'placeholder_headline');
-        $this->customize_title             = $GLOBALS['Language']->getText('admin_main', 'customize_title');
-        $this->label_language              = $GLOBALS['Language']->getText('admin_main', 'label_language');
+        $this->save                 = $GLOBALS['Language']->getText('admin_main', 'save_conf');
+        $this->logo                 = $GLOBALS['Language']->getText('admin_main', 'homepage_logo');
+        $this->upload               = $GLOBALS['Language']->getText('admin_main', 'homepage_upload_logo');
+        $this->replace_upload       = $GLOBALS['Language']->getText('admin_main', 'homepage_replace_logo');
+        $this->remove_custom_logo   = $GLOBALS['Language']->getText('admin_main', 'remove_custom_logo');
+        $this->or_label             = $GLOBALS['Language']->getText('admin_main', 'homepage_or_label');
+        $this->headline             = $GLOBALS['Language']->getText('admin_main', 'headline');
+        $this->logo_help            = $GLOBALS['Language']->getText('admin_main', 'homepage_logo_help');
+        $this->logo_help_end        = $GLOBALS['Language']->getText('admin_main', 'homepage_logo_help_end');
+        $this->headline_help        = $GLOBALS['Language']->getText('admin_main', 'headline_help');
+        $this->placeholder_headline = $GLOBALS['Language']->getText('admin_main', 'placeholder_headline');
+        $this->customize_title      = $GLOBALS['Language']->getText('admin_main', 'customize_title');
+        $this->label_language       = $GLOBALS['Language']->getText('admin_main', 'label_language');
     }
 }

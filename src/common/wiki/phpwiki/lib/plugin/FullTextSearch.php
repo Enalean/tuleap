@@ -77,12 +77,12 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
         }
         extract($args);
 
-        $query = new TextSearchQuery($s, $case_exact, $regex);
-        $pages = $dbi->fullSearch($query, $sortby, $limit, $exclude);
-        $lines = [];
+        $query      = new TextSearchQuery($s, $case_exact, $regex);
+        $pages      = $dbi->fullSearch($query, $sortby, $limit, $exclude);
+        $lines      = [];
         $hilight_re = $hilight ? $query->getHighlightRegexp() : false;
-        $count = 0;
-        $found = 0;
+        $count      = 0;
+        $found      = 0;
 
         if ($quiet) { // see how easy it is with PageList...
             $list = new PageList(false, $exclude, $args);
@@ -144,9 +144,9 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
     {
         $current = $page->getCurrentRevision();
         $matches = preg_grep("/$hilight_re/i", $current->getContent());
-        $html = [];
+        $html    = [];
         foreach ($matches as $line) {
-            $line = $this->highlight_line($line, $hilight_re);
+            $line   = $this->highlight_line($line, $hilight_re);
             $html[] = HTML::dd(HTML::small(
                 ['class' => 'search-context'],
                 $line
@@ -158,7 +158,7 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
     public function highlight_line($line, $hilight_re)
     {
         while (preg_match("/^(.*?)($hilight_re)/i", $line, $m)) {
-            $line = substr($line, strlen($m[0]));
+            $line   = substr($line, strlen($m[0]));
             $html[] = $m[1];    // prematch
             $html[] = HTML::strong(['class' => 'search-term'], $m[2]); // match
         }

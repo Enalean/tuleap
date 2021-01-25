@@ -31,7 +31,7 @@ use Webimpress\SafeWriter\FileWriter;
 
 final class LogToSyslog
 {
-    private const ENV_LOGGER           = 'TULEAP_LOGGER';
+    private const ENV_LOGGER = 'TULEAP_LOGGER';
 
     /**
      * @var LoggerInterface
@@ -65,7 +65,7 @@ final class LogToSyslog
     private function nginx(): void
     {
         $this->logger->info('Syslog: configure nginx');
-        $conf_file = '/etc/nginx/nginx.conf';
+        $conf_file  = '/etc/nginx/nginx.conf';
         $nginx_conf = preg_replace(
             [
                 '/error_log .*/',

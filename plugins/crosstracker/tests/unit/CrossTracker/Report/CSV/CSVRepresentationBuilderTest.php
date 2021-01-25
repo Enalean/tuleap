@@ -85,7 +85,7 @@ class CSVRepresentationBuilderTest extends TestCase
         $tracker->shouldReceive('getProject')->andReturn($project);
         $tracker->shouldReceive('getName')->andReturn('freckly');
 
-        $artifact       = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->similar_fields->shouldReceive('getFieldNames')->andReturn([]);
 
         $artifact_id = 84;

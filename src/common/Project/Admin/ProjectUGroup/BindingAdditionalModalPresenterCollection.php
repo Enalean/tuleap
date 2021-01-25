@@ -45,7 +45,7 @@ class BindingAdditionalModalPresenterCollection implements Dispatchable
     {
         $this->ugroup = $ugroup;
         $this->modals = [];
-        $this->csrf = $csrf;
+        $this->csrf   = $csrf;
     }
 
     /**

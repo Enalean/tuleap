@@ -60,7 +60,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         extract($args);
         if (empty($userid) or $userid == $request->_user->UserName()) {
-            $user = $request->_user;
+            $user   = $request->_user;
             $userid = $user->UserName();
         } else {
             $user = WikiUser($userid);
@@ -70,7 +70,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
             $this->disabled("! user->isAdmin");
         }
 
-        $html = HTML(HTML::h3(fmt("General Auth Settings")));
+        $html  = HTML(HTML::h3(fmt("General Auth Settings")));
         $table = HTML::table(['border' => 1,
                                   'cellpadding' => 2,
                                   'cellspacing' => 0]);
@@ -119,16 +119,16 @@ class WikiPlugin__AuthInfo extends WikiPlugin
             $userdata = obj2hash($user, ['_dbi', '_request', 'password', 'passwd']);
             $table->pushContent($this->_showhash("User: Object of " . get_class($user), $userdata));
             if (ENABLE_USER_NEW) {
-                $group = $request->getGroup();
-                $groups = $group->getAllGroupsIn();
+                $group     = $request->getGroup();
+                $groups    = $group->getAllGroupsIn();
                 $groupdata = obj2hash($group, ['_dbi', '_request', 'password', 'passwd']);
                 unset($groupdata['request']);
                 $table->pushContent($this->_showhash("Group: Object of " . get_class($group), $groupdata));
-                $groups = $group->getAllGroupsIn();
+                $groups    = $group->getAllGroupsIn();
                 $groupdata = ['getAllGroupsIn' => $groups];
                 foreach ($groups as $g) {
                     $groupdata["getMembersOf($g)"] = $group->getMembersOf($g);
-                    $groupdata["isMember($g)"] = $group->isMember($g);
+                    $groupdata["isMember($g)"]     = $group->isMember($g);
                 }
                 $table->pushContent($this->_showhash("Group Methods: ", $groupdata));
             }
@@ -139,9 +139,9 @@ class WikiPlugin__AuthInfo extends WikiPlugin
 
     public function _showhash($heading, $hash, $depth = 0)
     {
-        static $seen = [];
+        static $seen     = [];
         static $maxdepth = 0;
-        $rows = [];
+        $rows            = [];
         $maxdepth++;
         if ($maxdepth > 35) {
             return $heading;

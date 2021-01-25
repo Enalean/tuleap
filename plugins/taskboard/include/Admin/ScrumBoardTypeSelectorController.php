@@ -47,8 +47,8 @@ class ScrumBoardTypeSelectorController implements IScrumAdminSectionControllers
 
     public function __construct(\Project $project, TaskboardUsageDao $dao, \TemplateRenderer $renderer)
     {
-        $this->dao          = $dao;
-        $this->project      = $project;
+        $this->dao     = $dao;
+        $this->project = $project;
 
         $presenter     = new ScrumBoardTypeSelectorPresenter($this->getCurrentBoardType());
         $this->content = $renderer->renderToString('board-type-selector', $presenter);

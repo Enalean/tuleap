@@ -118,17 +118,17 @@ class ArtifactType
 
         $this->Group = $Group;
         if ($artifact_type_id) {
-            $res_events = $this->getNotificationEvents($artifact_type_id);
+            $res_events       = $this->getNotificationEvents($artifact_type_id);
             $this->num_events = db_numrows($res_events);
-            $i = 0;
+            $i                = 0;
             while ($arr_events = db_fetch_array($res_events)) {
                  $this->arr_events[$i] = $arr_events;
                 $i++;
             }
 
-            $res_roles = $this->getNotificationRoles($artifact_type_id);
+            $res_roles       = $this->getNotificationRoles($artifact_type_id);
             $this->num_roles = db_numrows($res_roles);
-            $i = 0;
+            $i               = 0;
             while ($arr_roles = db_fetch_array($res_roles)) {
                  $this->arr_roles[$i] = $arr_roles;
                 $i++;
@@ -465,7 +465,7 @@ class ArtifactType
             $this->setError($Language->getText('tracker_common_canned', 'missing_param'));
             return false;
         }
-        $sql = "INSERT INTO artifact_perm (group_artifact_id,user_id,perm_level)
+        $sql    = "INSERT INTO artifact_perm (group_artifact_id,user_id,perm_level)
 			VALUES ('" . db_ei($this->getID()) . "','" . db_ei($id) . "'," . db_ei($value) . ")";
         $result = db_query($sql);
         if ($result && db_affected_rows($result) > 0) {
@@ -490,7 +490,7 @@ class ArtifactType
             $this->setError($Language->getText('tracker_common_canned', 'missing_param'));
             return false;
         }
-        $sql = "SELECT * FROM artifact_perm WHERE user_id=" . db_ei($id) . " AND group_artifact_id=" . db_ei($this->getID());
+        $sql    = "SELECT * FROM artifact_perm WHERE user_id=" . db_ei($id) . " AND group_artifact_id=" . db_ei($this->getID());
         $result = db_query($sql);
         if (db_numrows($result) > 0) {
             return true;
@@ -518,7 +518,7 @@ class ArtifactType
             $this->setError($Language->getText('tracker_common_canned', 'missing_param') . ': ' . $id . '|' . $perm_level);
             return false;
         }
-        $sql = "UPDATE artifact_perm SET perm_level='" . db_ei($perm_level) . "'
+        $sql    = "UPDATE artifact_perm SET perm_level='" . db_ei($perm_level) . "'
 			WHERE user_id='" . db_ei($id) . "' AND group_artifact_id='" . db_ei($this->getID()) . "'";
         $result = db_query($sql);
         if ($result) {
@@ -547,7 +547,7 @@ class ArtifactType
          //$this->setError($Language->getText('tracker_common_canned','perm_denied'));
             return true;
         }
-        $sql = "DELETE FROM artifact_perm
+        $sql    = "DELETE FROM artifact_perm
 			WHERE user_id='" . db_ei($id) . "' AND group_artifact_id='" . db_ei($this->getID()) . "'";
         $result = db_query($sql);
         if ($result) {
@@ -573,8 +573,8 @@ class ArtifactType
             $this->setError($Language->getText('tracker_common_canned', 'perm_denied'));
             return false;
         }
-        $date = (time() + 1000000); // 12 days of delay
-        $sql = "update artifact_group_list SET status='D', deletion_date='" . db_ei($date) . "'
+        $date   = (time() + 1000000); // 12 days of delay
+        $sql    = "update artifact_group_list SET status='D', deletion_date='" . db_ei($date) . "'
 			WHERE group_artifact_id='" . db_ei($this->getID()) . "'";
         $result = db_query($sql);
         if ($result) {
@@ -598,12 +598,12 @@ class ArtifactType
             return false;
         }
         $keywords = preg_split("/-/", $date);
-        $ts = mktime("23", "59", "59", $keywords[1], $keywords[2], $keywords[0]);
+        $ts       = mktime("23", "59", "59", $keywords[1], $keywords[2], $keywords[0]);
         if (time() > $ts) {
             $this->setError($Language->getText('tracker_common_type', 'invalid_date'));
             return false;
         }
-        $sql = "update artifact_group_list SET deletion_date='" . db_ei($ts) . "'
+        $sql    = "update artifact_group_list SET deletion_date='" . db_ei($ts) . "'
 			WHERE group_artifact_id='" . db_ei($this->getID()) . "'";
         $result = db_query($sql);
         if ($result) {
@@ -627,7 +627,7 @@ class ArtifactType
             $this->setError($Language->getText('tracker_common_canned', 'perm_denied'));
             return false;
         }
-        $sql = "update artifact_group_list SET status='A'
+        $sql    = "update artifact_group_list SET status='A'
 			WHERE group_artifact_id='" . db_ei($this->getID()) . "'";
         $result = db_query($sql);
         if ($result) {
@@ -650,15 +650,15 @@ class ArtifactType
         global $Language;
 
         $result = $this->getUsersPerm($this->getID());
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
 
         if (($rows > 0) && (is_array($user_name))) {
             $update_error = "";
 
             for ($i = 0; $i < $rows; $i++) {
                 $user_id = db_result($result, $i, 'user_id');
-                $sql = "update artifact_perm set perm_level = " . db_ei($user_name[$i]) . " where ";
-                $sql .= "group_artifact_id = " . db_ei($atid) . " and user_id = " . db_ei($user_id);
+                $sql     = "update artifact_perm set perm_level = " . db_ei($user_name[$i]) . " where ";
+                $sql    .= "group_artifact_id = " . db_ei($atid) . " and user_id = " . db_ei($user_id);
                 //echo $sql."<br>";
                 $result2 = db_query($sql);
                 if (! $result2) {
@@ -779,7 +779,7 @@ class ArtifactType
     {
         $um = UserManager::instance();
         if (! $user_id) {
-            $user = $um->getCurrentUser();
+            $user    = $um->getCurrentUser();
             $user_id = $user->getId();
         } else {
             $user = $um->getUserById($user_id);
@@ -878,8 +878,8 @@ class ArtifactType
     public function getFieldPermissions($ugroups)
     {
         $art_field_fact = new ArtifactFieldFactory($this);
-        $used_fields = $art_field_fact->getAllUsedFields();
-        $field_perm = [];
+        $used_fields    = $art_field_fact->getAllUsedFields();
+        $field_perm     = [];
 
         reset($used_fields);
         foreach ($used_fields as $field) {
@@ -942,7 +942,7 @@ class ArtifactType
             }
         }
 
-        $allow_copy = ((! $allow_copy) ? 0 : $allow_copy);
+        $allow_copy                   = ((! $allow_copy) ? 0 : $allow_copy);
         $instantiate_for_new_projects = ((! $instantiate_for_new_projects) ? 0 : $instantiate_for_new_projects);
 
         $old_item_name = $this->getItemName();
@@ -962,17 +962,17 @@ class ArtifactType
 
            //Update table 'reference'
             $reference_dao = $this->getReferenceDao();
-            $result = $reference_dao->update_keyword($old_item_name, $itemname, $this->Group->getID());
+            $result        = $reference_dao->update_keyword($old_item_name, $itemname, $this->Group->getID());
 
            //Update table 'cross_reference'
             $reference_dao = $this->getCrossReferenceDao();
-            $result = $reference_dao->updateTargetKeyword($old_item_name, $itemname, $this->Group->getID());
-            $result2 = $reference_dao->updateSourceKeyword($old_item_name, $itemname, $this->Group->getID());
+            $result        = $reference_dao->updateTargetKeyword($old_item_name, $itemname, $this->Group->getID());
+            $result2       = $reference_dao->updateSourceKeyword($old_item_name, $itemname, $this->Group->getID());
         }
 
           //Update table 'artifact_group_list'
           $reference_dao = $this->getArtifactGroupListDao();
-          $result = $reference_dao->updateArtifactGroupList($this->getID(), $this->Group->getID(), $name, $description, $itemname, $allow_copy, $submit_instructions, $browse_instructions, $instantiate_for_new_projects);
+          $result        = $reference_dao->updateArtifactGroupList($this->getID(), $this->Group->getID(), $name, $description, $itemname, $allow_copy, $submit_instructions, $browse_instructions, $instantiate_for_new_projects);
 
         if (! $result) {
             $this->setError('ArtifactType::Update(): ' . db_error());
@@ -1019,12 +1019,12 @@ class ArtifactType
      //echo "setWatchees($user_id, $watchees)<br>";
         if ($watchees) {
          //echo "watchees";
-            $res_watch = true;
+            $res_watch      = true;
             $arr_user_names = preg_split('/[,;]/D', $watchees);
-            $arr_user_ids = [];
+            $arr_user_ids   = [];
             foreach ($arr_user_names as $user_name) {
                 $user_ident = util_user_finder($user_name, true);
-                $res = user_get_result_set_from_unix($user_ident);
+                $res        = user_get_result_set_from_unix($user_ident);
                 if (! $res || (db_numrows($res) <= 0)) {
              // user doesn;t exist  so abort this step and give feedback
                     $this->setError(" - " . $Language->getText('tracker_common_type', 'invalid_name', $user_name));
@@ -1040,8 +1040,8 @@ class ArtifactType
 
             if ($res_watch) {
                 $this->deleteWatchees($user_id);
-                $arr_watchees = array_keys($arr_user_ids);
-                $sql = 'INSERT INTO artifact_watcher (artifact_group_id, user_id,watchee_id) VALUES ';
+                $arr_watchees  = array_keys($arr_user_ids);
+                $sql           = 'INSERT INTO artifact_watcher (artifact_group_id, user_id,watchee_id) VALUES ';
                  $num_watchees = count($arr_watchees);
                 for ($i = 0; $i < $num_watchees; $i++) {
                     $sql .= "('" . db_ei($this->getID()) . "','" . db_ei($user_id) . "','" . db_ei($arr_watchees[$i]) . "'),";
@@ -1076,7 +1076,7 @@ class ArtifactType
             $role_id = $this->arr_roles[$i]['role_id'];
             for ($j = 0; $j < $this->num_events; $j++) {
                 $event_id = $this->arr_events[$j]['event_id'];
-                $sql .= "('" . db_ei($this->getID()) . "','" . db_ei($user_id) . "','" . db_ei($role_id) . "','" . db_ei($event_id) . "','" . db_ei($arr_notification[$role_id][$event_id]) . "'),";
+                $sql     .= "('" . db_ei($this->getID()) . "','" . db_ei($user_id) . "','" . db_ei($role_id) . "','" . db_ei($event_id) . "','" . db_ei($arr_notification[$role_id][$event_id]) . "'),";
             }
         }
         $sql = substr($sql, 0, -1); // remove extra comma at the end
@@ -1090,11 +1090,11 @@ class ArtifactType
     {
         $sqlname = "user.user_name";
         if ($with_display_preferences) {
-            $uh = new UserHelper();
+            $uh      = new UserHelper();
             $sqlname = $uh->getDisplayNameSQLQuery();
         }
         $group_artifact_id = $this->getID();
-        $sql = "(SELECT DISTINCT user.user_id, " . $sqlname . " , user.user_name " .
+        $sql               = "(SELECT DISTINCT user.user_id, " . $sqlname . " , user.user_name " .
         "FROM user,artifact " .
         "WHERE (user.user_id=artifact.submitted_by " .
         "AND artifact.group_artifact_id='" . db_ei($group_artifact_id) . "') " .
@@ -1174,7 +1174,7 @@ class ArtifactType
 
         for ($counter = 1; $counter <= 8; $counter++) {
             $start = ($time_now - ($counter * 604800));
-            $end = ($time_now - (($counter - 1) * 604800));
+            $end   = ($time_now - (($counter - 1) * 604800));
 
             $sql = "SELECT count(*)
                   FROM artifact
@@ -1207,7 +1207,7 @@ class ArtifactType
 
         for ($counter = 1; $counter <= 8; $counter++) {
             $start = ($time_now - ($counter * 604800));
-            $end = ($time_now - (($counter - 1) * 604800));
+            $end   = ($time_now - (($counter - 1) * 604800));
 
             $sql = "SELECT avg((close_date-open_date)/86400)
                   FROM artifact
@@ -1215,7 +1215,7 @@ class ArtifactType
                   AND status_id <> '1'
                   AND group_artifact_id='" . db_ei($this->getID()) . "'";
 
-            $result = db_query($sql);
+            $result              = db_query($sql);
             $names[$counter - 1] = format_date("m/d/y", ($start)) . " to " . format_date("m/d/y", ($end));
             if (db_numrows($result) > 0) {
                 $values[$counter - 1] = db_result($result, 0, 0);
@@ -1244,7 +1244,7 @@ class ArtifactType
             for ($j = 0; $j < db_numrows($result); $j++) {
                 if ($field->isSelectBox() || $field->isMultiSelectBox()) {
                     $labelValue = $field->getLabelValues($this->getID(), [db_result($result, $j, 0)]);
-                    $names[$j] = $labelValue[0];
+                    $names[$j]  = $labelValue[0];
                 } else {
                     $names[$j] = db_result($result, $j, 0);
                 }
@@ -1252,7 +1252,7 @@ class ArtifactType
             }
         }
 
-        $results['names'] = $names;
+        $results['names']  = $names;
         $results['values'] = $values;
 
         return $results;
@@ -1276,7 +1276,7 @@ class ArtifactType
             for ($j = 0; $j < db_numrows($result); $j++) {
                 if ($field->isSelectBox() || $field->isMultiSelectBox()) {
                     $labelValue = $field->getLabelValues($this->getID(), [db_result($result, $j, 0)]);
-                    $names[$j] = $labelValue[0];
+                    $names[$j]  = $labelValue[0];
                 } else {
                     $names[$j] = db_result($result, $j, 0);
                 }
@@ -1284,7 +1284,7 @@ class ArtifactType
             }
         }
 
-        $results['names'] = $names;
+        $results['names']  = $names;
         $results['values'] = $values;
 
         return $results;
@@ -1309,14 +1309,14 @@ class ArtifactType
             for ($j = 0; $j < db_numrows($result); $j++) {
                 if ($field->isSelectBox() || $field->isMultiSelectBox()) {
                     $labelValue = $field->getLabelValues($this->getID(), [db_result($result, $j, 0)]);
-                    $names[$j] = $labelValue[0];
+                    $names[$j]  = $labelValue[0];
                 } else {
                     $names[$j] = db_result($result, $j, 0);
                 }
 
                 $values[$j] = db_result($result, $j, 1);
             }
-            $results['names'] = $names;
+            $results['names']  = $names;
             $results['values'] = $values;
         }
         return $results;
@@ -1342,14 +1342,14 @@ class ArtifactType
             for ($j = 0; $j < db_numrows($result); $j++) {
                 if ($field->isSelectBox() || $field->isMultiSelectBox()) {
                     $labelValue = $field->getLabelValues($this->getID(), [db_result($result, $j, 0)]);
-                    $names[$j] = $labelValue[0];
+                    $names[$j]  = $labelValue[0];
                 } else {
                     $names[$j] = db_result($result, $j, 0);
                 }
 
                 $values[$j] = db_result($result, $j, 1);
             }
-            $results['names'] = $names;
+            $results['names']  = $names;
             $results['values'] = $values;
         }
         return $results;
@@ -1368,7 +1368,7 @@ class ArtifactType
      */
     public function checkNotification($user_id, $role, $changes = false)
     {
-        $send = false;
+        $send      = false;
         $arr_notif = $this->buildNotificationMatrix($user_id);
         if (! $arr_notif || (count($arr_notif) == 0)) {
             return true;
@@ -1460,8 +1460,8 @@ class ArtifactType
         if (isset($changes['CC']['add'])) {
             $arr_cc_changes = preg_split('/[,;]/D', $changes['CC']['add']);
         }
-        $arr_cc_changes[] = isset($changes['CC']['del']) ? $changes['CC']['del'] : null;
-        $is_user_in_cc_changes = in_array($user_name, $arr_cc_changes);
+        $arr_cc_changes[]                = isset($changes['CC']['del']) ? $changes['CC']['del'] : null;
+        $is_user_in_cc_changes           = in_array($user_name, $arr_cc_changes);
         $are_anyother_user_in_cc_changes =
         (! $is_user_in_cc_changes || count($arr_cc_changes) > 1);
 
@@ -1540,7 +1540,7 @@ class ArtifactType
      */
     public function getNotificationWithLabels($user_id)
     {
-        $group = $this->getGroup();
+        $group             = $this->getGroup();
         $group_artifact_id = $this->getID();
 
         $sql = "SELECT role_label,event_label,notify FROM artifact_notification_role r, artifact_notification_event e,artifact_notification n " .
@@ -1623,13 +1623,13 @@ class ArtifactType
       order by v3.valueText,v1.valueInt
      */
 
-        $count = 1;
+        $count             = 1;
         $count_user_fields = 0;
         reset($fields);
 
         $select = "SELECT ";
-        $from = "FROM artifact a";
-        $where = "WHERE a.group_artifact_id = " . db_ei($this->getID());
+        $from   = "FROM artifact a";
+        $where  = "WHERE a.group_artifact_id = " . db_ei($this->getID());
 
         $select_count = 0;
 
@@ -1652,7 +1652,7 @@ class ArtifactType
                 // Special case for fields which are user name
                 if (($field->isUsername()) && (! $field->isSelectBox()) && (! $field->isMultiSelectBox())) {
                     $select .= " u.user_name as " . $field->getName();
-                    $from .= " LEFT JOIN user u ON (u.user_id=a." . $field->getName() . ")";
+                    $from   .= " LEFT JOIN user u ON (u.user_id=a." . $field->getName() . ")";
                     $count_user_fields++;
                 } else {
                     $select .= " a." . $field->getName();
@@ -1675,7 +1675,7 @@ class ArtifactType
            //$where .= " and v".$count.".field_id=".$field->getID();
                     if (($field->isUsername()) && (! $field->isSelectBox()) && (! $field->isMultiSelectBox())) {
                            $select .= " u" . $count . ".user_name as " . $field->getName();
-                           $from .= " LEFT JOIN user u" . $count . " ON (v" . $count . "." . $field->getValueFieldName() . " = u" . $count . ".user_id)";
+                           $from   .= " LEFT JOIN user u" . $count . " ON (v" . $count . "." . $field->getValueFieldName() . " = u" . $count . ".user_id)";
                            $count_user_fields++;
                     } else {
                            $select .= " v" . $count . "." . $field->getValueFieldName() . " as " . $field->getName();
@@ -1706,11 +1706,11 @@ class ArtifactType
     public function buildExportQuery(&$fields, &$col_list, &$lbl_list, &$dsc_list, &$select, &$from, &$where, &$multiple_queries, &$all_queries, $constraint = false)
     {
         global $art_field_fact,$art_fieldset_fact;
-        $sql = null;
+        $sql         = null;
         $all_queries = [];
       // this array will be filled with the fields to export, ordered by fieldset and rank,
          // and send as an output argument of the function
-         $fields = [];
+         $fields   = [];
         $fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
          // fetch the fieldsets
         foreach ($fieldsets as $fieldset) {
@@ -1718,7 +1718,7 @@ class ArtifactType
           // for each fieldset, fetch the used fields inside
             foreach ($fields_in_fieldset as $field) {
                 if ($field->getName() != "comment_type_id") {
-                    $fields[$field->getName()] = $field;
+                    $fields[$field->getName()]   = $field;
                     $col_list[$field->getName()] = $field->getName();
                     $lbl_list[$field->getName()] = $field->getLabel();
                     $dsc_list[$field->getName()] = $field->getDescription();
@@ -1729,7 +1729,7 @@ class ArtifactType
       //it gets a bit more complicated if we have more fields than SQL wants to treat in one single query
         if (count($fields) > ((int) ForgeConfig::get('sys_server_join'))) {
             $multiple_queries = true;
-            $chunked_fields = array_chunk($fields, ((int) ForgeConfig::get('sys_server_join')) - 3, true);
+            $chunked_fields   = array_chunk($fields, ((int) ForgeConfig::get('sys_server_join')) - 3, true);
             $this->cutExportQuery($chunked_fields, $select, $from, $where, $all_queries, $constraint);
         } else {
             $multiple_queries = false;
@@ -1737,7 +1737,7 @@ class ArtifactType
 
             if ($count_user_fields > ((int) ForgeConfig::get('sys_server_join')) - count($fields)) {
                   $multiple_queries = true;
-                  $chunked_fields = array_chunk($fields, count($fields) / 2, true);
+                  $chunked_fields   = array_chunk($fields, count($fields) / 2, true);
                   $this->cutExportQuery($chunked_fields, $select, $from, $where, $count_user_fields, $all_queries, $constraint);
             } else {
                   $sql = $select . " " . $from . " " . $where . " " . ($constraint ? $constraint : "") . " group by a.artifact_id";
@@ -1755,7 +1755,7 @@ class ArtifactType
                   $chunked_fields = array_chunk($chunk, count($chunk) / 2, true);
                   $this->cutExportQuery($chunked_fields, $select, $from, $where, $count_user_fields, $all_queries, $constraint);
             } else {
-                  $sql = $select . " " . $from . " " . $where . " " . ($constraint ? $constraint : "") . " group by a.artifact_id";
+                  $sql           = $select . " " . $from . " " . $where . " " . ($constraint ? $constraint : "") . " group by a.artifact_id";
                   $all_queries[] = $sql;
             }
         }
@@ -1787,7 +1787,7 @@ class ArtifactType
      */
     public function getCC($change_ids)
     {
-        $sql = "select email,artifact_cc_id from artifact_cc where artifact_id in (" . db_es(implode(",", $change_ids)) . ") order by email";
+        $sql    = "select email,artifact_cc_id from artifact_cc where artifact_id in (" . db_es(implode(",", $change_ids)) . ") order by email";
         $result = db_query($sql);
         return $result;
     }
@@ -1805,14 +1805,14 @@ class ArtifactType
         $ok = true;
         foreach ($delete_cc as $artifact_ccs) {
             $artifact_cc_ids = explode(",", $artifact_ccs);
-            $i = 0;
+            $i               = 0;
             foreach ($artifact_cc_ids as $artifact_cc_id) {
                     $sql = "SELECT artifact_id from artifact_cc WHERE artifact_cc_id=" . db_ei($artifact_cc_id);
                     $res = db_query($sql);
                 if (db_numrows($res) > 0) {
                     $i++;
                     $aid = db_result($res, 0, 'artifact_id');
-                    $ah = new ArtifactHtml($this, $aid);
+                    $ah  = new ArtifactHtml($this, $aid);
                     $ok &= $ah->deleteCC($artifact_cc_id, $changes, true);
                 }
             }
@@ -1840,7 +1840,7 @@ class ArtifactType
     public function deleteAttachedFiles($delete_attached)
     {
         $ok = true;
-        $i = 0;
+        $i  = 0;
         foreach ($delete_attached as $id_list) {
             $ids = explode(",", $id_list);
             foreach ($ids as $id) {
@@ -1848,7 +1848,7 @@ class ArtifactType
                 $res = db_query($sql);
                 if (db_numrows($res) > 0) {
                     $aid = db_result($res, 0, 'artifact_id');
-                    $ah = new ArtifactHtml($this, $aid);
+                    $ah  = new ArtifactHtml($this, $aid);
                     $afh = new ArtifactFileHtml($ah, $id);
                     if (! $afh || ! is_object($afh)) {
                              $GLOBALS['Response']->addFeedback('error', 'Could Not Create File Object::' . $afh->getName());
@@ -1996,7 +1996,7 @@ class ArtifactType
      */
     public function setError($string)
     {
-        $this->error_state = true;
+        $this->error_state   = true;
         $this->error_message = $string;
     }
 

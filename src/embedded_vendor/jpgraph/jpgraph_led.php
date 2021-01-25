@@ -198,12 +198,12 @@ class DigitalLED74
             ];
 
     private $iSuperSampling = 3;
-    private $iMarg = 1;
-    private $iRad = 4;
+    private $iMarg          = 1;
+    private $iRad           = 4;
 
     public function __construct($aRadius = 2, $aMargin = 0.6)
     {
-        $this->iRad = $aRadius;
+        $this->iRad  = $aRadius;
         $this->iMarg = $aMargin;
     }
 
@@ -214,7 +214,7 @@ class DigitalLED74
 
     public function _GetLED($aLedIdx, $aColor = 0)
     {
-        $width =  $this->iLED_X * $this->iRad * 2 +  ($this->iLED_X + 1) * $this->iMarg + $this->iRad;
+        $width  =  $this->iLED_X * $this->iRad * 2 +  ($this->iLED_X + 1) * $this->iMarg + $this->iRad;
         $height = $this->iLED_Y * $this->iRad * 2 +  ($this->iLED_Y) * $this->iMarg + $this->iRad * 2;
 
         // Adjust radious for supersampling
@@ -223,7 +223,7 @@ class DigitalLED74
         // Margin in between "Led" dots
         $marg = $this->iMarg * $this->iSuperSampling;
 
-        $swidth = $width * $this->iSuperSampling;
+        $swidth  = $width * $this->iSuperSampling;
         $sheight = $height * $this->iSuperSampling;
 
         $simg = new RotImage($swidth, $sheight, 0, DEFAULT_GFORMAT, false);
@@ -275,7 +275,7 @@ class DigitalLED74
 
         if (($n = mb_strlen($aValStr, 'utf8')) == 0) {
             $aValStr = ' ';
-            $n = 1;
+            $n       = 1;
         }
 
         for ($i = 0; $i < $n; ++$i) {

@@ -48,9 +48,9 @@ class LatestProjectController implements DispatchableWithRequest
 
     public function __construct(LatestProjectDao $dao, \ProjectManager $project_manager, \Codendi_HTMLPurifier $html_purifier)
     {
-        $this->dao = $dao;
+        $this->dao             = $dao;
         $this->project_manager = $project_manager;
-        $this->html_purifier = $html_purifier;
+        $this->html_purifier   = $html_purifier;
     }
 
     /**
@@ -73,7 +73,7 @@ class LatestProjectController implements DispatchableWithRequest
 
         foreach ($this->dao->getLast10NewProjects() as $row) {
             $project = $this->project_manager->getProject($row['group_id']);
-            $entry = $feed->createEntry();
+            $entry   = $feed->createEntry();
             $entry->setTitle($this->html_purifier->purify($project->getPublicName()));
             $entry->setLink($project->getUrl());
             $entry->setDescription($this->html_purifier->purify($project->getDescription()));

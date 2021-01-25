@@ -116,8 +116,8 @@ function user_get_result_set_from_unix($user_name)
     //so it doesn't have to be fetched each time
 
     global $USER_RES;
-    $res = db_query("SELECT * FROM user WHERE user_name='" . db_es($user_name) . "'");
-    $user_id = db_result($res, 0, 'user_id');
+    $res                            = db_query("SELECT * FROM user WHERE user_name='" . db_es($user_name) . "'");
+    $user_id                        = db_result($res, 0, 'user_id');
     $USER_RES["_" . $user_id . "_"] = $res;
     return $USER_RES["_" . $user_id . "_"];
 }
@@ -127,9 +127,9 @@ function user_get_result_set_from_email($email)
     //so it doesn't have to be fetched each time
 
     global $USER_RES;
-    $sql = "SELECT * FROM user WHERE (user_name='" . db_es($email) . "' or email='" . db_es($email) . "')";
-    $res = db_query($sql);
-    $user_id = db_result($res, 0, 'user_id');
+    $sql                            = "SELECT * FROM user WHERE (user_name='" . db_es($email) . "' or email='" . db_es($email) . "')";
+    $res                            = db_query($sql);
+    $user_id                        = db_result($res, 0, 'user_id');
     $USER_RES["_" . $user_id . "_"] = $res;
     return $USER_RES["_" . $user_id . "_"];
 }
@@ -154,7 +154,7 @@ function user_set_preference($preference_name, $value)
     global $user_pref;
     if (user_isloggedin()) {
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-        $preference_name = strtolower(trim($preference_name));
+        $preference_name    = strtolower(trim($preference_name));
         /** @psalm-suppress DeprecatedFunction */
         $result = db_query("UPDATE user_preferences SET preference_value='" . db_es($value) . "' " .
         "WHERE user_id='" . $db_escaped_user_id . "' AND preference_name='" . db_es($preference_name) . "'");
@@ -230,10 +230,10 @@ function user_del_preference($preference_name)
             unset($user_pref[$preference_name]);
         }
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-        $sql = 'DELETE FROM user_preferences'
+        $sql                = 'DELETE FROM user_preferences'
             . ' WHERE preference_name="' . db_es($preference_name) . '"'
             . ' AND user_id=' . $db_escaped_user_id;
-        $res = db_query($sql);
+        $res                = db_query($sql);
         if (db_affected_rows($res) != 1) {
             return false;
         } else {

@@ -66,7 +66,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
 
     public function _getPropertiesFieldsDisplay($fields)
     {
-        $html = '';
+        $html  = '';
         $html .= '<table>';
         foreach ($fields as $field) {
             $html .= '<tr>';
@@ -115,23 +115,23 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     public function _getPropertiesFields($params)
     {
         $get_fields = new Docman_View_GetFieldsVisitor($this->metadataToSkip());
-        $fields = $this->newItem->accept($get_fields, ['form_name'  => $params['form_name'],
+        $fields     = $this->newItem->accept($get_fields, ['form_name'  => $params['form_name'],
                                                             'theme_path' => $params['theme_path']]);
         return $fields;
     }
 
     public function _getGeneralProperties($params)
     {
-        $html = '';
+        $html   = '';
         $fields = $this->_getPropertiesFields($params);
-        $html .= $this->_getPropertiesFieldsDisplay($fields);
-        $html .= '<input type="hidden" name="item[parent_id]" value="' . $this->newItem->getParentId() . '" />';
+        $html  .= $this->_getPropertiesFieldsDisplay($fields);
+        $html  .= '<input type="hidden" name="item[parent_id]" value="' . $this->newItem->getParentId() . '" />';
         return $html;
     }
 
     public function _getGeneralPropertiesFieldset($params)
     {
-        $html = '';
+        $html  = '';
         $html .= '<div class="properties">' . "\n";
         $html .= '<h3>' . dgettext('tuleap-docman', 'Properties') . '</h3>';
         $html .= $this->_getGeneralProperties($params);
@@ -148,7 +148,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
 
     public function _getSpecificPropertiesFieldset($params)
     {
-        $html = '';
+        $html  = '';
         $html .= '<h3>' . dgettext('tuleap-docman', 'Document type') . '</h3>';
         $html .= $this->_getSpecificProperties($params);
         return $html;
@@ -156,8 +156,8 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
 
     public function _getLocationFieldset($params)
     {
-        $html = '';
-        $html .= '<h3>' . dgettext('tuleap-docman', 'Location') . '</h3>';
+        $html        = '';
+        $html       .= '<h3>' . dgettext('tuleap-docman', 'Location') . '</h3>';
         $itemRanking = new Docman_View_ItemRanking();
 
         if (isset($params['ordering'])) {
@@ -171,32 +171,32 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
 
     public function _getPermissionsFieldset($params)
     {
-        $html = '';
-        $html .= '<h3>Permissions</h3>';
-        $html .= '<div id="docman_new_permissions_panel">';
-        $p = new Docman_View_PermissionsForItem($this->_controller);
+        $html                      = '';
+        $html                     .= '<h3>Permissions</h3>';
+        $html                     .= '<div id="docman_new_permissions_panel">';
+        $p                         = new Docman_View_PermissionsForItem($this->_controller);
         $params['user_can_manage'] = $this->_controller->userCanWrite($this->newItem->getParentId());
-        $html .= $p->fetch($this->newItem->getParentId(), $params);
-        $html .= '</div>';
+        $html                     .= $p->fetch($this->newItem->getParentId(), $params);
+        $html                     .= '</div>';
         return $html;
     }
 
     public function _getNewsFieldset($params)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
         $user = $this->_controller->getUser();
         if ($user->isMember($params['item']->getGroupId(), 'A') || $user->isMember($params['item']->getGroupId(), 'N1') || $user->isMember($params['item']->getGroupId(), 'N2')) {
-            $default_news_summary = '';
-            $default_news_details = '';
+            $default_news_summary       = '';
+            $default_news_details       = '';
             $default_news_private_check = '';
-            $default_news_public_check = 'checked="checked"';
+            $default_news_public_check  = 'checked="checked"';
             if (isset($params['force_news'])) {
                 $default_news_summary = isset($params['force_news']['summary']) ? $params['force_news']['summary'] : $default_news_summary;
                 $default_news_details = isset($params['force_news']['details']) ? $params['force_news']['details'] : $default_news_details;
                 if (isset($params['force_news']['is_private']) && $params['force_news']['is_private']) {
                     $default_news_private_check = $default_news_public_check;
-                    $default_news_public_check = '';
+                    $default_news_public_check  = '';
                 }
             }
             $html .= '<h3>News</h3>';

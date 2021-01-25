@@ -227,7 +227,7 @@ if (defined('NUSOAP')) {
     function getMyProjects($sessionKey)
     {
         if (session_continue($sessionKey)) {
-            $gf = new GroupFactory();
+            $gf        = new GroupFactory();
             $my_groups = $gf->getMyGroups();
             return groups_to_soap($my_groups);
         } else {
@@ -248,8 +248,8 @@ if (defined('NUSOAP')) {
     {
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
-                $project = $pm->getGroupByIdForSoap($unix_group_name, 'getGroupByName', true);
+                $pm         = ProjectManager::instance();
+                $project    = $pm->getGroupByIdForSoap($unix_group_name, 'getGroupByName', true);
                 $soap_group = group_to_soap($project);
                 return new SoapVar($soap_group, SOAP_ENC_OBJECT);
             } catch (SoapFault $e) {
@@ -273,8 +273,8 @@ if (defined('NUSOAP')) {
     {
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
-                $group = $pm->getGroupByIdForSoap($group_id, 'getGroupById');
+                $pm         = ProjectManager::instance();
+                $group      = $pm->getGroupByIdForSoap($group_id, 'getGroupById');
                 $soap_group = group_to_soap($group);
                 return $soap_group;
             } catch (SoapFault $e) {
@@ -293,8 +293,8 @@ if (defined('NUSOAP')) {
     {
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
-                $group = $pm->getGroupByIdForSoap($group_id, 'getGroupUgroups');
+                $pm      = ProjectManager::instance();
+                $group   = $pm->getGroupByIdForSoap($group_id, 'getGroupUgroups');
                 $ugroups = ugroup_get_ugroups_with_members($group_id);
                 return ugroups_to_soap($ugroups);
             } catch (SoapFault $e) {

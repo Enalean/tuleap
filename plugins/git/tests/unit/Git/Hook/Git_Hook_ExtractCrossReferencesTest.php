@@ -52,7 +52,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
         $this->repository_in_subpath->shouldReceive('getProject')->andReturns($project);
         $this->repository_in_subpath->shouldReceive('getFullName')->andReturns('arch/x86_64/dev');
 
-        $this->user = new PFUser([
+        $this->user              = new PFUser([
             'language_id' => 'en',
             'user_id' => 350
         ]);
@@ -60,7 +60,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
 
         $this->post_receive = new Git_Hook_ExtractCrossReferences($this->git_exec_repo, $this->reference_manager);
 
-        $this->push_details  = new Git_Hook_PushDetails($this->repository, $this->user, 'refs/heads/master', 'whatever', 'whatever', []);
+        $this->push_details = new Git_Hook_PushDetails($this->repository, $this->user, 'refs/heads/master', 'whatever', 'whatever', []);
     }
 
 

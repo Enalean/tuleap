@@ -35,6 +35,6 @@ class TestCaseExecutionPresenter
     public function __construct(string $test_case_name, string $build_url)
     {
         $this->test_case_name = $test_case_name;
-        $this->build_url = $build_url;
+        $this->build_url      = $build_url;
     }
 }

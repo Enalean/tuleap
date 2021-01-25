@@ -59,7 +59,7 @@ class AccessTokenGrantRepresentationBuilder
         OAuth2App $app,
         OAuth2AuthorizationCode $authorization_code
     ): OAuth2AccessTokenSuccessfulRequestRepresentation {
-        $access_token = $this->access_token_creator->issueAccessToken(
+        $access_token  = $this->access_token_creator->issueAccessToken(
             $current_time,
             $authorization_code->getID(),
             $authorization_code->getScopes()
@@ -79,7 +79,7 @@ class AccessTokenGrantRepresentationBuilder
         \DateTimeImmutable $current_time,
         OAuth2RefreshToken $refresh_token
     ): OAuth2AccessTokenSuccessfulRequestRepresentation {
-        $access_token = $this->access_token_creator->issueAccessToken(
+        $access_token                 = $this->access_token_creator->issueAccessToken(
             $current_time,
             $refresh_token->getAssociatedAuthorizationCodeID(),
             $refresh_token->getScopes()

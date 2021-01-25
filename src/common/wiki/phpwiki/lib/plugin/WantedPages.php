@@ -89,14 +89,14 @@ class WikiPlugin_WantedPages extends WikiPlugin
                 ['wanted' => ['_PageList_Column_WantedPages_wanted', 'custom:wanted', _("Wanted From"), 'left']]
             );
         }
-        $pagelist = new PageList($page ? '' : 'pagename,wanted', $exclude, $args); // search button?
+        $pagelist             = new PageList($page ? '' : 'pagename,wanted', $exclude, $args); // search button?
         $pagelist->_wpagelist = [];
 
         if (! $page) {
             list($offset, $maxcount) = $pagelist->limit($limit);
-            $wanted_iter = $dbi->wantedPages($exclude_from, $exclude, $sortby, $limit);
+            $wanted_iter             = $dbi->wantedPages($exclude_from, $exclude, $sortby, $limit);
             while ($row = $wanted_iter->next()) {
-                $wanted = $row['pagename'];
+                $wanted     = $row['pagename'];
                 $wantedfrom = $row['wantedfrom'];
                 // ignore duplicates:
                 if (empty($pagelist->_wpagelist[$wanted])) {
@@ -110,7 +110,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
         } elseif ($dbi->isWikiPage($page)) {
             //only get WantedPages links for one page
             $page_handle = $dbi->getPage($page);
-            $links = $page_handle->getPageLinks(true); // include_empty
+            $links       = $page_handle->getPageLinks(true); // include_empty
             while ($link_handle = $links->next()) {
                 if (! $dbi->isWikiPage($linkname = $link_handle->getName())) {
                     $pagelist->addPage($linkname);

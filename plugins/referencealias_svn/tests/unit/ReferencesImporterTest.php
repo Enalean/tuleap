@@ -63,7 +63,7 @@ final class ReferencesImporterTest extends TestCase
 
     public function testItShouldAddSVNLinks(): void
     {
-        $xml = <<<XML
+        $xml        = <<<XML
             <references>
                 <reference source="cmmt12" target="2"/>
             </references>
@@ -79,7 +79,7 @@ XML;
 
     public function testItShouldNotAddUnknownReferences(): void
     {
-        $xml = <<<XML
+        $xml        = <<<XML
             <references>
                 <reference source="stuff1234" target="1"/>
             </references>

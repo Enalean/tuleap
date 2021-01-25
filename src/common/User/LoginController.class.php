@@ -34,9 +34,9 @@ class User_LoginController extends MVC2_Controller
 
     public function confirmHash()
     {
-        $user_manager   = UserManager::instance();
-        $confirm_hash   = $this->request->get('confirm_hash');
-        $success        = $user_manager->getUserByConfirmHash($confirm_hash) !== null;
+        $user_manager = UserManager::instance();
+        $confirm_hash = $this->request->get('confirm_hash');
+        $success      = $user_manager->getUserByConfirmHash($confirm_hash) !== null;
         if ($success) {
             // Get user status: if already set to 'R' (restricted) don't change it!
             $user = $user_manager->getUserByConfirmHash($confirm_hash);

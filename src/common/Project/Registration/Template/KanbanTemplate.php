@@ -33,7 +33,7 @@ class KanbanTemplate implements TuleapTemplate
     public const NAME = 'kanban';
 
     private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/kanban/project.xml';
-    private const KANBAN_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/kanban/kanban_template.xml';
+    private const KANBAN_XML  = __DIR__ . '/../../../../../tools/utils/setup_templates/kanban/kanban_template.xml';
 
     /**
      * @var string
@@ -68,8 +68,8 @@ class KanbanTemplate implements TuleapTemplate
     {
         $this->title               = _('Kanban');
         $this->description         = _('Streamline your workflow and focus on what\'s hot with an easy-to-use board');
-        $this->glyph_finder       = $glyph_finder;
-        $this->project_xml_merger = $project_xml_merger;
+        $this->glyph_finder        = $glyph_finder;
+        $this->project_xml_merger  = $project_xml_merger;
         $this->consistency_checker = $consistency_checker;
     }
 

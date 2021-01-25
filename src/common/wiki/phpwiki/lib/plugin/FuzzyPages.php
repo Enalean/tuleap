@@ -103,7 +103,7 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
         $allPages = $dbi->getAllPages();
 
         while ($pagehandle = $allPages->next()) {
-            $pagename = $pagehandle->getName();
+            $pagename         = $pagehandle->getName();
             $similarity_score = $this->averageSimilarities($pagename);
             if ($similarity_score > MIN_SCORE_CUTOFF) {
                 $list[$pagename] = $similarity_score;
@@ -191,7 +191,7 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
         $this->debug = $debug;
 
         $this->_searchterm = $s;
-        $this->_list = [];
+        $this->_list       = [];
 
         $this->collectSimilarPages($this->_list, $dbi);
         $this->sortCollectedPages($this->_list);
@@ -213,8 +213,8 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
     {
         // This actually calculates everything a second time for each pagename
         // so the individual scores can be displayed separately for debugging.
-        $debug_spelling = round($this->spelling_similarity($pagename), 1);
-        $debug_sound = round($this->sound_similarity($pagename), 1);
+        $debug_spelling  = round($this->spelling_similarity($pagename), 1);
+        $debug_sound     = round($this->sound_similarity($pagename), 1);
         $debug_metaphone = sprintf(
             "(%s, %s)",
             metaphone($pagename),

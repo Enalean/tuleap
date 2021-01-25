@@ -45,11 +45,11 @@ class DiskUsageUserDetailsSearchFieldsPresenter
         $this->end_date_value   = $end_date_value;
         $this->group_by_values  = $group_by_values;
 
-        $this->title                 = $GLOBALS['Language']->getText('global', 'search_title');
-        $this->user_id_label         = dgettext('tuleap-statistics', 'User');
-        $this->start_date_label      = dgettext('tuleap-statistics', 'Start date');
-        $this->end_date_label        = dgettext('tuleap-statistics', 'End date');
-        $this->search                = $GLOBALS['Language']->getText('global', 'btn_search');
-        $this->group_by_label        = dgettext('tuleap-statistics', 'Group by');
+        $this->title            = $GLOBALS['Language']->getText('global', 'search_title');
+        $this->user_id_label    = dgettext('tuleap-statistics', 'User');
+        $this->start_date_label = dgettext('tuleap-statistics', 'Start date');
+        $this->end_date_label   = dgettext('tuleap-statistics', 'End date');
+        $this->search           = $GLOBALS['Language']->getText('global', 'btn_search');
+        $this->group_by_label   = dgettext('tuleap-statistics', 'Group by');
     }
 }

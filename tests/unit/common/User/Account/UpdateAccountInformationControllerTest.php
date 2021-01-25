@@ -86,7 +86,7 @@ final class UpdateAccountInformationControllerTest extends TestCase
     {
         $this->event_manager = new class implements EventDispatcherInterface {
             public $disable_real_name_change = false;
-            public $disable_email_change = false;
+            public $disable_email_change     = false;
 
             public function dispatch(object $event)
             {
@@ -105,10 +105,10 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $this->csrf_token = M::mock(CSRFSynchronizerToken::class);
         $this->csrf_token->shouldReceive('check')->byDefault();
 
-        $this->user_manager = M::mock(UserManager::class);
-        $this->email_updater = M::mock(EmailUpdater::class);
+        $this->user_manager     = M::mock(UserManager::class);
+        $this->email_updater    = M::mock(EmailUpdater::class);
         $this->avatar_generator = M::mock(AvatarGenerator::class);
-        $this->controller = new UpdateAccountInformationController(
+        $this->controller       = new UpdateAccountInformationController(
             $this->event_manager,
             $this->csrf_token,
             $this->user_manager,

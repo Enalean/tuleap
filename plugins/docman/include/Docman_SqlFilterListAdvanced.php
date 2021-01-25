@@ -30,7 +30,7 @@ class Docman_SqlFilterListAdvanced extends \Docman_SqlFilter
     public function _getSpecificSearchChunk()
     {
         $stmt = [];
-        $v = $this->filter->getValue();
+        $v    = $this->filter->getValue();
         if ($v !== \null && (\count($v) > 0 || \count($v) == 1 && $v[0] != '')) {
             $stmt[] = $this->field . ' IN (' . \implode(',', $this->filter->getValue()) . ')';
         }

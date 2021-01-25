@@ -56,9 +56,9 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
             102 => $mapping_ongoing,
             103 => $mapping_done,
         ];
-        $this->mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        $this->mapping  = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
 
-        $this->config   = \Mockery::mock(\Cardwall_OnTop_Config::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->config = \Mockery::mock(\Cardwall_OnTop_Config::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $changset = new Tracker_Artifact_Changeset_Null();
 
@@ -84,7 +84,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
 
     public function testItReturnsNullIfThereIsNoMapping(): void
     {
-        $tracker = $this->buildTracker(1);
+        $tracker         = $this->buildTracker(1);
         $mapping_tracker = $this->buildTracker(2);
 
         $dao                     = \Mockery::spy(\Cardwall_OnTop_Dao::class);
@@ -97,8 +97,8 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
 
     public function testItReturnsTheCorrespondingMapping(): void
     {
-        $tracker                 = $this->buildTracker(1);
-        $mapping_tracker         = $this->buildTracker(99);
+        $tracker         = $this->buildTracker(1);
+        $mapping_tracker = $this->buildTracker(99);
 
         $dao                     = \Mockery::spy(\Cardwall_OnTop_Dao::class);
         $column_factory          = \Mockery::spy(\Cardwall_OnTop_Config_ColumnFactory::class);
@@ -127,7 +127,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $field->shouldReceive('getFirstValueFor')->andReturn('In Progress');
         $field_provider = Mockery::mock(\Cardwall_FieldProviders_CustomFieldRetriever::class);
         $field_provider->shouldReceive('getField')->andReturn($field);
-        $column         = new Cardwall_Column(11, 'Ongoing', '');
+        $column = new Cardwall_Column(11, 'Ongoing', '');
 
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
@@ -140,7 +140,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $field->shouldReceive('getFirstValueFor')->andReturn('Todo');
         $field_provider = Mockery::mock(\Cardwall_FieldProviders_CustomFieldRetriever::class);
         $field_provider->shouldReceive('getField')->andReturn($field);
-        $column         = new Cardwall_Column(11, 'Ongoing', '');
+        $column = new Cardwall_Column(11, 'Ongoing', '');
 
         $this->assertFalse($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
@@ -153,7 +153,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $field->shouldReceive('getFirstValueFor')->andReturn(null);
         $field_provider = Mockery::mock(\Cardwall_FieldProviders_CustomFieldRetriever::class);
         $field_provider->shouldReceive('getField')->andReturn($field);
-        $column         = new Cardwall_Column(10, 'Todo', '');
+        $column = new Cardwall_Column(10, 'Todo', '');
 
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
@@ -166,7 +166,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $field->shouldReceive('getFirstValueFor')->andReturn('Ongoing');
         $field_provider = Mockery::mock(\Cardwall_FieldProviders_CustomFieldRetriever::class);
         $field_provider->shouldReceive('getField')->andReturn($field);
-        $column         = new Cardwall_Column(11, 'Ongoing', '');
+        $column = new Cardwall_Column(11, 'Ongoing', '');
 
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
@@ -179,7 +179,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $field->shouldReceive('getFirstValueFor')->andReturn(null);
         $field_provider = Mockery::mock(\Cardwall_FieldProviders_CustomFieldRetriever::class);
         $field_provider->shouldReceive('getField')->andReturn($field);
-        $column         = new Cardwall_Column(100, 'Ongoing', '');
+        $column = new Cardwall_Column(100, 'Ongoing', '');
 
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }

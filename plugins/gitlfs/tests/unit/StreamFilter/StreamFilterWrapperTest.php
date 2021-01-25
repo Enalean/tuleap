@@ -26,7 +26,7 @@ class StreamFilterWrapperTest extends TestCase
 {
     public function testIncorrectFilterIsRejected(): void
     {
-        $filter_wrapper = new StreamFilterWrapper();
+        $filter_wrapper         = new StreamFilterWrapper();
         $filter_wrapper->params = 'invalid_filter';
 
         $this->expectException(\InvalidArgumentException::class);

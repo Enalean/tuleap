@@ -46,17 +46,17 @@ class ProjectUGroupPresenterBuilder
         MembersPresenterBuilder $members_builder,
         PermissionsDelegationPresenterBuilder $permissions_delegation_builder
     ) {
-        $this->binding_builder      = $binding_builder;
-        $this->members_builder      = $members_builder;
+        $this->binding_builder = $binding_builder;
+        $this->members_builder = $members_builder;
 
         $this->permissions_delegation_builder = $permissions_delegation_builder;
     }
 
     public function build(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf, PFUser $user)
     {
-        $binding     = $this->binding_builder->build($ugroup, $csrf);
-        $members     = $this->members_builder->build($ugroup);
-        $delegation  = $this->permissions_delegation_builder->build($ugroup);
+        $binding    = $this->binding_builder->build($ugroup, $csrf);
+        $members    = $this->members_builder->build($ugroup);
+        $delegation = $this->permissions_delegation_builder->build($ugroup);
 
         return new ProjectUGroupPresenter($ugroup, $delegation, $binding, $members, $csrf);
     }

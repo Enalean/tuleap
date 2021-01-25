@@ -60,7 +60,7 @@ final class UpdateProjectAccessFileSystemEvent extends \SystemEvent
     public function process(): void
     {
         $project_id = $this->getProjectIdFromParameters();
-        $project = $this->project_manager->getProject($project_id);
+        $project    = $this->project_manager->getProject($project_id);
 
         if ($project === null) {
             $this->error('Project does not exist');

@@ -41,9 +41,9 @@ class AgileDashboard_HierarchyChecker
         AgileDashboard_KanbanFactory $kanban_factory,
         TrackerFactory $tracker_factory
     ) {
-        $this->planning_factory  = $planning_factory;
-        $this->kanban_factory    = $kanban_factory;
-        $this->tracker_factory   = $tracker_factory;
+        $this->planning_factory = $planning_factory;
+        $this->kanban_factory   = $kanban_factory;
+        $this->tracker_factory  = $tracker_factory;
     }
 
     private function isScrumHierarchy(Tracker $tracker)
@@ -93,15 +93,15 @@ class AgileDashboard_HierarchyChecker
 
     public function getADTrackerIdsByProjectId($project_id)
     {
-        $planning_tracker_ids = $this->planning_factory->getPlanningTrackerIdsByGroupId($project_id);
-        $backlog_tracker_ids  = $this->planning_factory->getBacklogTrackerIdsByGroupId($project_id);
-        $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds($project_id);
+        $planning_tracker_ids       = $this->planning_factory->getPlanningTrackerIdsByGroupId($project_id);
+        $backlog_tracker_ids        = $this->planning_factory->getBacklogTrackerIdsByGroupId($project_id);
+        $kanban_tracker_ids         = $this->kanban_factory->getKanbanTrackerIds($project_id);
         $agiledashboard_tracker_ids = array_unique(
             array_merge($planning_tracker_ids, $backlog_tracker_ids, $kanban_tracker_ids)
         );
-        $hierachy_factory = $this->tracker_factory->getHierarchyFactory();
-        $trackers_hierarchy = $hierachy_factory->getHierarchy($agiledashboard_tracker_ids);
-        $hierarchy_tracker_ids = $trackers_hierarchy->flatten();
+        $hierachy_factory           = $this->tracker_factory->getHierarchyFactory();
+        $trackers_hierarchy         = $hierachy_factory->getHierarchy($agiledashboard_tracker_ids);
+        $hierarchy_tracker_ids      = $trackers_hierarchy->flatten();
 
         return array_unique(array_merge($agiledashboard_tracker_ids, $hierarchy_tracker_ids));
     }

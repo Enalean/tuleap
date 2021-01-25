@@ -59,8 +59,8 @@ final class ArtifactsRankOrdererTest extends TestCase
         $this->context_id       = \Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT;
         $this->priority_manager = M::mock(\Tracker_Artifact_PriorityManager::class);
         $this->priority_manager->shouldReceive('enableExceptionsOnError');
-        $this->event_manager    = M::mock(\EventManager::class);
-        $this->orderer          = new ArtifactsRankOrderer($this->priority_manager, $this->event_manager);
+        $this->event_manager = M::mock(\EventManager::class);
+        $this->orderer       = new ArtifactsRankOrderer($this->priority_manager, $this->event_manager);
     }
 
     public function testReorderThrowsWhenSameIdIsPassedInOrderAndComparedTo(): void

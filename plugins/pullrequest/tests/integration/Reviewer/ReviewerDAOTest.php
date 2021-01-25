@@ -35,7 +35,7 @@ final class ReviewerDAOTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db                   = DBFactory::getMainTuleapDBConnection()->getDB();
         self::$reviewers_id[] = (int) $db->insertReturnId(
             'user',
             [
@@ -54,7 +54,7 @@ final class ReviewerDAOTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        $db                       = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
 
         $user_to_delete_condition = EasyStatement::open()->in('user_id IN (?*)', self::$reviewers_id);
         $db->safeQuery("DELETE FROM user WHERE $user_to_delete_condition", $user_to_delete_condition->values());

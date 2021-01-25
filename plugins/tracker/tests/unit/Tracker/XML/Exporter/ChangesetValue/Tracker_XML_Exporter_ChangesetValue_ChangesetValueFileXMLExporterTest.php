@@ -53,7 +53,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
         $this->file_exporter = Mockery::mock(FileInfoXMLExporter::class);
-        $this->exporter = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter(
+        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter(
             $this->file_exporter
         );
 

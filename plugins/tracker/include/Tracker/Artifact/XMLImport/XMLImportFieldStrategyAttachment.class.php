@@ -56,7 +56,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         PFUser $submitted_by,
         Artifact $artifact
     ) {
-        $values      = $field_change->value;
+        $values = $field_change->value;
 
         $files_infos = [];
 
@@ -127,7 +127,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         try {
             $attributes = $file_xml->attributes();
             if ($attributes) {
-                $fileinfo_id = (string) $attributes['id'];
+                $fileinfo_id                      = (string) $attributes['id'];
                 $fileinfo['previous_fileinfo_id'] = IdForXMLImportExportConvertor::convertXMLIdToFileInfoId(
                     $fileinfo_id
                 );

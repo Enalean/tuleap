@@ -48,7 +48,7 @@ class LDAP_UserSync_Orange extends LDAP_UserSync
      */
     public function sync(PFUser $user, LDAPResult $lr)
     {
-        $modified  = false;
+        $modified = false;
 
         $ldapEmail = $lr->getEmail();
         $realname  = ucwords(preg_replace('/^(\w+).(\w+)@.*/', '\\1 \\2', $ldapEmail));

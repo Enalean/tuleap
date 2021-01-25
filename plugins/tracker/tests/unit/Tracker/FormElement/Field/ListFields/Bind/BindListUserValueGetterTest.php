@@ -68,8 +68,8 @@ class BindListUserValueGetterTest extends TestCase
         $keyword       = "";
         $bindvalue_ids = [];
 
-        $field         = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker       = Mockery::mock(Tracker::class);
+        $field   = Mockery::mock(Tracker_FormElement_Field::class);
+        $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(1);
         $field->shouldReceive('getTracker')->andReturn(null);
 
@@ -85,8 +85,8 @@ class BindListUserValueGetterTest extends TestCase
         $keyword       = "";
         $bindvalue_ids = [];
 
-        $field         = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker       = Mockery::mock(Tracker::class);
+        $field   = Mockery::mock(Tracker_FormElement_Field::class);
+        $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(1);
         $field->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -138,8 +138,8 @@ class BindListUserValueGetterTest extends TestCase
         $keyword       = "";
         $bindvalue_ids = [];
 
-        $field         = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker       = Mockery::mock(Tracker::class);
+        $field   = Mockery::mock(Tracker_FormElement_Field::class);
+        $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(1);
         $field->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -191,8 +191,8 @@ class BindListUserValueGetterTest extends TestCase
         $keyword       = "";
         $bindvalue_ids = [];
 
-        $field         = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker       = Mockery::mock(Tracker::class);
+        $field   = Mockery::mock(Tracker_FormElement_Field::class);
+        $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(1);
         $field->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -226,8 +226,8 @@ class BindListUserValueGetterTest extends TestCase
         $keyword       = "";
         $bindvalue_ids = [];
 
-        $field         = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker       = Mockery::mock(Tracker::class);
+        $field   = Mockery::mock(Tracker_FormElement_Field::class);
+        $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(1);
         $field->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -270,8 +270,8 @@ class BindListUserValueGetterTest extends TestCase
         $keyword       = "";
         $bindvalue_ids = [];
 
-        $field         = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker       = Mockery::mock(Tracker::class);
+        $field   = Mockery::mock(Tracker_FormElement_Field::class);
+        $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(1);
         $field->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -314,8 +314,8 @@ class BindListUserValueGetterTest extends TestCase
         $keyword       = "";
         $bindvalue_ids = [];
 
-        $field         = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker       = Mockery::mock(Tracker::class);
+        $field   = Mockery::mock(Tracker_FormElement_Field::class);
+        $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(1);
         $field->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -367,8 +367,8 @@ class BindListUserValueGetterTest extends TestCase
         $keyword       = "";
         $bindvalue_ids = [];
 
-        $field         = Mockery::mock(Tracker_FormElement_Field::class);
-        $tracker       = Mockery::mock(Tracker::class);
+        $field   = Mockery::mock(Tracker_FormElement_Field::class);
+        $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(1);
         $field->shouldReceive('getTracker')->andReturn($tracker);
 
@@ -417,7 +417,7 @@ class BindListUserValueGetterTest extends TestCase
 
     public function testItExtractActiveUserListForStaticUGroup(): void
     {
-        $ugroups       = ['ugroup_109'];
+        $ugroups = ['ugroup_109'];
 
         $field   = Mockery::mock(Tracker_FormElement_Field::class);
         $tracker = Mockery::mock(Tracker::class);

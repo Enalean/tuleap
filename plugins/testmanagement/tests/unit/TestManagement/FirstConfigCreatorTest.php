@@ -77,17 +77,17 @@ class FirstConfigCreatorTest extends TestCase
      */
     private $config_creator;
 
-    private $template_id = 101;
-    private $campaign_tracker_id = 333;
+    private $template_id           = 101;
+    private $campaign_tracker_id   = 333;
     private $definition_tracker_id = 444;
-    private $execution_tracker_id = 555;
-    private $issue_tracker_id = 666;
+    private $execution_tracker_id  = 555;
+    private $issue_tracker_id      = 666;
 
-    private $project_id = 102;
-    private $new_campaign_tracker_id = 334;
+    private $project_id                = 102;
+    private $new_campaign_tracker_id   = 334;
     private $new_definition_tracker_id = 445;
-    private $new_execution_tracker_id = 556;
-    private $new_issue_tracker_id = 667;
+    private $new_execution_tracker_id  = 556;
+    private $new_issue_tracker_id      = 667;
     private $tracker_mapping;
 
     protected function setUp(): void

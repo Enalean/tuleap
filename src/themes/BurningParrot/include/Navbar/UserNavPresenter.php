@@ -93,9 +93,9 @@ class UserNavPresenter
         $this->platform_banner_is_warning  = $platform_banner && $platform_banner->getImportance() === Banner::IMPORTANCE_WARNING;
         $this->platform_banner_is_critical = $platform_banner && $platform_banner->getImportance() === Banner::IMPORTANCE_CRITICAL;
 
-        $this->dashboards          = $dashboards;
-        $this->has_no_dashboards   = count($dashboards) === 0;
-        $this->has_one_dashboard   = count($dashboards) === 1;
+        $this->dashboards        = $dashboards;
+        $this->has_no_dashboards = count($dashboards) === 0;
+        $this->has_one_dashboard = count($dashboards) === 1;
     }
 
     public function is_user_logged_in() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

@@ -87,7 +87,7 @@ class EditController
         $this->dao->startTransaction();
         try {
             $this->checkColor($new_color);
-            $label = $this->dao->getLabelById($label_to_edit_id);
+            $label         = $this->dao->getLabelById($label_to_edit_id);
             $previous_name = $label['name'];
 
             if ($this->dao->editInTransaction($project->getID(), $label_to_edit_id, $new_name, $new_color, $new_is_outline)) {

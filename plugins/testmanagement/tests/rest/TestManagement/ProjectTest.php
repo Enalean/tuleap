@@ -31,14 +31,14 @@ final class ProjectTest extends BaseTest
 
     public function testGetCampaigns(): void
     {
-        $response  = $this->getResponse($this->client->get("projects/$this->project_id/testmanagement_campaigns"));
+        $response = $this->getResponse($this->client->get("projects/$this->project_id/testmanagement_campaigns"));
 
         $this->assertGETCampaings($response);
     }
 
     public function testGetCampaignsWithRESTReadOnlyUser(): void
     {
-        $response  = $this->getResponse(
+        $response = $this->getResponse(
             $this->client->get("projects/$this->project_id/testmanagement_campaigns"),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );

@@ -142,7 +142,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
     public function getGlobalRanks(array $list_of_artifact_ids)
     {
         $list_of_artifact_ids = $this->da->escapeIntImplode($list_of_artifact_ids);
-        $sql = "SELECT * FROM tracker_artifact_priority_rank
+        $sql                  = "SELECT * FROM tracker_artifact_priority_rank
                 WHERE artifact_id IN ($list_of_artifact_ids)";
         return $this->retrieve($sql);
     }

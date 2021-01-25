@@ -28,7 +28,7 @@ class NewsCollection
 
     public function __construct(array $news)
     {
-        $this->news = $news;
+        $this->news     = $news;
         $this->has_news = count($news) > 0;
     }
 

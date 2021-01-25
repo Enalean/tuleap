@@ -36,8 +36,8 @@ class QueueInstrumentation
     public const STATUS_TIMEDOUT  = 'timedout';
     public const STATUS_DONE      = 'done';
 
-    private const DURATION_NAME = 'queue_events_duration';
-    private const DURATION_HELP = 'Duration of background worker events (from enqueue to done) in seconds';
+    private const DURATION_NAME    = 'queue_events_duration';
+    private const DURATION_HELP    = 'Duration of background worker events (from enqueue to done) in seconds';
     private const DURATION_BUCKETS = [0.1, 0.5, 1, 2, 5, 10, 20, 60, 120];
 
     /**

@@ -31,7 +31,7 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if (! $p || ! $pluginManager->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }
@@ -66,7 +66,7 @@ $statPeriod = $duMgr->getProperty('statistics_period');
 if (! $statPeriod) {
     $statPeriod = 3;
 }
-$endDate = date('Y-m-d');
+$endDate   = date('Y-m-d');
 $startDate = date('Y-m-d', mktime(0, 0, 0, date('m') - $statPeriod, date('d'), date('y')));
 
 

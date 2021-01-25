@@ -114,7 +114,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                     ]) . "]");
         }
 
-        $criteria_value = [
+        $criteria_value           = [
             'op'        => $op,
             'from_date' => $from_date,
             'to_date'   => $to_date,
@@ -271,8 +271,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         if ($this->isUsed()) {
             //Only filter query if criteria is valuated
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
-                $a = 'A_' . $this->id;
-                $b = 'B_' . $this->id;
+                $a                 = 'A_' . $this->id;
+                $b                 = 'B_' . $this->id;
                 $compare_date_stmt = $this->getSQLCompareDate(
                     $criteria->is_advanced,
                     $criteria_value['op'],
@@ -305,11 +305,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
         if (! isset($this->criteria_value[$criteria->report->id])) {
             $this->criteria_value[$criteria->report->id] = [];
-            $dao = $this->getCriteriaDao();
+            $dao                                         = $this->getCriteriaDao();
             if ($dao && $row = $dao->searchByCriteriaId($criteria->id)->getRow()) {
-                $this->criteria_value[$criteria->report->id]['op'] = $row['op'];
+                $this->criteria_value[$criteria->report->id]['op']        = $row['op'];
                 $this->criteria_value[$criteria->report->id]['from_date'] = $row['from_date'];
-                $this->criteria_value[$criteria->report->id]['to_date'] = $row['to_date'];
+                $this->criteria_value[$criteria->report->id]['to_date']   = $row['to_date'];
             }
         }
         return $this->criteria_value[$criteria->report->id];
@@ -457,14 +457,14 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
     public function fetchAdvancedCriteriaValue($criteria)
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp             = Codendi_HTMLPurifier::instance();
+        $html           = '';
         $criteria_value = $this->getCriteriaValue($criteria);
-        $html .= '<div style="text-align:right">';
-        $value = isset($criteria_value['from_date']) ? $this->formatDateForReport($criteria_value['from_date']) : '';
-        $html .= '<label>';
-        $html .= dgettext('tuleap-tracker', 'Start') . ' ';
-        $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
+        $html          .= '<div style="text-align:right">';
+        $value          = isset($criteria_value['from_date']) ? $this->formatDateForReport($criteria_value['from_date']) : '';
+        $html          .= '<label>';
+        $html          .= dgettext('tuleap-tracker', 'Start') . ' ';
+        $html          .= $GLOBALS['HTML']->getBootstrapDatePicker(
             "criteria_" . $this->id . "_from",
             "criteria[" . $this->id . "][from_date]",
             $value,
@@ -472,11 +472,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             [],
             false
         );
-        $html .= '</label>';
-        $value = isset($criteria_value['to_date']) ? $this->formatDateForReport($criteria_value['to_date']) : '';
-        $html .= '<label>';
-        $html .= dgettext('tuleap-tracker', 'End') . ' ';
-        $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
+        $html          .= '</label>';
+        $value          = isset($criteria_value['to_date']) ? $this->formatDateForReport($criteria_value['to_date']) : '';
+        $html          .= '<label>';
+        $html          .= dgettext('tuleap-tracker', 'End') . ' ';
+        $html          .= $GLOBALS['HTML']->getBootstrapDatePicker(
             "criteria_" . $this->id . "_to",
             "criteria[" . $this->id . "][to_date]",
             $value,
@@ -484,8 +484,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             [],
             false
         );
-        $html .= '</label>';
-        $html .= '</div>';
+        $html          .= '</label>';
+        $html          .= '</div>';
         return $html;
     }
 
@@ -495,11 +495,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         if ($criteria->is_advanced) {
             $html = $this->fetchAdvancedCriteriaValue($criteria);
         } else {
-            $hp = Codendi_HTMLPurifier::instance();
+            $hp             = Codendi_HTMLPurifier::instance();
             $criteria_value = $this->getCriteriaValue($criteria);
-            $lt_selected = '';
-            $eq_selected = '';
-            $gt_selected = '';
+            $lt_selected    = '';
+            $eq_selected    = '';
+            $gt_selected    = '';
             if ($criteria_value) {
                 if ($criteria_value['op'] == '<') {
                     $lt_selected = 'selected="selected"';
@@ -730,7 +730,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $user             = $this->getCurrentUser();
 
         if ($timeframe_helper->artifactHelpShouldBeShownToUser($user, $this)) {
-            $html_value     = $html_value
+            $html_value = $html_value
                 . '<span class="artifact-timeframe-helper"> ('
                 . $timeframe_helper->getDurationArtifactHelperForReadOnlyView($user, $artifact)
                 . ')</span>';
@@ -793,7 +793,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     {
         $html = '';
         if ($value && $value->getTimestamp()) {
-            $user = HTTPRequest::instance()->getCurrentUser();
+            $user  = HTTPRequest::instance()->getCurrentUser();
             $html .= DateHelper::relativeDateInlineContext($value->getTimestamp() ?? 0, $user);
         }
         return $html;
@@ -1048,8 +1048,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     public function getArtifactsByCriterias($date, $trackerId = null)
     {
         $artifacts = [];
-        $dao = new DateValueDao();
-        $dar = $dao->getArtifactsByFieldAndValue($this->id, $date);
+        $dao       = new DateValueDao();
+        $dar       = $dao->getArtifactsByFieldAndValue($this->id, $date);
         if ($dar && ! $dar->isError()) {
             $artifactFactory = Tracker_ArtifactFactory::instance();
             foreach ($dar as $row) {

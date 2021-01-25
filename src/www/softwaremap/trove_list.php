@@ -35,7 +35,7 @@ if ($request->exist('form_cat')) {
     $form_cat = intval($request->get('form_cat'));
 } else {
     $res_rootcat = db_query("SELECT trove_cat_id FROM trove_cat WHERE parent=0 ORDER BY fullname LIMIT 1");
-    $form_cat = db_fetch_array($res_rootcat)['trove_cat_id'];
+    $form_cat    = db_fetch_array($res_rootcat)['trove_cat_id'];
 }
 
 $special_cat = $request->getValidated('special_cat');
@@ -56,7 +56,7 @@ $row_trove_cat = db_fetch_array($res_trove_cat);
 
 $current_category_name = $row_trove_cat['fullpath'];
 
-$folders = explode(" :: ", $row_trove_cat['fullpath']);
+$folders     = explode(" :: ", $row_trove_cat['fullpath']);
 $folders_ids = explode(" :: ", $row_trove_cat['fullpath_ids']);
 $folders_len = count($folders);
 
@@ -67,7 +67,7 @@ if ($folders_len > 1) {
 
 $sub_categories = [];
 
-$sql = "SELECT t.trove_cat_id AS trove_cat_id, t.fullname AS fullname, SUM(IFNULL(t3.nb, 0)) AS subprojects
+$sql     = "SELECT t.trove_cat_id AS trove_cat_id, t.fullname AS fullname, SUM(IFNULL(t3.nb, 0)) AS subprojects
 FROM trove_cat AS t, trove_cat AS t2 LEFT JOIN (SELECT t.trove_cat_id AS trove_cat_id, count(t.group_id) AS nb
 FROM trove_group_link AS t INNER JOIN groups AS g USING(group_id)
 WHERE " . trove_get_visibility_for_user('g.access', $current_user) . "
@@ -95,7 +95,7 @@ while ($row_sub = db_fetch_array($res_sub)) {
 
 // MV: Add a None case
 if ($folders_len == 1) {
-    $sql = "SELECT count(DISTINCT g.group_id) AS count
+    $sql    = "SELECT count(DISTINCT g.group_id) AS count
 FROM groups AS g
 LEFT JOIN trove_group_link AS t
 USING ( group_id )
@@ -106,8 +106,8 @@ AND trove_cat_root = " . $form_cat;
     $res_nb = db_query($sql);
     $row_nb = db_fetch_array($res_nb);
 
-    $res_total = db_query("SELECT count(*) as count FROM groups WHERE " . trove_get_visibility_for_user('access', $current_user) . " AND status='A' and type=1");
-    $row_total = db_fetch_array($res_total);
+    $res_total  = db_query("SELECT count(*) as count FROM groups WHERE " . trove_get_visibility_for_user('access', $current_user) . " AND status='A' and type=1");
+    $row_total  = db_fetch_array($res_total);
     $nb_not_cat = $row_total['count'] - $row_nb['count'];
 
     $sub_categories[] = new Tuleap\Trove\TroveCatCategoryNonePresenter(
@@ -119,7 +119,7 @@ AND trove_cat_root = " . $form_cat;
 
 // here we print list of root level categories, and use open folder for current
 $root_categories = [];
-$res_rootcat = db_query('SELECT trove_cat_id,fullname FROM trove_cat WHERE '
+$res_rootcat     = db_query('SELECT trove_cat_id,fullname FROM trove_cat WHERE '
     . 'parent=0 ORDER BY fullname');
 while ($row_rootcat = db_fetch_array($res_rootcat)) {
     $root_categories[] = [
@@ -183,14 +183,14 @@ if ($special_cat === 'none') {
     . "GROUP BY groups.group_id ORDER BY groups.group_name ";
 }
 
-$limit  = TroveCatFactory::BROWSELIMIT;
-$offset = (int) $request->getValidated('offset', 'uint', 0);
+$limit           = TroveCatFactory::BROWSELIMIT;
+$offset          = (int) $request->getValidated('offset', 'uint', 0);
 $query_projlist .= " LIMIT $limit OFFSET $offset ";
 
 $res_grp = db_query($query_projlist);
 
-$res_count = db_query('SELECT FOUND_ROWS() as nb');
-$row_count = db_fetch_array($res_count);
+$res_count         = db_query('SELECT FOUND_ROWS() as nb');
+$row_count         = db_fetch_array($res_count);
 $total_nb_projects = $row_count['nb'];
 
 $collection_retriever = new \Tuleap\Trove\TroveCatCollectionRetriever($trove_cat_dao);

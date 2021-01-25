@@ -160,7 +160,7 @@ if (defined('NUSOAP')) {
     {
         global $Language;
         if (session_continue($session_hash)) {
-            $user = UserManager::instance()->getCurrentUser();
+            $user   = UserManager::instance()->getCurrentUser();
             $return = [
             'user_id'      => $user->getId(),
             'session_hash' => $user->getSessionHash()

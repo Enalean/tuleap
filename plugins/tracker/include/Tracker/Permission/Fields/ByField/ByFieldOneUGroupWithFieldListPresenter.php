@@ -39,6 +39,6 @@ class ByFieldOneUGroupWithFieldListPresenter extends ByFieldOneUGroupPresenter
     {
         parent::__construct($ugroup, $ugroup_permissions_for_field);
         $this->nb_permissions = $ugroup_permissions_for_field->getUGroupCount() + 1;
-        $this->field_list = $ugroup_permissions_for_field->getFieldList();
+        $this->field_list     = $ugroup_permissions_for_field->getFieldList();
     }
 }

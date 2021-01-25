@@ -30,7 +30,7 @@ final class Cardwall_OnTop_Config_Command_CreateMappingFieldTest extends \PHPUni
         parent::setUp();
 
         $this->tracker_id = 666;
-        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker          = \Mockery::spy(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturns($this->tracker_id);
 
         $task_tracker = \Mockery::spy(\Tracker::class);

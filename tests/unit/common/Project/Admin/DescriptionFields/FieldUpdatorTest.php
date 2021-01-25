@@ -72,7 +72,7 @@ final class FieldUpdatorTest extends TestCase
 
     public function testItUpdatesField(): void
     {
-        $group_id = 101;
+        $group_id     = 101;
         $project_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,
             TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
@@ -102,7 +102,7 @@ final class FieldUpdatorTest extends TestCase
 
     public function testItLogsIfUpdateFail(): void
     {
-        $group_id = 101;
+        $group_id     = 101;
         $project_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,
             TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
@@ -131,7 +131,7 @@ final class FieldUpdatorTest extends TestCase
     public function testItUpdatesFieldFromArray(): void
     {
         $group_id = 101;
-        $project = \Mockery::mock(\Project::class);
+        $project  = \Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn($group_id);
         $fields = [
             1 => 'My field 1 content',
@@ -157,7 +157,7 @@ final class FieldUpdatorTest extends TestCase
     public function testItLogsIfUpdateFromArrayFail(): void
     {
         $group_id = 101;
-        $project = \Mockery::mock(\Project::class);
+        $project  = \Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn($group_id);
         $fields = [1 => 'My field 1 content'];
 

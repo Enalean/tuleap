@@ -32,7 +32,7 @@ class Docman_FilterDate extends \Docman_Filter
         $this->operator = \null;
         if ($md !== \null) {
             $this->field_operator_name = $md->getLabel() . '_operator';
-            $this->field_value_name = $md->getLabel() . '_value';
+            $this->field_value_name    = $md->getLabel() . '_value';
         }
     }
     public function initFromRow($row)
@@ -99,7 +99,7 @@ class Docman_FilterDate extends \Docman_Filter
         $advSearch = new \Docman_FilterDateAdvanced($this->md);
         if ($request->exist($advSearch->getFieldStartValueName()) && $this->isValidDateFormat($request->get($advSearch->getFieldStartValueName()))) {
             $startValue = $request->get($advSearch->getFieldStartValueName());
-            $endValue = '';
+            $endValue   = '';
             if ($request->exist($advSearch->getFieldEndValueName()) && $this->isValidDateFormat($request->get($advSearch->getFieldEndValueName()))) {
                 $endValue = $request->get($advSearch->getFieldEndValueName());
             }

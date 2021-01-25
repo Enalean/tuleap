@@ -94,7 +94,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 
 $hp = Codendi_HTMLPurifier::instance();
 
-$project = $pm->getProject($group_id);
+$project            = $pm->getProject($group_id);
 $svn_mailing_header = $project->getSVNMailingHeader();
 
 // testing SVN tracking
@@ -125,13 +125,13 @@ echo '
 
 // List of paths & mail addresses (+delete)
 $svnNotificationsDetails = $svnNotification->getSvnEventNotificationDetails($group_id);
-$content = '<table>';
+$content                 = '<table>';
 if ($svnNotificationsDetails) {
-    $content .= '<th align="left">' . $Language->getText('svn_admin_notification', 'existent_notifications') . '</th><tbody>';
-    $content .= '<input type="hidden" name="group_id" value="' . $hp->purify($group_id) . '">';
-    $content .= '<input type="hidden" name="post_changes" value="list_of_paths">';
-    $content .= html_build_list_table_top([$GLOBALS['Language']->getText('svn_admin_notification', 'path_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'mailing_list_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'path_delete_ask')], false, false, false);
-    $rowBgColor  = 0;
+    $content   .= '<th align="left">' . $Language->getText('svn_admin_notification', 'existent_notifications') . '</th><tbody>';
+    $content   .= '<input type="hidden" name="group_id" value="' . $hp->purify($group_id) . '">';
+    $content   .= '<input type="hidden" name="post_changes" value="list_of_paths">';
+    $content   .= html_build_list_table_top([$GLOBALS['Language']->getText('svn_admin_notification', 'path_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'mailing_list_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'path_delete_ask')], false, false, false);
+    $rowBgColor = 0;
     foreach ($svnNotificationsDetails as $item) {
         $content .= '<tr class="' . html_get_alt_row_color(++$rowBgColor) . '">';
         $content .= '<td>' . $hp->purify($item['path']) . '</td>';

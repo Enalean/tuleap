@@ -158,10 +158,10 @@ class PageType_interwikimap extends PageType
     public function __construct($pagetext = false)
     {
         if (! $pagetext) {
-            $dbi = $GLOBALS['request']->getDbh();
+            $dbi  = $GLOBALS['request']->getDbh();
             $page = $dbi->getPage(_("InterWikiMap"));
             if ($page->get('locked')) {
-                $current = $page->getCurrentRevision();
+                $current  = $page->getCurrentRevision();
                 $pagetext = $current->getPackedContent();
                 $intermap = $this->_getMapFromWikiText($pagetext);
             } elseif ($page->exists()) {
@@ -177,7 +177,7 @@ class PageType_interwikimap extends PageType
             $intermap = $this->_getMapFromFile(INTERWIKI_MAP_FILE);
         }
 
-        $this->_map = $this->_parseMap($intermap);
+        $this->_map    = $this->_parseMap($intermap);
         $this->_regexp = $this->_getRegexp();
     }
 
@@ -345,10 +345,10 @@ class PageType_interwikimap extends PageType
             trigger_error($error_html, E_USER_NOTICE);
         }
         if (! file_exists($filename)) {
-            $finder = new FileFinder();
+            $finder   = new FileFinder();
             $filename = $finder->findFile(INTERWIKI_MAP_FILE);
         }
-        @$fd = fopen($filename, "rb");
+        @$fd   = fopen($filename, "rb");
         @$data = fread($fd, filesize($filename));
         @fclose($fd);
 
@@ -507,10 +507,10 @@ class PageFormatter_attach extends PageFormatter
         include_once('lib/Template.php');
         global $request;
         $tokens['CONTENT'] = $this->_transform($text);
-        $tokens['page'] = $this->_page;
-        $tokens['rev'] = new FakePageRevision($this->_meta);
+        $tokens['page']    = $this->_page;
+        $tokens['rev']     = new FakePageRevision($this->_meta);
 
-        $name = new WikiPageName($this->_page->getName());
+        $name                              = new WikiPageName($this->_page->getName());
         $tokens[$this->prefix . "_PARENT"] = $name->getParent();
 
         $meta = $this->_meta[$this->type];
@@ -524,17 +524,17 @@ class PageFormatter_attach extends PageFormatter
 
 class PageFormatter_wikiblog extends PageFormatter_attach
 {
-    public $type = 'wikiblog';
+    public $type   = 'wikiblog';
     public $prefix = "BLOG";
 }
 class PageFormatter_comment extends PageFormatter_attach
 {
-    public $type = 'comment';
+    public $type   = 'comment';
     public $prefix = "COMMENT";
 }
 class PageFormatter_wikiforum extends PageFormatter_attach
 {
-    public $type = 'wikiforum';
+    public $type   = 'wikiforum';
     public $prefix = "FORUM";
 }
 

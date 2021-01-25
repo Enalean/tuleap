@@ -85,12 +85,12 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
 
         switch ($item_type) {
             case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
-                $file_path       = __DIR__ . '/../_fixtures/docmanFile/embeddedFile';
+                $file_path = __DIR__ . '/../_fixtures/docmanFile/embeddedFile';
                 $file_type = 'text/html';
                 $this->addFileVersion($item_id, $title, $file_type, $file_path);
                 break;
             case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
-                $file_path       = __DIR__ . '/../_fixtures/docmanFile/file.txt';
+                $file_path = __DIR__ . '/../_fixtures/docmanFile/file.txt';
                 $file_type = 'application/pdf';
                 $this->addFileVersion($item_id, $title, $file_type, $file_path);
                 break;
@@ -163,7 +163,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
 
     private function addLinkVersion(int $item_id): int
     {
-        $docman_link    = $this->docman_item_factory->getItemFromDb($item_id);
+        $docman_link = $this->docman_item_factory->getItemFromDb($item_id);
         $docman_link->setUrl('https://my.example.test');
         $version_link_factory = new \Docman_LinkVersionFactory();
         $version_link_factory->create($docman_link, 'changset1', 'test rest Change', time());
@@ -228,7 +228,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
 
     public function addApprovalTable(string $title, int $version_id, int $status, string $field): void
     {
-        $dao = new Docman_ApprovalTableItemDao();
+        $dao      = new Docman_ApprovalTableItemDao();
         $table_id = $dao->createTable(
             $field,
             $version_id,
@@ -262,14 +262,14 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         int $user_id,
         int $item_type
     ): void {
-        $item_id         = $this->createItem(
+        $item_id = $this->createItem(
             $user_id,
             $folder_id,
             $file_name,
             $item_type
         );
 
-        $file_path       = __DIR__ . '/../_fixtures/docmanFile/embeddedFile';
+        $file_path  = __DIR__ . '/../_fixtures/docmanFile/embeddedFile';
         $version_id = $this->addFileVersion($item_id, $file_version_title, 'application/pdf', $file_path);
 
         $this->addApprovalTable($file_name, (int) $version_id, $approval_status, 'version_id');

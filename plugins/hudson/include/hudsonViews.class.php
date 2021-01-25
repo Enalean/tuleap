@@ -111,19 +111,19 @@ class hudsonViews extends Views
 
     public function job_details()
     {
-        $request = HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+        $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if ($request->exist('job_id')) {
             $job_id = $request->get('job_id');
-            $dar = $job_dao->searchByJobID($job_id);
+            $dar    = $job_dao->searchByJobID($job_id);
         } elseif ($request->exist('job')) {
             // used for references (job #MyJob or job #myproject:MyJob)
             $job_name = $request->get('job');
-            $dar = $job_dao->searchByJobName($job_name, $group_id);
+            $dar      = $job_dao->searchByJobName($job_name, $group_id);
         }
         if ($dar->valid()) {
-            $row = $dar->current();
+            $row           = $dar->current();
             $crossref_fact = new CrossReferenceFactory($row['name'], 'hudson_job', $group_id);
             $crossref_fact->fetchDatas();
             if ($crossref_fact->getNbReferences() > 0) {
@@ -138,7 +138,7 @@ class hudsonViews extends Views
 
     public function build_number()
     {
-        $request = HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         if ($request->exist('build')) {
             $build_id = $request->get('build');
@@ -148,11 +148,11 @@ class hudsonViews extends Views
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if ($request->exist('job_id')) {
             $job_id = $request->get('job_id');
-            $dar = $job_dao->searchByJobID($job_id);
+            $dar    = $job_dao->searchByJobID($job_id);
         } elseif ($request->exist('job')) {
             // used for references (build #MyJob/175 or job #myproject:MyJob/175 where 175 is the build number required)
             $job_name = $request->get('job');
-            $dar = $job_dao->searchByJobName($job_name, $group_id);
+            $dar      = $job_dao->searchByJobName($job_name, $group_id);
         } else {
             // used for references (build #175 where 175 is the build number required)
             // If no job or project is specified, we check if there is only one job associated to the current project and we assume it is this job.
@@ -163,7 +163,7 @@ class hudsonViews extends Views
         }
 
         if ($dar && $dar->valid()) {
-            $row = $dar->current();
+            $row           = $dar->current();
             $crossref_fact = new CrossReferenceFactory($row['name'] . '/' . $build_id, 'hudson_build', $group_id);
             $crossref_fact->fetchDatas();
             if ($crossref_fact->getNbReferences() > 0) {
@@ -182,13 +182,13 @@ class hudsonViews extends Views
 
     public function last_test_result()
     {
-        $request = HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $job_id = $request->get('job_id');
-        $user = UserManager::instance()->getCurrentUser();
+        $job_id   = $request->get('job_id');
+        $user     = UserManager::instance()->getCurrentUser();
 
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->searchByJobID($job_id);
+        $dar     = $job_dao->searchByJobID($job_id);
         if ($dar->valid()) {
             $row = $dar->current();
             echo Codendi_HTMLPurifier::instance()->purify(
@@ -203,13 +203,13 @@ class hudsonViews extends Views
 
     public function test_trend()
     {
-        $request = HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $job_id = $request->get('job_id');
-        $user = UserManager::instance()->getCurrentUser();
+        $job_id   = $request->get('job_id');
+        $user     = UserManager::instance()->getCurrentUser();
 
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->searchByJobID($job_id);
+        $dar     = $job_dao->searchByJobID($job_id);
         if ($dar->valid()) {
             $row = $dar->current();
             echo Codendi_HTMLPurifier::instance()->purify(
@@ -225,17 +225,17 @@ class hudsonViews extends Views
     public function editJob()
     {
         echo '<div class="continuous-integration-content">';
-        $request = HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $job_id = $request->get('job_id');
-        $user = UserManager::instance()->getCurrentUser();
+        $job_id   = $request->get('job_id');
+        $user     = UserManager::instance()->getCurrentUser();
         if ($user->isMember($group_id, 'A')) {
             $project_manager = ProjectManager::instance();
-            $project = $project_manager->getProject($group_id);
+            $project         = $project_manager->getProject($group_id);
 
             $em      = EventManager::instance();
             $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-            $dar = $job_dao->searchByJobID($job_id);
+            $dar     = $job_dao->searchByJobID($job_id);
             if ($dar->valid()) {
                 $row = $dar->current();
 
@@ -279,7 +279,7 @@ class hudsonViews extends Views
 
         if ($dar && $dar->valid()) {
             $project_manager = ProjectManager::instance();
-            $project = $project_manager->getProject($group_id);
+            $project         = $project_manager->getProject($group_id);
 
             echo '<table id="jobs_table" class="table">';
             echo ' <thead><tr>';
@@ -328,7 +328,7 @@ class hudsonViews extends Views
             }
 
             $hudson_jobs_with_exception = $job_builder->getHudsonJobsWithException($minimal_hudson_jobs);
-            $uri_sanitizer = new URISanitizer(new Valid_HTTPURI());
+            $uri_sanitizer              = new URISanitizer(new Valid_HTTPURI());
 
             foreach ($hudson_jobs_with_exception as $job_id => $hudson_job_with_exception) {
                 echo ' <tr>';
@@ -432,7 +432,7 @@ class hudsonViews extends Views
     public function _display_add_job_form($group_id, $services)
     {
         $project_manager = ProjectManager::instance();
-        $project = $project_manager->getProject($group_id);
+        $project         = $project_manager->getProject($group_id);
 
         // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
         echo '<input class="btn btn-primary" value="' . dgettext('tuleap-hudson', 'Add job') . '" type="submit" onclick="toggle_addurlform(); return false;">';

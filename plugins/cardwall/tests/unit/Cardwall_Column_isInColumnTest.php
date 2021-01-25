@@ -50,15 +50,15 @@ final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(33);
         $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $changset = new Tracker_Artifact_Changeset_Null();
+        $changset       = new Tracker_Artifact_Changeset_Null();
         $this->artifact->shouldReceive('getTracker')->andReturns($tracker);
         $this->artifact->shouldReceive('getLastChangeset')->andReturns($changset);
 
-        $this->field = \Mockery::spy(\Tracker_FormElement_Field_MultiSelectbox::class);
+        $this->field          = \Mockery::spy(\Tracker_FormElement_Field_MultiSelectbox::class);
         $this->field_provider = Mockery::mock(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class);
         $this->field_provider->shouldReceive('getField')->with($tracker)->andReturn($this->field);
-        $dao = \Mockery::spy(\Cardwall_OnTop_Dao::class);
-        $column_factory = \Mockery::spy(\Cardwall_OnTop_Config_ColumnFactory::class);
+        $dao                     = \Mockery::spy(\Cardwall_OnTop_Dao::class);
+        $column_factory          = \Mockery::spy(\Cardwall_OnTop_Config_ColumnFactory::class);
         $tracker_mapping_factory = \Mockery::spy(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
 
         $column_factory->shouldReceive('getDashboardColumns')->with($tracker)->andReturn(new Cardwall_OnTop_Config_ColumnCollection());
@@ -69,14 +69,14 @@ final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
     public function testItIsInTheCellIfTheLabelMatches(): void
     {
         $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns('ongoing');
-        $column   = $this->newCardwall_Column(0, 'ongoing');
+        $column = $this->newCardwall_Column(0, 'ongoing');
         $this->assertIn($column);
     }
 
     public function testItIsNotInTheCellIfTheLabelDoesntMatch(): void
     {
         $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns('ongoing');
-        $column   = $this->newCardwall_Column(0, 'done');
+        $column = $this->newCardwall_Column(0, 'done');
         $this->assertNotIn($column);
     }
 
@@ -84,7 +84,7 @@ final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
     {
         $null_status = null;
         $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns($null_status);
-        $column   = $this->newCardwall_Column(100, 'done');
+        $column = $this->newCardwall_Column(100, 'done');
         $this->assertIn($column);
     }
 
@@ -92,14 +92,14 @@ final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
     {
         $null_status = null;
         $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns($null_status);
-        $column   = $this->newCardwall_Column(123, 'done');
+        $column = $this->newCardwall_Column(123, 'done');
         $this->assertNotIn($column);
     }
 
     public function testItIsNotInTheCellIfHasANonMatchingLabelTheColumnIdIs100(): void
     {
         $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns('ongoing');
-        $column   = $this->newCardwall_Column(100, 'done');
+        $column = $this->newCardwall_Column(100, 'done');
         $this->assertNotIn($column);
     }
 

@@ -158,7 +158,7 @@ class LDAP_UserManager
     public function getUserIdsForLdapUser($ldapIds)
     {
         $userIds = [];
-        $dao = $this->getDao();
+        $dao     = $this->getDao();
         foreach ($ldapIds as $lr) {
             $user = $this->getUserManager()->getUserByLdapId($lr->getEdUid());
             if ($user) {
@@ -182,7 +182,7 @@ class LDAP_UserManager
      */
     public function getUserIdsFromUserList($userList)
     {
-        $userIds = [];
+        $userIds  = [];
         $userList = array_map('trim', preg_split('/[,;]/', $userList));
         foreach ($userList as $u) {
             $user = $this->getUserManager()->findUser($u);
@@ -216,8 +216,8 @@ class LDAP_UserManager
     public function generateLogin($uid)
     {
         $account_name = $this->getLoginFromString($uid);
-        $uid = $account_name;
-        $i = 2;
+        $uid          = $account_name;
+        $i            = 2;
         while ($this->userNameIsAvailable($uid) !== true) {
             $uid = $account_name . $i;
             $i++;
@@ -301,8 +301,8 @@ class LDAP_UserManager
         $user->setTimezone('GMT');
         $user->setLanguageID($GLOBALS['Language']->getText('conf', 'language_id'));
 
-        $um = $this->getUserManager();
-        $user  = $um->createAccount($user);
+        $um   = $this->getUserManager();
+        $user = $um->createAccount($user);
         if (! $user) {
             return false;
         }
@@ -384,7 +384,7 @@ class LDAP_UserManager
         $userUpdated = $this->getUserManager()->updateDb($user);
 
         $ldapUpdated = true;
-        $user_id    = $this->getLdapLoginFromUserIds([$user->getId()])->getRow();
+        $user_id     = $this->getLdapLoginFromUserIds([$user->getId()])->getRow();
         if ($user_id['ldap_uid'] != $lr->getLogin()) {
             $ldapUpdated = $this->updateLdapUid($user, $lr->getLogin());
             $this->triggerRenameOfUsers();
@@ -512,7 +512,7 @@ class LDAP_UserManager
         }
         $percentage_users_to_suspend = ($nbr_users_to_suspend / $nbr_all_users) * 100;
         $threshold_users_suspension  = $this->ldap->getLDAPParam('threshold_users_suspension');
-        $logger = new \Tuleap\LDAP\LdapLogger();
+        $logger                      = new \Tuleap\LDAP\LdapLogger();
         if ($percentage_users_to_suspend <= $threshold_users_suspension) {
             $logger->info("[LDAP] Percentage of suspended users is ( " . $percentage_users_to_suspend . "% ) and threshold is ( " . $threshold_users_suspension . "% )");
             $logger->info("[LDAP] Number of suspended users is ( " . $nbr_users_to_suspend . " ) and number of active users is ( " . $nbr_all_users . " )");
@@ -607,7 +607,7 @@ class LDAP_UserManager
         }
 
         $ldap = $this->getLdap();
-        $lri = null;
+        $lri  = null;
         switch ($type) {
             case 'ldapid':
                 $lri = $ldap->searchEdUid($value);

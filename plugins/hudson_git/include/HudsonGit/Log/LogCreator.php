@@ -51,9 +51,9 @@ class LogCreator
         ProjectJobDao $project_job_dao,
         DBTransactionExecutor $transaction_executor
     ) {
-        $this->job_dao                = $job_dao;
-        $this->project_job_dao        = $project_job_dao;
-        $this->transaction_executor   = $transaction_executor;
+        $this->job_dao              = $job_dao;
+        $this->project_job_dao      = $project_job_dao;
+        $this->transaction_executor = $transaction_executor;
     }
 
     /**

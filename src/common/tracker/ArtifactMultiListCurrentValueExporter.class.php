@@ -67,7 +67,7 @@ class ArtifactMultiListCurrentValueExporter
     {
         $field_name = $this->getFieldNameFromRow($field_value_row);
 
-        $this->current_field_values[$field_name] = $field_value_row;
+        $this->current_field_values[$field_name]                           = $field_value_row;
         $this->current_field_values[$field_name][self::LABEL_VALUES_INDEX] = null;
     }
 
@@ -77,7 +77,7 @@ class ArtifactMultiListCurrentValueExporter
         $existing_value = $this->getExistingValueForCurrentField($field_value_row);
 
         if (! $existing_value) {
-            $current_value = $this->getCurrentValueLabel($field_value_row);
+            $current_value                                                     = $this->getCurrentValueLabel($field_value_row);
             $this->current_field_values[$field_name][self::LABEL_VALUES_INDEX] = $current_value;
             return;
         }
@@ -87,8 +87,8 @@ class ArtifactMultiListCurrentValueExporter
 
     private function updateFieldsValues(array $field_value_row)
     {
-        $field_name     = $this->getFieldNameFromRow($field_value_row);
-        $current_value  = $this->getCurrentValueLabel($field_value_row);
+        $field_name    = $this->getFieldNameFromRow($field_value_row);
+        $current_value = $this->getCurrentValueLabel($field_value_row);
 
         $existing_field_property_values = explode(',', $this->current_field_values[$field_name][self::LABEL_VALUES_INDEX]);
 

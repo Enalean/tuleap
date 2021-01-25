@@ -32,7 +32,7 @@ class BindStaticValueDao extends DataAccessObject
     public const COPY_BY_VALUE     = false;
 
     private $cache_canbedeleted_values = [];
-    private $cache_canbehidden_values = [];
+    private $cache_canbehidden_values  = [];
 
     public function __construct()
     {

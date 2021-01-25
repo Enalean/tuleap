@@ -52,12 +52,12 @@ final class PermissionManagerTest extends \PHPUnit\Framework\TestCase //phpcs:ig
 
     protected function setUp(): void
     {
-        $this->tracker_id  = 112;
-        $project_id  = 34;
-        $this->tracker = \Mockery::spy(\Tracker::class);
+        $this->tracker_id = 112;
+        $project_id       = 34;
+        $this->tracker    = \Mockery::spy(\Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturns($this->tracker_id);
         $this->tracker->shouldReceive('getGroupId')->andReturns($project_id);
-        $this->permissions = [
+        $this->permissions         = [
             ProjectUGroup::ANONYMOUS => [
                 'ugroup'      => ['name' => 'whatever'],
                 'permissions' => []
@@ -76,8 +76,8 @@ final class PermissionManagerTest extends \PHPUnit\Framework\TestCase //phpcs:ig
             ],
         ];
         $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
-        $this->permission_setter    = new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager);
-        $this->permission_manager   = new Tracker_Permission_PermissionManager();
+        $this->permission_setter   = new Tracker_Permission_PermissionSetter($this->tracker, $this->permissions, $this->permissions_manager);
+        $this->permission_manager  = new Tracker_Permission_PermissionManager();
     }
 
     public function testItDoesNothingTryingToGrantAnonymousSubmittedOnly(): void
@@ -119,7 +119,7 @@ final class PermissionManagerTest extends \PHPUnit\Framework\TestCase //phpcs:ig
 
     public function testItRaisesAWarningWhenTryingToGrantRegisteredSubmittedOnlyWithAnonymousHasFullAccess(): void
     {
-        $request = new Tracker_Permission_PermissionRequest([
+        $request                                                    = new Tracker_Permission_PermissionRequest([
             ProjectUGroup::ANONYMOUS  => Tracker_Permission_Command::PERMISSION_FULL,
             ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
         ]);

@@ -37,6 +37,6 @@ class MailRegisterByAdminApprovalPresenter extends MailRegisterPresenter
         $section_three
     ) {
         parent::__construct($logo_url, $title, $section_one, $section_two, $section_after_login, $thanks, $signature, $help, $color_logo, $login);
-        $this->section_three         = $section_three;
+        $this->section_three = $section_three;
     }
 }

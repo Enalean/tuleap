@@ -49,14 +49,14 @@ class LDAP
     /**
      * It is equivalent to reading an entry from the directory.
      */
-    public const SCOPE_BASE     = 3;
+    public const SCOPE_BASE = 3;
 
     /**
      * Error value when search exceed either server or client size limit.
      */
     public const ERR_SIZELIMIT = 0x04;
 
-    public const ERR_SUCCESS   = 0x00;
+    public const ERR_SUCCESS = 0x00;
 
     public const SERVER_TYPE_ACTIVE_DIRECTORY = "ActiveDirectory";
     public const SERVER_TYPE_OPEN_LDAP        = "OpenLDAP";
@@ -408,7 +408,7 @@ class LDAP
      */
     public function searchUser($words)
     {
-        $words = ldap_escape($words, '', LDAP_ESCAPE_FILTER);
+        $words  = ldap_escape($words, '', LDAP_ESCAPE_FILTER);
         $filter = str_replace("%words%", $words, $this->ldapParams['search_user']);
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
@@ -470,7 +470,7 @@ class LDAP
      */
     public function searchUserAsYouType($name, $sizeLimit, $validEmail = false)
     {
-        $apIt  = new AppendIterator();
+        $apIt = new AppendIterator();
         if ($name && $this->_connectAndBind()) {
             $name = ldap_escape($name, '', LDAP_ESCAPE_FILTER);
             if (isset($this->ldapParams['tooltip_search_user'])) {
@@ -480,7 +480,7 @@ class LDAP
             }
             if ($validEmail) {
                 // Only search people with a non empty mail field
-                $mail = ldap_escape($this->ldapParams['mail'], '', LDAP_ESCAPE_FILTER);
+                $mail   = ldap_escape($this->ldapParams['mail'], '', LDAP_ESCAPE_FILTER);
                 $filter = '(&' . $filter . '(' . $mail . '=*))';
             }
             // We only care about Common name and Login (lower the amount of data
@@ -488,7 +488,7 @@ class LDAP
             if (isset($this->ldapParams['tooltip_search_attrs'])) {
                 $attrs = explode(';', $this->ldapParams['tooltip_search_attrs']);
             } else {
-                $attrs  = [$this->ldapParams['cn'], $this->ldapParams['uid']];
+                $attrs = [$this->ldapParams['cn'], $this->ldapParams['uid']];
             }
 
             if (! in_array($this->ldapParams['eduid'], $attrs)) {

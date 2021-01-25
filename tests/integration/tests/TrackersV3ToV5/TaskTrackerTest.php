@@ -87,7 +87,7 @@ class TaskTrackerTest extends TestCase
         self::$backup_codendi_log = \ForgeConfig::get('backup_codendi_log');
         \ForgeConfig::set('codendi_log', '/tmp');
 
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db      = DBFactory::getMainTuleapDBConnection()->getDB();
         $results = $db->run('SELECT * FROM artifact_group_list WHERE item_name = "task" AND group_id = 100');
         if (count($results) !== 1) {
             throw new \RuntimeException('No Tracker v3 data. Migration impossible');
@@ -96,13 +96,13 @@ class TaskTrackerTest extends TestCase
 
         $trackerv3_id = $row['group_artifact_id'];
         $v3_migration = new Tracker_Migration_V3(TrackerFactory::instance());
-        $project = ProjectManager::instance()->getProject(100);
-        $name = 'Tasks';
-        $description = "tasks tracker";
-        $itemname = "tsk";
-        $tv3 = new ArtifactType($project, $trackerv3_id);
+        $project      = ProjectManager::instance()->getProject(100);
+        $name         = 'Tasks';
+        $description  = "tasks tracker";
+        $itemname     = "tsk";
+        $tv3          = new ArtifactType($project, $trackerv3_id);
 
-        $task_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
+        $task_tracker          = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
         self::$task_tracker_id = $task_tracker->getId();
         unset($GLOBALS['Language']);
     }
@@ -124,7 +124,7 @@ class TaskTrackerTest extends TestCase
         $this->task_tracker = $this->tracker_factory->getTrackerById(self::$task_tracker_id);
 
         $this->report_factory = Tracker_ReportFactory::instance();
-        $this->tasks_report    = $this->getReportByName('Tasks');
+        $this->tasks_report   = $this->getReportByName('Tasks');
     }
 
     protected function tearDown(): void
@@ -382,8 +382,8 @@ class TaskTrackerTest extends TestCase
     public function testItSendsAnEmailToProjectAndTrackerAdminsTwoDaysBeforeStartDate()
     {
         $start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
-        $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
-        $reminders = $factory->getTrackerReminders();
+        $factory          = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
+        $reminders        = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[0]->getDistance(), 2);
         $this->assertEquals($reminders[0]->getNotificationType(), Tracker_DateReminder::BEFORE);
@@ -396,8 +396,8 @@ class TaskTrackerTest extends TestCase
     public function testItSendsASecondEmailOnStartDate()
     {
         $start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
-        $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
-        $reminders = $factory->getTrackerReminders();
+        $factory          = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
+        $reminders        = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[1]->getDistance(), 0);
         $this->assertEquals($reminders[1]->getNotificationType(), Tracker_DateReminder::BEFORE);
@@ -410,8 +410,8 @@ class TaskTrackerTest extends TestCase
     public function testItSendsTheLastEmailTwoDaysAfterStartDate()
     {
         $start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
-        $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
-        $reminders = $factory->getTrackerReminders();
+        $factory          = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
+        $reminders        = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[2]->getDistance(), 2);
         $this->assertEquals($reminders[2]->getNotificationType(), Tracker_DateReminder::AFTER);
@@ -424,10 +424,10 @@ class TaskTrackerTest extends TestCase
     public function testItSendsAnEmailToProjectMembersAndSubmitterOneDayAfterEndDate()
     {
         $end_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'end_date');
-        $submitterRole = new Tracker_DateReminder_Role_Submitter();
+        $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
-        $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
-        $reminders = $factory->getTrackerReminders();
+        $factory        = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
+        $reminders      = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[3]->getDistance(), 1);
         $this->assertEquals($reminders[3]->getNotificationType(), Tracker_DateReminder::AFTER);
@@ -440,10 +440,10 @@ class TaskTrackerTest extends TestCase
     public function testItSendsAnEmailToProjectMembersAndSubmitterThreeDaysAfterEndDate()
     {
         $end_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'end_date');
-        $submitterRole = new Tracker_DateReminder_Role_Submitter();
+        $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
-        $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
-        $reminders = $factory->getTrackerReminders();
+        $factory        = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
+        $reminders      = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[4]->getDistance(), 3);
         $this->assertEquals($reminders[4]->getNotificationType(), Tracker_DateReminder::AFTER);
@@ -456,10 +456,10 @@ class TaskTrackerTest extends TestCase
     public function testItSendsAnEmailToSubmitterOneDaysAfterDueDate()
     {
         $due_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'due_date');
-        $submitterRole = new Tracker_DateReminder_Role_Submitter();
+        $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
 
-        $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
+        $factory   = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[5]->getDistance(), 1);
@@ -473,10 +473,10 @@ class TaskTrackerTest extends TestCase
     public function testItSendsASecondEmailThreeDaysAfterDueDate()
     {
         $due_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'due_date');
-        $submitterRole = new Tracker_DateReminder_Role_Submitter();
+        $submitterRole  = new Tracker_DateReminder_Role_Submitter();
         $notified_roles = [$submitterRole];
 
-        $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
+        $factory   = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders = $factory->getTrackerReminders();
 
         $this->assertEquals($reminders[6]->getDistance(), 3);
@@ -489,7 +489,7 @@ class TaskTrackerTest extends TestCase
 
     public function testItCreateReminderWhenTheListOfUgroupsIsEmptyButNotTheTrackerRoles()
     {
-        $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
+        $factory   = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders = $factory->getTrackerReminders();
 
         $this->assertCount(7, $reminders);

@@ -46,7 +46,7 @@ class TestsDataFromJunitExtractorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->template_renderer = Mockery::mock(TemplateRenderer::class);
+        $this->template_renderer               = Mockery::mock(TemplateRenderer::class);
         $this->tests_data_from_junit_extractor = new TestsDataFromJunitExtractor($this->template_renderer);
     }
 
@@ -82,8 +82,8 @@ class TestsDataFromJunitExtractorTest extends TestCase
         $extracted_test_suite_3->setStatus("passed");
         $extracted_test_suite_3->addFeedbackOnResult("test suite executed");
 
-        $automated_tests_results_representation                          = new AutomatedTestsResultPATCHRepresentation();
-        $automated_tests_results_representation->build_url               = 'http://exemple/of/url';
+        $automated_tests_results_representation                 = new AutomatedTestsResultPATCHRepresentation();
+        $automated_tests_results_representation->build_url      = 'http://exemple/of/url';
         $automated_tests_results_representation->junit_contents = [
             '<testsuites>
                 <testsuite name="testSuite" failures="1" time="6">
@@ -136,8 +136,8 @@ class TestsDataFromJunitExtractorTest extends TestCase
         $extracted_test_suite->setStatus("failed");
         $extracted_test_suite->addFeedbackOnResult("test suite executedfailure feedbackfailure feedback");
 
-        $automated_tests_results_representation                          = new AutomatedTestsResultPATCHRepresentation();
-        $automated_tests_results_representation->build_url               = 'http://exemple/of/url';
+        $automated_tests_results_representation                 = new AutomatedTestsResultPATCHRepresentation();
+        $automated_tests_results_representation->build_url      = 'http://exemple/of/url';
         $automated_tests_results_representation->junit_contents = [
             '<testsuites>
                 <testsuite name="testSuite" failures="2" time="25">
@@ -162,8 +162,8 @@ class TestsDataFromJunitExtractorTest extends TestCase
 
     public function testGetTestsCaseFromJunitTrowExceptionIfNoXmlInAutomatedTestResult(): void
     {
-        $automated_tests_results_representation                          = new AutomatedTestsResultPATCHRepresentation();
-        $automated_tests_results_representation->build_url               = 'http://exemple/of/url';
+        $automated_tests_results_representation                 = new AutomatedTestsResultPATCHRepresentation();
+        $automated_tests_results_representation->build_url      = 'http://exemple/of/url';
         $automated_tests_results_representation->junit_contents = [
             'Oui'
         ];
@@ -185,8 +185,8 @@ class TestsDataFromJunitExtractorTest extends TestCase
         $extracted_suite_2->setStatus("failed");
         $extracted_suite_2->addFeedbackOnResult("test suite executedfailure feedback");
 
-        $automated_tests_results_representation = new AutomatedTestsResultPATCHRepresentation();
-        $automated_tests_results_representation->build_url = 'http://exemple/of/url';
+        $automated_tests_results_representation                 = new AutomatedTestsResultPATCHRepresentation();
+        $automated_tests_results_representation->build_url      = 'http://exemple/of/url';
         $automated_tests_results_representation->junit_contents = [
             '<testsuites>
                 <testsuite name="firstTestSuite" failures="0" time="2">

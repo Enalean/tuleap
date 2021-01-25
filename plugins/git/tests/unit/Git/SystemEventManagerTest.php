@@ -44,7 +44,7 @@ class Git_SystemEventManagerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->system_event_manager = \Mockery::spy(\SystemEventManager::class);
+        $this->system_event_manager     = \Mockery::spy(\SystemEventManager::class);
         $this->git_system_event_manager = new Git_SystemEventManager($this->system_event_manager, \Mockery::spy(\GitRepositoryFactory::class));
 
         $this->gitolite_repository = \Mockery::spy(\GitRepository::class);

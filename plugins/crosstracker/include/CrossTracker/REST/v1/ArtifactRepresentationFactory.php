@@ -35,7 +35,7 @@ class ArtifactRepresentationFactory
                 continue;
             }
             $artifact_representation = CrossTrackerArtifactReportRepresentation::build($artifact, $current_user);
-            $representations[] = $artifact_representation;
+            $representations[]       = $artifact_representation;
         }
 
         return new PaginatedCollectionOfCrossTrackerArtifacts($representations, $collection->getTotalSize());

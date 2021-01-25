@@ -78,7 +78,7 @@ final class SwaggerJsonController extends DispatchablePSR15Compatible implements
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $request_uri = $request->getUri();
+        $request_uri  = $request->getUri();
         $swagger_host = $request_uri->getHost();
         $port         = $request_uri->getPort();
         if ($port !== null) {

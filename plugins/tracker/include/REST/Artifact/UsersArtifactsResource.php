@@ -57,7 +57,7 @@ class UsersArtifactsResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $controller = new UsersArtifactsResourceController(\UserManager::instance(), \Tracker_ArtifactFactory::instance());
+        $controller          = new UsersArtifactsResourceController(\UserManager::instance(), \Tracker_ArtifactFactory::instance());
         [$total, $artifacts] = $controller->getArtifacts($id, $query, $offset, $limit);
 
         $this->sendGetArtifactsAllowHeaders();

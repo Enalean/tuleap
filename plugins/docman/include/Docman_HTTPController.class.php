@@ -85,7 +85,7 @@ class Docman_HTTPController extends Docman_Controller
     {
         $this->feedback->log('warning', sprintf(dgettext('tuleap-docman', 'The item %1$s doesn\'t exist or doesn\'t belong to project %2$s.'), $item->getId(), $group->getPublicName()));
         $this->_viewParams['redirect_to'] = str_replace('group_id=' . $this->request->get('group_id'), 'group_id=' . $item->getGroupId(), $_SERVER['REQUEST_URI']);
-        $this->view = 'Redirect';
+        $this->view                       = 'Redirect';
     }
 
     /**
@@ -94,8 +94,8 @@ class Docman_HTTPController extends Docman_Controller
      */
     public function notifyFuturObsoleteDocuments()
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $pm = ProjectManager::instance();
+        $hp          = Codendi_HTMLPurifier::instance();
+        $pm          = ProjectManager::instance();
         $itemFactory = new Docman_ItemFactory(0);
 
         //require_once('common/mail/TestMail.class.php');
@@ -118,7 +118,7 @@ class Docman_HTTPController extends Docman_Controller
             $obsoDate = DateHelper::formatForLanguage($GLOBALS['Language'], $item->getObsolescenceDate(), true);
 
             // Urls
-            $baseUrl = HTTPRequest::instance()->getServerUrl() . $this->pluginPath . '/index.php?group_id=' . $item->getGroupId() . '&id=' . $item->getId();
+            $baseUrl   = HTTPRequest::instance()->getServerUrl() . $this->pluginPath . '/index.php?group_id=' . $item->getGroupId() . '&id=' . $item->getId();
             $directUrl = $baseUrl . '&action=show';
             $detailUrl = $baseUrl . '&action=details';
 

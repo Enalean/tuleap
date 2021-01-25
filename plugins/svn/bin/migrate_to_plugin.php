@@ -95,8 +95,8 @@ $system_command = new System_Command();
 $logger         = BackendLogger::getDefaultLogger();
 $backend_svn    = Backend::instance('SVN');
 assert($backend_svn instanceof BackendSVN);
-$svn_admin      = new SvnAdmin($system_command, $logger, $backend_svn);
-$dao            = new Dao();
+$svn_admin = new SvnAdmin($system_command, $logger, $backend_svn);
+$dao       = new Dao();
 
 $hook_dao                    = new HookDao();
 $immutable_tag_dao           = new ImmutableTagDao();

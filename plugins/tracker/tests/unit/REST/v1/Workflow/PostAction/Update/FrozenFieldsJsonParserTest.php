@@ -69,7 +69,7 @@ class FrozenFieldsJsonParserTest extends TestCase
                 "field_ids" => [43],
             ]
         );
-        $expected_action = new FrozenFieldsValue([43]);
+        $expected_action     = new FrozenFieldsValue([43]);
         $this->assertEquals($expected_action, $frozen_fields_value);
     }
 
@@ -85,7 +85,7 @@ class FrozenFieldsJsonParserTest extends TestCase
                 "field_ids" => [43],
             ]
         );
-        $expected_action = new FrozenFieldsValue([43]);
+        $expected_action     = new FrozenFieldsValue([43]);
         $this->assertEquals($expected_action, $frozen_fields_value);
     }
 

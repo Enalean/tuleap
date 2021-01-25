@@ -218,7 +218,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject
                     f.formElement_type = 'msb' AND
                     (old.value_function IS NULL OR old.value_function = '') AND
                     POSITION(',' IN old.default_value) <> 0)";
-        $res   = $this->retrieve($sql);
+        $res = $this->retrieve($sql);
 
         if ($res) {
             while ($row = $res->getRow()) {
@@ -242,7 +242,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject
                         f.formElement_type = 'msb' AND
                         (old.value_function IS NOT NULL AND old.value_function <> '') AND
                         POSITION(',' IN old.default_value) <> 0)";
-        $res   = $this->retrieve($sql);
+        $res = $this->retrieve($sql);
 
         if ($res) {
             while ($row = $res->getRow()) {

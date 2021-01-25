@@ -32,7 +32,7 @@ class Feedback
      */
     private $formatter;
 
-    public const INFO =  'info';
+    public const INFO  =  'info';
     public const WARN  = 'warning';
     public const ERROR = 'error';
     public const DEBUG = 'debug';

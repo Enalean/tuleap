@@ -47,47 +47,47 @@ define('__DEBUG', false);
 class WindrosePlotScale
 {
     private $iMax;
-    private $iDelta = 5;
-    private $iNumCirc = 3;
-    public $iMaxNum = 0;
-    private $iLblFmt = '%.0f%%';
-    public $iFontFamily = FF_VERDANA;
-    public $iFontStyle = FS_NORMAL;
-    public $iFontSize = 10;
-    public $iZFontFamily = FF_ARIAL;
-    public $iZFontStyle = FS_NORMAL;
-    public $iZFontSize = 10;
-    public $iFontColor = 'black';
-    public $iZFontColor = 'black';
+    private $iDelta          = 5;
+    private $iNumCirc        = 3;
+    public $iMaxNum          = 0;
+    private $iLblFmt         = '%.0f%%';
+    public $iFontFamily      = FF_VERDANA;
+    public $iFontStyle       = FS_NORMAL;
+    public $iFontSize        = 10;
+    public $iZFontFamily     = FF_ARIAL;
+    public $iZFontStyle      = FS_NORMAL;
+    public $iZFontSize       = 10;
+    public $iFontColor       = 'black';
+    public $iZFontColor      = 'black';
     private $iFontFrameColor = false;
-    private $iFontBkgColor = false;
-    private $iLblZeroTxt = null;
-    private $iLblAlign = LBLALIGN_CENTER;
-    public $iAngle = 'auto';
-    private $iManualScale = false;
-    private $iHideLabels = false;
+    private $iFontBkgColor   = false;
+    private $iLblZeroTxt     = null;
+    private $iLblAlign       = LBLALIGN_CENTER;
+    public $iAngle           = 'auto';
+    private $iManualScale    = false;
+    private $iHideLabels     = false;
 
     public function __construct($aData)
     {
-        $max = 0;
-        $totlegsum = 0;
-        $maxnum = 0;
+        $max            = 0;
+        $totlegsum      = 0;
+        $maxnum         = 0;
         $this->iZeroSum = 0;
         foreach ($aData as $idx => $legdata) {
-            $legsum = array_sum($legdata);
-            $maxnum = max($maxnum, count($legdata) - 1);
-            $max = max($legsum - $legdata[0], $max);
-            $totlegsum += $legsum;
+            $legsum          = array_sum($legdata);
+            $maxnum          = max($maxnum, count($legdata) - 1);
+            $max             = max($legsum - $legdata[0], $max);
+            $totlegsum      += $legsum;
             $this->iZeroSum += $legdata[0];
         }
         if (round($totlegsum) > 100) {
             JpGraphError::RaiseL(22001, $legsum);
             //("Total percentage for all windrose legs in a windrose plot can not exceed  100% !\n(Current max is: ".$legsum.')');
         }
-        $this->iMax = $max;
-        $this->iMaxNum = $maxnum;
+        $this->iMax     = $max;
+        $this->iMaxNum  = $maxnum;
         $this->iNumCirc = $this->GetNumCirc();
-        $this->iMaxVal = $this->iNumCirc * $this->iDelta;
+        $this->iMaxVal  = $this->iNumCirc * $this->iDelta;
     }
 
     // Return number of grid circles
@@ -100,9 +100,9 @@ class WindrosePlotScale
 
     public function SetMaxValue($aMax)
     {
-        $this->iMax = $aMax;
+        $this->iMax     = $aMax;
         $this->iNumCirc = $this->GetNumCirc();
-        $this->iMaxVal = $this->iNumCirc * $this->iDelta;
+        $this->iMaxVal  = $this->iNumCirc * $this->iDelta;
     }
 
     // Set step size for circular grid
@@ -112,10 +112,10 @@ class WindrosePlotScale
             $this->SetMaxValue($aMax);
             return;
         }
-        $this->iDelta = $aDelta;
+        $this->iDelta   = $aDelta;
         $this->iNumCirc = ceil($aMax / $aDelta); //$this->GetNumCirc();
-        $this->iMaxVal = $this->iNumCirc * $this->iDelta;
-        $this->iMax = $aMax;
+        $this->iMaxVal  = $this->iNumCirc * $this->iDelta;
+        $this->iMax     = $aMax;
         // Remember that user has specified interval so don't
         // do autoscaling
         $this->iManualScale = true;
@@ -133,7 +133,7 @@ class WindrosePlotScale
 
         while ($tst <= $aMinDist && $this->iDelta < 100) {
             $this->iDelta += 5;
-            $tst = ceil($aRadius / $this->GetNumCirc());
+            $tst           = ceil($aRadius / $this->GetNumCirc());
         }
 
         if ($this->iDelta >= 100) {
@@ -143,11 +143,11 @@ class WindrosePlotScale
         // If the distance is to large try with multiples of 2 instead
         if ($tst > $aMinDist * 3) {
             $this->iDelta = 2;
-            $tst = ceil($aRadius / $this->iNumCirc);
+            $tst          = ceil($aRadius / $this->iNumCirc);
 
             while ($tst <= $aMinDist && $this->iDelta < 100) {
                 $this->iDelta += 2;
-                $tst = ceil($aRadius / $this->GetNumCirc());
+                $tst           = ceil($aRadius / $this->GetNumCirc());
             }
 
             if ($this->iDelta >= 100) {
@@ -156,7 +156,7 @@ class WindrosePlotScale
         }
 
         $this->iNumCirc = $this->GetNumCirc();
-        $this->iMaxVal = $this->iNumCirc * $this->iDelta;
+        $this->iMaxVal  = $this->iNumCirc * $this->iDelta;
     }
 
     // Return max of all leg values
@@ -204,23 +204,23 @@ class WindrosePlotScale
 
     public function SetFontColor($aColor)
     {
-        $this->iFontColor = $aColor;
+        $this->iFontColor  = $aColor;
         $this->iZFontColor = $aColor;
     }
 
     public function SetFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
         $this->iFontFamily = $aFontFamily;
-        $this->iFontStyle = $aFontStyle;
-        $this->iFontSize = $aFontSize;
+        $this->iFontStyle  = $aFontStyle;
+        $this->iFontSize   = $aFontSize;
         $this->SetZFont($aFontFamily, $aFontStyle, $aFontSize);
     }
 
     public function SetZFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
         $this->iZFontFamily = $aFontFamily;
-        $this->iZFontStyle = $aFontStyle;
-        $this->iZFontSize = $aFontSize;
+        $this->iZFontStyle  = $aFontStyle;
+        $this->iZFontSize   = $aFontSize;
     }
 
     public function SetZeroLabel($aTxt)
@@ -265,7 +265,7 @@ class WindrosePlotScale
         }
 
         // Stroke the labels close to each circle
-        $v = $d;
+        $v  = $d;
         $si = sin($a);
         $co = cos($a);
         for ($i = 0; $i < $n; ++$i, $v += $d) {
@@ -297,68 +297,68 @@ class WindrosePlotScale
 //===================================================
 class LegendStyle
 {
-    public $iLength = 40;
-    public $iMargin = 20;
-    public $iBottomMargin = 5;
-    public $iCircleWeight = 2;
-    public $iCircleRadius = 18;
-    public $iCircleColor = 'black';
-    public $iTxtFontFamily = FF_VERDANA;
-    public $iTxtFontStyle = FS_NORMAL;
-    public $iTxtFontSize = 8;
-    public $iLblFontFamily = FF_VERDANA;
-    public $iLblFontStyle = FS_NORMAL;
-    public $iLblFontSize = 8;
+    public $iLength           = 40;
+    public $iMargin           = 20;
+    public $iBottomMargin     = 5;
+    public $iCircleWeight     = 2;
+    public $iCircleRadius     = 18;
+    public $iCircleColor      = 'black';
+    public $iTxtFontFamily    = FF_VERDANA;
+    public $iTxtFontStyle     = FS_NORMAL;
+    public $iTxtFontSize      = 8;
+    public $iLblFontFamily    = FF_VERDANA;
+    public $iLblFontStyle     = FS_NORMAL;
+    public $iLblFontSize      = 8;
     public $iCircleFontFamily = FF_VERDANA;
-    public $iCircleFontStyle = FS_NORMAL;
-    public $iCircleFontSize = 8;
-    public $iLblFontColor = 'black';
-    public $iTxtFontColor = 'black';
-    public $iCircleFontColor = 'black';
-    public $iShow = true;
-    public $iFormatString = '%.1f';
-    public $iTxtMargin = 6;
-    public $iZCircleTxt = 'Calm';
+    public $iCircleFontStyle  = FS_NORMAL;
+    public $iCircleFontSize   = 8;
+    public $iLblFontColor     = 'black';
+    public $iTxtFontColor     = 'black';
+    public $iCircleFontColor  = 'black';
+    public $iShow             = true;
+    public $iFormatString     = '%.1f';
+    public $iTxtMargin        = 6;
+    public $iZCircleTxt       = 'Calm';
 
     public function SetFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
-        $this->iLblFontFamily = $aFontFamily;
-        $this->iLblFontStyle = $aFontStyle;
-        $this->iLblFontSize = $aFontSize;
-        $this->iTxtFontFamily = $aFontFamily;
-        $this->iTxtFontStyle = $aFontStyle;
-        $this->iTxtFontSize = $aFontSize;
+        $this->iLblFontFamily    = $aFontFamily;
+        $this->iLblFontStyle     = $aFontStyle;
+        $this->iLblFontSize      = $aFontSize;
+        $this->iTxtFontFamily    = $aFontFamily;
+        $this->iTxtFontStyle     = $aFontStyle;
+        $this->iTxtFontSize      = $aFontSize;
         $this->iCircleFontFamily = $aFontFamily;
-        $this->iCircleFontStyle = $aFontStyle;
-        $this->iCircleFontSize = $aFontSize;
+        $this->iCircleFontStyle  = $aFontStyle;
+        $this->iCircleFontSize   = $aFontSize;
     }
 
     public function SetLFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
         $this->iLblFontFamily = $aFontFamily;
-        $this->iLblFontStyle = $aFontStyle;
-        $this->iLblFontSize = $aFontSize;
+        $this->iLblFontStyle  = $aFontStyle;
+        $this->iLblFontSize   = $aFontSize;
     }
 
     public function SetTFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
         $this->iTxtFontFamily = $aFontFamily;
-        $this->iTxtFontStyle = $aFontStyle;
-        $this->iTxtFontSize = $aFontSize;
+        $this->iTxtFontStyle  = $aFontStyle;
+        $this->iTxtFontSize   = $aFontSize;
     }
 
     public function SetCFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
     {
         $this->iCircleFontFamily = $aFontFamily;
-        $this->iCircleFontStyle = $aFontStyle;
-        $this->iCircleFontSize = $aFontSize;
+        $this->iCircleFontStyle  = $aFontStyle;
+        $this->iCircleFontSize   = $aFontSize;
     }
 
 
     public function SetFontColor($aColor)
     {
-        $this->iTxtFontColor = $aColor;
-        $this->iLblFontColor = $aColor;
+        $this->iTxtFontColor    = $aColor;
+        $this->iLblFontColor    = $aColor;
         $this->iCircleFontColor = $aColor;
     }
 
@@ -399,7 +399,7 @@ class LegendStyle
 
     public function SetMargin($aMarg, $aBottomMargin = 5)
     {
-        $this->iMargin = $aMarg;
+        $this->iMargin       = $aMarg;
         $this->iBottomMargin = $aBottomMargin;
     }
 
@@ -432,46 +432,46 @@ define('RANGE_DISCRETE', 1);
 //===================================================
 class WindrosePlot
 {
-    private $iAntiAlias = true;
-    private $iData = [];
-    public $iX = 0.5;
-    public $iY = 0.5;
-    public $iSize = 0.55;
-    private $iGridColor1 = 'gray';
-    private $iGridColor2 = 'darkgreen';
-    private $iRadialColorArray = [];
-    private $iRadialWeightArray = [];
-    private $iRadialStyleArray = [];
-    private $iRanges = [1, 2, 3, 5, 6, 10, 13.5, 99.0];
-    private $iRangeStyle = RANGE_OVERLAPPING;
-    public $iCenterSize = 60;
-    private $iType = WINDROSE_TYPE16;
-    public $iFontFamily = FF_VERDANA;
-    public $iFontStyle = FS_NORMAL;
-    public $iFontSize = 10;
-    public $iFontColor = 'darkgray';
-    private $iRadialGridStyle = 'longdashed';
+    private $iAntiAlias          = true;
+    private $iData               = [];
+    public $iX                   = 0.5;
+    public $iY                   = 0.5;
+    public $iSize                = 0.55;
+    private $iGridColor1         = 'gray';
+    private $iGridColor2         = 'darkgreen';
+    private $iRadialColorArray   = [];
+    private $iRadialWeightArray  = [];
+    private $iRadialStyleArray   = [];
+    private $iRanges             = [1, 2, 3, 5, 6, 10, 13.5, 99.0];
+    private $iRangeStyle         = RANGE_OVERLAPPING;
+    public $iCenterSize          = 60;
+    private $iType               = WINDROSE_TYPE16;
+    public $iFontFamily          = FF_VERDANA;
+    public $iFontStyle           = FS_NORMAL;
+    public $iFontSize            = 10;
+    public $iFontColor           = 'darkgray';
+    private $iRadialGridStyle    = 'longdashed';
     private $iAllDirectionLabels =  ['E', 'ENE', 'NE', 'NNE', 'N', 'NNW', 'NW', 'WNW', 'W', 'WSW', 'SW', 'SSW', 'S', 'SSE', 'SE', 'ESE'];
     private $iStandardDirections = [];
-    private $iCircGridWeight = 3;
-    private $iRadialGridWeight = 1;
-    private $iLabelMargin = 12;
-    private $iLegweights = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
-    private $iLegColors = ['orange', 'black', 'blue', 'red', 'green', 'purple', 'navy', 'yellow', 'brown'];
-    private $iLabelFormatString = '';
-    private $iLabels = [];
-    private $iLabelPositioning = LBLPOSITION_EDGE;
-    private $iColor = 'white';
-    private $iShowBox = false;
-    private $iBoxColor = 'black';
-    private $iBoxWeight = 1;
-    private $iBoxStyle = 'solid';
-    private $iOrdinalEncoding = KEYENCODING_ANTICLOCKWISE;
-    public $legend = null;
+    private $iCircGridWeight     = 3;
+    private $iRadialGridWeight   = 1;
+    private $iLabelMargin        = 12;
+    private $iLegweights         = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
+    private $iLegColors          = ['orange', 'black', 'blue', 'red', 'green', 'purple', 'navy', 'yellow', 'brown'];
+    private $iLabelFormatString  = '';
+    private $iLabels             = [];
+    private $iLabelPositioning   = LBLPOSITION_EDGE;
+    private $iColor              = 'white';
+    private $iShowBox            = false;
+    private $iBoxColor           = 'black';
+    private $iBoxWeight          = 1;
+    private $iBoxStyle           = 'solid';
+    private $iOrdinalEncoding    = KEYENCODING_ANTICLOCKWISE;
+    public $legend               = null;
 
     public function __construct($aData)
     {
-        $this->iData = $aData;
+        $this->iData  = $aData;
         $this->legend = new LegendStyle();
 
         // Setup the scale
@@ -525,10 +525,10 @@ class WindrosePlot
 
     public function SetBox($aColor = 'black', $aWeight = 1, $aStyle = 'solid', $aShow = true)
     {
-        $this->iShowBox = $aShow;
-        $this->iBoxColor = $aColor;
+        $this->iShowBox   = $aShow;
+        $this->iBoxColor  = $aColor;
         $this->iBoxWeight = $aWeight;
-        $this->iBoxStyle = $aStyle;
+        $this->iBoxStyle  = $aStyle;
     }
 
     public function SetLabels($aLabels)
@@ -572,8 +572,8 @@ class WindrosePlot
     public function SetFont($aFFam, $aFStyle = FS_NORMAL, $aFSize = 10)
     {
         $this->iFontFamily = $aFFam;
-        $this->iFontStyle = $aFStyle;
-        $this->iFontSize = $aFSize;
+        $this->iFontStyle  = $aFStyle;
+        $this->iFontSize   = $aFSize;
     }
 
     public function SetFontColor($aColor)
@@ -589,7 +589,7 @@ class WindrosePlot
 
     public function SetGridWeight($aGrid1 = 1, $aGrid2 = 2)
     {
-        $this->iCircGridWeight = $aGrid1;
+        $this->iCircGridWeight   = $aGrid1;
         $this->iRadialGridWeight = $aGrid2;
     }
 
@@ -679,8 +679,8 @@ class WindrosePlot
             return;
         }
 
-        $xt = $xc + cos($a) * $ri;
-        $yt = $yc - sin($a) * $ri;
+        $xt  = $xc + cos($a) * $ri;
+        $yt  = $yc - sin($a) * $ri;
         $xxt = $xc + cos($a) * ($ri + $r);
         $yyt = $yc - sin($a) * ($ri + $r);
 
@@ -731,7 +731,7 @@ class WindrosePlot
         $w = $value->GetWidth($aImg);
         $l = round(max($this->legend->iLength * $scaling, $w * 1.5));
 
-        $r = $this->legend->iCircleRadius * $scaling;
+        $r   = $this->legend->iCircleRadius * $scaling;
         $len = 2 * $r + $this->scale->iMaxNum * $l;
 
         // We are called just to find out the width
@@ -777,7 +777,7 @@ class WindrosePlot
         if ($this->scale->iMaxNum >= count($this->iRanges)) {
             JpGraphError::RaiseL(22007); //('To few values for the range legend.');
         }
-        $i = 0;
+        $i   = 0;
         $idx = 0;
         while ($i < $this->scale->iMaxNum) {
             $y1 = $y - round($this->iLegweights[$i % $nlw] * $scaling);
@@ -853,10 +853,10 @@ class WindrosePlot
             }
 
             // Find the leg which has the lowest weighted sum of number of data around it
-            $c0 = array_sum($data[0]);
-            $c1 = array_sum($data[1]);
+            $c0    = array_sum($data[0]);
+            $c1    = array_sum($data[1]);
             $found = 1;
-            $min = $c0 + $c1 * 100; // Initialize to a high value
+            $min   = $c0 + $c1 * 100; // Initialize to a high value
             for ($i = 1; $i < 15; ++$i) {
                 $c2 = array_sum($data[$i + 1]);
 
@@ -864,7 +864,7 @@ class WindrosePlot
                 // to a short middle leg even if the 3 way sum is similair
                 $w = $c0 + 3 * $c1 + $c2;
                 if ($w < $min) {
-                    $min = $w;
+                    $min   = $w;
                     $found = $i;
                 }
                 $c0 = $c1;
@@ -887,9 +887,9 @@ class WindrosePlot
             $keys = array_keys($data);
             sort($keys, SORT_NUMERIC);
 
-            $n = count($data);
+            $n     = count($data);
             $found = false;
-            $max = 0;
+            $max   = 0;
             for ($i = 0; $i < 15; ++$i) {
                 $try_a = round(22.5 * $i);
 
@@ -938,10 +938,10 @@ class WindrosePlot
                     $w = round(1.4 * $w);
                 }
                 $diff = abs($d1 - $d2);
-                $w *= (360 - $diff);
+                $w   *= (360 - $diff);
                 if ($w > $max) {
                     $found = $i;
-                    $max = $w;
+                    $max   = $w;
                 }
             }
 
@@ -976,7 +976,7 @@ class WindrosePlot
 
     public function SetLabelPosition($aPos)
     {
-        $this->iLabelPositioning  = $aPos;
+        $this->iLabelPositioning = $aPos;
     }
 
     public function _StrokeFreeRose($dblImg, $value, $scaling, $xc, $yc, $r, $ri)
@@ -998,7 +998,7 @@ class WindrosePlot
         // Stroke grid lines for directions and remember the
         // position for the labels
         $txtpos = [];
-        $num = count($this->iData);
+        $num    = count($this->iData);
 
         $keys = array_keys($this->iData);
 
@@ -1023,8 +1023,8 @@ class WindrosePlot
 
             $xxc = round($xc + cos($a) * $ri);
             $yyc = round($yc - sin($a) * $ri);
-            $x = round($xc + cos($a) * $r);
-            $y = round($yc - sin($a) * $r);
+            $x   = round($xc + cos($a) * $r);
+            $y   = round($yc - sin($a) * $r);
             if (empty($this->iRadialColorArray[$dir])) {
                 $dblImg->SetColor($this->iGridColor2);
             } else {
@@ -1126,9 +1126,9 @@ class WindrosePlot
         $i = 0;
         foreach ($this->iData as $dir => $legdata) {
             $legdata = array_slice($legdata, 1);
-            $nn = count($legdata);
+            $nn      = count($legdata);
 
-            $a = $txtpos[$i][2];
+            $a   = $txtpos[$i][2];
             $rri = $ri / $scaling;
             for ($j = 0; $j < $nn; ++$j) {
                 // We want the non scaled original radius
@@ -1153,7 +1153,7 @@ class WindrosePlot
     // corresponding index.
     public function FixupIndexes($aDataArray, $num)
     {
-        $ret = [];
+        $ret  = [];
         $keys = array_keys($aDataArray);
         foreach ($aDataArray as $idx => $data) {
             if (is_string($idx)) {
@@ -1207,12 +1207,12 @@ class WindrosePlot
         $nlc = count($this->iLegColors);
         $nlw = count($this->iLegweights);
 
-        $this->iRadialColorArray = $this->FixupIndexes($this->iRadialColorArray, $num);
+        $this->iRadialColorArray  = $this->FixupIndexes($this->iRadialColorArray, $num);
         $this->iRadialWeightArray = $this->FixupIndexes($this->iRadialWeightArray, $num);
-        $this->iRadialStyleArray = $this->FixupIndexes($this->iRadialStyleArray, $num);
+        $this->iRadialStyleArray  = $this->FixupIndexes($this->iRadialStyleArray, $num);
 
         $txtpos = [];
-        $a = 2 * M_PI / $num;
+        $a      = 2 * M_PI / $num;
         $dblImg->SetColor($this->iGridColor2);
         $dblImg->SetLineStyle($this->iRadialGridStyle);
         $dblImg->SetLineWeight($this->iRadialGridWeight);
@@ -1222,8 +1222,8 @@ class WindrosePlot
         for ($i = 0; $i < $num; ++$i) {
             $xxc = round($xc + cos($a * $i) * $ri);
             $yyc = round($yc - sin($a * $i) * $ri);
-            $x = round($xc + cos($a * $i) * $r);
-            $y = round($yc - sin($a * $i) * $r);
+            $x   = round($xc + cos($a * $i) * $r);
+            $y   = round($yc - sin($a * $i) * $r);
             if (empty($this->iRadialColorArray[$i])) {
                 $dblImg->SetColor($this->iGridColor2);
             } else {
@@ -1311,7 +1311,7 @@ class WindrosePlot
         $keys = array_keys($this->iData);
         foreach ($this->iData as $idx => $legdata) {
             $legdata = array_slice($legdata, 1);
-            $nn = count($legdata);
+            $nn      = count($legdata);
             if (is_string($idx)) {
                 $idx = strtoupper($idx);
                 $idx = array_search($idx, $this->iAllDirectionLabels);
@@ -1330,8 +1330,8 @@ class WindrosePlot
             if ($idx < 0 || $idx > 15) {
                 JpgraphError::RaiseL(22019);//('Index for direction must be between 0 and 15. You can\'t specify angles for a Regular Windplot, only index and compass directions.');
             }
-            $a = $idx * (360 / $num);
-            $a *= M_PI / 180.0;
+            $a   = $idx * (360 / $num);
+            $a  *= M_PI / 180.0;
             $rri = $ri / $scaling;
             for ($j = 0; $j < $nn; ++$j) {
                 // We want the non scaled original radius
@@ -1383,11 +1383,11 @@ class WindrosePlot
         $maxw += round($this->iFontSize * $scaling * 0.4);
 
         $valxmarg = 1.5 * $maxw + 2 * $this->iLabelMargin * $scaling;
-        $w = round($this->iSize * $scaling + $valxmarg);
+        $w        = round($this->iSize * $scaling + $valxmarg);
 
         // Make sure that the width of the legend fits
         $legendwidth = $this->_StrokeLegend($aImg, 0, 0, $scaling, true) + 10 * $scaling;
-        $w = max($w, $legendwidth);
+        $w           = max($w, $legendwidth);
 
         return $w;
     }
@@ -1423,11 +1423,11 @@ class WindrosePlot
         //$maxh += round($this->iFontSize*$scaling * 0.5) ;
         $valymarg = 2 * $maxh + 2 * $this->iLabelMargin * $scaling;
 
-        $legendheight = round($this->legend->iShow ? 1 : 0);
+        $legendheight  = round($this->legend->iShow ? 1 : 0);
         $legendheight *= max($this->legend->iCircleRadius * 2, $this->legend->iTxtFontSize * 2) +
                          $this->legend->iMargin + $this->legend->iBottomMargin + 2;
         $legendheight *= $scaling;
-        $h = round($this->iSize * $scaling + $valymarg) + $legendheight;
+        $h             = round($this->iSize * $scaling + $valymarg) + $legendheight;
 
         return $h;
     }
@@ -1460,7 +1460,7 @@ class WindrosePlot
         $value->SetFont($this->iFontFamily, $this->iFontStyle, $this->iFontSize * $scaling);
         $value->SetColor($this->iFontColor);
 
-        $legendheight = round($this->legend->iShow ? 1 : 0);
+        $legendheight  = round($this->legend->iShow ? 1 : 0);
         $legendheight *= max($this->legend->iCircleRadius * 2, $this->legend->iTxtFontSize * 2) +
         $this->legend->iMargin + $this->legend->iBottomMargin + 2;
         $legendheight *= $scaling;
@@ -1523,7 +1523,7 @@ class WindrosePlot
 
         // Plot circle grids
         $ri *= $scaling;
-        $rr = round(($r - $ri) / $n);
+        $rr  = round(($r - $ri) / $n);
         for ($i = 1; $i <= $n; ++$i) {
             $this->_ThickCircle(
                 $dblImg,
@@ -1557,7 +1557,7 @@ class WindrosePlot
                     $const2 = 4;
                 }
                 $tmp = [];
-                $n = count($this->iData);
+                $n   = count($this->iData);
                 foreach ($this->iData as $key => $val) {
                     if (is_numeric($key)) {
                         $key = ($const1 - $key) % $const2;
@@ -1570,7 +1570,7 @@ class WindrosePlot
         }
 
         // Stroke the labels
-        $this->scale->iFontSize *= $scaling;
+        $this->scale->iFontSize  *= $scaling;
         $this->scale->iZFontSize *= $scaling;
         $this->scale->StrokeLabels($dblImg, $xc, $yc, $ri, $rr);
 

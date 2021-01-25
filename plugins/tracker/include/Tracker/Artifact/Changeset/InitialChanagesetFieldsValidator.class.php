@@ -55,8 +55,8 @@ class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker
 
     public static function build(): self
     {
-        $form_element_factory    = \Tracker_FormElementFactory::instance();
-        $artifact_factory        = Tracker_ArtifactFactory::instance();
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $artifact_factory     = Tracker_ArtifactFactory::instance();
 
         $artifact_link_usage_dao = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
         $artifact_link_validator = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(

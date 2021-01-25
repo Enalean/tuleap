@@ -105,12 +105,12 @@ class WikiPlugin_CalendarList extends WikiPlugin
         //    This is used by the last_n/next_n options to determine the date that
         //    accounts for the number of N events in the past/future.
         //    RETURNS: date of N-th event or the last item found
-        $args = &$this->args;                // gather the args array
+        $args    = &$this->args;                // gather the args array
         $timeTMP = time();                // start with today's date
-        $t = $timeTMP;                    // init the control date variable to now
+        $t       = $timeTMP;                    // init the control date variable to now
 
         for ($i = 0; $i <= 180; $i++) {            // loop thru 180 days, past or future
-            $date_string = strftime($args['date_format'], $t);
+            $date_string   = strftime($args['date_format'], $t);
             $page_for_date = $args['prefix'] . SUBPAGE_SEPARATOR . $date_string;
             if ($dbi->isWikiPage($page_for_date)) { // if this date has any comments/events
                 $timeTMP = $t;                //  capture the date of this event for return
@@ -127,11 +127,11 @@ class WikiPlugin_CalendarList extends WikiPlugin
 
     public function _date($dbi, $time)
     {
-        $args = &$this->args;
+        $args        = &$this->args;
         $date_string = strftime($args['date_format'], $time);
 
         $page_for_date = $args['prefix'] . SUBPAGE_SEPARATOR . $date_string;
-        $t = localtime($time, 1);
+        $t             = localtime($time, 1);
 
         $td = HTML::td(['align' => 'center']);
 
@@ -141,8 +141,8 @@ class WikiPlugin_CalendarList extends WikiPlugin
             $r = $p->getCurrentRevision();
             $c = $r->getContent();
             include_once('lib/BlockParser.php');
-            $content = TransformText(implode("\n", $c), $r->get('markup'));
-            $link = HTML::a(
+            $content        = TransformText(implode("\n", $c), $r->get('markup'));
+            $link           = HTML::a(
                 [
                     'class' => 'cal-hide',
                     'href' => WikiURL($page_for_date, ['action' => 'edit']),
@@ -151,7 +151,7 @@ class WikiPlugin_CalendarList extends WikiPlugin
                 $date_string
             );
             $this->_links[] = $page_for_date;
-            $a = [HTML::dt($link), HTML::dd($content)];
+            $a              = [HTML::dt($link), HTML::dd($content)];
         } else {
             $a = [];
         }
@@ -160,8 +160,8 @@ class WikiPlugin_CalendarList extends WikiPlugin
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
-        $this->args = $this->getArgs($argstr, $request);
-        $args       = &$this->args;
+        $this->args   = $this->getArgs($argstr, $request);
+        $args         = &$this->args;
         $this->_links = [];
 
         // default to this month
@@ -230,9 +230,9 @@ class WikiPlugin_CalendarList extends WikiPlugin
         $step = 24 * 3600;
         if ($args['order'] == 'reverse') {
             $time_tmp = $start;
-            $start = $end;
-            $end = $time_tmp;
-            $step *= -1;
+            $start    = $end;
+            $end      = $time_tmp;
+            $step    *= -1;
         }
 
         // style tag on wiki description but not in here

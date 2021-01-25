@@ -55,7 +55,7 @@ class User_SSHKeyDumper
             if ($user->getUnixStatus() != 'A') {
                 return true;
             }
-            $ssh_dir  = $user->getUnixHomeDir() . '/.ssh';
+            $ssh_dir = $user->getUnixHomeDir() . '/.ssh';
 
             // Subtlety: between the 2 process owner change, there is no way to
             // write any logs because the process is owned by a mere user but

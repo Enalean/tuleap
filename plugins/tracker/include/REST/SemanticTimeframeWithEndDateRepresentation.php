@@ -39,6 +39,6 @@ class SemanticTimeframeWithEndDateRepresentation
     public function build(int $start_date_field_id, int $end_date_field_id): void
     {
         $this->start_date_field_id = JsonCast::toInt($start_date_field_id);
-        $this->end_date_field_id = JsonCast::toInt($end_date_field_id);
+        $this->end_date_field_id   = JsonCast::toInt($end_date_field_id);
     }
 }

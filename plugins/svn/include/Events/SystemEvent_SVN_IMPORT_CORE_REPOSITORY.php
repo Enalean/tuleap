@@ -76,10 +76,10 @@ final class SystemEvent_SVN_IMPORT_CORE_REPOSITORY extends \SystemEvent // phpcs
         RepositoryManager $repository_manager,
         LastAccessDao $last_access_dao
     ): void {
-        $this->project_manager = $project_manager;
-        $this->backend_svn = $backend_svn;
+        $this->project_manager    = $project_manager;
+        $this->backend_svn        = $backend_svn;
         $this->repository_manager = $repository_manager;
-        $this->last_access_dao = $last_access_dao;
+        $this->last_access_dao    = $last_access_dao;
     }
 
     /**

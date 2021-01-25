@@ -32,7 +32,7 @@ final class BaseLanguageFactoryTest extends \PHPUnit\Framework\TestCase
         ForgeConfig::loadFromFile(__DIR__ . '/_fixtures/local.inc');
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
         $this->supportedLanguages = ForgeConfig::get('sys_supported_languages');
-        $this->oldLocale = setlocale(LC_ALL, "0");
+        $this->oldLocale          = setlocale(LC_ALL, "0");
         setlocale(LC_ALL, 'fr_FR');
         ForgeConfig::set('tmp_dir', $this->getTmpDir() . '/tuleap_cache');
         ForgeConfig::set('sys_custom_incdir', $this->getTmpDir());
@@ -48,8 +48,8 @@ final class BaseLanguageFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testFactoryShouldReturnABaseLanguageAccordingToTheLocale(): void
     {
-        $us = new BaseLanguage($this->supportedLanguages, 'en_US');
-        $fr = new BaseLanguage($this->supportedLanguages, 'fr_FR');
+        $us      = new BaseLanguage($this->supportedLanguages, 'en_US');
+        $fr      = new BaseLanguage($this->supportedLanguages, 'fr_FR');
         $factory = new BaseLanguageFactory();
         $factory->cacheBaseLanguage($us);
         $factory->cacheBaseLanguage($fr);

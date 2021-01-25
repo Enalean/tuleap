@@ -121,7 +121,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
             $mime = null;
             if (Config::GetInstance()->GetValue('filemimetype', true)) {
                 if ((! isset($this->params['hash'])) && (isset($this->params['file']))) {
-                    $commit = $this->project->GetCommit($this->params['hashbase']);
+                    $commit               = $this->project->GetCommit($this->params['hashbase']);
                     $this->params['hash'] = $commit->PathToHash($this->params['file']);
                 }
 
@@ -178,13 +178,13 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         }
 
         $pathtree = [];
-        $path = dirname($blob->GetPath());
+        $path     = dirname($blob->GetPath());
         while ($path !== '.') {
-            $name = basename($path);
-            $pathtreepiece = new \stdClass();
+            $name                = basename($path);
+            $pathtreepiece       = new \stdClass();
             $pathtreepiece->name = $name;
             $pathtreepiece->path = $path;
-            $pathtree[] = $pathtreepiece;
+            $pathtree[]          = $pathtreepiece;
 
             $path = dirname($path);
         }

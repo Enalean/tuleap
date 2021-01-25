@@ -72,7 +72,7 @@ class FusionForgeTemplate extends QuickTemplate
     {
         global $wgRequest, $sysDTDs;
         $this->skin = $skin = $this->data['skin'];
-        $action = $wgRequest->getText('action');
+        $action     = $wgRequest->getText('action');
 
      // Suppress warnings to prevent notices about missing indexes in $this->data
         wfSuppressWarnings();
@@ -134,8 +134,8 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
                  $project = group_get_object_by_name($GLOBALS['fusionforgeproject']);
                 if ($project) {
                     $GLOBALS['group_id'] = $project->getID();
-                    $params['group'] = $GLOBALS['group_id'];
-                    $params['toptab'] = 'mediawiki';
+                    $params['group']     = $GLOBALS['group_id'];
+                    $params['toptab']    = 'mediawiki';
                     $GLOBALS['HTML']->bodyHeader($params);
                 }
             }
@@ -266,7 +266,7 @@ echo htmlspecialchars($item['class']) ?>"
         <?php	}
 
      // Generate additional footer links
-        $footerlinks = [
+        $footerlinks      = [
         'lastmod', 'viewcount', 'numberofwatchingusers', 'credits', 'copyright',
         'privacy', 'about', 'disclaimer', 'tagline',
         ];

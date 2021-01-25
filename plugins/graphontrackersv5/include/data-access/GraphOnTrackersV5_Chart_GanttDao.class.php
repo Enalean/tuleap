@@ -31,29 +31,29 @@ class GraphOnTrackersV5_Chart_GanttDao extends DataAccessObject
 
     public function searchById($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT * FROM $this->table_name WHERE id = $id";
         return $this->retrieve($sql);
     }
 
     public function delete($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name WHERE id = $id";
         return $this->update($sql);
     }
 
     public function save($id, $field_start, $field_due, $field_finish, $field_percentage, $field_righttext, $scale, $as_of_date, $summary)
     {
-        $id                 = $this->da->escapeInt($id);
-        $field_start        = $this->da->escapeInt($field_start);
-        $field_due          = $this->da->escapeInt($field_due);
-        $field_finish       = $this->da->escapeInt($field_finish);
-        $field_percentage   = $this->da->escapeInt($field_percentage);
-        $field_righttext    = $this->da->escapeInt($field_righttext);
-        $scale              = $this->da->quoteSmart($scale);
-        $as_of_date         = (int) strtotime($as_of_date);
-        $summary            = $this->da->escapeInt($summary);
+        $id               = $this->da->escapeInt($id);
+        $field_start      = $this->da->escapeInt($field_start);
+        $field_due        = $this->da->escapeInt($field_due);
+        $field_finish     = $this->da->escapeInt($field_finish);
+        $field_percentage = $this->da->escapeInt($field_percentage);
+        $field_righttext  = $this->da->escapeInt($field_righttext);
+        $scale            = $this->da->quoteSmart($scale);
+        $as_of_date       = (int) strtotime($as_of_date);
+        $summary          = $this->da->escapeInt($summary);
 
         $sql = "REPLACE INTO $this->table_name (id, field_start, field_due, field_finish, field_percentage, field_righttext, scale, as_of_date, summary)
                 VALUES ($id, $field_start, $field_due, $field_finish, $field_percentage, $field_righttext, $scale, $as_of_date, $summary)";
@@ -64,15 +64,15 @@ class GraphOnTrackersV5_Chart_GanttDao extends DataAccessObject
     {
         $from_chart_id = $this->da->escapeInt($from_chart_id);
         $to_chart_id   = $this->da->escapeInt($to_chart_id);
-        $sql = "INSERT INTO $this->table_name (id, field_start, field_due, field_finish, field_percentage, field_righttext, scale, as_of_date, summary)
+        $sql           = "INSERT INTO $this->table_name (id, field_start, field_due, field_finish, field_percentage, field_righttext, scale, as_of_date, summary)
                 SELECT $to_chart_id, field_start, field_due, field_finish, field_percentage, field_righttext, scale, as_of_date, summary
                 FROM $this->table_name
                 WHERE id = $from_chart_id";
 
         $this->update($sql);
         foreach ($field_mapping as $mapping) {
-            $from  = $this->da->escapeInt($mapping['from']);
-            $to    = $this->da->escapeInt($mapping['to']);
+            $from = $this->da->escapeInt($mapping['from']);
+            $to   = $this->da->escapeInt($mapping['to']);
 
             $sql = "UPDATE $this->table_name
                     SET

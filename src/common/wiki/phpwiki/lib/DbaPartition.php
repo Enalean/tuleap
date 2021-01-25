@@ -38,9 +38,9 @@ class DbaPartition
 
     public function firstkey()
     {
-        $dbh = &$this->_h;
+        $dbh    = &$this->_h;
         $prefix = &$this->_p;
-        $n = strlen($prefix);
+        $n      = strlen($prefix);
         for ($key = $dbh->firstkey(); $key !== false; $key = $dbh->nextkey()) {
             if (substr($key, 0, $n) == $prefix) {
                 return (string) substr($key, $n);
@@ -51,9 +51,9 @@ class DbaPartition
 
     public function nextkey()
     {
-        $dbh = &$this->_h;
+        $dbh    = &$this->_h;
         $prefix = &$this->_p;
-        $n = strlen($prefix);
+        $n      = strlen($prefix);
         for ($key = $dbh->nextkey(); $key !== false; $key = $dbh->nextkey()) {
             if (substr($key, 0, $n) == $prefix) {
                 return (string) substr($key, $n);

@@ -39,7 +39,7 @@ if ($request->exist('wsdl')) {
     $wsdlGen = new SOAP_NusoapWSDL(SVN_SOAPServer::class, 'TuleapSubversionAPI', $uri);
     $wsdlGen->dumpWSDL();
 } else {
-    $user_manager = UserManager::instance();
+    $user_manager           = UserManager::instance();
     $soap_request_validator = $soap_request_validator = new SOAPRequestValidatorImplementation(
         ProjectManager::instance(),
         $user_manager,

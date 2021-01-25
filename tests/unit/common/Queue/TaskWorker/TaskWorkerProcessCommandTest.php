@@ -66,10 +66,10 @@ final class TaskWorkerProcessCommandTest extends TestCase
 
     public function testEventNotProperlyJSONSerializedIsRejected(): void
     {
-        $logger           = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $command          = new TaskWorkerProcessCommand(Mockery::mock(EventDispatcherInterface::class), $logger);
+        $logger  = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $command = new TaskWorkerProcessCommand(Mockery::mock(EventDispatcherInterface::class), $logger);
 
-        $path_to_file            = $this->filesystem_root->url() . '/event';
+        $path_to_file = $this->filesystem_root->url() . '/event';
         file_put_contents($path_to_file, '{ broken json');
 
         $logger->shouldReceive('debug')->atLeast()->once();

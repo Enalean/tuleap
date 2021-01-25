@@ -67,10 +67,10 @@ class AccessKeyPresenterBuilder
         SplitTokenFormatter $split_token_formatter,
         EncryptionKey $encryption_key
     ) {
-        $this->access_key_scope_builder = $access_key_scope_builder;
+        $this->access_key_scope_builder      = $access_key_scope_builder;
         $this->access_key_metadata_retriever = $access_key_metadata_retriever;
-        $this->split_token_formatter = $split_token_formatter;
-        $this->encryption_key = $encryption_key;
+        $this->split_token_formatter         = $split_token_formatter;
+        $this->encryption_key                = $encryption_key;
     }
 
     /**
@@ -101,11 +101,11 @@ class AccessKeyPresenterBuilder
      */
     public function getForUser(\PFUser $user, array &$storage): AccessKeyPresenter
     {
-        $access_key_scope_presenters   = [];
+        $access_key_scope_presenters = [];
         foreach ($this->access_key_scope_builder->buildAllAvailableAuthenticationScopes() as $access_key_scope) {
             $access_key_scope_presenters[] = new AccessKeyScopePresenter($access_key_scope);
         }
-        $access_key_presenters         = [];
+        $access_key_presenters = [];
         foreach ($this->access_key_metadata_retriever->getMetadataByUser($user) as $access_key_metadata) {
             $access_key_presenters[] = new AccessKeyMetadataPresenter($access_key_metadata);
         }

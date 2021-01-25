@@ -50,7 +50,7 @@ final class TrackerHierarchyFactoryGetAllAncestorsTest extends \PHPUnit\Framewor
 
     protected function setUp(): void
     {
-        $this->user = new PFUser(['language_id' => 'en']);
+        $this->user              = new PFUser(['language_id' => 'en']);
         $this->hierarchy_factory = Mockery::mock(Tracker_HierarchyFactory::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();
 

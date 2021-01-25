@@ -80,8 +80,8 @@ class ArtifactFactory
          "(afv.valueInt=" . db_ei($user_id) . " OR a.submitted_by=" . db_ei($user_id) . ") AND a.status_id <> 3 LIMIT 100";
 
      //echo $sql;
-        $result = db_query($sql);
-        $rows = db_numrows($result);
+        $result             = db_query($sql);
+        $rows               = db_numrows($result);
         $this->fetched_rows = $rows;
         if (db_error()) {
             $this->setError($Language->getText('tracker_common_factory', 'db_err') . ': ' . db_error());
@@ -101,8 +101,8 @@ class ArtifactFactory
          "a.submitted_by=" . db_ei($user_id) . " AND a.status_id <> 3 LIMIT 100";
 
      //echo $sql;
-        $result = db_query($sql);
-        $rows = db_numrows($result);
+        $result             = db_query($sql);
+        $rows               = db_numrows($result);
         $this->fetched_rows = $rows;
         if (db_error()) {
             $this->setError($Language->getText('tracker_common_factory', 'db_err') . ': ' . db_error());
@@ -135,8 +135,8 @@ class ArtifactFactory
         $artifacts = [];
         if (is_array($criteria) && count($criteria) > 0) {
             $sql_select = "SELECT a.* ";
-            $sql_from = " FROM artifact_group_list agl, artifact a ";
-            $sql_where = " WHERE a.group_artifact_id = " . db_ei($this->ArtifactType->getID()) . " AND 
+            $sql_from   = " FROM artifact_group_list agl, artifact a ";
+            $sql_where  = " WHERE a.group_artifact_id = " . db_ei($this->ArtifactType->getID()) . " AND 
                           a.group_artifact_id = agl.group_artifact_id ";
 
             $cpt_criteria = 0;  // counter for criteria (used to build the SQL query)
@@ -164,9 +164,9 @@ class ArtifactFactory
                     if ($cr->operator == '=' && ($cr->field_name == 'open_date' || $cr->field_name == 'close_date' || $cr->field_name == 'last_update_date')) {
                         // special case for open_date and close_date with operator = : the hours, minutes, and seconds are stored, so we have to compare an interval
                         list($year,$month,$day) = util_date_explode($cr->field_value);
-                        $time_end = mktime(23, 59, 59, $month, $day, $year);
-                        $sql_where .= " AND (a." . $cr->field_name . " >= '" . strtotime($cr->field_value) . "')";
-                        $sql_where .= " AND (a." . $cr->field_name . " <= '" . $time_end . "')";
+                        $time_end               = mktime(23, 59, 59, $month, $day, $year);
+                        $sql_where             .= " AND (a." . $cr->field_name . " >= '" . strtotime($cr->field_value) . "')";
+                        $sql_where             .= " AND (a." . $cr->field_name . " <= '" . $time_end . "')";
                     } else {
                         if ($af->isDateField()) {
                             $sql_where .= " AND (a." . $cr->field_name . " " . $operator . " '" . strtotime($cr->field_value) . "')";
@@ -176,8 +176,8 @@ class ArtifactFactory
                     }
                 } else {
                     $sql_select .= ", afv" . $cpt_criteria . ".valueInt ";
-                    $sql_from .= ", artifact_field af" . $cpt_criteria . ", artifact_field_value afv" . $cpt_criteria . " ";
-                    $sql_where .= " AND af" . $cpt_criteria . ".group_artifact_id = agl.group_artifact_id
+                    $sql_from   .= ", artifact_field af" . $cpt_criteria . ", artifact_field_value afv" . $cpt_criteria . " ";
+                    $sql_where  .= " AND af" . $cpt_criteria . ".group_artifact_id = agl.group_artifact_id
                                     AND (af" . $cpt_criteria . ".field_name = '" . $cr->field_name . "' 
                                     AND afv" . $cpt_criteria . "." . $af->getValueFieldName() . " " . $operator . " '" . $cr->field_value . "') 
                                     AND af" . $cpt_criteria . ".field_id = afv" . $cpt_criteria . ".field_id 
@@ -195,11 +195,11 @@ class ArtifactFactory
         }
 
         // we count the total number of artifact (without offset neither limit) to be able to perform the pagination
-        $result_count = db_query($sql);
-        $rows_count = db_numrows($result_count);
+        $result_count    = db_query($sql);
+        $rows_count      = db_numrows($result_count);
         $total_artifacts = $rows_count;
 
-        $offset = intval($offset);
+        $offset   = intval($offset);
         $max_rows = intval($max_rows);
         if ($max_rows > 0) {
             if (! $offset || $offset < 0) {
@@ -208,8 +208,8 @@ class ArtifactFactory
             $sql .= " LIMIT " .  db_ei($offset)  . "," .  db_ei($max_rows);
         }
 
-        $result = db_query($sql);
-        $rows = db_numrows($result);
+        $result             = db_query($sql);
+        $rows               = db_numrows($result);
         $this->fetched_rows = $rows;
         if (db_error()) {
             $this->setError($Language->getText('tracker_common_factory', 'db_err') . ': ' . db_error());
@@ -235,7 +235,7 @@ class ArtifactFactory
 
         $chunksz = $max_rows;
         $advsrch = 0;   // ?
-        $prefs = [];
+        $prefs   = [];
 
         $report = new ArtifactReport($report_id, $group_artifact_id);
         if (! $report || ! is_object($report)) {
@@ -246,7 +246,7 @@ class ArtifactFactory
             return false;
         }
 
-        $query_fields = $report->getQueryFields();
+        $query_fields  = $report->getQueryFields();
         $result_fields = $report->getResultFields();
 
         // Filter part
@@ -278,7 +278,7 @@ class ArtifactFactory
         }
 
         // Sort part
-        $morder = '';
+        $morder       = '';
         $array_morder = [];
         if (is_array($sort_criteria)) {
             foreach ($sort_criteria as $sort_cr) {
@@ -309,9 +309,9 @@ class ArtifactFactory
         }
         $morder = implode(',', $array_morder);
 
-        $pm = ProjectManager::instance();
+        $pm    = ProjectManager::instance();
         $group = $pm->getProject($group_id);
-        $ath = new ArtifactTypeHtml($group);
+        $ath   = new ArtifactTypeHtml($group);
 
         $artifact_report = new ArtifactReport($report_id, $group_artifact_id);
 
@@ -321,23 +321,23 @@ class ArtifactFactory
         // get the SQL query corresponding to the query
         $sql = $artifact_report->createQueryReport($prefs, $morder, $advsrch, $offset, $chunksz, $aids);
 
-        $result = $artifact_report->getResultQueryReport($sql);
+        $result        = $artifact_report->getResultQueryReport($sql);
         $result_fields = $artifact_report->getResultFields();
 
         //we get from result only fields that we need to display in the report (we add at the begining id and severity only to identify the artifact and for the severity color)
         $artifacts = [];
-        $i = 0;
+        $i         = 0;
         foreach ($result as $art) {
             $artifact_id = $art['artifact_id'];
             $severity_id = $art['severity_id'];
-            $artifact = new Artifact($this->ArtifactType, $art['artifact_id'], true);
+            $artifact    = new Artifact($this->ArtifactType, $art['artifact_id'], true);
             if ($artifact->userCanView()) {
                 $fields = [];
                 reset($result_fields);
                 $fields['severity_id'] = $severity_id;
-                $fields['id'] = $artifact_id;
+                $fields['id']          = $artifact_id;
                 foreach ($result_fields as $key => $field) {
-                    $value = $result[$i][$key];
+                    $value        = $result[$i][$key];
                     $fields[$key] = $value;
                 }
                 $artifacts[$artifact_id] = $fields;
@@ -353,7 +353,7 @@ class ArtifactFactory
      */
     public function setError($string)
     {
-        $this->error_state = true;
+        $this->error_state   = true;
         $this->error_message = $string;
     }
 

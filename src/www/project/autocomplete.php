@@ -38,8 +38,8 @@ if ($request->get('return_type') === 'json_for_select_2') {
 }
 
 // Number of user to display
-$limit     = 15;
-$page      = 1;
+$limit = 15;
+$page  = 1;
 
 if ($request->get('page')) {
     $page = (int) $request->get('page');

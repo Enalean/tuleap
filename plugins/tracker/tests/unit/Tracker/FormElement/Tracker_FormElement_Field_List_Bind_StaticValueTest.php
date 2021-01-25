@@ -32,7 +32,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticValueTest extends TestCase
         $description = 'The artifact has been re-opened';
         $rank        = 200;
         $is_hidden   = 0;
-        $bv = new Tracker_FormElement_Field_List_Bind_StaticValue($id, $label, $description, $rank, $is_hidden);
+        $bv          = new Tracker_FormElement_Field_List_Bind_StaticValue($id, $label, $description, $rank, $is_hidden);
         $this->assertEquals($label, $bv->getLabel());
     }
 }

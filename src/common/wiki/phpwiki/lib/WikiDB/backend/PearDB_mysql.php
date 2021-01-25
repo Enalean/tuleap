@@ -13,7 +13,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
      */
     public function set_versiondata($pagename, $version, $data)
     {
-        $dbh = &$this->_dbh;
+        $dbh         = &$this->_dbh;
         $version_tbl = $this->_table_names['version_tbl'];
 
         $minor_edit = (int) ! empty($data['is_minor_edit']);
@@ -98,7 +98,7 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
             . $orderby;
         if ($limit) {
             list($from, $count) = $this->limit($limit);
-            $result = $dbh->limitQuery($sql, $from, $count * 3);
+            $result             = $dbh->limitQuery($sql, $from, $count * 3);
         } else {
             $result = $dbh->query($sql);
         }

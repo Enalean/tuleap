@@ -68,12 +68,12 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         AgileDashboard_PaneInfoFactory $pane_info_factory,
         EventManager $event_manager
     ) {
-        $this->request                                         = $request;
-        $this->milestone_factory                               = $milestone_factory;
-        $this->pane_presenter_builder_factory                  = $pane_presenter_builder_factory;
-        $this->submilestone_finder                             = $submilestone_finder;
-        $this->pane_info_factory                               = $pane_info_factory;
-        $this->event_manager                                   = $event_manager;
+        $this->request                        = $request;
+        $this->milestone_factory              = $milestone_factory;
+        $this->pane_presenter_builder_factory = $pane_presenter_builder_factory;
+        $this->submilestone_finder            = $submilestone_finder;
+        $this->pane_info_factory              = $pane_info_factory;
+        $this->event_manager                  = $event_manager;
     }
 
     /** @return PanePresenterData */
@@ -152,7 +152,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
     private function buildDefaultPane(Planning_Milestone $milestone)
     {
         if (! isset($this->list_of_default_pane_info[$milestone->getArtifactId() ?? 0])) {
-            $pane_info                                                    = $this->pane_info_factory->getDetailsPaneInfo($milestone);
+            $pane_info                                                         = $this->pane_info_factory->getDetailsPaneInfo($milestone);
             $this->list_of_default_pane_info[$milestone->getArtifactId() ?? 0] = $pane_info;
         } else {
             $pane_info = $this->list_of_default_pane_info[$milestone->getArtifactId() ?? 0];
@@ -185,7 +185,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
         $allowed_additional_panes_to_display_collector = new AllowedAdditionalPanesToDisplayCollector();
         $this->event_manager->processEvent($allowed_additional_panes_to_display_collector);
 
-        $project = $this->request->getProject();
+        $project             = $this->request->getProject();
         $configuration_check = new ConfigurationCheckDelegation($user, $project);
         $this->event_manager->processEvent($configuration_check);
 
@@ -222,7 +222,7 @@ class Planning_MilestonePaneFactory // phpcs:ignore PSR1.Classes.ClassDeclaratio
             EventManager::instance()->processEvent($collector);
 
             $this->list_of_pane_info[$milestone->getArtifactId() ?? 0] = $collector->getPanes();
-            $this->active_pane[$milestone->getArtifactId() ?? 0] = $collector->getActivePane();
+            $this->active_pane[$milestone->getArtifactId() ?? 0]       = $collector->getActivePane();
         }
     }
 

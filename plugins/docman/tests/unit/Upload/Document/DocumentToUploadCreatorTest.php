@@ -295,8 +295,8 @@ final class DocumentToUploadCreatorTest extends TestCase
         );
 
         \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '1');
-        $parent_item = Mockery::mock(\Docman_Item::class);
-        $user = Mockery::mock(\PFUser::class);
+        $parent_item  = Mockery::mock(\Docman_Item::class);
+        $user         = Mockery::mock(\PFUser::class);
         $current_time = new \DateTimeImmutable();
 
         $this->expectException(UploadMaxSizeExceededException::class);

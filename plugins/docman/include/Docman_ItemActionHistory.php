@@ -25,8 +25,8 @@ class Docman_ItemActionHistory extends \Docman_ItemAction
     public function __construct(&$item)
     {
         parent::__construct($item);
-        $this->action = 'details&section=history';
+        $this->action  = 'details&section=history';
         $this->classes = 'docman_item_option_history';
-        $this->title = \dgettext('tuleap-docman', 'History');
+        $this->title   = \dgettext('tuleap-docman', 'History');
     }
 }

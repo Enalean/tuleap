@@ -58,7 +58,7 @@ class StatusValueProviderTest extends TestCase
         $this->user = Mockery::mock(PFUser::class);
 
         $this->for_changeset_provider = Mockery::mock(StatusValueForChangesetProvider::class);
-        $this->provider = new StatusValueProvider($this->for_changeset_provider);
+        $this->provider               = new StatusValueProvider($this->for_changeset_provider);
     }
 
     public function testItReturnsNullIfNoLastChangeset(): void

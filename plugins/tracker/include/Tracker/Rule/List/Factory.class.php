@@ -49,7 +49,7 @@ class Tracker_Rule_List_Factory
     public function create($source_field_id, $target_field_id, $tracker_id, $source_value, $target_value)
     {
         $list_rule = $this->populate(new Tracker_Rule_List(), $tracker_id, $source_field_id, $target_field_id, $source_value, $target_value);
-        $rule_id = $this->insert($list_rule);
+        $rule_id   = $this->insert($list_rule);
 
         $list_rule->setId($rule_id);
 
@@ -97,7 +97,7 @@ class Tracker_Rule_List_Factory
         $rules_array = [];
 
         foreach ($rules as $rule) {
-            $list_rule = $this->populate(new Tracker_Rule_List(), $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $rule['source_value_id'], $rule['target_value_id']);
+            $list_rule     = $this->populate(new Tracker_Rule_List(), $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $rule['source_value_id'], $rule['target_value_id']);
             $rules_array[] = $list_rule;
         }
 
@@ -159,13 +159,13 @@ class Tracker_Rule_List_Factory
      */
     public function exportToXml(SimpleXMLElement $root, $xmlMapping, $form_element_factory, $tracker_id)
     {
-        $rules = $this->searchByTrackerId($tracker_id);
+        $rules      = $this->searchByTrackerId($tracker_id);
         $list_rules = $root->addChild('list_rules');
 
         foreach ($rules as $rule) {
             $source_field = $form_element_factory->getFormElementById($rule->getSourceFieldId());
             $target_field = $form_element_factory->getFormElementById($rule->getTargetFieldId());
-            $bf = new Tracker_FormElement_Field_List_BindFactory();
+            $bf           = new Tracker_FormElement_Field_List_BindFactory();
             //TODO: handle sb/msb bind to users and remove condition
             if ($bf->getType($source_field->getBind()) == 'static' && $bf->getType($target_field->getBind()) == 'static') {
                 $child = $list_rules->addChild('rule');

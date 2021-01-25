@@ -71,9 +71,9 @@ class WikiPlugin_SearchHighlight extends WikiPlugin
 
         $query = new TextSearchQuery($s, $case_exact, $regex);
         //$pages = $dbi->fullSearch($query);
-        $lines = [];
+        $lines      = [];
         $hilight_re = $query->getHighlightRegexp();
-        $page = $request->getPage();
+        $page       = $request->getPage();
         return $this->showhits($page, $hilight_re);
     }
 
@@ -81,9 +81,9 @@ class WikiPlugin_SearchHighlight extends WikiPlugin
     {
         $current = $page->getCurrentRevision();
         $matches = preg_grep("/$hilight_re/i", $current->getContent());
-        $html = [];
+        $html    = [];
         foreach ($matches as $line) {
-            $line = $this->highlight_line($line, $hilight_re);
+            $line   = $this->highlight_line($line, $hilight_re);
             $html[] = HTML::dd(HTML::small(
                 ['class' => 'search-context'],
                 $line
@@ -95,7 +95,7 @@ class WikiPlugin_SearchHighlight extends WikiPlugin
     public function highlight_line($line, $hilight_re)
     {
         while (preg_match("/^(.*?)($hilight_re)/i", $line, $m)) {
-            $line = substr($line, strlen($m[0]));
+            $line   = substr($line, strlen($m[0]));
             $html[] = $m[1];    // prematch
             $html[] = HTML::strong(['class' => 'search-term'], $m[2]); // match
         }

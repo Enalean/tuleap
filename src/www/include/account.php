@@ -28,7 +28,7 @@ use Tuleap\User\Account\RedirectAfterLogin;
 // Add user to an existing project
 function account_add_user_to_group($group_id, &$user_unix_name)
 {
-    $um = UserManager::instance();
+    $um   = UserManager::instance();
     $user = $um->findUser($user_unix_name);
     if ($user) {
         $project = ProjectManager::instance()->getProject($group_id);
@@ -87,7 +87,7 @@ function account_redirect_after_login(PFUser $user, string $return_to): void
 {
     global $pv;
 
-    $event_manager = EventManager::instance();
+    $event_manager        = EventManager::instance();
     $redirect_after_login = $event_manager->dispatch(new RedirectAfterLogin($user, $return_to, isset($pv) && $pv == 2));
     assert($redirect_after_login instanceof RedirectAfterLogin);
     $return_to = $redirect_after_login->getReturnTo();

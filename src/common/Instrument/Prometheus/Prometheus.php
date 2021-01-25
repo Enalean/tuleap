@@ -41,7 +41,7 @@ class Prometheus
      *
      * @tlp-config-key
      */
-    public const CONFIG_PROMETHEUS_PLATFORM      = 'prometheus_platform';
+    public const CONFIG_PROMETHEUS_PLATFORM = 'prometheus_platform';
     /**
      * URL of `node_exporter` Prometheus exporter to be scrapped and included in Tuleap metrics
      *

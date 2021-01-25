@@ -114,13 +114,13 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
      */
     protected function fetchSubmitValueMasschange()
     {
-        $html = '';
+        $html  = '';
         $value = dgettext('tuleap-tracker', 'Unchanged');
 
         if ($this->isSemanticTitle()) {
             $html .= '<input type="text" readonly="readonly" value="' . $value . '" title="' . dgettext('tuleap-tracker', 'This field is the title of the artifact. It is not allowed to masschange it.') . '" />';
         } else {
-            $hp = Codendi_HTMLPurifier::instance();
+            $hp    = Codendi_HTMLPurifier::instance();
             $html .= '<input type="text" class="user-mention"
                              name="artifact[' . $this->id . ']"
                              size="' . $this->getProperty('size') . '"
@@ -172,7 +172,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
                 $value = $value->getText();
             }
         }
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text" class="user-mention"
                          data-test="' . $this->getName() . '"
                          name="artifact[' . $this->id . ']"
@@ -189,8 +189,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
      */
     protected function fetchAdminFormElement()
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp    = Codendi_HTMLPurifier::instance();
+        $html  = '';
         $value = '';
         if ($this->hasDefaultValue()) {
             $value = $this->getDefaultValue();
@@ -230,7 +230,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
      */
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($value) {
             $html .= $value->getValue();

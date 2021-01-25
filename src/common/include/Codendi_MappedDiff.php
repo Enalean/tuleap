@@ -61,7 +61,7 @@ class Codendi_MappedDiff extends \Codendi_Diff // phpcs:ignore PSR1.Classes.Clas
             $orig =& $this->edits[$i]->orig;
             if (\is_array($orig)) {
                 $orig = \array_slice($from_lines, $xi, \sizeof($orig));
-                $xi += \sizeof($orig);
+                $xi  += \sizeof($orig);
             }
             $fin =& $this->edits[$i]->fin;
             if (\is_array($fin)) {

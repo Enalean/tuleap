@@ -78,7 +78,7 @@ class ExecutionCreator
         $tracker = $this->getExecutionTrackerReferenceForProject($project_id);
         $values  = $this->getFieldValuesForExecutionArtifactCreation($tracker, $user, $definition->getId());
 
-        $execution = $this->artifact_creator->create($user, $tracker, $values, false);
+        $execution      = $this->artifact_creator->create($user, $tracker, $values, false);
         $last_changeset = $definition->getLastChangeset();
         if ($last_changeset) {
             $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(
@@ -101,7 +101,7 @@ class ExecutionCreator
         if (! $execution_tracker_id) {
             throw new RestException(400, 'The project does not contain an execution tracker');
         }
-        $execution_tracker    = $this->tracker_factory->getTrackerById($execution_tracker_id);
+        $execution_tracker = $this->tracker_factory->getTrackerById($execution_tracker_id);
         if (! $execution_tracker) {
             throw new RestException(400, 'The project does not contain an execution tracker');
         }
@@ -119,8 +119,8 @@ class ExecutionCreator
         PFUser $user,
         int $definition_id
     ): array {
-        $status_field      = $this->getStatusField($tracker_reference, $user);
-        $link_field        = $this->getArtifactLinksField($tracker_reference, $user);
+        $status_field = $this->getStatusField($tracker_reference, $user);
+        $link_field   = $this->getArtifactLinksField($tracker_reference, $user);
 
         $status_value                 = new ArtifactValuesRepresentation();
         $status_value->field_id       = (int) $status_field->getId();

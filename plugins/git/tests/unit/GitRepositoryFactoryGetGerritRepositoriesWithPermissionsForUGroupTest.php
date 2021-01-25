@@ -31,7 +31,7 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao = \Mockery::mock(GitDao::class);
+        $this->dao             = \Mockery::mock(GitDao::class);
         $this->project_manager = \Mockery::spy(\ProjectManager::class);
 
         $this->factory = \Mockery::mock(
@@ -42,7 +42,7 @@ class GitRepositoryFactoryGetGerritRepositoriesWithPermissionsForUGroupTest exte
             ->shouldAllowMockingProtectedMethods();
 
         $this->project_id = 320;
-        $this->ugroup_id = 115;
+        $this->ugroup_id  = 115;
 
         $this->user_ugroups = [404, 416];
         $this->user         = \Mockery::spy(\PFUser::class)->shouldReceive('getUgroups')->with($this->project_id, null)->andReturns($this->user_ugroups)->getMock();

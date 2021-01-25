@@ -477,7 +477,7 @@ class DB_result
      * for limit queries, the row to start fetching
      * @var int
      */
-    public $limit_from  = null;
+    public $limit_from = null;
 
     /**
      * for limit queries, the number of rows to fetch
@@ -496,14 +496,14 @@ class DB_result
      */
     public function __construct(&$dbh, $result, $options = [])
     {
-        $this->dbh = &$dbh;
+        $this->dbh    = &$dbh;
         $this->result = $result;
         foreach ($options as $key => $value) {
             $this->setOption($key, $value);
         }
-        $this->limit_type  = $dbh->features['limit'];
-        $this->autofree    = $dbh->options['autofree'];
-        $this->fetchmode   = $dbh->fetchmode;
+        $this->limit_type             = $dbh->features['limit'];
+        $this->autofree               = $dbh->options['autofree'];
+        $this->fetchmode              = $dbh->fetchmode;
         $this->fetchmode_object_class = $dbh->fetchmode_object_class;
     }
 
@@ -555,7 +555,7 @@ class DB_result
             $fetchmode = $this->fetchmode;
         }
         if ($fetchmode === DB_FETCHMODE_OBJECT) {
-            $fetchmode = DB_FETCHMODE_ASSOC;
+            $fetchmode    = DB_FETCHMODE_ASSOC;
             $object_class = $this->fetchmode_object_class;
         }
         if ($this->limit_from !== null) {
@@ -640,7 +640,7 @@ class DB_result
             $fetchmode = $this->fetchmode;
         }
         if ($fetchmode === DB_FETCHMODE_OBJECT) {
-            $fetchmode = DB_FETCHMODE_ASSOC;
+            $fetchmode    = DB_FETCHMODE_ASSOC;
             $object_class = $this->fetchmode_object_class;
         }
         if ($this->limit_from !== null) {

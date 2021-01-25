@@ -80,12 +80,12 @@ final class SetupMysqlCommand extends Command
         assert(is_string($user));
         $dbname = $input->getOption('dbname');
         assert(is_string($dbname));
-        $password = $input->getOption('password');
+        $password             = $input->getOption('password');
         $clear_admin_password = $input->getArgument('admin_password');
         assert(is_string($clear_admin_password));
         $admin_password = new ConcealedString($clear_admin_password);
         sodium_memzero($clear_admin_password);
-        $domain_name    = $input->getArgument('domain_name');
+        $domain_name = $input->getArgument('domain_name');
         assert(is_string($domain_name));
 
         if (! $password) {
@@ -95,7 +95,7 @@ final class SetupMysqlCommand extends Command
         assert(is_string($password));
 
         $connexion_manager = new ConnectionManager();
-        $db = $connexion_manager->getDBWithDBName($io, $host, $port, $ssl_mode, $ssl_ca_file, $user, $password, $dbname);
+        $db                = $connexion_manager->getDBWithDBName($io, $host, $port, $ssl_mode, $ssl_ca_file, $user, $password, $dbname);
         $output->writeln('<info>Successfully connected to the database !</info>');
 
         $connexion_manager->checkSQLModes($db);

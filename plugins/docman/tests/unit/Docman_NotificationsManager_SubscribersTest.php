@@ -68,7 +68,7 @@ class Docman_NotificationsManager_SubscribersTest extends TestCase
 
         $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($folder);
 
-        $user    = Mockery::mock(PFUser::class);
+        $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getRealName')->andReturn("UserName");
 
         $details_url = "http://www.example.com/plugins/docman/project_name/preview/1/";
@@ -83,10 +83,10 @@ class Docman_NotificationsManager_SubscribersTest extends TestCase
         );
 
             $expected_message = "You are receiving this message because you were added to the monitoring list of this item:\n";
-        $expected_message .= $details_url . "\n\n";
-        $expected_message .= "--------------------------------------------------------------------\n";
-        $expected_message .= "To stop monitoring, please visit:\n";
-        $expected_message .= $notifications_url;
+        $expected_message    .= $details_url . "\n\n";
+        $expected_message    .= "--------------------------------------------------------------------\n";
+        $expected_message    .= "To stop monitoring, please visit:\n";
+        $expected_message    .= $notifications_url;
 
         $this->assertEquals($expected_message, $message);
     }
@@ -107,7 +107,7 @@ class Docman_NotificationsManager_SubscribersTest extends TestCase
 
         $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($folder);
 
-        $user    = Mockery::mock(PFUser::class);
+        $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getRealName')->andReturn("UserName");
 
         $details_url = "http://www.example.com/plugins/docman/project_name/preview/1/";
@@ -121,7 +121,7 @@ class Docman_NotificationsManager_SubscribersTest extends TestCase
             $params
         );
 
-        $expected_message = "You are receiving this message because you were removed from the monitoring list of this item:\n";
+        $expected_message  = "You are receiving this message because you were removed from the monitoring list of this item:\n";
         $expected_message .= $details_url . "\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
         $expected_message .= "To restore monitoring, please visit:\n";

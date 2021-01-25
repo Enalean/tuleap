@@ -83,10 +83,10 @@ class AddProjectMemberTest extends TestCase
     protected function setUp(): void
     {
         \ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-        $this->an_active_user_id = '101';
-        $this->an_active_user = new \PFUser(['user_id' => $this->an_active_user_id, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'unix_status' => \PFUser::UNIX_STATUS_NO_UNIX_ACCOUNT]);
+        $this->an_active_user_id    = '101';
+        $this->an_active_user       = new \PFUser(['user_id' => $this->an_active_user_id, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'unix_status' => \PFUser::UNIX_STATUS_NO_UNIX_ACCOUNT]);
         $this->an_active_project_id = '202';
-        $this->an_active_project = new \Project(['group_id' => $this->an_active_project_id, 'access' => \Project::ACCESS_PUBLIC]);
+        $this->an_active_project    = new \Project(['group_id' => $this->an_active_project_id, 'access' => \Project::ACCESS_PUBLIC]);
         $this->user_permissions_dao = M::mock(UserPermissionsDao::class);
         $this->user_permissions_dao
             ->shouldReceive('isUserPartOfProjectMembers')

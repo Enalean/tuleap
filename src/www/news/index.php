@@ -76,7 +76,7 @@ if ($group_id && ($group_id != ForgeConfig::get('sys_news_group'))) {
 }
 
 $result = db_query($sql);
-$rows = db_numrows($result);
+$rows   = db_numrows($result);
 
 $purifier = Codendi_HTMLPurifier::instance();
 

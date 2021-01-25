@@ -31,7 +31,7 @@ class LFSAuthorizationTokenHeaderSerializerTest extends TestCase
     public function testAuthorizationTokenCanBeSerializedToHeaderAndUnserialized()
     {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
-        $split_token = new SplitToken(1, $verification_string);
+        $split_token         = new SplitToken(1, $verification_string);
 
         $serializer = new LFSAuthorizationTokenHeaderSerializer();
 

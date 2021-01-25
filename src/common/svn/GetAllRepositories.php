@@ -41,7 +41,7 @@ final class GetAllRepositories implements Dispatchable
 
     public function __construct(\SVN_DAO $dao, \ProjectManager $project_manager)
     {
-        $this->dao = $dao;
+        $this->dao             = $dao;
         $this->project_manager = $project_manager;
     }
 
@@ -51,7 +51,7 @@ final class GetAllRepositories implements Dispatchable
     public function getRepositories(): array
     {
         foreach ($this->dao->searchSvnRepositories() as $row) {
-            $project = $this->project_manager->getProjectFromDbRow($row);
+            $project    = $this->project_manager->getProjectFromDbRow($row);
             $repository = new CoreApacheConfRepository($project);
             if (! isset($this->repositories[$repository->getURLPath()])) {
                 $this->repositories[$repository->getURLPath()] = $repository;

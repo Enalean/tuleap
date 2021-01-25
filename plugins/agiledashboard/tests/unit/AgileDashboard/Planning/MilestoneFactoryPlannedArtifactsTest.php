@@ -36,23 +36,23 @@ final class MilestoneFactoryPlannedArtifactsTest extends TestCase
 
     public function testItReturnsATreeOfPlanningItems(): void
     {
-        $depth3_artifact  = Mockery::mock(Artifact::class);
+        $depth3_artifact = Mockery::mock(Artifact::class);
         $depth3_artifact->shouldReceive('getId')->andReturn(3);
         $depth3_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
 
-        $depth2_artifact  = Mockery::mock(Artifact::class);
+        $depth2_artifact = Mockery::mock(Artifact::class);
         $depth2_artifact->shouldReceive('getId')->andReturn(2);
         $depth2_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth3_artifact]);
 
-        $depth1_artifact  = Mockery::mock(Artifact::class);
+        $depth1_artifact = Mockery::mock(Artifact::class);
         $depth1_artifact->shouldReceive('getId')->andReturn(1);
         $depth1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth2_artifact]);
 
-        $root_artifact    = Mockery::mock(Artifact::class);
+        $root_artifact = Mockery::mock(Artifact::class);
         $root_artifact->shouldReceive('getId')->andReturn(100);
         $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth1_artifact]);
 
-        $factory = new Planning_MilestoneFactory(
+        $factory             = new Planning_MilestoneFactory(
             Mockery::spy(\PlanningFactory::class),
             Mockery::spy(\Tracker_ArtifactFactory::class),
             Mockery::spy(\Tracker_FormElementFactory::class),

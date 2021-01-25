@@ -153,7 +153,7 @@ class ViewVCProxy
 
         [$headers, $body] = http_split_header_body($content);
 
-        $content_type_line   = strtok($content, "\n\t\r\0\x0B");
+        $content_type_line = strtok($content, "\n\t\r\0\x0B");
 
         $content = substr($content, strpos($content, $content_type_line));
 

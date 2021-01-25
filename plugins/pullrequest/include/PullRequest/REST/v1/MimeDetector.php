@@ -101,7 +101,7 @@ class MimeDetector
 
     public static function getMimeInfo(string $file_path, string $dest_content, string $src_content): array
     {
-        $finfo = finfo_open(FILEINFO_MIME);
+        $finfo        = finfo_open(FILEINFO_MIME);
         $file_content = $src_content === "" ? $dest_content : $src_content;
         $finfo_buffer = finfo_buffer($finfo, $file_content);
         if ($finfo_buffer != false) {
@@ -119,9 +119,9 @@ class MimeDetector
         finfo_close($finfo);
 
         if (substr($mime_type, 0, 5) === 'text/') {
-            $file_ext = pathinfo($file_path, PATHINFO_EXTENSION);
+            $file_ext   = pathinfo($file_path, PATHINFO_EXTENSION);
             $mime_types = self::$EXTENSION_TO_MIME_TYPES;
-            $mime_type = isset($mime_types[$file_ext]) ? $mime_types[$file_ext] : $mime_type;
+            $mime_type  = isset($mime_types[$file_ext]) ? $mime_types[$file_ext] : $mime_type;
         }
 
         $charset = str_replace(' charset=', '', $charset_info);

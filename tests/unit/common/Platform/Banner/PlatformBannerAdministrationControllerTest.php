@@ -65,7 +65,7 @@ final class PlatformBannerAdministrationControllerTest extends TestCase
         $request = Mockery::mock(HTTPRequest::class);
         $request->shouldReceive(['getCurrentUser' => $current_user]);
 
-        $layout  = Mockery::mock(BaseLayout::class);
+        $layout = Mockery::mock(BaseLayout::class);
 
         $this->include_assets->shouldReceive('getFileURL')
             ->once()
@@ -96,7 +96,7 @@ final class PlatformBannerAdministrationControllerTest extends TestCase
         $request = Mockery::mock(HTTPRequest::class);
         $request->shouldReceive(['getCurrentUser' => $current_user]);
 
-        $layout  = Mockery::mock(BaseLayout::class);
+        $layout = Mockery::mock(BaseLayout::class);
 
         $this->expectException(ForbiddenException::class);
 

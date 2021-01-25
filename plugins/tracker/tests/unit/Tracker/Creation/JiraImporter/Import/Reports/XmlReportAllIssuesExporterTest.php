@@ -113,11 +113,11 @@ final class XmlReportAllIssuesExporterTest extends TestCase
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
         );
 
-        $tracker_node = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
+        $tracker_node       = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
         $this->reports_node = $tracker_node->addChild('reports');
 
-        $cdata_factory = new \XML_SimpleXMLCDATAFactory();
-        $this->report_export       = new XmlReportAllIssuesExporter(
+        $cdata_factory       = new \XML_SimpleXMLCDATAFactory();
+        $this->report_export = new XmlReportAllIssuesExporter(
             new XmlReportDefaultCriteriaExporter(),
             $cdata_factory,
             new XmlReportTableExporter($cdata_factory)

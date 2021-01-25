@@ -36,7 +36,7 @@ final class GitActionsForkTests extends TestCase
         parent::setUp();
         $this->manager = \Mockery::spy(\GitRepositoryManager::class);
 
-        $git_plugin  = Mockery::mock(\GitPlugin::class)
+        $git_plugin = Mockery::mock(\GitPlugin::class)
             ->shouldReceive('areFriendlyUrlsActivated')
             ->andReturnFalse()
             ->getMock();
@@ -82,16 +82,16 @@ final class GitActionsForkTests extends TestCase
 
     public function testItDelegatesForkToGitManager(): void
     {
-        $repositories = [
+        $repositories    = [
             Mockery::mock(GitRepository::class),
             Mockery::mock(GitRepository::class)
         ];
-        $to_project   = \Mockery::spy(\Project::class);
-        $namespace    = 'namespace';
-        $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;
-        $user         = \Mockery::spy(\PFUser::class);
-        $response     = \Mockery::spy(\Layout::class);
-        $redirect_url = '/stuff';
+        $to_project      = \Mockery::spy(\Project::class);
+        $namespace       = 'namespace';
+        $scope           = GitRepository::REPO_SCOPE_INDIVIDUAL;
+        $user            = \Mockery::spy(\PFUser::class);
+        $response        = \Mockery::spy(\Layout::class);
+        $redirect_url    = '/stuff';
         $forkPermissions = [];
 
         $this->manager->shouldReceive('forkRepositories')->with($repositories, $to_project, $user, $namespace, $scope, $forkPermissions)->once();

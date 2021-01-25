@@ -205,11 +205,11 @@ final class FieldCalculatorTest extends TestCase
                 ]
             );
 
-        $child_five = ['id' => '750', 'artifact_link_id' => '750', 'type' => 'int', 'int_value' => 5, 'parent_id' => '766'];
-        $child_six        = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 15, 'parent_id' => '766'];
+        $child_five  = ['id' => '750', 'artifact_link_id' => '750', 'type' => 'int', 'int_value' => 5, 'parent_id' => '766'];
+        $child_six   = ['id' => '751', 'artifact_link_id' => '751', 'type' => 'int', 'int_value' => 15, 'parent_id' => '766'];
         $child_seven = ['id' => '766', 'artifact_link_id' => '766', 'type' => 'computed', 'parent_id' => '777'];
 
-        $other_children    = \TestHelper::arrayToDar($child_five, $child_six, $child_seven);
+        $other_children = \TestHelper::arrayToDar($child_five, $child_six, $child_seven);
         $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
             ->withArgs(
                 [
@@ -227,7 +227,7 @@ final class FieldCalculatorTest extends TestCase
                 ]
             );
 
-        $other_children    = \TestHelper::arrayToDar($child_five, $child_six, $child_seven);
+        $other_children = \TestHelper::arrayToDar($child_five, $child_six, $child_seven);
         $this->provider->shouldReceive('fetchChildrenAndManualValuesOfArtifacts')
             ->withArgs(
                 [

@@ -51,7 +51,7 @@ class XMLExporter
     public function __construct(
         PlanningPermissionsManager $planning_permissions_manager
     ) {
-        $this->planning_permissions_manager  = $planning_permissions_manager;
+        $this->planning_permissions_manager = $planning_permissions_manager;
     }
 
     /**
@@ -62,10 +62,10 @@ class XMLExporter
         $plannings_node = $agiledashboard_node->addChild(self::NODE_PLANNINGS);
         foreach ($plannings as $planning) {
             /** @var Planning $planning */
-            $planning_name                  = $planning->getName();
-            $planning_title                 = $planning->getPlanTitle();
-            $planning_tracker_id            = $this->getFormattedTrackerId($planning->getPlanningTrackerId());
-            $planning_backlog_title         = $planning->getBacklogTitle();
+            $planning_name          = $planning->getName();
+            $planning_title         = $planning->getPlanTitle();
+            $planning_tracker_id    = $this->getFormattedTrackerId($planning->getPlanningTrackerId());
+            $planning_backlog_title = $planning->getBacklogTitle();
 
             $this->checkString($planning_name, PlanningParameters::NAME);
             $this->checkString($planning_title, PlanningParameters::PLANNING_TITLE);
@@ -92,7 +92,7 @@ class XMLExporter
     {
         $backlog_nodes = $planning_node->addChild(self::NODE_BACKLOGS);
         foreach ($planning->getBacklogTrackers() as $backlog_tracker) {
-            $planning_backlog_tracker_id    = $this->getFormattedTrackerId($backlog_tracker->getId());
+            $planning_backlog_tracker_id = $this->getFormattedTrackerId($backlog_tracker->getId());
             $this->checkId($planning_backlog_tracker_id, self::NODE_BACKLOG);
             $backlog_nodes->addChild(self::NODE_BACKLOG, $this->getFormattedTrackerId($backlog_tracker->getId()));
         }

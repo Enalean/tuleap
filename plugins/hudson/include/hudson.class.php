@@ -27,12 +27,12 @@ class hudson extends Controler
     public function request()
     {
         $request = HTTPRequest::instance();
-        $vgi = new Valid_GroupId();
+        $vgi     = new Valid_GroupId();
         $vgi->required();
         if ($request->valid($vgi)) {
             $group_id = $request->get('group_id');
-            $pm = ProjectManager::instance();
-            $project = $pm->getProject($group_id);
+            $pm       = ProjectManager::instance();
+            $project  = $pm->getProject($group_id);
             if ($project->usesService('hudson')) {
                 $user = UserManager::instance()->getCurrentUser();
                 if ($user->isMember($group_id)) {

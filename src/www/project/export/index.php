@@ -45,7 +45,7 @@ if (! $group_id) {
 session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
 //  get the Group object
-$pm = ProjectManager::instance();
+$pm    = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (! $group || ! is_object($group) || $group->isError()) {
     exit_no_group();
@@ -55,9 +55,9 @@ if (! $group || ! is_object($group) || $group->isError()) {
     exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_index', 'not_get_atf'));
 }
 
-$project = $pm->getProject($group_id);
+$project   = $pm->getProject($group_id);
 $groupname = $project->getUnixName();
-$pg_title = $Language->getText('project_admin_utils', 'project_data_export') . ' ' . $groupname;
+$pg_title  = $Language->getText('project_admin_utils', 'project_data_export') . ' ' . $groupname;
 
 $em->processEvent('project_export', ['export' => $export, 'project' => $project]);
 
@@ -129,7 +129,7 @@ switch ($export) {
         $history_data_export_format_links      = [];
         $dependencies_data_export_links        = [];
         $dependencies_data_export_format_links = [];
-        $iu = 0;
+        $iu                                    = 0;
 
         $titles = ['',
                      $Language->getText('project_export_index', 'art_data'),
@@ -142,7 +142,7 @@ switch ($export) {
             $at_arr = $atf->getArtifactTypes();
             if ($at_arr && count($at_arr) >= 1) {
                 foreach ($at_arr as $at) {
-                    $idx = 'tracker_' . $at->getID();
+                    $idx                                         = 'tracker_' . $at->getID();
                     $entry_label[$idx]                           = $Language->getText('project_export_index', 'tracker') . ': ' . $at->getName();
                     $entry_data_export_links[$idx]               = '?group_id=' . $group_id . '&atid=' . $at->getID() . '&export=artifact';
                     $entry_data_export_format_links[$idx]        = '?group_id=' . $group_id . '&atid=' . $at->getID() . '&export=artifact_format';

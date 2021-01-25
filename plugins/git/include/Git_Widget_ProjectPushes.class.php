@@ -57,9 +57,9 @@ class Git_Widget_ProjectPushes extends Widget
      */
     public function getContent()
     {
-        $request = HTTPRequest::instance();
-        $groupId = $request->get('group_id');
-        $plugin = PluginManager::instance()->getPluginByName('git');
+        $request     = HTTPRequest::instance();
+        $groupId     = $request->get('group_id');
+        $plugin      = PluginManager::instance()->getPluginByName('git');
         $weeksNumber = $request->get('weeks_number');
         if (empty($weeksNumber)) {
             $weeksNumber =  $plugin->getPluginInfo()->getPropVal('weeks_number');

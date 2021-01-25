@@ -79,14 +79,14 @@ final class AppsPresenterBuilderTest extends TestCase
             ->with(M::type(AccountTabPresenterCollection::class))
             ->once()
             ->andReturnArg(0);
-        $jenkins_app = new OAuth2App(
+        $jenkins_app    = new OAuth2App(
             1,
             'Jenkins',
             'https://example.com',
             true,
             new \Project(['group_id' => 101, 'group_name' => 'Public project'])
         );
-        $custom_app  = new OAuth2App(
+        $custom_app     = new OAuth2App(
             2,
             'My Custom REST Consumer',
             'https://example.com',

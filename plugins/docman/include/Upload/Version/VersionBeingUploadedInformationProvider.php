@@ -62,7 +62,7 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
             return null;
         }
 
-        $version_id = (int) $version_id;
+        $version_id   = (int) $version_id;
         $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
         \assert($current_user instanceof PFUser);
 

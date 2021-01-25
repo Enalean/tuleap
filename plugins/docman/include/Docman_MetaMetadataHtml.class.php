@@ -39,7 +39,7 @@ class Docman_MetaMetadataHtml
 
     public function getName(&$sthCanChange)
     {
-        $mdContent = '';
+        $mdContent  = '';
         $mdContent .= '<tr>';
         $mdContent .= '<td>';
         $mdContent .= dgettext('tuleap-docman', 'Name:');
@@ -50,7 +50,7 @@ class Docman_MetaMetadataHtml
         $mdContent .= '<td>';
         if ($this->md->canChangeName()) {
             $sthCanChange = true;
-            $mdContent .= '<input type="text" name="name" data-test="metadata_name" value="' . $this->hp->purify($this->md->getName()) . '" class="text_field" />';
+            $mdContent   .= '<input type="text" name="name" data-test="metadata_name" value="' . $this->hp->purify($this->md->getName()) . '" class="text_field" />';
         } else {
             $mdContent .= $this->hp->purify($this->md->getName());
         }
@@ -62,13 +62,13 @@ class Docman_MetaMetadataHtml
 
     public function getDescription(&$sthCanChange)
     {
-        $mdContent = '';
+        $mdContent  = '';
         $mdContent .= '<tr>';
         $mdContent .= '<td>' . dgettext('tuleap-docman', 'Description:') . '</td>';
         $mdContent .= '<td>';
         if ($this->md->canChangeDescription()) {
             $sthCanChange = true;
-            $mdContent .= '<textarea name="descr">' . $this->hp->purify($this->md->getDescription()) . '</textarea>';
+            $mdContent   .= '<textarea name="descr">' . $this->hp->purify($this->md->getDescription()) . '</textarea>';
         } else {
             $mdContent .= $this->hp->purify($this->md->getDescription());
         }
@@ -80,13 +80,13 @@ class Docman_MetaMetadataHtml
 
     public function getEmptyAllowed(&$sthCanChange)
     {
-        $mdContent = '';
+        $mdContent  = '';
         $mdContent .= '<tr>';
         $mdContent .= '<td>' . dgettext('tuleap-docman', 'Allow empty value:') . '</td>';
         $mdContent .= '<td>';
         if ($this->md->canChangeIsEmptyAllowed()) {
             $sthCanChange = true;
-            $selected = '';
+            $selected     = '';
             if ($this->md->isEmptyAllowed()) {
                 $selected = 'checked="checked"';
             }
@@ -106,13 +106,13 @@ class Docman_MetaMetadataHtml
 
     public function getMultipleValuesAllowed(&$sthCanChange)
     {
-        $mdContent = '';
+        $mdContent  = '';
         $mdContent .= '<tr>';
         $mdContent .= '<td>' . dgettext('tuleap-docman', 'Allow multiple selection:') . '</td>';
         $mdContent .= '<td>';
         if ($this->md->canChangeIsMultipleValuesAllowed()) {
             $sthCanChange = true;
-            $selected = '';
+            $selected     = '';
             if ($this->md->isMultipleValuesAllowed()) {
                 $selected = 'checked="checked"';
             }
@@ -132,14 +132,14 @@ class Docman_MetaMetadataHtml
 
     public function getUseIt(&$sthCanChange)
     {
-        $mdContent = '';
+        $mdContent  = '';
         $mdContent .= '<tr>';
 
         $mdContent .= '<td>' . dgettext('tuleap-docman', 'Use this property:') . '</td>';
         $mdContent .= '<td>';
         if (! $this->md->isRequired()) {
             $sthCanChange = true;
-            $selected = '';
+            $selected     = '';
             if ($this->md->isUsed()) {
                 $selected = 'checked="checked"';
             }
@@ -159,7 +159,7 @@ class Docman_MetaMetadataHtml
 
     public function getKeepHistory(&$sthCanChange)
     {
-        $mdContent = '';
+        $mdContent  = '';
         $mdContent .= '<tr>';
         $mdContent .= '<td>' . dgettext('tuleap-docman', 'Keep history:') . '</td>';
         $mdContent .= '<td>';
@@ -176,7 +176,7 @@ class Docman_MetaMetadataHtml
 
     public function getType(&$sthCanChange)
     {
-        $mdContent = '';
+        $mdContent  = '';
         $mdContent .= '<tr>';
 
         $mdContent .= '<td>' . dgettext('tuleap-docman', 'Type:') . '</td>';

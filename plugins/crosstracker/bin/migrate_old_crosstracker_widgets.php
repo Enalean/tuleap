@@ -26,7 +26,7 @@ $dao->enableExceptionsOnError();
 $dao->startTransaction();
 try {
     $logger->info('Searching for old crosstracker widgets');
-    $sql = "SHOW TABLES LIKE 'plugin_tracker_cross_tracker_report%'";
+    $sql    = "SHOW TABLES LIKE 'plugin_tracker_cross_tracker_report%'";
     $tables = $dao->retrieve($sql);
     if (count($tables) !== 2) {
         $logger->info('Tables for old widgets not found. Nothing to migrate.');
@@ -34,7 +34,7 @@ try {
         exit(0);
     }
 
-    $sql = "SHOW TABLES LIKE 'plugin_crosstracker_report%'";
+    $sql    = "SHOW TABLES LIKE 'plugin_crosstracker_report%'";
     $tables = $dao->retrieve($sql);
     if (count($tables) !== 2) {
         $logger->error('Tables for new widgets not found. Please install the plugin crosstracker.');

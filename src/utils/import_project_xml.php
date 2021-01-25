@@ -26,7 +26,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Tuleap\CLI\Command\ImportProjectXMLCommand;
 
-$application = new Application();
+$application                = new Application();
 $import_project_xml_command = new ImportProjectXMLCommand();
 $application->add($import_project_xml_command);
 $application->setDefaultCommand($import_project_xml_command->getName(), $is_single_command = true);

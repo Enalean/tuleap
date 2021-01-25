@@ -39,7 +39,7 @@ if ($request->valid($vUserName)) {
     exit;
 }
 
-$codendiUserOnly = false;
+$codendiUserOnly  = false;
 $vCodendiUserOnly = new Valid_UInt('codendi_user_only');
 if ($request->valid($vCodendiUserOnly)) {
     if ($request->get('codendi_user_only') == 1) {
@@ -71,13 +71,13 @@ if ($request->get('return_type') === 'json_for_select_2') {
 }
 
 // Number of user to display
-$limit = 15;
+$limit    = 15;
 $userList = [];
 
 // Raise an evt
 $pluginAnswered = false;
-$has_more = false;
-$evParams = ['searchToken'     => $userName,
+$has_more       = false;
+$evParams       = ['searchToken'     => $userName,
                   'limit'           => $limit,
                   'codendiUserOnly' => $codendiUserOnly,
                   'json_format'     => $json_format,
@@ -122,7 +122,7 @@ $userList = $post_search_event->getUserList();
 
 // Display
 if ($json_format) {
-    $json_entries = [];
+    $json_entries                      = [];
     $with_groups_of_user_in_project_id = $request->get('with-groups-of-user-in-project-id');
     if ($with_groups_of_user_in_project_id) {
         $ugroup_dao = new UGroupDao();
@@ -170,8 +170,8 @@ if ($json_format) {
         }
         $users_already_seen[] = $user_id;
 
-        $display_name   = $user_info['display_name'];
-        $login          = $user_info['login'];
+        $display_name = $user_info['display_name'];
+        $login        = $user_info['login'];
 
         $json_entries[] = [
             'type'           => 'user',

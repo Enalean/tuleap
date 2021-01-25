@@ -38,7 +38,7 @@ class Docman_EmbeddedFile extends Docman_File
 
     public function toRow()
     {
-        $row = parent::toRow();
+        $row              = parent::toRow();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE;
         return $row;
     }

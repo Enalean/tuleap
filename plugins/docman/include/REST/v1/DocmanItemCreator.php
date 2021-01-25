@@ -177,7 +177,7 @@ class DocmanItemCreator
         }
 
         $current_date = new \DateTimeImmutable();
-        $item = $this->item_factory->createWithoutOrdering(
+        $item         = $this->item_factory->createWithoutOrdering(
             $title,
             $description,
             $parent_item->getId(),

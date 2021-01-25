@@ -47,8 +47,8 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
     {
         parent::setUp();
 
-        $this->project_manager = Mockery::mock(ProjectManager::class);
-        $this->rule_project_name = Mockery::mock(Rule_ProjectName::class);
+        $this->project_manager        = Mockery::mock(ProjectManager::class);
+        $this->rule_project_name      = Mockery::mock(Rule_ProjectName::class);
         $this->rule_project_full_name = Mockery::mock(Rule_ProjectFullName::class);
 
         $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
@@ -385,8 +385,8 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
         $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs([Feedback::ERROR, Mockery::any()])->once();
 
         $required_custom_descriptions = [];
-        $trove_cat = new TroveCat(1, 'whatever', 'WhatEver');
-        $trove_cats = [$trove_cat];
+        $trove_cat                    = new TroveCat(1, 'whatever', 'WhatEver');
+        $trove_cats                   = [$trove_cat];
         $validator                    = $this->getValidator($request, $required_custom_descriptions, $trove_cats);
         $this->rule_project_name->shouldReceive('isValid')->once()->andReturnTrue();
         $this->rule_project_name->shouldReceive('getErrorMessage')->never();

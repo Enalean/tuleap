@@ -149,7 +149,7 @@ class GitXMLExporterTest extends TestCase
                  <projects />';
         $this->xml_tree = new SimpleXMLElement($data);
 
-        $this->zip  = new ZipArchive($this->export_folder . '/archive.zip');
+        $this->zip = new ZipArchive($this->export_folder . '/archive.zip');
 
         ForgeConfig::set('tmp_dir', $this->export_folder);
     }
@@ -173,8 +173,8 @@ class GitXMLExporterTest extends TestCase
         $this->assertCount(2, $this->xml_tree->git->repository);
 
         $exported_repositories = $this->xml_tree->git[0];
-        $repository           = $exported_repositories->repository;
-        $attrs                = $repository->attributes();
+        $repository            = $exported_repositories->repository;
+        $attrs                 = $repository->attributes();
 
         $this->assertEquals('MyRepo', $attrs['name']);
         $this->assertEquals('Repository description', $attrs['description']);

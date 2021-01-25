@@ -56,9 +56,9 @@ class PendingJiraImportCleanerTest extends TestCase
         $logger = Mockery::mock(LoggerInterface::class);
         $logger->shouldReceive('info');
 
-        $this->notifier        = Mockery::mock(CancellationOfJiraImportNotifier::class);
-        $this->dao             = Mockery::mock(PendingJiraImportDao::class);
-        $this->builder         = Mockery::mock(PendingJiraImportBuilder::class);
+        $this->notifier = Mockery::mock(CancellationOfJiraImportNotifier::class);
+        $this->dao      = Mockery::mock(PendingJiraImportDao::class);
+        $this->builder  = Mockery::mock(PendingJiraImportBuilder::class);
 
         $this->cleaner = new PendingJiraImportCleaner(
             $logger,

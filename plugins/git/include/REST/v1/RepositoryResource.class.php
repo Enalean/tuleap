@@ -163,7 +163,7 @@ class RepositoryResource extends AuthenticatedResource
             $this->repository_factory
         );
 
-        $this->gerrit_server_factory  = new Git_RemoteServer_GerritServerFactory(
+        $this->gerrit_server_factory = new Git_RemoteServer_GerritServerFactory(
             new Git_RemoteServer_Dao(),
             $git_dao,
             $this->git_system_event_manager,
@@ -234,7 +234,7 @@ class RepositoryResource extends AuthenticatedResource
         $sorter               = new FineGrainedPermissionSorter();
         $xml_ugroup_retriever = new XmlUgroupRetriever(\BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER), $ugroup_manager);
 
-        $fine_grained_permission_factory    = new FineGrainedPermissionFactory(
+        $fine_grained_permission_factory = new FineGrainedPermissionFactory(
             $fine_grained_dao,
             $ugroup_manager,
             $normalizer,
@@ -243,7 +243,7 @@ class RepositoryResource extends AuthenticatedResource
             $sorter,
             $xml_ugroup_retriever
         );
-        $fine_grained_replicator            = new FineGrainedPermissionReplicator(
+        $fine_grained_replicator         = new FineGrainedPermissionReplicator(
             $fine_grained_dao,
             new DefaultFineGrainedPermissionFactory(
                 $fine_grained_dao,
@@ -265,7 +265,7 @@ class RepositoryResource extends AuthenticatedResource
             $regexp_retriever,
             $validator
         );
-        $history_value_formatter            = new HistoryValueFormatter(
+        $history_value_formatter         = new HistoryValueFormatter(
             $permissions_manager,
             $ugroup_manager,
             $fine_grained_retriever,
@@ -831,7 +831,7 @@ class RepositoryResource extends AuthenticatedResource
 
         $result = [];
         foreach ($sliced_tags_refs as $tag) {
-            $name = $tag->GetName();
+            $name   = $tag->GetName();
             $commit = $tag->GetCommit();
             if (! $commit) {
                 continue;

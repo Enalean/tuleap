@@ -34,7 +34,7 @@ class DocmanTestExecutionHelper extends DocmanBase
     protected $docman_regular_user;
     protected function getDocmanRegularUser(): int
     {
-        $search = urlencode(
+        $search   = urlencode(
             json_encode(
                 [
                     'username' => DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME

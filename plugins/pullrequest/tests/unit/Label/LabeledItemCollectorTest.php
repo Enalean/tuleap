@@ -82,9 +82,9 @@ class LabeledItemCollectorTest extends TestCase
     {
         parent::setUp();
         $this->pullrequest_permission_checker = \Mockery::spy(\Tuleap\PullRequest\Authorization\PullRequestPermissionChecker::class);
-        $this->label_dao           = \Mockery::spy(\Tuleap\PullRequest\Label\PullRequestLabelDao::class);
-        $this->glyph_finder        = \Mockery::spy(\Tuleap\Glyph\GlyphFinder::class);
-        $this->pullrequest_factory = \Mockery::spy(\Tuleap\PullRequest\Factory::class);
+        $this->label_dao                      = \Mockery::spy(\Tuleap\PullRequest\Label\PullRequestLabelDao::class);
+        $this->glyph_finder                   = \Mockery::spy(\Tuleap\Glyph\GlyphFinder::class);
+        $this->pullrequest_factory            = \Mockery::spy(\Tuleap\PullRequest\Factory::class);
 
         $glyph = \Mockery::spy(\Tuleap\Glyph\Glyph::class);
         $this->glyph_finder->shouldReceive('get')->andReturns($glyph);
@@ -95,7 +95,7 @@ class LabeledItemCollectorTest extends TestCase
 
         $this->label_dao->shouldReceive('foundRows')->andReturns(99);
 
-        $first_pullrequest  = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
+        $first_pullrequest = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
         $first_pullrequest->shouldReceive('getTitle')->andReturns('First PR');
         $second_pullrequest = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
         $second_pullrequest->shouldReceive('getTitle')->andReturns('Second PR');
@@ -105,12 +105,12 @@ class LabeledItemCollectorTest extends TestCase
         $this->html_url_builder = \Mockery::spy(\Tuleap\PullRequest\Reference\HTMLURLBuilder::class);
 
         $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $repository = \Mockery::spy(\GitRepository::class);
+        $repository               = \Mockery::spy(\GitRepository::class);
         $repository->shouldReceive('getName')->andReturns('repo001');
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($repository);
 
         $this->user_manager = \Mockery::spy(\UserManager::class);
-        $user = \Mockery::spy(\PFUser::class);
+        $user               = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getRealName')->andReturns('user1');
         $this->user_manager->shouldReceive('getUserById')->andReturns($user);
     }

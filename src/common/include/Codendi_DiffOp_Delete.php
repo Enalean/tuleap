@@ -27,7 +27,7 @@ class Codendi_DiffOp_Delete extends \Codendi_DiffOp // phpcs:ignore PSR1.Classes
     public function __construct($lines)
     {
         $this->orig = $lines;
-        $this->fin = \false;
+        $this->fin  = \false;
     }
     public function reverse()
     {

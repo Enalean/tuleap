@@ -79,7 +79,7 @@ class CampaignCreatorTest extends TestCase
         $this->campaign_tracker = Mockery::spy(\Tracker::class);
         $this->campaign_tracker->shouldReceive('getName')->andReturn('Campaigns');
         $this->campaign_tracker->shouldReceive('getProject')->andReturn($this->project);
-        $this->user             = Mockery::spy(\PFUser::class);
+        $this->user = Mockery::spy(\PFUser::class);
 
         $this->project_manager     = Mockery::spy(\ProjectManager::class);
         $this->tracker_factory     = Mockery::spy(\TrackerFactory::class);
@@ -129,10 +129,10 @@ class CampaignCreatorTest extends TestCase
         $this->definition_selector->shouldReceive('selectDefinitions')->andReturn([]);
 
         $this->stubCampaignArtifact();
-        $expected_label    = 'Campaign Name';
-        $test_selector     = 'all';
-        $no_milestone_id   = 0;
-        $no_report_id      = 0;
+        $expected_label  = 'Campaign Name';
+        $test_selector   = 'all';
+        $no_milestone_id = 0;
+        $no_report_id    = 0;
 
         $label_field_id = 123;
         $label_field    = Mockery::spy(\Tracker_FormElement_Field::class);
@@ -171,10 +171,10 @@ class CampaignCreatorTest extends TestCase
         );
 
         $this->stubCampaignArtifact();
-        $expected_label    = 'Campaign Name';
-        $test_selector     = 'all';
-        $milestone_id      = 10;
-        $no_report_id      = 0;
+        $expected_label = 'Campaign Name';
+        $test_selector  = 'all';
+        $milestone_id   = 10;
+        $no_report_id   = 0;
 
         $campaign_artifact->shouldReceive('linkArtifact')->with($milestone_id, Mockery::any())->once();
 

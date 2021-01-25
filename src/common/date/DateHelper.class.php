@@ -43,7 +43,7 @@ class DateHelper
         }
 
         $distance_of_time_in_words = self::distanceOfTimeInWords($time, $_SERVER['REQUEST_TIME'], $include_seconds);
-        $str = sprintf(_('%s ago'), $distance_of_time_in_words);
+        $str                       = sprintf(_('%s ago'), $distance_of_time_in_words);
         if ($time > $_SERVER['REQUEST_TIME']) {
             $str = sprintf(_('in %s'), $distance_of_time_in_words);
         }

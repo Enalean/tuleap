@@ -32,7 +32,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \PHPUnit\Fra
         parent::setUp();
 
         $this->tracker_id = 666;
-        $tracker = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->tracker_id)->getMock();
+        $tracker          = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->tracker_id)->getMock();
 
         $this->field_dao = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldDao::class);
         $this->value_dao = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);

@@ -45,9 +45,9 @@ class Tracker_Report_HeaderRenderer
         Codendi_HTMLPurifier $purifier,
         TemplateRenderer $renderer
     ) {
-        $this->report_factory       = $report_factory;
-        $this->purifier             = $purifier;
-        $this->renderer             = $renderer;
+        $this->report_factory = $report_factory;
+        $this->purifier       = $purifier;
+        $this->renderer       = $renderer;
     }
 
     public function displayHeader(
@@ -59,9 +59,9 @@ class Tracker_Report_HeaderRenderer
     ) {
         $link_artifact_id = (int) $request->get('link-artifact-id');
         if ($report_can_be_modified) {
-            $title            = '';
-            $breadcrumbs      = [];
-            $params           = ['body_class' => ['in_tracker_report', 'has-sidebar-with-pinned-header']];
+            $title       = '';
+            $breadcrumbs = [];
+            $params      = ['body_class' => ['in_tracker_report', 'has-sidebar-with-pinned-header']];
 
             $report->getTracker()->displayHeader($layout, $title, $breadcrumbs, [], $params);
         }
@@ -129,7 +129,7 @@ class Tracker_Report_HeaderRenderer
                 false,
                 '?' . http_build_query(array_merge($options_params, ['func' => Tracker_Report::ACTION_SAVE]))
             );
-            $extra_save =  [
+            $extra_save   =  [
                 new Templating_Presenter_ButtonDropdownsOptionWithModal(
                     'tracker_report_updater_saveas',
                     dgettext('tuleap-tracker', 'Save as...'),
@@ -144,7 +144,7 @@ class Tracker_Report_HeaderRenderer
                 false,
                 '?' . http_build_query(array_merge($options_params, ['func' => Tracker_Report::ACTION_SAVEAS])) . '#tracker_report_updater_saveas-modal'
             );
-            $extra_save =  [];
+            $extra_save   =  [];
         }
 
         return new Templating_Presenter_SplitButtonDropdowns(
@@ -184,11 +184,11 @@ class Tracker_Report_HeaderRenderer
 
     private function getReportOptionsList(PFUser $current_user, Tracker_Report $report, array $options_params, array $reports)
     {
-        $states_list = [];
+        $states_list  = [];
         $actions_list = [];
 
         if ($report->getTracker()->userIsAdmin($current_user)) {
-            $is_public = ($report->user_id ? 0 : 1);
+            $is_public     = ($report->user_id ? 0 : 1);
             $states_list[] = new Templating_Presenter_ButtonDropdownsOption(
                 'tracker_report_updater_scope',
                 dgettext('tuleap-tracker', 'Public'),
@@ -235,7 +235,7 @@ class Tracker_Report_HeaderRenderer
 
     private function displayHeaderInArtifactLinkModal(Tracker_IFetchTrackerSwitcher $layout, Codendi_Request $request, PFUser $current_user, Tracker_Report $report, array $reports, $link_artifact_id)
     {
-        $project = null;
+        $project  = null;
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($link_artifact_id);
         if ($artifact) {
             $project = $artifact->getTracker()->getProject();
@@ -266,12 +266,12 @@ class Tracker_Report_HeaderRenderer
     private function getReportSelector(Tracker_Report $report, array $reports): string
     {
         if (count($reports) > 1) {
-            $options = '<select id="tracker_select_report" name="select_report">';
+            $options  = '<select id="tracker_select_report" name="select_report">';
             $personal = '';
             $public   = '';
             foreach ($reports as $r) {
-                $prefix = '<option value="' . $r->id . '"';
-                $suffix = '>' . $this->purifier->purify($r->name, CODENDI_PURIFIER_CONVERT_HTML)  . '</option>';
+                $prefix   = '<option value="' . $r->id . '"';
+                $suffix   = '>' . $this->purifier->purify($r->name, CODENDI_PURIFIER_CONVERT_HTML)  . '</option>';
                 $selected = $r->id == $report->id ? 'selected="selected"' : '';
                 if ($r->isPublic()) {
                     $public .= $prefix . ' ' . $selected . $suffix;

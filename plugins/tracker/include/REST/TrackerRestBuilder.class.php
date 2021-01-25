@@ -163,7 +163,7 @@ class Tracker_REST_TrackerRestBuilder
     private function getListOfWorkflowRuleDateRepresentation(Workflow $workflow)
     {
         $rules_manager = $workflow->getGlobalRulesManager();
-        $dates = [];
+        $dates         = [];
         foreach ($workflow->getGlobalRulesManager()->getAllDateRulesByTrackerId($workflow->getTrackerId()) as $rule) {
             $rule_date_representation = new WorkflowRuleDateRepresentation();
             $rule_date_representation->build(

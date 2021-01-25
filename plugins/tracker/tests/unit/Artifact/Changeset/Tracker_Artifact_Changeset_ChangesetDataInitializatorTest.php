@@ -46,12 +46,12 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \P
 
     protected function setUp(): void
     {
-        $this->tracker        = Mockery::mock(Tracker::class);
+        $this->tracker  = Mockery::mock(Tracker::class);
         $this->artifact = Mockery::mock(Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
         $this->formelement_factory = \Mockery::mock(Tracker_FormElementFactory::class);
-        $this->initializator = new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory);
+        $this->initializator       = new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory);
     }
 
     public function testItPreloadsDateFieldsFromPreviousChangeset(): void

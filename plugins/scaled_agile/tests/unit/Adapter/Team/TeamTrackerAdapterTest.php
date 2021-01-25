@@ -60,8 +60,8 @@ final class TeamTrackerAdapterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->team_store      = \Mockery::mock(TeamStore::class);
-        $this->tracker_factory = \Mockery::mock(\TrackerFactory::class);
+        $this->team_store       = \Mockery::mock(TeamStore::class);
+        $this->tracker_factory  = \Mockery::mock(\TrackerFactory::class);
         $this->planning_adapter = \Mockery::mock(BuildPlanning::class);
 
         $this->adapter = new TeamTrackerAdapter($this->tracker_factory, $this->team_store, $this->planning_adapter);

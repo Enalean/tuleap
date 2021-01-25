@@ -52,7 +52,7 @@ class ArtifactInNatureTablePresenter
         $this->artifact_title            = $this->emptyStringIfNull($artifact->getTitle());
         $this->artifact_status           = $this->emptyStringIfNull($artifact->getStatus());
         $this->artifact_last_update_date = date('Y-d-m H:i', $artifact->getLastUpdateDate());
-        $this->artifactlink_field_id = $field->getId();
+        $this->artifactlink_field_id     = $field->getId();
 
         $assignees      = $artifact->getAssignedTo($current_user);
         $assignee_links = [];

@@ -25,8 +25,8 @@ function extract_params($argv)
         $arg = $argv[$i];
         // If arg start by "--" this is the beginning of a new option
         if (strpos($arg, "--") === 0) {
-            $eqpos = strpos($arg, "=");
-            $argname = substr($arg, 2, $eqpos - 2);
+            $eqpos               = strpos($arg, "=");
+            $argname             = substr($arg, 2, $eqpos - 2);
             $arguments[$argname] = substr($arg, $eqpos + 1);
         } else {
             $arguments[$argname] .= " " . $arg;
@@ -75,7 +75,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
 
         $ST_START = 0;
         $ST_GROUP = 1;
-        $ST_PATH = 2;
+        $ST_PATH  = 2;
 
         $state = $ST_START;
 
@@ -100,7 +100,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
                         $group = $matches[1];
                         $users = $matches[2];
 
-                        $uarray = array_map('trim', explode(",", strtolower($users)));
+                        $uarray     = array_map('trim', explode(",", strtolower($users)));
                         $ldapLogins = [];
                         foreach ($uarray as $user) {
                             if (strpos($user, '@') === 0) {
@@ -119,7 +119,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
                 } elseif ($state == $ST_PATH) {
                     $m = preg_match($perm_pat, $line, $matches);
                     if ($m) {
-                        $who = $matches[1];
+                        $who  = $matches[1];
                         $perm = $matches[2];
 
                         if (strpos($who, '@') === 0) {

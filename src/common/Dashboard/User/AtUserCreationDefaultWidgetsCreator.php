@@ -40,7 +40,7 @@ class AtUserCreationDefaultWidgetsCreator
 
     public function __construct(DashboardWidgetDao $dao, EventManager $event_manager)
     {
-        $this->dao            = $dao;
+        $this->dao           = $dao;
         $this->event_manager = $event_manager;
     }
 

@@ -136,10 +136,10 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
     public function getLastTableForItem()
     {
         $table = null;
-        $dao = $this->_getDao();
-        $dar = $dao->getLatestTableByItemId($this->item->getId());
+        $dao   = $this->_getDao();
+        $dar   = $dao->getLatestTableByItemId($this->item->getId());
         if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
-            $row = $dar->current();
+            $row   = $dar->current();
             $table = $this->createTableFromRow($row);
         }
         return $table;
@@ -151,8 +151,8 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
     public function getAllApprovalTable()
     {
         $tableArray = [];
-        $dao = $this->_getDao();
-        $dar = $dao->getApprovalTableItemId($this->item->getId(), 'app.*', '', true);
+        $dao        = $this->_getDao();
+        $dar        = $dao->getApprovalTableItemId($this->item->getId(), 'app.*', '', true);
         if ($dar && ! $dar->isError()) {
             while ($row = $dar->getRow()) {
                 $tableArray[] = $this->createTableFromRow($row);

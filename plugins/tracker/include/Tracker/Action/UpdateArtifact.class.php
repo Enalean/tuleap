@@ -66,7 +66,7 @@ class Tracker_Action_UpdateArtifact
          //TODO : check permissions on this action?
         $comment_format = $this->artifact->validateCommentFormat($request, 'comment_formatnew');
 
-        $fields_data = $request->get('artifact');
+        $fields_data                          = $request->get('artifact');
         $fields_data['request_method_called'] = 'artifact-update';
         $this->artifact->getTracker()->augmentDataFromRequest($fields_data);
         unset($fields_data['request_method_called']);
@@ -129,7 +129,7 @@ class Tracker_Action_UpdateArtifact
         $stay     = $request->get('submit_and_stay');
         $from_aid = $request->get('from_aid');
 
-        $redirect = new Tracker_Artifact_Redirect();
+        $redirect                   = new Tracker_Artifact_Redirect();
         $redirect->mode             = Tracker_Artifact_Redirect::STATE_SUBMIT;
         $redirect->base_url         = TRACKER_BASE_URL;
         $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid);
@@ -143,12 +143,12 @@ class Tracker_Action_UpdateArtifact
     {
         $redirect_params = [];
         if ($stay) {
-            $redirect_params['aid']       = $this->artifact->getId();
-            $redirect_params['from_aid']  = $from_aid;
+            $redirect_params['aid']      = $this->artifact->getId();
+            $redirect_params['from_aid'] = $from_aid;
         } elseif ($from_aid) {
-            $redirect_params['aid']       = $from_aid;
+            $redirect_params['aid'] = $from_aid;
         } else {
-            $redirect_params['tracker']   = $this->artifact->tracker_id;
+            $redirect_params['tracker'] = $this->artifact->tracker_id;
         }
         return array_filter($redirect_params);
     }
@@ -167,9 +167,9 @@ class Tracker_Action_UpdateArtifact
 
     private function getCardUpdateInfo(Artifact $artifact, PFUser $current_user)
     {
-        $card_info               = [];
-        $tracker_id              = $artifact->getTracker()->getId();
-        $remaining_effort_field  = $this->form_element_factory->getComputableFieldByNameForUser(
+        $card_info              = [];
+        $tracker_id             = $artifact->getTracker()->getId();
+        $remaining_effort_field = $this->form_element_factory->getComputableFieldByNameForUser(
             $tracker_id,
             Tracker::REMAINING_EFFORT_FIELD_NAME,
             $current_user

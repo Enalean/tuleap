@@ -83,7 +83,7 @@ final class GitlabProjectResource extends AuthenticatedResource
             new GitlabRepositoryDao()
         );
 
-        $gitlab_repositories = $gitlab_repository_factory->getGitlabRepositoriesForProject($project);
+        $gitlab_repositories                 = $gitlab_repository_factory->getGitlabRepositoriesForProject($project);
         $gitlab_repositories_representations = [];
         foreach ($gitlab_repositories as $gitlab_repository) {
             $gitlab_repositories_representations[] = new GitlabRepositoryRepresentation(

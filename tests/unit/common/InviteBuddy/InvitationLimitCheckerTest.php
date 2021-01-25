@@ -43,7 +43,7 @@ final class InvitationLimitCheckerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(InvitationDao::class);
+        $this->dao     = \Mockery::mock(InvitationDao::class);
         $configuration = new InviteBuddyConfiguration(\Mockery::mock(\EventManager::class));
 
         $this->checker = new InvitationLimitChecker($this->dao, $configuration);
@@ -54,7 +54,7 @@ final class InvitationLimitCheckerTest extends TestCase
     public function testUserCanNotSendInvitationIfHeByPassLimit(): void
     {
         $nb_invitation_to_send = 3;
-        $user = \Mockery::mock(\PFUser::class);
+        $user                  = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
 
         $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(3);
@@ -66,7 +66,7 @@ final class InvitationLimitCheckerTest extends TestCase
     public function testUserCanSendInvitationsIfHeDoesNotByPassLimit(): void
     {
         $nb_invitation_to_send = 3;
-        $user = \Mockery::mock(\PFUser::class);
+        $user                  = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
 
         $this->dao->shouldReceive('getInvitationsSentByUserForToday')->andReturn(0);

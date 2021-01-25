@@ -54,7 +54,7 @@ class DataAccessObject
     public function __construct(?LegacyDataAccessInterface $da = null)
     {
         $this->table_name = 'CLASSNAME_MUST_BE_DEFINE_FOR_EACH_CLASS';
-        $this->da = $da ? $da : CodendiDataAccess::instance();
+        $this->da         = $da ? $da : CodendiDataAccess::instance();
     }
 
     /**
@@ -328,7 +328,7 @@ class DataAccessObject
                     );
                     $dar = $this->retrieve($sql);
                     if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
-                        $row = $dar->current();
+                        $row     = $dar->current();
                         $newRank = $row[$rank_key];
                     }
                     break;
@@ -345,7 +345,7 @@ class DataAccessObject
                     );
                     $dar = $this->retrieve($sql);
                     if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
-                        $row = $dar->current();
+                        $row     = $dar->current();
                         $newRank = $row[$rank_key];
                     }
                     break;
@@ -426,7 +426,7 @@ class DataAccessObject
                     );
                     $dar = $this->retrieve($sql);
                     if ($dar && ! $dar->isError()) {
-                        $row = $dar->current();
+                        $row  = $dar->current();
                         $rank = $row[$rank_key];
                     }
                     // Very important: no break here, because we have to update all
@@ -438,7 +438,7 @@ class DataAccessObject
                     // one item (user selected 'After XXX' in select box).
                     // The idea is to move up all the ranks upper to this value and to
                     // return the current value as the new rank.
-                    $sql = sprintf(
+                    $sql     = sprintf(
                         'UPDATE ' . $this->da->quoteSmartSchema($table_name) .
                                ' SET ' . $rank_key . ' = ' . $rank_key . ' + 1' .
                                ' WHERE ' . $parent_key . ' = %d' .

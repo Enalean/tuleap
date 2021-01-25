@@ -89,14 +89,14 @@ final class SvnlookTest extends TestCase
     public function testItGetsTheLogForARevision(): void
     {
         $expected_message = 'this is 1.0';
-        $log = $this->svnlook->getInfo($this->project, 1);
+        $log              = $this->svnlook->getInfo($this->project, 1);
         $this->assertCount(4, $log);
         $this->assertEquals('donald_duck', $log[0]);
         $this->assertEquals(strlen($expected_message), $log[2]);
         $this->assertEquals($expected_message, $log[3]);
 
         // Date
-        $str_date = substr($log[1], 0, strpos($log[1], '('));
+        $str_date      = substr($log[1], 0, strpos($log[1], '('));
         $log_timestamp = strtotime($str_date);
 
         // Same year-month-day

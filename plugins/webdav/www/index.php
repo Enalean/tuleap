@@ -22,7 +22,7 @@
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('webdav');
+$p              = $plugin_manager->getPluginByName('webdav');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     assert($p instanceof WebDAVPlugin);
     $p->getServer()->exec();

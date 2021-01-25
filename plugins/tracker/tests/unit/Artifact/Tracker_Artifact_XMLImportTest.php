@@ -107,13 +107,13 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
         $this->artifact_creator      = \Mockery::spy(TrackerArtifactCreator::class);
         $this->new_changeset_creator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator::class);
 
-        $this->summary_field_id = 50;
+        $this->summary_field_id    = 50;
         $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $string_field = new Tracker_FormElement_Field_String(50, $this->tracker_id, null, 'str', 'label', 'desc', true, 'S', true, false, 0);
+        $string_field              = new Tracker_FormElement_Field_String(50, $this->tracker_id, null, 'str', 'label', 'desc', true, 'S', true, false, 0);
         $string_field->setCacheSpecificProperties(['maxchars' => ['name' => 'maxchars', 'type' => 'string', 'value' => '0']]);
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->with($this->tracker_id, 'summary')->andReturns($string_field);
 
-        $this->john_doe = new PFUser([
+        $this->john_doe     = new PFUser([
             'user_id' => 200,
             'language_id' => 'en',
             'user_name' => 'john_doe'
@@ -226,7 +226,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
     public function testItCreatesArtifactWithSummaryFieldData(): void
     {
-        $data = [
+        $data          = [
             $this->summary_field_id => 'Ça marche'
         ];
         $bare_artifact = Mockery::spy(Artifact::class);
@@ -1635,13 +1635,13 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
         $string_field = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $string_field->shouldReceive('getId')->andReturns(369);
         $string_field->shouldReceive('validateField')->andReturns(true);
-        $int_field    = \Mockery::spy(\Tracker_FormElement_Field_Integer::class);
+        $int_field = \Mockery::spy(\Tracker_FormElement_Field_Integer::class);
         $int_field->shouldReceive('getId')->andReturns(234);
         $int_field->shouldReceive('validateField')->andReturns(true);
-        $float_field  = \Mockery::spy(\Tracker_FormElement_Field_Float::class);
+        $float_field = \Mockery::spy(\Tracker_FormElement_Field_Float::class);
         $float_field->shouldReceive('getId')->andReturns(347);
         $float_field->shouldReceive('validateField')->andReturns(true);
-        $date_field   = \Mockery::mock(\Tracker_FormElement_Field_Date::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $date_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $date_field->shouldReceive('getId')->andReturns(978);
         $date_field->shouldReceive('validateField')->andReturns(true);
         $date_field->shouldReceive('isTimeDisplayed')->andReturns(false);
@@ -1689,13 +1689,13 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
         $string_field = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $string_field->shouldReceive('getId')->andReturns(369);
         $string_field->shouldReceive('validateField')->andReturns(true);
-        $int_field    = \Mockery::spy(\Tracker_FormElement_Field_Integer::class);
+        $int_field = \Mockery::spy(\Tracker_FormElement_Field_Integer::class);
         $int_field->shouldReceive('getId')->andReturns(234);
         $int_field->shouldReceive('validateField')->andReturns(true);
-        $float_field  = \Mockery::spy(\Tracker_FormElement_Field_Float::class);
+        $float_field = \Mockery::spy(\Tracker_FormElement_Field_Float::class);
         $float_field->shouldReceive('getId')->andReturns(347);
         $float_field->shouldReceive('validateField')->andReturns(true);
-        $date_field   = \Mockery::mock(\Tracker_FormElement_Field_Date::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $date_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $date_field->shouldReceive('getId')->andReturns(978);
         $date_field->shouldReceive('validateField')->andReturns(true);
         $date_field->shouldReceive('isTimeDisplayed')->andReturns(true);
@@ -1740,7 +1740,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesntConvertEmptyDateInto70sdate(): void
     {
-        $xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+        $xml_element  = new SimpleXMLElement('<?xml version="1.0"?>
             <artifacts>
               <artifact id="4918">
                 <changeset>
@@ -1755,13 +1755,13 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
         $string_field = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $string_field->shouldReceive('getId')->andReturns(369);
         $string_field->shouldReceive('validateField')->andReturns(true);
-        $int_field    = \Mockery::spy(\Tracker_FormElement_Field_Integer::class);
+        $int_field = \Mockery::spy(\Tracker_FormElement_Field_Integer::class);
         $int_field->shouldReceive('getId')->andReturns(234);
         $int_field->shouldReceive('validateField')->andReturns(true);
-        $float_field  = \Mockery::spy(\Tracker_FormElement_Field_Float::class);
+        $float_field = \Mockery::spy(\Tracker_FormElement_Field_Float::class);
         $float_field->shouldReceive('getId')->andReturns(347);
         $float_field->shouldReceive('validateField')->andReturns(true);
-        $date_field   = \Mockery::mock(\Tracker_FormElement_Field_Date::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $date_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $date_field->shouldReceive('getId')->andReturns(978);
         $date_field->shouldReceive('validateField')->andReturns(true);
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->with($this->tracker_id, 'i_want_to')->andReturns($string_field);
@@ -1805,7 +1805,7 @@ class Tracker_Artifact_XMLImportTest extends \PHPUnit\Framework\TestCase
         $status_field = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $status_field->shouldReceive('getId')->andReturns(234);
         $status_field->shouldReceive('validateField')->andReturns(true);
-        $assto_field  = \Mockery::spy(\Tracker_FormElement_Field_String::class);
+        $assto_field = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         $assto_field->shouldReceive('getId')->andReturns(456);
         $assto_field->shouldReceive('validateField')->andReturns(true);
 

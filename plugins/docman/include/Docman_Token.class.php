@@ -65,10 +65,10 @@ class Docman_Token
     }
     /* static */ public function retrieveUrl($token)
     {
-        $url  = null;
-        $um   = UserManager::instance();
-        $dao  = new Docman_TokenDao(CodendiDataAccess::instance());
-        $user = $um->getCurrentUser();
+        $url     = null;
+        $um      = UserManager::instance();
+        $dao     = new Docman_TokenDao(CodendiDataAccess::instance());
+        $user    = $um->getCurrentUser();
         $user_id = $user->getId();
         if ($user_id) {
             $dar = $dao->searchUrl($user_id, $token);

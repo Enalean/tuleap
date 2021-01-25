@@ -37,8 +37,8 @@ class Docman_MetadataHtml
     public $hp;
     public function __construct(&$md, $formParams)
     {
-        $this->md = $md;
-        $this->hp = \Codendi_HTMLPurifier::instance();
+        $this->md         = $md;
+        $this->hp         = \Codendi_HTMLPurifier::instance();
         $this->formParams = $formParams;
     }
     /**
@@ -48,8 +48,8 @@ class Docman_MetadataHtml
      */
     public function getLabel($show_mandatory_information = \true)
     {
-        $desc = $this->md->getDescription();
-        $html = '';
+        $desc  = $this->md->getDescription();
+        $html  = '';
         $html .= '<span title="' . $this->hp->purify($desc) . '">';
         if ($this->md->isSpecial()) {
             switch ($this->md->getLabel()) {

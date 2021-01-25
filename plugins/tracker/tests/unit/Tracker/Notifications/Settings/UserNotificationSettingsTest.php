@@ -33,11 +33,11 @@ class UserNotificationSettingsTest extends TestCase
 
     public function testNoNotificationWhenTrackerModeIsNoNotifications(): void
     {
-        $has_unsubscribed = false;
-        $is_only_on_status_update = false;
-        $is_involved = false;
+        $has_unsubscribed           = false;
+        $is_only_on_status_update   = false;
+        $is_involved                = false;
         $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DISABLED;
-        $global_notifications = [];
+        $global_notifications       = [];
 
         $notification_settings = new UserNotificationSettings(
             $has_unsubscribed,
@@ -52,11 +52,11 @@ class UserNotificationSettingsTest extends TestCase
 
     public function testNoNotificationWhenUserSelectNoNotifications(): void
     {
-        $has_unsubscribed = true;
-        $is_only_on_status_update = false;
-        $is_involved = false;
+        $has_unsubscribed           = true;
+        $is_only_on_status_update   = false;
+        $is_involved                = false;
         $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
-        $global_notifications = [];
+        $global_notifications       = [];
 
         $notification_settings = new UserNotificationSettings(
             $has_unsubscribed,
@@ -71,11 +71,11 @@ class UserNotificationSettingsTest extends TestCase
 
     public function testNotificationIsInvolvedWhenUserSelectedIsInvolved(): void
     {
-        $has_unsubscribed = false;
-        $is_only_on_status_update = false;
-        $is_involved = true;
+        $has_unsubscribed           = false;
+        $is_only_on_status_update   = false;
+        $is_involved                = true;
         $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
-        $global_notifications = [];
+        $global_notifications       = [];
 
         $notification_settings = new UserNotificationSettings(
             $has_unsubscribed,
@@ -90,11 +90,11 @@ class UserNotificationSettingsTest extends TestCase
 
     public function testNotificationIsInvolvedWhenTrackerDefaultModeIsInvolvedAndUserHasNoChoice(): void
     {
-        $has_unsubscribed = false;
-        $is_only_on_status_update = false;
-        $is_involved = false;
+        $has_unsubscribed           = false;
+        $is_only_on_status_update   = false;
+        $is_involved                = false;
         $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
-        $global_notifications = [];
+        $global_notifications       = [];
 
         $notification_settings = new UserNotificationSettings(
             $has_unsubscribed,
@@ -109,11 +109,11 @@ class UserNotificationSettingsTest extends TestCase
 
     public function testNotificationOnStatusUpdateWhenUserSelectedStatusUpdate(): void
     {
-        $has_unsubscribed = false;
-        $is_only_on_status_update = true;
-        $is_involved = false;
+        $has_unsubscribed           = false;
+        $is_only_on_status_update   = true;
+        $is_involved                = false;
         $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
-        $global_notifications = [];
+        $global_notifications       = [];
 
         $notification_settings = new UserNotificationSettings(
             $has_unsubscribed,
@@ -128,11 +128,11 @@ class UserNotificationSettingsTest extends TestCase
 
     public function testNotificationOnStatusUpdateWhenTrackerDefaultModeIsStatusUpdateAndUserHasNoChoice(): void
     {
-        $has_unsubscribed = false;
-        $is_only_on_status_update = false;
-        $is_involved = false;
+        $has_unsubscribed           = false;
+        $is_only_on_status_update   = false;
+        $is_involved                = false;
         $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
-        $global_notifications = [];
+        $global_notifications       = [];
 
         $notification_settings = new UserNotificationSettings(
             $has_unsubscribed,
@@ -147,11 +147,11 @@ class UserNotificationSettingsTest extends TestCase
 
     public function testNotificationOnAllUpdatesWhenUserSelectedAllUpdates(): void
     {
-        $has_unsubscribed = false;
-        $is_only_on_status_update = false;
-        $is_involved = false;
+        $has_unsubscribed           = false;
+        $is_only_on_status_update   = false;
+        $is_involved                = false;
         $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
-        $global_notifications = [new GlobalNotification(true)];
+        $global_notifications       = [new GlobalNotification(true)];
 
         $notification_settings = new UserNotificationSettings(
             $has_unsubscribed,
@@ -166,11 +166,11 @@ class UserNotificationSettingsTest extends TestCase
 
     public function testNotificationOnCreationWhenUserSelectedAllUpdates(): void
     {
-        $has_unsubscribed = false;
-        $is_only_on_status_update = false;
-        $is_involved = false;
+        $has_unsubscribed           = false;
+        $is_only_on_status_update   = false;
+        $is_involved                = false;
         $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
-        $global_notifications = [new GlobalNotification(false)];
+        $global_notifications       = [new GlobalNotification(false)];
 
         $notification_settings = new UserNotificationSettings(
             $has_unsubscribed,

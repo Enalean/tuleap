@@ -25,8 +25,8 @@ class Docman_ItemActionPermissions extends \Docman_ItemAction
     public function __construct(&$item)
     {
         parent::__construct($item);
-        $this->action = 'details&section=permissions';
+        $this->action  = 'details&section=permissions';
         $this->classes = 'docman_item_option_permissions';
-        $this->title = \dgettext('tuleap-docman', 'Permissions');
+        $this->title   = \dgettext('tuleap-docman', 'Permissions');
     }
 }

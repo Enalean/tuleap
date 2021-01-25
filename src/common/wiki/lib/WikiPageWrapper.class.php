@@ -75,10 +75,10 @@ class WikiPageWrapper
 
         $page = 'ProjectWantedPages';
 
-        $dbi = $request->getDbh();
+        $dbi        = $request->getDbh();
         $pagehandle = $dbi->getPage($page);
 
-        $links = $pagehandle->getPageLinks(true);
+        $links    = $pagehandle->getPageLinks(true);
         $allPages = [];
         while ($link_handle = $links->next()) {
             if (! $dbi->isWikiPage($linkname = $link_handle->getName())) {
@@ -102,12 +102,12 @@ class WikiPageWrapper
         if ($pagehandle->exists()) {// don't replace default contents
             $current = $pagehandle->getCurrentRevision();
             $version = $current->getVersion();
-            $text = $current->getPackedContent();
-            $meta = $current->_data;
+            $text    = $current->getPackedContent();
+            $meta    = $current->_data;
         } else {
           // Create a new page (first use or page previously erased)
             $version = 0;
-            $text = $GLOBALS['Language']->getText(
+            $text    = $GLOBALS['Language']->getText(
                 'wiki_lib_wikipagewrap',
                 'new_page_text',
                 [$projectPageName]
@@ -130,13 +130,13 @@ class WikiPageWrapper
             );
         }
 
-        $text .= "\n* [$pagename]";
+        $text           .= "\n* [$pagename]";
         $meta['summary'] =  $GLOBALS['Language']->getText(
             'wiki_lib_wikipagewrap',
             'page_added',
             [$pagename]
         );
-        $meta['author'] = user_getname();
+        $meta['author']  = user_getname();
         $pagehandle->save($text, $version + 1, $meta);
     }
 
@@ -157,12 +157,12 @@ class WikiPageWrapper
         if ($pagehandle->exists()) {// don't replace default contents
             $current = $pagehandle->getCurrentRevision();
             $version = $current->getVersion();
-            $text = $current->getPackedContent();
-            $meta = $current->_data;
+            $text    = $current->getPackedContent();
+            $meta    = $current->_data;
         } else {
             // Create a new page (first use or page previously erased)
-            $version = 0;
-            $text = '__Upload a file which will be accessible by typing:__
+            $version        = 0;
+            $text           = '__Upload a file which will be accessible by typing:__
 <verbatim>
 Upload:num_rev/filename
 </verbatim>
@@ -253,7 +253,7 @@ Upload:num_rev/filename
     {
         $nextId = null;
 
-        $sql = sprintf(
+        $sql   = sprintf(
             'SELECT SQL_CALC_FOUND_ROWS DISTINCT group_id' .
                        ' FROM wiki_page' .
                        ' WHERE group_id > %d' .

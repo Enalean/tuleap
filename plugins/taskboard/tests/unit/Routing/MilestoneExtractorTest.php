@@ -58,7 +58,7 @@ class MilestoneExtractorTest extends TestCase
     {
         $this->user = Mockery::mock(PFUser::class);
 
-        $this->factory        = Mockery::mock(Planning_MilestoneFactory::class);
+        $this->factory = Mockery::mock(Planning_MilestoneFactory::class);
         $this->checker = Mockery::mock(MilestoneIsAllowedChecker::class);
 
         $this->extractor = new MilestoneExtractor($this->factory, $this->checker);

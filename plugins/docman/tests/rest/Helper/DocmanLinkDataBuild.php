@@ -310,7 +310,7 @@ class DocmanLinkDataBuild
         int $item_type,
         int $version
     ): void {
-        $item_id         = $this->common_builder->createItem(
+        $item_id = $this->common_builder->createItem(
             $user_id,
             $folder_id,
             $title,

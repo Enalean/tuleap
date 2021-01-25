@@ -135,8 +135,8 @@ class Tracker_Widget_MyArtifacts extends Widget
     {
         $html_my_artifacts = '';
 
-        $taf = Tracker_ArtifactFactory::instance();
-        $um = UserManager::instance();
+        $taf  = Tracker_ArtifactFactory::instance();
+        $um   = UserManager::instance();
         $user = $um->getCurrentUser();
         switch ($this->artifact_show) {
             case 'A':
@@ -226,7 +226,7 @@ class Tracker_Widget_MyArtifacts extends Widget
 
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
-        $request = HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $ajax_url = parent::getAjaxUrl($owner_id, $owner_type, $dashboard_id);
         if ($request->exist('hide_item_id') || $request->exist('hide_artifact')) {
             $ajax_url .= '&hide_item_id=' . $request->get('hide_item_id') . '&hide_artifact=' . $request->get('hide_artifact');

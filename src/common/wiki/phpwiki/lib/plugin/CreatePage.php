@@ -94,8 +94,8 @@ class WikiPlugin_CreatePage extends WikiPlugin
             or preg_match('/%%\w+%%/', $initial_content)
         ) { // need variable expansion
             unset($param['initial_content']);
-            $url = WikiURL($s, $param, 'absurl');
-            $page = $dbi->getPage($s);
+            $url     = WikiURL($s, $param, 'absurl');
+            $page    = $dbi->getPage($s);
             $current = $page->getCurrentRevision();
             $version = $current->getVersion();
             if ($version and ! $overwrite) {
@@ -105,10 +105,10 @@ class WikiPlugin_CreatePage extends WikiPlugin
                 $meta = ['markup' => 2.0,
                               'author' => $user->getId()];
                 if (! empty($param['template']) and ! $initial_content) {
-                    $tmplpage = $dbi->getPage($template);
-                    $currenttmpl = $tmplpage->getCurrentRevision();
+                    $tmplpage        = $dbi->getPage($template);
+                    $currenttmpl     = $tmplpage->getCurrentRevision();
                     $initial_content = $currenttmpl->getPackedContent();
-                    $meta['markup'] = $currenttmpl->_data['markup'];
+                    $meta['markup']  = $currenttmpl->_data['markup'];
                 }
                 $meta['summary'] = _("Created by CreatePage");
                 // expand variables in $initial_content
@@ -117,7 +117,7 @@ class WikiPlugin_CreatePage extends WikiPlugin
                     if (! empty($vars)) {
                         foreach (preg_split("/&/D", $vars) as $pair) {
                             list($key,$val) = preg_split("/=/D", $pair);
-                            $var[$key] = $val;
+                            $var[$key]      = $val;
                         }
                     }
                     if (empty($var['pagename'])) {

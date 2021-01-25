@@ -50,7 +50,7 @@ EOT;
      */
     public function up()
     {
-        $sql    = "INSERT INTO reference_group (reference_id, group_id, is_active)
+        $sql = "INSERT INTO reference_group (reference_id, group_id, is_active)
                    SELECT 30, service.group_id, 1
                    FROM service
                    LEFT JOIN reference_group

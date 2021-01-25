@@ -84,7 +84,7 @@ final class ForumML_FileStorageTest extends TestCase
 
         // check filename length is restricted to 64 characters
         $path_array1 = explode("/", $path1);
-        $fname1 = $path_array1[count($path_array1) - 1];
+        $fname1      = $path_array1[count($path_array1) - 1];
         $this->assertNotEquals($name1, $fname1);
         $this->assertSame(63, strlen($fname1));
         // check other path components
@@ -108,7 +108,7 @@ final class ForumML_FileStorageTest extends TestCase
         $this->assertNotNull($path2);
         $this->assertIsString($path2);
         $path_array2 = explode("/", $path2);
-        $fname2 = $path_array2[count($path_array2) - 1];
+        $fname2      = $path_array2[count($path_array2) - 1];
         $this->assertEquals("filename_less_than_64_chars", $fname2);
         $this->assertNotEquals(64, strlen($fname2));
         // check path components
@@ -146,7 +146,7 @@ final class ForumML_FileStorageTest extends TestCase
         $this->assertNotNull($path4);
         $this->assertIsString($path4);
         $path_array4 = explode("/", $path4);
-        $fname4 = $path_array4[count($path_array4) - 1];
+        $fname4      = $path_array4[count($path_array4) - 1];
         $this->assertMatchesRegularExpression('/^attachment.*/', $fname4);
     }
 

@@ -22,7 +22,7 @@ require_once __DIR__ . '/../../../../src/www/include/pre.php';
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $p->processSOAP($request);
 } else {

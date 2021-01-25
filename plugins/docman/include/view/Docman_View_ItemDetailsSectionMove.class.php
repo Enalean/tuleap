@@ -29,24 +29,24 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
     {
         parent::__construct($item, $url, false, true, $controller);
         $this->params = $params;
-        $this->token = $token;
+        $this->token  = $token;
     }
     public function getContent($params = [])
     {
-        $content = '';
+        $content  = '';
         $content .= '<dl><dt>' . dgettext('tuleap-docman', 'Move') . '</dt><dd>';
         $content .= '<form action="' . $this->url . '" method="POST">';
 
         $parents_tree = new Docman_View_ParentsTree($this->_controller);
-        $content .= $parents_tree->fetch([
+        $content     .= $parents_tree->fetch([
             'docman_icons' => $this->params['docman_icons'],
             'current'      => $this->item->getParentId(),
             'hierarchy'    => $this->params['hierarchy'],
             'input_name'   => 'id',
             'excludes'     => [$this->item->getId()]
         ]);
-        $content .= '<script type="text/javascript">docman.options.move.item_id = ' . $this->item->getId() . ';</script>';
-        $content .=  '<br />';
+        $content     .= '<script type="text/javascript">docman.options.move.item_id = ' . $this->item->getId() . ';</script>';
+        $content     .=  '<br />';
 
         //submit
         $content .= '<div>';

@@ -39,7 +39,7 @@ class SemanticTimeframeBuilder
 
     public function __construct(SemanticTimeframeDao $dao, \Tracker_FormElementFactory $form_element_factory)
     {
-        $this->dao = $dao;
+        $this->dao                  = $dao;
         $this->form_element_factory = $form_element_factory;
     }
 

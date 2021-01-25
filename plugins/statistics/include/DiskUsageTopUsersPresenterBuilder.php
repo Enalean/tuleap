@@ -55,7 +55,7 @@ class DiskUsageTopUsersPresenterBuilder
         $users = $this->disk_usage_manager->getTopUsers($end_date, $order);
 
         $data_top_users = [];
-        $rank = 0;
+        $rank           = 0;
         foreach ($users as $row) {
             $user_details_query = http_build_query([
                 'user_id' => $row['user_id']

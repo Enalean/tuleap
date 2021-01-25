@@ -32,7 +32,7 @@ class WorkflowMenuTabPresenterBuilder
 
     public function build(Tracker $tracker, $active_tab_name, array $used_services)
     {
-        $tabs_menu = $this->buildTabsMenu($tracker);
+        $tabs_menu                                = $this->buildTabsMenu($tracker);
         $tabs_menu[$active_tab_name]['is_active'] = true;
         return new WorkflowMenuTabPresenter(array_values($tabs_menu), $tracker->getId(), $used_services);
     }

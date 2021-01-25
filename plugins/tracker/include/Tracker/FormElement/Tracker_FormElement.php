@@ -508,25 +508,25 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function fetchAdminAdd()
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        $html .= '<tr><td>';
-        $html .= Tracker_FormElementFactory::instance()->getFactoryButton(self::class, 'add-formElement[' . $this->id . ']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
-        $html .= '</td><td>';
-        $html .= '<a href="' . $this->getAdminEditUrl() . '" title="' . dgettext('tuleap-tracker', 'Editer le champ') . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
+        $hp      = Codendi_HTMLPurifier::instance();
+        $html    = '';
+        $html   .= '<tr><td>';
+        $html   .= Tracker_FormElementFactory::instance()->getFactoryButton(self::class, 'add-formElement[' . $this->id . ']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
+        $html   .= '</td><td>';
+        $html   .= '<a href="' . $this->getAdminEditUrl() . '" title="' . dgettext('tuleap-tracker', 'Editer le champ') . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
         $confirm = dgettext('tuleap-tracker', 'Delete permanently the field') . ' ' . $this->getLabel() . '?';
-        $query = http_build_query(
+        $query   = http_build_query(
             [
                 'tracker'  => $this->getTracker()->id,
                 'func'     => 'admin-formElement-delete',
                 'formElement'    => $this->id,
             ]
         );
-        $html .= '<a class="delete-field"
+        $html   .= '<a class="delete-field"
                      onclick="return confirm(\'' . $hp->purify($confirm, CODENDI_PURIFIER_JS_QUOTE) . '\')"
                      title="' . $hp->purify($confirm) . '"
                      href="?' . $query . '">' . $GLOBALS['HTML']->getImage('ic/bin_closed.png', ['alt' => 'delete']) . '</a>';
-        $html .= '</td></tr>';
+        $html   .= '</td></tr>';
         return $html;
     }
 
@@ -682,7 +682,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function storeProperties($properties)
     {
         $success = true;
-        $dao = $this->getDao();
+        $dao     = $this->getDao();
 
         if ($dao && ($success = $dao->save($this->id, $properties))) {
             $this->cache_specific_properties = null; //force reload
@@ -903,7 +903,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
         $root->addAttribute('type', Tracker_FormElementFactory::instance()->getType($this));
         // this id is internal to XML
-        $ID = $this->getXMLId();
+        $ID              = $this->getXMLId();
         $xmlMapping[$ID] = $this->id;
         $root->addAttribute('ID', $ID);
         $root->addAttribute('rank', $this->rank);

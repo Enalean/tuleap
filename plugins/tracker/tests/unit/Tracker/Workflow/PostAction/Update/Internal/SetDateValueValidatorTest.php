@@ -43,7 +43,7 @@ class SetDateValueValidatorTest extends TestCase
         $this->field_id_validator = Mockery::mock(PostActionFieldIdValidator::class);
         $this->field_id_validator->shouldReceive('validate')->byDefault();
 
-        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->form_element_factory     = Mockery::mock(\Tracker_FormElementFactory::class);
         $this->set_date_value_validator = new SetDateValueValidator(
             $this->field_id_validator,
             $this->form_element_factory
@@ -52,7 +52,7 @@ class SetDateValueValidatorTest extends TestCase
 
     public function testValidateDoesNotThrowWhenValid()
     {
-        $date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class)
+        $date_field       = Mockery::mock(\Tracker_FormElement_Field_Date::class)
             ->shouldReceive('getId')
             ->andReturn(1)
             ->getMock();
@@ -76,7 +76,7 @@ class SetDateValueValidatorTest extends TestCase
 
     public function testValidateWrapsDuplicateFieldIdException()
     {
-        $first_same_field_id = new SetDateValue(1, 0);
+        $first_same_field_id  = new SetDateValue(1, 0);
         $second_same_field_id = new SetDateValue(1, 2);
         $this->field_id_validator->shouldReceive('validate')
             ->with($first_same_field_id, $second_same_field_id)

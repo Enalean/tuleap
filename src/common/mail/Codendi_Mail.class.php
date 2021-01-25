@@ -89,7 +89,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
 
     public function __construct()
     {
-        $this->message                = new Mail\Message();
+        $this->message = new Mail\Message();
         $this->message->setEncoding('UTF-8');
         $this->recipient_list_builder = new Mail_RecipientListBuilder(UserManager::instance());
         $this->transport              = new Mail\Transport\Sendmail();
@@ -165,7 +165,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
             if ($headers->has($recipient_type)) {
                 $recipient_header = $headers->get($recipient_type);
                 $list_addresses   = $recipient_header->getAddressList();
-                $addresses = [];
+                $addresses        = [];
                 foreach ($list_addresses as $address) {
                     $addresses[] = $address->getEmail();
                 }
@@ -458,7 +458,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      */
     public function setToUser($to)
     {
-        $arrayTo = $this->validateArrayOfUsers($to);
+        $arrayTo         = $this->validateArrayOfUsers($to);
         $arrayToRealName = [];
         foreach ($arrayTo as $to) {
             $this->message->addTo($to['email'], $to['real_name']);
@@ -475,7 +475,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      */
     public function setBccUser($bcc)
     {
-        $arrayBcc = $this->validateArrayOfUsers($bcc);
+        $arrayBcc         = $this->validateArrayOfUsers($bcc);
         $arrayBccRealName = [];
         foreach ($arrayBcc as $user) {
             $this->message->addBcc($user['email'], $user['real_name']);
@@ -492,7 +492,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      */
     public function setCcUser($cc)
     {
-        $arrayCc = $this->validateArrayOfUsers($cc);
+        $arrayCc         = $this->validateArrayOfUsers($cc);
         $arrayCcRealName = [];
         foreach ($arrayCc as $user) {
             $this->message->addCc($user['email'], $user['real_name']);
@@ -530,7 +530,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
             $this->logger->debug("Laminas mail Exception: " . $e->getMessage());
 
             if ($this->message->getHeaders()->get('to')) {
-                $list = $this->message->getHeaders()->get('to')->getAddressList();
+                $list      = $this->message->getHeaders()->get('to')->getAddressList();
                 $addresses = [];
                 foreach ($list as $address) {
                     $addresses[] = $address->getEmail();
@@ -587,10 +587,10 @@ class Codendi_Mail implements Codendi_Mail_Interface
 
     public function addAttachment($data, $mime_type, $filename)
     {
-        $mime_part               = $this->getMimePartAttachment($data, $mime_type);
-        $mime_part->filename     = $filename;
-        $mime_part->disposition  = Laminas\Mime\Mime::DISPOSITION_ATTACHMENT;
-        $this->attachments[]     = $mime_part;
+        $mime_part              = $this->getMimePartAttachment($data, $mime_type);
+        $mime_part->filename    = $filename;
+        $mime_part->disposition = Laminas\Mime\Mime::DISPOSITION_ATTACHMENT;
+        $this->attachments[]    = $mime_part;
     }
 
     public function addInlineAttachment($data, $mime_type, $cid)

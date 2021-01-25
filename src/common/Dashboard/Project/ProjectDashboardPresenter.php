@@ -39,7 +39,7 @@ class ProjectDashboardPresenter extends DashboardPresenter
                 'dashboard-type' => ProjectDashboardController::DASHBOARD_TYPE
             ]
         );
-        $this->url_add_widget = '/widgets/?' . http_build_query(
+        $this->url_add_widget         = '/widgets/?' . http_build_query(
             [
                 'action'         => 'add-widget',
                 'group_id'       => $this->project_id,

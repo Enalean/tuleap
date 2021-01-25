@@ -194,13 +194,13 @@ class Tracker_Action_CopyArtifact
     ) {
         $new_artifacts = [];
         foreach ($xml_artifacts->children() as $xml_artifact) {
-            $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
-            $config = new \Tuleap\Project\XML\Import\ImportConfig();
+            $tracker            = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
+            $config             = new \Tuleap\Project\XML\Import\ImportConfig();
             $tracker_xml_config = new \Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig(
                 $current_user,
                 $imported_at
             );
-            $artifact = $this->xml_importer->importBareArtifact($tracker, $xml_artifact, $config, $tracker_xml_config);
+            $artifact           = $this->xml_importer->importBareArtifact($tracker, $xml_artifact, $config, $tracker_xml_config);
             if (! $artifact) {
                 return null;
             } else {
@@ -213,7 +213,7 @@ class Tracker_Action_CopyArtifact
 
     private function importChangesets(SimpleXMLElement $xml_artifacts, array $new_artifacts, TrackerXmlFieldsMapping_InSamePlatform $xml_field_mapping)
     {
-        $extraction_path   = '';
+        $extraction_path = '';
         foreach (iterator_to_array($xml_artifacts->artifact, false) as $i => $xml_artifact) {
             $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
             $tracker->getWorkflow()->disable();
@@ -224,7 +224,7 @@ class Tracker_Action_CopyArtifact
                 $xml_field_mapping,
                 $this->artifacts_imported_mapping
             );
-            $config = new \Tuleap\Project\XML\Import\ImportConfig();
+            $config              = new \Tuleap\Project\XML\Import\ImportConfig();
             $this->xml_importer->importChangesets(
                 $new_artifacts[$i],
                 $xml_artifact,

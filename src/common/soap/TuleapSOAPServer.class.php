@@ -48,7 +48,7 @@ class TuleapSOAPServer extends SoapServer
      */
     private function fetchUnsecureWsdl($wsdl_url)
     {
-        $context = stream_context_create([
+        $context      = stream_context_create([
             'ssl' => [
                 'verify_peer' => false,
                 'verify_peer_name' => false,

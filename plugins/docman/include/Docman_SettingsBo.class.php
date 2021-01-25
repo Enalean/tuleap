@@ -29,8 +29,8 @@ class Docman_SettingsBo
     public function __construct($groupId)
     {
         $this->groupId = $groupId;
-        $this->row = null;
-        $this->dao = null;
+        $this->row     = null;
+        $this->dao     = null;
     }
 
     public static function instance($groupId)

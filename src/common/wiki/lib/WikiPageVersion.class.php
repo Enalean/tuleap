@@ -35,9 +35,9 @@ class WikiPageVersion
 
     public function __construct($page_id, $version_id, $content)
     {
-        $this->page_id      = $page_id;
-        $this->version_id   = $version_id;
-        $this->content      = $content;
+        $this->page_id    = $page_id;
+        $this->version_id = $version_id;
+        $this->content    = $content;
     }
 
     public function getPageId()

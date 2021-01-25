@@ -27,27 +27,27 @@ class StatusPresenter
     public $status_label;
     public $status_level;
     public $status_is_important = false;
-    public $status_is_active = false;
+    public $status_is_active    = false;
 
     public function __construct($status)
     {
         switch ($status) {
             case PFUser::STATUS_ACTIVE:
-                $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'active');
-                $this->status_level        = 'success';
-                $this->status_is_active    = true;
+                $this->status_label     = $GLOBALS['Language']->getText('admin_userlist', 'active');
+                $this->status_level     = 'success';
+                $this->status_is_active = true;
                 break;
             case PFUser::STATUS_RESTRICTED:
-                $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'restricted');
-                $this->status_level        = 'warning';
+                $this->status_label = $GLOBALS['Language']->getText('admin_userlist', 'restricted');
+                $this->status_level = 'warning';
                 break;
             case PFUser::STATUS_DELETED:
-                $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'deleted');
-                $this->status_level        = 'danger';
+                $this->status_label = $GLOBALS['Language']->getText('admin_userlist', 'deleted');
+                $this->status_level = 'danger';
                 break;
             case PFUser::STATUS_SUSPENDED:
-                $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'suspended');
-                $this->status_level        = 'secondary';
+                $this->status_label = $GLOBALS['Language']->getText('admin_userlist', 'suspended');
+                $this->status_level = 'secondary';
                 break;
             case PFUser::STATUS_PENDING:
                 $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'pending');

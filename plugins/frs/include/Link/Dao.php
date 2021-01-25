@@ -38,7 +38,7 @@ class Dao extends DataAccessObject
 
     public function deleteLink($release_id)
     {
-        $release_id  = $this->da->escapeInt($release_id);
+        $release_id = $this->da->escapeInt($release_id);
 
         $sql = "DELETE FROM plugin_frs_release_artifact
                 WHERE release_id = $release_id";
@@ -48,7 +48,7 @@ class Dao extends DataAccessObject
 
     public function searchLinkedArtifactForRelease($release_id)
     {
-        $release_id  = $this->da->escapeInt($release_id);
+        $release_id = $this->da->escapeInt($release_id);
 
         $sql = "SELECT *
                 FROM plugin_frs_release_artifact
@@ -59,7 +59,7 @@ class Dao extends DataAccessObject
 
     public function searchLinkedReleaseForArtifact($artifact_id)
     {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $artifact_id = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT *
                 FROM plugin_frs_release_artifact

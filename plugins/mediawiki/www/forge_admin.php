@@ -25,7 +25,7 @@ require_once __DIR__ . '/../include/MediawikiAdminController.class.php';
 require_once __DIR__ . '/../include/MediawikiSiteAdminController.class.php';
 
 $plugin_manager = PluginManager::instance();
-$mw_plugin = $plugin_manager->getPluginByName('mediawiki');
+$mw_plugin      = $plugin_manager->getPluginByName('mediawiki');
 if (! $mw_plugin || ! $plugin_manager->isPluginAvailable($mw_plugin)) {
     $GLOBALS['Response']->redirect('/');
     exit;
@@ -44,7 +44,7 @@ switch ($action) {
     case 'index':
     case 'save_language':
     case 'save_permissions':
-        $service = $request->getProject()->getService('plugin_mediawiki');
+        $service    = $request->getProject()->getService('plugin_mediawiki');
         $controller = new MediawikiAdminController($mw_plugin->getMediawikiManager());
         $controller->$action($service, $request);
         break;

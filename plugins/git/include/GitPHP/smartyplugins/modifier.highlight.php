@@ -36,8 +36,8 @@ function smarty_modifier_highlight($haystack, $needle, $trimlen = null, $escape 
             $linelen = strlen($regs[0]);
             if ($linelen > $trimlen) {
                 $matchlen = strlen($regs[2]);
-                $remain = floor(($trimlen - $matchlen) / 2);
-                $leftlen = strlen($regs[1]);
+                $remain   = floor(($trimlen - $matchlen) / 2);
+                $leftlen  = strlen($regs[1]);
                 $rightlen = strlen($regs[3]);
                 if ($leftlen > $remain) {
                     $leftremain = $remain;

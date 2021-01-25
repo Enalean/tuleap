@@ -40,8 +40,8 @@ class Git_Driver_Gerrit_MembershipCommand_AddBinding extends Git_Driver_Gerrit_M
 
     public function execute(Git_RemoteServer_GerritServer $server)
     {
-        $driver = $this->getDriver($server);
-        $group_name = $this->membership_manager->getFullyQualifiedUGroupName($this->ugroup);
+        $driver              = $this->getDriver($server);
+        $group_name          = $this->membership_manager->getFullyQualifiedUGroupName($this->ugroup);
         $included_group_name = $this->membership_manager->createGroupForServer($server, $this->source_ugroup);
         $driver->removeAllGroupMembers($server, $group_name);
         if ($this->ugroup->getSourceGroup()) {

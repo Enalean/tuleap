@@ -215,7 +215,7 @@ class ArtifactLinkUpdater
     ): array {
         $field_datas = [];
 
-        $field_datas[$artifactlink_field->getId()]['new_values'] = $this->formatLinkedElementForNewChangeset(
+        $field_datas[$artifactlink_field->getId()]['new_values']     = $this->formatLinkedElementForNewChangeset(
             $elements_to_be_linked
         );
         $field_datas[$artifactlink_field->getId()]['removed_values'] = $this->formatElementsToBeUnlinkedForNewChangeset(

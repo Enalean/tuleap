@@ -83,7 +83,7 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
             }
 
             $fields_data[$this->field->getId()] = $this->value;
-            $this->bypass_permissions = true;
+            $this->bypass_permissions           = true;
         }
     }
 }

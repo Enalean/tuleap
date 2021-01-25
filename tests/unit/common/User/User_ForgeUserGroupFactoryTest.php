@@ -99,7 +99,7 @@ final class User_ForgeUserGroupFactoryTest extends \PHPUnit\Framework\TestCase
     public function testItGetsForgeUGroup(): void
     {
         $user_group_id = 105;
-        $row = [
+        $row           = [
             'ugroup_id'   => 105,
             'name'        => 'my name',
             'description' => 'user group'

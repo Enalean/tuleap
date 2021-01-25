@@ -60,14 +60,14 @@ final class PackageRepresentationBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->package_id = 12;
-        $this->project_id = 350;
-        $this->a_project = M::mock(\Project::class, ['getID' => (string) $this->project_id, 'getPublicName' => 'foo']);
-        $this->an_frs_admin = M::mock(\PFUser::class);
-        $this->a_package = new FRSPackage(['package_id' => $this->package_id]);
+        $this->package_id          = 12;
+        $this->project_id          = 350;
+        $this->a_project           = M::mock(\Project::class, ['getID' => (string) $this->project_id, 'getPublicName' => 'foo']);
+        $this->an_frs_admin        = M::mock(\PFUser::class);
+        $this->a_package           = new FRSPackage(['package_id' => $this->package_id]);
         $this->permissions_manager = M::mock(\IPermissionsManagerNG::class);
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturn([])->byDefault();
-        $this->ugroup_manager = M::mock(\UGroupManager::class);
+        $this->ugroup_manager          = M::mock(\UGroupManager::class);
         $this->frs_permissions_manager = M::mock(FRSPermissionManager::class);
         $this->frs_permissions_manager->shouldReceive('isAdmin')->with($this->a_project, $this->an_frs_admin)->andReturnTrue();
         $this->builder = new PackageRepresentationBuilder($this->permissions_manager, $this->ugroup_manager, $this->frs_permissions_manager);
@@ -81,7 +81,7 @@ final class PackageRepresentationBuilderTest extends TestCase
 
     public function testItReturnsTheProject(): void
     {
-        $representation  = $this->builder->getPackageForUser($this->an_frs_admin, $this->a_package, $this->a_project);
+        $representation = $this->builder->getPackageForUser($this->an_frs_admin, $this->a_package, $this->a_project);
         $this->assertEquals($this->project_id, $representation->project->id);
     }
 
@@ -89,7 +89,7 @@ final class PackageRepresentationBuilderTest extends TestCase
     {
         $a_random_user = M::mock(\PFUser::class);
         $this->frs_permissions_manager->shouldReceive('isAdmin')->with($this->a_project, $a_random_user)->andReturnFalse();
-        $representation  = $this->builder->getPackageForUser($a_random_user, $this->a_package, $this->a_project);
+        $representation = $this->builder->getPackageForUser($a_random_user, $this->a_package, $this->a_project);
         $this->assertNull($representation->permissions_for_groups);
     }
 
@@ -103,7 +103,7 @@ final class PackageRepresentationBuilderTest extends TestCase
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->a_project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
 
         $static_ugroup_id = 345;
-        $static_ugroup = new ProjectUGroup([
+        $static_ugroup    = new ProjectUGroup([
             'ugroup_id' => $static_ugroup_id,
             'name' => 'Developers',
             'group_id' => $this->project_id,
@@ -114,7 +114,7 @@ final class PackageRepresentationBuilderTest extends TestCase
             ->with($this->a_project, $this->package_id, FRSPackage::PERM_READ)
             ->andReturn([ProjectUGroup::PROJECT_MEMBERS, $static_ugroup_id]);
 
-        $representation  = $this->builder->getPackageForUser($this->an_frs_admin, $this->a_package, $this->a_project);
+        $representation = $this->builder->getPackageForUser($this->an_frs_admin, $this->a_package, $this->a_project);
         $this->assertCount(2, $representation->permissions_for_groups->can_read);
 
         $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);

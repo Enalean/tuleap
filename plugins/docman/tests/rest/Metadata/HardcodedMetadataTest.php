@@ -610,15 +610,15 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $updated_content = $response->json();
 
-        $folder_updated    = $this->findItemByTitle($updated_content, 'PUT HM FO');
-        $status   = $this->findMetadataByName($folder_updated['metadata'], 'Status');
+        $folder_updated = $this->findItemByTitle($updated_content, 'PUT HM FO');
+        $status         = $this->findMetadataByName($folder_updated['metadata'], 'Status');
         $this->assertEquals(
             'Draft',
             $status['list_value'][0]['name']
         );
 
-        $item_updated    = $this->findItemByTitle($updated_content, 'PUT F OD');
-        $status   = $this->findMetadataByName($item_updated['metadata'], 'Status');
+        $item_updated = $this->findItemByTitle($updated_content, 'PUT F OD');
+        $status       = $this->findMetadataByName($item_updated['metadata'], 'Status');
         $this->assertEquals(
             'Draft',
             $status['list_value'][0]['name']
@@ -651,8 +651,8 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $updated_content = $response->json();
 
-        $folder_updated    = $this->findItemByTitle($updated_content, 'PUT HM FO');
-        $status   = $this->findMetadataByName($folder_updated['metadata'], 'Status');
+        $folder_updated = $this->findItemByTitle($updated_content, 'PUT HM FO');
+        $status         = $this->findMetadataByName($folder_updated['metadata'], 'Status');
         $this->assertEquals(
             'Draft',
             $status['list_value'][0]['name']

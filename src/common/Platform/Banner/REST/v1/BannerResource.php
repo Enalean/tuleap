@@ -108,7 +108,7 @@ final class BannerResource extends AuthenticatedResource
         $this->options();
 
         $banner_retriever = new BannerRetriever(new BannerDao());
-        $banner = $banner_retriever->getBanner();
+        $banner           = $banner_retriever->getBanner();
         if (! $banner) {
             throw new RestException(404, 'No banner set for the platform');
         }

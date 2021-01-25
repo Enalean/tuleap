@@ -65,7 +65,7 @@ final class MembershipUpdateVerifierTest extends TestCase
 
     public function testAssertUGroupAndUserValidityThrowsWhenUserIsAnonymous(): void
     {
-        $user = Mockery::mock(\PFUser::class, ['isAnonymous' => true]);
+        $user   = Mockery::mock(\PFUser::class, ['isAnonymous' => true]);
         $ugroup = Mockery::mock(
             \ProjectUGroup::class,
             ['getProjectId' => 105, 'getId' => 64]
@@ -78,7 +78,7 @@ final class MembershipUpdateVerifierTest extends TestCase
 
     public function testAssertUGroupAndUserValiditySucceedsOtherwise(): void
     {
-        $user = Mockery::mock(\PFUser::class, ['isAnonymous' => false]);
+        $user   = Mockery::mock(\PFUser::class, ['isAnonymous' => false]);
         $ugroup = Mockery::mock(
             \ProjectUGroup::class,
             ['getProjectId' => 105, 'getId' => 64]

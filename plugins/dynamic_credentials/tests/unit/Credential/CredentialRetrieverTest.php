@@ -133,7 +133,7 @@ class CredentialRetrieverTest extends TestCase
 
     public function testExceptionIsThrownWhenCredentialIdentifierDoesNotExist()
     {
-        $dao             = Mockery::mock(CredentialDAO::class);
+        $dao = Mockery::mock(CredentialDAO::class);
         $dao->shouldReceive('getUnrevokedCredentialByIdentifier')->andReturn([]);
         $password_handler     = Mockery::mock(\PasswordHandler::class);
         $identifier_extractor = Mockery::mock(CredentialIdentifierExtractor::class);

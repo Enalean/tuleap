@@ -61,7 +61,7 @@ final class Transition_PostAction_Field_DateTest extends \PHPUnit\Framework\Test
     {
         $this->field->shouldReceive('formatDate')->with($_SERVER['REQUEST_TIME'])->andReturns('date-of-today');
 
-        $expected    = $this->field->formatDate($_SERVER['REQUEST_TIME']);
+        $expected = $this->field->formatDate($_SERVER['REQUEST_TIME']);
 
         $fields_data = ['field_id' => 'value'];
         $transition  = \Mockery::spy(\Transition::class);
@@ -87,7 +87,7 @@ final class Transition_PostAction_Field_DateTest extends \PHPUnit\Framework\Test
             'field_id' => 'value',
             $field_id  => '1317817376',
         ];
-        $value_type = Transition_PostAction_Field_Date::CLEAR_DATE;
+        $value_type  = Transition_PostAction_Field_Date::CLEAR_DATE;
 
         $post_action = \Mockery::mock(
             \Transition_PostAction_Field_Date::class,
@@ -122,14 +122,14 @@ final class Transition_PostAction_Field_DateTest extends \PHPUnit\Framework\Test
     public function testBeforeShouldBypassAndClearTheDate(): void
     {
         $submitted_timestamp = 1317817376;
-        $transition  = \Mockery::spy(\Transition::class);
-        $field_id    = $this->field->getId();
-        $id          = 1;
-        $fields_data = [
+        $transition          = \Mockery::spy(\Transition::class);
+        $field_id            = $this->field->getId();
+        $id                  = 1;
+        $fields_data         = [
             'field_id' => 'value',
             $field_id  => $submitted_timestamp,
         ];
-        $value_type = Transition_PostAction_Field_Date::CLEAR_DATE;
+        $value_type          = Transition_PostAction_Field_Date::CLEAR_DATE;
 
         $post_action = \Mockery::mock(
             \Transition_PostAction_Field_Date::class,
@@ -156,7 +156,7 @@ final class Transition_PostAction_Field_DateTest extends \PHPUnit\Framework\Test
         $fields_data = [
             'field_id' => 'value',
         ];
-        $value_type = Transition_PostAction_Field_Date::CLEAR_DATE;
+        $value_type  = Transition_PostAction_Field_Date::CLEAR_DATE;
         $post_action = \Mockery::mock(
             \Transition_PostAction_Field_Date::class,
             [$transition, $id, $field, $value_type]

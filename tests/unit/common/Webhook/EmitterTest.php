@@ -47,7 +47,7 @@ class EmitterTest extends TestCase
         $webhook_1->shouldReceive('getUrl');
         $webhook_2 = \Mockery::mock(Webhook::class);
         $webhook_2->shouldReceive('getUrl');
-        $payload   = \Mockery::mock(Payload::class);
+        $payload = \Mockery::mock(Payload::class);
         $payload->shouldReceive('getPayload');
 
         $http_client->addException(\Mockery::mock(HttpException::class));

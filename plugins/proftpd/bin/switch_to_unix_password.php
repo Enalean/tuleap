@@ -23,7 +23,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $data_access = CodendiDataAccess::instance();
 
-$sql = 'CREATE OR REPLACE VIEW ftpusers AS
+$sql    = 'CREATE OR REPLACE VIEW ftpusers AS
             SELECT user_name as username, unix_pw as password, unix_uid+20000 as uid, unix_uid+20000 as gid, CONCAT("/home/users/", user_name) as home, shell
             FROM user
             WHERE status IN ("A", "R")

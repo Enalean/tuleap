@@ -7,7 +7,7 @@
 function viewvc_utils_track_browsing($group_id, $type)
 {
     $query_string = getStringFromServer('QUERY_STRING');
-    $request_uri = getStringFromServer('REQUEST_URI');
+    $request_uri  = getStringFromServer('REQUEST_URI');
 
     if (
         strpos($query_string, "view=markup") !== false ||
@@ -17,17 +17,17 @@ function viewvc_utils_track_browsing($group_id, $type)
     ) {
         if ($type == 'svn') {
             $browse_column = 'svn_browse';
-            $table = 'group_svn_full_history';
+            $table         = 'group_svn_full_history';
         } elseif ($type == 'cvs') {
             $browse_column = 'cvs_browse';
-            $table = 'group_cvs_full_history';
+            $table         = 'group_cvs_full_history';
         }
 
         $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-        $year   = strftime("%Y");
-        $mon    = strftime("%m");
-        $day    = strftime("%d");
-        $db_day = $year . $mon . $day;
+        $year               = strftime("%Y");
+        $mon                = strftime("%m");
+        $day                = strftime("%d");
+        $db_day             = $year . $mon . $day;
 
         $sql = "SELECT " . $browse_column . " FROM " . $table . " WHERE group_id = " . db_ei($group_id) . " AND user_id = " . $db_escaped_user_id . " AND day = '" . $db_day . "'";
         $res = db_query($sql);

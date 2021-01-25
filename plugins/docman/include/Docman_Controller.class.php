@@ -93,11 +93,11 @@ class Docman_Controller extends Controler
         $log_event_adder = new LogEventAdder($event_manager, $this->logger);
         $log_event_adder->addLogEventManagement();
 
-        $notifications_builders = new NotificationBuilders($this->feedback, $this->getProject());
-        $this->notificationsManager = $notifications_builders->buildNotificationManager();
-        $this->notificationsManager_Add  = $notifications_builders->buildNotificationManagerAdd();
-        $this->notificationsManager_Delete = $notifications_builders->buildNotificationManagerDelete();
-        $this->notificationsManager_Move = $notifications_builders->buildNotificationManagerMove();
+        $notifications_builders                 = new NotificationBuilders($this->feedback, $this->getProject());
+        $this->notificationsManager             = $notifications_builders->buildNotificationManager();
+        $this->notificationsManager_Add         = $notifications_builders->buildNotificationManagerAdd();
+        $this->notificationsManager_Delete      = $notifications_builders->buildNotificationManagerDelete();
+        $this->notificationsManager_Move        = $notifications_builders->buildNotificationManagerMove();
         $this->notificationsManager_Subscribers = $notifications_builders->buildNotificationManagerSubsribers();
 
         $notification_event_adder = new NotificationEventAdder(
@@ -117,13 +117,13 @@ class Docman_Controller extends Controler
         $_gid = $group_id ? $group_id : (int) $this->request->get('group_id');
 
         $item_factory = $this->getItemFactory();
-        $root = $item_factory->getRoot($_gid);
+        $root         = $item_factory->getRoot($_gid);
         if ($root) {
             // Docman already install for this project.
             return false;
         } else {
-            $pm = ProjectManager::instance();
-            $project = $pm->getProject($_gid);
+            $pm          = ProjectManager::instance();
+            $project     = $pm->getProject($_gid);
             $tmplGroupId = (int) $project->getTemplate();
             $this->_cloneDocman($tmplGroupId, $project, $ugroupsMapping);
         }
@@ -144,7 +144,7 @@ class Docman_Controller extends Controler
 
         // Clone Metadata definitions
         $metadataMapping = [];
-        $mdFactory = new Docman_MetadataFactory($srcGroupId);
+        $mdFactory       = new Docman_MetadataFactory($srcGroupId);
         $mdFactory->cloneMetadata($dstGroupId, $metadataMapping);
 
         // Clone Items, Item's permissions and metadata values
@@ -205,7 +205,7 @@ class Docman_Controller extends Controler
     public function getUser()
     {
         if ($this->user === null) {
-            $um = UserManager::instance();
+            $um         = UserManager::instance();
             $this->user = $um->getCurrentUser();
         }
         return $this->user;
@@ -302,7 +302,7 @@ class Docman_Controller extends Controler
     public function setMetadataValuesFromUserInput(&$item, $itemArray, $metadataArray)
     {
         $mdvFactory = new Docman_MetadataValueFactory($this->groupId);
-        $mdFactory = new Docman_MetadataFactory($this->groupId);
+        $mdFactory  = new Docman_MetadataFactory($this->groupId);
 
         $mdIter = $item->getMetadataIterator();
         $mdIter->rewind();
@@ -331,7 +331,7 @@ class Docman_Controller extends Controler
             $item_factory = $this->getItemFactory();
             $mdFactory    = new Docman_MetadataFactory($this->_viewParams['group_id']);
 
-            $i = $this->request->get('item');
+            $i        = $this->request->get('item');
             $new_item = $item_factory->getItemFromRow($i);
             $new_item->setGroupId($this->_viewParams['group_id']);
             // Build metadata list (from db) ...
@@ -344,7 +344,7 @@ class Docman_Controller extends Controler
             );
             if ($i['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                 $tmp_path = tempnam(ForgeConfig::get('tmp_dir'), 'embedded_file');
-                $f = fopen($tmp_path, 'w');
+                $f        = fopen($tmp_path, 'w');
                 fwrite($f, $this->request->get('content'));
                 fclose($f);
                 $v = new Docman_Version();
@@ -400,8 +400,8 @@ class Docman_Controller extends Controler
             $this->_setView('Error');
         } else {
             $_groupId = (int) $this->request->get('group_id');
-            $pm = ProjectManager::instance();
-            $project = $pm->getProject($_groupId);
+            $pm       = ProjectManager::instance();
+            $project  = $pm->getProject($_groupId);
             if ($project == false) {
                 $this->feedback->log('error', 'Project is missing.');
                 $this->_setView('Error');
@@ -426,16 +426,16 @@ class Docman_Controller extends Controler
             } elseif ($this->request->get('action') == 'permissions') {
                 $this->_viewParams['section'] = 'permissions';
             }
-            $view = $this->request->exist('action') ? $this->request->get('action') : 'show';
+            $view                        = $this->request->exist('action') ? $this->request->get('action') : 'show';
             $this->_viewParams['action'] = $view;
 
             // Start is used by Table view (like LIMIT start,offset)
             if ($this->request->exist('start')) {
-                $this->_viewParams['start']       = (int) $this->request->get('start');
+                $this->_viewParams['start'] = (int) $this->request->get('start');
             }
 
             if ($this->request->exist('pv')) {
-                $this->_viewParams['pv']       = (int) $this->request->get('pv');
+                $this->_viewParams['pv'] = (int) $this->request->get('pv');
             }
 
             if ($this->request->exist('report')) {
@@ -453,15 +453,15 @@ class Docman_Controller extends Controler
                 // Install
                 $_gid = (int) $this->request->get('group_id');
 
-                $pm = ProjectManager::instance();
-                $project = $pm->getProject($_gid);
+                $pm          = ProjectManager::instance();
+                $project     = $pm->getProject($_gid);
                 $tmplGroupId = (int) $project->getTemplate();
                 $this->_cloneDocman($tmplGroupId, $project, false);
                 if (! $item_factory->getRoot($_gid)) {
                     $item_factory->createRoot($_gid, 'roottitle_lbl_key');
                 }
                 $this->_viewParams['redirect_to'] = $_SERVER['REQUEST_URI'];
-                $this->view = 'Redirect';
+                $this->view                       = 'Redirect';
             } else {
                 $id = $this->request->get('id');
                 if (! $id && $this->request->exist('item')) {
@@ -506,12 +506,12 @@ class Docman_Controller extends Controler
                     }
                     if ($item->getGroupId() != $this->getGroupId()) {
                         $pm = ProjectManager::instance();
-                        $g = $pm->getProject($this->getGroupId());
+                        $g  = $pm->getProject($this->getGroupId());
                         $this->_set_doesnot_belong_to_project_error($item, $g);
                     } else {
-                        $user = $this->getUser();
-                        $dpm = $this->_getPermissionsManager();
-                        $can_read = $dpm->userCanAccess($user, $item->getId());
+                        $user               = $this->getUser();
+                        $dpm                = $this->_getPermissionsManager();
+                        $can_read           = $dpm->userCanAccess($user, $item->getId());
                         $folder_or_document = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
                         if (! $can_read) {
                             if ($this->request->get('action') == 'ajax_reference_tooltip') {
@@ -583,10 +583,10 @@ class Docman_Controller extends Controler
                 $this->view   = 'Admin_Permissions';
                 break;
             case 'admin_change_view':
-                $this->action = $view;
+                $this->action                            = $view;
                 $this->_viewParams['default_url_params'] = ['action'  => 'admin_view',
                                                              'id'      => $item->getParentId()];
-                $this->view = 'RedirectAfterCrud';
+                $this->view                              = 'RedirectAfterCrud';
                 break;
             case 'admin':
             case 'details':
@@ -599,22 +599,22 @@ class Docman_Controller extends Controler
                 $this->view = 'Admin_Permissions';
                 break;
             case 'admin_metadata':
-                $this->view = 'Admin_Metadata';
-                $mdFactory  = new Docman_MetadataFactory($this->_viewParams['group_id']);
-                $mdIter     = $mdFactory->getMetadataForGroup();
+                $this->view                  = 'Admin_Metadata';
+                $mdFactory                   = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                $mdIter                      = $mdFactory->getMetadataForGroup();
                 $this->_viewParams['mdIter'] = $mdIter;
                 break;
             case 'admin_md_details':
                 // Sanitize
                 $_mdLabel = $this->request->get('md');
 
-                $md = null;
+                $md        = null;
                 $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
-                $valid = $this->validateMetadata($_mdLabel, $md);
+                $valid     = $this->validateMetadata($_mdLabel, $md);
 
                 if (! $valid) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'Invalid property'));
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                     $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 } else {
                     $this->view = 'Admin_MetadataDetails';
@@ -623,7 +623,7 @@ class Docman_Controller extends Controler
                 }
                 break;
             case 'admin_md_details_update':
-                $_name = trim($this->request->get('name'));
+                $_name  = trim($this->request->get('name'));
                 $_label = $this->request->get('label');
 
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
@@ -646,7 +646,7 @@ class Docman_Controller extends Controler
                 }
 
                 $this->_viewParams['default_url_params'] = ['action'  => 'admin_metadata'];
-                $this->view = 'RedirectAfterCrud';
+                $this->view                              = 'RedirectAfterCrud';
                 break;
             case 'admin_delete_metadata':
                 $valid = false;
@@ -655,10 +655,10 @@ class Docman_Controller extends Controler
                 $_mdLabel = $this->request->get('md');
 
                 // Valid
-                $logmsg = '';
+                $logmsg    = '';
                 $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
-                $md = null;
-                $vld = $this->validateMetadata($_mdLabel, $md);
+                $md        = null;
+                $vld       = $this->validateMetadata($_mdLabel, $md);
                 if ($vld) {
                     if (! $mdFactory->isHardCodedMetadata($md->getLabel())) {
                         $valid = true;
@@ -673,10 +673,10 @@ class Docman_Controller extends Controler
                     if ($logmsg != '') {
                         $this->feedback->log('error', $logmsg);
                     }
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                     $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 } else {
-                    $this->action = $view;
+                    $this->action              = $view;
                     $this->_actionParams['md'] = $md;
                 }
 
@@ -684,7 +684,7 @@ class Docman_Controller extends Controler
             case 'admin_create_love':
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
                 if ($mdFactory->isValidLabel($this->request->get('md'))) {
-                    $this->action = $view;
+                    $this->action                            = $view;
                     $this->_viewParams['default_url_params'] = ['action'  => 'admin_md_details',
                                                                  'md' => $this->request->get('md')];
                 } else {
@@ -695,7 +695,7 @@ class Docman_Controller extends Controler
             case 'admin_delete_love':
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
                 if ($mdFactory->isValidLabel($this->request->get('md'))) {
-                    $this->action = $view;
+                    $this->action                            = $view;
                     $this->_viewParams['default_url_params'] = ['action'  => 'admin_md_details',
                                                                  'md' => $this->request->get('md')];
                 } else {
@@ -711,10 +711,10 @@ class Docman_Controller extends Controler
 
                 // Sanitize
                 $_mdLabel = $this->request->get('md');
-                $_loveId = (int) $this->request->get('loveid');
+                $_loveId  = (int) $this->request->get('loveid');
 
                 // Valid
-                $md = null;
+                $md   = null;
                 $love = null;
                 $this->validateMetadata($_mdLabel, $md);
                 if ($md !== null && $md->getLabel() !== 'status') {
@@ -722,14 +722,14 @@ class Docman_Controller extends Controler
                 }
 
                 if (! $valid) {
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                     $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 } else {
                     $mdFactory = new Docman_MetadataFactory($this->groupId);
                     $mdFactory->appendMetadataValueList($md, false);
 
-                    $this->view = 'Admin_MetadataDetailsUpdateLove';
-                    $this->_viewParams['md'] = $md;
+                    $this->view                = 'Admin_MetadataDetailsUpdateLove';
+                    $this->_viewParams['md']   = $md;
                     $this->_viewParams['love'] = $love;
                 }
                 break;
@@ -746,13 +746,13 @@ class Docman_Controller extends Controler
                 // Sanitize
                 /// @todo sanitize md, rank, name, descr
                 $_mdLabel = $this->request->get('md');
-                $_loveId = (int) $this->request->get('loveid');
-                $_rank = $this->request->get('rank');
-                $_name = $this->request->get('name');
-                $_descr = $this->request->get('descr');
+                $_loveId  = (int) $this->request->get('loveid');
+                $_rank    = $this->request->get('rank');
+                $_name    = $this->request->get('name');
+                $_descr   = $this->request->get('descr');
 
                 // Valid
-                $md = null;
+                $md   = null;
                 $love = null;
                 $this->validateMetadata($_mdLabel, $md);
                 if ($md !== null && $md->getLabel() !== 'status') {
@@ -761,7 +761,7 @@ class Docman_Controller extends Controler
 
                 if (! $valid) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'There is an error in parameters. Back to previous screen.'));
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                     $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 } else {
                     // Set parameters
@@ -770,8 +770,8 @@ class Docman_Controller extends Controler
                     $love->setDescription($_descr);
 
                     // define action
-                    $this->action = $view;
-                    $this->_actionParams['md'] = $md;
+                    $this->action                = $view;
+                    $this->_actionParams['md']   = $md;
                     $this->_actionParams['love'] = $love;
                 }
                 break;
@@ -779,16 +779,16 @@ class Docman_Controller extends Controler
             case 'admin_import_metadata_check':
                 $ok = false;
                 if ($this->request->existAndNonEmpty('plugin_docman_metadata_import_group')) {
-                    $pm = ProjectManager::instance();
+                    $pm       = ProjectManager::instance();
                     $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('plugin_docman_metadata_import_group'));
                     if ($srcGroup && ! $srcGroup->isError()) {
                         $this->_viewParams['sSrcGroupId'] = $srcGroup->getGroupId();
-                        $this->view = 'Admin_MetadataImport';
-                        $ok = true;
+                        $this->view                       = 'Admin_MetadataImport';
+                        $ok                               = true;
                     }
                 }
                 if (! $ok) {
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                     $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 }
                 break;
@@ -796,11 +796,11 @@ class Docman_Controller extends Controler
             case 'admin_import_metadata':
                 if ($this->request->existAndNonEmpty('confirm')) {
                     if ($this->request->existAndNonEmpty('plugin_docman_metadata_import_group')) {
-                        $pm = ProjectManager::instance();
-                        $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('plugin_docman_metadata_import_group'));
-                        $srcGroupId = $srcGroup->getGroupId();
+                        $pm                                 = ProjectManager::instance();
+                        $srcGroup                           = $pm->getProjectFromAutocompleter($this->request->get('plugin_docman_metadata_import_group'));
+                        $srcGroupId                         = $srcGroup->getGroupId();
                         $this->_actionParams['sSrcGroupId'] = $srcGroupId;
-                        $this->_actionParams['sGroupId'] = $this->_viewParams['group_id'];
+                        $this->_actionParams['sGroupId']    = $this->_viewParams['group_id'];
 
                         $this->action = $view;
                     } else {
@@ -810,7 +810,7 @@ class Docman_Controller extends Controler
                 } else {
                     $this->feedback->log('info', dgettext('tuleap-docman', 'Operation Canceled'));
                 }
-                $this->view = 'RedirectAfterCrud';
+                $this->view                              = 'RedirectAfterCrud';
                 $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 break;
 
@@ -829,7 +829,7 @@ class Docman_Controller extends Controler
                 } else {
                     if ($this->request->exist('quick_move')) {
                         $this->action = 'move';
-                        $this->view = null;
+                        $this->view   = null;
                     } else {
                         $this->_viewParams['hierarchy'] = $this->getItemHierarchy($root);
                         $this->view                     = ucfirst($view);
@@ -931,7 +931,7 @@ class Docman_Controller extends Controler
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to delete this item.'));
                     $this->view = 'Details';
                 } else {
-                    $this->view   = 'Delete';
+                    $this->view = 'Delete';
                 }
                 break;
             case 'action_new_version':
@@ -943,7 +943,7 @@ class Docman_Controller extends Controler
                     if ($dPm->getLockFactory()->itemIsLocked($item)) {
                         $this->feedback->log('warning', dgettext('tuleap-docman', 'Locked document'));
                     }
-                    $this->view   = 'NewVersion';
+                    $this->view = 'NewVersion';
                 }
                 break;
             case 'action_update':
@@ -951,47 +951,47 @@ class Docman_Controller extends Controler
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
-                    $this->view   = 'Update';
+                    $this->view = 'Update';
                 }
                 break;
 
             case 'action_copy':
                 //@XSS: validate action against a regexp.
-                $_action = $this->request->get('orig_action');
-                $_id     = (int) $this->request->get('orig_id');
+                $_action                     = $this->request->get('orig_action');
+                $_id                         = (int) $this->request->get('orig_id');
                 $this->_actionParams['item'] = $item;
 
                 $this->action = $view;
                 if (! $this->request->exist('ajax_copy')) {
                     $this->_viewParams['default_url_params'] = ['action'  => $_action,
                                                                  'id'      => $_id];
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
 
             case 'action_cut':
-                $_action = $this->request->get('orig_action');
-                $_id = (int) $this->request->get('orig_id');
+                $_action                     = $this->request->get('orig_action');
+                $_id                         = (int) $this->request->get('orig_id');
                 $this->_actionParams['item'] = $item;
 
                 $this->action = $view;
                 if (! $this->request->exist('ajax_cut')) {
                     $this->_viewParams['default_url_params'] = ['action'  => $_action,
                                                                  'id'      => $_id];
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
 
             case 'action_paste':
                 $itemToPaste = null;
                 $mode        = null;
-                $allowed = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
+                $allowed     = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
                 if (! $allowed) {
                     $this->view = 'Details';
                 } else {
                     $this->_viewParams['itemToPaste'] = $itemToPaste;
                     $this->_viewParams['srcMode']     = $mode;
-                    $this->view = 'Paste';
+                    $this->view                       = 'Paste';
                 }
                 break;
 
@@ -1004,11 +1004,11 @@ class Docman_Controller extends Controler
             case 'paste':
                 if ($this->request->exist('cancel')) {
                     $this->_viewParams['default_url_params'] = ['action'  => 'show'];
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                 } else {
                     $itemToPaste = null;
                     $mode        = null;
-                    $allowed = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
+                    $allowed     = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
                     if (! $allowed) {
                         $this->view = 'Details';
                     } else {
@@ -1021,8 +1021,8 @@ class Docman_Controller extends Controler
                                 $this->_viewParams['importMd'] = true;
                             }
                         }
-                        $this->_viewParams['item'] = $item;
-                        $this->_viewParams['rank'] = $this->request->get('rank');
+                        $this->_viewParams['item']        = $item;
+                        $this->_viewParams['rank']        = $this->request->get('rank');
                         $this->_viewParams['itemToPaste'] = $itemToPaste;
                         $this->_viewParams['srcMode']     = $mode;
                         /*$this->action = $view;
@@ -1054,8 +1054,8 @@ class Docman_Controller extends Controler
                     $this->view = 'Details';
                 } else {
                     if ($this->request->exist('confirm')) {
-                        $this->action = $view;
-                        $this->_actionParams['item']   = $item;
+                        $this->action                = $view;
+                        $this->_actionParams['item'] = $item;
 
                         // Version
                         $vVersion = new Valid_UInt('version');
@@ -1070,7 +1070,7 @@ class Docman_Controller extends Controler
                     $this->_viewParams['default_url_params'] = ['action'  => 'details',
                                                                  'section' => 'approval',
                                                                  'id'      => $item->getId()];
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
 
@@ -1079,7 +1079,7 @@ class Docman_Controller extends Controler
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
-                    $this->_actionParams['item']   = $item;
+                    $this->_actionParams['item'] = $item;
 
                     // Settings
                     $this->_actionParams['status']       = (int) $this->request->get('status');
@@ -1090,7 +1090,7 @@ class Docman_Controller extends Controler
                     $this->_actionParams['period']       = (int) $this->request->get('period');
 
                     // Users
-                    $this->_actionParams['user_list'] = $this->request->get('user_list');
+                    $this->_actionParams['user_list']   = $this->request->get('user_list');
                     $this->_actionParams['ugroup_list'] = null;
                     if (is_array($this->request->get('ugroup_list'))) {
                         $this->_actionParams['ugroup_list'] = array_map('intval', $this->request->get('ugroup_list'));
@@ -1101,7 +1101,7 @@ class Docman_Controller extends Controler
                     if (is_array($this->request->get('sel_user'))) {
                         $this->_actionParams['sel_user'] = array_map('intval', $this->request->get('sel_user'));
                     }
-                    $allowedAct = ['100', 'mail', 'del'];
+                    $allowedAct                          = ['100', 'mail', 'del'];
                     $this->_actionParams['sel_user_act'] = null;
                     if (in_array($this->request->get('sel_user_act'), $allowedAct)) {
                         $this->_actionParams['sel_user_act'] = $this->request->get('sel_user_act');
@@ -1139,7 +1139,7 @@ class Docman_Controller extends Controler
                                                                      'id'     => $item->getId()];
                     } else {
                         // Action!
-                        $this->action = $view;
+                        $this->action                            = $view;
                         $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
                                                                      'id'      => $item->getId()];
                     }
@@ -1155,14 +1155,14 @@ class Docman_Controller extends Controler
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
-                    $this->_actionParams['item'] = $item;
+                    $this->_actionParams['item']    = $item;
                     $this->_actionParams['user_id'] = (int) $this->request->get('user_id');
                     $this->_actionParams['rank']    = $this->request->get('rank');
-                    $this->action = $view;
+                    $this->action                   = $view;
 
                     $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
                                                                  'id'      => $item->getId()];
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
 
@@ -1171,13 +1171,13 @@ class Docman_Controller extends Controler
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
-                    $this->_actionParams['item'] = $item;
+                    $this->_actionParams['item']    = $item;
                     $this->_actionParams['user_id'] = (int) $this->request->get('user_id');
-                    $this->action = $view;
+                    $this->action                   = $view;
 
                     $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
                                                                  'id'      => $item->getId()];
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
 
@@ -1196,7 +1196,7 @@ class Docman_Controller extends Controler
                     $this->_actionParams['item'] = $item;
 
                     $svState = 0;
-                    $sState = (int) $this->request->get('state');
+                    $sState  = (int) $this->request->get('state');
                     if ($sState >= 0 && $sState < 5) {
                         $svState = $sState;
                     }
@@ -1221,14 +1221,14 @@ class Docman_Controller extends Controler
                         $this->_actionParams['sVersion'] = $sVersion;
                     }
                     $this->_actionParams['usComment'] = $this->request->get('comment');
-                    $this->_actionParams['monitor'] = (int) $this->request->get('monitor');
+                    $this->_actionParams['monitor']   = (int) $this->request->get('monitor');
 
                     $this->action = $view;
 
                     $this->_viewParams['default_url_params'] = ['action'  => 'details',
                                                                  'section' => 'approval',
                                                                  'id'      => $item->getId()];
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
 
@@ -1237,12 +1237,12 @@ class Docman_Controller extends Controler
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
-                    $this->action = $view;
+                    $this->action                = $view;
                     $this->_actionParams['item'] = $item;
 
                     $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
                                                                  'id'      => $item->getId()];
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view                              = 'RedirectAfterCrud';
                 }
                 break;
 
@@ -1253,7 +1253,7 @@ class Docman_Controller extends Controler
                 } else {
                     $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
                     $mdFactory->appendAllListOfValuesToItem($item);
-                    $this->view   = 'Edit';
+                    $this->view = 'Edit';
                 }
                 break;
             case 'delete':
@@ -1306,7 +1306,7 @@ class Docman_Controller extends Controler
                                     ['request' => $this->request]
                                 )
                             );
-                            $valid = $this->_validateRequest($fields);
+                            $valid  = $this->_validateRequest($fields);
                             if ($user->isMember($this->getGroupId(), 'A') || $user->isMember($this->getGroupId(), 'N1') || $user->isMember($this->getGroupId(), 'N2')) {
                                 $news = $this->request->get('news');
                                 if ($news) {
@@ -1344,7 +1344,7 @@ class Docman_Controller extends Controler
                                 $this->_set_redirectView();
                             } else {
                                 // Propagate return page
-                                $this->_viewParams['token']               = $this->request->get('token');
+                                $this->_viewParams['token'] = $this->request->get('token');
 
                                 $this->_viewParams['force_item']          = $new_item;
                                 $this->_viewParams['force_news']          = $this->request->get('news');
@@ -1360,10 +1360,10 @@ class Docman_Controller extends Controler
                 }
                 break;
             case 'update':
-                $this->_viewParams['recurseOnDocs'] = false;
+                $this->_viewParams['recurseOnDocs']   = false;
                 $this->_actionParams['recurseOnDocs'] = false;
                 if ($this->request->get('recurse_on_doc') == 1) {
-                    $this->_viewParams['recurseOnDocs'] = true;
+                    $this->_viewParams['recurseOnDocs']   = true;
                     $this->_actionParams['recurseOnDocs'] = true;
                 }
                 // Fall-through code dealing with new versions creation and update is the same
@@ -1426,7 +1426,7 @@ class Docman_Controller extends Controler
                             $this->view = 'Update';
                         } elseif ($view == 'new_version') {
                             // Keep fields values
-                            $v = $this->request->get('version');
+                            $v                              = $this->request->get('version');
                             $this->_viewParams['label']     = $v['label'];
                             $this->_viewParams['changelog'] = $v['changelog'];
                             if ($item instanceof Docman_EmbeddedFile) {
@@ -1468,11 +1468,11 @@ class Docman_Controller extends Controler
                 $this->_viewParams['force_ordering'] = $this->request->get('default_position');
                 $this->_viewParams['exclude']        = $this->request->get('exclude');
                 $this->_viewParams['hierarchy']      = $this->getItemHierarchy($root);
-                $this->view = ucfirst($view);
+                $this->view                          = ucfirst($view);
                 break;
             case 'permissionsForItem':
                 $this->_viewParams['user_can_manage'] = $this->userCanManage($item->getId());
-                $this->view = ucfirst($view);
+                $this->view                           = ucfirst($view);
                 break;
             case 'report_settings':
                 $this->view = 'ReportSettings';
@@ -1485,34 +1485,34 @@ class Docman_Controller extends Controler
                     $this->action = $view;
                 }
                 $this->_viewParams['default_url_params'] = ['action'  => 'report_settings'];
-                $this->view = 'RedirectAfterCrud';
+                $this->view                              = 'RedirectAfterCrud';
 
                 break;
             case 'report_upd':
                 if ($this->request->exist('report_id')) {
                     $this->_actionParams['sReportId'] = (int) $this->request->get('report_id');
                     $this->_actionParams['sGroupId']  = $this->_viewParams['group_id'];
-                    $usScope = $this->request->get('scope');
+                    $usScope                          = $this->request->get('scope');
                     if ($usScope === 'I' || $usScope === 'P') {
                         $this->_actionParams['sScope'] = $usScope;
                     }
                     $this->_actionParams['description'] = $this->request->get('description');
                     $this->_actionParams['title']       = $this->request->get('title');
-                    $this->_actionParams['sImage'] = (int) $this->request->get('image');
+                    $this->_actionParams['sImage']      = (int) $this->request->get('image');
 
                     $this->action = $view;
                 }
                 $this->_viewParams['default_url_params'] = ['action'  => 'report_settings'];
-                $this->view = 'RedirectAfterCrud';
+                $this->view                              = 'RedirectAfterCrud';
                 break;
 
             case 'report_import':
                 if ($this->request->exist('import_search_report_from_group')) {
-                    $pm = ProjectManager::instance();
+                    $pm       = ProjectManager::instance();
                     $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('import_search_report_from_group'));
                     if ($srcGroup && ! $srcGroup->isError()) {
-                        $this->_actionParams['sGroupId']       = $this->_viewParams['group_id'];
-                        $this->_actionParams['sImportGroupId'] = $srcGroup->getGroupId();
+                        $this->_actionParams['sGroupId']        = $this->_viewParams['group_id'];
+                        $this->_actionParams['sImportGroupId']  = $srcGroup->getGroupId();
                         $this->_actionParams['sImportReportId'] = null;
                         if ($this->request->exist('import_report_id') && trim($this->request->get('import_report_id')) != '') {
                             $this->_actionParams['sImportReportId'] = (int) $this->request->get('import_report_id');
@@ -1522,17 +1522,17 @@ class Docman_Controller extends Controler
                 }
 
                 $this->_viewParams['default_url_params'] = ['action'  => 'report_settings'];
-                $this->view = 'RedirectAfterCrud';
+                $this->view                              = 'RedirectAfterCrud';
                 break;
 
             case 'action_lock_add':
                 $this->_actionParams['item'] = $item;
-                $this->action = 'action_lock_add';
+                $this->action                = 'action_lock_add';
                 break;
 
             case 'action_lock_del':
                 $this->_actionParams['item'] = $item;
-                $this->action = 'action_lock_del';
+                $this->action                = 'action_lock_del';
                 break;
 
             case 'ajax_reference_tooltip':
@@ -1638,7 +1638,7 @@ class Docman_Controller extends Controler
                 && $_md->getGroupId() == $this->groupId
             ) {
                 $valid = true;
-                $md = $_md;
+                $md    = $_md;
             }
         }
 
@@ -1706,11 +1706,11 @@ class Docman_Controller extends Controler
         $valid = false;
 
         $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
-        $_love = $loveFactory->getByElementId($loveId, $md->getLabel());
+        $_love       = $loveFactory->getByElementId($loveId, $md->getLabel());
         if ($_love !== null) {
             // Still Need to verify that $love belong to $md
             $valid = true;
-            $love = $_love;
+            $love  = $_love;
         }
 
         return $valid;
@@ -1765,7 +1765,7 @@ class Docman_Controller extends Controler
     {
         // Redefine actions classes names building.
         $className = static::class;
-        $class = substr($className, 0, -(strlen("Controller"))) . 'Actions';
+        $class     = substr($className, 0, -(strlen("Controller"))) . 'Actions';
         require_once($class . '.class.php');
         if (! class_exists($class)) {
             throw new LogicException("$class does not exist");
@@ -1807,8 +1807,8 @@ class Docman_Controller extends Controler
     private function getItemHierarchy($rootItem)
     {
         if (! isset($this->hierarchy[$rootItem->getId()])) {
-            $itemFactory = new Docman_ItemFactory($rootItem->getGroupId());
-            $user = $this->getUser();
+            $itemFactory                         = new Docman_ItemFactory($rootItem->getGroupId());
+            $user                                = $this->getUser();
             $this->hierarchy[$rootItem->getId()] = $itemFactory->getItemTree($rootItem, $user, false, true);
         }
         return $this->hierarchy[$rootItem->getId()];

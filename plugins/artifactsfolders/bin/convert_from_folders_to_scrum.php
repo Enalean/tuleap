@@ -29,10 +29,10 @@ use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 
-$usage_options  = '';
-$usage_options .= 'p:'; // give me a project
-$usage_options .= 'u:'; // give me a user
-$usage_options .= 'h';  // help message
+$usage_options      = '';
+$usage_options     .= 'p:'; // give me a project
+$usage_options     .= 'u:'; // give me a user
+$usage_options     .= 'h';  // help message
 $usage_long_options = [
     'help'
 ];
@@ -93,18 +93,18 @@ try {
         throw new RuntimeException("The user $username is not member of project $project_id");
     }
 
-    $converter_dao    = new ConverterDao();
-    $artifact_factory = Tracker_ArtifactFactory::instance();
+    $converter_dao                  = new ConverterDao();
+    $artifact_factory               = Tracker_ArtifactFactory::instance();
     $nature_is_child_link_retriever = new NatureIsChildLinkRetriever(
         $artifact_factory,
         new ArtifactLinkFieldValueDao()
     );
-    $hierarchy_of_folder_builder = new HierarchyOfFolderBuilder(
+    $hierarchy_of_folder_builder    = new HierarchyOfFolderBuilder(
         new Dao(),
         $nature_is_child_link_retriever,
         $artifact_factory
     );
-    $ancestor_folder_checker = new AncestorFolderChecker(
+    $ancestor_folder_checker        = new AncestorFolderChecker(
         $nature_is_child_link_retriever,
         $hierarchy_of_folder_builder
     );

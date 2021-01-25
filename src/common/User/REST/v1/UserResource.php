@@ -129,7 +129,7 @@ class UserResource extends AuthenticatedResource
 
         $user_id = $this->getUserIDFromIDOrSelf($id);
 
-        $user                = $this->getUserById($user_id);
+        $user = $this->getUserById($user_id);
         return ($this->is_authenticated) ? UserRepresentation::build($user) : MinimalUserRepresentation::build($user);
     }
 
@@ -236,7 +236,7 @@ class UserResource extends AuthenticatedResource
 
         $list_of_user_representation = [];
         foreach ($user_collection->getUsers() as $user) {
-            $user_representation = ($this->is_authenticated) ? UserRepresentation::build($user) : MinimalUserRepresentation::build($user);
+            $user_representation           = ($this->is_authenticated) ? UserRepresentation::build($user) : MinimalUserRepresentation::build($user);
             $list_of_user_representation[] = $user_representation;
         }
 
@@ -361,7 +361,7 @@ class UserResource extends AuthenticatedResource
             $ugroup                    = $this->user_group_retriever->getExistingUserGroup($id);
             $project                   = $ugroup->getProject();
             $user_group_representation = new UserGroupRepresentation($project, $ugroup);
-            $user_groups[] = $user_group_representation;
+            $user_groups[]             = $user_group_representation;
         }
         return $user_groups;
     }
@@ -563,7 +563,7 @@ class UserResource extends AuthenticatedResource
     protected function patchUserDetails($id, array $values)
     {
         $user_to_update = $this->getUserById($id);
-        $current_user = $this->user_manager->getCurrentUser();
+        $current_user   = $this->user_manager->getCurrentUser();
         if ($this->checkUserCanUpdate($current_user)) {
             foreach ($values as $key => $value) {
                 switch ($key) {

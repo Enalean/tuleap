@@ -31,7 +31,7 @@ final class KanbanTrackerRepresentationTest extends TestCase
 
     public function testBuildsRepresentation(): void
     {
-        $tracker = \Mockery::mock(\Tracker::class);
+        $tracker         = \Mockery::mock(\Tracker::class);
         $tracker_factory = \Mockery::mock(\TrackerFactory::class);
         $tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
         $tracker->shouldReceive('getId')->andReturn(789);

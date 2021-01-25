@@ -59,17 +59,17 @@ class GerritStatusPresenter
         $this->has_migration_error   = ($status === Git_Driver_Gerrit_ProjectCreatorStatus::ERROR);
 
         if ($this->is_migrated_to_gerrit === true) {
-            $gerrit_server        = $gerrit_servers[$repository->getRemoteServerId()];
-            $driver               = $driver_factory->getDriver($gerrit_server);
-            $this->gerrit_project = $driver->getGerritProjectName($repository);
-            $this->gerrit_url     = $gerrit_server->getProjectUrl($this->gerrit_project);
+            $gerrit_server                                   = $gerrit_servers[$repository->getRemoteServerId()];
+            $driver                                          = $driver_factory->getDriver($gerrit_server);
+            $this->gerrit_project                            = $driver->getGerritProjectName($repository);
+            $this->gerrit_url                                = $gerrit_server->getProjectUrl($this->gerrit_project);
             $this->is_migrated_to_unsupported_gerrit_version = $driver instanceof GerritUnsupportedVersionDriver;
         }
 
         if ($this->has_migration_error === true) {
             RelativeDatesAssetsRetriever::includeAssetsInSnippet();
-            $this->purified_migration_time_ago  = DateHelper::relativeDateInlineContext((int) $project_creator_status->getEventDate($repository), $user);
-            $this->settings_gerrit_url = $url = GIT_BASE_URL . '/?'
+            $this->purified_migration_time_ago = DateHelper::relativeDateInlineContext((int) $project_creator_status->getEventDate($repository), $user);
+            $this->settings_gerrit_url         = $url = GIT_BASE_URL . '/?'
                 . http_build_query(
                     [
                         "action"   => "repo_management",

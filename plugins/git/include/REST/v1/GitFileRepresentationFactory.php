@@ -36,8 +36,8 @@ class GitFileRepresentationFactory
      */
     public function getGitFileRepresentation($path_to_file, $ref, Project $git_repository)
     {
-        $name     = basename($path_to_file);
-        $commit   = $git_repository->GetCommit($ref);
+        $name   = basename($path_to_file);
+        $commit = $git_repository->GetCommit($ref);
         if ($commit === null) {
             throw new \GitRepositoryException(sprintf('Commit for the reference \'%s\' not found', $ref));
         }

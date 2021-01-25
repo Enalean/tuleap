@@ -111,7 +111,7 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
     private function buildListOfPaneInfo(Planning_Milestone $milestone)
     {
         $milestone_artifact_id = $this->getMilestoneArtifactId();
-        $top_planning_pane = $this->getTopPlanningV2PaneInfo($milestone);
+        $top_planning_pane     = $this->getTopPlanningV2PaneInfo($milestone);
 
         $this->list_of_pane_info[$milestone_artifact_id][] = $top_planning_pane;
     }
@@ -130,8 +130,8 @@ class Planning_VirtualTopMilestonePaneFactory // phpcs:ignore PSR1.Classes.Class
 
         $pane_info = new TopPlanningV2PaneInfo($milestone, $milestone_tracker);
         $pane_info->setActive(true);
-        $project                                   = $this->request->getProject();
-        $user                                      = $this->request->getCurrentUser();
+        $project = $this->request->getProject();
+        $user    = $this->request->getCurrentUser();
 
         assert($milestone instanceof Planning_VirtualTopMilestone);
         $display_pv2_event = new DisplayTopPlanningAppEvent(

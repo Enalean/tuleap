@@ -48,7 +48,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
 
     public function fetchFormContent(Codendi_Request $request, PFUser $current_user)
     {
-        $html = '';
+        $html  = '';
         $html .= $this->fetchLastChangesetId();
         $html .= $this->fetchFromArtifactId();
         $html .= parent::fetchFormContent($request, $current_user);

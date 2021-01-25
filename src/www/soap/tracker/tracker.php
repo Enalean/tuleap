@@ -1234,7 +1234,7 @@ if (defined('NUSOAP')) {
     {
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm    = ProjectManager::instance();
                 $group = $pm->getGroupByIdForSoap($group_id, 'getTrackerList');
             } catch (SoapFault $e) {
                 return $e;
@@ -1271,7 +1271,7 @@ if (defined('NUSOAP')) {
     {
         global $ath;
         $user_id = UserManager::instance()->getCurrentUser()->getId();
-        $return = [];
+        $return  = [];
         for ($i = 0; $i < count($at_arr); $i++) {
             if ($at_arr[$i]->isError()) {
                 //skip if error
@@ -1297,12 +1297,12 @@ if (defined('NUSOAP')) {
                     }
                     $reports_desc = artifactreportsdesc_to_soap($report_fact->getReports($at_arr[$i]->data_array['group_artifact_id'], $user_id));
 
-                    $sql = "SELECT COALESCE(sum(af.filesize) / 1024,NULL,0) as total_file_size"
+                    $sql      = "SELECT COALESCE(sum(af.filesize) / 1024,NULL,0) as total_file_size"
                         . " FROM artifact_file af, artifact a, artifact_group_list agl"
                         . " WHERE (af.artifact_id = a.artifact_id)"
                         . " AND (a.group_artifact_id = agl.group_artifact_id)"
                         . " AND (agl.group_artifact_id =" . db_ei($at_arr[$i]->getID()) . ")";
-                    $result = db_query($sql);
+                    $result   = db_query($sql);
                     $return[] = [
                     'group_artifact_id' => $at_arr[$i]->data_array['group_artifact_id'],
                     'group_id' => $at_arr[$i]->data_array['group_id'],
@@ -1354,7 +1354,7 @@ if (defined('NUSOAP')) {
         if (session_continue($sessionKey)) {
             $user_id = UserManager::instance()->getCurrentUser()->getId();
             try {
-                $pm = ProjectManager::instance();
+                $pm    = ProjectManager::instance();
                 $group = $pm->getGroupByIdForSoap($group_id, 'getArtifactType');
             } catch (SoapFault $e) {
                 return $e;
@@ -1393,7 +1393,7 @@ if (defined('NUSOAP')) {
     {
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm    = ProjectManager::instance();
                 $group = $pm->getGroupByIdForSoap($group_id, 'getArtifactTypes');
             } catch (SoapFault $e) {
                 return $e;
@@ -1425,21 +1425,21 @@ if (defined('NUSOAP')) {
     {
         global $ath;
         $user_id = UserManager::instance()->getCurrentUser()->getId();
-        $return = [];
+        $return  = [];
 
         // number of opend artifact are not part of ArtifactType, so we have to get it with ArtifactTypeFactory (could need some refactoring maybe)
-        $atf = new ArtifactTypeFactory($at->getGroup());
+        $atf       = new ArtifactTypeFactory($at->getGroup());
         $arr_count = $atf->getStatusIdCount($at->getID());
         if ($arr_count) {
             $open_count = array_key_exists('open_count', $arr_count) ? $arr_count['open_count'] : -1;
-            $count = array_key_exists('count', $arr_count) ? $arr_count['count'] : -1;
+            $count      = array_key_exists('count', $arr_count) ? $arr_count['count'] : -1;
         } else {
             $open_count = -1;
-            $count = -1;
+            $count      = -1;
         }
 
         $field_sets = [];
-        $ath = new ArtifactType($at->getGroup(), $at->getID());
+        $ath        = new ArtifactType($at->getGroup(), $at->getID());
         if (! $ath || ! is_object($ath)) {
             return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'getArtifactTypes');
         }
@@ -1461,16 +1461,16 @@ if (defined('NUSOAP')) {
             $result_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
 
             foreach ($result_fieldsets as $fieldset_id => $result_fieldset) {
-                $fields = [];
+                $fields             = [];
                 $fields_in_fieldset = $result_fieldset->getAllUsedFields();
-                $group_id = $at->Group->getID();
-                $group_artifact_id = $at->getID();
+                $group_id           = $at->Group->getID();
+                $group_artifact_id  = $at->getID();
                 foreach ($fields_in_fieldset as $key => $field) {
                     if ($field->userCanRead($group_id, $group_artifact_id, $user_id)) {
                         $availablevalues = [];
-                        $result = $field->getFieldPredefinedValues($at->getID(), false, false, false, false);
-                        $rows = db_numrows($result);
-                        $cols = db_numfields($result);
+                        $result          = $field->getFieldPredefinedValues($at->getID(), false, false, false, false);
+                        $rows            = db_numrows($result);
+                        $cols            = db_numfields($result);
                         for ($j = 0; $j < $rows; $j++) {
                             $field_status = ($cols > 2) ? db_result($result, $j, 6) : '';
                             // we don't send hidden values (status == 'H')
@@ -1543,7 +1543,7 @@ if (defined('NUSOAP')) {
             // We add the field dependencies
             $field_dependencies = artifactrules_to_soap($at);
 
-            $sql = "SELECT COALESCE(sum(af.filesize) / 1024,NULL,0) as total_file_size"
+            $sql    = "SELECT COALESCE(sum(af.filesize) / 1024,NULL,0) as total_file_size"
                 . " FROM artifact_file af, artifact a, artifact_group_list agl"
                 . " WHERE (af.artifact_id = a.artifact_id)"
                 . " AND (a.group_artifact_id = agl.group_artifact_id)"
@@ -1580,21 +1580,21 @@ if (defined('NUSOAP')) {
 
     function artifactrule_to_soap($rule)
     {
-        $return = [];
-        $return['rule_id'] = $rule->id;
+        $return                      = [];
+        $return['rule_id']           = $rule->id;
         $return['group_artifact_id'] = $rule->group_artifact_id;
-        $return['source_field_id'] = $rule->source_field;
-        $return['source_value_id'] = $rule->source_value;
-        $return['target_field_id'] = $rule->target_field;
-        $return['target_value_id'] = $rule->target_value;
+        $return['source_field_id']   = $rule->source_field;
+        $return['source_value_id']   = $rule->source_value;
+        $return['target_field_id']   = $rule->target_field;
+        $return['target_value_id']   = $rule->target_value;
         return $return;
     }
 
     function artifactrules_to_soap($artifact_type)
     {
         $return = [];
-        $arm = new ArtifactRulesManager();
-        $rules = $arm->getAllRulesByArtifactTypeWithOrder($artifact_type->getID());
+        $arm    = new ArtifactRulesManager();
+        $rules  = $arm->getAllRulesByArtifactTypeWithOrder($artifact_type->getID());
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $rule) {
                 $return[] = artifactrule_to_soap($rule);
@@ -1626,7 +1626,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifacts');
             } catch (SoapFault $e) {
                 return $e;
@@ -1685,7 +1685,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactsFromReport');
             } catch (SoapFault $e) {
                 return $e;
@@ -1747,7 +1747,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact, $ath;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactById');
             } catch (SoapFault $e) {
                 return $e;
@@ -1796,7 +1796,7 @@ if (defined('NUSOAP')) {
     {
         global $art_field_fact;
 
-        $return = [];
+        $return  = [];
         $user_id = UserManager::instance()->getCurrentUser()->getId();
         // We check if the user can view this artifact
         if ($artifact->userCanView($user_id)) {
@@ -1879,7 +1879,7 @@ if (defined('NUSOAP')) {
 
     function artifact_query_result_to_soap($artifacts, $total_artifacts_number)
     {
-        $return = [];
+        $return                           = [];
         $return['total_artifacts_number'] = $total_artifacts_number;
         if ($total_artifacts_number == 0 && $artifacts == false) {
             $return['artifacts'] = null;
@@ -1902,11 +1902,11 @@ if (defined('NUSOAP')) {
     {
         global $art_field_fact;
 
-        $return = [];
+        $return        = [];
         $return_fields = [];
 
         $return['artifact_id'] = $artifact['id'];
-        $return['severity'] = $artifact['severity_id'];
+        $return['severity']    = $artifact['severity_id'];
 
         // we assume that the first field is 'severity_id'
         $arr_keys = array_keys($artifact);
@@ -1940,7 +1940,7 @@ if (defined('NUSOAP')) {
 
     function artifact_report_result_to_soap($artifacts, $total_artifacts_number)
     {
-        $return = [];
+        $return                           = [];
         $return['total_artifacts_number'] = $total_artifacts_number;
         if ($total_artifacts_number == 0 && $artifacts == false) {
             $return['artifacts'] = null;
@@ -1957,19 +1957,19 @@ if (defined('NUSOAP')) {
         $data = [];
         // set standard fields data
         if (isset($status_id)) {
-            $data['status_id']    =  $status_id;
+            $data['status_id'] =  $status_id;
         }
         if (isset($close_date) && $close_date != 0) {
-            $data['close_date']   =  date("Y-m-d", $close_date); // Dates are internally stored in timestamp, but for update and create functions, date must be Y-m-d
+            $data['close_date'] =  date("Y-m-d", $close_date); // Dates are internally stored in timestamp, but for update and create functions, date must be Y-m-d
         }
         if (isset($summary)) {
-            $data['summary']      =  $summary;
+            $data['summary'] =  $summary;
         }
         if (isset($details)) {
-            $data['details']      =  $details;
+            $data['details'] =  $details;
         }
         if (isset($severity) && $severity != 0) {
-            $data['severity']     =  $severity;
+            $data['severity'] =  $severity;
         }
 
         // set extra fields data
@@ -1984,11 +1984,11 @@ if (defined('NUSOAP')) {
                     continue;
                 } else {
                     if ($field->isMultiSelectBox()) {
-                        $value = explode(",", $extra_field['field_value']);
+                        $value                   = explode(",", $extra_field['field_value']);
                         $data[$field->getName()] = $value;
                     } elseif ($field->isDateField()) {
                         // Dates are internally stored in timestamp, but for update and create functions, date must be Y-m-d
-                        $value = date("Y-m-d", $extra_field['field_value']);
+                        $value                   = date("Y-m-d", $extra_field['field_value']);
                         $data[$field->getName()] = $value;
                     } else {
                         $data[$field->getName()] = $extra_field['field_value'];
@@ -2026,7 +2026,7 @@ if (defined('NUSOAP')) {
         if (session_continue($sessionKey)) {
             $user_id = UserManager::instance()->getCurrentUser()->getId();
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'addArtifact');
             } catch (SoapFault $e) {
                 return $e;
@@ -2100,7 +2100,7 @@ if (defined('NUSOAP')) {
 
                             if (! $used_field_present) {
                                 // the field is required, but there is no value, so we put the default value
-                                $extra_field_to_add = [];
+                                $extra_field_to_add             = [];
                                 $extra_field_to_add['field_id'] = $used_field->getID();
                                 if (is_array($used_field->getDefaultValue())) {
                                     // if the default values are multiple, we set them in a string separated with comma
@@ -2133,7 +2133,7 @@ if (defined('NUSOAP')) {
                 return new SoapFault(CREATE_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifact');
             } else {
                 // Send the notification
-                $agnf = new ArtifactGlobalNotificationFactory();
+                $agnf      = new ArtifactGlobalNotificationFactory();
                 $addresses = $agnf->getAllAddresses($ath->getID());
                 $a->mailFollowupWithPermissions($addresses);
 
@@ -2178,7 +2178,7 @@ if (defined('NUSOAP')) {
 
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'addArtifactWithFieldNames');
             } catch (SoapFault $e) {
                 return $e;
@@ -2209,7 +2209,7 @@ if (defined('NUSOAP')) {
             foreach ($extra_fields as $extra_field_name) {
                 $field = $art_field_fact->getFieldFromName($extra_field_name->field_name);
                 if ($field) {
-                    $extra_field_id = $field->getID();
+                    $extra_field_id        = $field->getID();
                     $extrafields_with_id[] = ['field_id' => $extra_field_id, 'artifact_id' => 0, 'field_value' => $extra_field_name->field_value];
                 } else {
                     return new SoapFault(INVALID_FIELD_FAULT, 'Invalid Field:' . $extra_field_name->field_name, 'addArtifact');
@@ -2248,7 +2248,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact, $ath;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'updateArtifact');
             } catch (SoapFault $e) {
                 return $e;
@@ -2299,7 +2299,7 @@ if (defined('NUSOAP')) {
                 assert(is_array($changes));
                 // Send the notification
                 if ($changes) {
-                    $agnf = new ArtifactGlobalNotificationFactory();
+                    $agnf      = new ArtifactGlobalNotificationFactory();
                     $addresses = $agnf->getAllAddresses($ath->getID(), true);
                     $a->mailFollowupWithPermissions($addresses, $changes);
                 }
@@ -2337,7 +2337,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact, $ath;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'updateArtifactWithFieldNames');
             } catch (SoapFault $e) {
                 return $e;
@@ -2368,7 +2368,7 @@ if (defined('NUSOAP')) {
             foreach ($extra_fields as $extra_field_name) {
                 $field = $art_field_fact->getFieldFromName($extra_field_name->field_name);
                 if ($field) {
-                    $extra_field_id = $field->getID();
+                    $extra_field_id        = $field->getID();
                     $extrafields_with_id[] = ['field_id' => $extra_field_id, 'field_value' => $extra_field_name->field_value];
                 } else {
                     return new SoapFault(INVALID_FIELD_FAULT, 'Invalid Field:' . $extra_field_name->field_name, 'updateArtifact');
@@ -2400,7 +2400,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactFollowups');
             } catch (SoapFault $e) {
                 return $e;
@@ -2427,7 +2427,7 @@ if (defined('NUSOAP')) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactFollowups');
             }
 
-            $return  = artifactfollowups_to_soap($a->getFollowups(), $group_id, $group_artifact_id, $a);
+            $return = artifactfollowups_to_soap($a->getFollowups(), $group_id, $group_artifact_id, $a);
             return $return;
         } else {
             return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getArtifactFollowups');
@@ -2437,10 +2437,10 @@ if (defined('NUSOAP')) {
     function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id, $artifact)
     {
         $return = [];
-        $rows = db_numrows($followups_res);
+        $rows   = db_numrows($followups_res);
         for ($i = 0; $i < $rows; $i++) {
-            $comment = Codendi_HTMLPurifier::instance()->purify(db_result($followups_res, $i, 'new_value'), CODENDI_PURIFIER_BASIC_NOBR, $group_id);
-            $id = db_result($followups_res, $i, 'artifact_history_id');
+            $comment  = Codendi_HTMLPurifier::instance()->purify(db_result($followups_res, $i, 'new_value'), CODENDI_PURIFIER_BASIC_NOBR, $group_id);
+            $id       = db_result($followups_res, $i, 'artifact_history_id');
             $return[] =  [
             'artifact_id'         => db_result($followups_res, $i, 'artifact_id'),
             'follow_up_id'        => $id,
@@ -2473,7 +2473,7 @@ if (defined('NUSOAP')) {
     {
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactCannedResponses');
             } catch (SoapFault $e) {
                 return $e;
@@ -2494,7 +2494,7 @@ if (defined('NUSOAP')) {
     function artifactcannedresponses_to_soap($cannedresponses_res, $group_artifact_id)
     {
         $return = [];
-        $rows = db_numrows($cannedresponses_res);
+        $rows   = db_numrows($cannedresponses_res);
         for ($i = 0; $i < $rows; $i++) {
             $return[] =  [
             'artifact_canned_id' => db_result($cannedresponses_res, $i, 'artifact_canned_id'),
@@ -2522,7 +2522,7 @@ if (defined('NUSOAP')) {
         $user_id = UserManager::instance()->getCurrentUser()->getId();
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactReports');
             } catch (SoapFault $e) {
                 return $e;
@@ -2607,7 +2607,7 @@ if (defined('NUSOAP')) {
 
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactAttachedFiles');
             } catch (SoapFault $e) {
                 return $e;
@@ -2662,7 +2662,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactAttachedFile');
             } catch (SoapFault $e) {
                 return $e;
@@ -2704,7 +2704,7 @@ if (defined('NUSOAP')) {
     function artifactfiles_to_soap($attachedfiles_arr, $set_bin_data = false)
     {
         $return = [];
-        $rows = db_numrows($attachedfiles_arr);
+        $rows   = db_numrows($attachedfiles_arr);
         for ($i = 0; $i < $rows; $i++) {
             $bin_data = db_result($attachedfiles_arr, $i, 'bin_data');
             $return[] = [
@@ -2724,15 +2724,15 @@ if (defined('NUSOAP')) {
 
     function artifactfile_to_soap($file_id, Artifact $artifact, $set_bin_data)
     {
-        $return = null;
+        $return            = null;
         $attachedfiles_arr = $artifact->getAttachedFiles();
-        $rows = db_numrows($attachedfiles_arr);
+        $rows              = db_numrows($attachedfiles_arr);
         for ($i = 0; $i < $rows; $i++) {
-            $file = [];
-            $attachment_id = db_result($attachedfiles_arr, $i, 'id');
-            $file['id'] = $attachment_id;
+            $file                = [];
+            $attachment_id       = db_result($attachedfiles_arr, $i, 'id');
+            $file['id']          = $attachment_id;
             $file['artifact_id'] = db_result($attachedfiles_arr, $i, 'artifact_id');
-            $file['filename'] = db_result($attachedfiles_arr, $i, 'filename');
+            $file['filename']    = db_result($attachedfiles_arr, $i, 'filename');
             $file['description'] = SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description'));
             if ($set_bin_data) {
                 $attachment_path = ArtifactFile::getPathOnFilesystem($artifact, $attachment_id);
@@ -2742,9 +2742,9 @@ if (defined('NUSOAP')) {
                     $file['bin_data'] = db_result($attachedfiles_arr, $i, 'bin_data');
                 }
             }
-            $file['filesize'] = db_result($attachedfiles_arr, $i, 'filesize');
-            $file['filetype'] = db_result($attachedfiles_arr, $i, 'filetype');
-            $file['adddate']  = db_result($attachedfiles_arr, $i, 'adddate');
+            $file['filesize']     = db_result($attachedfiles_arr, $i, 'filesize');
+            $file['filetype']     = db_result($attachedfiles_arr, $i, 'filetype');
+            $file['adddate']      = db_result($attachedfiles_arr, $i, 'adddate');
             $file['submitted_by'] = db_result($attachedfiles_arr, $i, 'user_name');
             if ($file['id'] == $file_id) {
                 $return = $file;
@@ -2771,7 +2771,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactDependencies');
             } catch (SoapFault $e) {
                 return $e;
@@ -2809,7 +2809,7 @@ if (defined('NUSOAP')) {
     function dependencies_to_soap($artifact_type, $dependencies)
     {
         $return = [];
-        $rows = db_numrows($dependencies);
+        $rows   = db_numrows($dependencies);
         for ($i = 0; $i < $rows; $i++) {
             // check the permission : is the user allowed to see the artifact ?
             $artifact = new Artifact($artifact_type, db_result($dependencies, $i, 'is_dependent_on_artifact_id'));
@@ -2849,7 +2849,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactInverseDependencies');
             } catch (SoapFault $e) {
                 return $e;
@@ -2890,7 +2890,7 @@ if (defined('NUSOAP')) {
     function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dependencies)
     {
         $return = [];
-        $rows = db_numrows($inverse_dependencies);
+        $rows   = db_numrows($inverse_dependencies);
         for ($i = 0; $i < $rows; $i++) {
             // check the permission : is the user allowed to see the artifact ?
             $artifact = new Artifact($artifact_type, db_result($inverse_dependencies, $i, 'artifact_id'));
@@ -2933,7 +2933,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'addArtifactAttachedFile');
             } catch (SoapFault $e) {
                 return $e;
@@ -2978,7 +2978,7 @@ if (defined('NUSOAP')) {
             } else {
                 // Send the notification
                 if ($changes) {
-                    $agnf = new ArtifactGlobalNotificationFactory();
+                    $agnf      = new ArtifactGlobalNotificationFactory();
                     $addresses = $agnf->getAllAddresses($at->getID(), true);
                     $a->mailFollowupWithPermissions($addresses, $changes);
                 }
@@ -3011,7 +3011,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'deleteArtifactAttachedFile');
             } catch (SoapFault $e) {
                 return $e;
@@ -3074,7 +3074,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'addArtifactDependencies');
             } catch (SoapFault $e) {
                 return $e;
@@ -3136,7 +3136,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact, $changes;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'updateArtifactFollowUp');
             } catch (SoapFault $e) {
                 return $e;
@@ -3171,7 +3171,7 @@ if (defined('NUSOAP')) {
             } else {
             // Send the notification
                 if ($changes) {
-                    $agnf = new ArtifactGlobalNotificationFactory();
+                    $agnf      = new ArtifactGlobalNotificationFactory();
                     $addresses = $agnf->getAllAddresses($at->getID(), true);
                     $a->mailFollowupWithPermissions($addresses, $changes);
                 }
@@ -3205,7 +3205,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact, $changes;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'deleteArtifactFollowUp');
             } catch (SoapFault $e) {
                 return $e;
@@ -3263,7 +3263,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'deleteArtifactDependency');
             } catch (SoapFault $e) {
                 return $e;
@@ -3322,7 +3322,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact, $ath;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'addArtifactFollowup');
             } catch (SoapFault $e) {
                 return $e;
@@ -3353,7 +3353,7 @@ if (defined('NUSOAP')) {
                 return new SoapFault(CREATE_FOLLOWUP_FAULT, 'Comment could not be saved', 'addArtifactFollowup');
             } else {
                 // Send notification
-                $agnf = new ArtifactGlobalNotificationFactory();
+                $agnf      = new ArtifactGlobalNotificationFactory();
                 $addresses = $agnf->getAllAddresses($ath->getID(), true);
                 $a->mailFollowupWithPermissions($addresses, $changes);
                 return true;
@@ -3384,7 +3384,7 @@ if (defined('NUSOAP')) {
             }
 
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'existArtifactSummary');
             } catch (SoapFault $e) {
                 return $e;
@@ -3425,7 +3425,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactCCList');
             } catch (SoapFault $e) {
                 return $e;
@@ -3463,7 +3463,7 @@ if (defined('NUSOAP')) {
     function artifactCC_to_soap($group_id, $group_artifact_id, $artifact_id, $artifact_cc_list)
     {
         $return = [];
-        $rows = db_numrows($artifact_cc_list);
+        $rows   = db_numrows($artifact_cc_list);
         for ($i = 0; $i < $rows; $i++) {
             // retrieve the field, for permission checks
             $return[] = [
@@ -3494,7 +3494,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'addArtifactCC');
             } catch (SoapFault $e) {
                 return $e;
@@ -3546,7 +3546,7 @@ if (defined('NUSOAP')) {
 
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'deleteArtifactCC');
             } catch (SoapFault $e) {
                 return $e;
@@ -3601,7 +3601,7 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
             try {
-                $pm = ProjectManager::instance();
+                $pm  = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactHistory');
             } catch (SoapFault $e) {
                 return $e;
@@ -3641,11 +3641,11 @@ if (defined('NUSOAP')) {
         global $art_field_fact;
 
         $return = [];
-        $rows = db_numrows($history);
+        $rows   = db_numrows($history);
         for ($i = 0; $i < $rows; $i++) {
             // retrieve the field, for permission checks
             $field_name = db_result($history, $i, 'field_name');
-            $field = $art_field_fact->getFieldFromName($field_name);
+            $field      = $art_field_fact->getFieldFromName($field_name);
             if ($field) {
                 if ($field->userCanRead($group_id, $group_artifact_id)) {
                     $return[] = [

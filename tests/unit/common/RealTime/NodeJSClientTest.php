@@ -64,7 +64,7 @@ final class NodeJSClientTest extends TestCase
 
         $requests = $http_client->getRequests();
         $this->assertCount(1, $requests);
-        $request  = $requests[0];
+        $request = $requests[0];
         $this->assertEquals('POST', $request->getMethod());
         $this->assertStringStartsWith('https://' . $realtime_server_address, (string) $request->getUri());
     }

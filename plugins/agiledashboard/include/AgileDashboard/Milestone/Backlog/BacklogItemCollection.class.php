@@ -50,7 +50,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
 
     public function push(AgileDashboard_Milestone_Backlog_IBacklogItem $item)
     {
-        $this->rows[] = $item;
+        $this->rows[]             = $item;
         $this->index[$item->id()] = true;
     }
 

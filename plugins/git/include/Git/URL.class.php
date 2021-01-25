@@ -148,7 +148,7 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
 
     private function setIsSmartHTTP()
     {
-        $uri = $this->uri;
+        $uri             = $this->uri;
         $params_position = strpos($uri, '?');
         if ($params_position !== false) {
             $uri = substr($uri, 0, $params_position);
@@ -171,7 +171,7 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
             return;
         }
 
-        $this->path_info    = '/' . $this->matches['project_name'] . '/' . $repository_path . '/' . $this->matches['smart_http'];
+        $this->path_info = '/' . $this->matches['project_name'] . '/' . $repository_path . '/' . $this->matches['smart_http'];
         if ($params_position !== false) {
             $this->query_string = substr($this->uri, $params_position + 1);
         }

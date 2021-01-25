@@ -42,7 +42,7 @@ class MetadataListOfValuesElementListBuilder
      */
     public function build(int $id, bool $only_active): array
     {
-        $dar = $this->dao->searchByFieldId($id, $only_active);
+        $dar              = $this->dao->searchByFieldId($id, $only_active);
         $list_of_elements = [];
         foreach ($dar as $list_value) {
             $element = new Docman_MetadataListOfValuesElement();

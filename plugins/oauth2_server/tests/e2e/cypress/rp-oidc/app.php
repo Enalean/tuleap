@@ -51,7 +51,7 @@ Amp\Loop::run(
         $log_handler->setFormatter(new ConsoleFormatter());
         $logger_front_channel = new Logger('rp-oidc-front-channel');
         $logger_front_channel->pushHandler($log_handler);
-        $logger_back_channel  = new Logger('rp-oidc-backchannel');
+        $logger_back_channel = new Logger('rp-oidc-backchannel');
         $logger_back_channel->pushHandler($log_handler);
 
         $private_key = openssl_pkey_new();

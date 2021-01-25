@@ -37,7 +37,7 @@ class Workflow_Transition_Condition_CommentNotEmpty_Factory //phpcs:ignore
             return null;
         }
 
-        $row = $this->dao->searchByTransitionId($transition->getId());
+        $row                 = $this->dao->searchByTransitionId($transition->getId());
         $is_comment_required = $row && $row['is_comment_required'];
 
         return new Workflow_Transition_Condition_CommentNotEmpty($transition, $this->dao, $is_comment_required);

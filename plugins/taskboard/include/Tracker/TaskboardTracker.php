@@ -34,7 +34,7 @@ final class TaskboardTracker
     public function __construct(Tracker $milestone_tracker, Tracker $tracker)
     {
         $this->milestone_tracker = $milestone_tracker;
-        $this->tracker = $tracker;
+        $this->tracker           = $tracker;
     }
 
     public function getMilestoneTrackerId(): int

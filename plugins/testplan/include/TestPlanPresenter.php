@@ -105,9 +105,9 @@ class TestPlanPresenter
         int $expand_backlog_item_id,
         int $highlight_test_definition_id
     ) {
-        $this->milestone_presenter = $milestone_presenter;
-        $this->user_display_name   = $user_display_name;
-        $this->milestone_id        = $milestone_id;
+        $this->milestone_presenter          = $milestone_presenter;
+        $this->user_display_name            = $user_display_name;
+        $this->milestone_id                 = $milestone_id;
         $this->milestone_title              = $milestone_title;
         $this->project_id                   = $project_id;
         $this->project_name                 = $project_name;

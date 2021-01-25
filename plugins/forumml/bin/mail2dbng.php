@@ -22,10 +22,10 @@
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $list = $argv[1];
-$sql = sprintf('SELECT group_id, group_list_id FROM mail_group_list WHERE list_name = "%s"', db_escape_string($list));
-$res = db_query($sql);
+$sql  = sprintf('SELECT group_id, group_list_id FROM mail_group_list WHERE list_name = "%s"', db_escape_string($list));
+$res  = db_query($sql);
 if (db_numrows($res) > 0) {
-    $row = db_fetch_array($res);
+    $row        = db_fetch_array($res);
     $list_id    = $row['group_list_id'];
     $project_id = $row['group_id'];
 } else {
@@ -34,7 +34,7 @@ if (db_numrows($res) > 0) {
 }
 
 $plugin_manager = PluginManager::instance();
-$plugin = $plugin_manager->getPluginByName('forumml');
+$plugin         = $plugin_manager->getPluginByName('forumml');
 if ($plugin && $plugin_manager->isPluginAvailable($plugin) && $plugin_manager->isPluginAllowedForProject($plugin, $project_id)) {
     $info = $plugin->getPluginInfo();
 

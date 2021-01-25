@@ -54,16 +54,16 @@ final class DocumentUploadFinisherTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logger                      = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->item_factory                = \Mockery::mock(Docman_ItemFactory::class);
-        $this->version_factory             = \Mockery::mock(Docman_VersionFactory::class);
-        $this->event_manager               = \Mockery::mock(\EventManager::class);
-        $this->on_going_upload_dao         = \Mockery::mock(DocumentOngoingUploadDAO::class);
-        $this->item_dao                    = \Mockery::mock(\Docman_ItemDao::class);
-        $this->file_storage                = \Mockery::mock(\Docman_FileStorage::class);
-        $this->user_manager                = \Mockery::mock(\UserManager::class);
-        $this->event_adder                 = \Mockery::mock(DocmanItemsEventAdder::class);
-        $this->project_manager             = \Mockery::mock(\ProjectManager::instance());
+        $this->logger              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->item_factory        = \Mockery::mock(Docman_ItemFactory::class);
+        $this->version_factory     = \Mockery::mock(Docman_VersionFactory::class);
+        $this->event_manager       = \Mockery::mock(\EventManager::class);
+        $this->on_going_upload_dao = \Mockery::mock(DocumentOngoingUploadDAO::class);
+        $this->item_dao            = \Mockery::mock(\Docman_ItemDao::class);
+        $this->file_storage        = \Mockery::mock(\Docman_FileStorage::class);
+        $this->user_manager        = \Mockery::mock(\UserManager::class);
+        $this->event_adder         = \Mockery::mock(DocmanItemsEventAdder::class);
+        $this->project_manager     = \Mockery::mock(\ProjectManager::instance());
     }
 
     public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete(): void
@@ -88,8 +88,8 @@ final class DocumentUploadFinisherTest extends TestCase
             $this->project_manager
         );
 
-        $item_id_being_created = 12;
-        $file_information = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
+        $item_id_being_created    = 12;
+        $file_information         = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);

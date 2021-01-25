@@ -49,8 +49,8 @@ class LinkedList extends Collection
         if (is_a($obj, "Collection") && $this->size() === $obj->size()) {
             //We walk through the two LinkedList to see if both
             //contain same values
-            $it1 = $this->iterator();
-            $it2 = $obj->iterator();
+            $it1          = $this->iterator();
+            $it2          = $obj->iterator();
             $is_identical = true;
             while ($it1->valid() && $is_identical) {
                 $val1 = $it1->current();

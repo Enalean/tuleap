@@ -56,7 +56,7 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
         extract($args);
         */
 
-        $form = HTML::form(['action' => $request->getPostURL(),
+        $form     = HTML::form(['action' => $request->getPostURL(),
                                  'enctype' => 'multipart/form-data',
                                  'method' => 'post']);
         $contents = HTML::div(['class' => 'wikiaction']);
@@ -71,11 +71,11 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
                                                  'type' => 'submit']));
         $form->pushContent($contents);
 
-        $message = HTML();
+        $message  = HTML();
         $userfile = $request->getUploadedFile('userfile');
         if ($userfile) {
-            $userfile_name = $userfile->getName();
-            $userfile_name = basename($userfile_name);
+            $userfile_name    = $userfile->getName();
+            $userfile_name    = basename($userfile_name);
             $userfile_tmpname = $userfile->getTmpName();
 
             if (! preg_match("/(\.html|\.htm)$/i", $userfile_name)) {
@@ -119,15 +119,15 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
         $file = str_replace("<li", "\n<li", $file);
         $file = preg_replace("/<li>\s*/", "<li>", $file);
 
-        $enclosing_regexp = "_(.*)<ul\s?[^>]*>((?U).*)</ul>(.*)_is";
-        $indent_tag = "<li";
+        $enclosing_regexp        = "_(.*)<ul\s?[^>]*>((?U).*)</ul>(.*)_is";
+        $indent_tag              = "<li";
         $embedded_fragment_array = [];
-        $found = preg_match($enclosing_regexp, $file, $embedded_fragment_array);
+        $found                   = preg_match($enclosing_regexp, $file, $embedded_fragment_array);
         while ($found) {
             $indented = str_replace($indent_tag, "\t" . $indent_tag, $embedded_fragment_array[2]);
          // string the file together again with the indented part in the middle.
          // a <p> is inserted instead of the erased <ul> tags to have a paragraph generated at the end of the script
-            $file = $embedded_fragment_array[1] . "<p>" . $indented . $embedded_fragment_array[3];
+            $file  = $embedded_fragment_array[1] . "<p>" . $indented . $embedded_fragment_array[3];
             $found = preg_match($enclosing_regexp, $file, $embedded_fragment_array);
         }
     }
@@ -135,12 +135,12 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
     public function _process($file_name)
     {
         $result = HTML();
-        $file = file_get_contents($file_name);
-        $file = html_entity_decode($file);
+        $file   = file_get_contents($file_name);
+        $file   = html_entity_decode($file);
 
-        $ascii  =  '[\x00-\x7F]';
-        $euc  =  '[\xA1-\xFE][\xA1-\xFE]';
-        $character  =  "$ascii|$euc";
+        $ascii     =  '[\x00-\x7F]';
+        $euc       =  '[\xA1-\xFE][\xA1-\xFE]';
+        $character =  "$ascii|$euc";
 
         $this->_processA($file);
         $this->_processIMG($file);

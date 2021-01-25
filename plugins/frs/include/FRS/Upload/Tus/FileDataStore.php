@@ -62,10 +62,10 @@ final class FileDataStore implements TusDataStore
         FileUploadCanceler $file_upload_canceler
     ) {
         $this->file_being_uploaded_information_provider = $file_being_uploaded_information_provider;
-        $this->file_being_uploaded_writer           = $file_being_uploaded_writer;
-        $this->file_being_uploaded_locker           = $file_being_uploaded_locker;
-        $this->file_upload_finisher                 = $file_upload_finisher;
-        $this->file_upload_canceler                 = $file_upload_canceler;
+        $this->file_being_uploaded_writer               = $file_being_uploaded_writer;
+        $this->file_being_uploaded_locker               = $file_being_uploaded_locker;
+        $this->file_upload_finisher                     = $file_upload_finisher;
+        $this->file_upload_canceler                     = $file_upload_canceler;
     }
 
     public function getFileInformationProvider(): TusFileInformationProvider

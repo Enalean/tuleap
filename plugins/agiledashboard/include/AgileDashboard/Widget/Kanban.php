@@ -180,19 +180,19 @@ abstract class Kanban extends Widget
             AGILEDASHBOARD_TEMPLATE_DIR . '/widgets'
         );
         try {
-            $kanban     = $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id);
-            $tracker    = $this->tracker_factory->getTrackerByid($kanban->getTrackerId());
+            $kanban  = $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id);
+            $tracker = $this->tracker_factory->getTrackerByid($kanban->getTrackerId());
             if ($tracker === null) {
                 throw new \RuntimeException('Tracker does not exist');
             }
             $project_id = $tracker->getProject()->getID();
             $is_empty   = ! $kanban;
 
-            $user_is_kanban_admin = $this->permissions_manager->userCanAdministrate(
+            $user_is_kanban_admin    = $this->permissions_manager->userCanAdministrate(
                 $this->getCurrentUser(),
                 $project_id
             );
-            $kanban_presenter = new KanbanPresenter(
+            $kanban_presenter        = new KanbanPresenter(
                 $kanban,
                 $this->getCurrentUser(),
                 $user_is_kanban_admin,

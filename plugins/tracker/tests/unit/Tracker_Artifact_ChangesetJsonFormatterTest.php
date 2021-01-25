@@ -33,7 +33,7 @@ class Tracker_Artifact_ChangesetJsonFormatterTest extends \PHPUnit\Framework\Tes
             ->with('system', 'datefmt')
             ->andReturn('d/m/Y H:i');
 
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact  = Mockery::mock(Artifact::class);
         $timestamp = mktime(1, 1, 1, 9, 25, 2013);
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class, [15, $artifact, 45, $timestamp, ''])
             ->makePartial()

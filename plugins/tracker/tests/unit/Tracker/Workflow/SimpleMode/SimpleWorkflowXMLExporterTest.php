@@ -43,9 +43,9 @@ class SimpleWorkflowXMLExporterTest extends TestCase
         $extractor     = new TransitionExtractor();
         $state_factory = Mockery::mock(StateFactory::class);
 
-        $exporter  = new SimpleWorkflowXMLExporter($dao, $state_factory, $extractor);
+        $exporter = new SimpleWorkflowXMLExporter($dao, $state_factory, $extractor);
 
-        $workflow  = Mockery::mock(Workflow::class);
+        $workflow = Mockery::mock(Workflow::class);
 
         $workflow->shouldReceive('getFieldId')->once()->andReturn(114);
         $workflow->shouldReceive('isUsed')->once()->andReturn(true);

@@ -86,8 +86,8 @@ class StatisticsPlugin extends Plugin
     {
         switch ($params['type']) {
             case SystemEvent_STATISTICS_DAILY::NAME:
-                $queue = new SystemEventQueueStatistics();
-                $params['class'] = 'SystemEvent_STATISTICS_DAILY';
+                $queue                  = new SystemEventQueueStatistics();
+                $params['class']        = 'SystemEvent_STATISTICS_DAILY';
                 $params['dependencies'] = [
                     $queue->getLogger(),
                     $this->getConfigurationManager(),
@@ -218,7 +218,7 @@ class StatisticsPlugin extends Plugin
             'menu'           => 'services',
             'project_filter' => $params['project']->getPublicName() . ' (' . $params['project']->getUnixName() . ')'
         ];
-        $params['links'][] = [
+        $params['links'][]  = [
             'href'  => $this->getPluginPath() . '/disk_usage.php?' . http_build_query($project_url_params),
             'label' => dgettext('tuleap-statistics', 'Disk usage')
         ];
@@ -330,7 +330,7 @@ class StatisticsPlugin extends Plugin
 
     public function renderWSDL()
     {
-        $uri = $this->getSoapUri();
+        $uri           = $this->getSoapUri();
         $wsdl_renderer = new SOAP_WSDLRenderer();
         $wsdl_renderer->render($uri . '/?wsdl');
     }
@@ -351,7 +351,7 @@ class StatisticsPlugin extends Plugin
     public function get_statistics_aggregation($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $statistics_aggregator = new StatisticsAggregatorDao();
-        $params['result'] = $statistics_aggregator->getStatistics(
+        $params['result']      = $statistics_aggregator->getStatistics(
             $params['statistic_name'],
             $params['date_start'],
             $params['date_end']
@@ -361,7 +361,7 @@ class StatisticsPlugin extends Plugin
     public function burning_parrot_get_stylesheets(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $variant    = $params['variant'];
+            $variant                 = $params['variant'];
             $params['stylesheets'][] = $this->getAssets()->getFileURL('style-bp-' . $variant->getName() . '.css');
         }
     }
@@ -369,7 +369,7 @@ class StatisticsPlugin extends Plugin
     public function burning_parrot_get_javascript_files(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $ckeditor_assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
+            $ckeditor_assets              = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
             $params['javascript_files'][] = $ckeditor_assets->getFileURL('ckeditor.js');
             $params['javascript_files'][] = $this->getAssets()->getFileURL('admin.js');
         }

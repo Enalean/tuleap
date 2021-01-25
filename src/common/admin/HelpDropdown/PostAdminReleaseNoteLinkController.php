@@ -88,7 +88,7 @@ class PostAdminReleaseNoteLinkController implements DispatchableWithRequest
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user);
 
-        $valid_url = new Valid_HTTPURI();
+        $valid_url  = new Valid_HTTPURI();
         $custom_url = $request->get("url");
         if (! $custom_url || $custom_url === '' || ! $valid_url->validate($custom_url)) {
             $layout->addFeedback(

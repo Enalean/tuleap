@@ -43,7 +43,7 @@ final class SiteAdminWarnings
 
     public function __construct(EventManager $event_manager, ForgeUpgradeConfig $forge_upgrade_config)
     {
-        $this->event_manager = $event_manager;
+        $this->event_manager        = $event_manager;
         $this->forge_upgrade_config = $forge_upgrade_config;
     }
 

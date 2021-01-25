@@ -353,9 +353,9 @@ class JiraXmlExporter
         $this->logger->debug("Add root formelement");
         $root_form_elements = $node_tracker->addChild('formElements');
 
-        $containers_collection = new ContainersXMLCollection($field_id_generator);
+        $containers_collection         = new ContainersXMLCollection($field_id_generator);
         $jira_field_mapping_collection = new FieldMappingCollection($field_id_generator);
-        $status_values_collection  = new StatusValuesCollection(
+        $status_values_collection      = new StatusValuesCollection(
             $this->wrapper,
             $this->logger
         );

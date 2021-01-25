@@ -39,10 +39,10 @@ class ServiceTracker extends Service
                 new User_ForgeUserGroupPermissionsDao()
             )
         );
-        $user_has_special_access = $global_admin_permissions_checker
+        $user_has_special_access          = $global_admin_permissions_checker
             ->doesUserHaveTrackerGlobalAdminRightsOnProject($this->getProject(), UserManager::instance()->getCurrentUser());
 
-        $params = $params + ['user_has_special_access' => $user_has_special_access];
+        $params                 = $params + ['user_has_special_access' => $user_has_special_access];
         $params['service_name'] = self::NAME;
         $params['project_id']   = $this->getGroupId();
 
@@ -76,7 +76,7 @@ class ServiceTracker extends Service
     protected function isAllowed($project): bool
     {
         $plugin_manager = PluginManager::instance();
-        $p = $plugin_manager->getPluginByName('tracker');
+        $p              = $plugin_manager->getPluginByName('tracker');
         if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed($project->getGroupId())) {
             return true;
         }
@@ -89,7 +89,7 @@ class ServiceTracker extends Service
     public function isRestricted(): bool
     {
         $plugin_manager = PluginManager::instance();
-        $p = $plugin_manager->getPluginByName('tracker');
+        $p              = $plugin_manager->getPluginByName('tracker');
         if ($p && $plugin_manager->isProjectPluginRestricted($p)) {
             return true;
         }

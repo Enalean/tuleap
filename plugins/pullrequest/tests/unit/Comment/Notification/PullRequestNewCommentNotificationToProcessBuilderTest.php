@@ -72,12 +72,12 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends TestCa
 
     protected function setUp(): void
     {
-        $this->user_manager              = \Mockery::mock(UserManager::class);
-        $this->pull_request_factory      = \Mockery::mock(Factory::class);
-        $this->comment_factory           = \Mockery::mock(\Tuleap\PullRequest\Comment\Factory::class);
-        $this->owner_retriever           = \Mockery::mock(OwnerRetriever::class);
-        $this->user_helper               = \Mockery::mock(UserHelper::class);
-        $this->html_url_builder          = \Mockery::mock(HTMLURLBuilder::class);
+        $this->user_manager         = \Mockery::mock(UserManager::class);
+        $this->pull_request_factory = \Mockery::mock(Factory::class);
+        $this->comment_factory      = \Mockery::mock(\Tuleap\PullRequest\Comment\Factory::class);
+        $this->owner_retriever      = \Mockery::mock(OwnerRetriever::class);
+        $this->user_helper          = \Mockery::mock(UserHelper::class);
+        $this->html_url_builder     = \Mockery::mock(HTMLURLBuilder::class);
 
         $this->builder = new PullRequestNewCommentNotificationToProcessBuilder(
             $this->user_manager,
@@ -92,12 +92,12 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends TestCa
 
     public function testBuildNewCommentNotificationFromPullRequestNewCommentEvent(): void
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);
         $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
-        $change_user   = $this->buildUser(102);
-        $owners        = [$change_user, $this->buildUser(104), $this->buildUser(105)];
-        $comment       = $this->buildComment(41, $change_user->getId(), $pull_request->getId());
+        $change_user = $this->buildUser(102);
+        $owners      = [$change_user, $this->buildUser(104), $this->buildUser(105)];
+        $comment     = $this->buildComment(41, $change_user->getId(), $pull_request->getId());
 
         $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
 
@@ -130,7 +130,7 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends TestCa
 
     public function testNoNotificationIsBuiltWhenThePullRequestCannotBeFound(): void
     {
-        $comment     = $this->buildComment(14, 102, 404);
+        $comment = $this->buildComment(14, 102, 404);
 
         $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
 
@@ -142,7 +142,7 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends TestCa
 
     public function testNoNotificationIsBuiltWhenTheUserCommentingCannotBeFound(): void
     {
-        $comment     = $this->buildComment(14, 404, 16);
+        $comment = $this->buildComment(14, 404, 16);
 
         $event = PullRequestNewCommentEvent::fromCommentID($comment->getId());
 

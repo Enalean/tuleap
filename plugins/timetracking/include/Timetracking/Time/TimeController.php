@@ -47,8 +47,8 @@ class TimeController
         TimeUpdater $time_updater,
         TimeRetriever $time_retriever
     ) {
-        $this->time_updater          = $time_updater;
-        $this->time_retriever        = $time_retriever;
+        $this->time_updater   = $time_updater;
+        $this->time_retriever = $time_retriever;
     }
 
     /**

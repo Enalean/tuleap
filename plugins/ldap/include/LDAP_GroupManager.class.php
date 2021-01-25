@@ -93,12 +93,12 @@ abstract class LDAP_GroupManager
         // Current group to treat: the ldap group name the Codendi group id
         // and the list of user to add/remove. If you want to manipulate several
         // groups in the same time, instanciate several objects.
-        $this->groupName             = null;
-        $this->groupDn               = null;
-        $this->id                    = null;
-        $this->usersToAdd            = null;
-        $this->usersToRemove         = null;
-        $this->usersNotImpacted      = null;
+        $this->groupName        = null;
+        $this->groupDn          = null;
+        $this->id               = null;
+        $this->usersToAdd       = null;
+        $this->usersToRemove    = null;
+        $this->usersNotImpacted = null;
     }
 
     /**
@@ -299,7 +299,7 @@ abstract class LDAP_GroupManager
      */
     public function getLdapGroupMembers($group_dn)
     {
-        $ldap_ids          = [];
+        $ldap_ids         = [];
         $group_definition = $this->ldap->searchGroupMembers($group_dn);
         if (! $group_definition) {
             return [];
@@ -358,7 +358,7 @@ abstract class LDAP_GroupManager
 
     private function getUserIdsWithGroupDnPatternMatching(LDAPResultIterator $group_definition, array &$ldap_ids)
     {
-        $ldap_group = $group_definition->current();
+        $ldap_group    = $group_definition->current();
         $base_group_dn = strtolower($this->ldap->getLDAPParam('grp_dn'));
         foreach ($ldap_group->getGroupMembers() as $member_dn) {
             $member_dn = strtolower($member_dn);
@@ -390,7 +390,7 @@ abstract class LDAP_GroupManager
 
     private function getLdapEntryForUser($member_dn)
     {
-        $attributes = [
+        $attributes                = [
             $this->ldap->getLDAPParam('eduid'),
             $this->ldap->getLDAPParam('cn'),
             $this->ldap->getLDAPParam('uid'),
@@ -428,7 +428,7 @@ abstract class LDAP_GroupManager
      * */
     private function getLdapGroupAttributes()
     {
-        $ldap = $this->getLdap();
+        $ldap  = $this->getLdap();
         $attrs = $ldap->getDefaultAttributes();
         if (isset($ldap->getLDAPParams()['grp_display_name'])) {
             $attrs[] = $ldap->getLDAPParams()['grp_display_name'];
@@ -446,8 +446,8 @@ abstract class LDAP_GroupManager
     public function getLdapGroupByGroupId($id)
     {
         $ldapGroup = null;
-        $dao = $this->getDao();
-        $row = $dao->searchByGroupId($id);
+        $dao       = $this->getDao();
+        $row       = $dao->searchByGroupId($id);
         if ($row !== false) {
             $ldap = $this->getLdap();
 

@@ -45,7 +45,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 svn_header_admin(['title' => $Language->getText('svn_admin_immutable_tags', 'title'),
                         'help' => 'svn.html#subversion-administration-interface']);
 
-$pm = ProjectManager::instance();
+$pm      = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 
 $template_dir = ForgeConfig::get('codendi_dir') . '/src/templates/svn/';

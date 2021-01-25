@@ -23,7 +23,7 @@ class SystemEventDao extends DataAccessObject
 {
     public function getElapsedTime(SystemEvent $system_event): int
     {
-        $id = $this->da->escapeInt($system_event->getId());
+        $id  = $this->da->escapeInt($system_event->getId());
         $sql = "SELECT TIMESTAMPDIFF(SECOND, process_date, end_date) AS seconds
                 FROM system_event
                 WHERE id = $id
@@ -84,8 +84,8 @@ class SystemEventDao extends DataAccessObject
     */
     public function checkOutNextEvent($owner, $types)
     {
-        $owner    = $this->da->quoteSmart($owner);
-        $types    = $this->da->quoteSmartImplode(',', $types);
+        $owner = $this->da->quoteSmart($owner);
+        $types = $this->da->quoteSmartImplode(',', $types);
 
         // Get Id of next event to process
         $sql = "SELECT id FROM system_event
@@ -97,7 +97,7 @@ class SystemEventDao extends DataAccessObject
         if ($dar && ! $dar->isError()) {
             // Mark event as 'RUNNING'
             if ($row = $dar->getRow()) {
-                $id = $row['id'];
+                $id      = $row['id'];
                 $upd_sql = "UPDATE system_event SET status='" . SystemEvent::STATUS_RUNNING . "', process_date=FROM_UNIXTIME(" . time() . ") WHERE id=$id";
                 $this->update($upd_sql);
                 // Retrieve all event parameters
@@ -130,7 +130,7 @@ class SystemEventDao extends DataAccessObject
         $limit          = $this->da->escapeInt($limit);
         $filters_status = $this->da->quoteSmartImplode(", ", $filters_status);
         $filters_type   = $this->da->quoteSmartImplode(", ", $filters_type);
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+        $sql            = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM system_event
                 WHERE status IN ($filters_status)
                   AND type   IN ($filters_type)
@@ -211,7 +211,7 @@ class SystemEventDao extends DataAccessObject
     {
         $id     = $this->da->escapeInt($id);
         $status = $this->da->quoteSmart($status);
-        $sql = "UPDATE system_event
+        $sql    = "UPDATE system_event
                 SET status = $status
                 WHERE id = $id";
         return $this->update($sql);

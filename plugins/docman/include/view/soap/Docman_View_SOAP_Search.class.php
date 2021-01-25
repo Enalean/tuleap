@@ -25,7 +25,7 @@ class Docman_View_SOAP_Search
 
     public function display($params)
     {
-        $itemFactory = new Docman_ItemFactory($params['group_id']);
+        $itemFactory  = new Docman_ItemFactory($params['group_id']);
         $nbItemsFound = 0;
         $itemIterator = $itemFactory->getItemList(
             $params['item']->getId(),

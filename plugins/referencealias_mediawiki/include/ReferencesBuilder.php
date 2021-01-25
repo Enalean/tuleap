@@ -81,10 +81,10 @@ class ReferencesBuilder
      */
     public function referenceFromMatch($match, $project_id)
     {
-        $project         = $this->project_manager->getProject($project_id);
-        $ref             = $match['ref'];
-        $keyword         = $match['key'];
-        $value           = $match['val'];
+        $project = $this->project_manager->getProject($project_id);
+        $ref     = $match['ref'];
+        $keyword = $match['key'];
+        $value   = $match['val'];
 
         $reference = $this->findReference($project, $keyword, $ref);
 

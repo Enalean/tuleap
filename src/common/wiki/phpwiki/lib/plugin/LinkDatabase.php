@@ -84,7 +84,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
     public function run($dbi, $argstr, $request, $basepage)
     {
         global $WikiTheme;
-        $args = $this->getArgs($argstr, $request);
+        $args    = $this->getArgs($argstr, $request);
         $caption = _("All pages with all links in this wiki (%d total):");
 
         if (! empty($args['owner'])) {
@@ -145,7 +145,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
         if ($args['format'] == 'html') {
             $args['types']['links'] =
                 new _PageList_Column_LinkDatabase_links('links', _("Links"), 'left');
-            $pagelist = new PageList($args['info'], $args['exclude_from'], $args);
+            $pagelist               = new PageList($args['info'], $args['exclude_from'], $args);
             if (! $args['noheader']) {
                 $pagelist->setCaption($caption);
             }
@@ -192,7 +192,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
             echo "<graph id=\"",MangleXmlIdentifier(WIKI_NAME),"\">\n";
             echo '<style><line tag="node" class="main" colour="#ffffff"/><line tag="node" class="child" colour="blue"/><line tag="node" class="relation" colour="green"/></style>',"\n\n";
             while ($page = $pages->next()) {
-                $pageid = MangleXmlIdentifier($page->getName());
+                $pageid   = MangleXmlIdentifier($page->getName());
                 $pagename = $page->getName();
                 echo "<node name=\"$pageid\"";
                 if ($pagename == $currpage) {
@@ -223,7 +223,7 @@ class _PageList_Column_LinkDatabase_links extends _PageList_Column
 {
     public function _getValue($page, &$revision_handle)
     {
-        $out = HTML();
+        $out   = HTML();
         $links = $page->getPageLinks();
         while ($link = $links->next()) {
             $out->pushContent(" ", WikiLink($link));

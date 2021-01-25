@@ -63,36 +63,36 @@ class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase
     {
         $this->package_factory = new FRSPackageFactoryMock();
         $this->release_factory = \Mockery::mock(\FRSReleaseFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->file_factory = new FRSXMLImporterTest_FRSFileFactory();
+        $this->file_factory    = new FRSXMLImporterTest_FRSFileFactory();
 
-        $this->package_dao = \Mockery::spy(\FRSPackageDao::class);
+        $this->package_dao          = \Mockery::spy(\FRSPackageDao::class);
         $this->package_factory->dao = $this->package_dao;
         FRSPackageFactory::setInstance($this->package_factory);
 
         $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
         PermissionsManager::setInstance($this->permissions_manager);
 
-        $this->release_dao = \Mockery::spy(\FRSReleaseDao::class);
-        $this->release_factory->dao =  $this->release_dao;
+        $this->release_dao                      = \Mockery::spy(\FRSReleaseDao::class);
+        $this->release_factory->dao             =  $this->release_dao;
         $this->release_factory->package_factory = $this->package_factory;
-        $this->release_factory->file_factory = $this->file_factory;
+        $this->release_factory->file_factory    = $this->file_factory;
         FRSReleaseFactory::setInstance($this->release_factory);
 
-        $this->file_dao = \Mockery::spy(\FRSFileDao::class);
-        $this->file_factory->dao = $this->file_dao;
+        $this->file_dao                      = \Mockery::spy(\FRSFileDao::class);
+        $this->file_factory->dao             = $this->file_dao;
         $this->file_factory->release_factory = $this->release_factory;
 
         $this->processor_dao = \Mockery::spy(\FRSProcessorDao::class);
-        $this->filetype_dao = \Mockery::spy(\FRSFileTypeDao::class);
+        $this->filetype_dao  = \Mockery::spy(\FRSFileTypeDao::class);
 
-        $this->user_finder = \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class);
+        $this->user_finder  = \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class);
         $this->user_manager = \Mockery::spy(\UserManager::class);
         UserManager::setInstance($this->user_manager);
 
         $this->ugroup_dao = \Mockery::spy(\UGroupDao::class);
         $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(new DataAccessResultEmpty());
 
-        $this->xml_import_helper = \Mockery::spy(\XMLImportHelper::class);
+        $this->xml_import_helper      = \Mockery::spy(\XMLImportHelper::class);
         $this->frs_permission_creator = \Mockery::spy(\Tuleap\FRS\FRSPermissionCreator::class);
 
         $this->link_dao = \Mockery::spy(\Tuleap\FRS\UploadedLinksDao::class);
@@ -130,9 +130,9 @@ class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase
 
     public function testItShouldImportOnePackageWithDefaultValues()
     {
-        $pm = ProjectManager::instance();
-        $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
-        $xml = <<<XML
+        $pm                     = ProjectManager::instance();
+        $project                = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
+        $xml                    = <<<XML
         <project>
             <frs>
                 <package name="empty_package">
@@ -141,7 +141,7 @@ class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase
             </frs>
         </project>
 XML;
-        $xml_element = new SimpleXMLElement($xml);
+        $xml_element            = new SimpleXMLElement($xml);
         $expected_package_array = $this->getDefaultPackage('empty_package');
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once();
 
@@ -151,7 +151,7 @@ XML;
 
     public function testItShouldImportPermissions()
     {
-        $pm = ProjectManager::instance();
+        $pm      = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
 
         $this->frs_permission_creator->shouldReceive('savePermissions')->with($project, [2], FRSPermission::FRS_READER)->ordered();
@@ -177,9 +177,9 @@ XML;
 
     public function testItShouldImportOnePackageWithOneRelease()
     {
-        $pm = ProjectManager::instance();
-        $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
-        $xml = <<<XML
+        $pm          = ProjectManager::instance();
+        $project     = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
+        $xml         = <<<XML
         <project>
             <frs>
                 <package name="package">
@@ -200,7 +200,7 @@ XML;
         $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(['user_id' => $user_id]));
 
         $expected_package_array = $this->getDefaultPackage('package');
-        $package_id = 1337;
+        $package_id             = 1337;
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->andReturns($package_id);
 
         $expected_release_array = [
@@ -221,9 +221,9 @@ XML;
 
     public function testItShouldImportOnePackageWithOneReleaseLinkedToAnArtifact()
     {
-        $pm = ProjectManager::instance();
+        $pm      = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
-        $xml = <<<XML
+        $xml     = <<<XML
         <project>
             <frs>
                 <package name="package">
@@ -260,13 +260,13 @@ XML;
     public function testItShouldImportOnePackageWithOneReleaseWithOneFile(): void
     {
         $extraction_path = $this->getTmpDir();
-        $temp_file = tempnam($extraction_path, 'thefile_');
+        $temp_file       = tempnam($extraction_path, 'thefile_');
         fwrite(fopen($temp_file, 'w+'), 'such file, wow');
         $file_name = basename($temp_file);
 
-        $pm = ProjectManager::instance();
-        $project = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
-        $xml = <<<XML
+        $pm          = ProjectManager::instance();
+        $project     = $pm->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
+        $xml         = <<<XML
         <project>
             <frs>
                 <package name="package">
@@ -290,7 +290,7 @@ XML;
         $user_id = 42;
         $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(['user_id' => $user_id]));
 
-        $package_id = 1337;
+        $package_id            = 1337;
         $package_array_with_id = [
             'package_id' => $package_id,
             'group_id'   => 123,
@@ -304,7 +304,7 @@ XML;
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once()->andReturns($package_id);
         $this->package_dao->shouldReceive('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->andReturns(\TestHelper::arrayToDar($package_array_with_id));
 
-        $release_id = 8665;
+        $release_id             = 8665;
         $expected_release_array = [
             'release_id' => 0,
             'package_id' => $package_id,
@@ -317,7 +317,7 @@ XML;
             'released_by' => $user_id];
         $this->release_dao->shouldReceive('createFromArray')->with($expected_release_array)->once()->andReturns($release_id);
 
-        $release_array_with_group = $expected_release_array;
+        $release_array_with_group             = $expected_release_array;
         $release_array_with_group['group_id'] = 123;
 
         $this->filetype_dao->shouldReceive('searchTypeId')->andReturns(667);
@@ -325,7 +325,7 @@ XML;
         $this->release_dao->shouldReceive('searchById')->andReturns(\TestHelper::arrayToDar($release_array_with_group));
         $this->file_dao->shouldReceive('searchFileByName')->andReturns(\TestHelper::emptyDar());
 
-        $file_id = 12569;
+        $file_id             = 12569;
         $expected_file_array = [
             'file_id'       => null,
             'filename'      => "p1337_r8665/lefichier",
@@ -345,7 +345,7 @@ XML;
 
         $this->file_dao->shouldReceive('createFromArray')->with($expected_file_array)->once()->andReturns($file_id);
 
-        $expected_file_array_with_id = $expected_file_array;
+        $expected_file_array_with_id       = $expected_file_array;
         $expected_file_array_with_id['id'] = $file_id;
         $this->file_dao->shouldReceive('searchById')->with($file_id)->andReturns(\TestHelper::arrayToDar($expected_file_array_with_id));
 
@@ -361,8 +361,8 @@ XML;
     {
         $extraction_path = $this->getTmpDir();
         $project_manager = ProjectManager::instance();
-        $project = $project_manager->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
-        $xml = <<<XML
+        $project         = $project_manager->getProjectFromDbRow(['group_id' => 123, 'unix_group_name' => 'test_project']);
+        $xml             = <<<XML
         <project>
             <frs>
                 <package name="package">
@@ -383,12 +383,12 @@ XML;
             </frs>
         </project>
 XML;
-        $xml_element = new SimpleXMLElement($xml);
+        $xml_element     = new SimpleXMLElement($xml);
 
         $user_id = 42;
         $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(['user_id' => $user_id]));
 
-        $package_id = 1337;
+        $package_id            = 1337;
         $package_array_with_id = [
             'package_id' => $package_id,
             'group_id'   => 123,
@@ -402,7 +402,7 @@ XML;
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once()->andReturns($package_id);
         $this->package_dao->shouldReceive('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->andReturns(\TestHelper::arrayToDar($package_array_with_id));
 
-        $release_id = 8665;
+        $release_id             = 8665;
         $expected_release_array = [
             'release_id' => 0,
             'package_id' => $package_id,
@@ -415,7 +415,7 @@ XML;
             'released_by' => $user_id];
         $this->release_dao->shouldReceive('createFromArray')->with($expected_release_array)->once()->andReturns($release_id);
 
-        $release_array_with_group = $expected_release_array;
+        $release_array_with_group             = $expected_release_array;
         $release_array_with_group['group_id'] = 123;
 
         $this->link_dao->shouldReceive('create')->andReturns(true);

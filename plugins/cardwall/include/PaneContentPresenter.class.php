@@ -73,16 +73,16 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:igno
         Cardwall_EffortProgressPresenter $progress_presenter
     ) {
         parent::__construct($board, $redirect_parameter);
-        $this->swimline_title               = dgettext('tuleap-cardwall', 'Backlog items');
-        $this->has_swimline_header          = true;
-        $this->switch_display_username_url  = $switch_display_username_url;
-        $this->is_display_avatar_selected   = $is_display_avatar_selected;
-        $this->display_avatar_label         = dgettext('tuleap-cardwall', 'Display Avatar');
-        $this->display_avatar_title         = dgettext('tuleap-cardwall', 'Toggle the avatar or username display');
-        $this->search_cardwall_placeholder  = dgettext('tuleap-cardwall', 'Search for: user, title, ...');
-        $this->planning_id                  = $planning->getId();
-        $this->milestone                    = $milestone;
-        $this->progress_presenter           = $progress_presenter;
+        $this->swimline_title              = dgettext('tuleap-cardwall', 'Backlog items');
+        $this->has_swimline_header         = true;
+        $this->switch_display_username_url = $switch_display_username_url;
+        $this->is_display_avatar_selected  = $is_display_avatar_selected;
+        $this->display_avatar_label        = dgettext('tuleap-cardwall', 'Display Avatar');
+        $this->display_avatar_title        = dgettext('tuleap-cardwall', 'Toggle the avatar or username display');
+        $this->search_cardwall_placeholder = dgettext('tuleap-cardwall', 'Search for: user, title, ...');
+        $this->planning_id                 = $planning->getId();
+        $this->milestone                   = $milestone;
+        $this->progress_presenter          = $progress_presenter;
     }
 
     public function isDisplayAvatarSelected()

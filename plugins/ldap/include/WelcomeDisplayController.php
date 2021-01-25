@@ -71,9 +71,9 @@ class WelcomeDisplayController implements DispatchableWithRequest
         assert($layout instanceof \Layout);
 
         $currentUser = $request->getCurrentUser();
-        $timezone = $request->get('timezone');
+        $timezone    = $request->get('timezone');
 
-        $pv = 0;
+        $pv  = 0;
         $vPv = new Valid_Pv();
         if ($request->valid($vPv)) {
             $pv = $request->get('pv');

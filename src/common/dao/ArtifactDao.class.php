@@ -33,7 +33,7 @@ class ArtifactDao extends DataAccessObject
             return false;
         }
         $artifact_id = $this->da->quoteSmart($artifact_id);
-        $sql = "SELECT group_id 
+        $sql         = "SELECT group_id 
                 FROM $this->table_name, artifact_group_list
                 WHERE artifact.group_artifact_id=artifact_group_list.group_artifact_id 
                     AND artifact.artifact_id=$artifact_id";

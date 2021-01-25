@@ -32,7 +32,7 @@ class AuthorizationRequestCreator
 
     public function __construct(StateManager $state_manager)
     {
-        $this->state_manager        = $state_manager;
+        $this->state_manager = $state_manager;
     }
 
     public function createAuthorizationRequest(Provider $provider, ?string $return_to): AuthorizationRequest

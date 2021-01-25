@@ -43,7 +43,7 @@ final class ProgramTrackerAdapter implements BuildTracker
     public function __construct(TrackerFactory $tracker_factory, PlanStore $plan_store)
     {
         $this->tracker_factory = $tracker_factory;
-        $this->plan_store = $plan_store;
+        $this->plan_store      = $plan_store;
     }
 
     /**
@@ -82,8 +82,8 @@ final class ProgramTrackerAdapter implements BuildTracker
         foreach ($plannable_trackers_id as $tracker_id) {
             $tracker = $this->getValidTracker($tracker_id, $project_id);
 
-            $plannable_tracker = new ProgramPlannableTracker($tracker->getId());
-            $plannable_trackers_ids[]  = $plannable_tracker;
+            $plannable_tracker        = new ProgramPlannableTracker($tracker->getId());
+            $plannable_trackers_ids[] = $plannable_tracker;
         }
 
         if (empty($plannable_trackers_ids)) {

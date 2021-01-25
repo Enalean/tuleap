@@ -85,7 +85,7 @@ class AgileDashboardStatisticsAggregator
     public function getStatistics($statistic_name, $date_start, $date_end)
     {
         $statistics_data = [];
-        $params = [
+        $params          = [
             'statistic_name' => $statistic_name,
             'date_start'     => $date_start,
             'date_end'       => $date_end,

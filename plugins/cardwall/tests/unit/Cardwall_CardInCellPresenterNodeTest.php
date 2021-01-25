@@ -34,8 +34,8 @@ final class Cardwall_CardInCellPresenterNodeTest extends \PHPUnit\Framework\Test
 
     public function testItHasAnArtifact(): void
     {
-        $artifact       = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $presenter      = \Mockery::spy(\Cardwall_CardInCellPresenter::class);
+        $artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $presenter = \Mockery::spy(\Cardwall_CardInCellPresenter::class);
         $presenter->shouldReceive('getArtifact')->andReturns($artifact);
         $presenter_node = new Cardwall_CardInCellPresenterNode($presenter);
         $this->assertEquals($artifact, $presenter_node->getArtifact());

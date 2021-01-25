@@ -64,7 +64,7 @@ class DocmanFolderDataBuild
      */
     public function createFolderWithContent($docman_root): void
     {
-        $folder_file_id       = $this->common_builder->createItemWithVersion(
+        $folder_file_id = $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $docman_root->getId(),
             'Folder',

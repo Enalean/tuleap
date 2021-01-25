@@ -49,7 +49,7 @@ class ForInteger implements FieldFromWhereBuilder
         $field_id         = (int) $field->getId();
 
         $changeset_value_int_alias = "CVInt_{$field_id}_{$suffix}";
-        $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
+        $changeset_value_alias     = "CV_{$field_id}_{$suffix}";
 
         if ($value === '') {
             $condition = "$changeset_value_int_alias.value IS NOT NULL";

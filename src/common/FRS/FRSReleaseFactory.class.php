@@ -82,12 +82,12 @@ class FRSReleaseFactory
         $_id = (int) $release_id;
         $dao = $this->_getFRSReleaseDao();
         if ($group_id && $package_id) {
-            $_group_id = (int) $group_id;
+            $_group_id   = (int) $group_id;
             $_package_id = (int) $package_id;
-            $dar = $dao->searchByGroupPackageReleaseID($_id, $_group_id, $package_id, $extraFlags);
+            $dar         = $dao->searchByGroupPackageReleaseID($_id, $_group_id, $package_id, $extraFlags);
         } elseif ($group_id) {
             $_group_id = (int) $group_id;
-            $dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
+            $dar       = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
         } else {
             $dar = $dao->searchById($_id, $extraFlags);
         }
@@ -176,7 +176,7 @@ class FRSReleaseFactory
         $dao = $this->_getFRSReleaseDao();
         if ($package_id) {
             $_package_id = (int) $package_id;
-            $dar = $dao->searchByGroupPackageID($_id, $_package_id);
+            $dar         = $dao->searchByGroupPackageID($_id, $_package_id);
         } else {
             $dar = $dao->searchByGroupPackageID($_id);
         }
@@ -280,9 +280,9 @@ class FRSReleaseFactory
 
     public function _delete($release_id)
     {
-        $_id = (int) $release_id;
+        $_id     = (int) $release_id;
         $release = $this->getFRSReleaseFromDb($_id);
-        $dao = $this->_getFRSReleaseDao();
+        $dao     = $this->_getFRSReleaseDao();
         if ($dao->delete($_id, $this->STATUS_DELETED)) {
             $this->getEventManager()->processEvent(
                 'frs_delete_release',
@@ -316,7 +316,7 @@ class FRSReleaseFactory
             return false;
         } else {
             //delete all corresponding files from the database
-            $res = $release->getFiles();
+            $res   = $release->getFiles();
             $frsff = $this->_getFRSFileFactory();
             foreach ($res as $file) {
                 $frsff->delete_file($group_id, $file->getFileID());
@@ -488,8 +488,8 @@ class FRSReleaseFactory
      */
     public function emailNotification(FRSRelease $release)
     {
-        $fmmf   = new FileModuleMonitorFactory();
-        $result = $fmmf->whoIsMonitoringPackageById($release->getGroupID(), $release->getPackageID());
+        $fmmf         = new FileModuleMonitorFactory();
+        $result       = $fmmf->whoIsMonitoringPackageById($release->getGroupID(), $release->getPackageID());
         $user_manager = $this->getUserManager();
 
         if ($result && count($result) > 0) {
@@ -498,8 +498,8 @@ class FRSReleaseFactory
             // To
             $array_emails =  [];
             foreach ($result as $res) {
-                $user = $user_manager->getUserById($res['user_id']);
-                $user_can_read = $this->userCanRead(
+                $user           = $user_manager->getUserById($res['user_id']);
+                $user_can_read  = $this->userCanRead(
                     $release->getGroupID(),
                     $release->getPackageID(),
                     $release->getReleaseID(),
@@ -511,8 +511,8 @@ class FRSReleaseFactory
                 }
             }
 
-            $notification    = $this->getNotification($release, $package, $array_emails);
-            $is_email_sent   = $this->sendEmail($release, $notification);
+            $notification  = $this->getNotification($release, $package, $array_emails);
+            $is_email_sent = $this->sendEmail($release, $notification);
 
             if ($is_email_sent) {
                 return count($result);
@@ -579,7 +579,7 @@ class FRSReleaseFactory
         $fileUrl  = $server_url . "/file/showfiles.php?group_id=" . $package->getGroupID() . "&release_id=" . $release->getReleaseID();
         $notifUrl = $server_url . "/file/filemodule_monitor.php?filemodule_id=" . $package->getPackageID() . "&group_id=" . $package->getGroupID();
 
-        $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', [$release->getProject()->getPublicName(), $package->getName(), $release->getName(), $fileUrl]);
+        $body = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', [$release->getProject()->getPublicName(), $package->getName(), $release->getName(), $fileUrl]);
 
         if ($release->getNotes() != '') {
             $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_notes', [$release->getNotes()]);

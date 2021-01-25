@@ -40,9 +40,9 @@ foreach ($file_list as $key => $filename) {
         $backendCVS->log("Unable to checkout $filename, output=$output", Backend::LOG_ERROR);
         continue;
     }
-    $lines = file($filename);
+    $lines          = file($filename);
     $lines_to_write = [];
-    $project_name = trim($project_list[$key]);
+    $project_name   = trim($project_list[$key]);
     foreach ($lines as $line) {
         if (strpos($line, "ALL (cat;chgrp -R $project_name /var/lib/codendi/cvsroot/$project_name)>/dev/null 2>&1") !== false) {
             continue;

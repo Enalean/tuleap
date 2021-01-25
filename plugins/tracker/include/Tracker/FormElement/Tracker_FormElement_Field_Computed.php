@@ -150,7 +150,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($dar) {
             foreach ($dar as $row) {
                 if ($row['id'] !== null) {
-                    $artifact_ids_to_fetch[]  = $row['id'];
+                    $artifact_ids_to_fetch[] = $row['id'];
                 }
                 if ($row['type'] === 'computed') {
                     $computed_children_to_fetch[] = $row['id'];
@@ -220,7 +220,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function getComputedValueWithNoLabel(Artifact $artifact, PFUser $user, $stop_on_manual_value)
     {
         if ($stop_on_manual_value) {
-            $empty_array = [];
+            $empty_array    = [];
             $computed_value = $this->getComputedValue($user, $artifact, null, $empty_array);
         } else {
             $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
@@ -238,7 +238,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $formElement_data = $request->get('formElement_data');
 
         if ($formElement_data !== false) {
-            $default_specific_properties = [
+            $default_specific_properties   = [
                 'fast_compute'      => '1',
                 'target_field_name' => $formElement_data['name']
             ];
@@ -405,7 +405,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             data-test="' . $this->getName() . '"
             name="artifact[' . $purifier->purify($this->getId()) . '][' . self::FIELD_VALUE_MANUAL . ']"
             value="' . $purifier->purify($displayed_value) . '" />';
-        $html     .= '<input type="hidden"
+        $html    .= '<input type="hidden"
             name="artifact[' . $purifier->purify($this->getId()) . '][' . self::FIELD_VALUE_IS_AUTOCOMPUTED . ']"
             value="' . $purifier->purify((int) $is_autocomputed) . '" />';
 
@@ -576,7 +576,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function fetchAdminFormElement()
     {
-        $html  = '<div class="input-append">';
+        $html = '<div class="input-append">';
 
         $default_value          = $this->getDefaultValue();
         $default_value_in_input = '';
@@ -691,7 +691,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $purifier = Codendi_HTMLPurifier::instance();
         $required = $this->required ? ' <span class="highlight">*</span>' : '';
 
-        $html = '<div>';
+        $html  = '<div>';
         $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed editable ' . $extra_class . '">';
 
         $title = $purifier->purify(sprintf(dgettext('tuleap-tracker', 'Edit the field "%1$s"'), $this->getLabel()));
@@ -708,7 +708,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $is_autocomputed        = true;
         if ($default_value !== null) {
             $default_value_in_input = (string) $default_value[self::FIELD_VALUE_MANUAL];
-            $is_autocomputed = false;
+            $is_autocomputed        = false;
         }
 
         $html .= $this->fetchComputedInputs($default_value_in_input, $is_autocomputed);
@@ -760,27 +760,27 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $required = $this->isRequired() ? ' <span class="highlight">*</span>' : '';
 
         if ($this->userCanUpdate()) {
-            $html    .= '<div class="field-masschange tracker_artifact_field tracker_artifact_field-computed editable"
+            $html .= '<div class="field-masschange tracker_artifact_field tracker_artifact_field-computed editable"
                          data-field-id="' . $purifier->purify($this->getId()) . '">';
 
-            $html    .= '<div class="edition-mass-change">';
-            $html    .= '<label for="tracker_artifact_' . $purifier->purify($this->getId()) . '"
+            $html .= '<div class="edition-mass-change">';
+            $html .= '<label for="tracker_artifact_' . $purifier->purify($this->getId()) . '"
                         title="' . $purifier->purify($this->description) . '"  class="tracker_formelement_label">' .
                         $purifier->purify($this->getLabel()) . $required . '</label>';
-            $html    .= '<div class=" input-append">';
-            $html    .= $this->fetchSubmitValueMasschange();
-            $html    .= '</div>';
-            $html    .= '</div>';
+            $html .= '<div class=" input-append">';
+            $html .= $this->fetchSubmitValueMasschange();
+            $html .= '</div>';
+            $html .= '</div>';
 
-            $html    .= '<div class="display-mass-change display-mass-change-hidden">';
-            $html    .= '<button class="tracker_formelement_edit edit-mass-change-autocompute" type="button">' .
+            $html .= '<div class="display-mass-change display-mass-change-hidden">';
+            $html .= '<button class="tracker_formelement_edit edit-mass-change-autocompute" type="button">' .
                         $purifier->purify($this->getLabel()) . $required . '</button>';
-            $html    .= '<span class="auto-computed">';
-            $html    .= $purifier->purify(ucfirst(dgettext('tuleap-tracker', 'autocomputed')));
-            $html    .= '</span>';
-            $html    .= '</div>';
+            $html .= '<span class="auto-computed">';
+            $html .= $purifier->purify(ucfirst(dgettext('tuleap-tracker', 'autocomputed')));
+            $html .= '</span>';
+            $html .= '</div>';
 
-            $html    .= '</div>';
+            $html .= '</div>';
         }
 
         return $html;
@@ -802,7 +802,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $computed_value = $this->getFieldEmptyMessage();
         }
         $autocomputed_label = ' (' . dgettext('tuleap-tracker', 'autocomputed') . ')';
-        $class = 'auto-computed';
+        $class              = 'auto-computed';
 
         $changeset = $artifact->getLastChangesetWithFieldValue($this)->getValue($this);
         $required  = $this->required ? ' <span class="highlight">*</span>' : '';

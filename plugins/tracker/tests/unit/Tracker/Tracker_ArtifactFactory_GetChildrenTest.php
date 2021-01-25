@@ -52,7 +52,7 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dao = \Mockery::spy(\Tracker_ArtifactDao::class);
+        $this->dao              = \Mockery::spy(\Tracker_ArtifactDao::class);
         $this->artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->artifact_factory->shouldReceive('getDao')->andReturns($this->dao);
 

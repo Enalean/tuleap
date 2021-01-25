@@ -27,7 +27,7 @@ class Git_HTTP_CommandGitolite extends Git_HTTP_Command
     {
         parent::__construct();
 
-        $gitolite_user_info = posix_getpwnam('gitolite');
+        $gitolite_user_info  = posix_getpwnam('gitolite');
         $this->gitolite_home = $gitolite_user_info['dir'];
 
         $this->env['SHELL']            = '/bin/sh';
@@ -37,7 +37,7 @@ class Git_HTTP_CommandGitolite extends Git_HTTP_Command
         $this->env['REMOTE_ADDR']      = HTTPRequest::instance()->getIPAddress();
         $this->env['TERM']             = 'linux';
         $this->appendToEnv('REQUEST_URI');
-        $this->env['REMOTE_PORT']      = empty($_SERVER['REMOTE_PORT']) ? 'UNKNOWN' : $_SERVER['REMOTE_PORT'];
+        $this->env['REMOTE_PORT'] = empty($_SERVER['REMOTE_PORT']) ? 'UNKNOWN' : $_SERVER['REMOTE_PORT'];
         $this->appendToEnv('SERVER_ADDR');
         $this->appendToEnv('SERVER_PORT');
     }

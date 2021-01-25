@@ -48,8 +48,8 @@ class ChartConfigurationValueRetriever
         LoggerInterface $logger
     ) {
         $this->configuration_field_retriever = $configuration_field_retriever;
-        $this->timeframe_builder = $timeframe_builder;
-        $this->logger            = $logger;
+        $this->timeframe_builder             = $timeframe_builder;
+        $this->logger                        = $logger;
     }
 
     /**

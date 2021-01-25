@@ -73,7 +73,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
         $bib = [];
 
         $start = false;
-        $stop = false;
+        $stop  = false;
         for ($i = 0; $i < count($content); $i++) {
             // $starttag shows when to start
             if (preg_match('/^@/', $content[$i], $match)) {
@@ -128,7 +128,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
         extract($this->getArgs($argstr, $request));
         if ($pagename) {
             // Expand relative page names.
-            $page = new WikiPageName($pagename, $basepage);
+            $page     = new WikiPageName($pagename, $basepage);
             $pagename = $page->name;
         }
         if (! $pagename) {
@@ -136,7 +136,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
         }
 
         // Get the links page contents
-        $page = $dbi->getPage($pagename);
+        $page    = $dbi->getPage($pagename);
         $current = $page->getCurrentRevision();
         $content = $current->getContent();
 
@@ -158,7 +158,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
         if ($articles = $this->extractArticles($content)) {
             foreach ($articles as $h) {
                 // Now let's get the bibtex information from that subpage
-                $subpage = $dbi->getPage($h);
+                $subpage    = $dbi->getPage($h);
                 $subversion = $subpage->getCurrentRevision();
                 $subcontent = $subversion->getContent();
 
@@ -175,8 +175,8 @@ class WikiPlugin_CreateBib extends WikiPlugin
         if ($request->getArg('file')) {
             // Yes, we want to dump this somewhere
             // Get the contents of this page
-            $p = $dbi->getPage($pagename);
-            $c = $p->getCurrentRevision();
+            $p        = $dbi->getPage($pagename);
+            $c        = $p->getCurrentRevision();
             $pagedata = $c->getContent();
             $this->dumpFile($pagedata, $request->getArg('file'));
         }

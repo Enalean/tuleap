@@ -40,7 +40,7 @@ class Tracker_Artifact_Changeset_IncomingMailGoldenRetriever
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            $c = self::class;
+            $c              = self::class;
             self::$instance = new $c(
                 new Tracker_Artifact_Changeset_IncomingMailDao()
             );

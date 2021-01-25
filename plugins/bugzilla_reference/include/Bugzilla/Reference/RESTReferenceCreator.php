@@ -69,7 +69,7 @@ class RESTReferenceCreator
         $this->logger->info(
             "Asking reference between $source_keyword $source_id and bugzilla reference $target_keyword $target_id"
         );
-        $message = "A tuleap item [$source_keyword #$source_id] references this bugzilla item. \n";
+        $message  = "A tuleap item [$source_keyword #$source_id] references this bugzilla item. \n";
         $message .= "[$source_keyword #$source_id]: " . $this->getLinkToSource($cross_reference);
 
         $base_url              = $this->getBaseUrl($bugzilla);

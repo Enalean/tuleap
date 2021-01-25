@@ -59,12 +59,12 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 
     protected function setUp(): void
     {
-        $this->list_field             = Mockery::mock(Tracker_FormElement_Field_List::class)
+        $this->list_field      = Mockery::mock(Tracker_FormElement_Field_List::class)
             ->shouldAllowMockingProtectedMethods()->makePartial();
-        $this->value_dao              = Mockery::spy(ListValueDao::class);
-        $this->changeset_value        = Mockery::spy(Tracker_Artifact_ChangesetValue_List::class);
-        $this->bind                   = Mockery::spy(Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->bind_value             = Mockery::spy(Tracker_FormElement_Field_List_BindValue::class);
+        $this->value_dao       = Mockery::spy(ListValueDao::class);
+        $this->changeset_value = Mockery::spy(Tracker_Artifact_ChangesetValue_List::class);
+        $this->bind            = Mockery::spy(Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->bind_value      = Mockery::spy(Tracker_FormElement_Field_List_BindValue::class);
 
         $this->list_field->shouldReceive('getValueDao')->andReturn($this->value_dao);
         $this->list_field->shouldReceive('getBind')->andReturn($this->bind);
@@ -473,12 +473,12 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
     public function testItAddsACriterion(): void
     {
         $this->bind->shouldReceive('getAllValues')->andReturn([101 => 101, 102 => 102, 103 => 103]);
-        $criteria   = Mockery::mock(Tracker_Report_Criteria::class);
-        $report     = Mockery::mock(Tracker_Report::class);
+        $criteria = Mockery::mock(Tracker_Report_Criteria::class);
+        $report   = Mockery::mock(Tracker_Report::class);
         $criteria->shouldReceive('getReport')->andReturn($report);
         $report->shouldReceive('getId')->andReturn(1);
 
-        $rest_criteria_value  = [
+        $rest_criteria_value = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => '101',
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
         ];
@@ -495,12 +495,12 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
     public function testItAddsCriteria(): void
     {
         $this->bind->shouldReceive('getAllValues')->andReturn([101 => 101, 102 => 102, 103 => 103]);
-        $criteria   = Mockery::mock(Tracker_Report_Criteria::class);
-        $report     = Mockery::mock(Tracker_Report::class);
+        $criteria = Mockery::mock(Tracker_Report_Criteria::class);
+        $report   = Mockery::mock(Tracker_Report::class);
         $criteria->shouldReceive('getReport')->andReturn($report);
         $report->shouldReceive('getId')->andReturn(1);
 
-        $rest_criteria_value  = [
+        $rest_criteria_value = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => ['101', 103],
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
         ];

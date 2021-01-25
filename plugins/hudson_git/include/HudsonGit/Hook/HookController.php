@@ -75,7 +75,7 @@ class HookController
         $repository = $this->getRepository();
         $this->checkCSRFToken($repository);
 
-        $jenkins_server = trim($this->request->getValidated('url', 'string', ''));
+        $jenkins_server             = trim($this->request->getValidated('url', 'string', ''));
         $is_commit_reference_needed = (bool) $this->request->get('is_commit_reference_needed');
 
         if (! $this->valid_HTTPURI->validate($jenkins_server)) {

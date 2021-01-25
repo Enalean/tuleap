@@ -106,8 +106,8 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
         ksort($this->pagelist);
         arsort($this->pagelist);
 
-        $this->_rows = HTML();
-        $caption = false;
+        $this->_rows           = HTML();
+        $caption               = false;
         $this->_messageIfEmpty = _("<none>");
 
         if ($page) {
@@ -123,7 +123,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
                 } else {
                     $pagelink = WikiLink($page, 'unknown');
                 }
-                $c = count($this->pagelist);
+                $c       = count($this->pagelist);
                 $caption = fmt(
                     "Wanted Pages for %s (%d total):",
                     $pagelink,
@@ -143,7 +143,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
                 // Enclose any FullTextSearch keys containing a space
                 // with quotes in oder to request a defnitive search.
                 $searchkey = (strstr($key, ' ') === false) ? $key : "\"$key\"";
-                $row = HTML::tr(HTML::td(
+                $row       = HTML::tr(HTML::td(
                     ['align' => 'right'],
                     Button(
                         ['s' => $searchkey],
@@ -196,7 +196,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
                 ));
             }
 
-            $row = HTML::tr();
+            $row    = HTML::tr();
             $spacer = new RawXml("&nbsp;&nbsp;&nbsp;&nbsp;");
             foreach ($this->_columns as $col_heading) {
                 $row->pushContent(HTML::td(HTML(
@@ -229,7 +229,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
     public function _generateList($caption)
     {
         $list = HTML();
-        $c = count($this->pagelist);
+        $c    = count($this->pagelist);
         if ($caption) {
             $list->pushContent(HTML::p($caption));
         }

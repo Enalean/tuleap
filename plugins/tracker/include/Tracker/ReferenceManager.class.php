@@ -40,8 +40,8 @@ class Tracker_ReferenceManager
         ReferenceManager $reference_manager,
         Tracker_ArtifactFactory $artifact_factory
     ) {
-        $this->reference_manager      = $reference_manager;
-        $this->artifact_factory       = $artifact_factory;
+        $this->reference_manager = $reference_manager;
+        $this->artifact_factory  = $artifact_factory;
     }
 
     /**

@@ -46,7 +46,7 @@ class ProjectXMLImporterTest extends TestCase
      * @var M\MockInterface
      */
     private $ugroup_manager;
-    private $xml_file_path = __DIR__ . '/_fixtures/ProjectXMLImporter/fake_project.xml';
+    private $xml_file_path              = __DIR__ . '/_fixtures/ProjectXMLImporter/fake_project.xml';
     private $xml_file_path_with_ugroups = __DIR__ . '/_fixtures/ProjectXMLImporter/fake_project_with_ugroups.xml';
     /**
      * @var M\MockInterface

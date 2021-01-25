@@ -65,8 +65,8 @@ class AgileDashboard_SequenceIdManager
 
         if (! isset($this->backlog_item_ids[$milestone->getArtifactId()])) {
             $this->backlog_item_ids[$milestone->getArtifactId() ?? 0] = [];
-            $backlog           = $this->backlog_factory->getBacklog($milestone);
-            $backlog_artifacts = $backlog->getArtifacts($user);
+            $backlog                                                  = $this->backlog_factory->getBacklog($milestone);
+            $backlog_artifacts                                        = $backlog->getArtifacts($user);
 
             $this->storeBacklogArtifacts($milestone->getArtifactId(), $backlog_artifacts);
         }
@@ -89,7 +89,7 @@ class AgileDashboard_SequenceIdManager
         $artifact_position = 1;
         foreach ($backlog_items as $backlog_item) {
             $this->backlog_item_ids[$milestone_id][$backlog_item->getArtifact()->getId()] = $artifact_position;
-            $artifact_position = $artifact_position + 1;
+            $artifact_position                                                            = $artifact_position + 1;
         }
     }
 
@@ -98,7 +98,7 @@ class AgileDashboard_SequenceIdManager
         $artifact_position = 1;
         foreach ($backlog_artifacts as $backlog_artifact) {
             $this->backlog_item_ids[$milestone_id][$backlog_artifact->getId()] = $artifact_position;
-            $artifact_position = $artifact_position + 1;
+            $artifact_position                                                 = $artifact_position + 1;
         }
     }
 }

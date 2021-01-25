@@ -35,7 +35,7 @@ class PermissionsXMLExporterTest extends TestCase
 {
     public function testItExportsDefaultPermissionsForFieldsInMapping(): void
     {
-        $tracker_node = new SimpleXMLElement('<tracker/>');
+        $tracker_node       = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
@@ -77,7 +77,7 @@ class PermissionsXMLExporterTest extends TestCase
 
     public function testItExportsOnlyReadPermissionsForArtifactIdField(): void
     {
-        $tracker_node = new SimpleXMLElement('<tracker/>');
+        $tracker_node       = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $mapping_collection->addMapping(
             new ScalarFieldMapping(
@@ -107,7 +107,7 @@ class PermissionsXMLExporterTest extends TestCase
 
     public function testItExportsOnlyReadPermissionsForOldJiraLinkField(): void
     {
-        $tracker_node = new SimpleXMLElement('<tracker/>');
+        $tracker_node       = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
         $mapping_collection->addMapping(
             new ScalarFieldMapping(

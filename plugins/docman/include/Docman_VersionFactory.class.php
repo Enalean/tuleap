@@ -66,13 +66,13 @@ class Docman_VersionFactory
 
     public function getAllVersionForItem(&$item)
     {
-        $dao = $this->_getVersionDao();
-        $dar = $dao->searchByItemId($item->getId());
+        $dao      = $this->_getVersionDao();
+        $dar      = $dao->searchByItemId($item->getId());
         $versions = false;
         if ($dar && ! $dar->isError()) {
             $versions = [];
             while ($dar->valid()) {
-                $row = $dar->current();
+                $row        = $dar->current();
                 $versions[] = new Docman_Version($row);
                 $dar->next();
             }
@@ -96,8 +96,8 @@ class Docman_VersionFactory
 
     public function getSpecificVersion($item, $number)
     {
-        $dao = $this->_getVersionDao();
-        $dar = $dao->searchByNumber($item->getId(), $number);
+        $dao     = $this->_getVersionDao();
+        $dar     = $dao->searchByNumber($item->getId(), $number);
         $version = null;
         if ($dar && ! $dar->isError() && $dar->valid()) {
             $version = new Docman_Version($dar->current());
@@ -114,8 +114,8 @@ class Docman_VersionFactory
      */
     public function getSpecificVersionById($id, $table = 'plugin_docman_version_deleted')
     {
-        $dao = $this->_getVersionDao();
-        $dar = $dao->searchById($id, $table);
+        $dao     = $this->_getVersionDao();
+        $dar     = $dao->searchById($id, $table);
         $version = null;
         if ($dar && ! $dar->isError() && $dar->valid()) {
             $version = new Docman_Version($dar->current());
@@ -185,8 +185,8 @@ class Docman_VersionFactory
      */
     public function archiveBeforePurge(Docman_Version $version): bool
     {
-        $item    = $this->_getItemFactory()->getItemFromDb($version->getItemId(), ['ignore_deleted' => true]);
-        $prefix  = $item->getGroupId() . '_i' . $version->getItemId() . '_v' . $version->getNumber();
+        $item   = $this->_getItemFactory()->getItemFromDb($version->getItemId(), ['ignore_deleted' => true]);
+        $prefix = $item->getGroupId() . '_i' . $version->getItemId() . '_v' . $version->getNumber();
 
         $event = new ArchiveDeletedItemEvent(new ArchiveDeletedItemFileProvider($version->getPath(), $prefix));
 
@@ -299,7 +299,7 @@ class Docman_VersionFactory
             $list = [];
             foreach ($dar as $row) {
                 $version = new Docman_Version($row);
-                $list[] = $version;
+                $list[]  = $version;
             }
             return $list;
         }

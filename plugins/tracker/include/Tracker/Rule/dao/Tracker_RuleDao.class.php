@@ -129,7 +129,7 @@ class Tracker_RuleDao extends DataAccessObject
 
     public function deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
+        $tracker_id      = $this->da->escapeInt($tracker_id);
         $field_source_id = $this->da->escapeInt($field_source_id);
         $field_target_id = $this->da->escapeInt($field_target_id);
 
@@ -157,10 +157,10 @@ class Tracker_RuleDao extends DataAccessObject
 
     public function searchBySourceTarget($tracker_id, $field_source_id, $field_target_id)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
+        $tracker_id      = $this->da->escapeInt($tracker_id);
         $field_source_id = $this->da->escapeInt($field_source_id);
         $field_target_id = $this->da->escapeInt($field_target_id);
-        $sql = "SELECT *
+        $sql             = "SELECT *
                 FROM tracker_rule JOIN $this->table_name
                 ON (tracker_rule.id = $this->table_name.tracker_rule_id)
                 WHERE tracker_id = $tracker_id
@@ -172,7 +172,7 @@ class Tracker_RuleDao extends DataAccessObject
     public function searchInvolvedFieldsByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT DISTINCT tracker_rule_list.source_field_id, tracker_rule_list.target_field_id
+        $sql        = "SELECT DISTINCT tracker_rule_list.source_field_id, tracker_rule_list.target_field_id
                 FROM tracker_rule JOIN tracker_rule_list
                 ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
                 WHERE tracker_rule.tracker_id = '$tracker_id'";

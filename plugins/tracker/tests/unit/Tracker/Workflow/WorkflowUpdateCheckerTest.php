@@ -40,8 +40,8 @@ final class WorkflowUpdateCheckerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->frozen_field_detector = Mockery::mock(FrozenFieldDetector::class);
-        $this->workflow_update_checker  = new WorkflowUpdateChecker($this->frozen_field_detector);
+        $this->frozen_field_detector   = Mockery::mock(FrozenFieldDetector::class);
+        $this->workflow_update_checker = new WorkflowUpdateChecker($this->frozen_field_detector);
     }
 
     public function testCanFieldBeUpdatedReturnsTrueWhenInitialSubmission()

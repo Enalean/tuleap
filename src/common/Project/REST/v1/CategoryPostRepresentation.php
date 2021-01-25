@@ -41,7 +41,7 @@ class CategoryPostRepresentation
 
     public static function build(int $category_id, int $value_id): self
     {
-        $representation = new self();
+        $representation              = new self();
         $representation->category_id = $category_id;
         $representation->value_id    = $value_id;
         return $representation;

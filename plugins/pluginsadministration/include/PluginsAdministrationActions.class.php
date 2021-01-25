@@ -49,11 +49,11 @@ class PluginsAdministrationActions extends Actions
     public function available()
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
-        $request = HTTPRequest::instance();
+        $request     = HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
         if ($plugin_data) {
             $plugin_manager = $this->plugin_manager;
-            $dependencies = $this->dependency_solver->getUnmetAvailableDependencies($plugin_data['plugin']);
+            $dependencies   = $this->dependency_solver->getUnmetAvailableDependencies($plugin_data['plugin']);
             if ($dependencies) {
                 $error_msg = sprintf(dgettext('tuleap-pluginsadministration', 'Unable to avail %1$s. Please avail the following plugins before: %2$s'), $plugin_data['plugin']->getName(), implode(', ', $dependencies));
                 $GLOBALS['Response']->addFeedback('error', $error_msg);
@@ -76,7 +76,7 @@ class PluginsAdministrationActions extends Actions
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
-        $name = $request->get('name');
+        $name    = $request->get('name');
         if ($name) {
             $plugin = $this->plugin_manager->installPlugin($name);
 
@@ -98,11 +98,11 @@ class PluginsAdministrationActions extends Actions
     public function unavailable()
     {
         $this->checkSynchronizerToken('/plugins/pluginsadministration/');
-        $request = HTTPRequest::instance();
+        $request     = HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
         if ($plugin_data && $this->plugin_disabler_verifier->canPluginBeDisabled($plugin_data['plugin'])) {
             $plugin_manager = $this->plugin_manager;
-            $dependencies = $this->dependency_solver->getAvailableDependencies($plugin_data['plugin']);
+            $dependencies   = $this->dependency_solver->getAvailableDependencies($plugin_data['plugin']);
             if ($dependencies) {
                 $error_msg = sprintf(dgettext('tuleap-pluginsadministration', 'Unable to unavail %1$s. Please unavail the following plugins before:  %2$s'), $plugin_data['plugin']->getName(), implode(', ', $dependencies));
                 $GLOBALS['Response']->addFeedback('error', $error_msg);
@@ -127,7 +127,7 @@ class PluginsAdministrationActions extends Actions
         $plugin = $this->_getPluginFromRequest();
         if ($plugin && $this->plugin_disabler_verifier->canPluginBeDisabled($plugin['plugin'])) {
             $plugin_manager = $this->plugin_manager;
-            $uninstalled = $plugin_manager->uninstallPlugin($plugin['plugin']);
+            $uninstalled    = $plugin_manager->uninstallPlugin($plugin['plugin']);
             if (! $uninstalled) {
                  $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(dgettext('tuleap-pluginsadministration', 'Plugin "%1$s" have not been uninstalled.'), $plugin['name']));
             } else {
@@ -140,24 +140,24 @@ class PluginsAdministrationActions extends Actions
     public function _validateProjectList($usList)
     {
         $sPrjList = null;
-        $usList = trim(rtrim($usList));
+        $usList   = trim(rtrim($usList));
         if ($usList) {
             $usPrjList = explode(',', $usList);
-            $sPrjList = array_map('intval', $usPrjList);
+            $sPrjList  = array_map('intval', $usPrjList);
         }
         return $sPrjList;
     }
 
     public function _addAllowedProjects($prjList)
     {
-        $plugin = $this->_getPluginFromRequest();
+        $plugin         = $this->_getPluginFromRequest();
         $plugin_manager = $this->plugin_manager;
         $plugin_manager->addProjectForPlugin($plugin['plugin'], $prjList);
     }
 
     public function _delAllowedProjects($prjList)
     {
-        $plugin = $this->_getPluginFromRequest();
+        $plugin         = $this->_getPluginFromRequest();
         $plugin_manager = $this->plugin_manager;
         $plugin_manager->delProjectForPlugin($plugin['plugin'], $prjList);
     }
@@ -177,9 +177,9 @@ class PluginsAdministrationActions extends Actions
             }
         }
         if (isset($properties['prj_restricted'])) {
-            $plugin = $this->_getPluginFromRequest();
+            $plugin         = $this->_getPluginFromRequest();
             $plugin_manager = $this->plugin_manager;
-            $resricted = ($properties['prj_restricted'] == 1 ? true : false);
+            $resricted      = ($properties['prj_restricted'] == 1 ? true : false);
             $plugin_manager->updateProjectPluginRestriction($plugin['plugin'], $resricted);
         }
     }
@@ -207,12 +207,12 @@ class PluginsAdministrationActions extends Actions
 
         if ($user_properties) {
             $plug_info = $plugin['plugin']->getPluginInfo();
-            $descs = $plug_info->getPropertyDescriptors();
-            $keys  = $descs->getKeys();
-            $iter  = $keys->iterator();
+            $descs     = $plug_info->getPropertyDescriptors();
+            $keys      = $descs->getKeys();
+            $iter      = $keys->iterator();
             while ($iter->valid()) {
-                $key   = $iter->current();
-                $desc  = $descs->get($key);
+                $key       = $iter->current();
+                $desc      = $descs->get($key);
                 $prop_name = $desc->getName();
                 if (isset($user_properties[$prop_name])) {
                     $val = $user_properties[$prop_name];
@@ -233,20 +233,20 @@ class PluginsAdministrationActions extends Actions
 
     public function _getPluginFromRequest()
     {
-        $return = false;
+        $return  = false;
         $request = HTTPRequest::instance();
         if ($request->exist('plugin_id') && is_numeric($request->get('plugin_id'))) {
             $plugin_manager = $this->plugin_manager;
-            $plugin = $plugin_manager->getPluginById($request->get('plugin_id'));
+            $plugin         = $plugin_manager->getPluginById($request->get('plugin_id'));
             if ($plugin) {
                 $plug_info  = $plugin->getPluginInfo();
                 $descriptor = $plug_info->getPluginDescriptor();
-                $name = $descriptor->getFullName();
+                $name       = $descriptor->getFullName();
                 if (strlen(trim($name)) === 0) {
                     $name = get_class($plugin);
                 }
-                $return = [];
-                $return['name'] = $name;
+                $return           = [];
+                $return['name']   = $name;
                 $return['plugin'] = $plugin;
             }
         }
@@ -255,10 +255,10 @@ class PluginsAdministrationActions extends Actions
 
     public function setPluginRestriction()
     {
-        $request                    = HTTPRequest::instance();
-        $plugin_id                  = $request->get('plugin_id');
-        $plugin_data                = $this->_getPluginFromRequest();
-        $all_allowed                = $request->get('all-allowed');
+        $request     = HTTPRequest::instance();
+        $plugin_id   = $request->get('plugin_id');
+        $plugin_data = $this->_getPluginFromRequest();
+        $all_allowed = $request->get('all-allowed');
 
         if ($plugin_data) {
             $plugin = $plugin_data['plugin'];
@@ -311,11 +311,11 @@ class PluginsAdministrationActions extends Actions
 
     public function updateAllowedProjectList()
     {
-        $request                    = HTTPRequest::instance();
-        $plugin_id                  = $request->get('plugin_id');
-        $plugin_data                = $this->_getPluginFromRequest();
-        $project_to_add             = $request->get('project-to-allow');
-        $project_ids_to_remove      = $request->get('project-ids-to-revoke');
+        $request               = HTTPRequest::instance();
+        $plugin_id             = $request->get('plugin_id');
+        $plugin_data           = $this->_getPluginFromRequest();
+        $project_to_add        = $request->get('project-to-allow');
+        $project_ids_to_remove = $request->get('project-ids-to-revoke');
 
         if ($plugin_data) {
             $plugin = $plugin_data['plugin'];

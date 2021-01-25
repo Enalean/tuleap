@@ -44,7 +44,7 @@ final class SiteDeployGitolite3
             return;
         }
 
-        $expected_gitolite_config  = $this->getExpectedGitolite3ConfigContent();
+        $expected_gitolite_config = $this->getExpectedGitolite3ConfigContent();
         $current_gitolite_config  = file_get_contents(self::GITOLITE_RC_CONFIG);
 
         if ($expected_gitolite_config !== $current_gitolite_config) {
@@ -53,7 +53,7 @@ final class SiteDeployGitolite3
         }
 
         $expected_gitolite_profile = $this->getExpectedGitoliteProfileContent();
-        $current_gitolite_profile = '';
+        $current_gitolite_profile  = '';
         if (is_file(self::GITOLITE_PROFILE)) {
             $current_gitolite_profile = file_get_contents(self::GITOLITE_PROFILE);
         }

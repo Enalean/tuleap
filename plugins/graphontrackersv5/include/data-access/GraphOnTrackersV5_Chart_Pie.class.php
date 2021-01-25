@@ -29,7 +29,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
     public function loadFromSession()
     {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
-        $chart_in_session = $this->report_session->get($this->id);
+        $chart_in_session     = $this->report_session->get($this->id);
         if (isset($chart_in_session['field_base']) && $chart_in_session['field_base'] !== '') {
             $this->field_base = $chart_in_session['field_base'];
         } else {
@@ -40,8 +40,8 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
 
     public function loadFromDb()
     {
-        $arr = $this->getDao()->searchById($this->id)->getRow();
-        $this->field_base  = $arr['field_base'];
+        $arr              = $this->getDao()->searchById($this->id)->getRow();
+        $this->field_base = $arr['field_base'];
     }
 
     public function registerInSession()
@@ -125,7 +125,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
 
     public function userCanVisualize()
     {
-        $ff = Tracker_FormElementFactory::instance();
+        $ff                  = Tracker_FormElementFactory::instance();
         $artifact_field_base = $ff->getFormElementById($this->field_base);
         if ($artifact_field_base && $artifact_field_base->userCanRead()) {
             return true;

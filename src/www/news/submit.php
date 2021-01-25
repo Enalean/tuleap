@@ -78,8 +78,8 @@ if (user_isloggedin()) {
         news_header(['title' => $Language->getText('news_index', 'news'),
               'help' => 'collaboration.html#news-service']);
 
-        $hp = Codendi_HTMLPurifier::instance();
-        $pm = ProjectManager::instance();
+        $hp      = Codendi_HTMLPurifier::instance();
+        $pm      = ProjectManager::instance();
         $project = $pm->getProject($group_id);
         /*
          create a new discussion forum without a default msg

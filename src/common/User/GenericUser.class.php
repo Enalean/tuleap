@@ -20,7 +20,7 @@
 class GenericUser extends PFUser
 {
     public const NAME_PREFIX = 'forge__prjgen_';
-    public const REAL_NAME = 'Generic User For Project';
+    public const REAL_NAME   = 'Generic User For Project';
 
     /**
      * @var Project

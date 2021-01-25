@@ -50,8 +50,8 @@ class ArchiveDeletedArtifactProvider implements ArchiveDeletedItemProvider
     public function __construct(ArtifactWithTrackerStructureExporter $artifact_with_tracker_structure_exporter, Artifact $artifact, PFUser $user)
     {
         $this->artifact_with_tracker_structure_exporter = $artifact_with_tracker_structure_exporter;
-        $this->artifact = $artifact;
-        $this->user = $user;
+        $this->artifact                                 = $artifact;
+        $this->user                                     = $user;
     }
 
     /**
@@ -65,7 +65,7 @@ class ArchiveDeletedArtifactProvider implements ArchiveDeletedItemProvider
     public function getArchivePath(): string
     {
         $this->archive_path = ForgeConfig::get('tmp_dir') . '/artifact_' . $this->artifact->getId() . '_' . time() . '.zip';
-        $archive      = new ZipArchive($this->archive_path);
+        $archive            = new ZipArchive($this->archive_path);
         $this->artifact_with_tracker_structure_exporter->exportArtifactAndTrackerStructureToXML($this->user, $this->artifact, $archive);
         $archive->close();
         return $this->archive_path;

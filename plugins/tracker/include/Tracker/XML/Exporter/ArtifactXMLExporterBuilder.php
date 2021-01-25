@@ -40,7 +40,7 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
     ): Tracker_XML_Exporter_ArtifactXMLExporter {
         $file_info_xml_exporter = new FileInfoXMLExporter($file_path_xml_exporter);
 
-        $visitor = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
+        $visitor            = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter(
                 new FieldChangeDateBuilder(
                     new XML_SimpleXMLCDATAFactory()

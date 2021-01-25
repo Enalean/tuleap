@@ -61,8 +61,8 @@ class RichTextareaProviderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->tracker  = Mockery::mock(Tracker::class);
-        $this->user     = Mockery::mock(PFUser::class);
+        $this->tracker = Mockery::mock(Tracker::class);
+        $this->user    = Mockery::mock(PFUser::class);
 
         $this->first_usable_field_data_getter = Mockery::mock(FileUploadDataProvider::class);
 

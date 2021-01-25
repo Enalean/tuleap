@@ -87,7 +87,7 @@ class FilesHeaderPresenterBuilder
         } catch (RepositoryAccessException $exception) {
             return $cannot_be_displayed_presenter;
         }
-        $commit         = $this->commit_retriever->getCommitOfCurrentTree($request, $gitphp_project);
+        $commit = $this->commit_retriever->getCommitOfCurrentTree($request, $gitphp_project);
         if (! $commit) {
             if (empty($gitphp_project->GetRefs())) {
                 return $cannot_be_displayed_presenter;
@@ -95,7 +95,7 @@ class FilesHeaderPresenterBuilder
         }
 
         list($head_name, $is_tag) = $commit ? $this->getHeadNameForCurrentCommit($request, $commit) : ['', false];
-        $committer_epoch = $commit ? $commit->GetCommitterEpoch() : '';
+        $committer_epoch          = $commit ? $commit->GetCommitterEpoch() : '';
 
         return new FilesHeaderPresenter(
             $repository,
@@ -189,7 +189,7 @@ class FilesHeaderPresenterBuilder
      */
     private function getURLParameters(HTTPRequest $request)
     {
-        $parameters = [];
+        $parameters         = [];
         $parameters_to_keep = ['a', 'f', 's', 'st', 'm'];
         foreach ($parameters_to_keep as $key) {
             if ($request->exist($key)) {

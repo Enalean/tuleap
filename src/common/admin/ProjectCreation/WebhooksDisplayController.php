@@ -71,7 +71,7 @@ class WebhooksDisplayController implements DispatchableWithRequest
             );
         }
 
-        $title = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_configuration');
+        $title     = $GLOBALS['Language']->getText('admin_sidebar', 'projects_nav_configuration');
         $presenter = new WebhooksPresenter(
             new ProjectCreationNavBarPresenter('webhooks'),
             $title,

@@ -39,8 +39,8 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
     ) {
         parent::__construct($project_id, $are_mirrors_defined, $external_pane_presenters);
 
-        $this->static_ugroups    = $static_ugroups;
-        $this->selected_ugroups  = $selected_ugroups;
+        $this->static_ugroups   = $static_ugroups;
+        $this->selected_ugroups = $selected_ugroups;
     }
 
     public function git_admins_section()

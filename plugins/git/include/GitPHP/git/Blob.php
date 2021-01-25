@@ -131,7 +131,7 @@ class Blob extends FilesystemObject
     private function ReadData() // @codingStandardsIgnoreLine
     {
         $this->dataRead = true;
-        $this->data = $this->GetProject()->GetObject($this->hash);
+        $this->data     = $this->GetProject()->GetObject($this->hash);
     }
 
     /**
@@ -327,7 +327,7 @@ class Blob extends FilesystemObject
 
         $exe = new GitExe($this->GetProject());
 
-        $args = [];
+        $args   = [];
         $args[] = '--max-count=' . escapeshellarg($count);
         $args[] = '--skip=' . escapeshellarg($skip);
         if (isset($this->commit)) {
@@ -408,7 +408,7 @@ class Blob extends FilesystemObject
 
         $exe = new GitExe($this->GetProject());
 
-        $args = [];
+        $args   = [];
         $args[] = '-s';
         $args[] = '-l';
         $args[] = '--root';
@@ -427,7 +427,7 @@ class Blob extends FilesystemObject
             if (preg_match('/^([0-9a-fA-F]{40})(\s+.+)?\s+([0-9]+)\)/', $line, $regs)) {
                 if ($regs[1] != $lastcommit) {
                     $this->blame[(int) ($regs[3])] = $this->GetProject()->GetCommit($regs[1]);
-                    $lastcommit = $regs[1];
+                    $lastcommit                    = $regs[1];
                 }
             }
         }

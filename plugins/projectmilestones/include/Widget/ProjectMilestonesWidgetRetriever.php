@@ -38,7 +38,7 @@ use PFUser;
 
 class ProjectMilestonesWidgetRetriever
 {
-    public const PARAM_SELECTED_PROJECT = 'select-project-milestones-widget';
+    public const PARAM_SELECTED_PROJECT      = 'select-project-milestones-widget';
     public const VALUE_SELECTED_PROJECT_SELF = 'self';
 
     /**
@@ -97,13 +97,13 @@ class ProjectMilestonesWidgetRetriever
                 $this->presenter_builder->getProjectMilestonePresenter($project, $root_planning)
             );
         } catch (TimeframeBrokenConfigurationException $e) {
-            $message_error = '<p class="tlp-alert-danger">';
+            $message_error  = '<p class="tlp-alert-danger">';
             $message_error .= dgettext('tuleap-projectmilestones', 'Invalid Timeframe Semantic configuration.');
             $message_error .= '</p>';
 
             return $message_error;
         } catch (ProjectMilestonesException $e) {
-            $message_error = '<p class="tlp-alert-danger">';
+            $message_error  = '<p class="tlp-alert-danger">';
             $message_error .= $e->getTranslatedMessage();
             $message_error .= '</p>';
 

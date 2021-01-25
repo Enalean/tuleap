@@ -459,7 +459,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $empty_to_update_id = $response->json()['id'];
 
-        $file_size = 10;
+        $file_size       = 10;
         $file_properties = json_encode(
             [
                 'file_name' => 'Blanka',
@@ -481,7 +481,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         );
         $general_use_http_client->setCurlMulti($this->client->getCurlMulti());
         $general_use_http_client->setSslVerification(false, false, false);
-        $file_content        = str_repeat('A', $file_size);
+        $file_content = str_repeat('A', $file_size);
 
         $tus_response_upload = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
@@ -724,7 +724,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
 
         $metadata = ['status' => 'none'];
-        $response           = $this->getResponse(
+        $response = $this->getResponse(
             $this->client->put(
                 'docman_empty_documents/' . $empty_to_update_id . '/metadata',
                 null,
@@ -744,7 +744,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
 
         $project_members_identifier = $this->project_id . '_3';
-        $response           = $this->getResponse(
+        $response                   = $this->getResponse(
             $this->client->put(
                 'docman_empty_documents/' . $empty_to_update_id . '/permissions',
                 null,

@@ -109,8 +109,8 @@ class OneStepProjectCreationPresenter_FieldsTest extends TestCase
 
     public function testItSetsDefaultTemplateIdIfRequestDataDontHaveOne(): void
     {
-        $request_data          = [];
-        $single_step = $this->aOneStepProjectCreationForm($request_data);
+        $request_data = [];
+        $single_step  = $this->aOneStepProjectCreationForm($request_data);
 
         $this->assertEquals(Project_OneStepCreation_OneStepCreationPresenter::DEFAULT_TEMPLATE_ID, $single_step->getTemplateId());
     }

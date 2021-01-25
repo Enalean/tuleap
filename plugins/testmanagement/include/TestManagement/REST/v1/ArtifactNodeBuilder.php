@@ -46,9 +46,9 @@ class ArtifactNodeBuilder
 
     public function __construct(Tracker_ArtifactDao $artifact_dao, ArtifactNodeDao $dao, NodeBuilderFactory $node_builder_factory)
     {
-        $this->artifact_dao                   = $artifact_dao;
-        $this->dao                            = $dao;
-        $this->node_builder_factory           = $node_builder_factory;
+        $this->artifact_dao         = $artifact_dao;
+        $this->dao                  = $dao;
+        $this->node_builder_factory = $node_builder_factory;
     }
 
     public function getNodeRepresentation(PFUser $user, Artifact $artifact): NodeRepresentation

@@ -51,7 +51,7 @@ class DynamicCredentialSession
      */
     public function initialize(string $username, ConcealedString $password)
     {
-        $credential = $this->credential_retriever->authenticate($username, $password);
+        $credential                              = $this->credential_retriever->authenticate($username, $password);
         $this->storage[self::STORAGE_IDENTIFIER] = $credential->getIdentifier();
     }
 

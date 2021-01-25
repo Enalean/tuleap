@@ -88,7 +88,7 @@ class Docman_LogDao extends DataAccessObject
         if (! is_null($field)) {
             $sql .= ', ' . $this->da->quoteSmart($field);
         }
-        $sql .= ')';
+        $sql     .= ')';
         $inserted = $this->update($sql);
 
         return $inserted;

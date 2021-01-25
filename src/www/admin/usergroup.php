@@ -101,7 +101,7 @@ if ($request->isPost()) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_usergroup', 'data_not_parsed'));
         } else {
             if ($request->existAndNonEmpty('expiry_date')) {
-                $date_list = explode('-', $request->get('expiry_date'), 3);
+                $date_list        = explode('-', $request->get('expiry_date'), 3);
                 $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
                 if ($user->getExpiryDate() != $unix_expiry_time) {
                     $user->setExpiryDate($unix_expiry_time);
@@ -141,7 +141,7 @@ if ($request->isPost()) {
             // New status must be valid AND user account must already be validated
             // There are specific actions done in approve_pending scripts
             $accountActivationEvent = null;
-            $vStatus = new Valid_WhiteList('form_status', $user->getAllWorkingStatus());
+            $vStatus                = new Valid_WhiteList('form_status', $user->getAllWorkingStatus());
             $vStatus->required();
             if (
                 $request->valid($vStatus)
@@ -333,8 +333,8 @@ $user_has_rest_read_only_administration_delegation = $forge_user_group_permissio
 );
 
 $invite_buddy_configuration = new InviteBuddyConfiguration(EventManager::instance());
-$invited_by_builder = new InvitedByPresenterBuilder(new InvitationDao(), $um);
-$invited_by = $invite_buddy_configuration->isFeatureEnabled()
+$invited_by_builder         = new InvitedByPresenterBuilder(new InvitationDao(), $um);
+$invited_by                 = $invite_buddy_configuration->isFeatureEnabled()
     ? $invited_by_builder->getInvitedByPresenter($user)
     : null;
 

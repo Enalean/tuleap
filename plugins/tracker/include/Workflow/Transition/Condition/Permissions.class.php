@@ -50,7 +50,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         $child->addAttribute('type', $this->identifier);
 
         $transition_ugroups = $this->getAuthorizedUGroups();
-        $grand_child = $child->addChild('permissions');
+        $grand_child        = $child->addChild('permissions');
         foreach ($transition_ugroups as $transition_ugroup) {
             $ugroup_keyname = $this->getExportableUGroupKeyname($transition_ugroup['ugroup_id']);
             if ($ugroup_keyname) {

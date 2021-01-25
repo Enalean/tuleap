@@ -28,7 +28,7 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends TestCase
 {
     public function testStopLookingForTheAccessKeyScopeAsSoonAsOneItBuilt(): void
     {
-        $key_scope_recognize_identifier = new /** @psalm-immutable */ class implements AuthenticationScope
+        $key_scope_recognize_identifier     = new /** @psalm-immutable */ class implements AuthenticationScope
         {
             use AuthenticationScopeThrowOnActualMethodCall;
 

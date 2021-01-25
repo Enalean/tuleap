@@ -340,9 +340,9 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         $item_request = $this->request_builder->buildFromItemId($id);
         $this->addAllEvent($item_request->getProject());
 
-        $project      = $item_request->getProject();
+        $project = $item_request->getProject();
 
-        $item         = $item_request->getItem();
+        $item = $item_request->getItem();
         \assert($item instanceof Docman_Empty);
 
         $current_user = $this->user_manager->getCurrentUser();
@@ -394,8 +394,8 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         $item_request = $this->request_builder->buildFromItemId($id);
         $this->addAllEvent($item_request->getProject());
 
-        $project      = $item_request->getProject();
-        $item         = $item_request->getItem();
+        $project = $item_request->getProject();
+        $item    = $item_request->getItem();
 
         $current_user = $this->user_manager->getCurrentUser();
 

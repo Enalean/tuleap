@@ -37,20 +37,20 @@ class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFact
     {
         parent::__construct($item);
 
-        $dao = $this->_getDao();
+        $dao      = $this->_getDao();
         $vFactory = new Docman_VersionFactory();
 
         $dar = $dao->getLatestTableByItemId($item->getId(), 'ver.number');
         if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
-            $row = $dar->getRow();
+            $row               = $dar->getRow();
             $lastVersionNumber = $row['number'];
-            $lastItemVersion = $vFactory->getSpecificVersion($item, $lastVersionNumber);
+            $lastItemVersion   = $vFactory->getSpecificVersion($item, $lastVersionNumber);
 
             if (
                 $versionNumber !== null
                 && $lastItemVersion->getNumber() != $versionNumber
             ) {
-                $this->itemVersion = $vFactory->getSpecificVersion($item, $versionNumber);
+                $this->itemVersion  = $vFactory->getSpecificVersion($item, $versionNumber);
                 $this->customizable = false;
             } else {
                 $this->itemVersion = $lastItemVersion;
@@ -105,7 +105,7 @@ class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFact
             $dao = $this->_getDao();
             $dar = $dao->getTableById($version->getId());
             if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
-                $row = $dar->current();
+                $row   = $dar->current();
                 $table = $this->createTableFromRow($row);
                 $table->setVersionNumber($version->getNumber());
             }

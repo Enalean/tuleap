@@ -39,7 +39,7 @@ class ArtifactRuleFactory
     public function __construct(ArtifactRuleDao $rules_dao)
     {
         $this->rules_dao = $rules_dao;
-        $this->rules = [];
+        $this->rules     = [];
 
         $this->RULETYPE_HIDDEN    = 1;
         $this->RULETYPE_DISABLED  = 2;
@@ -54,7 +54,7 @@ class ArtifactRuleFactory
     {
         static $_artifactrulefactory_instance;
         if (! $_artifactrulefactory_instance) {
-            $rules_dao         = new ArtifactRuleDao(CodendiDataAccess::instance());
+            $rules_dao                     = new ArtifactRuleDao(CodendiDataAccess::instance());
             $_artifactrulefactory_instance = new ArtifactRuleFactory($rules_dao);
         }
         return $_artifactrulefactory_instance;
@@ -67,7 +67,7 @@ class ArtifactRuleFactory
             //We retrieve rule
             $dar = $this->rules_dao->searchById($id);
             if ($dar && ($rule_row = $dar->getRow())) {
-                $rule_row['id'] = $id;
+                $rule_row['id']   = $id;
                 $this->rules[$id] = $this->_buildRuleInstance($rule_row);
             }
         }
@@ -76,12 +76,12 @@ class ArtifactRuleFactory
 
     public function getAllRulesByArtifactTypeWithOrder($artifact_type)
     {
-        $dar = $this->rules_dao->searchByGroupArtifactIdWithOrder($artifact_type);
+        $dar   = $this->rules_dao->searchByGroupArtifactIdWithOrder($artifact_type);
         $rules = [];
         while ($rule_row = $dar->getRow()) {
             if (! isset($this->rules[$rule_row['id']])) {
                 $rule_row['group_artifact_id'] = $artifact_type;
-                $this->rules[$rule_row['id']] = $this->_buildRuleInstance($rule_row);
+                $this->rules[$rule_row['id']]  = $this->_buildRuleInstance($rule_row);
             }
             $rules[] = $this->rules[$rule_row['id']];
         }

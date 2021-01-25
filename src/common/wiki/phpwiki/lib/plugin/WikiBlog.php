@@ -169,8 +169,8 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         }
         //$request->finish(fmt("No pagename specified for %s",$type));
 
-        $now = time();
-        $dbi = $request->getDbh();
+        $now  = time();
+        $dbi  = $request->getDbh();
         $user = $request->getUser();
 
         /*
@@ -192,7 +192,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
                            ];
 
         // Version meta-data
-        $summary = trim($blog['summary']);
+        $summary      = trim($blog['summary']);
         $version_meta = ['author'    => $blog_meta['creator'],
                               'author_id' => $blog_meta['creator_id'],
                               'markup'    => 2.0,   // assume new markup
@@ -247,7 +247,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
                 SavePage($request, $pageinfo, '', '');
             }
 
-            $p = $dbi->getPage($prefix . $pagename . SUBPAGE_SEPARATOR
+            $p  = $dbi->getPage($prefix . $pagename . SUBPAGE_SEPARATOR
                                . str_replace("T", SUBPAGE_SEPARATOR, "$time"));
             $pr = $p->getCurrentRevision();
 
@@ -291,8 +291,8 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         $dbi = $request->getDbh();
 
         $parent = $args['pagename'];
-        $blogs = $this->findBlogs($dbi, $parent, $type);
-        $html = HTML();
+        $blogs  = $this->findBlogs($dbi, $parent, $type);
+        $html   = HTML();
         if ($blogs) {
             // First reorder
             usort($blogs, ["WikiPlugin_WikiBlog",
@@ -336,7 +336,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
 
     public function _transformOldFormatBlog($rev, $type = 'wikiblog')
     {
-        $page = $rev->getPage();
+        $page     = $rev->getPage();
         $metadata = [];
         foreach (['ctime', 'creator', 'creator_id'] as $key) {
             $metadata[$key] = $page->get($key);
@@ -344,7 +344,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         if (empty($metadata) and $type != 'wikiblog') {
             $metadata[$key] = $page->get('wikiblog');
         }
-        $meta = $rev->getMetaData();
+        $meta        = $rev->getMetaData();
         $meta[$type] = $metadata;
         return new TransformedText($page, $rev->getPackedContent(), $meta, $type);
     }
@@ -352,7 +352,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
     public function findBlogs(&$dbi, $parent, $type = 'wikiblog')
     {
         $prefix = (empty($parent) ? "" :  $parent . SUBPAGE_SEPARATOR) . $this->_blogPrefix($type);
-        $pages = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
+        $pages  = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
 
         $blogs = [];
         while ($page = $pages->next()) {

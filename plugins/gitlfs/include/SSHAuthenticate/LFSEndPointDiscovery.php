@@ -32,7 +32,7 @@ class LFSEndPointDiscovery implements BatchResponseActionHref
 
     public function __construct(\GitRepository $repository)
     {
-        $this->repository  = $repository;
+        $this->repository = $repository;
     }
 
     /**

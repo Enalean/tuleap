@@ -58,13 +58,13 @@ class Rule_File extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_unknown', $file['error']);
             }
             if ($ok && $file['name'] == '') {
-                $ok = \false;
+                $ok          = \false;
                 $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload');
             }
             if ($ok) {
                 // Re-check filesize (do not trust uploaded MAX_FILE_SIZE)
                 if (\filesize($file['tmp_name']) > $this->maxSize) {
-                    $ok = \false;
+                    $ok          = \false;
                     $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_size', 1);
                 }
             }

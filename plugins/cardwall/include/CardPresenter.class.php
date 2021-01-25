@@ -104,7 +104,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     public function getFields()
     {
         $diplayed_fields_presenter = [];
-        $displayed_fields = $this->card_fields->getFields($this->getArtifact());
+        $displayed_fields          = $this->card_fields->getFields($this->getArtifact());
 
         foreach ($displayed_fields as $displayed_field) {
             $diplayed_fields_presenter[] = new Cardwall_CardFieldPresenter($displayed_field, $this->artifact, $this->display_preferences);
@@ -180,7 +180,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
      */
     public function getCssClasses()
     {
-        $classes = '';
+        $classes  = '';
         $classes .= (! $this->hasLegacyAccentColor()) ? ' card-accent-' . $this->getAccentColor() : '';
         $classes .= ($this->getBackgroundColorName()) ? ' card-style-' . $this->getBackgroundColorName() : '';
 

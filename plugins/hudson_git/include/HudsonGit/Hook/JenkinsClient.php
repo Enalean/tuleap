@@ -38,7 +38,7 @@ class JenkinsClient
     private const NOTIFY_HOOK_TYPE = 'pushGitNotifications';
 
     private const TULEAP_HOOK_URL  = '/tuleap-hook/';
-    private const TULEAP_HOOK_TYPE  = 'pushJenkinsTuleapPluginNotification';
+    private const TULEAP_HOOK_TYPE = 'pushJenkinsTuleapPluginNotification';
 
     /**
      * @var ClientInterface
@@ -85,7 +85,7 @@ class JenkinsClient
         if (mb_substr($server_url, -1) === '/') {
             $server_url = mb_substr($server_url, 0, -1);
         }
-        $parameters      = [
+        $parameters = [
             'url' => $repository_url,
         ];
         if ($commit_reference) {
@@ -98,7 +98,7 @@ class JenkinsClient
         $crumb_header_split = explode(':', $csrf_crumb_header);
         if (count($crumb_header_split) === 2) {
             [$crumb_header_name, $crumb_header_value] = $crumb_header_split;
-            $request = $request->withHeader($crumb_header_name, $crumb_header_value);
+            $request                                  = $request->withHeader($crumb_header_name, $crumb_header_value);
         }
         $response = $this->sendRequestToJenkinsServer($request, $push_url, self::NOTIFY_HOOK_TYPE);
 
@@ -125,7 +125,7 @@ class JenkinsClient
 
         $request = $this->addCrumbHeader($request, $csrf_crumb_header);
         $request = $request->withHeader('Content-Type', 'application/x-www-form-urlencoded');
-        $request                    = $request->withBody(
+        $request = $request->withBody(
             $this->stream_factory->createStream(
                 json_encode($this->jenkins_tuleap_plugin_payload->getPayload())
             )

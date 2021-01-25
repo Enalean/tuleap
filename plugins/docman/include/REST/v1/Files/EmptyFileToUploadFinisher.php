@@ -47,7 +47,7 @@ class EmptyFileToUploadFinisher
 
     public function createEmptyFile(DocumentToUpload $document_to_upload, string $filename)
     {
-        $item_id = $document_to_upload->getItemId();
+        $item_id          = $document_to_upload->getItemId();
         $file_information = new FileAlreadyUploadedInformation($item_id, $filename, 0);
 
         $uploaded_document_path = $this->document_upload_path_allocator->getPathForItemBeingUploaded($file_information);

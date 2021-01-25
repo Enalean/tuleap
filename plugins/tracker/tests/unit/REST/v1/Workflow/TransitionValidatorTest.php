@@ -36,7 +36,7 @@ class TransitionValidatorTest extends TestCase
     private $validator;
 
     private const FROM_ID = 516;
-    private const TO_ID = 137;
+    private const TO_ID   = 137;
 
     protected function setUp(): void
     {

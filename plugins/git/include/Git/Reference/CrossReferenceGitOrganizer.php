@@ -39,7 +39,7 @@ final class CrossReferenceGitOrganizer
         OrganizeableGitCrossReferencesAndTheContributorsCollector $collector,
         CrossReferenceGitEnhancer $cross_reference_git_filler
     ) {
-        $this->collector = $collector;
+        $this->collector                    = $collector;
         $this->cross_reference_git_enhancer = $cross_reference_git_filler;
     }
 

@@ -64,7 +64,7 @@ class AdminDelegationBuilder
 
     private function enhancePermissionsWithUserInformations(array $permissions_by_users)
     {
-        $user_list   = [];
+        $user_list = [];
 
         foreach ($permissions_by_users as $key => $permissions) {
             $user = $this->user_manager->getUserById($key);
@@ -86,7 +86,7 @@ class AdminDelegationBuilder
         $service_list = [];
 
         foreach (AdminDelegation_Service::getAllServices() as $service) {
-            $built_service = [
+            $built_service  = [
                 'id' => $service,
                 'label' => AdminDelegation_Service::getLabel($service),
             ];

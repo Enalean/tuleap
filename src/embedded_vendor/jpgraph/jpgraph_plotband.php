@@ -30,10 +30,10 @@ class Rectangle
     public $ye;
     public function __construct($aX, $aY, $aWidth, $aHeight)
     {
-        $this->x = $aX;
-        $this->y = $aY;
-        $this->w = $aWidth;
-        $this->h = $aHeight;
+        $this->x  = $aX;
+        $this->y  = $aY;
+        $this->w  = $aWidth;
+        $this->h  = $aHeight;
         $this->xe = $aX + $aWidth - 1;
         $this->ye = $aY + $aHeight - 1;
     }
@@ -50,14 +50,14 @@ class RectPattern
 {
     protected $color;
     protected $weight;
-    protected $rect = null;
+    protected $rect    = null;
     protected $doframe = true;
     protected $linespacing; // Line spacing in pixels
     protected $iBackgroundColor = -1;  // Default is no background fill
 
     public function __construct($aColor, $aWeight = 1)
     {
-        $this->color = $aColor;
+        $this->color  = $aColor;
         $this->weight = $aWeight;
     }
 
@@ -154,7 +154,7 @@ class RectPatternHor extends RectPattern
     {
         $x0 = $this->rect->x;
         $x1 = $this->rect->xe;
-        $y = $this->rect->y;
+        $y  = $this->rect->y;
         while ($y < $this->rect->ye) {
             $aImg->Line($x0, $y, $x1, $y);
             $y += $this->linespacing;
@@ -179,7 +179,7 @@ class RectPatternVert extends RectPattern
     // Private methods
     public function DoPattern($aImg)
     {
-        $x = $this->rect->x;
+        $x  = $this->rect->x;
         $y0 = $this->rect->y;
         $y1 = $this->rect->ye;
         while ($x < $this->rect->xe) {
@@ -239,9 +239,9 @@ class RectPatternRDiag extends RectPattern
         } else {
             // Height larger than width
             $diff = $x0 - $xe;
-            $y0 = $diff + $this->rect->y;
-            $x0 = $xe;
-            $x1 = $this->rect->x;
+            $y0   = $diff + $this->rect->y;
+            $x0   = $xe;
+            $x1   = $this->rect->x;
             while ($y1 <= $ye) {
                 $aImg->Line($x0, $y0, $x1, $y1);
                 $y1 += $this->linespacing;
@@ -249,8 +249,8 @@ class RectPatternRDiag extends RectPattern
             }
 
             $diff = $y1 - $ye;
-            $y1 = $ye;
-            $x1 = $diff + $this->rect->x;
+            $y1   = $ye;
+            $x1   = $diff + $this->rect->x;
         }
 
         while ($y0 <= $ye) {
@@ -309,16 +309,16 @@ class RectPatternLDiag extends RectPattern
         } else {
             // Height larger than width
             $diff = $x0 - $xe;
-            $y0 = $ye - $diff;
-            $x0 = $xe;
+            $y0   = $ye - $diff;
+            $x0   = $xe;
             while ($y1 >= $this->rect->y) {
                 $aImg->Line($x0, $y0, $x1, $y1);
                 $y0 -= $this->linespacing;
                 $y1 -= $this->linespacing;
             }
             $diff = $this->rect->y - $y1;
-            $x1 = $this->rect->x + $diff;
-            $y1 = $this->rect->y;
+            $x1   = $this->rect->x + $diff;
+            $y1   = $this->rect->y;
         }
         while ($y0 >= $this->rect->y) {
             $aImg->Line($x0, $y0, $x1, $y1);
@@ -353,10 +353,10 @@ class RectPattern3DPlane extends RectPattern
     public function DoPattern($aImg)
     {
         // "Fake" a nice 3D grid-effect.
-        $x0 = $this->rect->x + $this->rect->w / 2;
-        $y0 = $this->rect->y;
-        $x1 = $x0;
-        $y1 = $this->rect->ye;
+        $x0       = $this->rect->x + $this->rect->w / 2;
+        $y0       = $this->rect->y;
+        $x1       = $x0;
+        $y1       = $this->rect->ye;
         $x0_right = $x0;
         $x1_right = $x1;
 
@@ -374,30 +374,30 @@ class RectPattern3DPlane extends RectPattern
 
         // Endpoint falls on bottom line
         $middle = $this->rect->x + $this->rect->w / 2;
-        $dist = $this->linespacing;
+        $dist   = $this->linespacing;
         $factor = $this->alpha / ($apa);
         while ($x1 > $this->rect->x) {
             $aImg->Line($x0, $y0, $x1, $y1);
             $aImg->Line($x0_right, $y0, $x1_right, $y1);
-            $x1 = $middle - $dist;
-            $x0 = $middle - $dist * $factor;
+            $x1       = $middle - $dist;
+            $x0       = $middle - $dist * $factor;
             $x1_right = $middle + $dist;
             $x0_right =  $middle + $dist * $factor;
-            $dist += $this->linespacing;
+            $dist    += $this->linespacing;
         }
 
         // Endpoint falls on sides
         $dist -= $this->linespacing;
-        $d = $this->rect->w / 2;
-        $c = $apa - $d * $apa / $dist;
+        $d     = $this->rect->w / 2;
+        $c     = $apa - $d * $apa / $dist;
         while ($x0 > $this->rect->x) {
             $aImg->Line($x0, $y0, $this->rect->x, $this->rect->ye - $c);
             $aImg->Line($x0_right, $y0, $this->rect->xe, $this->rect->ye - $c);
-            $dist += $this->linespacing;
-            $x0 = $middle - $dist * $factor;
-            $x1 = $middle - $dist;
+            $dist    += $this->linespacing;
+            $x0       = $middle - $dist * $factor;
+            $x1       = $middle - $dist;
             $x0_right =  $middle + $dist * $factor;
-            $c = $apa - $d * $apa / $dist;
+            $c        = $apa - $d * $apa / $dist;
         }
 
         // Horizontal lines
@@ -405,7 +405,7 @@ class RectPattern3DPlane extends RectPattern
         // of perspective depth (alpha) and density (linespacing)
         $x0 = $this->rect->x;
         $x1 = $this->rect->xe;
-        $y = $this->rect->ye;
+        $y  = $this->rect->ye;
 
         // The first line is drawn directly. Makes the loop below slightly
         // more readable.
@@ -436,8 +436,8 @@ class RectPattern3DPlane extends RectPattern
         $aImg->PopColor();
         */
 
-        $y -= $vls;
-        $k = ($this->rect->ye - ($this->rect->ye - $vls)) / ($middle - ($middle - $ds));
+        $y   -= $vls;
+        $k    = ($this->rect->ye - ($this->rect->ye - $vls)) / ($middle - ($middle - $ds));
         $dist = $hls;
         while ($y > $this->rect->y) {
             $aImg->Line($this->rect->x, $y, $this->rect->xe, $y);
@@ -445,7 +445,7 @@ class RectPattern3DPlane extends RectPattern
             if ($adj < 2) {
                 $adj = 1;
             }
-            $y = $this->rect->ye - round($adj);
+            $y     = $this->rect->ye - round($adj);
             $dist += $hls;
         }
     }
@@ -458,7 +458,7 @@ class RectPattern3DPlane extends RectPattern
 class RectPatternCross extends RectPattern
 {
     private $vert = null;
-    private $hor = null;
+    private $hor  = null;
     public function __construct($aColor = "black", $aWeight = 1)
     {
         parent::__construct($aColor, $aWeight);
@@ -499,7 +499,7 @@ class RectPatternCross extends RectPattern
 
 class RectPatternDiagCross extends RectPattern
 {
-    private $left = null;
+    private $left  = null;
     private $right = null;
     public function __construct($aColor = "black", $aWeight = 1)
     {
@@ -596,15 +596,15 @@ class PlotBand
 
     public function __construct($aDir, $aPattern, $aMin, $aMax, $aColor = "black", $aWeight = 1, $aDepth = DEPTH_BACK)
     {
-        $f =  new RectPatternFactory();
+        $f           =  new RectPatternFactory();
         $this->prect = $f->Create($aPattern, $aColor, $aWeight);
         if (is_numeric($aMin) && is_numeric($aMax) && ($aMin > $aMax)) {
             JpGraphError::RaiseL(16004);
         }
         //('Min value for plotband is larger than specified max value. Please correct.');
-        $this->dir = $aDir;
-        $this->min = $aMin;
-        $this->max = $aMax;
+        $this->dir   = $aDir;
+        $this->min   = $aMin;
+        $this->max   = $aMax;
         $this->depth = $aDepth;
     }
 
@@ -669,9 +669,9 @@ class PlotBand
                 $this->min = max($this->min, $aYScale->GetMinVal());
                 $this->max = min($this->max, $aYScale->GetMaxVal());
 
-                $x = $aXScale->scale_abs[0];
-                $y = $aYScale->Translate($this->max);
-                $width = $aXScale->scale_abs[1] - $aXScale->scale_abs[0] + 1;
+                $x      = $aXScale->scale_abs[0];
+                $y      = $aYScale->Translate($this->max);
+                $width  = $aXScale->scale_abs[1] - $aXScale->scale_abs[0] + 1;
                 $height = abs($y - $aYScale->Translate($this->min)) + 1;
                 $this->prect->SetPos(new Rectangle($x, $y, $width, $height));
                 $this->prect->Stroke($aImg);
@@ -690,10 +690,10 @@ class PlotBand
                 $this->min = max($this->min, $aXScale->GetMinVal());
                 $this->max = min($this->max, $aXScale->GetMaxVal());
 
-                $y = $aYScale->scale_abs[1];
-                $x = $aXScale->Translate($this->min);
+                $y      = $aYScale->scale_abs[1];
+                $x      = $aXScale->Translate($this->min);
                 $height = abs($aYScale->scale_abs[1] - $aYScale->scale_abs[0]);
-                $width = abs($x - $aXScale->Translate($this->max));
+                $width  = abs($x - $aXScale->Translate($this->max));
                 $this->prect->SetPos(new Rectangle($x, $y, $width, $height));
                 $this->prect->Stroke($aImg);
             }

@@ -51,7 +51,7 @@ class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDup
 
     public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): ?Tracker_Semantic
     {
-        $xml_field = $xml->field;
+        $xml_field            = $xml->field;
         $xml_field_attributes = $xml_field->attributes();
         if (! isset($xml_mapping[(string) $xml_field_attributes['REF']])) {
             return null;
@@ -84,7 +84,7 @@ class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDup
         $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();
         if ($row) {
             $from_title_field_id = $row['field_id'];
-            $to_title_field_id = false;
+            $to_title_field_id   = false;
             foreach ($field_mapping as $mapping) {
                 if ($mapping['from'] == $from_title_field_id) {
                     $to_title_field_id = $mapping['to'];

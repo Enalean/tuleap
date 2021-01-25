@@ -57,9 +57,9 @@ class ExternalLinkRedirectorTest extends TestCase
 
     public function testItShouldDoNothingIfUserIsAnonymous(): void
     {
-        $folder_id = 10;
+        $folder_id      = 10;
         $root_folder_id = 3;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
+        $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
         $this->request->shouldReceive("exist")->with("action")->andReturn(false);
         $this->user->shouldReceive('isAnonymous')->andReturn(true);
@@ -70,9 +70,9 @@ class ExternalLinkRedirectorTest extends TestCase
 
     public function testItShouldNotRedirectWhenUserPreferenceIsForNewDocmanAndRequestIsForDocmanAdministrationUI(): void
     {
-        $folder_id = 10;
+        $folder_id      = 10;
         $root_folder_id = 3;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
+        $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
         $this->request->shouldReceive("exist")->with("action")->andReturn(true);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
@@ -83,9 +83,9 @@ class ExternalLinkRedirectorTest extends TestCase
 
     public function testItShouldRedirectUserWhenShouldRedirectUserIsSetToTrue(): void
     {
-        $folder_id = 10;
+        $folder_id      = 10;
         $root_folder_id = 3;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
+        $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
         $this->request->shouldReceive("exist")->with("action")->andReturn(false);
         $this->request->shouldReceive("exist")->with("group_id")->andReturn(false);
@@ -100,9 +100,9 @@ class ExternalLinkRedirectorTest extends TestCase
 
     public function testItShouldNotRedirectUserWhenShouldRedirectUserIsSetToFalse(): void
     {
-        $folder_id = 10;
+        $folder_id      = 10;
         $root_folder_id = 3;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
+        $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
         $this->request->shouldReceive("exist")->with("action")->andReturn(false);
         $this->request->shouldReceive("exist")->with("group_id")->andReturn(false);
@@ -114,9 +114,9 @@ class ExternalLinkRedirectorTest extends TestCase
 
     public function testItShouldStoreDocumentIdWhenUrlIsForAccessingToASpecificDocument(): void
     {
-        $folder_id = 10;
+        $folder_id      = 10;
         $root_folder_id = 3;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
+        $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
         $this->request->shouldReceive("exist")->with("action")->andReturn(false);
         $this->request->shouldReceive("exist")->with("group_id")->andReturn(102);
@@ -154,9 +154,9 @@ class ExternalLinkRedirectorTest extends TestCase
 
     public function testItShouldStoreDocumentIdAndRedirectToRootWhenUrlIsForAccessingRootDocument(): void
     {
-        $folder_id = 0;
+        $folder_id      = 0;
         $root_folder_id = 3;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
+        $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
         $this->request->shouldReceive("exist")->with("action")->andReturn(false);
         $this->request->shouldReceive("exist")->with("group_id")->andReturn(102);

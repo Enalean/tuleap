@@ -373,7 +373,7 @@ class Tracker_RulesManager
             if (! $request->isPost() || ! $request->get('create_field_dependencies')) {
                 $source_field = $request->get('source_field');
                 $target_field = $request->get('target_field');
-                $tracker_id = $this->tracker->id;
+                $tracker_id   = $this->tracker->id;
 
                 if (
                     $this->isCyclic($tracker_id, $source_field, $target_field) ||
@@ -390,10 +390,10 @@ class Tracker_RulesManager
                 $this->deleteRulesBySourceTarget($this->tracker->id, $request->get('source_field'), $request->get('target_field'));
 
                 //Add dependencies in db
-                $field_source = $this->form_element_factory->getFormElementById($request->get('source_field'));
+                $field_source        = $this->form_element_factory->getFormElementById($request->get('source_field'));
                 $field_source_values = $field_source->getVisibleValuesPlusNoneIfAny();
 
-                $field_target = $this->form_element_factory->getFormElementById($request->get('target_field'));
+                $field_target        = $this->form_element_factory->getFormElementById($request->get('target_field'));
                 $field_target_values = $field_target->getVisibleValuesPlusNoneIfAny();
 
                 $currMatrix = [];
@@ -423,7 +423,7 @@ class Tracker_RulesManager
 
     private function displayChooseSourceAndTarget($engine, $request, $current_user, $source_field_id)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $title = dgettext('tuleap-tracker', 'Manage field dependencies');
         $this->tracker->displayAdminItemHeader($engine, 'dependencies', $title);
 
@@ -480,7 +480,7 @@ class Tracker_RulesManager
             foreach ($sources_targets as $row) {
                 if ($source = $this->form_element_factory->getFormElementById($row['source_field_id'])) {
                     if ($target = $this->form_element_factory->getFormElementById($row['target_field_id'])) {
-                        $d = '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(
+                        $d              = '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(
                             [
                                 'tracker'      => (int) $this->tracker->id,
                                 'func'         => 'admin-dependencies',
@@ -488,8 +488,8 @@ class Tracker_RulesManager
                                 'target_field' => $row['target_field_id'],
                             ]
                         ) . '">';
-                        $d .= $hp->purify($source->getLabel()) . ' &rarr; ' . $hp->purify($target->getLabel());
-                        $d .= '</a>';
+                        $d             .= $hp->purify($source->getLabel()) . ' &rarr; ' . $hp->purify($target->getLabel());
+                        $d             .= '</a>';
                         $dependencies[] = $d;
                     }
                 }
@@ -507,7 +507,7 @@ class Tracker_RulesManager
 
     public function displayDefineDependencies($engine, $request, $current_user, $source_field_id, $target_field_id)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $title = dgettext('tuleap-tracker', 'Define dependencies');
         $this->tracker->displayAdminItemHeader($engine, 'dependencies', $title);
         $source_field = $this->form_element_factory->getFieldById($source_field_id);
@@ -583,12 +583,12 @@ class Tracker_RulesManager
 
     public function displayRulesAsJavascript()
     {
-        $html = '<script type="text/javascript">';
+        $html  = '<script type="text/javascript">';
         $html .= "\n//------------------------------------------------------\n";
         $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
-                $trvv = new Tracker_Rule_List_View($rules[$key]);
+                $trvv  = new Tracker_Rule_List_View($rules[$key]);
                 $html .= 'tuleap.tracker.rules_definitions.push(';
                 $html .= $trvv->fetchJavascript();
                 $html .= ");\n";
@@ -602,10 +602,10 @@ class Tracker_RulesManager
     /** @return bool */
     public function isUsedInFieldDependency(Tracker_FormElement $field)
     {
-        $field_id = $field->getId();
+        $field_id   = $field->getId();
         $list_rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->getId());
         $date_rules = $this->getAllDateRulesByTrackerId($this->tracker->getId());
-        $rules = array_merge($list_rules, $date_rules);
+        $rules      = array_merge($list_rules, $date_rules);
         foreach ($rules as $rule) {
             if ($rule->isUsedInRule($field->getId())) {
                 return true;

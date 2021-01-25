@@ -36,7 +36,7 @@ final class MiddlewareDispatcherTest extends TestCase
 
     public function testRequestIsDispatched(): void
     {
-        $passthrough_middleware = new class implements MiddlewareInterface {
+        $passthrough_middleware        = new class implements MiddlewareInterface {
             public function process(
                 ServerRequestInterface $request,
                 RequestHandlerInterface $handler
@@ -55,7 +55,7 @@ final class MiddlewareDispatcherTest extends TestCase
             $response_generator_middleware,
             $never_called_middleware
         );
-        $response = $dispatcher->handle(Mockery::mock(ServerRequestInterface::class));
+        $response   = $dispatcher->handle(Mockery::mock(ServerRequestInterface::class));
         $this->assertSame($expected_response, $response);
     }
 

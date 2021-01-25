@@ -45,22 +45,22 @@ require_once('lib/XmlParser.php');
 class RSSParser extends XmlParser
 {
 
-    public $title = "";
-    public $link  = "";
+    public $title       = "";
+    public $link        = "";
     public $description = "";
     public $inside_item = false;
-    public $list_items = false;
-    public $item  = [];
+    public $list_items  = false;
+    public $item        = [];
     public $items;
     public $channel;
     public $divers = "";
-    public $date = "";
+    public $date   = "";
 
     public function tag_open($parser, $name, $attrs = '')
     {
         global $current_tag, $current_attrs;
 
-        $current_tag = $name;
+        $current_tag   = $name;
         $current_attrs = $attrs;
         if ($name == "ITEM") {
             $this->inside_item = true;
@@ -77,43 +77,43 @@ class RSSParser extends XmlParser
 
         if ($tagName == "ITEM") {
             if (empty($this->items)) {
-                $this->items = [];
+                $this->items                 = [];
                 $GLOBALS['rss_parser_items'] = $this->items;
             } elseif (! empty($this->items[0]['link']) and $this->items[0]['title'] == '') {
                 // override the initial <items> list with detailed <item>'s
-                $this->items = [];
+                $this->items                 = [];
                 $GLOBALS['rss_parser_items'] = $this->items;
             }
-            $this->items[] = ["title"       => $this->item['TITLE'],
+            $this->items[]     = ["title"       => $this->item['TITLE'],
                                    "description" => @$this->item['DESCRIPTION'],
                                    "link"        => $this->item['LINK']];
-            $this->item = ["TITLE"       => "",
+            $this->item        = ["TITLE"       => "",
                                 "DESCRIPTION" => "",
                                 "LINK"        => ""];
             $this->inside_item = false;
         } elseif ($tagName == "IMAGE") {
-            $this->item = ["TITLE"       => "",
+            $this->item        = ["TITLE"       => "",
                                 "DESCRIPTION" => "",
                                 "LINK"        => ""];
             $this->inside_item = false;
         } elseif ($tagName == "CHANNEL") {
-            $this->channel = ["title" => $this->title,
+            $this->channel                 = ["title" => $this->title,
                                    "description" => $this->description,
                                    "link" => $this->link,
                                    "date" => $this->date,
                                    "divers" => $this->divers];
             $GLOBALS['rss_parser_channel'] = $this->channel;
-            $this->title       = "";
-            $this->description = "";
-            $this->link        = "";
-            $this->divers      = "";
-            $this->date        = "";
+            $this->title                   = "";
+            $this->description             = "";
+            $this->link                    = "";
+            $this->divers                  = "";
+            $this->date                    = "";
         } elseif ($tagName == "ITEMS") {
             $GLOBALS['rss_parser_items'] = $this->items;
-            $this->item = ["TITLE"       => "",
+            $this->item                  = ["TITLE"       => "",
                                 "DESCRIPTION" => "",
                                 "LINK"        => ""];
-            $this->list_items = false;
+            $this->list_items            = false;
         }
     }
 

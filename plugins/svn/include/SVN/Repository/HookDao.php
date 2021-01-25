@@ -46,7 +46,7 @@ class HookDao extends DataAccessObject
             $vals[]   = $this->da->quoteSmart((bool) $value);
         }
 
-        $sql = "INSERT INTO plugin_svn_hook_config";
+        $sql  = "INSERT INTO plugin_svn_hook_config";
         $sql .= " (repository_id, " . implode(", ", $cols) . ")";
         $sql .= " VALUES ($id, " . implode(", ", $vals) . ")";
         $sql .= " ON DUPLICATE KEY UPDATE " . implode(", ", $update) . ";";

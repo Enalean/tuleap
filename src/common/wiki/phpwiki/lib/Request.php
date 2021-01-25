@@ -299,12 +299,12 @@ class Request
     {
         if ($strategy == 'NO_CACHE') {
             $cache_control = "no-cache"; // better set private. See Pear HTTP_Header
-            $max_age = -20;
+            $max_age       = -20;
         } elseif ($strategy == 'ALLOW_STALE' && $max_age > 0) {
             $cache_control = sprintf("max-age=%d", $max_age);
         } else {
             $cache_control = "must-revalidate";
-            $max_age = -20;
+            $max_age       = -20;
         }
         header("Cache-Control: $cache_control");
         header("Expires: " . Rfc1123DateTime(time() + $max_age));
@@ -420,7 +420,7 @@ class Request
             $this->_is_compressing_output = false;
         }
         $this->_is_buffering_output = true;
-        $this->_ob_get_length = 0;
+        $this->_ob_get_length       = 0;
     }
 
     public function discardOutput()
@@ -717,7 +717,7 @@ class Request_UploadedFile
 
     public function getContents()
     {
-        $fd = $this->open();
+        $fd   = $this->open();
         $data = fread($fd, $this->getSize());
         fclose($fd);
         return $data;
@@ -728,7 +728,7 @@ class HTTP_ETag
 {
     public function __construct($val, $is_weak = false)
     {
-        $this->_val = wikihash($val);
+        $this->_val  = wikihash($val);
         $this->_weak = $is_weak;
     }
 
@@ -788,8 +788,8 @@ class HTTP_ETag
             )
         ) {
             list($match, $weak, $str) = $m;
-            $taglist = substr($taglist, strlen($match));
-            $tag = new HTTP_ETag(stripslashes($str), $weak);
+            $taglist                  = substr($taglist, strlen($match));
+            $tag                      = new HTTP_ETag(stripslashes($str), $weak);
             if ($this->equals($tag, $strong_match)) {
                 return true;
             }
@@ -810,7 +810,7 @@ class HTTP_ValidatorSet
     public function __construct($validators)
     {
         $this->_mtime = $this->_weak = false;
-        $this->_tag = [];
+        $this->_tag   = [];
 
         foreach ($validators as $key => $val) {
             if ($key == '%mtime') {
@@ -922,7 +922,7 @@ class HTTP_ValidatorSet
     public function _checkIfNoneMatch(&$request)
     {
         if ($this->_tag && ($taglist = $request->get("HTTP_IF_NONE_MATCH"))) {
-            $tag = $this->getETag();
+            $tag            = $this->getETag();
             $strong_compare = ! $request->isGetOrHead();
             if ($taglist) {
                 if ($tag->matches($taglist, $strong_compare)) {

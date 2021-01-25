@@ -37,8 +37,8 @@ class FrozenFieldsRepresentation extends PostActionRepresentation
      */
     private function __construct(int $id, array $field_ids)
     {
-        $this->id   = $id;
-        $this->type = FrozenFields::SHORT_NAME;
+        $this->id        = $id;
+        $this->type      = FrozenFields::SHORT_NAME;
         $this->field_ids = $field_ids;
     }
 

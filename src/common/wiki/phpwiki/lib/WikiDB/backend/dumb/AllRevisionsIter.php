@@ -19,8 +19,8 @@ class WikiDB_backend_dumb_AllRevisionsIter extends WikiDB_backend_iterator
      */
     public function __construct(&$backend, $pagename)
     {
-        $this->_backend = &$backend;
-        $this->_pagename = $pagename;
+        $this->_backend     = &$backend;
+        $this->_pagename    = $pagename;
         $this->_lastversion = -1;
     }
 
@@ -31,9 +31,9 @@ class WikiDB_backend_dumb_AllRevisionsIter extends WikiDB_backend_iterator
      */
     public function next()
     {
-        $backend = &$this->_backend;
+        $backend  = &$this->_backend;
         $pagename = &$this->_pagename;
-        $version = &$this->_lastversion;
+        $version  = &$this->_lastversion;
 
         //$backend->lock();
         if ($this->_lastversion == -1) {

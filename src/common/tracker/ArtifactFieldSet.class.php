@@ -88,7 +88,7 @@ class ArtifactFieldSet
         // set the attributes of this fieldset
         $this->setFromArray($res);
         // attach the fields of this fieldset
-        $art_field_fact = new ArtifactFieldFactory($ArtifactType);
+        $art_field_fact       = new ArtifactFieldFactory($ArtifactType);
         $this->ArtifactFields = $art_field_fact->getFieldsContainedInFieldSet($this->getID());
         db_free_result($res);
         return true;
@@ -102,11 +102,11 @@ class ArtifactFieldSet
      */
     public function setFromArray($fieldset_array)
     {
-        $this->field_set_id = $fieldset_array['field_set_id'];
+        $this->field_set_id      = $fieldset_array['field_set_id'];
         $this->group_artifact_id = $fieldset_array['group_artifact_id'];
-        $this->name = $fieldset_array['name'];
-        $this->description = $fieldset_array['description'];
-        $this->rank = $fieldset_array['rank'];
+        $this->name              = $fieldset_array['name'];
+        $this->description       = $fieldset_array['description'];
+        $this->rank              = $fieldset_array['rank'];
     }
 
     /**
@@ -287,7 +287,7 @@ class ArtifactFieldSet
     {
         $um = UserManager::instance();
         if (! $user_id) {
-            $user = $um->getCurrentUser();
+            $user    = $um->getCurrentUser();
             $user_id = $user->getId();
         } else {
             $user = $um->getUserById($user_id);
@@ -295,7 +295,7 @@ class ArtifactFieldSet
         if ($user->isSuperUser()) {
             $ok = true;
         } else {
-            $ok = false;
+            $ok     = false;
             $fields = $this->getAllUsedFields();
             foreach ($fields as $field) {
                 if ($ok) {

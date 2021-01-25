@@ -42,7 +42,7 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         $user_manager   = \Mockery::mock(UserManager::class);
         $current_user   = \Mockery::mock(\PFUser::class);
         $user_manager->shouldReceive('getCurrentUser')->andReturn($current_user);
-        $data_store     = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
+        $data_store = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456,
@@ -105,9 +105,9 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
 
     public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase(): void
     {
-        $dao           = \Mockery::mock(DocumentOngoingUploadDAO::class);
-        $item_factory  = \Mockery::mock(\Docman_ItemFactory::class);
-        $data_store    = new DocumentBeingUploadedInformationProvider(
+        $dao          = \Mockery::mock(DocumentOngoingUploadDAO::class);
+        $item_factory = \Mockery::mock(\Docman_ItemFactory::class);
+        $data_store   = new DocumentBeingUploadedInformationProvider(
             new UploadPathAllocator('/var/tmp'),
             $dao,
             $item_factory

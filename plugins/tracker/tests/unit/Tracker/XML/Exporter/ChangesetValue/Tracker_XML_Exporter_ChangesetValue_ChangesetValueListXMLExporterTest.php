@@ -45,7 +45,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTes
     protected function setUp(): void
     {
         parent::setUp();
-        $this->exporter = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(
+        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(
             new FieldChangeListBuilder(
                 new XML_SimpleXMLCDATAFactory(),
                 \Mockery::spy(\UserXMLExporter::class)

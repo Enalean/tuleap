@@ -57,7 +57,7 @@ class LegacyReferenceAdministrationBrowsingRenderer
 
     public function render(\Project $project): void
     {
-        $project_id = $project->getID();
+        $project_id          = $project->getID();
         $is_template_project = ((int) $project_id === \Project::ADMIN_PROJECT_ID);
 
         if ($is_template_project) {

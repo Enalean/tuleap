@@ -33,7 +33,7 @@ final class HierarchySaverTest extends TestCase
 
     public function testItSavesHierarchy(): void
     {
-        $dao = \Mockery::mock(HierarchyDAO::class);
+        $dao   = \Mockery::mock(HierarchyDAO::class);
         $saver = new HierarchySaver($dao);
 
         $hierarchy = new Hierarchy(1, [30, 40]);

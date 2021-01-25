@@ -32,8 +32,8 @@ class CanvasScale
 
     public function __construct($graph, $xmin = 0, $xmax = 10, $ymin = 0, $ymax = 10)
     {
-        $this->w = $graph->img->width;
-        $this->h = $graph->img->height;
+        $this->w     = $graph->img->width;
+        $this->h     = $graph->img->height;
         $this->ixmin = $xmin;
         $this->ixmax = $xmax;
         $this->iymin = $ymin;
@@ -111,7 +111,7 @@ class Shape
     {
         $n = count($p);
         for ($i = 0; $i < $n; $i += 2) {
-            $p[$i]   = $this->scale->TranslateX($p[$i]);
+            $p[$i]     = $this->scale->TranslateX($p[$i]);
             $p[$i + 1] = $this->scale->TranslateY($p[$i + 1]);
         }
         $this->img->Polygon($p, $aClosed);
@@ -121,7 +121,7 @@ class Shape
     {
         $n = count($p);
         for ($i = 0; $i < $n; $i += 2) {
-            $p[$i]   = $this->scale->TranslateX($p[$i]);
+            $p[$i]     = $this->scale->TranslateX($p[$i]);
             $p[$i + 1] = $this->scale->TranslateY($p[$i + 1]);
         }
         $this->img->FilledPolygon($p);
@@ -152,10 +152,10 @@ class Shape
         $x_old = $x0;
         $y_old = $y0;
         for ($t = $delta; $t <= 1.0; $t += $delta) {
-            $tt = $t * $t;
+            $tt  = $t * $t;
             $ttt = $tt * $t;
-            $x  = $ax * $ttt + $bx * $tt + $cx * $t + $x0;
-            $y = $ay * $ttt + $by * $tt + $cy * $t + $y0;
+            $x   = $ax * $ttt + $bx * $tt + $cx * $t + $x0;
+            $y   = $ay * $ttt + $by * $tt + $cy * $t + $y0;
             $this->Line($x_old, $y_old, $x, $y);
             $x_old = $x;
             $y_old = $y;
@@ -166,14 +166,14 @@ class Shape
     public function Rectangle($x1, $y1, $x2, $y2)
     {
         list($x1,$y1) = $this->scale->Translate($x1, $y1);
-        list($x2,$y2)   = $this->scale->Translate($x2, $y2);
+        list($x2,$y2) = $this->scale->Translate($x2, $y2);
         $this->img->Rectangle($x1, $y1, $x2, $y2);
     }
 
     public function FilledRectangle($x1, $y1, $x2, $y2)
     {
         list($x1,$y1) = $this->scale->Translate($x1, $y1);
-        list($x2,$y2)   = $this->scale->Translate($x2, $y2);
+        list($x2,$y2) = $this->scale->Translate($x2, $y2);
         $this->img->FilledRectangle($x1, $y1, $x2, $y2);
     }
 
@@ -181,7 +181,7 @@ class Shape
     {
         list($x1,$y1) = $this->scale->Translate($x1, $y1);
         if ($r >= 0) {
-            $r   = $this->scale->TranslateX($r);
+            $r = $this->scale->TranslateX($r);
         } else {
             $r = -$r;
         }
@@ -192,7 +192,7 @@ class Shape
     {
         list($x1,$y1) = $this->scale->Translate($x1, $y1);
         if ($r >= 0) {
-            $r   = $this->scale->TranslateX($r);
+            $r = $this->scale->TranslateX($r);
         } else {
             $r = -$r;
         }
@@ -202,7 +202,7 @@ class Shape
     public function RoundedRectangle($x1, $y1, $x2, $y2, $r = null)
     {
         list($x1,$y1) = $this->scale->Translate($x1, $y1);
-        list($x2,$y2)   = $this->scale->Translate($x2, $y2);
+        list($x2,$y2) = $this->scale->Translate($x2, $y2);
 
         if ($r == null) {
             $r = 5;
@@ -217,7 +217,7 @@ class Shape
     public function FilledRoundedRectangle($x1, $y1, $x2, $y2, $r = null)
     {
         list($x1,$y1) = $this->scale->Translate($x1, $y1);
-        list($x2,$y2)   = $this->scale->Translate($x2, $y2);
+        list($x2,$y2) = $this->scale->Translate($x2, $y2);
 
         if ($r == null) {
             $r = 5;
@@ -418,21 +418,21 @@ class CanvasRectangleText
     private $ih;
     private $ir = 4;
     private $iTxt;
-    private $iColor = 'black';
-    private $iFillColor = '';
-    private $iFontColor = 'black';
-    private $iParaAlign = 'center';
+    private $iColor         = 'black';
+    private $iFillColor     = '';
+    private $iFontColor     = 'black';
+    private $iParaAlign     = 'center';
     private $iAutoBoxMargin = 5;
-    private $iShadowWidth = 3;
-    private $iShadowColor = '';
+    private $iShadowWidth   = 3;
+    private $iShadowColor   = '';
 
     public function __construct($aTxt = '', $xl = 0, $yt = 0, $w = 0, $h = 0)
     {
         $this->iTxt = new Text($aTxt);
-        $this->ix = $xl;
-        $this->iy = $yt;
-        $this->iw = $w;
-        $this->ih = $h;
+        $this->ix   = $xl;
+        $this->iy   = $yt;
+        $this->iw   = $w;
+        $this->ih   = $h;
     }
 
     public function SetShadow($aColor = 'gray', $aWidth = 3)

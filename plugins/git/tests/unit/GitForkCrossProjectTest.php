@@ -54,13 +54,13 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturns($groupId);
         $forkPermissions = [];
-        $toProjectId = 100;
-        $toProject = \Mockery::spy(\Project::class);
+        $toProjectId     = 100;
+        $toProject       = \Mockery::spy(\Project::class);
         $toProject->shouldReceive('getId')->andReturns($toProjectId);
         $toProject->shouldReceive('getUnixNameLowerCase')->andReturns('toproject');
 
-        $repo  = new GitRepository();
-        $repos = [$repo];
+        $repo     = new GitRepository();
+        $repos    = [$repo];
         $repo_ids = '200';
 
         $user = \Mockery::spy(\PFUser::class);
@@ -137,7 +137,7 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
 
     public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks(): void
     {
-        $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git       = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $exception = new \Exception();
         $git->shouldReceive('checkSynchronizerToken')->andThrows($exception);
         $this->expectExceptionObject($exception);
@@ -152,7 +152,7 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
 
         $user = \Mockery::spy(\PFUser::class);
 
-        $to_project = Mockery::mock(Project::class);
+        $to_project      = Mockery::mock(Project::class);
         $project_manager = Mockery::mock(ProjectManager::class);
         $project_manager->shouldReceive('getProject')->with(666)->andReturn($to_project);
 

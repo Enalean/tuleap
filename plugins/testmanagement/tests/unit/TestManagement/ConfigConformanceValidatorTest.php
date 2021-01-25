@@ -94,10 +94,10 @@ class ConfigConformanceAsserterTest extends TestCase
         $this->user = Mockery::spy(\PFUser::class);
         $this->user->shouldReceive('getId')->andReturn($this->user_id);
 
-        $this->campaign_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->definition_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->execution_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->another_execution_artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->campaign_artifact           = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->definition_artifact         = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->execution_artifact          = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->another_execution_artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact_outside_of_project = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
 
         $this->campaign_artifact->shouldReceive('getTracker')->andReturn($campaign_tracker);

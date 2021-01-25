@@ -71,7 +71,7 @@ class WikiPlugin_AllPages extends WikiPlugin
     // 2004-07-08 22:05:35 rurban: turned off &$request to prevent from strange bug below
     public function run($dbi, $argstr, $request, $basepage)
     {
-        $args = $this->getArgs($argstr, $request);
+        $args  = $this->getArgs($argstr, $request);
         $pages = false;
         // Todo: extend given _GET args
         if ($args['debug']) {

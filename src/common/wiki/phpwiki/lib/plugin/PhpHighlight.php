@@ -124,7 +124,7 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
          */
         foreach ([$string, $comment, $keyword, $bg, $default, $html] as $color) {
             $search = "<font color=\"$color\"></font>";
-            $str = str_replace($search, '', $str);
+            $str    = str_replace($search, '', $str);
         }
 
         /* restore default colors in case of multiple invocations of
@@ -175,11 +175,11 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
     public function set_colors($string, $comment, $keyword, $bg, $default, $html)
     {
         // set highlight colors
-        $this->oldstring = ini_set('highlight.string', $string);
+        $this->oldstring  = ini_set('highlight.string', $string);
         $this->oldcomment = ini_set('highlight.comment', $comment);
         $this->oldkeyword = ini_set('highlight.keyword', $keyword);
         $this->olddefault = ini_set('highlight.default', $default);
-        $this->oldhtml = ini_set('highlight.html', $html);
+        $this->oldhtml    = ini_set('highlight.html', $html);
     }
 
     public function restore_colors()

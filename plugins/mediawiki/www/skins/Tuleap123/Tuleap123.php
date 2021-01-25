@@ -29,24 +29,24 @@ class SkinTuleap123 extends SkinTemplate
     public const MEDIAWIKI_URL = '/\/plugins\/mediawiki\/wiki\/(.*)\/index.php\//';
 
     /** Using fusionforge. */
-    public $skinname = 'tuleap123';
-    public $stylename = 'tuleap123';
-    public $template = 'Tuleap123Template';
+    public $skinname       = 'tuleap123';
+    public $stylename      = 'tuleap123';
+    public $template       = 'Tuleap123Template';
     public $useHeadElement = true;
 
     public function setupTemplate($classname, $repository = false, $cache_dir = false)
     {
-            $tc = new $classname();
+            $tc         = new $classname();
             $tc->params = [];
         if (
             ($tc->project = $project =
                 group_get_object_by_name($GLOBALS['fusionforgeproject']))
         ) {
-                $tc->params['group'] = $GLOBALS['group_id'] =
+                $tc->params['group']  = $GLOBALS['group_id'] =
                     $project->getID();
                 $tc->params['toptab'] = 'plugin_mediawiki';
                 //$page_name = substr($_SERVER['REQUEST_URI'], (strpos($_SERVER['REQUEST_URI'], 'index.php/') + strlen('index.php/')), strlen($_SERVER['REQUEST_URI']));
-                $page_name = preg_replace(self::MEDIAWIKI_URL, '', $_SERVER['REQUEST_URI']);
+                $page_name           = preg_replace(self::MEDIAWIKI_URL, '', $_SERVER['REQUEST_URI']);
                 $tc->params['title'] = 'Mediawiki-' . $page_name;
         }
 
@@ -126,7 +126,7 @@ class Tuleap123Template extends BaseTemplate
                     new User_ForgeUserGroupPermissionsDao(),
                 ),
             );
-            $breadcrumbs = $breadcrumb_builder->getBreadcrumbs(
+            $breadcrumbs        = $breadcrumb_builder->getBreadcrumbs(
                 $GLOBALS['group'],
                 UserManager::instance()->getCurrentUser(),
             );
@@ -246,8 +246,8 @@ class Tuleap123Template extends BaseTemplate
 
     private function IsUserAdmin()
     {
-        $pfuser             = UserManager::instance()->getCurrentUser();
-        $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
+        $pfuser                 = UserManager::instance()->getCurrentUser();
+        $forge_user_manager     = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );
         $has_special_permission = $forge_user_manager->doesUserHavePermission(
@@ -273,7 +273,7 @@ class Tuleap123Template extends BaseTemplate
     private function getMediawikiManager()
     {
         $plugin_manager = PluginManager::instance();
-        $mw_plugin = $plugin_manager->getPluginByName('mediawiki');
+        $mw_plugin      = $plugin_manager->getPluginByName('mediawiki');
         if ($mw_plugin && $plugin_manager->isPluginAvailable($mw_plugin)) {
             return $mw_plugin->getMediawikiManager();
         }
@@ -441,7 +441,7 @@ class Tuleap123Template extends BaseTemplate
     public function customBox($bar, $cont)
     {
         $portletAttribs = ['class' => 'generated-sidebar portlet', 'id' => Sanitizer::escapeId("p-$bar"), 'role' => 'navigation'];
-        $tooltip = Linker::titleAttrib("p-$bar");
+        $tooltip        = Linker::titleAttrib("p-$bar");
         if ($tooltip !== false) {
             $portletAttribs['title'] = $tooltip;
         }

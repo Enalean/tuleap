@@ -50,9 +50,9 @@ class NaturePresenter
 
     public function __construct(string $shortname, string $forward_label, string $reverse_label, bool $is_visible)
     {
-        $this->shortname           = $shortname;
-        $this->forward_label       = $forward_label;
-        $this->reverse_label       = $reverse_label;
-        $this->is_visible          = $is_visible;
+        $this->shortname     = $shortname;
+        $this->forward_label = $forward_label;
+        $this->reverse_label = $reverse_label;
+        $this->is_visible    = $is_visible;
     }
 }

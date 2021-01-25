@@ -48,7 +48,7 @@ class PermissionsManagerSavePermissionsFeebackOverlapingTest extends TestCase
         $this->permission_type     = 'FOO';
         $this->object_id           = 'BAR';
         $this->permissions_manager = new PermissionsManager($this->permissions_dao);
-        $this->normalizer = new PermissionsNormalizer();
+        $this->normalizer          = new PermissionsNormalizer();
         $this->permissions_dao->shouldReceive('clearPermission')->andReturns(true);
         $this->permissions_dao->shouldReceive('addPermission')->andReturns(true);
     }

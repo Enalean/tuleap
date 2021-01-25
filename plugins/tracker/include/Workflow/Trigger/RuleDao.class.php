@@ -24,7 +24,7 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject
     public function searchForTargetByRuleId($rule_id)
     {
         $rule_id = $this->da->escapeInt($rule_id);
-        $sql = "SELECT field.id as field_id, rule.*
+        $sql     = "SELECT field.id as field_id, rule.*
                 FROM tracker_workflow_trigger_rule_static_value rule
                   INNER JOIN tracker_field_list_bind_static_value lbsv ON (lbsv.id = rule.value_id)
                   INNER JOIN tracker_field field ON (field.id = lbsv.field_id)
@@ -35,7 +35,7 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject
     public function searchForTargetTracker($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT field.id as field_id, rule.*
+        $sql        = "SELECT field.id as field_id, rule.*
                 FROM tracker_workflow_trigger_rule_static_value rule
                   INNER JOIN tracker_field_list_bind_static_value lbsv ON (lbsv.id = rule.value_id)
                   INNER JOIN tracker_field field ON (field.id = lbsv.field_id)
@@ -46,7 +46,7 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject
     public function searchTriggeringTrackersByTargetTrackerID(int $target_tracker_id)
     {
         $target_tracker_id = $this->da->escapeInt($target_tracker_id);
-        $sql = "SELECT DISTINCT trigger_field.tracker_id
+        $sql               = "SELECT DISTINCT trigger_field.tracker_id
                 FROM tracker_workflow_trigger_rule_static_value AS rule
                 JOIN tracker_field_list_bind_static_value AS target_lbsv ON (target_lbsv.id = rule.value_id)
                 JOIN tracker_field AS target_field ON (target_field.id = target_lbsv.field_id)
@@ -61,7 +61,7 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject
     {
         $field_id = $this->da->escapeInt($field_id);
 
-        $sql     = "SELECT rule_tracker_child.field_id AS field_id
+        $sql = "SELECT rule_tracker_child.field_id AS field_id
                     FROM tracker_workflow_trigger_rule_trg_field_static_value AS triggering_field
                     INNER JOIN tracker_field_list_bind_static_value AS rule_tracker_child
                       ON (rule_tracker_child.id = triggering_field.value_id)
@@ -78,7 +78,7 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject
     public function searchForTriggeringFieldByRuleId($rule_id)
     {
         $rule_id = $this->da->escapeInt($rule_id);
-        $sql = "SELECT lbsv.field_id, triggering_field.*
+        $sql     = "SELECT lbsv.field_id, triggering_field.*
                 FROM tracker_workflow_trigger_rule_trg_field_static_value triggering_field
                     INNER JOIN tracker_field_list_bind_static_value lbsv ON (lbsv.id = triggering_field.value_id)
                 WHERE rule_id = $rule_id";
@@ -89,22 +89,22 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject
     {
         $value_id  = $this->da->escapeInt($value_id);
         $condition = $this->da->quoteSmart($condition);
-        $sql = 'INSERT INTO tracker_workflow_trigger_rule_static_value (value_id, rule_condition) VALUES (' . $value_id . ', ' . $condition . ')';
+        $sql       = 'INSERT INTO tracker_workflow_trigger_rule_static_value (value_id, rule_condition) VALUES (' . $value_id . ', ' . $condition . ')';
         return $this->updateAndGetLastId($sql);
     }
 
     public function addTriggeringField($rule_id, $value_id)
     {
         $rule_id  = $this->da->escapeInt($rule_id);
-        $value_id  = $this->da->escapeInt($value_id);
-        $sql = 'INSERT INTO tracker_workflow_trigger_rule_trg_field_static_value (rule_id, value_id) VALUES (' . $rule_id . ', ' . $value_id . ')';
+        $value_id = $this->da->escapeInt($value_id);
+        $sql      = 'INSERT INTO tracker_workflow_trigger_rule_trg_field_static_value (rule_id, value_id) VALUES (' . $rule_id . ', ' . $value_id . ')';
         return $this->updateAndGetLastId($sql);
     }
 
     public function deleteTriggeringFieldsByRuleId($rule_id)
     {
         $rule_id = $this->da->escapeInt($rule_id);
-        $sql = "DELETE FROM tracker_workflow_trigger_rule_static_value
+        $sql     = "DELETE FROM tracker_workflow_trigger_rule_static_value
                 WHERE id = $rule_id";
         return $this->update($sql);
     }
@@ -112,7 +112,7 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject
     public function deleteTargetByRuleId($rule_id)
     {
         $rule_id = $this->da->escapeInt($rule_id);
-        $sql = "DELETE FROM tracker_workflow_trigger_rule_trg_field_static_value
+        $sql     = "DELETE FROM tracker_workflow_trigger_rule_trg_field_static_value
                 WHERE rule_id = $rule_id";
         return $this->update($sql);
     }

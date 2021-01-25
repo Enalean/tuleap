@@ -28,7 +28,7 @@ class Docman_FileStorage
     public $root;
     public function __construct($root)
     {
-        $this->root       = $root;
+        $this->root = $root;
     }
 
     public function upload($file, $group_id, $item_id, $version_number)
@@ -105,13 +105,13 @@ class Docman_FileStorage
     */
     public function _getPath($name, $group_id, $item_id, $version_number)
     {
-        $name = preg_replace('`[^a-z0-9_-]`i', '_', $name);
-        $name = preg_replace('`_{2,}`', '_', $name);
+        $name  = preg_replace('`[^a-z0-9_-]`i', '_', $name);
+        $name  = preg_replace('`_{2,}`', '_', $name);
         $hash1 = $item_id % 10;
         $hash2 = ( ($item_id - $hash1) / 10) % 10;
 
         $path_elements = [$this->root, $this->_getGroupName($group_id), $hash2, $hash1, $item_id, $version_number];
-        $path = '';
+        $path          = '';
         foreach ($path_elements as $elem) {
             $path .= $elem . '/';
             if (! is_dir($path)) {
@@ -127,7 +127,7 @@ class Docman_FileStorage
 
     public function _getGroupName($id)
     {
-        $pm = ProjectManager::instance();
+        $pm    = ProjectManager::instance();
         $group = $pm->getProject($id);
         return $group->getUnixName();
     }

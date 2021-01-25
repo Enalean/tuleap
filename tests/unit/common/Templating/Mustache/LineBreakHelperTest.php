@@ -38,7 +38,7 @@ final class LineBreakHelperTest extends TestCase
                 return $string;
             }
         };
-        $helper = new LineBreakHelper();
+        $helper        = new LineBreakHelper();
         self::assertEquals("L1<br />\nL2", $helper->nl2br("L1\nL2", $lambda_helper));
     }
 }

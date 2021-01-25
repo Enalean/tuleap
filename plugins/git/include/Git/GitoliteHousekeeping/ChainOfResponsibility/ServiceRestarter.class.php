@@ -35,8 +35,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter extends Gi
         BackendService $backend_service
     ) {
         parent::__construct();
-        $this->response         = $response;
-        $this->backend_service  = $backend_service;
+        $this->response        = $response;
+        $this->backend_service = $backend_service;
     }
 
     public function execute()

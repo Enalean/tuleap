@@ -38,7 +38,7 @@ class Docman_MetadataHtmlLink extends \Docman_MetadataHtml
     }
     public function &getValidator()
     {
-        $msg = \dgettext('tuleap-docman', 'The URL is required.');
+        $msg       = \dgettext('tuleap-docman', 'The URL is required.');
         $validator = new \Docman_ValidateValueNotEmpty($this->link_url, $msg);
         return $validator;
     }

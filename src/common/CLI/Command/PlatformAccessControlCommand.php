@@ -40,7 +40,7 @@ use UGroupDao;
 
 class PlatformAccessControlCommand extends Command
 {
-    public const NAME = '--platform-access-control';
+    public const NAME                    = '--platform-access-control';
     public const ACCESS_CONTROL_ARGUMENT = 'access_control_level';
 
     protected function configure()
@@ -52,7 +52,7 @@ class PlatformAccessControlCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $current_platform_access_value = ForgeConfig::get(ForgeAccess::CONFIG);
-        $new_access_value = $input->getArgument(self::ACCESS_CONTROL_ARGUMENT);
+        $new_access_value              = $input->getArgument(self::ACCESS_CONTROL_ARGUMENT);
         if ($new_access_value === null) {
             $output->writeln($current_platform_access_value);
             return 0;

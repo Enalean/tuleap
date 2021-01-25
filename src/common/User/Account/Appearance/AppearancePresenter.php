@@ -151,13 +151,13 @@ final class AppearancePresenter
         $this->username_display_value_login          = \UserHelper::PREFERENCES_LOGIN;
         $this->username_display_value_realname       = \UserHelper::PREFERENCES_REAL_NAME;
 
-        $presenter_builder = new RelativeDatesDisplayPreferencesSelectboxPresenterBuilder();
+        $presenter_builder                                    = new RelativeDatesDisplayPreferencesSelectboxPresenterBuilder();
         $this->relative_dates_display_preference_sb_presenter = $presenter_builder->build($relative_dates_display);
 
         $five_days_ago_timestamp = (new \DateTimeImmutable())->sub(
             new \DateInterval('P5D')
         )->getTimestamp();
-        $date_five_days_ago = date($GLOBALS['Language']->getText('system', 'datefmt_short'), $five_days_ago_timestamp);
+        $date_five_days_ago      = date($GLOBALS['Language']->getText('system', 'datefmt_short'), $five_days_ago_timestamp);
 
         if ($date_five_days_ago) {
             $this->date_for_preview = $date_five_days_ago;

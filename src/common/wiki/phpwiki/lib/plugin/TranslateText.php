@@ -88,8 +88,8 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
                 );
             } else {
                 //save translation in a users subpage
-                $user = $request->getUser();
-                $homepage = $user->_HomePagehandle;
+                $user          = $request->getUser();
+                $homepage      = $user->_HomePagehandle;
                 $transpagename = $homepage->getName() . SUBPAGE_SEPARATOR . _("ContributedTranslations");
 
                 $page    = $dbi->getPage($transpagename);
@@ -103,14 +103,14 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
                     $meta = ['markup' => 2.0,
                                   'author' => $user->getId()];
                 }
-                $text .= $user->getId() . " " . Iso8601DateTime() . "\n" .
+                $text           .= $user->getId() . " " . Iso8601DateTime() . "\n" .
                          "* " . sprintf(
                              _("Translate '%s' to '%s' in *%s*"),
                              $pagename,
                              $trans,
                              $lang
                          );
-                $text .= "\n  <verbatim>locale/po/$lang.po:\n  msgid \"" . $pagename . "\"\n  msgstr \"" . $trans . "\"\n  </verbatim>";
+                $text           .= "\n  <verbatim>locale/po/$lang.po:\n  msgid \"" . $pagename . "\"\n  msgstr \"" . $trans . "\"\n  </verbatim>";
                 $meta['summary'] = sprintf(
                     _("Translate %s to %s in %s"),
                     substr($pagename, 0, 15),

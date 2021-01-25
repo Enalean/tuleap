@@ -67,7 +67,7 @@ final class KanbanTest extends TestBase
 
     private function assertGETKanban(Response $response): void
     {
-        $kanban   = $response->json();
+        $kanban = $response->json();
 
         $this->assertEquals('My first kanban', $kanban['label']);
         $this->assertEquals($this->kanban_tracker_id, $kanban['tracker']['id']);
@@ -135,7 +135,7 @@ final class KanbanTest extends TestBase
     {
         $initial_state_response = $this->getResponse($this->client->get('kanban/' . REST_TestDataBuilder::KANBAN_ID));
         $initial_state_kanban   = $initial_state_response->json();
-        $first_column = $initial_state_kanban['columns'][0];
+        $first_column           = $initial_state_kanban['columns'][0];
         $this->assertTrue($first_column['is_open']);
 
         $patch_response = $this->getResponse($this->client->patch(
@@ -152,8 +152,8 @@ final class KanbanTest extends TestBase
         ));
         $this->assertEquals($patch_response->getStatusCode(), 200);
 
-        $new_state_response = $this->getResponse($this->client->get('kanban/' . REST_TestDataBuilder::KANBAN_ID));
-        $new_state_kanban   = $new_state_response->json();
+        $new_state_response     = $this->getResponse($this->client->get('kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $new_state_kanban       = $new_state_response->json();
         $new_state_first_column = $new_state_kanban['columns'][0];
         $this->assertFalse($new_state_first_column['is_open']);
     }

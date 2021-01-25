@@ -294,7 +294,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 $values[] = $val;
             }
         }
-        $changeset_value = implode(', ', $values);
+        $changeset_value                      = implode(', ', $values);
         $cache[$this->getId()][$changeset_id] = $changeset_value;
         return $changeset_value;
     }
@@ -456,7 +456,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             return;
         }
 
-        $value_in_field_value = $cache->get($criteria->getReport()->getId());
+        $value_in_field_value     = $cache->get($criteria->getReport()->getId());
         $formatted_criteria_value = [];
         foreach ($value_in_field_value as $field_value) {
             assert($field_value instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
@@ -494,15 +494,15 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function fetchCriteriaValue($criteria)
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp             = Codendi_HTMLPurifier::instance();
+        $html           = '';
         $criteria_value = $this->getCriteriaValue($criteria);
         if (! is_array($criteria_value)) {
             $criteria_value = [$criteria_value];
         }
 
-        $multiple = ' ';
-        $size     = ' ';
+        $multiple    = ' ';
+        $size        = ' ';
         $prefix_name = "criteria[$this->id][values]";
         $name        = $prefix_name . '[]';
 
@@ -523,10 +523,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                           $multiple . '>';
         //Any value
         $selected = count($criteria_value) && ! in_array('', $criteria_value) ? '' : 'selected="selected"';
-        $html .= '<option value="" ' . $selected . ' title="' . $GLOBALS['Language']->getText('global', 'any') . '">' . $GLOBALS['Language']->getText('global', 'any') . '</option>';
+        $html    .= '<option value="" ' . $selected . ' title="' . $GLOBALS['Language']->getText('global', 'any') . '">' . $GLOBALS['Language']->getText('global', 'any') . '</option>';
         //None value
         $selected = in_array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID, $criteria_value) ? 'selected="selected"' : '';
-        $styles = $tracker_form_element_field_list_bind->getSelectOptionStyles(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
+        $styles   = $tracker_form_element_field_list_bind->getSelectOptionStyles(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
 
         $html .= $this->buildOptionHTML(
             Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
@@ -686,8 +686,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
-        $values = $submitted_values[$this->id] ?? [];
-        $selected_values  = $value ? $value->getListValues() : [];
+        $values          = $submitted_values[$this->id] ?? [];
+        $selected_values = $value ? $value->getListValues() : [];
         return $this->_fetchField(
             'tracker_field_' . $this->id,
             'artifact[' . $this->id . ']',
@@ -724,7 +724,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 $output = $this->fetchArtifactValueReadOnlyForMail($artifact, $value);
                 break;
             default:
-                $tablo = [];
+                $tablo           = [];
                 $selected_values = ! empty($value) ? $value->getListValues() : [];
                 foreach ($selected_values as $value) {
                     $tablo[] = $this->getBind()->formatMailArtifactValue($value->getId());
@@ -750,9 +750,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $html = '';
+        $html            = '';
         $selected_values = $value ? $value->getListValues() : [];
-        $tablo = [];
+        $tablo           = [];
 
         if (empty($selected_values)) {
             return $this->getNoValueLabel();
@@ -833,7 +833,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 if (! $last_changeset) {
                     if (! $this->isTransitionValid(null, $field_value_to)) {
                            $this->has_errors = true;
-                           $valid = false;
+                           $valid            = false;
                     }
                 } else {
                     if ($last_changeset->getValue($this) != null) {
@@ -841,14 +841,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                             if ($value != $field_value_to) {
                                 if (! $this->isTransitionValid($value, $field_value_to)) {
                                     $this->has_errors = true;
-                                    $valid = false;
+                                    $valid            = false;
                                 }
                             }
                         }
                     } else {
                         if (! $this->isTransitionValid(null, $field_value_to)) {
                             $this->has_errors = true;
-                            $valid = false;
+                            $valid            = false;
                         }
                     }
                 }
@@ -942,7 +942,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         if ($values) {
             if (! $this->isRequired()) {
-                $none = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+                $none   = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
                 $values = [$none->getId() => $none] + $values;
             }
         }
@@ -1002,7 +1002,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
 
         $data_target_fields_ids = '';
-        $target_fields_ids = $this->getTargetFieldsIds();
+        $target_fields_ids      = $this->getTargetFieldsIds();
         if (count($target_fields_ids) > 0) {
             $data_target_fields_ids = "data-target-fields-ids='" . json_encode($target_fields_ids) . "'";
         }
@@ -1018,7 +1018,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         if (! $this->fieldHasEnableWorkflow()) {
             $none_value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
-            $html .= $this->fetchFieldValue($none_value, $name, $none_is_selected);
+            $html      .= $this->fetchFieldValue($none_value, $name, $none_is_selected);
         }
 
         if (($submitted_values_for_this_list) && ! is_array($submitted_values_for_this_list)) {
@@ -1072,7 +1072,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
     {
-        $purifier = Codendi_HTMLPurifier::instance();
+        $purifier  = Codendi_HTMLPurifier::instance();
         $value_id  = $value->getId();
         $list_bind = $this->getBind();
         if ($value_id == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
@@ -1081,8 +1081,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $label = $list_bind->formatArtifactValue($value_id);
         }
 
-        $styles = $list_bind->getSelectOptionStyles($value_id);
-        $selected = $is_selected ? 'selected="selected"' : '';
+        $styles       = $list_bind->getSelectOptionStyles($value_id);
+        $selected     = $is_selected ? 'selected="selected"' : '';
         $option_start = '<option value="'
                         . $value_id
                         . '" '
@@ -1110,11 +1110,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     protected function _fetchFieldMasschange($id, $name, $selected_values) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        $purifier  = Codendi_HTMLPurifier::instance();
-        $html      = '';
-        $multiple  = ' ';
-        $size      = ' ';
-        $bind_type = 'data-bind-type="' . $this->getBind()->getType() . '"';
+        $purifier   = Codendi_HTMLPurifier::instance();
+        $html       = '';
+        $multiple   = ' ';
+        $size       = ' ';
+        $bind_type  = 'data-bind-type="' . $this->getBind()->getType() . '"';
         $has_colors = count($this->getDecorators()) > 0;
 
         if ($this->isMultiple()) {
@@ -1166,7 +1166,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     protected function fetchAdminFormElement()
     {
-        $html = '';
+        $html  = '';
         $html .= $this->_fetchField('', '', $this->getBind()->getDefaultValues());
         return $html;
     }
@@ -1217,7 +1217,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     {
         $redirect = false;
         if ($request->exist('bind')) {
-            $params            = $request->get('bind');
+            $params = $request->get('bind');
             if ($request->get('formElement_data')) {
                 $params = array_merge($params, $request->get('formElement_data'));
             }
@@ -1257,7 +1257,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         parent::exportToXML($root, $xmlMapping, $project_export_context, $user_xml_exporter);
         if ($this->getBind() && $this->shouldBeBindXML()) {
             $child = $root->addChild('bind');
-            $bf = new Tracker_FormElement_Field_List_BindFactory();
+            $bf    = new Tracker_FormElement_Field_List_BindFactory();
             $child->addAttribute('type', $bf->getType($this->getBind()));
             $this->getBind()->exportToXML($child, $xmlMapping, $project_export_context, $user_xml_exporter);
         }
@@ -1349,8 +1349,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
         $changeset_value = null;
-        $value_ids = $this->getValueDao()->searchById($value_id, $this->id);
-        $bindvalue_ids = [];
+        $value_ids       = $this->getValueDao()->searchById($value_id, $this->id);
+        $bindvalue_ids   = [];
         if ($value_ids) {
             foreach ($value_ids as $v) {
                 $bindvalue_ids[] = $v['bindvalue_id'];
@@ -1525,7 +1525,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     protected function isPossibleValue($value)
     {
-        $is_possible_value   = true;
+        $is_possible_value = true;
 
         if (is_array($value)) {
             foreach ($value as $id) {
@@ -1590,7 +1590,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     public function fetchFormattedForJson()
     {
-        $json = parent::fetchFormattedForJson();
+        $json           = parent::fetchFormattedForJson();
         $json['values'] = $this->getBind()->fetchFormattedForJson();
         return $json;
     }
@@ -1598,7 +1598,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function getRESTAvailableValues()
     {
         $values = null;
-        $bind = $this->getBind();
+        $bind   = $this->getBind();
         if ($bind != null) {
             $values = $bind->getRESTAvailableValues();
         }
@@ -1622,7 +1622,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function getSelectDefaultValues($default_values)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
 
         //Select default values
@@ -1631,7 +1631,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= '<select name="bind[default][]" class="bind_default_values" size="7" multiple="multiple">';
         foreach ($this->getAllVisibleValues() as $v) {
             $selected = isset($default_values[$v->getId()]) ? 'selected="selected"' : '';
-            $html .= '<option value="' . $v->getId() . '" ' . $selected . '>' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . '</option>';
+            $html    .= '<option value="' . $v->getId() . '" ' . $selected . '>' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . '</option>';
         }
         $html .= '</select>';
         $html .= '</p>';

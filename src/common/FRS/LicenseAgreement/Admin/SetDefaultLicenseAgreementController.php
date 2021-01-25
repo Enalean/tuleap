@@ -92,7 +92,7 @@ class SetDefaultLicenseAgreementController implements DispatchableWithRequest
             throw new InvalidLicenseAgreementException('Agreement id is missing');
         }
         $agreement_id = (int) $request->getValidated('default_agreement', 'int');
-        $license = $this->factory->getLicenseAgreementById($project, $agreement_id);
+        $license      = $this->factory->getLicenseAgreementById($project, $agreement_id);
         if (! $license) {
             throw new InvalidLicenseAgreementException('Invalid license agreement for project');
         }

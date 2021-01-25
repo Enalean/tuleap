@@ -114,7 +114,7 @@ class LDAP_UserWrite
             if ($user->isAlive()) {
                 $this->ldap->update($dn, $this->getLDAPInfo($user));
             } elseif ($user->isSuspended()) {
-                $info = $this->getLDAPInfo($user);
+                $info                 = $this->getLDAPInfo($user);
                 $info['userPassword'] = '!' . $this->getLDAPPassword($user);
                 $this->ldap->update($dn, $info);
             } else {

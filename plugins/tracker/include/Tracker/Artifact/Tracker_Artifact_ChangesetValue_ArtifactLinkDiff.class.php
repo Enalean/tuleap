@@ -62,11 +62,11 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         Tracker $tracker,
         NaturePresenterFactory $nature_factory
     ) {
-        $this->previous       = $previous;
-        $this->next           = $next;
+        $this->previous = $previous;
+        $this->next     = $next;
         if ($this->hasChanges()) {
-            $formatter = new CollectionOfLinksFormatter();
-            $this->removed = new RemovedLinkCollection($formatter);
+            $formatter        = new CollectionOfLinksFormatter();
+            $this->removed    = new RemovedLinkCollection($formatter);
             $removed_elements = array_diff(array_keys($previous), array_keys($next));
             foreach ($removed_elements as $key) {
                 $this->removed->add($previous[$key]);
@@ -165,7 +165,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
             return ' ' . dgettext('tuleap-tracker', 'cleared');
         }
 
-        $formatted_messages = [];
+        $formatted_messages   = [];
         $formatted_messages[] = $this->removed->fetchFormatted($user, $format, $ignore_perms);
         foreach ($this->added_by_nature as $collection) {
             $formatted_messages[] = $collection->fetchFormatted($user, $format, $ignore_perms);

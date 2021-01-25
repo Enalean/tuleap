@@ -13,11 +13,11 @@ function GleanKeywords($page)
         return '';
     }
     include_once("lib/TextSearchQuery.php");
-    $search = new TextSearchQuery(KEYWORDS, true);
+    $search            = new TextSearchQuery(KEYWORDS, true);
     $KeywordLinkRegexp = $search->asRegexp();
     // iterate over the pagelinks (could be a large number) [15ms on PluginManager]
     // or do a titleSearch and check the categories if they are linked?
-    $links = $page->getPageLinks();
+    $links      = $page->getPageLinks();
     $keywords[] = SplitPagename($page->getName());
     while ($link = $links->next()) {
         if (preg_match($KeywordLinkRegexp, $link->getName(), $m)) {
@@ -49,14 +49,14 @@ function actionPage(&$request, $action)
     global $WikiTheme;
 
     $pagename = $request->getArg('pagename');
-    $version = $request->getArg('version');
+    $version  = $request->getArg('version');
 
-    $page = $request->getPage();
+    $page     = $request->getPage();
     $revision = $page->getCurrentRevision();
 
-    $dbi = $request->getDbh();
+    $dbi        = $request->getDbh();
     $actionpage = $dbi->getPage($action);
-    $actionrev = $actionpage->getCurrentRevision();
+    $actionrev  = $actionpage->getCurrentRevision();
 
     $pagetitle = HTML(fmt(
         "%s: %s",
@@ -73,7 +73,7 @@ function actionPage(&$request, $action)
                                      '%mtime' => $actionrev->get('mtime')]);
 
     $transformedContent = $actionrev->getTransformedContent();
-    $template = Template('browse', ['CONTENT' => $transformedContent]);
+    $template           = Template('browse', ['CONTENT' => $transformedContent]);
 /*
     if (!headers_sent()) {
         //FIXME: does not work yet. document.write not supported (signout button)
@@ -95,8 +95,8 @@ function displayPage(&$request, $template = false)
 {
     global $WikiTheme, $pv;
     $pagename = $request->getArg('pagename');
-    $version = $request->getArg('version');
-    $page = $request->getPage();
+    $version  = $request->getArg('version');
+    $page     = $request->getPage();
     if ($version) {
         $revision = $page->getRevision($version);
         if (! $revision) {
@@ -107,9 +107,9 @@ function displayPage(&$request, $template = false)
     }
 
     if (isSubPage($pagename)) {
-        $pages = explode(SUBPAGE_SEPARATOR, $pagename);
-        $last_page = array_pop($pages); // deletes last element from array as side-effect
-        $pageheader = HTML::span(HTML::a(
+        $pages       = explode(SUBPAGE_SEPARATOR, $pagename);
+        $last_page   = array_pop($pages); // deletes last element from array as side-effect
+        $pageheader  = HTML::span(HTML::a(
             ['href' => WikiURL($pages[0]),
                                               'class' => 'pagetitle'
                                               ],
@@ -165,7 +165,7 @@ function displayPage(&$request, $template = false)
     // {{{ Codendi hook to insert stuff between navbar and header
     $eM = EventManager::instance();
 
-    $ref_html = '';
+    $ref_html      = '';
     $crossref_fact = new CrossReferenceFactory($pagename, ReferenceManager::REFERENCE_NATURE_WIKIPAGE, GROUP_ID);
     $crossref_fact->fetchDatas();
     if ($crossref_fact->getNbReferences() > 0) {
@@ -221,7 +221,7 @@ function displayPage(&$request, $template = false)
                This just parses the wikitext, and doesn't highlight the markup */
             include_once('lib/WikiPlugin.php');
             $loader = new WikiPluginLoader();
-            $xml = $loader->expandPI('<' . '?plugin SearchHighlight s="' . $result['query'] . '"?' . '>', $request, $markup);
+            $xml    = $loader->expandPI('<' . '?plugin SearchHighlight s="' . $result['query'] . '"?' . '>', $request, $markup);
             if ($xml and is_array($xml)) {
                 foreach (array_reverse($xml) as $line) {
                     array_unshift($page_content->_content, $line);
@@ -237,23 +237,23 @@ function displayPage(&$request, $template = false)
                This looks like overkill.
              */
                 require_once("lib/TextSearchQuery.php");
-                $query = new TextSearchQuery($result['query']);
+                $query      = new TextSearchQuery($result['query']);
                 $hilight_re = $query->getHighlightRegexp();
             //$matches = preg_grep("/$hilight_re/i", $revision->getContent());
             // FIXME!
                 for ($i = 0; $i < count($page_content->_content); $i++) {
                     $found = false;
-                    $line = $page_content->_content[$i];
+                    $line  = $page_content->_content[$i];
                     if (is_string($line)) {
                         while (preg_match("/^(.*?)($hilight_re)/i", $line, $m)) {
-                            $found = true;
-                            $line = substr($line, strlen($m[0]));
+                            $found  = true;
+                            $line   = substr($line, strlen($m[0]));
                             $html[] = $m[1];    // prematch
                             $html[] = HTML::strong(['class' => 'search-term'], $m[2]); // match
                         }
                     }
                     if ($found) {
-                        $html[] = $line;  // postmatch
+                        $html[]                     = $line;  // postmatch
                         $page_content->_content[$i] = HTML::span(
                             ['class' => 'search-context'],
                             $html
@@ -266,15 +266,15 @@ function displayPage(&$request, $template = false)
 
     $toks['CONTENT'] = new Template('browse', $request, $page_content);
 
-    $toks['TITLE'] = $pagetitle;   // <title> tag
-    $toks['HEADER'] = $pageheader; // h1 with backlink
+    $toks['TITLE']    = $pagetitle;   // <title> tag
+    $toks['HEADER']   = $pageheader; // h1 with backlink
     $toks['revision'] = $revision;
     if (! empty($redirect_message)) {
         $toks['redirected'] = $redirect_message;
     }
-    $toks['ROBOTS_META'] = 'index,follow';
+    $toks['ROBOTS_META']      = 'index,follow';
     $toks['PAGE_DESCRIPTION'] = $page_content->getDescription();
-    $toks['PAGE_KEYWORDS'] = GleanKeywords($page);
+    $toks['PAGE_KEYWORDS']    = GleanKeywords($page);
     if (! $template) {
         $template = new Template('html', $request);
     }

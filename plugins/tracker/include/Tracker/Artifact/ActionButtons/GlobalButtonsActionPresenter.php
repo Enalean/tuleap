@@ -71,11 +71,11 @@ class GlobalButtonsActionPresenter
         ?ArtifactNotificationsButtonPresenter $artifact_notifications_button_presenter = null,
         ?ArtifactOriginalEmailButtonPresenter $artifact_original_email_button_presenter = null
     ) {
-        $this->artifact_move_button_presenter               = $artifact_move_button_presenter;
-        $this->artifact_move_modal_presenter                = $artifact_move_modal_presenter;
-        $this->artifact_copy_button_presenter               = $artifact_copy_button_presenter;
-        $this->artifact_notifications_button_presenter      = $artifact_notifications_button_presenter;
-        $this->artifact_original_email_button_presenter     = $artifact_original_email_button_presenter;
+        $this->artifact_move_button_presenter           = $artifact_move_button_presenter;
+        $this->artifact_move_modal_presenter            = $artifact_move_modal_presenter;
+        $this->artifact_copy_button_presenter           = $artifact_copy_button_presenter;
+        $this->artifact_notifications_button_presenter  = $artifact_notifications_button_presenter;
+        $this->artifact_original_email_button_presenter = $artifact_original_email_button_presenter;
 
         $this->should_load_modal = $artifact_move_button_presenter !== null &&
             ! $artifact_move_button_presenter->hasError();

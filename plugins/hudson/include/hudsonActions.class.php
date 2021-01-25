@@ -38,9 +38,9 @@ class hudsonActions extends Actions
 
     public function addJob()
     {
-        $request = HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $job_url = $request->get('hudson_job_url');
+        $job_url  = $request->get('hudson_job_url');
         try {
             $minimal_job_factory = new MinimalHudsonJobFactory();
             $job_builder         = new HudsonJobBuilder(HTTPFactoryBuilder::requestFactory(), HttpClientFactory::createAsyncClient());
@@ -54,7 +54,7 @@ class hudsonActions extends Actions
             $svn_paths       = $this->svn_paths_updater->transformContent($request->get('hudson_svn_paths'));
 
             $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-            $jobId = $job_dao->createHudsonJob(
+            $jobId   = $job_dao->createHudsonJob(
                 $group_id,
                 $job_url,
                 $job->getName(),
@@ -67,8 +67,8 @@ class hudsonActions extends Actions
             if (! $jobId) {
                 $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Unable to add Jenkins job.'));
             } else {
-                $em       = EventManager::instance();
-                $params   = ['job_id' => $jobId, 'request' => $request];
+                $em     = EventManager::instance();
+                $params = ['job_id' => $jobId, 'request' => $request];
                 $em->processEvent('save_ci_triggers', $params);
                 $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-hudson', 'Jenkins job added.'));
                 $GLOBALS['Response']->redirect('/plugins/hudson/?group_id=' . intval($group_id));
@@ -110,8 +110,8 @@ class hudsonActions extends Actions
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Unable to update Jenkins job'));
         } else {
             $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-hudson', 'Jenkins job updated.'));
-            $em       = EventManager::instance();
-            $params   = ['request' => $request];
+            $em     = EventManager::instance();
+            $params = ['request' => $request];
             $em->processEvent('update_ci_triggers', $params);
         }
     }
@@ -119,14 +119,14 @@ class hudsonActions extends Actions
     public function deleteJob()
     {
         $request = HTTPRequest::instance();
-        $job_id = $request->get('job_id');
+        $job_id  = $request->get('job_id');
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if (! $job_dao->deleteHudsonJob($job_id)) {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-hudson', 'Unable to delete Jenkins job'));
         } else {
             $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-hudson', 'Jenkins job deleted.'));
-            $em       = EventManager::instance();
-            $params   = ['job_id' => $job_id];
+            $em     = EventManager::instance();
+            $params = ['job_id' => $job_id];
             $em->processEvent('delete_ci_triggers', $params);
         }
     }

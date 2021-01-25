@@ -54,15 +54,15 @@ final class DisplayKeysTokensControllerTest extends TestCase
 
     public function setUp(): void
     {
-        $event_manager = new class implements EventDispatcherInterface {
+        $event_manager                       = new class implements EventDispatcherInterface {
             public function dispatch(object $event)
             {
                 return $event;
             }
         };
-        $csrf_token = M::mock(CSRFSynchronizerToken::class);
+        $csrf_token                          = M::mock(CSRFSynchronizerToken::class);
         $this->access_keys_presenter_builder = M::mock(AccessKeyPresenterBuilder::class);
-        $this->svn_tokens_presenter_builder = new SVNTokensPresenterBuilder(
+        $this->svn_tokens_presenter_builder  = new SVNTokensPresenterBuilder(
             M::mock(\SVN_TokenHandler::class, ['getSVNTokensForUser' => []]),
             M::mock(KeyFactory::class)
         );

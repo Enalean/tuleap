@@ -42,7 +42,7 @@ final class AccountCreation
     public function __construct(LoggerInterface $logger, LDAP_UserManager $ldap_user_manager)
     {
         $this->ldap_user_manager = $ldap_user_manager;
-        $this->logger = $logger;
+        $this->logger            = $logger;
     }
 
     public function associateWithLDAPAccount(AccountCreated $account_created): void

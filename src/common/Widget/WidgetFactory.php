@@ -177,7 +177,7 @@ class WidgetFactory
                 break;
             default:
                 $get_widget_event = $this->event_manager->dispatch(new GetWidget($widget_name));
-                $widget = $get_widget_event->getWidget();
+                $widget           = $get_widget_event->getWidget();
                 break;
         }
 

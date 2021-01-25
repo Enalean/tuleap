@@ -56,15 +56,15 @@ class Docman_View_ParentsTree /* implements Visitor*/
     }
     public function fetchFolder($folder, $params)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp       = Codendi_HTMLPurifier::instance();
         $selected = '';
         if (! isset($params['selected']) || ! $params['selected']) {
             if ($this->docman->userCanWrite($folder['id']) && (! $params['select'] || $params['select'] == $folder['id'])) {
-                $selected = 'checked="checked"';
+                $selected           = 'checked="checked"';
                 $params['selected'] = true;
             }
         }
-        $disabled = ($this->docman->userCanWrite($folder['id'])) ? '' : 'disabled="disabled"';
+        $disabled      = ($this->docman->userCanWrite($folder['id'])) ? '' : 'disabled="disabled"';
         $label_classes = $selected ? 'docman_item_actual_parent' : '';
 
         $h  = '<li  class="' . Docman_View_Browse::getItemClasses(['is_last' => $params['is_last']]) . '">';
@@ -76,8 +76,8 @@ class Docman_View_ParentsTree /* implements Visitor*/
         $h .= '<ul class="docman_items">';
 
         $params['is_last'] = false;
-        $nb = count($folder['items']);
-        $i = 0;
+        $nb                = count($folder['items']);
+        $i                 = 0;
         foreach ($folder['items'] as $item) {
             $i++;
             if ($i == $nb) {
@@ -107,7 +107,7 @@ class Docman_View_ParentsTree /* implements Visitor*/
             ];
 
             $items = $item->getAllItems();
-            $it = $items->iterator();
+            $it    = $items->iterator();
             while ($it->valid()) {
                 $o = $it->current();
                 if ($this->_itemCanBeFetched($o, $params)) {

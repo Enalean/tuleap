@@ -150,7 +150,7 @@ class CrossTrackerArtifactReportFactory
             $limit,
             $offset
         );
-        $total_size = $this->expert_query_dao->foundRows();
+        $total_size            = $this->expert_query_dao->foundRows();
         return $this->buildCollectionOfArtifacts($results, $total_size);
     }
 

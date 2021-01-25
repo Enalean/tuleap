@@ -63,10 +63,10 @@ final class ReviewerAddedNotification implements NotificationToProcess
         array $new_reviewers,
         NotificationEnhancedContent $enhanced_content
     ) {
-        $this->pull_request              = $pull_request;
-        $this->change_user_display_name  = $change_user_display_name;
-        $this->new_reviewers             = $new_reviewers;
-        $this->enhanced_content          = $enhanced_content;
+        $this->pull_request             = $pull_request;
+        $this->change_user_display_name = $change_user_display_name;
+        $this->new_reviewers            = $new_reviewers;
+        $this->enhanced_content         = $enhanced_content;
     }
 
     /**

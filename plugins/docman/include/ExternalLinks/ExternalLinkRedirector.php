@@ -112,7 +112,7 @@ class ExternalLinkRedirector implements Dispatchable
     private function checkAndStoreDocumentIdIfUserCanAccessToLegacyLinkToDocumentUrl(): void
     {
         if ($this->request->exist("group_id") && $this->request->exist("id")) {
-            $this->document_id = (int) $this->request->get("id");
+            $this->document_id          = (int) $this->request->get("id");
             $this->should_redirect_user = true;
         }
     }

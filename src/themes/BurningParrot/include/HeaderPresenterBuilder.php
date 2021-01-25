@@ -91,18 +91,18 @@ class HeaderPresenterBuilder
         IDetectIfLogoIsCustomized $customized_logo_detector,
         ?\Tuleap\Platform\Banner\BannerDisplay $platform_banner
     ) {
-        $this->navbar_presenter_builder              = $navbar_presenter_builder;
-        $this->current_user                          = $current_user;
-        $this->imgroot                               = $imgroot;
-        $this->title                                 = $title;
-        $this->body_classes                          = $body_classes;
-        $this->main_classes                          = $main_classes;
-        $this->sidebar                               = $sidebar;
-        $this->css_assets                            = $css_assets;
-        $this->is_in_siteadmin                       = $is_in_siteadmin;
-        $this->project_context                       = $project_context;
+        $this->navbar_presenter_builder = $navbar_presenter_builder;
+        $this->current_user             = $current_user;
+        $this->imgroot                  = $imgroot;
+        $this->title                    = $title;
+        $this->body_classes             = $body_classes;
+        $this->main_classes             = $main_classes;
+        $this->sidebar                  = $sidebar;
+        $this->css_assets               = $css_assets;
+        $this->is_in_siteadmin          = $is_in_siteadmin;
+        $this->project_context          = $project_context;
 
-        $color = $this->getMainColor();
+        $color           = $this->getMainColor();
         $theme_variation = new ThemeVariation($color, $current_user);
 
         $is_legacy_logo_customized = $customized_logo_detector->isLegacyOrganizationLogoCustomized();
@@ -158,11 +158,11 @@ class HeaderPresenterBuilder
 
     private function getStylesheets(ThemeVariation $theme_variation): array
     {
-        $core_assets = new IncludeAssets(
+        $core_assets      = new IncludeAssets(
             __DIR__ . '/../../../www/assets/core',
             '/assets/core'
         );
-        $css_assets = new CssAssetCollection([
+        $css_assets       = new CssAssetCollection([
             new CssAsset($core_assets, 'tlp'),
             new CssAsset($core_assets, 'BurningParrot/burning-parrot')
         ]);

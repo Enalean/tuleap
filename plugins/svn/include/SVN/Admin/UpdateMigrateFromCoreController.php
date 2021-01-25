@@ -64,8 +64,8 @@ final class UpdateMigrateFromCoreController implements DispatchableWithRequest, 
     ) {
         $this->project_manager     = $project_manager;
         $this->permissions_manager = $permissions_manager;
-        $this->repository_manager = $repository_manager;
-        $this->repository_creator = $repository_creator;
+        $this->repository_manager  = $repository_manager;
+        $this->repository_creator  = $repository_creator;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void

@@ -108,7 +108,7 @@ class AccessControl extends Pane
      */
     public function getContent()
     {
-        $html = '';
+        $html  = '';
         $html .= '<h2>' . $this->getTitle() . '</h2>';
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=' .
             $this->repository->getProjectId() . '">';
@@ -148,10 +148,10 @@ class AccessControl extends Pane
         $checked = 'checked="checked"';
         if ($this->repository->getAccess() == GitRepository::PRIVATE_ACCESS) {
             $private = $checked;
-            $html .= '<input type="hidden" id="action" name="action" value="edit" />';
+            $html   .= '<input type="hidden" id="action" name="action" value="edit" />';
         } elseif ($this->repository->getAccess() == GitRepository::PUBLIC_ACCESS) {
-            $public  = $checked;
-            $html .= '<input type="hidden" id="action" name="action" value="confirm_private" />';
+            $public = $checked;
+            $html  .= '<input type="hidden" id="action" name="action" value="confirm_private" />';
         }
         $html .= '<p id="plugin_git_access">';
         $html .= dgettext('tuleap-git', 'Access');

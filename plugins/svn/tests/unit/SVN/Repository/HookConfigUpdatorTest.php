@@ -75,7 +75,7 @@ class HookConfigUpdatorTest extends TestCase
             $this->project_history_formatter
         );
 
-        $project          = \Mockery::mock(\Project::class);
+        $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(101);
 
         $this->repository = Mockery::mock(\Tuleap\SVN\Repository\Repository::class);

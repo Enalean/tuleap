@@ -67,7 +67,7 @@ class FRSPackageFactory
         $dao = $this->_getFRSPackageDao();
         if ($group_id) {
             $_group_id = (int) $group_id;
-            $dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
+            $dar       = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
         } else {
             $dar = $dao->searchById($_id, $extraFlags);
         }
@@ -105,10 +105,10 @@ class FRSPackageFactory
 
     public function getFRSPackageByReleaseIDFromDb($release_id, $group_id)
     {
-        $_id = (int) $release_id;
+        $_id       = (int) $release_id;
         $_group_id = (int) $group_id;
-        $dao = $this->_getFRSPackageDao();
-        $dar = $dao->searchInGroupByReleaseId($_id, $_group_id);
+        $dao       = $this->_getFRSPackageDao();
+        $dar       = $dao->searchInGroupByReleaseId($_id, $_group_id);
 
         if ($dar->isError()) {
             return;
@@ -252,14 +252,14 @@ class FRSPackageFactory
     {
         $original_approval_license = null;
         if (isset($data_array['approve_license'])) {
-            $original_approval_license = $data_array['approve_license'];
+            $original_approval_license     = $data_array['approve_license'];
             $data_array['approve_license'] = LicenseAgreementFactory::convertLicenseAgreementIdToPackageApprovalLicense((int) $data_array['approve_license']) ? '1' : '0';
         }
         $dao = $this->_getFRSPackageDao();
-        $id = $dao->createFromArray($data_array);
+        $id  = $dao->createFromArray($data_array);
         if ($id) {
             $data_array['package_id'] = $id;
-            $package = new FRSPackage($data_array);
+            $package                  = new FRSPackage($data_array);
             $this->setLicenseAgreementAtPackageCreation($package, $original_approval_license);
             $this->setDefaultPermissions($package);
             $this->getEventManager()->processEvent(
@@ -289,9 +289,9 @@ class FRSPackageFactory
 
     public function _delete($package_id)
     {
-        $_id = (int) $package_id;
+        $_id     = (int) $package_id;
         $package = $this->getFRSPackageFromDb($_id);
-        $dao = $this->_getFRSPackageDao();
+        $dao     = $this->_getFRSPackageDao();
         if ($dao->delete($_id, $this->STATUS_DELETED)) {
             $this->getEventManager()->processEvent(
                 'frs_delete_package',

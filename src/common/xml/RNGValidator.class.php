@@ -38,7 +38,7 @@ class XML_RNGValidator
      */
     private function simpleXmlElementToDomDocument(SimpleXMLElement $xml_element): DOMDocument
     {
-        $dom = new DOMDocument("1.0", "UTF-8");
+        $dom         = new DOMDocument("1.0", "UTF-8");
         $dom_element = $dom->importNode(dom_import_simplexml($xml_element), true);
         $dom->appendChild($dom_element);
         return $dom;
@@ -66,7 +66,7 @@ class XML_RNGValidator
         }
 
         try {
-            $jing   = __DIR__ . '/../../utils/xml/jing.jar';
+            $jing = __DIR__ . '/../../utils/xml/jing.jar';
             $system_command->exec('java -jar ' . escapeshellarg($jing) . ' ' .  escapeshellarg($rng_path) . ' ' . escapeshellarg($temp));
         } catch (System_Command_CommandException $ex) {
             $errors = [];

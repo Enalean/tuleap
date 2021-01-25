@@ -47,7 +47,7 @@ class WebdavURLVerificationTest extends TestCase
     {
         parent::setUp();
 
-        $this->request = \Mockery::spy(\HTTPRequest::class);
+        $this->request               = \Mockery::spy(\HTTPRequest::class);
         $this->webdavURLVerification = \Mockery::mock(\Webdav_URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
 

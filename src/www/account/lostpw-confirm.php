@@ -37,12 +37,12 @@ if ($user === null || $user->getUserPw() === null) {
     exit_error('Invalid User', 'That user does not exist.');
 }
 
-$reset_token_dao         = new Tuleap\User\Password\Reset\LostPasswordDAO();
-$reset_token_creator     = new \Tuleap\User\Password\Reset\Creator(
+$reset_token_dao     = new Tuleap\User\Password\Reset\LostPasswordDAO();
+$reset_token_creator = new \Tuleap\User\Password\Reset\Creator(
     $reset_token_dao,
     new Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher()
 );
-$reset_token = $reset_token_creator->create($user);
+$reset_token         = $reset_token_creator->create($user);
 
 $mail_is_sent = false;
 

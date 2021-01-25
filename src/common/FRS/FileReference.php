@@ -61,12 +61,12 @@ class FileReference extends \Reference
             throw new NotFoundException(self::class . ': no reference value found for ' . $this->reference_value);
         }
         $file_factory = new \FRSFileFactory();
-        $file = $file_factory->getFRSFileFromDb($this->reference_value);
+        $file         = $file_factory->getFRSFileFromDb($this->reference_value);
         if (! $file) {
             throw new NotFoundException(self::class . ': no valid file found for ' . $this->reference_value);
         }
         $package_factory = new \FRSPackageFactory();
-        $package = $package_factory->getFRSPackageByFileIdFromDb($this->reference_value);
+        $package         = $package_factory->getFRSPackageByFileIdFromDb($this->reference_value);
         if (! $package) {
             throw new NotFoundException(self::class . ': no valid package found for ' . $this->reference_value);
         }

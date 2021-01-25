@@ -49,9 +49,9 @@ $em = EventManager::instance();
 $project_manager = ProjectManager::instance();
 
 // Get various number of users and projects from status
-$project_dao = new ProjectDao();
+$project_dao        = new ProjectDao();
 $projects_by_status = $project_dao->getProjectsGroupByStatus();
-$project_count = [];
+$project_count      = [];
 foreach ($projects_by_status as $projects) {
     $project_count[$projects['status']] = $projects['project_nb'];
 }
@@ -63,7 +63,7 @@ if (isset($project_count[Project::STATUS_PENDING])) {
     $project_pending_count = $pending_projects;
 }
 
-$builder = new NbUsersByStatusBuilder(new UserCounterDao());
+$builder            = new NbUsersByStatusBuilder(new UserCounterDao());
 $nb_users_by_status = $builder->getNbUsersByStatusBuilder();
 
 $realpending_users = $nb_users_by_status->getNbPending();
@@ -80,7 +80,7 @@ db_query("SELECT COUNT(DISTINCT(p.user_id)) AS count
             AND preference_value = 1
             AND (status = 'A'
               OR status = 'R')");
-$row = db_fetch_array();
+$row      = db_fetch_array();
 $mode_lab = $row['count'];
 
 if (ForgeConfig::get('sys_user_approval') == 1) {
@@ -92,10 +92,10 @@ if (ForgeConfig::get('sys_user_approval') == 1) {
 
 
 db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
-$row = db_fetch_array();
+$row             = db_fetch_array();
 $validated_users = $row['count'];
 
-$purifier = Codendi_HTMLPurifier::instance();
+$purifier               = Codendi_HTMLPurifier::instance();
 $statistics_users_graph = [];
 
 if ($actif_users > 0) {
@@ -164,7 +164,7 @@ $user_statistics_presenter = new UsersStatisticsPresenter(
     stats_getactiveusers($nb_seconds_in_three_months),
     $additional_statistics
 );
-$renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/admin/homepage/');
+$renderer                  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/admin/homepage/');
 
 $user_stats = new Widget_Static($Language->getText('admin_main', 'stat_users'));
 $user_stats->setIcon('fa-pie-chart');
@@ -309,7 +309,7 @@ echo '</div>';
 
 echo '</div>';
 
-$system_events_pane_builder = new Tuleap\Admin\SystemEvents\HomepagePanePresenterBuilder(
+$system_events_pane_builder  = new Tuleap\Admin\SystemEvents\HomepagePanePresenterBuilder(
     new SystemEventDao(),
     EventManager::instance(),
     SystemEventManager::instance()

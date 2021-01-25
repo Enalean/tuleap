@@ -31,8 +31,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarterTest extend
     protected function setUp(): void
     {
         parent::setUp();
-        $this->response         = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
-        $this->backend_service  = \Mockery::spy(\BackendService::class);
+        $this->response        = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
+        $this->backend_service = \Mockery::spy(\BackendService::class);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter($this->response, $this->backend_service);
     }

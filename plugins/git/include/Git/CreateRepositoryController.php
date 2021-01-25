@@ -68,7 +68,7 @@ class CreateRepositoryController extends RouterLink
         $project_id = $project->getID();
 
         try {
-            $repository = $this->repository_creator->create($project, $creator, $repository_name);
+            $repository   = $this->repository_creator->create($project, $creator, $repository_name);
             $redirect_url = $this->url_manager->getRepositoryBaseUrl($repository);
         } catch (Exception $exception) {
             $GLOBALS['Response']->addFeedback('error', $exception->getMessage());

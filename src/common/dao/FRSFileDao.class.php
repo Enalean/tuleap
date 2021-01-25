@@ -34,7 +34,7 @@ class FRSFileDao extends DataAccessObject
 
     public function searchInReleaseById($id, $group_id)
     {
-        $_id = (int) $id;
+        $_id       = (int) $id;
         $_group_id = (int) $group_id;
         return $this->_search(
             ' p.group_id=' . $this->da->escapeInt($_group_id) . ' AND r.release_id = f.release_id' .
@@ -62,7 +62,7 @@ class FRSFileDao extends DataAccessObject
      */
     public function searchByReleaseId($id, $only_active_files = 1)
     {
-        $_id = (int) $id;
+        $_id          = (int) $id;
         $where_status = "";
         if ($only_active_files == 1) {
             $where_status = " AND status='A' ";
@@ -74,7 +74,7 @@ class FRSFileDao extends DataAccessObject
     public function searchInfoByGroupFileID($group_id, $file_id)
     {
         $_group_id = (int) $group_id;
-        $_file_id = (int) $file_id;
+        $_file_id  = (int) $file_id;
 
         $sql = sprintf(
             "SELECT f.filename, f.file_id AS file_id, p.group_id AS group_id, " .
@@ -145,7 +145,7 @@ class FRSFileDao extends DataAccessObject
     {
         $file_name  = $this->da->quoteSmart('%/' . $this->getDa()->escapeLikeValue($file_name));
         $release_id = $this->da->quoteSmart($release_id);
-        $sql = 'SELECT file_id'
+        $sql        = 'SELECT file_id'
             . ' from frs_file'
             . ' WHERE filename LIKE ' . $file_name
             . ' AND release_id = ' . $release_id
@@ -175,50 +175,50 @@ class FRSFileDao extends DataAccessObject
         $values = [];
 
         if ($file_name !== null) {
-            $arg[] = 'filename';
+            $arg[]    = 'filename';
             $values[] = $this->da->quoteSmart($file_name);
         }
 
         if ($filepath !== null) {
-            $arg[] = 'filepath';
+            $arg[]    = 'filepath';
             $values[] = $this->da->quoteSmart($filepath);
         }
 
         if ($release_id !== null) {
-            $arg[] = 'release_id';
+            $arg[]    = 'release_id';
             $values[] = ($this->da->escapeInt($release_id));
         }
 
         if ($type_id !== null) {
-            $arg[] = 'type_id';
+            $arg[]    = 'type_id';
             $values[] = ($this->da->escapeInt($type_id));
         }
 
         if ($processor_id !== null) {
-            $arg[] = 'processor_id';
+            $arg[]    = 'processor_id';
             $values[] = ($this->da->escapeInt($processor_id));
         }
 
         if ($reference_md5 !== null) {
-            $arg[] = 'reference_md5';
+            $arg[]    = 'reference_md5';
             $values[] = $this->da->quoteSmart($reference_md5);
         }
 
-        $arg[] = 'release_time';
+        $arg[]    = 'release_time';
         $values[] = ($this->da->escapeInt(time()));
 
         if ($file_size !== null) {
-            $arg[] = 'file_size';
+            $arg[]    = 'file_size';
             $values[] = ($this->da->escapeInt($file_size));
         } else {
-            $arg[] = 'file_size';
+            $arg[]    = 'file_size';
             $values[] = \filesize($file_name);
         }
 
-        $arg[] = 'post_date';
+        $arg[]    = 'post_date';
         $values[] = ($this->da->escapeInt(time()));
 
-        $arg[] = 'status';
+        $arg[]    = 'status';
         $values[] = $status;
 
         $sql = 'INSERT INTO frs_file'
@@ -310,14 +310,14 @@ class FRSFileDao extends DataAccessObject
     public function updateFromArray($data_array)
     {
         $updated = false;
-        $id = false;
+        $id      = false;
         if (isset($data_array['file_id'])) {
             $file_id = $data_array['file_id'];
         }
         if ($file_id) {
             $dar = $this->searchById($file_id);
             if (! $dar->isError() && $dar->valid()) {
-                $current = $dar->current();
+                $current   = $dar->current();
                 $set_array = [];
                 foreach ($data_array as $key => $value) {
                     if ($key != 'id' && $key != 'post_date' && $value != $current[$key]) {
@@ -325,7 +325,7 @@ class FRSFileDao extends DataAccessObject
                     }
                 }
                 if (count($set_array)) {
-                    $sql = 'UPDATE frs_file'
+                    $sql     = 'UPDATE frs_file'
                         . ' SET ' . implode(' , ', $set_array)
                         . ' WHERE file_id=' . $this->da->quoteSmart($file_id);
                     $updated = $this->update($sql);
@@ -344,7 +344,7 @@ class FRSFileDao extends DataAccessObject
      */
     public function delete($file_id)
     {
-        $sql = "UPDATE frs_file SET status='D' WHERE file_id=" . $this->da->escapeInt($file_id);
+        $sql     = "UPDATE frs_file SET status='D' WHERE file_id=" . $this->da->escapeInt($file_id);
         $deleted = $this->update($sql);
         return $deleted;
     }

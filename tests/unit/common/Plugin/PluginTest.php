@@ -43,14 +43,14 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testDefaultCallbackIsHookNameInCamelCase(): void
     {
-        $p = $this->getFakePluginToTestHooks();
+        $p   = $this->getFakePluginToTestHooks();
         $col = $p->getHooksAndCallbacks();
         $this->assertTrue($col->isEmpty());
 
         $hook = 'an_event';
         $p->addHook($hook);
-        $col = $p->getHooksAndCallbacks();
-        $it = $col->iterator();
+        $col          = $p->getHooksAndCallbacks();
+        $it           = $col->iterator();
         $current_hook = $it->current();
         $this->assertEquals($hook, $current_hook['hook']);
         $this->assertEquals('anEvent', $current_hook['callback']);
@@ -64,8 +64,8 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
         $hook     = 'name_of_hook';
         $callback = 'doSomething';
         $p->addHook($hook, $callback);
-        $col = $p->getHooksAndCallbacks();
-        $it = $col->iterator();
+        $col          = $p->getHooksAndCallbacks();
+        $it           = $col->iterator();
         $current_hook = $it->current();
         $this->assertEquals($hook, $current_hook['hook']);
         $this->assertEquals($callback, $current_hook['callback']);
@@ -80,8 +80,8 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
         $callback = 'doSomething';
         $recall   = true;
         $p->addHook($hook, $callback, $recall);
-        $col = $p->getHooksAndCallbacks();
-        $it = $col->iterator();
+        $col          = $p->getHooksAndCallbacks();
+        $it           = $col->iterator();
         $current_hook = $it->current();
         $this->assertEquals($hook, $current_hook['hook']);
         $this->assertEquals($callback, $current_hook['callback']);
@@ -117,7 +117,7 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
 
         ForgeConfig::set('sys_custompluginsroot', $root . '/test/custom/');
         $shortname = 'shortname';
-        $pm = \Mockery::spy(\PluginManager::class);
+        $pm        = \Mockery::spy(\PluginManager::class);
         $pm->shouldReceive('getNameForPlugin')->andReturns($shortname);
         $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $p->shouldReceive('_getPluginManager')->andReturns($pm);
@@ -129,7 +129,7 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
     {
         ForgeConfig::set('sys_pluginspath', '/plugins');
         $shortname = 'shortname';
-        $pm = \Mockery::spy(\PluginManager::class);
+        $pm        = \Mockery::spy(\PluginManager::class);
 
         $pm->shouldReceive('pluginIsCustom')->once()->andReturns(false);
         $pm->shouldReceive('getNameForPlugin')->andReturns($shortname);
@@ -149,8 +149,8 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
         ForgeConfig::set('sys_custompluginsroot', $tmp_dir . '/test/custom/');
         mkdir(dirname(ForgeConfig::get('sys_pluginsroot')));
 
-        $shortname     = 'shortname';
-        $pm = \Mockery::spy(\PluginManager::class);
+        $shortname = 'shortname';
+        $pm        = \Mockery::spy(\PluginManager::class);
         $pm->shouldReceive('pluginIsCustom')->andReturns(false, true, true);
         $pm->shouldReceive('getNameForPlugin')->andReturns($shortname);
         $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -241,8 +241,8 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
         ForgeConfig::set('sys_pluginsroot', $tmp_dir . '/test/plugins/');
         ForgeConfig::set('sys_custompluginsroot', $tmp_dir . '/test/custom/');
 
-        $shortname     = 'shortname';
-        $pm = \Mockery::spy(\PluginManager::class);
+        $shortname = 'shortname';
+        $pm        = \Mockery::spy(\PluginManager::class);
         $pm->shouldReceive('getNameForPlugin')->andReturns($shortname);
 
         $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -319,7 +319,7 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
         $plugin->setIsRestricted(false);
         $plugin->shouldReceive('isAllowed')->never();
         $services = [];
-        $params = [
+        $params   = [
             'project'  => Mockery::mock(Project::class),
             'services' => &$services
         ];
@@ -334,7 +334,7 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
         $plugin->shouldReceive('getServiceShortname')->andReturn('fooservice');
         $plugin->shouldReceive('isAllowed')->once()->andReturn(true);
         $services = [];
-        $params = [
+        $params   = [
             'project'  => Mockery::mock(Project::class, ['getID' => 101]),
             'services' => &$services
         ];
@@ -350,7 +350,7 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
         $plugin->setIsRestricted(true);
         $plugin->shouldReceive('isAllowed')->once()->andReturn(true);
         $services = [];
-        $params = [
+        $params   = [
             'project'  => Mockery::mock(Project::class, ['getID' => 101]),
             'services' => &$services
         ];
@@ -365,7 +365,7 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
         $plugin->shouldReceive('getServiceShortname')->andReturn('fooservice');
         $plugin->shouldReceive('isAllowed')->once()->andReturn(false);
         $services = [];
-        $params = [
+        $params   = [
             'project'  => Mockery::mock(Project::class, ['getID' => 101]),
             'services' => &$services
         ];

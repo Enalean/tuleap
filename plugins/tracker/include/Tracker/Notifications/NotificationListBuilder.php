@@ -53,11 +53,11 @@ class NotificationListBuilder
     {
         $notifications_presenters = [];
         foreach ($notifications as $notification) {
-            $emails_to_be_notified = $addresses_builder->transformNotificationAddressesStringAsArray(
+            $emails_to_be_notified      = $addresses_builder->transformNotificationAddressesStringAsArray(
                 $notification->getAddresses()
             );
-            $user_presenters   = $this->user_involved_in_notification_presenter_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
-            $ugroup_presenters = $this->ugroup_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($notification);
+            $user_presenters            = $this->user_involved_in_notification_presenter_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
+            $ugroup_presenters          = $this->ugroup_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($notification);
             $notifications_presenters[] = new PaneNotificationPresenter(
                 $notification,
                 $emails_to_be_notified,
@@ -87,9 +87,9 @@ class NotificationListBuilder
     {
         $ugroups_to_be_notified_parsed = [];
         foreach ($ugroups_to_be_notified as $ugroup_presenter) {
-            $ugroup_row    = $this->ugroup_dao->searchByUGroupId($ugroup_presenter->ugroup_id)->getRow();
-            $ugroup        = new ProjectUGroup($ugroup_row);
-            $ugroup_parsed = [
+            $ugroup_row                      = $this->ugroup_dao->searchByUGroupId($ugroup_presenter->ugroup_id)->getRow();
+            $ugroup                          = new ProjectUGroup($ugroup_row);
+            $ugroup_parsed                   = [
                 'type' => 'group',
                 'id'   => '_ugroup:' . $ugroup->getNormalizedName(),
                 'text' => $ugroup->getTranslatedName()
@@ -116,7 +116,7 @@ class NotificationListBuilder
     {
         $emails_to_be_notified_parsed = [];
         foreach ($emails_to_be_notified as $email) {
-            $email_parsed = [
+            $email_parsed                   = [
                 'type' => 'email',
                 'id'   => $email,
                 'text' => $email

@@ -13,7 +13,7 @@ require_once __DIR__ . '/../project/admin/project_admin_utils.php';
 ini_set('max_execution_time', 1800);
 
 $group_id = $request->getValidated('group_id', 'GroupId');
-$mode = $request->get('mode');
+$mode     = $request->get('mode');
 if ($group_id && $mode == "admin") {
     $hp = Codendi_HTMLPurifier::instance();
   //   the welcome screen when entering the import facility from admin page
@@ -21,7 +21,7 @@ if ($group_id && $mode == "admin") {
     session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
   //  get the Group object
-    $pm = ProjectManager::instance();
+    $pm    = ProjectManager::instance();
     $group = $pm->getProject($group_id);
     if (! $group || ! is_object($group) || $group->isError()) {
         exit_no_group();
@@ -43,7 +43,7 @@ if ($group_id && $mode == "admin") {
         \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
     );
 
-    $pm = ProjectManager::instance();
+    $pm      = ProjectManager::instance();
     $project = $pm->getProject($group_id);
     if (! $project->usesTracker()) {
         echo '<P> ' . $Language->getText('tracker_import_admin', 'disabled');

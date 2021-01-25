@@ -93,7 +93,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
 
         $args = $this->getArgs($argstr, $request);
         extract($args);
-        $query = new TextSearchQuery($pagename . SUBPAGE_SEPARATOR . '*', true, 'glob');
+        $query    = new TextSearchQuery($pagename . SUBPAGE_SEPARATOR . '*', true, 'glob');
         $subpages = $dbi->titleSearch($query, $sortby, $limit, $exclude);
         //if ($sortby)
         //    $subpages = $subpages->applyFilters(array('sortby' => $sortby, 'limit' => $limit, 'exclude' => $exclude));
@@ -147,9 +147,9 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                         continue;
                     }
                     $cpagename = $m[1];
-                    $page = $dbi->getPage($cpagename);
-                    $r = $page->getCurrentRevision();
-                    $c = $r->getContent();   // array of lines
+                    $page      = $dbi->getPage($cpagename);
+                    $r         = $page->getCurrentRevision();
+                    $c         = $r->getContent();   // array of lines
                 }
 
                 // moved to IncludePage

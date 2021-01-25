@@ -65,7 +65,7 @@ class SoftwareMapPresenter
         $this->project_list     = $projects;
         $this->pagination       = $pagination;
 
-        $this->has_parent       = $parent_id !== null;
-        $this->has_results      = count($this->project_list) > 0;
+        $this->has_parent  = $parent_id !== null;
+        $this->has_results = count($this->project_list) > 0;
     }
 }

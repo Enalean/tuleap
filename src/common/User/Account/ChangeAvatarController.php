@@ -50,7 +50,7 @@ class ChangeAvatarController implements DispatchableWithRequest
     ) {
         $this->csrf              = $csrf;
         $this->user_avatar_saver = $user_avatar_saver;
-        $this->user_manager = $user_manager;
+        $this->user_manager      = $user_manager;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void

@@ -36,20 +36,20 @@ $hp        = Codendi_HTMLPurifier::instance();
 
 if ($aid && ! $atid) {
     // We have the artifact id, but not the tracker id
-    $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id= " . db_ei($aid);
+    $sql    = "SELECT group_artifact_id FROM artifact WHERE artifact_id= " . db_ei($aid);
     $result = db_query($sql);
     if (db_numrows($result) > 0) {
-        $row = db_fetch_array($result);
+        $row  = db_fetch_array($result);
         $atid = $row['group_artifact_id'];
     }
 }
 
 if ($atid && ! $group_id) {
     // We have the artifact group id, but not the group id
-    $sql = "SELECT group_id FROM artifact_group_list WHERE group_artifact_id=" . db_ei($atid);
+    $sql    = "SELECT group_id FROM artifact_group_list WHERE group_artifact_id=" . db_ei($atid);
     $result = db_query($sql);
     if (db_numrows($result) > 0) {
-        $row = db_fetch_array($result);
+        $row      = db_fetch_array($result);
         $group_id = $row['group_id'];
     }
 }
@@ -67,7 +67,7 @@ if ($func == 'gotoid') {
     }
 } elseif ($group_id && $atid) {
         //      get the Group object
-        $pm = ProjectManager::instance();
+        $pm    = ProjectManager::instance();
         $group = $pm->getProject($group_id);
     if (! $group || ! is_object($group) || $group->isError()) {
             exit_no_group();
@@ -90,7 +90,7 @@ if ($func == 'gotoid') {
     }
 
         // Create field factory
-        $art_field_fact = new ArtifactFieldFactory($ath);
+        $art_field_fact    = new ArtifactFieldFactory($ath);
         $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
 
     switch ($func) {
@@ -135,7 +135,7 @@ if ($func == 'gotoid') {
                     // First check parameters
 
                     // CC
-                    $add_cc = $request->get('add_cc');
+                    $add_cc       = $request->get('add_cc');
                     $array_add_cc = preg_split('/[,;]/D', $add_cc);
                 if ($add_cc && ! util_validateCCList($array_add_cc, $message)) {
                     exit_error($Language->getText('tracker_index', 'cc_list_invalid'), $message);
@@ -184,7 +184,7 @@ if ($func == 'gotoid') {
                     }
 
                         // send an email to notify the user of the artifact add
-                        $agnf = new ArtifactGlobalNotificationFactory();
+                        $agnf      = new ArtifactGlobalNotificationFactory();
                         $addresses = $agnf->getAllAddresses($ath->getID());
                         $ah->mailFollowupWithPermissions($addresses);
 
@@ -221,7 +221,7 @@ if ($func == 'gotoid') {
                     // First check parameters
 
                     // CC
-                    $add_cc = $request->get('add_cc');
+                    $add_cc       = $request->get('add_cc');
                     $array_add_cc = preg_split('/[,;]/D', $add_cc);
                 if ($add_cc && ! util_validateCCList($array_add_cc, $message)) {
                     exit_error($Language->getText('tracker_index', 'cc_list_invalid'), $message);
@@ -272,14 +272,14 @@ if ($func == 'gotoid') {
 
                 // Add follow-up comments if any
                         $follow_up_comment = $request->get('follow_up_comment');
-                        $comment_type_id = $request->get('comment_type_id');
-                        $canned_response = $request->get('canned_response');
-                        $vFormat = new Valid_WhiteList('comment_format', [Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT]);
-                        $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
+                        $comment_type_id   = $request->get('comment_type_id');
+                        $canned_response   = $request->get('canned_response');
+                        $vFormat           = new Valid_WhiteList('comment_format', [Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT]);
+                        $comment_format    = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
                         $ah->addFollowUpComment($follow_up_comment, $comment_type_id, $canned_response, $changes, $comment_format);
 
                         // send an email to notify the user of the artifact update
-                            $agnf = new ArtifactGlobalNotificationFactory();
+                            $agnf      = new ArtifactGlobalNotificationFactory();
                             $addresses = $agnf->getAllAddresses($ath->getID());
                             $ah->mailFollowupWithPermissions($addresses);
 
@@ -307,8 +307,8 @@ if ($func == 'gotoid') {
             } else {
                 $changes        = [];
                 $artifact_cc_id = $request->get('artifact_cc_id');
-                    $cc_array = $ah->getCC($artifact_cc_id);
-                    $user_id  = UserManager::instance()->getCurrentUser()->getId();
+                    $cc_array   = $ah->getCC($artifact_cc_id);
+                    $user_id    = UserManager::instance()->getCurrentUser()->getId();
                     // Perform CC deletion if one of the condition is met:
                     // (a) current user is a artifact admin
                     // (b) then CC name is the current user
@@ -322,7 +322,7 @@ if ($func == 'gotoid') {
                 ) {
                         $changed = $ah->deleteCC($artifact_cc_id, $changes);
                     if ($changed) {
-                        $agnf = new ArtifactGlobalNotificationFactory();
+                        $agnf      = new ArtifactGlobalNotificationFactory();
                         $addresses = $agnf->getAllAddresses($ath->getID(), true);
                         $ah->mailFollowupWithPermissions($addresses, $changes);
                     }
@@ -383,9 +383,9 @@ if ($func == 'gotoid') {
                 exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
             } else {
                 $dependent_on_artifact_id = $request->get('dependent_on_artifact_id');
-                $changed = $ah->deleteDependency($dependent_on_artifact_id, $changes);
+                $changed                  = $ah->deleteDependency($dependent_on_artifact_id, $changes);
                 if ($changed) {
-                        $agnf = new ArtifactGlobalNotificationFactory();
+                        $agnf      = new ArtifactGlobalNotificationFactory();
                         $addresses = $agnf->getAllAddresses($ath->getID(), true);
                         $ah->mailFollowupWithPermissions($addresses, $changes);
                 }
@@ -398,7 +398,7 @@ if ($func == 'gotoid') {
                 $ah = new ArtifactHtml($ath, $aid);
 
                 // Check permissions
-                $id = $request->get('id');
+                $id         = $request->get('id');
                 $file_array = $ah->getAttachedFile($id);
             if (
                 user_ismember($group_id) ||
@@ -451,7 +451,7 @@ if ($func == 'gotoid') {
                     // First check parameters
 
                     // CC
-                    $add_cc = $request->get('add_cc');
+                    $add_cc       = $request->get('add_cc');
                     $array_add_cc = preg_split('/[,;]/D', $add_cc);
                 if ($add_cc && ! util_validateCCList($array_add_cc, $message)) {
                     exit_error($Language->getText('tracker_index', 'cc_list_invalid'), $message);
@@ -469,7 +469,7 @@ if ($func == 'gotoid') {
 
                     //data control layer
                     $canned_response = $request->get('canned_response');
-                    $changed = $ah->handleUpdate($request->get('artifact_id_dependent'), $canned_response, $changes);
+                    $changed         = $ah->handleUpdate($request->get('artifact_id_dependent'), $canned_response, $changes);
                 if (! $changed) {
                         $GLOBALS['Response']->redirect('?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '&func=browse');
                         exit();
@@ -506,7 +506,7 @@ if ($func == 'gotoid') {
                     $changed |= $ah->addCC($add_cc, $sanitizer->sanitize($request->get('cc_comment')), $changes);
                 }
                 if ($changed && $changes) {
-                    $agnf = new ArtifactGlobalNotificationFactory();
+                    $agnf      = new ArtifactGlobalNotificationFactory();
                     $addresses = $agnf->getAllAddresses($ath->getID(), true);
                     $ah->mailFollowupWithPermissions($addresses, $changes);
                 }
@@ -557,7 +557,7 @@ if ($func == 'gotoid') {
          // First check parameters
 
                 // CC
-                $add_cc = $request->get('add_cc');
+                $add_cc       = $request->get('add_cc');
                 $array_add_cc = preg_split('/[,;]/D', $add_cc);
             if ($add_cc && ! util_validateCCList($array_add_cc, $message)) {
                 exit_error($Language->getText('tracker_index', 'cc_list_invalid'), $message);
@@ -572,14 +572,14 @@ if ($func == 'gotoid') {
                 $report_fact = new ArtifactReportFactory();
              // Create the HTML report object
                 $art_report_html = $report_fact->getArtifactReportHtml($report_id, $atid);
-                $query = $art_field_fact->extractFieldList(true, 'query_');
-                $advsrch = $request->get('advsrch');
-                $from    = '';
-                $where   = '';
+                $query           = $art_field_fact->extractFieldList(true, 'query_');
+                $advsrch         = $request->get('advsrch');
+                $from            = '';
+                $where           = '';
                 $art_report_html->getQueryElements($query, $advsrch, $from, $where);
                 $sql = "select distinct a.artifact_id " . $from . " " . $where;
 
-                $result = db_query($sql);
+                $result     = db_query($sql);
                 $number_aid = db_numrows($result);
             } else {
                 $mass_change_ids = $request->get('mass_change_ids');
@@ -587,7 +587,7 @@ if ($func == 'gotoid') {
                 $number_aid = count($mass_change_ids);
             }
 
-            $feedback = '';
+            $feedback        = '';
             $canned_response = $request->get('canned_response');
             for ($i = 0; $i < $number_aid; $i++) {
                 if ($report_id) {
@@ -695,7 +695,7 @@ if ($func == 'gotoid') {
             $email   = $request->get('email');
             $changes = [];
             if ($comment) {
-                $vFormat = new Valid_WhiteList('comment_format', [Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT]);
+                $vFormat        = new Valid_WhiteList('comment_format', [Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT]);
                 $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
                 if (! $ah->addComment($comment, $email, $changes, $comment_format)) {
                     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_saved_comment'));
@@ -735,7 +735,7 @@ if ($func == 'gotoid') {
             }
 
             // send an email to notify the user of the bug update
-            $agnf = new ArtifactGlobalNotificationFactory();
+            $agnf      = new ArtifactGlobalNotificationFactory();
             $addresses = $agnf->getAllAddresses($ath->getID(), true);
             $ah->mailFollowupWithPermissions($addresses, $changes);
             $GLOBALS['Response']->redirect('?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '&func=browse');
@@ -790,8 +790,8 @@ if ($func == 'gotoid') {
                     $aid_column      = $request->get('aid_column');
                     for ($i = 0; $i < $count_artifacts; $i++) {
                         for ($c = 0; $c < count($parsed_labels); $c++) {
-                            $label = $parsed_labels[$c];
-                               $var_name = "artifacts_data_" . $i . "_" . $c;
+                            $label           = $parsed_labels[$c];
+                               $var_name     = "artifacts_data_" . $i . "_" . $c;
                                $data[$label] = $request->get($var_name);
                                //echo "insert $label,".$$var_name." into data<br>";
                         }
@@ -815,13 +815,13 @@ if ($func == 'gotoid') {
             $artifact_id = $request->get('artifact_id');
             if (user_isloggedin() && $request->exist('followup_update')) {
                 $followup_update = $request->get('followup_update');
-                $ah = new ArtifactHtml($ath, $artifact_id);
-                $vFormat = new Valid_WhiteList('comment_format', [Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT]);
-                $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
-                $changes        = [];
+                $ah              = new ArtifactHtml($ath, $artifact_id);
+                $vFormat         = new Valid_WhiteList('comment_format', [Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT]);
+                $comment_format  = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
+                $changes         = [];
                 if ($ah->updateFollowupComment($request->get('artifact_history_id'), $followup_update, $changes, $comment_format)) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_common_artifact', 'followup_upd_succ'));
-                    $agnf = new ArtifactGlobalNotificationFactory();
+                    $agnf      = new ArtifactGlobalNotificationFactory();
                     $addresses = $agnf->getAllAddresses($ath->getID(), true);
                     $ah->mailFollowupWithPermissions($addresses, $changes);
                 } else {
@@ -833,17 +833,17 @@ if ($func == 'gotoid') {
         case 'browse':
                 $masschange = false;
             if ($request->get('change_report_column')) {
-                $report_id = $request->getValidated('report_id', 'uint');
-                $field_name  = $request->getValidated('change_report_column', 'string');
-                $arf = new ArtifactReportFactory();
+                $report_id  = $request->getValidated('report_id', 'uint');
+                $field_name = $request->getValidated('change_report_column', 'string');
+                $arf        = new ArtifactReportFactory();
                 if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
                     $report->toggleFieldColumnUsage($field_name);
                 }
                 $GLOBALS['Response']->redirect('?group_id=' . (int) $group_id . '&atid=' . (int) $atid . '&func=browse');
             } elseif ($request->get('change_report_query')) {
-                $report_id = $request->getValidated('report_id', 'uint');
-                $field_name  = $request->getValidated('change_report_query', 'string');
-                $arf = new ArtifactReportFactory();
+                $report_id  = $request->getValidated('report_id', 'uint');
+                $field_name = $request->getValidated('change_report_query', 'string');
+                $arf        = new ArtifactReportFactory();
                 if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
                     $report->toggleFieldQueryUsage($field_name);
                 }
@@ -851,7 +851,7 @@ if ($func == 'gotoid') {
             } elseif ($reordercolumns = $request->get('reordercolumns')) {
                 if (is_array($reordercolumns)) {
                     $report_id = $request->getValidated('report_id', 'uint');
-                    $arf = new ArtifactReportFactory();
+                    $arf       = new ArtifactReportFactory();
                     if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
                         //Todo: check that the user can update the report
                         $id           = key($reordercolumns);
@@ -877,7 +877,7 @@ if ($func == 'gotoid') {
             } elseif ($resizecolumns = $request->get('resizecolumns')) {
                 if (is_array($resizecolumns)) {
                     $report_id = $request->getValidated('report_id', 'uint');
-                    $arf = new ArtifactReportFactory();
+                    $arf       = new ArtifactReportFactory();
                     if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
                         //Todo: check that the user can update the report
                         $dao = new ArtifactReportFieldDao(CodendiDataAccess::instance());
@@ -893,7 +893,7 @@ if ($func == 'gotoid') {
             break;
         case 'masschange':
             $masschange = true;
-            $export = false;
+            $export     = false;
             require('./browse.php');
             break;
 
@@ -951,7 +951,7 @@ if ($func == 'gotoid') {
             $em->processEvent('tracker_collapsable_sections', ['sections' => &$collapsable_sections]);
             if (in_array($request->get('section'), $collapsable_sections)) {
                 $current_user = UserManager::instance()->getCurrentUser();
-                $pref_name = 'tracker_' . (int) $atid . '_hide_section_' . $request->get('section');
+                $pref_name    = 'tracker_' . (int) $atid . '_hide_section_' . $request->get('section');
                 if ($current_user->getPreference($pref_name)) {
                     $current_user->delPreference($pref_name);
                 } else {
@@ -968,7 +968,7 @@ if ($func == 'gotoid') {
     } // switch
 } elseif ($group_id) {
         //  get the Group object
-        $pm = ProjectManager::instance();
+        $pm    = ProjectManager::instance();
         $group = $pm->getProject($group_id);
     if (! $group || ! is_object($group) || $group->isError()) {
             exit_no_group();
@@ -984,12 +984,12 @@ if ($func == 'gotoid') {
         $pv = $request->get('pv');
 
         //required params for site_project_header();
-        $params['group'] = $group_id;
-        $params['toptab'] = 'tracker';
+        $params['group']    = $group_id;
+        $params['toptab']   = 'tracker';
         $params['pagename'] = 'trackers';
-        $params['title'] = $Language->getText('tracker_index', 'trackers_for', $group->getPublicName());
-        $params['help'] = 'tracker-v3.html';
-        $params['pv']  = $pv ? $pv : '';
+        $params['title']    = $Language->getText('tracker_index', 'trackers_for', $group->getPublicName());
+        $params['help']     = 'tracker-v3.html';
+        $params['pv']       = $pv ? $pv : '';
 
         echo site_project_header($params);
         echo '<strong>';

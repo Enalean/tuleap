@@ -28,7 +28,7 @@ final class ArtifactRuleValueViewTest extends \PHPUnit\Framework\TestCase
 
     public function testFetch(): void
     {
-        $rule = \Mockery::spy(\ArtifactRuleValue::class);
+        $rule                    = \Mockery::spy(\ArtifactRuleValue::class);
         $rule->id                = 'id';
         $rule->group_artifact_id = 'group_artifact_id';
         $rule->source_field      = 'source_field';

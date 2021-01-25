@@ -50,10 +50,10 @@ class LFSObjectRetrieverTest extends TestCase
             ['object_oid' => 'oid4']
         ]);
 
-        $object_retriever     = new LFSObjectRetriever($this->dao);
-        $repository           = \Mockery::mock(\GitRepository::class);
+        $object_retriever = new LFSObjectRetriever($this->dao);
+        $repository       = \Mockery::mock(\GitRepository::class);
         $repository->shouldReceive('getId')->andReturns(123);
-        $existing_objects     = $object_retriever->getExistingLFSObjectsFromTheSetForRepository($repository, ...$objects);
+        $existing_objects = $object_retriever->getExistingLFSObjectsFromTheSetForRepository($repository, ...$objects);
 
         $this->assertCount(2, $existing_objects);
         $this->assertContains($objects[2], $existing_objects);

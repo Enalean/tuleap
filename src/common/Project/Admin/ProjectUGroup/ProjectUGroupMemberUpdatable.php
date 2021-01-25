@@ -46,7 +46,7 @@ class ProjectUGroupMemberUpdatable implements Dispatchable
 
     public function __construct(\ProjectUGroup $group)
     {
-        $this->group   = $group;
+        $this->group                 = $group;
         $this->members_indexed_by_id = [];
         foreach ($group->getMembersIncludingSuspendedAndDeleted() as $member) {
             $this->members_indexed_by_id[$member->getId()] = $member;

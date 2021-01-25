@@ -44,9 +44,9 @@ class AuthorizationCreator
         AuthorizationDao $authorization_dao,
         AuthorizationScopeDao $scope_dao
     ) {
-        $this->executor = $executor;
+        $this->executor          = $executor;
         $this->authorization_dao = $authorization_dao;
-        $this->scope_dao = $scope_dao;
+        $this->scope_dao         = $scope_dao;
     }
 
     public function saveAuthorization(NewAuthorization $new_authorization): void

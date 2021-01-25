@@ -38,7 +38,7 @@ class GitActionsTest extends TestCase
         $GLOBALS['Language']->shouldReceive('getText')->with('plugin_git', 'actions_no_repository_forked', '*')->andReturns('actions_no_repository_forked');
         $GLOBALS['Language']->shouldReceive('getText')->with('plugin_git', 'successfully_forked', '*')->andReturns('successfully_forked');
 
-        $git_plugin  = Mockery::mock(\GitPlugin::class)
+        $git_plugin = Mockery::mock(\GitPlugin::class)
             ->shouldReceive('areFriendlyUrlsActivated')
             ->andReturnFalse()
             ->getMock();
@@ -288,7 +288,7 @@ class GitActionsTest extends TestCase
     public function testConfirmPrivateFailNoAccess(): void
     {
         $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $git = \Mockery::spy(\Git::class);
+        $git       = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
@@ -306,7 +306,7 @@ class GitActionsTest extends TestCase
     public function testConfirmPrivateFailNoDesc(): void
     {
         $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $git = \Mockery::spy(\Git::class);
+        $git       = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
@@ -324,7 +324,7 @@ class GitActionsTest extends TestCase
     public function testConfirmPrivateNotSettingToPrivate(): void
     {
         $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $git = \Mockery::spy(\Git::class);
+        $git       = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $gitRepository->shouldReceive('getAccess')->andReturns('public');
@@ -343,7 +343,7 @@ class GitActionsTest extends TestCase
     public function testConfirmPrivateAlreadyPrivate(): void
     {
         $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $git = \Mockery::spy(\Git::class);
+        $git       = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $gitRepository->shouldReceive('getAccess')->andReturns('private');
@@ -362,7 +362,7 @@ class GitActionsTest extends TestCase
     public function testConfirmPrivateNoMailsToDelete(): void
     {
         $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $git = \Mockery::spy(\Git::class);
+        $git       = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $gitRepository->shouldReceive('getAccess')->andReturns('public');
@@ -381,7 +381,7 @@ class GitActionsTest extends TestCase
     public function testConfirmPrivate(): void
     {
         $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $git = \Mockery::spy(\Git::class);
+        $git       = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $gitRepository->shouldReceive('getAccess')->andReturns('public');
@@ -432,7 +432,7 @@ class GitActionsTest extends TestCase
             ]
         );
 
-        $dao    = \Mockery::spy(\GitDao::class);
+        $dao = \Mockery::spy(\GitDao::class);
         $dao->shouldReceive('getProjectRepositoryList')->with($projectId, false, true, null)->andReturns($project_repos);
         $dao->shouldReceive('getProjectRepositoryList')->with($projectId, false, true, $userId)->andReturns($sandra_repos);
         $dao->shouldReceive('getProjectRepositoriesOwners')->with($projectId)->andReturns($repo_owners);

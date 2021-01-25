@@ -144,8 +144,8 @@ class PullRequestRepresentation extends PullRequestMinimalRepresentation
         $this->head_reference = $git_reference->getGitHeadReference();
         $this->status         = $this->expandStatusName($pull_request->getStatus());
 
-        $this->last_build_status                  = $last_build_status_name;
-        $this->last_build_date                    = JsonCast::toDate($last_build_date);
+        $this->last_build_status = $last_build_status_name;
+        $this->last_build_date   = JsonCast::toDate($last_build_date);
 
         $this->user_can_update_labels = $user_can_update_labels;
         $this->user_can_merge         = $user_can_merge;

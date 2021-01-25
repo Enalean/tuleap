@@ -53,7 +53,7 @@ abstract class Widget_ProjectLatestCommits extends Widget
             $pm      = ProjectManager::instance();
             $project = $pm->getProject($this->group_id);
             if ($project && $this->canBeUsedByProject($project)) {
-                $get_commits_callback = $this->commits_callback;
+                $get_commits_callback          = $this->commits_callback;
                 list($this->latest_revisions,) = $get_commits_callback($project, 0, 5);
             }
         }

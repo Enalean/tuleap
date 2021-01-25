@@ -184,9 +184,9 @@ class Tracker_HierarchyFactory
     {
         $hierarchy         = $this->getHierarchy([$tracker->getId()]);
         $parent_tracker_id = $hierarchy->getParent($tracker->getId());
-        $stack = [];
+        $stack             = [];
         while (($parent_tracker_id !== null) && ($parent_tracker = $this->tracker_factory->getTrackerById($parent_tracker_id))) {
-            $stack[] = $parent_tracker;
+            $stack[]           = $parent_tracker;
             $parent_tracker_id = $hierarchy->getParent($parent_tracker->getId());
         }
         return $stack;
@@ -204,9 +204,9 @@ class Tracker_HierarchyFactory
     {
         $hierarchy         = $this->getHierarchy([$tracker_id]);
         $parent_tracker_id = $hierarchy->getParent($tracker_id);
-        $stack = [$tracker_id];
+        $stack             = [$tracker_id];
         while ($parent_tracker_id) {
-            $stack[] = $parent_tracker_id;
+            $stack[]           = $parent_tracker_id;
             $parent_tracker_id = $hierarchy->getParent($parent_tracker_id);
         }
         return $stack;
@@ -269,7 +269,7 @@ class Tracker_HierarchyFactory
             if ($parent === null || $parent->getId() == $child->getId() || isset($stack[$parent->getId()])) {
                 $this->cache_ancestors[$user->getId()][$child->getId()] = [];
             } else {
-                $stack[$parent->getId()] = true;
+                $stack[$parent->getId()]                                = true;
                 $this->cache_ancestors[$user->getId()][$child->getId()] = array_merge([$parent], $this->getAllAncestors($user, $parent, $stack));
             }
         }
@@ -284,7 +284,7 @@ class Tracker_HierarchyFactory
     public function duplicate($tracker_mapping)
     {
         $search_tracker_ids = array_keys($tracker_mapping);
-        $hierarchy_dar     = $this->hierarchy_dao->searchTrackerHierarchy($search_tracker_ids);
+        $hierarchy_dar      = $this->hierarchy_dao->searchTrackerHierarchy($search_tracker_ids);
 
         foreach ($hierarchy_dar as $row) {
             $this->hierarchy_dao->duplicate($row['parent_id'], $row['child_id'], $tracker_mapping);

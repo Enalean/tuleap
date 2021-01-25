@@ -81,7 +81,7 @@ class Toggler
     public static function getClassname($id, $force = null, $noajax = false)
     {
         $current_user = UserManager::instance()->getCurrentUser();
-        $ajax_mode = $current_user->isAnonymous() || $noajax ? '-noajax' : '';
+        $ajax_mode    = $current_user->isAnonymous() || $noajax ? '-noajax' : '';
         if ($current_user->isAnonymous()) {
             return $force === true ? 'toggler' . $ajax_mode : 'toggler-hide' . $ajax_mode;
         } else {
@@ -106,7 +106,7 @@ class Toggler
             EventManager::instance()->processEvent(Event::TOGGLE, ['id' => $id, 'user' => $current_user, 'done' => &$done]);
             if (! $done) {
                 if (strpos($id, 'tracker_report_query_') === 0) {
-                    $report_id = (int) substr($id, strlen('tracker_report_query_'));
+                    $report_id      = (int) substr($id, strlen('tracker_report_query_'));
                     $report_factory = ArtifactReportFactory::instance();
                     if (($report = $report_factory->getReportById($report_id, $current_user->getid())) && $report->userCanUpdate($current_user)) {
                         $report->toggleQueryDisplay();

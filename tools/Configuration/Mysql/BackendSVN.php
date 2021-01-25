@@ -41,9 +41,9 @@ class BackendSVN
 
     public function configure()
     {
-        $output = [];
+        $output       = [];
         $return_value = 0;
-        $command = sprintf(
+        $command      = sprintf(
             '%s/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init --host=%s --admin-user=%s --admin-password=%s --db-name=%s --nss-user=%s@%s --nss-password=%s 2>&1',
             escapeshellarg($this->app_dir),
             escapeshellarg($this->db_host),

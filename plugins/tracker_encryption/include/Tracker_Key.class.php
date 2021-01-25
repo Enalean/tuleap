@@ -48,7 +48,7 @@ class Tracker_Key
     public function getKey()
     {
         $result = '';
-        $array = ($this->dao_pub_key->retrieveKey($this->id_tracker));
+        $array  = ($this->dao_pub_key->retrieveKey($this->id_tracker));
         foreach ($array as $key => $value) {
             $result = $value['key_content'];
         }

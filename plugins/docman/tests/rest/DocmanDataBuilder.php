@@ -66,7 +66,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $common_builder = new DocmanDataBuildCommon(self::PROJECT_NAME);
 
-        $file_builder   = new DocmanFileDataBuild($common_builder);
+        $file_builder = new DocmanFileDataBuild($common_builder);
         $file_builder->createFolderFileWithContent($docman_root);
 
         $file_builder = new DocmanEmbeddedDataBuild($common_builder);

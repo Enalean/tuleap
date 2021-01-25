@@ -51,7 +51,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
 
     public function testGetTemplateFromProjectForCreationFromRESTRepresentation(): void
     {
-        $representation = new ProjectPostRepresentation();
+        $representation              = new ProjectPostRepresentation();
         $representation->template_id = 123;
 
         $expected_project = $this->mockForSuccessfulValidation($representation->template_id);
@@ -127,7 +127,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
 
     public function testGetTemplateFromProjectForCreationIsNotValidWhenProjectToUseAsTemplateDoesNotExist(): void
     {
-        $representation = new ProjectPostRepresentation();
+        $representation              = new ProjectPostRepresentation();
         $representation->template_id = 404;
 
         $project = Mockery::mock(Project::class);
@@ -146,7 +146,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
 
     public function testGetTemplateFromProjectForCreationIsNotValidWhenProjectToUseAsTemplateIsNotActiveAndNotMarkedAsTemplate(): void
     {
-        $representation = new ProjectPostRepresentation();
+        $representation              = new ProjectPostRepresentation();
         $representation->template_id = 124;
 
         $project = Mockery::mock(Project::class);
@@ -167,7 +167,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
 
     public function testGetTemplateFromProjectForCreationIsNotValidWhenProjectToUseIsActiveButTheUserRequestingTheCreationIsNotOneOfTheProjectAdmins(): void
     {
-        $representation = new ProjectPostRepresentation();
+        $representation              = new ProjectPostRepresentation();
         $representation->template_id = 125;
 
         $project = Mockery::mock(Project::class);

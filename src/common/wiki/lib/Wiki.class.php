@@ -189,7 +189,7 @@ class Wiki
             $entry = new WikiEntry();
             $wei   = $entry->getEntryIterator($this->gid);
             if ($wei->valid()) {
-                $we = $wei->current(); // get first element
+                $we                = $wei->current(); // get first element
                 $this->language_id = $we->getLanguage_id();
             }
         }

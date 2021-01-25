@@ -55,7 +55,7 @@ class Git_Hook_LogAnalyzer
                 $revision_list = $this->exec_repo->revListSinceStart($refname, $newrev);
                 $change_type   = Git_Hook_PushDetails::ACTION_CREATE;
             } elseif ($newrev == self::FAKE_EMPTY_COMMIT) {
-                $change_type   = Git_Hook_PushDetails::ACTION_DELETE;
+                $change_type = Git_Hook_PushDetails::ACTION_DELETE;
             } else {
                 $revision_list = $this->exec_repo->revList($oldrev, $newrev);
                 $change_type   = Git_Hook_PushDetails::ACTION_UPDATE;

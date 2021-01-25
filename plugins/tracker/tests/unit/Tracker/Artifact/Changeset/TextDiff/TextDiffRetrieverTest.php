@@ -82,9 +82,9 @@ final class TextDiffRetrieverTest extends TestCase
             new DiffProcessor(new \Codendi_UnifiedDiffFormatter())
         );
 
-        $this->next_changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
+        $this->next_changeset     = \Mockery::mock(\Tracker_Artifact_Changeset::class);
         $this->previous_changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $this->field_text = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
+        $this->field_text         = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
     }
 
     public function testItThrowsIfUserCanNotReadArtifact(): void
@@ -141,7 +141,7 @@ final class TextDiffRetrieverTest extends TestCase
 
     public function testItReturnsEmptyWhenLastChangesetDoesNotExists(): void
     {
-        $user = \Mockery::mock(\PFUser::class);
+        $user    = \Mockery::mock(\PFUser::class);
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getCurrentUser')->andReturn($user);
         $this->getAnArtifact(123, $user, true);
@@ -203,7 +203,7 @@ final class TextDiffRetrieverTest extends TestCase
 
     public function testItReturnsTheDiffForTextFormat(): void
     {
-        $user = \Mockery::mock(\PFUser::class);
+        $user    = \Mockery::mock(\PFUser::class);
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getCurrentUser')->andReturn($user);
         $this->getAnArtifact(123, $user, true);
@@ -242,7 +242,7 @@ final class TextDiffRetrieverTest extends TestCase
 
     public function testItReturnsTheDiffForHTMLFormat(): void
     {
-        $user = \Mockery::mock(\PFUser::class);
+        $user    = \Mockery::mock(\PFUser::class);
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getCurrentUser')->andReturn($user);
         $this->getAnArtifact(123, $user, true);

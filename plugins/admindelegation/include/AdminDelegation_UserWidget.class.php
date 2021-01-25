@@ -71,9 +71,9 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
     public function getProjectAdmins($groupId)
     {
         $admins = [];
-        $um = UserManager::instance();
-        $sql = 'SELECT u.user_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = ' . db_ei($groupId);
-        $res = db_query($sql);
+        $um     = UserManager::instance();
+        $sql    = 'SELECT u.user_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = ' . db_ei($groupId);
+        $res    = db_query($sql);
         while ($row = db_fetch_array($res)) {
             $admins[] = $um->getUserById($row['user_id']);
         }
@@ -84,9 +84,9 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
     {
         $html = '';
 
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp      = Codendi_HTMLPurifier::instance();
         $request = HTTPRequest::instance();
-        $vFunc = new Valid_WhiteList('plugin_admindelegation_func', ['show_admins']);
+        $vFunc   = new Valid_WhiteList('plugin_admindelegation_func', ['show_admins']);
         $vFunc->required();
         if ($request->valid($vFunc)) {
             $func = $request->get('plugin_admindelegation_func');
@@ -122,9 +122,9 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
 
         if ($func == 'show_admins' && $project && $project->isActive()) {
             $allAdmins = [];
-            $users = $this->getProjectAdmins($project->getId());
+            $users     = $this->getProjectAdmins($project->getId());
             if (count($users) > 0) {
-                $uh = UserHelper::instance();
+                $uh    = UserHelper::instance();
                 $html .= '<table width="100%" class="tlp-table">';
                 $html .= '<thead>';
                 $html .= '<tr>';
@@ -133,14 +133,14 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
                 $html .= '</tr>';
                 $html .= '</thead>';
                 $html .= '<tbody>';
-                $i = 1;
+                $i     = 1;
                 foreach ($users as $u) {
-                    $mailto = $u->getEmail();
+                    $mailto      = $u->getEmail();
                     $allAdmins[] = $mailto;
-                    $html .= '<tr class="' . util_get_alt_row_color($i++) . '">';
-                    $html .= '<td>' . $hp->purify($uh->getDisplayNameFromUser($u)) . '</td>';
-                    $html .= '<td><a href="mailto:' . $hp->purify($mailto) . '">' . $hp->purify($u->getEmail()) . '</a></td>';
-                    $html .= '</tr>';
+                    $html       .= '<tr class="' . util_get_alt_row_color($i++) . '">';
+                    $html       .= '<td>' . $hp->purify($uh->getDisplayNameFromUser($u)) . '</td>';
+                    $html       .= '<td><a href="mailto:' . $hp->purify($mailto) . '">' . $hp->purify($u->getEmail()) . '</a></td>';
+                    $html       .= '</tr>';
                 }
                 $html .= '</tbody>';
                 $html .= '</table>';

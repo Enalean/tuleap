@@ -40,7 +40,7 @@ class Git_Hook_ExtractCrossReferences
 
     public function __construct(Git_Exec $git_exec, ReferenceManager $reference_manager)
     {
-        $this->git_exec = $git_exec;
+        $this->git_exec          = $git_exec;
         $this->reference_manager = $reference_manager;
     }
 

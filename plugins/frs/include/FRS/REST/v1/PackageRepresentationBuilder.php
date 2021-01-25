@@ -48,8 +48,8 @@ class PackageRepresentationBuilder
 
     public function __construct(IPermissionsManagerNG $permissions_manager, UGroupManager $ugroup_manager, FRSPermissionManager $frs_permission_manager)
     {
-        $this->permissions_manager = $permissions_manager;
-        $this->ugroup_manager = $ugroup_manager;
+        $this->permissions_manager    = $permissions_manager;
+        $this->ugroup_manager         = $ugroup_manager;
         $this->frs_permission_manager = $frs_permission_manager;
     }
 
@@ -81,7 +81,7 @@ class PackageRepresentationBuilder
         foreach ($ugroup_ids as $ugroup_id) {
             $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
             if ($ugroup) {
-                $ugroup_representation = new MinimalUserGroupRepresentation((int) $project->getID(), $ugroup);
+                $ugroup_representation    = new MinimalUserGroupRepresentation((int) $project->getID(), $ugroup);
                 $permissions_for_groups[] = $ugroup_representation;
             }
         }

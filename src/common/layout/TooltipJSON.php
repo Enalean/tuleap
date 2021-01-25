@@ -36,6 +36,6 @@ class TooltipJSON
     public function __construct(string $title_as_html, string $body_as_html)
     {
         $this->title_as_html = $title_as_html;
-        $this->body_as_html = $body_as_html;
+        $this->body_as_html  = $body_as_html;
     }
 }

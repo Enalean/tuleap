@@ -229,7 +229,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
      */
     public function testOptionsArtifactIdIsAllowedForADifferentUser($file_id)
     {
-        $request = $this->client->options('artifact_temporary_files/' . $file_id);
+        $request  = $this->client->options('artifact_temporary_files/' . $file_id);
         $response = $this->getResponseForDifferentUser($request);
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -246,9 +246,9 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
 
     public function testAttachFileToPostArtifact()
     {
-        $post_resource = json_encode($this->third_file);
-        $request  = $this->client->post('artifact_temporary_files', null, $post_resource);
-        $response = $this->getResponse($request);
+        $post_resource       = json_encode($this->third_file);
+        $request             = $this->client->post('artifact_temporary_files', null, $post_resource);
+        $response            = $this->getResponse($request);
         $file_representation = $response->json();
 
         $structure = $this->tracker_representations[$this->user_stories_tracker_id];
@@ -292,7 +292,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $this->assertEquals($response->getStatusCode(), 201);
         $posted_artifact = $response->json();
 
-        $response = $this->getResponse($this->client->get('artifacts/' . $posted_artifact['id']));
+        $response        = $this->getResponse($this->client->get('artifacts/' . $posted_artifact['id']));
         $posted_artifact = $response->json();
 
         $this->assertCount(10, $posted_artifact['values']);
@@ -388,7 +388,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $response = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $params));
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $response = $this->getResponse($this->client->get('artifacts/' . $artifact_id));
+        $response        = $this->getResponse($this->client->get('artifacts/' . $artifact_id));
         $posted_artifact = $response->json();
         $this->assertCount(9, $posted_artifact['values']);
 
@@ -471,9 +471,9 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
 
     public function testArtifactTemporaryFilesDeleteId()
     {
-        $post_resource = json_encode($this->second_file);
-        $request  = $this->client->post('artifact_temporary_files', null, $post_resource);
-        $response = $this->getResponse($request);
+        $post_resource       = json_encode($this->second_file);
+        $request             = $this->client->post('artifact_temporary_files', null, $post_resource);
+        $response            = $this->getResponse($request);
         $file_representation = $response->json();
 
         $response = $this->getResponse($this->client->delete('artifact_temporary_files/' . $file_representation['id']));

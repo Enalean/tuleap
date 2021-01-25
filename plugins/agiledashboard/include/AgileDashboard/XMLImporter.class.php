@@ -41,8 +41,8 @@ class AgileDashboard_XMLImporter
      */
     public function toArray(SimpleXMLElement $xml_object, array $tracker_mappings)
     {
-        $plannings_node_name = XMLExporter::NODE_PLANNINGS;
-        $plannings = [];
+        $plannings_node_name             = XMLExporter::NODE_PLANNINGS;
+        $plannings                       = [];
         $plannings[$plannings_node_name] = [];
 
         if (! $xml_object->$plannings_node_name) {

@@ -58,7 +58,7 @@ class MoveToCentralDbDao extends DataAccessObject
     private function getAllProjectsWithDedicatedDb()
     {
         $central_db_name = $this->da->quoteSmart($this->central_database_name);
-        $sql = "SELECT plugin_mediawiki_database.*
+        $sql             = "SELECT plugin_mediawiki_database.*
                 FROM plugin_mediawiki_database
                   JOIN groups ON (group_id = project_id)
                   JOIN service ON (service.group_id = groups.group_id AND short_name = 'plugin_mediawiki')
@@ -105,9 +105,9 @@ class MoveToCentralDbDao extends DataAccessObject
     {
         $dar = $this->retrieve("SHOW TABLES FROM $database_name");
         foreach ($dar as $row) {
-            $table_name = array_pop($row);
+            $table_name     = array_pop($row);
             $new_table_name = 'mw_' . $project_id . '_' . substr($table_name, 2);
-            $sql = sprintf(
+            $sql            = sprintf(
                 'ALTER TABLE `%s`.`%s` RENAME `%s`.`%s`',
                 $database_name,
                 $table_name,

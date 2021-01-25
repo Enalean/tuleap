@@ -48,7 +48,7 @@ class Tracker_Semantic_ContributorFactoryTest extends TestCase
         $f3 = Mockery::mock(Tracker_FormElement_Field_List::class);
         $f3->shouldReceive('getId')->andReturns(113);
 
-        $mapping = [
+        $mapping              = [
                     'F9'  => $f1,
                     'F13'  => $f2,
                     'F16' => $f3

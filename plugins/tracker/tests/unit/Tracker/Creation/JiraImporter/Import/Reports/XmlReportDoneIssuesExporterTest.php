@@ -128,7 +128,7 @@ final class XmlReportDoneIssuesExporterTest extends TestCase
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
         );
 
-        $tracker_node = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
+        $tracker_node       = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
         $this->reports_node = $tracker_node->addChild('reports');
 
         $this->cdata_factory             = new \XML_SimpleXMLCDATAFactory();

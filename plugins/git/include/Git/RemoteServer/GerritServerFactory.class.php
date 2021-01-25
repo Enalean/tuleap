@@ -35,10 +35,10 @@ class Git_RemoteServer_GerritServerFactory
 
     public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao, Git_SystemEventManager $system_event_manager, ProjectManager $project_manager)
     {
-        $this->dao     = $dao;
-        $this->git_dao = $git_dao;
+        $this->dao                  = $dao;
+        $this->git_dao              = $git_dao;
         $this->system_event_manager = $system_event_manager;
-        $this->project_manager = $project_manager;
+        $this->project_manager      = $project_manager;
     }
 
     /**
@@ -47,7 +47,7 @@ class Git_RemoteServer_GerritServerFactory
      */
     public function getServer(GitRepository $repository)
     {
-        $id  = $repository->getRemoteServerId();
+        $id = $repository->getRemoteServerId();
         return $this->getServerById($id);
     }
 

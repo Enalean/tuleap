@@ -144,7 +144,7 @@ class WikiPlugin_PageDump extends WikiPlugin
             _("Download for CVS"),
             $page
         );
-        $dl = Button(
+        $dl    = Button(
             [//'page' => $page,
                            'action' => $this->getName(),
                            'download' => true],
@@ -170,7 +170,7 @@ class WikiPlugin_PageDump extends WikiPlugin
         }
 
         if ($format == 'forcvs') {
-            $desc = _("(formatted for PhpWiki developers as pgsrc template, not for backing up)");
+            $desc              = _("(formatted for PhpWiki developers as pgsrc template, not for backing up)");
             $altpreviewbuttons = HTML(
                 Button(
                     ['action' => $this->getName()],
@@ -187,7 +187,7 @@ class WikiPlugin_PageDump extends WikiPlugin
                 )
             );
         } elseif ($format == 'backup') {
-            $desc = _("(formatted for backing up: all revisions)"); // all revisions
+            $desc              = _("(formatted for backing up: all revisions)"); // all revisions
             $altpreviewbuttons = HTML(
                 Button(
                     ['action' => $this->getName(),
@@ -205,7 +205,7 @@ class WikiPlugin_PageDump extends WikiPlugin
                 )
             );
         } else {
-            $desc = _("(normal formatting: latest revision only)");
+            $desc              = _("(normal formatting: latest revision only)");
             $altpreviewbuttons = HTML(
                 Button(
                     ['action' => $this->getName(),
@@ -292,9 +292,9 @@ class WikiPlugin_PageDump extends WikiPlugin
         $return = explode("\n", $mailified);
 
         // Leave message intact for backing up, just add Message-Id header before transmitting.
-        $item_to_insert = "Message-Id: <" . $this->MessageId . ">";
+        $item_to_insert           = "Message-Id: <" . $this->MessageId . ">";
         $insert_into_key_position = 2;
-        $returnval_ignored = array_splice(
+        $returnval_ignored        = array_splice(
             $return,
             $insert_into_key_position,
             0,
@@ -309,18 +309,18 @@ class WikiPlugin_PageDump extends WikiPlugin
         $array = explode("\n", $mailified);
 
         // Massage headers to prepare for developer checkin to CVS.
-        $item_to_insert = "X-Rcs-Id: \$Id\$";
+        $item_to_insert           = "X-Rcs-Id: \$Id\$";
         $insert_into_key_position = 2;
-        $returnval_ignored = array_splice(
+        $returnval_ignored        = array_splice(
             $array,
             $insert_into_key_position,
             0,
             $item_to_insert
         );
 
-        $item_to_insert = "  pgsrc_version=\"2 \$Revision\$\";";
+        $item_to_insert           = "  pgsrc_version=\"2 \$Revision\$\";";
         $insert_into_key_position = 5;
-        $returnval_ignored = array_splice(
+        $returnval_ignored        = array_splice(
             $array,
             $insert_into_key_position,
             0,

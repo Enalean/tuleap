@@ -440,9 +440,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         Header::allowOptionsGet();
 
         try {
-            $current_user    = $this->user_manager->getCurrentUser();
-            $report          = $this->getReport($id);
-            $trackers        = $this->getTrackersFromRoute($query, $report);
+            $current_user = $this->user_manager->getCurrentUser();
+            $report       = $this->getReport($id);
+            $trackers     = $this->getTrackersFromRoute($query, $report);
             if (count($trackers) === 0) {
                 return ["artifacts" => []];
             }
@@ -451,7 +451,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
             $this->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
-            $artifacts = $this->cross_tracker_artifact_factory->getArtifactsMatchingReport(
+            $artifacts       = $this->cross_tracker_artifact_factory->getArtifactsMatchingReport(
                 $expected_report,
                 $current_user,
                 $limit,

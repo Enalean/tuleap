@@ -108,9 +108,9 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget
         if ($this->job != null) {
             $job = $this->job;
 
-            $buildHistoryRSSWidget = new Widget_ProjectRss();
+            $buildHistoryRSSWidget          = new Widget_ProjectRss();
             $buildHistoryRSSWidget->rss_url = $job->getUrl() . '/rssAll';
-            $html .= $buildHistoryRSSWidget->getContent();
+            $html                          .= $buildHistoryRSSWidget->getContent();
         } else {
             $html .= dgettext('tuleap-hudson', 'Job not found.');
         }

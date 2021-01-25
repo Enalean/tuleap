@@ -83,15 +83,15 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
         global $WikiTheme;
         include_once('lib/InlineParser.php');
 
-        $args = $this->getArgs($argstr, $request);
+        $args    = $this->getArgs($argstr, $request);
         $default = $this->getDefaultArguments();
         foreach (['cellpadding', 'cellspacing', 'border'] as $arg) {
             if (! is_numeric($args[$arg])) {
                 $args[$arg] = $default[$arg];
             }
         }
-        $lines = preg_split('/\s*?\n\s*/', $argstr);
-        $table_args = [];
+        $lines        = preg_split('/\s*?\n\s*/', $argstr);
+        $table_args   = [];
         $default_args = array_keys($default);
         foreach ($default_args as $arg) {
             if ($args[$arg] == '' and $default[$arg] == '') {
@@ -133,8 +133,8 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
 
     public function _parse_row($line, $basepage)
     {
-        $brkt_link = "\\[ .*? [^]\s] .*? \\]";
-        $cell_content  = "(?: [^[] | " . ESCAPE_CHAR . "\\[ | $brkt_link )*?";
+        $brkt_link    = "\\[ .*? [^]\s] .*? \\]";
+        $cell_content = "(?: [^[] | " . ESCAPE_CHAR . "\\[ | $brkt_link )*?";
 
         preg_match_all(
             "/(\\|+) (v*) ([<>^]?) \s* ($cell_content) \s* (?=\\||\$)/x",

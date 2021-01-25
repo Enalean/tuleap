@@ -27,8 +27,8 @@ class UserHelper
 
     public const PREFERENCES_NAME_AND_LOGIN = 0;
     public const PREFERENCES_LOGIN_AND_NAME = 1;
-    public const PREFERENCES_LOGIN = 2;
-    public const PREFERENCES_REAL_NAME = 3;
+    public const PREFERENCES_LOGIN          = 2;
+    public const PREFERENCES_REAL_NAME      = 3;
 
     public $_username_display;
     public $_cache_by_id;
@@ -60,7 +60,7 @@ class UserHelper
     public static function instance()
     {
         if (! isset(self::$_instance)) {
-            $c = self::class;
+            $c               = self::class;
             self::$_instance = new $c();
         }
         return self::$_instance;
@@ -160,7 +160,7 @@ class UserHelper
         $usersIds     = $user_manager->getUserIdsList($by);
         if (count($usersIds) > 0) {
             $user_ids_escaped = $this->_getUserDao()->getDa()->escapeIntImplode($usersIds);
-            $filter .= ' AND user.user_id IN (' . $user_ids_escaped . ')';
+            $filter          .= ' AND user.user_id IN (' . $user_ids_escaped . ')';
         } else {
             $by      = $this->_getUserDao()->getDa()->quoteLikeValueSurround($by);
             $filter .= ' AND user.user_name LIKE ' . $by;
@@ -235,14 +235,14 @@ class UserHelper
     {
         $um = $this->_getUserManager();
         if ($um->isUserLoadedById($user_id)) {
-            $user = $um->getUserById($user_id);
+            $user    = $um->getUserById($user_id);
             $display = $this->getDisplayNameFromUser($user);
         } else {
             if (! isset($this->_cache_by_id[$user_id])) {
                 $this->_cache_by_id[$user_id] = $GLOBALS['Language']->getText('global', 'none');
-                $dar = $this->_userdao->searchByUserId($user_id);
+                $dar                          = $this->_userdao->searchByUserId($user_id);
                 if ($row = $dar->getRow()) {
-                    $this->_cache_by_id[$user_id] = $this->getDisplayName($row['user_name'], $row['realname']);
+                    $this->_cache_by_id[$user_id]                = $this->getDisplayName($row['user_name'], $row['realname']);
                     $this->_cache_by_username[$row['user_name']] = $this->_cache_by_id[$user_id];
                 }
             }
@@ -266,13 +266,13 @@ class UserHelper
         } else {
             $um = $this->_getUserManager();
             if ($um->isUserLoadedByUserName($user_name)) {
-                $user = $um->getUserByUserName($user_name);
+                $user    = $um->getUserByUserName($user_name);
                 $display = $this->getDisplayNameFromUser($user);
             } else {
                 if (! isset($this->_cache_by_username[$user_name])) {
                     $dar = $this->_userdao->searchByUserName($user_name);
                     if ($row = $dar->getRow()) {
-                        $this->_cache_by_id[$row['user_id']] = $this->getDisplayName($row['user_name'], $row['realname']);
+                        $this->_cache_by_id[$row['user_id']]         = $this->getDisplayName($row['user_name'], $row['realname']);
                         $this->_cache_by_username[$row['user_name']] = $this->_cache_by_id[$row['user_id']];
                     } else {
                         $this->_cache_by_username[$user_name] = $user_name;

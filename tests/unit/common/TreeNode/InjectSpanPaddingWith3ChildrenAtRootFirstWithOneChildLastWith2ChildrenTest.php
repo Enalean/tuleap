@@ -64,7 +64,7 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
         $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
-        $pattern = $this->getPatternSuite(" indent pipe tree indent minus-tree");
+        $pattern    = $this->getPatternSuite(" indent pipe tree indent minus-tree");
         $givenChild = $given->getChild(0);
 
         $this->thenGivenTreeNodeDataTreePaddingAssertPattern($givenChild, $pattern);
@@ -73,7 +73,7 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
 
     public function testItShouldSetDataToChild2ThatMatchesIndentPipeBlankIndentLastLeftIndentLastRight(): void
     {
-        $given      = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
+        $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
         $pattern    = $this->getPatternSuite(" indent pipe blank indent last-left indent last-right");
@@ -84,7 +84,7 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
 
     public function testItShouldSetDataToChild3ThatMatchesIndentPipeIndentMinus(): void
     {
-        $given      = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
+        $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
         $pattern    = $this->getPatternSuite(" indent pipe indent minus");
@@ -95,7 +95,7 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
 
     public function testItShouldSetDataToChild4ThatMatchesIndentLastLeftTreeIndentMinusTree(): void
     {
-        $given      = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
+        $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
         $pattern    = $this->getPatternSuite(" indent last-left tree indent minus-tree");
@@ -106,7 +106,7 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
 
     public function testItShouldSetDataToChild5ThatMatchesBlankBlankIndentPipeIndentMinus(): void
     {
-        $given      = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
+        $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
         $pattern    = $this->getPatternSuite(" blank blank indent pipe indent minus");
@@ -117,7 +117,7 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
 
     public function testItShouldSetDataToChild6ThatMatchesBlankBlankIndentLastLeftIdentLastRight(): void
     {
-        $given      = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
+        $given = $this->given3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children();
         $this->whenVisitTreeNodeWithInjectSpanPadding($given);
 
         $pattern    = $this->getPatternSuite(" blank blank indent last-left indent last-right");

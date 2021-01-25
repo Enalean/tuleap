@@ -131,12 +131,12 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
     {
         //if ($request->getArg('action') != 'browse')
         //    return $this->disabled("(action != 'browse')");
-        $args = $this->getArgs($argstr, $request);
+        $args        = $this->getArgs($argstr, $request);
         $this->_args = $args;
         extract($args);
         $this->preSelectS($args, $request);
 
-        $info = $args['info'];
+        $info        = $args['info'];
         $this->debug = $args['debug'];
 
         // array_multisort($this->_list, SORT_NUMERIC, SORT_DESC);
@@ -180,13 +180,13 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
                 and $request->getArg('wikiadmin')
         ) {
             // handle external plugin
-            $loader = new WikiPluginLoader();
-            $a = array_keys($request->getArg('wikiadmin'));
-            $plugin_action = $a[0];
+            $loader             = new WikiPluginLoader();
+            $a                  = array_keys($request->getArg('wikiadmin'));
+            $plugin_action      = $a[0];
             $single_arg_plugins = ["Remove"];
             if (in_array($plugin_action, $single_arg_plugins)) {
                 $plugin = $loader->getPlugin($plugin_action);
-                $ul = HTML::ul();
+                $ul     = HTML::ul();
                 foreach ($p as $page => $name) {
                     $plugin_args = "run_page=$name";
                     $request->setArg($plugin_action, 1);
@@ -205,7 +205,7 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
                 // redirect to the plugin page.
                 // in which page is this plugin?
                 $plugin_action = preg_replace("/^WikiAdmin/", "", $plugin_action);
-                $args = [];
+                $args          = [];
                 foreach ($p as $page => $x) {
                     $args["p[$page]"] = 1;
                 }
@@ -253,7 +253,7 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
             if (defined('PHPWIKI_DIR')) {
                 $plugin_dir = PHPWIKI_DIR . "/$plugin_dir";
             }
-            $fs = new fileSet($plugin_dir, 'WikiAdmin*.php');
+            $fs      = new fileSet($plugin_dir, 'WikiAdmin*.php');
             $actions = $fs->getFiles();
             foreach ($actions as $f) {
                 $f = preg_replace('/.php$/', '', $f);

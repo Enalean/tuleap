@@ -35,7 +35,7 @@ final class ProgramIncrementsTrackerCollectionTest extends TestCase
 
     public function testGetTrackerIdsReturnsTrackerIds(): void
     {
-        $first_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(78)->withProject(new \Project(['group_id' => 103]))->build());
+        $first_tracker  = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(78)->withProject(new \Project(['group_id' => 103]))->build());
         $second_tracker = new ScaledAgileTracker(TrackerTestBuilder::aTracker()->withId(57)->withProject(new \Project(['group_id' => 104]))->build());
 
         $collection = new ProgramIncrementsTrackerCollection([$first_tracker, $second_tracker]);
@@ -52,7 +52,7 @@ final class ProgramIncrementsTrackerCollectionTest extends TestCase
 
     public function testGetMilestoneTrackersReturnTrackers(): void
     {
-        $first_tracker = TrackerTestBuilder::aTracker()->withId(78)->withProject(new \Project(['group_id' => 103]))->build();
+        $first_tracker  = TrackerTestBuilder::aTracker()->withId(78)->withProject(new \Project(['group_id' => 103]))->build();
         $second_tracker = TrackerTestBuilder::aTracker()->withId(57)->withProject(new \Project(['group_id' => 104]))->build();
 
         $collection = new ProgramIncrementsTrackerCollection([$first_tracker, $second_tracker]);

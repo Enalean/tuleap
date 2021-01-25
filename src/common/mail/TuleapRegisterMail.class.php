@@ -52,8 +52,8 @@ class TuleapRegisterMail
             include($GLOBALS['Language']->getContent('account/new_account_email'));
         } elseif ($presenter_role === "admin-notification") {
             $redirect_url = $base_url . "/admin/approve_pending_users.php?page=pending";
-            $subject = $GLOBALS['Language']->getText('account_register', 'mail_approval_subject', $login);
-            $message = $this->createNotificationMessageText($login, $redirect_url);
+            $subject      = $GLOBALS['Language']->getText('account_register', 'mail_approval_subject', $login);
+            $message      = $this->createNotificationMessageText($login, $redirect_url);
         } else {
             $subject = sprintf(_('Your account has been created on %s'), ForgeConfig::get('sys_name'));
             include($GLOBALS['Language']->getContent('admin/new_account_email'));
@@ -147,7 +147,7 @@ class TuleapRegisterMail
         $cid_logo       = '';
         $path_logo      = $logo_retriever->getLegacyPath();
         if ($path_logo) {
-            $id_attachment  = 'logo';
+            $id_attachment = 'logo';
             $mail->addInlineAttachment(file_get_contents($path_logo), $logo_retriever->getMimetype(), $id_attachment);
             $cid_logo = 'cid:' . $id_attachment;
         }

@@ -28,9 +28,9 @@ class GraphOnTrackersV5_ChartFactory
 
     protected function __construct()
     {
-        $this->charts        = null;
+        $this->charts          = null;
         $this->chart_factories = [];
-        $em = EventManager::instance();
+        $em                    = EventManager::instance();
         $em->processEvent('graphontrackersv5_load_chart_factories', ['factories' => &$this->chart_factories]);
     }
 
@@ -54,7 +54,7 @@ class GraphOnTrackersV5_ChartFactory
     public function getCharts($renderer, $store_in_session = true)
     {
         if (! isset($this->charts[$renderer->id])) {
-            $charts_data = [];
+            $charts_data                 = [];
             $this->charts[$renderer->id] = [];
             if ($store_in_session) {
                 $this->report_session = new Tracker_Report_Session($renderer->report->id);
@@ -117,7 +117,7 @@ class GraphOnTrackersV5_ChartFactory
     public function getChartsFromDb($renderer)
     {
         $charts = [];
-        $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
+        $dao    = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
         $charts = $dao->searchByReportId($renderer->id);
         return $charts;
     }
@@ -144,7 +144,7 @@ class GraphOnTrackersV5_ChartFactory
     {
         $chart = null;
         if ($chart_classname = $this->getChartClassname($chart_type)) {
-            $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
+            $dao                 = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
             $default_title       = 'Untitled ' . $chart_type;
             $default_description = '';
             $default_width       = call_user_func([$chart_classname, 'getDefaultWidth']);
@@ -152,7 +152,7 @@ class GraphOnTrackersV5_ChartFactory
 
             $session = new Tracker_Report_Session($renderer->report->id);
             $session->changeSessionNamespace("renderers.{$renderer->id}");
-            $id = -count($session->charts) - 1;
+            $id   = -count($session->charts) - 1;
             $rank = 0;
 
             //Add new chart in session
@@ -204,7 +204,7 @@ class GraphOnTrackersV5_ChartFactory
     public function createDb($renderer_id, $chart)
     {
         $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
-        $id = $dao->create(
+        $id  = $dao->create(
             $renderer_id,
             $chart->getChartType(),
             $chart->getRank(),
@@ -225,7 +225,7 @@ class GraphOnTrackersV5_ChartFactory
      */
     public function getChart($renderer, $id, $store_in_session = true)
     {
-        $c = null;
+        $c          = null;
         $chart_data = null;
         if ($renderer != null && $store_in_session) {
             $session = new Tracker_Report_Session($renderer->report->id);
@@ -237,13 +237,13 @@ class GraphOnTrackersV5_ChartFactory
 
         if (! $chart_data) {
             // not found. look in the db
-            $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
+            $dao        = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
             $chart_data = $dao->searchById($id)->getRow();
         }
 
         if ($chart_data) {
             if (! $renderer) {
-                $report = null; //We don't know the report
+                $report   = null; //We don't know the report
                 $renderer = Tracker_Report_RendererFactory::instance()->getReportRendererById($chart_data['report_graphic_id'], $report, $store_in_session);
             }
             if ($renderer) {
@@ -260,12 +260,12 @@ class GraphOnTrackersV5_ChartFactory
     public function getChartFromDb($renderer, $id)
     {
         //not add in session
-        $c = null;
-        $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
+        $c          = null;
+        $dao        = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
         $chart_data = $dao->searchById($id)->getRow();
         if ($chart_data) {
             if (! $renderer) {
-                $report = null; //We don't know the report
+                $report   = null; //We don't know the report
                 $renderer = Tracker_Report_RendererFactory::instance()->getReportRendererById($chart_data['report_graphic_id'], $report);
             }
             if ($renderer) {

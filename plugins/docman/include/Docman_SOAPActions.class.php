@@ -32,10 +32,10 @@ class Docman_SOAPActions extends Docman_Actions
         $request = $this->_controler->request;
 
         if ($request->exist('item_id')) {
-            $item_id = $request->get('item_id');
+            $item_id      = $request->get('item_id');
             $item_factory = $this->_getItemFactory();
-            $item = $item_factory->getItemFromDb($item_id);
-            $itemType = $item_factory->getItemTypeForItem($item);
+            $item         = $item_factory->getItemFromDb($item_id);
+            $itemType     = $item_factory->getItemTypeForItem($item);
 
             if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
                 $this->storeFileChunk($item);
@@ -52,8 +52,8 @@ class Docman_SOAPActions extends Docman_Actions
      */
     private function storeFileChunk($item)
     {
-        $fs       = $this->_getFileStorage();
-        $request  = $this->_controler->request;
+        $fs      = $this->_getFileStorage();
+        $request = $this->_controler->request;
         if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
             $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber(), $request->get('chunk_offset'), $request->get('chunk_size'));
             if (! $path) {
@@ -73,17 +73,17 @@ class Docman_SOAPActions extends Docman_Actions
         $request = $this->_controler->request;
 
         if ($request->exist('item_id')) {
-            $item_id = $request->get('item_id');
+            $item_id      = $request->get('item_id');
             $item_factory = $this->_getItemFactory();
-            $item = $item_factory->getItemFromDb($item_id);
+            $item         = $item_factory->getItemFromDb($item_id);
             if ($item !== null) {
                 $itemType = $item_factory->getItemTypeForItem($item);
                 if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                     $fs = $this->_getFileStorage();
 
                     if ($request->existAndNonEmpty('all_versions')) {
-                        $md5sum = [];
-                        $vf = $this->_getVersionFactory();
+                        $md5sum   = [];
+                        $vf       = $this->_getVersionFactory();
                         $versions = $vf->getAllVersionForItem($item);
                         foreach ($versions as $version) {
                             $md5sum[$version->getNumber()] = $fs->getFileMD5sum($version->getPath());
@@ -98,9 +98,9 @@ class Docman_SOAPActions extends Docman_Actions
                     } else {
                         // if the version number is specified we compute the md5sum of this version else the last one
                         if ($request->existAndNonEmpty('version')) {
-                            $vf = $this->_getVersionFactory();
+                            $vf      = $this->_getVersionFactory();
                             $version = $vf->getSpecificVersion($item, $request->get('version'));
-                            $md5sum = $fs->getFileMD5sum($version->getPath());
+                            $md5sum  = $fs->getFileMD5sum($version->getPath());
                         } else {
                             $md5sum = $fs->getFileMD5sum($item->getCurrentVersion()->getPath());
                         }
@@ -126,10 +126,10 @@ class Docman_SOAPActions extends Docman_Actions
      */
     public function getProjectMetadata()
     {
-        $request = $this->_controler->request;
-        $groupId = $request->get('group_id');
-        $metadataFactory = new Docman_MetadataFactory($groupId);
-        $metadataList = array_merge($metadataFactory->getRealMetadataList(true), $metadataFactory->getHardCodedMetadataList(true));
+        $request                                        = $this->_controler->request;
+        $groupId                                        = $request->get('group_id');
+        $metadataFactory                                = new Docman_MetadataFactory($groupId);
+        $metadataList                                   = array_merge($metadataFactory->getRealMetadataList(true), $metadataFactory->getHardCodedMetadataList(true));
         $this->_controler->_viewParams['action_result'] = $metadataList;
     }
 
@@ -138,9 +138,9 @@ class Docman_SOAPActions extends Docman_Actions
      */
     public function getMetadataListOfValues()
     {
-        $request = $this->_controler->request;
-        $groupId = $request->get('group_id');
-        $metadataFactory = new Docman_MetadataFactory($groupId);
+        $request            = $this->_controler->request;
+        $groupId            = $request->get('group_id');
+        $metadataFactory    = new Docman_MetadataFactory($groupId);
         $metadataLovFactory = new Docman_MetadataListOfValuesElementFactory();
 
         $label = $request->get('label');
@@ -168,8 +168,8 @@ class Docman_SOAPActions extends Docman_Actions
 
         $itemFactory = $this->_getItemFactory($groupId);
 
-        $nb = 0;
-        $params['user'] = $this->_controler->getUser();
+        $nb               = 0;
+        $params['user']   = $this->_controler->getUser();
         $params['getall'] = true;
 
         if ($request->exist('parent_id')) {
@@ -177,14 +177,14 @@ class Docman_SOAPActions extends Docman_Actions
         }
 
         if (isset($parent_id) && $parent_id != 0) {
-            $itemList = $itemFactory->getItemList($parent_id, $nb, $params);
+            $itemList   = $itemFactory->getItemList($parent_id, $nb, $params);
             $itemList[] = $itemFactory->getItemFromDb($parent_id);
 
             $res = [];
             foreach ($itemList as $item) {
                 $type = $itemFactory->getItemTypeForItem($item);
                 if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-                    $vf = $this->_getVersionFactory();
+                    $vf         = $this->_getVersionFactory();
                     $nbVersions = count($vf->getAllVersionForItem($item));
                     if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
                         $filename = $item->getCurrentVersion()->getFilename();
@@ -219,15 +219,15 @@ class Docman_SOAPActions extends Docman_Actions
         $request = $this->_controler->request;
 
         if ($request->exist('item_id')) {
-            $item_id = $request->get('item_id');
+            $item_id      = $request->get('item_id');
             $item_factory = $this->_getItemFactory();
-            $item = $item_factory->getItemFromDb($item_id);
+            $item         = $item_factory->getItemFromDb($item_id);
             if ($item !== null) {
                 $itemType = $item_factory->getItemTypeForItem($item);
                 if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                     if ($request->exist('version_number')) {
                         $version_factory = $this->_getVersionFactory();
-                        $version = $version_factory->getSpecificVersion($item, $request->get('version_number'));
+                        $version         = $version_factory->getSpecificVersion($item, $request->get('version_number'));
                     } else {
                         $version = $item->getCurrentVersion();
                     }
@@ -257,22 +257,22 @@ class Docman_SOAPActions extends Docman_Actions
         $request = $this->_controler->request;
 
         if ($request->exist('item_id')) {
-            $item_id = $request->get('item_id');
+            $item_id      = $request->get('item_id');
             $item_factory = $this->_getItemFactory();
-            $item = $item_factory->getItemFromDb($item_id);
+            $item         = $item_factory->getItemFromDb($item_id);
             if ($item !== null) {
                 $itemType = $item_factory->getItemTypeForItem($item);
                 if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                     if ($request->exist('version_number')) {
                         $version_factory = $this->_getVersionFactory();
-                        $version = $version_factory->getSpecificVersion($item, $request->get('version_number'));
+                        $version         = $version_factory->getSpecificVersion($item, $request->get('version_number'));
                     } else {
                         $version = $item->getCurrentVersion();
                     }
                     if ($version) {
                         if (file_exists($version->getPath())) {
                             if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
-                                $contents = file_get_contents($version->getPath(), null, null, $request->get('chunk_offset'), $request->get('chunk_size'));
+                                $contents                                       = file_get_contents($version->getPath(), null, null, $request->get('chunk_offset'), $request->get('chunk_size'));
                                 $this->_controler->_viewParams['action_result'] = base64_encode($contents);
                             }
                         }

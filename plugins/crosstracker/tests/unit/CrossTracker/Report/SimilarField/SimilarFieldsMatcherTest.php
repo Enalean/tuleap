@@ -49,17 +49,17 @@ class SimilarFieldsMatcherTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->similar_fields_dao      = Mockery::mock(SupportedFieldsDao::class);
-        $this->form_element_factory    = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->report                  = Mockery::mock(CrossTrackerReport::class);
-        $this->user                    = Mockery::mock(\PFUser::class);
-        $this->similar_fields_filter   = Mockery::mock(SimilarFieldsFilter::class)
+        $this->similar_fields_dao    = Mockery::mock(SupportedFieldsDao::class);
+        $this->form_element_factory  = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->report                = Mockery::mock(CrossTrackerReport::class);
+        $this->user                  = Mockery::mock(\PFUser::class);
+        $this->similar_fields_filter = Mockery::mock(SimilarFieldsFilter::class)
             ->shouldReceive('filterCandidatesUsedInSemantics')->andReturnUsing(function (...$args) {
                 return $args;
             })->getMock();
-        $this->bind_name_visitor = Mockery::mock(BindNameVisitor::class);
+        $this->bind_name_visitor     = Mockery::mock(BindNameVisitor::class);
 
-        $this->matcher                 = new SimilarFieldsMatcher(
+        $this->matcher = new SimilarFieldsMatcher(
             $this->similar_fields_dao,
             $this->form_element_factory,
             $this->similar_fields_filter,
@@ -80,7 +80,7 @@ class SimilarFieldsMatcherTest extends TestCase
                 ]
             );
 
-        $first_field  = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $first_field = \Mockery::mock(\Tracker_FormElement_Field::class);
         $first_field->shouldReceive('getName')->andReturn('field_name');
         $first_field->shouldReceive('userCanRead')->andReturn(true);
         $second_field = \Mockery::mock(\Tracker_FormElement_Field::class);
@@ -105,7 +105,7 @@ class SimilarFieldsMatcherTest extends TestCase
                 ]
             );
 
-        $first_field  = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $first_field = \Mockery::mock(\Tracker_FormElement_Field::class);
         $first_field->shouldReceive('getName')->andReturn('field_name');
         $first_field->shouldReceive('userCanRead')->andReturn(true);
         $second_field = \Mockery::mock(\Tracker_FormElement_Field::class);

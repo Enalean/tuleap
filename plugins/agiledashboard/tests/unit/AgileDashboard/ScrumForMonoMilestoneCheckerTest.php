@@ -54,7 +54,7 @@ class ScrumForMonoMilestoneCheckerTest extends TestCase
     {
         $this->user                     = \Mockery::spy(\PFUser::class);
         $this->scrum_mono_milestone_dao = \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao::class);
-        $this->planning_factory               = \Mockery::spy(\PlanningFactory::class);
+        $this->planning_factory         = \Mockery::spy(\PlanningFactory::class);
 
         $this->scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
             $this->scrum_mono_milestone_dao,

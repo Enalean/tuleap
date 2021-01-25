@@ -129,11 +129,11 @@ class Tracker_Artifact_XMLImport
         $archive->extractFiles();
         $xml = simplexml_load_string($archive->getXML());
 
-        $extraction_path   = $archive->getExtractionPath();
-        $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
-        $url_mapping       = new CreatedFileURLMapping();
-        $config            = new ImportConfig();
-        $date = new DateTimeImmutable();
+        $extraction_path    = $archive->getExtractionPath();
+        $xml_field_mapping  = new TrackerXmlFieldsMapping_InSamePlatform();
+        $url_mapping        = new CreatedFileURLMapping();
+        $config             = new ImportConfig();
+        $date               = new DateTimeImmutable();
         $tracker_xml_config = new TrackerXmlImportConfig($user, $date);
 
         $this->importFromXML($tracker, $xml, $extraction_path, $xml_field_mapping, $url_mapping, $config, $tracker_xml_config);
@@ -214,7 +214,7 @@ class Tracker_Artifact_XMLImport
         $tracker->getWorkflow()->disable();
         $artifacts = [];
 
-        $this->source_platform              = $this->xml_artifact_source_platform_extractor->getSourcePlatform($xml_element, $configuration);
+        $this->source_platform               = $this->xml_artifact_source_platform_extractor->getSourcePlatform($xml_element, $configuration);
         $this->existing_sources_artifact_ids = $this->existing_artifact_source_id_extractor->getSourceArtifactIds($tracker, $this->source_platform);
 
         foreach (iterator_to_array($xml_element->artifact, false) as $i => $artifact_xml) {
@@ -538,7 +538,7 @@ class Tracker_Artifact_XMLImport
         TrackerImportConfig $tracker_import_config
     ): ?Tracker_Artifact_Changeset {
         $submitted_by = $this->getSubmittedBy($xml_changeset);
-        $fields_data = $fields_data_builder->getFieldsData($xml_changeset, $submitted_by, $artifact);
+        $fields_data  = $fields_data_builder->getFieldsData($xml_changeset, $submitted_by, $artifact);
         if (count($fields_data) === 0) {
             return null;
         }
@@ -612,7 +612,7 @@ class Tracker_Artifact_XMLImport
         }
 
         $submitted_by = $this->getSubmittedBy($xml_changeset);
-        $changeset = $this->new_changeset_creator->create(
+        $changeset    = $this->new_changeset_creator->create(
             $artifact,
             $fields_data_builder->getFieldsData($xml_changeset, $submitted_by, $artifact),
             $initial_comment_body,
@@ -702,7 +702,7 @@ class Tracker_Artifact_XMLImport
                     new Tracker_XML_Importer_ArtifactImportedMapping()
                 );
 
-                $date = new DateTimeImmutable();
+                $date                  = new DateTimeImmutable();
                 $tracker_import_config = new TrackerXmlImportConfig($user, $date);
 
                 $this->importAllChangesetsBySubmitionDate(

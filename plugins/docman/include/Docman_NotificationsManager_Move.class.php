@@ -31,7 +31,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
         if ($event == 'plugin_docman_event_move') {
             if ($params['item']->getParentId() != $params['parent']->getId()) {
                 $params['path'] = $this->_getDocmanPath();
-                $users = $this->notified_people_retriever->getNotifiedUsers($this->project, $params['item']->getId());
+                $users          = $this->notified_people_retriever->getNotifiedUsers($this->project, $params['item']->getId());
                 $this->_buildMessagesForUsers($users, self::MESSAGE_MOVED, $params);
                 $users = $this->notified_people_retriever->getNotifiedUsers($this->project, $params['parent']->getId());
                 $this->_buildMessagesForUsers($users, self::MESSAGE_MOVED_TO, $params);
@@ -94,7 +94,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
                 $msg .= $this->getFromToInformation($params, true);
 
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
-                $msg           .= $this->getMonitoringInformation($monitoredItem);
+                $msg          .= $this->getMonitoringInformation($monitoredItem);
                 break;
             case self::MESSAGE_MOVED_FROM:
                 $msg .= sprintf(
@@ -110,7 +110,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
                 $msg .= $this->getFromToInformation($params, false);
 
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
-                $msg           .= $this->getMonitoringInformation($monitoredItem);
+                $msg          .= $this->getMonitoringInformation($monitoredItem);
                 break;
             case self::MESSAGE_MOVED_TO:
                 $msg .= sprintf(
@@ -121,10 +121,10 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
                 $msg .= "\n" . $this->getUrlProvider()->getShowLinkUrl($params['parent']) . "\n\n";
                 $msg .= dgettext('tuleap-docman', "Moved");
 
-                $msg           .= " ";
-                $msg           .= $this->getFromToInformation($params, false);
+                $msg          .= " ";
+                $msg          .= $this->getFromToInformation($params, false);
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
-                $msg           .= $this->getMonitoringInformation($monitoredItem);
+                $msg          .= $this->getMonitoringInformation($monitoredItem);
                 break;
             default:
                 $msg .= parent::_getMessageForUser($user, $message_type, $params);

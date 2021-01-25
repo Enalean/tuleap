@@ -102,9 +102,9 @@ class ItemRepresentationVisitorTest extends TestCase
 
     public function testItVisitAFolderAndReturnsItsSize(): void
     {
-        $folder  = Mockery::mock(\Docman_Folder::class);
-        $user = Mockery::mock(\PFUser::class);
-        $params  = [
+        $folder = Mockery::mock(\Docman_Folder::class);
+        $user   = Mockery::mock(\PFUser::class);
+        $params = [
             'current_user' => $user,
             'with_size' => true
         ];
@@ -153,7 +153,7 @@ class ItemRepresentationVisitorTest extends TestCase
 
     public function testItVisitALinkAndStoreTheAccess(): void
     {
-        $item   = Mockery::mock(\Docman_Link::class);
+        $item = Mockery::mock(\Docman_Link::class);
         $item->shouldReceive('getGroupId')->once();
 
         $version = Mockery::mock(\Docman_Version::class);
@@ -199,7 +199,7 @@ class ItemRepresentationVisitorTest extends TestCase
 
     public function testItVisitAnEmbeddedFileAndStoreTheAccess(): void
     {
-        $item   = Mockery::mock(\Docman_EmbeddedFile::class);
+        $item = Mockery::mock(\Docman_EmbeddedFile::class);
         $item->shouldReceive('getGroupId')->once();
 
         $version = Mockery::mock(\Docman_Version::class);

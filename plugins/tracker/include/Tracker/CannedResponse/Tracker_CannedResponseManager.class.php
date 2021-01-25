@@ -64,7 +64,7 @@ class Tracker_CannedResponseManager
 
     protected function displayAdminAllResponses(TrackerManager $tracker_manager, $request, $current_user)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $title = dgettext('tuleap-tracker', 'Canned responses');
 
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editcanned', $title);
@@ -131,7 +131,7 @@ class Tracker_CannedResponseManager
     protected function displayAdminResponse(TrackerManager $tracker_manager, $request, $current_user)
     {
         if ($response = Tracker_CannedResponseFactory::instance()->getCannedResponse($this->tracker, (int) $request->get('edit'))) {
-            $hp = Codendi_HTMLPurifier::instance();
+            $hp    = Codendi_HTMLPurifier::instance();
             $title = dgettext('tuleap-tracker', 'Modify Canned Response');
             $this->tracker->displayAdminItemHeader(
                 $tracker_manager,

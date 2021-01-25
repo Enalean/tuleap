@@ -43,7 +43,7 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $this->dao   = \Mockery::spy(\Tracker_Artifact_Changeset_ValueDao::class);
+        $this->dao = \Mockery::spy(\Tracker_Artifact_Changeset_ValueDao::class);
     }
 
     public function testItContainsChanges(): void

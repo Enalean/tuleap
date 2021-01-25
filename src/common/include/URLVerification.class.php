@@ -129,7 +129,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
 
         // Plugins
         $anonymousAllowed = false;
-        $params = ['script_name' => $server['SCRIPT_NAME'], 'anonymous_allowed' => &$anonymousAllowed];
+        $params           = ['script_name' => $server['SCRIPT_NAME'], 'anonymous_allowed' => &$anonymousAllowed];
         $this->getEventManager()->processEvent('anonymous_access_to_script_allowed', $params);
 
         return $anonymousAllowed;
@@ -184,7 +184,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      */
     public function getRedirectionURL(HTTPRequest $request, $server)
     {
-        $chunks   = $this->getUrlChunks($server);
+        $chunks = $this->getUrlChunks($server);
 
         $location = $this->getRedirectLocation($request, $server, $chunks);
 
@@ -256,8 +256,8 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
             $user->isAnonymous() &&
             ! $this->isScriptAllowedForAnonymous($server)
         ) {
-            $redirect = new URLRedirect($this->getEventManager());
-            $this->urlChunks['script']   = $redirect->buildReturnToLogin($server);
+            $redirect                  = new URLRedirect($this->getEventManager());
+            $this->urlChunks['script'] = $redirect->buildReturnToLogin($server);
         }
     }
 
@@ -553,7 +553,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     {
         if ($user->isAnonymous()) {
             $event_manager = EventManager::instance();
-            $redirect = new URLRedirect($event_manager);
+            $redirect      = new URLRedirect($event_manager);
             $redirect->redirectToLogin();
         }
     }

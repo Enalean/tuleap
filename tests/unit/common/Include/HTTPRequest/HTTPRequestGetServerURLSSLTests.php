@@ -60,7 +60,7 @@ class HTTPRequestGetServerURLSSLTests extends HTTPRequestGetServerURLTests // ph
 
     public function testItReturnsHTTPWhenReverseProxyDoesntTerminateSSLAndCommunicateInSSLWithTuleap()
     {
-        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['HTTPS']                  = 'on';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
 
         $this->assertEquals('http://example.com', $this->request->getServerUrl());
@@ -68,7 +68,7 @@ class HTTPRequestGetServerURLSSLTests extends HTTPRequestGetServerURLTests // ph
 
     public function testItReturnsHTTPSWhenEverythingIsSSL()
     {
-        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['HTTPS']                  = 'on';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
 
         $this->assertEquals('https://example.com', $this->request->getServerUrl());

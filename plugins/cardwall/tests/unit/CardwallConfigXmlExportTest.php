@@ -66,13 +66,13 @@ final class CardwallConfigXmlExportTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->project  = Mockery::mock(Project::class);
+        $this->project = Mockery::mock(Project::class);
         $this->project->shouldReceive('getID')->andReturn(140);
         $this->tracker1 = Mockery::mock(Tracker::class);
         $this->tracker1->shouldReceive('getId')->andReturn(214);
         $this->tracker2 = Mockery::mock(Tracker::class);
         $this->tracker2->shouldReceive('getId')->andReturn(614);
-        $this->root     = new SimpleXMLElement('<projects/>');
+        $this->root = new SimpleXMLElement('<projects/>');
 
         $this->cardwall_config = Mockery::mock(\Cardwall_OnTop_Config::class);
         $this->cardwall_config->shouldReceive('isEnabled')->andReturn(false);

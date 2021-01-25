@@ -46,8 +46,8 @@ final class Cardwall_PaneBuilderTest extends \PHPUnit\Framework\TestCase
         $this->user                           = new PFUser(['language_id' => 'en']);
         $this->milestone_artifact             = Mockery::mock(Artifact::class);
         $this->milestone_artifact->shouldReceive('getId')->andReturn(1);
-        $this->mapping_collection             = \Mockery::spy(\Cardwall_MappingCollection::class);
-        $this->columns                        = \Mockery::spy(\Cardwall_OnTop_Config_ColumnCollection::class);
+        $this->mapping_collection = \Mockery::spy(\Cardwall_MappingCollection::class);
+        $this->columns            = \Mockery::spy(\Cardwall_OnTop_Config_ColumnCollection::class);
     }
 
     public function testItReturnsAnEmptyBoard(): void
@@ -72,7 +72,7 @@ final class Cardwall_PaneBuilderTest extends \PHPUnit\Framework\TestCase
         $this->card_in_cell_presenter_builder->shouldReceive('getCardInCellPresenter')->with($swimline_artifact, $swimline_artifact->getId())->andReturns(\Mockery::spy(\Cardwall_CardInCellPresenter::class));
 
         $pane_builder = new Cardwall_PaneBoardBuilder($this->card_in_cell_presenter_builder, $this->artifact_factory, $this->dao, $this->swimline_factory);
-        $board = $pane_builder->getBoard($this->user, $this->milestone_artifact, $this->columns, $this->mapping_collection);
+        $board        = $pane_builder->getBoard($this->user, $this->milestone_artifact, $this->columns, $this->mapping_collection);
         $this->assertCount(1, $board->swimlines);
         $this->assertInstanceOf(\Cardwall_SwimlineSolo::class, $board->swimlines[0]);
     }
@@ -94,7 +94,7 @@ final class Cardwall_PaneBuilderTest extends \PHPUnit\Framework\TestCase
         $this->card_in_cell_presenter_builder->shouldReceive('getCardInCellPresenters')->andReturns([\Mockery::spy(\Cardwall_CardInCellPresenter::class)]);
 
         $pane_builder = new Cardwall_PaneBoardBuilder($this->card_in_cell_presenter_builder, $this->artifact_factory, $this->dao, $this->swimline_factory);
-        $board = $pane_builder->getBoard($this->user, $this->milestone_artifact, $this->columns, $this->mapping_collection);
+        $board        = $pane_builder->getBoard($this->user, $this->milestone_artifact, $this->columns, $this->mapping_collection);
         $this->assertCount(1, $board->swimlines);
         $this->assertInstanceOf(\Cardwall_Swimline::class, $board->swimlines[0]);
     }

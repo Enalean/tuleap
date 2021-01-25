@@ -49,8 +49,8 @@ class GitlabCommitCrossReferenceEnhancerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->user_manager = Mockery::mock(\UserManager::class);
-        $this->user_helper = Mockery::mock(\UserHelper::class);
+        $this->user_manager                    = Mockery::mock(\UserManager::class);
+        $this->user_helper                     = Mockery::mock(\UserHelper::class);
         $this->gitlab_cross_reference_enhancer = new GitlabCommitCrossReferenceEnhancer(
             $this->user_manager,
             $this->user_helper,

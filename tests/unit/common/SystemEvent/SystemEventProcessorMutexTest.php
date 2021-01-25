@@ -65,8 +65,8 @@ class SystemEventProcessorMutexTest extends TestCase
     {
         parent::setUp();
 
-        $this->process  = Mockery::mock(SystemEventProcess::class);
-        $this->object   = Mockery::mock(IRunInAMutex::class);
+        $this->process = Mockery::mock(SystemEventProcess::class);
+        $this->object  = Mockery::mock(IRunInAMutex::class);
 
         $this->process->shouldReceive('getQueue')->andReturn(SystemEvent::DEFAULT_QUEUE);
         $this->process->shouldReceive('getLockName')->andReturn('lock');

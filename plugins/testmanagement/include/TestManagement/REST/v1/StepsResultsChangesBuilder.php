@@ -104,7 +104,7 @@ class StepsResultsChangesBuilder
 
         $submitted_steps_results = $this->getSubmittedStepsResultsIndexedById($submitted_steps_results);
         assert($execution_field instanceof StepExecution);
-        $existing_steps_results  = $this->getExistingStepsResultsIndexedById($execution_artifact, $execution_field);
+        $existing_steps_results = $this->getExistingStepsResultsIndexedById($execution_artifact, $execution_field);
 
         $steps_changes = [];
         foreach ($steps_defined_in_test as $step) {

@@ -59,7 +59,7 @@ final class SOAP_RequestLimitatorTest extends \PHPUnit\Framework\TestCase
 
     public function testTwoRequestsShouldBeAllowedByConfiguration(): void
     {
-        $dao = $this->givenThereWasAlreadyOneCallTheLastHour();
+        $dao       = $this->givenThereWasAlreadyOneCallTheLastHour();
         $limitator = new SOAP_RequestLimitator($nb_call = 10, $timeframe = 3600, $dao);
         $limitator->logCallTo('addProject');
     }
@@ -89,7 +89,7 @@ final class SOAP_RequestLimitatorTest extends \PHPUnit\Framework\TestCase
         $dao = \Mockery::spy(\SOAP_RequestLimitatorDao::class);
 
         $time30minutesAgo = $_SERVER['REQUEST_TIME'] - 30 * 60;
-        $dar = TestHelper::arrayToDar(['method_name' => 'addProject', 'date' => $time30minutesAgo]);
+        $dar              = TestHelper::arrayToDar(['method_name' => 'addProject', 'date' => $time30minutesAgo]);
         $dao->shouldReceive('searchFirstCallToMethod')->andReturns($dar);
         $dao->shouldReceive('foundRows')->andReturns(10);
 

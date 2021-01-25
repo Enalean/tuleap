@@ -45,7 +45,7 @@ class UpdateNotificationsPreferences implements DispatchableWithRequest
 
     public function __construct(CSRFSynchronizerToken $csrf_token, UserManager $user_manager)
     {
-        $this->csrf_token = $csrf_token;
+        $this->csrf_token   = $csrf_token;
         $this->user_manager = $user_manager;
     }
 
@@ -61,7 +61,7 @@ class UpdateNotificationsPreferences implements DispatchableWithRequest
 
         $this->csrf_token->check(DisplayNotificationsController::URL);
 
-        $user_need_update = false;
+        $user_need_update     = false;
         $email_format_changed = false;
 
         $site_email_updates = $request->get('site_email_updates') === '1' ? 1 : 0;

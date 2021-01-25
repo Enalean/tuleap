@@ -26,7 +26,7 @@ class Codendi_WordLevelDiff extends \Codendi_MappedDiff // phpcs:ignore PSR1.Cla
     public function __construct($orig_lines, $fin_lines)
     {
         list($orig_words, $orig_stripped) = $this->_split($orig_lines);
-        list($fin_words, $fin_stripped) = $this->_split($fin_lines);
+        list($fin_words, $fin_stripped)   = $this->_split($fin_lines);
         parent::__construct($orig_words, $fin_words, $orig_stripped, $fin_stripped);
     }
 

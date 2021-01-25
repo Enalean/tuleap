@@ -186,13 +186,13 @@ class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDecl
         $is_in_iframe,
         $is_in_new_tab
     ) {
-        $service_id   = $this->da->escapeInt($service_id);
-        $label        = $this->da->quoteSmart($label);
-        $icon_name    = $this->da->quoteSmart($icon_name);
-        $description  = $this->da->quoteSmart($description);
-        $link         = $this->da->quoteSmart($link);
-        $rank         = $this->da->escapeInt($rank);
-        $is_in_iframe = $is_in_iframe ? 1 : 0;
+        $service_id    = $this->da->escapeInt($service_id);
+        $label         = $this->da->quoteSmart($label);
+        $icon_name     = $this->da->quoteSmart($icon_name);
+        $description   = $this->da->quoteSmart($description);
+        $link          = $this->da->quoteSmart($link);
+        $rank          = $this->da->escapeInt($rank);
+        $is_in_iframe  = $is_in_iframe ? 1 : 0;
         $is_in_new_tab = $is_in_new_tab ? 1 : 0;
 
         $sql = "UPDATE service
@@ -239,7 +239,7 @@ class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDecl
         foreach ($legacy as $service_shortname => $legacy_service_usage) {
             if (! $legacy_service_usage) {
                 $service_shortname =  $this->da->quoteSmart($service_shortname);
-                $additional_where  .= " AND short_name <> $service_shortname";
+                $additional_where .= " AND short_name <> $service_shortname";
             }
         }
 

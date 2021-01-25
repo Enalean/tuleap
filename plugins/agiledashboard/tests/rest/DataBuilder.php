@@ -69,8 +69,8 @@ class DataBuilder extends REST_TestDataBuilder
         parent::__construct();
         $this->instanciateFactories();
 
-        $kanban_dao            = new AgileDashboard_KanbanDao();
-        $this->kanban_manager  = new AgileDashboard_KanbanManager(
+        $kanban_dao           = new AgileDashboard_KanbanDao();
+        $this->kanban_manager = new AgileDashboard_KanbanManager(
             $kanban_dao,
             $this->tracker_factory
         );

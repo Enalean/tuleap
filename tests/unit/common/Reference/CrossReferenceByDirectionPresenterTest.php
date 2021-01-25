@@ -35,7 +35,7 @@ class CrossReferenceByDirectionPresenterTest extends TestCase
         $e_sources = new CrossReferenceNaturePresenter("E Sources", "", []);
         $f_sources = new CrossReferenceNaturePresenter("f Sources", "", []);
 
-        $nature  = new CrossReferenceByDirectionPresenter([$e_sources, $d_sources, $f_sources], [$b_targets, $a_targets]);
+        $nature = new CrossReferenceByDirectionPresenter([$e_sources, $d_sources, $f_sources], [$b_targets, $a_targets]);
 
         self::assertCount(2, $nature->targets_by_nature);
         self::assertCount(3, $nature->sources_by_nature);

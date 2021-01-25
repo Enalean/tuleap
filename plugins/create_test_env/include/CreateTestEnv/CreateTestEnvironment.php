@@ -110,7 +110,7 @@ class CreateTestEnvironment
 
     private function getArchiveBaseDir($archive_dir_name)
     {
-        $etc_base_dir = \ForgeConfig::get('sys_custompluginsroot') . '/' . \create_test_envPlugin::NAME . '/resources';
+        $etc_base_dir     = \ForgeConfig::get('sys_custompluginsroot') . '/' . \create_test_envPlugin::NAME . '/resources';
         $project_xml_path = $etc_base_dir . '/' . $archive_dir_name . '/project.xml';
         if (file_exists($project_xml_path)) {
             return $etc_base_dir . '/' . $archive_dir_name;
@@ -171,7 +171,7 @@ class CreateTestEnvironment
     private function execImport()
     {
         try {
-            $cmd = sprintf('sudo -u root /usr/share/tuleap/src/utils/tuleap import-project-xml -u admin --automap=no-email,create:A -i %s', escapeshellarg($this->output_dir));
+            $cmd  = sprintf('sudo -u root /usr/share/tuleap/src/utils/tuleap import-project-xml -u admin --automap=no-email,create:A -i %s', escapeshellarg($this->output_dir));
             $exec = new \System_Command();
             $exec->exec($cmd);
         } catch (\System_Command_CommandException $exception) {

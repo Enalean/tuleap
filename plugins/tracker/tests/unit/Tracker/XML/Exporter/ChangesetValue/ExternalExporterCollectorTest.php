@@ -33,7 +33,7 @@ final class ExternalExporterCollectorTest extends TestCase
     public function testItCollectExternalExporter(): void
     {
         $changeset_value = \Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
-        $event_manager = \Mockery::mock(\EventManager::class);
+        $event_manager   = \Mockery::mock(\EventManager::class);
 
         $collector = new ExternalExporterCollector(
             $event_manager

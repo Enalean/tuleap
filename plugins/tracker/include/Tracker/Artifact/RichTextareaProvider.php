@@ -41,7 +41,7 @@ class RichTextareaProvider
         TemplateRendererFactory $template_renderer_factory,
         UploadDataAttributesForRichTextEditorBuilder $upload_data_attributes_for_rich_text_editor_builder
     ) {
-        $this->template_renderer_factory = $template_renderer_factory;
+        $this->template_renderer_factory                           = $template_renderer_factory;
         $this->upload_data_attributes_for_rich_text_editor_builder = $upload_data_attributes_for_rich_text_editor_builder;
     }
 
@@ -66,7 +66,7 @@ class RichTextareaProvider
 
         $is_dragndrop_allowed = ! empty($data_attributes_for_dragndrop);
         if ($is_dragndrop_allowed) {
-            $data_attributes[]    = [
+            $data_attributes[] = [
                 'name'  => 'help-id',
                 'value' => $help_id
             ];

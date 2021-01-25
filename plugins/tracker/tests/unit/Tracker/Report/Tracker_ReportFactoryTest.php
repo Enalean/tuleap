@@ -50,7 +50,7 @@ final class Tracker_ReportFactoryTest extends TestCase
         parent::setUp();
 
         $this->report_factory = \Mockery::mock(\Tracker_ReportFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $criteria_factory = \Mockery::spy(\Tracker_Report_CriteriaFactory::class);
+        $criteria_factory     = \Mockery::spy(\Tracker_Report_CriteriaFactory::class);
         $this->report_factory->shouldReceive('getCriteriaFactory')->andReturns($criteria_factory);
         $this->renderer_factory = \Mockery::spy(\Tracker_Report_RendererFactory::class);
         $this->report_factory->shouldReceive('getRendererFactory')->andReturns($this->renderer_factory);
@@ -67,12 +67,12 @@ final class Tracker_ReportFactoryTest extends TestCase
 
     public function testImport(): void
     {
-        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TestTracker-1.xml'));
-        $reports = [];
+        $xml                   = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TestTracker-1.xml'));
+        $reports               = [];
         $renderers_xml_mapping = [];
         foreach ($xml->reports->report as $report) {
             $empty_array = [];
-            $reports[] = $this->report_factory->getInstanceFromXML($report, $empty_array, $renderers_xml_mapping, 0);
+            $reports[]   = $this->report_factory->getInstanceFromXML($report, $empty_array, $renderers_xml_mapping, 0);
         }
 
         //general settings
@@ -91,12 +91,12 @@ final class Tracker_ReportFactoryTest extends TestCase
         $renderer = Mockery::mock(Tracker_Report_Renderer::class);
         $this->renderer_factory->shouldReceive('getInstanceFromXML')->andReturn($renderer);
 
-        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/tracker_with_renderer_id.xml'));
-        $reports = [];
+        $xml                   = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/tracker_with_renderer_id.xml'));
+        $reports               = [];
         $renderers_xml_mapping = [];
         foreach ($xml->reports->report as $report) {
             $empty_array = [];
-            $reports[] = $this->report_factory->getInstanceFromXML($report, $empty_array, $renderers_xml_mapping, 0);
+            $reports[]   = $this->report_factory->getInstanceFromXML($report, $empty_array, $renderers_xml_mapping, 0);
         }
 
         //general settings

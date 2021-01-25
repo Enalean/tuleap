@@ -40,7 +40,7 @@ class FrozenFieldsValueUpdater implements PostActionUpdater
         FrozenFieldsValueValidator $frozen_fields_validator
     ) {
         $this->frozen_fields_repository = $frozen_fields_repository;
-        $this->frozen_fields_validator = $frozen_fields_validator;
+        $this->frozen_fields_validator  = $frozen_fields_validator;
     }
 
     /**

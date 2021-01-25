@@ -42,8 +42,8 @@ class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:igno
 
     public function testStripLightForibdden()
     {
-        $p = \Mockery::mock(\Codendi_HTMLPurifier::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $rm = \Mockery::spy(\ReferenceManager::class);
+        $p   = \Mockery::mock(\Codendi_HTMLPurifier::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $rm  = \Mockery::spy(\ReferenceManager::class);
         $val = 'bugtest #123';
         $rm->shouldReceive('insertReferences')->andReturns($val);
         $p->shouldReceive('getReferenceManager')->andReturns($rm);
@@ -98,7 +98,7 @@ class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:igno
     {
         $p = $this->getHTMLPurifier();
 
-        $vRef = ['<script>alert(1);</script>',
+        $vRef    = ['<script>alert(1);</script>',
                       'toto',
                       '<h1>title</h1>',
                       '<b>bold</b>'];
@@ -180,7 +180,7 @@ class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpcs:igno
         $p = \Mockery::mock(\Codendi_HTMLPurifier::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $p->shouldReceive('getReferenceManager')->andReturns($reference_manager);
 
-        $html = 'Text with <a href="http://tuleap.net/">link</a> and a reference to art #1';
+        $html     = 'Text with <a href="http://tuleap.net/">link</a> and a reference to art #1';
         $expected = 'Text with <a href="http://tuleap.net/">link</a> and a reference to <a href="link-to-art-1">art #1</a>';
 
         $this->assertEquals($expected, $p->purifyHTMLWithReferences($html, 123));

@@ -47,7 +47,7 @@ final class BannerRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->banner_dao        = Mockery::mock(BannerDao::class);
+        $this->banner_dao       = Mockery::mock(BannerDao::class);
         $this->banner_retriever = new BannerRetriever($this->banner_dao);
 
         $this->project = Mockery::mock(Project::class);

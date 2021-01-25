@@ -29,7 +29,7 @@ class NotInComparison implements Term, Visitable, Comparison
 
     public function __construct(Searchable $searchable, InValueWrapper $value_wrapper)
     {
-        $this->searchable         = $searchable;
+        $this->searchable    = $searchable;
         $this->value_wrapper = $value_wrapper;
     }
 

@@ -63,11 +63,11 @@ class RepositoryDeletePresenter extends BaseAdminPresenter
         $this->repository_delete_active = true;
         $this->token                    = $token->fetchHTMLInput();
 
-        $this->cannot_delete            = dgettext('tuleap-svn', 'You can\'t delete.');
-        $this->subtitle                 = dgettext('tuleap-svn', 'Delete this repository');
-        $this->comment                  = dgettext('tuleap-svn', 'You are about to permanently delete the repository:');
-        $this->comment_undone           = dgettext('tuleap-svn', 'This action cannot be undone.');
-        $this->button                   = dgettext('tuleap-svn', 'Delete this repository');
+        $this->cannot_delete  = dgettext('tuleap-svn', 'You can\'t delete.');
+        $this->subtitle       = dgettext('tuleap-svn', 'Delete this repository');
+        $this->comment        = dgettext('tuleap-svn', 'You are about to permanently delete the repository:');
+        $this->comment_undone = dgettext('tuleap-svn', 'This action cannot be undone.');
+        $this->button         = dgettext('tuleap-svn', 'Delete this repository');
 
         $this->modal_title         = dgettext('tuleap-svn', 'Wait a minute...');
         $this->modal_content       = dgettext('tuleap-svn', 'This deletion can\'t be undone. Please confirm the repository deletion.');

@@ -59,10 +59,10 @@ class ManifestFileGeneratorTest extends TestCase
         $this->manifest_directory = $this->fixture_dir . '/manifests';
         mkdir($this->manifest_directory);
 
-        $this->kernel_repository = $this->buildMockedRepository('linux/kernel.git', 'Linux4ever');
+        $this->kernel_repository  = $this->buildMockedRepository('linux/kernel.git', 'Linux4ever');
         $this->firefox_repository = $this->buildMockedRepository('mozilla/firefox.git', 'free and open-source web browser');
 
-        $this->singapour_mirror = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->singapour_mirror_id, 'singapour.com', 'singapour', 'SNP');
+        $this->singapour_mirror            = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->singapour_mirror_id, 'singapour.com', 'singapour', 'SNP');
         $this->manifest_file_for_singapour = $this->manifest_directory
             . "/manifest_mirror_{$this->singapour_mirror_id}.js.gz";
 

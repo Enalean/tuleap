@@ -71,15 +71,15 @@ class ListFieldCheckerWithBindUgroupsTest extends TestCase
             $this->ugroup_label_converter_for_list_checker
         );
 
-        $this->comparison       = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison::class);
-        $this->bind             = \Mockery::mock(\Tracker_FormElement_Field_List_Bind_Ugroups::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->field            = $this->buildCheckboxField();
+        $this->comparison = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison::class);
+        $this->bind       = \Mockery::mock(\Tracker_FormElement_Field_List_Bind_Ugroups::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->field      = $this->buildCheckboxField();
 
         $project_members_ugroup = \Mockery::spy(\ProjectUGroup::class);
         $project_members_ugroup->shouldReceive('getTranslatedName')->andReturns('Project members');
 
         $project_members_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(2, $project_members_ugroup, false);
-        $custom_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(
+        $custom_ugroup_value   = new Tracker_FormElement_Field_List_Bind_UgroupsValue(
             185,
             new ProjectUGroup(
                 [

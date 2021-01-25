@@ -33,7 +33,7 @@ class DumperFactoryTest extends TestCase
 
     public function testItBuildsGitoliteDumperIfTuleapDoesNotManageAuthorizedKeysFile()
     {
-        $management_detector          = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\ManagementDetector::class);
+        $management_detector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\ManagementDetector::class);
         $management_detector->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturnFalse();
         $authorized_keys_file_creator = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\AuthorizedKeysFileCreator::class);
         $system_command               = \Mockery::spy(\System_Command::class);
@@ -57,7 +57,7 @@ class DumperFactoryTest extends TestCase
 
     public function testItBuildsTuleapDumperIfTuleapManagesAuthorizedKeysFile()
     {
-        $management_detector          = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\ManagementDetector::class);
+        $management_detector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\ManagementDetector::class);
         $management_detector->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturnTrue();
         $authorized_keys_file_creator = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\AuthorizedKeysFileCreator::class);
         $system_command               = \Mockery::spy(\System_Command::class);

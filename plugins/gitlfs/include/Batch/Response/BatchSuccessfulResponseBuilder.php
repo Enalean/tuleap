@@ -44,8 +44,8 @@ use Tuleap\Project\Quota\ProjectQuotaChecker;
 
 class BatchSuccessfulResponseBuilder
 {
-    public const EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC = 900;
-    public const EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC = 6 * 3600;
+    public const EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC   = 900;
+    public const EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC   = 6 * 3600;
     public const EXPIRATION_DELAY_DOWNLOAD_ACTION_IN_SEC = 3600;
 
     /**
@@ -168,7 +168,7 @@ class BatchSuccessfulResponseBuilder
                     new ActionAuthorizationTypeVerify(),
                     new BatchResponseActionHrefVerify($server_url, $request_object)
                 );
-                $response_objects[] = new BatchResponseObjectWithActions(
+                $response_objects[]    = new BatchResponseObjectWithActions(
                     $request_object,
                     new BatchResponseActionsForUploadOperation($upload_action_content, $verify_action_content)
                 );
@@ -236,7 +236,7 @@ class BatchSuccessfulResponseBuilder
                     new ActionAuthorizationTypeDownload(),
                     new BatchResponseActionHrefDownload($server_url, $request_object)
                 );
-                $response_objects[]    = new BatchResponseObjectWithActions(
+                $response_objects[]      = new BatchResponseObjectWithActions(
                     $request_object,
                     new BatchResponseActionsForDownloadOperation($download_action_content)
                 );
@@ -261,7 +261,7 @@ class BatchSuccessfulResponseBuilder
         ActionAuthorizationType $action_type,
         BatchResponseActionHref $action_href
     ) {
-        $authorization = new ActionAuthorizationRequest(
+        $authorization       = new ActionAuthorizationRequest(
             $repository,
             $request_object,
             $action_type,

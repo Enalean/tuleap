@@ -78,9 +78,9 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
 
     public function chmodPages(&$dbi, &$request, $pages, $permstring)
     {
-        $ul = HTML::ul();
+        $ul    = HTML::ul();
         $count = 0;
-        $acl = chmodHelper($permstring);
+        $acl   = chmodHelper($permstring);
         if ($perm = new PagePermission($acl)) {
             foreach ($pages as $name) {
                 if ($perm->store($dbi->getPage($name))) {
@@ -114,7 +114,7 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
             return $this->disabled("WikiAdminChmod not yet enabled. Set DEBUG to try it.");
         }
 
-        $args = $this->getArgs($argstr, $request);
+        $args        = $this->getArgs($argstr, $request);
         $this->_args = $args;
         $this->preSelectS($args, $request);
 
@@ -122,9 +122,9 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
         if (! $p) {
             $p = $this->_list;
         }
-        $post_args = $request->getArg('admin_chmod');
+        $post_args   = $request->getArg('admin_chmod');
         $next_action = 'select';
-        $pages = [];
+        $pages       = [];
         if ($p && ! $request->isPost()) {
             $pages = $p;
         }
@@ -164,13 +164,13 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
             $args['info'] = "checkbox,pagename,perm,author,mtime";
         }
         $args['types'] = ['perm' => new _PageList_Column_chmod_perm('perm', _("Permission"))];
-        $pagelist = new PageList_Selectable($args['info'], $args['exclude'], $args);
+        $pagelist      = new PageList_Selectable($args['info'], $args['exclude'], $args);
         $pagelist->addPageList($pages);
 
         $header = HTML::p();
         if ($next_action == 'verify') {
             $button_label = _("Yes");
-            $header = $this->chmodForm($header, $post_args);
+            $header       = $this->chmodForm($header, $post_args);
             $header->pushContent(
                 HTML::p(HTML::strong(
                     _("Are you sure you want to permanently change the selected files?")
@@ -178,7 +178,7 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
             );
         } else {
             $button_label = _("Chmod");
-            $header = $this->chmodForm($header, $post_args);
+            $header       = $this->chmodForm($header, $post_args);
             $header->pushContent(HTML::p(_("Select the pages to change:")));
         }
 

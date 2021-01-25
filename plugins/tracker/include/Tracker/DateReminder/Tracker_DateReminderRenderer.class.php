@@ -63,7 +63,7 @@ class Tracker_DateReminderRenderer
      */
     public function getNewDateReminderForm(CSRFSynchronizerToken $csrf_token)
     {
-        $output = '<form method="post" id="date_field_reminder_form" class="form-inline"> ';
+        $output  = '<form method="post" id="date_field_reminder_form" class="form-inline"> ';
         $output .= '<input type="hidden" name="action" value="new_reminder">';
         $output .= $csrf_token->fetchHTMLInput();
         $output .= '<table border="0" cellpadding="5"><tr>';
@@ -152,7 +152,7 @@ class Tracker_DateReminderRenderer
     protected function getAllowedNotifiedForTracker($reminderId = null)
     {
         /** @psalm-suppress DeprecatedFunction */
-        $res = ugroup_db_get_existing_ugroups($this->tracker->group_id, [$GLOBALS['UGROUP_PROJECT_MEMBERS'],
+        $res             = ugroup_db_get_existing_ugroups($this->tracker->group_id, [$GLOBALS['UGROUP_PROJECT_MEMBERS'],
                                                                               $GLOBALS['UGROUP_PROJECT_ADMIN']]);
         $selectedUgroups = '';
         $ugroups         = [];
@@ -168,7 +168,7 @@ class Tracker_DateReminderRenderer
             }
         }
         $output  = '<select name="reminder_notified[]" multiple size=7 >';
-        $output  .= '<optgroup label="' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_optgroup_label_ugroup') . '" >';
+        $output .= '<optgroup label="' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_optgroup_label_ugroup') . '" >';
         while ($row = db_fetch_array($res)) {
             if ($ugroups && in_array($row['ugroup_id'], $ugroups)) {
                 $output .= '<option value="u_' . intval($row['ugroup_id']) . '" selected>' . \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']) . '</option>';
@@ -176,14 +176,14 @@ class Tracker_DateReminderRenderer
                 $output .= '<option value="u_' . intval($row['ugroup_id']) . '">' . \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']) . '</option>';
             }
         }
-        $output  .= '</optgroup>';
-         $output  .= '<optgroup label="' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_optgroup_label_role') . '">';
+        $output             .= '</optgroup>';
+         $output            .= '<optgroup label="' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_optgroup_label_role') . '">';
          $all_possible_roles = [
             new Tracker_DateReminder_Role_Submitter(),
             new Tracker_DateReminder_Role_Assignee(),
             new Tracker_DateReminder_Role_Commenter()
          ];
-         $purifier = Codendi_HTMLPurifier::instance();
+         $purifier           = Codendi_HTMLPurifier::instance();
          foreach ($all_possible_roles as $role) {
              if ($roles && in_array($role, $roles)) {
                  $output .= '<option value="r_' . $purifier->purify($role->getIdentifier()) . '" selected>' .
@@ -192,8 +192,8 @@ class Tracker_DateReminderRenderer
                  $output .= '<option value="r_' . $purifier->purify($role->getIdentifier()) . '">' . $purifier->purify($role->getLabel()) . '</option>';
              }
          }
-         $output  .= '</optgroup>';
-         $output  .= '</select>';
+         $output .= '</optgroup>';
+         $output .= '</select>';
          return $output;
     }
 
@@ -308,7 +308,7 @@ class Tracker_DateReminderRenderer
         while ($row = db_fetch_array($ugs)) {
             $ugroupIds[] = intval($row['ugroup_id']);
         }
-        $validUgroupIds  = [];
+        $validUgroupIds = [];
         if (! empty($selectedUgroups)) {
             foreach ($selectedUgroups as $ugroup) {
                 if (in_array($ugroup, $ugroupIds)) {
@@ -331,7 +331,7 @@ class Tracker_DateReminderRenderer
      */
     public function validateReminderRoles(array $selectedRoles)
     {
-        $validRoles = [];
+        $validRoles         = [];
         $all_possible_roles = [
             new Tracker_DateReminder_Role_Submitter(),
             new Tracker_DateReminder_Role_Assignee(),
@@ -361,7 +361,7 @@ class Tracker_DateReminderRenderer
      */
     public function scindReminderNotifiedPeople(HTTPRequest $request)
     {
-        $vArray = new Valid_Array('reminder_notified');
+        $vArray   = new Valid_Array('reminder_notified');
         $notified = $roles = $ugroups = [];
         if ($request->valid($vArray)) {
             $people = $request->get('reminder_notified');
@@ -438,7 +438,7 @@ class Tracker_DateReminderRenderer
         $reminderString .= sprintf(dgettext('tuleap-tracker', '%1$s day(s) %2$s'), $reminder->getDistance(), $reminder->getNotificationTypeLabel()) . '&nbsp;"';
         $reminderString .= $purifier->purify($reminder->getField()->getLabel()) . '"</b>';
 
-        $output = '<p><form id="delete_reminder" method="POST" class="date_reminder_confirm_delete">';
+        $output  = '<p><form id="delete_reminder" method="POST" class="date_reminder_confirm_delete">';
         $output .= $csrf_token->fetchHTMLInput();
         $output .= sprintf(dgettext('tuleap-tracker', '<h3>Confirm deletion of date reminder</h3><p>You are going to delete this date reminder:</p><p>%1$s</p><p>Are you sure that you want to continue?</p>'), $reminderString);
         $output .= '<div class="date_reminder_confirm_delete_buttons">';
@@ -461,7 +461,7 @@ class Tracker_DateReminderRenderer
      */
     public function displayDateReminders(HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
     {
-        $output = '<h2 class="almost-tlp-title">' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_title') . '</h2>';
+        $output  = '<h2 class="almost-tlp-title">' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_title') . '</h2>';
         $output .= '<fieldset>';
         if ($request->get('action') == 'delete_reminder') {
             $output .= $this->displayConfirmDelete($request->get('reminder_id'), $csrf_token);

@@ -25,7 +25,7 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject
     public function searchMappingFieldValues($cardwall_tracker_id)
     {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
-        $sql = "SELECT *
+        $sql                 = "SELECT *
                 FROM plugin_cardwall_on_top_column_mapping_field_value
                 WHERE cardwall_tracker_id = $cardwall_tracker_id";
         return $this->retrieve($sql);
@@ -53,7 +53,7 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject
     {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $column_id           = $this->da->escapeInt($column_id);
-        $sql = "DELETE FROM plugin_cardwall_on_top_column_mapping_field_value
+        $sql                 = "DELETE FROM plugin_cardwall_on_top_column_mapping_field_value
                 WHERE cardwall_tracker_id = $cardwall_tracker_id
                 AND column_id  = $column_id";
         return $this->update($sql);
@@ -65,7 +65,7 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject
         $tracker_id          = $this->da->escapeInt($tracker_id);
         $field_id            = $this->da->escapeInt($field_id);
         $column_id           = $this->da->escapeInt($column_id);
-        $sql = "DELETE FROM plugin_cardwall_on_top_column_mapping_field_value
+        $sql                 = "DELETE FROM plugin_cardwall_on_top_column_mapping_field_value
                 WHERE cardwall_tracker_id = $cardwall_tracker_id
                 AND tracker_id = $tracker_id
                 AND field_id   = $field_id
@@ -77,7 +77,7 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject
     {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $tracker_id          = $this->da->escapeInt($tracker_id);
-        $sql = "DELETE FROM plugin_cardwall_on_top_column_mapping_field_value
+        $sql                 = "DELETE FROM plugin_cardwall_on_top_column_mapping_field_value
                 WHERE tracker_id          = $tracker_id
                   AND cardwall_tracker_id = $cardwall_tracker_id";
         return $this->update($sql);
@@ -105,9 +105,9 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject
         $to_value_stmt   = $this->getSQLCase('value_id', $to_value_when_then);
         $to_tracker_stmt = $this->associativeToSQLCase($tracker_mapping, 'tracker_id');
         if (count($column_mapping) > 0) {
-            $to_column_stmt  = $this->associativeToSQLCase($column_mapping, 'column_id');
+            $to_column_stmt = $this->associativeToSQLCase($column_mapping, 'column_id');
         } else {
-            $to_column_stmt  = $this->associativeToSQLCase($all_values, 'column_id');
+            $to_column_stmt = $this->associativeToSQLCase($all_values, 'column_id');
         }
 
         $sql = "INSERT INTO plugin_cardwall_on_top_column_mapping_field_value (cardwall_tracker_id, tracker_id, field_id, value_id, column_id)

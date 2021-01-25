@@ -56,8 +56,8 @@ class SiteContentCustomisationController implements DispatchableWithRequest
         BaseLanguageFactory $base_language_factory
     ) {
         $this->base_language_factory = $base_language_factory;
-        $this->admin_page_renderer = $admin_page_renderer;
-        $this->template_renderer = $template_renderer_factory->getRenderer(__DIR__ . '/../../templates/admin/');
+        $this->admin_page_renderer   = $admin_page_renderer;
+        $this->template_renderer     = $template_renderer_factory->getRenderer(__DIR__ . '/../../templates/admin/');
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -116,9 +116,9 @@ class SiteContentCustomisationController implements DispatchableWithRequest
 
     private function appendCustomisationsDoneForCore(string $locale, array &$customisations): void
     {
-        $language = $this->base_language_factory->getBaseLanguage($locale);
+        $language         = $this->base_language_factory->getBaseLanguage($locale);
         $sitecontent_path = \ForgeConfig::get('sys_custom_incdir') . '/' . $locale;
-        $original_path = '/usr/share/tuleap/site-content/' . $locale;
+        $original_path    = '/usr/share/tuleap/site-content/' . $locale;
         $this->parseSiteContentLocaleDir($original_path, $sitecontent_path, $language, $customisations);
     }
 
@@ -165,14 +165,14 @@ class SiteContentCustomisationController implements DispatchableWithRequest
     private function compareFiles(BaseLanguage $language, array &$customisations, string $customised_filename, string $original_filename): void
     {
         $customised_text_array = [];
-        $original_text_array = [];
+        $original_text_array   = [];
         $language->parseLanguageFile($customised_filename, $customised_text_array);
         $language->parseLanguageFile($original_filename, $original_text_array);
 
         $lines = [];
         foreach ($customised_text_array as $primary_key => $entries) {
             foreach ($entries as $secondary_key => $value) {
-                $original = $original_text_array[$primary_key][$secondary_key];
+                $original      = $original_text_array[$primary_key][$secondary_key];
                 $customisation = $customised_text_array[$primary_key][$secondary_key];
                 if ($original === $customisation) {
                     continue;

@@ -102,7 +102,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
         $categories = [];
         foreach ($this->dao->getTopCategories() as $row) {
             $nb_selected = 0;
-            $values = [];
+            $values      = [];
             foreach ($this->dao->getCategoriesUnderGivenRootForProject($row['trove_cat_id'], $project->getID()) as $row_value) {
                 $values[] = [
                     'fullpath'    => $row_value['fullpath'],

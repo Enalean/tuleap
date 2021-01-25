@@ -27,7 +27,7 @@ class LockDeleteRequestTest extends TestCase
 
     public function testParsingRequest()
     {
-        $json = <<<JSON
+        $json           = <<<JSON
 {
   "force": true,
   "ref": {
@@ -45,7 +45,7 @@ JSON;
 
     public function testRequestCanBeParsedWhenNoRefIsGiven()
     {
-        $json_without_ref = <<<JSON
+        $json_without_ref         = <<<JSON
 {
   "force": false
 }

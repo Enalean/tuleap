@@ -174,7 +174,7 @@ class BurnupDataBuilder
         }
 
         if ($burnup_data->getTimePeriod()->isTodayWithinTimePeriod()) {
-            $now    = time();
+            $now            = time();
             $count_elements = $this->count_elements_calculator->getValue((int) $artifact->getId(), $now);
             $burnup_data->addCountElements($count_elements, $now);
         }

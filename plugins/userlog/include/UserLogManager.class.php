@@ -80,7 +80,7 @@ class UserLogManager
             if ($dis == '') {
                 $dis = '&nbsp;';
             } else {
-                $hp = Codendi_HTMLPurifier::instance();
+                $hp  = Codendi_HTMLPurifier::instance();
                 $dis = $hp->purify($dis);
             }
         } else {
@@ -107,8 +107,8 @@ class UserLogManager
 
     public function displayLogs($offset, $selected_day = null)
     {
-        $count       = 100;
-        $log_builder = new UserLogBuilder($this->getDao(), $this->user_manager);
+        $count                    = 100;
+        $log_builder              = new UserLogBuilder($this->getDao(), $this->user_manager);
         list($logs, $total_count) = $log_builder->build($selected_day, $offset, $count);
 
         $presenter = new UserLogPresenter($logs, $selected_day, $count, $offset, $total_count);

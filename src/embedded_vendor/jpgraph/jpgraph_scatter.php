@@ -16,8 +16,8 @@ require_once('jpgraph_plotmark.inc.php');
 //===================================================
 class FieldArrow
 {
-    public $iColor = 'black';
-    public $iSize = 10;  // Length in pixels for  arrow
+    public $iColor     = 'black';
+    public $iSize      = 10;  // Length in pixels for  arrow
     public $iArrowSize = 2;
     private $isizespec = [
         [2,1],[3,2],[4,3],[6,4],[7,4],[8,5],[10,6],[12,7],[16,8],[20,10]
@@ -29,7 +29,7 @@ class FieldArrow
 
     public function SetSize($aSize, $aArrowSize = 2)
     {
-        $this->iSize = $aSize;
+        $this->iSize      = $aSize;
         $this->iArrowSize = $aArrowSize;
     }
 
@@ -44,15 +44,15 @@ class FieldArrow
         list($x,$y) = $aImg->Rotate($x, $y);
 
         $old_origin = $aImg->SetCenter($x, $y);
-        $old_a = $aImg->a;
+        $old_a      = $aImg->a;
         $aImg->SetAngle(-$a + $old_a);
 
         $dx = round($this->iSize / 2);
-        $c = [$x - $dx, $y, $x + $dx, $y];
+        $c  = [$x - $dx, $y, $x + $dx, $y];
         $x += $dx;
 
         list($dx,$dy) = $this->isizespec[$this->iArrowSize];
-        $ca = [$x, $y, $x - $dx, $y - $dy, $x - $dx, $y + $dy, $x, $y];
+        $ca           = [$x, $y, $x - $dx, $y - $dy, $x - $dx, $y + $dy, $x, $y];
 
         $aImg->SetColor($this->iColor);
         $aImg->Polygon($c);
@@ -69,8 +69,8 @@ class FieldArrow
 //===================================================
 class FieldPlot extends Plot
 {
-    public $arrow = '';
-    private $iAngles = [];
+    public $arrow      = '';
+    private $iAngles   = [];
     private $iCallback = '';
 
     public function __construct($datay, $datax, $angles)
@@ -99,8 +99,8 @@ class FieldPlot extends Plot
     public function Stroke($img, $xscale, $yscale)
     {
         // Remeber base color and size
-        $bc = $this->arrow->iColor;
-        $bs = $this->arrow->iSize;
+        $bc  = $this->arrow->iColor;
+        $bs  = $this->arrow->iSize;
         $bas = $this->arrow->iArrowSize;
 
         for ($i = 0; $i < $this->numpoints; ++$i) {
@@ -173,7 +173,7 @@ class ScatterPlot extends Plot
         $this->mark->SetColor($this->color);
         $this->value->SetAlign('center', 'center');
         $this->value->SetMargin(0);
-        $this->link = new LineProperty(1, 'black', 'solid');
+        $this->link        = new LineProperty(1, 'black', 'solid');
         $this->link->iShow = false;
     }
 
@@ -192,10 +192,10 @@ class ScatterPlot extends Plot
     // Combine the scatter plot points with a line
     public function SetLinkPoints($aFlag = true, $aColor = "black", $aWeight = 1, $aStyle = 'solid')
     {
-        $this->link->iShow = $aFlag;
-        $this->link->iColor = $aColor;
+        $this->link->iShow   = $aFlag;
+        $this->link->iColor  = $aColor;
         $this->link->iWeight = $aWeight;
-        $this->link->iStyle = $aStyle;
+        $this->link->iStyle  = $aStyle;
     }
 
     public function Stroke($img, $xscale, $yscale)

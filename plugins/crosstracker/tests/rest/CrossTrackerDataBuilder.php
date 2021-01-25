@@ -51,9 +51,9 @@ class CrossTrackerDataBuilder extends REST_TestDataBuilder
 
         $test_user_1_id = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME)->getId();
 
-        $user_report_id  = $cross_tracker_saver->create();
+        $user_report_id = $cross_tracker_saver->create();
         $widget_dao->create($test_user_1_id, 'u', 2, 'crosstrackersearch', $user_report_id);
-        $project_report_id  = $cross_tracker_saver->create();
+        $project_report_id = $cross_tracker_saver->create();
         $widget_dao->create($test_user_1_id, 'g', 3, 'crosstrackersearch', $project_report_id);
     }
 

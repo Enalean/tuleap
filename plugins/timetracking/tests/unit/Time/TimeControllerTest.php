@@ -47,10 +47,10 @@ class TimeControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->time_updater          = \Mockery::spy(\Tuleap\Timetracking\Time\TimeUpdater::class);
-        $this->time_retriever        = \Mockery::spy(TimeRetriever::class);
-        $this->request               = \Mockery::spy(Codendi_Request::class);
-        $this->time_controller       = new TimeController($this->time_updater, $this->time_retriever);
+        $this->time_updater    = \Mockery::spy(\Tuleap\Timetracking\Time\TimeUpdater::class);
+        $this->time_retriever  = \Mockery::spy(TimeRetriever::class);
+        $this->request         = \Mockery::spy(Codendi_Request::class);
+        $this->time_controller = new TimeController($this->time_updater, $this->time_retriever);
 
         $this->user = \Mockery::spy(\PFUser::class);
         $this->user->allows()->getId()->andReturns(102);

@@ -188,12 +188,12 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function body($params)
     {
-        $current_user = UserManager::instance()->getCurrentUser();
+        $current_user    = UserManager::instance()->getCurrentUser();
         $project_manager = ProjectManager::instance();
 
-        $body_class       = isset($params['body_class']) ? $params['body_class'] : [];
-        $has_sidebar      = isset($params['group']) ? 'has-sidebar' : '';
-        $sidebar_state    = 'sidebar-expanded';
+        $body_class    = isset($params['body_class']) ? $params['body_class'] : [];
+        $has_sidebar   = isset($params['group']) ? 'has-sidebar' : '';
+        $sidebar_state = 'sidebar-expanded';
 
         $this->addBodyClassDependingThemeVariant($current_user, $body_class);
         $this->addBodyClassDependingUserPreference($current_user, $body_class);
@@ -202,7 +202,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $sidebar_state = $current_user->getPreference('sidebar_state');
         }
 
-        $banner = null;
+        $banner  = null;
         $project = null;
         if (! empty($params['group'])) {
             $project = $project_manager->getProject($params['group']);
@@ -276,7 +276,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         $current_context_section = $this->getNewDropdownCurrentContextSectionFromParams($params);
 
-        $widget_factory = new WidgetFactory(
+        $widget_factory           = new WidgetFactory(
             UserManager::instance(),
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
             $event_manager
@@ -286,7 +286,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $registration_user_permission_checker = new ProjectRegistrationUserPermissionChecker(
             new ProjectDao()
         );
-        $new_dropdown_presenter_builder = new NewDropdownPresenterBuilder(
+        $new_dropdown_presenter_builder       = new NewDropdownPresenterBuilder(
             $event_manager,
             $registration_user_permission_checker
         );

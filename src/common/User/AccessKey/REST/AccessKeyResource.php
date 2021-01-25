@@ -103,7 +103,7 @@ class AccessKeyResource extends AuthenticatedResource
             (new KeyFactory())->getEncryptionKey(),
             $storage_access_key_identifier_store
         );
-        $access_key_creator               = new AccessKeyCreator(
+        $access_key_creator                  = new AccessKeyCreator(
             $last_access_key_identifier_store,
             new AccessKeyDAO(),
             new SplitTokenVerificationStringHasher(),
@@ -112,7 +112,7 @@ class AccessKeyResource extends AuthenticatedResource
             new AccessKeyCreationNotifier(\HTTPRequest::instance()->getServerUrl(), \Codendi_HTMLPurifier::instance())
         );
 
-        $expiration_date = null;
+        $expiration_date          = null;
         $provided_expiration_date = $access_key->expiration_date;
         if ($provided_expiration_date !== null) {
             $expiration_date = DateTimeImmutable::createFromFormat(DateTime::ATOM, $provided_expiration_date);

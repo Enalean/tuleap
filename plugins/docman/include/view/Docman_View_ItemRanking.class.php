@@ -51,14 +51,14 @@ class Docman_View_ItemRanking
         $itemFactory = Docman_ItemFactory::instance($parentItem->getGroupId());
         $brotherIter = $itemFactory->getChildrenFromParent($parentItem);
 
-        $vals = ['beginning', 'end', '--'];
+        $vals  = ['beginning', 'end', '--'];
         $texts = [dgettext('tuleap-docman', 'At the beginning'),
                        dgettext('tuleap-docman', 'At the end'),
                        '----'];
-        $i = 3;
+        $i     = 3;
 
-        $pm = Docman_PermissionsManager::instance($parentItem->getGroupId());
-        $um = UserManager::instance();
+        $pm   = Docman_PermissionsManager::instance($parentItem->getGroupId());
+        $um   = UserManager::instance();
         $user = $um->getCurrentUser();
 
         $hp = Codendi_HTMLPurifier::instance();
@@ -79,7 +79,7 @@ class Docman_View_ItemRanking
         $html = '';
         $html = dgettext('tuleap-docman', 'Position:') . ' ';
 
-        $html .= '<select name="' . $this->dropDownName . '">' . "\n";
+        $html   .= '<select name="' . $this->dropDownName . '">' . "\n";
         $maxOpts = count($vals);
         for ($i = 0; $i < $maxOpts; $i++) {
             $selected = '';

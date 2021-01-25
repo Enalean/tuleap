@@ -60,7 +60,7 @@ class Docman_XMLExport
      */
     public function getMetadataDef(DOMDocument $doc)
     {
-        $propdefs = $doc->createElement('propdefs');
+        $propdefs  = $doc->createElement('propdefs');
         $mdFactory = new Docman_MetadataFactory($this->groupId);
         foreach ($mdFactory->getRealMetadataList() as $metadata) {
             $propdef = $doc->createElement('propdef');
@@ -101,10 +101,10 @@ class Docman_XMLExport
     {
         // Get root item
         $itemFactory = new Docman_ItemFactory($this->groupId);
-        $user = UserManager::instance()->getCurrentUser();
+        $user        = UserManager::instance()->getCurrentUser();
 
         $rootItem = $itemFactory->getRoot($this->groupId);
-        $tree = $itemFactory->getItemSubTree($rootItem, $user, true, true);
+        $tree     = $itemFactory->getItemSubTree($rootItem, $user, true, true);
 
         $xmlExport = new Docman_XMLExportVisitor($doc, $this->logger);
         $xmlExport->setDataPath($this->dataPath);

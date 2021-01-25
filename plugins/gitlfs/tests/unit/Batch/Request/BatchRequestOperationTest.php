@@ -26,7 +26,7 @@ class BatchRequestOperationTest extends TestCase
 {
     public function testValidOperation()
     {
-        $upload_operation   = new BatchRequestOperation('upload');
+        $upload_operation = new BatchRequestOperation('upload');
         $this->assertFalse($upload_operation->isDownload());
         $this->assertTrue($upload_operation->isUpload());
         $download_operation = new BatchRequestOperation('download');

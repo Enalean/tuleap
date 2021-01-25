@@ -42,7 +42,7 @@ class PaginatedSystemEventRepresentationsBuilder
         $total_rows            = (int) $this->dao->foundRows();
 
         foreach ($event_rows as $event_row) {
-            $event = $this->manager->getInstanceFromRow($event_row);
+            $event          = $this->manager->getInstanceFromRow($event_row);
             $representation = new SystemEventRepresentation();
             $representation->build($event);
 

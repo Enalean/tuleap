@@ -64,10 +64,10 @@ class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory
     public function _getTable()
     {
         $table = null;
-        $dao = $this->_getDao();
-        $dar = $dao->getTableByItemId($this->item->getId());
+        $dao   = $this->_getDao();
+        $dar   = $dao->getTableByItemId($this->item->getId());
         if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
-            $row = $dar->current();
+            $row   = $dar->current();
             $table = $this->createTableFromRow($row);
         }
         return $table;

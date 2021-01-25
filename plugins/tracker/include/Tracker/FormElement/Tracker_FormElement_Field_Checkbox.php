@@ -57,10 +57,10 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
      */
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
-        $selected_values_ids  = ($value && $value instanceof Tracker_Artifact_ChangesetValue_List)
+        $selected_values_ids = ($value && $value instanceof Tracker_Artifact_ChangesetValue_List)
             ? array_keys($value->getListValues())
             : [];
-        $visible_values = $this->getBind()->getAllVisibleValues();
+        $visible_values      = $this->getBind()->getAllVisibleValues();
         if (empty($visible_values)) {
             return $this->getNoValueLabel();
         }
@@ -73,9 +73,9 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
                 continue;
             }
             $checked = in_array($bind_id, $selected_values_ids);
-            $html .= '<li>';
-            $html .= '<span class="tracker-read-only-checkbox-list-item">' . ($checked ? "[x]" : "[ ]") . '</span> ' . $this->getBind()->formatChangesetValueWithoutLink($bind_value);
-            $html .= '</li>';
+            $html   .= '<li>';
+            $html   .= '<span class="tracker-read-only-checkbox-list-item">' . ($checked ? "[x]" : "[ ]") . '</span> ' . $this->getBind()->formatChangesetValueWithoutLink($bind_value);
+            $html   .= '</li>';
         }
         $html .= '</ul>';
         return $html;

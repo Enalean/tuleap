@@ -36,21 +36,21 @@ use TuleapCfg\Command\SetupMysql\MysqlCommandHelper;
 
 final class SetupMysqlInitCommand extends Command
 {
-    private const OPT_ADMIN_USER     = 'admin-user';
-    private const OPT_ADMIN_PASSWORD = 'admin-password';
-    private const OPT_APP_DBNAME     = 'db-name';
-    private const OPT_APP_USER       = 'app-user';
-    private const OPT_APP_PASSWORD   = 'app-password';
-    private const OPT_NSS_USER       = 'nss-user';
-    private const OPT_NSS_PASSWORD   = 'nss-password';
-    private const OPT_MEDIAWIKI      = 'mediawiki';
+    private const OPT_ADMIN_USER                  = 'admin-user';
+    private const OPT_ADMIN_PASSWORD              = 'admin-password';
+    private const OPT_APP_DBNAME                  = 'db-name';
+    private const OPT_APP_USER                    = 'app-user';
+    private const OPT_APP_PASSWORD                = 'app-password';
+    private const OPT_NSS_USER                    = 'nss-user';
+    private const OPT_NSS_PASSWORD                = 'nss-password';
+    private const OPT_MEDIAWIKI                   = 'mediawiki';
     private const OPT_MEDIAWIKI_VALUE_PER_PROJECT = 'per-project';
     private const OPT_MEDIAWIKI_VALUE_CENTRAL     = 'central';
-    private const OPT_SKIP_DATABASE  = 'skip-database';
-    private const OPT_GRANT_HOSTNAME = 'grant-hostname';
-    private const OPT_LOG_PASSWORD   = 'log-password';
-    private const OPT_AZURE_SUFFIX   = 'azure-suffix';
-    private const ENV_AZURE_SUFFIX   = 'TULEAP_DB_AZURE_SUFFIX';
+    private const OPT_SKIP_DATABASE               = 'skip-database';
+    private const OPT_GRANT_HOSTNAME              = 'grant-hostname';
+    private const OPT_LOG_PASSWORD                = 'log-password';
+    private const OPT_AZURE_SUFFIX                = 'azure-suffix';
+    private const ENV_AZURE_SUFFIX                = 'TULEAP_DB_AZURE_SUFFIX';
 
     /**
      * @var MysqlCommandHelper

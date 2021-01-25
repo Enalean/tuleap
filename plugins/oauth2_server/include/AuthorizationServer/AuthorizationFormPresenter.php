@@ -94,9 +94,9 @@ final class AuthorizationFormPresenter
     ) {
         $app = $data->getApp();
 
-        $this->app_identifier              = ClientIdentifier::fromOAuth2App($app)->toString();
-        $this->app_name                    = $app->getName();
-        $project = $app->getProject();
+        $this->app_identifier = ClientIdentifier::fromOAuth2App($app)->toString();
+        $this->app_name       = $app->getName();
+        $project              = $app->getProject();
         if ($project !== null) {
             $this->project_name = $project->getPublicName();
         }

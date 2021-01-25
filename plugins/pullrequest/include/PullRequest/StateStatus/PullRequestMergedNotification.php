@@ -64,10 +64,10 @@ final class PullRequestMergedNotification implements NotificationToProcess
         array $owners_without_change_user,
         NotificationEnhancedContent $enhanced_content
     ) {
-        $this->pull_request              = $pull_request;
-        $this->change_user_display_name  = $change_user_display_name;
-        $this->owners                    = $owners_without_change_user;
-        $this->enhanced_content          = $enhanced_content;
+        $this->pull_request             = $pull_request;
+        $this->change_user_display_name = $change_user_display_name;
+        $this->owners                   = $owners_without_change_user;
+        $this->enhanced_content         = $enhanced_content;
     }
 
     /**

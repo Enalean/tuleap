@@ -60,11 +60,11 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->tracker_id           = 3;
-        $project                    = Mockery::mock(\Project::class);
+        $this->tracker_id = 3;
+        $project          = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(101);
 
-        $tracker              = Mockery::mock(Tracker::class);
+        $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getProject')->andReturn($project);
         $tracker->shouldReceive('getId')->andReturn($this->tracker_id);
         $tracker->shouldReceive('getName')->andReturn('Stories');

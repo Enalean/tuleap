@@ -89,7 +89,7 @@ class PullRequestFileRepresentationFactory
                 $lines_stat['added_lines'],
                 $lines_stat['removed_lines']
             );
-            $x_files[] = $file_representation;
+            $x_files[]           = $file_representation;
         }
 
         return $x_files;

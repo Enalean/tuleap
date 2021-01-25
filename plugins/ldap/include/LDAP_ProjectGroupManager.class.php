@@ -77,8 +77,8 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
         if ($user === null) {
             return false;
         }
-        $project         = $this->project_manager->getProject($this->id);
-        $set_of_user_ids = new LDAPSetOfUserIDsForDiff([$user->getId()], [], []);
+        $project                  = $this->project_manager->getProject($this->id);
+        $set_of_user_ids          = new LDAPSetOfUserIDsForDiff([$user->getId()], [], []);
         $filtered_set_of_user_ids = $this->project_restricted_user_filter->filter($project, $set_of_user_ids);
         if (empty($filtered_set_of_user_ids->getUserIDsToAdd())) {
             return false;
@@ -167,11 +167,11 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
             $this->usersNotImpacted
         );
 
-        $project = $this->project_manager->getProject($this->id);
+        $project                  = $this->project_manager->getProject($this->id);
         $filtered_set_of_user_ids = $this->project_restricted_user_filter->filter($project, $set_of_user_ids);
 
-        $this->usersToAdd = $filtered_set_of_user_ids->getUserIDsToAdd();
-        $this->usersToRemove = $filtered_set_of_user_ids->getUserIDsToRemove();
+        $this->usersToAdd       = $filtered_set_of_user_ids->getUserIDsToAdd();
+        $this->usersToRemove    = $filtered_set_of_user_ids->getUserIDsToRemove();
         $this->usersNotImpacted = $filtered_set_of_user_ids->getUserIDsNotImpacted();
     }
 

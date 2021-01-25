@@ -35,8 +35,8 @@ class WebhookModalPresenter
 
     public function __construct(GitRepository $repository)
     {
-        $this->project_id     = $repository->getProjectId();
-        $this->repository_id  = $repository->getId();
+        $this->project_id    = $repository->getProjectId();
+        $this->repository_id = $repository->getId();
 
         $this->title      = dgettext('tuleap-git', 'Add generic webhook');
         $this->desc       = dgettext('tuleap-git', 'Add a target which will be called everytime a git push will be done. The URL will be called using HTTP POST method.');

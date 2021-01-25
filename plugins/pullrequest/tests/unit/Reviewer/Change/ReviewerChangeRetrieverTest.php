@@ -178,7 +178,7 @@ final class ReviewerChangeRetrieverTest extends TestCase
 
     public function testReviewerChangeAssociatedWithThePullRequestIsNotReturnedWhenTheUsersLinkedToItAreNotFound(): void
     {
-        $change_id       = 855;
+        $change_id = 855;
 
         $this->reviewer_change_dao->shouldReceive('searchByChangeID')->with($change_id)->andReturn([
             [

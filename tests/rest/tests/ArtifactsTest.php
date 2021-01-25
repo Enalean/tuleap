@@ -229,11 +229,11 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
     public function testGETBurndownForAChildrenArtifact()
     {
-        $response     = $this->getResponse(
+        $response = $this->getResponse(
             $this->client->get("artifacts/" . $this->niveau_1_artifact_ids[1])
         );
 
-        $burndown     = $response->json();
+        $burndown = $response->json();
 
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
@@ -277,11 +277,11 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
     public function testGETBurndownForAnotherChildrenArtifact()
     {
-        $response     = $this->getResponse(
+        $response = $this->getResponse(
             $this->client->get("artifacts/" . $this->niveau_2_artifact_ids[2])
         );
 
-        $burndown     = $response->json();
+        $burndown = $response->json();
 
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
@@ -350,11 +350,11 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
         $this->assertCount(count($existing_artifact_ids), $artifacts['collection']);
 
-        $response_with_read_only_user  = $this->getResponse(
+        $response_with_read_only_user = $this->getResponse(
             $this->client->get('artifacts?query=' . urlencode($query)),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $artifacts = $response_with_read_only_user->json();
+        $artifacts                    = $response_with_read_only_user->json();
 
         $this->assertCount(count($existing_artifact_ids), $artifacts['collection']);
         $tracker_ids = [];
@@ -431,8 +431,8 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $last_modified = $artifact->getHeader('Last-Modified')->normalize()->__toString();
         $etag          = $artifact->getHeader('Etag')->normalize()->__toString();
 
-        $field_label =  'Summary';
-        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $field_label  =  'Summary';
+        $field_id     = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource = json_encode([
             'values' => [
                 [
@@ -442,7 +442,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             ],
         ]);
 
-        $response    = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_resource));
+        $response = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_resource));
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
@@ -458,8 +458,8 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
      */
     public function testPutArtifactIdWithValidIfUnmodifiedSinceHeader($artifact_id)
     {
-        $field_label =  'Summary';
-        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $field_label  =  'Summary';
+        $field_id     = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource = json_encode([
             'values' => [
                 [
@@ -489,8 +489,8 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
      */
     public function testPutArtifactIdWithValidIfMatchHeader($artifact_id)
     {
-        $field_label =  'Summary';
-        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $field_label  =  'Summary';
+        $field_id     = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource = json_encode([
             'values' => [
                 [
@@ -502,8 +502,8 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
         $request = $this->client->put('artifacts/' . $artifact_id, null, $put_resource);
 
-        $artifact      = $this->getResponse($this->client->get('artifacts/' . $artifact_id));
-        $Etag = $artifact->getHeader('Etag')->normalize()->__toString();
+        $artifact = $this->getResponse($this->client->get('artifacts/' . $artifact_id));
+        $Etag     = $artifact->getHeader('Etag')->normalize()->__toString();
         $request->setHeader('If-Match', $Etag);
 
         $response = $this->getResponse($request);
@@ -520,8 +520,8 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
      */
     public function testPutArtifactIdWithInvalidIfUnmodifiedSinceHeader($artifact_id)
     {
-        $field_label =  'Summary';
-        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $field_label  =  'Summary';
+        $field_id     = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource = json_encode([
             'values' => [
                 [
@@ -547,8 +547,8 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
      */
     public function testPutArtifactIdWithInvalidIfMatchHeader($artifact_id)
     {
-        $field_label =  'Summary';
-        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $field_label  =  'Summary';
+        $field_id     = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource = json_encode([
             'values' => [
                 [
@@ -582,7 +582,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             ],
         ]);
 
-        $response    = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_resource));
+        $response = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_resource));
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));

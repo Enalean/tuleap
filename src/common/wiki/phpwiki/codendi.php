@@ -13,7 +13,7 @@ define('PHPWIKI_NOMAIN', true);
 function display_remove_button($pagename)
 {
     $display_remove_button = true;
-    $em = EventManager::instance();
+    $em                    = EventManager::instance();
     $em->processEvent(
         Event::WIKI_DISPLAY_REMOVE_BUTTON,
         [
@@ -81,9 +81,9 @@ function codendi_main()
                         'args'     => wikihash($request->getArgs()),
                         'prefs'    => wikihash($request->getPrefs())];
     if (CACHE_CONTROL == 'STRICT') {
-        $dbi = $request->getDbh();
-        $timestamp = $dbi->getTimestamp();
-        $validators['mtime'] = $timestamp;
+        $dbi                  = $request->getDbh();
+        $timestamp            = $dbi->getTimestamp();
+        $validators['mtime']  = $timestamp;
         $validators['%mtime'] = (int) $timestamp;
     }
     // FIXME: we should try to generate strong validators when possible,

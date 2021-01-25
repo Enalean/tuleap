@@ -104,7 +104,7 @@ class SimpleModeTest extends TrackerBase
      */
     public function testCreatedPostActionDuplicatesPreConditions(int $transition_id): void
     {
-        $infos = $this->gatherWorkflowInformation();
+        $infos         = $this->gatherWorkflowInformation();
         $date_field_id = $infos['date_field_id'];
         $response      = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -139,7 +139,7 @@ class SimpleModeTest extends TrackerBase
     {
         $infos = $this->gatherWorkflowInformation();
 
-        $transition = $this->getSpecificTransition(
+        $transition            = $this->getSpecificTransition(
             $this->simple_mode_workflow_tracker_id,
             'status',
             'Open',
@@ -428,7 +428,7 @@ class SimpleModeTest extends TrackerBase
         $this->assertEquals($tracker['workflow']['is_used'], "1");
         $this->assertCount(3, $tracker['workflow']['transitions']);
 
-        $transition = $this->getSpecificTransition(
+        $transition    = $this->getSpecificTransition(
             $this->simple_mode_from_xml_tracker_id,
             'status',
             'Open',

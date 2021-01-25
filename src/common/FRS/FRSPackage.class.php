@@ -26,7 +26,7 @@
  */
 class FRSPackage
 {
-    public const PERM_READ      = 'PACKAGE_READ';
+    public const PERM_READ = 'PACKAGE_READ';
 
     public const STATUS_ACTIVE  = 1;
     public const STATUS_DELETED = 2;
@@ -63,11 +63,11 @@ class FRSPackage
 
     public function __construct($data_array = null)
     {
-        $this->package_id       = null;
-        $this->group_id         = null;
-        $this->name             = null;
-        $this->status_id        = null;
-        $this->rank             = null;
+        $this->package_id = null;
+        $this->group_id   = null;
+        $this->name       = null;
+        $this->status_id  = null;
+        $this->rank       = null;
 
         if ($data_array) {
             $this->initFromArray($data_array);
@@ -182,7 +182,7 @@ class FRSPackage
 
     public function toArray(): array
     {
-        $array = [];
+        $array                    = [];
         $array['package_id']      = $this->getPackageID();
         $array['group_id']        = $this->getGroupID();
         $array['name']            = $this->getName();
@@ -210,7 +210,7 @@ class FRSPackage
     {
         if (! is_array($this->package_releases) || count($this->package_releases) < 1) {
             $this->package_releases = [];
-            $frsrf = new FRSReleaseFactory();
+            $frsrf                  = new FRSReleaseFactory();
             $this->package_releases = $frsrf->getFRSReleasesFromDb($this->getPackageID());
         }
         return $this->package_releases;

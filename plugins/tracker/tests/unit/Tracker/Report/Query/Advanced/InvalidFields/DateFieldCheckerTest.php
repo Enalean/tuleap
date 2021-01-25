@@ -48,7 +48,7 @@ final class DateFieldCheckerTest extends TestCase
         );
         $this->field              = \Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->field->shouldReceive('getName')->andReturn('date field');
-        $this->comparison         = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison::class);
+        $this->comparison = \Mockery::spy(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison::class);
     }
 
     public function testItDoesNotThrowWhenEmptyValueIsAllowed(): void

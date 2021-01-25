@@ -86,7 +86,7 @@ class PullRequestUpdaterTest extends TestCase
     {
         $reference_manager = \Mockery::mock(ReferenceManager::class);
 
-        $this->dao = new Dao();
+        $this->dao                    = new Dao();
         $this->inline_comments_dao    = \Mockery::spy(InlineCommentDAO::class);
         $this->git_repository_factory = \Mockery::mock(GitRepositoryFactory::class);
         $this->git_exec_factory       = \Mockery::mock(GitExecFactory::class);

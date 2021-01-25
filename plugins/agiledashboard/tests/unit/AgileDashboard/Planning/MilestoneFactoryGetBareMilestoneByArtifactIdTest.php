@@ -87,8 +87,8 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends TestCase
             $this->timeframe_builder,
             Mockery::spy(MilestoneBurndownFieldChecker::class)
         );
-        $this->user = Mockery::mock(PFUser::class);
-        $this->artifact_id = 112;
+        $this->user              = Mockery::mock(PFUser::class);
+        $this->artifact_id       = 112;
     }
 
     public function testItReturnsNullIfArtifactDoesntExist(): void

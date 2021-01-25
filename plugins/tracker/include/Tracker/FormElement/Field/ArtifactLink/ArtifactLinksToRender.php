@@ -45,14 +45,14 @@ class ArtifactLinksToRender
             $this->has_artifact_to_display = false;
             return;
         }
-        $this->has_artifact_to_display = true;
-        $matching_ids                  = $this->getMatchingIDs(
+        $this->has_artifact_to_display          = true;
+        $matching_ids                           = $this->getMatchingIDs(
             $current_user,
             $field,
             $nature_presenter_factory,
             ...$link_infos
         );
-        $this->grouped_by_project_then_tracker = $this->groupAndEnhanceMatchingIDsPerProject(
+        $this->grouped_by_project_then_tracker  = $this->groupAndEnhanceMatchingIDsPerProject(
             $tracker_factory,
             $report_factory,
             $matching_ids
@@ -76,7 +76,7 @@ class ArtifactLinksToRender
             return [];
         }
         $project_allowed_to_use_nature = $tracker->isProjectAllowedToUseNature();
-        $ids = [];
+        $ids                           = [];
         // build an array of artifact_id / last_changeset_id for fetch renderer method
         foreach ($link_infos as $artifact_link) {
             if ($this->canUseArtifactLink($current_user, $artifact_link)) {
@@ -90,11 +90,11 @@ class ArtifactLinksToRender
                         $ids[$artifact_link_tracker_id]['nature'] = [];
                     }
                 }
-                $artifact_id = $artifact_link->getArtifactId();
-                $ids[$artifact_link_tracker_id]['id'] .= "$artifact_id,";
+                $artifact_id                                          = $artifact_link->getArtifactId();
+                $ids[$artifact_link_tracker_id]['id']                .= "$artifact_id,";
                 $ids[$artifact_link_tracker_id]['last_changeset_id'] .= $artifact_link->getLastChangesetId() . ',';
                 if ($project_allowed_to_use_nature) {
-                    $nature_presenter = $this->getNaturePresenterFromShortnameWithCache(
+                    $nature_presenter                                       = $this->getNaturePresenterFromShortnameWithCache(
                         $nature_presenter_factory,
                         $artifact_link->getNature()
                     );
@@ -124,7 +124,7 @@ class ArtifactLinksToRender
             if ($tracker->userCanView() && ! $tracker->isDeleted()) {
                 $report = $report_factory->getDefaultReportsByTrackerId($tracker->getId());
                 if ($report) {
-                    $renderers = $report->getRenderers();
+                    $renderers            = $report->getRenderers();
                     $renderer_table_found = false;
                     // looking for the first table renderer
                     foreach ($renderers as $renderer) {
@@ -134,7 +134,7 @@ class ArtifactLinksToRender
                                 $matching_ids,
                                 $renderer
                             );
-                            $renderer_table_found = true;
+                            $renderer_table_found                          = true;
                             break;
                         }
                     }
@@ -206,8 +206,8 @@ class ArtifactLinksToRender
         if (isset($this->can_user_artifact_link_cache[$user->getId()][spl_object_hash($artifact_link)])) {
             return $this->can_user_artifact_link_cache[$user->getId()][spl_object_hash($artifact_link)];
         }
-        $artifact_link_tracker = $artifact_link->getTracker();
-        $can_use_artifact_link = ($artifact_link_tracker !== null && $artifact_link_tracker->isActive() &&
+        $artifact_link_tracker                                                               = $artifact_link->getTracker();
+        $can_use_artifact_link                                                               = ($artifact_link_tracker !== null && $artifact_link_tracker->isActive() &&
             $artifact_link->userCanView($user) && ! $this->hideArtifact($artifact_link));
         $this->can_user_artifact_link_cache[$user->getId()][spl_object_hash($artifact_link)] = $can_use_artifact_link;
         return $can_use_artifact_link;

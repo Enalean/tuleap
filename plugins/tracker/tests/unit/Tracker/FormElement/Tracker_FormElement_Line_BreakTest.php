@@ -27,17 +27,17 @@ final class Tracker_FormElement_Line_BreakTest extends \PHPUnit\Framework\TestCa
 
     public function testFetchDescription(): void
     {
-        $id = 2;
-        $tracker_id = 254;
-        $parent_id = 0;
-        $name = 'linebreak2';
-        $label = 'Line Break Label';
-        $description = 'Line Break Description that should not be kept';
-        $use_it = true;
-        $scope = 'S';
-        $required = false;
+        $id             = 2;
+        $tracker_id     = 254;
+        $parent_id      = 0;
+        $name           = 'linebreak2';
+        $label          = 'Line Break Label';
+        $description    = 'Line Break Description that should not be kept';
+        $use_it         = true;
+        $scope          = 'S';
+        $required       = false;
         $notififcations = false;
-        $rank = 25;
+        $rank           = 25;
         $original_field = null;
 
         $line_break = new Tracker_FormElement_StaticField_LineBreak($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notififcations, $rank, $original_field);

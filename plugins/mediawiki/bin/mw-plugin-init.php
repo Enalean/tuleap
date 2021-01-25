@@ -29,9 +29,9 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $echo_links = $argc >= 1;
 
-$master_path = forge_get_config('master_path', 'mediawiki');
+$master_path   = forge_get_config('master_path', 'mediawiki');
 $projects_path = forge_get_config('projects_path', 'mediawiki');
-$src_path = forge_get_config('src_path', 'mediawiki');
+$src_path      = forge_get_config('src_path', 'mediawiki');
 
 // create directories
 if (! is_dir($projects_path)) {
@@ -73,7 +73,7 @@ if (! ($dh = opendir($src_path))) {
     while ($file = readdir($dh)) {
         if (! isset($ignore_file[$file]) || ! $ignore_file[$file]) {
             $from = "$src_path/$file";
-            $to = "$master_path/$file";
+            $to   = "$master_path/$file";
             mysymlink($from, $to);
         }
     }
@@ -82,7 +82,7 @@ if (! ($dh = opendir($src_path))) {
 
 // link LocalSettings.php from forge_get_config('source_path')/plugins/mediawiki/etc/plugins/mediawiki/LocalSettings.php
 $from = forge_get_config('source_path') . "/plugins/mediawiki/www/LocalSettings.php";
-$to = "$master_path/LocalSettings.php";
+$to   = "$master_path/LocalSettings.php";
 mysymlink($from, $to);
 
 // create skin directory
@@ -93,8 +93,8 @@ if (! is_dir($todir)) {
 
 // link FusionForge skin file
 $fromdir = forge_get_config('source_path') . "/plugins/mediawiki/mediawiki-skin";
-$from = "$fromdir/FusionForge.php";
-$to = "$todir/FusionForge.php";
+$from    = "$fromdir/FusionForge.php";
+$to      = "$todir/FusionForge.php";
 mysymlink($from, $to);
 
 // create skin subdir
@@ -105,14 +105,14 @@ if (! is_dir($todir)) {
 
 // link fusionforge.css files
 $fromdir = "$fromdir/fusionforge";
-$from = "$fromdir/fusionforge.css";
-$to = "$todir/fusionforge.css";
+$from    = "$fromdir/fusionforge.css";
+$to      = "$todir/fusionforge.css";
 mysymlink($from, $to);
 
 // link the rest of the files from monobook skin
 $fromdir = "$src_path/skins/monobook";
 
-$dh = opendir($fromdir);
+$dh          = opendir($fromdir);
 $ignore_file = [
     '.' => true,
     '..' => true,
@@ -120,7 +120,7 @@ $ignore_file = [
 while ($file = readdir($dh)) {
     if (! isset($ignore_file[$file]) || ! $ignore_file[$file]) {
         $from = "$fromdir/$file";
-        $to = "$todir/$file";
+        $to   = "$todir/$file";
         mysymlink($from, $to);
     }
 }

@@ -50,7 +50,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(LicenseAgreementDao::class);
+        $this->dao     = \Mockery::mock(LicenseAgreementDao::class);
         $this->project = new \Project(['group_id' => '101']);
         $this->package = new FRSPackage(['package_id' => '470']);
         $this->factory = new LicenseAgreementFactory($this->dao);
@@ -319,7 +319,7 @@ class LicenseAgreementFactoryTest extends TestCase
         $this->dao->shouldReceive('setProjectDefault');
 
         $frs_package_factory = \Mockery::mock(\FRSPackageFactory::class);
-        $packages = [];
+        $packages            = [];
         foreach ([350, 470, 1001, 1002] as $package_id) {
             $packages[$package_id] = new FRSPackage(['package_id' => (string) $package_id, 'approve_license' => '1']);
             $frs_package_factory->shouldReceive('getFRSPackageFromDb')->with($package_id)->andReturn($packages[$package_id]);

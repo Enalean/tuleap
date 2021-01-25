@@ -143,7 +143,7 @@ class ForgeConfigTest extends TestCase
 
     public function testItReturnsEmptyArrayIfRestrictedUserFileIsTheDefaultOne(): void
     {
-        $default_file    = __DIR__ . '/../../../../site-content/en_US/include/restricted_user_permissions.txt';
+        $default_file = __DIR__ . '/../../../../site-content/en_US/include/restricted_user_permissions.txt';
 
         $GLOBALS['Language']
             ->shouldReceive('getContent')

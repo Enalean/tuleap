@@ -42,8 +42,8 @@ class NodeBuilderFactory
 
     public function __construct()
     {
-        $dao       = new TestManagementDao();
-        $config    = new Config($dao, \TrackerFactory::instance());
+        $dao    = new TestManagementDao();
+        $config = new Config($dao, \TrackerFactory::instance());
 
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $config,

@@ -140,7 +140,7 @@ class PluginsAdministrationViews extends Views
     // {{{ Views
     public function browse()
     {
-        $output = '';
+        $output  = '';
         $output .= $this->getInstalledPluginsPresenter();
         $output .= $this->getAvailablePluginsPresenter();
         echo $output;
@@ -256,9 +256,9 @@ class PluginsAdministrationViews extends Views
     public function _searchPlugins()
     {
         if (! $this->_plugins) {
-            $this->_plugins    = [];
+            $this->_plugins = [];
 
-            $plugin_manager               = $this->plugin_manager;
+            $plugin_manager = $this->plugin_manager;
             try {
                 $forgeUpgradeConfig = new ForgeUpgradeConfig(new System_Command());
                 $forgeUpgradeConfig->loadDefaults();
@@ -271,8 +271,8 @@ class PluginsAdministrationViews extends Views
             foreach ($plugins as $plugin) {
                 $plug_info  = $plugin->getPluginInfo();
                 $descriptor = $plug_info->getPluginDescriptor();
-                $available = $plugin_manager->isPluginAvailable($plugin);
-                $name = $descriptor->getFullName();
+                $available  = $plugin_manager->isPluginAvailable($plugin);
+                $name       = $descriptor->getFullName();
                 if (strlen(trim($name)) === 0) {
                     $name = get_class($plugin);
                 }
@@ -370,7 +370,7 @@ class PluginsAdministrationViews extends Views
 
             if (! empty($dependencies)) {
                 $plugins[$key]['is_there_unmet_dependencies'] = true;
-                $plugins[$key]['unmet_dependencies'] = $dependencies;
+                $plugins[$key]['unmet_dependencies']          = $dependencies;
             }
         }
 

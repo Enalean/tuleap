@@ -34,7 +34,7 @@ class ActionAuthorizationTokenCreatorTest extends TestCase
 
     public function testAuthorizationTokenIsCreated()
     {
-        $hasher  = \Mockery::mock(SplitTokenVerificationStringHasher::class);
+        $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('computeHash')->andReturns('hashed_verification_string');
         $dao = \Mockery::mock(ActionAuthorizationDAO::class);
         $dao->shouldReceive('create')->andReturns(100);
@@ -42,7 +42,7 @@ class ActionAuthorizationTokenCreatorTest extends TestCase
         $creator = new ActionAuthorizationTokenCreator($hasher, $dao);
 
         $authorization_request = \Mockery::mock(ActionAuthorizationRequest::class);
-        $repository = \Mockery::mock(\GitRepository::class);
+        $repository            = \Mockery::mock(\GitRepository::class);
         $repository->shouldReceive('getId')->andReturns(1);
         $authorization_request->shouldReceive('getGitRepository')->andReturns($repository);
         $authorization_request->shouldReceive('getExpiration')

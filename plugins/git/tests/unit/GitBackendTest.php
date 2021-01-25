@@ -105,11 +105,11 @@ class GitBackendTest extends TestCase
         // Copy the reference to save time & create symlink because
         // git is very sensitive to path you are using. Just symlinking
         // spots bugs
-        $this->cwd           = getcwd();
-        $this->_tmpDir       = $this->getTmpDir();
-        $this->_fixDir       = __DIR__ . '/_fixtures';
-        $this->_glAdmDirRef  = $this->_tmpDir . '/gitolite-admin-ref';
-        $this->backupDir     = $this->_tmpDir . '/backup';
+        $this->cwd          = getcwd();
+        $this->_tmpDir      = $this->getTmpDir();
+        $this->_fixDir      = __DIR__ . '/_fixtures';
+        $this->_glAdmDirRef = $this->_tmpDir . '/gitolite-admin-ref';
+        $this->backupDir    = $this->_tmpDir . '/backup';
         system('tar -xf ' . $this->_fixDir . '/gitolite-admin-ref' . '.tar --directory ' . $this->_tmpDir);
         mkdir($this->backupDir);
     }

@@ -113,7 +113,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
                 and (! $this->ExcludedPages or ! preg_match("/" . $this->ExcludedPages . "/", $linkpagename))
             ) {
                 $pagearr[$level . " [$linkpagename]"] = $link;
-                $pagearr = $this->recursivelyGetBackLinks(
+                $pagearr                              = $this->recursivelyGetBackLinks(
                     $link,
                     $pagearr,
                     $level . '*',
@@ -153,7 +153,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
             ) {
                 if (! $this->excludeunknown or $this->dbi->isWikiPage($linkpagename)) {
                     $pagearr[$level . " [$linkpagename]"] = $link;
-                    $pagearr = $this->recursivelyGetLinks(
+                    $pagearr                              = $this->recursivelyGetLinks(
                         $link,
                         $pagearr,
                         $level . '*',
@@ -176,15 +176,15 @@ class WikiPlugin_SiteMap extends WikiPlugin
             return '';
         }
         $this->_pagename = $page;
-        $out = ''; // get rid of this
-        $html = HTML();
+        $out             = ''; // get rid of this
+        $html            = HTML();
         if (empty($exclude)) {
             $exclude = [];
         }
         if (! $include_self) {
             $exclude[] = $page;
         }
-        $this->ExcludedPages = empty($exclude) ? "" : ("^(?:" . join("|", $exclude) . ")");
+        $this->ExcludedPages  = empty($exclude) ? "" : ("^(?:" . join("|", $exclude) . ")");
         $this->_default_limit = str_pad('', 3, '*');
         if (is_numeric($reclimit)) {
             if ($reclimit < 0) {
@@ -207,7 +207,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
             $html->pushContent(TransformText($out, 1.0, $page));
         }
         $pagelist = new PageList($info, $exclude);
-        $p = $dbi->getPage($page);
+        $p        = $dbi->getPage($page);
 
         $pagearr = [];
         if ($direction == 'back') {
@@ -218,11 +218,11 @@ class WikiPlugin_SiteMap extends WikiPlugin
                 $limit
             );
         } else {
-            $this->dbi = $dbi;
-            $this->initialpage = $page;
-            $this->firstreversed = $firstreversed;
+            $this->dbi            = $dbi;
+            $this->initialpage    = $page;
+            $this->firstreversed  = $firstreversed;
             $this->excludeunknown = $excludeunknown;
-            $pagearr = $this->recursivelyGetLinks($p, $pagearr, "*", $limit);
+            $pagearr              = $this->recursivelyGetLinks($p, $pagearr, "*", $limit);
         }
 
         reset($pagearr);
@@ -234,19 +234,19 @@ class WikiPlugin_SiteMap extends WikiPlugin
             if (! is_string($includepages)) {
                 $includepages = ' '; // avoid plugin loader problems
             }
-            $loader = new WikiPluginLoader();
-            $plugin = $loader->getPlugin('IncludePage', false);
+            $loader  = new WikiPluginLoader();
+            $plugin  = $loader->getPlugin('IncludePage', false);
             $nothing = '';
         }
 
         foreach ($pagearr as $key => $link) {
             if (! empty($includepages)) {
-                $a = substr_count($key, '*');
+                $a        = substr_count($key, '*');
                 $indenter = str_pad($nothing, $a);
                 //$request->setArg('IncludePage', 1);
                 // quote linkname, by Stefan Schorn
                 $plugin_args = 'page=\'' . $link->getName() . '\' ' . $includepages;
-                $pagehtml = $plugin->run($dbi, $plugin_args, $request, $basepage);
+                $pagehtml    = $plugin->run($dbi, $plugin_args, $request, $basepage);
                 $html->pushContent($pagehtml);
                 //$html->pushContent( HTML(TransformText($indenter, 1.0, $page), $pagehtml));
                 //$out .= $indenter . $pagehtml . "\n";

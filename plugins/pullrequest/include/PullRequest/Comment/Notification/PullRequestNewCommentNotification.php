@@ -70,11 +70,11 @@ final class PullRequestNewCommentNotification implements NotificationToProcess
         string $comment,
         NotificationEnhancedContent $enhanced_content
     ) {
-        $this->pull_request              = $pull_request;
-        $this->change_user_display_name  = $change_user_display_name;
-        $this->owners                    = $owners_without_change_user;
-        $this->comment                   = $comment;
-        $this->enhanced_content          = $enhanced_content;
+        $this->pull_request             = $pull_request;
+        $this->change_user_display_name = $change_user_display_name;
+        $this->owners                   = $owners_without_change_user;
+        $this->comment                  = $comment;
+        $this->enhanced_content         = $enhanced_content;
     }
 
     /**

@@ -76,12 +76,12 @@ class Tracker_RuleFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->xmlstr = <<<XML
+        $this->xmlstr  = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
     <rules>
     </rules>
 XML;
-        $this->xml    = new SimpleXMLElement($this->xmlstr);
+        $this->xml     = new SimpleXMLElement($this->xmlstr);
         $this->tracker = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(888);
         $this->f1 = Mockery::mock(Tracker_FormElement_Field_List::class);

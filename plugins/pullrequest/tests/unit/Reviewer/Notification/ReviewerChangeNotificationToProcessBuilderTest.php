@@ -70,7 +70,7 @@ final class ReviewerChangeNotificationToProcessBuilderTest extends TestCase
 
     public function testBuildReviewerAddedNotificationFromReviewerChangeEvent(): void
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);
         $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
         $change_user   = $this->buildUser(102);
@@ -101,9 +101,9 @@ final class ReviewerChangeNotificationToProcessBuilderTest extends TestCase
 
     public function testNoAddedNotificationIsBuiltIfThereIsNoNewReviewer(): void
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);
-        $change_user   = \Mockery::mock(PFUser::class);
+        $change_user = \Mockery::mock(PFUser::class);
 
         $reviewer_change_event = ReviewerChangeEvent::fromID(148);
 

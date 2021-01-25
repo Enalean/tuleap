@@ -65,8 +65,8 @@ class SVN_Apache_ModPerl extends SVN_Apache
         if (! $redis_server || strpos($redis_server, 'tls://') === 0) {
             return '';
         }
-        $redis_server .= ':' . trim(ForgeConfig::get('redis_port'));
-        $conf = '    TuleapRedisServer "' . $this->escapeStringForApacheConf($redis_server) . '"' . "\n";
+        $redis_server  .= ':' . trim(ForgeConfig::get('redis_port'));
+        $conf           = '    TuleapRedisServer "' . $this->escapeStringForApacheConf($redis_server) . '"' . "\n";
         $redis_password = trim(ForgeConfig::get('redis_password'));
         if ($redis_password) {
             $conf .= '    TuleapRedisPassword "' . $this->escapeStringForApacheConf($redis_password) . '"' . "\n";

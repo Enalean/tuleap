@@ -37,8 +37,8 @@ class Docman_View_Details extends Docman_View_Display
         $token = isset($params['token']) ? $params['token'] : null;
 
         $user_can_manage = $this->_controller->userCanManage($params['item']->getId());
-        $user_can_write = $user_can_manage || $this->_controller->userCanWrite($params['item']->getId());
-        $user_can_read  = $user_can_write || $this->_controller->userCanRead($params['item']->getId());
+        $user_can_write  = $user_can_manage || $this->_controller->userCanWrite($params['item']->getId());
+        $user_can_read   = $user_can_write || $this->_controller->userCanRead($params['item']->getId());
 
         $user_can_read_obsolete = false;
         if ($params['item']->isObsolete()) {
@@ -49,7 +49,7 @@ class Docman_View_Details extends Docman_View_Display
                 // Save read value to let user (according to their rights) to see
                 // the properties.
                 $user_can_read_obsolete = $user_can_read;
-                $user_can_read   = false;
+                $user_can_read          = false;
             }
         }
 
@@ -76,7 +76,7 @@ class Docman_View_Details extends Docman_View_Display
         }
         if ($user_can_manage) {
             $sections['permissions'] = true;
-            $permissions = new Docman_View_ItemDetailsSectionPermissions($params['item'], $params['default_url']);
+            $permissions             = new Docman_View_ItemDetailsSectionPermissions($params['item'], $params['default_url']);
             $details->addSection($permissions);
         }
 
@@ -107,7 +107,7 @@ class Docman_View_Details extends Docman_View_Display
 
         if ($user_can_read) {
             $sections['history'] = true;
-            $logger = $this->_controller->getLogger();
+            $logger              = $this->_controller->getLogger();
             $details->addSection(new Docman_View_ItemDetailsSectionHistory($params['item'], $params['default_url'], $user_can_manage, $logger));
         }
 

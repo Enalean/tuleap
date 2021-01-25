@@ -63,7 +63,7 @@ class WikiPlugin__BackendInfo extends WikiPlugin
             $page
         )));
 
-        $table = HTML::table(['border' => 1,
+        $table    = HTML::table(['border' => 1,
                                    'cellpadding' => 2,
                                    'cellspacing' => 0]);
         $pagedata = $backend->get_pagedata($page);

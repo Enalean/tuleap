@@ -41,8 +41,8 @@ class RepositorySimpleRepresentationBuilder
         CollectionOfUGroupRepresentationBuilder $collection_of_ugroups_builder,
         AdminUrlBuilder $url_builder
     ) {
-        $this->permissions_manager = $permissions_manager;
-        $this->url_builder         = $url_builder;
+        $this->permissions_manager           = $permissions_manager;
+        $this->url_builder                   = $url_builder;
         $this->collection_of_ugroups_builder = $collection_of_ugroups_builder;
     }
 

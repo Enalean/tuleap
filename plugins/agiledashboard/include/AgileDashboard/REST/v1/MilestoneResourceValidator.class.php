@@ -267,7 +267,7 @@ class MilestoneResourceValidator
     private function filterArtifactIdsAlreadyInBacklog(array $ids, Planning_Milestone $milestone, PFUser $user)
     {
         $indexed_backlog_items = $this->getIndexedBacklogItems($user, $milestone);
-        $to_add = [];
+        $to_add                = [];
         foreach ($ids as $id) {
             if (! isset($indexed_backlog_items[$id])) {
                 $to_add[] = $id;
@@ -279,7 +279,7 @@ class MilestoneResourceValidator
     private function getIndexedChildrenBacklogTrackers(Planning_Milestone $milestone)
     {
         $children_backlog_trackers = [];
-        $children_planning = $this->planning_factory->getChildrenPlanning($milestone->getPlanning());
+        $children_planning         = $this->planning_factory->getChildrenPlanning($milestone->getPlanning());
         if ($children_planning) {
             foreach ($children_planning->getBacklogTrackersIds() as $id) {
                 $children_backlog_trackers[$id] = true;
@@ -290,7 +290,7 @@ class MilestoneResourceValidator
 
     private function getIndexedBacklogItems(PFUser $user, Planning_Milestone $milestone)
     {
-        $index = [];
+        $index         = [];
         $backlog_items = $this->getMilestoneBacklogItems($user, $milestone);
         foreach ($backlog_items as $item) {
             $index[$item->id()] = true;

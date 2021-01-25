@@ -37,13 +37,13 @@ class Search_Presenter_SearchPresenter
 
     public function __construct($type_of_search, $words, $search_result, array $search_panes, $project)
     {
-        $this->type_of_search         = $type_of_search;
-        $this->words                  = $words;
-        $this->search_result          = $search_result;
-        $this->search_panes           = $search_panes;
+        $this->type_of_search = $type_of_search;
+        $this->words          = $words;
+        $this->search_result  = $search_result;
+        $this->search_panes   = $search_panes;
 
         if ($project && ! $project->isError()) {
-            $this->group_id   = $project->getId();
+            $this->group_id = $project->getId();
         }
 
         $this->number_of_page_results = Search_SearchPlugin::RESULTS_PER_QUERY;

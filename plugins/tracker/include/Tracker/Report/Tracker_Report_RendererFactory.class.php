@@ -75,7 +75,7 @@ class Tracker_Report_RendererFactory
         if ($row) {
             if (! $report) {
                 //try to dynamically load it
-                $arf = Tracker_ReportFactory::instance();
+                $arf    = Tracker_ReportFactory::instance();
                 $report = $arf->getReportById($row['report_id'], UserManager::instance()->getCurrentUser()->getId());
             }
             if ($report) {
@@ -135,7 +135,7 @@ class Tracker_Report_RendererFactory
     public function getReportRendererByReportAndId($report, $renderer_id, $store_in_session = true)
     {
         $renderer = null;
-        $row = null;
+        $row      = null;
         if ($store_in_session) {
             $session = new Tracker_Report_Session($report->id);
             $session->changeSessionNamespace('renderers');
@@ -193,8 +193,8 @@ class Tracker_Report_RendererFactory
     public function create($report, $name, $description, $type)
     {
         $renderer_id = false;
-        $type = $type ? $type : Tracker_Report_Renderer::TABLE;
-        $types = $this->getTypes();
+        $type        = $type ? $type : Tracker_Report_Renderer::TABLE;
+        $types       = $this->getTypes();
         if (isset($types[$type])) {
             if ($renderer_id = $this->getDao()->create($report->id, $type, $name, $description, 'end')) {
                 switch ($type) {
@@ -255,13 +255,13 @@ class Tracker_Report_RendererFactory
     public function createInSession($report, $name, $description, $type)
     {
         $renderer_id = false;
-        $type = $type ? $type : Tracker_Report_Renderer::TABLE;
-        $types = $this->getTypes();
+        $type        = $type ? $type : Tracker_Report_Renderer::TABLE;
+        $types       = $this->getTypes();
         if (isset($types[$type])) {
             $session = new Tracker_Report_Session($report->id);
             $session->changeSessionNamespace('renderers');
             $nb_renderers = count($report->getRenderers());
-            $renderer_id = -$nb_renderers - 1;
+            $renderer_id  = -$nb_renderers - 1;
             $session->set(
                 $renderer_id,
                 [
@@ -401,7 +401,7 @@ class Tracker_Report_RendererFactory
                     if (! isset($row['chunksz']) || ! isset($row['multisort'])) {
                         $row['chunksz']   = 15;
                         $row['multisort'] = 0;
-                        $table_row = $this->getTableDao()
+                        $table_row        = $this->getTableDao()
                                     ->searchByRendererId($row['id'])
                                     ->getRow();
                         if ($table_row) {
@@ -532,14 +532,14 @@ class Tracker_Report_RendererFactory
                 $sort = [];
                 if ($xml->sort) {
                     foreach ($xml->sort->field as $f) {
-                        $att = $f->attributes();
+                        $att    = $f->attributes();
                         $column = [];
                         if (! isset($xmlMapping[(string) $att['REF']])) {
                             continue;
                         }
 
                         $column['field'] = $xmlMapping[(string) $att['REF']];
-                        $sort[] = $column;
+                        $sort[]          = $column;
                     }
                     $row['sort'] = $sort;
                 }

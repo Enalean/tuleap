@@ -62,8 +62,8 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
         }
 
         $pull_request_id = $this->da->escapeInt($item_id);
-        $da = $this->da;
-        $values = implode(
+        $da              = $this->da;
+        $values          = implode(
             ', ',
             array_map(
                 function ($id) use ($pull_request_id, $da) {
@@ -133,7 +133,7 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
 
         foreach ($label_ids as $i => $label_id) {
             $label_id = $this->da->escapeInt($label_id);
-            $sql .= " INNER JOIN (
+            $sql     .= " INNER JOIN (
                            SELECT pull_request_id
                            FROM plugin_pullrequest_label
                            WHERE label_id = $label_id

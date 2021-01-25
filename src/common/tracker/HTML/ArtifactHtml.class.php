@@ -49,17 +49,17 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         global $art_field_fact,$art_fieldset_fact,$Language;
         $sys_max_size_attachment = ForgeConfig::get('sys_max_size_attachment', ArtifactFileHtml::MAX_SIZE_DEFAULT);
-        $hp = Codendi_HTMLPurifier::instance();
-        $fields_per_line = 2;
+        $hp                      = Codendi_HTMLPurifier::instance();
+        $fields_per_line         = 2;
         // the column number is the number of field per line * 2 (label + value)
         // + the number of field per line -1 (a blank column between each pair "label-value" to give more space)
         $columns_number = ($fields_per_line * 2) + ($fields_per_line - 1);
-        $max_size = 40;
+        $max_size       = 40;
 
-        $group = $this->ArtifactType->getGroup();
+        $group             = $this->ArtifactType->getGroup();
         $group_artifact_id = $this->ArtifactType->getID();
-        $group_id = $group->getGroupId();
-        $result_fields = $art_field_fact->getAllUsedFields();
+        $group_id          = $group->getGroupId();
+        $result_fields     = $art_field_fact->getAllUsedFields();
 
 
         $result_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
@@ -73,7 +73,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         echo '</div>' . PHP_EOL;
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
-        $artTitle = '[ ' . $hp->purify($this->ArtifactType->getItemName(), CODENDI_PURIFIER_CONVERT_HTML);
+        $artTitle          = '[ ' . $hp->purify($this->ArtifactType->getItemName(), CODENDI_PURIFIER_CONVERT_HTML);
         $field_artifact_id = $result_fields['artifact_id'];
         if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, $user_id)) {
             $artTitle .= " #" . $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML);
@@ -98,9 +98,9 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             <INPUT TYPE="HIDDEN" NAME="aid" VALUE="' . (int) $this->getID() . '">';
         echo '<TABLE><TR><TD class="artifact">';
 
-        $html = '';
+        $html  = '';
         $html .= '<TABLE width="100%"><TR>';
-        $pm = ProjectManager::instance();
+        $pm    = ProjectManager::instance();
 
         // Now display the variable part of the field list (depend on the project)
 
@@ -110,7 +110,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
             $fieldset_html = '';
 
-            $i = 0;
+            $i                  = 0;
             $fields_in_fieldset = $result_fieldset->getAllUsedFields();
             foreach ($fields_in_fieldset as $field) {
                 if ($field->getName() != 'comment_type_id' && $field->getName() != 'artifact_id') {
@@ -127,7 +127,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                               '<TD align="left" valign="top" width="10%" nowrap="nowrap">' . $field_html['label'] . '</td>' .
                               '<TD valign="top" width="90%" colspan="' . ($columns_number - 1) . '">' . $field_html['value'] . '</TD>' .
                               "\n</TR>";
-                            $i = 0;
+                            $i              = 0;
                         } else {
                             $fieldset_html .= ($i % $fields_per_line ? '' : "\n<TR>");
                             $fieldset_html .= '<TD align="left" valign="top" width="10%" nowrap="nowrap">' . $field_html['label'] . '</td>' .
@@ -165,7 +165,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             echo '<div style="text-align:center"><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $Language->getText('tracker_include_artifact', 'submit') . '"></div>';
         }
         // Followups comments
-        $html = '';
+        $html  = '';
         $html .= '<script type="text/javascript">';
         $html .= "var tracker_comment_togglers = {};
             function tracker_reorder_followups() {
@@ -193,7 +193,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             $field = $art_field_fact->getFieldFromName('comment_type_id');
             if ($field && $field->isUsed() && db_numrows($field->getFieldPredefinedValues($group_artifact_id)) > 1) {
                 $field_html = new ArtifactFieldHtml($field);
-                $html .= '<P><B>' . $Language->getText('tracker_include_artifact', 'comment_type') . '</B>' .
+                $html      .= '<P><B>' . $Language->getText('tracker_include_artifact', 'comment_type') . '</B>' .
                 $field_html->fieldBox('', $group_artifact_id, $field->getDefaultValue(), true, $Language->getText('global', 'none')) . '<BR>';
             }
             $html .= '<b>' . $Language->getText('tracker_include_artifact', 'add_comment') . '</b>';
@@ -219,7 +219,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $title .= 'document.write(\'<a href="#reorder" onclick="tracker_reorder_followups();new Ajax.Request(\\\'invert_comments_order.php\\\'); return false;" title="Invert order of the follow-ups">[&darr;&uarr;]</a>\');';
         $title .= '</script>';
         $title .= ' <a href="/tracker/?func=rss&aid=' . (int) $this->getId() . '&atid=' . (int) $this->ArtifactType->getID() . '&group_id=' . (int) $this->ArtifactType->getGroupId() . '" ';
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp     = Codendi_HTMLPurifier::instance();
         $title .= ' title="' . $hp->purify($group->getPublicName() . ' ' . SimpleSanitizer::unsanitize($this->ArtifactType->getName()) . ' #' . $this->getId() . ' - ' . util_unconvert_htmlspecialchars($this->getValue('summary')), CODENDI_PURIFIER_CONVERT_HTML) . ' - ' . $Language->getText('tracker_include_artifact', 'follow_ups') . '">';
         $title .= '[xml]</a> ';
         echo $this->_getSection(
@@ -292,7 +292,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             (db_numrows($this->getDependencies()) || db_numrows($this->getInverseDependencies())) ? '' : '<div>' . $Language->getText('tracker_include_artifact', 'dep_list_empty') . '</div>'
         );
         // Artifact Cross References
-        $html = '';
+        $html          = '';
         $crossref_fact = new CrossReferenceFactory($this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $group_id);
         $crossref_fact->fetchDatas();
         $html .= $crossref_fact->getHTMLDisplayCrossRefs();
@@ -310,7 +310,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             if ($this->useArtifactPermissions()) {
                 $checked = 'checked="checked"';
             }
-            $html = '';
+            $html  = '';
             $html .= '<p>';
             $html .= '<label class="checkbox" for="use_artifact_permissions"><input type="hidden" name="use_artifact_permissions_name" value="0" />';
             $html .= '<input type="checkbox" name="use_artifact_permissions_name" id="use_artifact_permissions" value="1" ' . $checked . ' />';
@@ -369,10 +369,10 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         $html =  '<fieldset><legend id="' . $id . '_legend">';
         if ($is_open) {
-            $sign = 'minus';
+            $sign    = 'minus';
             $display = '';
         } else {
-            $sign = 'plus';
+            $sign    = 'plus';
             $display = 'display:none;';
         }
         $html .= $GLOBALS['HTML']->getImage(
@@ -433,9 +433,9 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                     $field_value = $this->getValue($field->getName());
             }
 
-            $field_html  = new ArtifactFieldHtml($field);
-            $label       = $field_html->labelDisplay(false, false, ! $read_only);
-            $label      .= ($field->isEmptyOk() ? '' : '<span class="highlight"><big>*</big></b></span>');
+            $field_html = new ArtifactFieldHtml($field);
+            $label      = $field_html->labelDisplay(false, false, ! $read_only);
+            $label     .= ($field->isEmptyOk() ? '' : '<span class="highlight"><big>*</big></b></span>');
 
             // original submission field must be displayed read-only,
             // except for site admin, tracker admin and for the artifact submitter
@@ -473,18 +473,18 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         global $art_field_fact,$art_fieldset_fact,$Language;
         $sys_max_size_attachment = ForgeConfig::get('sys_max_size_attachment', ArtifactFileHtml::MAX_SIZE_DEFAULT);
-        $hp = Codendi_HTMLPurifier::instance();
-        $fields_per_line = 2;
+        $hp                      = Codendi_HTMLPurifier::instance();
+        $fields_per_line         = 2;
         // the column number is the number of field per line * 2 (label + value)
         // + the number of field per line -1 (a blank column between each pair "label-value" to give more space)
         $columns_number = ($fields_per_line * 2) + ($fields_per_line - 1);
-        $max_size = 40;
+        $max_size       = 40;
 
-        $group = $this->ArtifactType->getGroup();
+        $group             = $this->ArtifactType->getGroup();
         $group_artifact_id = $this->ArtifactType->getID();
-        $group_id = $group->getGroupId();
-        $result_fields = $art_field_fact->getAllUsedFields();
-        $result_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
+        $group_id          = $group->getGroupId();
+        $result_fields     = $art_field_fact->getAllUsedFields();
+        $result_fieldsets  = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
 
 
         // Display submit informations if any
@@ -506,8 +506,8 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         echo "<H2>[ " . $hp->purify($Language->getText('tracker_include_artifact', 'copy_of', $this->ArtifactType->getItemName() . " #" . $this->getID()) . " ] " . $summary, CODENDI_PURIFIER_CONVERT_HTML) . "</H2>";
         echo "</TD></TR></TABLE>";
 
-        $html = '';
-        $pm = ProjectManager::instance();
+        $html  = '';
+        $pm    = ProjectManager::instance();
         $html .= '
             <table width="100%">
               <tr><td colspan="' . (int) $columns_number . '"><B>' . $Language->getText('tracker_include_artifact', 'group') . ':</B>&nbsp;' . $hp->purify($pm->getProject($group_id)->getPublicName(), CODENDI_PURIFIER_CONVERT_HTML) . '</TD></tr>';
@@ -520,7 +520,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
             $fieldset_html = '';
 
-            $i = 0;
+            $i                  = 0;
             $fields_in_fieldset = $result_fieldset->getAllUsedFields();
 
             foreach ($fields_in_fieldset as $field) {
@@ -548,8 +548,8 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                     }
 
                     list($sz,) = explode("/", $field->getDisplaySize());
-                    $label = $field_html->labelDisplay(false, false, ! $ro);
-                    $value = $field_html->display($this->ArtifactType->getID(), $field_value, false, false, $ro);
+                    $label     = $field_html->labelDisplay(false, false, ! $ro);
+                    $value     = $field_html->display($this->ArtifactType->getID(), $field_value, false, false, $ro);
 
                     $star = ($field->isEmptyOk() ? '' : '<span class="highlight"><big>*</big></b></span>');
 
@@ -560,7 +560,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                         '<TD valign="middle" colspan="' . ($columns_number - 1) . '">' .
                         $value . '</TD>' .
                         "\n</TR>";
-                        $i = 0;
+                        $i              = 0;
                     } else {
                         $fieldset_html .= ($i % $fields_per_line ? '' : "\n<TR>");
                         $fieldset_html .= '<TD valign="middle">' . $label . $star . '</td>' .
@@ -589,7 +589,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         );
 
         // Followups comments
-        $html = '';
+        $html  = '';
         $html .= '<div>';
         if (! $ro) {
             if (db_numrows($this->ArtifactType->getCannedResponses())) {
@@ -600,7 +600,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             $field = $art_field_fact->getFieldFromName('comment_type_id');
             if ($field && $field->isUsed() && db_numrows($field->getFieldPredefinedValues($group_artifact_id)) > 1) {
                 $field_html = new ArtifactFieldHtml($field);
-                $html .= '<P><B>' . $Language->getText('tracker_include_artifact', 'comment_type') . '</B>' .
+                $html      .= '<P><B>' . $Language->getText('tracker_include_artifact', 'comment_type') . '</B>' .
                 $field_html->fieldBox('', $group_artifact_id, $field->getDefaultValue(), true, $Language->getText('global', 'none')) . '<BR>';
             }
             // This div id used just to show the toggle of html format
@@ -622,7 +622,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $html .= '</div>';
         $html .= "<br />";
 
-        $title  = $Language->getText('tracker_include_artifact', 'follow_ups') . ' ';
+        $title = $Language->getText('tracker_include_artifact', 'follow_ups') . ' ';
         echo $this->_getSection(
             'artifact_section_followups',
             $title,
@@ -632,7 +632,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
 
         // CC List
-        $html = '';
+        $html  = '';
         $html .= $Language->getText('tracker_include_artifact', 'fill_cc_list_msg');
         $html .= $Language->getText('tracker_include_artifact', 'fill_cc_list_lbl');
         $html .= '<textarea type="text" name="add_cc" id="tracker_cc" rows="2" cols="60" wrap="soft"></textarea>';
@@ -647,7 +647,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         );
 
         // File attachments
-        $html = '';
+        $html  = '';
         $html .= '<input type="file" name="input_file" size="40">';
         $html .= $Language->getText('tracker_include_artifact', 'upload_file_msg', formatByteToMb($sys_max_size_attachment));
 
@@ -701,13 +701,13 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             //      show the artifact_history rows that are relevant to this artifact_id, excluding comment (follow-up comments)
         global $art_field_fact,$sys_lf,$Language;
         $result = $this->getHistory();
-        $rows = db_numrows($result);
-        $html = '';
-        $hp = Codendi_HTMLPurifier::instance();
-        $uh = UserHelper::instance();
-        $um = UserManager::instance();
+        $rows   = db_numrows($result);
+        $html   = '';
+        $hp     = Codendi_HTMLPurifier::instance();
+        $uh     = UserHelper::instance();
+        $um     = UserManager::instance();
         if ($rows > 0) {
-                    $title_arr = [];
+                    $title_arr   = [];
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'field');
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'old_val');
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'new_val');
@@ -717,7 +717,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                     $html .= html_build_list_table_top($title_arr);
 
             for ($i = 0; $i < $rows; $i++) {
-                $field_name = db_result($result, $i, 'field_name');
+                $field_name   = db_result($result, $i, 'field_name');
                 $value_id_new =  db_result($result, $i, 'new_value');
                 //if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name) && $value_id_new == "") {
                 //    //removed followup comment is not recorded
@@ -750,7 +750,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                             $html .= $hp->purify($value_id_new, CODENDI_PURIFIER_CONVERT_HTML);
                         }
 
-                                $user = $um->getUserByUserName(db_result($result, $i, 'user_name'));
+                                $user  = $um->getUserByUserName(db_result($result, $i, 'user_name'));
                                 $html .= '</TD>' .
                                 '<TD>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'date')) . '</TD>' .
                                 '<TD>' . $uh->getLinkOnUser($user) . '</TD></TR>';
@@ -789,8 +789,8 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
         //      format the dependencies list for this artifact
         $result = $this->getInverseDependencies();
-        $rows = db_numrows($result);
-        $out = '';
+        $rows   = db_numrows($result);
+        $out    = '';
 
         // Nobody in the dependencies list -> return now
         if ($rows <= 0) {
@@ -805,8 +805,8 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         // Header first an determine what the print out format is
         // based on output type (Ascii, HTML)
         if ($ascii) {
-            $out .= $Language->getText('tracker_include_artifact', 'dep_list') . $sys_lf . str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'dep_list'))) . "$sys_lf$sys_lf";
-                    $fmt = "%-15s | %s (%s)$sys_lf";
+            $out         .= $Language->getText('tracker_include_artifact', 'dep_list') . $sys_lf . str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'dep_list'))) . "$sys_lf$sys_lf";
+                    $fmt  = "%-15s | %s (%s)$sys_lf";
                     $out .= sprintf(
                         $fmt,
                         $Language->getText('tracker_include_artifact', 'artifact'),
@@ -815,13 +815,13 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                     );
                     $out .= "------------------------------------------------------------------$sys_lf";
         } else {
-                    $title_arr = [];
+                    $title_arr   = [];
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'artifact');
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'summary');
                     $title_arr[] = $Language->getText('global', 'status');
                     $title_arr[] = $Language->getText('tracker_import_admin', 'tracker');
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'group');
-                    $out .= html_build_list_table_top($title_arr);
+                    $out        .= html_build_list_table_top($title_arr);
 
                     $fmt = "\n" . '<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>' .
                         '<td align="center">%s</td><td align="center">%s</td></tr>';
@@ -830,10 +830,10 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         // Loop through the denpendencies and format them
         for ($i = 0; $i < $rows; $i++) {
                     $dependent_on_artifact_id = db_result($result, $i, 'artifact_id');
-                    $summary = db_result($result, $i, 'summary');
-                    $status = db_result($result, $i, 'status');
-                    $tracker_label = db_result($result, $i, 'name');
-                    $group_label = db_result($result, $i, 'group_name');
+                    $summary                  = db_result($result, $i, 'summary');
+                    $status                   = db_result($result, $i, 'status');
+                    $tracker_label            = db_result($result, $i, 'name');
+                    $group_label              = db_result($result, $i, 'group_name');
 
             if ($ascii) {
                 $out .= sprintf($fmt, $dependent_on_artifact_id, $summary, $status);
@@ -861,17 +861,17 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         global $art_field_fact,$art_fieldset_fact,$Language;
         $sys_max_size_attachment = ForgeConfig::get('sys_max_size_attachment', ArtifactFileHtml::MAX_SIZE_DEFAULT);
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp                      = Codendi_HTMLPurifier::instance();
 
         $fields_per_line = 2;
         // the column number is the number of field per line * 2 (label + value)
         // + the number of field per line -1 (a blank column between each pair "label-value" to give more space)
         $columns_number = ($fields_per_line * 2) + ($fields_per_line - 1);
-        $max_size = 40;
+        $max_size       = 40;
 
-        $group = $this->ArtifactType->getGroup();
+        $group             = $this->ArtifactType->getGroup();
         $group_artifact_id = $this->ArtifactType->getID();
-        $group_id = $group->getGroupId();
+        $group_id          = $group->getGroupId();
 
         $result_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
 
@@ -889,7 +889,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         echo '<TABLE><TR><TD class="artifact">';
         $pm = ProjectManager::instance();
 
-        $html = '';
+        $html  = '';
         $html .= '  <TABLE width="100%">
                 <TR><TD VALIGN="TOP" COLSPAN="' . ($columns_number) . '">
                           <B>' . $Language->getText('tracker_include_artifact', 'group') . ':</B>&nbsp;' . $hp->purify($pm->getProject($group_id)->getPublicName(), CODENDI_PURIFIER_CONVERT_HTML) . '</TD></TR>';
@@ -904,7 +904,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
             $fieldset_html = '';
 
-            $i = 0;
+            $i                  = 0;
             $fields_in_fieldset = $result_fieldset->getAllUsedFields();
             foreach ($fields_in_fieldset as $field) {
                 $field_html = new ArtifactFieldHtml($field);
@@ -922,10 +922,10 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                         $display_fieldset = true;
 
                         $field_value = $field->getDefaultValue();
-                        list($sz,) = $field->getGlobalDisplaySize();
-                        $label = $field_html->labelDisplay(false, false, true);
-                        $value = $field_html->display($group_artifact_id, $field_value, false, false);
-                        $star = ($field->isEmptyOk() ? '' : '<span class="highlight"><big>*</big></b></span>');
+                        list($sz,)   = $field->getGlobalDisplaySize();
+                        $label       = $field_html->labelDisplay(false, false, true);
+                        $value       = $field_html->display($group_artifact_id, $field_value, false, false);
+                        $star        = ($field->isEmptyOk() ? '' : '<span class="highlight"><big>*</big></b></span>');
 
                         if (($sz > $max_size) || ($field->getName() == 'details')) {
                             $fieldset_html .= "\n<TR>" .
@@ -933,7 +933,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                                 '<TD valign="middle" colspan="' . ($columns_number - 1) . '">' .
                                 $value . '</TD>' .
                                 "\n</TR>";
-                            $i = 0;
+                            $i              = 0;
                         } else {
                             $fieldset_html .= ($i % $fields_per_line ? '' : "\n<TR>");
                             $fieldset_html .= '<TD valign="middle"><a class="artifact_field_tooltip" href="#" title="' . $hp->purify(SimpleSanitizer::unsanitize($field->getDescription()), CODENDI_PURIFIER_CONVERT_HTML) . '">' . $label . $star . '</a></td>' .
@@ -963,7 +963,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         );
 
         // CC List
-        $html = '';
+        $html  = '';
         $html .= $Language->getText('tracker_include_artifact', 'fill_cc_list_msg');
         $html .= $Language->getText('tracker_include_artifact', 'fill_cc_list_lbl');
         $html .= '<textarea type="text" name="add_cc" id="tracker_cc" rows="2" cols="60" wrap="soft"></textarea>';
@@ -978,7 +978,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         );
 
         // File attachments
-        $html = '';
+        $html  = '';
         $html .= '<input type="file" name="input_file" size="40">';
         $html .= $Language->getText('tracker_include_artifact', 'upload_file_msg', formatByteToMb($sys_max_size_attachment));
 
@@ -998,7 +998,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             if ($this->useArtifactPermissions()) {
                 $checked = 'checked="checked"';
             }
-            $html = '';
+            $html  = '';
             $html .= '<p>';
             $html .= '<label class="checkbox" for="use_artifact_permissions"><input type="hidden" name="use_artifact_permissions_name" value="0" />';
             $html .= '<input type="checkbox" name="use_artifact_permissions_name" id="use_artifact_permissions" value="1" ' . $checked . ' />';
@@ -1046,11 +1046,11 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
      */
     public function displayEditFollowupComment($comment_id)
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $group = $this->ArtifactType->getGroup();
+        $hp                = Codendi_HTMLPurifier::instance();
+        $group             = $this->ArtifactType->getGroup();
         $group_artifact_id = $this->ArtifactType->getID();
-        $group_id = $group->getGroupId();
-        $followUp = $this->getFollowUpDetails($comment_id);
+        $group_id          = $group->getGroupId();
+        $followUp          = $this->getFollowUpDetails($comment_id);
 
         $result_fields     = $GLOBALS['art_field_fact']->getAllUsedFields();
         $summary           = $this->getValue('summary');
@@ -1096,11 +1096,11 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
     */
     public function displayRSS()
     {
-        $uh          = UserHelper::instance();
+        $uh         = UserHelper::instance();
         $hp         = Codendi_HTMLPurifier::instance();
         $group      = $this->ArtifactType->getGroup();
         $server_url = HTTPRequest::instance()->getServerUrl();
-        $rss = new RSS([
+        $rss        = new RSS([
             'title'       => $group->getPublicName() . ' ' . $this->ArtifactType->getName() . ' #' . $this->getId() . ' - ' . $this->getValue('summary') . ' - ' . $GLOBALS['Language']->getText('tracker_include_artifact', 'follow_ups'),
             'description' => '',
             'link'        => '<![CDATA[' . $server_url . '/tracker/?atid=' . $this->ArtifactType->getID() . '&group_id=' . $group->getGroupId() . ']]>',
@@ -1108,14 +1108,14 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             'copyright'   => $GLOBALS['Language']->getText('rss', 'copyright', [$GLOBALS['sys_long_org_name'],$GLOBALS['sys_name'],date('Y', time())]),
             'pubDate'     => gmdate('D, d M Y h:i:s', $this->getLastUpdateDate()) . ' GMT',
         ]);
-        $result = $this->getFollowups();
+        $result     = $this->getFollowups();
         for ($i = 0; $i < db_numrows($result); $i++) {
-            $comment_type = db_result($result, $i, 'comment_type');
+            $comment_type    = db_result($result, $i, 'comment_type');
             $comment_type_id = db_result($result, $i, 'comment_type_id');
-            $comment_id = db_result($result, $i, 'artifact_history_id');
-            $field_name = db_result($result, $i, 'field_name');
-            $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
-            $orig_date = $this->getOriginalCommentDate($comment_id);
+            $comment_id      = db_result($result, $i, 'artifact_history_id');
+            $field_name      = db_result($result, $i, 'field_name');
+            $orig_subm       = $this->getOriginalCommentSubmitter($comment_id);
+            $orig_date       = $this->getOriginalCommentDate($comment_id);
 
             if (($comment_type_id == 100) || ($comment_type == "")) {
                 $comment_type = '';

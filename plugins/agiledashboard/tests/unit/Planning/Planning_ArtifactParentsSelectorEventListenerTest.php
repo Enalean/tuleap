@@ -71,8 +71,8 @@ final class Planning_ArtifactParentsSelectorEventListenerTest extends \PHPUnit\F
      */
     private $sprint_tracker;
     protected $sprint_id = 9001;
-    protected $epic_id = 2;
-    protected $epic2_id = 3;
+    protected $epic_id   = 2;
+    protected $epic2_id  = 3;
 
     protected function setUp(): void
     {

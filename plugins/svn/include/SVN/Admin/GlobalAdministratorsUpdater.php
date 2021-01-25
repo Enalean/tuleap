@@ -49,7 +49,7 @@ class GlobalAdministratorsUpdater
         HTTPRequest $request,
         BaseLayout $layout
     ): void {
-        $project          = $request->getProject();
+        $project = $request->getProject();
 
         $token = self::generateToken($project);
         $token->check();

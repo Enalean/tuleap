@@ -87,7 +87,7 @@ class ArtifactTemporaryFilesResource
             throw new RestException(400);
         }
 
-        $paginated_files = $this->file_manager->getPaginatedUserTemporaryFiles($this->user, $offset, $limit);
+        $paginated_files       = $this->file_manager->getPaginatedUserTemporaryFiles($this->user, $offset, $limit);
         $files_representations = [];
 
         foreach ($paginated_files->getFiles() as $file) {

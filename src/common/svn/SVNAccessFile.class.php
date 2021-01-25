@@ -36,7 +36,7 @@ class SVNAccessFile
     /**
      * Value in $groups when the group is defined only in default [groups] section
      */
-    public const UGROUP_DEFAULT   = 1;
+    public const UGROUP_DEFAULT = 1;
 
     /**
      * Pattern used to find a line defining permission on group
@@ -192,8 +192,8 @@ class SVNAccessFile
 
     private function parseGroup($svn_dir, $contents, $verbose = false)
     {
-        $defaultLines = explode("\n", $this->getPlatformBlock($svn_dir));
-        $groups = [];
+        $defaultLines   = explode("\n", $this->getPlatformBlock($svn_dir));
+        $groups         = [];
         $currentSection = -1;
         foreach ($defaultLines as $line) {
             $currentSection = $this->getCurrentSection($line, $currentSection);
@@ -201,13 +201,13 @@ class SVNAccessFile
                 $groups = $this->accumulateDefinedGroups($groups, $line, true);
             }
         }
-        $lines = explode("\n", $contents);
+        $lines         = explode("\n", $contents);
         $validContents = '';
         foreach ($lines as $line) {
             $currentSection = $this->getCurrentSection($line, $currentSection);
             switch ($currentSection) {
                 case 'groups':
-                    $groups = $this->accumulateDefinedGroups($groups, $line, false);
+                    $groups         = $this->accumulateDefinedGroups($groups, $line, false);
                     $validContents .= $line . PHP_EOL;
                     break;
                 default:

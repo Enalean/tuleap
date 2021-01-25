@@ -54,7 +54,7 @@ class ArtifactCommentXMLExporter
         $this->node_helper->appendSubmittedBy($comment_node, $row['submitted_by'], $row['is_anonymous']);
         $this->node_helper->appendSubmittedOn($comment_node, $row['date']);
         $comment = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($row['comment']);
-        $body = $this->node_helper->getNodeWithValue('body', $comment);
+        $body    = $this->node_helper->getNodeWithValue('body', $comment);
         $body->setAttribute('format', $this->getFormat($row['format']));
         $comment_node->appendChild($body);
         return $comment_node;

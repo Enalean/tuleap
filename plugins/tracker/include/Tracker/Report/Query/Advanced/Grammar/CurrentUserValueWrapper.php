@@ -30,7 +30,7 @@ class CurrentUserValueWrapper implements ValueWrapper
 
     public function __construct($user_manager)
     {
-        $this->value        = null;
+        $this->value = null;
 
         $current_user = $user_manager->getCurrentUser();
         if ($current_user) {

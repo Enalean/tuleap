@@ -55,8 +55,8 @@ class ProjectCategoriesDisplayController implements DispatchableWithRequest
 
         $layout->includeFooterJavascriptFile($include_assets->getFileURL('trovecat-admin.js'));
 
-        $csrf_token = new \CSRFSynchronizerToken('/admin/project-creation/categories');
-        $trove_dao = new TroveCatDao();
+        $csrf_token   = new \CSRFSynchronizerToken('/admin/project-creation/categories');
+        $trove_dao    = new TroveCatDao();
         $list_builder = new TroveCatHierarchyRetriever($trove_dao);
 
         $last_parent    = [];
@@ -66,7 +66,7 @@ class ProjectCategoriesDisplayController implements DispatchableWithRequest
 
         $list_builder->retrieveFullHierarchy(0, $last_parent, $already_seen, $trove_cat_list, $hierarchy_ids);
 
-        $presenter  = new TroveCatListPresenter(
+        $presenter = new TroveCatListPresenter(
             new ProjectCreationNavBarPresenter('categories'),
             $trove_cat_list,
             $csrf_token

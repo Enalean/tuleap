@@ -61,13 +61,13 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends TestCas
             ->once()
             ->andReturn($user2);
 
-        $builder    = new CollectionOfUserInvolvedInNotificationPresenterBuilder(
+        $builder = new CollectionOfUserInvolvedInNotificationPresenterBuilder(
             $users_to_notify_dao,
             $unsubscribers_notification_dao,
             $user_manager
         );
 
-        $tracker    = \Mockery::mock(\Tracker::class);
+        $tracker = \Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturns(101);
 
         $user_helper = \Mockery::mock(\UserHelper::class);

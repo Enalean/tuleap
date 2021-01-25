@@ -25,7 +25,7 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
 
     public function fetchTypeForUpdate()
     {
-        $html = '';
+        $html  = '';
         $html .= '<p><label for="formElement_type">' . dgettext('tuleap-tracker', 'Type') . ': </label><br />';
         $html .= '<img width="16" height="16" alt="" src="' . $this->formElement->getFactoryIconUseIt() . '" style="vertical-align:middle"/> ' . $this->formElement->getFactoryLabel();
 

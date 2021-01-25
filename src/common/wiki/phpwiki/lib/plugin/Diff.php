@@ -71,7 +71,7 @@ class WikiPlugin_Diff extends WikiPlugin
         $row = HTML::tr(HTML::td(['align' => 'right'], $label));
         if ($rev) {
             $author = $rev->get('author');
-            $dbi = $request->getDbh();
+            $dbi    = $request->getDbh();
 
             $iswikipage = (isWikiWord($author) && $dbi->isWikiPage($author));
             $authorlink = $iswikipage ? WikiLink($author) : $author;
@@ -101,7 +101,7 @@ class WikiPlugin_Diff extends WikiPlugin
         }
 
         // abort if page doesn't exist
-        $page = $request->getPage($pagename);
+        $page    = $request->getPage($pagename);
         $current = $page->getCurrentRevision();
         if ($current->getVersion() < 1) {
             $html = HTML(HTML::p(fmt(
@@ -117,7 +117,7 @@ class WikiPlugin_Diff extends WikiPlugin
             }
             $new_version = fmt("version %d", $version);
         } else {
-            $new = $current;
+            $new         = $current;
             $new_version = _("current version");
         }
 
@@ -126,7 +126,7 @@ class WikiPlugin_Diff extends WikiPlugin
                 NoSuchRevision($request, $page, $previous);
             }
             $old_version = fmt("version %d", $previous);
-            $others = ['major', 'minor', 'author'];
+            $others      = ['major', 'minor', 'author'];
         } else {
             switch ($previous) {
                 case 'author':
@@ -137,13 +137,13 @@ class WikiPlugin_Diff extends WikiPlugin
                         }
                     }
                     $old_version = _("revision by previous author");
-                    $others = ['major', 'minor'];
+                    $others      = ['major', 'minor'];
                     break;
                 case 'minor':
-                    $previous = 'minor';
-                    $old = $page->getRevisionBefore($new);
+                    $previous    = 'minor';
+                    $old         = $page->getRevisionBefore($new);
                     $old_version = _("previous revision");
-                    $others = ['major', 'author'];
+                    $others      = ['major', 'author'];
                     break;
                 case 'major':
                 default:
@@ -155,13 +155,13 @@ class WikiPlugin_Diff extends WikiPlugin
                         $old = $page->getRevisionBefore($old);
                     }
                     $old_version = _("predecessor to the previous major change");
-                    $others = ['minor', 'author'];
+                    $others      = ['minor', 'author'];
                     break;
             }
         }
 
-        $new_link = WikiLink($new, '', $new_version);
-        $old_link = $old ? WikiLink($old, '', $old_version) : $old_version;
+        $new_link  = WikiLink($new, '', $new_version);
+        $old_link  = $old ? WikiLink($old, '', $old_version) : $old_version;
         $page_link = WikiLink($page);
 
         $html = HTML(HTML::p(fmt(
@@ -172,7 +172,7 @@ class WikiPlugin_Diff extends WikiPlugin
         )));
 
         $otherdiffs = HTML::p(_("Other diffs:"));
-        $label = ['major' => _("Previous Major Revision"),
+        $label      = ['major' => _("Previous Major Revision"),
                        'minor' => _("Previous Revision"),
                        'author' => _("Previous Author")];
         foreach ($others as $other) {
@@ -240,9 +240,9 @@ class _HWLDF_WordAccumulator
     public function __construct()
     {
         $this->_lines = [];
-        $this->_line = false;
+        $this->_line  = false;
         $this->_group = false;
-        $this->_tag = '~begin';
+        $this->_tag   = '~begin';
     }
 
     public function _flushGroup($new_tag)
@@ -259,7 +259,7 @@ class _HWLDF_WordAccumulator
                                       : $this->_group);
         }
         $this->_group = '';
-        $this->_tag = $new_tag;
+        $this->_tag   = $new_tag;
     }
 
     public function _flushLine($new_tag)
@@ -303,7 +303,7 @@ class WordLevelDiff extends MappedDiff
 {
     public function __construct($orig_lines, $final_lines)
     {
-        list ($orig_words, $orig_stripped) = $this->_split($orig_lines);
+        list ($orig_words, $orig_stripped)   = $this->_split($orig_lines);
         list ($final_words, $final_stripped) = $this->_split($final_lines);
 
         parent::__construct(

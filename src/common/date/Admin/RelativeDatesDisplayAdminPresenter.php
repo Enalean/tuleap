@@ -54,7 +54,7 @@ class RelativeDatesDisplayAdminPresenter
         $this->tlp_relative_date_component_purified = \DateHelper::relativeDateInlineContext($last_week_timestamp, $user);
         $this->csrf_token                           = $csrf_token;
 
-        $presenter_builder = new RelativeDatesDisplayPreferencesSelectboxPresenterBuilder();
+        $presenter_builder                                    = new RelativeDatesDisplayPreferencesSelectboxPresenterBuilder();
         $this->relative_dates_display_preference_sb_presenter = $presenter_builder->build($selected_preference);
     }
 }

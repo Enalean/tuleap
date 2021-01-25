@@ -105,7 +105,7 @@ class PanesPermissionPerGroupBuilder
         if ($news_pane) {
             $news_service = $project->getService(Service::NEWS);
             if ($news_service !== null) {
-                $rank_in_project           = $news_service->getRank();
+                $rank_in_project         = $news_service->getRank();
                 $panes[$rank_in_project] = $news_pane;
             }
         }

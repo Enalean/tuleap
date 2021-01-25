@@ -57,7 +57,7 @@ class ForumML_FileStorage
     public function store($filename, $content, $list, $date, $encod = "")
     {
         $path = $this->_getPath($filename, $list, $date, "store");
-        $ret = file_put_contents($path, $content);
+        $ret  = file_put_contents($path, $content);
         if ($ret !== false) {
             return $path;
         } else {

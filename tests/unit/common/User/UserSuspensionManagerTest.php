@@ -68,14 +68,14 @@ class UserSuspensionManagerTest extends TestCase
         ForgeConfig::set('sys_suspend_send_account_suspension_email', 1);
 
         $this->mail_account_suspension_alert_presenter = Mockery::mock(MailAccountSuspensionAlertPresenter::class);
-        $this->mail_account_suspension_presenter = Mockery::mock(MailAccountSuspensionPresenter::class);
-        $this->mail_presenter_factory = Mockery::mock(MailPresenterFactory::class);
-        $this->template_renderer = Mockery::mock(TemplateRenderer::class);
-        $this->mail = Mockery::mock(Codendi_Mail::class);
-        $this->dao = Mockery::mock(UserSuspensionDao::class);
-        $this->language = Mockery::mock(BaseLanguage::class);
-        $this->lang_factory = Mockery::mock(BaseLanguageFactory::class);
-        $this->user_manager = Mockery::mock(UserManager::class);
+        $this->mail_account_suspension_presenter       = Mockery::mock(MailAccountSuspensionPresenter::class);
+        $this->mail_presenter_factory                  = Mockery::mock(MailPresenterFactory::class);
+        $this->template_renderer                       = Mockery::mock(TemplateRenderer::class);
+        $this->mail                                    = Mockery::mock(Codendi_Mail::class);
+        $this->dao                                     = Mockery::mock(UserSuspensionDao::class);
+        $this->language                                = Mockery::mock(BaseLanguage::class);
+        $this->lang_factory                            = Mockery::mock(BaseLanguageFactory::class);
+        $this->user_manager                            = Mockery::mock(UserManager::class);
         $this->user_manager->shouldReceive('instance')->andReturn($this->user_manager);
         $this->user_suspension_logger = Mockery::mock(LoggerInterface::class);
 
@@ -93,9 +93,9 @@ class UserSuspensionManagerTest extends TestCase
 
     public function testSendNotificationMailToIdleAccountsIsCalled()
     {
-        $test_date = (new \DateTimeImmutable())->setTimestamp(1585090800);
+        $test_date        = (new \DateTimeImmutable())->setTimestamp(1585090800);
         $last_access_date = (new \DateTimeImmutable())->setTimestamp(1584576000);
-        $suspension_date = (new \DateTimeImmutable())->setTimestamp(1585436400);
+        $suspension_date  = (new \DateTimeImmutable())->setTimestamp(1585436400);
 
         // Disable mail to inactive accounts
         ForgeConfig::set('sys_suspend_send_account_suspension_email', 0);
@@ -127,10 +127,10 @@ class UserSuspensionManagerTest extends TestCase
     {
         $test_date = (new \DateTimeImmutable())->setTimestamp(1579699252);
 
-        $last_remove = $test_date->sub(new DateInterval("P4D"));
+        $last_remove       = $test_date->sub(new DateInterval("P4D"));
         $last_valid_access = $test_date->sub(new DateInterval("P10D"));
 
-        $non_project_members = [['user_id' => 103], ['user_id' => 104]];
+        $non_project_members  = [['user_id' => 103], ['user_id' => 104]];
         $non_project_member_1 = 103;
         $non_project_member_2 = 104;
         $this->user_suspension_logger->shouldReceive('info');
@@ -156,7 +156,7 @@ class UserSuspensionManagerTest extends TestCase
 
     public function testSendNotificationMailToInactiveAccountsIsCalled()
     {
-        $test_date = (new \DateTimeImmutable())->setTimestamp(1579616700);
+        $test_date        = (new \DateTimeImmutable())->setTimestamp(1579616700);
         $last_access_date = (new \DateTimeImmutable())->setTimestamp(1578752699);
 
         // Disable mailing to idle accounts

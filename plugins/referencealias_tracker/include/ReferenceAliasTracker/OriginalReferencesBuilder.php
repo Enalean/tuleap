@@ -76,9 +76,9 @@ class OriginalReferencesBuilder
      */
     public function referenceFromMatch($match, $project_id)
     {
-        $ref             = $match['ref'];
-        $keyword         = $match['key'];
-        $value           = $match['val'];
+        $ref     = $match['ref'];
+        $keyword = $match['key'];
+        $value   = $match['val'];
 
         $reference = $this->findReference($keyword, $ref);
 

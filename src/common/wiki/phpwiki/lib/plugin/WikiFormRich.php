@@ -125,10 +125,10 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
         for ($i = 0; $i < count($arg_array); $i++) {
             //TODO: we require an name=value pair here, but submit may go without also.
             if (preg_match("/^\s*(" . join("|", $allowed) . ")\[\](.*)$/", $arg_array[$i], $m)) {
-                $name = $m[1]; // one of the allowed input types
+                $name                    = $m[1]; // one of the allowed input types
                 $this->inputbox[][$name] = [];
-                $j = count($this->inputbox) - 1;
-                $curargs = trim($m[2]);
+                $j                       = count($this->inputbox) - 1;
+                $curargs                 = trim($m[2]);
                 // must match name=NAME and also value=<!plugin-list name !>
                 while (
                     preg_match(
@@ -137,8 +137,8 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                         $m
                     )
                 ) {
-                       $attr = $m[1];
-                    $value = $m[2];
+                       $attr    = $m[1];
+                    $value      = $m[2];
                        $curargs = substr($curargs, strlen($m[0]));
                     if (preg_match("/^\"(.*)\"$/", $value, $m)) {
                         $value = $m[1];
@@ -148,9 +148,9 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                             and preg_match('/^<!plugin-list.+!>$/', $value, $m)
                     ) {
                     // like pulldown[] name=test value=<!plugin-list BackLinks page=HomePage!>
-                        $loader = new WikiPluginLoader();
-                        $markup = null;
-                        $basepage = null;
+                        $loader     = new WikiPluginLoader();
+                        $markup     = null;
+                        $basepage   = null;
                         $plugin_str = preg_replace(["/^<!/", "/!>$/"], ["<?", "?>"], $value);
                  // will return a pagelist object! pulldown,checkbox,radiobutton
                         $value = $loader->expandPI($plugin_str, $GLOBALS['request'], $markup, $basepage);
@@ -185,14 +185,14 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
         if (empty($action)) {
             return $this->error(fmt("A required argument '%s' is missing.", "action"));
         }
-        $form = HTML::form(
+        $form           = HTML::form(
             ['action' => $request->getPostURL(),
                                  'method' => strtolower($method),
                                  'class'  => 'wikiaction',
                                  'accept-charset' => $GLOBALS['charset']],
             HiddenInputs(['action' => $action, 'group_id' => GROUP_ID])
         );
-        $nbsp = HTML::Raw('&nbsp;');
+        $nbsp           = HTML::Raw('&nbsp;');
         $already_submit = 0;
         foreach ($this->inputbox as $inputbox) {
             foreach ($inputbox as $inputtype => $input) {
@@ -200,7 +200,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                     $inputtype = 'radio'; // convert from older versions
                 }
                 $input['type'] = $inputtype;
-                $text = '';
+                $text          = '';
                 if ($inputtype != 'submit') {
                     if (empty($input['name'])) {
                         return $this->error(fmt(
@@ -221,9 +221,9 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                             $input['value'] = 1;
                         }
                         if (is_array($input['value'])) {
-                            $div = HTML::div(['class' => $class]);
-                            $values = $input['value'];
-                            $name = $input['name'];
+                            $div           = HTML::div(['class' => $class]);
+                            $values        = $input['value'];
+                            $name          = $input['name'];
                             $input['name'] = $inputtype == 'checkbox' ? $name . "[]" : $name;
                             foreach ($values as $val) {
                                 $input['value'] = $val;

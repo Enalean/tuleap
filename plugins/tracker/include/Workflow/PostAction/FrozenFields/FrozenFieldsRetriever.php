@@ -63,7 +63,7 @@ class FrozenFieldsRetriever
     {
         $rows = $this->getPostActionRows($transition);
 
-        $field_ids = [];
+        $field_ids      = [];
         $post_action_id = null;
         foreach ($rows as $row) {
             $field_ids[] = $row['field_id'];

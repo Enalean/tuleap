@@ -21,7 +21,7 @@
 
 
 //    get the Group object
-$pm = ProjectManager::instance();
+$pm    = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (! $group || ! is_object($group) || $group->isError()) {
     exit_no_group();
@@ -64,7 +64,7 @@ $eol = "\n";
 //echo "DBG -- $sql<br>";
 
 $result = db_query($sql);
-$rows = db_numrows($result);
+$rows   = db_numrows($result);
 
 require_once __DIR__ . '/project_export_utils.php';
 

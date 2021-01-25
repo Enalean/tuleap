@@ -30,7 +30,7 @@ define("GRAD_DIAGONAL", 11);
 //===================================================
 class Gradient
 {
-    private $img = null;
+    private $img       = null;
     private $numcolors = 100;
     //---------------
     // CONSTRUCTOR
@@ -122,10 +122,10 @@ class Gradient
                 break;
 
             case GRAD_WIDE_MIDVER:
-                $diff = ceil(abs($xr - $xl));
-                $steps = floor(abs($diff) / 3);
+                $diff      = ceil(abs($xr - $xl));
+                $steps     = floor(abs($diff) / 3);
                 $firststep = $diff - 2 * $steps;
-                $delta = $xr >= $xl ? 1 : -1;
+                $delta     = $xr >= $xl ? 1 : -1;
                 $this->GetColArray($from_color, $to_color, $firststep, $colors, $this->numcolors);
                 for ($x = $xl, $i = 0; $i < $firststep; ++$i) {
                     $this->img->current_color = $colors[$i];
@@ -147,10 +147,10 @@ class Gradient
                 break;
 
             case GRAD_WIDE_MIDHOR:
-                $diff = ceil(abs($yb - $yt));
-                $steps = floor(abs($diff) / 3);
+                $diff      = ceil(abs($yb - $yt));
+                $steps     = floor(abs($diff) / 3);
                 $firststep = $diff - 2 * $steps;
-                $delta = $yb >= $yt ? 1 : -1;
+                $delta     = $yb >= $yt ? 1 : -1;
                 $this->GetColArray($from_color, $to_color, $firststep, $colors, $this->numcolors);
                 for ($y = $yt, $i = 0; $i < $firststep; ++$i) {
                     $this->img->current_color = $colors[$i];
@@ -172,11 +172,11 @@ class Gradient
 
             case GRAD_LEFT_REFLECTION:
                 $steps1 = ceil(0.3 * abs($xr - $xl));
-                $delta = $xr >= $xl ? 1 : -1;
+                $delta  = $xr >= $xl ? 1 : -1;
 
-                $from_color = $this->img->rgb->Color($from_color);
-                $adj = 1.4;
-                $m = ($adj - 1.0) * (255 - min(255, min($from_color[0], min($from_color[1], $from_color[2]))));
+                $from_color  = $this->img->rgb->Color($from_color);
+                $adj         = 1.4;
+                $m           = ($adj - 1.0) * (255 - min(255, min($from_color[0], min($from_color[1], $from_color[2]))));
                 $from_color2 = [min(255, $from_color[0] + $m),
                 min(255, $from_color[1] + $m), min(255, $from_color[2] + $m)];
 
@@ -205,7 +205,7 @@ class Gradient
 
             case GRAD_RIGHT_REFLECTION:
                 $steps1 = ceil(0.7 * abs($xr - $xl));
-                $delta = $xr >= $xl ? 1 : -1;
+                $delta  = $xr >= $xl ? 1 : -1;
 
                 $this->GetColArray($from_color, $to_color, $steps1, $colors, $this->numcolors);
                 $n = count($colors);
@@ -222,8 +222,8 @@ class Gradient
                 }
 
                 $from_color = $this->img->rgb->Color($from_color);
-                $adj = 1.4;
-                $m = ($adj - 1.0) * (255 - min(255, min($from_color[0], min($from_color[1], $from_color[2]))));
+                $adj        = 1.4;
+                $m          = ($adj - 1.0) * (255 - min(255, min($from_color[0], min($from_color[1], $from_color[2]))));
                 $from_color = [min(255, $from_color[0] + $m),
                 min(255, $from_color[1] + $m), min(255, $from_color[2] + $m)];
 
@@ -242,11 +242,11 @@ class Gradient
                 $this->GetColArray($from_color, $to_color, $steps, $colors, $this->numcolors);
                 $dx = ($xr - $xl) / 2;
                 $dy = ($yb - $yt) / 2;
-                $x = $xl;
-                $y = $yt;
+                $x  = $xl;
+                $y  = $yt;
                 $x2 = $xr;
                 $y2 = $yb;
-                $n = count($colors);
+                $n  = count($colors);
                 for ($x = $xl, $i = 0; $x < $xl + $dx && $y < $yt + $dy && $i < $n; ++$x, ++$y, --$x2, --$y2, ++$i) {
                     $this->img->current_color = $colors[$i];
                     $this->img->Rectangle($x, $y, $x2, $y2);
@@ -257,7 +257,7 @@ class Gradient
             case GRAD_RAISED_PANEL:
                 // right to left
                 $steps1 = $xr - $xl;
-                $delta = $xr >= $xl ? 1 : -1;
+                $delta  = $xr >= $xl ? 1 : -1;
                 $this->GetColArray($to_color, $from_color, $steps1, $colors, $this->numcolors);
                 $n = count($colors);
                 for ($x = $xl, $i = 0; $i < $steps1 && $i < $n; ++$i) {
@@ -267,12 +267,12 @@ class Gradient
                 }
 
                 // left to right
-                $xr -= 3;
-                $xl += 3;
-                $yb -= 3;
-                $yt += 3;
+                $xr    -= 3;
+                $xl    += 3;
+                $yb    -= 3;
+                $yt    += 3;
                 $steps2 = $xr - $xl;
-                $delta = $xr >= $xl ? 1 : -1;
+                $delta  = $xr >= $xl ? 1 : -1;
                 for ($x = $xl, $j = $steps2; $j >= 0; --$j) {
                     $this->img->current_color = $colors[$j];
                     $this->img->Line($x, $yb, $x, $yt);
@@ -293,14 +293,14 @@ class Gradient
 
                     for ($x = $xl, $i = 0; $i < $steps && $i < $n; ++$i) {
                         $this->img->current_color = $colors[$i];
-                        $y = $yt + ($i / $steps) * ($yb - $yt) * $delta;
+                        $y                        = $yt + ($i / $steps) * ($yb - $yt) * $delta;
                         $this->img->Line($x, $yt, $xl, $y);
                         $x += $delta;
                     }
 
                     for ($x = $xl, $i = 0; $i < $steps && $i < $n; ++$i) {
                         $this->img->current_color = $colors[$steps + $i];
-                        $y = $yt + ($i / $steps) * ($yb - $yt) * $delta;
+                        $y                        = $yt + ($i / $steps) * ($yb - $yt) * $delta;
                         $this->img->Line($x, $yb, $xr, $y);
                         $x += $delta;
                     }
@@ -313,14 +313,14 @@ class Gradient
 
                     for ($y = $yt, $i = 0; $i < $steps && $i < $n; ++$i) {
                         $this->img->current_color = $colors[$i];
-                        $x = $xl + ($i / $steps) * ($xr - $xl) * $delta;
+                        $x                        = $xl + ($i / $steps) * ($xr - $xl) * $delta;
                         $this->img->Line($x, $yt, $xl, $y);
                         $y += $delta;
                     }
 
                     for ($y = $yt, $i = 0; $i < $steps && $i < $n; ++$i) {
                         $this->img->current_color = $colors[$steps + $i];
-                        $x = $xl + ($i / $steps) * ($xr - $xl) * $delta;
+                        $x                        = $xl + ($i / $steps) * ($xr - $xl) * $delta;
                         $this->img->Line($x, $yb, $xr, $y);
                         $x += $delta;
                     }
@@ -347,10 +347,10 @@ class Gradient
 
         $maxy = $pts[1];
         $miny = $pts[1];
-        $n = count($pts);
+        $n    = count($pts);
         for ($i = 0, $idx = 0; $i < $n; $i += 2) {
-            $x = round($pts[$i]);
-            $y = round($pts[$i + 1]);
+            $x    = round($pts[$i]);
+            $y    = round($pts[$i + 1]);
             $miny = min($miny, $y);
             $maxy = max($maxy, $y);
         }
@@ -361,7 +361,7 @@ class Gradient
             $colmap[$i] = $colors[$idx++];
         }
 
-        $n = count($pts) / 2;
+        $n   = count($pts) / 2;
         $idx = 0;
         while ($idx < $n - 1) {
             $p1 = [round($pts[$idx * 2]), round($pts[$idx * 2 + 1])];
@@ -380,19 +380,19 @@ class Gradient
 
             // Fill the rest using lines (slow...)
             $slope = ($p2[0] - $p1[0]) / ($p1[1] - $p2[1]);
-            $x1 = $p1[0];
-            $x2 = $p2[0] - 1;
+            $x1    = $p1[0];
+            $x2    = $p2[0] - 1;
             $start = $y;
             if ($p1[1] > $p2[1]) {
                 while ($y >= $p2[1]) {
-                    $x1 = $slope * ($start - $y) + $p1[0];
+                    $x1                       = $slope * ($start - $y) + $p1[0];
                     $this->img->current_color = $colmap[$y];
                     $this->img->Line($x1, $y, $x2, $y);
                     --$y;
                 }
             } else {
                 while ($y >= $p1[1]) {
-                    $x2 = $p2[0] + $slope * ($start - $y);
+                    $x2                       = $p2[0] + $slope * ($start - $y);
                     $this->img->current_color = $colmap[$y];
                     $this->img->Line($x1, $y, $x2, $y);
                     --$y;
@@ -413,26 +413,26 @@ class Gradient
 
         // If color is given as text get it's corresponding r,g,b values
         $from_color = $this->img->rgb->Color($from_color);
-        $to_color = $this->img->rgb->Color($to_color);
+        $to_color   = $this->img->rgb->Color($to_color);
 
-        $rdelta = ($to_color[0] - $from_color[0]) / $numcols;
-        $gdelta = ($to_color[1] - $from_color[1]) / $numcols;
-        $bdelta = ($to_color[2] - $from_color[2]) / $numcols;
+        $rdelta        = ($to_color[0] - $from_color[0]) / $numcols;
+        $gdelta        = ($to_color[1] - $from_color[1]) / $numcols;
+        $bdelta        = ($to_color[2] - $from_color[2]) / $numcols;
         $colorsperstep = $numcols / $arr_size;
-        $prevcolnum = -1;
-        $from_alpha = floatval($from_color[3]);
-        $to_alpha = floatval($to_color[3]);
-        $adelta = ( $to_alpha - $from_alpha ) / $numcols;
+        $prevcolnum    = -1;
+        $from_alpha    = floatval($from_color[3]);
+        $to_alpha      = floatval($to_color[3]);
+        $adelta        = ( $to_alpha - $from_alpha ) / $numcols;
         for ($i = 0; $i < $arr_size; ++$i) {
             $colnum = floor($colorsperstep * $i);
             if ($colnum == $prevcolnum) {
                 $colors[$i] = $colidx;
             } else {
-                $r = floor($from_color[0] + $colnum * $rdelta);
-                $g = floor($from_color[1] + $colnum * $gdelta);
-                $b = floor($from_color[2] + $colnum * $bdelta);
-                $alpha = $from_alpha + $colnum * $adelta;
-                $colidx = $this->img->rgb->Allocate(sprintf("#%02x%02x%02x", $r, $g, $b), $alpha);
+                $r          = floor($from_color[0] + $colnum * $rdelta);
+                $g          = floor($from_color[1] + $colnum * $gdelta);
+                $b          = floor($from_color[2] + $colnum * $bdelta);
+                $alpha      = $from_alpha + $colnum * $adelta;
+                $colidx     = $this->img->rgb->Allocate(sprintf("#%02x%02x%02x", $r, $g, $b), $alpha);
                 $colors[$i] = $colidx;
             }
             $prevcolnum = $colnum;

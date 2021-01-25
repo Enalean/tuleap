@@ -68,7 +68,7 @@ class Git_Driver_Gerrit_UserFinder
         }
 
         $ugroup_ids = $this->permissions_manager->getAuthorizedUgroups($repository_id, $permission_type, false);
-        $result = [];
+        $result     = [];
         foreach ($ugroup_ids as $row) {
             $result[] = $row['ugroup_id'];
         }

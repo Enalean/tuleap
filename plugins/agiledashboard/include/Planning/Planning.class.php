@@ -164,7 +164,7 @@ class Planning
      */
     public function setBacklogTrackers(array $backlog_trackers)
     {
-        $this->backlog_trackers = $backlog_trackers;
+        $this->backlog_trackers     = $backlog_trackers;
         $this->backlog_trackers_ids = [];
 
         foreach ($this->backlog_trackers as $backlog_tracker) {

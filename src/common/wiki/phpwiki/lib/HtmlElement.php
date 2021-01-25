@@ -585,7 +585,7 @@ function JavaScript($js, $script_args = false)
 {
     $default_script_args = [//'version' => 'JavaScript', // not xhtml conformant
                                  'type' => 'text/javascript'];
-    $script_args = $script_args ? array_merge($default_script_args, $script_args)
+    $script_args         = $script_args ? array_merge($default_script_args, $script_args)
                                 : $default_script_args;
     if (empty($js)) {
         return HTML(HTML::script($script_args), "\n");
@@ -620,8 +620,8 @@ function IfJavaScript($if_content = false, $else_content = false)
 {
     $html = [];
     if ($if_content) {
-        $xml = AsXML($if_content);
-        $js = sprintf(
+        $xml    = AsXML($if_content);
+        $js     = sprintf(
             'document.write("%s");',
             addcslashes($xml, "\0..\37!@\\\177..\377")
         );

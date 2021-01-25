@@ -138,7 +138,7 @@ class LogCreatorTest extends TestCase
 
     public function testCreatesFullLogForProject(): void
     {
-        $project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $project        = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
@@ -165,7 +165,7 @@ class LogCreatorTest extends TestCase
 
     public function testCreatesLogWithTriggeredJobsOnlyForProject(): void
     {
-        $project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $project        = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
@@ -192,7 +192,7 @@ class LogCreatorTest extends TestCase
 
     public function testCreatesLogWithBranchSourceStatusCodeOnlyForProject(): void
     {
-        $project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $project        = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
@@ -219,7 +219,7 @@ class LogCreatorTest extends TestCase
 
     public function testDoesNotCreateAnyLogForProjectWhenNothingIsReturned(): void
     {
-        $project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $project        = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
@@ -248,14 +248,14 @@ class LogCreatorTest extends TestCase
 
     public function testDoesNotCreateAnyLogForProjectWhenServerAndLogsAreNotInSameProject(): void
     {
-        $project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $project        = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
         $jenkins_server = new JenkinsServer(
             1,
             'https://jenkins_url',
             $project
         );
 
-        $project02 = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(102)->getMock();
+        $project02  = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(102)->getMock();
         $repository = Mockery::mock(GitRepository::class);
         $repository->shouldReceive('getProject')->andReturn($project02);
         $repository->shouldReceive('getId')->andReturn(1);

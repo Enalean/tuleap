@@ -65,12 +65,12 @@ class ContainersXMLCollectionBuilderTest extends TestCase
         $this->assertNotNull($form_element_label);
         $this->assertEquals("Custom Fields", (string) $form_element_label);
 
-        $left_column   = $details_fieldset->formElements->formElement[0];
+        $left_column = $details_fieldset->formElements->formElement[0];
         $this->assertEquals("column", $left_column['type']);
         $this->assertEquals("Fcol5", $left_column['ID']);
         $this->assertEquals("1", $left_column['rank']);
 
-        $right_column  = $details_fieldset->formElements->formElement[1];
+        $right_column = $details_fieldset->formElements->formElement[1];
         $this->assertEquals("column", $right_column['type']);
         $this->assertEquals("Fcol6", $right_column['ID']);
         $this->assertEquals("2", $right_column['rank']);

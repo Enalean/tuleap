@@ -43,10 +43,10 @@ final class JiraFieldRetrieverTest extends TestCase
 
     public function testItExportsJiraFieldAndBuildAnArraySortedById(): void
     {
-        $wrapper = \Mockery::mock(ClientWrapper::class);
+        $wrapper         = \Mockery::mock(ClientWrapper::class);
         $field_retriever = new JiraFieldRetriever($wrapper);
 
-        $system_field = [];
+        $system_field                     = [];
         $system_field['required']         = true;
         $system_field['schema']['type']   = 'string';
         $system_field['schema']['system'] = 'summary';
@@ -57,7 +57,7 @@ final class JiraFieldRetrieverTest extends TestCase
             'set'
         ];
 
-        $custom_field = [];
+        $custom_field                       = [];
         $custom_field['required']           = false;
         $custom_field['schema']['type']     = 'user';
         $custom_field['schema']['custom']   = "com.atlassian.jira.toolkit:lastupdaterorcommenter";
@@ -101,7 +101,7 @@ final class JiraFieldRetrieverTest extends TestCase
 
     public function testReturnsAnEmptyArrayWhenNoFieldFound(): void
     {
-        $wrapper = \Mockery::mock(ClientWrapper::class);
+        $wrapper         = \Mockery::mock(ClientWrapper::class);
         $field_retriever = new JiraFieldRetriever($wrapper);
 
         $wrapper->shouldReceive('getUrl')->andReturn(null);

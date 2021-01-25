@@ -41,7 +41,7 @@ class Dao extends DataAccessObject
 
     public function countTestsExecutionsArtifacts(): int
     {
-        $sql = "SELECT count(*) AS nb
+        $sql  = "SELECT count(*) AS nb
                 FROM plugin_testmanagement
                 INNER JOIN tracker_artifact
                     ON plugin_testmanagement.test_execution_tracker_id = tracker_artifact.tracker_id";

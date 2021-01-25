@@ -101,7 +101,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     {
         if (! isset(self::$_instance)) {
             $formelement_factory = Tracker_FormElementFactory::instance();
-            $logger = new WorkflowBackendLogger(BackendLogger::getDefaultLogger(), ForgeConfig::get('sys_logger_level'));
+            $logger              = new WorkflowBackendLogger(BackendLogger::getDefaultLogger(), ForgeConfig::get('sys_logger_level'));
 
             $trigger_rules_manager = new Tracker_Workflow_Trigger_RulesManager(
                 new Tracker_Workflow_Trigger_RulesDao(),
@@ -119,7 +119,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
                 new WorkflowRulesManagerLoopSafeGuard($logger)
             );
 
-            $c = self::class;
+            $c               = self::class;
             self::$_instance = new $c(
                 TransitionFactory::instance(),
                 TrackerFactory::instance(),
@@ -165,7 +165,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     {
         if (! isset($this->cache[$workflow_id])) {
             $this->cache[$workflow_id] = false;
-            $row = $this->getDao()->searchById($workflow_id);
+            $row                       = $this->getDao()->searchById($workflow_id);
             if ($row !== null) {
                 $this->cache[$workflow_id] = $this->getInstanceFromRow($row);
             }
@@ -246,8 +246,8 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public function getTransitionId($workflow_id, $transition)
     {
         $values = explode("_", $transition);
-        $from = $values[0];
-        $to = $values[1];
+        $from   = $values[0];
+        $to     = $values[1];
         return $this->getTransitionDao()->searchTransitionId($workflow_id, $from, $to);
     }
 
@@ -262,7 +262,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     {
         if (! isset($this->cache_workflowfield[$tracker_id])) {
             $this->cache_workflowfield[$tracker_id] = [null];
-            $row = $this->getDao()->searchByTrackerId($tracker_id);
+            $row                                    = $this->getDao()->searchByTrackerId($tracker_id);
             if ($row !== null) {
                 $this->cache_workflowfield[$tracker_id] = [$this->getInstanceFromRow($row)];
             }
@@ -322,7 +322,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, $ugroup_mapping, $duplicate_type)
     {
         if ($workflow = $this->getWorkflowByTrackerId($from_tracker_id)) {
-            $is_used = $workflow->getIsUsed();
+            $is_used     = $workflow->getIsUsed();
             $is_advanced = $workflow->isAdvanced();
 
             //Duplicate workflow
@@ -349,7 +349,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
 
         $transitions = [];
         foreach ($xml->transitions->transition as $t) {
-            $tf = $this->transition_factory;
+            $tf            = $this->transition_factory;
             $transitions[] = $tf->getInstanceFromXML($t, $xml_mapping, $project);
         }
 
@@ -382,7 +382,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         $transitions    = [];
 
         foreach ($xml->states->state as $state_xml) {
-            $state = $this->state_factory->getInstanceFromXML($state_xml, $xml_mapping, $project);
+            $state       = $this->state_factory->getInstanceFromXML($state_xml, $xml_mapping, $project);
             $transitions = array_merge(
                 $transitions,
                 $state->getTransitions()
@@ -408,7 +408,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
 
     private function getWorkflowField(SimpleXMLElement $xml, array $xml_mapping)
     {
-        $xml_field_id = $xml->field_id;
+        $xml_field_id         = $xml->field_id;
         $xml_field_attributes = $xml_field_id->attributes();
         if (! isset($xml_mapping[(string) $xml_field_attributes['REF']])) {
             return null;

@@ -108,8 +108,8 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
             }
         }
 
-        $dynamic_session      = new DynamicCredentialSession($_SESSION, $credential_retriever);
-        $user_realname        = $this->getPluginInfo()->getPropertyValueForName('dynamic_user_realname');
+        $dynamic_session = new DynamicCredentialSession($_SESSION, $credential_retriever);
+        $user_realname   = $this->getPluginInfo()->getPropertyValueForName('dynamic_user_realname');
 
         $support_user_creator = new DynamicUserCreator(
             $dynamic_session,

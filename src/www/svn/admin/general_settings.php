@@ -22,7 +22,7 @@
 
 require_once __DIR__ . '/../svn_data.php';
 
-$request = HTTPRequest::instance();
+$request  = HTTPRequest::instance();
 $group_id = $request->get('group_id');
 
 // CAUTION!!
@@ -36,7 +36,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vTracked->required();
     $vMandatoryRef = new Valid_WhiteList('form_mandatory_ref', ['0', '1']);
     $vMandatoryRef->required();
-    $vPreamble = new Valid_Text('form_preamble');
+    $vPreamble        = new Valid_Text('form_preamble');
     $vCanChangeSVNLog = new Valid_WhiteList('form_can_change_svn_log', ['0', '1']);
     $vCanChangeSVNLog->required();
 
@@ -47,9 +47,9 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
         $request->valid($vCanChangeSVNLog)
     ) {
         // group_id was validated in index.
-        $form_tracked = $request->get('form_tracked');
-        $form_preamble = $request->get('form_preamble');
-        $form_mandatory_ref = $request->get('form_mandatory_ref');
+        $form_tracked            = $request->get('form_tracked');
+        $form_preamble           = $request->get('form_preamble');
+        $form_mandatory_ref      = $request->get('form_mandatory_ref');
         $form_can_change_svn_log = $request->get('form_can_change_svn_log');
 
         $ret = svn_data_update_general_settings(
@@ -79,7 +79,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 svn_header_admin(['title' => $Language->getText('svn_admin_general_settings', 'gen_settings'),
                         'help' => 'svn.html#general-settings']);
 
-$pm = ProjectManager::instance();
+$pm      = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 
 $template_dir = ForgeConfig::get('codendi_dir') . '/src/templates/svn/';

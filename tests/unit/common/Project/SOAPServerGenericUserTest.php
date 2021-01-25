@@ -44,7 +44,7 @@ class SOAPServerGenericUserTest extends TestCase
         $this->user = \Mockery::spy(\GenericUser::class);
         $this->user->shouldReceive('isLoggedIn')->andReturns(true);
 
-        $this->admin  = \Mockery::spy(\PFUser::class);
+        $this->admin = \Mockery::spy(\PFUser::class);
         $this->admin->shouldReceive('isLoggedIn')->andReturns(true);
         $this->admin->shouldReceive('isSuperUser')->andReturns(true);
 

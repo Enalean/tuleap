@@ -118,8 +118,8 @@ class ReferenceAdministrationViews extends Views
 <tr><td><a href="#" title="' . _('If the reference pattern is specific to one service, select it here') . '">' . _('Bound to service') . '</a>:</td>
 <td>';
 // Get list of services
-            $result = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
-            $serv_label = [];
+            $result          = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
+            $serv_label      = [];
             $serv_short_name = [];
             while ($serv = db_fetch_array($result)) {
                 $label = $serv['label'];
@@ -127,7 +127,7 @@ class ReferenceAdministrationViews extends Views
                     $label = $GLOBALS['Language']->getOverridableText('project_admin_editservice', $label);
                 }
                 $serv_short_name[] = $serv['short_name'];
-                $serv_label[] = $label;
+                $serv_label[]      = $label;
             }
             echo html_build_select_box_from_arrays($serv_short_name, $serv_label, "service_short_name");
             echo '</td></tr>';
@@ -157,7 +157,7 @@ class ReferenceAdministrationViews extends Views
 
     public function edit()
     {
-        $request = HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
 
         $purifier = Codendi_HTMLPurifier::instance();
@@ -271,8 +271,8 @@ class ReferenceAdministrationViews extends Views
 <tr><td><a href="#" title="' . _('If the reference pattern is specific to one service, select it here') . '">' . _('Bound to service') . '</a>:</td>
 <td>';
             // Get list of services
-            $result = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
-            $serv_label = [];
+            $result          = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
+            $serv_label      = [];
             $serv_short_name = [];
             while ($serv = db_fetch_array($result)) {
                 $label = $serv['label'];
@@ -280,7 +280,7 @@ class ReferenceAdministrationViews extends Views
                     $label = $GLOBALS['Language']->getOverridableText('project_admin_editservice', $label);
                 }
                 $serv_short_name[] = $serv['short_name'];
-                $serv_label[] = $label;
+                $serv_label[]      = $label;
             }
             if ($ro) {
                 echo $purifier->purify($ref->getServiceShortName());

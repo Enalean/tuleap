@@ -87,7 +87,7 @@ class ByGroupOneFieldPresenter
         $this->has_update_access = $fields_permission_for_group->hasUpdatePermission($field);
         foreach ($fields_permission_for_group->getPermissionsForOtherGroups($field) as $other_groups) {
             $this->has_other_groups = true;
-            $this->other_groups[] = $other_groups;
+            $this->other_groups[]   = $other_groups;
         }
     }
 }

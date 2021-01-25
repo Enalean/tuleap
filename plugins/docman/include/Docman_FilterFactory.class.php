@@ -29,32 +29,32 @@ class Docman_FilterFactory
     public function __construct($groupId)
     {
         $this->dynTextFields = [];
-        $this->groupId = $groupId;
+        $this->groupId       = $groupId;
     }
 
     public function addFiltersToReport(&$report)
     {
-        $gsMd = $this->getGlobalSearchMetadata();
+        $gsMd         = $this->getGlobalSearchMetadata();
         $globalSearch = false;
-        $gsRow = null;
+        $gsRow        = null;
 
-        $itsMd = $this->getItemTypeSearchMetadata();
+        $itsMd                = $this->getItemTypeSearchMetadata();
         $itemTypeSearchSearch = false;
-        $itsRows = [];
+        $itsRows              = [];
 
         $filtersArray = [];
 
         $metadataFactory = new Docman_MetadataFactory($report->getGroupId());
-        $dao = $this->getDao();
-        $dar = $dao->searchByReportId($report->getId());
+        $dao             = $this->getDao();
+        $dar             = $dao->searchByReportId($report->getId());
         if ($dar && ! $dar->isError()) {
             while ($dar->valid()) {
                 $row = $dar->current();
                 if ($row['label'] == $gsMd->getLabel()) {
-                    $gsRow = $row;
+                    $gsRow        = $row;
                     $globalSearch = true;
                 } elseif ($row['label'] == $itsMd->getLabel()) {
-                    $itsRows[] = $row;
+                    $itsRows[]            = $row;
                     $itemTypeSearchSearch = true;
                 } else {
                     if (isset($filtersArray[$row['label']])) {
@@ -62,7 +62,7 @@ class Docman_FilterFactory
                         $f->initFromRow($row);
                     } else {
                         $md = $metadataFactory->getFromLabel($row['label']);
-                        $f = $this->createFromMetadata($md, $report->getAdvancedSearch());
+                        $f  = $this->createFromMetadata($md, $report->getAdvancedSearch());
                         $f->initFromRow($row);
                         $filtersArray[$row['label']] = $f;
                     }
@@ -132,10 +132,10 @@ class Docman_FilterFactory
         $md->setLabel('item_type');
         $md->setIsMultipleValuesAllowed(true);
 
-        $row = [];
-        $values = [];
+        $row          = [];
+        $values       = [];
         $item_factory = Docman_ItemFactory::instance($this->groupId);
-        $all_types = [
+        $all_types    = [
             PLUGIN_DOCMAN_ITEM_TYPE_FILE,
             PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
             PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
@@ -145,9 +145,9 @@ class Docman_FilterFactory
         ];
         foreach ($all_types as $type) {
             $row['value_id'] = $type;
-            $row['name'] = $item_factory->getItemTypeAsText($type);
-            $row['status'] = 'A';
-            $love = new Docman_MetadataListOfValuesElement();
+            $row['name']     = $item_factory->getItemTypeAsText($type);
+            $row['status']   = 'A';
+            $love            = new Docman_MetadataListOfValuesElement();
             $love->initFromRow($row);
             $values[] = $love;
         }
@@ -163,7 +163,7 @@ class Docman_FilterFactory
      */
     public function getFakeGlobalSearchFilter()
     {
-        $md = $this->getGlobalSearchMetadata();
+        $md     = $this->getGlobalSearchMetadata();
         $filter = new Docman_FilterGlobalText($md, '');
         return $filter;
     }

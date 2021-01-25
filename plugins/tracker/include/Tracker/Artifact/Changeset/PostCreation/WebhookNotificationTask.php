@@ -52,7 +52,7 @@ final class WebhookNotificationTask implements PostCreationTask
         WebhookFactory $webhook_factory,
         ArtifactPayloadBuilder $payload_builder
     ) {
-        $this->logger = $logger;
+        $this->logger          = $logger;
         $this->webhook_emitter = $webhook_emitter;
         $this->webhook_factory = $webhook_factory;
         $this->payload_builder = $payload_builder;

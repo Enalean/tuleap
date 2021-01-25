@@ -36,7 +36,7 @@ class Cardwall_SwimlineFactory
 
     public function __construct(Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider)
     {
-        $this->config = $config;
+        $this->config         = $config;
         $this->field_provider = $field_provider;
     }
 
@@ -72,7 +72,7 @@ class Cardwall_SwimlineFactory
 
     private function addNodeToCell(Cardwall_CardInCellPresenter $presenter, Cardwall_Column $column, array &$presenters)
     {
-        $artifact        = $presenter->getArtifact();
+        $artifact = $presenter->getArtifact();
         if ($this->config->isInColumn($artifact, $this->field_provider, $column)) {
             $presenters[] = $presenter;
         }

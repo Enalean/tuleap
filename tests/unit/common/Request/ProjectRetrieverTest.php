@@ -74,7 +74,7 @@ final class ProjectRetrieverTest extends TestCase
     public function testGetProjectFromIdReturnsValidProject(): void
     {
         $project_id = '104';
-        $project = M::mock(Project::class)->shouldReceive('isError')
+        $project    = M::mock(Project::class)->shouldReceive('isError')
             ->once()
             ->andReturnFalse()
             ->getMock();

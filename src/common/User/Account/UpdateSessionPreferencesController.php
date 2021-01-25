@@ -45,7 +45,7 @@ final class UpdateSessionPreferencesController implements DispatchableWithReques
 
     public function __construct(CSRFSynchronizerToken $csrf_token, \UserManager $user_manager)
     {
-        $this->csrf_token = $csrf_token;
+        $this->csrf_token   = $csrf_token;
         $this->user_manager = $user_manager;
     }
 

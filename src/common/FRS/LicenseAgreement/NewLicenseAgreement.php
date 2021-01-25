@@ -41,7 +41,7 @@ class NewLicenseAgreement implements LicenseAgreementInterface
 
     public function __construct(string $title, string $content)
     {
-        $this->title = $title;
+        $this->title   = $title;
         $this->content = $content;
     }
 

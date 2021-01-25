@@ -27,8 +27,8 @@ use UserPreferencesDao;
 class ReleaseNoteManager
 {
     public const USER_PREFERENCE_NAME_RELEASE_NOTE_SEEN = 'has_release_note_been_seen';
-    private const UTM_RELEASE_NOTE                       = '/?utm_source=tuleap&utm_medium=forge&utm_campaign=tuleap-forge-icon-help-RN-link';
-    private const BASE_RELEASE_NOTE_URL                  = 'https://www.tuleap.org/resources/release-notes/tuleap-';
+    private const UTM_RELEASE_NOTE                      = '/?utm_source=tuleap&utm_medium=forge&utm_campaign=tuleap-forge-icon-help-RN-link';
+    private const BASE_RELEASE_NOTE_URL                 = 'https://www.tuleap.org/resources/release-notes/tuleap-';
 
     /**
      * @var ReleaseLinkDao

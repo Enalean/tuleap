@@ -83,7 +83,7 @@ class DefectTrackerTest extends TestCase
         self::$backup_codendi_log = \ForgeConfig::get('backup_codendi_log');
         \ForgeConfig::set('codendi_log', '/tmp');
 
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db      = DBFactory::getMainTuleapDBConnection()->getDB();
         $results = $db->run('SELECT * FROM artifact_group_list WHERE item_name = "bug" AND group_id = 100');
         if (count($results) !== 1) {
             throw new \RuntimeException('No Tracker v3 data. Migration impossible');
@@ -91,14 +91,14 @@ class DefectTrackerTest extends TestCase
         $row = $results[0];
 
         $defect_trackerv3_id = $row['group_artifact_id'];
-        $v3_migration = new Tracker_Migration_V3(TrackerFactory::instance());
-        $project = ProjectManager::instance()->getProject(100);
-        $name = 'Defect';
-        $description = "defect tracker";
-        $itemname = "defect";
-        $tv3 = new ArtifactType($project, $defect_trackerv3_id);
+        $v3_migration        = new Tracker_Migration_V3(TrackerFactory::instance());
+        $project             = ProjectManager::instance()->getProject(100);
+        $name                = 'Defect';
+        $description         = "defect tracker";
+        $itemname            = "defect";
+        $tv3                 = new ArtifactType($project, $defect_trackerv3_id);
 
-        $defect_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
+        $defect_tracker          = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
         self::$defect_tracker_id = $defect_tracker->getId();
         unset($GLOBALS['Language']);
     }

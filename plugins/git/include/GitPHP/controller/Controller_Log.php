@@ -121,7 +121,7 @@ class Controller_Log extends ControllerBase // @codingStandardsIgnoreLine
                 new CommitStatusRetriever(new CommitStatusDAO()),
                 UserManager::instance()
             );
-            $builder = new ShortlogPresenterBuilder($commit_metadata_retriever);
+            $builder                   = new ShortlogPresenterBuilder($commit_metadata_retriever);
             $this->tpl->assign(
                 'shortlog_presenter',
                 $builder->getShortlogPresenter($this->getTuleapGitRepository(), ...$revlist)

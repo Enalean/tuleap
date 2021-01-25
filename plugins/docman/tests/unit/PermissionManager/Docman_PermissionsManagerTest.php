@@ -54,8 +54,8 @@ class Docman_PermissionsManagerTest extends TestCase
         parent::setUp();
         $this->user = \Mockery::spy(\PFUser::class);
         $this->user->shouldReceive('getId')->andReturns(1234);
-        $this->docmanPm  = Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->project   = Mockery::mock(Project::class);
+        $this->docmanPm = Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->project  = Mockery::mock(Project::class);
         $this->project->shouldReceive('getID')->andReturn('102');
         $this->docmanPm->shouldReceive('getProject')->andReturn($this->project);
         $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);

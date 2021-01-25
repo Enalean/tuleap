@@ -93,7 +93,7 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
 
         register_shutdown_function(function () {
             $userlog_access_storage = UserlogAccessStorage::instance();
-            $userlog_access = $userlog_access_storage->getUserlogAccess();
+            $userlog_access         = $userlog_access_storage->getUserlogAccess();
 
             if ($userlog_access === null) {
                 return;
@@ -107,7 +107,7 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
     public function projectProviderEvent(ProjectProviderEvent $event): void
     {
         $userlog_access_storage = UserlogAccessStorage::instance();
-        $userlog_access = $userlog_access_storage->getUserlogAccess();
+        $userlog_access         = $userlog_access_storage->getUserlogAccess();
 
         if ($userlog_access === null) {
             return;

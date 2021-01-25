@@ -70,12 +70,12 @@ class Docman_NotificationsManager_DeleteTest extends TestCase
         $plugin_url = "http://www.example.com/plugins/docman/";
         $this->link_provider->shouldReceive('getPluginLinkUrl')->andReturn($plugin_url);
 
-        $message          = $this->notification_manager->_getMessageForUser(
+        $message           = $this->notification_manager->_getMessageForUser(
             $user,
             $this->notification_manager::MESSAGE_REMOVED,
             $params
         );
-        $expected_message = "/my/folder/parent has been removed by UserName.\n";
+        $expected_message  = "/my/folder/parent has been removed by UserName.\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";
         $expected_message .= $plugin_url;
         $this->assertEquals($expected_message, $message);
@@ -102,12 +102,12 @@ class Docman_NotificationsManager_DeleteTest extends TestCase
         $notifications_url = "http://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
         $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
 
-        $message          = $this->notification_manager->_getMessageForUser(
+        $message           = $this->notification_manager->_getMessageForUser(
             $user,
             $this->notification_manager::MESSAGE_REMOVED_FROM,
             $params
         );
-        $expected_message = "/my/folder/parent has been modified by UserName.\n";
+        $expected_message  = "/my/folder/parent has been modified by UserName.\n";
         $expected_message .= $details_url . "\n\n";
         $expected_message .= "Removed:\nmy file name\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";

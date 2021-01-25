@@ -89,7 +89,7 @@ class Tracker_Rule_Date extends Tracker_Rule
             return true;
         }
 
-        $date_only   = $this->isOneValueDateOnly($source_value, $target_value);
+        $date_only = $this->isOneValueDateOnly($source_value, $target_value);
 
         $source_date = $this->getTimestamp($source_value, $date_only);
         $target_date = $this->getTimestamp($target_value, $date_only);

@@ -85,7 +85,7 @@ class QueryParameterParser
      */
     private function getParameterContent($query, $parameter_name)
     {
-        $query = trim($query);
+        $query      = trim($query);
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
 
         if (! isset($json_query[$parameter_name])) {

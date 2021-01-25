@@ -57,7 +57,7 @@ class ReportsResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $artifact_factory              = Tracker_ArtifactFactory::instance();
         $this->report_artifact_factory = new ReportArtifactFactory(
             $artifact_factory
         );
@@ -189,7 +189,7 @@ class ReportsResource extends AuthenticatedResource
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values)
     {
         $form_element_factory = Tracker_FormElementFactory::instance();
-        $builder = new ArtifactRepresentationBuilder(
+        $builder              = new ArtifactRepresentationBuilder(
             $form_element_factory,
             Tracker_ArtifactFactory::instance(),
             new NatureDao(),
@@ -229,7 +229,7 @@ class ReportsResource extends AuthenticatedResource
     private function getReportById(\PFUser $user, $id)
     {
         $store_in_session = false;
-        $report = Tracker_ReportFactory::instance()->getReportById(
+        $report           = Tracker_ReportFactory::instance()->getReportById(
             $id,
             $user->getId(),
             $store_in_session

@@ -37,7 +37,7 @@ $em = EventManager::instance();
 // Clean variables
 $_cVar = [];
 // Raw variables
-$_rVar = [];
+$_rVar   = [];
 $request = HTTPRequest::instance();
 
 $_rVar['form_loginname'] = null;
@@ -73,7 +73,7 @@ if ($request->isPost()) {
     if (! $_rVar['form_loginname'] || ! $_rVar['form_pw']) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session', 'missing_pwd'));
     } else {
-        $user    = $um->login($_rVar['form_loginname'], new \Tuleap\Cryptography\ConcealedString($_rVar['form_pw']));
+        $user = $um->login($_rVar['form_loginname'], new \Tuleap\Cryptography\ConcealedString($_rVar['form_pw']));
         sodium_memzero($_rVar['form_pw']);
         $status  = $user->getStatus();
         $success = true;
@@ -102,7 +102,7 @@ if ($_cVar['pv'] == 2) {
 }
 
 $presenter_builder = new User_LoginPresenterBuilder();
-$presenter = $presenter_builder->build(
+$presenter         = $presenter_builder->build(
     $_rVar['return_to'],
     $_cVar['pv'],
     $_rVar['form_loginname'],

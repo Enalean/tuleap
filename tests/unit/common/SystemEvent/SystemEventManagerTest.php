@@ -32,7 +32,7 @@ class SystemEventManagerTest extends TestCase
 
     public function testConcatParameters(): void
     {
-        $sem = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $sem    = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $params = [
             'key1' => 'value1',
             'key2' => 'value2',

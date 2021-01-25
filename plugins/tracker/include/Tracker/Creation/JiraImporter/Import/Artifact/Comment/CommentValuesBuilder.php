@@ -55,7 +55,7 @@ class CommentValuesBuilder
         $this->logger->debug("Start build comment collection ...");
         $comment_collection = [];
 
-        $comment_response = $this->wrapper->getUrl(
+        $comment_response                = $this->wrapper->getUrl(
             $this->getCommentURL($jira_issue_key, null, null)
         );
         $comment_response_representation = CommentResponseRepresentation::buildFromAPIResponse($comment_response);
@@ -71,7 +71,7 @@ class CommentValuesBuilder
             $max_results = $comment_response_representation->getMaxResults();
             $start_at    = $max_results * $count_loop;
 
-            $comment_response = $this->wrapper->getUrl(
+            $comment_response                = $this->wrapper->getUrl(
                 $this->getCommentURL($jira_issue_key, $start_at, $max_results)
             );
             $comment_response_representation = CommentResponseRepresentation::buildFromAPIResponse($comment_response);

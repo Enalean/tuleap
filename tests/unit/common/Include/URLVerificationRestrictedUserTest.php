@@ -39,9 +39,9 @@ class URLVerificationRestrictedUserTest extends TestCase //phpcs:ignore
     public function itAllowsRestrictedUserToAccessProjectDashboard(): void
     {
         $_SERVER['REQUEST_URI'] = '/projects/demo-pr';
-        $user = \Mockery::mock(PFUser::class, ['isSuperUser' => false, 'isMember' => false, 'isRestricted' => true, 'isAnonymous' => false]);
-        $project = \Mockery::mock(Project::class, ['isError' => false, 'isActive' => true, 'getID' => 101, 'allowsRestricted' => true]);
-        $url_verification = new URLVerification();
+        $user                   = \Mockery::mock(PFUser::class, ['isSuperUser' => false, 'isMember' => false, 'isRestricted' => true, 'isAnonymous' => false]);
+        $project                = \Mockery::mock(Project::class, ['isError' => false, 'isActive' => true, 'getID' => 101, 'allowsRestricted' => true]);
+        $url_verification       = new URLVerification();
         $this->assertTrue($url_verification->userCanAccessProject($user, $project));
     }
 }

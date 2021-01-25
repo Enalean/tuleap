@@ -44,7 +44,7 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
             null
         );
 
-        $this->to   = new Tracker_FormElement_Field_List_Bind_StaticValue(
+        $this->to = new Tracker_FormElement_Field_List_Bind_StaticValue(
             456,
             null,
             null,
@@ -75,12 +75,12 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
         $field_value_accepted = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $field_value_accepted->shouldReceive('getId')->andReturns(2068);
 
-        $t1  = new Transition(1, 2, $field_value_new, $field_value_analyzed);
-        $t2  = new Transition(1, 2, $field_value_analyzed, $field_value_accepted);
-        $t3  = new Transition(1, 2, $field_value_analyzed, $field_value_new);
-        $t4  = new Transition(1, 2, $field_value_new, $field_value_analyzed); // equals $t1
-        $t5  = new Transition(1, 2, null, $field_value_analyzed);
-        $t6  = new Transition(1, 2, null, $field_value_analyzed);
+        $t1 = new Transition(1, 2, $field_value_new, $field_value_analyzed);
+        $t2 = new Transition(1, 2, $field_value_analyzed, $field_value_accepted);
+        $t3 = new Transition(1, 2, $field_value_analyzed, $field_value_new);
+        $t4 = new Transition(1, 2, $field_value_new, $field_value_analyzed); // equals $t1
+        $t5 = new Transition(1, 2, null, $field_value_analyzed);
+        $t6 = new Transition(1, 2, null, $field_value_analyzed);
 
         $this->assertTrue($t1->equals($t1));
         $this->assertTrue($t2->equals($t2));
@@ -166,7 +166,7 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
 
     public function testItBypassesPermission(): void
     {
-        $posts_actions    = [$this->date_post_action];
+        $posts_actions = [$this->date_post_action];
 
         $this->transition->setPostActions($posts_actions);
         $this->assertTrue($this->transition->bypassPermissions($this->field));
@@ -174,8 +174,8 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
 
     public function testItBypassesPermissionIfThereIsACIJob(): void
     {
-        $ci_job           = \Mockery::spy(\Transition_PostAction_CIBuild::class);
-        $posts_actions    = [$ci_job, $this->date_post_action];
+        $ci_job        = \Mockery::spy(\Transition_PostAction_CIBuild::class);
+        $posts_actions = [$ci_job, $this->date_post_action];
 
         $this->transition->setPostActions($posts_actions);
         $this->assertTrue($this->transition->bypassPermissions($this->field));

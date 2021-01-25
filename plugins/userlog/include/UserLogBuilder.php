@@ -43,9 +43,9 @@ class UserLogBuilder
 
     public function build($day, $offset, $count)
     {
-        $date = $this->buildDates($day);
+        $date                         = $this->buildDates($day);
         list($timelogs, $total_count) = $this->getLogsByHour($date['start_date'], $date['end_date'], $offset, $count);
-        $logs = $this->groupLogsByTimestamp($timelogs);
+        $logs                         = $this->groupLogsByTimestamp($timelogs);
 
         return [$logs, $total_count];
     }

@@ -33,12 +33,12 @@ function help_button($type, $helpid = false, $prompt = '[?]')
     // Generic processing derives the script name from the help type
     if ($helpid == false) {
     // $type is a static HTML page from the Codendi User Guide
-        $lang = HTTPRequest::instance()->getCurrentUser()->getShortLocale();
+        $lang   = HTTPRequest::instance()->getCurrentUser()->getShortLocale();
         $script = '/doc/' . $purifier->purify(urlencode($lang), CODENDI_PURIFIER_JS_QUOTE) . '/user-guide/' . $purifier->purify($type, CODENDI_PURIFIER_JS_QUOTE);
     } else {
     // $type is a php script - the invoker probably wants to customize
     // the help display somehow
-        $script = '/help/' . $purifier->purify($type, CODENDI_PURIFIER_JS_QUOTE);
+        $script  = '/help/' . $purifier->purify($type, CODENDI_PURIFIER_JS_QUOTE);
         $script .= '.php?helpid=' . $purifier->purify(urlencode($helpid), CODENDI_PURIFIER_JS_QUOTE);
     }
     $prompt_purified = $purifier->purify($prompt);

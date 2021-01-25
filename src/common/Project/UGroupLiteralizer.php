@@ -106,7 +106,7 @@ class UGroupLiteralizer
     {
         $groups_ids = [];
         foreach ($user->getProjects(true) as $project) {
-            $group_id = $project['group_id'];
+            $group_id     = $project['group_id'];
             $groups_ids[] = $group_id . '_' . ProjectUGroup::PROJECT_MEMBERS;
 
             if ($user->isMember($group_id, 'A')) {
@@ -152,11 +152,11 @@ class UGroupLiteralizer
      */
     private function getDynamicUGroups(PFUser $user): array
     {
-        $user_ugroups   = [];
+        $user_ugroups  = [];
         $user_projects = $user->getProjects(true);
         foreach ($user_projects as $user_project) {
-            $project_name = strtolower($user_project['unix_group_name']);
-            $group_id     = $user_project['group_id'];
+            $project_name   = strtolower($user_project['unix_group_name']);
+            $group_id       = $user_project['group_id'];
             $user_ugroups[] = $this->ugroupIdToStringWithoutArobase(ProjectUGroup::PROJECT_MEMBERS, $project_name);
             if ($user->isMember($group_id, 'A')) {
                 $user_ugroups[] = $this->ugroupIdToStringWithoutArobase(ProjectUGroup::PROJECT_ADMIN, $project_name);

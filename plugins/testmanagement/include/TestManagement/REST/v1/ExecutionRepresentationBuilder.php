@@ -162,14 +162,14 @@ class ExecutionRepresentationBuilder
 
         $file_field_data = $this->file_upload_data_provider->getFileUploadData($execution->getTracker(), $execution, $user);
 
-        $definition = $this->definition_retriever->getDefinitionRepresentationForExecution($user, $execution);
+        $definition                = $this->definition_retriever->getDefinitionRepresentationForExecution($user, $execution);
         $definition_representation = $this->getDefinitionRepresentationForExecution(
             $user,
             $execution,
             $definition,
             $definitions_changeset_ids
         );
-        $execution_representation = new ExecutionRepresentation(
+        $execution_representation  = new ExecutionRepresentation(
             $execution->getId(),
             $execution->getStatus(),
             $this->getExecutionResult($user, $execution),

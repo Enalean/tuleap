@@ -48,12 +48,12 @@ final class BoundDecoratorEditorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->bind_decorator_dao    = \Mockery::mock(
+        $this->bind_decorator_dao     = \Mockery::mock(
             \Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao::class
         );
         $this->bound_decorator_editor = new BoundDecoratorEditor($this->bind_decorator_dao);
 
-        $this->field = \Mockery::mock(\Tracker_FormElement_Field_List::class);
+        $this->field    = \Mockery::mock(\Tracker_FormElement_Field_List::class);
         $this->field_id = 101;
         $this->field->shouldReceive('getId')->andReturn($this->field_id);
     }

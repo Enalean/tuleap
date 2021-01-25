@@ -59,12 +59,12 @@ class UsersArtifactsResourceControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->current_user_id  = '101';
-        $this->current_user     = M::mock(\PFUser::class, ['getId' => $this->current_user_id]);
-        $this->user_manager     = M::mock(\UserManager::class);
+        $this->current_user_id = '101';
+        $this->current_user    = M::mock(\PFUser::class, ['getId' => $this->current_user_id]);
+        $this->user_manager    = M::mock(\UserManager::class);
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($this->current_user)->byDefault();
         $this->artifact_factory = M::mock(Tracker_ArtifactFactory::class);
-        $this->controller = new \Tuleap\Tracker\REST\Artifact\UsersArtifactsResourceController($this->user_manager, $this->artifact_factory);
+        $this->controller       = new \Tuleap\Tracker\REST\Artifact\UsersArtifactsResourceController($this->user_manager, $this->artifact_factory);
     }
 
     public function testThrowsForbiddenWhenParameterIsNotSelf(): void
@@ -127,8 +127,8 @@ class UsersArtifactsResourceControllerTest extends TestCase
     public function testFetchArtifactsSubmittedByUserWithData(): void
     {
         $tracker_id = 122;
-        $project = new \Project(['group_id' => 333, 'group_name' => '']);
-        $tracker = new \Tracker($tracker_id, -1, '', '', '', false, '', '', '', '', '', '', '', TrackerColor::default(), '');
+        $project    = new \Project(['group_id' => 333, 'group_name' => '']);
+        $tracker    = new \Tracker($tracker_id, -1, '', '', '', false, '', '', '', '', '', '', '', TrackerColor::default(), '');
         $tracker->setProject($project);
         $tracker_factory = M::mock(\TrackerFactory::class);
         $tracker_factory->shouldReceive('getTrackerById')->once()->andReturn($tracker);

@@ -57,7 +57,7 @@ class BaseLanguage
      */
     public function __construct($supported_languages, $default_language)
     {
-        $this->allLanguages = [];
+        $this->allLanguages  = [];
         $supported_languages = explode(',', $supported_languages);
         foreach ($supported_languages as $v) {
             if (trim($v) !== '') {
@@ -215,7 +215,7 @@ class BaseLanguage
             mkdir($this->getCacheDirectory(), 0755);
         }
 
-        $path = $this->getCacheDirectory() . DIRECTORY_SEPARATOR . $lang . '.php';
+        $path    = $this->getCacheDirectory() . DIRECTORY_SEPARATOR . $lang . '.php';
         $content = '<?php' . PHP_EOL . 'return ' . VarExporter::export($text_array) . ';';
         try {
             FileWriter::writeFile($path, $content);
@@ -265,7 +265,7 @@ class BaseLanguage
              * @psalm-taint-escape include
              * @psalm-taint-escape file
              */
-            $new_lang = $lang;
+            $new_lang   = $lang;
             $this->lang = $new_lang;
             $this->loadFromSerialized($new_lang) || $this->loadFromTabs($new_lang);
         }
@@ -485,7 +485,7 @@ class BaseLanguage
         //extract language abbr and country codes from Codendi languages
         $provided_languages = [];
         foreach ($this->allLanguages as $lang) {
-            list($l,$c) = explode('_', $lang);
+            list($l,$c)                                         = explode('_', $lang);
             $provided_languages[strtolower($l)][strtolower($c)] = $lang;
         }
 
@@ -493,7 +493,7 @@ class BaseLanguage
         $parse_accept_lang = $this->parseAcceptLanguage($accept_language);
         foreach ($parse_accept_lang as $lang => $score) {
             $lang = explode('-', $lang);
-            $l = strtolower($lang[0]);
+            $l    = strtolower($lang[0]);
             if (isset($provided_languages[$l])) {
                 //We've just found a matching languages
                 //check now for the country code

@@ -52,7 +52,7 @@ class ArtifactTimeRepresentation
 
     public static function build(Time $time)
     {
-        $object = new self();
+        $object          = new self();
         $object->date    = $time->getDay();
         $object->minutes = $time->getMinutes();
         $object->id      = $time->getId();

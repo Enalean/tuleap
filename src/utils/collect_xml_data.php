@@ -80,7 +80,7 @@ class TuleapArchiveContent
 {
     private $reference_files = [];
 
-    private $content_files   = [];
+    private $content_files = [];
 
     public function addFileReference($reference, $target_file_path)
     {

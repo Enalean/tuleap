@@ -52,7 +52,7 @@ class ReleasePresenter
             "contact_email"       => ForgeConfig::get('sys_email_contact')
         ];
 
-        $this->platform_license_info  = json_encode($platform_license_info);
+        $this->platform_license_info = json_encode($platform_license_info);
 
         $this->custom_license_agreement = $agreement->getAsJson();
     }

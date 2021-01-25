@@ -43,7 +43,7 @@ final class TeamCollection
      */
     public function __construct(array $teams, ToBeCreatedProgram $program)
     {
-        $this->teams = $teams;
+        $this->teams   = $teams;
         $this->program = $program;
     }
 

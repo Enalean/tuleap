@@ -40,7 +40,7 @@ class EnableUniqueAuthenticationEndpointVerifierTest extends TestCase
         );
         $provider                                       = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
         $provider->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(false);
-        $user                                           = \Mockery::spy(\PFUser::class);
+        $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isSuperUser')->andReturns(true);
 
         $can_be_enabled = $enable_unique_authentication_endpoint_verifier->canBeEnabledBy($provider, $user);
@@ -71,7 +71,7 @@ class EnableUniqueAuthenticationEndpointVerifierTest extends TestCase
         );
         $provider                                       = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
         $provider->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(true);
-        $user                                           = \Mockery::spy(\PFUser::class);
+        $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isSuperUser')->andReturns(true);
 
         $can_be_enabled = $enable_unique_authentication_endpoint_verifier->canBeEnabledBy($provider, $user);
@@ -81,14 +81,14 @@ class EnableUniqueAuthenticationEndpointVerifierTest extends TestCase
 
     public function testItRefusesToEnableIfUserIsLinkedToTheProvider(): void
     {
-        $user_mapping_manager                           = \Mockery::spy(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager::class);
+        $user_mapping_manager = \Mockery::spy(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager::class);
         $user_mapping_manager->shouldReceive('getByProviderAndUser')->andThrows(new UserMappingNotFoundException());
         $enable_unique_authentication_endpoint_verifier = new EnableUniqueAuthenticationEndpointVerifier(
             $user_mapping_manager
         );
         $provider                                       = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
         $provider->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(false);
-        $user                                           = \Mockery::spy(\PFUser::class);
+        $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isSuperUser')->andReturns(true);
 
         $can_be_enabled = $enable_unique_authentication_endpoint_verifier->canBeEnabledBy($provider, $user);

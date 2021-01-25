@@ -47,7 +47,7 @@ class DirectoryItemCollection
     public function __construct($folders, $files)
     {
         $this->folders = $folders;
-        $this->files = $files;
+        $this->files   = $files;
     }
 
     /**

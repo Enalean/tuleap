@@ -43,8 +43,8 @@ class FileBeingUploadedWriterTest extends TestCase
         $path_allocator
             ->shouldReceive('getPathForItemBeingUploaded')
             ->andReturn("$tmp_dir/12");
-        $db_connection  = \Mockery::mock(DBConnection::class);
-        $writer         = new FileBeingUploadedWriter($path_allocator, $db_connection);
+        $db_connection = \Mockery::mock(DBConnection::class);
+        $writer        = new FileBeingUploadedWriter($path_allocator, $db_connection);
 
         $db_connection->shouldReceive('reconnectAfterALongRunningProcess')->twice();
 
@@ -79,8 +79,8 @@ class FileBeingUploadedWriterTest extends TestCase
         $path_allocator
             ->shouldReceive('getPathForItemBeingUploaded')
             ->andReturn("$tmp_dir/12");
-        $db_connection  = \Mockery::mock(DBConnection::class);
-        $writer         = new FileBeingUploadedWriter($path_allocator, $db_connection);
+        $db_connection = \Mockery::mock(DBConnection::class);
+        $writer        = new FileBeingUploadedWriter($path_allocator, $db_connection);
 
         $db_connection->shouldReceive('reconnectAfterALongRunningProcess')->once();
 

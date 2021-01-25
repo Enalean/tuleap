@@ -55,7 +55,7 @@ abstract class GraphOnTrackersV5_Engine
     {
         $available_colors = $this->graph->getThemedColors();
         $max_colors       = count($available_colors);
-        $i = 0;
+        $i                = 0;
         foreach ($this->colors as $group => $color) {
             $this->colors[$group] = $this->fillTheBlanks($color, $available_colors, $max_colors, $i);
         }

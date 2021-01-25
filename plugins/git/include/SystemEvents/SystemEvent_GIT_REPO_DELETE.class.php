@@ -65,9 +65,9 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
 
     public function process()
     {
-        $parameters   = $this->getParametersAsArray();
+        $parameters = $this->getParametersAsArray();
         //project id
-        $projectId    = 0;
+        $projectId = 0;
         if (! empty($parameters[0])) {
             $projectId = (int) $parameters[0];
         } else {

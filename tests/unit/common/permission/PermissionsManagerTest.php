@@ -33,7 +33,7 @@ class PermissionsManagerTest extends TestCase
         $permission_types = ['STUFF_READ'];
         $ugroup_mapping   = [110 => 210,
                                   120 => 220];
-        $duplicate_type  = PermissionsDao::DUPLICATE_SAME_PROJECT;
+        $duplicate_type   = PermissionsDao::DUPLICATE_SAME_PROJECT;
 
         $dao = Mockery::mock(PermissionsDao::class);
         $dao->shouldReceive('duplicatePermissions')->with($source, $target, $permission_types, $duplicate_type, $ugroup_mapping)->once();

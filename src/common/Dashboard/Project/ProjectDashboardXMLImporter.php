@@ -85,7 +85,7 @@ class ProjectDashboardXMLImporter
                     $dashboard_name = trim((string) $dashboard_xml["name"]);
                     $this->logger->info("Create dashboard $dashboard_name");
                     $dashboard_id = $this->project_dashboard_saver->save($user, $project, $dashboard_name);
-                    $dashboard = new Dashboard($dashboard_id, $dashboard_name);
+                    $dashboard    = new Dashboard($dashboard_id, $dashboard_name);
                     $this->importWidgets($dashboard, $project, $dashboard_xml, $mapping_registry);
                 } catch (UserCanNotUpdateProjectDashboardException $e) {
                     $this->logger->warning($e->getMessage());
@@ -106,7 +106,7 @@ class ProjectDashboardXMLImporter
             return;
         }
 
-        $line_rank = 1;
+        $line_rank   = 1;
         $all_widgets = [];
         foreach ($dashboard_xml->line as $line) {
             $this->createLine($line, $project, $dashboard, $line_rank, $all_widgets, $mapping_registry);
@@ -117,14 +117,14 @@ class ProjectDashboardXMLImporter
 
     private function createLine(\SimpleXMLElement $line, Project $project, Dashboard $dashboard, $line_rank, array &$all_widgets, MappingsRegistry $mapping_registry)
     {
-        $line_id = -1;
+        $line_id     = -1;
         $column_rank = 1;
         foreach ($line->column as $column) {
             $this->createColumn($column, $project, $dashboard, $line_id, $line_rank, $column_rank, $all_widgets, $mapping_registry);
             $column_rank++;
         }
         $nb_columns = $column_rank - 1;
-        $layout = '';
+        $layout     = '';
         if (isset($line['layout'])) {
             $layout = (string) $line['layout'];
             if (! $dashboard->isLayoutValid($layout, $nb_columns)) {
@@ -141,7 +141,7 @@ class ProjectDashboardXMLImporter
 
     private function createColumn(\SimpleXMLElement $column, Project $project, Dashboard $dashboard, &$line_id, $line_rank, $column_rank, array &$all_widgets, MappingsRegistry $mapping_registry)
     {
-        $column_id = -1;
+        $column_id   = -1;
         $widget_rank = 1;
         foreach ($column->widget as $widget_xml) {
             try {
@@ -234,8 +234,8 @@ class ProjectDashboardXMLImporter
             foreach ($widget_xml->preference as $preference) {
                 $preference_name = trim((string) $preference['name']);
                 foreach ($preference->value as $value) {
-                    $key = trim((string) $value['name']);
-                    $val = trim((string) $value);
+                    $key                            = trim((string) $value['name']);
+                    $val                            = trim((string) $value);
                     $params[$preference_name][$key] = $val;
                 }
             }

@@ -31,5 +31,5 @@ $controller = new Admin_Homepage_Controller(
     new AdminPageRenderer(),
     new ConfigDao()
 );
-$router = new Admin_Homepage_Router($controller, $request);
+$router     = new Admin_Homepage_Router($controller, $request);
 $router->route();

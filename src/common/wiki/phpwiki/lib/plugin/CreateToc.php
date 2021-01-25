@@ -160,9 +160,9 @@ class WikiPlugin_CreateToc extends WikiPlugin
         &$hend,
         $basepage = false
     ) {
-        $hstart = 0;
-        $hend = 0;
-        $h = $this->_getHeader($level);
+        $hstart   = 0;
+        $hend     = 0;
+        $h        = $this->_getHeader($level);
         $qheading = $this->_quote($heading);
         for ($j = $start_index; $j < count($content); $j++) {
             if (is_string($content[$j])) {
@@ -177,7 +177,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
             } elseif (isa($content[$j], 'cached_link')) {
                 if (method_exists($content[$j], 'asXML')) {
                     $content[$j]->_basepage = $basepage;
-                    $content[$j] = $content[$j]->asXML();
+                    $content[$j]            = $content[$j]->asXML();
                 } else {
                     $content[$j] = $content[$j]->asString();
                 }
@@ -188,7 +188,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
                     and substr($content[$j + 1], 0, 5) == "</$h>"
                 ) {
                     $hstart = $j - 1;
-                    $hend = $j + 1;
+                    $hend   = $j + 1;
                     return $j; // single wikiword
                 } elseif (TOC_FULL_SYNTAX) {
                     //DONE: To allow "!! WikiWord link" or !! http://anylink/
@@ -225,8 +225,8 @@ class WikiPlugin_CreateToc extends WikiPlugin
     {
         static $anchors = [];
 
-        $s = str_replace(' ', '_', $s);
-        $i = 1;
+        $s      = str_replace(' ', '_', $s);
+        $i      = 1;
         $anchor = $s;
         while (! empty($anchors[$anchor])) {
             $anchor = sprintf("%s_%d", $s, $i++);
@@ -251,7 +251,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         reset($levels);
         sort($levels);
         $headers = [];
-        $j = 0;
+        $j       = 0;
         for ($i = 0; $i < count($content); $i++) {
             foreach ($levels as $level) {
                 if ($level < 1 or $level > 3) {
@@ -271,9 +271,9 @@ class WikiPlugin_CreateToc extends WikiPlugin
                         // Remove escape char from toc titles.
                         $s = str_replace('~', '', $s);
 
-                        $anchor = $this->_nextAnchor($s);
+                        $anchor  = $this->_nextAnchor($s);
                         $manchor = MangleXmlIdentifier($anchor);
-                        $texts = $s;
+                        $texts   = $s;
                         if ($counter) {
                             $texts = $this->_getCounter($tocCounter, $level) . ' - ' . $s;
                         }
@@ -286,7 +286,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
                         // Search <hn>$s</hn> line in markup
                         /* Url for backlink */
                         $url = WikiURL(new WikiPageName($basepage, false, "TOC"));
-                        $j = $this->searchHeader(
+                        $j   = $this->searchHeader(
                             $markup->_content,
                             $j,
                             $s,
@@ -296,7 +296,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
                             $markup->_basepage
                         );
                         if ($j and isset($markup->_content[$j])) {
-                            $x = $markup->_content[$j];
+                            $x        = $markup->_content[$j];
                             $qheading = $this->_quote($s);
                             if ($counter) {
                                 $counterString = $this->_getCounter($tocCounter, $level);
@@ -380,7 +380,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         extract($this->getArgs($argstr, $request));
         if ($pagename) {
             // Expand relative page names.
-            $page = new WikiPageName($pagename, $basepage);
+            $page     = new WikiPageName($pagename, $basepage);
             $pagename = $page->name;
         }
         if (! $pagename) {
@@ -390,7 +390,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
             //trigger_error(_("jshide set to 0 on Mac IE"), E_USER_NOTICE);
             $jshide = 0;
         }
-        $page = $dbi->getPage($pagename);
+        $page    = $dbi->getPage($pagename);
         $current = $page->getCurrentRevision();
         //FIXME: I suspect this only to crash with Apache2
         if (! $current->get('markup') or $current->get('markup') < 2) {
@@ -400,7 +400,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
             }
         }
         $content = $current->getContent();
-        $html = HTML::div(['class' => 'toc', 'id' => 'toc']);
+        $html    = HTML::div(['class' => 'toc', 'id' => 'toc']);
         /*if ($liststyle == 'dl')
             $list = HTML::dl(array('id'=>'toclist','class' => 'toc'));
         elseif ($liststyle == 'ul')
@@ -419,11 +419,11 @@ class WikiPlugin_CreateToc extends WikiPlugin
         foreach ($headers as $h) {
             //replace !!! with level 1, ...
             if (strstr($h, "!")) {
-                $hcount = substr_count($h, '!');
-                $level = min(max(1, $hcount), 3);
+                $hcount   = substr_count($h, '!');
+                $level    = min(max(1, $hcount), 3);
                 $levels[] = $level;
             } else {
-                $level = min(max(1, (int) $h), 3);
+                $level    = min(max(1, (int) $h), 3);
                 $levels[] = $level;
             }
         }
@@ -470,7 +470,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
             }
         }
         $list->setAttr('style', 'display:' . ($jshide ? 'none;' : 'block;'));
-        $open = DATA_PATH . '/' . $WikiTheme->_findFile("images/folderArrowOpen.png");
+        $open  = DATA_PATH . '/' . $WikiTheme->_findFile("images/folderArrowOpen.png");
         $close = DATA_PATH . '/' . $WikiTheme->_findFile("images/folderArrowClosed.png");
         $html->pushContent(Javascript("
 function toggletoc(a) {

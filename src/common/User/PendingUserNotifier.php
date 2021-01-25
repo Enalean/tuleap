@@ -24,8 +24,8 @@ class User_PendingUserNotifier
 
     public function notifyAdministrator(PFUser $user)
     {
-        $user_name  = $user->getUserName();
-        $to         = ForgeConfig::get('sys_email_admin');
+        $user_name = $user->getUserName();
+        $to        = ForgeConfig::get('sys_email_admin');
         if (! send_new_user_email_notification($to, $user_name)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,

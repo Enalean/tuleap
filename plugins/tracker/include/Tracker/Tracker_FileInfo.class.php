@@ -253,7 +253,7 @@ class Tracker_FileInfo
      */
     private function createThumbnail()
     {
-        $size = getimagesize($this->getPath());
+        $size             = getimagesize($this->getPath());
         $thumbnail_width  = $size[0];
         $thumbnail_height = $size[1];
         if ($thumbnail_width > self::THUMBNAILS_MAX_WIDTH || $thumbnail_height > self::THUMBNAILS_MAX_HEIGHT) {
@@ -272,7 +272,7 @@ class Tracker_FileInfo
                 $source      = imagecreatefromgif($this->getPath());
                 $destination = imagecreate((int) $thumbnail_width, (int) $thumbnail_height);
                 imagepalettecopy($destination, $source);
-                $store       = 'imagegif';
+                $store = 'imagegif';
                 break;
             case IMAGETYPE_JPEG:
                 $source      = imagecreatefromjpeg($this->getPath());
@@ -301,7 +301,7 @@ class Tracker_FileInfo
      */
     public function save()
     {
-        $dao = new Tracker_FileInfoDao();
+        $dao      = new Tracker_FileInfoDao();
         $this->id = $dao->create($this->submitted_by, $this->description, $this->filename, $this->filesize, $this->filetype);
         if ($this->id) {
             return true;

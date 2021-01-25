@@ -112,7 +112,7 @@ class BindToValueVisitorTest extends TestCase
     {
         $this->changeset_value->shouldReceive('getValue')->andReturn(['326']);
 
-        $user = Mockery::mock(\PFUser::class);
+        $user             = Mockery::mock(\PFUser::class);
         $users_bind_value = Mockery::mock(\Tracker_FormElement_Field_List_Bind_UsersValue::class);
         $users_bind_value->shouldReceive('getUser')->andReturn($user);
 

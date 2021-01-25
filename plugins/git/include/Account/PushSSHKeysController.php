@@ -52,10 +52,10 @@ final class PushSSHKeysController implements DispatchableWithRequest
 
     public function __construct(\CSRFSynchronizerToken $csrf_token, Git_UserAccountManager $git_user_account_manager, \Git_RemoteServer_GerritServerFactory $gerrit_server_factory, LoggerInterface $logger)
     {
-        $this->csrf_token = $csrf_token;
+        $this->csrf_token               = $csrf_token;
         $this->git_user_account_manager = $git_user_account_manager;
-        $this->logger = $logger;
-        $this->gerrit_server_factory = $gerrit_server_factory;
+        $this->logger                   = $logger;
+        $this->gerrit_server_factory    = $gerrit_server_factory;
     }
 
     /**

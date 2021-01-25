@@ -78,7 +78,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     private function assertGET(Response $response)
     {
-        $backlog_item  = $response->json();
+        $backlog_item = $response->json();
 
         $this->assertEquals("build a new interface", $backlog_item['label']);
         $this->assertEquals(200, $response->getStatusCode());
@@ -175,7 +175,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testPATCHChildren()
     {
-        $uri = 'backlog_items/' . $this->stories_ids[1] . '/children';
+        $uri           = 'backlog_items/' . $this->stories_ids[1] . '/children';
         $response      = $this->getResponse($this->client->get($uri));
         $backlog_items = $response->json();
 
@@ -225,7 +225,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testPATCHChildrenDuplicateIds()
     {
-        $uri = 'backlog_items/' . $this->stories_ids[1] . '/children';
+        $uri           = 'backlog_items/' . $this->stories_ids[1] . '/children';
         $response      = $this->getResponse($this->client->get($uri));
         $backlog_items = $response->json();
 
@@ -248,7 +248,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testPATCHSomeoneElseChildren()
     {
-        $uri = 'backlog_items/' . $this->stories_ids[1] . '/children';
+        $uri           = 'backlog_items/' . $this->stories_ids[1] . '/children';
         $response      = $this->getResponse($this->client->get($uri));
         $backlog_items = $response->json();
 
@@ -256,7 +256,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
             $this->assertNotEquals($backlog_item['id'], 9999);
         }
 
-        $first_id  = $backlog_items[0]['id'];
+        $first_id = $backlog_items[0]['id'];
 
         $response = $this->getResponse($this->client->patch($uri, null, json_encode([
             'order' => [
@@ -271,13 +271,13 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testGETChildrenWithWrongId()
     {
-        $response      = $this->getResponse($this->client->get('backlog_items/700/children'));
+        $response = $this->getResponse($this->client->get('backlog_items/700/children'));
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
     public function testPatchChildrenAdd()
     {
-        $uri = 'backlog_items/' . $this->stories_ids[1] . '/children';
+        $uri           = 'backlog_items/' . $this->stories_ids[1] . '/children';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
         $this->assertCount(2, $backlog_items);
@@ -311,14 +311,14 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testPatchChildrenMove()
     {
-        $uri = 'backlog_items/' . $this->stories_ids[2] . '/children';
+        $uri           = 'backlog_items/' . $this->stories_ids[2] . '/children';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
         $first_id  = $backlog_items[0]['id'];
         $second_id = $backlog_items[1]['id'];
 
         $task_in_another_story_id = $this->tasks['Bla bla bla'];
-        $another_story_id = $this->stories['Another story'];
+        $another_story_id         = $this->stories['Another story'];
 
         try {
             $response = $this->getResponse($this->client->patch($uri, null, json_encode([
@@ -353,7 +353,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     private function getIdsOrderedByPriority($uri)
     {
-        $response = $this->getResponse($this->client->get($uri));
+        $response     = $this->getResponse($this->client->get($uri));
         $actual_order = [];
         foreach ($response->json() as $backlog_element) {
             $actual_order[] = $backlog_element['id'];

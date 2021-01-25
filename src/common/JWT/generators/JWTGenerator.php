@@ -40,7 +40,7 @@ class JWTGenerator
 
     public function __construct(Configuration $jwt_configuration, UserManager $user_manager, UGroupLiteralizer $ugroup_literalizer)
     {
-        $this->jwt_configuration = $jwt_configuration;
+        $this->jwt_configuration  = $jwt_configuration;
         $this->user_manager       = $user_manager;
         $this->ugroup_literalizer = $ugroup_literalizer;
     }
@@ -52,7 +52,7 @@ class JWTGenerator
     public function getToken(): string
     {
         $current_user = $this->user_manager->getCurrentUser();
-        $data = [
+        $data         = [
             'user_id'     => (int) $current_user->getId(),
             'user_rights' => $this->ugroup_literalizer->getUserGroupsForUserWithArobase($current_user)
         ];

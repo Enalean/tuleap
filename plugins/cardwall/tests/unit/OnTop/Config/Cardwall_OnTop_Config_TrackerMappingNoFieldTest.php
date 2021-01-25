@@ -29,7 +29,7 @@ final class Cardwall_OnTop_Config_TrackerMappingNoFieldTest extends \PHPUnit\Fra
     {
         $tracker          = Mockery::mock(Tracker::class);
         $available_fields = [];
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingNoField($tracker, $available_fields);
+        $mapping          = new Cardwall_OnTop_Config_TrackerMappingNoField($tracker, $available_fields);
         $this->assertEquals([], $mapping->getValueMappings());
     }
 
@@ -37,7 +37,7 @@ final class Cardwall_OnTop_Config_TrackerMappingNoFieldTest extends \PHPUnit\Fra
     {
         $tracker          = Mockery::mock(Tracker::class);
         $available_fields = [];
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingNoField($tracker, $available_fields);
+        $mapping          = new Cardwall_OnTop_Config_TrackerMappingNoField($tracker, $available_fields);
         $this->assertNull($mapping->getField());
     }
 }

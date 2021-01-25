@@ -41,10 +41,10 @@ class Docman_ItemFactory
     public function __construct($groupId = null)
     {
         // Cache highly used info
-        $this->rootItems[] = [];
+        $this->rootItems[]           = [];
         $this->onlyOneChildForRoot[] = [];
-        $this->copiedItem = [];
-        $this->cutItem = [];
+        $this->copiedItem            = [];
+        $this->cutItem               = [];
 
         // Parameter
         $this->groupId = $groupId;
@@ -401,7 +401,7 @@ class Docman_ItemFactory
         $objectsIds = [];
         $dar->rewind();
         while ($dar->valid()) {
-            $row = $dar->current();
+            $row          = $dar->current();
             $objectsIds[] = $row['item_id'];
             $dar->next();
         }
@@ -446,8 +446,8 @@ class Docman_ItemFactory
         if ($child === null || $this->isRoot($child)) {
             return [];
         }
-        $directParentId = $child->getParentId();
-        $parents = $this->getParents($directParentId);
+        $directParentId           = $child->getParentId();
+        $parents                  = $this->getParents($directParentId);
         $parents[$directParentId] = true;
         return $parents;
     }
@@ -481,20 +481,20 @@ class Docman_ItemFactory
         $dao = $this->_getItemDao();
         $dPm = Docman_PermissionsManager::instance($rootItem->getGroupId());
 
-        $itemList = [$rootItem->getId() => &$rootItem];
+        $itemList  = [$rootItem->getId() => &$rootItem];
         $parentIds = [$rootItem->getId()];
         do {
             // Fetch all children for the given level.
-            $dar = $dao->searchChildren($parentIds, $searchItemsParams);
+            $dar       = $dao->searchChildren($parentIds, $searchItemsParams);
             $parentIds = [];
-            $itemIds = [];
-            $itemRows = [];
+            $itemIds   = [];
+            $itemRows  = [];
             if ($dar && ! $dar->isError()) {
                 $dar->rewind();
                 while ($dar->valid()) {
-                    $row = $dar->current();
+                    $row                       = $dar->current();
                     $itemRows[$row['item_id']] = $row;
-                    $itemIds[] = $row['item_id'];
+                    $itemIds[]                 = $row['item_id'];
                     if (
                         $row['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
                         && ($expandAll || isset($expandedFolders[$row['item_id']]))
@@ -563,26 +563,26 @@ class Docman_ItemFactory
         $dao = $this->_getItemDao();
 
         // Build Folder List
-        $parentItem = $this->getItemFromDb($parentId);
-        $dPm = Docman_PermissionsManager::instance($parentItem->getGroupId());
-        $folderList = [$parentId => &$parentItem];
-        $pathIdArray = [$parentId => []];
+        $parentItem     = $this->getItemFromDb($parentId);
+        $dPm            = Docman_PermissionsManager::instance($parentItem->getGroupId());
+        $folderList     = [$parentId => &$parentItem];
+        $pathIdArray    = [$parentId => []];
         $pathTitleArray = [$parentId => []];
-        $parentIds = [$parentId];
-        $folderIds = [$parentId];
-        $i = 0;
+        $parentIds      = [$parentId];
+        $folderIds      = [$parentId];
+        $i              = 0;
         do {
             $i++;
-            $dar = $dao->searchSubFolders($parentIds);
+            $dar       = $dao->searchSubFolders($parentIds);
             $parentIds = [];
             $itemIds   = [];
-            $itemRows = [];
+            $itemRows  = [];
             if ($dar && ! $dar->isError()) {
                 $dar->rewind();
                 while ($dar->valid()) {
-                    $row = $dar->current();
-                    $itemRows[$row['item_id']] = $row;
-                    $itemIds[] = $row['item_id'];
+                    $row                        = $dar->current();
+                    $itemRows[$row['item_id']]  = $row;
+                    $itemIds[]                  = $row['item_id'];
                     $parentIds[$row['item_id']] = $row['item_id'];
                     $dar->next();
                 }
@@ -595,7 +595,7 @@ class Docman_ItemFactory
                     if ($dPm->userCanRead($user, $id)) {
                         $folderList[$id] = $this->getItemFromRow($itemRows[$id]);
                         // Update path
-                        $pathIdArray[$id] = array_merge($pathIdArray[$folderList[$id]->getParentId()], [$id]);
+                        $pathIdArray[$id]    = array_merge($pathIdArray[$folderList[$id]->getParentId()], [$id]);
                         $pathTitleArray[$id] = array_merge($pathTitleArray[$folderList[$id]->getParentId()], [$folderList[$id]->getTitle()]);
                     } else {
                         unset($parentIds[$id]);
@@ -605,8 +605,8 @@ class Docman_ItemFactory
         } while (count($parentIds) > 0);
 
         // Keep only documents in allowed subfolders
-        $mdFactory  = new Docman_MetadataFactory($this->groupId);
-        $ci = null;
+        $mdFactory = new Docman_MetadataFactory($this->groupId);
+        $ci        = null;
         if ($filter !== null) {
             $ci = $filter->getColumnIterator();
         }
@@ -677,7 +677,7 @@ class Docman_ItemFactory
     {
         if (! $id) {
             $dao = $this->_getItemDao();
-            $id = $dao->searchRootIdForGroupId($this->groupId);
+            $id  = $dao->searchRootIdForGroupId($this->groupId);
         }
         return $this->getItemSubTreeAsList($id, $nbItemsFound, $params);
     }
@@ -750,15 +750,15 @@ class Docman_ItemFactory
     public function findFuturObsoleteItems()
     {
         // Compute the timescale for the day in one month
-        $today = getdate();
+        $today   = getdate();
         $tsStart = mktime(0, 0, 0, $today['mon'] + 1, $today['mday'], $today['year']);
         $tsEnd   = mktime(23, 59, 59, $today['mon'] + 1, $today['mday'], $today['year']);
 
-        $ia = [];
+        $ia  = [];
         $dao = $this->_getItemDao();
         $dar = $dao->searchObsoleteAcrossProjects($tsStart, $tsEnd);
         while ($dar->valid()) {
-            $row = $dar->current();
+            $row  = $dar->current();
             $ia[] = $this->getItemFromRow($row);
             $dar->next();
         }
@@ -872,7 +872,7 @@ class Docman_ItemFactory
     public function create($row, $ordering)
     {
         $dao = $this->_getItemDao();
-        $id = $dao->createFromRow($row);
+        $id  = $dao->createFromRow($row);
         if ($id) {
             $this->setNewParent($id, $row['parent_id'], $ordering);
         }
@@ -912,10 +912,10 @@ class Docman_ItemFactory
             'link_url'          => $link_url
 
         ];
-        $id  = $this->create($row, null);
+        $id = $this->create($row, null);
 
         $row['item_id'] = $id;
-        $item = $this->getItemFromRow($row);
+        $item           = $this->getItemFromRow($row);
 
         if (! $item) {
             throw new CannotInstantiateItemWeHaveJustCreatedInDBException();
@@ -942,7 +942,7 @@ class Docman_ItemFactory
                 } elseif ($dar->rowCount() == 0) {
                     $this->onlyOneChildForRoot[$groupId] = true;
                 } else {
-                    $row = $dar->getRow();
+                    $row                                 = $dar->getRow();
                     $this->onlyOneChildForRoot[$groupId] = (int) $row['item_id'];
                 }
             }
@@ -1015,7 +1015,7 @@ class Docman_ItemFactory
     */
     public function breathFirst($item_id, $callback, $params)
     {
-        $dao = $this->_getItemDao();
+        $dao     = $this->_getItemDao();
         $parents = [$item_id];
         do {
             $dar = $dao->searchByParentsId($parents);
@@ -1045,8 +1045,8 @@ class Docman_ItemFactory
         if (is_array($itemArray)) {
             foreach ($itemArray as $item) {
                 $itemList[$item->getId()] = $item;
-                $orphans[$item->getId()] = $item->getId();
-                $itemIds[] = $item->getId();
+                $orphans[$item->getId()]  = $item->getId();
+                $itemIds[]                = $item->getId();
             }
         } else {
             return $null;
@@ -1063,13 +1063,13 @@ class Docman_ItemFactory
         }
 
         // Now, here we go
-        $paths = [];
-        $dao = $this->_getItemDao();
+        $paths  = [];
+        $dao    = $this->_getItemDao();
         $rootId = false;
         do {
             // Try to build the connections between childrens and parents in itemList
             $wantedItems = [];
-            $rootInfo = $this->connectOrphansToParents($itemList, $orphans, $wantedItems);
+            $rootInfo    = $this->connectOrphansToParents($itemList, $orphans, $wantedItems);
             if ($rootInfo !== false) {
                 $rootId = $rootInfo;
             }
@@ -1080,14 +1080,14 @@ class Docman_ItemFactory
                 if ($dar && ! $dar->isError()) {
                     $this->preloadItemPerms($dar, $user, $this->groupId);
                     while ($dar->valid()) {
-                        $row = $dar->current();
+                        $row  = $dar->current();
                         $item = $this->getItemFromRow($row);
                         if ($item === null) {
                             continue;
                         }
                         if ($dpm->userCanRead($user, $item->getId())) {
                             $itemList[$item->getId()] = $item;
-                            $orphans[$item->getId()] = $item->getId();
+                            $orphans[$item->getId()]  = $item->getId();
                         } else {
                             $itemList[$item->getId()] = null;
                         }
@@ -1170,8 +1170,8 @@ class Docman_ItemFactory
     public function getRoot($group_id)
     {
         if (! isset($this->rootItems[$group_id])) {
-            $dao = $this->_getItemDao();
-            $id = $dao->searchRootIdForGroupId($group_id);
+            $dao                        = $this->_getItemDao();
+            $id                         = $dao->searchRootIdForGroupId($group_id);
             $this->rootItems[$group_id] = $this->getItemFromDb($id);
         }
         return $this->rootItems[$group_id];
@@ -1228,7 +1228,7 @@ class Docman_ItemFactory
             }
 
             $cloneItemsVisitor = $destination->getCloneItemsVisitor();
-            $visitorParams = ['parentId' => $parent_id,
+            $visitorParams     = ['parentId' => $parent_id,
                                'user' => $user,
                                'metadataMapping' => $metadataMapping,
                                'ugroupsMapping'  => $ugroupsMapping,
@@ -1273,7 +1273,7 @@ class Docman_ItemFactory
     {
         if (! isset($this->cutItem[$user->getId()])) {
             $cutId = false;
-            $id = user_get_preference(PLUGIN_DOCMAN_PREF . '_item_cut');
+            $id    = user_get_preference(PLUGIN_DOCMAN_PREF . '_item_cut');
             if ($groupId !== null && $id !== false) {
                 $item = $this->getItemFromDb($id);
                 if ($item && $item->getGroupId() == $groupId) {
@@ -1362,14 +1362,14 @@ class Docman_ItemFactory
     private function getFolderTreeStats($folder)
     {
         $stats['count'] = 0;
-        $stats['size'] = 0;
+        $stats['size']  = 0;
         $stats['types'] = [];
 
         if (is_a($folder, 'Docman_Folder')) {
             $items = $folder->getAllItems();
             foreach ($items->iterator() as $item) {
                 $class = get_class($item);
-                $type = strtolower(substr(strrchr($class, '_'), 1));
+                $type  = strtolower(substr(strrchr($class, '_'), 1));
 
                 if (! isset($stats['types'][$type])) {
                     $stats['types'][$type] = 0;
@@ -1391,7 +1391,7 @@ class Docman_ItemFactory
                         $stats['types'][$k] += $v;
                     }
                     $stats['count'] += $childStats['count'];
-                    $stats['size'] += $childStats['size'];
+                    $stats['size']  += $childStats['size'];
                 }
             }
         }
@@ -1460,13 +1460,13 @@ class Docman_ItemFactory
     public function deleteProjectTree($groupId)
     {
         $deleteStatus = true;
-        $root = $this->getRoot($groupId);
+        $root         = $this->getRoot($groupId);
         if ($root) {
-            $dPm = Docman_PermissionsManager::instance($groupId);
+            $dPm              = Docman_PermissionsManager::instance($groupId);
             $subItemsWritable = $dPm->currentUserCanWriteSubItems($root->getId());
             if ($subItemsWritable) {
                 $rootChildren = $this->getChildrenFromParent($root);
-                $user = $this->_getUserManager()->getCurrentUser();
+                $user         = $this->_getUserManager()->getCurrentUser();
                 try {
                     foreach ($rootChildren as $children) {
                         if (! $this->deleteSubTree($children, $user, true)) {
@@ -1500,7 +1500,7 @@ class Docman_ItemFactory
         if ($item && ! $this->isRoot($item)) {
             // Cannot delete one folder if at least on of the document inside
             // cannot be deleted
-            $dPm = Docman_PermissionsManager::instance($item->getGroupId());
+            $dPm              = Docman_PermissionsManager::instance($item->getGroupId());
             $subItemsWritable = $dPm->currentUserCanWriteSubItems($item->getId());
             if ($subItemsWritable) {
                 $itemSubTree = $this->getItemSubTree($item, $user, false, true);
@@ -1583,9 +1583,9 @@ class Docman_ItemFactory
         $oneRestored = false;
         $isFile      = false;
         if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-            $isFile      = true;
-            $vf          = $this->_getVersionFactory();
-            $versions    = $vf->listVersionsToPurgeForItem($item);
+            $isFile   = true;
+            $vf       = $this->_getVersionFactory();
+            $versions = $vf->listVersionsToPurgeForItem($item);
             if ($versions) {
                 foreach ($versions as $version) {
                     $oneRestored |= $vf->restore($version);

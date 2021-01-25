@@ -39,6 +39,6 @@ final class ProjectResourcePutHierarchyRepresentation
     public function __construct(int $program_tracker_id, array $team_tracker_ids)
     {
         $this->program_tracker_id = $program_tracker_id;
-        $this->team_tracker_ids    = $team_tracker_ids;
+        $this->team_tracker_ids   = $team_tracker_ids;
     }
 }

@@ -41,9 +41,9 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestC
     protected function setUp(): void
     {
         parent::setUp();
-        $this->ssh_key_dumper = \Mockery::spy(\Git_Gitolite_SSHKeyDumper::class);
+        $this->ssh_key_dumper        = \Mockery::spy(\Git_Gitolite_SSHKeyDumper::class);
         $this->gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
-        $this->event = \Mockery::mock(\SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->event                 = \Mockery::mock(\SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->event->injectDependencies($this->gerrit_server_factory, $this->ssh_key_dumper);
     }
 

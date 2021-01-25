@@ -39,8 +39,8 @@ class MetadataUpdatorBuilder
 {
     public static function build(\Project $project, \EventManager $event_manager): MetadataUpdator
     {
-        $user_manager = \UserManager::instance();
-        $docman_metadata_factory      = new \Docman_MetadataFactory($project->getGroupId());
+        $user_manager            = \UserManager::instance();
+        $docman_metadata_factory = new \Docman_MetadataFactory($project->getGroupId());
 
         $metadata_value_dao = new \Docman_MetadataValueDao();
 

@@ -56,7 +56,7 @@ class SemanticDoneDuplicator
         }
 
         $from_semantic_status_field_id = (int) $from_semantic_status_field_row['field_id'];
-        $values_mapping = $this->extractValueMapping(
+        $values_mapping                = $this->extractValueMapping(
             $field_mapping,
             $from_semantic_status_field_id
         );

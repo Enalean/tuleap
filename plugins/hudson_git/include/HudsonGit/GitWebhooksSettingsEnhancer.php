@@ -76,8 +76,8 @@ class GitWebhooksSettingsEnhancer
 
         $params['description'] = dgettext('tuleap-hudson_git', 'You can define one Jenkins webhook and several generic webhooks.');
 
-        $project = $repository->getProject();
-        $jenkins_servers = $this->jenkins_server_factory->getJenkinsServerOfProject($project);
+        $project                   = $repository->getProject();
+        $jenkins_servers           = $this->jenkins_server_factory->getJenkinsServerOfProject($project);
         $nb_project_jenkins_server = count($jenkins_servers);
         if ($nb_project_jenkins_server > 0) {
             $params['additional_description'] = dngettext(
@@ -99,15 +99,15 @@ class GitWebhooksSettingsEnhancer
             );
         }
 
-        $url = '';
+        $url                        = '';
         $is_commit_reference_needed = true;
-        $dar = $this->dao->searchById($repository->getId());
-        $has_already_a_jenkins = count($dar) > 0;
+        $dar                        = $this->dao->searchById($repository->getId());
+        $has_already_a_jenkins      = count($dar) > 0;
         $params['create_buttons'][] = new GitWebhooksSettingsCreateJenkinsButtonPresenter($has_already_a_jenkins);
 
         if (count($dar)) {
-            $row = $dar->getRow();
-            $url = $row['jenkins_server_url'];
+            $row                        = $dar->getRow();
+            $url                        = $row['jenkins_server_url'];
             $is_commit_reference_needed = $row['is_commit_reference_needed'];
 
             $triggered_jobs = $this->log_factory->getJobByRepository($repository);
@@ -125,7 +125,7 @@ class GitWebhooksSettingsEnhancer
             );
         }
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR . '/templates');
+        $renderer                         = TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR . '/templates');
         $params['additional_html_bits'][] = $renderer->renderToString(
             'modals',
             new ModalsPresenter($repository, $url, $is_commit_reference_needed, $this->csrf)

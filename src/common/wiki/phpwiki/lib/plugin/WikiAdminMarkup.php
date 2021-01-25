@@ -67,12 +67,12 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
 
     public function chmarkupPages(&$dbi, &$request, $pages, $newmarkup)
     {
-        $ul = HTML::ul();
+        $ul    = HTML::ul();
         $count = 0;
         foreach ($pages as $name) {
-            $page = $dbi->getPage($name);
+            $page    = $dbi->getPage($name);
             $current = $page->getCurrentRevision();
-            $markup = $current->get('markup');
+            $markup  = $current->get('markup');
             if (! $markup or $newmarkup != $markup) {
                 if (! mayAccessPage('change', $name)) {
                     $ul->pushContent(HTML::li(fmt(
@@ -80,11 +80,11 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
                         WikiLink($name)
                     )));
                 } else {
-                    $version = $current->getVersion();
-                    $meta = $current->_data;
+                    $version        = $current->getVersion();
+                    $meta           = $current->_data;
                     $meta['markup'] = $newmarkup;
                     // convert text?
-                    $text = $current->getPackedContent();
+                    $text            = $current->getPackedContent();
                     $meta['summary'] = sprintf(_("WikiAdminMarkup from %s to %s"), $markup, $newmarkup);
                     $page->save($text, $version + 1, $meta);
                     $current = $page->getCurrentRevision();
@@ -124,7 +124,7 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
             }
         }
 
-        $args = $this->getArgs($argstr, $request);
+        $args        = $this->getArgs($argstr, $request);
         $this->_args = $args;
         $this->preSelectS($args, $request);
 
@@ -137,7 +137,7 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
             $post_args['markup'] = $args['markup'];
         }
         $next_action = 'select';
-        $pages = [];
+        $pages       = [];
         if ($p && ! $request->isPost()) {
             $pages = $p;
         }

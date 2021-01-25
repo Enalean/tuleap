@@ -97,7 +97,7 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
             self::FIELD_DESCRIPTION
         );
 
-        $this->description = self::getCommonmarkContentWithReferences(
+        $this->description       = self::getCommonmarkContentWithReferences(
             $interpreter,
             $description_text_field,
             $artifact

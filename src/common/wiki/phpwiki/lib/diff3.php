@@ -13,7 +13,7 @@ class _Diff3_Block
 
     public function __construct($orig = false, $final1 = false, $final2 = false)
     {
-        $this->orig = $orig ? $orig : [];
+        $this->orig   = $orig ? $orig : [];
         $this->final1 = $final1 ? $final1 : [];
         $this->final2 = $final2 ? $final2 : [];
     }
@@ -47,7 +47,7 @@ class _Diff3_CopyBlock extends _Diff3_Block
 
     public function __construct($lines = false)
     {
-        $this->orig = $lines ? $lines : [];
+        $this->orig   = $lines ? $lines : [];
         $this->final1 = &$this->orig;
         $this->final2 = &$this->orig;
     }
@@ -124,9 +124,9 @@ class Diff3
 {
     public function __construct($orig, $final1, $final2)
     {
-        $eng = new _DiffEngine();
+        $eng                     = new _DiffEngine();
         $this->ConflictingBlocks = 0;  //Conflict counter
-        $this->blocks = $this->diff3(
+        $this->blocks            = $this->diff3(
             $eng->diff($orig, $final1),
             $eng->diff($orig, $final2)
         );
@@ -135,7 +135,7 @@ class Diff3
     private function diff3($edits1, $edits2)
     {
         $blocks = [];
-        $bb = new _Diff3_BlockBuilder();
+        $bb     = new _Diff3_BlockBuilder();
 
         $e1 = current($edits1);
         $e2 = current($edits2);
@@ -174,7 +174,7 @@ class Diff3
                 if ($e1 && $e2) {
                     if ($e1->orig && $e2->orig) {
                         $norig = min($e1->norig(), $e2->norig());
-                        $orig = array_splice($e1->orig, 0, $norig);
+                        $orig  = array_splice($e1->orig, 0, $norig);
                         array_splice($e2->orig, 0, $norig);
                         $bb->input($orig);
                     }

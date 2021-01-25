@@ -67,7 +67,7 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            $c = self::class;
+            $c              = self::class;
             self::$instance = new $c(new ServiceDao(), ProjectManager::instance());
         }
         return self::$instance;
@@ -97,7 +97,7 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         if (! isset($this->list_of_services_per_project[$project->getID()])) {
             $this->list_of_services_per_project[$project->getID()] = [];
-            $allowed_services_dar = $this->dao->searchByProjectIdAndShortNames(
+            $allowed_services_dar                                  = $this->dao->searchByProjectIdAndShortNames(
                 $project->getID(),
                 array_merge(
                     $this->list_of_core_services,
@@ -107,7 +107,7 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
             foreach ($allowed_services_dar as $row) {
                 try {
-                    $service = $this->instantiateFromRow($project, $row);
+                    $service                                                                   = $this->instantiateFromRow($project, $row);
                     $this->list_of_services_per_project[$project->getID()][$row['service_id']] = $service;
                 } catch (ServiceNotAllowedForProjectException $e) {
                     //don't display the row for this servce

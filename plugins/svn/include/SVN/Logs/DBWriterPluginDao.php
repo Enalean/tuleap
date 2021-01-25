@@ -27,7 +27,7 @@ class DBWriterPluginDao extends \DataAccessObject
     public function searchRepositoriesForProjects(array $project_names)
     {
         $project_names = $this->da->quoteSmartImplode(',', $project_names);
-        $sql = "SELECT id as repository_id, unix_group_name as project_name, name as repository_name
+        $sql           = "SELECT id as repository_id, unix_group_name as project_name, name as repository_name
           FROM groups g
           INNER JOIN plugin_svn_repositories r ON (r.project_id = g.group_id)
           WHERE
@@ -51,7 +51,7 @@ class DBWriterPluginDao extends \DataAccessObject
         $day           = $this->da->escapeInt($day);
         $nb_read       = $this->da->escapeInt($nb_read);
         $nb_write      = $this->da->escapeInt($nb_write);
-        $sql = "UPDATE plugin_svn_full_history
+        $sql           = "UPDATE plugin_svn_full_history
                 SET svn_write_operations = svn_write_operations + $nb_write,
                   svn_read_operations = svn_read_operations + $nb_read
                 WHERE repository_id = $repository_id
@@ -67,7 +67,7 @@ class DBWriterPluginDao extends \DataAccessObject
         $day           = $this->da->escapeInt($day);
         $nb_read       = $this->da->escapeInt($nb_read);
         $nb_write      = $this->da->escapeInt($nb_write);
-        $sql = "INSERT INTO plugin_svn_full_history (repository_id, user_id, day, svn_write_operations, svn_read_operations)
+        $sql           = "INSERT INTO plugin_svn_full_history (repository_id, user_id, day, svn_write_operations, svn_read_operations)
                VALUES ($repository_id, $user_id, $day, $nb_write, $nb_read)";
         return $this->update($sql);
     }

@@ -55,7 +55,7 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
 
         $this->form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
         $this->background_color_dao = Mockery::mock(BackgroundColorDao::class);
-        $this->builder = new BackgroundColorPresenterBuilder(
+        $this->builder              = new BackgroundColorPresenterBuilder(
             $this->form_element_factory,
             $this->background_color_dao
         );

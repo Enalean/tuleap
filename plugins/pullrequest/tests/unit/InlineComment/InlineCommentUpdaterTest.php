@@ -50,7 +50,7 @@ class WhenSourceChangesTest extends TestCase
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
 
-        $changes_diff  = new FileUniDiff();
+        $changes_diff = new FileUniDiff();
         $changes_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, '');
 
         $dest_diff     = new FileNullDiff();
@@ -75,7 +75,7 @@ class WhenSourceChangesTest extends TestCase
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
 
-        $changes_diff  = new FileUniDiff();
+        $changes_diff = new FileUniDiff();
         $changes_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, '');
 
         $dest_diff     = new FileNullDiff();
@@ -100,11 +100,11 @@ class WhenSourceChangesTest extends TestCase
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
 
-        $changes_diff  = new FileUniDiff();
+        $changes_diff = new FileUniDiff();
         $changes_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, 'une ligne');
         $changes_diff->addLine(UniDiffLine::ADDED, 2, null, 1, 'une ligne avec changement');
 
-        $dest_diff     = new FileNullDiff();
+        $dest_diff = new FileNullDiff();
 
         $targeted_diff = new FileUniDiff();
         $targeted_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne avec changement');
@@ -128,12 +128,12 @@ class WhenSourceChangesTest extends TestCase
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
 
-        $changes_diff  = new FileUniDiff();
+        $changes_diff = new FileUniDiff();
         $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
         $changes_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
         $changes_diff->addLine(UniDiffLine::KEPT, 3, 1, 3, 'une ligne');
 
-        $dest_diff     = new FileNullDiff();
+        $dest_diff = new FileNullDiff();
 
         $targeted_diff = new FileUniDiff();
         $targeted_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
@@ -160,12 +160,12 @@ class WhenSourceChangesTest extends TestCase
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
 
-        $changes_diff  = new FileUniDiff();
+        $changes_diff = new FileUniDiff();
         $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
         $changes_diff->addLine(UniDiffLine::ADDED, 2, null, 2, 'header 2');
         $changes_diff->addLine(UniDiffLine::KEPT, 3, 1, 3, 'une ligne');
 
-        $dest_diff     = new FileNullDiff();
+        $dest_diff = new FileNullDiff();
 
         $targeted_diff = new FileUniDiff();
         $targeted_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
@@ -192,10 +192,10 @@ class WhenSourceChangesTest extends TestCase
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, 'une ligne');
 
-        $changes_diff  = new FileUniDiff();
+        $changes_diff = new FileUniDiff();
         $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'une ligne');
 
-        $dest_diff     = new FileNullDiff();
+        $dest_diff = new FileNullDiff();
 
         $targeted_diff = new FileUniDiff();
         $targeted_diff->addLine(UniDiffLine::KEPT, 1, 1, 1, 'une ligne');
@@ -219,10 +219,10 @@ class WhenSourceChangesTest extends TestCase
         $original_diff = new FileUniDiff();
         $original_diff->addLine(UniDiffLine::REMOVED, 1, 1, null, 'une ligne');
 
-        $changes_diff  = new FileUniDiff();
+        $changes_diff = new FileUniDiff();
         $changes_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');
 
-        $dest_diff     = new FileNullDiff();
+        $dest_diff = new FileNullDiff();
 
         $targeted_diff = new FileUniDiff();
         $targeted_diff->addLine(UniDiffLine::ADDED, 1, null, 1, 'header 1');

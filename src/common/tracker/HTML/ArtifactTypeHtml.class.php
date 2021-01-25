@@ -49,7 +49,7 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
     {
         global $Language;
         $group_id = $this->Group->getID();
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp       = Codendi_HTMLPurifier::instance();
 
         \Tuleap\Project\ServiceInstrumentation::increment('tv3');
 
@@ -58,8 +58,8 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         $GLOBALS['HTML']->includeCalendarScripts();
 
         //required by new site_project_header
-        $params['group'] = $group_id;
-        $params['toptab'] = 'tracker';
+        $params['group']   = $group_id;
+        $params['toptab']  = 'tracker';
         $params['tabtext'] = $this->getName();
 
         site_project_header($params);
@@ -109,8 +109,8 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         $GLOBALS['HTML']->includeCalendarScripts();
 
         //required by new site_project_header
-        $params['group'] = $group_id;
-        $params['toptab'] = 'tracker';
+        $params['group']   = $group_id;
+        $params['toptab']  = 'tracker';
         $params['tabtext'] = $this->getName();
 
         site_project_header($params);
@@ -146,8 +146,8 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         $group_id = $this->Group->getID();
 
         //required by new site_project_header
-        $params['group'] = $group_id;
-        $params['toptab'] = 'tracker';
+        $params['group']   = $group_id;
+        $params['toptab']  = 'tracker';
         $params['tabtext'] = $this->getName();
 
         site_project_header($params);
@@ -194,7 +194,7 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
             echo '<H3>' . $Language->getText('tracker_include_type', 'manage') . '</H3>';
             echo $Language->getText('tracker_include_type', 'admin_or_del') . '<p>';
 
-            $title_arr = [];
+            $title_arr   = [];
             $title_arr[] = $Language->getText('tracker_include_report', 'id');
             $title_arr[] = $Language->getText('tracker_import_admin', 'tracker');
             $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
@@ -322,12 +322,12 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
          */
     protected function _displayAdminMenu($items) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
         foreach ($items as $item) {
             if (isset($item['name'])) {
                 $html .= '<H3>';
-                $name =  $hp->purify($item['name'], CODENDI_PURIFIER_CONVERT_HTML);
+                $name  =  $hp->purify($item['name'], CODENDI_PURIFIER_CONVERT_HTML);
                 if (isset($item['link'])) {
                     $html .= '<a href="' . $item['link'] . '">';
                     $html .= $name;
@@ -372,7 +372,7 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         $group_first_value = ($group_first ? 1 : 0);
         $group_id          = (int) $this->getGroupID();
         $atid              = (int) $this->getID();
-        $html .= <<<EOS
+        $html             .= <<<EOS
                 <script type="text/javascript">
                 <!--
                 function changeFirstPartId(wanted) {
@@ -407,7 +407,7 @@ EOS;
         }
         if ($group_first) {
             //We reorganize the associative array
-            $tablo = $ugroups_permissions;
+            $tablo               = $ugroups_permissions;
             $ugroups_permissions = [];
             foreach ($tablo as $key_field => $value_field) {
                 foreach ($value_field['ugroups'] as $key_ugroup => $value_ugroup) {
@@ -479,7 +479,7 @@ EOS;
             $html .= html_build_list_table_top($header);
 
             //body
-            $i = 0;
+            $i                   = 0;
             $a_star_is_displayed = false;
 
             //The select box for the ugroups or fields (depending $group_first)
@@ -494,7 +494,7 @@ EOS;
                 if ($part_permissions['values']['id'] === $selected_id) {
                     $first_part    = $part_permissions['values'];
                     $related_parts = $part_permissions['related_parts'];
-                    $html .= $attributes_for_selected;
+                    $html         .= $attributes_for_selected;
                 }
                 $html .= " >";
                 $html .= $part_permissions['values']['name'];
@@ -503,14 +503,14 @@ EOS;
                         isset($part_permissions['tracker_permissions'])
                         && count($part_permissions['tracker_permissions']) === 0
                     ) {
-                        $html .= " *";
+                        $html               .= " *";
                         $a_star_is_displayed = true;
                     }
                 }
                 $html .= "</option>";
             }
-            $html .= "</select>";
-            $html .= "</td>";
+            $html    .= "</select>";
+            $html    .= "</td>";
             $is_first = true;
 
             //The permissions for the current item (field or ugroup, depending $group_id)
@@ -527,11 +527,11 @@ EOS;
                 }
                 $html .= '<td>';
 
-                $name = "<a href='" . $url_action_without_group_first . "&selected_id=" . (int) $second_part['id'] . "&group_first=" . ($group_first ? 0 : 1) . "'>";
+                $name  = "<a href='" . $url_action_without_group_first . "&selected_id=" . (int) $second_part['id'] . "&group_first=" . ($group_first ? 0 : 1) . "'>";
                 $name .=  $hp->purify($second_part['name'], $group_first ? CODENDI_PURIFIER_DISABLED : CODENDI_PURIFIER_BASIC);
                 $name .= "</a>";
                 if (! $group_first && isset($ugroup_permissions['tracker_permissions']) && count($ugroup_permissions['tracker_permissions']) === 0) {
-                    $name = "<span >" . $name . " *</span>"; //TODO css
+                    $name                = "<span >" . $name . " *</span>"; //TODO css
                     $a_star_is_displayed = true;
                 }
                 $html .= $name;
@@ -659,10 +659,10 @@ EOS;
             $html .= '</td>';
             $html .= "<td>";
 
-            $html .= "<select name='permissions_" . $ugroup['id'] . "' >";
+            $html                   .= "<select name='permissions_" . $ugroup['id'] . "' >";
             $attributes_for_selected = "selected='selected' style='background:#EEE;'"; //TODO: put style in stylesheet
-            $html .= "<option value='100' " . (count($permissions) == 0 ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_NONE') . "</option>";
-            $html .= "<option value='0' " . (isset($permissions[$full_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_ACCESS_FULL') . "</option>";
+            $html                   .= "<option value='100' " . (count($permissions) == 0 ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_NONE') . "</option>";
+            $html                   .= "<option value='0' " . (isset($permissions[$full_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_ACCESS_FULL') . "</option>";
 
             //We don't show specific access permissions for anonymous users and registered
             if ($ugroup['id'] != $GLOBALS['UGROUP_ANONYMOUS'] && $ugroup['id'] != $GLOBALS['UGROUP_REGISTERED']) {
@@ -700,7 +700,7 @@ EOS;
     {
         global $Language;
 
-        $out = '<FONT size="-1"><SELECT name="user_name[' . $i . ']">';
+        $out  = '<FONT size="-1"><SELECT name="user_name[' . $i . ']">';
         $out .= '<OPTION value="0"' . (($perm_level == 0) ? " selected" : "") . '>' . $Language->getText('global', 'none');
         $out .= '<OPTION value="1"' . (($perm_level == 1) ? " selected" : "") . '>' . $Language->getText('project_admin_userperms', 'tech_only');
         $out .= '<OPTION value="2"' . (($perm_level == 2) ? " selected" : "") . '>' . $Language->getText('project_admin_userperms', 'tech&admin');
@@ -720,10 +720,10 @@ EOS;
         global $Language;
 
         $result = $this->getUsersPerm($this->getID());
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
 
         if ($rows > 0) {
-            $title_arr = [];
+            $title_arr   = [];
             $title_arr[] = $Language->getText('tracker_include_type', 'user');
             $title_arr[] = $Language->getText('tracker_include_type', 'perm');
             $title_arr[] = $Language->getText('tracker_include_canned', 'delete');
@@ -731,8 +731,8 @@ EOS;
             echo html_build_list_table_top($title_arr);
 
             for ($i = 0; $i < $rows; $i++) {
-                $user_id = db_result($result, $i, 'user_id');
-                $user_name = db_result($result, $i, 'user_name');
+                $user_id    = db_result($result, $i, 'user_id');
+                $user_name  = db_result($result, $i, 'user_name');
                 $perm_level =  db_result($result, $i, 'perm_level');
 
                 echo '<TR class="' . util_get_alt_row_color($i) . '">' .
@@ -843,8 +843,8 @@ EOS;
 
 
         // Show all the fields currently available in the system
-        $i = 0;
-        $title_arr = [];
+        $i           = 0;
+        $title_arr   = [];
         $title_arr[] = $Language->getText('tracker_include_report', 'field_label');
         $title_arr[] = $Language->getText('tracker_include_type', 'type');
         $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
@@ -856,11 +856,11 @@ EOS;
         echo html_build_list_table_top($title_arr);
 
         // Build HTML ouput for  Used fields
-        $iu = 0;
-        $fieldsets_with_used_fields = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
+        $iu                           = 0;
+        $fieldsets_with_used_fields   = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
         $fieldsets_with_unused_fields = $art_fieldset_fact->getAllFieldSetsContainingUnusedFields();
 
-        $html = "";
+        $html        = "";
         $tracker_url = '?group_id=' . (int) $this->Group->getID() . '&atid=' . (int) $this->getID();
 
         foreach ($fieldsets_with_used_fields as $fieldset) {
@@ -868,7 +868,7 @@ EOS;
             // separation between fieldsets
             $html .= '<tr class="fieldset_separator"><td colspan="7">' . $hp->purify(SimpleSanitizer::unsanitize($fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) . '</td></tr>';
             foreach ($used_fields_in_fieldset as $field) {
-                $rank = ($field->getPlace() ? $field->getPlace() : "-");
+                $rank   = ($field->getPlace() ? $field->getPlace() : "-");
                 $status = ($field->getUseIt() ? $Language->getText('tracker_include_type', 'used') : $Language->getText('tracker_include_type', 'unused'));
 
                 $html .= '<TR class="' . util_get_alt_row_color($iu) . '">';
@@ -905,7 +905,7 @@ EOS;
             // separation between fieldsets
             $html .= '<tr class="fieldset_separator"><td colspan="7">' . $hp->purify(SimpleSanitizer::unsanitize($fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) . '</td></tr>';
             foreach ($unused_fields_in_fieldset as $field) {
-                $rank = ($field->getPlace() ? $field->getPlace() : "-");
+                $rank   = ($field->getPlace() ? $field->getPlace() : "-");
                 $status = ($field->getUseIt() ? $Language->getText('tracker_include_type', 'used') : $Language->getText('tracker_include_type', 'unused'));
 
                 $html .= '<TR class="' . util_get_alt_row_color($iu) . '">';
@@ -1127,7 +1127,7 @@ EOS;
         $fieldset_id = false
     ) {
         global $art_field_fact,$Language;
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $field = $art_field_fact->getFieldFromId($field_id);
 
         $af = new ArtifactField();
@@ -1330,8 +1330,8 @@ EOS;
 
 
         // Show all the fields currently available in the system
-        $i = 0;
-        $title_arr = [];
+        $i           = 0;
+        $title_arr   = [];
         $title_arr[] = $Language->getText('tracker_include_report', 'field_label');
         $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
         $title_arr[] = $Language->getText('tracker_include_type', 'fieldset');
@@ -1342,7 +1342,7 @@ EOS;
         $iu = 0;
         //$fields = $art_field_fact->getAllUsedFields();
         $fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
-        $html = "";
+        $html      = "";
         foreach ($fieldsets as $fieldset) {
             $html .= '<tr class="fieldset_separator"><td colspan="3">' . $hp->purify(SimpleSanitizer::unsanitize($fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) . '</td></tr>';
 
@@ -1420,25 +1420,25 @@ EOS;
         }
         echo '<option value="artifact_submitters"' . $selected . '>' . $Language->getText('tracker_include_type', 'submitters') . '</option>';
 
-        $selected = "";
+        $selected   = "";
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_MEMBERS']);
-        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
+        $name       = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
         if ($value_function && in_array("group_members", $value_function)) {
             $selected = " selected";
         }
         echo '<option value="group_members"' . $selected . '>' . $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
 
-        $selected = "";
+        $selected   = "";
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_ADMIN']);
-        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
+        $name       = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
         if ($value_function && in_array("group_admins", $value_function)) {
             $selected = " selected";
         }
         echo '<option value="group_admins"' . $selected . '>' . $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
 
-        $selected = "";
+        $selected   = "";
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_TRACKER_ADMIN']);
-        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
+        $name       = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
         if ($value_function && in_array("tracker_admins", $value_function)) {
             $selected = " selected";
         }
@@ -1446,9 +1446,9 @@ EOS;
 
         /** @psalm-suppress DeprecatedFunction */
         $ugroup_res = ugroup_db_get_existing_ugroups(100);
-        $rows = db_numrows($ugroup_res);
+        $rows       = db_numrows($ugroup_res);
         for ($i = 0; $i < $rows; $i++) {
-            $ug = db_result($ugroup_res, $i, 'ugroup_id');
+            $ug       = db_result($ugroup_res, $i, 'ugroup_id');
             $selected = "";
             if (
                 ($ug == $GLOBALS['UGROUP_NONE']) ||
@@ -1470,11 +1470,11 @@ EOS;
         if ($this->Group->getID() != 100) {
             /** @psalm-suppress DeprecatedFunction */
             $ugroup_res = ugroup_db_get_existing_ugroups($this->Group->getID());
-            $rows = db_numrows($ugroup_res);
+            $rows       = db_numrows($ugroup_res);
             for ($i = 0; $i < $rows; $i++) {
                 $selected = "";
-                $ug = db_result($ugroup_res, $i, 'ugroup_id');
-                $ugr = "ugroup_" . $ug;
+                $ug       = db_result($ugroup_res, $i, 'ugroup_id');
+                $ugr      = "ugroup_" . $ug;
                 if ($value_function && in_array($ugr, $value_function)) {
                     $selected = " selected";
                 }
@@ -1647,7 +1647,7 @@ EOS;
         }
 
         $values = $field->getFieldValues($this->getID(), ['A', 'P']);
-        $rows = db_numrows($values);
+        $rows   = db_numrows($values);
 
         if (! $values || ($rows == 0)) {
             echo "\n<H3>" . $Language->getText('tracker_include_type', 'no_values') . "</H3>";
@@ -1659,7 +1659,7 @@ EOS;
 
 
         // Show all the fields currently available in the system
-        $i = 0;
+        $i         = 0;
         $title_arr = [];
         if ($field->getName() == "severity") {
             $title_arr[] = $Language->getText('tracker_include_report', 'id');
@@ -1673,11 +1673,11 @@ EOS;
         echo html_build_list_table_top($title_arr);
 
         // Build HTML ouput for  Used fields
-        $iu = 0;
+        $iu   = 0;
         $html = "";
 
         while ($row = db_fetch_array($values)) {
-            $rank = $row['order_id'] ? $row['order_id'] : "-";
+            $rank   = $row['order_id'] ? $row['order_id'] : "-";
             $status = $this->getLabelValueStatus($row['status']);
 
             $html .= '<TR class="' .
@@ -1722,12 +1722,12 @@ EOS;
         }
 
         // Build HTML ouput for Unused fields
-        $iu = 0;
+        $iu     = 0;
         $values = $field->getFieldValues($this->getID(), ['H']);
-        $html = "";
+        $html   = "";
 
         while ($row = db_fetch_array($values)) {
-            $rank = $row['order_id'] ? $row['order_id'] : "-";
+            $rank   = $row['order_id'] ? $row['order_id'] : "-";
             $status = $this->getLabelValueStatus($row['status']);
 
             $html .= '<TR class="' .
@@ -1786,7 +1786,7 @@ EOS;
         for ($i = 0; $i < $this->num_roles; $i++) {
             $role_label = $this->arr_roles[$i]['role_label'];
             for ($j = 0; $j < $this->num_events; $j++) {
-                $event_label = $this->arr_events[$j]['event_label'];
+                $event_label                          = $this->arr_events[$j]['event_label'];
                 $arr_notif[$role_label][$event_label] = 1;
                 //echo "[$role_label][$event_label] = 1<br>";
             }
@@ -1797,13 +1797,13 @@ EOS;
             $arr_notif[$arr['role_label']][$arr['event_label']] = $arr['notify'];
         }
 
-        $group = $this->getGroup();
+        $group             = $this->getGroup();
         $group_artifact_id = $this->getID();
-        $group_id = $group->getGroupId();
+        $group_id          = $group->getGroupId();
 
         echo '<H2>' . $Language->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . (int) $group_id . '&atid=' . $group_artifact_id . '">' . $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</a>\' - ' . $Language->getText('tracker_include_type', 'mail_notif') . '</h2>';
         // Build Wachees UI
-        $res = $this->getWatchees($user_id);
+        $res          = $this->getWatchees($user_id);
         $arr_watchees = [];
         while ($row_watchee = db_fetch_array($res)) {
             $arr_watchees[] = user_getname($row_watchee['watchee_id']);
@@ -1832,7 +1832,7 @@ EOS;
         echo '<h3><a name="GlobalEmailNotification"></a>' . $Language->getText('tracker_include_type', 'global_mail_notif') . ' ' .
         '</h3>';
 
-        $agnf = new ArtifactGlobalNotificationFactory();
+        $agnf   = new ArtifactGlobalNotificationFactory();
         $notifs = $agnf->getGlobalNotificationsForTracker($this->getID());
         if ($this->userIsAdmin()) {
             echo '<p>' . $Language->getText('tracker_include_type', 'admin_note') . '</p>';
@@ -1923,12 +1923,12 @@ EOS;
 		<p><INPUT TYPE="TEXT" NAME="watchees" VALUE="' . $hp->purify($watchees, CODENDI_PURIFIER_CONVERT_HTML) . '" SIZE="55" MAXLENGTH="255"><br></p>
 		';
 
-            $res = $this->getWatchers($user_id);
+            $res          = $this->getWatchers($user_id);
             $arr_watchers = [];
-            $watchers = "";
+            $watchers     = "";
             while ($row_watcher = db_fetch_array($res)) {
                 $watcher_name = user_getname($row_watcher['user_id']);
-                $watchers .= '<a href="/users/' . urlencode($watcher_name) . '">' . $hp->purify($watcher_name, CODENDI_PURIFIER_CONVERT_HTML) . '</a>,';
+                $watchers    .= '<a href="/users/' . urlencode($watcher_name) . '">' . $hp->purify($watcher_name, CODENDI_PURIFIER_CONVERT_HTML) . '</a>,';
             }
             $watchers = substr($watchers, 0, -1); // remove extra comma at the end
 
@@ -1974,13 +1974,13 @@ EOS;
         echo "</tr>\n";
 
         for ($j = 0; $j < $this->num_events; $j++) {
-            $event_id = $this->arr_events[$j]['event_id'];
+            $event_id    = $this->arr_events[$j]['event_id'];
             $event_label = $this->arr_events[$j]['event_label'];
             echo "<tr class=\"" . util_get_alt_row_color($j) . "\">\n";
             for ($i = 0; $i < $this->num_roles; $i++) {
-                $role_id = $this->arr_roles[$i]['role_id'];
+                $role_id    = $this->arr_roles[$i]['role_id'];
                 $role_label = $this->arr_roles[$i]['role_label'];
-                $cbox_name = 'cb_' . $role_id . '_' . $event_id;
+                $cbox_name  = 'cb_' . $role_id . '_' . $event_id;
                 //echo "<BR>$role_label $role_id $event_label $event_id ".$arr_notif['$role_label']['$event_label'];
                 if (
                     (($event_label == 'NEW_ARTIFACT') && ($role_label != 'ASSIGNEE') && ($role_label != 'SUBMITTER')) ||
@@ -2033,7 +2033,7 @@ EOS;
     public function displayDefaultValueForm($field_id, $default_value)
     {
         global $ath,$art_field_fact,$Language;
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $field = $art_field_fact->getFieldFromId($field_id);
         if (! $field) {
             return;
@@ -2103,7 +2103,7 @@ EOS;
 	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="' . (int) $this->getID() . '">';
 
         //new stuff by MLS
-        $field_value = $field->getDefaultValue();
+        $field_value      = $field->getDefaultValue();
         $predefinedValues = $field->getFieldPredefinedValues($this->getID());
 
         if ($field->isSelectBox()) {
@@ -2169,18 +2169,18 @@ EOS;
     {
         global $art_field_fact,$Language;
         $sys_max_size_attachment = ForgeConfig::get('sys_max_size_attachment', ArtifactFileHtml::MAX_SIZE_DEFAULT);
-        $hp = Codendi_HTMLPurifier::instance();
-        $fields_per_line = 2;
-        $max_size = 40;
+        $hp                      = Codendi_HTMLPurifier::instance();
+        $fields_per_line         = 2;
+        $max_size                = 40;
 
-        $group = $this->getGroup();
-        $atid = $this->getID();
+        $group    = $this->getGroup();
+        $atid     = $this->getID();
         $group_id = $group->getGroupId();
 
         if ($query) {
             $from = $where = '';
             $art_report_html->getQueryElements($query, $advsrch, $from, $where);
-            $sql = "select distinct a.artifact_id " . $from . " " . $where;
+            $sql    = "select distinct a.artifact_id " . $from . " " . $where;
             $result = db_query($sql);
             while ($row = db_fetch_array($result)) {
                 $mass_change_ids[] = $row['artifact_id'];
@@ -2222,8 +2222,8 @@ EOS;
             <TABLE cellpadding="0">';
 
         //first special case for submitted_by
-        $field = $art_field_fact->getFieldFromName('submitted_by');
-        $field_html = new ArtifactFieldHtml($field);
+        $field       = $art_field_fact->getFieldFromName('submitted_by');
+        $field_html  = new ArtifactFieldHtml($field);
         $field_value = $Language->getText('global', 'unchanged');
 
             [$sz,] = explode("/", $field->getDisplaySize());
@@ -2243,7 +2243,7 @@ EOS;
 
             // Now display the variable part of the field list (depend on the project)
 
-        $i = 0;
+        $i                 = 0;
             $result_fields = $art_field_fact->getAllUsedFields();
         foreach ($result_fields as $field) {
                 $field_html = new ArtifactFieldHtml($field);
@@ -2392,16 +2392,16 @@ EOS;
             echo '<label for="change_permissions">' . $GLOBALS['Language']->getText('tracker_include_type', 'mass_change_permissions') . '</label>';
             echo '<blockquote>';
             $checked = '';
-            $html = '';
-            $html .= '<p>';
-            $html .= '<label class="checkbox" for="use_artifact_permissions">';
-            $html .= '<input type="hidden" name="use_artifact_permissions_name" value="0" />';
-            $html .= '<input type="checkbox" name="use_artifact_permissions_name" id="use_artifact_permissions" value="1" ' . $checked . ' />';
-            $html .= '' . $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') . '</label>';
-            $html .= '</p>';
-            $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', 0, $group_id);
-            $html .= '<script type="text/javascript">';
-            $html .= "
+            $html    = '';
+            $html   .= '<p>';
+            $html   .= '<label class="checkbox" for="use_artifact_permissions">';
+            $html   .= '<input type="hidden" name="use_artifact_permissions_name" value="0" />';
+            $html   .= '<input type="checkbox" name="use_artifact_permissions_name" id="use_artifact_permissions" value="1" ' . $checked . ' />';
+            $html   .= '' . $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') . '</label>';
+            $html   .= '</p>';
+            $html   .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', 0, $group_id);
+            $html   .= '<script type="text/javascript">';
+            $html   .= "
                     document.observe('dom:loaded', function() {
                         //init
                         if ( ! $('use_artifact_permissions')|| ! $('use_artifact_permissions').checked ) {
@@ -2464,26 +2464,26 @@ EOS;
         $result = $this->getCC($change_ids);
 
         if (db_numrows($result) > 0) {
-            $title_arr = [];
+            $title_arr               = [];
                         $title_arr[] = $Language->getText('tracker_include_artifact', 'cc_address');
                         $title_arr[] = $Language->getText('tracker_include_type', 'occurrence');
                         $title_arr[] = $Language->getText('tracker_include_canned', 'delete');
-                        $out .= html_build_list_table_top($title_arr);
+                        $out        .= html_build_list_table_top($title_arr);
 
                         $fmt = "\n" . '<TR class="%s"><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
 
 
             // Loop through the cc and format them
-            $email = "";
-            $row_color = 0;
-            $i = 0;
+            $email      = "";
+            $row_color  = 0;
+            $i          = 0;
             $delete_ids = '';
             while ($row = db_fetch_array($result)) {
                 if ($row['email'] != $email) {
                     if ($email != "") {
                         $html_delete = '
 		<INPUT TYPE="CHECKBOX" NAME="delete_cc[]" VALUE="' . $hp->purify($delete_ids, CODENDI_PURIFIER_CONVERT_HTML) . '">';
-                        $out .= sprintf(
+                        $out        .= sprintf(
                             $fmt,
                             util_get_alt_row_color($row_color),
                             $href_cc ?? '',
@@ -2493,7 +2493,7 @@ EOS;
                         $row_color++;
                         $i = 0;
                     }
-                    $email = $row['email'];
+                    $email        = $row['email'];
                     $res_username = user_get_result_set_from_unix($email);
                     if ($res_username && (db_numrows($res_username) == 1)) {
                             $href_cc = util_user_link($email);
@@ -2508,14 +2508,14 @@ EOS;
             }
             $html_delete = '
 		<INPUT TYPE="CHECKBOX" NAME="delete_cc[]" VALUE="' . $delete_ids . '">';
-            $out .= sprintf(
+            $out        .= sprintf(
                 $fmt,
                 util_get_alt_row_color($row_color),
                 $href_cc ?? '',
                 $i,
                 $html_delete
             );
-            $out .= "</TABLE>";
+            $out        .= "</TABLE>";
         }
 
                 return($out);
@@ -2530,12 +2530,12 @@ EOS;
     public function showAttachedFiles($change_ids)
     {
         global $Language;
-        $hp = Codendi_HTMLPurifier::instance();
-        $out = "";
+        $hp     = Codendi_HTMLPurifier::instance();
+        $out    = "";
         $result = $this->getAttachedFiles($change_ids);
 
         if (db_numrows($result) > 0) {
-            $title_arr = [];
+            $title_arr           = [];
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'name');
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'size_kb');
                     $title_arr[] = $Language->getText('tracker_include_type', 'occurrence');
@@ -2546,17 +2546,17 @@ EOS;
             $fmt = '<TR class="%s"><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
 
             // Loop throuh the attached files and format them
-            $i = 0;
-            $rowcolor = 0;
-            $filename = "";
-            $filesize = -1;
+            $i          = 0;
+            $rowcolor   = 0;
+            $filename   = "";
+            $filesize   = -1;
             $delete_ids = '';
             while ($row = db_fetch_array($result)) {
                 if ($row['filename'] != $filename || $row['filesize'] != $filesize) {
                     if ($filename != "") {
                         $html_delete = '
 	<INPUT TYPE="CHECKBOX" NAME="delete_attached[]" VALUE="' . $hp->purify($delete_ids, CODENDI_PURIFIER_CONVERT_HTML) . '">';
-                        $out .= sprintf(
+                        $out        .= sprintf(
                             $fmt,
                             util_get_alt_row_color($rowcolor),
                             $hp->purify($filename, CODENDI_PURIFIER_CONVERT_HTML),
@@ -2564,12 +2564,12 @@ EOS;
                             $i,
                             $html_delete
                         );
-                        $i = 0;
+                        $i           = 0;
                         $rowcolor++;
                     }
                     $delete_ids = $row['id'];
-                    $filename = $row['filename'];
-                    $filesize = $row['filesize'];
+                    $filename   = $row['filename'];
+                    $filesize   = $row['filesize'];
                 } else {
                     $delete_ids .= "," . $row['id'];
                 }
@@ -2577,7 +2577,7 @@ EOS;
             }
             $html_delete = '
 	<INPUT TYPE="CHECKBOX" NAME="delete_attached[]" VALUE="' . $hp->purify($delete_ids, CODENDI_PURIFIER_CONVERT_HTML) . '">';
-            $out .= sprintf(
+            $out        .= sprintf(
                 $fmt,
                 util_get_alt_row_color($rowcolor),
                 $hp->purify($filename, CODENDI_PURIFIER_CONVERT_HTML),
@@ -2585,7 +2585,7 @@ EOS;
                 $i,
                 $html_delete
             );
-            $out .= "</TABLE>";
+            $out        .= "</TABLE>";
         }
         return $out;
     }
@@ -2599,36 +2599,36 @@ EOS;
     public function showDependencies($change_ids)
     {
         global $Language;
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp     = Codendi_HTMLPurifier::instance();
         $result = $this->getDependencies($change_ids);
-        $rows = db_numrows($result);
-        $out = '';
+        $rows   = db_numrows($result);
+        $out    = '';
         // Nobody in the dependencies list -> return now
         if ($rows > 0) {
-            $title_arr = [];
+            $title_arr   = [];
             $title_arr[] = $Language->getText('tracker_include_artifact', 'artifact');
             $title_arr[] = $Language->getText('tracker_include_artifact', 'summary');
             $title_arr[] = $Language->getText('tracker_import_admin', 'tracker');
             $title_arr[] = $Language->getText('tracker_include_artifact', 'group');
             $title_arr[] = $Language->getText('tracker_include_type', 'occurrence');
             $title_arr[] = $Language->getText('tracker_include_canned', 'delete');
-            $out .= html_build_list_table_top($title_arr);
+            $out        .= html_build_list_table_top($title_arr);
 
             $fmt = "\n" . '<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>' .
                         '<td align="center">%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
 
             // Loop through the denpendencies and format them
-            $occ = 0;
+            $occ                      = 0;
             $dependent_on_artifact_id = -1;
-            $row_color = 0;
-            $depend_ids = '';
-            $group_id   = 0;
+            $row_color                = 0;
+            $depend_ids               = '';
+            $group_id                 = 0;
             for ($i = 0; $i < $rows; $i++) {
                 if ($dependent_on_artifact_id != db_result($result, $i, 'is_dependent_on_artifact_id')) {
                     if ($dependent_on_artifact_id != -1) {
                         $html_delete = '
 	<INPUT TYPE="CHECKBOX" NAME="delete_depend[]" VALUE="' . $hp->purify($depend_ids, CODENDI_PURIFIER_CONVERT_HTML) . '">';
-                        $out .= sprintf(
+                        $out        .= sprintf(
                             $fmt,
                             util_get_alt_row_color($row_color),
                             '<a href="/tracker/?func=gotoid&group_id=' . (int) $group_id . '&aid=' . (int) $dependent_on_artifact_id . '">' .  $hp->purify($dependent_on_artifact_id, CODENDI_PURIFIER_CONVERT_HTML)  . "</a>",
@@ -2654,7 +2654,7 @@ EOS;
             } // for
             $html_delete = '
 	<INPUT TYPE="CHECKBOX" NAME="delete_depend[]" VALUE="' . $depend_ids . '">';
-            $out .= sprintf(
+            $out        .= sprintf(
                 $fmt,
                 util_get_alt_row_color($row_color),
                 '<a href="/tracker/?func=gotoid&group_id=' . (int) $group_id . '&aid=' . (int) $dependent_on_artifact_id . '">' .  $hp->purify($dependent_on_artifact_id, CODENDI_PURIFIER_CONVERT_HTML)  . "</a>",
@@ -2689,7 +2689,7 @@ EOS;
     public function displayFieldSetCreateForm($func = "fieldset_create", $fieldset_id = false, $fieldset_name = false, $description = false, $rank = false)
     {
         global $art_fieldset_fact,$Language;
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp       = Codendi_HTMLPurifier::instance();
         $fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
 
         $afs = new ArtifactFieldSet();
@@ -2760,8 +2760,8 @@ EOS;
 
 
         // Show all the fields currently available in the system
-        $i = 0;
-        $title_arr = [];
+        $i           = 0;
+        $title_arr   = [];
         $title_arr[] = $Language->getText('tracker_include_type', 'fieldset_name');
         $title_arr[] = $Language->getText('tracker_include_artifact', 'desc');
         $title_arr[] = $Language->getText('tracker_include_type', 'fields_inside');
@@ -2771,23 +2771,23 @@ EOS;
         echo html_build_list_table_top($title_arr);
 
         // Build HTML ouput for  Used fields
-        $iu = 0;
+        $iu        = 0;
         $fieldsets = $art_fieldset_fact->getAllFieldSets();
-        $html = "";
+        $html      = "";
 
         foreach ($fieldsets as $fieldset) {
             $rank = ($fieldset->getRank()) ? $fieldset->getRank() : "-";
 
-            $html .= '<tr class="' . util_get_alt_row_color($iu) . '">';
-            $html .= '<td><a href="?group_id=' . (int) $this->Group->getID() . "&atid=" . (int) $this->getID() . '&func=display_fieldset_update&fieldset_id=' . (int) $fieldset->getID() . '">' . $hp->purify(SimpleSanitizer::unsanitize($fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) . '</A></td>';
-            $html .= '<td>' . $hp->purify(SimpleSanitizer::unsanitize($fieldset->getDescriptionText()), CODENDI_PURIFIER_BASIC, $this->getGroupId()) . '</td>';
-            $html .= '<td>';
+            $html            .= '<tr class="' . util_get_alt_row_color($iu) . '">';
+            $html            .= '<td><a href="?group_id=' . (int) $this->Group->getID() . "&atid=" . (int) $this->getID() . '&func=display_fieldset_update&fieldset_id=' . (int) $fieldset->getID() . '">' . $hp->purify(SimpleSanitizer::unsanitize($fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) . '</A></td>';
+            $html            .= '<td>' . $hp->purify(SimpleSanitizer::unsanitize($fieldset->getDescriptionText()), CODENDI_PURIFIER_BASIC, $this->getGroupId()) . '</td>';
+            $html            .= '<td>';
             $fields_contained = $fieldset->getArtifactFields();
             if (count($fields_contained) > 0) {
                 $html .= '<ul>';
                 foreach ($fields_contained as $field_contained) {
                     $link_field_usage = '/tracker/admin/?func=display_field_update&group_id=' . (int) $this->Group->getID() . '&atid=' . (int) $this->getID() . '&field_id=' . (int) $field_contained->getID();
-                    $html .= '<li>';
+                    $html            .= '<li>';
                     if ($field_contained->getUseIt()) {
                         $html .= '<strong><a href="' . $link_field_usage . '">' . $hp->purify(SimpleSanitizer::unsanitize($field_contained->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) . '</a></strong>';
                     } else {

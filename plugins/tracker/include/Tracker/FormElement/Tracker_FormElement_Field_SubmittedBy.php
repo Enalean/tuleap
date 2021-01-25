@@ -49,8 +49,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     {
         //Only filter query if criteria is valuated
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
-            $a = 'A_' . $this->id;
-            $b = 'B_' . $this->id;
+            $a             = 'A_' . $this->id;
+            $b             = 'B_' . $this->id;
             $ids_to_search = array_values(array_intersect(
                 array_values($criteria_value),
                 array_merge([100], array_keys($this->getBind()->getAllValues()))
@@ -157,7 +157,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     {
         //force the bind
         $form_element_data['bind-type'] = 'users';
-        $form_element_data['bind'] = [
+        $form_element_data['bind']      = [
             'value_function' => [
                 'artifact_submitters',
             ]
@@ -409,7 +409,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     public function getFieldData($value)
     {
         $um = $this->getUserManager();
-        $u = $um->getUserByUserName($value);
+        $u  = $um->getUserByUserName($value);
         if ($u) {
             return $u->getId();
         } else {

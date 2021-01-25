@@ -327,7 +327,7 @@ class Admin_PermissionDelegationController
 
         if ($id) {
             try {
-                $user_group  = $this->user_group_factory->getForgeUserGroupById($id);
+                $user_group = $this->user_group_factory->getForgeUserGroupById($id);
 
                 foreach ($permission_ids as $permission_id) {
                     $permission = $this->user_group_permissions_factory->getForgePermissionById($permission_id);
@@ -350,7 +350,7 @@ class Admin_PermissionDelegationController
 
         if ($id) {
             try {
-                $user_group  = $this->user_group_factory->getForgeUserGroupById($id);
+                $user_group = $this->user_group_factory->getForgeUserGroupById($id);
 
                 foreach ($permission_ids as $permission_id) {
                     $permission = $this->user_group_permissions_factory->getForgePermissionById($permission_id);

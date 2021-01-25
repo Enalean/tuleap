@@ -48,8 +48,8 @@ class ListActivitiesController implements DispatchableWithRequest, DispatchableW
 
     public function __construct(\TemplateRendererFactory $renderer_factory, ActivityLoggerDao $activity_logger_dao, User_ForgeUserGroupPermissionsManager $forge_user_group_permissions_manager)
     {
-        $this->renderer            = $renderer_factory->getRenderer(__DIR__ . '/templates');
-        $this->activity_logger_dao = $activity_logger_dao;
+        $this->renderer                             = $renderer_factory->getRenderer(__DIR__ . '/templates');
+        $this->activity_logger_dao                  = $activity_logger_dao;
         $this->forge_user_group_permissions_manager = $forge_user_group_permissions_manager;
     }
 

@@ -30,7 +30,7 @@ class Docman_View_Admin extends Docman_View_Extra
     }
     public function _content($params)
     {
-        $html = '';
+        $html  = '';
         $html .= '<h3><a href="' . DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => 'admin_permissions']) . '">' . dgettext('tuleap-docman', 'Manage Permissions') . '</a></h3>';
         $html .= '<p>' . dgettext('tuleap-docman', 'Define who can administrate the document manager.') . '</p>';
 

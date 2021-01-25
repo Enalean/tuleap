@@ -65,7 +65,7 @@ class TrackerReportRendererTableTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->tracker_report_renderer_table  = \Mockery::mock(Tracker_Report_Renderer_Table::class)->makePartial();
+        $this->tracker_report_renderer_table = \Mockery::mock(Tracker_Report_Renderer_Table::class)->makePartial();
 
 
         $this->matchings_ids = [

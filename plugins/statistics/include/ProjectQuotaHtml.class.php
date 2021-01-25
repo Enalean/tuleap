@@ -108,13 +108,13 @@ class ProjectQuotaHtml
      */
     private function validateOrderByFilter(HTTPRequest $request)
     {
-        $validSort = new Valid_String('sort');
-        $sortBy    = null;
+        $validSort    = new Valid_String('sort');
+        $sortBy       = null;
         $validRequest = [];
         if ($request->valid($validSort)) {
-            $sortBy  = $request->get('sort');
+            $sortBy               = $request->get('sort');
             $validRequest['sort'] = $sortBy;
-            $validOrderBy = new Valid_String('order');
+            $validOrderBy         = new Valid_String('order');
             if ($request->valid($validOrderBy)) {
                 if ($request->get('order') == "ASC" || $request->get('order') == "DESC") {
                     $orderBy = $request->get('order');
@@ -129,15 +129,15 @@ class ProjectQuotaHtml
 
     public function getListOfProjectQuotaPresenters(HTTPRequest $request)
     {
-        $quotas       = [];
-        $count        = 25;
-        $offset       = $this->validateOffset($request);
-        $filter       = $this->validateProjectFilter($request);
-        $orderParams  = $this->validateOrderByFilter($request);
-        $sortBy       = $orderParams['sort'];
-        $orderBy      = $orderParams['order'];
-        $list         = $this->getListOfProjectsIds($filter ?? '');
-        $purifier     = Codendi_HTMLPurifier::instance();
+        $quotas      = [];
+        $count       = 25;
+        $offset      = $this->validateOffset($request);
+        $filter      = $this->validateProjectFilter($request);
+        $orderParams = $this->validateOrderByFilter($request);
+        $sortBy      = $orderParams['sort'];
+        $orderBy     = $orderParams['order'];
+        $list        = $this->getListOfProjectsIds($filter ?? '');
+        $purifier    = Codendi_HTMLPurifier::instance();
 
         $customQuotas = $this->dao->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
         $total_size   = $this->dao->foundRows();
@@ -302,8 +302,8 @@ class ProjectQuotaHtml
 
     private function enhanceWithModalValues(array $exceeding_projects): array
     {
-        $new_values['csrf_token']  = new CSRFSynchronizerToken('');
-        $enhanced_projects         = [];
+        $new_values['csrf_token'] = new CSRFSynchronizerToken('');
+        $enhanced_projects        = [];
 
         foreach ($exceeding_projects as $project) {
             $new_values['subject_content'] = sprintf(dgettext('tuleap-statistics', '[Disk quota] [Warning] Project %1$s is exceeding allowed disk quota'), $project['project_name']);

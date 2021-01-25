@@ -60,9 +60,9 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
         $project_private->shouldReceive('isPublic')->andReturns(false);
         $project_private->shouldReceive('isActive')->andReturns(true);
 
-        $this->tracker  = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $tracker1       = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $tracker2 = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $tracker1      = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $tracker2      = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $tf = \Mockery::spy(\TrackerFactory::class);
         $this->tracker->shouldReceive('getTrackerFactory')->andReturns($tf);
@@ -209,7 +209,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
         UserManager::setInstance($user_manager);
 
         $this->initial_global_ugroups = $GLOBALS['UGROUPS'];
-        $GLOBALS['UGROUPS'] = [
+        $GLOBALS['UGROUPS']           = [
             'UGROUP_1' => 1,
             'UGROUP_2' => 2,
             'UGROUP_3' => 3,
@@ -228,7 +228,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
     public function testHasUnknownAidCreateMode(): void
     {
         $header = ['summary', 'details'];
-        $lines = [
+        $lines  = [
                     ['summary 1', 'details 1'],
                     ['summary 2', 'details 2'],
                     ['summary 3', 'details 3'],
@@ -241,7 +241,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
     public function testHasUnknownAidUpdateModeNoError(): void
     {
         $header = ['aid', 'summary', 'details'];
-        $lines = [
+        $lines  = [
                     ['1','summary 1', 'details 1'],
                     ['2','summary 2', 'details 2'],
                     ['3','summary 3', 'details 3'],
@@ -271,7 +271,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
     public function testHasUnknownAidUpdateModeError(): void
     {
         $header = ['aid', 'summary', 'details'];
-        $lines = [
+        $lines  = [
                     ['1','summary 1', 'details 1'],
                     ['2','summary 2', 'details 2'],
                     ['3','summary 3', 'details 3'],
@@ -302,7 +302,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
 
     public function testIsValidCSVWrongSeparator(): void
     {
-        $lines = [
+        $lines     = [
                     ['aid;summary;details'],
                     ['1;summary 1;details 1'],
                     ['2;summary 2;details 2'],
@@ -320,7 +320,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
 
     public function testIsValidCSVGoodSeparator(): void
     {
-        $lines = [
+        $lines     = [
                     ['aid', 'summary', 'details'],
                     ['1', 'summary 1', 'details 1'],
                     ['2', 'summary 2', 'details 2'],
@@ -373,7 +373,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
     private function setUpTrackerWorkflowTest(): void
     {
         $this->tracker_id = 12;
-        $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->tracker    = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->tracker->setId($this->tracker_id);
 
         $this->workflow_factory = \Mockery::spy(\WorkflowFactory::class);
@@ -413,7 +413,7 @@ final class TrackerTest extends \PHPUnit\Framework\TestCase
     private function setUpGetParentTest(): void
     {
         $this->tracker_factory = \Mockery::spy(\TrackerFactory::class);
-        $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->tracker         = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->tracker->shouldReceive('getTrackerFactory')->andReturns($this->tracker_factory);
     }
 

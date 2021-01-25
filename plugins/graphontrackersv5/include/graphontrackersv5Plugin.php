@@ -254,10 +254,10 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
      */
     public function isAllowed($group_id)
     {
-        $request = HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
         if (! isset($this->allowedForProject[$group_id])) {
-            $pM = PluginManager::instance();
+            $pM                                 = PluginManager::instance();
             $this->allowedForProject[$group_id] = $pM->isPluginAllowedForProject($this, $group_id);
         }
         return $this->allowedForProject[$group_id];
@@ -277,22 +277,22 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
 
     public function graphontrackersv5_load_chart_factories($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['factories']['pie'] = [
+        $params['factories']['pie']             = [
             'chart_type'      => 'pie',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Pie',
             'title'           => dgettext('tuleap-graphontrackersv5', 'Pie'),
         ];
-        $params['factories']['bar'] = [
+        $params['factories']['bar']             = [
             'chart_type'      => 'bar',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Bar',
             'title'           => dgettext('tuleap-graphontrackersv5', 'Bar'),
         ];
-        $params['factories']['gantt'] = [
+        $params['factories']['gantt']           = [
             'chart_type'      => 'gantt',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Gantt',
             'title'           => dgettext('tuleap-graphontrackersv5', 'Gantt'),
         ];
-        $params['factories']['burndown'] = [
+        $params['factories']['burndown']        = [
             //The type of the chart
             'chart_type'      => 'burndown',
             //The classname of the chart. The class must be already declared.

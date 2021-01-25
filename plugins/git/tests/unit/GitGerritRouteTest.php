@@ -32,8 +32,8 @@ class GitGerritRouteTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    protected $repo_id = 999;
-    protected $group_id = 101;
+    protected $repo_id           = 999;
+    protected $group_id          = 101;
     protected $project_unix_name = 'gitproject';
     protected $repository;
 
@@ -63,10 +63,10 @@ class GitGerritRouteTest extends TestCase
         $this->git_permissions_manager->shouldReceive('userIsGitAdmin')->with($this->admin, $project)->andReturns(true);
 
         $_SERVER['REQUEST_URI'] = '/plugins/tests/';
-        $GLOBALS['Response'] = Mockery::spy(\Response::class);
+        $GLOBALS['Response']    = Mockery::spy(\Response::class);
 
         $system_event_manager = Mockery::mock(SystemEventManager::class);
-        $sys_dao = Mockery::mock(SystemEventDao::class);
+        $sys_dao              = Mockery::mock(SystemEventDao::class);
         $sys_dao->shouldReceive('searchWithParam')->andReturn([]);
         $system_event_manager->shouldReceive('_getDao')->andReturn($sys_dao);
 

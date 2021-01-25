@@ -38,7 +38,7 @@ class LinkedListTest extends TestCase
         $l->add($c);
         $l->add($b);
         $l->add($a);
-        $it = $l->iterator();
+        $it      = $l->iterator();
         $element = $it->current();
         $this->assertSame($element, $c);
         $it->next();
@@ -51,8 +51,8 @@ class LinkedListTest extends TestCase
 
     public function testEqualsDifferentOrder(): void
     {
-        $a = new stdClass();
-        $b = new stdClass();
+        $a  = new stdClass();
+        $b  = new stdClass();
         $l1 = new LinkedList();
         $l1->add($a);
         $l1->add($b);

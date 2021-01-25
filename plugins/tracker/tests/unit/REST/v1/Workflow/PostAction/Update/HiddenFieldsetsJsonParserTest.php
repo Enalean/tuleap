@@ -69,7 +69,7 @@ class HiddenFieldsetsJsonParserTest extends TestCase
                 "fieldset_ids" => [43],
             ]
         );
-        $expected_action = new HiddenFieldsetsValue([43]);
+        $expected_action        = new HiddenFieldsetsValue([43]);
         $this->assertEquals($expected_action, $hidden_fieldsets_value);
     }
 
@@ -85,7 +85,7 @@ class HiddenFieldsetsJsonParserTest extends TestCase
                 "fieldset_ids" => [43],
             ]
         );
-        $expected_action = new HiddenFieldsetsValue([43]);
+        $expected_action        = new HiddenFieldsetsValue([43]);
         $this->assertEquals($expected_action, $hidden_fieldsets_value);
     }
 

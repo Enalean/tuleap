@@ -42,7 +42,7 @@ class UserTokenCreatorTest extends TestCase
         $repository = \Mockery::mock(\GitRepository::class);
         $repository->shouldReceive('getId')->andReturns(1);
         $expiration = new \DateTimeImmutable('2018-11-30', new \DateTimeZone('UTC'));
-        $user = \Mockery::mock(\PFUser::class);
+        $user       = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(102);
         $operation = \Mockery::mock(UserOperation::class);
         $operation->shouldReceive('getName')->andReturns('operation_name');

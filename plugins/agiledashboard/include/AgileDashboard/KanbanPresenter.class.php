@@ -92,7 +92,7 @@ class KanbanPresenter
             )
         );
 
-        $widget_factory    = new WidgetFactory(
+        $widget_factory          = new WidgetFactory(
             UserManager::instance(),
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
             EventManager::instance()
@@ -104,9 +104,9 @@ class KanbanPresenter
             ),
             new ProjectDashboardRetriever(new ProjectDashboardDao($widget_dao))
         );
-        $project_manager        = ProjectManager::instance();
-        $tracker_report_factory = Tracker_ReportFactory::instance();
-        $tracker_report_builder = new TrackerReportBuilder(
+        $project_manager         = ProjectManager::instance();
+        $tracker_report_factory  = Tracker_ReportFactory::instance();
+        $tracker_report_builder  = new TrackerReportBuilder(
             $tracker_report_factory,
             $kanban,
             new TrackerReportDao()

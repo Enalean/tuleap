@@ -50,9 +50,9 @@ class Git_URL_GitSmartHTTPTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->project_manager     = \Mockery::spy(\ProjectManager::class);
-        $this->repository_factory  = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->gpig_project        = \Mockery::spy(\Project::class);
+        $this->project_manager    = \Mockery::spy(\ProjectManager::class);
+        $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->gpig_project       = \Mockery::spy(\Project::class);
         $this->gpig_project->shouldReceive('getId')->andReturns($this->gpig_project_id);
         $this->gpig_project->shouldReceive('getUnixName')->andReturns($this->gpig_project_name);
 

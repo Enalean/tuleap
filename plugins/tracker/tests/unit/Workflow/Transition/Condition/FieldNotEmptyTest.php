@@ -27,7 +27,7 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
     use \Tuleap\GlobalResponseMock;
 
     private $condition;
-    private $empty_data = '';
+    private $empty_data     = '';
     private $not_empty_data = 'coin';
     private $field;
     private $field_bis;
@@ -137,8 +137,8 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
     {
         $this->condition->addField($this->field);
         $artifact_without_changeset = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $fields_data = [];
-        $is_valid    = $this->condition->validate($fields_data, $artifact_without_changeset, '', $this->current_user);
+        $fields_data                = [];
+        $is_valid                   = $this->condition->validate($fields_data, $artifact_without_changeset, '', $this->current_user);
         $this->assertFalse($is_valid);
     }
 
@@ -158,7 +158,7 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
             123 => $this->not_empty_data,
             234 => $this->not_empty_data
         ];
-        $is_valid = $this->condition->validate($fields_data, $this->artifact, '', $this->current_user);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact, '', $this->current_user);
         $this->assertTrue($is_valid);
     }
 
@@ -170,7 +170,7 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
             123 => $this->not_empty_data,
             234 => $this->empty_data
         ];
-        $is_valid = $this->condition->validate($fields_data, $this->artifact, '', $this->current_user);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact, '', $this->current_user);
         $this->assertFalse($is_valid);
     }
 }

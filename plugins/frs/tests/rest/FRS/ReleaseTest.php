@@ -100,7 +100,7 @@ final class ReleaseTest extends RestBase
 
     private function assertGETRelease(Response $response): void
     {
-        $release  = $response->json();
+        $release = $response->json();
 
         $this->assertEquals($release['id'], 1);
         $this->assertEquals($release['name'], 'release1');

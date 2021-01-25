@@ -54,9 +54,9 @@ class ViewVCController implements DispatchableWithRequest
         if (! $request->valid($vRoot)) {
             exit_no_group();
         }
-        $root = $request->get('root');
+        $root            = $request->get('root');
         $project_manager = ProjectManager::instance();
-        $project = $project_manager->getProjectByUnixName($root);
+        $project         = $project_manager->getProjectByUnixName($root);
         if (! $project) {
             throw new NotFoundException();
         }

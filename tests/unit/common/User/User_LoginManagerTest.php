@@ -55,12 +55,12 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->event_manager     = new EventManager();
-        $this->user_manager      = \Mockery::spy(\UserManager::class);
-        $this->password_verifier = \Mockery::spy(\Tuleap\User\PasswordVerifier::class);
+        $this->event_manager               = new EventManager();
+        $this->user_manager                = \Mockery::spy(\UserManager::class);
+        $this->password_verifier           = \Mockery::spy(\Tuleap\User\PasswordVerifier::class);
         $this->password_expiration_checker = Mockery::spy(\User_PasswordExpirationChecker::class);
-        $this->password_handler = \Mockery::spy(\PasswordHandler::class);
-        $this->login_manager     = new User_LoginManager(
+        $this->password_handler            = \Mockery::spy(\PasswordHandler::class);
+        $this->login_manager               = new User_LoginManager(
             $this->event_manager,
             $this->user_manager,
             $this->password_verifier,
@@ -141,7 +141,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
     {
         $this->getCatchEventsPlugin();
         $exception_catched = false;
-        $user = $this->buildUser(PFUser::STATUS_ACTIVE);
+        $user              = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
         try {
             $this->login_manager->authenticate('john', new ConcealedString('wrong_password'));
@@ -172,7 +172,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
             public function afterLocalLogin(AfterLocalLogin $event): void
             {
                 $this->after_called = true;
-                $this->user = $event->user;
+                $this->user         = $event->user;
             }
 
             public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event): void

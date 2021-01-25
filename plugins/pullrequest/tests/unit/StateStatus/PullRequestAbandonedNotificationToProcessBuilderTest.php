@@ -66,11 +66,11 @@ final class PullRequestAbandonedNotificationToProcessBuilderTest extends TestCas
 
     protected function setUp(): void
     {
-        $this->user_manager              = \Mockery::mock(UserManager::class);
-        $this->pull_request_factory      = \Mockery::mock(Factory::class);
-        $this->owner_retriever           = \Mockery::mock(OwnerRetriever::class);
-        $this->user_helper               = \Mockery::mock(UserHelper::class);
-        $this->html_url_builder          = \Mockery::mock(HTMLURLBuilder::class);
+        $this->user_manager         = \Mockery::mock(UserManager::class);
+        $this->pull_request_factory = \Mockery::mock(Factory::class);
+        $this->owner_retriever      = \Mockery::mock(OwnerRetriever::class);
+        $this->user_helper          = \Mockery::mock(UserHelper::class);
+        $this->html_url_builder     = \Mockery::mock(HTMLURLBuilder::class);
 
         $this->builder = new PullRequestAbandonedNotificationToProcessBuilder(
             $this->user_manager,
@@ -84,11 +84,11 @@ final class PullRequestAbandonedNotificationToProcessBuilderTest extends TestCas
 
     public function testBuildAbandonNotificationFromPullRequestAbandonedEvent(): void
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);
         $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
-        $change_user   = $this->buildUser(102);
-        $owners        = [$change_user, $this->buildUser(104), $this->buildUser(105)];
+        $change_user = $this->buildUser(102);
+        $owners      = [$change_user, $this->buildUser(104), $this->buildUser(105)];
 
         $event = PullRequestAbandonedEvent::fromPullRequestAndUserAbandoningThePullRequest($pull_request, $change_user);
 
@@ -108,7 +108,7 @@ final class PullRequestAbandonedNotificationToProcessBuilderTest extends TestCas
 
     public function testNoNotificationIsBuiltWhenThePullRequestCanNoBeFound(): void
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(404);
         $change_user = $this->buildUser(102);
 
@@ -122,7 +122,7 @@ final class PullRequestAbandonedNotificationToProcessBuilderTest extends TestCas
 
     public function testNoNotificationIsBuiltWhenTheUserAbandoningThePullRequestCannotBeFound(): void
     {
-        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(13);
         $change_user = $this->buildUser(102);
 

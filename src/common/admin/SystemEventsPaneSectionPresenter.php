@@ -49,14 +49,14 @@ class HomepagePaneSectionPresenter
         $warning_count,
         $error_count
     ) {
-        $this->title                     = $title;
-        $this->name                      = $name;
-        $this->flag_type                 = $error_count ? self::FLAG_ERROR : ($warning_count ? self::FLAG_WARNING : self::FLAG_SUCCESS);
-        $this->new_count                 = $new_count;
-        $this->running_count             = $running_count;
-        $this->done_count                = $done_count;
-        $this->warning_count             = $warning_count;
-        $this->error_count               = $error_count;
+        $this->title         = $title;
+        $this->name          = $name;
+        $this->flag_type     = $error_count ? self::FLAG_ERROR : ($warning_count ? self::FLAG_WARNING : self::FLAG_SUCCESS);
+        $this->new_count     = $new_count;
+        $this->running_count = $running_count;
+        $this->done_count    = $done_count;
+        $this->warning_count = $warning_count;
+        $this->error_count   = $error_count;
 
         $this->has_new                   = $this->new_count > 0;
         $this->has_running               = $this->running_count > 0;
@@ -65,12 +65,12 @@ class HomepagePaneSectionPresenter
         $this->has_warning_or_error      = $this->has_warning || $this->has_error;
         $this->has_warning_without_error = $this->has_warning && ! $this->has_error;
 
-        $this->new_label_tooltip         = $GLOBALS['Language']->getText('admin_main', 'new_label_tooltip');
-        $this->running_label_tooltip     = $GLOBALS['Language']->getText('admin_main', 'running_label_tooltip');
-        $this->done_label_tooltip        = $GLOBALS['Language']->getText('admin_main', 'done_label_tooltip');
-        $this->warning_label_tooltip     = $GLOBALS['Language']->getText('admin_main', 'warning_label_tooltip');
-        $this->error_label_tooltip       = $GLOBALS['Language']->getText('admin_main', 'error_label_tooltip');
-        $this->warning_label             = $GLOBALS['Language']->getText('admin_main', 'warning_label');
-        $this->error_label               = $GLOBALS['Language']->getText('admin_main', 'error_label');
+        $this->new_label_tooltip     = $GLOBALS['Language']->getText('admin_main', 'new_label_tooltip');
+        $this->running_label_tooltip = $GLOBALS['Language']->getText('admin_main', 'running_label_tooltip');
+        $this->done_label_tooltip    = $GLOBALS['Language']->getText('admin_main', 'done_label_tooltip');
+        $this->warning_label_tooltip = $GLOBALS['Language']->getText('admin_main', 'warning_label_tooltip');
+        $this->error_label_tooltip   = $GLOBALS['Language']->getText('admin_main', 'error_label_tooltip');
+        $this->warning_label         = $GLOBALS['Language']->getText('admin_main', 'warning_label');
+        $this->error_label           = $GLOBALS['Language']->getText('admin_main', 'error_label');
     }
 }

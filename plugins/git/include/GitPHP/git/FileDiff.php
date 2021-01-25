@@ -220,7 +220,7 @@ class FileDiff
         }
 
         $this->fromHash = $fromHash;
-        $this->toHash = $toHash;
+        $this->toHash   = $toHash;
     }
 
     public function isBinaryFile()
@@ -259,14 +259,14 @@ class FileDiff
         if (preg_match('/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$/', $diffTreeLine, $regs)) {
             $this->diffInfoRead = true;
 
-            $this->fromMode = $regs[1];
-            $this->toMode = $regs[2];
-            $this->fromHash = $regs[3];
-            $this->toHash = $regs[4];
-            $this->status = $regs[5];
+            $this->fromMode   = $regs[1];
+            $this->toMode     = $regs[2];
+            $this->fromHash   = $regs[3];
+            $this->toHash     = $regs[4];
+            $this->status     = $regs[5];
             $this->similarity = ltrim($regs[6], '0');
-            $this->fromFile = strtok($regs[7], "\t");
-            $this->toFile = strtok("\t");
+            $this->fromFile   = strtok($regs[7], "\t");
+            $this->toFile     = strtok("\t");
             if ($this->toFile === false) {
                 /* no filename change */
                 $this->toFile = $this->fromFile;
@@ -635,13 +635,13 @@ class FileDiff
             $pid = posix_getpid();
 
             $fromTmpFile = null;
-            $toTmpFile = null;
+            $toTmpFile   = null;
 
             $fromName = null;
-            $toName = null;
+            $toName   = null;
 
             if ((empty($this->status)) || ($this->status == 'D') || ($this->status == 'M')) {
-                $fromBlob = $this->GetFromBlob();
+                $fromBlob    = $this->GetFromBlob();
                 $fromTmpFile = 'gitphp_' . $pid . '_from';
                 $tmpdir->AddFile($fromTmpFile, $fromBlob->GetData());
 
@@ -656,7 +656,7 @@ class FileDiff
             }
 
             if ((empty($this->status)) || ($this->status == 'A') || ($this->status == 'M')) {
-                $toBlob = $this->GetToBlob();
+                $toBlob    = $this->GetToBlob();
                 $toTmpFile = 'gitphp_' . $pid . '_to';
                 $tmpdir->AddFile($toTmpFile, $toBlob->GetData());
 
@@ -710,7 +710,7 @@ class FileDiff
         $exe = new GitExe($this->project);
 
         $fromBlob = $this->GetFromBlob();
-        $blob = $fromBlob->GetData(true);
+        $blob     = $fromBlob->GetData(true);
 
         $diffLines = '';
         if (function_exists('xdiff_string_diff')) {
@@ -726,7 +726,7 @@ class FileDiff
         unset($exe);
 
         // parse diffs
-        $diffs = [];
+        $diffs       = [];
         $currentDiff = false;
         foreach ($diffLines as $d) {
             if (strlen($d) == 0) {
@@ -741,8 +741,8 @@ class FileDiff
                         }
                         $diffs[] = $currentDiff;
                     }
-                    $comma = strpos($d, ",");
-                    $line = -intval(substr($d, 2, $comma - 2));
+                    $comma       = strpos($d, ",");
+                    $line        = -intval(substr($d, 2, $comma - 2));
                     $currentDiff = ["line" => $line,
                         "left" => [], "right" => []];
                     break;
@@ -759,7 +759,7 @@ class FileDiff
                 case ' ':
                     echo "should not happen!";
                     if ($currentDiff) {
-                        $currentDiff["left"][] = substr($d, 1);
+                        $currentDiff["left"][]  = substr($d, 1);
                         $currentDiff["right"][] = substr($d, 1);
                     }
                     break;
@@ -775,10 +775,10 @@ class FileDiff
 
         // iterate over diffs
         $output = [];
-        $idx = 0;
+        $idx    = 0;
         foreach ($diffs as $d) {
             while ($idx + 1 < $d['line']) {
-                $h = $blob[$idx];
+                $h        = $blob[$idx];
                 $output[] = ['', $h, $h];
                 $idx++;
             }
@@ -792,8 +792,8 @@ class FileDiff
             }
 
             for ($i = 0; $i < count($d['left']) || $i < count($d['right']); $i++) {
-                $left = $i < count($d['left']) ? $d['left'][$i] : false;
-                $right = $i < count($d['right']) ? $d['right'][$i] : false;
+                $left     = $i < count($d['left']) ? $d['left'][$i] : false;
+                $right    = $i < count($d['right']) ? $d['right'][$i] : false;
                 $output[] = [$mode, $left, $right];
             }
 
@@ -801,7 +801,7 @@ class FileDiff
         }
 
         while ($idx < count($blob)) {
-            $h = $blob[$idx];
+            $h        = $blob[$idx];
             $output[] = ['', $h, $h];
             $idx++;
         }
@@ -828,10 +828,10 @@ class FileDiff
         }
 
         $fromData = '';
-        $toData = '';
+        $toData   = '';
         $isBinary = false;
         $fromName = '/dev/null';
-        $toName = '/dev/null';
+        $toName   = '/dev/null';
         if (empty($this->status) || ($this->status == 'M') || ($this->status == 'D')) {
             $fromBlob = $this->GetFromBlob();
             $fromData = $fromBlob->GetData(false);
@@ -846,10 +846,10 @@ class FileDiff
             }
         }
         if (empty($this->status) || ($this->status == 'M') || ($this->status == 'A')) {
-            $toBlob = $this->GetToBlob();
-            $toData = $toBlob->GetData(false);
+            $toBlob   = $this->GetToBlob();
+            $toData   = $toBlob->GetData(false);
             $isBinary = $isBinary || BinaryDetector::isBinary($toData);
-            $toName = 'b/';
+            $toName   = 'b/';
             if (! empty($file)) {
                 $toName .= $file;
             } elseif (! empty($this->toFile)) {

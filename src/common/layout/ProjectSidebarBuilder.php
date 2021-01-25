@@ -195,7 +195,7 @@ class ProjectSidebarBuilder
                     $link
                 );
             }
-            $link = str_replace('$sys_default_domain', ForgeConfig::get('sys_default_domain'), $link);
+            $link                 = str_replace('$sys_default_domain', ForgeConfig::get('sys_default_domain'), $link);
             $sys_default_protocol = 'http';
             if (ForgeConfig::get('sys_https_host')) {
                 $sys_default_protocol = 'https';
@@ -215,7 +215,7 @@ class ProjectSidebarBuilder
 
     private function getLabel(\Service $service): string
     {
-        $label = '<span title="' . $this->purifier->purify($service->getInternationalizedDescription()) . '">';
+        $label  = '<span title="' . $this->purifier->purify($service->getInternationalizedDescription()) . '">';
         $label .= $this->purifier->purify($service->getInternationalizedName()) . '</span>';
 
         return $label;

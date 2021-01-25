@@ -25,8 +25,8 @@ final class Tracker_FormElement_Field_List_BindValueTest extends \PHPUnit\Framew
 
     public function testJSon(): void
     {
-        $id          = 123;
-        $label       = 'Reopen';
+        $id    = 123;
+        $label = 'Reopen';
         $value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $value->shouldReceive('getLabel')->andReturn($label);
         $value->shouldReceive('getId')->andReturn($id);

@@ -566,7 +566,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             Toggler::togglePreference($params['user'], $params['id']);
             $params['done'] = true;
         } elseif (strpos($params['id'], 'tracker_report_query_') === 0) {
-            $report_id = (int) substr($params['id'], strlen('tracker_report_query_'));
+            $report_id      = (int) substr($params['id'], strlen('tracker_report_query_'));
             $report_factory = Tracker_ReportFactory::instance();
             if (($report = $report_factory->getReportById($report_id, $params['user']->getid())) && $report->userCanUpdate($params['user'])) {
                 $report->toggleQueryDisplay();
@@ -708,7 +708,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 } elseif ($type == 'artifact') {
                     $ret = (string) $object_id;
                     if ($a  = Tracker_ArtifactFactory::instance()->getArtifactById($object_id)) {
-                        $ret = 'art #' . $a->getId();
+                        $ret       = 'art #' . $a->getId();
                         $semantics = $a->getTracker()
                                        ->getTrackerSemanticManager()
                                        ->getSemantics();
@@ -792,7 +792,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($params['artifact_id']);
         if ($artifact) {
-            $tracker = $artifact->getTracker();
+            $tracker            = $artifact->getTracker();
             $params['group_id'] = $tracker->getGroupId();
         }
     }
@@ -919,7 +919,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $project = $event->getProject();
         if ($project->usesService($this->getServiceShortname())) {
             $service = $project->getService($this->getServiceShortname());
-            $tf = TrackerFactory::instance();
+            $tf      = TrackerFactory::instance();
 
             // Get the artfact type list
             $trackers = $tf->getTrackersByGroupId($project->getGroupId());
@@ -934,7 +934,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     }
                 }
                 if ($service !== null && $entries) {
-                    $area = '';
+                    $area  = '';
                     $area .= '<a href="' . TRACKER_BASE_URL . '/?group_id=' . urlencode($project->getGroupId()) . '">';
                     $area .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($service->getIcon()) . '"></i>';
                     $area .= dgettext('tuleap-tracker', 'Trackers');
@@ -1015,7 +1015,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function codendi_daily_start($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $trackerManager = new TrackerManager();
-        $logger = BackendLogger::getDefaultLogger();
+        $logger         = BackendLogger::getDefaultLogger();
         $logger->debug("[TDR] Tuleap daily start event: launch date reminder");
 
         $this->getSystemEventManager()->createEvent(
@@ -1182,7 +1182,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function collect_errors_without_importing_xml_project($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker_xml_import = TrackerXmlImport::build($params['user_finder'], $params['logger']);
-        $params['errors'] = $tracker_xml_import->collectErrorsWithoutImporting(
+        $params['errors']   = $tracker_xml_import->collectErrorsWithoutImporting(
             $params['project'],
             $params['xml_content']
         );
@@ -1198,8 +1198,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $dao = $this->getArtifactDao();
 
-        $start_date      = strtotime($params['start_date']);
-        $end_date        = strtotime($params['end_date']);
+        $start_date = strtotime($params['start_date']);
+        $end_date   = strtotime($params['end_date']);
 
         $number_of_open_artifacts_between_two_dates   = $dao->searchSubmittedArtifactBetweenTwoDates($start_date, $end_date);
         $number_of_closed_artifacts_between_two_dates = $dao->searchClosedArtifactBetweenTwoDates($start_date, $end_date);
@@ -1308,8 +1308,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             new MailGatewayConfigDao()
         );
 
-        $src_dir  = ForgeConfig::get('codendi_dir');
-        $script   = $src_dir . '/plugins/tracker/bin/emailgateway-wrapper.sh';
+        $src_dir = ForgeConfig::get('codendi_dir');
+        $script  = $src_dir . '/plugins/tracker/bin/emailgateway-wrapper.sh';
 
         $command = "sudo -u codendiadm $script";
 
@@ -1772,8 +1772,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             return;
         }
 
-        $autocompleted_user_list                = $event->getUserList();
-        $autocompleted_user_id_list             = [];
+        $autocompleted_user_list    = $event->getUserList();
+        $autocompleted_user_id_list = [];
         foreach ($autocompleted_user_list as $autocompleted_user) {
             $autocompleted_user_id_list[] = $autocompleted_user['user_id'];
         }
@@ -2145,7 +2145,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory()
         );
-        $file_info_factory = new Tracker_FileInfoFactory(
+        $file_info_factory            = new Tracker_FileInfoFactory(
             new Tracker_FileInfoDao(),
             $form_element_factory,
             Tracker_ArtifactFactory::instance()

@@ -43,7 +43,7 @@ class referencealias_trackerPlugin extends Plugin //phpcs:ignore
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->dao = new Dao();
+        $this->dao                         = new Dao();
         $this->original_references_builder = new OriginalReferencesBuilder($this->dao);
         $this->setScope(self::SCOPE_SYSTEM);
         $this->addHook(Event::IMPORT_COMPAT_REF_XML, 'importCompatRefXML');

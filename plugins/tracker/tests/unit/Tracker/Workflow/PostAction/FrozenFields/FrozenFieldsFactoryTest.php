@@ -57,7 +57,7 @@ final class FrozenFieldsFactoryTest extends TestCase
 
     public function testLoadPostActionsReturnsASinglePostAction()
     {
-        $transition  = new \Transition(null, null, null, null);
+        $transition           = new \Transition(null, null, null, null);
         $expected_post_action = new FrozenFields($transition, 0, []);
         $this->frozen_fields_retriever->shouldReceive('getFrozenFields')->with($transition)->andReturn(
             $expected_post_action
@@ -71,7 +71,7 @@ final class FrozenFieldsFactoryTest extends TestCase
     {
         $this->frozen_fields_retriever->shouldReceive('getFrozenFields')->andThrow(new NoFrozenFieldsPostActionException());
 
-        $transition  = new \Transition(null, null, null, null);
+        $transition = new \Transition(null, null, null, null);
 
         $result = $this->frozen_fields_factory->loadPostActions($transition);
         $this->assertEquals([], $result);
@@ -85,7 +85,7 @@ final class FrozenFieldsFactoryTest extends TestCase
                 <field_id REF="F2"/>
             </postaction_frozen_fields>
 XML;
-        $xml = new SimpleXMLElement($xml_content);
+        $xml         = new SimpleXMLElement($xml_content);
 
         $int_field   = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
         $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
@@ -114,7 +114,7 @@ XML;
                 <field_id REF="F2"/>
             </postaction_frozen_fields>
 XML;
-        $xml = new SimpleXMLElement($xml_content);
+        $xml         = new SimpleXMLElement($xml_content);
 
         $int_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
         $int_field->shouldReceive('getId')->andReturn(0);

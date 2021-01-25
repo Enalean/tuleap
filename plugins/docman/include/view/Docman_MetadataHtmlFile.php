@@ -31,7 +31,7 @@ class Docman_MetadataHtmlFile extends \Docman_MetadataHtml
     }
     public function getField()
     {
-        $html = '<input type="file" name="file" />';
+        $html  = '<input type="file" name="file" />';
         $html .= '<br /><em>' . \sprintf(\dgettext('tuleap-docman', '(The maximum upload file size is %1$s MByte)'), \formatByteToMb((int) \ForgeConfig::get(\DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING))) . '</em>';
         return $html;
     }

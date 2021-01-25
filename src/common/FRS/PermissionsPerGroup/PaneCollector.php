@@ -52,7 +52,7 @@ class PaneCollector
         $service_presenter = $this->service_presenter_builder->getPanePresenter($project, $selected_ugroup);
         $package_presenter = $this->packages_pane_builder->getPanePresenter($project, $selected_ugroup);
 
-        $include_assets  = new IncludeAssets(
+        $include_assets = new IncludeAssets(
             __DIR__ . '/../../../www/assets/core',
             '/assets/core'
         );

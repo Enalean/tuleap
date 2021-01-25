@@ -143,7 +143,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
         $postaction_attributes = $xml->attributes();
-        $row = [
+        $row                   = [
             'id'      => 0,
             'job_url' => (string) $postaction_attributes['job_url'],
         ];

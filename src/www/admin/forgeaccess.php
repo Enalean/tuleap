@@ -41,5 +41,5 @@ $controller = new ForgeAccess_AdminController(
     $request,
     $GLOBALS['Response']
 );
-$router = new ForgeAccess_AdminRouter($controller, $request);
+$router     = new ForgeAccess_AdminRouter($controller, $request);
 $router->route();

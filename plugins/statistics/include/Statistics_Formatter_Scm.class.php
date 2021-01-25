@@ -124,7 +124,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
     {
         $result['project'][] = dgettext('tuleap-statistics', 'Top projects');
         $result['commits'][] = dgettext('tuleap-statistics', 'Top projects (number of commits)');
-        $commitsDar = $this->dao->commitsByProject($this->startDate, $this->endDate);
+        $commitsDar          = $this->dao->commitsByProject($this->startDate, $this->endDate);
         if ($commitsDar && ! $commitsDar->isError()) {
             foreach ($commitsDar as $row) {
                 if ($row) {
@@ -145,7 +145,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
     {
         $result['user'][]    = dgettext('tuleap-statistics', 'Top users');
         $result['commits'][] = dgettext('tuleap-statistics', 'Top users (number of commits)');
-        $commitsDar = $this->dao->commitsByUser($this->startDate, $this->endDate);
+        $commitsDar          = $this->dao->commitsByUser($this->startDate, $this->endDate);
         if ($commitsDar && ! $commitsDar->isError()) {
             foreach ($commitsDar as $row) {
                 if ($row) {
@@ -165,8 +165,8 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
     public function repositoriesWithCommit()
     {
         $repositories[] = dgettext('tuleap-statistics', 'Total number of repositories containing commits');
-        $count = 0;
-        $dar = $this->dao->repositoriesWithCommit($this->startDate, $this->endDate);
+        $count          = 0;
+        $dar            = $this->dao->repositoriesWithCommit($this->startDate, $this->endDate);
         if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             $row = $dar->getRow();
             if ($row) {

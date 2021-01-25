@@ -46,7 +46,7 @@ class ByGroupController implements DispatchableWithRequest
     public function __construct(\TrackerFactory $tracker_factory, \TemplateRenderer $renderer)
     {
         $this->tracker_factory = $tracker_factory;
-        $this->renderer = $renderer;
+        $this->renderer        = $renderer;
     }
 
     /**

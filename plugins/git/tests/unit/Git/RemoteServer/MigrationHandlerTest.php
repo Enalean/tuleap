@@ -132,7 +132,7 @@ class MigrationHandlerTest extends TestCase
     public function testItThrowsAnExceptionIfParentProjectIsNotActive(): void
     {
         $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
-        $project = \Mockery::spy(Project::class);
+        $project    = \Mockery::spy(Project::class);
         $this->project_manager->shouldReceive('getParentProject')->andReturns($project);
         $project->shouldReceive('isActive')->andReturns(false);
         $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
@@ -152,7 +152,7 @@ class MigrationHandlerTest extends TestCase
     public function testItMigratesRepositoryWhenParentIsActive(): void
     {
         $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
-        $project = \Mockery::spy(Project::class);
+        $project    = \Mockery::spy(Project::class);
         $this->project_manager->shouldReceive('getParentProject')->andReturns($project);
         $project->shouldReceive('isActive')->andReturns(true);
         $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));

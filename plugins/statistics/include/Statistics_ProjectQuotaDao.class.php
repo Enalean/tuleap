@@ -23,7 +23,7 @@
 class Statistics_ProjectQuotaDao extends DataAccessObject
 {
 
-    protected $tableName       = 'plugin_statistics_disk_quota_exception';
+    protected $tableName              = 'plugin_statistics_disk_quota_exception';
     public const GROUP_ID             = 'group_id'; //PK
     public const REQUESTER_ID         = 'requester_id';
     public const REQUEST_SIZE         = 'requested_size';
@@ -92,7 +92,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject
 
         if (isset($sort)) {
             $sortOrder = $sortOrder == 'DESC' ? 'DESC' : 'ASC';
-            $order = 'ORDER BY ';
+            $order     = 'ORDER BY ';
             switch ($sort) {
                 case 'quota':
                     $order .= self::REQUEST_SIZE . ' ' . $sortOrder;
@@ -123,7 +123,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject
     public function getProjectCustomQuota($groupId)
     {
         $groupId = $this->da->escapeInt($groupId);
-        $sql = "SELECT *
+        $sql     = "SELECT *
                 FROM " . $this->getTable() . "
                 WHERE " . self::GROUP_ID . " = " . $groupId;
         return $this->retrieve($sql);
@@ -132,7 +132,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject
     public function deleteCustomQuota($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);
-        $sql = "DELETE FROM " . $this->getTable() . "
+        $sql        = "DELETE FROM " . $this->getTable() . "
                 WHERE " . self::GROUP_ID . " = $project_id";
         return $this->update($sql);
     }

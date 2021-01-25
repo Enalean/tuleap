@@ -142,7 +142,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         if ($this->isAllowed($params['project']->getId()) && ! $params['project']->isError()) {
             $lists = [];
-            $dao = new MailingListDao();
+            $dao   = new MailingListDao();
             foreach ($dao->searchByProject($params['project']->getId()) as $row) {
                 $lists[] = [
                     'url'              => $this->getSearchUrl($params['project']->getId(), $row['group_list_id'], $params['words']),
@@ -168,8 +168,8 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $query = $params['query'];
 
         if ($query->getTypeOfSearch() == self::SEARCH_TYPE) {
-            $request  = HTTPRequest::instance();
-            $list     = (int) $request->get('list');
+            $request = HTTPRequest::instance();
+            $list    = (int) $request->get('list');
             util_return_to($this->getSearchUrl($query->getProject()->getId(), $list, $query->getWords()));
         }
     }

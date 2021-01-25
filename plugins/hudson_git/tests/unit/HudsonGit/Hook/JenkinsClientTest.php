@@ -54,7 +54,7 @@ final class JenkinsClientTest extends TestCase
             'url' => 'https://myinstance.example.com/plugins/git/project/myrepo.git',
             'sha1' => '8b2f3943e997d2faf4a55ed78e695bda64fad421',
         ];
-        $expected_url = 'https://jenkins.example.com/git/notifyCommit?' . http_build_query($expected_parameters);
+        $expected_url        = 'https://jenkins.example.com/git/notifyCommit?' . http_build_query($expected_parameters);
         $request_factory
             ->shouldReceive('createRequest')
             ->with('POST', $expected_url)
@@ -99,7 +99,7 @@ final class JenkinsClientTest extends TestCase
         $expected_parameters = [
             'url' => 'https://myinstance.example.com/plugins/git/project/myrepo.git',
         ];
-        $expected_url = 'https://jenkins.example.com/git/notifyCommit?' . http_build_query($expected_parameters);
+        $expected_url        = 'https://jenkins.example.com/git/notifyCommit?' . http_build_query($expected_parameters);
         $request_factory
             ->shouldReceive('createRequest')
             ->with('POST', $expected_url)

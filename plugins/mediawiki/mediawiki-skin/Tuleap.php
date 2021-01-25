@@ -25,9 +25,9 @@ class SkinTuleap extends SkinTemplate
     public const MEDIAWIKI_URL = '/\/plugins\/mediawiki\/wiki\/(.*)\/index.php\//';
 
     /** Using fusionforge. */
-    public $skinname = 'tuleap';
-    public $stylename = 'tuleap';
-    public $template = 'TuleapTemplate';
+    public $skinname       = 'tuleap';
+    public $stylename      = 'tuleap';
+    public $template       = 'TuleapTemplate';
     public $useHeadElement = true;
 
     public function setupTemplate($classname, $repository = false, $cache_dir = false)
@@ -39,11 +39,11 @@ class SkinTuleap extends SkinTemplate
             ($tc->project = $project =
                 group_get_object_by_name($GLOBALS['fusionforgeproject']))
         ) {
-                $tc->params['group'] = $GLOBALS['group_id'] =
+                $tc->params['group']  = $GLOBALS['group_id'] =
                     $project->getID();
                 $tc->params['toptab'] = 'plugin_mediawiki';
                 //$page_name = substr($_SERVER['REQUEST_URI'], (strpos($_SERVER['REQUEST_URI'], 'index.php/') + strlen('index.php/')), strlen($_SERVER['REQUEST_URI']));
-                $page_name = preg_replace(self::MEDIAWIKI_URL, '', $_SERVER['REQUEST_URI']);
+                $page_name           = preg_replace(self::MEDIAWIKI_URL, '', $_SERVER['REQUEST_URI']);
                 $tc->params['title'] = 'Mediawiki-' . $page_name;
         }
 
@@ -305,7 +305,7 @@ class TuleapTemplate extends BaseTemplate
     public function customBox($bar, $cont)
     {
         $portletAttribs = ['class' => 'generated-sidebar portlet', 'id' => Sanitizer::escapeId("p-$bar")];
-        $tooltip = Linker::titleAttrib("p-$bar");
+        $tooltip        = Linker::titleAttrib("p-$bar");
         if ($tooltip !== false) {
             $portletAttribs['title'] = $tooltip;
         }

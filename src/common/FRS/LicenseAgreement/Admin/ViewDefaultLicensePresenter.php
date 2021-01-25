@@ -50,9 +50,9 @@ class ViewDefaultLicensePresenter
 
     public function __construct(\Project $project)
     {
-        $this->organisation_name    = ForgeConfig::get('sys_org_name');
-        $this->exchange_policy_url  = ForgeConfig::get('sys_exchange_policy_url');
-        $this->contact_email        = ForgeConfig::get('sys_email_contact');
-        $this->list_url = ListLicenseAgreementsController::getUrl($project);
+        $this->organisation_name   = ForgeConfig::get('sys_org_name');
+        $this->exchange_policy_url = ForgeConfig::get('sys_exchange_policy_url');
+        $this->contact_email       = ForgeConfig::get('sys_email_contact');
+        $this->list_url            = ListLicenseAgreementsController::getUrl($project);
     }
 }

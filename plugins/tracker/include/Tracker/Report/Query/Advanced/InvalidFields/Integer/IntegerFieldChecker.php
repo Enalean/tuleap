@@ -45,7 +45,7 @@ class IntegerFieldChecker implements InvalidFieldChecker
         CollectionOfAlphaNumericValuesExtractor $values_extractor
     ) {
         $this->empty_string_checker = $empty_string_checker;
-        $this->values_extractor = $values_extractor;
+        $this->values_extractor     = $values_extractor;
     }
 
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)

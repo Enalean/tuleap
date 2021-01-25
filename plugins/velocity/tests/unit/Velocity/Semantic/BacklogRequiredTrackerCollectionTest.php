@@ -65,7 +65,7 @@ class BacklogRequiredTrackerCollectionTest extends TestCase
     {
         parent::setUp();
 
-        $this->formatter  = Mockery::mock(BacklogRequiredTrackerCollectionFormatter::class);
+        $this->formatter = Mockery::mock(BacklogRequiredTrackerCollectionFormatter::class);
 
         $language = Mockery::mock(\BaseLanguage::class);
         $language->shouldReceive('getLanguageFromAcceptLanguage');

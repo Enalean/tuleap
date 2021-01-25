@@ -29,7 +29,7 @@ final class FileExtensionFilterIteratorTest extends TestCase
 {
     public function testItGetsAllTheFiles(): void
     {
-        $iterator = $this->getRecurseDirectoryIterator([]);
+        $iterator       = $this->getRecurseDirectoryIterator([]);
         $filtered_files = $this->extractFilenames($iterator);
         $expected_files = [
             'dir1',

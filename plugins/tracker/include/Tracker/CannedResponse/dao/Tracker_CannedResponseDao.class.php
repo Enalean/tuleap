@@ -29,8 +29,8 @@ class Tracker_CannedResponseDao extends DataAccessObject
     public function searchById($tracker_id, $id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $id = $this->da->escapeInt($id);
-        $sql = "SELECT * 
+        $id         = $this->da->escapeInt($id);
+        $sql        = "SELECT * 
                 FROM $this->table_name
                 WHERE id = $id 
                   AND tracker_id = $tracker_id";
@@ -40,7 +40,7 @@ class Tracker_CannedResponseDao extends DataAccessObject
     public function searchByTrackerId($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT * 
+        $sql        = "SELECT * 
                 FROM $this->table_name
                 WHERE tracker_id = $tracker_id
                 ORDER BY title ASC";
@@ -52,17 +52,17 @@ class Tracker_CannedResponseDao extends DataAccessObject
         $tracker_id = $this->da->escapeInt($tracker_id);
         $title      = $this->da->quoteSmart($title);
         $body       = $this->da->quoteSmart($body);
-        $sql = "INSERT INTO $this->table_name (tracker_id, title, body)
+        $sql        = "INSERT INTO $this->table_name (tracker_id, title, body)
                 VALUES ($tracker_id, $title, $body)";
         return $this->updateAndGetLastId($sql);
     }
 
     public function save($canned)
     {
-        $id         = $this->da->escapeInt($canned->id);
-        $title      = $this->da->quoteSmart($canned->title);
-        $body       = $this->da->quoteSmart($canned->body);
-        $sql = "UPDATE $this->table_name 
+        $id    = $this->da->escapeInt($canned->id);
+        $title = $this->da->quoteSmart($canned->title);
+        $body  = $this->da->quoteSmart($canned->body);
+        $sql   = "UPDATE $this->table_name 
                 SET title      = $title, 
                     body       = $body
                 WHERE id = $id";
@@ -71,7 +71,7 @@ class Tracker_CannedResponseDao extends DataAccessObject
 
     public function delete($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name 
                 WHERE id = $id";
         return $this->update($sql);

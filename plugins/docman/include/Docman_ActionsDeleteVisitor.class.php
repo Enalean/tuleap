@@ -60,7 +60,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         if ($items->size()) {
             $it = $items->iterator();
             while ($it->valid()) {
-                $o = $it->current();
+                $o                = $it->current();
                 $params['parent'] = $item;
                 if (! $o->accept($this, $params)) {
                     $one_item_has_not_been_deleted = true;
@@ -184,7 +184,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         $version_factory = $this->_getVersionFactory();
         if ($versions = $version_factory->getAllVersionForItem($item)) {
             if (count($versions)) {
-                $um = UserManager::instance();
+                $um   = UserManager::instance();
                 $user = $um->getCurrentUser();
                 foreach ($versions as $version) {
                     $this->_deleteVersion($item, $version, $user);

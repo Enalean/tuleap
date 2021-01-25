@@ -59,10 +59,10 @@ class ExplorerController
         RepositoryBuilder $repository_builder,
         RepositoryCreator $repository_creator
     ) {
-        $this->repository_manager   = $repository_manager;
-        $this->permissions_manager  = $permissions_manager;
-        $this->repository_builder   = $repository_builder;
-        $this->repository_creator   = $repository_creator;
+        $this->repository_manager  = $repository_manager;
+        $this->permissions_manager = $permissions_manager;
+        $this->repository_builder  = $repository_builder;
+        $this->repository_creator  = $repository_creator;
     }
 
     public function index(ServiceSvn $service, HTTPRequest $request)

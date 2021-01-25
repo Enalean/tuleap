@@ -211,7 +211,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
         $timestamp = $value->getTimestamp();
         $value     = $timestamp ? $this->formatDateForDisplay($timestamp) : '';
-        $html .= $value;
+        $html     .= $value;
 
         return $html;
     }
@@ -335,7 +335,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      */
     protected function fetchAdminFormElement()
     {
-        $html = '';
+        $html  = '';
         $html .= '<div>' . $this->formatDateTime(time()) . '</div>';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= dgettext('tuleap-tracker', 'The field is automatically set to last artifact update date');
@@ -370,8 +370,8 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     public function getArtifactsByCriterias($date, $trackerId = null)
     {
         $artifacts = [];
-        $dao = new Tracker_Artifact_ChangesetDao();
-        $dar = $dao->getArtifactsByFieldAndLastUpdateDate($trackerId, $date);
+        $dao       = new Tracker_Artifact_ChangesetDao();
+        $dar       = $dao->getArtifactsByFieldAndLastUpdateDate($trackerId, $date);
         if ($dar && ! $dar->isError()) {
             $artifactFactory = Tracker_ArtifactFactory::instance();
             foreach ($dar as $row) {

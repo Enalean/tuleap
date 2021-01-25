@@ -62,7 +62,7 @@ class ProjectRendererWidgetXMLImporter
                         continue;
                     }
 
-                    $value = trim((string) $value);
+                    $value                                                                            = trim((string) $value);
                     $request_params[self::RENDERER_PREFERENCE_NAME][self::RENDERER_TITLE_REQUEST_KEY] = $value;
                 }
             }

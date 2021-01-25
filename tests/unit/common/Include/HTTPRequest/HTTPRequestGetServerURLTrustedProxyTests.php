@@ -29,7 +29,7 @@ class HTTPRequestGetServerURLTrustedProxyTests extends HTTPRequestGetServerURLTe
     {
         parent::setUp();
 
-        $_SERVER['HTTPS']       = 'on';
+        $_SERVER['HTTPS'] = 'on';
 
         ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', 'example.com');

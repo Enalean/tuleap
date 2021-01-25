@@ -53,7 +53,7 @@ final class HierarchyControllerTest extends TestCase
                 return $event;
             }
         };
-        $controller = new HierarchyController(
+        $controller               = new HierarchyController(
             $request,
             $hierarchical_tracker,
             Mockery::mock(Tracker_Hierarchy_HierarchicalTrackerFactory::class),
@@ -107,7 +107,7 @@ final class HierarchyControllerTest extends TestCase
                 return $event;
             }
         };
-        $controller = new HierarchyController(
+        $controller               = new HierarchyController(
             $request,
             $hierarchical_tracker,
             Mockery::mock(Tracker_Hierarchy_HierarchicalTrackerFactory::class),

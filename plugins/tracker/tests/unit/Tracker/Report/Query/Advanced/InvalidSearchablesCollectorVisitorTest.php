@@ -133,7 +133,7 @@ final class InvalidSearchablesCollectorVisitorTest extends TestCase
             null
         );
 
-        $this->open_list_field  = new \Tracker_FormElement_Field_OpenList(
+        $this->open_list_field = new \Tracker_FormElement_Field_OpenList(
             102,
             null,
             null,
@@ -148,7 +148,7 @@ final class InvalidSearchablesCollectorVisitorTest extends TestCase
             null
         );
 
-        $this->string_field  = new \Tracker_FormElement_Field_String(
+        $this->string_field = new \Tracker_FormElement_Field_String(
             102,
             null,
             null,
@@ -208,7 +208,7 @@ final class InvalidSearchablesCollectorVisitorTest extends TestCase
 
     public function testItDoesNotCollectInvalidFieldsIfDateFieldIsUsedForEqualComparison(): void
     {
-        $date_field  = \Mockery::mock(Tracker_FormElement_Field_Date::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $date_field = \Mockery::mock(Tracker_FormElement_Field_Date::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $date_field->shouldReceive('isTimeDisplayed')->andReturn(true);
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldByNameForUser')
             ->with(101, "field", $this->user)->andReturns($date_field);

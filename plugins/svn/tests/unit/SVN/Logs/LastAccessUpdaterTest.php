@@ -37,7 +37,7 @@ class LastAccessUpdaterTest extends TestCase
         $dao                 = Mockery::mock(LastAccessDao::class);
         $last_access_updater = new LastAccessUpdater($dao);
 
-        $repository  = Mockery::mock(Repository::class);
+        $repository = Mockery::mock(Repository::class);
         $repository->shouldReceive('getId')->andReturn(10);
         $commit_info = Mockery::mock(CommitInfo::class);
         $commit_info->shouldReceive('getDate')->andReturn('2017-06-06 11:59:45 +0000 (Tue, 06 Jun 2017)');
@@ -52,7 +52,7 @@ class LastAccessUpdaterTest extends TestCase
         $dao                 = Mockery::mock(LastAccessDao::class);
         $last_access_updater = new LastAccessUpdater($dao);
 
-        $repository  = Mockery::mock(Repository::class);
+        $repository = Mockery::mock(Repository::class);
         $repository->shouldReceive('getId')->andReturn(10);
         $commit_info = Mockery::mock(CommitInfo::class);
         $commit_info->shouldReceive('getDate')->andReturn('This is not a valid commit date');

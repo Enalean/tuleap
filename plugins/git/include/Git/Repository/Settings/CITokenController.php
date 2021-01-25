@@ -53,7 +53,7 @@ class CITokenController extends SettingsController
     private function checkCSRF(HTTPRequest $request)
     {
         $project_id = $request->getProject()->getID();
-        $token = new CSRFSynchronizerToken('plugins/git/?group_id=' . $project_id . '&pane=citoken');
+        $token      = new CSRFSynchronizerToken('plugins/git/?group_id=' . $project_id . '&pane=citoken');
         $token->check();
     }
 

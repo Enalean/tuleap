@@ -46,9 +46,9 @@ class JenkinsServer implements \JsonSerializable
 
     public function __construct(int $id, string $jenkins_server_url, Project $project)
     {
-        $this->id = $id;
+        $this->id                 = $id;
         $this->jenkins_server_url = $jenkins_server_url;
-        $this->project = $project;
+        $this->project            = $project;
     }
 
     /**

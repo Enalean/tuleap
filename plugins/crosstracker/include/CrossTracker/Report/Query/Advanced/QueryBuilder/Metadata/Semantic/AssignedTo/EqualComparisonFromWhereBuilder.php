@@ -63,7 +63,7 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
      */
     private function getFromWhereForEmptyCondition()
     {
-        $from = 'INNER JOIN tracker_semantic_contributor AS empty_assigned_to_field
+        $from            = 'INNER JOIN tracker_semantic_contributor AS empty_assigned_to_field
             ON (
                 empty_assigned_to_field.tracker_id = tracker_artifact.tracker_id
             )
@@ -79,7 +79,7 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
             )';
         $from_parameters = [];
 
-        $where = '(changeset_value_assigned_to.changeset_id IS NULL
+        $where            = '(changeset_value_assigned_to.changeset_id IS NULL
             OR tracker_changeset_value_assigned_to.bindvalue_id = ? )';
         $where_parameters = [\Tracker_FormElement_Field_List::NONE_VALUE];
 
@@ -97,7 +97,7 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
      */
     private function getFromWhereForNonEmptyCondition($value)
     {
-        $from = 'INNER JOIN tracker_semantic_contributor AS equal_assigned_to_field
+        $from            = 'INNER JOIN tracker_semantic_contributor AS equal_assigned_to_field
             ON (
                 equal_assigned_to_field.tracker_id = tracker_artifact.tracker_id
             )';
@@ -105,7 +105,7 @@ class EqualComparisonFromWhereBuilder implements FromWhereBuilder
 
         $user = $this->user_manager->getUserByUserName($value);
 
-        $where = 'tracker_artifact.last_changeset_id IN (
+        $where            = 'tracker_artifact.last_changeset_id IN (
             SELECT changeset_value_assigned_to.changeset_id
             FROM tracker_changeset_value AS changeset_value_assigned_to
             INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_assigned_to

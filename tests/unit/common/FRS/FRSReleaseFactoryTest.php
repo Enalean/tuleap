@@ -35,7 +35,7 @@ class FRSReleaseFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
 
     protected function setUp(): void
     {
-        $this->user  = \Mockery::spy(\PFUser::class);
+        $this->user                = \Mockery::spy(\PFUser::class);
         $this->frs_release_factory = \Mockery::mock(\FRSReleaseFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->user_manager        = \Mockery::spy(\UserManager::class);
         $this->permission_manager  = \Mockery::spy(\PermissionsManager::class);

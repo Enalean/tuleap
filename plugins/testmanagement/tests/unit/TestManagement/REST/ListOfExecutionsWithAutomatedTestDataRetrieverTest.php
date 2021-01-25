@@ -139,7 +139,7 @@ class ListOfExecutionsWithAutomatedTestDataRetrieverTest extends TestCase
 
     public function testGetExecutionsWithAutomatedTestDataReturnEmptyIfNoDefinition(): void
     {
-        $execution_1  = Mockery::mock(Artifact::class);
+        $execution_1 = Mockery::mock(Artifact::class);
 
         $this->artifact_dao->shouldReceive('searchExecutionArtifactsForCampaign')->andReturn(
             [["execution_1"]]

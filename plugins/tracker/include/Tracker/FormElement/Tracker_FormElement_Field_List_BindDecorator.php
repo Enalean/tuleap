@@ -150,20 +150,20 @@ class Tracker_FormElement_Field_List_BindDecorator
 
     public static function noDecoratorEdit(int $field_id, int $value_id, bool $is_used_in_semantics): ColorpickerMountPointPresenter
     {
-        $id   = 'decorator_' . $field_id . '_' . $value_id;
+        $id = 'decorator_' . $field_id . '_' . $value_id;
 
         return self::getColorPickerMountPoint($id, $value_id, null, $is_used_in_semantics);
     }
 
     protected static function fetchSquareColor($id, $title, $classname, $r, $g, $b, $img = 'blank16x16.png')
     {
-        $html = '';
+        $html    = '';
         $bgcolor = '';
 
         if ($r !== null && $g !== null && $b !== null) {
-            $r = (int) $r;
-            $g = (int) $g;
-            $b = (int) $b;
+            $r        = (int) $r;
+            $g        = (int) $g;
+            $b        = (int) $b;
             $bgcolor .= "background-color:rgb($r, $g, $b);";
         }
 

@@ -27,7 +27,7 @@ class _RecentChanges_Formatter
 
     public function __construct($rc_args)
     {
-        $this->_args = $rc_args;
+        $this->_args     = $rc_args;
         $this->_diffargs = ['action' => 'diff'];
 
         if ($rc_args['show_minor'] || ! $rc_args['show_major']) {
@@ -135,7 +135,7 @@ class _RecentChanges_Formatter
 
     public function setValidators($most_recent_rev)
     {
-        $rev = $most_recent_rev;
+        $rev        = $most_recent_rev;
         $validators = ['RecentChanges-top' =>
                             [$rev->getPageName(), $rev->getVersion()],
                             '%mtime' => $rev->get('mtime')];
@@ -366,12 +366,12 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
             . "    window.sidebar.addPanel (\"" . sprintf("%s - %s", WIKI_NAME, $pagetitle) . "\",\n"
             . "       \"$sidebarurl\",\"\");\n"
             . "}\n";
-        $jsf = JavaScript($addsidebarjsfunc);
+        $jsf              = JavaScript($addsidebarjsfunc);
 
         global $WikiTheme;
-        $sidebar_button = $WikiTheme->makeButton("sidebar", 'javascript:addPanel();', 'sidebaricon');
+        $sidebar_button    = $WikiTheme->makeButton("sidebar", 'javascript:addPanel();', 'sidebaricon');
         $addsidebarjsclick = asXML(HTML::small(['style' => 'font-weight:normal;vertical-align:middle;'], $sidebar_button));
-        $jsc = JavaScript("if ((typeof window.sidebar == 'object') &&\n"
+        $jsc               = JavaScript("if ((typeof window.sidebar == 'object') &&\n"
                                 . "    (typeof window.sidebar.addPanel == 'function'))\n"
                                 . "   {\n"
                                 . "       document.write('$addsidebarjsclick');\n"
@@ -393,8 +393,8 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
         }
 
         $last_date = '';
-        $lines = false;
-        $first = true;
+        $lines     = false;
+        $first     = true;
 
         while ($rev = $changes->next()) {
             if (($date = $this->date($rev)) != $last_date) {
@@ -402,7 +402,7 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
                     $html->pushContent($lines);
                 }
                 $html->pushContent(HTML::h3($date));
-                $lines = HTML::ul();
+                $lines     = HTML::ul();
                 $last_date = $date;
             }
             // enforce view permission
@@ -484,7 +484,7 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
     {
         //logo click opens the HomePage in the main browser frame
         global $WikiTheme;
-        $img = HTML::img(['src' => $WikiTheme->getImageURL('logo'),
+        $img     = HTML::img(['src' => $WikiTheme->getImageURL('logo'),
                                'border' => 0,
                                'align' => 'right',
                                'style' => 'height:2.5ex'
@@ -551,8 +551,8 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
     public function format($changes)
     {
         $this->_args['daylist'] = false; //don't show day buttons in Mozilla sidebar
-        $html = _RecentChanges_HtmlFormatter::format($changes);
-        $html = HTML::div(['class' => 'wikitext'], $html);
+        $html                   = _RecentChanges_HtmlFormatter::format($changes);
+        $html                   = HTML::div(['class' => 'wikitext'], $html);
         global $request;
         $request->discardOutput();
 
@@ -610,10 +610,10 @@ class _RecentChanges_BoxFormatter extends _RecentChanges_HtmlFormatter
     {
         include_once('lib/InlineParser.php');
         $last_date = '';
-        $first = true;
-        $html = HTML();
-        $counter = 1;
-        $sp = HTML::Raw("\n&nbsp;&middot;&nbsp;");
+        $first     = true;
+        $html      = HTML();
+        $counter   = 1;
+        $sp        = HTML::Raw("\n&nbsp;&middot;&nbsp;");
         while ($rev = $changes->next()) {
             // enforce view permission
             if (mayAccessPage('view', $rev->_pagename)) {
@@ -745,7 +745,7 @@ class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
 
     public function item_properties($rev)
     {
-        $page = $rev->getPage();
+        $page     = $rev->getPage();
         $pagename = $page->getName();
 
         return [ 'title'           => SplitPagename($pagename),
@@ -840,7 +840,7 @@ class NonDeletedRevisionIterator extends WikiDB_PageRevisionIterator
      */
     public function __construct($revisions, $check_current_revision = true)
     {
-        $this->_revisions = $revisions;
+        $this->_revisions              = $revisions;
         $this->_check_current_revision = $check_current_revision;
     }
 
@@ -848,7 +848,7 @@ class NonDeletedRevisionIterator extends WikiDB_PageRevisionIterator
     {
         while (($rev = $this->_revisions->next())) {
             if ($this->_check_current_revision) {
-                $page = $rev->getPage();
+                $page      = $rev->getPage();
                 $check_rev = $page->getCurrentRevision();
             } else {
                 $check_rev = $rev;
@@ -1024,12 +1024,12 @@ class WikiPlugin_RecentChanges extends WikiPlugin
         if (! isset($args['limit'])) {
             $args['limit'] = 15;
         }
-        $args['format'] = 'box';
-        $args['show_minor'] = false;
-        $args['show_major'] = true;
+        $args['format']       = 'box';
+        $args['show_minor']   = false;
+        $args['show_major']   = true;
         $args['show_deleted'] = 'sometimes';
-        $args['show_all'] = false;
-        $args['days'] = 90;
+        $args['show_all']     = false;
+        $args['days']         = 90;
         return $this->makeBox(
             WikiLink($this->getName(), '', SplitPagename($this->getName())),
             $this->format($this->getChanges($request->_dbi, $args), $args)

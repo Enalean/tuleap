@@ -40,8 +40,8 @@ class BareRepositoryCreator
         RepositoryCreator $repository_creator,
         SettingsRetriever $settings_retriever
     ) {
-        $this->repository_creator          = $repository_creator;
-        $this->settings_retriever          = $settings_retriever;
+        $this->repository_creator = $repository_creator;
+        $this->settings_retriever = $settings_retriever;
     }
 
     /**

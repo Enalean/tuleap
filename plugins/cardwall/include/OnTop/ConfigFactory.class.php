@@ -113,7 +113,7 @@ class Cardwall_OnTop_ConfigFactory
         $column_dao       = $this->getOnTopColumnDao();
         $mappingfield_dao = $this->getOnTopColumnMappingFieldDao();
         $mappingvalue_dao = $this->getOnTopColumnMappingFieldValueDao();
-        $updater = new Cardwall_OnTop_Config_Updater();
+        $updater          = new Cardwall_OnTop_Config_Updater();
         $updater->addCommand(new Cardwall_OnTop_Config_Command_EnableCardwallOnTop($tracker, $dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_EnableFreestyleColumns($tracker, $dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_CreateColumn($tracker, $column_dao));

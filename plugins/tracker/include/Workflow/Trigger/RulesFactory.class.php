@@ -32,7 +32,7 @@ class Tracker_Workflow_Trigger_RulesFactory
     public function __construct(Tracker_FormElementFactory $formelement_factory, Tracker_Workflow_Trigger_TriggerValidator $validator)
     {
         $this->formelement_factory = $formelement_factory;
-        $this->validator = $validator;
+        $this->validator           = $validator;
     }
 
     /**

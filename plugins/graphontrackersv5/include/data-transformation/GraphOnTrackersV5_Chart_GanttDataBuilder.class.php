@@ -30,11 +30,11 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
     public function buildProperties($engine)
     {
         parent::buildProperties($engine);
-        $engine->title      = $this->chart->getTitle();
+        $engine->title       = $this->chart->getTitle();
         $engine->description = $this->chart->getDescription();
-        $engine->scale      = $this->chart->getScale();
-        $engine->asOfDate   = $this->chart->getAs_of_date();
-        $af = Tracker_FormElementFactory::instance()->getFormElementById($this->chart->getSummary());
+        $engine->scale       = $this->chart->getScale();
+        $engine->asOfDate    = $this->chart->getAs_of_date();
+        $af                  = Tracker_FormElementFactory::instance()->getFormElementById($this->chart->getSummary());
         if ($af) {
             $engine->summary_label = $af->getLabel();
         }
@@ -51,15 +51,15 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
     {
         $engine->data = [];
 
-        $ff = Tracker_FormElementFactory::instance();
+        $ff               = Tracker_FormElementFactory::instance();
         $field_start      = $this->chart->getField_start()      ? $ff->getFormElementById($this->chart->getField_start())      : null;
         $field_due        = $this->chart->getField_due()        ? $ff->getFormElementById($this->chart->getField_due())        : null;
         $field_finish     = $this->chart->getField_finish()     ? $ff->getFormElementById($this->chart->getField_finish())     : null;
         $field_percentage = $this->chart->getField_percentage() ? $ff->getFormElementById($this->chart->getField_percentage()) : null;
         $field_righttext  = $this->chart->getField_righttext()  ? $ff->getFormElementById($this->chart->getField_righttext())  : null;
         $field_summary    = $this->chart->getSummary()          ? $ff->getFormElementById($this->chart->getSummary())          : null;
-        $af        = Tracker_ArtifactFactory::instance();
-        $artifacts = $af->getArtifactsByArtifactIdList(explode(',', $this->artifacts['id']));
+        $af               = Tracker_ArtifactFactory::instance();
+        $artifacts        = $af->getArtifactsByArtifactIdList(explode(',', $this->artifacts['id']));
         foreach ($artifacts as $artifact) {
             $last_changeset = $artifact->getLastChangeset();
             if ($last_changeset === null) {

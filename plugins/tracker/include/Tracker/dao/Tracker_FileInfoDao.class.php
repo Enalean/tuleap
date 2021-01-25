@@ -37,7 +37,7 @@ class Tracker_FileInfoDao extends DataAccessObject
     */
     public function searchById($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE id = $id";
@@ -46,7 +46,7 @@ class Tracker_FileInfoDao extends DataAccessObject
 
     public function searchFieldIdByFileInfoId($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT DISTINCT cv.field_id AS field_id
                 FROM tracker_changeset_value AS cv
                     INNER JOIN tracker_changeset_value_file AS cv_file ON (cv_file.changeset_value_id = cv.id)
@@ -66,7 +66,7 @@ class Tracker_FileInfoDao extends DataAccessObject
         $filename     = $this->da->quoteSmart($filename);
         $filesize     = $this->da->escapeInt($filesize);
         $filetype     = $this->da->quoteSmart($filetype);
-        $sql = "INSERT INTO $this->table_name(submitted_by, description, filename, filesize, filetype)
+        $sql          = "INSERT INTO $this->table_name(submitted_by, description, filename, filesize, filetype)
                 VALUES ($submitted_by, $description, $filename, $filesize, $filetype)";
         return $this->updateAndGetLastId($sql);
     }
@@ -80,7 +80,7 @@ class Tracker_FileInfoDao extends DataAccessObject
 
     public function searchArtifactIdByFileInfoIdInLastChangeset($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT DISTINCT c.artifact_id as artifact_id, cv.field_id as field_id
                 FROM tracker_changeset_value AS cv
                     INNER JOIN tracker_changeset_value_file AS cv_file ON (cv_file.changeset_value_id = cv.id)
@@ -92,7 +92,7 @@ class Tracker_FileInfoDao extends DataAccessObject
 
     public function searchArtifactIdByFileInfoId($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT DISTINCT c.artifact_id as artifact_id, cv.field_id as field_id
                 FROM tracker_changeset_value AS cv
                     INNER JOIN tracker_changeset_value_file AS cv_file ON (cv_file.changeset_value_id = cv.id)

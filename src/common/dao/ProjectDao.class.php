@@ -22,10 +22,10 @@
 class ProjectDao extends DataAccessObject
 {
 
-    public const TABLE_NAME       = 'groups';
-    public const GROUP_ID         = 'group_id';
-    public const STATUS           = 'status';
-    public const UNIX_GROUP_NAME  = 'unix_group_name';
+    public const TABLE_NAME      = 'groups';
+    public const GROUP_ID        = 'group_id';
+    public const STATUS          = 'status';
+    public const UNIX_GROUP_NAME = 'unix_group_name';
 
     public function __construct($da = null)
     {
@@ -56,7 +56,7 @@ class ProjectDao extends DataAccessObject
     public function searchByStatus($status)
     {
         $status = $this->da->quoteSmart($status);
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+        $sql    = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM $this->table_name
                 WHERE status = $status
                 ORDER BY group_name";
@@ -93,7 +93,7 @@ class ProjectDao extends DataAccessObject
     public function searchByUnixGroupName($unixGroupName)
     {
         $unixGroupName = $this->da->quoteSmart($unixGroupName);
-        $sql = "SELECT *
+        $sql           = "SELECT *
                 FROM $this->table_name
                 WHERE unix_group_name=$unixGroupName";
         return $this->retrieve($sql);
@@ -102,7 +102,7 @@ class ProjectDao extends DataAccessObject
     public function searchByCaseInsensitiveUnixGroupName($unixGroupName)
     {
         $unixGroupName = $this->da->quoteSmart($unixGroupName);
-        $sql = "SELECT *
+        $sql           = "SELECT *
                 FROM $this->table_name
                 WHERE LOWER(unix_group_name)=LOWER($unixGroupName)";
         return $this->retrieve($sql);
@@ -136,9 +136,9 @@ class ProjectDao extends DataAccessObject
         $access_private               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
         $access_private_wo_restricted = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
 
-        $public         = ' g.access NOT IN (' . $access_private . ', ' . $access_private_wo_restricted . ')';
+        $public = ' g.access NOT IN (' . $access_private . ', ' . $access_private_wo_restricted . ')';
         if ($isPrivate) {
-            $public  = ' 1 ';
+            $public = ' 1 ';
         }
         if ($userId != null) {
             if ($isMember || $isAdmin) {
@@ -208,7 +208,7 @@ class ProjectDao extends DataAccessObject
     private function searchActiveProjectsByUserStatus($user_id, $where = '')
     {
         $user_id = $this->da->escapeInt($user_id);
-        $sql = "SELECT groups.*
+        $sql     = "SELECT groups.*
             FROM groups
               JOIN user_group USING (group_id)
             WHERE user_group.user_id = $user_id
@@ -257,14 +257,14 @@ class ProjectDao extends DataAccessObject
     public function renameProject($project, $new_name)
     {
         //Update 'groups' table
-        $sql = ' UPDATE groups SET unix_group_name= ' . $this->da->quoteSmart($new_name) . ' ,
+        $sql        = ' UPDATE groups SET unix_group_name= ' . $this->da->quoteSmart($new_name) . ' ,
                  http_domain=REPLACE (http_domain,' . $this->da->quoteSmart($project->getUnixName(false)) . ',' . $this->da->quoteSmart($new_name) . ')
                  WHERE group_id= ' . $this->da->quoteSmart($project->getID());
         $res_groups = $this->update($sql);
 
         //Update 'service' table
         if ($res_groups) {
-            $sql_summary  = ' UPDATE service SET link= REPLACE (link,' . $this->da->quoteSmart($project->getUnixName()) . ',' . $this->da->quoteSmart(strtolower($new_name)) . ')
+            $sql_summary = ' UPDATE service SET link= REPLACE (link,' . $this->da->quoteSmart($project->getUnixName()) . ',' . $this->da->quoteSmart(strtolower($new_name)) . ')
                               WHERE short_name="summary"
                               AND group_id= ' . $this->da->quoteSmart($project->getID());
             $res_summary = $this->update($sql_summary);
@@ -285,7 +285,7 @@ class ProjectDao extends DataAccessObject
      */
     public function returnAllProjects($offset, $limit, $status = false, $groupName = false)
     {
-        $cond = [];
+        $cond          = [];
         $project_limit = "";
         if ($limit != 0) {
             $project_limit .= ' LIMIT ' . $this->da->escapeInt($offset) . ', ' . $this->da->escapeInt($limit);
@@ -302,7 +302,7 @@ class ProjectDao extends DataAccessObject
 
         if ($groupName != false) {
             $pattern = $this->da->quoteSmart('%' . $groupName . '%');
-            $cond[] = '(group_name LIKE ' . $pattern . ' OR group_id LIKE ' . $pattern . ' OR unix_group_name LIKE ' . $pattern . ')';
+            $cond[]  = '(group_name LIKE ' . $pattern . ' OR group_id LIKE ' . $pattern . ' OR unix_group_name LIKE ' . $pattern . ')';
         }
 
         if (count($cond) > 0) {
@@ -363,9 +363,9 @@ class ProjectDao extends DataAccessObject
 
     public function getMyAndPublicProjectsForREST(PFUser $user, $offset, $limit)
     {
-        $user_id      = $this->da->escapeInt($user->getId());
-        $offset       = $this->da->escapeInt($offset);
-        $limit        = $this->da->escapeInt($limit);
+        $user_id = $this->da->escapeInt($user->getId());
+        $offset  = $this->da->escapeInt($offset);
+        $limit   = $this->da->escapeInt($limit);
 
         $private_type               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
         $private_wo_restricted_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
@@ -394,9 +394,9 @@ class ProjectDao extends DataAccessObject
 
     public function getMyProjectsForREST(PFUser $user, $offset, $limit)
     {
-        $user_id      = $this->da->escapeInt($user->getId());
-        $offset       = $this->da->escapeInt($offset);
-        $limit        = $this->da->escapeInt($limit);
+        $user_id = $this->da->escapeInt($user->getId());
+        $offset  = $this->da->escapeInt($offset);
+        $limit   = $this->da->escapeInt($limit);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT groups.*
                     FROM groups
@@ -412,9 +412,9 @@ class ProjectDao extends DataAccessObject
 
     public function getProjectICanAdminForREST(PFUser $user, int $offset, int $limit)
     {
-        $user_id              = $this->da->escapeInt($user->getId());
-        $offset               = $this->da->escapeInt($offset);
-        $limit                = $this->da->escapeInt($limit);
+        $user_id = $this->da->escapeInt($user->getId());
+        $offset  = $this->da->escapeInt($offset);
+        $limit   = $this->da->escapeInt($limit);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT groups.*
                     FROM groups
@@ -610,8 +610,8 @@ class ProjectDao extends DataAccessObject
     public function searchGlobalPaginatedForRestrictedUsers($words, $offset, $exact, $user_id, $limit)
     {
         $user_id = $this->da->escapeInt($user_id);
-        $from  = " JOIN user_group ON (user_group.group_id = groups.group_id)";
-        $where = " AND user_group.user_id = $user_id";
+        $from    = " JOIN user_group ON (user_group.group_id = groups.group_id)";
+        $where   = " AND user_group.user_id = $user_id";
         return $this->searchGlobalParams($words, $offset, $exact, $from, $where, $limit);
     }
 
@@ -704,7 +704,7 @@ class ProjectDao extends DataAccessObject
     {
         $new_access = $this->da->quoteSmart($new);
         $old_access = $this->da->quoteSmart($old);
-        $sql = "UPDATE groups SET access = $new_access WHERE access = $old_access";
+        $sql        = "UPDATE groups SET access = $new_access WHERE access = $old_access";
 
         return $this->update($sql);
     }

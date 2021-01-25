@@ -4,7 +4,7 @@
 */
 class OceanTheme extends Theme
 {
-    protected $font_color       = '#0066FF';
+    protected $font_color     = '#0066FF';
     private $background_color = '#DDEEFF';
     private $axis_color       = '#0000CC';
     private $grid_color       = '#3333CC';

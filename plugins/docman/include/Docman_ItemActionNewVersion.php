@@ -25,8 +25,8 @@ class Docman_ItemActionNewVersion extends \Docman_ItemAction
     public function __construct(&$item)
     {
         parent::__construct($item);
-        $this->action = 'action_new_version';
+        $this->action  = 'action_new_version';
         $this->classes = 'docman_item_option_newversion';
-        $this->title = \dgettext('tuleap-docman', 'New version');
+        $this->title   = \dgettext('tuleap-docman', 'New version');
     }
 }

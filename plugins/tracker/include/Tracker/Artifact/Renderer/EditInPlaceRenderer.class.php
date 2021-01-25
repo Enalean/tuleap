@@ -75,7 +75,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
     private function fetchArtifactLinks(PFUser $current_user)
     {
         $linked_artifacts = $this->artifact->getLinkedArtifacts($current_user);
-        $links = [];
+        $links            = [];
 
         foreach ($linked_artifacts as $artifact) {
             $artifact_title = $artifact->getTitle();
@@ -154,7 +154,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
     private function getAugmentedDataFromRequest(Codendi_Request $request)
     {
         //this handles the 100 value on multi-select boxes
-        $fields_data = $request->get('artifact');
+        $fields_data                          = $request->get('artifact');
         $fields_data['request_method_called'] = 'artifact-update';
         $this->artifact->getTracker()->augmentDataFromRequest($fields_data);
         unset($fields_data['request_method_called']);

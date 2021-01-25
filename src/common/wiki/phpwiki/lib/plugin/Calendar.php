@@ -86,11 +86,11 @@ class WikiPlugin_Calendar extends WikiPlugin
     {
         $args = &$this->args;
 
-        $t = localtime($time - SECONDS_PER_DAY, 1);
+        $t        = localtime($time - SECONDS_PER_DAY, 1);
         $prev_url = WikiURL($pagename, ['month' => $t['tm_mon'] + 1,
                                              'year'  => $t['tm_year'] + 1900]);
 
-        $t = localtime($time + 32 * SECONDS_PER_DAY, 1);
+        $t        = localtime($time + 32 * SECONDS_PER_DAY, 1);
         $next_url = WikiURL($pagename, ['month' => $t['tm_mon'] + 1,
                                              'year'  => $t['tm_year'] + 1900]);
 
@@ -124,7 +124,7 @@ class WikiPlugin_Calendar extends WikiPlugin
         $t = localtime($time, 1);
         assert($t['tm_wday'] == $start_wday);
 
-        $fs = $this->args['wday_format'];
+        $fs  = $this->args['wday_format'];
         $row = HTML::tr();
         $row->setattr('class', 'cal-dayname');
         for ($i = 0; $i < 7; $i++) {
@@ -139,7 +139,7 @@ class WikiPlugin_Calendar extends WikiPlugin
         $args = &$this->args;
 
         $page_for_date = $args['prefix'] . strftime($args['date_format'], $time);
-        $t = localtime($time, 1);
+        $t             = localtime($time, 1);
 
         $td = HTML::td(['align' => 'center']);
 
@@ -154,7 +154,7 @@ class WikiPlugin_Calendar extends WikiPlugin
 
         if ($dbi->isWikiPage($page_for_date)) {
             $this->_links[] = $page_for_date;
-            $date = HTML::a(
+            $date           = HTML::a(
                 ['class' => 'cal-day', 'href' => WikiURL($page_for_date), 'title' => $page_for_date],
                 HTML::em($mday)
             );
@@ -174,8 +174,8 @@ class WikiPlugin_Calendar extends WikiPlugin
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
-        $this->args = $this->getArgs($argstr, $request);
-        $args       = &$this->args;
+        $this->args   = $this->getArgs($argstr, $request);
+        $args         = &$this->args;
         $this->_links = [];
 
         $now = localtime(time() + 3600 * $request->getPref('timeOffset'), 1);
@@ -211,7 +211,7 @@ class WikiPlugin_Calendar extends WikiPlugin
         }
 
         $tbody = HTML::tbody();
-        $row = HTML::tr();
+        $row   = HTML::tr();
 
         $col = (7 + $t['tm_wday'] - $args['start_wday']) % 7;
         if ($col > 0) {

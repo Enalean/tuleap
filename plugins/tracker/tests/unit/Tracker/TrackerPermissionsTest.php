@@ -376,7 +376,7 @@ class TrackerPermissionsTest extends TestCase
         $this->user_manager = Mockery::mock(UserManager::class);
         UserManager::setInstance($this->user_manager);
 
-        $GLOBALS['Response']        = Mockery::mock(BaseLayout::class);
+        $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
 
         $GLOBALS['UGROUPS'] = [
             "UGROUP_NONE"               => 100,

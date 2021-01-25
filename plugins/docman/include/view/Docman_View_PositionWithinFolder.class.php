@@ -36,7 +36,7 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
             $this->_displayItem($item, $params);
         } else {
             $items = $item->getAllItems();
-            $it = $items->iterator();
+            $it    = $items->iterator();
             while ($it->valid()) {
                 $o = $it->current();
                 $r = $o->accept($this, $params);

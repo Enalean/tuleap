@@ -118,7 +118,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getWriteUGroups(Project $project)
     {
-        $user_groups  = $this->user_group_factory->getAllForProject($project);
+        $user_groups   = $this->user_group_factory->getAllForProject($project);
         $write_ugroups = [];
 
         $selected_ugroups = $this->manager->getWriteAccessControl($project);
@@ -137,8 +137,8 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     private function getMappedGroupPresenter(Project $project)
     {
         $group_mapper_presenters = [];
-        $current_mapping = $this->mapper->getCurrentUserGroupMapping($project);
-        $all_ugroups     = $this->getIndexedUgroups($project);
+        $current_mapping         = $this->mapper->getCurrentUserGroupMapping($project);
+        $all_ugroups             = $this->getIndexedUgroups($project);
         foreach (MediawikiUserGroupsMapper::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES as $mw_group_name) {
             $group_mapper_presenters[] = $this->getGroupPresenters($mw_group_name, $current_mapping, $all_ugroups);
         }
@@ -147,13 +147,13 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getIndexedUgroups(Project $project)
     {
-        $ugroups        = [];
-        $ugroup_manager = new UGroupManager();
+        $ugroups         = [];
+        $ugroup_manager  = new UGroupManager();
         $excluded_groups = array_merge(ProjectUGroup::$legacy_ugroups, [ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS]);
         if (! $project->isPublic()) {
             $excluded_groups = array_merge($excluded_groups, [ProjectUGroup::REGISTERED]);
         }
-        $all_ugroups    = $ugroup_manager->getUGroups($project, $excluded_groups);
+        $all_ugroups = $ugroup_manager->getUGroups($project, $excluded_groups);
         foreach ($all_ugroups as $ugroup) {
             $ugroups[$ugroup->getId()] = $ugroup;
         }
@@ -232,7 +232,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $selected_read_ugroup = $request->get('read_ugroups');
                 if ($selected_read_ugroup) {
                     $override_collection = new PermissionsNormalizerOverrideCollection();
-                    $normalized_ids = $this->permissions_normalizer->getNormalizedUGroupIds($project, $selected_read_ugroup, $override_collection);
+                    $normalized_ids      = $this->permissions_normalizer->getNormalizedUGroupIds($project, $selected_read_ugroup, $override_collection);
 
                     if ($this->manager->saveReadAccessControl($project, $normalized_ids)) {
                         $override_collection->emitFeedback(MediawikiManager::READ_ACCESS);
@@ -242,7 +242,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $selected_write_ugroup = $request->get('write_ugroups');
                 if ($selected_write_ugroup) {
                     $override_collection = new PermissionsNormalizerOverrideCollection();
-                    $normalized_ids = $this->permissions_normalizer->getNormalizedUGroupIds($project, $selected_write_ugroup, $override_collection);
+                    $normalized_ids      = $this->permissions_normalizer->getNormalizedUGroupIds($project, $selected_write_ugroup, $override_collection);
 
                     if ($this->manager->saveWriteAccessControl($project, $normalized_ids)) {
                         $override_collection->emitFeedback(MediawikiManager::WRITE_ACCESS);

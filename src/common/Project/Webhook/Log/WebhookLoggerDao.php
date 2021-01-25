@@ -40,7 +40,7 @@ class WebhookLoggerDao extends \DataAccessObject
             return false;
         }
 
-        $sql_clean_logs = "DELETE FROM project_webhook_log WHERE webhook_id = $webhook_id AND created_on <= (
+        $sql_clean_logs        = "DELETE FROM project_webhook_log WHERE webhook_id = $webhook_id AND created_on <= (
               SELECT created_on FROM (
                 SELECT created_on FROM project_webhook_log WHERE webhook_id = $webhook_id ORDER BY created_on DESC LIMIT 1 OFFSET 10
               ) oldest_entry_to_keep

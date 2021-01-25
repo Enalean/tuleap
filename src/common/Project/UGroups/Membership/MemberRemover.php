@@ -43,7 +43,7 @@ class MemberRemover
     public function __construct(DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater, StaticMemberRemover $static_member_remover)
     {
         $this->dynamic_ugroup_members_updater = $dynamic_ugroup_members_updater;
-        $this->static_member_remover = $static_member_remover;
+        $this->static_member_remover          = $static_member_remover;
     }
 
     /**

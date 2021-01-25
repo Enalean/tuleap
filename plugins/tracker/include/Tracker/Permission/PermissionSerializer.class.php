@@ -61,7 +61,7 @@ class Tracker_Permission_PermissionsSerializer
     public function getLiteralizedUserGroupsThatCanViewTrackerFields(Artifact $artifact)
     {
         $u_groups_literalize_by_field = [];
-        $u_groups_ids_by_field = $this->getUserGroupsThatCanViewTrackerFields($artifact);
+        $u_groups_ids_by_field        = $this->getUserGroupsThatCanViewTrackerFields($artifact);
         foreach ($u_groups_ids_by_field as $key => $u_groups_id) {
             $u_groups_literalize_by_field[$key] = $this->literalize(
                 $u_groups_id,

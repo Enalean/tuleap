@@ -77,8 +77,8 @@ class SystemEventPresenter
             $this->priority = $GLOBALS['Language']->getText('admin_system_events', 'priority_3');
         }
 
-        $this->is_high  = (int) $sysevent->getPriority() === SystemEvent::PRIORITY_HIGH;
-        $this->is_low   = (int) $sysevent->getPriority() === SystemEvent::PRIORITY_LOW;
+        $this->is_high = (int) $sysevent->getPriority() === SystemEvent::PRIORITY_HIGH;
+        $this->is_low  = (int) $sysevent->getPriority() === SystemEvent::PRIORITY_LOW;
 
         $this->is_started = $sysevent->getProcessDate() !== self::$NULL_DATE;
         $this->is_ended   = $sysevent->getEndDate() !== self::$NULL_DATE;

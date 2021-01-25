@@ -118,7 +118,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     {
         $html   = '';
         $fields = $this->getFields();
-        $html   .= '<p>';
+        $html  .= '<p>';
         if (! count($fields)) {
             $html .= dgettext('tuleap-cardwall', 'There aren\'t any fields added to cards yet.');
         } else {

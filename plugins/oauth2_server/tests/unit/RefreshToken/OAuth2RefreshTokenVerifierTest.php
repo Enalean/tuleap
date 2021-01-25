@@ -81,7 +81,7 @@ final class OAuth2RefreshTokenVerifierTest extends TestCase
             1,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $app = $this->buildApp();
+        $app           = $this->buildApp();
         $this->dao->shouldReceive('searchRefreshTokenByID')->with($refresh_token->getID())->andReturn(
             [
                 'verifier'              => 'expected_hashed_verification_string',
@@ -176,7 +176,7 @@ final class OAuth2RefreshTokenVerifierTest extends TestCase
             5,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $app = $this->buildApp();
+        $app           = $this->buildApp();
         $this->dao->shouldReceive('searchRefreshTokenByID')->with($refresh_token->getID())->andReturn(
             [
                 'verifier'              => 'expected_hashed_verification_string',
@@ -199,7 +199,7 @@ final class OAuth2RefreshTokenVerifierTest extends TestCase
             5,
             new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
         );
-        $app = $this->buildApp();
+        $app           = $this->buildApp();
         $this->dao->shouldReceive('searchRefreshTokenByID')->with($refresh_token->getID())->andReturn(
             [
                 'verifier'              => 'expected_hashed_verification_string',

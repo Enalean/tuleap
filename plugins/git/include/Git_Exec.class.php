@@ -214,7 +214,7 @@ class Git_Exec
      */
     public function revListSinceStart($refname, $newrev)
     {
-        $output = [];
+        $output         = [];
         $other_branches = implode(' ', array_map('escapeshellarg', $this->getOtherBranches($refname)));
         $this->gitCmdWithOutput('rev-parse --not ' . $other_branches . ' | ' . $this->buildGitCommandForWorkTree() . ' rev-list --stdin ' . escapeshellarg($newrev), $output);
         return $output;
@@ -406,11 +406,11 @@ class Git_Exec
      */
     protected function execInPath($cmd, &$output)
     {
-        $git = $this->buildGitCommandForWorkTree();
+        $git  = $this->buildGitCommandForWorkTree();
         $git .= ' ' . $cmd;
         try {
             $command = new System_Command();
-            $output = $command->exec($git);
+            $output  = $command->exec($git);
             return true;
         } catch (System_Command_CommandException $exception) {
             throw new Git_Command_Exception($exception->getCommand(), $exception->getOutput(), $exception->getReturnValue());

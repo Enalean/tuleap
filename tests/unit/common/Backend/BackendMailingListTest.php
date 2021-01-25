@@ -34,8 +34,8 @@ final class BackendMailingListTest extends TestCase
     public function testDeleteProjectMailingListsNothingToDelete(): void
     {
         $backend = \Mockery::mock(\BackendMailingList::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\MailingListDao::class);
-        $dar = \Mockery::spy(\DataAccessResult::class);
+        $dao     = \Mockery::spy(\MailingListDao::class);
+        $dar     = \Mockery::spy(\DataAccessResult::class);
         $dar->shouldReceive('isError')->andReturns(false);
         $dar->shouldReceive('getRow')->once()->andReturns(false);
         $dao->shouldReceive('searchByProject')->andReturns($dar);
@@ -48,8 +48,8 @@ final class BackendMailingListTest extends TestCase
     public function testDeleteProjectMailingListsDbDeleteFail(): void
     {
         $backend = \Mockery::mock(\BackendMailingList::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\MailingListDao::class);
-        $dar = \Mockery::spy(\DataAccessResult::class);
+        $dao     = \Mockery::spy(\MailingListDao::class);
+        $dar     = \Mockery::spy(\DataAccessResult::class);
         $dar->shouldReceive('isError')->andReturns(false);
         $dar->shouldReceive('getRow')->once()->andReturns(['group_list_id' => 10]);
         $dar->shouldReceive('getRow')->once()->andReturns(['group_list_id' => 12]);
@@ -65,8 +65,8 @@ final class BackendMailingListTest extends TestCase
     public function testDeleteProjectMailingListsSuccess(): void
     {
         $backend = \Mockery::mock(\BackendMailingList::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao = \Mockery::spy(\MailingListDao::class);
-        $dar = \Mockery::spy(\DataAccessResult::class);
+        $dao     = \Mockery::spy(\MailingListDao::class);
+        $dar     = \Mockery::spy(\DataAccessResult::class);
         $dar->shouldReceive('isError')->andReturns(false);
         $dar->shouldReceive('getRow')->once()->andReturns(['group_list_id' => 10]);
         $dar->shouldReceive('getRow')->once()->andReturns(['group_list_id' => 12]);

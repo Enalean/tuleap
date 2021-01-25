@@ -51,7 +51,7 @@ class AdditionalArtifactActionButtonsFetcher implements Dispatchable
     public function __construct(Artifact $artifact, PFUser $user)
     {
         $this->artifact = $artifact;
-        $this->user = $user;
+        $this->user     = $user;
     }
 
     public function getArtifact(): Artifact

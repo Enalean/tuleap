@@ -38,9 +38,9 @@ class Planning_Presenter_BaseHomePresenter
         $is_mono_milestone_enabled,
         bool $is_planning_management_delegated
     ) {
-        $this->group_id                  = $group_id;
-        $this->is_user_admin             = $is_user_admin;
-        $this->is_start_scrum_possible   = ! $is_mono_milestone_enabled && ! $is_planning_management_delegated;
+        $this->group_id                = $group_id;
+        $this->is_user_admin           = $is_user_admin;
+        $this->is_start_scrum_possible = ! $is_mono_milestone_enabled && ! $is_planning_management_delegated;
     }
 
     public function nothing_set_up()
@@ -79,7 +79,7 @@ class Planning_Presenter_BaseHomePresenter
 
     public function create_scrum_url()
     {
-        $params = $this->getBaseParameters();
+        $params                      = $this->getBaseParameters();
         $params['activate-scrum']    = 1;
         $params['scrum-title-admin'] = 'Scrum';
 
@@ -88,7 +88,7 @@ class Planning_Presenter_BaseHomePresenter
 
     public function create_kanban_url()
     {
-        $params = $this->getBaseParameters();
+        $params                       = $this->getBaseParameters();
         $params['activate-kanban']    = 1;
         $params['kanban-title-admin'] = 'Kanban';
 

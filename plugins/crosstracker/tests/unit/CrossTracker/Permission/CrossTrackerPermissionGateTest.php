@@ -39,7 +39,7 @@ class CrossTrackerPermissionGateTest extends TestCase
         $column_field->shouldReceive('userCanRead')->andReturn(true);
         $search_field = \Mockery::spy(\Tracker_FormElement_Field_List::class);
         $search_field->shouldReceive('userCanRead')->andReturn(true);
-        $report  = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
+        $report = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
         $report->shouldReceive('getProjects')->andReturn([$project]);
         $report->shouldReceive('getTrackers')->andReturn([$tracker]);
         $report->shouldReceive('getColumnFields')->andReturn([$column_field]);
@@ -75,13 +75,13 @@ class CrossTrackerPermissionGateTest extends TestCase
         $tracker1->shouldReceive('userCanView')->andReturn(true);
         $tracker2 = \Mockery::spy(\Tracker::class);
         $tracker2->shouldReceive('userCanView')->andReturn(false);
-        $project  = \Mockery::spy(\Project::class);
-        $report   = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
+        $project = \Mockery::spy(\Project::class);
+        $report  = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
         $report->shouldReceive('getProjects')->andReturn([$project]);
         $report->shouldReceive('getTrackers')->andReturn([$tracker1, $tracker2]);
 
         $url_verification = \Mockery::spy(\URLVerification::class);
-        $permission_gate = new CrossTrackerPermissionGate($url_verification);
+        $permission_gate  = new CrossTrackerPermissionGate($url_verification);
         $this->expectException(\Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedTrackerException::class);
         $permission_gate->check($user, $report);
     }
@@ -96,7 +96,7 @@ class CrossTrackerPermissionGateTest extends TestCase
         $column_field1->shouldReceive('userCanRead')->andReturn(true);
         $column_field2 = \Mockery::spy(\Tracker_FormElement_Field_List::class);
         $column_field2->shouldReceive('userCanRead')->andReturn(false);
-        $report  = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
+        $report = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
         $report->shouldReceive('getProjects')->andReturn([$project]);
         $report->shouldReceive('getTrackers')->andReturn([$tracker]);
         $report->shouldReceive('getColumnFields')->andReturn([$column_field1, $column_field2]);
@@ -119,7 +119,7 @@ class CrossTrackerPermissionGateTest extends TestCase
         $search_field1->shouldReceive('userCanRead')->andReturn(true);
         $search_field2 = \Mockery::spy(\Tracker_FormElement_Field_List::class);
         $search_field2->shouldReceive('userCanRead')->andReturn(false);
-        $report  = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
+        $report = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
         $report->shouldReceive('getProjects')->andReturn([$project]);
         $report->shouldReceive('getTrackers')->andReturn([$tracker]);
         $report->shouldReceive('getColumnFields')->andReturn([$column_field]);

@@ -164,7 +164,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
             );
         }
         if ($lines) {
-            $c = array_slice($c, 0, $lines);
+            $c   = array_slice($c, 0, $lines);
             $c[] = sprintf(_(" ... first %d lines"), $bytes);
         }
         if ($words) {
@@ -174,7 +174,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
             $ct = implode("\n", $c); // one string
             if (strlen($ct) > $bytes) {
                 $ct = substr($c, 0, $bytes);
-                $c = [$ct, sprintf(_(" ... first %d bytes"), $bytes)];
+                $c  = [$ct, sprintf(_(" ... first %d bytes"), $bytes)];
             }
         }
         $ct = implode("\n", $c); // one string

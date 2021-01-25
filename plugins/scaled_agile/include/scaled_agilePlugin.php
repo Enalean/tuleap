@@ -194,8 +194,8 @@ final class scaled_agilePlugin extends Plugin
 
     public function displayTopPlanningAppEvent(DisplayTopPlanningAppEvent $event): void
     {
-        $virtual_top_milestone = $event->getTopMilestone();
-        $project_data = ProjectAdapter::build($virtual_top_milestone->getProject());
+        $virtual_top_milestone   = $event->getTopMilestone();
+        $project_data            = ProjectAdapter::build($virtual_top_milestone->getProject());
         $team_project_collection = $this->getTeamProjectCollectionBuilder()->getTeamProjectForAGivenProgramProject(
             $project_data
         );
@@ -349,8 +349,8 @@ final class scaled_agilePlugin extends Plugin
     public function externalParentCollector(OriginalProjectCollector $original_project_collector): void
     {
         $source_analyser = new SourceArtifactNatureAnalyzer(new TeamDao(), ProjectManager::instance(), Tracker_ArtifactFactory::instance());
-        $artifact = $original_project_collector->getOriginalArtifact();
-        $user = $original_project_collector->getUser();
+        $artifact        = $original_project_collector->getOriginalArtifact();
+        $user            = $original_project_collector->getUser();
 
         try {
             $project = $source_analyser->retrieveProjectOfMirroredArtifact($artifact, $user);

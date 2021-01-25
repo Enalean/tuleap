@@ -22,10 +22,10 @@ namespace Tuleap\Tracker\Config;
 
 class SectionsPresenter
 {
-    public $artifact_link_active = '';
+    public $artifact_link_active     = '';
     public $artifact_deletion_active = '';
-    public $email_gateway_active = '';
-    public $report_active = '';
+    public $email_gateway_active     = '';
+    public $report_active            = '';
     public $emailgateway;
     public $natures;
     public $report_config_panel;
@@ -41,10 +41,10 @@ class SectionsPresenter
         $this->natures             = dgettext('tuleap-tracker', 'Artifact Links Types');
         $this->report_config_panel = dgettext('tuleap-tracker', 'Report');
 
-        $this->emailgateway_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([
+        $this->emailgateway_url  = TRACKER_BASE_URL . '/config.php?' . http_build_query([
             'action'   => 'emailgateway'
         ]);
-        $this->natures_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([
+        $this->natures_url       = TRACKER_BASE_URL . '/config.php?' . http_build_query([
             'action'   => 'natures'
         ]);
         $this->report_config_url = TRACKER_BASE_URL . '/config.php?' . http_build_query([

@@ -48,17 +48,17 @@ final class CardInCellPresenterTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $swimline_field_values   = [100, 221];
-        $swimline_id             = 3;
-        $this->artifact          = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->card_presenter    = \Mockery::mock(\Cardwall_CardPresenter::class)->shouldReceive('getArtifact')->andReturns($this->artifact)->getMock();
+        $swimline_field_values = [100, 221];
+        $swimline_id           = 3;
+        $this->artifact        = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $this->card_presenter  = \Mockery::mock(\Cardwall_CardPresenter::class)->shouldReceive('getArtifact')->andReturns($this->artifact)->getMock();
         $this->card_presenter->shouldReceive('getId')->andReturns(self::CARD_ID);
-        $this->presenter         = new Cardwall_CardInCellPresenter($this->card_presenter, self::CARD_FIELD_ID, $swimline_id, $swimline_field_values);
+        $this->presenter = new Cardwall_CardInCellPresenter($this->card_presenter, self::CARD_FIELD_ID, $swimline_id, $swimline_field_values);
     }
 
     public function testItHasColumnDropInto(): void
     {
-        $drop_into               = 'drop-into-3-100 drop-into-3-221';
+        $drop_into = 'drop-into-3-100 drop-into-3-221';
         $this->assertEquals($drop_into, $this->presenter->getDropIntoClass());
     }
 

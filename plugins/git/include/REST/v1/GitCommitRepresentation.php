@@ -96,7 +96,7 @@ class GitCommitRepresentation
         $author = $commit_metadata->getAuthor();
         if ($author !== null) {
             $author_representation = MinimalUserRepresentation::build($author);
-            $this->author = $author_representation;
+            $this->author          = $author_representation;
         }
 
         $this->commit_status = null;

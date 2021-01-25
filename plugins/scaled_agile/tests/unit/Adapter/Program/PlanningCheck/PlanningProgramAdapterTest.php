@@ -69,12 +69,12 @@ final class PlanningProgramAdapterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tracker_factory    = Mockery::mock(\TrackerFactory::class);
-        $this->project_manager    = Mockery::mock(\ProjectManager::class);
-        $this->url_verification   = Mockery::mock(\URLVerification::class);
-        $this->plan_store         = Mockery::mock(PlanStore::class);
-        $this->program_store      = Mockery::mock(ProgramStore::class);
-        $this->team_store         = Mockery::mock(TeamStore::class);
+        $this->tracker_factory  = Mockery::mock(\TrackerFactory::class);
+        $this->project_manager  = Mockery::mock(\ProjectManager::class);
+        $this->url_verification = Mockery::mock(\URLVerification::class);
+        $this->plan_store       = Mockery::mock(PlanStore::class);
+        $this->program_store    = Mockery::mock(ProgramStore::class);
+        $this->team_store       = Mockery::mock(TeamStore::class);
 
         $this->adapter = new PlanningProgramAdapter(
             $this->tracker_factory,
@@ -88,10 +88,10 @@ final class PlanningProgramAdapterTest extends TestCase
 
     public function testItThrowExceptionWhenStoreProgramIsNotAProgram(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $project = new Project(['group_id' => 101]);
-        $team    = new Project(['group_id' => $project->getID()]);
-        $program_increment    = new Project(['group_id' => 200]);
+        $user              = UserTestBuilder::aUser()->build();
+        $project           = new Project(['group_id' => 101]);
+        $team              = new Project(['group_id' => $project->getID()]);
+        $program_increment = new Project(['group_id' => 200]);
         $this->project_manager->shouldReceive('getProject')->with($project->getId())->andReturn($team);
         $this->project_manager->shouldReceive('getProject')->with($program_increment->getId())->andReturn($program_increment);
 
@@ -105,10 +105,10 @@ final class PlanningProgramAdapterTest extends TestCase
 
     public function testItThrowExceptionWhenUserCanNotAccessToProgram(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $project = new Project(['group_id' => 101]);
-        $team    = new Project(['group_id' => $project->getID()]);
-        $program_increment    = new Project(['group_id' => 200]);
+        $user              = UserTestBuilder::aUser()->build();
+        $project           = new Project(['group_id' => 101]);
+        $team              = new Project(['group_id' => $project->getID()]);
+        $program_increment = new Project(['group_id' => 200]);
         $this->project_manager->shouldReceive('getProject')->with($project->getId())->andReturn($team);
         $this->project_manager->shouldReceive('getProject')->with($program_increment->getId())->andReturn($program_increment);
 
@@ -123,10 +123,10 @@ final class PlanningProgramAdapterTest extends TestCase
 
     public function testItBuildAProgram(): void
     {
-        $user    = UserTestBuilder::aUser()->build();
-        $project = new Project(['group_id' => 101]);
-        $team    = new Project(['group_id' => $project->getID()]);
-        $program_increment    = new Project(['group_id' => 200]);
+        $user              = UserTestBuilder::aUser()->build();
+        $project           = new Project(['group_id' => 101]);
+        $team              = new Project(['group_id' => $project->getID()]);
+        $program_increment = new Project(['group_id' => 200]);
         $this->project_manager->shouldReceive('getProject')->with($project->getId())->andReturn($team);
         $this->project_manager->shouldReceive('getProject')->with($program_increment->getId())->andReturn($program_increment);
 

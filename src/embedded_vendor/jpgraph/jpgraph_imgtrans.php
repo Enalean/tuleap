@@ -45,8 +45,8 @@ class ImgTrans
             $hh = $h;
         }
 
-        $newgdh = imagecreatetruecolor($ww, $hh);
-        $crgb = new RGB($newgdh);
+        $newgdh    = imagecreatetruecolor($ww, $hh);
+        $crgb      = new RGB($newgdh);
         $fillColor = $crgb->Allocate($aFillColor);
         imagefilledrectangle($newgdh, 0, 0, $ww - 1, $hh - 1, $fillColor);
 
@@ -76,11 +76,11 @@ class ImgTrans
                 } else {
                     $rgb = imagecolorat($aGdImg, $x, $y);
                 }
-                $r = ($rgb >> 16) & 0xFF;
-                $g = ($rgb >> 8) & 0xFF;
-                $b = $rgb & 0xFF;
+                $r      = ($rgb >> 16) & 0xFF;
+                $g      = ($rgb >> 8) & 0xFF;
+                $b      = $rgb & 0xFF;
                 $colidx = imagecolorallocate($newgdh, $r, $g, $b);
-                $xt = round($xt + $mid);
+                $xt     = round($xt + $mid);
                 if ($aDir == SKEW3D_UP) {
                     $syt = $yt;
                 } else {
@@ -88,10 +88,10 @@ class ImgTrans
                 }
 
                 if (! empty($set[$yt])) {
-                    $nrgb = imagecolorat($newgdh, $xt, $syt);
-                    $nr = ($nrgb >> 16) & 0xFF;
-                    $ng = ($nrgb >> 8) & 0xFF;
-                    $nb = $nrgb & 0xFF;
+                    $nrgb   = imagecolorat($newgdh, $xt, $syt);
+                    $nr     = ($nrgb >> 16) & 0xFF;
+                    $ng     = ($nrgb >> 8) & 0xFF;
+                    $nb     = $nrgb & 0xFF;
                     $colidx = imagecolorallocate(
                         $newgdh,
                         floor(($r + $nr) / 2),
@@ -126,8 +126,8 @@ class ImgTrans
             $ww = $w;
         }
 
-        $newgdh = imagecreatetruecolor($ww, $hh);
-        $crgb = new RGB($newgdh);
+        $newgdh    = imagecreatetruecolor($ww, $hh);
+        $crgb      = new RGB($newgdh);
         $fillColor = $crgb->Allocate($aFillColor);
         imagefilledrectangle($newgdh, 0, 0, $ww - 1, $hh - 1, $fillColor);
 
@@ -157,11 +157,11 @@ class ImgTrans
                 } else {
                     $rgb = imagecolorat($aGdImg, $x, $y);
                 }
-                $r = ($rgb >> 16) & 0xFF;
-                $g = ($rgb >> 8) & 0xFF;
-                $b = $rgb & 0xFF;
+                $r      = ($rgb >> 16) & 0xFF;
+                $g      = ($rgb >> 8) & 0xFF;
+                $b      = $rgb & 0xFF;
                 $colidx = imagecolorallocate($newgdh, $r, $g, $b);
-                $yt = floor($hh - $yt - $mid - 1);
+                $yt     = floor($hh - $yt - $mid - 1);
                 if ($aDir == SKEW3D_RIGHT) {
                     $sxt = $ww - $xt - 1;
                 } else {
@@ -169,10 +169,10 @@ class ImgTrans
                 }
 
                 if (! empty($set[$xt])) {
-                    $nrgb = imagecolorat($newgdh, $sxt, $yt);
-                    $nr = ($nrgb >> 16) & 0xFF;
-                    $ng = ($nrgb >> 8) & 0xFF;
-                    $nb = $nrgb & 0xFF;
+                    $nrgb   = imagecolorat($newgdh, $sxt, $yt);
+                    $nr     = ($nrgb >> 16) & 0xFF;
+                    $ng     = ($nrgb >> 8) & 0xFF;
+                    $nb     = $nrgb & 0xFF;
                     $colidx = imagecolorallocate(
                         $newgdh,
                         floor(($r + $nr) / 2),

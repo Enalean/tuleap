@@ -155,7 +155,7 @@ class PlanningResource extends AuthenticatedResource
     private function getMilestonesByPlanning(Planning $planning, $limit, $offset)
     {
         $all_milestones = [];
-        $milestones = $this->milestone_factory->getAllBareMilestones($this->getCurrentUser(), $planning);
+        $milestones     = $this->milestone_factory->getAllBareMilestones($this->getCurrentUser(), $planning);
         foreach ($milestones as $milestone) {
             $all_milestones[] = new MilestoneInfoRepresentation($milestone);
         }

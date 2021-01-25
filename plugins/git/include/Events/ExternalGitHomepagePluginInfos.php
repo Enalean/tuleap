@@ -30,6 +30,6 @@ class ExternalGitHomepagePluginInfos
     public function __construct(string $plugin_name, array $data)
     {
         $this->plugin_name = $plugin_name;
-        $this->data = $data;
+        $this->data        = $data;
     }
 }

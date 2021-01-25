@@ -131,7 +131,7 @@ class Git_PermissionsDao extends \Tuleap\DB\DataAccessObject
                   AND permissions.ugroup_id = ?
                 ";
 
-        $params = $git_permission_type_in_condition->values();
+        $params   = $git_permission_type_in_condition->values();
         $params[] = GitDao::NOT_DELETED_DATE;
         $params[] = $ugroup_id;
 

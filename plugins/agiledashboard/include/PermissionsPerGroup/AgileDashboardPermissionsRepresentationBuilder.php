@@ -77,7 +77,7 @@ class AgileDashboardPermissionsRepresentationBuilder
         $planning_names = [];
 
         foreach ($plannings as $project_planning) {
-            $representation   = $this->planning_builder->build($project, $project_planning, $user_group);
+            $representation = $this->planning_builder->build($project, $project_planning, $user_group);
             if ($representation) {
                 $planning_names[] = $representation;
             }

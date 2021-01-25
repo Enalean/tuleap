@@ -182,8 +182,8 @@ class IncomingMessageInsecureBuilderTest extends TestCase
         $incoming_mail->shouldReceive('getTo')->andReturns([self::ARTIFACT_MAIL]);
         $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        $incoming_message  = $incoming_message_builder->build($incoming_mail);
-        $artifact          = $incoming_message->getArtifact();
+        $incoming_message = $incoming_message_builder->build($incoming_mail);
+        $artifact         = $incoming_message->getArtifact();
         $this->assertNotNull($artifact);
     }
 
@@ -206,8 +206,8 @@ class IncomingMessageInsecureBuilderTest extends TestCase
         $incoming_mail->shouldReceive('getTo')->andReturns([]);
         $incoming_mail->shouldReceive('getCC')->andReturns([self::ARTIFACT_MAIL]);
 
-        $incoming_message  = $incoming_message_builder->build($incoming_mail);
-        $artifact          = $incoming_message->getArtifact();
+        $incoming_message = $incoming_message_builder->build($incoming_mail);
+        $artifact         = $incoming_message->getArtifact();
         $this->assertNotNull($artifact);
     }
 
@@ -230,8 +230,8 @@ class IncomingMessageInsecureBuilderTest extends TestCase
         $incoming_mail->shouldReceive('getTo')->andReturns([self::ARTIFACT_MAIL, 'unknown@example.com']);
         $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        $incoming_message  = $incoming_message_builder->build($incoming_mail);
-        $artifact          = $incoming_message->getArtifact();
+        $incoming_message = $incoming_message_builder->build($incoming_mail);
+        $artifact         = $incoming_message->getArtifact();
         $this->assertNotNull($artifact);
     }
 

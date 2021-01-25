@@ -58,7 +58,7 @@ class ScopeExtractor
             } catch (InvalidOAuth2ScopeIdentifierException $e) {
                 throw InvalidOAuth2ScopeException::invalidFormat($e);
             }
-            $scope            = $this->scope_builder->buildAuthenticationScopeFromScopeIdentifier(
+            $scope = $this->scope_builder->buildAuthenticationScopeFromScopeIdentifier(
                 $scope_identifier
             );
             if ($scope === null) {

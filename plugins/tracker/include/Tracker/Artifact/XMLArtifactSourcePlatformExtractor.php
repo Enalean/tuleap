@@ -40,7 +40,7 @@ class XMLArtifactSourcePlatformExtractor
 
     public function __construct(Valid_HTTPURI $valid_HTTPURI, LoggerInterface $logger)
     {
-        $this->logger = $logger;
+        $this->logger        = $logger;
         $this->valid_HTTPURI = $valid_HTTPURI;
     }
 

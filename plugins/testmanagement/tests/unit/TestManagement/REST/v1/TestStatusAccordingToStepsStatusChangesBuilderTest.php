@@ -39,9 +39,9 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \PHPUnit\Framew
      */
     private $status_field;
 
-    private $notrun_id = 101;
-    private $passed_id = 102;
-    private $failed_id = 103;
+    private $notrun_id  = 101;
+    private $passed_id  = 102;
+    private $failed_id  = 103;
     private $blocked_id = 104;
 
     public function setUp(): void

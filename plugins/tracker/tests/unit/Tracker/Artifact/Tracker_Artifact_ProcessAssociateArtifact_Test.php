@@ -82,7 +82,7 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TestCase
         $this->artifact->shouldReceive('getUserManager')->andReturn($this->user_manager);
         $this->artifact->shouldReceive('getFormElementFactory')->andReturn($this->factory);
 
-        $this->request       = new Codendi_Request(
+        $this->request = new Codendi_Request(
             [
                 'func'               => 'associate-artifact-to',
                 'linked-artifact-id' => 987

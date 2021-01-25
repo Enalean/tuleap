@@ -32,7 +32,7 @@ class ThemeColorPresenterBuilderTest extends TestCase
 
     public function testGetColorPresenterCollection()
     {
-        $user = Mockery::mock(\PFUser::class);
+        $user          = Mockery::mock(\PFUser::class);
         $theme_variant = Mockery::mock(\ThemeVariant::class);
 
         $theme_variant

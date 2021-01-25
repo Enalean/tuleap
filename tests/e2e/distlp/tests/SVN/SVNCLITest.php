@@ -46,7 +46,7 @@ class SVNCLITest extends TestCase
 
     public function testSVNLs()
     {
-        $output = $this->getXML($this->getSvnCommand('alice', 'ls --xml https://reverse-proxy/svnplugin/svn-project-01/sample'));
+        $output  = $this->getXML($this->getSvnCommand('alice', 'ls --xml https://reverse-proxy/svnplugin/svn-project-01/sample'));
         $content = [];
         foreach ($output->list->entry as $entry) {
             $content[] = (string) $entry->name;
@@ -65,7 +65,7 @@ class SVNCLITest extends TestCase
         $this->command($this->getSvnCommand('alice', 'co https://reverse-proxy/svnplugin/svn-project-01/sample'));
         chdir('/tmp/sample');
         $checkedout_revision = $this->getWCRevision();
-        $need_to_add = true;
+        $need_to_add         = true;
         if (file_exists('trunk/README')) {
             $need_to_add = false;
         }
@@ -81,7 +81,7 @@ class SVNCLITest extends TestCase
     public function testWriteAccessDeniedToBob()
     {
         $got_exception = false;
-        $message = '';
+        $message       = '';
         try {
             $this->command($this->getSvnCommand('bob', 'cp -m "stuff" https://reverse-proxy/svnplugin/svn-project-01/sample/trunk https://reverse-proxy/svnplugin/svn-project-01/sample/branches/v1'));
         } catch (\Exception $e) {
@@ -121,8 +121,8 @@ class SVNCLITest extends TestCase
 
     private function command(string $command): string
     {
-        $total_stdout = '';
-        $total_stderr = '';
+        $total_stdout   = '';
+        $total_stderr   = '';
         $descriptorspec = [
             0 => ["pipe", "r"],   // stdin is a pipe that the child will read from
             1 => ["pipe", "w"],   // stdout is a pipe that the child will write to

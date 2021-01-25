@@ -85,13 +85,13 @@ class ThreadsController implements DispatchableWithBurningParrot, DispatchableWi
         System_Command $command,
         CurrentListBreadcrumbCollectionBuilder $breadcrumb_collection_builder
     ) {
-        $this->plugin                 = $plugin;
-        $this->dao                    = $dao;
-        $this->project_manager        = $project_manager;
-        $this->renderer               = $renderer;
-        $this->include_assets         = $include_assets;
-        $this->presenter_builder      = $presenter_builder;
-        $this->command                = $command;
+        $this->plugin                        = $plugin;
+        $this->dao                           = $dao;
+        $this->project_manager               = $project_manager;
+        $this->renderer                      = $renderer;
+        $this->include_assets                = $include_assets;
+        $this->presenter_builder             = $presenter_builder;
+        $this->command                       = $command;
         $this->breadcrumb_collection_builder = $breadcrumb_collection_builder;
     }
 

@@ -53,9 +53,9 @@ class TimetrackingDatesExtractorTest extends TestCase
 
     public function testWhenQueryIsNotProvidedThenStartDateIsAMonthAgo()
     {
-        $date        = new DateTime();
-        $end_date    = $date->format('Y-m-d');
-        $start_date  = $date->modify("-1 month")->format('Y-m-d');
+        $date       = new DateTime();
+        $end_date   = $date->format('Y-m-d');
+        $start_date = $date->modify("-1 month")->format('Y-m-d');
 
         $result = $this->dates_extractor->getDatesFromRoute(null);
 
@@ -65,7 +65,7 @@ class TimetrackingDatesExtractorTest extends TestCase
 
     public function testWhenStartDateIsNotProvidedThenStartDateIsAMonthAgo()
     {
-        $date                    = new DateTime();
+        $date        = new DateTime();
         $end_date    = $date->format('Y-m-d');
         $start_date  = $date->modify("-1 month")->format('Y-m-d');
         $this->dates = new DateTrackingTimesPeriod($start_date, $end_date);

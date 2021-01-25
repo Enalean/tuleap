@@ -53,14 +53,14 @@ class ReviewerDAO extends DataAccessObject
             $change_timestamp,
             $user_ids
         ): ?int {
-            $current_reviewer_ids  = array_map(
+            $current_reviewer_ids = array_map(
                 static function (array $user_row): int {
                     return $user_row['user_id'];
                 },
                 $this->searchReviewers($pull_request_id)
             );
-            $added_reviewer_ids    = array_diff($user_ids, $current_reviewer_ids);
-            $removed_reviewer_ids  = array_diff($current_reviewer_ids, $user_ids);
+            $added_reviewer_ids   = array_diff($user_ids, $current_reviewer_ids);
+            $removed_reviewer_ids = array_diff($current_reviewer_ids, $user_ids);
 
             if (empty($added_reviewer_ids) && empty($removed_reviewer_ids)) {
                 return null;

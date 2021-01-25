@@ -55,14 +55,14 @@ class StartTestManagementController
         $this->artifact_link_usage_updater = $artifact_link_usage_updater;
         $this->csrf_token                  = $csrf_token;
         $this->config_creator              = $config_creator;
-        $this->transaction_executor              = $transaction_executor;
+        $this->transaction_executor        = $transaction_executor;
     }
 
     public function misconfiguration(HTTPRequest $request): string
     {
-        $current_user   = $request->getCurrentUser();
-        $project_id     = (int) $request->getProject()->getID();
-        $is_user_admin  = $current_user->isAdmin($project_id);
+        $current_user  = $request->getCurrentUser();
+        $project_id    = (int) $request->getProject()->getID();
+        $is_user_admin = $current_user->isAdmin($project_id);
 
         return $this->getRenderer()->renderToString(
             'misconfiguration',

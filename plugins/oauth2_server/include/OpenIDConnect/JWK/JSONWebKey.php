@@ -72,7 +72,7 @@ final class JSONWebKey
         if ($public_key === false) {
             throw new InvalidPublicRSAKeyPEMFormatException($pem_public_key);
         }
-        $details    = \openssl_pkey_get_details($public_key);
+        $details = \openssl_pkey_get_details($public_key);
         if (! isset($details['rsa']['n'], $details['rsa']['e'])) {
             throw new InvalidPublicRSAKeyPEMFormatException($pem_public_key);
         }

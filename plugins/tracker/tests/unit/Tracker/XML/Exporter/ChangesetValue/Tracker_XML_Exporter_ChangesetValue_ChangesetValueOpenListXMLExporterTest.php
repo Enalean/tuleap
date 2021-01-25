@@ -46,7 +46,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 
-        $user = new PFUser([
+        $user              = new PFUser([
             'user_id' => 112,
             'language_id' => 'en',
             'ldap_id' => 'ldap_01'

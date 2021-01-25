@@ -55,10 +55,10 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->tracker_xml_import        = Mockery::mock(TrackerXmlImport::class);
-        $this->tracker_factory           = Mockery::mock(TrackerFactory::class);
-        $this->xml_error_displayer       = Mockery::mock(TrackerCreatorXmlErrorDisplayer::class);
-        $this->creation_data_checker     = Mockery::mock(TrackerCreationDataChecker::class);
+        $this->tracker_xml_import    = Mockery::mock(TrackerXmlImport::class);
+        $this->tracker_factory       = Mockery::mock(TrackerFactory::class);
+        $this->xml_error_displayer   = Mockery::mock(TrackerCreatorXmlErrorDisplayer::class);
+        $this->creation_data_checker = Mockery::mock(TrackerCreationDataChecker::class);
 
         $this->creator = new TrackerCreator(
             $this->tracker_xml_import,

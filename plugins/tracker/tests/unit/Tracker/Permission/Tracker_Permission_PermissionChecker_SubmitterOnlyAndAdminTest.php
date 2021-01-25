@@ -87,9 +87,9 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
         $project->shouldReceive('getID')->andReturns(120);
         $project->shouldReceive('isPublic')->andReturns(true);
 
-        $user_manager           = \Mockery::spy(\UserManager::class);
-        $project_access_checker = \Mockery::spy(ProjectAccessChecker::class);
-        $this->permission_checker     = new Tracker_Permission_PermissionChecker(
+        $user_manager             = \Mockery::spy(\UserManager::class);
+        $project_access_checker   = \Mockery::spy(ProjectAccessChecker::class);
+        $this->permission_checker = new Tracker_Permission_PermissionChecker(
             $user_manager,
             $project_access_checker
         );
@@ -171,7 +171,7 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyAndAdminTest exten
 
         $this->artifact->shouldReceive('getSubmittedBy')->andReturns(250);
 
-        $private_project            = Mockery::spy(\Project::class);
+        $private_project = Mockery::spy(\Project::class);
         $private_project->shouldReceive('isPublic')->andReturnFalse();
 
         $tracker_in_private_project = Mockery::spy(\Tracker::class);

@@ -43,8 +43,8 @@ class FileInfoForTusUploadedFileReadyToBeAttachedProvider
         FileBeingUploadedInformationProvider $information_provider,
         FileOngoingUploadDao $ongoing_upload_dao
     ) {
-        $this->information_provider  = $information_provider;
-        $this->ongoing_upload_dao    = $ongoing_upload_dao;
+        $this->information_provider = $information_provider;
+        $this->ongoing_upload_dao   = $ongoing_upload_dao;
     }
 
     public function getFileInfo(

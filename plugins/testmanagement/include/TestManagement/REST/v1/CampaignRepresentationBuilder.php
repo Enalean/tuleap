@@ -105,7 +105,7 @@ class CampaignRepresentationBuilder
         int $offset
     ) {
         $campaign_representations = [];
-        $milestone_id = (int) $milestone_criterion->getMilestoneId();
+        $milestone_id             = (int) $milestone_criterion->getMilestoneId();
 
         if ($status_criterion->shouldRetrieveOnlyClosedCampaigns()) {
             $paginated_campaigns = $this->testmanagement_artifact_factory->getPaginatedClosedArtifactsByTrackerIdUserCanView($user, $campaign_tracker_id, $milestone_id, $limit, $offset);

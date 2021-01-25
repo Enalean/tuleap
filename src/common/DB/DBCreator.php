@@ -52,7 +52,7 @@ class DBCreator
     {
         $options = [];
         if (DBConfig::isSSLEnabled()) {
-            $options[PDO::MYSQL_ATTR_SSL_CA] = DBConfig::getSSLCACertFile();
+            $options[PDO::MYSQL_ATTR_SSL_CA]                 = DBConfig::getSSLCACertFile();
             $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = DBConfig::isSSLVerifyCert();
         }
         return $options;

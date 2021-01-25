@@ -57,7 +57,7 @@ class Docman_MetadataFactory
         // states such as 'useIt' in a dedicated table
         $this->modifiableMetadata = ['obsolescence_date', 'status'];
 
-        $this->scalarMetadata     = [PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
+        $this->scalarMetadata = [PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
                                           PLUGIN_DOCMAN_METADATA_TYPE_STRING,
                                           PLUGIN_DOCMAN_METADATA_TYPE_DATE];
 
@@ -211,7 +211,7 @@ class Docman_MetadataFactory
         $dao = $this->getDao();
         $dar = $dao->searchByGroupId($this->groupId, true, []);
         while ($dar->valid()) {
-            $row = $dar->current();
+            $row                 = $dar->current();
             $mdla[$row['label']] = $row['label'];
             $dar->next();
         }
@@ -321,7 +321,7 @@ class Docman_MetadataFactory
     {
         // Get parent
         $itemFactory = new Docman_ItemFactory();
-        $parentItem = $itemFactory->getItemFromDb($item->getParentId());
+        $parentItem  = $itemFactory->getItemFromDb($item->getParentId());
         $this->appendItemMetadataList($parentItem);
 
         // Get inheritables metadata
@@ -341,7 +341,7 @@ class Docman_MetadataFactory
         $value = null;
         if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $loveFactory = new Docman_MetadataListOfValuesElementFactory();
-            $value = $loveFactory->getLoveValuesForItem($item, $md);
+            $value       = $loveFactory->getLoveValuesForItem($item, $md);
         } else {
             $dao = $this->getDao();
             $dar = $dao->searchValueById($md->getId(), $item->getId());
@@ -474,7 +474,7 @@ class Docman_MetadataFactory
             if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 // Insert 'none' value in the list (first value).
                 $loveFactory = new Docman_MetadataListOfValuesElementFactory($mdId);
-                $inserted = $loveFactory->createNoneValue();
+                $inserted    = $loveFactory->createNoneValue();
                 if ($inserted === false) {
                     $mdId = false;
                 }
@@ -507,7 +507,7 @@ class Docman_MetadataFactory
             $delLove = false;
             if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
-                $delLove = $loveFactory->deleteByMetadataId();
+                $delLove     = $loveFactory->deleteByMetadataId();
             } else {
                 $delLove = true;
             }
@@ -655,7 +655,7 @@ class Docman_MetadataFactory
             // If current metadata is a list of values, clone values
             if ($newMdId > 0 && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 $srcLoveFactory = $this->_getListOfValuesElementFactory($md->getId());
-                $values = $srcLoveFactory->cloneValues($md, $newMd);
+                $values         = $srcLoveFactory->cloneValues($md, $newMd);
                 foreach ($values as $srcId => $dstId) {
                     $metadataMapping['love'][$srcId] = $dstId;
                 }
@@ -704,11 +704,11 @@ class Docman_MetadataFactory
     {
         $dstMdFactory = $this->_getMetadataFactory($dstGroupId);
 
-        $metadataMapping = [];
-        $metadataMapping['md'] = [];
+        $metadataMapping         = [];
+        $metadataMapping['md']   = [];
         $metadataMapping['love'] = [];
 
-        $mda = $this->getRealMetadataList(false);
+        $mda    = $this->getRealMetadataList(false);
         $mdIter = new ArrayIterator($mda);
         $mdIter->rewind();
         while ($mdIter->valid()) {
@@ -723,7 +723,7 @@ class Docman_MetadataFactory
                 if ($md->equivalent($dstMd)) {
                     // Mapping in both sense to make the usage of the map
                     // easier
-                    $metadataMapping['md'][$md->getId()] = $dstMd->getId();
+                    $metadataMapping['md'][$md->getId()]    = $dstMd->getId();
                     $metadataMapping['md'][$dstMd->getId()] = $md->getId();
 
                     if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {

@@ -30,7 +30,7 @@ class Tracker_TreeNode_CardPresenterNodeTest extends \PHPUnit\Framework\TestCase
         $node_2 = new TreeNode([], 2);
 
         $data['artifact'] = Mockery::mock(Artifact::class);
-        $tree_node  = new TreeNode($data, 3);
+        $tree_node        = new TreeNode($data, 3);
         $tree_node->setChildren([$node_1, $node_2]);
         $tree_node->setObject($data['artifact']);
 

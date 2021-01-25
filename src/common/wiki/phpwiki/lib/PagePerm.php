@@ -131,7 +131,7 @@ function pagePermissionsAcl($type, $perm_tree)
     $perm = $perm_tree[1];
     while (! is_object($perm)) {
         $perm_tree = pagePermissionsAcl($type, $perm);
-        $perm = $perm_tree[1];
+        $perm      = $perm_tree[1];
     }
     return [$type, $perm];
 }
@@ -235,8 +235,8 @@ function _requiredAuthorityForPagename($access, $pagename)
     $page = $request->getPage($pagename);
     // Page not found; check against default permissions
     if (! $page->exists()) {
-        $perm = new PagePermission();
-        $result = ($perm->isAuthorized($access, $request->_user) === true);
+        $perm                          = new PagePermission();
+        $result                        = ($perm->isAuthorized($access, $request->_user) === true);
         $permcache[$pagename][$access] = $result;
         return $result;
     }
@@ -249,12 +249,12 @@ function _requiredAuthorityForPagename($access, $pagename)
                 trigger_error(". (dotpage == rootpage for inheriting pageperm ACLs) exists without any ACL!\n" .
                               "Please do ?action=setacl&pagename=.", E_USER_WARNING);
             }
-            $result = ($perm->isAuthorized($access, $request->_user) === true);
+            $result                        = ($perm->isAuthorized($access, $request->_user) === true);
             $permcache[$pagename][$access] = $result;
             return $result;
         } elseif ($pagename[0] == '.') {
-            $perm = new PagePermission(PagePermission::dotPerms());
-            $result = ($perm->isAuthorized($access, $request->_user) === true);
+            $perm                          = new PagePermission(PagePermission::dotPerms());
+            $result                        = ($perm->isAuthorized($access, $request->_user) === true);
             $permcache[$pagename][$access] = $result;
             return $result;
         }
@@ -442,7 +442,7 @@ class PagePermission
             if (! $user->isAuthenticated()) {
                 return false;
             }
-            $page = $request->getPage();
+            $page  = $request->getPage();
             $owner = $page->getOwner();
             return ($owner === $user->UserName()
                     or $member->isMember($owner));
@@ -451,7 +451,7 @@ class PagePermission
             if (! $user->isAuthenticated()) {
                 return false;
             }
-            $page = $request->getPage();
+            $page    = $request->getPage();
             $creator = $page->getCreator();
             return ($creator === $user->UserName()
                     or $member->isMember($creator));
@@ -506,7 +506,7 @@ class PagePermission
                 $perm['edit'] = [ACL_AUTHENTICATED => true];
             }
             $perm['edit'][ACL_BOGOUSER] = ALLOW_BOGO_LOGIN ? true : false;
-            $perm['create'] = $perm['edit'];
+            $perm['create']             = $perm['edit'];
         }
         return $perm;
     }
@@ -546,7 +546,7 @@ class PagePermission
      */
     public function dotPerms()
     {
-        $def = [ACL_ADMIN => true,
+        $def  = [ACL_ADMIN => true,
                      ACL_OWNER => true];
         $perm = [];
         foreach (self::accessTypes() as $access) {
@@ -644,21 +644,21 @@ class PagePermission
         }
         //array_unique(array_merge($this->_group->getAllGroupsIn(),
         $deletesrc = $WikiTheme->_findData('images/delete.png');
-        $addsrc = $WikiTheme->_findData('images/add.png');
-        $nbsp = HTML::raw('&nbsp;');
+        $addsrc    = $WikiTheme->_findData('images/add.png');
+        $nbsp      = HTML::raw('&nbsp;');
         foreach ($this->perm as $access => $groups) {
             //$permlist = HTML::table(array('class' => 'cal','valign' => 'top'));
             $first_only = true;
-            $newperm = HTML::input(['type' => 'checkbox',
+            $newperm    = HTML::input(['type' => 'checkbox',
                                          'name' => "acl[_new_perm][$access]",
                                          'value' => 1]);
-            $addbutton = HTML::input(['type' => 'checkbox',
+            $addbutton  = HTML::input(['type' => 'checkbox',
                                            'name' => "acl[_add_group][$access]",
                                            //'src'  => $addsrc,
                                            //'alt'   => "Add",
                                            'title' => _("Add this ACL"),
                                            'value' => 1]);
-            $newgroup = HTML::select(['name' => "acl[_new_group][$access]",
+            $newgroup   = HTML::select(['name' => "acl[_new_group][$access]",
                                            'style' => 'text-align: right;',
                                            'size' => 1]);
             foreach ($allGroups as $groupname) {
@@ -691,7 +691,7 @@ class PagePermission
                 if ($bool) {
                     $checkbox->setAttr('checked', 'checked');
                 }
-                $checkbox = HTML(
+                $checkbox     = HTML(
                     HTML::input(['type' => 'hidden',
                                                    'name' => "acl[$access][$group]",
                                                    'value' => 0]),
@@ -762,7 +762,7 @@ class PagePermission
     // As used by WikiAdminSetAclSimple
     public function asAclLines()
     {
-        $s = '';
+        $s    = '';
         $line = '';
         $this->sanify();
         foreach ($this->perm as $access => $groups) {

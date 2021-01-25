@@ -88,7 +88,7 @@ class CardwallLegacyController implements DispatchableWithRequest
                         new BackgroundColorBuilder($bind_decorator_retriever),
                         new AccentColorBuilder(Tracker_FormElementFactory::instance(), $bind_decorator_retriever)
                     );
-                    $controller = new Cardwall_CardController(
+                    $controller          = new Cardwall_CardController(
                         $request,
                         $single_card_builder->getSingleCard(
                             $request->getCurrentUser(),

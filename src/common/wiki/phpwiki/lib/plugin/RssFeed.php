@@ -71,7 +71,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
             $feed = $rss_parser->channel['title'];
         }
         if (! empty($rss_parser->channel['link'])) {
-            $url  = $rss_parser->channel['link'];
+            $url = $rss_parser->channel['link'];
         }
         if (! empty($rss_parser->channel['description'])) {
             $description = $rss_parser->channel['description'];

@@ -49,7 +49,7 @@ class PermissionsManagerLockTest extends TestCase
         parent::setUp();
         $this->user = \Mockery::spy(PFUser::class);
         $this->user->allows(['getId' => 1234]);
-        $this->itemId = 1848;
+        $this->itemId   = 1848;
         $this->docmanPm = \Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
 

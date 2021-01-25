@@ -28,7 +28,7 @@ class Tracker_Report_Criteria_Date_ValueDao extends Tracker_Report_Criteria_Valu
 
     public function save($id, $value)
     {
-        $id        = $this->da->escapeInt($id);
+        $id = $this->da->escapeInt($id);
 
         if (isset($value['op'])) {
             $op = $this->da->quoteSmart($value['op']);

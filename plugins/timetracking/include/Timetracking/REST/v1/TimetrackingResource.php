@@ -112,7 +112,7 @@ class TimetrackingResource extends AuthenticatedResource
         $this->sendAllowHeaders();
         try {
             $current_user = $this->user_manager->getCurrentUser();
-            $retriever = ArtifactTimeRetriever::build();
+            $retriever    = ArtifactTimeRetriever::build();
             return $retriever->getArtifactTime($current_user, $query);
         } catch (\User_StatusInvalidException $exception) {
             throw new RestException(401);

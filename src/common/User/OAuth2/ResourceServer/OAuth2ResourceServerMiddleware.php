@@ -98,7 +98,7 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
         }
 
         try {
-            $event = new VerifyOAuth2AccessTokenEvent(
+            $event                 = new VerifyOAuth2AccessTokenEvent(
                 $this->access_token_identifier_unserializer->getSplitToken($serialized_access_token_identifier),
                 $this->required_scope
             );

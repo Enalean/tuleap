@@ -54,13 +54,13 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
             $add_update_to_history = false;
 
             //We look for anonymous and registered users' permissions, both in the user's request and in the db
-            $user_set_anonymous_to_submit = isset($ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]) &&
+            $user_set_anonymous_to_submit  = isset($ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]) &&
                 isset($ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['submit']) &&
                 $ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['submit'] === "on";
-            $user_set_anonymous_to_read   = isset($ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]) &&
+            $user_set_anonymous_to_read    = isset($ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]) &&
                 isset($ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['others']) &&
                 $ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['others'] === "0";
-            $user_set_anonymous_to_update = isset($ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]) &&
+            $user_set_anonymous_to_update  = isset($ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]) &&
                 isset($ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['others']) &&
                 $ugroups_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['others'] === "1";
             $user_set_registered_to_submit = isset($ugroups_permissions[$GLOBALS['UGROUP_REGISTERED']]) &&
@@ -93,7 +93,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                     foreach ($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
                         if ($stored_ugroup_id === $GLOBALS['UGROUP_ANONYMOUS']) {
                             permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $fake_object_id, $stored_ugroup_id);
-                            $add_submit_to_history = true;
+                            $add_submit_to_history              = true;
                             $anonymous_is_already_set_to_submit = true;
                         } else {
                             if (
@@ -110,7 +110,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                     }
                 } elseif ($anonymous_is_already_set_to_submit && ! $user_set_anonymous_to_submit) {
                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $GLOBALS['UGROUP_ANONYMOUS'], $fake_object_id);
-                    $add_submit_to_history = true;
+                    $add_submit_to_history              = true;
                     $anonymous_is_already_set_to_submit = false;
                 }
 
@@ -121,7 +121,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                     foreach ($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
                         if ($stored_ugroup_id === $GLOBALS['UGROUP_ANONYMOUS']) {
                             permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_UPDATE', $fake_object_id, $stored_ugroup_id);
-                            $add_update_to_history = true;
+                            $add_update_to_history              = true;
                             $anonymous_is_already_set_to_update = true;
                         } else {
                             if (
@@ -144,7 +144,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                     }
                 } elseif ($anonymous_is_already_set_to_update && ! $user_set_anonymous_to_update) {
                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_UPDATE', $GLOBALS['UGROUP_ANONYMOUS'], $fake_object_id);
-                    $add_update_to_history = true;
+                    $add_update_to_history              = true;
                     $anonymous_is_already_set_to_update = false;
                 }
 
@@ -155,7 +155,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                     foreach ($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
                         if ($stored_ugroup_id === $GLOBALS['UGROUP_ANONYMOUS']) {
                             permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_READ', $fake_object_id, $stored_ugroup_id);
-                            $add_read_to_history = true;
+                            $add_read_to_history              = true;
                             $anonymous_is_already_set_to_read = true;
                         } else {
                             if (
@@ -173,7 +173,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                     }
                 } elseif ($anonymous_is_already_set_to_read && ! $user_set_anonymous_to_read) {
                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_READ', $GLOBALS['UGROUP_ANONYMOUS'], $fake_object_id);
-                    $add_read_to_history = true;
+                    $add_read_to_history              = true;
                     $anonymous_is_already_set_to_read = false;
                 }
             }
@@ -196,7 +196,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                         foreach ($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
                             if ($stored_ugroup_id === $GLOBALS['UGROUP_REGISTERED']) {
                                 permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $fake_object_id, $stored_ugroup_id);
-                                $add_submit_to_history = true;
+                                $add_submit_to_history               = true;
                                 $registered_is_already_set_to_submit = true;
                             } elseif ($stored_ugroup_id !== $GLOBALS['UGROUP_ANONYMOUS']) {
                                 if (
@@ -214,7 +214,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                     }
                 } elseif ($registered_is_already_set_to_submit && ! $user_set_registered_to_submit) {
                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $GLOBALS['UGROUP_REGISTERED'], $fake_object_id);
-                    $add_submit_to_history = true;
+                    $add_submit_to_history               = true;
                     $registered_is_already_set_to_submit = false;
                 }
 
@@ -230,7 +230,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                         foreach ($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
                             if ($stored_ugroup_id === $GLOBALS['UGROUP_REGISTERED']) {
                                 permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_UPDATE', $fake_object_id, $stored_ugroup_id);
-                                $add_update_to_history = true;
+                                $add_update_to_history               = true;
                                 $registered_is_already_set_to_update = true;
                             } elseif ($stored_ugroup_id !== $GLOBALS['UGROUP_ANONYMOUS']) { //ugroups other than anonymous
                                 if (
@@ -254,7 +254,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                     }
                 } elseif ($registered_is_already_set_to_update && ! $user_set_registered_to_update) {
                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_UPDATE', $GLOBALS['UGROUP_REGISTERED'], $fake_object_id);
-                    $add_update_to_history = true;
+                    $add_update_to_history               = true;
                     $registered_is_already_set_to_update = false;
                 }
 
@@ -270,7 +270,7 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                         foreach ($stored_ugroups_permissions[$field_id]['ugroups'] as $stored_ugroup_id => $stored_ugroup_permissions) {
                             if ($stored_ugroup_id === $GLOBALS['UGROUP_REGISTERED']) {
                                 permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_READ', $fake_object_id, $stored_ugroup_id);
-                                $add_read_to_history = true;
+                                $add_read_to_history               = true;
                                 $registered_is_already_set_to_read = true;
                             } elseif ($stored_ugroup_id !== $GLOBALS['UGROUP_ANONYMOUS']) { //ugroups other than anonymous
                                 if (
@@ -526,17 +526,17 @@ function plugin_tracker_permission_fetch_selection_field($permission_type, $obje
     // Get ugroups already defined for this permission_type
     if (empty($selected)) {
         $res_ugroups = permission_db_authorized_ugroups($permission_type, $object_id);
-        $nb_set = db_numrows($res_ugroups);
+        $nb_set      = db_numrows($res_ugroups);
     } else {
         $res_ugroups = $selected;
-        $nb_set = count($res_ugroups);
+        $nb_set      = count($res_ugroups);
     }
     // Now retrieve all possible ugroups for this project, as well as the default values
     $sql = "SELECT ugroup_id,is_default FROM permissions_values WHERE permission_type='$permission_type'";
 
-    $res = db_query($sql);
+    $res                = db_query($sql);
     $predefined_ugroups = '';
-    $default_values = [];
+    $default_values     = [];
     if (db_numrows($res) < 1) {
         $html .= "<p><b>" . $GLOBALS['Language']->getText('global', 'error') . "</b>: " . $GLOBALS['Language']->getText('project_admin_permissions', 'perm_type_not_def', $permission_type);
         return $html;
@@ -556,7 +556,7 @@ function plugin_tracker_permission_fetch_selection_field($permission_type, $obje
 
     $array = [];
     while ($row = db_fetch_array($res)) {
-        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row[1]);
+        $name    = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row[1]);
         $array[] = [
             'value' => $row[0],
             'text' => $name

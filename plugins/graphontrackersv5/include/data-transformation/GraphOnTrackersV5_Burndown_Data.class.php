@@ -26,8 +26,8 @@ class GraphOnTrackersV5_Burndown_Data
 {
     private $artifact_ids     = [];
     private $remaining_effort = [];
-    private $min_day = PHP_INT_MAX;
-    private $max_day = 0;
+    private $min_day          = PHP_INT_MAX;
+    private $max_day          = 0;
     /**
      * @var TimePeriodWithWeekEnd
      */

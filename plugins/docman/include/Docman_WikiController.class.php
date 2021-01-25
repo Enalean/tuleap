@@ -92,12 +92,12 @@ class Docman_WikiController extends Docman_Controller
     public function canAccess()
     {
         $wiki_page = $this->request->get('wiki_page');
-        $group_id = $this->request->get('group_id');
+        $group_id  = $this->request->get('group_id');
 
         $dPM = Docman_PermissionsManager::instance($group_id);
 
         $item_factory = $this->getItemFactory();
-        $references = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
+        $references   = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
 
         $uM = UserManager::instance();
 
@@ -174,9 +174,9 @@ class Docman_WikiController extends Docman_Controller
 
         $referers = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
 
-        $uM = UserManager::instance();
-        $user = $uM->getCurrentUser();
-        $dPM = Docman_PermissionsManager::instance($group_id);
+        $uM       = UserManager::instance();
+        $user     = $uM->getCurrentUser();
+        $dPM      = Docman_PermissionsManager::instance($group_id);
         $canWrite = false;
         if (count($referers) > 0) {
             foreach ($referers as $item) {
@@ -187,8 +187,8 @@ class Docman_WikiController extends Docman_Controller
                         if (! $dPM->getLockFactory()->userIsLocker($item, $user)) {
                             $lockInfos = $dPM->getLockFactory()->getLockInfoForItem($item);
                             if ($lockInfos) {
-                                $uH = UserHelper::instance();
-                                $locker = $uH->getDisplayNameFromUserId($lockInfos['user_id']);
+                                $uH      = UserHelper::instance();
+                                $locker  = $uH->getDisplayNameFromUserId($lockInfos['user_id']);
                                 $message = sprintf(dgettext('tuleap-docman', '%1$s locked this page. You cannot modify it until the lock owner or a document manager release the lock.'), $locker ?? '');
                             }
                             break;
@@ -271,7 +271,7 @@ class Docman_WikiController extends Docman_Controller
                 $dpm     = Docman_PermissionsManager::instance($group_id);
                 // Wiki page could have many references in docman.
                 if (is_array($docman_item_id)) {
-                    $icon = HTML::img(['id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => dgettext('tuleap-docman', 'Open to see related documents')]);
+                    $icon        = HTML::img(['id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => dgettext('tuleap-docman', 'Open to see related documents')]);
                     $linked_icon = HTML::a(['href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"], $icon);
 
                     // creating the title of the section regarding number of referencing documents and from where we arrived to this wiki page.
@@ -289,7 +289,7 @@ class Docman_WikiController extends Docman_Controller
                     }
 
                     //create Full legend of the section
-                    $legend = HTML::legend(
+                    $legend  = HTML::legend(
                         ['class' => 'docman_md_frame'],
                         count($docman_item_id) > 1 ? $linked_icon : "",
                         $title,
@@ -381,14 +381,14 @@ class Docman_WikiController extends Docman_Controller
         $reference    = $item;
 
         while ($item->getParentId() != 0) {
-            $item = $item_factory->getItemFromDb($item->getParentId());
+            $item      = $item_factory->getItemFromDb($item->getParentId());
             $parents[] = [
                 'id'    => $item->getId(),
                 'title' => $item->getTitle()
             ];
         }
 
-        $parents = array_reverse($parents);
+        $parents  = array_reverse($parents);
         $item_url = '/plugins/docman/?group_id=' . $group_id . '&sort_update_date=0&action=show&id=';
 
         foreach ($parents as $parent) {
@@ -415,13 +415,13 @@ class Docman_WikiController extends Docman_Controller
         $reference    = $item;
         if ($reference && $referrer_id != $id) {
             while ($item && $item->getParentId() != 0) {
-                $item = $item_factory->getItemFromDb($item->getParentId());
+                $item      = $item_factory->getItemFromDb($item->getParentId());
                 $parents[] = [
                     'id'    => $item->getId(),
                     'title' => $item->getTitle()
                 ];
             }
-            $parents = array_reverse($parents);
+            $parents  = array_reverse($parents);
             $item_url = '/plugins/docman/?group_id=' . $group_id . '&sort_update_date=0&action=show&id=';
             foreach ($parents as $parent) {
                 $html->pushContent(HTML::a(['href' => $item_url . $parent['id'], 'target' => '_blank', 'rel' => 'noreferrer'], HTML::strong($parent['title'])));

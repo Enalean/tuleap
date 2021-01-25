@@ -35,7 +35,7 @@ final class Git_PostReceiveMailManagerTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $dao = \Mockery::mock(Git_PostReceiveMailDao::class);
+        $dao      = \Mockery::mock(Git_PostReceiveMailDao::class);
         $prm->dao = $dao;
 
         $repo = \Mockery::spy(\GitRepository::class);

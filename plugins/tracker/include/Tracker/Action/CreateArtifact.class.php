@@ -134,11 +134,11 @@ class Tracker_Action_CreateArtifact
     {
         $parent_tracker = $this->tracker->getParent();
         if ($parent_tracker && count($artifact->getAllAncestors($current_user)) == 0) {
-            $art_link    = $this->formelement_factory->getAnArtifactLinkField($current_user, $parent_tracker);
+            $art_link = $this->formelement_factory->getAnArtifactLinkField($current_user, $parent_tracker);
 
             if ($art_link && $this->isParentCreationRequested($request, $current_user)) {
-                $art_link_key = 'artifact[' . $art_link->getId() . '][new_values]';
-                $redirect_params = [
+                $art_link_key               = 'artifact[' . $art_link->getId() . '][new_values]';
+                $redirect_params            = [
                     'tracker'     => (string) $parent_tracker->getId(),
                     'func'        => 'new-artifact',
                     $art_link_key => (string) $artifact->getId()
@@ -151,14 +151,14 @@ class Tracker_Action_CreateArtifact
 
     private function isParentCreationRequested(Codendi_Request $request, PFUser $current_user)
     {
-        $request_data           = $request->get('artifact');
-        $artifact_link_field    = $this->formelement_factory->getAnArtifactLinkField($current_user, $this->tracker);
+        $request_data        = $request->get('artifact');
+        $artifact_link_field = $this->formelement_factory->getAnArtifactLinkField($current_user, $this->tracker);
 
         if (! $artifact_link_field) {
             return false;
         }
 
-        $art_link_id  = $artifact_link_field->getId();
+        $art_link_id = $artifact_link_field->getId();
 
         if (isset($request_data[$art_link_id]) && isset($request_data[$art_link_id]['parent'])) {
             return $request_data[$art_link_id]['parent'] == Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE;
@@ -169,11 +169,11 @@ class Tracker_Action_CreateArtifact
 
     protected function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id)
     {
-        $redirect = new Tracker_Artifact_Redirect();
+        $redirect           = new Tracker_Artifact_Redirect();
         $redirect->base_url = TRACKER_BASE_URL;
 
-        $stay      = $request->get('submit_and_stay');
-        $continue  = $request->get('submit_and_continue');
+        $stay     = $request->get('submit_and_stay');
+        $continue = $request->get('submit_and_continue');
         if ($stay) {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
         } elseif ($continue) {
@@ -188,13 +188,13 @@ class Tracker_Action_CreateArtifact
 
     private function calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue)
     {
-        $redirect_params = [];
-        $redirect_params['tracker']       = $tracker_id;
+        $redirect_params            = [];
+        $redirect_params['tracker'] = $tracker_id;
         if ($continue) {
-            $redirect_params['func']      = 'new-artifact';
+            $redirect_params['func'] = 'new-artifact';
         }
         if ($stay) {
-            $redirect_params['aid']       = $artifact_id;
+            $redirect_params['aid'] = $artifact_id;
         }
         return array_filter($redirect_params);
     }

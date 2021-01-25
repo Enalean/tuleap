@@ -51,14 +51,14 @@ class Tracker_FormElement_DateFormatterTest extends \PHPUnit\Framework\TestCase 
 
     public function testItValidatesWellFormedValue(): void
     {
-        $value    = '2014-09-03';
+        $value = '2014-09-03';
 
         $this->assertTrue($this->date_formatter->validate($value));
     }
 
     public function testItDoesNotValidateNotWellFormedValue(): void
     {
-        $value    = '2014/09/03';
+        $value = '2014/09/03';
         $this->field->shouldReceive('getLabel')->once();
 
         $this->assertFalse($this->date_formatter->validate($value));

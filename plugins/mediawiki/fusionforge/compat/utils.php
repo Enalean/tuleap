@@ -62,7 +62,7 @@ function util_url_prefix($prefix = '')
  */
 function util_make_base_url($prefix = '')
 {
-    $url = util_url_prefix($prefix);
+    $url  = util_url_prefix($prefix);
     $url .= forge_get_config('web_host');
     if (forge_get_config('https_port') && (forge_get_config('https_port') != 443)) {
         $url .= ":" . forge_get_config('https_port');
@@ -92,7 +92,7 @@ function util_make_url($path = '', $prefix = '')
 function util_make_uri($path)
 {
     $path = preg_replace('/^\//', '', $path);
-    $uri = normalized_urlprefix();
+    $uri  = normalized_urlprefix();
     $uri .= $path;
     return $uri;
 }

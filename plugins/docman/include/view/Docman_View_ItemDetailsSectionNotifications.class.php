@@ -58,7 +58,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
     }
     public function getContent($params = [])
     {
-        $content = '<dl><fieldset><legend>' . dgettext('tuleap-docman', 'Notifications') . '</legend>';
+        $content  = '<dl><fieldset><legend>' . dgettext('tuleap-docman', 'Notifications') . '</legend>';
         $content .= '<dd>';
         $content .= '<form action="" method="POST">';
         $content .= '<p>';
@@ -67,8 +67,8 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         }
         $content .= '<input type="hidden" name="action" value="monitor" />';
         $content .= '<input type="hidden" name="id" value="' . $this->item->getId() . '" />';
-        $um   = UserManager::instance();
-        $user = $um->getCurrentUser();
+        $um       = UserManager::instance();
+        $user     = $um->getCurrentUser();
         $checked  = ! $user->isAnonymous() && $this->notificationsManager->userExists($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
         $disabled = $user->isAnonymous() ? 'disabled="disabled"' : '';
         $content .= '<input type="hidden" name="monitor" value="0" />';
@@ -92,10 +92,10 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
      */
     private function displayListeningUsers($itemId)
     {
-        $dpm        = Docman_PermissionsManager::instance($this->item->getGroupId());
-        $um         = UserManager::instance();
-        $purifier   = Codendi_HTMLPurifier::instance();
-        $content    = '';
+        $dpm      = Docman_PermissionsManager::instance($this->item->getGroupId());
+        $um       = UserManager::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
+        $content  = '';
         if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
             $users   = $this->notificationsManager->getListeningUsers($this->item);
             $ugroups = $this->ugroups_to_be_notified_builder->getCollectionOfUgroupMonitoredItems($this->item);
@@ -111,7 +111,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
             );
 
             $content .= '</fieldset>';
-            $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../../src/www/assets/docman', '/assets/docman');
+            $assets   = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../../src/www/assets/docman', '/assets/docman');
             $GLOBALS['Response']->includeFooterJavascriptFile($assets->getFileURL('notifications.js'));
         }
         return $content;
@@ -143,7 +143,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
     }
     public function visitFolder(&$item, $params)
     {
-        $content = '<blockquote>';
+        $content  = '<blockquote>';
         $checked  = ! $params['user']->isAnonymous() && $this->notificationsManager->userExists($params['user']->getId(), $this->item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE) ? 'checked="checked"' : '';
         $disabled = $params['user']->isAnonymous() ? 'disabled="disabled"' : '';
         $content .= '<input type="hidden" name="cascade" value="0" />';

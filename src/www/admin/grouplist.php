@@ -40,8 +40,8 @@ $GLOBALS['HTML']->includeFooterJavascriptFile(
 //EXPORT-CSV
 if ($request->exist('export')) {
     //Validate group_name_search
-    $group_name_search = "";
-    $valid_group_name_search  = new Valid_String('group_name_search');
+    $group_name_search       = "";
+    $valid_group_name_search = new Valid_String('group_name_search');
     if ($request->valid($valid_group_name_search)) {
         $group_name_search = $request->get('group_name_search');
     }
@@ -66,7 +66,7 @@ if ($request->exist('export')) {
     exit;
 }
 
-$dao = new ProjectDao(CodendiDataAccess::instance());
+$dao    = new ProjectDao(CodendiDataAccess::instance());
 $offset = $request->getValidated('offset', 'uint', 0);
 if (! $offset || $offset < 0) {
     $offset = 0;
@@ -74,7 +74,7 @@ if (! $offset || $offset < 0) {
 $limit = 50;
 
 $group_name_search = "";
-$vGroupNameSearch = new Valid_String('group_name_search');
+$vGroupNameSearch  = new Valid_String('group_name_search');
 if ($request->valid($vGroupNameSearch)) {
     if ($request->exist('group_name_search')) {
         $group_name_search = $request->get('group_name_search');
@@ -97,7 +97,7 @@ if (in_array('ANY', $status_values)) {
 }
 
 //return projects matching given parameters
-$projects = $dao->searchProjectsWithNumberOfMembers(
+$projects          = $dao->searchProjectsWithNumberOfMembers(
     $offset,
     $limit,
     $dao_status_values,

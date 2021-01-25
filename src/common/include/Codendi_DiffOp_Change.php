@@ -27,7 +27,7 @@ class Codendi_DiffOp_Change extends \Codendi_DiffOp // phpcs:ignore PSR1.Classes
     public function __construct($orig, $fin)
     {
         $this->orig = $orig;
-        $this->fin = $fin;
+        $this->fin  = $fin;
     }
     public function reverse()
     {

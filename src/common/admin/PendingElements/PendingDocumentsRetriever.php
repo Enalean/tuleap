@@ -53,8 +53,8 @@ class PendingDocumentsRetriever implements Dispatchable
     public function __construct(Project $project, PFUser $user, \CSRFSynchronizerToken $token)
     {
         $this->project = $project;
-        $this->user = $user;
-        $this->token = $token;
+        $this->user    = $user;
+        $this->token   = $token;
     }
 
     public function getProject(): Project

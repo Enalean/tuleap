@@ -103,7 +103,7 @@ class SystemEventSearchPresenter
     {
         $this->types_by_queue = [];
         foreach ($types_by_queue as $queue_name => $types) {
-            $is_current_queue = $queue_name === $selected_queue_name;
+            $is_current_queue       = $queue_name === $selected_queue_name;
             $this->types_by_queue[] = [
                 'queue'      => $queue_name,
                 'is_current' => $is_current_queue,

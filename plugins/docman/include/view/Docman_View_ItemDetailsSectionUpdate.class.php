@@ -39,7 +39,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
 
     public function _updateHeader($enctype = '')
     {
-        $content = '';
+        $content  = '';
         $content .= '<dl><dt>' . dgettext('tuleap-docman', 'Update') . '</dt><dd>';
         $content .= '<form action="' . $this->url . '&amp;id=' . $this->item->getId() . '" method="post" ' . $enctype . '>';
         return $content;
@@ -72,7 +72,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
 
         $content .= $this->_updateHeader();
 
-        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), ['force_item' => $this->force, 'request' => $this->_controller->request]);
+        $fields   = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), ['force_item' => $this->force, 'request' => $this->_controller->request]);
         $content .= '<table>';
         foreach ($fields as $field) {
             $content .= '<tr style="vertical-align:top;"><td><label>' . $field->getLabel() . '</label></td><td>' . $field->getField() . '</td></tr>';
@@ -104,14 +104,14 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     {
         $content = '';
 
-        $enctype = ' enctype="multipart/form-data"';
+        $enctype  = ' enctype="multipart/form-data"';
         $content .= $this->_updateHeader($enctype);
 
         // Fetch type selector
-        $newView = new Docman_View_NewDocument($this->_controller);
-        $vparam = [];
+        $newView              = new Docman_View_NewDocument($this->_controller);
+        $vparam               = [];
         $vparam['force_item'] = $item;
-        $content .= $newView->_getSpecificProperties($vparam);
+        $content             .= $newView->_getSpecificProperties($vparam);
 
         $content .= $this->_updateFooter();
 

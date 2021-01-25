@@ -74,7 +74,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logger = Mockery::mock(LoggerInterface::class);
+        $this->logger         = Mockery::mock(LoggerInterface::class);
         $this->field_exporter = Mockery::mock(FieldXmlExporter::class);
         $this->mapper         = new JiraToTuleapFieldTypeMapper(
             $this->field_exporter,
@@ -82,7 +82,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             $this->logger
         );
 
-        $form_elements = new SimpleXMLElement("<formElements/>");
+        $form_elements               = new SimpleXMLElement("<formElements/>");
         $this->containers_collection = new ContainersXMLCollection(new FieldAndValueIDGenerator());
         (new ContainersXMLCollectionBuilder(new XML_SimpleXMLCDATAFactory()))->buildCollectionOfJiraContainersXML(
             $form_elements,

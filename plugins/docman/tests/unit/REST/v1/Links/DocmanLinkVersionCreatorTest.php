@@ -120,16 +120,16 @@ class DocmanLinkVersionCreatorTest extends TestCase
         $obsolescence_date           = $date->modify('+1 day');
         $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
 
-        $representation                            = new DocmanLinkPATCHRepresentation();
-        $representation->change_log                = 'changelog';
-        $representation->version_title             = 'version title';
-        $representation->should_lock_file          = false;
-        $docman_link                               = \Mockery::mock(Docman_LinkVersion::class);
+        $representation                   = new DocmanLinkPATCHRepresentation();
+        $representation->change_log       = 'changelog';
+        $representation->version_title    = 'version title';
+        $representation->should_lock_file = false;
+        $docman_link                      = \Mockery::mock(Docman_LinkVersion::class);
         $docman_link->shouldReceive('getLink')->andReturn('https://example.com');
-        $representation->link_properties           = LinkPropertiesRepresentation::build($docman_link);
-        $representation->approval_table_action     = 'copy';
-        $representation->status                    = 'rejected';
-        $representation->obsolescence_date         = $obsolescence_date_formatted;
+        $representation->link_properties       = LinkPropertiesRepresentation::build($docman_link);
+        $representation->approval_table_action = 'copy';
+        $representation->status                = 'rejected';
+        $representation->obsolescence_date     = $obsolescence_date_formatted;
 
         $this->transaction_executor->shouldReceive('execute')->once();
 

@@ -71,7 +71,7 @@ class AgileDashboard_XMLExporterTest extends TestCase
         $this->xml_validator = Mockery::mock(XML_RNGValidator::class);
 
         $this->explicit_backlog_xml_exporter = Mockery::mock(Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter::class);
-        $this->planning_xml_exporter = Mockery::mock(Tuleap\AgileDashboard\Planning\XML\XMLExporter::class);
+        $this->planning_xml_exporter         = Mockery::mock(Tuleap\AgileDashboard\Planning\XML\XMLExporter::class);
         $this->kanban_XML_exporter           = Mockery::mock(KanbanXMLExporter::class);
 
         $this->exporter = new AgileDashboard_XMLExporter(

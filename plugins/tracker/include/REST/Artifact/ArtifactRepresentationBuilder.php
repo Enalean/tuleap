@@ -124,7 +124,7 @@ class ArtifactRepresentationBuilder
      */
     public function getArtifactRepresentation(PFUser $user, Artifact $artifact)
     {
-        $tracker_representation  = MinimalTrackerRepresentation::build($artifact->getTracker());
+        $tracker_representation = MinimalTrackerRepresentation::build($artifact->getTracker());
 
         return ArtifactRepresentation::build(
             $user,

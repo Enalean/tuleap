@@ -83,7 +83,7 @@ class MediaWikiInstantiater
             new MediawikiSiteAdminResourceRestrictorDao(),
             ProjectManager::instance()
         );
-        $this->backend = Backend::instance();
+        $this->backend             = Backend::instance();
     }
 
     /**
@@ -178,7 +178,7 @@ class MediaWikiInstantiater
      */
     private function doesDirectoryExist()
     {
-        $data_dir = new \Tuleap\Mediawiki\MediawikiDataDir();
+        $data_dir               = new \Tuleap\Mediawiki\MediawikiDataDir();
         $this->project_name_dir = $data_dir->getMediawikiDir($this->project);
 
         if (is_dir($this->project_name_dir)) {
@@ -211,7 +211,7 @@ class MediaWikiInstantiater
         $mediawiki_db_connection->getDB()->tryFlatTransaction(function () use ($mediawiki_db_connection, $database, $mediawiki_path) {
             try {
                 $this->logger->info('Updating mediawiki database.');
-                $table_file   = $mediawiki_path . '/maintenance/tables.sql';
+                $table_file = $mediawiki_path . '/maintenance/tables.sql';
                 if (! file_exists($table_file)) {
                     throw new Exception('Error: Couldn\'t find Mediawiki Database Creation File ' . $table_file);
                 }
@@ -220,7 +220,7 @@ class MediaWikiInstantiater
 
                 $this->logger->info('Creating tables from tables.sql');
                 $table_prefix = $this->dao->getTablePrefixForCreation($this->project);
-                $add_tables = $this->createTablesFromFile($mediawiki_db_connection->getDB(), $table_file, $table_prefix);
+                $add_tables   = $this->createTablesFromFile($mediawiki_db_connection->getDB(), $table_file, $table_prefix);
                 if (! $add_tables) {
                     throw new Exception('Error: Mediawiki Database Creation Failed');
                 }
@@ -256,13 +256,13 @@ class MediaWikiInstantiater
             return false;
         }
 
-        $cmd = "";
-        $done = false;
+        $cmd         = "";
+        $done        = false;
         $dollarquote = false;
 
         while (! feof($fp)) {
             $line = trim(fgets($fp, 1024));
-            $sl = strlen($line) - 1;
+            $sl   = strlen($line) - 1;
 
             if ($sl < 0) {
                 continue;
@@ -275,7 +275,7 @@ class MediaWikiInstantiater
             if (substr($line, 0, 4) == '$mw$') {
                 if ($dollarquote) {
                     $dollarquote = false;
-                    $done = true;
+                    $done        = true;
                 } else {
                     $dollarquote = true;
                 }
@@ -304,7 +304,7 @@ class MediaWikiInstantiater
                     throw $ex;
                 }
 
-                $cmd = '';
+                $cmd  = '';
                 $done = false;
             }
         }
@@ -341,7 +341,7 @@ class MediaWikiInstantiater
 
     private function seedProjectUGroupMappings($group_id, array $mappings)
     {
-        $query  = "INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name) VALUES ";
+        $query = "INSERT INTO plugin_mediawiki_ugroup_mapping(group_id, ugroup_id, mw_group_name) VALUES ";
 
         return $query . implode(",", $this->getFormattedDefaultValues($group_id, $mappings));
     }

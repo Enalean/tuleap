@@ -44,7 +44,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
 
     protected function setUp(): void
     {
-        $user            = Mockery::mock(PFUser::class);
+        $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
         $user->shouldReceive('getLdapId')->andReturn("ldap_01");
         $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
@@ -177,7 +177,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
                 1234
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
-        $user = $this->getAMockedUser();
+        $user    = $this->getAMockedUser();
         $comment->shouldReceive('getCurrentUser')->andReturn($user);
 
         $this->assertStringContainsString("Comment has been cleared", $comment->fetchMailFollowUp());
@@ -186,8 +186,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
     public function testItDisplayStandardComment(): void
     {
         $changeset = $this->buildChangeset();
-        $body    = 'See art #290';
-        $comment = Mockery::mock(
+        $body      = 'See art #290';
+        $comment   = Mockery::mock(
             Tracker_Artifact_Changeset_Comment::class,
             [
                 1,
@@ -201,7 +201,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
                 0
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
-        $user = $this->getAMockedUser();
+        $user      = $this->getAMockedUser();
         $comment->shouldReceive('getCurrentUser')->andReturn($user);
         $purifier = Mockery::mock(Codendi_HTMLPurifier::class);
         $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn($body);
@@ -215,8 +215,8 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
     public function testItDisplayEditedComment(): void
     {
         $changeset = $this->buildChangeset();
-        $body                      = 'See art #290';
-        $comment                   = Mockery::mock(
+        $body      = 'See art #290';
+        $comment   = Mockery::mock(
             Tracker_Artifact_Changeset_Comment::class,
             [
                 1,
@@ -230,7 +230,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
                 1234
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
-        $user = $this->getAMockedUser();
+        $user      = $this->getAMockedUser();
         $comment->shouldReceive('getCurrentUser')->andReturn($user);
         $purifier = Mockery::mock(Codendi_HTMLPurifier::class);
         $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn($body);
@@ -257,7 +257,7 @@ final class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\Te
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getGroupId')->andReturn(101);
-        $artifact                      = Mockery::mock(Artifact::class);
+        $artifact = Mockery::mock(Artifact::class);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         return new \Tracker_Artifact_Changeset(
             1001,

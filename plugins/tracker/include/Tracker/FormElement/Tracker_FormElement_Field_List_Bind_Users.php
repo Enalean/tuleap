@@ -146,7 +146,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function getChangesetValues($changeset_id)
     {
-        $uh = UserHelper::instance();
+        $uh     = UserHelper::instance();
         $values = [];
         foreach ($this->getDao()->searchChangesetValues($changeset_id, $this->field->id, $uh->getDisplayNameSQLQuery(), $uh->getDisplayNameSQLOrder()) as $row) {
             $values[] =  new Tracker_FormElement_Field_List_Bind_UsersValue($row['id'], $row['user_name'], $row['full_name']);
@@ -163,7 +163,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             $v = new Tracker_FormElement_Field_List_Bind_UsersValue(0);
         } else {
             $vs = $this->getAllValues();
-            $v = null;
+            $v  = null;
             if (isset($vs[$value_id])) {
                 $v = $vs[$value_id];
             } else {
@@ -393,7 +393,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         $values = $this->getAllValues();
         if ($is_multiple) {
-            $return = [];
+            $return           = [];
             $submitted_values = explode(',', $submitted_value);
             foreach ($values as $id => $value) {
                 if (in_array($value->getUsername(), $submitted_values)) {
@@ -500,8 +500,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function getQuerySelectAggregate($functions)
     {
-        $R1  = 'R1_' . $this->field->id;
-        $R2  = 'R2_' . $this->field->id;
+        $R1       = 'R1_' . $this->field->id;
+        $R2       = 'R2_' . $this->field->id;
         $same     = [];
         $separate = [];
         foreach ($functions as $f) {
@@ -549,7 +549,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function fetchRawValueFromChangeset($changeset)
     {
-        $value = '';
+        $value        = '';
         $values_array = [];
         if ($v = $changeset->getValue($this->field)) {
             $values = $v->getListValues();
@@ -597,7 +597,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function fetchAdminEditForm()
     {
-        $html = '';
+        $html  = '';
         $html .= '<h3>' . 'Bind to users' . '</h3>';
         $html .= self::fetchSelectUsers('bind[value_function][]', $this->field, $this->value_function);
 
@@ -609,10 +609,10 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
     protected static function fetchSelectUsers($select_name, $field, $value_function)
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        $html .= '<input type="hidden" name="' . $select_name . '" value="" />';
-        $html .= '<select multiple="multiple" name="' . $select_name . '">
+        $hp       = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        $html    .= '<input type="hidden" name="' . $select_name . '" value="" />';
+        $html    .= '<select multiple="multiple" name="' . $select_name . '">
                   <option value="">' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
         $selected = "";
         if (in_array("artifact_submitters", $value_function)) {
@@ -620,17 +620,17 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         }
         $html .= '<option value="artifact_submitters" ' . $selected . '>' . dgettext('tuleap-tracker', 'Artifact submitters') . '</option>';
 
-        $selected = "";
+        $selected   = "";
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_MEMBERS']);
-        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
+        $name       = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
         if (in_array("group_members", $value_function)) {
             $selected = 'selected="selected"';
         }
         $html .= '<option value="group_members" ' . $selected . '>' . $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
 
-        $selected = "";
+        $selected   = "";
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_ADMIN']);
-        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
+        $name       = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
         if (in_array("group_admins", $value_function)) {
             $selected = 'selected="selected"';
         }
@@ -638,9 +638,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
         /** @psalm-suppress DeprecatedFunction */
         $ugroup_res = ugroup_db_get_existing_ugroups(100);
-        $rows = db_numrows($ugroup_res);
+        $rows       = db_numrows($ugroup_res);
         for ($i = 0; $i < $rows; $i++) {
-            $ug = db_result($ugroup_res, $i, 'ugroup_id');
+            $ug       = db_result($ugroup_res, $i, 'ugroup_id');
             $selected = "";
             if (
                 ($ug == $GLOBALS['UGROUP_NONE']) ||
@@ -652,7 +652,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                    continue;
             }
 
-            $ugr  = "ugroup_" . $ug;
+            $ugr = "ugroup_" . $ug;
             if (in_array($ugr, $value_function)) {
                 $selected = 'selected="selected"';
             }
@@ -663,11 +663,11 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         if ($group_id != 100) {
             /** @psalm-suppress DeprecatedFunction */
             $ugroup_res = ugroup_db_get_existing_ugroups($group_id);
-            $rows = db_numrows($ugroup_res);
+            $rows       = db_numrows($ugroup_res);
             for ($i = 0; $i < $rows; $i++) {
                 $selected = "";
-                $ug  = db_result($ugroup_res, $i, 'ugroup_id');
-                $ugr = "ugroup_" . $ug;
+                $ug       = db_result($ugroup_res, $i, 'ugroup_id');
+                $ugr      = "ugroup_" . $ug;
                 if (in_array($ugr, $value_function)) {
                     $selected = 'selected="selected"';
                 }
@@ -923,7 +923,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $rest_array = [];
         foreach ($bind_values as $value) {
             $representation = \Tuleap\User\REST\UserRepresentation::build($value->getUser());
-            $rest_array[] = $representation;
+            $rest_array[]   = $representation;
         }
         return $rest_array;
     }
@@ -966,8 +966,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
     public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value)
     {
-        $user_manager        = UserManager::instance();
-        $user = $user_manager->getUserByUserName($value->getLabel());
+        $user_manager = UserManager::instance();
+        $user         = $user_manager->getUserByUserName($value->getLabel());
         if (! $user) {
             $user = new PFUser();
             $user->setEmail($value->getLabel());

@@ -139,8 +139,8 @@ class GitViews extends PluginViews
      */
     public function repoManagement()
     {
-        $params = $this->getData();
-        $repository   = $params['repository'];
+        $params     = $this->getData();
+        $repository = $params['repository'];
 
         $this->header_renderer->renderRepositorySettingsHeader(
             $this->request,
@@ -177,12 +177,12 @@ class GitViews extends PluginViews
      */
     public function confirmPrivate()
     {
-        $params = $this->getData();
-        $repository   = $params['repository'];
-        $repoId       = $repository->getId();
-        $repoName     = $repository->getName();
-        $initialized  = $repository->isInitialized();
-        $mails        = $params['mails'];
+        $params      = $this->getData();
+        $repository  = $params['repository'];
+        $repoId      = $repository->getId();
+        $repoName    = $repository->getName();
+        $initialized = $repository->isInitialized();
+        $mails       = $params['mails'];
         if ($this->getController()->isAPermittedAction('save')) :
             ?>
         <div class="confirm">
@@ -404,7 +404,7 @@ class GitViews extends PluginViews
                 $is_used = isset($mirror_ids_per_repository[$repository->getId()])
                     && in_array($mirror->mirror_id, $mirror_ids_per_repository[$repository->getId()]);
 
-                $copy_of_mirror = clone $mirror;
+                $copy_of_mirror          = clone $mirror;
                 $copy_of_mirror->is_used = $is_used;
 
                 $used_mirrors[] = $copy_of_mirror;
@@ -485,7 +485,7 @@ class GitViews extends PluginViews
 
     private function fetchCopyToAnotherProject()
     {
-        $html = '';
+        $html               = '';
         $userProjectOptions = $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
         if ($userProjectOptions) {
             $options = ' checked="true" ';

@@ -39,7 +39,7 @@ class AgileDashboard_KanbanUserPreferencesTest extends \PHPUnit\Framework\TestCa
         $this->user = Mockery::spy(\PFUser::class);
 
         $this->user_preferences = new AgileDashboard_KanbanUserPreferences();
-        $this->kanban = new AgileDashboard_Kanban(1, 1, 'My first kanban');
+        $this->kanban           = new AgileDashboard_Kanban(1, 1, 'My first kanban');
     }
 
     public function testDefaultBehavior(): void

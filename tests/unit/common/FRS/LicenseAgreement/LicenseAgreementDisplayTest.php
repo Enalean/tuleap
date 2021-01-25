@@ -192,7 +192,7 @@ class LicenseAgreementDisplayTest extends TestCase
             ]
         )->once()->andReturn('foobar');
 
-        $package = new \FRSPackage();
+        $package          = new \FRSPackage();
         $custom_agreement = new LicenseAgreement(5, 'Some custom stuff', 'bla');
         $this->factory->shouldReceive('getProjectLicenseAgreements')->once()->with($this->project)->andReturns([
             $custom_agreement,

@@ -41,7 +41,7 @@ class MappedFieldRetriever
         Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider,
         FreestyleMappingFactory $freestyle_mapping_factory
     ) {
-        $this->semantic_status_provider = $semantic_status_provider;
+        $this->semantic_status_provider  = $semantic_status_provider;
         $this->freestyle_mapping_factory = $freestyle_mapping_factory;
     }
 

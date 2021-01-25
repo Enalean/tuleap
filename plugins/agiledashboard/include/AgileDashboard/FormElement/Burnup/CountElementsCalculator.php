@@ -67,7 +67,7 @@ class CountElementsCalculator
 
     public function getValue(int $artifact_id, int $timestamp): CountElementsInfo
     {
-        $items_dar      = $this->burnup_dao->searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp);
+        $items_dar     = $this->burnup_dao->searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp);
         $backlog_items = [];
         array_push($backlog_items, ...$items_dar);
         $elements_count = array_reduce(

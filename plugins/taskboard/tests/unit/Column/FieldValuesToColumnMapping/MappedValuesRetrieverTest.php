@@ -118,9 +118,9 @@ final class MappedValuesRetrieverTest extends TestCase
             ->with($taskboard_tracker)
             ->once()
             ->andReturnFalse();
-        $todo_list_value     = new Tracker_FormElement_Field_List_Bind_StaticValue(564, 'Todo', '', 1, false);
+        $todo_list_value    = new Tracker_FormElement_Field_List_Bind_StaticValue(564, 'Todo', '', 1, false);
         $ongoing_list_value = new Tracker_FormElement_Field_List_Bind_StaticValue(756, 'On Going', '', 2, false);
-        $status_field        = M::mock(Tracker_FormElement_Field_Selectbox::class);
+        $status_field       = M::mock(Tracker_FormElement_Field_Selectbox::class);
         $status_field->shouldReceive('getVisibleValuesPlusNoneIfAny')
             ->once()
             ->andReturn([$todo_list_value, $ongoing_list_value]);

@@ -37,7 +37,7 @@ final class ExplorerControllerTest extends TestCase
     {
         $include_assets = \Mockery::mock(IncludeAssets::class);
 
-        $template_cache            = \Mockery::mock(TemplateCache::class);
+        $template_cache = \Mockery::mock(TemplateCache::class);
         $template_cache->shouldReceive('getPath')->andReturnNull();
         $template_renderer_factory = new TemplateRendererFactory($template_cache);
 

@@ -42,7 +42,7 @@ class ByGroupFieldsPermissionsForOtherGroups
     {
         $this->id          = $id;
         $this->name        = $name;
-        $permission_text = [
+        $permission_text   = [
             \Tracker_FormElement::PERMISSION_READ   => dgettext('tuleap-tracker', 'Read only'),
             \Tracker_FormElement::PERMISSION_SUBMIT => dgettext('tuleap-tracker', 'Submit'),
             \Tracker_FormElement::PERMISSION_UPDATE => dgettext('tuleap-tracker', 'Update'),

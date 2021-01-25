@@ -34,7 +34,7 @@ function forge_get_config($key, $scope = 'core')
         $key = $conf_variables_mapping[$key];
     } elseif ($scope !== 'core') {
         $plugin_manager = PluginManager::instance();
-        $plugin = $plugin_manager->getPluginByName($scope);
+        $plugin         = $plugin_manager->getPluginByName($scope);
         if (! $plugin || ! $plugin_manager->isPluginAvailable($plugin)) {
             return null;
         }

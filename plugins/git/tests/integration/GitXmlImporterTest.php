@@ -135,7 +135,7 @@ final class GitXmlImporterTest extends TestCase
         $this->backup_access_config = ForgeConfig::get(ForgeAccess::CONFIG);
         $this->backup_sys_data_dir  = ForgeConfig::get('sys_data_dir');
 
-        $this->old_cwd = getcwd();
+        $this->old_cwd        = getcwd();
         $this->system_command = new System_Command();
         parent::setUp();
 
@@ -161,7 +161,7 @@ final class GitXmlImporterTest extends TestCase
 
         $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->logger->shouldReceive('debug');
-        $this->git_plugin = new GitPlugin(1);
+        $this->git_plugin  = new GitPlugin(1);
         $this->git_factory = new GitRepositoryFactory($this->git_dao, $this->project_manager);
 
         $this->ugroup_dao     = \Mockery::spy(\UGroupDao::class);
@@ -195,7 +195,7 @@ final class GitXmlImporterTest extends TestCase
         );
 
         $restricted_plugin_dao = \Mockery::spy(\RestrictedPluginDao::class);
-        $plugin_factory = new PluginFactory($plugin_dao, new PluginResourceRestrictor($restricted_plugin_dao));
+        $plugin_factory        = new PluginFactory($plugin_dao, new PluginResourceRestrictor($restricted_plugin_dao));
 
         $plugin_manager = new PluginManager(
             $plugin_factory,
@@ -225,7 +225,7 @@ final class GitXmlImporterTest extends TestCase
             \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
             \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class)
         );
-        $this->user_finder = \Mockery::spy(XMLImportHelper::class);
+        $this->user_finder    = \Mockery::spy(XMLImportHelper::class);
 
         $gitolite       = new Git_Backend_Gitolite($git_gitolite_driver, \Mockery::spy(GitoliteAccessURLGenerator::class), $this->logger);
         $this->importer = new GitXmlImporter(
@@ -277,7 +277,7 @@ final class GitXmlImporterTest extends TestCase
 
     public function testItShouldCreateOneEmptyRepository(): void
     {
-        $xml = <<<XML
+        $xml         = <<<XML
             <project>
                 <git>
                     <repository bundle-path="" name="empty"/>
@@ -285,7 +285,7 @@ final class GitXmlImporterTest extends TestCase
             </project>
 XML;
         $xml_element = new SimpleXMLElement($xml);
-        $res = $this->importer->import(
+        $res         = $this->importer->import(
             new \Tuleap\Project\XML\Import\ImportConfig(),
             $this->project,
             \Mockery::spy(\PFUser::class),
@@ -295,7 +295,7 @@ XML;
 
         $this->assertEquals($this->last_saved_repository->getName(), 'empty');
 
-        $iterator = new DirectoryIterator(ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/test_project');
+        $iterator      = new DirectoryIterator(ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/test_project');
         $empty_is_here = false;
         foreach ($iterator as $it) {
             if ($it->getFilename() == 'empty') {
@@ -307,7 +307,7 @@ XML;
 
     public function testItShouldImportOneRepositoryWithOneCommit(): void
     {
-        $xml = <<<XML
+        $xml         = <<<XML
             <project>
                 <git>
                     <repository bundle-path="stable.bundle" name="stable"/>
@@ -315,7 +315,7 @@ XML;
             </project>
 XML;
         $xml_element = new SimpleXMLElement($xml);
-        $res = $this->importer->import(
+        $res         = $this->importer->import(
             new \Tuleap\Project\XML\Import\ImportConfig(),
             $this->project,
             \Mockery::spy(\PFUser::class),
@@ -324,7 +324,7 @@ XML;
         );
 
         $sys_data_dir_arg = escapeshellarg(ForgeConfig::get('sys_data_dir'));
-        $nb_commit = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && git log --oneline| wc -l");
+        $nb_commit        = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && git log --oneline| wc -l");
         $this->assertEquals(1, intval($nb_commit));
     }
 
@@ -352,7 +352,7 @@ XML;
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $xml = <<<XML
+        $xml    = <<<XML
             <project>
                 <git>
                     <repository bundle-path="stable.bundle" name="stable">
@@ -385,7 +385,7 @@ XML;
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $xml = <<<XML
+        $xml    = <<<XML
             <project>
                 <git>
                     <repository bundle-path="stable.bundle" name="stable">
@@ -465,7 +465,7 @@ XML;
 
     public function testItShouldImportGitAdmins(): void
     {
-        $xml = <<<XML
+        $xml    = <<<XML
             <project>
                 <git>
                     <repository bundle-path="stable.bundle" name="stable"/>

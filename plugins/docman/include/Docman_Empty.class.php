@@ -36,7 +36,7 @@ class Docman_Empty extends Docman_Document
 
     public function toRow()
     {
-        $row = parent::toRow();
+        $row              = parent::toRow();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_EMPTY;
         return $row;
     }

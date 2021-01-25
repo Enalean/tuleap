@@ -150,11 +150,11 @@ class DocmanWikiResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setHeaders();
 
-        $item_request      = $this->request_builder->buildFromItemId($id);
-        $item_to_delete    = $item_request->getItem();
-        $current_user      = $this->user_manager->getCurrentUser();
-        $project           = $item_request->getProject();
-        $validator = $this->getValidator($project, $current_user, $item_to_delete);
+        $item_request   = $this->request_builder->buildFromItemId($id);
+        $item_to_delete = $item_request->getItem();
+        $current_user   = $this->user_manager->getCurrentUser();
+        $project        = $item_request->getProject();
+        $validator      = $this->getValidator($project, $current_user, $item_to_delete);
         $item_to_delete->accept($validator);
         assert($item_to_delete instanceof Docman_Wiki);
 

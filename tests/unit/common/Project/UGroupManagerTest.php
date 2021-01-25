@@ -72,8 +72,8 @@ class UGroupManagerTest extends TestCase
      */
     public function instantiateMocks()
     {
-        $this->user_group_dao = Mockery::mock(UGroupDao::class);
-        $this->event_manager = Mockery::mock(EventManager::class);
+        $this->user_group_dao      = Mockery::mock(UGroupDao::class);
+        $this->event_manager       = Mockery::mock(EventManager::class);
         $this->user_group_user_dao = Mockery::mock(UGroupUserDao::class);
         $this->user_group_dao->shouldReceive('searchDynamicAndStaticByGroupId')
             ->andReturn([

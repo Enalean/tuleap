@@ -84,11 +84,11 @@ class AccessFileHistoryCreatorTest extends TestCase
         $this->globals_svnaccess_set_initially = isset($GLOBALS['SVNACCESS']);
         $this->globals_svngroups_set_initially = isset($GLOBALS['SVNGROUPS']);
 
-        $this->access_file_dao     = Mockery::mock(AccessFileHistoryDao::class);
-        $this->access_file_factory = Mockery::mock(AccessFileHistoryFactory::class);
+        $this->access_file_dao           = Mockery::mock(AccessFileHistoryDao::class);
+        $this->access_file_factory       = Mockery::mock(AccessFileHistoryFactory::class);
         $this->project_history_formatter = Mockery::mock(ProjectHistoryFormatter::class);
         $this->project_history_dao       = Mockery::mock(ProjectHistoryDao::class);
-        $this->backend_svn = Mockery::mock(\BackendSVN::class);
+        $this->backend_svn               = Mockery::mock(\BackendSVN::class);
 
         $this->creator = new AccessFileHistoryCreator(
             $this->access_file_dao,

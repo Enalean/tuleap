@@ -34,7 +34,7 @@ class ComputedFieldCalculator implements IProvideArtifactChildrenForComputedCalc
     public function __construct(
         ComputedFieldDao $dao
     ) {
-        $this->dao                 = $dao;
+        $this->dao = $dao;
     }
 
     public function fetchChildrenAndManualValuesOfArtifacts(

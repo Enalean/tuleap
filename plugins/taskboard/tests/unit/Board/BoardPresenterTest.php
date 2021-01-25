@@ -102,7 +102,7 @@ final class BoardPresenterTest extends TestCase
         $user->shouldReceive('getPreference')
             ->andReturn('');
 
-        $tracker  = M::mock(Tracker::class);
+        $tracker = M::mock(Tracker::class);
         $tracker->shouldReceive(['getId' => '96']);
         $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), $tracker);
         $title_field       = new TitleFieldPresenter(

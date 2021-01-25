@@ -39,7 +39,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     public function getUsername()
     {
         if ($this->user_name == null) {
-            $user = $this->getUser();
+            $user            = $this->getUser();
             $this->user_name = $user->getUsername();
         }
         return $this->user_name;
@@ -119,7 +119,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         $name        = $this->hp->purify($user_helper->getDisplayNameFromUser($user));
         $user_id     = $this->getId();
 
-        $html = '<div class="realname"
+        $html  = '<div class="realname"
                        title="' . $name . '"
                        data-user-id = "' . $user_id . '"
                    >';
@@ -189,7 +189,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
 
     private function getUserUrl()
     {
-        $user_name    = $this->user_name;
+        $user_name = $this->user_name;
         if (! $user_name) {
             $user_name = $this->getUser()->getUserName();
         }

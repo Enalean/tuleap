@@ -39,7 +39,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
 
     public function testAddUserKey(): void
     {
-        $user = new PFUser([
+        $user                   = new PFUser([
             'id'              => 12,
             'language_id'     => 'en',
             'user_name'       => 'john_do',
@@ -58,7 +58,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
 
     public function testAddUserWithSeveralKeys(): void
     {
-        $user = new PFUser([
+        $user                   = new PFUser([
             'id'              => 12,
             'language_id'     => 'en',
             'user_name'       => 'john_do',

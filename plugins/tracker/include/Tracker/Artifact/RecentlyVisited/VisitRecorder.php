@@ -37,7 +37,7 @@ class VisitRecorder
 
     public function __construct(RecentlyVisitedDao $dao, ?DBTransactionExecutor $transaction_executor = null)
     {
-        $this->dao = $dao;
+        $this->dao                  = $dao;
         $this->transaction_executor = $transaction_executor ?? new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
     }
 

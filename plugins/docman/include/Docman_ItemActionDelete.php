@@ -25,8 +25,8 @@ class Docman_ItemActionDelete extends \Docman_ItemAction
     public function __construct(&$item)
     {
         parent::__construct($item);
-        $this->action = 'confirmDelete';
+        $this->action  = 'confirmDelete';
         $this->classes = 'docman_item_option_delete';
-        $this->title = \dgettext('tuleap-docman', 'Delete');
+        $this->title   = \dgettext('tuleap-docman', 'Delete');
     }
 }

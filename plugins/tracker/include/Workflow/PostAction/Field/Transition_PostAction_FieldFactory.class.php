@@ -63,7 +63,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
     public function saveObject(Transition_PostAction $post_action)
     {
         $short_name = $post_action->getShortName();
-        $dao = $this->getDao($short_name);
+        $dao        = $this->getDao($short_name);
 
         $dao->save(
             $post_action->getTransition()->getId(),
@@ -96,7 +96,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      */
     public function loadPostActions(Transition $transition): array
     {
-        $post_actions = [];
+        $post_actions         = [];
         $post_actions_classes = $this->post_actions_classes;
 
         foreach ($post_actions_classes as $shortname => $klass) {

@@ -194,7 +194,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
 
         $list_of_presenters = [];
         foreach ($this->servers as $server) {
-            $is_used = $this->gerrit_server_factory->isServerUsed($server);
+            $is_used              = $this->gerrit_server_factory->isServerUsed($server);
             $list_of_presenters[] = new Git_RemoteServer_GerritServerPresenter($server, $is_used);
         }
 
@@ -205,7 +205,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     {
         if ($this->allGerritServerParamsRequiredExist($request_gerrit_server) && $this->isHTTPPasswordDefined($request_gerrit_server)) {
             $gerrit_server = $this->admin_gerrit_builder->buildFromRequest($request_gerrit_server);
-            $server = new Git_RemoteServer_GerritServer(
+            $server        = new Git_RemoteServer_GerritServer(
                 0,
                 $gerrit_server['host'],
                 $gerrit_server['ssh_port'],

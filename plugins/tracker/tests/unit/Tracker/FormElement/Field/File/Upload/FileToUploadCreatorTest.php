@@ -58,8 +58,8 @@ class FileToUploadCreatorTest extends TestCase
      */
     public function instantiateCreator(): void
     {
-        $this->dao          = Mockery::mock(FileOngoingUploadDao::class);
-        $this->creator      = new FileToUploadCreator(
+        $this->dao     = Mockery::mock(FileOngoingUploadDao::class);
+        $this->creator = new FileToUploadCreator(
             $this->dao,
             new DBTransactionExecutorPassthrough(),
             1000

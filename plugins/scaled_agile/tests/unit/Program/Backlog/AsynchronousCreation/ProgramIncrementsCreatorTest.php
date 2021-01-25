@@ -112,11 +112,11 @@ final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
 
     public function testItThrowsWhenThereIsAnErrorDuringCreation(): void
     {
-        $copied_values         = $this->buildCopiedValues();
+        $copied_values  = $this->buildCopiedValues();
         $a_team_project = new \Project(['group_id' => '110']);
-        $tracker               = $this->buildTestTrackerData(10, $a_team_project);
-        $trackers              = new ProgramIncrementsTrackerCollection([$tracker]);
-        $current_user          = UserTestBuilder::aUser()->build();
+        $tracker        = $this->buildTestTrackerData(10, $a_team_project);
+        $trackers       = new ProgramIncrementsTrackerCollection([$tracker]);
+        $current_user   = UserTestBuilder::aUser()->build();
 
         $this->synchronized_fields_adapter->shouldReceive('build')
             ->andReturn($this->buildSynchronizedFields(1001, 1002, 1003, 1004, 1005, 1006));
@@ -130,10 +130,10 @@ final class ProgramIncrementsCreatorTest extends \PHPUnit\Framework\TestCase
 
     private function buildCopiedValues(): SourceChangesetValuesCollection
     {
-        $planned_value          = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Planned', 'Irrelevant', 1, false);
+        $planned_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(2000, 'Planned', 'Irrelevant', 1, false);
 
-        $title_value = new TitleValue('Program Release');
-        $description_value = new DescriptionValue('Description', 'text');
+        $title_value         = new TitleValue('Program Release');
+        $description_value   = new DescriptionValue('Description', 'text');
         $status_value        = new StatusValue([$planned_value]);
         $start_date_value    = new StartDateValue("2020-10-01");
         $end_period_value    = new EndPeriodValue("2020-10-31");

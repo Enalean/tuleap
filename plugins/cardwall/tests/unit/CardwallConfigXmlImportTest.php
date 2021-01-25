@@ -143,7 +143,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
               <agiledashboard/>
             </project>');
 
-        $field = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(1)->getMock();
+        $field    = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(1)->getMock();
         $value_01 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(401)->getMock();
         $value_02 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(402)->getMock();
         $value_03 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(403)->getMock();
@@ -163,15 +163,15 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
             "V4" => $value_04
         ];
 
-        $this->cardwall_ontop_dao         = \Mockery::spy(\Cardwall_OnTop_Dao::class);
-        $this->column_dao                 = \Mockery::spy(\Cardwall_OnTop_ColumnDao::class);
-        $this->mapping_field_dao          = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldDao::class);
-        $this->mapping_field_value_dao    = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
-        $this->group_id                   = 145;
-        $this->event_manager              = \Mockery::mock(\EventManager::class);
-        $this->xml_validator              = \Mockery::spy(\XML_RNGValidator::class);
-        $this->logger                     = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->artifact_id_mapping        = new Tracker_XML_Importer_ArtifactImportedMapping();
+        $this->cardwall_ontop_dao      = \Mockery::spy(\Cardwall_OnTop_Dao::class);
+        $this->column_dao              = \Mockery::spy(\Cardwall_OnTop_ColumnDao::class);
+        $this->mapping_field_dao       = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldDao::class);
+        $this->mapping_field_value_dao = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
+        $this->group_id                = 145;
+        $this->event_manager           = \Mockery::mock(\EventManager::class);
+        $this->xml_validator           = \Mockery::spy(\XML_RNGValidator::class);
+        $this->logger                  = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->artifact_id_mapping     = new Tracker_XML_Importer_ArtifactImportedMapping();
 
         $this->cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
@@ -287,7 +287,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException(): void
     {
-        $cardwall_ontop_dao         = \Mockery::spy(\Cardwall_OnTop_Dao::class);
+        $cardwall_ontop_dao = \Mockery::spy(\Cardwall_OnTop_Dao::class);
         $cardwall_ontop_dao->shouldReceive('enable')->andReturns(false)->once();
         $cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
@@ -311,7 +311,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
 
     public function testItThrowsAnExceptionIfXmlDoesNotMatchRNG(): void
     {
-        $xml_validator  = \Mockery::spy(\XML_RNGValidator::class);
+        $xml_validator = \Mockery::spy(\XML_RNGValidator::class);
         $xml_validator->shouldReceive('validate')->andThrows(new XML_ParseException('', [], []));
 
         $cardwall_config_xml_import = new CardwallConfigXmlImport(

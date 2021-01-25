@@ -83,9 +83,9 @@ class NotificationUpdateCheckerTest extends TestCase
         );
 
         $this->user_102 = new \PFUser(['user_id' => 102]);
-        $this->user_103  = new \PFUser(['user_id' => 103]);
+        $this->user_103 = new \PFUser(['user_id' => 103]);
 
-        $this->user_group_101 = new ProjectUGroup(['ugroup_id' => 101]);
+        $this->user_group_101            = new ProjectUGroup(['ugroup_id' => 101]);
         $this->user_group_project_member = new ProjectUGroup(['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS]);
 
         $this->repository = \Mockery::spy(\Tuleap\SVN\Repository\Repository::class);

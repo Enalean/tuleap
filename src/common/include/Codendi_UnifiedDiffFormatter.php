@@ -30,7 +30,7 @@ class Codendi_UnifiedDiffFormatter extends \Codendi_DiffFormatter // phpcs:ignor
 {
     public function __construct($context_lines = 4)
     {
-        $this->leading_context_lines = $context_lines;
+        $this->leading_context_lines  = $context_lines;
         $this->trailing_context_lines = $context_lines;
     }
     public function _block_header($xbeg, $xlen, $ybeg, $ylen)

@@ -82,10 +82,10 @@ class ReferencesBuilder
      */
     public function referenceFromMatch($match, $project_id)
     {
-        $project         = $this->project_manager->getProject($project_id);
-        $ref             = $match['ref'];
-        $keyword         = $match['key'];
-        $value           = $match['val'];
+        $project = $this->project_manager->getProject($project_id);
+        $ref     = $match['ref'];
+        $keyword = $match['key'];
+        $value   = $match['val'];
 
         $reference = $this->findReference($project, $keyword, $ref);
 
@@ -121,12 +121,12 @@ class ReferencesBuilder
         $is_used     = 1;
         switch ($keyword) {
             case ReferencesImporter::XREF_PKG:
-                $url         = "/file/showfiles.php?group_id=$project_id#p_$target";
-                $nature      = 'package';
+                $url    = "/file/showfiles.php?group_id=$project_id#p_$target";
+                $nature = 'package';
                 break;
             case ReferencesImporter::XREF_REL:
-                $url         = "/file/shownotes.php?release_id=$target";
-                $nature      = ReferenceManager::REFERENCE_NATURE_RELEASE;
+                $url    = "/file/shownotes.php?release_id=$target";
+                $nature = ReferenceManager::REFERENCE_NATURE_RELEASE;
                 break;
             default:
                 return null;

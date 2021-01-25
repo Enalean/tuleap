@@ -14,7 +14,7 @@ $vGroupId = new Valid_UInt('group_id');
 $vGroupId->required();
 
 $there_are_specific_permissions = true;
-$project_svnroot = '';
+$project_svnroot                = '';
 if ($request->valid($vGroupId)) {
     $pm              = ProjectManager::instance();
     $project         = $pm->getProject($request->get('group_id'));

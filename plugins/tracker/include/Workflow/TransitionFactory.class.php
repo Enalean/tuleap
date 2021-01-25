@@ -62,11 +62,11 @@ class TransitionFactory
         Transition_PostActionFactory $transition_post_action_factory,
         Workflow_TransitionDao $dao
     ) {
-        $this->condition_factory       = $condition_factory;
-        $this->event_manager           = $event_manager;
-        $this->db_transaction_executor = $db_transaction_executor;
+        $this->condition_factory              = $condition_factory;
+        $this->event_manager                  = $event_manager;
+        $this->db_transaction_executor        = $db_transaction_executor;
         $this->transition_post_action_factory = $transition_post_action_factory;
-        $this->dao = $dao;
+        $this->dao                            = $dao;
     }
 
     /**
@@ -248,7 +248,7 @@ class TransitionFactory
         ?Tracker_FormElement_Field_List_Value $from_value,
         Tracker_FormElement_Field_List_Value $to_value
     ) {
-        $transition = new Transition(0, 0, $from_value, $to_value);
+        $transition  = new Transition(0, 0, $from_value, $to_value);
         $postactions = [];
         if ($xml->postactions) {
             $postactions = $this->transition_post_action_factory->getInstanceFromXML(
@@ -313,12 +313,12 @@ class TransitionFactory
      */
     public function getTransitions(Workflow $workflow): array
     {
-        $workflow_id   = (int) $workflow->getId();
+        $workflow_id = (int) $workflow->getId();
         if (! isset($this->workflow_cache[$workflow_id])) {
             $this->workflow_cache[$workflow_id] = [];
             $this->transition_post_action_factory->warmUpCacheForWorkflow($workflow);
             foreach ($this->dao->searchByWorkflow($workflow->getId()) as $row) {
-                $transition = $this->getInstanceFromRow($row, $workflow);
+                $transition                                                     = $this->getInstanceFromRow($row, $workflow);
                 $this->workflow_cache[$workflow_id][(int) $transition->getId()] = $transition;
             }
         }
@@ -355,7 +355,7 @@ class TransitionFactory
         } else {
             $from_id = $transition->getFieldValueFrom()->getId();
         }
-        $to_id = $transition->getFieldValueTo()->getId();
+        $to_id         = $transition->getFieldValueTo()->getId();
         $transition_id = $this->dao->addTransition($workflow_id, $from_id, $to_id);
         $transition->setTransitionId($transition_id);
 
@@ -390,7 +390,7 @@ class TransitionFactory
      */
     public function addPermissions(array $ugroups_ids, $transition_id)
     {
-        $pm = PermissionsManager::instance();
+        $pm              = PermissionsManager::instance();
         $permission_type = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
         foreach ($ugroups_ids as $ugroup_id) {
             if (! $pm->addPermission($permission_type, (int) $transition_id, $ugroup_id)) {

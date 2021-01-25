@@ -115,7 +115,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
         if (! isset($this->criteria_value[$criteria->getReport()->getId()])) {
             $this->criteria_value[$criteria->getReport()->getId()] = null;
-            $dao = $this->getCriteriaDao();
+            $dao                                                   = $this->getCriteriaDao();
             if ($dao && $v = $dao->searchByCriteriaId($criteria->id)->getRow()) {
                 $this->criteria_value[$criteria->getReport()->getId()] = $v['value'];
             }
@@ -191,7 +191,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function saveCriteriaValueFromXML(Tracker_Report_Criteria $criteria)
     {
         $report_id = $criteria->getReport()->getId();
-        $cache = XMLCriteriaValueCache::instance(spl_object_id($this));
+        $cache     = XMLCriteriaValueCache::instance(spl_object_id($this));
 
         if (! $cache->has($report_id)) {
             return;
@@ -474,11 +474,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     private function fetchArtifactField(Artifact $artifact, $html_value, array $additional_classes)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $html     = '';
         if ($this->userCanRead()) {
             $is_field_read_only = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
-            $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="' . $this->getClassNames($additional_classes, $is_field_read_only) . '"
+            $required           = $this->required ? ' <span class="highlight">*</span>' : '';
+            $html              .= '<div class="' . $this->getClassNames($additional_classes, $is_field_read_only) . '"
                 data-field-id="' . $this->id . '"
                 data-test="tracker-artifact-value-' . $this->getName() . '"
                 data-is-required="' . ($this->required ? 'true' : 'false') . '">';
@@ -510,13 +510,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             return '';
         }
 
-        $value = $artifact->getLastChangeset()->getValue($this);
+        $value                = $artifact->getLastChangeset()->getValue($this);
         $mail_formatted_value = $this->fetchMailArtifactValue($artifact, $recipient, $ignore_perms, $value, $format);
 
         if ($format == 'text') {
             $output = ' * ' . $this->getLabel() . ' : ' . $mail_formatted_value;
         } else {
-            $hp = Codendi_HTMLPurifier::instance();
+            $hp     = Codendi_HTMLPurifier::instance();
             $output = '<tr>
                 <td valign="top" align="left" >
                     <label id = "tracker_artifact_' . $this->id . '"
@@ -546,14 +546,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function fetchSubmit(array $submitted_values)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanSubmit()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="' . $this->getClassNamesForSubmit() . '"
+            $html    .= '<div class="' . $this->getClassNamesForSubmit() . '"
                 data-field-id="' . $this->id . '"
                 data-is-required="' . ($this->required ? 'true' : 'false') . '">';
-            $html .= '<label for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required . '</label>';
+            $html    .= '<label for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required . '</label>';
 
             $html .= $this->fetchSubmitValue($submitted_values);
             $html .= $this->fetchSubmitAdditionnalInfo($submitted_values);
@@ -588,12 +588,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function fetchSubmitMasschange()
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanUpdate()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="field-masschange ' . $this->getClassNames([], false) . '">';
-            $html .= '<label for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required . '</label>';
+            $html    .= '<div class="field-masschange ' . $this->getClassNames([], false) . '">';
+            $html    .= '<label for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required . '</label>';
 
             $html .= $this->fetchSubmitValueMasschange();
             $html .= $this->fetchSubmitAdditionnalInfo([]);
@@ -604,7 +604,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     private function getClassNames(array $additional_classes, bool $is_field_read_only)
     {
-        $classnames = 'tracker_artifact_field';
+        $classnames  = 'tracker_artifact_field';
         $classnames .= ' tracker_artifact_field-' . $this->getFormElementFactory()->getType($this);
         if ($this->has_errors) {
             $classnames .= ' has_errors';
@@ -622,7 +622,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     private function getClassNamesForSubmit()
     {
-        $classnames = 'tracker_artifact_field';
+        $classnames  = 'tracker_artifact_field';
         $classnames .= ' tracker_artifact_field-' . $this->getFormElementFactory()->getType($this);
         if ($this->has_errors) {
             $classnames .= ' has_errors';
@@ -640,7 +640,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function fetchTooltip($artifact)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanRead()) {
             $html .= '<tr><td>';
@@ -776,7 +776,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $data_field_id   = '';
         $data_field_type = '';
 
-        $purifier        = Codendi_HTMLPurifier::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
 
         $is_field_frozen = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
         if ($this->userCanUpdate() && ! $is_field_frozen) {
@@ -829,12 +829,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     public function fetchAdmin($tracker)
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp       = Codendi_HTMLPurifier::instance();
+        $html     = '';
         $required = $this->required ? ' <span class="highlight">*</span>' : '';
 
-        $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '">';
-        $html .= '<div class="tracker-admin-field-controls">';
+        $html         .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '">';
+        $html         .= '<div class="tracker-admin-field-controls">';
                 $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
         if ($this->canBeRemovedFromUsage()) {
             $html .= '<a href="?' . http_build_query([
@@ -844,9 +844,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
         } else {
             $cannot_remove_message = $this->getCannotRemoveMessage();
-            $html .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
-            $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', ['alt' => 'remove']);
-            $html .= '</span>';
+            $html                 .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
+            $html                 .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', ['alt' => 'remove']);
+            $html                 .= '</span>';
         }
         $html .= '</div>';
 
@@ -986,7 +986,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
 
         $tracker_formelement_factory = Tracker_FormElementFactory::instance();
-        $tracker_rules_manager = new Tracker_RulesManager(
+        $tracker_rules_manager       = new Tracker_RulesManager(
             $tracker,
             $tracker_formelement_factory,
             new FrozenFieldsDao(),
@@ -1062,7 +1062,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function validateFieldWithPermissionsAndRequiredStatus(Artifact $artifact, $submitted_value, PFUser $user, ?Tracker_Artifact_ChangesetValue $last_changeset_value = null, ?bool $is_submission = null)
     {
-        $is_valid = true;
+        $is_valid      = true;
         $hasPermission = $this->userCanUpdate($user);
         if ($is_submission) {
             $hasPermission = $this->userCanSubmit($user);

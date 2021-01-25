@@ -35,7 +35,7 @@ final class OAuth2AuthorizationCodeTest extends TestCase
         $scope               = OAuth2TestScope::fromItself();
         $pkce_code_challenge = 'code_chall';
         $nonce               = 'oidc_nonce';
-        $auth_code = OAuth2AuthorizationCode::approveForSetOfScopes(
+        $auth_code           = OAuth2AuthorizationCode::approveForSetOfScopes(
             new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
             $user,
             $pkce_code_challenge,

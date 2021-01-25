@@ -62,7 +62,7 @@ class SerializedPluginProxy
 
     public function addListener(\PluginFactory $plugin_factory, $event_name, \Plugin $plugin, array $hook)
     {
-        $this->plugin_map[$plugin->getId()] = new PluginCacheInfo(
+        $this->plugin_map[$plugin->getId()]    = new PluginCacheInfo(
             $plugin->getId(),
             $plugin->getName(),
             $plugin->isRestricted(),

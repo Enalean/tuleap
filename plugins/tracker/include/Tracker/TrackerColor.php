@@ -26,8 +26,8 @@ use InvalidArgumentException;
 
 final class TrackerColor
 {
-    private const DEFAULT_COLOR_NAME = 'inca-silver';
-    public const COLOR_NAMES         = [
+    private const DEFAULT_COLOR_NAME     = 'inca-silver';
+    public const COLOR_NAMES             = [
         self::DEFAULT_COLOR_NAME,
         'chrome-silver',
         'firemist-silver',

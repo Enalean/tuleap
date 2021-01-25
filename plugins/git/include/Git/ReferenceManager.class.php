@@ -58,7 +58,7 @@ class Git_ReferenceManager
             return null;
         }
 
-        $args = [$commit_info->getRepository()->getId(), $commit_info->getSha1()];
+        $args      = [$commit_info->getRepository()->getId(), $commit_info->getSha1()];
         $reference = $this->reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $project->getID(), count($args), $value);
         if ($reference) {
             $reference->replaceLink($args);
@@ -79,9 +79,9 @@ class Git_ReferenceManager
 
     private function splitRepositoryAndSha1($value)
     {
-        $last_slash_position  = strrpos($value, '/');
-        $repository_name      = substr($value, 0, $last_slash_position);
-        $sha1                 = substr($value, $last_slash_position + 1);
+        $last_slash_position = strrpos($value, '/');
+        $repository_name     = substr($value, 0, $last_slash_position);
+        $sha1                = substr($value, $last_slash_position + 1);
         return [$repository_name, $sha1];
     }
 }

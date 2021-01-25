@@ -51,10 +51,10 @@ class AdminGerritControllerTest extends TestCase
 
     public function setUp(): void
     {
-        $GLOBALS['Response']       = \Mockery::spy(Response::class);
-        $this->csrf                = \Mockery::spy(CSRFSynchronizerToken::class);
+        $GLOBALS['Response'] = \Mockery::spy(Response::class);
+        $this->csrf          = \Mockery::spy(CSRFSynchronizerToken::class);
 
-        $this->request             = new \Codendi_Request([], \Mockery::spy(\ProjectManager::class));
+        $this->request = new \Codendi_Request([], \Mockery::spy(\ProjectManager::class));
         $this->request->set($this->csrf->getTokenName(), $this->csrf->getToken());
         $this->request->set('action', 'add-gerrit-server');
 
@@ -88,7 +88,7 @@ class AdminGerritControllerTest extends TestCase
             'azerty',
         );
 
-        $this->factory             = \Mockery::spy(
+        $this->factory = \Mockery::spy(
             Git_RemoteServer_GerritServerFactory::class,
             [
                 'getServers'    => [1 => $this->an_existing_server],
@@ -96,7 +96,7 @@ class AdminGerritControllerTest extends TestCase
             ]
         );
 
-        $this->admin               = new \Git_AdminGerritController(
+        $this->admin = new \Git_AdminGerritController(
             $this->csrf,
             $this->factory,
             $this->admin_page_renderer,

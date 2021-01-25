@@ -49,7 +49,7 @@ class ArtifactDateReminderFactory
     {
         // Set object attributes
         $this->notification_id = $notification_id;
-        $notif_array = $this->getNotificationData($notification_id);
+        $notif_array           = $this->getNotificationData($notification_id);
         $this->setFromArray($notif_array);
 
         $this->logger = new TrackerDateReminder_Logger_Prefix($logger, '[Notif id ' . $notification_id . ']');
@@ -79,13 +79,13 @@ class ArtifactDateReminderFactory
      */
     public function getNotificationData($notification_id)
     {
-        $qry = sprintf(
+        $qry    = sprintf(
             'SELECT * FROM artifact_date_reminder_processing'
             . ' WHERE notification_id=%d',
             db_ei($notification_id)
         );
         $result = db_query($qry);
-        $rows = db_fetch_array($result);
+        $rows   = db_fetch_array($result);
 
         return $rows;
     }
@@ -170,7 +170,7 @@ class ArtifactDateReminderFactory
     public function getTrackerName()
     {
         $group = ProjectManager::instance()->getProject($this->getGroupId());
-        $at = new ArtifactType($group, $this->getGroupArtifactId());
+        $at    = new ArtifactType($group, $this->getGroupArtifactId());
         return $at->getName();
     }
 
@@ -181,7 +181,7 @@ class ArtifactDateReminderFactory
      */
     public function getNotificationStartDate()
     {
-        $sql = sprintf(
+        $sql        = sprintf(
             'SELECT notification_start, notification_type FROM artifact_date_reminder_settings'
             . ' WHERE reminder_id=%d'
             . ' AND field_id=%d'
@@ -190,11 +190,11 @@ class ArtifactDateReminderFactory
             db_ei($this->getFieldId()),
             db_ei($this->getGroupArtifactId())
         );
-        $res  = db_query($sql);
-        $start = db_result($res, 0, 'notification_start');
-        $type = db_result($res, 0, 'notification_type');
+        $res        = db_query($sql);
+        $start      = db_result($res, 0, 'notification_start');
+        $type       = db_result($res, 0, 'notification_type');
         $date_value = $this->getDateValue();
-        $shift = intval($start * 24 * 3600);
+        $shift      = intval($start * 24 * 3600);
         if ($type == 0) {
             //notification starts before occurence date
             $notif_start_date = intval($date_value - $shift);
@@ -268,31 +268,31 @@ class ArtifactDateReminderFactory
      */
     public function getDateValue()
     {
-        $group = ProjectManager::instance()->getProject($this->getGroupId());
-        $at = new ArtifactType($group, $this->getGroupArtifactId());
+        $group          = ProjectManager::instance()->getProject($this->getGroupId());
+        $at             = new ArtifactType($group, $this->getGroupArtifactId());
         $art_field_fact = new ArtifactFieldFactory($at);
-        $field = $art_field_fact->getFieldFromId($this->getFieldId());
+        $field          = $art_field_fact->getFieldFromId($this->getFieldId());
 
         if (! $field->isStandardField()) {
-            $qry = sprintf(
+            $qry       = sprintf(
                 'SELECT valueDate FROM artifact_field_value'
                           . ' WHERE artifact_id=%d'
                           . ' AND field_id=%d',
                 db_ei($this->getArtifactId()),
                 db_ei($this->getFieldId())
             );
-            $result = db_query($qry);
+            $result    = db_query($qry);
             $valueDate = db_result($result, 0, 'valueDate');
         } else {
             //End Date
-            $qry = sprintf(
+            $qry       = sprintf(
                 'SELECT close_date FROM artifact'
                           . ' WHERE artifact_id=%d'
                           . ' AND group_artifact_id=%d',
                 db_ei($this->getArtifactId()),
                 db_ei($this->getGroupArtifactId())
             );
-            $result = db_query($qry);
+            $result    = db_query($qry);
             $valueDate = db_result($result, 0, 'close_date');
         }
 
@@ -328,13 +328,13 @@ class ArtifactDateReminderFactory
         global $art_field_fact;
 
         //Instantiate a new Artifact object
-        $group = ProjectManager::instance()->getProject($this->getGroupId());
-        $at = new ArtifactType($group, $this->getGroupArtifactId());
+        $group          = ProjectManager::instance()->getProject($this->getGroupId());
+        $at             = new ArtifactType($group, $this->getGroupArtifactId());
         $art_field_fact = new ArtifactFieldFactory($at);
-        $art = new Artifact($at, $this->getArtifactId(), false);
+        $art            = new Artifact($at, $this->getArtifactId(), false);
 
         $notified_people = [];
-        $sql = sprintf(
+        $sql             = sprintf(
             'SELECT notified_people FROM artifact_date_reminder_settings'
                       . ' WHERE reminder_id=%d'
                       . ' AND group_artifact_id=%d'
@@ -343,21 +343,21 @@ class ArtifactDateReminderFactory
             db_ei($this->getGroupArtifactId()),
             db_ei($this->getFieldId())
         );
-        $res = db_query($sql);
-        $notif = db_result($res, 0, 'notified_people');
-        $notif_array = explode(",", $notif);
+        $res             = db_query($sql);
+        $notif           = db_result($res, 0, 'notified_people');
+        $notif_array     = explode(",", $notif);
         foreach ($notif_array as $item) {
             if ($item == 1) {
                 //Submitter
                 $submitter = $art->getSubmittedBy();
                 //add submitter in the 'notified_people' array
                 if (! in_array(user_getemail($submitter), $notified_people) && $submitter != 100 && $this->isUserAllowedToBeNotified($submitter)) {
-                    $count = count($notified_people);
+                    $count                   = count($notified_people);
                     $notified_people[$count] = user_getemail($submitter);
                 }
             } elseif ($item == 2) {
                 //Assigned To
-                $assignee_array = [];
+                $assignee_array    = [];
                 $multi_assigned_to = $art_field_fact->getFieldFromName('multi_assigned_to');
                 if (is_object($multi_assigned_to)) {
                     //Multi-Assigned To field
@@ -415,7 +415,7 @@ class ArtifactDateReminderFactory
                 $ugr_id = (int) (substr($item, 1));
                 if ($ugr_id > 100) {
                     // user-defined ugroup
-                    $qry = ugroup_db_get_members($ugr_id);
+                    $qry    = ugroup_db_get_members($ugr_id);
                     $result = db_query($qry);
                     if (db_numrows($result) > 0) {
                         $idx = count($notified_people);
@@ -485,11 +485,11 @@ class ArtifactDateReminderFactory
     {
         global $art_field_fact;
 
-        $group = ProjectManager::instance()->getProject($this->getGroupId());
-        $at = new ArtifactType($group, $this->getGroupArtifactId());
+        $group          = ProjectManager::instance()->getProject($this->getGroupId());
+        $at             = new ArtifactType($group, $this->getGroupArtifactId());
         $art_field_fact = new ArtifactFieldFactory($at);
-        $art = new Artifact($at, $this->getArtifactId(), false);
-        $field = $art_field_fact->getFieldFromId($this->getFieldId());
+        $art            = new Artifact($at, $this->getArtifactId(), false);
+        $field          = $art_field_fact->getFieldFromId($this->getFieldId());
 
         return ($art->userCanView($user_id) && $field->userCanRead($this->getGroupId(), $this->getGroupArtifactId(), $user_id));
     }

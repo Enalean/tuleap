@@ -51,7 +51,7 @@ class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereB
     {
         $query_presenter = new QueryListFieldPresenter($comparison, $field);
 
-        $values   = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
+        $values = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
 
         $escaped_values = $this->quoteSmartImplode($values);
         $condition      = "$query_presenter->changeset_value_list_alias.bindvalue_id = $query_presenter->list_value_alias.user_id

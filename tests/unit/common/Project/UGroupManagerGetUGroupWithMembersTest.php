@@ -31,7 +31,7 @@ class UGroupManagerGetUGroupWithMembersTest extends TestCase
         parent::setUp();
 
         $this->ugroup_id = 112;
-        $this->project = \Mockery::spy(\Project::class);
+        $this->project   = \Mockery::spy(\Project::class);
 
         $this->ugroup_manager = \Mockery::mock(\UGroupManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }

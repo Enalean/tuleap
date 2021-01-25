@@ -59,8 +59,8 @@ class SiteAdminController implements DispatchableWithRequest, DispatchableWithBu
     public function __construct(AdminDelegation_UserServiceManager $user_delegation_manager, UserManager $user_manager, AdminPageRenderer $admin_page_renderer)
     {
         $this->user_delegation_manager = $user_delegation_manager;
-        $this->user_manager = $user_manager;
-        $this->admin_page_renderer = $admin_page_renderer;
+        $this->user_manager            = $user_manager;
+        $this->admin_page_renderer     = $admin_page_renderer;
     }
 
     /**

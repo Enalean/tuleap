@@ -39,9 +39,9 @@ class WebhookXMLExporterTest extends TestCase
         parent::setUp();
 
         $this->webhook_factory = \Mockery::mock(WebhookFactory::class);
-        $this->exporter  = new WebhookXMLExporter($this->webhook_factory);
+        $this->exporter        = new WebhookXMLExporter($this->webhook_factory);
 
-        $this->tracker   = \Mockery::mock(\Tracker::class);
+        $this->tracker = \Mockery::mock(\Tracker::class);
     }
 
     public function testItDoesNothingIfNoWebhookDefinedForTracker()

@@ -36,7 +36,7 @@ use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 class ExplorerController
 {
-    public const NAME = 'explorer';
+    public const NAME                  = 'explorer';
     public const TRANSFERT_BUFFER_SIZE = 8192;
 
     /** @var DirectoryParser */
@@ -87,7 +87,7 @@ class ExplorerController
         }
 
         $path_parser = new DirectoryPathParser();
-        $path = $path_parser->getCleanPath($request->get('path'));
+        $path        = $path_parser->getCleanPath($request->get('path'));
         if ($this->parser->isFile($project->getUnixName() . DIRECTORY_SEPARATOR . $path)) {
             $this->renderFileContent($request, $project, $project->getUnixName() . DIRECTORY_SEPARATOR . $path);
         } else {
@@ -114,7 +114,7 @@ class ExplorerController
     private function renderDirectoryContent(ServiceProFTPd $service, HTTPRequest $request, DirectoryPathParser $path_parser, Project $project, $path)
     {
         $remove_parent_directory_listing = ($path == '') ? true : false;
-        $items = $this->parser->parseDirectory($project->getUnixName() . DIRECTORY_SEPARATOR . $path, $remove_parent_directory_listing);
+        $items                           = $this->parser->parseDirectory($project->getUnixName() . DIRECTORY_SEPARATOR . $path, $remove_parent_directory_listing);
 
         $service->renderInPage(
             $request,

@@ -114,7 +114,7 @@ class WikiPlugin_ListPages extends WikiPlugin
             // find out which users we should show ratings for
             $options = ['dimension' => $dimension,
                              'users' => []];
-            $args = array_merge($options, $args);
+            $args    = array_merge($options, $args);
         }
         if (empty($pages) and $pages != '0') {
             return '';
@@ -127,7 +127,7 @@ class WikiPlugin_ListPages extends WikiPlugin
             $args['types']['numpagelinks'] = new _PageList_Column_ListPages_count('numpagelinks', _("#"));
         }
 
-        $pagelist = new PageList($info, $exclude, $args);
+        $pagelist    = new PageList($info, $exclude, $args);
         $pages_array = is_string($pages) ? explodePageList($pages) : (is_array($pages) ? $pages : []);
         $pagelist->addPageList($pages_array);
         return $pagelist;
@@ -144,7 +144,7 @@ class _PageList_Column_ListPages_count extends _PageList_Column
     }
     public function _getValue($page, &$revision_handle)
     {
-        $iter = $page->getLinks($this->_direction);
+        $iter  = $page->getLinks($this->_direction);
         $count = $iter->count();
         return $count;
     }

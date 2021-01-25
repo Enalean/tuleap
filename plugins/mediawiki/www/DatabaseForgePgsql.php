@@ -57,9 +57,9 @@ class DatabaseForge extends DatabasePostgres
         global $wgDBmwschema;
 
         $save_wgDBmwschema = $wgDBmwschema;
-        $wgDBmwschema = 'public';
-        $v = DatabasePostgres::fieldInfo($table, $field);
-        $wgDBmwschema = $save_wgDBmwschema;
+        $wgDBmwschema      = 'public';
+        $v                 = DatabasePostgres::fieldInfo($table, $field);
+        $wgDBmwschema      = $save_wgDBmwschema;
         return $v;
     }
 

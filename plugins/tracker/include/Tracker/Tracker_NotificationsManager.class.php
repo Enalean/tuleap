@@ -143,7 +143,7 @@ class Tracker_NotificationsManager
         $config_notification_custom_email_from = new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao());
 
         $email_custom_enabled = $request->get('email-custom-enabled');
-        $email_custom_from = $request->get('email-custom-from');
+        $email_custom_from    = $request->get('email-custom-from');
         if ($request->exist('email-custom-from')) {
             $config_notification_custom_email_from->setCustomSender($this->tracker, $email_custom_from, $email_custom_enabled);
         }
@@ -174,7 +174,7 @@ class Tracker_NotificationsManager
     private function createNewGlobalNotification($global_notification_data)
     {
         $invalid_entries = new InvalidEntryInAutocompleterCollection();
-        $autocompleter = $this->getAutocompleter($global_notification_data['addresses'], $invalid_entries);
+        $autocompleter   = $this->getAutocompleter($global_notification_data['addresses'], $invalid_entries);
         $invalid_entries->generateWarningMessageForInvalidEntries();
 
         if ($this->isNotificationEmpty($autocompleter)) {
@@ -198,7 +198,7 @@ class Tracker_NotificationsManager
     {
         $global_notifications = $this->getGlobalNotifications();
         if (array_key_exists($notification_id, $global_notifications)) {
-            $invalid_entries = new InvalidEntryInAutocompleterCollection();
+            $invalid_entries           = new InvalidEntryInAutocompleterCollection();
             $autocompleter             = $this->getAutocompleter($notification['addresses'], $invalid_entries);
             $emails                    = $autocompleter->getEmails();
             $notification['addresses'] = $this->addresses_builder->transformNotificationAddressesArrayAsString($emails);
@@ -281,7 +281,7 @@ class Tracker_NotificationsManager
 
     protected function displayAdminNotifications_Toggle() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $renderer = $this->getNotificationsRenderer();
+        $renderer            = $this->getNotificationsRenderer();
         $notifications_level = $this->tracker->getNotificationsLevel();
         $renderer->renderToPage(
             'admin-notifications-level',
@@ -299,10 +299,10 @@ class Tracker_NotificationsManager
 
     private function displayAdminNotificationAssignedToMeFlag()
     {
-        $config_notification_assigned_to = new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao());
+        $config_notification_assigned_to   = new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao());
         $config_notification_custom_sender
             = new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao());
-        $is_assigned_to_enabled          = $config_notification_assigned_to->isAssignedToSubjectEnabled($this->tracker);
+        $is_assigned_to_enabled            = $config_notification_assigned_to->isAssignedToSubjectEnabled($this->tracker);
 
         $custom_email_sender = $config_notification_custom_sender->getCustomSender($this->tracker);
 
@@ -460,7 +460,7 @@ class Tracker_NotificationsManager
     public function getAllAddresses($update = false)
     {
         $addresses = [];
-        $notifs = $this->getGlobalNotifications();
+        $notifs    = $this->getGlobalNotifications();
         foreach ($notifs as $key => $nop) {
             if (! $update || $notifs[$key]->isAllUpdates()) {
                 foreach (preg_split('/[,;]/', $notifs[$key]->getAddresses()) as $address) {

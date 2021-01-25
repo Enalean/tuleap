@@ -61,10 +61,10 @@ class PreRevPropChangeTest extends TestCase
         $repository = Mockery::mock(Repository::class);
         $repository->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
 
-        $this->repo_manager = Mockery::mock(RepositoryManager::class);
-        $this->hook_config = Mockery::mock(HookConfig::class);
+        $this->repo_manager          = Mockery::mock(RepositoryManager::class);
+        $this->hook_config           = Mockery::mock(HookConfig::class);
         $this->hook_config_retriever = \Mockery::spy(HookConfigRetriever::class);
-        $this->repo_path = "FOO";
+        $this->repo_path             = "FOO";
 
         $this->repo_manager->shouldReceive('getRepositoryFromSystemPath')->andReturn($repository);
         $this->hook_config_retriever->shouldReceive('getHookConfig')->andReturn($this->hook_config);

@@ -28,7 +28,7 @@ class Docman_ReportColumn
     public $sort;
     public function __construct($md)
     {
-        $this->md = $md;
+        $this->md   = $md;
         $this->sort = \null;
     }
     public function setSort($s)
@@ -62,21 +62,21 @@ class Docman_ReportColumn
         $sort = $this->getSort();
         if ($sort == 1) {
             $toggleValue = '0';
-            $toogleIcon = '<img src="' . \util_get_image_theme("up_arrow.png") . '" border="0" >';
+            $toogleIcon  = '<img src="' . \util_get_image_theme("up_arrow.png") . '" border="0" >';
         } else {
             $toggleValue = '1';
-            $toogleIcon = '<img src="' . \util_get_image_theme("dn_arrow.png") . '" border="0" >';
+            $toogleIcon  = '<img src="' . \util_get_image_theme("dn_arrow.png") . '" border="0" >';
         }
         // URL
         $toggleParam = [];
-        $sortParam = $this->getSortParameter();
+        $sortParam   = $this->getSortParameter();
         if ($sortParam !== \null) {
             $toggleParam[$sortParam] = $toggleValue;
         }
-        $url = $view->_buildSearchUrl($viewParams, [$sortParam => $toggleValue]);
-        $title = \dgettext('tuleap-docman', 'Click on title to toggle table sort');
+        $url      = $view->_buildSearchUrl($viewParams, [$sortParam => $toggleValue]);
+        $title    = \dgettext('tuleap-docman', 'Click on title to toggle table sort');
         $purifier = \Codendi_HTMLPurifier::instance();
-        $link = $purifier->purify($this->md->getName());
+        $link     = $purifier->purify($this->md->getName());
         if ($sort !== \null) {
             $link .= '&nbsp;' . $toogleIcon;
         }
@@ -93,7 +93,7 @@ class Docman_ReportColumn
     public function _getMdHtml($item)
     {
         $mdHtml = \null;
-        $md = $item->getMetadataFromLabel($this->md->getLabel());
+        $md     = $item->getMetadataFromLabel($this->md->getLabel());
         if ($md !== \null) {
             $mdHtml = \Docman_MetadataHtmlFactory::getFromMetadata($md, []);
         }

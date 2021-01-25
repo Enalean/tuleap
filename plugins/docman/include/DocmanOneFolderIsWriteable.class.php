@@ -36,7 +36,7 @@ class DocmanOneFolderIsWriteable /* implements Visitor */
             $b = true;
         } else {
             $items = $item->getAllItems();
-            $it = $items->iterator();
+            $it    = $items->iterator();
             while (! $b && $it->valid()) {
                 $o = $it->current();
                 $b = $o->accept($this);

@@ -40,7 +40,7 @@ class NavigationTabPresenterBuilder
     public function __construct(HTMLURLBuilder $url_builder, Factory $factory)
     {
         $this->url_builder = $url_builder;
-        $this->factory = $factory;
+        $this->factory     = $factory;
     }
 
     public function build(GitRepository $repository, $selected_tab)

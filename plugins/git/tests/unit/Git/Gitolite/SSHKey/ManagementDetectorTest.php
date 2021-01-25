@@ -28,7 +28,7 @@ final class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
 
     public function testItCanNotManageAuthorizedKeysFileIfGitolite3IsNotUsed(): void
     {
-        $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
+        $version_detector = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
         $version_detector->shouldReceive('isGitolite3')->andReturns(false);
         $global_parameter_dao = \Mockery::mock(GlobalParameterDao::class);
 
@@ -39,7 +39,7 @@ final class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
 
     public function testItIsAbleToFindThatTuleapManagesAuthorizedKeysFile(): void
     {
-        $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
+        $version_detector = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
         $version_detector->shouldReceive('isGitolite3')->andReturns(true);
         $global_parameter_dao = \Mockery::mock(GlobalParameterDao::class);
         $global_parameter_dao->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturns(false);
@@ -51,7 +51,7 @@ final class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
 
     public function testItIsAbleToDetectThatTuleapManagesAuthorizedKeysFile(): void
     {
-        $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
+        $version_detector = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
         $version_detector->shouldReceive('isGitolite3')->andReturns(true);
         $global_parameter_dao = \Mockery::mock(GlobalParameterDao::class);
         $global_parameter_dao->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturns(true);

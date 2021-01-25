@@ -33,7 +33,7 @@ class ArtifactDao extends DataAccessObject
         $order = ($reverse_order) ? 'DESC' : 'ASC';
 
         $milestone_filter = $this->milestoneSQLFilter($milestone_id);
-        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*
+        $sql              = "SELECT SQL_CALC_FOUND_ROWS A.*
                 FROM tracker_artifact AS A
                 $milestone_filter A.tracker_id = ?
                 ORDER BY A.id $order
@@ -45,7 +45,7 @@ class ArtifactDao extends DataAccessObject
     public function searchPaginatedOpenByTrackerId(int $tracker_id, ?int $milestone_id, int $limit, int $offset): array
     {
         $milestone_filter = $this->milestoneSQLFilter($milestone_id);
-        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*
+        $sql              = "SELECT SQL_CALC_FOUND_ROWS A.*
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = ?)
                     INNER JOIN tracker_changeset AS C ON (A.last_changeset_id = C.id)
@@ -69,7 +69,7 @@ class ArtifactDao extends DataAccessObject
     public function searchPaginatedClosedByTrackerId(int $tracker_id, ?int $milestone_id, int $limit, int $offset): array
     {
         $milestone_filter = $this->milestoneSQLFilter($milestone_id);
-        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*
+        $sql              = "SELECT SQL_CALC_FOUND_ROWS A.*
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS t ON (A.tracker_id = t.id)
                     INNER JOIN tracker_semantic_status AS ss USING(tracker_id)
@@ -116,7 +116,7 @@ class ArtifactDao extends DataAccessObject
         int $limit,
         int $offset
     ): array {
-        $where_statement      = EasyStatement::open()->in('parent_art.id IN (?*)', $artifacts_ids)
+        $where_statement = EasyStatement::open()->in('parent_art.id IN (?*)', $artifacts_ids)
             ->andIn('IFNULL(artlink.nature, "") IN (?*)', $natures);
 
         $sql = "SELECT DISTINCT SQL_CALC_FOUND_ROWS linked_art.*

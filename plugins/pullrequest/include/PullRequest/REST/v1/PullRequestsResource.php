@@ -202,7 +202,7 @@ class PullRequestsResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->git_repository_factory  = new GitRepositoryFactory(
+        $this->git_repository_factory = new GitRepositoryFactory(
             new GitDao(),
             ProjectManager::instance()
         );
@@ -211,14 +211,14 @@ class PullRequestsResource extends AuthenticatedResource
         $reference_manager          = ReferenceManager::instance();
         $this->pull_request_factory = new PullRequestFactory($pull_request_dao, $reference_manager);
 
-        $this->logger               = BackendLogger::getDefaultLogger();
+        $this->logger = BackendLogger::getDefaultLogger();
 
         $event_dispatcher = PullRequestNotificationSupport::buildDispatcher($this->logger);
 
         $comment_dao           = new CommentDao();
         $this->comment_factory = new CommentFactory($comment_dao, $reference_manager, $event_dispatcher);
 
-        $this->user_manager         = UserManager::instance();
+        $this->user_manager = UserManager::instance();
 
         $inline_comment_dao     = new InlineCommentDao();
         $timeline_dao           = new TimelineDao();
@@ -262,7 +262,7 @@ class PullRequestsResource extends AuthenticatedResource
             $event_dispatcher
         );
 
-        $dao = new \Tuleap\PullRequest\InlineComment\Dao();
+        $dao                          = new \Tuleap\PullRequest\InlineComment\Dao();
         $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher);
 
         $this->access_control_verifier = new AccessControlVerifier(
@@ -293,11 +293,11 @@ class PullRequestsResource extends AuthenticatedResource
             new GitPullRequestReferenceNamespaceAvailabilityChecker()
         );
 
-        $this->git_plugin  = PluginFactory::instance()->getPluginByName('git');
-        $url_manager = new Git_GitRepositoryUrlManager($this->git_plugin, new \Tuleap\InstanceBaseURLBuilder());
+        $this->git_plugin = PluginFactory::instance()->getPluginByName('git');
+        $url_manager      = new Git_GitRepositoryUrlManager($this->git_plugin, new \Tuleap\InstanceBaseURLBuilder());
 
-        $this->status_retriever = new CommitStatusRetriever(new CommitStatusDAO());
-        $metadata_retriever     = new CommitMetadataRetriever($this->status_retriever, $this->user_manager);
+        $this->status_retriever              = new CommitStatusRetriever(new CommitStatusDAO());
+        $metadata_retriever                  = new CommitMetadataRetriever($this->status_retriever, $this->user_manager);
         $this->commit_representation_builder = new GitCommitRepresentationBuilder(
             $metadata_retriever,
             $url_manager
@@ -481,7 +481,7 @@ class PullRequestsResource extends AuthenticatedResource
             $dest_repository->getProject()
         );
 
-        $collection = $this->labels_retriever->getPaginatedLabelsForPullRequest($pull_request, $limit, $offset);
+        $collection            = $this->labels_retriever->getPaginatedLabelsForPullRequest($pull_request, $limit, $offset);
         $labels_representation = array_map(
             function (Label $label) {
                 $representation = new LabelRepresentation();
@@ -690,7 +690,7 @@ class PullRequestsResource extends AuthenticatedResource
         $special_format = $event->getSpecialFormat();
 
         if ($charset === "binary" || $special_format !== '') {
-            $diff = new FileUniDiff();
+            $diff            = new FileUniDiff();
             $inline_comments = [];
         } else {
             $executor_repo_destination = $this->getExecutor($git_repository_destination);
@@ -706,8 +706,8 @@ class PullRequestsResource extends AuthenticatedResource
                 new \Tuleap\PullRequest\InlineComment\Dao(),
                 $this->user_manager
             );
-            $git_repository_source = $this->getRepository($pull_request->getRepositoryId());
-            $inline_comments       = $inline_comment_builder->getForFile($pull_request, $path, $git_repository_source->getProjectId());
+            $git_repository_source  = $this->getRepository($pull_request->getRepositoryId());
+            $inline_comments        = $inline_comment_builder->getForFile($pull_request, $path, $git_repository_source->getProjectId());
         }
 
         return PullRequestFileUniDiffRepresentation::build($diff, $inline_comments, $mime_type, $charset, $special_format);
@@ -821,15 +821,15 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
-        $user                = $this->user_manager->getCurrentUser();
+        $user = $this->user_manager->getCurrentUser();
 
-        $repository_id       = $content->repository_id;
-        $repository_src      = $this->getRepository($repository_id);
-        $branch_src          = $content->branch_src;
+        $repository_id  = $content->repository_id;
+        $repository_src = $this->getRepository($repository_id);
+        $branch_src     = $content->branch_src;
 
-        $repository_dest_id  = $content->repository_dest_id;
-        $repository_dest     = $this->getRepository($repository_dest_id);
-        $branch_dest         = $content->branch_dest;
+        $repository_dest_id = $content->repository_dest_id;
+        $repository_dest    = $this->getRepository($repository_dest_id);
+        $branch_dest        = $content->branch_dest;
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $repository_dest->getProject()
@@ -1230,7 +1230,7 @@ class PullRequestsResource extends AuthenticatedResource
         $information_extractor = new ReviewerRepresentationInformationExtractor(
             new UserRESTReferenceRetriever($this->user_manager),
         );
-        $users = $information_extractor->getUsers($representation);
+        $users                 = $information_extractor->getUsers($representation);
 
         $reviewer_updater = new ReviewerUpdater(
             new ReviewerDAO(),
@@ -1266,7 +1266,7 @@ class PullRequestsResource extends AuthenticatedResource
         $pull_request_with_git_reference = $this->getAccessiblePullRequestWithGitReferenceForCurrentUser($id);
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
 
-        $current_user    = $this->user_manager->getCurrentUser();
+        $current_user = $this->user_manager->getCurrentUser();
 
         $this->checkUserCanMerge($pull_request, $current_user);
 

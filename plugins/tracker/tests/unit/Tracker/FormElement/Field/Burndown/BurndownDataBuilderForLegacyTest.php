@@ -84,7 +84,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
         $this->artifact = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::mock(\Tracker::class));
-        $this->user     = Mockery::mock(\PFUser::class);
+        $this->user = Mockery::mock(\PFUser::class);
         $this->user->shouldReceive("toRow");
         $this->user->shouldReceive("isLoggedIn")->andReturn(true);
 
@@ -138,7 +138,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $second_day = strtotime('2018-11-02');
-        $third_day = strtotime('2018-11-03');
+        $third_day  = strtotime('2018-11-03');
 
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
 
@@ -156,7 +156,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
         $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $second_day = strtotime('2018-11-02');
-        $third_day = strtotime('2018-11-03');
+        $third_day  = strtotime('2018-11-03');
 
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
 

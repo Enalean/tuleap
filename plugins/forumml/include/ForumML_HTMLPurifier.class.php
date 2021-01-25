@@ -50,7 +50,7 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier
     {
      //static $purifier;
         if (! isset(self::$ForumML_HTMLPurifier_instance)) {
-            $c = self::class;
+            $c                                   = self::class;
             self::$ForumML_HTMLPurifier_instance = new $c();
         }
         return self::$ForumML_HTMLPurifier_instance;
@@ -95,9 +95,9 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier
         $clean = '';
         switch ($level) {
             case CODENDI_PURIFIER_FORUMML:
-                $hp = HTMLPurifier::getInstance();
+                $hp     = HTMLPurifier::getInstance();
                 $config = $this->getHPConfig($level);
-                $clean = parent::purify($hp->purify($html, $config), CODENDI_PURIFIER_BASIC_NOBR, $groupId);
+                $clean  = parent::purify($hp->purify($html, $config), CODENDI_PURIFIER_BASIC_NOBR, $groupId);
                 break;
             default:
                 $clean = parent::purify($html, $level, $groupId);

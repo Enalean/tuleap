@@ -44,8 +44,8 @@ class LDAPResult implements Iterator, Countable // phpcs:ignore PSR1.Classes.Cla
     public function __construct($info, $ldapParams)
     {
         $this->ldapParams = $ldapParams;
-        $this->info  = $info;
-        $this->index = 0;
+        $this->info       = $info;
+        $this->index      = 0;
     }
 
     public function getEmail()

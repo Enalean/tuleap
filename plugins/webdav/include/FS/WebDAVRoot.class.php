@@ -59,12 +59,12 @@ class WebDAVRoot extends Sabre_DAV_Directory
 
     public function __construct(WebDAVPlugin $plugin, PFUser $user, int $maxFileSize, ProjectManager $project_manager, WebDAVUtils $utils, PluginManager $plugin_manager, ProjectAccessChecker $project_access_checker)
     {
-        $this->user = $user;
-        $this->plugin = $plugin;
-        $this->maxFileSize = $maxFileSize;
-        $this->project_manager = $project_manager;
-        $this->utils = $utils;
-        $this->plugin_manager = $plugin_manager;
+        $this->user                   = $user;
+        $this->plugin                 = $plugin;
+        $this->maxFileSize            = $maxFileSize;
+        $this->project_manager        = $project_manager;
+        $this->utils                  = $utils;
+        $this->plugin_manager         = $plugin_manager;
         $this->project_access_checker = $project_access_checker;
     }
 
@@ -154,7 +154,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
      */
     private function getUserProjectList(): array
     {
-        $res = $this->user->getProjects();
+        $res      = $this->user->getProjects();
         $projects = [];
         foreach ($res as $groupId) {
             $project = $this->project_manager->getProject((int) $groupId);

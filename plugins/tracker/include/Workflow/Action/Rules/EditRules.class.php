@@ -42,9 +42,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
     public function __construct(Tracker $tracker, Tracker_Rule_Date_Factory $rule_date_factory, CSRFSynchronizerToken $token)
     {
         parent::__construct($tracker);
-        $this->rule_date_factory    = $rule_date_factory;
-        $this->token                = $token;
-        $this->url_query            = TRACKER_BASE_URL . '/?' . http_build_query(
+        $this->rule_date_factory = $rule_date_factory;
+        $this->token             = $token;
+        $this->url_query         = TRACKER_BASE_URL . '/?' . http_build_query(
             [
                 'tracker' => (int) $this->tracker->id,
                 'func'    => Workflow::FUNC_ADMIN_RULES,
@@ -162,7 +162,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
 
     private function updateARule($rule_id, array $new_values)
     {
-        $rule = $this->rule_date_factory->getRule($this->tracker, (int) $rule_id);
+        $rule                                           = $this->rule_date_factory->getRule($this->tracker, (int) $rule_id);
         list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($new_values);
         if ($this->shouldUpdateTheRule($rule, $source_field, $target_field, $comparator)) {
             $rule->setSourceField($source_field);
@@ -204,7 +204,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
     private function removeRules(Codendi_Request $request)
     {
         $remove_rules = $request->get(self::PARAMETER_REMOVE_RULES);
-        $nb_deleted = 0;
+        $nb_deleted   = 0;
         if (is_array($remove_rules)) {
             foreach ($remove_rules as $rule_id) {
                 if ($this->rule_date_factory->deleteById($this->tracker->getId(), (int) $rule_id)) {
@@ -221,7 +221,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
     private function addRule(Codendi_Request $request)
     {
         if ($this->shouldAddRule($request)) {
-            $add_values = $request->get(self::PARAMETER_ADD_RULE);
+            $add_values                                     = $request->get(self::PARAMETER_ADD_RULE);
             list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($add_values);
             $this->rule_date_factory->create(
                 $source_field->getId(),
@@ -324,7 +324,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
 
     private function getListOfDateFieldLabels()
     {
-        $labels = [];
+        $labels        = [];
         $form_elements = $this->rule_date_factory->getUsedDateFields($this->tracker);
         foreach ($form_elements as $form_element) {
             $labels[$form_element->getId()] = $form_element->getLabel();

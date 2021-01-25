@@ -65,7 +65,7 @@ class RedisPersistentQueue implements PersistentQueue
      */
     public function listen($queue_id, $topic, callable $callback)
     {
-        $reconnect = false;
+        $reconnect        = false;
         $processing_queue = $this->event_queue_name . '-processing-' . $queue_id;
         do {
             try {
@@ -82,7 +82,7 @@ class RedisPersistentQueue implements PersistentQueue
                 // we get that due to default_socket_timeout
                 if (stripos($e->getMessage(), 'read error on connection') === 0) {
                     $this->redis = null;
-                    $reconnect = true;
+                    $reconnect   = true;
                 } else {
                     throw $e;
                 }
@@ -131,10 +131,10 @@ class RedisPersistentQueue implements PersistentQueue
         $this->logger->debug('Wait for events');
         $message_counter = 0;
         while ($message_counter < self::MAX_MESSAGES) {
-            $value = $redis->brpoplpush($this->event_queue_name, $processing_queue, 0);
+            $value            = $redis->brpoplpush($this->event_queue_name, $processing_queue, 0);
             $message_metadata = RedisEventMessageForPersistentQueue::fromSerializedEventMessageValue($value);
-            $topic        = $message_metadata->getTopic();
-            $enqueue_time = $message_metadata->getEnqueueTime();
+            $topic            = $message_metadata->getTopic();
+            $enqueue_time     = $message_metadata->getEnqueueTime();
             QueueInstrumentation::increment($this->event_queue_name, $topic, QueueInstrumentation::STATUS_DEQUEUED);
             try {
                 $callback($value);

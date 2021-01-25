@@ -52,9 +52,9 @@ class SystemEvent_USER_RENAME extends SystemEvent
      */
     public function verbalizeParameters($with_link)
     {
-        $txt = '';
+        $txt                      = '';
         list($user_id, $new_name) = $this->getParametersAsArray();
-        $txt .= 'user: ' . $this->verbalizeUserId($user_id, $with_link) . ' new name: ' . $new_name;
+        $txt                     .= 'user: ' . $this->verbalizeUserId($user_id, $with_link) . ' new name: ' . $new_name;
         return $txt;
     }
 
@@ -109,7 +109,7 @@ class SystemEvent_USER_RENAME extends SystemEvent
                 $renameState = $renameState & false;
             }
 
-            $params = [];
+            $params                  = [];
             $params['old_user_name'] = $old_user_name;
             $params['user']          = $user;
 

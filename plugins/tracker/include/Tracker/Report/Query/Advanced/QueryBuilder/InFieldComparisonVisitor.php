@@ -130,11 +130,11 @@ class InFieldComparisonVisitor implements
 
     private function visitList(Tracker_FormElement_Field_List $field)
     {
-        $static_bind_builder = new InComparison\ForListBindStatic(
+        $static_bind_builder  = new InComparison\ForListBindStatic(
             new CollectionOfListValuesExtractor(),
             new FromWhereComparisonListFieldBuilder()
         );
-        $users_bind_builder = new InComparison\ForListBindUsers(
+        $users_bind_builder   = new InComparison\ForListBindUsers(
             new CollectionOfListValuesExtractor(),
             new FromWhereComparisonListFieldBuilder()
         );

@@ -129,7 +129,7 @@ final class AuthorizationEndpointProcessConsentControllerTest extends TestCase
         $this->user_manager->shouldReceive('getCurrentUser')
             ->andReturn(UserTestBuilder::aUser()->withId(102)->build());
         $client_identifier = ClientIdentifier::fromClientId('tlp-client-id-404');
-        $request = (new NullServerRequest())->withParsedBody(
+        $request           = (new NullServerRequest())->withParsedBody(
             ['redirect_uri' => 'https://example.com', 'app_identifier' => $client_identifier->toString(), 'scope' => ['foo:bar', 'type:value']]
         );
         $this->csrf_token->shouldReceive('check');

@@ -43,8 +43,8 @@ class BackendLoggerTest extends TestCase
         ForgeConfig::set('sys_logger_level', LogLevel::DEBUG);
         ForgeConfig::set('sys_http_user', posix_getuid());
 
-        $this->log_file         = tempnam(ForgeConfig::get('codendi_log'), 'codendi_syslog');
-        $this->logger           = new BackendLogger($this->log_file);
+        $this->log_file = tempnam(ForgeConfig::get('codendi_log'), 'codendi_syslog');
+        $this->logger   = new BackendLogger($this->log_file);
     }
 
     public function testItLogsToTheSyslog(): void

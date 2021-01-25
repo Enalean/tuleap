@@ -73,7 +73,7 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
         // tailored SQL query via the backend, but this does the job
 
         $allpages_iter = $dbi->getAllPages($include_empty);
-        $pages = [];
+        $pages         = [];
         while ($page = $allpages_iter->next()) {
             $links_iter = $page->getBackLinks();
             // Test for absence of backlinks. If a page is linked to
@@ -88,7 +88,7 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
             }
         }
         $args['count'] = count($pages);
-        $pagelist = new PageList($info, $exclude, $args);
+        $pagelist      = new PageList($info, $exclude, $args);
         if (! $noheader) {
             $pagelist->setCaption(_("Orphaned Pages in this wiki (%d total):"));
         }

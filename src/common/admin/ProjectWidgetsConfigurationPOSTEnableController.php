@@ -59,7 +59,7 @@ class ProjectWidgetsConfigurationPOSTEnableController implements DispatchableWit
         $csrf_token->check();
 
         $widget_name = (string) $variables['widget-id'];
-        $widget = $this->widget_factory->getInstanceByWidgetName($widget_name);
+        $widget      = $this->widget_factory->getInstanceByWidgetName($widget_name);
 
         if ($widget === null) {
             throw new NotFoundException(_('Widget not found.'));

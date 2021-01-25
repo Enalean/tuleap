@@ -55,7 +55,7 @@ final class JWKSDocumentEndpointControllerTest extends TestCase
     public function testBuildsResponse(): void
     {
         $signing_key_factory = \Mockery::mock(OpenIDConnectSigningKeyFactory::class);
-        $controller = new JWKSDocumentEndpointController(
+        $controller          = new JWKSDocumentEndpointController(
             $signing_key_factory,
             new \DateInterval('PT30S'),
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),

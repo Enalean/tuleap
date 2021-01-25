@@ -75,7 +75,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         $dao = $this->_getFRSFileDao();
         if ($group_id) {
             $_group_id = (int) $group_id;
-            $dar = $dao->searchInReleaseById($_id, $group_id);
+            $dar       = $dao->searchInReleaseById($_id, $group_id);
         } else {
             $dar = $dao->searchById($_id);
         }
@@ -83,7 +83,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         $file = null;
         if (! $dar->isError() && $dar->valid()) {
             $data_array = $dar->current();
-            $file = self::getFRSFileFromArray($data_array);
+            $file       = self::getFRSFileFromArray($data_array);
         }
         return $file;
     }
@@ -103,7 +103,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         if (! $dar->isError() && $dar->valid()) {
             while ($dar->valid()) {
                 $data_array = $dar->current();
-                $files[] = self::getFRSFileFromArray($data_array);
+                $files[]    = self::getFRSFileFromArray($data_array);
                 $dar->next();
             }
         }
@@ -113,8 +113,8 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     public function getFRSFileInfoListFromDb($group_id, $file_id)
     {
         $_group_id = (int) $group_id;
-        $_file_id = (int) $file_id;
-        $dao = $this->_getFRSFileDao();
+        $_file_id  = (int) $file_id;
+        $dao       = $this->_getFRSFileDao();
 
         $dar = $dao->searchInfoByGroupFileID($_group_id, $_file_id);
 
@@ -137,7 +137,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     public function getFRSFileInfoListByReleaseFromDb($release_id)
     {
         $_release_id = (int) $release_id;
-        $dao = $this->_getFRSFileDao();
+        $dao         = $this->_getFRSFileDao();
 
         $dar = $dao->searchInfoFileByReleaseID($_release_id);
 
@@ -180,8 +180,8 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function isFileBaseNameExists($file_basename, $release_id, $group_id)
     {
-        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id);
-        $subdir = $this->getUploadSubDirectory($release);
+        $release   = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id);
+        $subdir    = $this->getUploadSubDirectory($release);
         $file_name = $subdir . '/' . $file_basename;
         return $this->isFileNameExist($file_name, $group_id);
     }
@@ -197,9 +197,9 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function isSameFileMarkedToBeRestored($basename, $release_id)
     {
-        $dao = $this->_getFRSFileDao();
-        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id, null, null, true);
-        $subdir = $this->getUploadSubDirectory($release);
+        $dao      = $this->_getFRSFileDao();
+        $release  = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id, null, null, true);
+        $subdir   = $this->getUploadSubDirectory($release);
         $filename = $subdir . '/' . $basename;
         return $dao->isMarkedToBeRestored($filename);
     }
@@ -216,7 +216,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
 
     public function update($data_array)
     {
-        $dao = $this->_getFRSFileDao();
+        $dao      = $this->_getFRSFileDao();
         $old_file = $this->getFRSFileFromDb($data_array['file_id']);
 
         if ($dao->updateFromArray($data_array)) {
@@ -264,7 +264,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         $dao = $this->_getFRSFileDao();
         if ($id = $dao->createFromArray($data_array)) {
             $file = $this->getFRSFileFromDb($id);
-            $um = UserManager::instance();
+            $um   = UserManager::instance();
             $user = $um->getCurrentUser();
             $this->_getEventManager()->processEvent(
                 'frs_create_file',
@@ -363,7 +363,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         // Workaround for files bigger than 2Gb:
         $src_dir  = $this->getSrcDir($project);
         $filelist = shell_exec("/usr/bin/find " . $src_dir . " -maxdepth 1 -type f -printf \"%f\\n\"");
-        $files = explode("\n", $filelist);
+        $files    = explode("\n", $filelist);
         // Remove last (empty) element
         array_pop($files);
         foreach ($files as $file) {
@@ -395,9 +395,9 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function moveFileForge(FRSFile $file)
     {
-        $release  = $file->getRelease();
-        $project  = $release->getProject();
-        $src_dir  = $this->getSrcDir($project);
+        $release = $file->getRelease();
+        $project = $release->getProject();
+        $src_dir = $this->getSrcDir($project);
 
         return $this->moveFileForgeFromSrcDir($project, $release, $file, $src_dir);
     }
@@ -471,9 +471,9 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
 
     public function _delete($file_id)
     {
-        $_id = (int) $file_id;
+        $_id  = (int) $file_id;
         $file = $this->getFRSFileFromDb($_id);
-        $dao = $this->_getFRSFileDao();
+        $dao  = $this->_getFRSFileDao();
         if ($dao->delete($_id)) {
             $this->_getEventManager()->processEvent(
                 'frs_delete_file',
@@ -584,8 +584,8 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     {
         $stagingPath = $this->getStagingPath($file);
         $stagingDir  = dirname($stagingPath);
-        $moveStatus = true;
-        $dao = $this->_getFRSFileDao();
+        $moveStatus  = true;
+        $dao         = $this->_getFRSFileDao();
         if (! is_dir($stagingDir)) {
             $moveStatus = mkdir($stagingDir, 0750, true);
         }
@@ -617,7 +617,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     public function deleteProjectFRS($groupId, $backend)
     {
         $deleteState = true;
-        $frsrf = $this->_getFRSReleaseFactory();
+        $frsrf       = $this->_getFRSReleaseFactory();
         if (! $frsrf->deleteProjectReleases($groupId)) {
             $deleteState = false;
         }
@@ -640,7 +640,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function deleteEmptyReleaseDirectory($file, $backend)
     {
-        $nbFiles = 0;
+        $nbFiles   = 0;
         $directory = dirname($file->getFileLocation());
         try {
             $dir = new DirectoryIterator($directory);
@@ -695,7 +695,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             $purgeState = true;
             if ($dar->rowCount() > 0) {
                 foreach ($dar as $row) {
-                    $file = new FRSFile($row);
+                    $file       = new FRSFile($row);
                     $purgeState = $purgeState & $this->purgeFile($file, $backend);
                 }
             }
@@ -927,7 +927,7 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     public function restoreFile($file, $backend)
     {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
-        $dao = $this->_getFRSFileDao();
+        $dao     = $this->_getFRSFileDao();
         if (! $release->isDeleted()) {
             $stagingPath = $this->getStagingPath($file);
             if (file_exists($stagingPath)) {

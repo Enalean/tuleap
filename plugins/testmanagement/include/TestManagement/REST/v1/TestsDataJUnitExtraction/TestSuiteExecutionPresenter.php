@@ -35,6 +35,6 @@ class TestSuiteExecutionPresenter
     public function __construct(string $test_suite_name, string $build_url)
     {
         $this->test_suite_name = $test_suite_name;
-        $this->build_url = $build_url;
+        $this->build_url       = $build_url;
     }
 }

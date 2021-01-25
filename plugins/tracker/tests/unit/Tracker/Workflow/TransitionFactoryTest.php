@@ -79,7 +79,7 @@ class TransitionFactoryTest extends TestCase
 
         $this->project = \Mockery::spy(\Project::class);
 
-        $field             = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
 
         $from_value        = Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $this->to_value    = Mockery::spy(\Tracker_FormElement_Field_List_Value::class);

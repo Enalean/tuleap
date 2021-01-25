@@ -71,7 +71,7 @@ abstract class Ref extends GitObject
     public function __construct($project, $refDir, $refName, $refHash = '')
     {
         $this->project = $project;
-        $this->refDir = $refDir;
+        $this->refDir  = $refDir;
         $this->refName = $refName;
         if (! empty($refHash)) {
             $this->SetHash($refHash);
@@ -106,12 +106,12 @@ abstract class Ref extends GitObject
      */
     protected function FindHash() // @codingStandardsIgnoreLine
     {
-        $exe = new GitExe($this->GetProject());
-        $args = [];
+        $exe    = new GitExe($this->GetProject());
+        $args   = [];
         $args[] = '--hash';
         $args[] = '--verify';
         $args[] = escapeshellarg($this->GetRefPath());
-        $hash = trim($exe->Execute(GitExe::SHOW_REF, $args));
+        $hash   = trim($exe->Execute(GitExe::SHOW_REF, $args));
 
         if (empty($hash)) {
             throw new GitRepoRefNotFoundException(sprintf('Invalid ref : %s', $this->GetRefPath()));

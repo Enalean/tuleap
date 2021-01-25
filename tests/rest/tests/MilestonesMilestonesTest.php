@@ -30,7 +30,7 @@ class MilestonesMilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes
         $this->client->put('milestones/' . $this->release_artifact_ids[1] . '/milestones', null, '[' . $this->sprint_artifact_ids[1] . ']');
         $response_put = $this->getResponse($this->client->put('milestones/' . $this->release_artifact_ids[1] . '/milestones', null, '[]'));
         $this->assertEquals($response_put->getStatusCode(), 200);
-        $response_get = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1] . '/milestones', null));
+        $response_get  = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1] . '/milestones', null));
         $submilestones = $response_get->json();
 
         $this->assertCount(0, $submilestones);
@@ -55,7 +55,7 @@ class MilestonesMilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes
         $response_put = $this->getResponse($this->client->put('milestones/' . $this->release_artifact_ids[1] . '/milestones', null, '[' . $this->sprint_artifact_ids[1] . ']'));
         $this->assertEquals(200, $response_put->getStatusCode());
 
-        $response_get = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1] . '/milestones', null));
+        $response_get  = $this->getResponse($this->client->get('milestones/' . $this->release_artifact_ids[1] . '/milestones', null));
         $submilestones = $response_get->json();
 
         $this->assertCount(1, $submilestones);

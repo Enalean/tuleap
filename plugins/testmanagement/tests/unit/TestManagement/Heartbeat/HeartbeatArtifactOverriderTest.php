@@ -54,8 +54,8 @@ final class HeartbeatArtifactOverriderTest extends TestCase
 
         $this->artifact = \Mockery::mock(\Tracker_Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(10);
-        $artifact_list  = [$this->artifact];
-        $this->event    = new OverrideArtifactsInFavourOfAnOther($artifact_list, $user, $project);
+        $artifact_list = [$this->artifact];
+        $this->event   = new OverrideArtifactsInFavourOfAnOther($artifact_list, $user, $project);
 
         $this->artifact_overrider = new HeartbeatArtifactOverrider();
     }

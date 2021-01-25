@@ -68,12 +68,12 @@ class OAuth2AuthorizationCodeCreator
         DateInterval $access_token_expiration_delay,
         DBTransactionExecutor $transaction_executor
     ) {
-        $this->authorization_code_formatter      = $authorization_code_formatter;
-        $this->hasher                            = $hasher;
-        $this->authorization_code_dao            = $authorization_code_dao;
-        $this->authorization_code_scope_saver    = $authorization_code_scope_saver;
-        $this->access_token_expiration_delay     = $access_token_expiration_delay;
-        $this->transaction_executor              = $transaction_executor;
+        $this->authorization_code_formatter   = $authorization_code_formatter;
+        $this->hasher                         = $hasher;
+        $this->authorization_code_dao         = $authorization_code_dao;
+        $this->authorization_code_scope_saver = $authorization_code_scope_saver;
+        $this->access_token_expiration_delay  = $access_token_expiration_delay;
+        $this->transaction_executor           = $transaction_executor;
     }
 
     /**

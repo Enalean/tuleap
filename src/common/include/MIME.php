@@ -44,7 +44,7 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public static function instance()
     {
         if (! isset(self::$_instance)) {
-            $c = self::class;
+            $c               = self::class;
             self::$_instance = new $c();
         }
         return self::$_instance;
@@ -78,7 +78,7 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                     continue;
                 }
                 // strip the newline character, but leave any spaces
-                $line = \substr($line, 0, \strlen($line) - 1);
+                $line              = \substr($line, 0, \strlen($line) - 1);
                 list($mime, $glob) = \explode(':', $line, 2);
                 // check for a possible direct match
                 if ($basename == $glob) {
@@ -123,25 +123,25 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                     switch ($buffer[0]) {
                         // create an entry for a new mimetype
                         case '[':
-                            $mime = \substr($buffer, 1, \strpos($buffer, ']') - 1);
+                            $mime                    = \substr($buffer, 1, \strpos($buffer, ']') - 1);
                             $this->magicRules[$mime] = [];
-                            $parents[0] =& $this->magicRules[$mime];
-                            $buffer = \substr($buffer, \strlen($mime) + 3);
+                            $parents[0]              =& $this->magicRules[$mime];
+                            $buffer                  = \substr($buffer, \strlen($mime) + 3);
                             break;
                         // add a new rule to the current mimetype
                         case '>':
                         default:
-                            $indent = $buffer[0] == '>' ? 0 : \intval($buffer);
-                            $buffer = \substr($buffer, \strpos($buffer, '>') + 1);
-                            $parents[$indent][] = new \MIME_MagicRule();
-                            $rulenum = \sizeof($parents[$indent]) - 1;
+                            $indent                                   = $buffer[0] == '>' ? 0 : \intval($buffer);
+                            $buffer                                   = \substr($buffer, \strpos($buffer, '>') + 1);
+                            $parents[$indent][]                       = new \MIME_MagicRule();
+                            $rulenum                                  = \sizeof($parents[$indent]) - 1;
                             $parents[$indent][$rulenum]->start_offset = \intval($buffer);
-                            $buffer = \substr($buffer, \strpos($buffer, '=') + 1);
-                            $value_length = 256 * \ord($buffer[0]) + \ord($buffer[1]);
-                            $buffer = \substr($buffer, 2);
-                            $parents[$indent][$rulenum]->value = \substr($buffer, 0, $value_length);
-                            $buffer = \substr($buffer, $value_length);
-                            $parents[$indent][$rulenum]->mask = $buffer[0] != '&' ? \str_repeat("�", $value_length) : \substr($buffer, 1, $value_length);
+                            $buffer                                   = \substr($buffer, \strpos($buffer, '=') + 1);
+                            $value_length                             = 256 * \ord($buffer[0]) + \ord($buffer[1]);
+                            $buffer                                   = \substr($buffer, 2);
+                            $parents[$indent][$rulenum]->value        = \substr($buffer, 0, $value_length);
+                            $buffer                                   = \substr($buffer, $value_length);
+                            $parents[$indent][$rulenum]->mask         = $buffer[0] != '&' ? \str_repeat("�", $value_length) : \substr($buffer, 1, $value_length);
                             if ($buffer[0] == '&') {
                                 $buffer = \substr($buffer, $value_length + 1);
                             }
@@ -150,9 +150,9 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                                 $buffer = \substr($buffer, 1);
                             }
                             $parents[$indent][$rulenum]->range_length = $buffer[0] != '+' ? 1 : \intval($buffer);
-                            $buffer = \substr($buffer, \strpos($buffer, "\n") + 1);
-                            $parents[$indent][$rulenum]->children = [];
-                            $parents[$indent + 1] =& $parents[$indent][$rulenum]->children;
+                            $buffer                                   = \substr($buffer, \strpos($buffer, "\n") + 1);
+                            $parents[$indent][$rulenum]->children     = [];
+                            $parents[$indent + 1]                     =& $parents[$indent][$rulenum]->children;
                             break;
                     }
                 }
@@ -175,7 +175,7 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         // nothing worked, I will now only determine whether the file is binary or text
         \fseek($fp, 0);
         $length = \filesize($filename) > 50 ? 50 : \filesize($filename);
-        $data = \fread($fp, $length);
+        $data   = \fread($fp, $length);
         \fclose($fp);
         for ($i = 0; $i < $length; $i++) {
             if (! isset($data[$i]) || $data[$i] < " " && $data[$i] != "\t" && $data[$i] != "\n" && $data[$i] != "\r") {
@@ -210,8 +210,8 @@ class MIME // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public function description($mimetype, $language = 'en')
     {
         $this->description = '';
-        $this->lang = $language;
-        $this->read = \false;
+        $this->lang        = $language;
+        $this->read        = \false;
         // go through the data dirs to search for the XML file for the specified mime type
         foreach ($this->XDG_DATA_DIRS as $dir) {
             $filename = "{$dir}/mime/{$mimetype}.xml";

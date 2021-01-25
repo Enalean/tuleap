@@ -26,6 +26,6 @@ class Tracker_XML_Updater_FieldChange_FieldChangeStringXMLUpdater implements Tra
      */
     public function update(SimpleXMLElement $field_change_xml, $submitted_value)
     {
-        $field_change_xml->value  = $submitted_value;
+        $field_change_xml->value = $submitted_value;
     }
 }

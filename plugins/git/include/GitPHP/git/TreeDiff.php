@@ -96,7 +96,7 @@ class TreeDiff implements \Iterator, \Countable
     {
         $this->project = $project;
 
-        $toCommit = $this->project->GetCommit($toHash);
+        $toCommit     = $this->project->GetCommit($toHash);
         $this->toHash = $toHash;
 
         if (empty($fromHash)) {
@@ -105,7 +105,7 @@ class TreeDiff implements \Iterator, \Countable
                 $this->fromHash = $parent->GetHash();
             }
         } else {
-            $fromCommit = $this->project->GetCommit($fromHash);
+            $fromCommit     = $this->project->GetCommit($fromHash);
             $this->fromHash = $fromHash;
         }
 
@@ -142,11 +142,11 @@ class TreeDiff implements \Iterator, \Countable
 
         $stat_args = array_merge($args, ['--numstat']);
 
-        $args[] = escapeshellarg($this->toHash);
+        $args[]      = escapeshellarg($this->toHash);
         $stat_args[] = escapeshellarg($this->toHash);
 
         $stats_indexed_by_filename = $this->getStatsIndexedByFilename($exe, $stat_args);
-        $diffTreeLines = explode("\n", $exe->Execute(GitExe::DIFF_TREE, $args));
+        $diffTreeLines             = explode("\n", $exe->Execute(GitExe::DIFF_TREE, $args));
         foreach ($diffTreeLines as $line) {
             $trimmed = trim($line);
             if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {
@@ -213,7 +213,7 @@ class TreeDiff implements \Iterator, \Countable
             return;
         }
 
-        $this->renames = $renames;
+        $this->renames  = $renames;
         $this->dataRead = false;
     }
 
@@ -317,7 +317,7 @@ class TreeDiff implements \Iterator, \Countable
             if (! trim($line)) {
                 continue;
             }
-            list($added, $removed, $filename) = explode("\t", $line);
+            list($added, $removed, $filename)     = explode("\t", $line);
             $stats_indexed_by_filename[$filename] = [
                 'added'   => $added,
                 'removed' => $removed

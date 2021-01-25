@@ -386,7 +386,7 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
             $planning_factory,
             new ProjectBackgroundConfiguration(new ProjectBackgroundDao()),
         );
-        $request_refiner = new FilteringQueryParser();
+        $request_refiner                  = new FilteringQueryParser();
         return new ProjectMilestonesResource($request_refiner, $milestone_factory, $milestone_representation_builder);
     }
 }

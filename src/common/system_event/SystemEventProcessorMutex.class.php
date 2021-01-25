@@ -57,7 +57,7 @@ class SystemEventProcessorMutex
     public function execute()
     {
         $process = $this->getProcess();
-        $lock = $this->lock_factory->createLock($process->getLockName());
+        $lock    = $this->lock_factory->createLock($process->getLockName());
         if ($lock->acquire()) {
             $this->runnable->execute($process->getQueue());
             $lock->release();
@@ -70,7 +70,7 @@ class SystemEventProcessorMutex
     public function waitAndExecute()
     {
         $process = $this->getProcess();
-        $lock = $this->lock_factory->createLock($process->getLockName());
+        $lock    = $this->lock_factory->createLock($process->getLockName());
         if ($lock->acquire(true)) {
             $this->db_connection->reconnectAfterALongRunningProcess();
             $this->runnable->execute($process->getQueue());

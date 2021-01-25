@@ -52,7 +52,7 @@ class PluginLoader
     {
         $this->event_manager  = $event_manager;
         $this->plugin_factory = $plugin_factory;
-        $this->logger = $logger;
+        $this->logger         = $logger;
     }
 
     public function loadPlugins()

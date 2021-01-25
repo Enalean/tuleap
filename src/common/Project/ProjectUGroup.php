@@ -92,19 +92,19 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         self::SVN_ADMIN          => 'svn_admins',
     ];
 
-    protected $id    = 0;
-    protected $group_id     = 0;
-    protected $name         = null;
-    protected $description  = null;
-    protected $is_dynamic   = true;
-    protected $source_id    = false;
+    protected $id          = 0;
+    protected $group_id    = 0;
+    protected $name        = null;
+    protected $description = null;
+    protected $is_dynamic  = true;
+    protected $source_id   = false;
 
     protected $members      = null;
     protected $members_name = null;
     /** @var Project|null */
-    protected $project      = null;
+    protected $project = null;
     /** @var self|null|false */
-    protected $source_ugroup  = false;
+    protected $source_ugroup = false;
 
     /**
      * @var UGroupDao
@@ -570,7 +570,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     public function setSourceGroup(?ProjectUGroup $ugroup = null)
     {
         $this->source_ugroup = $ugroup;
-        $this->source_id = ($ugroup === null) ? null : $ugroup->getId();
+        $this->source_id     = ($ugroup === null) ? null : $ugroup->getId();
     }
 
     public function isStatic()

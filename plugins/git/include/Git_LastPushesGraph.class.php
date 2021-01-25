@@ -37,7 +37,7 @@ class Git_LastPushesGraph
     /**
      * @var Array
      */
-    public $repoList   = [];
+    public $repoList = [];
 
     /**
      * @var int
@@ -52,7 +52,7 @@ class Git_LastPushesGraph
     /**
      * @var Array
      */
-    protected $dates   = [];
+    protected $dates = [];
 
     /**
      * @var Array
@@ -62,7 +62,7 @@ class Git_LastPushesGraph
     /**
      * @var Array
      */
-    protected $year    = [];
+    protected $year = [];
 
     /**
      *
@@ -74,12 +74,12 @@ class Git_LastPushesGraph
      */
     public function __construct($groupId, $weeksNumber)
     {
-        $dao                = new GitDao();
+        $dao = new GitDao();
         // TODO: Optionally include presonal forks in repo list
-        $allRepositories    = $dao->getProjectRepositoryList($groupId);
-        $um                 = UserManager::instance();
-        $user               = $um->getCurrentUser();
-        $repoFactory        = new GitRepositoryFactory($dao, ProjectManager::instance());
+        $allRepositories = $dao->getProjectRepositoryList($groupId);
+        $um              = UserManager::instance();
+        $user            = $um->getCurrentUser();
+        $repoFactory     = new GitRepositoryFactory($dao, ProjectManager::instance());
         foreach ($allRepositories as $repo) {
             $repository = $repoFactory->getRepositoryById($repo['repository_id']);
             if ($repository->userCanRead($user)) {
@@ -89,9 +89,9 @@ class Git_LastPushesGraph
         $this->displayChart = false;
         $this->weeksNumber  = min($weeksNumber, self::MAX_WEEKSNUMBER);
         // Init some class properties according to 'weeks number' parameter
-        $today              = $_SERVER['REQUEST_TIME'];
-        $startPeriod        = strtotime("-$this->weeksNumber weeks");
-        $weekInSeconds      = self::WEEKS_IN_SECONDS;
+        $today         = $_SERVER['REQUEST_TIME'];
+        $startPeriod   = strtotime("-$this->weeksNumber weeks");
+        $weekInSeconds = self::WEEKS_IN_SECONDS;
         for ($i = $startPeriod + $weekInSeconds; $i < $today + $weekInSeconds; $i += $weekInSeconds) {
             $this->dates[]   = date('M d', $i);
             $this->weekNum[] = intval(date('W', $i));
@@ -112,7 +112,7 @@ class Git_LastPushesGraph
         $margin_for_repositories = $this->getNumberOfRepositoriesAddedToSpacesLeftToTotalDirectory($nbRepo, $columns);
         $graph_margin            = $this->getGraphMargin($margin_for_repositories, $columns, $nbRepo);
 
-        $graph  = new Chart(500, 300 + 16 * $graph_margin);
+        $graph = new Chart(500, 300 + 16 * $graph_margin);
         $graph->SetScale('textint');
         $graph->img->SetMargin(40, 20, 20, 80 + 16 * $graph_margin);
         $graph->SetMarginColor('white');
@@ -164,14 +164,14 @@ class Git_LastPushesGraph
     private function displayRepositoryPushesByWeek()
     {
         $colors_for_charts = new ColorsForCharts();
-        $nbRepo   = count($this->repoList);
-        $colors   = array_slice($colors_for_charts->getChartColors(), 0, $nbRepo);
-        $nbColors = count($colors);
-        $i        = 0;
-        $bplot    = [];
+        $nbRepo            = count($this->repoList);
+        $colors            = array_slice($colors_for_charts->getChartColors(), 0, $nbRepo);
+        $nbColors          = count($colors);
+        $i                 = 0;
+        $bplot             = [];
         foreach ($this->repoList as $repository) {
             $this->legend = null;
-            $pushes = $this->getRepositoryPushesByWeek($repository);
+            $pushes       = $this->getRepositoryPushesByWeek($repository);
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
                 $color  = $colors[$i++ % $nbColors];

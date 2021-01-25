@@ -445,7 +445,7 @@ final class GerritRESTTest extends TestCase
                 'parent'      => $project_name
             ]
         );
-        $request = $this->http_client->getLastRequest();
+        $request            = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
         $this->assertEquals('PUT', $request->getMethod());
         $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
@@ -476,7 +476,7 @@ final class GerritRESTTest extends TestCase
                 ]
             ]
         );
-        $request = $this->http_client->getLastRequest();
+        $request            = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
         $this->assertEquals('PUT', $request->getMethod());
         $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
@@ -516,7 +516,7 @@ final class GerritRESTTest extends TestCase
                 'state' => 'READ_ONLY'
             ]
         );
-        $request = $this->http_client->getLastRequest();
+        $request            = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
         $this->assertEquals('PUT', $request->getMethod());
         $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
@@ -539,7 +539,7 @@ final class GerritRESTTest extends TestCase
                 'parent' => 'prj'
             ]
         );
-        $request = $this->http_client->getLastRequest();
+        $request            = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
         $this->assertEquals('PUT', $request->getMethod());
         $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
@@ -562,7 +562,7 @@ final class GerritRESTTest extends TestCase
                 'parent' => Git_Driver_Gerrit::DEFAULT_PARENT_PROJECT
             ]
         );
-        $request = $this->http_client->getLastRequest();
+        $request            = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
         $this->assertEquals('PUT', $request->getMethod());
         $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
@@ -720,7 +720,7 @@ final class GerritRESTTest extends TestCase
 
     public function testAddsSSHKeyForUser(): void
     {
-        $ssh_key         = 'AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw==';
+        $ssh_key = 'AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw==';
 
         $this->logger->shouldReceive('info');
 

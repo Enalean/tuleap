@@ -51,7 +51,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
     {
         parent::__construct($item);
 
-        $dao = $this->_getDao();
+        $dao                = $this->_getDao();
         $lastTableVersionId = $dao->getLastTableVersionIdByItemId($item->getId());
 
         if ($versionNumber !== null) {
@@ -118,7 +118,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
             $dao = $this->_getDao();
             $dar = $dao->getTableById($itemId, $version);
             if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
-                $row = $dar->current();
+                $row   = $dar->current();
                 $table = $this->createTableFromRow($row);
             }
         }

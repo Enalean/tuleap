@@ -116,7 +116,7 @@ class RestProjectCreator
         $this->template_factory           = $template_factory;
         $this->permission_checker         = $permission_checker;
         $this->categories_updater         = $categories_updater;
-        $this->fields_updater = $fields_updater;
+        $this->fields_updater             = $fields_updater;
     }
 
     /**

@@ -11,7 +11,7 @@
 class ImgData_Balls extends ImgData
 {
     protected $name = 'Round Balls';
-    protected $an = [MARK_IMG_LBALL => 'imgdata_large',
+    protected $an   = [MARK_IMG_LBALL => 'imgdata_large',
     MARK_IMG_MBALL => 'imgdata_small',
     MARK_IMG_SBALL => 'imgdata_xsmall',
     MARK_IMG_BALL => 'imgdata_xsmall'];
@@ -42,7 +42,7 @@ class ImgData_Balls extends ImgData
      'gray','graypurple','green','greenblue','lightblue',
      'lightred','navy','orange','purple','red','yellow'];
 
-    private $index_3 = ['bluegreen' => 1,'cyan' => 11,'darkgray' => 14,'greengray' => 10,
+    private $index_3  = ['bluegreen' => 1,'cyan' => 11,'darkgray' => 14,'greengray' => 10,
     'gray' => 3,'graypurple' => 4,'green' => 9,'greenblue' => 7,
     'lightblue' => 13,'lightred' => 0,'navy' => 2,'orange' => 12,
     'purple' => 8,'red' => 5,'yellow' => 6];
@@ -59,17 +59,17 @@ class ImgData_Balls extends ImgData
             case MARK_IMG_SBALL:
             case MARK_IMG_BALL:
                 $this->colors = $this->colors_3;
-                $this->index = $this->index_3;
+                $this->index  = $this->index_3;
                 $this->maxidx = $this->maxidx_3;
                 break;
             case MARK_IMG_MBALL:
                 $this->colors = $this->colors_2;
-                $this->index = $this->index_2;
+                $this->index  = $this->index_2;
                 $this->maxidx = $this->maxidx_2;
                 break;
             default:
                 $this->colors = $this->colors_1;
-                $this->index = $this->index_1;
+                $this->index  = $this->index_1;
                 $this->maxidx = $this->maxidx_1;
                 break;
         }

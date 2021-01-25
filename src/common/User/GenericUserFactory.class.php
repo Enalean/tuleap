@@ -41,9 +41,9 @@ class GenericUserFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
     public function __construct(UserManager $userManager, ProjectManager $project_manager, GenericUserDao $dao)
     {
-        $this->user_manager = $userManager;
+        $this->user_manager    = $userManager;
         $this->project_manager = $project_manager;
-        $this->dao = $dao;
+        $this->dao             = $dao;
     }
 
     /**

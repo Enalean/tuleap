@@ -28,7 +28,7 @@ class DateUpdaterTest extends TestCase
 
     public function testItUpdatesTheDatesInTheXMLFileWithDateInArtifacts()
     {
-        $xml      = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/project.xml'));
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/project.xml'));
 
         $updater = new DateUpdater(
             new \DateTimeImmutable('2018-09-21'),
@@ -60,7 +60,7 @@ class DateUpdaterTest extends TestCase
 
     public function testItUpdatesTheDatesInTheXMLFileWithDateInTrackerAndArtifacts()
     {
-        $xml      = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/project4.xml'));
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/project4.xml'));
 
         $updater = new DateUpdater(
             new \DateTimeImmutable('2017-05-04'),

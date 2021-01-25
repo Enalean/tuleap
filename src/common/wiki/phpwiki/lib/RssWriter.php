@@ -42,7 +42,7 @@ class RssWriter extends XmlElement
         ];
 
         $this->_uris_seen = [];
-        $this->_items = [];
+        $this->_items     = [];
     }
 
     public function registerModule($alias, $uri)
@@ -97,7 +97,7 @@ class RssWriter extends XmlElement
         }
 
         $channel = &$this->_channel;
-        $items = &$this->_items;
+        $items   = &$this->_items;
 
         $seq = new XmlElement('rdf:Seq');
         if ($items) {
@@ -160,7 +160,7 @@ class RssWriter extends XmlElement
     private function uniquify_uri($uri)
     {
         if (! $uri || isset($this->_uris_seen[$uri])) {
-            $n = count($this->_uris_seen);
+            $n   = count($this->_uris_seen);
             $uri = $this->_channel->getAttr('rdf:about') . "#uri$n";
             assert(! isset($this->_uris_seen[$uri]));
         }

@@ -38,7 +38,7 @@ class UserDashboardPresenter extends DashboardPresenter
                 'dashboard-type' => UserDashboardController::DASHBOARD_TYPE
             ]
         );
-        $this->url_add_widget = '/widgets/?' . http_build_query(
+        $this->url_add_widget         = '/widgets/?' . http_build_query(
             [
                 'action'         => 'add-widget',
                 'dashboard-id'   => $this->id,

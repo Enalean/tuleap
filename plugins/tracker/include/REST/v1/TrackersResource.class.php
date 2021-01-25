@@ -261,8 +261,8 @@ class TrackersResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $user        = $this->user_manager->getCurrentUser();
-        $tracker     = $this->getTrackerById($user, $id);
+        $user    = $this->user_manager->getCurrentUser();
+        $tracker = $this->getTrackerById($user, $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $this->user_manager->getCurrentUser(),
@@ -272,7 +272,7 @@ class TrackersResource extends AuthenticatedResource
         $all_reports = $this->report_factory->getReportsByTrackerId($tracker->getId(), $user->getId());
 
         $nb_of_reports = count($all_reports);
-        $reports = array_slice($all_reports, $offset, $limit);
+        $reports       = array_slice($all_reports, $offset, $limit);
 
         Header::allowOptionsGet();
         Header::sendPaginationHeaders($limit, $offset, $nb_of_reports, self::MAX_LIMIT);
@@ -367,7 +367,7 @@ class TrackersResource extends AuthenticatedResource
         } else {
             $reverse_order = (bool) (strtolower($order) === self::ORDER_DESC);
 
-            $pagination = $this->tracker_artifact_factory->getPaginatedArtifactsByTrackerId(
+            $pagination  = $this->tracker_artifact_factory->getPaginatedArtifactsByTrackerId(
                 $id,
                 $limit,
                 $offset,
@@ -543,7 +543,7 @@ class TrackersResource extends AuthenticatedResource
 
         $parent = $this->getParentTracker($user, $tracker);
 
-        $possible_parents_getr                       = new Tracker_Artifact_PossibleParentsRetriever($this->tracker_artifact_factory);
+        $possible_parents_getr                   = new Tracker_Artifact_PossibleParentsRetriever($this->tracker_artifact_factory);
         [$label, $pagination, $display_selector] = $possible_parents_getr->getPossibleArtifactParents($parent, $user, $limit, $offset);
 
         if ($display_selector) {
@@ -844,9 +844,9 @@ class TrackersResource extends AuthenticatedResource
      */
     private function deleteTransitionsRules(Tracker $tracker)
     {
-        $tracker_id = $tracker->getId();
+        $tracker_id       = $tracker->getId();
         $workflow_factory = $this->getWorkflowFactory();
-        $workflow = $workflow_factory->getWorkflowByTrackerId($tracker_id);
+        $workflow         = $workflow_factory->getWorkflowByTrackerId($tracker_id);
         if (! $workflow) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', "This tracker has no workflow."));
         }
@@ -887,7 +887,7 @@ class TrackersResource extends AuthenticatedResource
     private function updateWorkflowTransitionActivation(Tracker $tracker, $is_used)
     {
         $workflow_factory = $this->getWorkflowFactory();
-        $workflow = $workflow_factory->getWorkflowByTrackerId($tracker->getId());
+        $workflow         = $workflow_factory->getWorkflowByTrackerId($tracker->getId());
         if (! $workflow) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', "No workflow defined on the given tracker."));
         }

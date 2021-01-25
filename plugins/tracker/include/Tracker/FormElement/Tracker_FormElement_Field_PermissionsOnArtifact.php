@@ -69,15 +69,15 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     private function fetchChangesetRegardingPermissions($artifact_id, $changeset_id)
     {
-        $values = [];
+        $values   = [];
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
         if ($artifact->useArtifactPermissions()) {
-            $dao = new Tracker_Artifact_Changeset_ValueDao();
-            $row = $dao->searchByFieldId($changeset_id, $this->id)->getRow();
+            $dao                = new Tracker_Artifact_Changeset_ValueDao();
+            $row                = $dao->searchByFieldId($changeset_id, $this->id)->getRow();
             $changeset_value_id = $row['id'];
 
             foreach ($this->getValueDao()->searchByChangesetValueId($changeset_value_id) as $value) {
-                $name = $this->getUGroupDao()->searchByUGroupId($value['ugroup_id'])->getRow();
+                $name     = $this->getUGroupDao()->searchByUGroupId($value['ugroup_id'])->getRow();
                 $values[] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $name['name']);
             }
 
@@ -200,14 +200,14 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
-        $output = '';
+        $output    = '';
         $separator = '&nbsp;';
         if ($format == 'text') {
             $separator = PHP_EOL;
-            $output .= dgettext('tuleap-tracker', 'Restrict access to this artifact for the following user groups:');
+            $output   .= dgettext('tuleap-tracker', 'Restrict access to this artifact for the following user groups:');
         }
 
-        $ugroups  = permission_fetch_selected_ugroups(self::PERMISSION_TYPE, $artifact->getId(), $this->getTracker()->getGroupId());
+        $ugroups = permission_fetch_selected_ugroups(self::PERMISSION_TYPE, $artifact->getId(), $this->getTracker()->getGroupId());
         $output .= $separator . implode(', ', $ugroups);
         return $output;
     }
@@ -255,19 +255,19 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $changeset_values   = $this->getLastChangesetValues($artifact_id);
         $is_expecting_input = $this->isRequired() && empty($changeset_values);
 
-        $html   = $this->fetchRestrictCheckbox($can_user_restrict_permissions_to_nobody, $is_read_only, $is_expecting_input);
-        $html  .= $this->fetchUserGroupList($is_read_only, $changeset_values);
+        $html  = $this->fetchRestrictCheckbox($can_user_restrict_permissions_to_nobody, $is_read_only, $is_expecting_input);
+        $html .= $this->fetchUserGroupList($is_read_only, $changeset_values);
 
         return $html;
     }
 
     private function fetchUserGroupList($is_read_only, array $changeset_values)
     {
-        $field_id          = $this->getId();
-        $element_name      = 'artifact[' . $field_id . '][u_groups][]';
+        $field_id     = $this->getId();
+        $element_name = 'artifact[' . $field_id . '][u_groups][]';
 
         $hp    = Codendi_HTMLPurifier::instance();
-        $html = '<select '
+        $html  = '<select '
             . 'name="' . $hp->purify($element_name) . '" '
             . 'id="' . $hp->purify(str_replace('[]', '', $element_name)) . '" '
             . 'multiple '
@@ -324,8 +324,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     {
         $changeset_values = $this->getLastChangesetValues(0);
 
-        $html   = $this->fetchRestrictCheckbox(false, true, false);
-        $html  .= $this->fetchUserGroupList(true, $changeset_values);
+        $html  = $this->fetchRestrictCheckbox(false, true, false);
+        $html .= $this->fetchUserGroupList(true, $changeset_values);
 
         return $html;
     }
@@ -370,10 +370,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         if ($value && $artifact->useArtifactPermissions()) {
             $ugroup_dao = $this->getUGroupDao();
 
-            $perms = $value->getPerms();
+            $perms      = $value->getPerms();
             $perms_name = [];
             foreach ($perms as $perm) {
-                $row = $ugroup_dao->searchByUGroupId($perm)->getRow();
+                $row          = $ugroup_dao->searchByUGroupId($perm)->getRow();
                 $perms_name[] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']);
             }
             $html .= implode(",", $perms_name);
@@ -406,8 +406,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         if ($this->isUsed()) {
             $criteria_value = $this->getCriteriaValue($criteria);
             if ($criteria_value && count($criteria_value) === 1 && array_key_exists("100", $criteria_value)) {
-                $a = 'A_' . $this->id;
-                $b = 'B_' . $this->id;
+                $a    = 'A_' . $this->id;
+                $b    = 'B_' . $this->id;
                  $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = " . $this->id . ")
                           INNER JOIN tracker_artifact AS $b ON ($b.last_changeset_id = $a.changeset_id AND
                             $b.use_artifact_permissions = 0) ";
@@ -462,7 +462,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         }
 
         if (isset($this->criteria_value[$criteria->report->id]) && $this->criteria_value[$criteria->report->id]) {
-            $values = $this->criteria_value[$criteria->report->id];
+            $values                                      = $this->criteria_value[$criteria->report->id];
             $this->criteria_value[$criteria->report->id] = [];
 
             foreach ($values as $value) {
@@ -476,7 +476,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             }
         } elseif (! isset($this->criteria_value[$criteria->report->id])) {
             $this->criteria_value[$criteria->report->id] = [];
-            $dao = $this->getCriteriaDao();
+            $dao                                         = $this->getCriteriaDao();
             if ($dao !== null) {
                 foreach ($dao->searchByCriteriaId($criteria->id) as $row) {
                     $this->criteria_value[$criteria->report->id][$row['value']] = $row;
@@ -523,10 +523,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
                           $multiple . '>';
         //Any value
         $selected = count($criteria_value) ? '' : 'selected="selected"';
-        $html .= '<option value="" ' . $selected . '>' . $GLOBALS['Language']->getText('global', 'any') . '</option>';
+        $html    .= '<option value="" ' . $selected . '>' . $GLOBALS['Language']->getText('global', 'any') . '</option>';
         //None value
         $selected = isset($criteria_value[100]) ? 'selected="selected"' : '';
-        $html .= '<option value="100" ' . $selected . '>' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
+        $html    .= '<option value="100" ' . $selected . '>' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
 
         if (! is_array($criteria_value)) {
             $criteria_value = [];
@@ -541,7 +541,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     {
         $options = '';
         foreach ($user_groups as $user_group) {
-            $id = $user_group->getId();
+            $id       = $user_group->getId();
             $selected = (in_array($id, $selected_ids)) ? 'selected="selected"' : '';
             $options .= '<option value="' . $id . '" ' . $selected . '>';
             $options .= NameTranslator::getUserGroupDisplayName($user_group->getName());
@@ -697,8 +697,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
         $changeset_value = null;
-        $value_ids = $this->getValueDao()->searchById($value_id, $this->id);
-        $ugroups = [];
+        $value_ids       = $this->getValueDao()->searchById($value_id, $this->id);
+        $ugroups         = [];
 
         foreach ($value_ids as $v) {
             $ugroups[] = $v['ugroup_id'];
@@ -740,7 +740,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             throw new Tracker_FormElement_InvalidFieldException("'granted_groups' must be an array. E.g. [2, '124_3']");
         }
 
-        $project_groups       = [];
+        $project_groups = [];
         foreach ($user_groups as $user_group) {
             try {
                 UserGroupRepresentation::checkRESTIdIsAppropriate($user_group);
@@ -815,7 +815,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     public function addPermissions($ugroups, $artifact_id)
     {
-        $pm = PermissionsManager::instance();
+        $pm              = PermissionsManager::instance();
         $permission_type = self::PERMISSION_TYPE;
         foreach ($ugroups as $ugroup) {
             if (! $pm->addPermission($permission_type, $artifact_id, $ugroup)) {
@@ -848,8 +848,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     public function getRESTAvailableValues()
     {
-        $representation       = new PermissionsOnArtifacts();
-        $project_id           = $this->getTracker()->getGroupId();
+        $representation = new PermissionsOnArtifacts();
+        $project_id     = $this->getTracker()->getGroupId();
         $representation->build($project_id, self::IS_USED_BY_DEFAULT, $this->getAllUserGroups());
 
         return $representation;

@@ -33,7 +33,7 @@ class Docman_View_NewFolder extends Docman_View_New
 
     public function _getGeneralProperties($params)
     {
-        $html = '';
+        $html  = '';
         $html .= parent::_getGeneralProperties($params);
         $html .= '<input type="hidden" name="item[item_type]" value="' . PLUGIN_DOCMAN_ITEM_TYPE_FOLDER . '" />';
         return $html;
@@ -41,7 +41,7 @@ class Docman_View_NewFolder extends Docman_View_New
 
     public function _getDefaultValuesFields($params)
     {
-        $mdFactory = new Docman_MetadataFactory($this->newItem->getGroupId());
+        $mdFactory      = new Docman_MetadataFactory($this->newItem->getGroupId());
         $inheritableMda = $mdFactory->getInheritableMdLabelArray(true);
 
         $mdIter = $this->newItem->getMetadataIterator();
@@ -54,12 +54,12 @@ class Docman_View_NewFolder extends Docman_View_New
     {
         $html = '';
 
-        $html .= '<div class="properties">' . "\n";
-        $html .= '<h3>' . dgettext('tuleap-docman', 'Default Values') . '</h3>';
-        $html .= '<p>' . dgettext('tuleap-docman', 'Define the default properties values for the item that will be created within this folder.') . '</p>';
+        $html  .= '<div class="properties">' . "\n";
+        $html  .= '<h3>' . dgettext('tuleap-docman', 'Default Values') . '</h3>';
+        $html  .= '<p>' . dgettext('tuleap-docman', 'Define the default properties values for the item that will be created within this folder.') . '</p>';
         $fields = $this->_getDefaultValuesFields($params);
-        $html .= $this->_getPropertiesFieldsDisplay($fields);
-        $html .= '</div>';
+        $html  .= $this->_getPropertiesFieldsDisplay($fields);
+        $html  .= '</div>';
 
         return $html;
     }

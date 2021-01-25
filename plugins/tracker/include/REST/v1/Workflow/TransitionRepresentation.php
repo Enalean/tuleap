@@ -73,11 +73,11 @@ class TransitionRepresentation
         array $not_empty_field_ids,
         $is_comment_required
     ) {
-        $this->id = $id;
-        $this->from_id = $from_id;
-        $this->to_id = $to_id;
+        $this->id                        = $id;
+        $this->from_id                   = $from_id;
+        $this->to_id                     = $to_id;
         $this->authorized_user_group_ids = $authorized_user_group_ids;
-        $this->not_empty_field_ids = $not_empty_field_ids;
-        $this->is_comment_required = $is_comment_required;
+        $this->not_empty_field_ids       = $not_empty_field_ids;
+        $this->is_comment_required       = $is_comment_required;
     }
 }

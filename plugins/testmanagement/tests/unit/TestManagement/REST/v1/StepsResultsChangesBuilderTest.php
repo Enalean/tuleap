@@ -48,7 +48,7 @@ final class StepsResultsChangesBuilderTest extends TestCase
     private $execution_field;
     private $definition_field;
 
-    private $execution_tracker_id = 123;
+    private $execution_tracker_id  = 123;
     private $definition_tracker_id = 124;
     private $definition_changeset;
     private $definition_changeset_value;

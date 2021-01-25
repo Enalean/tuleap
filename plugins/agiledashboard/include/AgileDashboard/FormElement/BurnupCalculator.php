@@ -79,7 +79,7 @@ class BurnupCalculator
         $total_effort = 0;
         $team_effort  = 0;
         foreach ($backlog_items as $item) {
-            $artifact     = $this->artifact_factory->getArtifactById($item['id']);
+            $artifact = $this->artifact_factory->getArtifactById($item['id']);
 
             $effort        = $this->getEffort($artifact, $timestamp);
             $total_effort += $effort->getTotalEffort();

@@ -25,8 +25,8 @@ class Docman_ItemActionApproval extends \Docman_ItemAction
     public function __construct(&$item)
     {
         parent::__construct($item);
-        $this->action = 'details&section=approval';
+        $this->action  = 'details&section=approval';
         $this->classes = 'docman_item_option_approval';
-        $this->title = \dgettext('tuleap-docman', 'Approval table');
+        $this->title   = \dgettext('tuleap-docman', 'Approval table');
     }
 }

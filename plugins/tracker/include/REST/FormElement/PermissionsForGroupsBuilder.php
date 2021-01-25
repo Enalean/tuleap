@@ -47,8 +47,8 @@ class PermissionsForGroupsBuilder
 
     public function __construct(\UGroupManager $ugroup_manager, FrozenFieldDetector $read_only_field_detector, PermissionsFunctionsWrapper $permissions_functions_wrapper)
     {
-        $this->ugroup_manager = $ugroup_manager;
-        $this->read_only_field_detector = $read_only_field_detector;
+        $this->ugroup_manager                = $ugroup_manager;
+        $this->read_only_field_detector      = $read_only_field_detector;
         $this->permissions_functions_wrapper = $permissions_functions_wrapper;
     }
 
@@ -101,7 +101,7 @@ class PermissionsForGroupsBuilder
     {
         $ugroup = $this->ugroup_manager->getUGroup($tracker->getProject(), $result_array['ugroup']['id']);
         if ($ugroup) {
-            $representation = new MinimalUserGroupRepresentation((int) $ugroup->getProjectId(), $ugroup);
+            $representation       = new MinimalUserGroupRepresentation((int) $ugroup->getProjectId(), $ugroup);
             $ugroups_collection[] = $representation;
         }
     }

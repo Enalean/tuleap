@@ -66,7 +66,7 @@ class MediawikiVersionManager
     public function getAllProjectsToMigrateTo123()
     {
         $project_ids = [];
-        $dar = $this->version_dao->getAllMediawikiToMigrate(self::MEDIAWIKI_120_VERSION);
+        $dar         = $this->version_dao->getAllMediawikiToMigrate(self::MEDIAWIKI_120_VERSION);
         foreach ($dar as $row) {
             $project_ids[] = $row['group_id'];
         }

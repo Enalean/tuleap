@@ -59,7 +59,7 @@ final class AccessTokenGrantControllerTest extends TestCase
         $this->grant_access_token_from_refresh_token = \Mockery::mock(OAuth2GrantAccessTokenFromRefreshToken::class);
 
         $this->response_factory = HTTPFactoryBuilder::responseFactory();
-        $stream_factory   = HTTPFactoryBuilder::streamFactory();
+        $stream_factory         = HTTPFactoryBuilder::streamFactory();
 
         $this->controller = new AccessTokenGrantController(
             new AccessTokenGrantErrorResponseBuilder($this->response_factory, $stream_factory),

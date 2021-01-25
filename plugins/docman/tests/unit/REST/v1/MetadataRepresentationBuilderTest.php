@@ -59,7 +59,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $value2 = Mockery::mock(\Docman_MetadataListOfValuesElement::class);
         $value2->shouldReceive('getId')->andReturn(100);
         $value2->shouldReceive('getMetadataValue')->andReturn("None");
-        $list_metadata   = Mockery::mock(Docman_ListMetadata::class);
+        $list_metadata = Mockery::mock(Docman_ListMetadata::class);
         $list_metadata->shouldReceive('getValue')->andReturn(
             new \ArrayIterator([
                 $value1,

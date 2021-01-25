@@ -76,10 +76,10 @@ class ProgramIncrementsCreator
                 foreach ($program_increments_tracker_collection->getProgramIncrementTrackers() as $program_increment_tracker) {
                     $synchronized_fields = $this->synchronized_fields_adapter->build($program_increment_tracker);
 
-                    $mapped_status       = $this->status_mapper
+                    $mapped_status = $this->status_mapper
                         ->mapStatusValueByDuckTyping($copied_values, $synchronized_fields->getStatusField());
 
-                    $fields_data         = ProgramIncrementFields::fromSourceChangesetValuesAndSynchronizedFields(
+                    $fields_data = ProgramIncrementFields::fromSourceChangesetValuesAndSynchronizedFields(
                         $copied_values,
                         $mapped_status,
                         $synchronized_fields

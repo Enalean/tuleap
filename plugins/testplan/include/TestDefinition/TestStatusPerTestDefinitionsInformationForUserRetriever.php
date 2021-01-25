@@ -65,7 +65,7 @@ class TestStatusPerTestDefinitionsInformationForUserRetriever
             return null;
         }
 
-        $test_exec_art_link_field_id = $this->getReadableByTheUserArtLinkFieldID(
+        $test_exec_art_link_field_id     = $this->getReadableByTheUserArtLinkFieldID(
             $this->testmanagement_config->getTestExecutionTrackerId($project),
             $user
         );

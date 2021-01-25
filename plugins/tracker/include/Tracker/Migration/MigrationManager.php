@@ -110,8 +110,8 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
             $this->logger->error('Skipping;');
             throw new RuntimeException("User $username not found.");
         }
-        $tracker_id   = $this->createTrackerStructure($user, $project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name);
-        $xml_path     = $this->exportTV3Data($tv3_id);
+        $tracker_id = $this->createTrackerStructure($user, $project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name);
+        $xml_path   = $this->exportTV3Data($tv3_id);
         $this->importArtifactsData($username, $tracker_id, $xml_path, $user, $keep_original_ids);
         unlink($xml_path);
 
@@ -180,12 +180,12 @@ class Tracker_Migration_MigrationManager // phpcs:ignore PSR1.Classes.ClassDecla
         if ($tracker) {
             $xml_import = $this->getXMLImporter();
 
-            $xml               = \simplexml_load_string(\file_get_contents($xml_file_path));
-            $xml_file_path     = "";
-            $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
-            $config            = new ImportConfig();
-            $url_mapping       = new CreatedFileURLMapping();
-            $date = new DateTimeImmutable();
+            $xml                = \simplexml_load_string(\file_get_contents($xml_file_path));
+            $xml_file_path      = "";
+            $xml_field_mapping  = new TrackerXmlFieldsMapping_InSamePlatform();
+            $config             = new ImportConfig();
+            $url_mapping        = new CreatedFileURLMapping();
+            $date               = new DateTimeImmutable();
             $tracker_xml_config = new TrackerXmlImportConfig(
                 $user,
                 $date,

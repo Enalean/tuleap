@@ -29,8 +29,8 @@ class Cardwall_RendererDao extends DataAccessObject
 
     public function searchByRendererId($renderer_id)
     {
-        $renderer_id  = $this->da->escapeInt($renderer_id);
-        $sql = "SELECT *
+        $renderer_id = $this->da->escapeInt($renderer_id);
+        $sql         = "SELECT *
                 FROM $this->table_name
                 WHERE renderer_id = $renderer_id ";
         return $this->retrieve($sql);
@@ -39,8 +39,8 @@ class Cardwall_RendererDao extends DataAccessObject
     public function create($renderer_id, $field_id)
     {
         $renderer_id = $this->da->escapeInt($renderer_id);
-        $field_id     = $this->da->escapeInt($field_id);
-        $sql = "INSERT INTO $this->table_name
+        $field_id    = $this->da->escapeInt($field_id);
+        $sql         = "INSERT INTO $this->table_name
                 (renderer_id, field_id)
                 VALUES ($renderer_id, $field_id)";
         return $this->update($sql);
@@ -49,8 +49,8 @@ class Cardwall_RendererDao extends DataAccessObject
     public function save($renderer_id, $field_id)
     {
         $renderer_id = $this->da->escapeInt($renderer_id);
-        $field_id     = $this->da->escapeInt($field_id);
-        $sql = "REPLACE INTO $this->table_name  
+        $field_id    = $this->da->escapeInt($field_id);
+        $sql         = "REPLACE INTO $this->table_name  
                 (renderer_id, field_id)
                 VALUES ($renderer_id, $field_id)";
         return $this->update($sql);
@@ -66,7 +66,7 @@ class Cardwall_RendererDao extends DataAccessObject
     {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_renderer_id   = $this->da->escapeInt($to_renderer_id);
-        $sql = "INSERT INTO $this->table_name (renderer_id, field_id) 
+        $sql              = "INSERT INTO $this->table_name (renderer_id, field_id) 
                 SELECT $to_renderer_id, field_id
                 FROM $this->table_name
                 WHERE renderer_id = $from_renderer_id ";

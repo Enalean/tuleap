@@ -88,9 +88,9 @@ class SearchEngines
         foreach ($this->searchEngines as $key => $var) {
             if (stristr($ref, $key)) {
                 unset($ref);
-                $ref["engine"] = $var["engine"];
-                $query1 =  $var["query1"];
-                $query2 =  $var["query2"];
+                $ref["engine"]     = $var["engine"];
+                $query1            =  $var["query1"];
+                $query2            =  $var["query2"];
                 $ref["engine_url"] = $var["url"];
             }
         }
@@ -108,7 +108,7 @@ class SearchEngines
             $query = explode($query2, $url);
         }
         if (! empty($query)) {
-            $query = @explode("&", $query[1]);
+            $query        = @explode("&", $query[1]);
             $ref["query"] = @urldecode($query[0]);
         }
         return $ref;

@@ -88,7 +88,7 @@ class HiddenFieldsetsFactoryTest extends TestCase
                 <fieldset_id REF="F2"/>
             </postaction_hidden_fieldsets>
 XML;
-        $xml = new SimpleXMLElement($xml_content);
+        $xml         = new SimpleXMLElement($xml_content);
 
         $fieldset_01 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
         $fieldset_02 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
@@ -117,7 +117,7 @@ XML;
                 <fieldset_id REF="F2"/>
             </postaction_hidden_fieldsets>
 XML;
-        $xml = new SimpleXMLElement($xml_content);
+        $xml         = new SimpleXMLElement($xml_content);
 
         $fieldset_01 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
         $fieldset_01->shouldReceive('getID')->andReturn(0);

@@ -111,7 +111,7 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PH
 
     public function testItReturnsArrayIfAllForgeUserGroupHasNoPermission(): void
     {
-        $user_group      = new UserForgeUGroupPresenter(new User_ForgeUGroup(101, '', ''), true);
+        $user_group = new UserForgeUGroupPresenter(new User_ForgeUGroup(101, '', ''), true);
 
         $this->dao->shouldReceive('getPermissionsForForgeUGroup')->with(101)->andReturns(false);
         $all = $this->factory->getAllUnusedForgePermissionsForForgeUserGroup($user_group);

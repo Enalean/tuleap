@@ -156,7 +156,7 @@ class GitPresenters_AccessControlPresenter
         $this->remove_fine_grained_permission_confirm = dgettext('tuleap-git', 'Confirm deletion');
 
         $this->title_warning_regexp_uncheck = dgettext('tuleap-git', 'Some rules may be deleted');
-        $this->warnings = $warnings;
+        $this->warnings                     = $warnings;
 
         $this->btn_cancel       = $GLOBALS['Language']->getText('global', 'btn_cancel');
         $this->save_permissions = dgettext('tuleap-git', 'Save permissions');

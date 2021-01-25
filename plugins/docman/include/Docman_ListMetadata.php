@@ -62,7 +62,7 @@ class Docman_ListMetadata extends \Docman_Metadata
             $v->rewind();
             //if(is_a($love, 'Docman_MetadataListOfValuesElement')) {
             while ($v->valid()) {
-                $love = $v->current();
+                $love                 = $v->current();
                 $this->defaultValue[] = $love->getId();
                 $v->next();
             }

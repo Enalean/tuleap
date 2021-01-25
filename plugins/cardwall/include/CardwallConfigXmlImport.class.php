@@ -307,7 +307,7 @@ class CardwallConfigXmlImport
         if (! isset($xml_column[$color_label])) {
             return null;
         }
-        $color_name  = $xml_column[$color_label];
+        $color_name = $xml_column[$color_label];
 
         if ((string) $color_name === '') {
             $this->addColorImportErrorFeedback($color_label, $xml_column_id);

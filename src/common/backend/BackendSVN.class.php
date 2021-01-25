@@ -303,7 +303,7 @@ class BackendSVN extends Backend
     {
         $unix_group_name = $project->getUnixNameMixedCase(); // May contain upper-case letters
         if ($project->isSVNTracked()) {
-            $filename = "$system_path/hooks/post-commit";
+            $filename    = "$system_path/hooks/post-commit";
             $update_hook = false;
             if (! is_file($filename)) {
                 // File header
@@ -339,7 +339,7 @@ class BackendSVN extends Backend
             }
         } else {
             // Make sure that the Codendi blocks are removed
-            $filename = "$system_path/hooks/post-commit";
+            $filename    = "$system_path/hooks/post-commit";
             $update_hook = false;
             if (is_file($filename)) {
                 $file_array = file($filename);
@@ -351,7 +351,7 @@ class BackendSVN extends Backend
 
         // Put in place the Codendi svn pre-commit hook
         // if not present (if the file does not exist it is created)
-        $filename = "$system_path/hooks/pre-commit";
+        $filename    = "$system_path/hooks/pre-commit";
         $update_hook = false;
         if (! is_file($filename)) {
             // File header
@@ -467,7 +467,7 @@ class BackendSVN extends Backend
         $contents = '';
         if (is_file($this->getSvnAccessFile($system_path))) {
             $svnaccess_array = file($this->getSvnAccessFile($system_path));
-            $configlines = false;
+            $configlines     = false;
 
             while ($line = array_shift($svnaccess_array)) {
                 if ($configlines) {
@@ -484,7 +484,7 @@ class BackendSVN extends Backend
 
     private function getDefaultBlock(Project $project)
     {
-        $default_block = '';
+        $default_block  = '';
         $default_block .= $this->getSVNAccessGroups($project);
         $default_block .= $this->getSVNAccessRootPathDef($project);
 
@@ -583,7 +583,7 @@ class BackendSVN extends Backend
      */
     public function getSVNAccessGroups($project)
     {
-        $conf = "[groups]\n";
+        $conf  = "[groups]\n";
         $conf .= $this->getSVNAccessProjectMembers($project);
         $conf .= $this->getSVNAccessUserGroupMembers($project);
         $conf .= "\n";
@@ -626,9 +626,9 @@ class BackendSVN extends Backend
         $dar        = $ugroup_dao->searchByGroupId($project->getId());
 
         foreach ($dar as $row) {
-            $ugroup          = $this->getUGroupFromRow($row);
-            $ugroup_members  = $ugroup->getMembers();
-            $valid_members   = [];
+            $ugroup         = $this->getUGroupFromRow($row);
+            $ugroup_members = $ugroup->getMembers();
+            $valid_members  = [];
             foreach ($ugroup_members as $ugroup_member) {
                 try {
                     $this->getProjectAccessChecker()->checkUserCanAccessProject($ugroup_member, $project);
@@ -640,7 +640,7 @@ class BackendSVN extends Backend
             // User names must be in lowercase
             if ($ugroup->getName() && count($valid_members) > 0) {
                 $members_list = strtolower(implode(", ", $valid_members));
-                $conf .= $ugroup->getName() . " = " . $members_list . "\n";
+                $conf        .= $ugroup->getName() . " = " . $members_list . "\n";
             }
         }
         $conf .= "\n";
@@ -741,7 +741,7 @@ class BackendSVN extends Backend
      */
     public function generateSVNApacheConf()
     {
-        $svn_root_file = ForgeConfig::get('svn_root_file');
+        $svn_root_file     = ForgeConfig::get('svn_root_file');
         $svn_root_file_old = $svn_root_file . ".old";
         $svn_root_file_new = $svn_root_file . ".new";
         try {
@@ -776,7 +776,7 @@ class BackendSVN extends Backend
             )
         );
         assert($get_all_repositories instanceof GetAllRepositories);
-        $factory           = $this->getSVNApacheAuthFactory();
+        $factory = $this->getSVNApacheAuthFactory();
 
         $conf = new SVN_Apache_SvnrootConf($factory, $get_all_repositories->getRepositories());
 
@@ -843,7 +843,7 @@ class BackendSVN extends Backend
      */
     public function checkSVNMode(Project $project)
     {
-        $svnroot = $project->getSVNRootPath();
+        $svnroot    = $project->getSVNRootPath();
         $is_private = ! $project->isPublic() || $project->isSVNPrivate();
         if ($is_private) {
             $perms = fileperms($svnroot);
@@ -854,7 +854,7 @@ class BackendSVN extends Backend
             }
         }
         // Sometimes, there might be a bad ownership on file (e.g. chmod failed, maintenance done as root...)
-        $files_to_check = ['db/current', 'hooks/pre-commit', 'hooks/post-commit', 'db/rep-cache.db'];
+        $files_to_check    = ['db/current', 'hooks/pre-commit', 'hooks/post-commit', 'db/rep-cache.db'];
         $need_owner_update = false;
         foreach ($files_to_check as $file) {
             // Get file stat
@@ -879,7 +879,7 @@ class BackendSVN extends Backend
 
     public function setUserAndGroup(Project $project, $svnroot)
     {
-        $group = $this->getSvnFilesUnixGroupName($project);
+        $group                    = $this->getSvnFilesUnixGroupName($project);
         $no_filter_file_extension = [];
         $this->recurseChownChgrp($svnroot, $this->getHTTPUser(), $group, $no_filter_file_extension);
         $this->chown($svnroot, $this->getHTTPUser());

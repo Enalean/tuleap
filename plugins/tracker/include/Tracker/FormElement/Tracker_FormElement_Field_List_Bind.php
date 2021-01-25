@@ -141,7 +141,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     public function getRESTBindingProperties()
     {
         $bind_factory = new Tracker_FormElement_Field_List_BindFactory();
-        $bind_type = $bind_factory->getType($this);
+        $bind_type    = $bind_factory->getType($this);
         return [
             self::REST_TYPE_KEY => $bind_type,
             self::REST_LIST_KEY => $this->getRESTBindingList()
@@ -610,7 +610,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         }
 
         if (is_array($this->decorators) && ! empty($this->decorators)) {
-            $saver = $this->getBoundDecoratorSaver();
+            $saver  = $this->getBoundDecoratorSaver();
             $values = $this->getBindValues();
             foreach ($this->decorators as $decorator) {
                 if (! $decorator->isUsingOldPalette()) {
@@ -693,7 +693,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
     {
         $representation = new FieldValueRepresentation();
-        $values = [
+        $values         = [
             self::REST_ID_KEY    => $value->getId(),
             self::REST_LABEL_KEY => $value->getAPIValue()
         ];

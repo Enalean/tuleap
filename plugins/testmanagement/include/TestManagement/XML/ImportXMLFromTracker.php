@@ -38,7 +38,7 @@ class ImportXMLFromTracker
     public function __construct(
         XML_RNGValidator $rng_validator
     ) {
-        $this->rng_validator                = $rng_validator;
+        $this->rng_validator = $rng_validator;
     }
 
     public function validateXMLImport(SimpleXMLElement $xml): void
@@ -61,7 +61,7 @@ class ImportXMLFromTracker
     {
         $att = $testmanagement->attributes();
         assert($att !== null);
-        $row            = [
+        $row = [
             'name'              => (string) $testmanagement->name,
             'label'             => (string) $testmanagement->label,
             'type'              => (string) $att['type'],

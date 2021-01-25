@@ -40,7 +40,7 @@ class GenericProviderIssuerClaimValidatorTest extends TestCase
 
     public function testIssuerClaimIsValid(): void
     {
-        $iss_from_id_tocken   = 'example.com';
+        $iss_from_id_tocken = 'example.com';
 
         $provider = new GenericProvider(
             0,
@@ -55,14 +55,14 @@ class GenericProviderIssuerClaimValidatorTest extends TestCase
             'github',
             'fiesta_red'
         );
-        $result = $this->generic_issuer_claim_validator->isIssuerClaimValid($provider, $iss_from_id_tocken);
+        $result   = $this->generic_issuer_claim_validator->isIssuerClaimValid($provider, $iss_from_id_tocken);
 
         $this->assertTrue($result);
     }
 
     public function testIssuerClaimIsInvalid(): void
     {
-        $iss_from_id_tocken   = 'evil.example.com';
+        $iss_from_id_tocken = 'evil.example.com';
 
         $provider = new GenericProvider(
             0,

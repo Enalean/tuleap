@@ -25,8 +25,8 @@ class CacheableMarkup extends XmlContent
     public function __construct($content, $basepage)
     {
         $this->_basepage = $basepage;
-        $this->_buf = '';
-        $this->_content = [];
+        $this->_buf      = '';
+        $this->_content  = [];
         $this->_append($content);
         if ($this->_buf != '') {
             $this->_content[] = $this->_buf;
@@ -65,7 +65,7 @@ class CacheableMarkup extends XmlContent
             } else {
                 // user our php lib. TESTME
                 include_once("ziplib.php");
-                $zip = new ZipReader($packed);
+                $zip                 = new ZipReader($packed);
                 list(,$data,$attrib) = $zip->readFile();
                 return unserialize($data);
             }
@@ -126,7 +126,7 @@ class CacheableMarkup extends XmlContent
         } elseif (isa($item, 'Cached_DynamicContent')) {
             if ($this->_buf) {
                 $this->_content[] = $this->_buf;
-                $this->_buf = '';
+                $this->_buf       = '';
             }
             $this->_content[] = $item;
         } elseif (isa($item, 'XmlElement')) {
@@ -195,14 +195,14 @@ class CacheableMarkup extends XmlContent
 
     public function asXML()
     {
-        $xml = '';
+        $xml      = '';
         $basepage = $this->_basepage;
 
         foreach ($this->_content as $item) {
             if (is_string($item)) {
                 $xml .= $item;
             } elseif ($item instanceof \Cached_DynamicContent) {
-                $val = $item->expand($basepage, $this);
+                $val  = $item->expand($basepage, $this);
                 $xml .= $val->asXML();
             } else {
                 $xml .= $item->asXML();
@@ -323,9 +323,9 @@ class Cached_WikiLink extends Cached_Link
 
     public function expand($basepage, &$markup)
     {
-        $label = isset($this->_label) ? $this->_label : false;
+        $label  = isset($this->_label) ? $this->_label : false;
         $anchor = isset($this->_anchor) ? (string) $this->_anchor : '';
-        $page = new WikiPageName($this->_page, $basepage, $anchor);
+        $page   = new WikiPageName($this->_page, $basepage, $anchor);
         if ($page->isValid()) {
             return WikiLink($page, 'auto', $label);
         } else {
@@ -335,10 +335,10 @@ class Cached_WikiLink extends Cached_Link
 
     public function asXml()
     {
-        $label = isset($this->_label) ? $this->_label : false;
+        $label  = isset($this->_label) ? $this->_label : false;
         $anchor = isset($this->_anchor) ? (string) $this->_anchor : '';
-        $page = new WikiPageName($this->_page, false, $anchor);
-        $link = WikiLink($page, 'auto', $label);
+        $page   = new WikiPageName($this->_page, false, $anchor);
+        $link   = WikiLink($page, 'auto', $label);
         return $link->asXml();
     }
 
@@ -388,7 +388,7 @@ class Cached_PhpwikiURL extends Cached_DynamicContent
     public function asXml()
     {
         $label = isset($this->_label) ? $this->_label : false;
-        $link = LinkPhpwikiURL($this->_url, $label);
+        $link  = LinkPhpwikiURL($this->_url, $label);
         return $link->asXml();
     }
 
@@ -428,11 +428,11 @@ class Cached_ExternalLink extends Cached_Link
         global $request;
 
         $label = isset($this->_label) ? $this->_label : false;
-        $link = LinkURL($this->_url, $label);
+        $link  = LinkURL($this->_url, $label);
 
         if (GOOGLE_LINKS_NOFOLLOW) {
             // Ignores nofollow when the user who saved the page was authenticated.
-            $page = $request->getPage($basepage);
+            $page    = $request->getPage($basepage);
             $current = $page->getCurrentRevision();
             if (! $current->get('author_id')) {
                 $link->setAttr('rel', 'nofollow');
@@ -476,7 +476,7 @@ class Cached_InterwikiLink extends Cached_ExternalLink
     public function expand($basepage, &$markup)
     {
         $intermap = getInterwikiMap();
-        $label = isset($this->_label) ? $this->_label : false;
+        $label    = isset($this->_label) ? $this->_label : false;
         return $intermap->link($this->_link, $label);
     }
 
@@ -496,10 +496,10 @@ class Cached_UserLink extends Cached_WikiLink
 {
     public function expand($basepage, &$markup)
     {
-        $label = isset($this->_label) ? $this->_label : false;
+        $label  = isset($this->_label) ? $this->_label : false;
         $anchor = isset($this->_anchor) ? (string) $this->_anchor : '';
-        $page = new WikiPageName($this->_page, $basepage, $anchor);
-        $link = WikiLink($page, 'auto', $label);
+        $page   = new WikiPageName($this->_page, $basepage, $anchor);
+        $link   = WikiLink($page, 'auto', $label);
         // $link = HTML::a(array('href' => $PageName));
         $link->setContent(PossiblyGlueIconToText('wikiuser', $this->_page));
         $link->setAttr('class', 'wikiuser');

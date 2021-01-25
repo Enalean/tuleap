@@ -63,7 +63,7 @@ class WebhooksPresenter
     public function __construct(ProjectCreationNavBarPresenter $navbar, $title, array $webhooks, \CSRFSynchronizerToken $csrf_token)
     {
         $this->navbar = $navbar;
-        $this->title = $title;
+        $this->title  = $title;
 
         $this->webhooks     = $webhooks;
         $this->has_webhooks = ! empty($webhooks);

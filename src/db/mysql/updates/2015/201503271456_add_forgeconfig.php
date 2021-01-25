@@ -50,8 +50,8 @@ class b201503271456_add_forgeconfig extends ForgeUpgrade_Bucket
     private function populateTable()
     {
         $access_mode = $this->getCurrentAccessMode();
-        $sql = "REPLACE INTO forgeconfig (name, value) VALUES ('access_mode', '$access_mode')";
-        $res = $this->db->dbh->exec($sql);
+        $sql         = "REPLACE INTO forgeconfig (name, value) VALUES ('access_mode', '$access_mode')";
+        $res         = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while populating forgeconfig table.');
         }

@@ -32,7 +32,7 @@ class Search_SearchProjectResultPresenter
 
     public function __construct(array $result)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp                        = Codendi_HTMLPurifier::instance();
         $this->project_name        = $result['group_name'];
         $this->project_unix_name   = $result['unix_group_name'];
         $this->project_description = $hp->purify($result['short_description'], CODENDI_PURIFIER_BASIC, $result['group_id']);

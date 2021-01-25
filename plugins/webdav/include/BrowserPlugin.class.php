@@ -115,8 +115,8 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
      */
     public function getReleaseDestinations($release)
     {
-        $project = $this->server->tree->getNodeForPath(dirname(dirname($release['href'])));
-        $packages = $project->getChildren();
+        $project      = $this->server->tree->getNodeForPath(dirname(dirname($release['href'])));
+        $packages     = $project->getChildren();
         $destinations = [];
         foreach ($packages as $package) {
             $destinationPath = $project->getName() . '/' . $package->getName();
@@ -136,8 +136,8 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
      */
     public function getFileDestinations($file)
     {
-        $project = $this->server->tree->getNodeForPath(dirname(dirname(dirname($file['href']))));
-        $packages = $project->getChildren();
+        $project      = $this->server->tree->getNodeForPath(dirname(dirname(dirname($file['href']))));
+        $packages     = $project->getChildren();
         $destinations = [];
         foreach ($packages as $package) {
             $releases = $package->getChildren();
@@ -178,7 +178,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
                     } else {
                         break;
                     }
-                    $newName = trim($file['name']);
+                    $newName         = trim($file['name']);
                     list(, $newName) = Sabre_DAV_URLUtil::splitPath(trim($file['name']));
                     if (isset($_POST['name']) && trim($_POST['name'])) {
                         $newName = trim($_POST['name']);
@@ -277,7 +277,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
 
         if ($path) {
             list($parentUri) = Sabre_DAV_URLUtil::splitPath($path);
-            $fullPath = Sabre_DAV_URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
+            $fullPath        = Sabre_DAV_URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
             echo "<tr><td><a href=\"{$this->purifier->purify($fullPath)}\">..</a></td></tr>";
         }
 
@@ -288,7 +288,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
             }
 
             list(, $name) = Sabre_DAV_URLUtil::splitPath($file['href']);
-            $type = null;
+            $type         = null;
 
             if (isset($file[200]['{DAV:}resourcetype'])) {
                 $type = $file[200]['{DAV:}resourcetype']->getValue();
@@ -310,8 +310,8 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
                 }
                 $type = implode(', ', $type);
             }
-            $type = $this->escapeHTML($type);
-            $size = isset($file[200]['{DAV:}getcontentlength']) ? (int) $file[200]['{DAV:}getcontentlength'] : '';
+            $type         = $this->escapeHTML($type);
+            $size         = isset($file[200]['{DAV:}getcontentlength']) ? (int) $file[200]['{DAV:}getcontentlength'] : '';
             $lastmodified = isset($file[200]['{DAV:}getlastmodified']) ? $file[200]['{DAV:}getlastmodified']->getTime()->format(DATE_ATOM) : '';
 
             $fullPath = '/' . trim($this->server->getBaseUri() . ($path ? $this->purifier->purify($path) . '/' : '') . $this->purifier->purify($name), '/');

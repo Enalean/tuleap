@@ -153,7 +153,7 @@ function guessing_lang($languages = false)
 
     if ($accept) {
         $lang_list = [];
-        $list = explode(",", $accept);
+        $list      = explode(",", $accept);
         for ($i = 0; $i < count($list); $i++) {
             $pos = strchr($list[$i], ";");
             if ($pos === false) {
@@ -161,9 +161,9 @@ function guessing_lang($languages = false)
                 $lang_list[$list[$i]] = 100;
             } else {
                 // Has a Q rating
-                $q = explode(";", $list[$i]);
-                $loc = $q[0];
-                $q = explode("=", $q[1]);
+                $q               = explode(";", $list[$i]);
+                $loc             = $q[0];
+                $q               = explode("=", $q[1]);
                 $lang_list[$loc] = $q[1] * 100;
             }
         }
@@ -281,9 +281,9 @@ function update_locale($loc)
     // setlocale(), for bindtextdomain() to succeed.
     $setlocale = guessing_setlocale(LC_ALL, $loc); // [56ms]
     if (! $setlocale) { // system has no locale for this language, so gettext might fail
-        $setlocale = FileFinder::_get_lang();
+        $setlocale         = FileFinder::_get_lang();
         list ($setlocale,) = preg_split('/_/D', $setlocale, 2);
-        $setlocale = guessing_setlocale(LC_ALL, $setlocale); // try again
+        $setlocale         = guessing_setlocale(LC_ALL, $setlocale); // try again
         if (! $setlocale) {
             $setlocale = $loc;
         }
@@ -323,7 +323,7 @@ function update_locale($loc)
 
 function deduce_script_name()
 {
-    $s = &$_SERVER;
+    $s      = &$_SERVER;
     $script = @$s['SCRIPT_NAME'];
     if (empty($script) or $script[0] != '/') {
         // Some places (e.g. Lycos) only supply a relative name in

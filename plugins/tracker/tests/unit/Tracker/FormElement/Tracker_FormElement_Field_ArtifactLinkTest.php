@@ -121,7 +121,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
         $field->shouldReceive('isRequired')->andReturns(true);
 
         $ids = [];
-        $cv = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
+        $cv  = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         $cv->shouldReceive('getArtifactIds')->andReturns($ids);
         $c = Mockery::mock(\Tracker_Artifact_Changeset::class);
         $c->shouldReceive('getValue')->andReturns($cv);
@@ -158,7 +158,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     {
         $field     = $this->buildField();
         $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $user = Mockery::mock(PFUser::class);
+        $user      = Mockery::mock(PFUser::class);
 
         $artifacts = $field->getLinkedArtifacts($changeset, $user);
         $this->assertEmpty($artifacts);
@@ -168,7 +168,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
     {
         $field     = $this->buildField();
         $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class);
-        $user = Mockery::mock(PFUser::class);
+        $user      = Mockery::mock(PFUser::class);
 
         $sliced = $field->getSlicedLinkedArtifacts($changeset, $user, 10, 0);
         $this->assertEmpty($sliced->getArtifacts());
@@ -301,7 +301,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
         $field->setArtifactFactory($this->givenAnArtifactFactory([$artifact]));
 
         $non_existing_id = 666;
-        $changeset = $this->givenAChangesetValueWithArtifactIds($field, [123, $non_existing_id]);
+        $changeset       = $this->givenAChangesetValueWithArtifactIds($field, [123, $non_existing_id]);
 
         $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 10, 0);
         $expected_artifacts = [$artifact];

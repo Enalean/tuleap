@@ -34,7 +34,7 @@ class ListEndpointsPresenterBuilder
     public function build(array $list_endpoints)
     {
         $csrf_token_delete = new \CSRFSynchronizerToken(TULEAP_SYNCHRO_URL . '/delete_endpoint');
-        $csrf_token_add = new \CSRFSynchronizerToken(TULEAP_SYNCHRO_URL . '/add_endpoint');
+        $csrf_token_add    = new \CSRFSynchronizerToken(TULEAP_SYNCHRO_URL . '/add_endpoint');
 
         $endpoints['csrf_token_add'] = $csrf_token_add;
 

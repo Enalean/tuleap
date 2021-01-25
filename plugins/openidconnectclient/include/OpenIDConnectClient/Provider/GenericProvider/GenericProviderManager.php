@@ -36,7 +36,7 @@ class GenericProviderManager
 
     public function __construct(GenericProviderDao $generic_provider_dao)
     {
-        $this->generic_provider_dao  = $generic_provider_dao;
+        $this->generic_provider_dao = $generic_provider_dao;
     }
     /**
      * @throws ProviderMalformedDataException

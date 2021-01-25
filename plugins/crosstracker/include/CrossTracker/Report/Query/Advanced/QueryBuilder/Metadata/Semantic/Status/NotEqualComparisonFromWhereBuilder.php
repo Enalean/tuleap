@@ -30,7 +30,7 @@ class NotEqualComparisonFromWhereBuilder implements FromWhereBuilder
 {
     public function getFromWhere(Metadata $metadata, Comparison $comparison, array $trackers)
     {
-        $tracker_ids = array_map(
+        $tracker_ids           = array_map(
             function (Tracker $tracker) {
                 return $tracker->getId();
             },

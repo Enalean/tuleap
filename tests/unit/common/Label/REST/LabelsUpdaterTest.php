@@ -62,8 +62,8 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 
     public function testItAddsAndRemoveLabels(): void
     {
-        $body = new LabelsPATCHRepresentation();
-        $body->add = [
+        $body         = new LabelsPATCHRepresentation();
+        $body->add    = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
             $this->buildLabelRepresentation(3)
@@ -82,7 +82,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 
     public function testItUsesTransaction(): void
     {
-        $body = new LabelsPATCHRepresentation();
+        $body      = new LabelsPATCHRepresentation();
         $body->add = [
             $this->buildLabelRepresentation(1)
         ];
@@ -95,7 +95,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 
     public function testItOnlyAddsLabels(): void
     {
-        $body = new LabelsPATCHRepresentation();
+        $body      = new LabelsPATCHRepresentation();
         $body->add = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
@@ -110,7 +110,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 
     public function testItOnlyRemovesLabels(): void
     {
-        $body = new LabelsPATCHRepresentation();
+        $body         = new LabelsPATCHRepresentation();
         $body->remove = [
             $this->buildLabelRepresentation(4),
             $this->buildLabelRepresentation(5),
@@ -125,8 +125,8 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesNotKnowHowToAddAndRemoveTheSameLabel(): void
     {
-        $body = new LabelsPATCHRepresentation();
-        $body->add = [
+        $body         = new LabelsPATCHRepresentation();
+        $body->add    = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
             $this->buildLabelRepresentation(3)
@@ -147,7 +147,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
     {
         $this->project_label_dao->shouldReceive('checkThatAllLabelIdsExistInProjectInTransaction')->with(66, [1])->andThrows(new UnknownLabelException());
 
-        $body = new LabelsPATCHRepresentation();
+        $body      = new LabelsPATCHRepresentation();
         $body->add = [
             $this->buildLabelRepresentation(1),
         ];
@@ -164,7 +164,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
     {
         $this->project_label_dao->shouldReceive('createIfNeededInTransaction')->with(66, 'Emergency Fix', \Mockery::any())->andReturns(10);
 
-        $body = new LabelsPATCHRepresentation();
+        $body      = new LabelsPATCHRepresentation();
         $body->add = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelRepresentation(2),
@@ -178,7 +178,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 
     public function testItTrimsLabelToAdd(): void
     {
-        $body = new LabelsPATCHRepresentation();
+        $body      = new LabelsPATCHRepresentation();
         $body->add = [
             $this->buildLabelToCreateRepresentation('  Emergency Fix  ')
         ];
@@ -190,7 +190,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesNotAddEmptyLabels(): void
     {
-        $body = new LabelsPATCHRepresentation();
+        $body      = new LabelsPATCHRepresentation();
         $body->add = [
             $this->buildLabelRepresentation(1),
             $this->buildLabelToCreateRepresentation(' ')
@@ -205,7 +205,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 
     private function buildLabelRepresentation(int $id): LabelRepresentation
     {
-        $label = new LabelRepresentation();
+        $label     = new LabelRepresentation();
         $label->id = $id;
 
         return $label;
@@ -213,7 +213,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 
     private function buildLabelToCreateRepresentation(string $name): LabelRepresentation
     {
-        $label = new LabelRepresentation();
+        $label        = new LabelRepresentation();
         $label->label = $name;
 
         return $label;

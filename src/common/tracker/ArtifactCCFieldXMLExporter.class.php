@@ -25,13 +25,13 @@ class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter
 
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)
     {
-        $values = array_filter(explode(',', $row['new_value']));
+        $values     = array_filter(explode(',', $row['new_value']));
         $field_node = $this->node_helper->createElement('field_change');
         $field_node->setAttribute('field_name', 'cc');
         $field_node->setAttribute('type', self::TV5_TYPE);
         $field_node->setAttribute('bind', 'users');
         foreach ($values as $value) {
-            $value = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($value);
+            $value         = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($value);
             $cc_value_node = $this->node_helper->getNodeWithValue('value', $value);
             $field_node->appendChild($cc_value_node);
         }

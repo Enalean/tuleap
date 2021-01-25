@@ -68,9 +68,9 @@ abstract class Theme
     {
         $result_list = [];
 
-        $old_index = $this->color_index;
+        $old_index         = $this->color_index;
         $this->color_index = 0;
-        $count = 0;
+        $count             = 0;
 
         $i = 0;
         while (true) {
@@ -98,13 +98,13 @@ abstract class Theme
         } else {
             $color_count = count($color_list);
             if ($color_count <= $this->color_index) {
-                $color_tmp = $color_list[$this->color_index % $color_count];
+                $color_tmp  = $color_list[$this->color_index % $color_count];
                 $brightness = 1.0 - intval($this->color_index / $color_count) * 0.2;
-                $rgb = new RGB();
-                $color = $color_tmp . ':' . $brightness;
-                $color = $rgb->Color($color);
-                $alpha = array_pop($color);
-                $color = $rgb->tryHexConversion($color);
+                $rgb        = new RGB();
+                $color      = $color_tmp . ':' . $brightness;
+                $color      = $rgb->Color($color);
+                $alpha      = array_pop($color);
+                $color      = $rgb->tryHexConversion($color);
                 if ($alpha) {
                     $color .= '@' . $alpha;
                 }

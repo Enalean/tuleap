@@ -56,10 +56,10 @@ class MyProjects extends \Widget
 
     public function getContent(): string
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp              = Codendi_HTMLPurifier::instance();
+        $html            = '';
         $display_privacy = ForgeConfig::get('sys_display_project_privacy_in_service_bar');
-        $user = UserManager::instance()->getCurrentUser();
+        $user            = UserManager::instance()->getCurrentUser();
 
         $order = 'groups.group_name';
         if ($display_privacy) {
@@ -71,7 +71,7 @@ class MyProjects extends \Widget
                            " WHERE user_group.user_id = " . db_ei($user->getId()) .
                            " AND groups.status = 'A'" .
                            " ORDER BY $order");
-        $rows = db_numrows($result);
+        $rows   = db_numrows($result);
         if (! $result || $rows < 1) {
             $html .= '<div class="empty-pane">';
             $html .= '<svg class="empty-pane-icon" xmlns="http://www.w3.org/2000/svg" width="239" height="287" viewBox="0 0 239 287">';
@@ -95,9 +95,9 @@ class MyProjects extends \Widget
             $html .= '<p class="empty-pane-text">' . $GLOBALS['Language']->getText('my_index', 'not_member') . '</p>';
             $html .= '</div>';
         } else {
-            $html .= '<table cellspacing="0" class="tlp-table widget_my_projects" data-test="dashboard-my-projects">';
-            $i     = 0;
-            $prevIsPublic = false;
+            $html           .= '<table cellspacing="0" class="tlp-table widget_my_projects" data-test="dashboard-my-projects">';
+            $i               = 0;
+            $prevIsPublic    = false;
             $disable_contact = (bool) ForgeConfig::get(self::CONFIG_DISABLE_CONTACT);
             while ($row = db_fetch_array($result)) {
                 if (
@@ -164,8 +164,8 @@ class MyProjects extends \Widget
                 // Remove from project
                 $html .= '<td class="widget_my_projects_remove' . $tdClass . '">';
                 if ($row['admin_flags'] != 'A') {
-                    $link = 'rmproject.php?group_id=' . urlencode($row['group_id']);
-                    $warn = $GLOBALS['Language']->getText('my_index', 'quit_proj');
+                    $link  = 'rmproject.php?group_id=' . urlencode($row['group_id']);
+                    $warn  = $GLOBALS['Language']->getText('my_index', 'quit_proj');
                     $html .= '<a href="' . $link . '" onClick="return confirm(\'' . $hp->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')"><i class="far fa-trash-alt"></i></a>';
                 } else {
                     $html .= '&nbsp;';
@@ -220,7 +220,7 @@ class MyProjects extends \Widget
     }
     public function displayRss(): void
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp         = Codendi_HTMLPurifier::instance();
         $server_url = HTTPRequest::instance()->getServerUrl();
         $rss        = new RSS([
             'title'       => 'Codendi - MyProjects',
@@ -230,7 +230,7 @@ class MyProjects extends \Widget
             'copyright'   => 'Copyright Xerox',
             'pubDate'     => gmdate('D, d M Y G:i:s', time()) . ' GMT',
         ]);
-        $result = db_query("SELECT groups.group_name,"
+        $result     = db_query("SELECT groups.group_name,"
             . "groups.group_id,"
             . "groups.unix_group_name,"
             . "groups.status,"
@@ -240,7 +240,7 @@ class MyProjects extends \Widget
             . "WHERE groups.group_id=user_group.group_id "
             . "AND user_group.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' "
             . "AND groups.status='A' ORDER BY group_name");
-        $rows = db_numrows($result);
+        $rows       = db_numrows($result);
         if (! $result || $rows < 1) {
             $rss->addItem([
                 'title'       => 'Error',

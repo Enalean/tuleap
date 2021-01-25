@@ -68,7 +68,7 @@ class JiraProjectListController implements DispatchableWithRequest, Dispatchable
         $this->permission_checker->checkANewTrackerCanBeCreated($project, $user);
 
         try {
-            $wrapper = $this->wrapper_builder->buildFromRequest($request);
+            $wrapper  = $this->wrapper_builder->buildFromRequest($request);
             $projects = $this->jira_project_builder->build($wrapper);
             $layout->sendJSON($projects);
         } catch (JiraConnectionException $exception) {

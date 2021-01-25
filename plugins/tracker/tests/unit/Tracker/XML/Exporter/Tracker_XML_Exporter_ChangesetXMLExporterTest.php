@@ -82,7 +82,7 @@ final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \PHPUnit\Frame
 
         $this->int_changeset_value   = new Tracker_Artifact_ChangesetValue_Integer('*', $changeset, '*', '*', '*');
         $this->float_changeset_value = new Tracker_Artifact_ChangesetValue_Float('*', $changeset, '*', '*', '*');
-        $this->values = [
+        $this->values                = [
             $this->int_changeset_value,
             $this->float_changeset_value
         ];

@@ -207,7 +207,7 @@ function zip_deflate($content)
     }
 
     $gz_header_len = 10;
-    $gz_data_len = strlen($z) - $gz_header_len - 8;
+    $gz_data_len   = strlen($z) - $gz_header_len - 8;
     if ($gz_data_len < 0) {
         trigger_error("not enough gzip output?", E_USER_ERROR);
     }
@@ -293,9 +293,9 @@ class ZipWriter
     public function __construct($comment = "", $zipname = "archive.zip")
     {
         $this->comment = $comment;
-        $this->nfiles = 0;
-        $this->dir = "";        // "Central directory block"
-        $this->offset = 0;        // Current file position.
+        $this->nfiles  = 0;
+        $this->dir     = "";        // "Central directory block"
+        $this->offset  = 0;        // Current file position.
 
         $zipname = addslashes($zipname);
         header("Content-Type: application/zip; name=\"$zipname\"");
@@ -312,7 +312,7 @@ class ZipWriter
         if (function_exists('gzopen')) {
             list ($data, $crc32, $os_type) = zip_deflate($content);
             if (strlen($data) < $size) {
-                $content = $data;    // Use compressed data.
+                $content   = $data;    // Use compressed data.
                 $comp_type = ZIP_DEFLATE;
             } else {
                 unset($crc32);    // force plain store.
@@ -325,7 +325,7 @@ class ZipWriter
 
         if (! isset($crc32)) {
             $comp_type = ZIP_STORE;
-            $crc32 = zip_crc32($content);
+            $crc32     = zip_crc32($content);
         }
 
         if (! empty($attrib['write_protected'])) {
@@ -439,15 +439,15 @@ class ZipReader
     {
         if (! is_string($zipfile)) { // filepointer: File already open
             $this->fp = $zipfile;
-            $zipfile = null;
+            $zipfile  = null;
         } elseif (
             ((ord($zipfile[0]) * 256 + ord($zipfile[1])) % 31 == 0) // buffer
             and (substr($zipfile, 0, 2) == "\037\213")
             or (substr($zipfile, 0, 2) == "x\332")
         ) {  // 120, 218
-            $this->fp = null;
+            $this->fp  = null;
             $this->buf = $zipfile;
-            $zipfile = null;
+            $zipfile   = null;
         }
         if ($zipfile) {
             $this->zipfile = $zipfile;
@@ -472,7 +472,7 @@ class ZipReader
             if (strlen($this->buf) < $nbytes) {
                 trigger_error(_("Unexpected EOF in zip file"), E_USER_ERROR);
             }
-            $chunk = substr($this->buf, 0, $nbytes);
+            $chunk     = substr($this->buf, 0, $nbytes);
             $this->buf = substr($this->buf, $nbytes);
             return $chunk;
         }
@@ -508,7 +508,7 @@ class ZipReader
                 if ($this->fp) {
                     fclose($this->fp);
                     $this->fp = fopen($this->zipfile, "rb");
-                    $content = $this->_read(filesize($this->fp));
+                    $content  = $this->_read(filesize($this->fp));
                 } else {
                     $content = $this->buf;
                 }
@@ -691,7 +691,7 @@ function MimeifyPageRevision(&$page, &$revision)
         $params['owner'] = $page->get('owner');
     }
     if ($page->get('perm') and class_exists('PagePermission')) {
-        $acl = getPagePermissions($page);
+        $acl           = getPagePermissions($page);
         $params['acl'] = $acl->asAclLines();
         //TODO: convert to multiple lines? acl-view => groups,...; acl-edit => groups,...
     }
@@ -709,7 +709,7 @@ function MimeifyPageRevision(&$page, &$revision)
         $params['acl'] = str_replace(["%3A", "%3B%20", "%2C"], [":", "; ", ","], $params['acl']);
     }
 
-    $out = MimeContentTypeHeader('application', 'x-phpwiki', $params);
+    $out  = MimeContentTypeHeader('application', 'x-phpwiki', $params);
     $out .= sprintf(
         "Content-Transfer-Encoding: %s\r\n",
         STRICT_MAILABLE_PAGEDUMPS ? 'quoted-printable' : 'binary'
@@ -735,7 +735,7 @@ function ParseRFC822Headers(&$string)
 {
     if (preg_match("/^From (.*)\r?\n/", $string, $match)) {
         $headers['from '] = preg_replace('/^\s+|\s+$/', '', $match[1]);
-        $string = substr($string, strlen($match[0]));
+        $string           = substr($string, strlen($match[0]));
     }
 
     while (
@@ -748,7 +748,7 @@ function ParseRFC822Headers(&$string)
     ) {
         $headers[strtolower($match[1])]
             = preg_replace('/^\s+|\s+$/', '', $match[2]);
-        $string = substr($string, strlen($match[0]));
+        $string                         = substr($string, strlen($match[0]));
     }
 
     if (empty($headers)) {
@@ -879,11 +879,11 @@ function ParseMimeifiedPerm($string)
     $hash = [];
     foreach (preg_split("/;/D", trim($string)) as $accessgroup) {
         list($access,$groupstring) = preg_split("/:/D", trim($accessgroup));
-        $access = trim($access);
-        $groups = preg_split("/,/D", trim($groupstring));
+        $access                    = trim($access);
+        $groups                    = preg_split("/,/D", trim($groupstring));
         foreach ($groups as $group) {
             $group = trim($group);
-            $bool = (bool) (substr($group, 0, 1) != '-');
+            $bool  = (bool) (substr($group, 0, 1) != '-');
             if (substr($group, 0, 1) == '-' or substr($group, 0, 1) == '+') {
                 $group = substr($group, 1);
             }
@@ -932,9 +932,9 @@ function ParseMimeifiedPages($data)
     }
 
     // FIXME: more sanity checking?
-    $page        = [];
-    $pagedata    = [];
-    $versiondata = [];
+    $page             = [];
+    $pagedata         = [];
+    $versiondata      = [];
     $pagedata['date'] = strtotime($headers['date']);
 
     //DONE: support owner and acl
@@ -982,7 +982,7 @@ function ParseMimeifiedPages($data)
     if (! isset($versiondata['author'])) {
         global $request;
         if (is_object($request)) {
-            $user = $request->getUser();
+            $user                  = $request->getUser();
             $versiondata['author'] = $user->getId(); //FIXME:?
         }
     }
@@ -996,8 +996,8 @@ function ParseMimeifiedPages($data)
 
     $data .= GenerateFootnotesFromRefs($params);
 
-    $page['content'] = preg_replace('/[ \t\r]*\n/', "\n", chop($data));
-    $page['pagedata'] = $pagedata;
+    $page['content']     = preg_replace('/[ \t\r]*\n/', "\n", chop($data));
+    $page['pagedata']    = $pagedata;
     $page['versiondata'] = $versiondata;
 
     return [$page];

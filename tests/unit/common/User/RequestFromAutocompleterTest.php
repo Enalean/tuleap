@@ -72,7 +72,7 @@ final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
 
         $this->invalid_entries = new InvalidEntryInAutocompleterCollection();
 
-        $this->rule_email   = new Rule_Email();
+        $this->rule_email = new Rule_Email();
     }
 
     /**

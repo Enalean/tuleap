@@ -51,7 +51,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     require_once MEDIAWIKI_BASE_DIR . '/../fusionforge/compat/load_compatibilities_method.php';
 
     $plugin_manager = PluginManager::instance();
-    $mw_plugin = $plugin_manager->getPluginByName('mediawiki');
+    $mw_plugin      = $plugin_manager->getPluginByName('mediawiki');
     \assert($mw_plugin instanceof mediawikiPlugin);
     if (! $mw_plugin || ! $plugin_manager->isPluginAvailable($mw_plugin)) {
         die('Mediawiki plugin not available');
@@ -59,11 +59,11 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
     define('MW_NO_SESSION', true);
 
-    $manager                = $mw_plugin->getMediawikiManager();
+    $manager                  = $mw_plugin->getMediawikiManager();
     $GLOBALS['mediawiki_dao'] = $manager->getDao();
-    $language_manager       = new MediawikiLanguageManager(new MediawikiLanguageDao());
-    $project_name_retriever = new MediawikiFusionForgeProjectNameRetriever();
-    $project_manager        = ProjectManager::instance();
+    $language_manager         = new MediawikiLanguageManager(new MediawikiLanguageDao());
+    $project_name_retriever   = new MediawikiFusionForgeProjectNameRetriever();
+    $project_manager          = ProjectManager::instance();
 
     $forbidden_permissions = [
     'editmyusercss',
@@ -143,20 +143,20 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         $wgDBts2schema = str_replace('-', '_', "plugin_mediawiki_$fusionforgeproject");
     }
 
-    $wgDBuser           = forge_get_config('database_user');
-    $wgDBpassword       = forge_get_config('database_password');
-    $wgDBadminuser      = forge_get_config('database_user');
-    $wgDBadminpassword  = forge_get_config('database_password');
-    $wgDBport           = forge_get_config('database_port');
+    $wgDBuser          = forge_get_config('database_user');
+    $wgDBpassword      = forge_get_config('database_password');
+    $wgDBadminuser     = forge_get_config('database_user');
+    $wgDBadminpassword = forge_get_config('database_password');
+    $wgDBport          = forge_get_config('database_port');
     if (DBConfig::isSSLEnabled()) {
         $wgDBssl = true;
     }
-    $wgMainCacheType    = CACHE_NONE;
-    $wgMemCachedServers = [];
+    $wgMainCacheType     = CACHE_NONE;
+    $wgMemCachedServers  = [];
     $wgEnableParserCache = false;
 
     $debug_project_ids = [];
-    $debug_project_id = forge_get_config('mw_debug_project_id', 'mediawiki');
+    $debug_project_id  = forge_get_config('mw_debug_project_id', 'mediawiki');
     if ($debug_project_id !== false) {
         $debug_project_ids = array_map(
             function ($arg) {
@@ -167,10 +167,10 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
         if (in_array($group->getID(), $debug_project_ids)) {
             ini_set('display_errors', 1);
-            $wgShowSQLErrors = true;
-            $wgDebugDumpSql = true;
+            $wgShowSQLErrors        = true;
+            $wgDebugDumpSql         = true;
             $wgShowDBErrorBacktrace = true;
-            $wgDebugToolbar = true;
+            $wgDebugToolbar         = true;
             if (forge_get_config('mw_debug_full', 'mediawiki') === true) {
                 $wgShowDebug = true;
             }
@@ -190,12 +190,12 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
     $used_language = $language_manager->getUsedLanguageForProject($group);
     if ($used_language) {
-        $wgLanguageCode  = substr($used_language, 0, 2);
+        $wgLanguageCode = substr($used_language, 0, 2);
     } elseif ($mw_service && $mw_service->userIsAdmin($user)) {
         header('Location: /plugins/mediawiki/forge_admin.php?group_id=' . $group->getID() . '&pane=language&nolang=1');
         die();
     } else {
-        $wgLanguageCode  = substr($user->getLocale(), 0, 2);
+        $wgLanguageCode = substr($user->getLocale(), 0, 2);
     }
 
     $wgHtml5          = false;
@@ -414,7 +414,7 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
         class SpecialForgeRedirLogin extends SpecialForgeRedir
         {
             public $dstappendself = true;
-            public $dst = '/account/login.php?return_to=';
+            public $dst           = '/account/login.php?return_to=';
         }
 
         class SpecialForgeRedirCreateAccount extends SpecialForgeRedir
@@ -429,9 +429,9 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
         function DisableLogInOut(&$mList)
         {
-            $mList['Userlogin'] = 'SpecialForgeRedirLogin';
+            $mList['Userlogin']     = 'SpecialForgeRedirLogin';
             $mList['CreateAccount'] = 'SpecialForgeRedirCreateAccount';
-            $mList['Resetpass'] = 'SpecialForgeRedirResetPass';
+            $mList['Resetpass']     = 'SpecialForgeRedirResetPass';
                unset($mList['Userlogout']);
             return true;
         }
@@ -483,9 +483,9 @@ if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 }
 
 // Add Tuleap Skin
-$wgDefaultSkin    = 'tuleap123';
+$wgDefaultSkin                  = 'tuleap123';
 $wgAutoloadClasses['Tuleap123'] = __DIR__ . "/skins/Tuleap123/Tuleap123.php";
-$wgValidSkinNames['tuleap123'] = 'Tuleap123';
+$wgValidSkinNames['tuleap123']  = 'Tuleap123';
 require_once $wgAutoloadClasses['Tuleap123'];
 
 // ParserFunctions Extension inclusion
@@ -551,7 +551,7 @@ if ($manager->isCompatibilityViewEnabled($group)) {
     require_once("$IP/extensions/WikiEditor/WikiEditor.php");
 
     // Enables use of WikiEditor by default but still allow users to disable it in preferences
-    $wgDefaultUserOptions['usebetatoolbar'] = 1;
+    $wgDefaultUserOptions['usebetatoolbar']     = 1;
     $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 
     // Displays the Preview and Changes tabs

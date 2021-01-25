@@ -69,9 +69,9 @@ function random_good_password($minlength = 5, $maxlength = 8)
     $newpass = '';
     // assume ASCII ordering (not valid on EBCDIC systems!)
     $valid_chars = "!#%&+-.0123456789=@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
-    $start = ord($valid_chars);
-    $end   = ord(substr($valid_chars, -1));
-    $length = random_int($minlength, $maxlength);
+    $start       = ord($valid_chars);
+    $end         = ord(substr($valid_chars, -1));
+    $length      = random_int($minlength, $maxlength);
     while ($length > 0) {
         $newchar = random_int($start, $end);
         if (! strrpos($valid_chars, $newchar)) {
@@ -100,7 +100,7 @@ if (! empty($posted['create'])) {
     $new_password = random_good_password();
     echo "<p>The newly created random password is:<br />\n<br />&nbsp;&nbsp;&nbsp;\n<tt><strong>",
          htmlentities($new_password),"</strong></tt></p>\n";
-    $posted['password'] = $new_password;
+    $posted['password']  = $new_password;
     $posted['password2'] = $new_password;
 }
 
@@ -122,7 +122,7 @@ if (
     );
     // Generate the encrypted password.
     $encrypted_password = crypt($password, rand_ascii($salt_length));
-    $debug = $_GET['debug'];
+    $debug              = $_GET['debug'];
     if ($debug) {
         echo "The password was encrypted using a salt length of: $salt_length<br />\n";
     }

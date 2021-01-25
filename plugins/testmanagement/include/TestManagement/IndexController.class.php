@@ -97,7 +97,7 @@ class IndexController extends TestManagementController
     private function getIssueTrackerConfig(PFUser $current_user): array
     {
         $issue_tracker_id = $this->config->getIssueTrackerId($this->project);
-        $empty_config              = [
+        $empty_config     = [
             "permissions" => [
                 "create" => false,
                 "link"   => false
@@ -120,7 +120,7 @@ class IndexController extends TestManagementController
         if (! $execution_tracker_id) {
             return $empty_config;
         }
-        $execution_tracker    = $this->tracker_factory->getTrackerById($execution_tracker_id);
+        $execution_tracker = $this->tracker_factory->getTrackerById($execution_tracker_id);
         if (! $execution_tracker) {
             return $empty_config;
         }

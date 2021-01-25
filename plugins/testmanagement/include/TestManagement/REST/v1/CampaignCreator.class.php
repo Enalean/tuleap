@@ -133,7 +133,7 @@ class CampaignCreator
         );
 
         foreach ($definitions as $definition) {
-            $execution = $this->execution_creator->createTestExecution(
+            $execution       = $this->execution_creator->createTestExecution(
                 $project_id,
                 $user,
                 $definition
@@ -155,7 +155,7 @@ class CampaignCreator
         if (! $campaign_tracker_id) {
             throw new RestException(400, 'The project does not contain a campaign tracker');
         }
-        $campaign_tracker    = $this->tracker_factory->getTrackerById($campaign_tracker_id);
+        $campaign_tracker = $this->tracker_factory->getTrackerById($campaign_tracker_id);
         if (! $campaign_tracker) {
             throw new RestException(400, 'The project does not contain a campaign tracker');
         }

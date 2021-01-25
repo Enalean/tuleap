@@ -36,7 +36,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * The user is active
      */
-    public const STATUS_ACTIVE     = 'A';
+    public const STATUS_ACTIVE = 'A';
 
     /**
      * The user is restricted
@@ -46,17 +46,17 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * The user is pending
      */
-    public const STATUS_PENDING    = 'P';
+    public const STATUS_PENDING = 'P';
 
     /**
      * The user is suspended
      */
-    public const STATUS_SUSPENDED  = 'S';
+    public const STATUS_SUSPENDED = 'S';
 
     /**
      * The user is deleted
      */
-    public const STATUS_DELETED    = 'D';
+    public const STATUS_DELETED = 'D';
 
     /**
      * Site admin validated the account as active
@@ -69,18 +69,18 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public const STATUS_VALIDATED_RESTRICTED = 'W';
 
     public const UNIX_STATUS_SITEADMIN_SPECIAL = '0';
-    public const UNIX_STATUS_NO_UNIX_ACCOUNT = 'N';
-    public const UNIX_STATUS_ACTIVE = 'A';
-    public const UNIX_STATUS_SUSPENDED = 'S';
-    public const UNIX_STATUS_DELETED = 'D';
+    public const UNIX_STATUS_NO_UNIX_ACCOUNT   = 'N';
+    public const UNIX_STATUS_ACTIVE            = 'A';
+    public const UNIX_STATUS_SUSPENDED         = 'S';
+    public const UNIX_STATUS_DELETED           = 'D';
 
     /**
      * Name of the preference for lab features
      */
     public const PREF_NAME_LAB_FEATURE = 'use_lab_features';
 
-    public const PREFERENCE_DISPLAY_DENSITY     = 'display_density';
-    public const DISPLAY_DENSITY_CONDENSED      = 'condensed';
+    public const PREFERENCE_DISPLAY_DENSITY = 'display_density';
+    public const DISPLAY_DENSITY_CONDENSED  = 'condensed';
 
     /**
      * Seperator for ssh key concatenation
@@ -221,34 +221,34 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->is_super_user = null;
         $this->locale        = '';
-        $this->preferences  = [];
+        $this->preferences   = [];
 
-        $this->user_id            = isset($row['user_id'])            ? $row['user_id']            : 0;
-        $this->user_name          = isset($row['user_name'])          ? $row['user_name']          : null;
-        $this->email              = isset($row['email'])              ? $row['email']              : null;
-        $this->user_pw            = isset($row['password'])           ? $row['password']           : null;
-        $this->user_pw_legacy     = isset($row['user_pw'])            ? $row['user_pw']            : null;
-        $this->realname           = isset($row['realname'])           ? $row['realname']           : null;
-        $this->register_purpose   = isset($row['register_purpose'])   ? $row['register_purpose']   : null;
-        $this->status             = isset($row['status'])             ? $row['status']             : null;
-        $this->shell              = isset($row['shell'])              ? $row['shell']              : null;
-        $this->unix_pw            = isset($row['unix_pw'])            ? $row['unix_pw']            : null;
-        $this->unix_status        = isset($row['unix_status'])        ? $row['unix_status']        : null;
-        $this->unix_uid           = isset($row['unix_uid'])           ? $row['unix_uid']           : null;
-        $this->unix_box           = isset($row['unix_box'])           ? $row['unix_box']           : null;
-        $this->ldap_id            = isset($row['ldap_id'])            ? $row['ldap_id']            : null;
-        $this->add_date           = isset($row['add_date'])           ? $row['add_date']           : null;
-        $this->confirm_hash       = isset($row['confirm_hash'])       ? $row['confirm_hash']       : null;
-        $this->mail_siteupdates   = isset($row['mail_siteupdates'])   ? $row['mail_siteupdates']   : null;
-        $this->mail_va            = isset($row['mail_va'])            ? $row['mail_va']            : null;
-        $this->sticky_login       = isset($row['sticky_login'])       ? $row['sticky_login']       : null;
-        $this->authorized_keys    = isset($row['authorized_keys'])    ? $row['authorized_keys']    : null;
-        $this->email_new          = isset($row['email_new'])          ? $row['email_new']          : null;
-        $this->timezone           = isset($row['timezone'])           ? $row['timezone']           : null;
-        $this->language_id        = isset($row['language_id'])        ? $row['language_id']        : null;
-        $this->last_pwd_update    = isset($row['last_pwd_update'])    ? $row['last_pwd_update']    : null;
-        $this->expiry_date        = isset($row['expiry_date'])        ? $row['expiry_date']        : null;
-        $this->has_custom_avatar  = ($row['has_custom_avatar'] ?? 0) ? 1 : 0;
+        $this->user_id           = isset($row['user_id'])            ? $row['user_id']            : 0;
+        $this->user_name         = isset($row['user_name'])          ? $row['user_name']          : null;
+        $this->email             = isset($row['email'])              ? $row['email']              : null;
+        $this->user_pw           = isset($row['password'])           ? $row['password']           : null;
+        $this->user_pw_legacy    = isset($row['user_pw'])            ? $row['user_pw']            : null;
+        $this->realname          = isset($row['realname'])           ? $row['realname']           : null;
+        $this->register_purpose  = isset($row['register_purpose'])   ? $row['register_purpose']   : null;
+        $this->status            = isset($row['status'])             ? $row['status']             : null;
+        $this->shell             = isset($row['shell'])              ? $row['shell']              : null;
+        $this->unix_pw           = isset($row['unix_pw'])            ? $row['unix_pw']            : null;
+        $this->unix_status       = isset($row['unix_status'])        ? $row['unix_status']        : null;
+        $this->unix_uid          = isset($row['unix_uid'])           ? $row['unix_uid']           : null;
+        $this->unix_box          = isset($row['unix_box'])           ? $row['unix_box']           : null;
+        $this->ldap_id           = isset($row['ldap_id'])            ? $row['ldap_id']            : null;
+        $this->add_date          = isset($row['add_date'])           ? $row['add_date']           : null;
+        $this->confirm_hash      = isset($row['confirm_hash'])       ? $row['confirm_hash']       : null;
+        $this->mail_siteupdates  = isset($row['mail_siteupdates'])   ? $row['mail_siteupdates']   : null;
+        $this->mail_va           = isset($row['mail_va'])            ? $row['mail_va']            : null;
+        $this->sticky_login      = isset($row['sticky_login'])       ? $row['sticky_login']       : null;
+        $this->authorized_keys   = isset($row['authorized_keys'])    ? $row['authorized_keys']    : null;
+        $this->email_new         = isset($row['email_new'])          ? $row['email_new']          : null;
+        $this->timezone          = isset($row['timezone'])           ? $row['timezone']           : null;
+        $this->language_id       = isset($row['language_id'])        ? $row['language_id']        : null;
+        $this->last_pwd_update   = isset($row['last_pwd_update'])    ? $row['last_pwd_update']    : null;
+        $this->expiry_date       = isset($row['expiry_date'])        ? $row['expiry_date']        : null;
+        $this->has_custom_avatar = ($row['has_custom_avatar'] ?? 0) ? 1 : 0;
 
         $this->id = $this->user_id;
 
@@ -256,7 +256,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         if (! $this->language_id) {
             //Detect browser settings
             $accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
-            $this->locale = $GLOBALS['Language']->getLanguageFromAcceptLanguage($accept_language);
+            $this->locale    = $GLOBALS['Language']->getLanguageFromAcceptLanguage($accept_language);
         } else {
             $this->locale = $this->language_id;
         }
@@ -460,9 +460,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         if (! $this->tracker_data) {
             $this->tracker_data = [];
-            $id = (int) $this->user_id;
+            $id                 = (int) $this->user_id;
             //TODO: use a DAO (waiting for the next tracker api)
-            $sql = "SELECT group_artifact_id, perm_level
+            $sql    = "SELECT group_artifact_id, perm_level
                     FROM artifact_perm WHERE user_id = $id";
             $db_res = db_query($sql);
             if (db_numrows($db_res) > 0) {
@@ -484,7 +484,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         if ($this->is_super_user === null) {
             $this->is_super_user = false;
-            $group_data = $this->getUserGroupData();
+            $group_data          = $this->getUserGroupData();
             if ((isset($group_data[1]['admin_flags']) && $group_data[1]['admin_flags'] == 'A') || $this->doesUserHaveSuperUserPermissionDelegation()) {
                 $this->is_super_user = true;
             }
@@ -1053,7 +1053,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function setId($id)
     {
-        $this->id = $id;
+        $this->id      = $id;
         $this->user_id = $id;
     }
 
@@ -1476,8 +1476,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $purifier    = Codendi_HTMLPurifier::instance();
         $user_helper = new UserHelper();
 
-        $title    = $purifier->purify($user_helper->getDisplayNameFromUser($this));
-        $user_id  = $this->getId();
+        $title   = $purifier->purify($user_helper->getDisplayNameFromUser($this));
+        $user_id = $this->getId();
 
         $html = '<div class="avatar"
                         title="' . $title . '"
@@ -1488,7 +1488,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
 
         if ($url) {
             $alternate_text = $purifier->purify(_('User avatar'));
-            $html .= '<img src="' . $url . '" alt="' . $alternate_text . '" />';
+            $html          .= '<img src="' . $url . '" alt="' . $alternate_text . '" />';
         }
 
         $html .= '</div>';

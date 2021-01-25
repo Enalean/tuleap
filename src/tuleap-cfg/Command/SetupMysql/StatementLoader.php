@@ -41,7 +41,7 @@ class StatementLoader
             throw new \RuntimeException(sprintf('%s does not exist', $filepath));
         }
 
-        $sql = file_get_contents($filepath);
+        $sql         = file_get_contents($filepath);
         $transformed = str_replace("\\\n", '', $sql);
 
         $this->db->rawExec($transformed);

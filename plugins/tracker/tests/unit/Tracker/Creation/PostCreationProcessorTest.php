@@ -54,9 +54,9 @@ final class PostCreationProcessorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->reference_manager = Mockery::mock(\ReferenceManager::class);
+        $this->reference_manager   = Mockery::mock(\ReferenceManager::class);
         $this->in_new_dropdown_dao = Mockery::mock(TrackerInNewDropdownDao::class);
-        $this->processor = new PostCreationProcessor($this->reference_manager, $this->in_new_dropdown_dao);
+        $this->processor           = new PostCreationProcessor($this->reference_manager, $this->in_new_dropdown_dao);
 
         $this->tracker = Mockery::mock(\Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(10);

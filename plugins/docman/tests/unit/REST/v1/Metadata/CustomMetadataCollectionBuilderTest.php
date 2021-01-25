@@ -43,7 +43,7 @@ class CustomMetadataCollectionBuilderTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->metadata_factory = \Mockery::mock(\Docman_MetadataFactory::class);
+        $this->metadata_factory      = \Mockery::mock(\Docman_MetadataFactory::class);
         $this->list_of_value_builder = \Mockery::mock(MetadataListOfValuesElementListBuilder::class);
     }
 

@@ -51,7 +51,7 @@ class UserSuspensionManager
      */
     public const CONFIG_INACTIVE_EMAIL = 'sys_suspend_send_account_suspension_email';
     public const CONFIG_INACTIVE_DELAY = 'sys_suspend_inactive_accounts_delay';
-    public const ONE_DAY_INTERVAL = "PT23H59M59S";
+    public const ONE_DAY_INTERVAL      = "PT23H59M59S";
 
     /**
      * @var MailPresenterFactory
@@ -107,13 +107,13 @@ class UserSuspensionManager
         LocaleSwitcher $locale_switcher
     ) {
         $this->mail_presenter_factory = $mail_presenter_factory;
-        $this->renderer = $renderer;
-        $this->mail = $mail;
-        $this->dao = $dao;
-        $this->user_manager = $user_manager->instance();
-        $this->lang_factory = $lang_factory;
-        $this->logger = $logger;
-        $this->locale_switcher = $locale_switcher;
+        $this->renderer               = $renderer;
+        $this->mail                   = $mail;
+        $this->dao                    = $dao;
+        $this->user_manager           = $user_manager->instance();
+        $this->lang_factory           = $lang_factory;
+        $this->logger                 = $logger;
+        $this->locale_switcher        = $locale_switcher;
     }
 
     /**
@@ -121,12 +121,12 @@ class UserSuspensionManager
      */
     public function sendNotificationMailToIdleAccounts(DateTimeImmutable $date): void
     {
-        $inactive_delay = (int) ForgeConfig::get(self::CONFIG_INACTIVE_DELAY);
+        $inactive_delay     = (int) ForgeConfig::get(self::CONFIG_INACTIVE_DELAY);
         $notification_delay = (int) ForgeConfig::get(self::CONFIG_NOTIFICATION_DELAY);
 
         if (($notification_delay > 0) && ($inactive_delay > 0)) {
             $idle_users = $this->getIdleAccounts($notification_delay, $inactive_delay, $date);
-            $users = array_column($idle_users, 'user_id');
+            $users      = array_column($idle_users, 'user_id');
 
             if ($users) {
                 $this->logger->info(
@@ -140,10 +140,10 @@ class UserSuspensionManager
             foreach ($idle_users as $idle_user) {
                 $user = $this->user_manager->getUserbyId($idle_user['user_id']);
                 if ($user) {
-                    $locale = $user->getLocale();
-                    $suspension_date = $this->getSuspensionDate($notification_delay, $date);
+                    $locale           = $user->getLocale();
+                    $suspension_date  = $this->getSuspensionDate($notification_delay, $date);
                     $last_access_date = new DateTimeImmutable('@' . $idle_user['last_access_date']);
-                    $language = $this->lang_factory->getBaseLanguage($locale);
+                    $language         = $this->lang_factory->getBaseLanguage($locale);
 
                     $this->locale_switcher->setLocaleForSpecificExecutionContext(
                         $locale,
@@ -198,7 +198,7 @@ class UserSuspensionManager
     private function getIdleAccounts(int $notification_delay, int $inactive_delay, DateTimeImmutable $date): array
     {
         $start_date = $this->getLastAccessDate($notification_delay, $inactive_delay, $date);
-        $end_date = $start_date->modify('+23hours 59 minutes 59 seconds');
+        $end_date   = $start_date->modify('+23hours 59 minutes 59 seconds');
         $this->logger->info(
             "Idle accounts: querying users that last accessed " . ForgeConfig::get('sys_name') .
             " between " . $start_date->format('Y-m-d\TH:i:sO') . " and " . $end_date->format('Y-m-d\TH:i:sO')
@@ -256,7 +256,7 @@ class UserSuspensionManager
     private function suspendInactiveAccounts(DateTimeImmutable $time)
     {
         if (ForgeConfig::exists('sys_suspend_inactive_accounts_delay') && ForgeConfig::get('sys_suspend_inactive_accounts_delay') > 0) {
-            $date_param = '- ' . ForgeConfig::get('sys_suspend_inactive_accounts_delay') . ' day';
+            $date_param      = '- ' . ForgeConfig::get('sys_suspend_inactive_accounts_delay') . ' day';
             $lastValidAccess = $time->modify($date_param);
             return $this->dao->suspendInactiveAccounts($lastValidAccess);
         }
@@ -273,7 +273,7 @@ class UserSuspensionManager
             $lastRemove = $time->modify($date_param);
 
             $timestamp = $lastRemove->getTimestamp();
-            $dar = $this->dao->returnNotProjectMembers();
+            $dar       = $this->dao->returnNotProjectMembers();
             if ($dar) {
                 //we should verify the delay for it user has been no more belonging to any project
                 foreach ($dar as $row) {
@@ -328,7 +328,7 @@ class UserSuspensionManager
 
         if ($enable_suspension_mails !== false && $inactive_accounts_delay > 0) {
             $inactive_users = $this->getInactiveAccounts($date);
-            $users = array_column($inactive_users, 'user_id');
+            $users          = array_column($inactive_users, 'user_id');
 
             if ($users) {
                 $this->logger->info(
@@ -342,7 +342,7 @@ class UserSuspensionManager
             foreach ($inactive_users as $inactive_user) {
                 $user = $this->user_manager->getUserbyId($inactive_user['user_id']);
                 if ($user) {
-                    $locale = $user->getLocale();
+                    $locale   = $user->getLocale();
                     $language = $this->lang_factory->getBaseLanguage($locale);
                     if ($inactive_user['last_access_date'] != 0) {
                         $last_access_date = new DateTimeImmutable('@' . $inactive_user['last_access_date']);
@@ -397,7 +397,7 @@ class UserSuspensionManager
 
     private function getInactiveAccounts(DateTimeImmutable $date): array
     {
-        $last_valid_access_end = $date->sub(
+        $last_valid_access_end   = $date->sub(
             new DateInterval("P" . ForgeConfig::get('sys_suspend_inactive_accounts_delay') . "D")
         );
         $last_valid_access_start = $last_valid_access_end->sub(new DateInterval(self::ONE_DAY_INTERVAL));

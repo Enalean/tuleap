@@ -25,20 +25,20 @@ final class HTTPRequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
 
     protected function setUp(): void
     {
-        $_REQUEST['exists'] = '1';
-        $_REQUEST['exists_empty'] = '';
-        $_SERVER['server_exists'] = '1';
-        $_SERVER['server_quote'] = "l'avion du server";
-        $_REQUEST['quote'] = "l'avion";
-        $_REQUEST['array'] = ['quote_1' => "l'avion", 'quote_2' => ['quote_3' => "l'oiseau"]];
-        $_REQUEST['testkey'] = 'testvalue';
-        $_REQUEST['testarray'] = ['key1' => 'valuekey1'];
-        $_REQUEST['testkey_array'] = ['testvalue1', 'testvalue2', 'testvalue3'];
-        $_REQUEST['testkey_array_empty'] = [];
+        $_REQUEST['exists']               = '1';
+        $_REQUEST['exists_empty']         = '';
+        $_SERVER['server_exists']         = '1';
+        $_SERVER['server_quote']          = "l'avion du server";
+        $_REQUEST['quote']                = "l'avion";
+        $_REQUEST['array']                = ['quote_1' => "l'avion", 'quote_2' => ['quote_3' => "l'oiseau"]];
+        $_REQUEST['testkey']              = 'testvalue';
+        $_REQUEST['testarray']            = ['key1' => 'valuekey1'];
+        $_REQUEST['testkey_array']        = ['testvalue1', 'testvalue2', 'testvalue3'];
+        $_REQUEST['testkey_array_empty']  = [];
         $_REQUEST['testkey_array_mixed1'] = ['testvalue', 1, 2];
         $_REQUEST['testkey_array_mixed2'] = [1, 'testvalue', 2];
         $_REQUEST['testkey_array_mixed3'] = [1, 2, 'testvalue'];
-        $_FILES['file1'] = ['name' => 'Test file 1'];
+        $_FILES['file1']                  = ['name' => 'Test file 1'];
     }
 
     protected function tearDown(): void

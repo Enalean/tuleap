@@ -211,8 +211,8 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
 
     public function testItReturnsFalseIfUserCannotSubmitArtifact(): void
     {
-        $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone    = $this->getPlanningData();
+        $user              = UserTestBuilder::aUser()->build();
+        $program_milestone = $this->getPlanningData();
 
         $this->mockTeamMilestoneTrackers($this->project, false);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -238,8 +238,8 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
 
     public function testItReturnsFalseIfUserCantSubmitOneArtifactLink(): void
     {
-        $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone    = $this->getPlanningData();
+        $user              = UserTestBuilder::aUser()->build();
+        $program_milestone = $this->getPlanningData();
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -252,8 +252,8 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
 
     public function testItReturnsFalseIfTrackersHaveRequiredFieldsThatCannotBeSynchronized(): void
     {
-        $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone    = $this->getPlanningData();
+        $user              = UserTestBuilder::aUser()->build();
+        $program_milestone = $this->getPlanningData();
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -270,8 +270,8 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
 
     public function testItReturnsFalseIfTeamTrackersAreUsingSynchronizedFieldsInWorkflowRules(): void
     {
-        $user                 = UserTestBuilder::aUser()->build();
-        $program_milestone    = $this->getPlanningData();
+        $user              = UserTestBuilder::aUser()->build();
+        $program_milestone = $this->getPlanningData();
 
         $this->mockTeamMilestoneTrackers($this->project);
         $this->semantic_checker->shouldReceive('areTrackerSemanticsWellConfigured')
@@ -342,15 +342,15 @@ final class ProgramIncrementArtifactCreatorCheckerTest extends TestCase
         $this->mockField($description_field, 2, true, true);
         $description_field_data = new Field($description_field);
 
-        $status_field        = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
+        $status_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
         $this->mockField($status_field, 3, true, true);
         $status_field_data = new Field($status_field);
 
-        $field_start_date      = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $field_start_date = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_start_date, 4, true, true);
         $start_date_field_data = new Field($field_start_date);
 
-        $field_end_date          = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $field_end_date = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->mockField($field_end_date, 5, true, true);
         $end_date_field_data = new Field($field_end_date);
 

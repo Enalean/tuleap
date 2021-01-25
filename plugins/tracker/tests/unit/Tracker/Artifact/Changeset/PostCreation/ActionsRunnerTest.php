@@ -97,7 +97,7 @@ class ActionsRunnerTest extends TestCase
 
     public function testAsyncPostCreationTasksFallbackInSyncProcessingInCaseOfError(): void
     {
-        $task   = \Mockery::mock(PostCreationTask::class);
+        $task = \Mockery::mock(PostCreationTask::class);
 
         $actions_runner = new ActionsRunner($this->logger, $this->dao, new QueueFactory($this->logger), $task);
 

@@ -20,11 +20,11 @@
 
 class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
 {
-    public const LABEL_VALUES_INDEX  = 'valueLabelList';
-    public const TV3_VALUE_INDEX     = 'valueInt';
-    public const TV3_TYPE            = 'MB_2';
-    public const TV5_TYPE            = 'list';
-    public const TV5_BIND            = 'static';
+    public const LABEL_VALUES_INDEX = 'valueLabelList';
+    public const TV3_VALUE_INDEX    = 'valueInt';
+    public const TV3_TYPE           = 'MB_2';
+    public const TV5_TYPE           = 'list';
+    public const TV5_BIND           = 'static';
 
     public const SYS_VALUE_NONE_FR = 'Aucun';
     public const SYS_VALUE_NONE_EN = 'None';

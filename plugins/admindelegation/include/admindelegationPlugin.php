@@ -77,8 +77,8 @@ class AdminDelegationPlugin extends Plugin
      */
     protected function userCanViewWidget($widget)
     {
-        $um      = UserManager::instance();
-        $user    = $um->getCurrentUser();
+        $um   = UserManager::instance();
+        $user = $um->getCurrentUser();
         if ($user) {
             $service = AdminDelegation_Service::getServiceFromWidget($widget);
             if ($service) {

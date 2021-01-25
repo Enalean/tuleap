@@ -105,7 +105,7 @@ final class FrozenFieldsRetrieverTest extends TestCase
             ['transition_id' => 99, 'postaction_id' => $postaction_id, 'field_id' => 987],
         ]);
 
-        $int_field    = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $int_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
 
         $this->form_element_factory->shouldReceive('getFieldById')->with(331)->andReturn($int_field);
 

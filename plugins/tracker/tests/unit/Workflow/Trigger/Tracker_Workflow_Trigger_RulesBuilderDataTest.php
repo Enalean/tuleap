@@ -73,7 +73,7 @@ final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \PHPUnit\Frame
         );
 
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), [$triggering_field]);
-        $result = $rules_builder_data->fetchFormattedForJson();
+        $result             = $rules_builder_data->fetchFormattedForJson();
         $this->assertCount(1, $result['triggers']);
         $this->assertEquals(90, $result['triggers'][$tracker_id]['id']);
         $this->assertEquals('Tasks', $result['triggers'][$tracker_id]['name']);
@@ -83,7 +83,7 @@ final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \PHPUnit\Frame
     public function testItHasATriggerTrackerWithAField(): void
     {
         $field_id = 693;
-        $field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
+        $field    = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $field->shouldReceive('getId')->andReturn($field_id);
         $field->shouldReceive('fetchFormattedForJson')->andReturns('whatever')->once();
 
@@ -97,8 +97,8 @@ final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \PHPUnit\Frame
         );
 
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), [$triggering_field]);
-        $result = $rules_builder_data->fetchFormattedForJson();
-        $trigger = $result['triggers'][$tracker_id];
+        $result             = $rules_builder_data->fetchFormattedForJson();
+        $trigger            = $result['triggers'][$tracker_id];
         $this->assertCount(1, $trigger['fields']);
         $this->assertEquals('whatever', $trigger['fields'][$field_id]);
     }

@@ -46,10 +46,10 @@ class Docman_ItemFactoryTest extends TestCase
 
         $itemFactory = new Docman_ItemFactory(0);
 
-        $itemList = [113 => $fld113];
-        $orphans = [113 => 113];
+        $itemList    = [113 => $fld113];
+        $orphans     = [113 => 113];
         $wantedItems = [];
-        $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
+        $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
         $this->assertEquals([112], $wantedItems);
         $this->assertEquals([113 => 113], $orphans);
         $this->assertEquals([113 => $fld113], $itemList);
@@ -70,10 +70,10 @@ class Docman_ItemFactoryTest extends TestCase
 
         $itemFactory = new Docman_ItemFactory(0);
 
-        $itemList = [112 => $fld112, 113 => $fld113];
-        $orphans  = [112 => 112, 113 => 113];
+        $itemList    = [112 => $fld112, 113 => $fld113];
+        $orphans     = [112 => 112, 113 => 113];
         $wantedItems = [];
-        $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
+        $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
         $this->assertEquals([150], $wantedItems);
         $this->assertEquals([112 => 112], $orphans);
         $this->assertEquals([112 => $c_fld112, 113 => $c_fld113], $itemList);
@@ -97,10 +97,10 @@ class Docman_ItemFactoryTest extends TestCase
         $itemFactory = new Docman_ItemFactory(0);
 
         $fld112->addItem($fld113);
-        $itemList = [150 => $fld150, 112 => $fld112, 113 => $fld113];
-        $orphans  = [150 => 150, 112 => 112];
+        $itemList    = [150 => $fld150, 112 => $fld112, 113 => $fld113];
+        $orphans     = [150 => 150, 112 => 112];
         $wantedItems = [];
-        $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
+        $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
         $this->assertEquals([140], $wantedItems);
         $this->assertEquals([150 => 150], $orphans);
         $this->assertEquals([150 => $c_fld150, 112 => $c_fld112, 113 => $c_fld113], $itemList);
@@ -128,10 +128,10 @@ class Docman_ItemFactoryTest extends TestCase
 
         $fld112->addItem($fld113);
         $fld150->addItem($fld112);
-        $itemList = [140 => $fld140, 150 => $fld150, 112 => $fld112, 113 => $fld113];
-        $orphans  = [140 => 140, 150 => 150];
+        $itemList    = [140 => $fld140, 150 => $fld150, 112 => $fld112, 113 => $fld113];
+        $orphans     = [140 => 140, 150 => 150];
         $wantedItems = [];
-        $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
+        $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
         $this->assertEquals([], $wantedItems);
         $this->assertEquals([], $orphans);
         $this->assertEquals([140 => $c_fld140, 150 => $c_fld150, 112 => $c_fld112, 113 => $c_fld113], $itemList);
@@ -163,10 +163,10 @@ class Docman_ItemFactoryTest extends TestCase
         $itemFactory = new Docman_ItemFactory(0);
 
         $fld112->addItem($fld113);
-        $itemList = [150 => false, 112 => $fld112, 113 => $fld113];
-        $orphans  = [150 => 150, 112 => 112];
+        $itemList    = [150 => false, 112 => $fld112, 113 => $fld113];
+        $orphans     = [150 => 150, 112 => 112];
         $wantedItems = [];
-        $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
+        $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
         $this->assertEquals([], $wantedItems);
         $this->assertEquals([150 => 150, 112 => 112], $orphans);
         $this->assertEquals([150 => false, 112 => $c_fld112, 113 => $c_fld113], $itemList);
@@ -326,14 +326,14 @@ class Docman_ItemFactoryTest extends TestCase
 
         $itemFactory = new Docman_ItemFactory(0);
 
-        $itemList = [113 => $fld113,
+        $itemList    = [113 => $fld113,
                           115 => $fld115,
                           135 => $fld135];
-        $orphans = [113 => 113,
+        $orphans     = [113 => 113,
                          115 => 115,
                          135 => 135];
         $wantedItems = [];
-        $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
+        $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
         $this->assertEquals([112, 150, 140], $wantedItems);
         $this->assertEquals([113 => 113, 115 => 115, 135 => 135], $orphans);
         $this->assertEquals([113 => $fld113, 115 => $fld115, 135 => $fld135], $itemList);
@@ -379,14 +379,14 @@ class Docman_ItemFactoryTest extends TestCase
         // the priorities. While the final result will always be the same
         // (items ordered by priority) the internal status of the mapping may
         // differ. And this internal difference will break tests :/
-        $orphans = [140 => 140,
+        $orphans     = [140 => 140,
                          150 => 150,
                          112 => 112,
                          113 => 113,
                          115 => 115,
                          135 => 135];
         $wantedItems = [];
-        $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
+        $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
         $this->assertEquals([], $wantedItems);
         $this->assertEquals([], $orphans);
         $this->assertEquals(

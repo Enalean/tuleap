@@ -88,8 +88,8 @@ class AdditionalArtifactActionBuilder
 
     public function buildArtifactAction(Artifact $artifact, PFUser $user): ?AdditionalButtonAction
     {
-        $tracker  = $artifact->getTracker();
-        $project  = $tracker->getProject();
+        $tracker = $artifact->getTracker();
+        $project = $tracker->getProject();
 
         $project_id  = (int) $project->getID();
         $artifact_id = (int) $artifact->getId();

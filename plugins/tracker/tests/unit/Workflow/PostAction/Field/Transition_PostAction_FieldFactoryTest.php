@@ -83,7 +83,7 @@ final class Transition_PostAction_FieldFactoryTest extends \PHPUnit\Framework\Te
 
     protected function setUp(): void
     {
-        $workflow_id = '1112';
+        $workflow_id    = '1112';
         $this->workflow = Mockery::mock(Workflow::class, ['getId' => $workflow_id]);
 
         $this->transition_id = 123;

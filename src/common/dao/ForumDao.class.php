@@ -29,7 +29,7 @@ class ForumDao extends DataAccessObject
     public function searchByGroupForumId($forum_id)
     {
         $forum_id = $this->da->quoteSmart($forum_id);
-        $sql = "SELECT group_id 
+        $sql      = "SELECT group_id 
                 FROM $this->table_name
                 WHERE group_forum_id=$forum_id";
         return $this->retrieve($sql);
@@ -78,7 +78,7 @@ class ForumDao extends DataAccessObject
     public function updatePublicForumToPrivate($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);
-        $sql = "UPDATE forum_group_list
+        $sql      = "UPDATE forum_group_list
                 SET is_public = 0
                 WHERE group_id = $group_id
                 AND is_public = 1";

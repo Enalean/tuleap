@@ -27,9 +27,9 @@ class LDAP_SyncReminderNotificationManager
 
     public function __construct(ProjectManager $projectManager, UserManager $userManager)
     {
-        $this->userManager  = $userManager;
-        $this->ldapSyncMail = new LDAP_SyncMail($projectManager);
-        $this->projectManager  = $projectManager;
+        $this->userManager    = $userManager;
+        $this->ldapSyncMail   = new LDAP_SyncMail($projectManager);
+        $this->projectManager = $projectManager;
     }
 
     /**
@@ -105,10 +105,10 @@ class LDAP_SyncReminderNotificationManager
      */
     private function getBody($unixProjectName, $user)
     {
-        $server_url       = HTTPRequest::instance()->getServerUrl();
-        $project_url      = $server_url . '/projects/' . urlencode($unixProjectName);
-        $project = $this->projectManager->getProjectByUnixName($unixProjectName);
-        $publicProjectName = $project->getPublicName();
+        $server_url                = HTTPRequest::instance()->getServerUrl();
+        $project_url               = $server_url . '/projects/' . urlencode($unixProjectName);
+        $project                   = $this->projectManager->getProjectByUnixName($unixProjectName);
+        $publicProjectName         = $project->getPublicName();
         $purifiedPublicProjectName = Codendi_HTMLPurifier::instance()->purify($publicProjectName, CODENDI_PURIFIER_LIGHT);
         return $GLOBALS['Language']->getOverridableText('plugin_ldap', 'ldap_sync_reminder_mail_notification_body', [$user->getRealName(), $user->getEmail(), $project_url, $purifiedPublicProjectName, ForgeConfig::get('sys_name')]);
     }

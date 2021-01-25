@@ -48,7 +48,7 @@ class Collection
     public function contains($wanted)
     {
         $compare_with_equals = method_exists($wanted, 'equals');
-        $found = false;
+        $found               = false;
         if (! $compare_with_equals) {
             return in_array($wanted, $this->elements);
         } else {
@@ -83,7 +83,7 @@ class Collection
             //We walk through the first collection to see if the second
             //contains each value. Remember that there is no order, and
             //we cannot see $obj->elements (protected)
-            $it = $this->iterator();
+            $it           = $this->iterator();
             $is_identical = true;
             while ($it->valid() && $is_identical) {
                 $val = $it->current();
@@ -96,7 +96,7 @@ class Collection
                 //We walk through the second collection to see if the first
                 //contains each value. Remember that there is no order, and
                 //we cannot see $obj->elements (protected)
-                $it = $obj->iterator();
+                $it           = $obj->iterator();
                 $is_identical = true;
                 while ($it->valid() && $is_identical) {
                     $val = $it->current();

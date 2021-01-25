@@ -53,7 +53,7 @@ class MessageException extends Exception
      */
     public function __construct($message, $error = false, $statusCode = 200, $code = 0)
     {
-        $this->Error = $error;
+        $this->Error      = $error;
         $this->StatusCode = $statusCode;
         parent::__construct($message, $code);
     }

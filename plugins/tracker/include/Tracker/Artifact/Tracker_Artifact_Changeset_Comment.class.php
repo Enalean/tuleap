@@ -177,16 +177,16 @@ class Tracker_Artifact_Changeset_Comment
             if ($considered_body_format === self::COMMONMARK_COMMENT) {
                 $considered_body_format = self::TEXT_COMMENT;
             }
-            $html        .= '<input type="hidden"
+            $html .= '<input type="hidden"
                 id="tracker_artifact_followup_comment_body_format_' . $this->changeset->getId() . '"
                 name="tracker_artifact_followup_comment_body_format_' . $this->changeset->getId() . '"
                 value="' . $considered_body_format . '" />';
-            $html        .= '<div class="tracker_artifact_followup_comment_body">';
+            $html .= '<div class="tracker_artifact_followup_comment_body">';
             if ($this->parent_id && ! trim($this->body)) {
                 $html .= '<em>' . dgettext('tuleap-tracker', 'Comment has been cleared') . '</em>';
             } elseif ($this->bodyFormat === self::COMMONMARK_COMMENT) {
                 $content_interpretor = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
-                $html                .= $content_interpretor->getInterpretedContentWithReferences(
+                $html               .= $content_interpretor->getInterpretedContentWithReferences(
                     $this->body,
                     (int) $this->changeset->getTracker()->getGroupId()
                 );
@@ -225,7 +225,7 @@ class Tracker_Artifact_Changeset_Comment
             return PHP_EOL . PHP_EOL . $body . PHP_EOL . PHP_EOL;
         }
 
-        $user     = $this->getCurrentUser();
+        $user = $this->getCurrentUser();
         if ($user === null) {
             return '';
         }
@@ -297,7 +297,7 @@ class Tracker_Artifact_Changeset_Comment
     private function fetchFormattedMailComment(): string
     {
         $formatted_comment = '';
-        $comment = '';
+        $comment           = '';
         if (! empty($this->body)) {
             if ($this->parent_id && ! trim($this->body)) {
                 $comment =
@@ -349,7 +349,7 @@ class Tracker_Artifact_Changeset_Comment
 
         $user_xml_exporter->exportUserByUserId($this->submitted_by, $comment_node, 'submitted_by');
 
-        $cdata_factory   = new XML_SimpleXMLCDATAFactory();
+        $cdata_factory = new XML_SimpleXMLCDATAFactory();
         $cdata_factory->insertWithAttributes(
             $comment_node,
             'submitted_on',

@@ -32,7 +32,7 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 $logger = new \Tuleap\Configuration\Logger\Console();
 
 $redis_conf_file = '/etc/tuleap/conf/redis.inc';
-$fpm   = new SiteDeployFPM(
+$fpm             = new SiteDeployFPM(
     $logger,
     'codendiadm',
     true,
@@ -45,7 +45,7 @@ $fpm   = new SiteDeployFPM(
     SiteDeployFPM::PHP73_SRC_CONF_DIR,
     [],
 );
-$nginx = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');
+$nginx           = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');
 
 $fpm->forceDeploy();
 $nginx->configure();

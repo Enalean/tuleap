@@ -46,7 +46,7 @@ final class DataPersistence
     public function __construct(ProcessFactory $process_factory, string ...$paths)
     {
         $this->process_factory = $process_factory;
-        $this->paths = $paths;
+        $this->paths           = $paths;
     }
 
     public function isThereAnyData(): bool

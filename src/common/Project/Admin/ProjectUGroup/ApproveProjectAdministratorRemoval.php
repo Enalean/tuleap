@@ -37,7 +37,7 @@ class ApproveProjectAdministratorRemoval implements Dispatchable
 
     public function __construct(\Project $project, \PFUser $project_admin_to_remove)
     {
-        $this->project                   = $project;
+        $this->project                 = $project;
         $this->project_admin_to_remove = $project_admin_to_remove;
     }
 

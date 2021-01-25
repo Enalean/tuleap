@@ -51,7 +51,7 @@ class ServiceActivatorTest extends TestCase
         $this->service_creator = \Mockery::spy(\Tuleap\Service\ServiceCreator::class);
         $this->activator       = new ServiceActivator($this->service_manager, $this->tracker_v3, $this->service_creator);
 
-        $this->template = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->template              = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
         $this->project_creation_data = \Mockery::spy(\ProjectCreationData::class);
 
         $this->params = [

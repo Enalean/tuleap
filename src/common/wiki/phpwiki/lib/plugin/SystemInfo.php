@@ -100,11 +100,11 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         if (! defined('USECACHE') or ! USECACHE) {
             return _("no cache used");
         }
-        $dbi = $this->_dbi;
+        $dbi   = $this->_dbi;
         $cache = $dbi->_cache;
-        $s  = _("cached pagedata:") . " " . count($cache->_pagedata_cache);
-        $s .= ", " . _("cached versiondata:");
-        $s .= " " . count($cache->_versiondata_cache);
+        $s     = _("cached pagedata:") . " " . count($cache->_pagedata_cache);
+        $s    .= ", " . _("cached versiondata:");
+        $s    .= " " . count($cache->_versiondata_cache);
         //$s .= ", glv size: " . count($cache->_glv_cache);
         //$s .= ", cache hits: ?";
         //$s .= ", cache misses: ?";
@@ -140,7 +140,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     {
         global $request;
         $dbi = $request->getDbh();
-        $s  = sprintf(_("%d pages"), $dbi->numPages(true));
+        $s   = sprintf(_("%d pages"), $dbi->numPages(true));
         $s  .= ", " . sprintf(_("%d not-empty pages"), $dbi->numPages(false));
         // more bla....
         // $s  .= ", " . sprintf(_("earliest page from %s"), $earliestdate);
@@ -153,7 +153,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     //  Any useful numbers similar to a VisualWiki interestmap?
     public function linkstats()
     {
-        $s  = _("not yet");
+        $s = _("not yet");
         return $s;
     }
     // number of homepages: easy
@@ -163,15 +163,15 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     //   easy. related to the view/edit rate in accessstats.
     public function userstats()
     {
-        $dbi = $this->_dbi;
-        $h = 0;
+        $dbi       = $this->_dbi;
+        $h         = 0;
         $page_iter = $dbi->getAllPages(true);
         while ($page = $page_iter->next()) {
             if ($page->isUserPage(true)) { // check if the admin is there. if not add him to the authusers.
                 $h++;
             }
         }
-        $s  = sprintf(_("%d homepages"), $h);
+        $s = sprintf(_("%d homepages"), $h);
         // $s  .= ", " . sprintf(_("%d anonymous users"), $au); // ??
         // $s  .= ", " . sprintf(_("%d anonymous edits"), $ae); // see recentchanges
         // $s  .= ", " . sprintf(_("%d authenticated users"), $auth); // users with password set
@@ -184,14 +184,14 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     {
         sort($hits);
         reset($hits);
-        $n = count($hits);
+        $n   = count($hits);
         $max = 0;
         $min = 9999999999999;
         $sum = 0;
         foreach ($hits as $h) {
             $sum += $h;
-            $max = max($h, $max);
-            $min = min($h, $min);
+            $max  = max($h, $max);
+            $min  = min($h, $min);
         }
         $median_i = (int) $n / 2;
         if (! ($n / 2)) {
@@ -199,7 +199,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         } else {
             $median = $hits[$median_i];
         }
-        $treshold = 10;
+        $treshold    = 10;
         $mintreshold = $max * $treshold / 100.0;   // lower than 10% of the hits
         reset($hits);
         $nmin = $hits[0] < $mintreshold ? 1 : 0;
@@ -233,8 +233,8 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     //  %d pages more than 100 hits (>90%)  >90% percent of the mostpopular
     public function hitstats()
     {
-        $dbi = $this->_dbi;
-        $hits = [];
+        $dbi       = $this->_dbi;
+        $hits      = [];
         $page_iter = $dbi->getAllPages(true);
         while ($page = $page_iter->next()) {
             if (
@@ -245,7 +245,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
             }
         }
         $treshold = 10.0;
-        $stats = $this->_stats($hits, $treshold);
+        $stats    = $this->_stats($hits, $treshold);
 
         $s  = sprintf(_("total hits: %d"), $stats['sum']);
         $s .= ", " . sprintf(_("max: %d"), $stats['max']);
@@ -282,7 +282,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     public function available_plugins()
     {
         $fileset = new fileSet(FindFile('lib/plugin'), '*.php');
-        $list = $fileset->getFiles();
+        $list    = $fileset->getFiles();
         natcasesort($list);
         reset($list);
         return sprintf(_("Total %d plugins: "), count($list))
@@ -340,9 +340,9 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     {
         // don't parse argstr for name=value pairs. instead we use just 'name'
         //$args = $this->getArgs($argstr, $request);
-        $this->_dbi = $dbi;
+        $this->_dbi        = $dbi;
         $args['seperator'] = ' ';
-        $availableargs = // name => callback + 0 args
+        $availableargs     = // name => callback + 0 args
              ['appname' => function () {
                 return 'PhpWiki';
              },
@@ -394,7 +394,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
 //                           '' => _(""),
                              '' => ""
                              ];
-            $table = HTML::table(['border' => 1,'cellspacing' => 3,
+            $table   = HTML::table(['border' => 1,'cellspacing' => 3,
                                        'cellpadding' => 3]);
             foreach ($allargs as $arg => $desc) {
                 if (! $arg) {
@@ -436,7 +436,7 @@ function median($hits)
 {
     sort($hits);
     reset($hits);
-    $n = count($hits);
+    $n      = count($hits);
     $median = (int) $n / 2;
     if (! ($n % 2)) { // proper rounding on even length
         return ($hits[$median] + $hits[$median - 1]) * 0.5;
@@ -474,7 +474,7 @@ function stddev(&$hits, $total = false)
         $total = array_reduce($hits, 'rsum');
     }
     $mean = $total / $n;
-    $r = array_map(function ($i) use ($mean) {
+    $r    = array_map(function ($i) use ($mean) {
         return ($i - $mean) * ($i - $mean);
     },
                    $hits);

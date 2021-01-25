@@ -57,7 +57,7 @@ final class SiteDeployFPMTest extends TestCase
 
     protected function setUp(): void
     {
-        $base_dir = $this->getTmpDir();
+        $base_dir                         = $this->getTmpDir();
         $this->php73_configuration_folder = $base_dir . '/etc/opt/remi/php73';
         mkdir($this->php73_configuration_folder . '/php-fpm.d', 0755, true);
         $this->php74_configuration_folder = $base_dir . '/etc/opt/remi/php74';
@@ -67,7 +67,7 @@ final class SiteDeployFPMTest extends TestCase
         $tuleap_conf_dir = $base_dir . '/etc/tuleap/conf';
         mkdir($tuleap_conf_dir, 0755, true);
         $this->tuleap_redis_conf_file = $tuleap_conf_dir . '/redis.inc';
-        $this->current_user = posix_getpwuid(posix_geteuid())['name'];
+        $this->current_user           = posix_getpwuid(posix_geteuid())['name'];
     }
 
     public function testDeployPHP73Prod(): void

@@ -85,9 +85,9 @@ class SystemControlCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $action       = $input->getArgument('action');
+        $action = $input->getArgument('action');
         assert(is_string($action));
-        $targets      = $input->getArgument('targets');
+        $targets = $input->getArgument('targets');
         assert(is_array($targets));
 
         $error_output = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
@@ -152,8 +152,8 @@ class SystemControlCommand extends Command
     private function formatErrorMessage(SystemControlInterface $command): string
     {
         $error_message = '<error>Error while running `' . $command->getCommandLine() . '`';
-        $stdout = $command->getOutput();
-        $stderr = $command->getErrorOutput();
+        $stdout        = $command->getOutput();
+        $stderr        = $command->getErrorOutput();
         if ($stdout && $stderr) {
             $error_message .= PHP_EOL . 'Got on stdout:' . PHP_EOL;
             $error_message .= $this->addTrailingCRLFWhenMissing($stdout);

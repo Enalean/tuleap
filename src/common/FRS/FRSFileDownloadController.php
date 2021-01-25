@@ -73,7 +73,7 @@ final class FRSFileDownloadController extends DispatchablePSR15Compatible implem
     {
         $file_id = (int) $request->getAttribute('file_id');
 
-        $file  = $this->file_factory->getFRSFileFromDb($file_id);
+        $file = $this->file_factory->getFRSFileFromDb($file_id);
 
         if ($file === null) {
             throw new NotFoundException(_('The file cannot be found'));

@@ -31,7 +31,7 @@ class NewsBytesDao extends DataAccessObject
     public function searchByForumId($forum_id)
     {
         $forum_id = $this->da->quoteSmart($forum_id);
-        $sql = "SELECT group_id
+        $sql      = "SELECT group_id
                 FROM $this->table_name
                 WHERE forum_id = $forum_id";
         return $this->retrieve($sql);

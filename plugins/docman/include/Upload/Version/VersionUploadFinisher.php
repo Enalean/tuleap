@@ -135,7 +135,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->lock_factory                   = $lock_factory;
         $this->approval_table_updater         = $approval_table_updater;
         $this->approval_table_retriever       = $approval_table_retriever;
-        $this->approval_table_action_checker = $approval_table_action_checker;
+        $this->approval_table_action_checker  = $approval_table_action_checker;
     }
 
     public function finishUpload(TusFileInformation $file_information): void

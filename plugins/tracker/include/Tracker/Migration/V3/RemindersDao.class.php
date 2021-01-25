@@ -36,7 +36,7 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
                 WHERE group_artifact_id = $tv3_id";
         foreach ($this->retrieve($sql) as $old_date_reminder) {
             $ugroups = $this->extractUgroups($old_date_reminder['notified_people']);
-            $roles = $this->extractTrackerRoles($old_date_reminder['notified_people']);
+            $roles   = $this->extractTrackerRoles($old_date_reminder['notified_people']);
             if (! $ugroups && ! $roles) {
                 continue;
             }
@@ -81,23 +81,23 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
 
         $distance = $start - $i * $frequency;
         if ($distance < 0) {
-            $distance = abs($distance);
+            $distance          = abs($distance);
             $notification_type = Tracker_DateReminder::AFTER;
         }
-        $sql = "INSERT INTO tracker_reminder (tracker_id, field_id, ugroups, notification_type, distance, status)
+        $sql        = "INSERT INTO tracker_reminder (tracker_id, field_id, ugroups, notification_type, distance, status)
                 VALUES ($tv5_id, $field_id, $ugroups,  $notification_type, $distance, $status)";
         $reminderId = $this->updateAndGetLastId($sql);
         if ($reminderId && ! empty($roles)) {
             $values = [];
             foreach ($roles as $role) {
-                $role = (int) $this->da->escapeInt($role);
+                $role     = (int) $this->da->escapeInt($role);
                 $values[] = " (
                         " . $reminderId . ",
                         " . $role . "
                     )";
             }
             $values = implode(', ', $values);
-            $sql = "INSERT INTO tracker_reminder_notified_roles
+            $sql    = "INSERT INTO tracker_reminder_notified_roles
                         (
                         reminder_id,
                         role_id
@@ -139,7 +139,7 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
     {
         $roles = [];
         foreach (explode(',', $notified_people) as $id) {
-            $id = trim($id);
+            $id   = trim($id);
             $role = ["1", "2", "4"];
             if (in_array($id, $role)) {
                 $roles[] = ($id == "4") ? "3" : $id;

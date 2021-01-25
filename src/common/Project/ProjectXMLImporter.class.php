@@ -142,9 +142,9 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
     public static function build(\User\XML\Import\IFindUserFromXMLReference $user_finder, ProjectCreator $project_creator, ?\Psr\Log\LoggerInterface $logger = null): self
     {
-        $event_manager           = EventManager::instance();
-        $user_manager            = UserManager::instance();
-        $ugroup_manager          = new UGroupManager();
+        $event_manager  = EventManager::instance();
+        $user_manager   = UserManager::instance();
+        $ugroup_manager = new UGroupManager();
         if ($logger) {
             $logger = new BrokerLogger([$logger, self::getLogger()]);
         } else {
@@ -339,7 +339,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->logger->info('Start collecting errors from file ' . $xml_file_path);
 
         $xml_element = $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath($xml_file_path);
-        $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
+        $project     = $this->project_manager->getValidProjectByShortNameOrId($project_id);
 
         return $this->collectBlockingErrorsWithoutImportingContent($project, $xml_element);
     }
@@ -496,7 +496,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
      */
     private function getUgroupsFromXMLToAdd(Project $project, SimpleXMLElement $xml_element_ugroups)
     {
-        $ugroups = [];
+        $ugroups         = [];
         $project_members = [];
 
         $rng_path = realpath(dirname(__FILE__) . '/../xml/resources/ugroups.rng');

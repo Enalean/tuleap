@@ -101,12 +101,12 @@ class UserHistoryEntryRepresentation
 
     public static function build(HistoryEntry $entry): self
     {
-        $small_icon = null;
+        $small_icon       = null;
         $glyph_small_icon = $entry->getSmallIcon();
         if ($glyph_small_icon !== null) {
             $small_icon = $glyph_small_icon->getInlineString();
         }
-        $icon = null;
+        $icon              = null;
         $glyph_normal_icon = $entry->getNormalIcon();
         if ($glyph_normal_icon !== null) {
             $icon = $glyph_normal_icon->getInlineString();
@@ -115,7 +115,7 @@ class UserHistoryEntryRepresentation
         $quick_links = [];
         foreach ($entry->getQuickLinks() as $quick_link) {
             $quick_link_representation = UserHistoryQuickLinkRepresentation::build($quick_link);
-            $quick_links[] = $quick_link_representation;
+            $quick_links[]             = $quick_link_representation;
         }
 
         return new self(

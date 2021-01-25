@@ -115,7 +115,7 @@ class ValueFormatter
     ) {
         foreach ($matching_field_names as $field_name) {
             $search[] = '%' . $field_name;
-            $field = $this->factory->getUsedFieldByNameForUser($artifact_link_info->getTrackerId(), $field_name, $user);
+            $field    = $this->factory->getUsedFieldByNameForUser($artifact_link_info->getTrackerId(), $field_name, $user);
             if (! $field) {
                 throw new NoFieldToFormatException();
             } else {

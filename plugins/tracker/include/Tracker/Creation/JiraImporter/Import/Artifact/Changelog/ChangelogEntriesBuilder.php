@@ -56,7 +56,7 @@ class ChangelogEntriesBuilder
 
         $changelog_entries = [];
 
-        $changelog_response = $this->wrapper->getUrl(
+        $changelog_response       = $this->wrapper->getUrl(
             $this->getChangelogUrl($jira_issue_key, null, null)
         );
         $changelog_representation = ChangelogResponseRepresentation::buildFromAPIResponse($changelog_response);
@@ -72,7 +72,7 @@ class ChangelogEntriesBuilder
             $max_results = $changelog_representation->getMaxResults();
             $start_at    = $max_results * $count_loop;
 
-            $changelog_response = $this->wrapper->getUrl(
+            $changelog_response       = $this->wrapper->getUrl(
                 $this->getChangelogUrl($jira_issue_key, $start_at, $max_results)
             );
             $changelog_representation = ChangelogResponseRepresentation::buildFromAPIResponse($changelog_response);

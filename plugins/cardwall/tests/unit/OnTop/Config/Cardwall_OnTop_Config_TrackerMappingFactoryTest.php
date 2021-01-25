@@ -33,14 +33,14 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
         $this->field_124    = $this->buildSelectBoxField(124);
         $this->status_field = $this->buildSelectBoxField(125);
 
-        $group_id           = 234;
-        $this->tracker      = Mockery::mock(Tracker::class);
+        $group_id      = 234;
+        $this->tracker = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(3);
         $this->tracker->shouldReceive('getGroupId')->andReturn($group_id);
-        $this->tracker_10   = Mockery::mock(Tracker::class);
+        $this->tracker_10 = Mockery::mock(Tracker::class);
         $this->tracker_10->shouldReceive('getId')->andReturn(10);
         $this->tracker_10->shouldReceive('getStatusField')->andReturn($this->status_field);
-        $this->tracker_20   = Mockery::mock(Tracker::class);
+        $this->tracker_20 = Mockery::mock(Tracker::class);
         $this->tracker_20->shouldReceive('getId')->andReturn(20);
         $this->tracker_20->shouldReceive('getStatusField')->andReturn(null);
         $project_trackers = [

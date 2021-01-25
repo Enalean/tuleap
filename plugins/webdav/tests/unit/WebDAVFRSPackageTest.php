@@ -92,7 +92,7 @@ class WebDAVFRSPackageTest extends TestCase
      */
     public function testGetChildFailWithNotExist(): void
     {
-        $FRSRelease = \Mockery::spy(FRSRelease::class);
+        $FRSRelease    = \Mockery::spy(FRSRelease::class);
         $WebDAVRelease = \Mockery::spy(\WebDAVFRSRelease::class);
         $WebDAVRelease->shouldReceive('exist')->andReturns(false);
 
@@ -112,7 +112,7 @@ class WebDAVFRSPackageTest extends TestCase
      */
     public function testGetChildFailWithUserCanNotRead(): void
     {
-        $FRSRelease = \Mockery::spy(FRSRelease::class);
+        $FRSRelease    = \Mockery::spy(FRSRelease::class);
         $WebDAVRelease = \Mockery::spy(\WebDAVFRSRelease::class);
         $WebDAVRelease->shouldReceive('exist')->andReturns(true);
         $WebDAVRelease->shouldReceive('userCanRead')->andReturns(false);
@@ -134,7 +134,7 @@ class WebDAVFRSPackageTest extends TestCase
      */
     public function testSucceedGetChild(): void
     {
-        $FRSRelease = \Mockery::spy(FRSRelease::class);
+        $FRSRelease    = \Mockery::spy(FRSRelease::class);
         $WebDAVRelease = \Mockery::spy(\WebDAVFRSRelease::class);
         $WebDAVRelease->shouldReceive('exist')->andReturns(true);
         $WebDAVRelease->shouldReceive('userCanRead')->andReturns(true);
@@ -155,7 +155,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadFailurePackageDeletedUserHaveNoPermissions(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => false]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => false]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(false);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -170,7 +170,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadFailureActiveUserCanNotRead(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => false, 'isHidden' => false]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => false, 'isHidden' => false]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(false);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -185,7 +185,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadFailureDeletedUserCanRead(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => false]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => false]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(false);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -200,7 +200,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadSucceedActiveUserCanRead(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => true, 'isHidden' => false]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => true, 'isHidden' => false]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(false);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -215,7 +215,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadFailureHiddenNotAdmin(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => true]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => true]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(false);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -230,7 +230,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadFailureHiddenNotAdminUserCanRead(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => true]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => true]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(false);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -245,7 +245,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadFailureDeletedUserIsAdmin(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => false]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => false]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(true);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -261,7 +261,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadFailureAdminHaveNoPermission(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => false, 'isHidden' => false]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => false, 'isHidden' => false]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(true);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -276,7 +276,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadFailureDeletedCanReadIsAdmin(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => false]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => false]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(true);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -291,7 +291,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadSucceedActiveUserCanReadIsAdmin(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => true, 'isHidden' => false]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => true, 'isHidden' => false]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(true);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -306,7 +306,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadSucceedHiddenUserIsAdmin(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => true]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => true]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(true);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -321,7 +321,7 @@ class WebDAVFRSPackageTest extends TestCase
     public function testUserCanReadSucceedHiddenUserIsAdminCanRead(): void
     {
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => true]);
+        $package          = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => true]);
         $webDAVFRSPackage->shouldReceive('userIsAdmin')->andReturns(true);
 
         $webDAVFRSPackage->shouldReceive('getPackage')->andReturns($package);
@@ -406,7 +406,7 @@ class WebDAVFRSPackageTest extends TestCase
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSPackage->shouldReceive('userCanWrite')->andReturns(false);
         $packageFactory = \Mockery::spy(\FRSPackageFactory::class);
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils          = \Mockery::spy(\WebDAVUtils::class);
         $utils->shouldReceive('getPackageFactory')->andReturns($packageFactory);
         $webDAVFRSPackage->shouldReceive('getUtils')->andReturns($utils);
         $project = \Mockery::spy(\Project::class);
@@ -499,7 +499,7 @@ class WebDAVFRSPackageTest extends TestCase
                                     'changes'    => '',
                                     'status_id'  => 1];
         // Values we expect for the package once created
-        $refPackage = $refPackageToCreate;
+        $refPackage               = $refPackageToCreate;
         $refPackage['release_id'] = 15;
 
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();

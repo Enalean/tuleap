@@ -117,7 +117,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         $link_properties = null;
         if ($this->isADirectAccessToDocument($params)) {
             $link_properties = $this->buildLinkProperties($item);
-            $version = null;
+            $version         = null;
             if ($item->getCurrentVersion()) {
                 $version = $item->getCurrentVersion()->getNumber();
             }
@@ -149,7 +149,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         $item_version    = $this->docman_version_factory->getCurrentVersionForItem($item);
         $file_properties = null;
         if ($item_version) {
-            $download_href    = $this->buildFileDirectAccessURL($item);
+            $download_href   = $this->buildFileDirectAccessURL($item);
             $file_properties = FilePropertiesRepresentation::build($item_version, $download_href);
         }
         return $this->item_representation_builder->buildItemRepresentation(
@@ -185,7 +185,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         $item_version             = $this->docman_version_factory->getCurrentVersionForItem($item);
         $file_embedded_properties = null;
         if ($item_version) {
-            $content                  = file_get_contents($item_version->getPath());
+            $content = file_get_contents($item_version->getPath());
             if ($this->isADirectAccessToDocument($params)) {
                 $file_embedded_properties = EmbeddedFilePropertiesFullRepresentation::build($item_version, $content);
             } else {

@@ -15,8 +15,8 @@
 class StockPlot extends Plot
 {
     protected $iTupleSize = 4;
-    private $iWidth = 9;
-    private $iEndLines = 1;
+    private $iWidth       = 9;
+    private $iEndLines    = 1;
     private $iStockColor1 = 'white';
     private $iStockColor2 = 'darkred';
     private $iStockColor3 = 'darkred';
@@ -36,7 +36,7 @@ class StockPlot extends Plot
 
     public function SetColor($aColor, $aColor1 = 'white', $aColor2 = 'darkred', $aColor3 = 'darkred')
     {
-        $this->color = $aColor;
+        $this->color        = $aColor;
         $this->iStockColor1 = $aColor1;
         $this->iStockColor2 = $aColor2;
         $this->iStockColor3 = $aColor3;
@@ -92,7 +92,7 @@ class StockPlot extends Plot
             $xs = 0;
         }
 
-        $ts = $this->iTupleSize;
+        $ts              = $this->iTupleSize;
         $this->csimareas = '';
         for ($i = 0; $i < $n; ++$i) {
             //If value is NULL, then don't draw a bar at all
@@ -110,7 +110,7 @@ class StockPlot extends Plot
             }
             $xt = $xscale->Translate($x);
 
-            $neg = $this->coords[0][$i * $ts] > $this->coords[0][$i * $ts + 1];
+            $neg    = $this->coords[0][$i * $ts] > $this->coords[0][$i * $ts + 1];
             $yopen  = $yscale->Translate($this->coords[0][$i * $ts]);
             $yclose = $yscale->Translate($this->coords[0][$i * $ts + 1]);
             $ymin   = $yscale->Translate($this->coords[0][$i * $ts + 2]);
@@ -136,10 +136,10 @@ class StockPlot extends Plot
             $img->Rectangle($xl, $yopen, $xr, $yclose);
 
             if ($yopen < $yclose) {
-                $ytop = $yopen;
+                $ytop    = $yopen;
                 $ybottom = $yclose;
             } else {
-                $ytop = $yclose;
+                $ytop    = $yclose;
                 $ybottom = $yopen;
             }
             $img->SetColor($this->color);
@@ -162,7 +162,7 @@ class StockPlot extends Plot
                 round($xr) . ',' . round($ybottom) . '" ';
                 $this->csimareas .= ' href="' . $this->csimtargets[$i] . '"';
                 if (! empty($this->csimalts[$i])) {
-                    $sval = $this->csimalts[$i];
+                    $sval             = $this->csimalts[$i];
                     $this->csimareas .= " title=\"$sval\" alt=\"$sval\" ";
                 }
                 $this->csimareas .= "  />\n";

@@ -29,7 +29,7 @@ class ForumML_Attachment
         $attach = null;
         $dar    = $this->getDao()->getById($id);
         if ($dar && ! $dar->isError()) {
-            $attch = $dar->current();
+            $attch         = $dar->current();
             $attch['type'] = $this->getType($attch);
         }
         return $attch;

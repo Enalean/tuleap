@@ -51,7 +51,7 @@ class Notification extends Pane
         CollectionOfUgroupToBeNotifiedPresenterBuilder $group_to_be_notified_builder
     ) {
         parent::__construct($repository, $request);
-        $this->user_to_be_notified_builder = $user_to_be_notified_builder;
+        $this->user_to_be_notified_builder  = $user_to_be_notified_builder;
         $this->group_to_be_notified_builder = $group_to_be_notified_builder;
     }
 
@@ -90,7 +90,7 @@ class Notification extends Pane
             )
         );
         $html    .= $this->getPluginNotifications();
-        $assets = new IncludeAssets(__DIR__ . "/../../../../../../src/www/assets/git", "/assets/git");
+        $assets   = new IncludeAssets(__DIR__ . "/../../../../../../src/www/assets/git", "/assets/git");
         $GLOBALS['Response']->includeFooterJavascriptFile($assets->getFileURL('repo-admin-notifications.js'));
 
         return $html;

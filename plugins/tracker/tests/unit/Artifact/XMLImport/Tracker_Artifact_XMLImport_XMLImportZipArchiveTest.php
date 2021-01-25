@@ -53,7 +53,7 @@ final class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends \PHPUnit\
         $this->tmp_dir      =  $this->getTmpDir();
         $this->fixtures_dir = __DIR__ . '/_fixtures';
         $this->tracker_id   = 1;
-        $tracker = Mockery::mock(Tracker::class);
+        $tracker            = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(1);
         $this->tracker = $tracker;
 
@@ -94,7 +94,7 @@ final class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends \PHPUnit\
     public function testItEnsuresThatTemporaryDirectoryIsNotReadableByEveryone(): void
     {
         $extraction_path = $this->archive->getExtractionPath();
-        $perms = fileperms($extraction_path) & 0777;
+        $perms           = fileperms($extraction_path) & 0777;
         $this->assertEquals(0700, $perms);
     }
 

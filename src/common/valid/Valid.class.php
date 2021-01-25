@@ -62,11 +62,11 @@ class Valid
      */
     public function __construct($key = null)
     {
-        $this->key = $key;
-        $this->errors = [];
-        $this->rules = [];
-        $this->isRequired = false;
-        $this->useFeedback = true;
+        $this->key                = $key;
+        $this->errors             = [];
+        $this->rules              = [];
+        $this->isRequired         = false;
+        $this->useFeedback        = true;
         $this->globalErrorMessage = null;
         $this->isValid;
     }
@@ -206,7 +206,7 @@ class Valid
     public function checkEachRules($value)
     {
         $isValid = true;
-        $rCtr = count($this->rules);
+        $rCtr    = count($this->rules);
         for ($i = 0; $i < $rCtr; $i++) {
             $valid = $this->rules[$i]->isValid($value);
             $this->errorMessage($i, $valid);

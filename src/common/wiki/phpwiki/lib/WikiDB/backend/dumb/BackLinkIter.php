@@ -14,16 +14,16 @@ class WikiDB_backend_dumb_BackLinkIter extends WikiDB_backend_iterator
 {
     public function __construct(&$backend, &$all_pages, $pagename)
     {
-        $this->_pages = $all_pages;
+        $this->_pages   = $all_pages;
         $this->_backend = &$backend;
-        $this->_target = $pagename;
+        $this->_target  = $pagename;
     }
 
     public function next()
     {
         while ($page = $this->_pages->next()) {
             $pagename = $page['pagename'];
-            $links = $this->_backend->get_links($pagename, false);
+            $links    = $this->_backend->get_links($pagename, false);
             while ($link = $links->next()) {
                 if ($link['pagename'] == $this->_target) {
                     $links->free();

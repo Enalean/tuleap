@@ -224,7 +224,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
     public function testTheValueIndexedByFieldNameIsReturned(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
-        $value = [
+        $value       = [
             'field_id' => 876,
             'value'    => 3.14,
         ];

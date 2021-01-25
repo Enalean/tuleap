@@ -148,7 +148,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     public function forceFetchAllValues()
     {
         $this->values = [];
-        $factory = $this->getFormElementFactory();
+        $factory      = $this->getFormElementFactory();
         foreach ($this->getValueDao()->searchById($this->id) as $row) {
             if ($field = $factory->getFieldById($row['field_id'])) {
                 $this->values[$field->getId()] = $field->getChangesetValue($this, $row['id'], $row['has_changed']);
@@ -175,7 +175,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     protected function deleteValues()
     {
         $value_dao = $this->getValueDao();
-        $factory = $this->getFormElementFactory();
+        $factory   = $this->getFormElementFactory();
         foreach ($value_dao->searchById($this->id) as $row) {
             if ($field = $factory->getFieldById($row['field_id'])) {
                 $field->deleteChangesetValue($this, $row['id']);
@@ -216,9 +216,9 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         //The comment
         if ($comment = $this->getComment()) {
             $follow_up = $comment->fetchFollowUp($current_user);
-            $html .= '<div class="tracker_artifact_followup_comment">';
-            $html .= $follow_up;
-            $html .= '</div>';
+            $html     .= '<div class="tracker_artifact_followup_comment">';
+            $html     .= $follow_up;
+            $html     .= '</div>';
 
             if ($follow_up && $diff_to_previous) {
                 $html .= '<hr size="1" />';
@@ -351,11 +351,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     public function getSubmitterUrl()
     {
         if ($this->submitted_by) {
-            $submitter = $this->getSubmitter();
-            $uh = UserHelper::instance();
+            $submitter     = $this->getSubmitter();
+            $uh            = UserHelper::instance();
             $submitter_url = $uh->getLinkOnUser($submitter);
         } else {
-            $hp = Codendi_HTMLPurifier::instance();
+            $hp            = Codendi_HTMLPurifier::instance();
             $submitter_url = $hp->purify($this->email, CODENDI_PURIFIER_BASIC);
         }
 

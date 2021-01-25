@@ -55,7 +55,7 @@ class Admin_UserListExporter
         global $Language;
         header('Content-Type: text/csv');
         header('Content-Disposition:attachment; filename=users_list.csv');
-        $eol = "\n";
+        $eol             = "\n";
         $documents_title = [
             'user_id'          => $Language->getText('admin_userlist', 'id_user'),
             'login_name'       => $Language->getOverridableText('include_user_home', 'login_name'),
@@ -67,7 +67,7 @@ class Admin_UserListExporter
             'last_access_date' => $Language->getText('admin_userlist', 'last_access_date'),
         ];
         echo build_csv_header($this->col_list, $documents_title) . $eol;
-        $dao = new UserDao(CodendiDataAccess::instance());
+        $dao    = new UserDao(CodendiDataAccess::instance());
         $result = $dao->listAllUsers($group_id, $user_name_search, 0, 0, $current_sort_header, $sort_order, $status_values);
         $users  = $result['users'];
         echo $this->buildCsvBody($users);
@@ -82,7 +82,7 @@ class Admin_UserListExporter
     private function buildCsvBody($users)
     {
         $csv_body = "";
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp       = Codendi_HTMLPurifier::instance();
         foreach ($users as $user) {
             $documents_body = [
                 'user_id'          => $user['user_id'],
@@ -94,7 +94,7 @@ class Admin_UserListExporter
                 'status'           => $this->getUserStatus($user['status']),
                 'last_access_date' => $this->getLastAccessDate($user['last_access_date']),
             ];
-            $csv_body .= build_csv_record($this->col_list, $documents_body) . "\n";
+            $csv_body      .= build_csv_record($this->col_list, $documents_body) . "\n";
         }
 
         return $csv_body;

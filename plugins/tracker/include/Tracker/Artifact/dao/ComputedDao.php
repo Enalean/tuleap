@@ -49,7 +49,7 @@ class ComputedDao extends FloatValueDao
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $value              = $this->da->escapeFloat($value);
-        $sql = "REPLACE INTO tracker_changeset_value_computedfield_manual_value(changeset_value_id, value)
+        $sql                = "REPLACE INTO tracker_changeset_value_computedfield_manual_value(changeset_value_id, value)
                 VALUES ($changeset_value_id, $value)";
 
         return $this->update($sql);
@@ -59,7 +59,7 @@ class ComputedDao extends FloatValueDao
     {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
-        $sql = "INSERT INTO tracker_changeset_value_computedfield_manual_value(changeset_value_id, value)
+        $sql  = "INSERT INTO tracker_changeset_value_computedfield_manual_value(changeset_value_id, value)
                 SELECT $to, value
                 FROM tracker_changeset_value_computedfield_manual_value
                 WHERE changeset_value_id = $from";

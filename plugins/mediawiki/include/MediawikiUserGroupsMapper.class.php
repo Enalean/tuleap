@@ -68,7 +68,7 @@ class MediawikiUserGroupsMapper
 
     public function __construct(MediawikiDao $dao, User_ForgeUserGroupPermissionsDao $forge_permissions_dao)
     {
-        $this->dao = $dao;
+        $this->dao                   = $dao;
         $this->forge_permissions_dao = $forge_permissions_dao;
     }
 
@@ -124,7 +124,7 @@ class MediawikiUserGroupsMapper
 
     public function getCurrentUserGroupMapping($project)
     {
-        $list = [];
+        $list        = [];
         $data_result = $this->dao->getMediawikiUserGroupMapping($project);
 
         foreach (self::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {

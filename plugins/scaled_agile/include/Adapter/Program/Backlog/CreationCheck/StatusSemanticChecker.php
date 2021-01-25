@@ -52,7 +52,7 @@ final class StatusSemanticChecker implements CheckStatus
         Planning $planning,
         SourceTrackerCollection $source_tracker_collection
     ): bool {
-        $program_top_milestone_tracker = $planning->getPlanningTracker();
+        $program_top_milestone_tracker   = $planning->getPlanningTracker();
         $program_tracker_status_semantic = $this->semantic_status_factory->getByTracker(
             $program_top_milestone_tracker->getFullTracker()
         );

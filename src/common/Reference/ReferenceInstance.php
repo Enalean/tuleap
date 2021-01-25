@@ -39,8 +39,8 @@ class ReferenceInstance
     public function __construct($match, $ref, $value)
     {
         $this->reference = $ref;
-        $this->match = $match;
-        $this->value = $value;
+        $this->match     = $match;
+        $this->value     = $value;
     }
 
     /** Accessors */

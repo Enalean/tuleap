@@ -69,11 +69,11 @@ class Docman_View_LoveDetails
         $html .=  '<tr>';
         $html .=  '<td>' . dgettext('tuleap-docman', 'Rank:') . '</td>';
 
-        $vals = ['beg', 'end', '--'];
+        $vals  = ['beg', 'end', '--'];
         $texts = [dgettext('tuleap-docman', 'At the beginning'),
                        dgettext('tuleap-docman', 'At the end'),
                        '----'];
-        $i = 3;
+        $i     = 3;
 
         $vIter = $this->md->getListOfValueIterator();
         $vIter->rewind();

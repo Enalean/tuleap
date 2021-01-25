@@ -30,14 +30,14 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
     {
         $this->_controller = $controller;
 
-        $id = 'statistics';
+        $id    = 'statistics';
         $title = dgettext('tuleap-docman', 'Statistics');
         parent::__construct($item, $url, $id, $title);
     }
 
     public function _getPropertyRow($label, $value)
     {
-        $html = '';
+        $html  = '';
         $html .= '<tr style="vertical-align:top;">';
         $html .= '<td class="label">' . $label . '</td>';
         $html .= '<td class="value">' . $value . '</td>';
@@ -50,7 +50,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         $html = '';
 
         if (is_a($this->item, 'Docman_Folder')) {
-            $if = Docman_ItemFactory::instance($this->_controller->getGroupId());
+            $if    = Docman_ItemFactory::instance($this->_controller->getGroupId());
             $stats = $if->getFolderStats($this->item, $this->_controller->getUser());
 
             $size =  $this->convertBytesToHumanReadable($stats['size']);
@@ -90,7 +90,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
                             $label = dgettext('tuleap-docman', 'Folders:');
                             break;
                     }
-                    $html  .= $this->_getPropertyRow($label, $stat);
+                    $html .= $this->_getPropertyRow($label, $stat);
                 }
                 $html .= '</table>';
             }
@@ -101,7 +101,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
 
     public function getContent($params = [])
     {
-        $html = '<div class="docman_help">' . dgettext('tuleap-docman', '<ul><li>The whole folder sub-tree is taken in account for these statistics.</li><li>To compute the size, only the last versions of "file" and "embedded file" documents are taken in account.</li></ul>') . '</div>';
+        $html  = '<div class="docman_help">' . dgettext('tuleap-docman', '<ul><li>The whole folder sub-tree is taken in account for these statistics.</li><li>To compute the size, only the last versions of "file" and "embedded file" documents are taken in account.</li></ul>') . '</div>';
         $html .= $this->_getStatisticsFields($params);
         return $html;
     }
@@ -117,7 +117,7 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
             }
             $displayedSize = round($bytes / pow(1024, floor($e)), 2);
         } else {
-            $e = 0;
+            $e             = 0;
             $displayedSize = 0;
         }
 

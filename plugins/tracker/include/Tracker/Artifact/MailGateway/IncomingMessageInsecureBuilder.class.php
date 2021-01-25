@@ -50,19 +50,19 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder
      */
     public function build(IncomingMail $incoming_mail)
     {
-        $subject        = $incoming_mail->getSubject();
-        $body           = $incoming_mail->getBodyText();
-        $user           = $this->getUserFromMailHeader($incoming_mail);
-        $address_array  = array_merge($incoming_mail->getTo(), $incoming_mail->getCC());
-        $mail_receiver  = $this->searchRightMail($address_array);
-        $is_a_followup  = $this->isAFollowUp($mail_receiver);
+        $subject       = $incoming_mail->getSubject();
+        $body          = $incoming_mail->getBodyText();
+        $user          = $this->getUserFromMailHeader($incoming_mail);
+        $address_array = array_merge($incoming_mail->getTo(), $incoming_mail->getCC());
+        $mail_receiver = $this->searchRightMail($address_array);
+        $is_a_followup = $this->isAFollowUp($mail_receiver);
 
         if ($is_a_followup) {
-            $artifact   = $this->getArtifactFromMailHeader($mail_receiver);
-            $tracker    = $artifact->getTracker();
+            $artifact = $this->getArtifactFromMailHeader($mail_receiver);
+            $tracker  = $artifact->getTracker();
         } else {
-            $tracker    = $this->getTrackerFromMailHeader($mail_receiver);
-            $artifact   = null;
+            $tracker  = $this->getTrackerFromMailHeader($mail_receiver);
+            $artifact = null;
         }
 
         $incoming_message = new Tracker_Artifact_MailGateway_IncomingMessage(
@@ -105,7 +105,7 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder
         }
 
         $tracker_id = (int) $mail_userpart[1];
-        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
 
         if ($tracker === null) {
             throw new Tracker_Artifact_MailGateway_TrackerDoesNotExistException();
@@ -126,7 +126,7 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder
         }
 
         $artifact_id = (int) $mail_userpart[1];
-        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+        $artifact    = $this->artifact_factory->getArtifactById($artifact_id);
 
         if ($artifact === null) {
             throw new Tracker_Artifact_MailGateway_ArtifactDoesNotExistException();

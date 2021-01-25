@@ -87,7 +87,7 @@ class KanbanColumnsTest extends TestBase
 
     public function testDELETEKanbanColumnsDeniedForRESTReadOnlyUserNotInvolvedInProject(): void
     {
-        $url = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_OTHER_VALUE_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
+        $url      = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_OTHER_VALUE_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
         $response = $this->getResponse($this->client->delete($url), REST_TestDataBuilder::TEST_BOT_USER_NAME);
 
         $this->assertEquals(403, $response->getStatusCode());

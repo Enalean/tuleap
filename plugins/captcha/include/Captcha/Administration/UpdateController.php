@@ -44,8 +44,8 @@ class UpdateController implements DispatchableWithRequest
 
     public function __construct(ConfigurationSaver $saver)
     {
-        $this->saver         = $saver;
-        $this->csrf_token    = new CSRFSynchronizerToken(CAPTCHA_BASE_URL . '/admin/');
+        $this->saver      = $saver;
+        $this->csrf_token = new CSRFSynchronizerToken(CAPTCHA_BASE_URL . '/admin/');
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)

@@ -69,14 +69,14 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
 
     public function setaclPages(&$request, $pages, $acl)
     {
-        $ul = HTML::ul();
+        $ul    = HTML::ul();
         $count = 0;
-        $dbi = $request->_dbi;
+        $dbi   = $request->_dbi;
         // check new_group and new_perm
         if (isset($acl['_add_group'])) {
         //add groups with perm
             foreach ($acl['_add_group'] as $access => $dummy) {
-                $group = $acl['_new_group'][$access];
+                $group                = $acl['_new_group'][$access];
                 $acl[$access][$group] = isset($acl['_new_perm'][$access]) ? 1 : 0;
             }
             unset($acl['_add_group']);
@@ -96,7 +96,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
             $perm->sanify();
             foreach ($pages as $pagename) {
                 // check if unchanged? we need a deep array_equal
-                $page = $dbi->getPage($pagename);
+                $page    = $dbi->getPage($pagename);
                 $oldperm = getPagePermissions($page);
                 if ($oldperm) {
                     $oldperm->sanify();
@@ -142,14 +142,14 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
             return $this->disabled("ENABLE_PAGEPERM = false");
         }
 
-        $args = $this->getArgs($argstr, $request);
+        $args        = $this->getArgs($argstr, $request);
         $this->_args = $args;
         $this->preSelectS($args, $request);
 
-        $p = $request->getArg('p');
-        $post_args = $request->getArg('admin_setacl');
+        $p           = $request->getArg('p');
+        $post_args   = $request->getArg('admin_setacl');
         $next_action = 'select';
-        $pages = [];
+        $pages       = [];
         if ($p && ! $request->isPost()) {
             $pages = $p;
         } elseif ($this->_list) {
@@ -204,7 +204,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         $pagelist->addPageList($pages);
         if ($next_action == 'verify') {
             $button_label = _("Yes");
-            $header = $this->setaclForm($header, $post_args, $pages);
+            $header       = $this->setaclForm($header, $post_args, $pages);
             $header->pushContent(
                 HTML::p(HTML::strong(
                     _("Are you sure you want to permanently change access to the selected files?")
@@ -212,7 +212,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
             );
         } else {
             $button_label = _("SetAcl");
-            $header = $this->setaclForm($header, $post_args, $pages);
+            $header       = $this->setaclForm($header, $post_args, $pages);
             $header->pushContent(HTML::p(_("Select the pages to change:")));
         }
 
@@ -251,10 +251,10 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
             }
         }
         $perm_tree = pagePermissions($name);
-        $table = pagePermissionsAclFormat($perm_tree, ! empty($pages));
+        $table     = pagePermissionsAclFormat($perm_tree, ! empty($pages));
         $header->pushContent(HTML::strong(_("Selected Pages: ")), HTML::tt(join(', ', $pages)), HTML::br());
-        $first_page = $GLOBALS['request']->_dbi->getPage($name);
-        $owner = $first_page->getOwner();
+        $first_page        = $GLOBALS['request']->_dbi->getPage($name);
+        $owner             = $first_page->getOwner();
         list($type, $perm) = pagePermissionsAcl($perm_tree[0], $perm_tree);
         //if (DEBUG) $header->pushContent(HTML::pre("Permission tree for $name:\n",print_r($perm_tree,true)));
         if ($type == 'inherited') {

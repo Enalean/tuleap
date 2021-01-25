@@ -59,7 +59,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         if (empty($id)) {
             return false;
         }
-        $sql = 'SELECT repository_id
+        $sql    = 'SELECT repository_id
                 FROM plugin_git
                 WHERE repository_id = ? AND repository_deletion_date = "0000-00-00 00:00:00"';
         $result = $this->getDB()->run($sql, $id);
@@ -80,16 +80,16 @@ class GitDao extends \Tuleap\DB\DataAccessObject
 
     public function save(GitRepository $repository)
     {
-        $id          = (int) $repository->getId();
+        $id = (int) $repository->getId();
 
-        $name        = $repository->getName();
-        $mailPrefix  = $repository->getMailPrefix();
-        $parentId    = 0;
-        $scope       = $repository->getScope();
-        $namespace   = $repository->getNamespace();
+        $name       = $repository->getName();
+        $mailPrefix = $repository->getMailPrefix();
+        $parentId   = 0;
+        $scope      = $repository->getScope();
+        $namespace  = $repository->getNamespace();
 
         try {
-            $parent   = $repository->getParent();
+            $parent = $repository->getParent();
             if (! empty($parent)) {
                 $parentId = $parent->getId();
             }
@@ -163,7 +163,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         $deletionDate = $repository->getDeletionDate();
         $projectName  = $repository->getProject()->getUnixName();
         $backup_path  = str_replace('/', '_', $repository->getFullName());
-        $backup_path  .= '_' . strtotime($deletionDate);
+        $backup_path .= '_' . strtotime($deletionDate);
         $backup_path  = $projectName . '_' . $backup_path;
 
         try {
@@ -452,7 +452,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         $project = ProjectManager::instance()->getProject($result[self::FK_PROJECT_ID]);
         $repository->setProject($project);
         $repository->setCreationDate($result[self::REPOSITORY_CREATION_DATE]);
-        $user    = UserManager::instance()->getUserById($result[self::REPOSITORY_CREATION_USER_ID]);
+        $user = UserManager::instance()->getUserById($result[self::REPOSITORY_CREATION_USER_ID]);
         $repository->setCreator($user);
         $repository->setIsInitialized($result[self::REPOSITORY_IS_INITIALIZED]);
         $repository->setDeletionDate($result[self::REPOSITORY_DELETION_DATE]);
@@ -582,7 +582,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
      */
     public function isRemoteServerUsed($remote_server_id)
     {
-        $sql = 'SELECT NULL
+        $sql  = 'SELECT NULL
                 FROM plugin_git
                     JOIN groups ON (group_id = project_id)
                 WHERE remote_server_id = ?
@@ -614,7 +614,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     {
         $permission_type_condition = EasyStatement::open()->in('?*', [Git::PERM_READ, Git::PERM_WRITE, Git::PERM_WPLUS]);
         $ugroup_ids_condition      = EasyStatement::open()->in('?*', $ugroup_ids);
-        $sql = "SELECT *
+        $sql                       = "SELECT *
                 FROM plugin_git git
                   JOIN permissions ON (
                     permissions.object_id = CAST(git.repository_id as CHAR CHARACTER SET utf8)

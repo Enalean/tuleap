@@ -23,8 +23,8 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
 
     public function searchByRendererId($renderer_id)
     {
-        $renderer_id  = $this->da->escapeInt($renderer_id);
-        $sql = "SELECT col.*
+        $renderer_id = $this->da->escapeInt($renderer_id);
+        $sql         = "SELECT col.*
                 FROM tracker_report_renderer_table_columns AS col
                     INNER JOIN tracker_field ON (col.field_id = tracker_field.id)
                 WHERE renderer_id = $renderer_id
@@ -97,16 +97,16 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
     {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_renderer_id   = $this->da->escapeInt($to_renderer_id);
-        $sql = "INSERT INTO tracker_report_renderer_table_columns(renderer_id, field_id, width, rank, artlink_nature, artlink_nature_format)
+        $sql              = "INSERT INTO tracker_report_renderer_table_columns(renderer_id, field_id, width, rank, artlink_nature, artlink_nature_format)
                 SELECT $to_renderer_id, field_id, width, rank, artlink_nature, artlink_nature_format
                 FROM tracker_report_renderer_table_columns
                 WHERE renderer_id = $from_renderer_id";
         $this->update($sql);
 
         foreach ($field_mapping as $mapping) {
-            $from  = $this->da->escapeInt($mapping['from']);
-            $to    = $this->da->escapeInt($mapping['to']);
-            $sql = "UPDATE tracker_report_renderer_table_columns
+            $from = $this->da->escapeInt($mapping['from']);
+            $to   = $this->da->escapeInt($mapping['to']);
+            $sql  = "UPDATE tracker_report_renderer_table_columns
                     SET field_id = $to
                     WHERE renderer_id = $to_renderer_id
                       AND field_id = $from";

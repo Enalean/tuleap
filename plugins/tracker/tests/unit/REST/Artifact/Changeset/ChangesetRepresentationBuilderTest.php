@@ -161,7 +161,7 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
 
     public function testItSetsSubmittedByToNullWhenThereIsNone(): void
     {
-        $user      = $this->buildUser();
+        $user = $this->buildUser();
         $this->user_manager->shouldReceive('getUserById')->with(0)->andReturnNull();
         $changeset = $this->buildChangeset(true, 0);
 
@@ -175,7 +175,7 @@ final class ChangesetRepresentationBuilderTest extends \PHPUnit\Framework\TestCa
 
     public function testItSetsLastModifiedByToNullWhenThereIsNone(): void
     {
-        $user      = $this->buildUser();
+        $user = $this->buildUser();
         $this->user_manager->shouldReceive('getUserById')->with(0)->andReturnNull();
         $changeset = $this->buildChangeset(true, 101, 0);
 

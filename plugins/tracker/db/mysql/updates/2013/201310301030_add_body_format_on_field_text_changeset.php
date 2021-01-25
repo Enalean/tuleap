@@ -33,7 +33,7 @@ class b201310301030_add_body_format_on_field_text_changeset extends ForgeUpgrade
 
     public function up()
     {
-        $sql = "ALTER TABLE tracker_changeset_value_text
+        $sql    = "ALTER TABLE tracker_changeset_value_text
                     ADD COLUMN body_format varchar(16) NOT NULL default 'text';";
         $result = $this->db->dbh->exec($sql);
 

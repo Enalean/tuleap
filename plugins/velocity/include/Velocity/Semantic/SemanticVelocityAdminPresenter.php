@@ -135,9 +135,9 @@ class SemanticVelocityAdminPresenter
         $this->are_all_backlog_trackers_misconfigured = $backlog_required_tracker_collection->areAllBacklogTrackersMisconfigured();
 
         $this->has_at_least_one_tracker_correctly_configured = $has_at_least_one_tracker_correctly_configured;
-        $this->nb_semantic_misconfigured = $children_required_tracker_collection->getNbTrackersWithoutVelocitySemantic()
+        $this->nb_semantic_misconfigured                     = $children_required_tracker_collection->getNbTrackersWithoutVelocitySemantic()
             + $backlog_required_tracker_collection->getNbMisconfiguredTrackers();
-        $this->semantics_not_correctly_set = $this->getMisconfiguredSemantics($backlog_required_tracker_collection, $children_required_tracker_collection);
+        $this->semantics_not_correctly_set                   = $this->getMisconfiguredSemantics($backlog_required_tracker_collection, $children_required_tracker_collection);
     }
 
     private function buildPossibleVelocityField(array $possible_velocity_field, $selected_velocity_field_id)

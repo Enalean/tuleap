@@ -91,7 +91,7 @@ class Tracker_Workflow_Trigger_RulesManager
             $cdata = new \XML_SimpleXMLCDATAFactory();
             $cdata->insert($trigger_rule_xml, 'condition', $trigger_rule->getCondition());
 
-            $target = $trigger_rule->getTarget();
+            $target     = $trigger_rule->getTarget();
             $target_xml = $trigger_rule_xml->addChild('target');
             $target_xml->addChild('field_id')->addAttribute('REF', array_search($target->getField()->getId(), $xmlMapping));
             $target_xml->addChild('field_value_id')->addAttribute('REF', array_search($target->getValue()->getId(), $xmlMapping['values']));

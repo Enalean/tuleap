@@ -50,10 +50,10 @@ class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role
      */
     public function getRecipientsFromArtifact(Artifact $artifact)
     {
-        $recipients = [];
+        $recipients  = [];
         $userManager = $artifact->getUserManager();
-        $userId = $artifact->getSubmittedBy();
-        $user = $userManager->getUserById($userId);
+        $userId      = $artifact->getSubmittedBy();
+        $user        = $userManager->getUserById($userId);
         if ($user) {
             $recipients[$userId] = $user;
         }

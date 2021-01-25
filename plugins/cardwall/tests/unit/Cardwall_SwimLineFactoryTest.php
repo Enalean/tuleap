@@ -39,8 +39,8 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->config     = \Mockery::mock(\Cardwall_OnTop_Config::class);
-        $this->factory    = new Cardwall_SwimlineFactory($this->config, \Mockery::spy(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class));
+        $this->config  = \Mockery::mock(\Cardwall_OnTop_Config::class);
+        $this->factory = new Cardwall_SwimlineFactory($this->config, \Mockery::spy(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class));
     }
 
     public function testItReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters(): void
@@ -75,12 +75,12 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testItAsksTheColumnIfItGoesInThere(): void
     {
-        $artifact1 = Mockery::mock(Artifact::class);
-        $artifact2 = Mockery::mock(Artifact::class);
-        $label = $bgcolor = null;
-        $column1   = new Cardwall_Column(55, $label, $bgcolor);
-        $column2   = new Cardwall_Column(100, $label, $bgcolor);
-        $columns   = new Cardwall_OnTop_Config_ColumnCollection([$column1, $column2]);
+        $artifact1             = Mockery::mock(Artifact::class);
+        $artifact2             = Mockery::mock(Artifact::class);
+        $label                 = $bgcolor = null;
+        $column1               = new Cardwall_Column(55, $label, $bgcolor);
+        $column2               = new Cardwall_Column(100, $label, $bgcolor);
+        $columns               = new Cardwall_OnTop_Config_ColumnCollection([$column1, $column2]);
         $cardincell_presenter1 = \Mockery::spy(\Cardwall_CardInCellPresenter::class)->shouldReceive('getArtifact')->andReturns($artifact1)->getMock();
         $cardincell_presenter2 = \Mockery::spy(\Cardwall_CardInCellPresenter::class)->shouldReceive('getArtifact')->andReturns($artifact2)->getMock();
 
@@ -98,10 +98,10 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testItIgnoresPresentersIfThereIsNoMatchingColumn(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $column = new Cardwall_Column(55, null, null);
-        $columns  = new Cardwall_OnTop_Config_ColumnCollection();
-        $columns[] = $column;
+        $artifact             = Mockery::mock(Artifact::class);
+        $column               = new Cardwall_Column(55, null, null);
+        $columns              = new Cardwall_OnTop_Config_ColumnCollection();
+        $columns[]            = $column;
         $cardincell_presenter = \Mockery::spy(\Cardwall_CardInCellPresenter::class)->shouldReceive('getArtifact')->andReturns($artifact)->getMock();
 
         $this->config->shouldReceive('isInColumn')->with($artifact, \Mockery::any(), $column)->andReturns(false);

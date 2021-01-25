@@ -39,7 +39,7 @@ class SystemEvent_MAILING_LIST_DELETE extends SystemEvent
      */
     public function verbalizeParameters($with_link)
     {
-        $txt = '';
+        $txt  = '';
         $txt .= 'mailing list: #' . $this->getIdFromParam($this->parameters);
         return $txt;
     }

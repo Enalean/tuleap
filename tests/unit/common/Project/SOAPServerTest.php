@@ -208,7 +208,7 @@ class SOAPServerTest extends TestCase
         $this->user = \Mockery::spy(\PFUser::class);
         $this->user->shouldReceive('isLoggedIn')->andReturns(true);
 
-        $admin  = \Mockery::spy(\PFUser::class);
+        $admin = \Mockery::spy(\PFUser::class);
         $admin->shouldReceive('isLoggedIn')->andReturns(true);
         $admin->shouldReceive('isSuperUser')->andReturns(true);
 

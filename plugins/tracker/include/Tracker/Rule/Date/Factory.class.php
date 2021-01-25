@@ -35,7 +35,7 @@ class Tracker_Rule_Date_Factory
 
     public function __construct(Tracker_Rule_Date_Dao $dao, Tracker_FormElementFactory $element_factory)
     {
-        $this->dao = $dao;
+        $this->dao             = $dao;
         $this->element_factory = $element_factory;
     }
 
@@ -183,7 +183,7 @@ class Tracker_Rule_Date_Factory
     public function exportToXml(SimpleXMLElement $root, array $xmlMapping, $tracker_id)
     {
         $date_rules = $root->addChild('date_rules');
-        $rules = $this->searchByTrackerId($tracker_id);
+        $rules      = $this->searchByTrackerId($tracker_id);
         foreach ($rules as $rule) {
             $source_field_id = array_search($rule->getSourceFieldId(), $xmlMapping);
             $target_field_id = array_search($rule->getTargetFieldId(), $xmlMapping);

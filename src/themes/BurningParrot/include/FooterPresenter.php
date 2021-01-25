@@ -44,7 +44,7 @@ class FooterPresenter
         $is_footer_shown,
         $tuleap_version
     ) {
-        $is_file_already_included = [];
+        $is_file_already_included    = [];
         $is_snippet_already_included = [];
         foreach ($javascript_in_footer as $javascript) {
             if (isset($javascript['file'])) {

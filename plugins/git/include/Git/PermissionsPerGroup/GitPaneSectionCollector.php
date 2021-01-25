@@ -46,8 +46,8 @@ class GitPaneSectionCollector
 
     public function collectSections(PermissionPerGroupPaneCollector $pane_collector)
     {
-        $service_section_presenter     = $this->git_section_builder->buildPresenter($pane_collector);
-        $project                       = $pane_collector->getProject();
+        $service_section_presenter = $this->git_section_builder->buildPresenter($pane_collector);
+        $project                   = $pane_collector->getProject();
 
         $user_group = $this->ugroup_manager->getUGroup($project, $pane_collector->getSelectedUGroupId());
 

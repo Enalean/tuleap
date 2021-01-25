@@ -28,7 +28,7 @@ class Docman_Filter
     public function __construct($md)
     {
         $this->value = \null;
-        $this->md = $md;
+        $this->md    = $md;
     }
     public function setValue($v)
     {

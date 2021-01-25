@@ -56,7 +56,7 @@ class ArtifactCreatedHandler
         $this->program_store                   = $program_store;
         $this->run_program_increment_creation  = $run_program_increment_creation;
         $this->pending_artifact_creation_store = $pending_artifact_creation_store;
-        $this->planning_adapter                 = $planning_adapter;
+        $this->planning_adapter                = $planning_adapter;
     }
 
     public function handle(ArtifactCreated $event): void

@@ -58,11 +58,11 @@ class ArtifactReportField extends ArtifactField
     public function setReportFieldsFromArray($field_array)
     {
      //echo "setReportFieldsFromArray<br>";
-        $this->show_on_query = $field_array['show_on_query'];
+        $this->show_on_query  = $field_array['show_on_query'];
         $this->show_on_result = $field_array['show_on_result'];
-        $this->place_query = $field_array['place_query'];
-        $this->place_result = $field_array['place_result'];
-        $this->col_width = $field_array['col_width'];
+        $this->place_query    = $field_array['place_query'];
+        $this->place_result   = $field_array['place_result'];
+        $this->col_width      = $field_array['col_width'];
     }
 
     /**

@@ -38,7 +38,7 @@ class Widget_Static extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration
      * Title
      * @var String
      */
-    protected $title   = "";
+    protected $title = "";
 
     /**
      * Content
@@ -50,7 +50,7 @@ class Widget_Static extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration
      * Icon
      * @var String
      */
-    protected $icon    = "";
+    protected $icon = "";
 
     /**
      * Icon

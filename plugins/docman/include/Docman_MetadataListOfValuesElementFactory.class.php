@@ -54,11 +54,11 @@ class Docman_MetadataListOfValuesElementFactory
      */
     public function delete(&$love)
     {
-        $dao = $this->getDao();
+        $dao     = $this->getDao();
         $deleted = $dao->delete($love->getId());
         if ($deleted) {
             $mdvFactory = new Docman_MetadataValueFactory(null);
-            $deleted = $mdvFactory->deleteLove($this->metadataId, $love->getId());
+            $deleted    = $mdvFactory->deleteLove($this->metadataId, $love->getId());
         }
         return $deleted;
     }
@@ -67,7 +67,7 @@ class Docman_MetadataListOfValuesElementFactory
     {
         $deleted = false;
         if ($this->metadataId !== null) {
-            $dao = $this->getDao();
+            $dao     = $this->getDao();
             $deleted = $dao->deleteByMetadataId($this->metadataId);
         }
         return $deleted;
@@ -216,9 +216,9 @@ class Docman_MetadataListOfValuesElementFactory
      */
     public function cloneValues(Docman_Metadata $srcMd, Docman_Metadata $dstMd)
     {
-        $valuesMapping = [];
+        $valuesMapping  = [];
         $dstLoveFactory = $this->getMetadataListOfValuesElementFactory($dstMd->getId());
-        $loveArray = $this->getListByFieldId($srcMd->getId(), $srcMd->getLabel(), false);
+        $loveArray      = $this->getListByFieldId($srcMd->getId(), $srcMd->getLabel(), false);
         foreach ($loveArray as $love) {
             if ($love->getId() != 100) {
                 $valuesMapping[$love->getId()] = $dstLoveFactory->create($love);
@@ -287,13 +287,13 @@ class Docman_MetadataListOfValuesElementFactory
         $metadataMapping['love'][0] = 0;
 
         $loveArray = $this->getListByFieldId($md->getId(), $md->getLabel(), true);
-        $loveIter = new ArrayIterator($loveArray);
+        $loveIter  = new ArrayIterator($loveArray);
         $loveIter->rewind();
         while ($loveIter->valid()) {
             $love = $loveIter->current();
 
             $dstLoveFactory = new Docman_MetadataListOfValuesElementFactory($dstMdId);
-            $ei = $dstLoveFactory->getByName($love->getName(), $md->getLabel());
+            $ei             = $dstLoveFactory->getByName($love->getName(), $md->getLabel());
             if ($ei->count() == 1) {
                 // Found exactly one name that match
                 $ei->rewind();
@@ -301,7 +301,7 @@ class Docman_MetadataListOfValuesElementFactory
 
                 // Mapping in both sense to make the usage of the map
                 // easier
-                $metadataMapping['love'][$love->getId()] = $dstLove->getId();
+                $metadataMapping['love'][$love->getId()]    = $dstLove->getId();
                 $metadataMapping['love'][$dstLove->getId()] = $love->getId();
             }
 

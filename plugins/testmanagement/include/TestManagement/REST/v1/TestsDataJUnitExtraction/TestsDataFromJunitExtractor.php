@@ -82,8 +82,8 @@ class TestsDataFromJunitExtractor
         string $build_url
     ): void {
         $test_suite_name = (string) $test_suite['name'];
-        $status = (int) $test_suite['failures'] > 0 ? self::STATUS_FAILURE : self::STATUS_SUCCESS;
-        $time = (int) ($test_suite['time'] ?? 0);
+        $status          = (int) $test_suite['failures'] > 0 ? self::STATUS_FAILURE : self::STATUS_SUCCESS;
+        $time            = (int) ($test_suite['time'] ?? 0);
 
         if (! isset($all_test_results[$test_suite_name])) {
             $all_test_results[$test_suite_name] = new ExtractedTestResultFromJunit();
@@ -122,8 +122,8 @@ class TestsDataFromJunitExtractor
     ): void {
         foreach ($test_suite->testcase as $testcase) {
             $testcase_name = (string) $testcase['name'];
-            $status = $testcase->failure ? self::STATUS_FAILURE : self::STATUS_SUCCESS;
-            $time = (int) ($testcase['time'] ?? 0);
+            $status        = $testcase->failure ? self::STATUS_FAILURE : self::STATUS_SUCCESS;
+            $time          = (int) ($testcase['time'] ?? 0);
 
             if (! isset($all_test_results[$testcase_name])) {
                 $all_test_results[$testcase_name] = new ExtractedTestResultFromJunit();

@@ -43,7 +43,7 @@ function exit_display_soap_error()
     if (array_key_exists('Response', $GLOBALS)) {
         $text = $GLOBALS['Response']->getRawFeedback();
     }
-    $fault_code = "1000";
+    $fault_code   = "1000";
     $fault_factor = 'exit_error';
     $fault_string = strip_tags($text);
     $fault_detail = strip_tags($text);
@@ -71,7 +71,7 @@ function exit_missing_param()
 {
     global $feedback,$Language;
   // Display current $feedback normally, and replace feedback with error message
-    $msg = $feedback;
+    $msg      = $feedback;
     $feedback = "";
     exit_error($Language->getText('include_exit', 'missing_param_err'), '<p>' . $msg);
 }

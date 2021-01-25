@@ -76,14 +76,14 @@ final class MemberAdditionControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->project_retriever = M::mock(ProjectRetriever::class);
+        $this->project_retriever     = M::mock(ProjectRetriever::class);
         $this->administrator_checker = M::mock(ProjectAdministratorChecker::class);
-        $this->ugroup_manager    = M::mock(\UGroupManager::class);
-        $this->user_manager      = M::mock(\UserManager::class);
-        $this->member_adder      = M::mock(MemberAdder::class);
-        $this->http_request      = M::mock(\HTTPRequest::class);
-        $this->layout            = M::mock(BaseLayout::class);
-        $this->csrf              = M::mock(\CSRFSynchronizerToken::class);
+        $this->ugroup_manager        = M::mock(\UGroupManager::class);
+        $this->user_manager          = M::mock(\UserManager::class);
+        $this->member_adder          = M::mock(MemberAdder::class);
+        $this->http_request          = M::mock(\HTTPRequest::class);
+        $this->layout                = M::mock(BaseLayout::class);
+        $this->csrf                  = M::mock(\CSRFSynchronizerToken::class);
         $this->csrf->shouldReceive('check')->once();
         $this->controller = new MemberAdditionController(
             $this->project_retriever,

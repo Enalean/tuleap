@@ -27,6 +27,6 @@ class ForgeUpgrade_Db_Driver_Codendi extends ForgeUpgrade_Db_Driver
     protected $user;
     protected $password;
 
-    protected $platform_name = "codendi";
+    protected $platform_name     = "codendi";
     protected $env_variable_name = "CODENDI_LOCAL_INC";
 }

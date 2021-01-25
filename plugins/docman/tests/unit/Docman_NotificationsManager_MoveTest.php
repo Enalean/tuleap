@@ -119,7 +119,7 @@ class Docman_NotificationsManager_MoveTest extends TestCase
             $params
         );
 
-        $expected_message = "My title has been modified by UserRealName.\n";
+        $expected_message  = "My title has been modified by UserRealName.\n";
         $expected_message .= $details_url . "\n\n";
         $expected_message .= "Moved from:\n /my/old/path\n        to:\n /my/new/path\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
@@ -154,7 +154,7 @@ class Docman_NotificationsManager_MoveTest extends TestCase
             $params
         );
 
-        $expected_message = "/my/new/path has been modified by UserRealName.\n";
+        $expected_message  = "/my/new/path has been modified by UserRealName.\n";
         $expected_message .= $details_url . "\n\n";
         $expected_message .= "Moved from:\n /my/old/path to:\n /my/new/path\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
@@ -189,7 +189,7 @@ class Docman_NotificationsManager_MoveTest extends TestCase
             $params
         );
 
-        $expected_message = "/my/old/path has been modified by UserRealName.\n";
+        $expected_message  = "/my/old/path has been modified by UserRealName.\n";
         $expected_message .= $details_url . "\n\n";
         $expected_message .= "Moved from:\n /my/old/path to:\n /my/new/path\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
@@ -226,7 +226,7 @@ class Docman_NotificationsManager_MoveTest extends TestCase
             $params
         );
 
-        $expected_message = "My title has been modified by UserRealName.\n";
+        $expected_message  = "My title has been modified by UserRealName.\n";
         $expected_message .= $details_url . "\n\n";
         $expected_message .= "Moved \n\n";
         $expected_message .= "--------------------------------------------------------------------\n";

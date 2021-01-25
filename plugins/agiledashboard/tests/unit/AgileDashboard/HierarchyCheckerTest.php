@@ -55,10 +55,10 @@ class AgileDashboard_HierarchyCheckerTest extends TestCase
         $this->tracker = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(12);
         $this->tracker->shouldReceive('getProject')->andReturn($project);
-        $this->planning_factory  = \Mockery::spy(\PlanningFactory::class);
-        $this->kanban_factory    = \Mockery::spy(\AgileDashboard_KanbanFactory::class);
-        $this->hierarchy         = \Mockery::spy(\Tracker_Hierarchy::class);
-        $this->tracker_factory   = \Mockery::spy(\TrackerFactory::class);
+        $this->planning_factory = \Mockery::spy(\PlanningFactory::class);
+        $this->kanban_factory   = \Mockery::spy(\AgileDashboard_KanbanFactory::class);
+        $this->hierarchy        = \Mockery::spy(\Tracker_Hierarchy::class);
+        $this->tracker_factory  = \Mockery::spy(\TrackerFactory::class);
 
         $this->hierarchy_checker = new AgileDashboard_HierarchyChecker(
             $this->planning_factory,

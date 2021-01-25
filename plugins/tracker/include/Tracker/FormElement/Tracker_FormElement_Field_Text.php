@@ -102,7 +102,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     protected function buildMatchExpression($field_name, $criteria_value)
     {
         $matches = [];
-        $expr = parent::buildMatchExpression($field_name, $criteria_value);
+        $expr    = parent::buildMatchExpression($field_name, $criteria_value);
         if (! $expr) {
             // else transform into a series of LIKE %word%
             if (is_array($criteria_value)) {
@@ -233,14 +233,14 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
      */
     protected function fetchSubmitValueMasschange()
     {
-        $html = '';
+        $html  = '';
         $value = dgettext('tuleap-tracker', 'Unchanged');
 
         //check if this field is the title we do not allow to change it
         if ($this->isSemanticTitle()) {
             $html .= '<textarea readonly="readonly" title="' . dgettext('tuleap-tracker', 'This field is the title of the artifact. It is not allowed to masschange it.') . '">' . $value . '</textarea>';
         } else {
-            $hp = Codendi_HTMLPurifier::instance();
+            $hp    = Codendi_HTMLPurifier::instance();
             $html .= '<textarea id = field_' . $this->id . ' class="user-mention"
                                 name="artifact[' . $this->id . '][content]"
                                 rows="' . $this->getProperty('rows') . '"
@@ -272,7 +272,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             $format = $value->getFormat();
         } else {
             $default_value = $this->getDefaultValue();
-            $format = $default_value['format'];
+            $format        = $default_value['format'];
         }
 
         if (isset($submitted_values[$this->getId()])) {
@@ -395,7 +395,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         $html    = '';
         $content = '';
         if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
+            $value   = $this->getDefaultValue();
             $content = $value['content'];
         }
         $html .= '<textarea rows="' . $this->getProperty('rows') . '" cols="' . $this->getProperty('cols') . '" autocomplete="off">';
@@ -484,7 +484,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
      */
     protected function validate(Artifact $artifact, $value)
     {
-        $rule = $this->getRuleString();
+        $rule    = $this->getRuleString();
         $content = $this->getRightContent($value);
         if (! ($is_valid = $rule->isValid($content))) {
             $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', '%1$s is not a text.'), $this->getLabel()));
@@ -599,7 +599,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     {
         $last_changeset_value = $this->getLastChangesetValue($artifact);
         assert($last_changeset_value === null || $last_changeset_value instanceof Tracker_Artifact_ChangesetValue_Text);
-        $old_format           = $last_changeset_value ? $last_changeset_value->getFormat() : null;
+        $old_format = $last_changeset_value ? $last_changeset_value->getFormat() : null;
         return is_array($value) ? $value['format'] : $old_format;
     }
 

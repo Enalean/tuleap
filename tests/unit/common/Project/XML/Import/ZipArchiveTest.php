@@ -78,7 +78,7 @@ final class ZipArchiveTest extends \PHPUnit\Framework\TestCase
     public function testItEnsuresThatTemporaryDirectoryIsNotReadableByEveryone(): void
     {
         $extraction_path = $this->archive->getExtractionPath();
-        $perms = fileperms($extraction_path) & 0777;
+        $perms           = fileperms($extraction_path) & 0777;
         $this->assertEquals(0700, $perms);
     }
 

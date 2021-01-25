@@ -230,7 +230,7 @@ class Git_Mirror_MirrorDataMapper
                     $row['group_id'],
                     $row['group_name']
                 );
-                $presenters[] = $project_presenter;
+                $presenters[]      = $project_presenter;
             }
 
             $project_presenter->repositories[] = [

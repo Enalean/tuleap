@@ -27,8 +27,8 @@ use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 class Tracker_REST_FormElementRepresentation //phpcs:ignore
 {
 
-    public const BIND_TYPE  = 'type';
-    public const BIND_LIST  = 'list';
+    public const BIND_TYPE = 'type';
+    public const BIND_LIST = 'list';
 
     public const BIND_ID    = 'id';
     public const BIND_LABEL = 'label';
@@ -113,18 +113,18 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
         $this->label    = $form_element->getLabel();
 
         if ($form_element instanceof Tracker_FormElement_Field) {
-            $this->required  = JsonCast::toBoolean($form_element->isRequired());
+            $this->required = JsonCast::toBoolean($form_element->isRequired());
         } else {
-            $this->required  = false;
+            $this->required = false;
         }
         $this->collapsed = $is_collapsed;
 
         $this->default_value = $default_rest_value;
-        $this->type   = $type;
+        $this->type          = $type;
 
         $this->values = $values;
 
-        $bindings = $rest_binding_properties;
+        $bindings       = $rest_binding_properties;
         $this->bindings = [
             self::BIND_TYPE => $bindings[Tracker_FormElement_Field_List_Bind::REST_TYPE_KEY],
             self::BIND_LIST => array_map(

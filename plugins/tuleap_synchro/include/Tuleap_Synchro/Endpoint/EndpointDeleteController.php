@@ -37,7 +37,7 @@ class EndpointDeleteController implements DispatchableWithRequest, DispatchableW
 
     public function __construct(EndpointUpdater $endpoint_updater)
     {
-        $this->endpoint_updater    = $endpoint_updater;
+        $this->endpoint_updater = $endpoint_updater;
     }
 
     /**

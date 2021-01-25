@@ -79,7 +79,7 @@ final class MasschangeUpdaterTest extends TestCase
         $rules_factory->shouldReceive('getAllListRulesByTrackerWithOrder')->andReturn([]);
 
         $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
-        $artifact_201 = Mockery::mock(Artifact::class);
+        $artifact_201     = Mockery::mock(Artifact::class);
         $artifact_201->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(Tracker_Artifact_Changeset::class));
         $artifact_201->shouldReceive('createNewChangeset')->once();
         $artifact_factory->shouldReceive('getArtifactById')->with(201)->andReturn($artifact_201);
@@ -125,7 +125,7 @@ final class MasschangeUpdaterTest extends TestCase
         $rules_factory->shouldReceive('getAllListRulesByTrackerWithOrder')->andReturn([]);
 
         $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
-        $artifact_201 = Mockery::mock(Artifact::class);
+        $artifact_201     = Mockery::mock(Artifact::class);
         $artifact_201->shouldReceive('getId')->andReturn(201);
         $artifact_201->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(Tracker_Artifact_Changeset::class));
         $artifact_201->shouldReceive('userCanView')->andReturn(true);
@@ -185,7 +185,7 @@ final class MasschangeUpdaterTest extends TestCase
         $masschange_data_value_extractor->shouldReceive('getNewValues')->andReturn($new_values);
 
         $rules_factory = Mockery::mock(Tracker_RuleFactory::class);
-        $rule_1 = Mockery::mock(Tracker_Rule_List::class);
+        $rule_1        = Mockery::mock(Tracker_Rule_List::class);
         $rule_1->shouldReceive('getSourceFieldId')->andReturn(3201);
         $rule_1->shouldReceive('getTargetFieldId')->andReturn(3202);
         $rule_2 = Mockery::mock(Tracker_Rule_List::class);
@@ -194,7 +194,7 @@ final class MasschangeUpdaterTest extends TestCase
         $rules_factory->shouldReceive('getAllListRulesByTrackerWithOrder')->andReturn([$rule_1, $rule_2]);
 
         $form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $source_field_rule1 = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $source_field_rule1   = Mockery::mock(Tracker_FormElement_Field_List::class);
         $source_field_rule1->shouldReceive('getId')->andReturn(3201);
         $source_and_target_field_both_rules = Mockery::mock(Tracker_FormElement_Field_List::class);
         $source_and_target_field_both_rules->shouldReceive('getId')->andReturn(3202);

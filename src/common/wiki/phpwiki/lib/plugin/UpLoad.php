@@ -110,7 +110,7 @@ ws[cfh]"
         $file_dir = getUploadFilePath();
         //$url_prefix = SERVER_NAME . DATA_PATH;
 
-        $form = HTML::form(['action' => $request->getPostURL(),
+        $form     = HTML::form(['action' => $request->getPostURL(),
                                  'enctype' => 'multipart/form-data',
                                  'method' => 'post']);
         $contents = HTML::div(['class' => 'wikiaction']);
@@ -151,10 +151,10 @@ ws[cfh]"
 
         $userfile = $request->getUploadedFile('userfile');
         if ($userfile) {
-            $userfile_name = $userfile->getName();
-            $userfile_name = trim(basename($userfile_name));
+            $userfile_name    = $userfile->getName();
+            $userfile_name    = trim(basename($userfile_name));
             $userfile_tmpname = $userfile->getTmpName();
-            $err_header = HTML::h2(fmt("ERROR uploading '%s': ", $userfile_name));
+            $err_header       = HTML::h2(fmt("ERROR uploading '%s': ", $userfile_name));
 
             /// MV add
             /// Wiki attachments
@@ -166,9 +166,9 @@ ws[cfh]"
                 $userfile->getTmpName()
             );
             if ($rev >= 0) {
-                $prev = $rev + 1;
+                $prev      = $rev + 1;
                 $interwiki = new PageType_interwikimap();
-                $link = $interwiki->link("Upload:$prev/$userfile_name");
+                $link      = $interwiki->link("Upload:$prev/$userfile_name");
                 $message->pushContent(HTML::h2(_("File successfully uploaded.")));
                 $message->pushContent(HTML::ul(HTML::li($link)));
 
@@ -181,11 +181,11 @@ ws[cfh]"
                     require_once("lib/loadsave.php");
                     $pagehandle = $dbi->getPage($page);
                     if ($pagehandle->exists()) {// don't replace default contents
-                        $current = $pagehandle->getCurrentRevision();
-                        $version = $current->getVersion();
-                        $text = $current->getPackedContent();
-                        $newtext = $text . "\n* [Upload:$userfile_name]";
-                        $meta = $current->_data;
+                        $current         = $pagehandle->getCurrentRevision();
+                        $version         = $current->getVersion();
+                        $text            = $current->getPackedContent();
+                        $newtext         = $text . "\n* [Upload:$userfile_name]";
+                        $meta            = $current->_data;
                         $meta['summary'] = sprintf(_("uploaded %s"), $userfile_name);
                         $pagehandle->save($newtext, $version + 1, $meta);
                     }
@@ -230,7 +230,7 @@ ws[cfh]"
             $wa = $wai->current();
 
             $filename = basename($wa->getFilename());
-            $url = getUploadDataPath() . urlencode($filename);
+            $url      = getUploadDataPath() . urlencode($filename);
 
             $line = HTML::tr();
             $line->pushContent(HTML::td(HTML::a(

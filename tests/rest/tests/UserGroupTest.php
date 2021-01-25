@@ -376,7 +376,7 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
             ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
             ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]],
         ]);
-        $response = $this->getResponse($this->client->put(
+        $response     = $this->getResponse($this->client->put(
             'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
             null,
             $put_resource

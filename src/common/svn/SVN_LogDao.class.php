@@ -25,7 +25,7 @@ class SVN_LogDao extends DataAccessObject
     {
         $group_id  = $this->da->escapeInt($group_id);
         $date_stmt = $this->inIntervalStatement($interval);
-        $sql = "SELECT whoid, count(1) as commit_count
+        $sql       = "SELECT whoid, count(1) as commit_count
                 FROM svn_commits
                 WHERE group_id = $group_id
                     $date_stmt
@@ -35,10 +35,10 @@ class SVN_LogDao extends DataAccessObject
 
     public function searchTopModifiedFiles($group_id, TimeInterval $interval, $limit, $where_forbidden)
     {
-        $group_id   = $this->da->escapeInt($group_id);
-        $limit      = $this->da->escapeInt($limit);
-        $date_stmt  = $this->inIntervalStatement($interval);
-        $sql = "SELECT CONCAT(dir,file) as path, count(1) as commit_count
+        $group_id  = $this->da->escapeInt($group_id);
+        $limit     = $this->da->escapeInt($limit);
+        $date_stmt = $this->inIntervalStatement($interval);
+        $sql       = "SELECT CONCAT(dir,file) as path, count(1) as commit_count
                 FROM svn_commits 
                     JOIN svn_checkins ON (svn_checkins.commitid = svn_commits.id)
                     JOIN svn_files ON (svn_files.id = svn_checkins.fileid)
@@ -56,7 +56,7 @@ class SVN_LogDao extends DataAccessObject
     {
         $start_date = $this->da->escapeInt($interval->getStartTimestamp());
         $end_date   = $this->da->escapeInt($interval->getEndTimestamp());
-        $sql = "AND date >= $start_date
+        $sql        = "AND date >= $start_date
                 AND date <= $end_date";
         return $sql;
     }

@@ -121,7 +121,7 @@ final class ReviewerAutocompleterController extends DispatchablePSR15Compatible 
         $potential_reviewer_representations = [];
 
         foreach ($potential_reviewers as $potential_reviewer) {
-            $representation = MinimalUserRepresentation::build($potential_reviewer);
+            $representation                       = MinimalUserRepresentation::build($potential_reviewer);
             $potential_reviewer_representations[] = $representation;
         }
 

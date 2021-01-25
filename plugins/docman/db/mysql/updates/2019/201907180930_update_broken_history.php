@@ -40,7 +40,7 @@ class b201907180930_update_broken_history extends ForgeUpgrade_Bucket // phpcs:i
         ];
 
         foreach ($status_mapping as $string_status => $legacy_status) {
-            $sql = "UPDATE plugin_docman_log SET old_value=? WHERE field='status' AND old_value=?";
+            $sql           = "UPDATE plugin_docman_log SET old_value=? WHERE field='status' AND old_value=?";
             $pdo_statement = $this->db->dbh->prepare($sql);
 
             if (! $pdo_statement->execute([$legacy_status, $string_status])) {
@@ -49,7 +49,7 @@ class b201907180930_update_broken_history extends ForgeUpgrade_Bucket // phpcs:i
                 );
             }
 
-            $sql = "UPDATE plugin_docman_log SET new_value=? WHERE field='status' AND new_value=?";
+            $sql           = "UPDATE plugin_docman_log SET new_value=? WHERE field='status' AND new_value=?";
             $pdo_statement = $this->db->dbh->prepare($sql);
 
             if (! $pdo_statement->execute([$legacy_status, $string_status])) {

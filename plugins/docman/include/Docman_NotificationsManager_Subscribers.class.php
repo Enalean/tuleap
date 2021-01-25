@@ -23,7 +23,7 @@
 class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManager
 {
 
-    public const MESSAGE_ADDED = 'added'; // X has been added to monitoring list
+    public const MESSAGE_ADDED   = 'added'; // X has been added to monitoring list
     public const MESSAGE_REMOVED = 'removed'; // X has been removed from monitoring list
 
     /**
@@ -36,7 +36,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
      */
     public function somethingHappen($event, $params)
     {
-        $um = $this->_getUserManager();
+        $um    = $this->_getUserManager();
         $users = new ArrayIterator($params['listeners']);
         if ($users) {
             $dpm = $this->_getPermissionsManager();
@@ -65,7 +65,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         $type = '';
         switch ($event) {
             case 'plugin_docman_add_monitoring':
-                $type = self::MESSAGE_ADDED;
+                $type    = self::MESSAGE_ADDED;
                 $subject = sprintf(
                     dgettext(
                         'tuleap-docman',
@@ -75,7 +75,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
                 );
                 break;
             case 'plugin_docman_remove_monitoring':
-                $type = self::MESSAGE_REMOVED;
+                $type    = self::MESSAGE_REMOVED;
                 $subject = sprintf(
                     dgettext(
                         'tuleap-docman',
@@ -107,9 +107,9 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     */
     public function _getMessageForUser($user, $message_type, $params)
     {
-        $msg = '';
+        $msg       = '';
         $separator = "\n\n--------------------------------------------------------------------\n";
-        $itemUrl = $this->getMessageLink($message_type, $params);
+        $itemUrl   = $this->getMessageLink($message_type, $params);
         switch ($message_type) {
             case self::MESSAGE_ADDED:
                 $msg .= dgettext(

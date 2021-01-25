@@ -47,11 +47,11 @@ function getParameter(&$parameter_array, $parameter, $require_value = false)
             // is it --parameter=value or just --parameter?
             if (preg_match("/(.+)=(.+)/s", $passed_string, $res)) {
                 $passed_parameter = $res[1];
-                $passed_value = $res[2];
-                $has_value = true;
+                $passed_value     = $res[2];
+                $has_value        = true;
             } else {
                 $passed_parameter = $passed_string;
-                $has_value = false;
+                $has_value        = false;
             }
 
             if (! is_array($parameter)) {
@@ -79,7 +79,7 @@ function getParameter(&$parameter_array, $parameter, $require_value = false)
                 if (($i + 1) < count($parameter_array) && ! preg_match("/^\\-/", $parameter_array[$i + 1])) {
                     $i++;        // position in value
                     $passed_value = $parameter_array[$i];
-                    $has_value = true;
+                    $has_value    = true;
                 } else {
                     $has_value = false;
                 }

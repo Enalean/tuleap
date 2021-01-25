@@ -80,7 +80,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
 
     public function getRankSelectboxDefinition()
     {
-        $def = parent::getRankSelectboxDefinition();
+        $def             = parent::getRankSelectboxDefinition();
         $def['subitems'] = [];
         foreach ($this->getFormElements() as $field) {
             $def['subitems'][] = $field->getRankSelectboxDefinition();
@@ -172,7 +172,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     ) {
         parent::exportToXML($root, $xmlMapping, $project_export_context, $user_xml_exporter);
         $subfields = $this->getAllFormElements();
-        $child = $root->addChild('formElements');
+        $child     = $root->addChild('formElements');
         foreach ($subfields as $subfield) {
             $grandchild = $child->addChild($subfield->getTagNameForXMLExport());
             $subfield->exportToXML($grandchild, $xmlMapping, $project_export_context, $user_xml_exporter);
@@ -270,7 +270,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
 
     protected function fetchRecursiveArtifactForSubmit($method, array $submitted_values)
     {
-        $html = '';
+        $html    = '';
         $content = $this->getContainerContent($method, [$submitted_values]);
 
         if (count($content)) {
@@ -285,7 +285,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
 
     protected function fetchRecursiveArtifact($method, Artifact $artifact, array $submitted_values, array $additional_classes)
     {
-        $html = '';
+        $html    = '';
         $content = $this->getContainerContent($method, [$artifact, $submitted_values, $additional_classes]);
 
         if (count($content)) {
@@ -300,7 +300,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
 
     protected function fetchMailRecursiveArtifact($format, $method, $params = [])
     {
-        $output = '';
+        $output  = '';
         $content = $this->getContainerContent($method, $params);
 
         if (count($content)) {

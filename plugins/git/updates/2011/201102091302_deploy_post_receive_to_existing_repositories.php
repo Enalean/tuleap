@@ -31,7 +31,7 @@ EOT;
     public function preUp()
     {
         $processUser = posix_getpwuid(posix_geteuid());
-        $username = $processUser['name'];
+        $username    = $processUser['name'];
         if ($username != 'root') {
             throw new Exception('Must be root to run this upgrade');
         }
@@ -47,7 +47,7 @@ EOT;
                     $hooksDir = $repo->getPathname() . DIRECTORY_SEPARATOR . 'hooks';
                     if (! $repo->isDot() && is_dir($hooksDir)) {
                         $groupName = basename($project->getPathname());
-                        $hook = $hooksDir . DIRECTORY_SEPARATOR . 'post-receive';
+                        $hook      = $hooksDir . DIRECTORY_SEPARATOR . 'post-receive';
 
                         $this->log->info("Deploy $hook");
                         unlink($hook);

@@ -42,8 +42,8 @@ abstract class Docman_ApprovalTableFactory
 
     public function __construct(Docman_Item $item)
     {
-        $this->item = $item;
-        $this->table = null;
+        $this->item         = $item;
+        $this->table        = null;
         $this->customizable = true;
     }
 
@@ -122,14 +122,14 @@ abstract class Docman_ApprovalTableFactory
     public function deleteTable()
     {
         $deleted = false;
-        $table = $this->getTable();
+        $table   = $this->getTable();
         if ($table !== null) {
             $reviewerFactory = $this->_getReviewerFactory($table, $this->item);
-            $dao = $this->_getDao();
-            $deleted = $dao->deleteTable($table->getId());
+            $dao             = $this->_getDao();
+            $deleted         = $dao->deleteTable($table->getId());
             if ($deleted) {
-                $deleted = $reviewerFactory->deleteTable();
-                $table = null;
+                $deleted     = $reviewerFactory->deleteTable();
+                $table       = null;
                 $this->table = null;
             }
         }

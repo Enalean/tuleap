@@ -39,7 +39,7 @@ abstract class MVC2_PluginController extends MVC2_Controller
     protected function redirect($query_parts): void
     {
         $redirect = http_build_query($query_parts);
-        $layout = $GLOBALS['Response'];
+        $layout   = $GLOBALS['Response'];
         assert($layout instanceof \Tuleap\Layout\BaseLayout);
         $layout->redirect('/plugins/' . $this->base_name . '/?' . $redirect);
     }

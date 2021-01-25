@@ -101,7 +101,7 @@ class VelocitySemanticCheckerTest extends TestCase
         $backlog_trackers_collection = Mockery::mock(BacklogRequiredTrackerCollection::class);
         $backlog_trackers_collection->shouldReceive('areAllBacklogTrackersMisconfigured')->andReturn(true);
 
-        $checker                                          = new VelocitySemanticChecker();
+        $checker = new VelocitySemanticChecker();
         $this->assertFalse(
             $checker->hasAtLeastOneTrackerCorrectlyConfigured(
                 $backlog_trackers_collection,
@@ -137,7 +137,7 @@ class VelocitySemanticCheckerTest extends TestCase
         $backlog_trackers_collection = Mockery::mock(BacklogRequiredTrackerCollection::class);
         $backlog_trackers_collection->shouldReceive('areAllBacklogTrackersMisconfigured')->andReturn(false);
 
-        $checker                                          = new VelocitySemanticChecker();
+        $checker = new VelocitySemanticChecker();
         $this->assertTrue(
             $checker->hasAtLeastOneTrackerCorrectlyConfigured(
                 $backlog_trackers_collection,

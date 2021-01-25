@@ -66,7 +66,7 @@ class DockerAioRunCommand extends Command
 
     public function __construct(ProcessFactory $process_factory)
     {
-        $this->process_factory = $process_factory;
+        $this->process_factory  = $process_factory;
         $this->data_persistence = new DataPersistence($this->process_factory, ...self::PERSISTENT_DATA);
 
         parent::__construct();

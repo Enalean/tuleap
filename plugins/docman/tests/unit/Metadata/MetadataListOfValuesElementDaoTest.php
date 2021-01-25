@@ -31,12 +31,12 @@ class MetadataListOfValuesElementDaoTest extends TestCase
     public function testUpdate(): void
     {
         // Data
-        $metadataId = 1444;
-        $valueId = 1125;
-        $name = 'love_value';
+        $metadataId  = 1444;
+        $valueId     = 1125;
+        $name        = 'love_value';
         $description = 'desc';
-        $rank = 12;
-        $status = 'A';
+        $rank        = 12;
+        $status      = 'A';
 
          // Setup
         $dao = \Mockery::mock(Docman_MetadataListOfValuesElementDao::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -64,8 +64,8 @@ class MetadataListOfValuesElementDaoTest extends TestCase
         $metadataId = 1444;
 
          // Setup
-        $dao = \Mockery::mock(Docman_MetadataListOfValuesElementDao::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao->da = \Mockery::spy(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
+        $dao        = \Mockery::mock(Docman_MetadataListOfValuesElementDao::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dao->da    = \Mockery::spy(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $sql_update = "UPDATE plugin_docman_metadata_love AS love SET status = 'D' WHERE value_id IN (  SELECT value_id   FROM plugin_docman_metadata_love_md AS lovemd   WHERE lovemd.field_id = " . $metadataId . "     AND lovemd.value_id > 100  )";
         $dao->shouldReceive('update')->with($sql_update)->once()->andReturns(true);
 

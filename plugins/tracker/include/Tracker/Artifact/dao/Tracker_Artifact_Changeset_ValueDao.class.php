@@ -29,7 +29,7 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
 
     public function searchById($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT * FROM $this->table_name
                 WHERE changeset_id = $id";
         return $this->retrieve($sql);
@@ -38,8 +38,8 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
     public function searchByFieldId($changeset_id, $field_id)
     {
         $changeset_id = $this->da->escapeInt($changeset_id);
-        $field_id = $this->da->escapeInt($field_id);
-        $sql = "SELECT * FROM $this->table_name
+        $field_id     = $this->da->escapeInt($field_id);
+        $sql          = "SELECT * FROM $this->table_name
                 WHERE changeset_id = $changeset_id
                     AND field_id = $field_id";
         return $this->retrieve($sql);
@@ -48,11 +48,11 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
     public function searchByArtifactId($artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $sql = "SELECT changeset_value.*
+        $sql         = "SELECT changeset_value.*
                 FROM tracker_changeset_value AS changeset_value
                 JOIN tracker_changeset AS changeset ON (changeset.id = changeset_value.changeset_id)
                 WHERE changeset.artifact_id = $artifact_id";
-        $results = [];
+        $results     = [];
         foreach ($this->retrieve($sql) as $row) {
             $results[$row['changeset_id']][] = $row;
         }
@@ -62,18 +62,18 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
     public function save($changeset_id, $field_id, $has_changed)
     {
         $changeset_id = $this->da->escapeInt($changeset_id);
-        $field_id = $this->da->escapeInt($field_id);
-        $has_changed = $has_changed ? 1 : 0;
-        $sql = "INSERT INTO $this->table_name(changeset_id, field_id, has_changed)
+        $field_id     = $this->da->escapeInt($field_id);
+        $has_changed  = $has_changed ? 1 : 0;
+        $sql          = "INSERT INTO $this->table_name(changeset_id, field_id, has_changed)
                 VALUES ($changeset_id, $field_id, $has_changed)";
         return $this->updateAndGetLastId($sql);
     }
 
     public function createFromLastChangesetByTrackerId($tracker_id, $field_id, $has_changed)
     {
-        $tracker_id  = $this->da->escapeInt($tracker_id);
-        $field_id    = $this->da->escapeInt($field_id);
-        $has_changed = $has_changed ? 1 : 0;
+        $tracker_id        = $this->da->escapeInt($tracker_id);
+        $field_id          = $this->da->escapeInt($field_id);
+        $has_changed       = $has_changed ? 1 : 0;
         $changesetValueDao = new Tracker_Artifact_ChangesetDao();
 
         $sql = " INSERT INTO $this->table_name(changeset_id, field_id, has_changed)
@@ -111,7 +111,7 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
     public function delete($changeset_id)
     {
         $changeset_id = $this->da->escapeInt($changeset_id);
-        $sql = "DELETE
+        $sql          = "DELETE
                 FROM $this->table_name
                 WHERE changeset_id = $changeset_id";
         return $this->update($sql);

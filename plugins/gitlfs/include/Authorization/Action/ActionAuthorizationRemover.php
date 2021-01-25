@@ -63,7 +63,7 @@ class ActionAuthorizationRemover
     {
         $current_work_objects = [];
         foreach ($this->filesystem->listContents($this->path_allocator->getBasePathForSaveInProgressObject()) as $save_in_progress_object) {
-            $path = $save_in_progress_object->path();
+            $path                                  = $save_in_progress_object->path();
             $current_work_objects[basename($path)] = [$path];
         }
         foreach ($this->filesystem->listContents($this->path_allocator->getBasePathForReadyToBeAvailableObject()) as $ready_object) {
@@ -75,7 +75,7 @@ class ActionAuthorizationRemover
             }
         }
 
-        $still_used_work_objects = $this->dao->searchExistingOIDsForAuthorizedActionByExpirationAndOIDs(
+        $still_used_work_objects        = $this->dao->searchExistingOIDsForAuthorizedActionByExpirationAndOIDs(
             $current_time->getTimestamp(),
             array_keys($current_work_objects)
         );

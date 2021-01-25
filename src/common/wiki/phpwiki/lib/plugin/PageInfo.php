@@ -62,8 +62,8 @@ class WikiPlugin_PageInfo extends WikiPlugin
         extract($args);
 
         $pagename = $page;
-        $page = $request->getPage();
-        $current = $page->getCurrentRevision();
+        $page     = $request->getPage();
+        $current  = $page->getCurrentRevision();
 
         if ($current->getVersion() < 1) {
             return fmt(

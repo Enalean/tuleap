@@ -30,7 +30,7 @@ final class LoginURLGeneratorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private const BASE_URL = '/base';
+    private const BASE_URL    = '/base';
     private const PROVIDER_ID = 1;
 
     /**

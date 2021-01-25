@@ -34,18 +34,18 @@ final class HierarchyCreatorTest extends TestCase
 
     public function testItCreateHierarchy(): void
     {
-        $user = UserTestBuilder::aUser()->build();
-        $program_id = 101;
+        $user               = UserTestBuilder::aUser()->build();
+        $program_id         = 101;
         $program_tracker_id = 1;
-        $team_tracker_ids = [20];
+        $team_tracker_ids   = [20];
 
-        $program_build = \Mockery::mock(BuildProgram::class);
+        $program_build   = \Mockery::mock(BuildProgram::class);
         $hierarchy_build = \Mockery::mock(BuildHierarchy::class);
         $hierarchy_store = \Mockery::mock(HierarchyStore::class);
 
         $hierarchy_creator = new HierarchyCreator($program_build, $hierarchy_build, $hierarchy_store);
 
-        $program = new Program($program_id);
+        $program   = new Program($program_id);
         $hierarchy = new Hierarchy($program_tracker_id, $team_tracker_ids);
 
         $program_build->shouldReceive('buildExistingProgramProject')->once()->andReturn($program);

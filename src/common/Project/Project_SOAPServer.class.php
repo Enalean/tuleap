@@ -95,17 +95,17 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         User_ForgeUserGroupPermissionsManager $forge_ugroup_permissions_manager,
         ProjectRegistrationUserPermissionChecker $project_registration_user_permission_checker
     ) {
-        $this->projectManager                   = $projectManager;
-        $this->projectCreator                   = $projectCreator;
-        $this->userManager                      = $userManager;
-        $this->generic_user_factory             = $generic_user_factory;
-        $this->limitator                        = $limitator;
-        $this->description_factory              = $description_factory;
-        $this->description_manager              = $description_manager;
-        $this->description_value_factory        = $description_value_factory;
-        $this->service_usage_factory            = $service_usage_factory;
-        $this->service_usage_manager            = $service_usage_manager;
-        $this->forge_ugroup_permissions_manager = $forge_ugroup_permissions_manager;
+        $this->projectManager                               = $projectManager;
+        $this->projectCreator                               = $projectCreator;
+        $this->userManager                                  = $userManager;
+        $this->generic_user_factory                         = $generic_user_factory;
+        $this->limitator                                    = $limitator;
+        $this->description_factory                          = $description_factory;
+        $this->description_manager                          = $description_manager;
+        $this->description_value_factory                    = $description_value_factory;
+        $this->service_usage_factory                        = $service_usage_factory;
+        $this->service_usage_manager                        = $service_usage_manager;
+        $this->forge_ugroup_permissions_manager             = $forge_ugroup_permissions_manager;
         $this->project_registration_user_permission_checker = $project_registration_user_permission_checker;
     }
 
@@ -235,7 +235,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         }
 
         foreach ($template_for_project_creation->getProject()->getServices() as $key => $service) {
-            $is_used = $service->isActive() && $service->isUsed();
+            $is_used                                                   = $service->isActive() && $service->isUsed();
             $data['project']['services'][$service->getId()]['is_used'] = $is_used;
         }
 
@@ -453,7 +453,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     {
         $this->continueSession($sessionKey);
         $project_desc_fields = $this->description_factory->getCustomDescriptions();
-        $soap_return = [];
+        $soap_return         = [];
         if (empty($project_desc_fields)) {
                 throw new SoapFault('3107', "No custom project description fields");
         }
@@ -465,7 +465,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
     private function extractDescFieldSOAPDatas(Project_CustomDescription_CustomDescription $desc_field)
     {
-        $field_datas = [];
+        $field_datas                 = [];
         $field_datas['id']           = $desc_field->getId();
         $field_datas['name']         = $desc_field->getName();
         $field_datas['is_mandatory'] = $desc_field->isRequired();
@@ -565,7 +565,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
     private function extractServicesUsageSOAPDatas(Project_Service_ServiceUsage $service_usage)
     {
-        $field_datas = [];
+        $field_datas               = [];
         $field_datas['id']         = $service_usage->getId();
         $field_datas['short_name'] = $service_usage->getShortName();
         $field_datas['is_used']    = (int) $service_usage->isUsed();
@@ -653,7 +653,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      */
     private function getProjectIfUserIsAdmin($groupId, $sessionKey)
     {
-        $project   = $this->projectManager->getProject($groupId);
+        $project = $this->projectManager->getProject($groupId);
         if ($project && ! $project->isError()) {
             if ($this->isRequesterAdmin($sessionKey, $project->getID())) {
                 return $project;

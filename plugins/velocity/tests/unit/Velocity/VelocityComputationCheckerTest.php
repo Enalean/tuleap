@@ -88,7 +88,7 @@ class VelocityComputationCheckerTest extends \PHPUnit\Framework\TestCase
 
         $this->semantic_velocity = Mockery::mock(SemanticVelocity::class);
 
-        $this->semantic_done   = Mockery::mock(SemanticDone::class);
+        $this->semantic_done = Mockery::mock(SemanticDone::class);
 
         $this->computation_checker = new VelocityComputationChecker();
 

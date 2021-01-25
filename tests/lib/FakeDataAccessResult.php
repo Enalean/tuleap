@@ -31,9 +31,9 @@ final class FakeDataAccessResult extends DataAccessResult
 
     public function __construct(array $data)
     {
-        $this->data = $data;
+        $this->data     = $data;
         $this->_current = -1;
-        $this->_row = false;
+        $this->_row     = false;
         $this->rewind(); // in case getRow is called explicitly
     }
 

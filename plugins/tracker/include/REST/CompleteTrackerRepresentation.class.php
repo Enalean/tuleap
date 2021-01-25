@@ -119,26 +119,26 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
         ?WorkflowRepresentation $workflow = null,
         ?PermissionsRepresentation $permissions = null
     ) {
-        $this->id          = JsonCast::toInt($tracker->getId());
-        $this->uri         = self::ROUTE . '/' . $this->id;
-        $this->html_url    = $tracker->getUri();
+        $this->id       = JsonCast::toInt($tracker->getId());
+        $this->uri      = self::ROUTE . '/' . $this->id;
+        $this->html_url = $tracker->getUri();
 
-        $this->project     = new ProjectReference($tracker_project);
+        $this->project = new ProjectReference($tracker_project);
 
-        $this->label       = $tracker->getName();
-        $this->description = $tracker->getDescription();
-        $this->item_name   = $tracker->getItemName();
-        $this->fields      = $tracker_fields;
-        $this->structure   = $structure;
-        $this->semantics   = $semantics;
-        $this->workflow    = $workflow;
-        $this->resources   = [
+        $this->label                  = $tracker->getName();
+        $this->description            = $tracker->getDescription();
+        $this->item_name              = $tracker->getItemName();
+        $this->fields                 = $tracker_fields;
+        $this->structure              = $structure;
+        $this->semantics              = $semantics;
+        $this->workflow               = $workflow;
+        $this->resources              = [
             [
                 'type' => 'reports',
                 'uri'  => $this->uri . '/' . ReportRepresentation::ROUTE
             ]
         ];
-        $this->color_name  = $tracker->getColor()->getName();
+        $this->color_name             = $tracker->getColor()->getName();
         $this->permissions_for_groups = $permissions;
 
         if ($tracker_parent) {

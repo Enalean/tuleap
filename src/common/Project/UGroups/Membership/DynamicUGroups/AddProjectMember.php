@@ -51,10 +51,10 @@ class AddProjectMember
 
     public function __construct(UserPermissionsDao $dao, \UserManager $user_manager, \EventManager $event_manager, \ProjectHistoryDao $history_dao, \UGroupBinding $ugroup_binding)
     {
-        $this->dao = $dao;
-        $this->user_manager = $user_manager;
-        $this->event_manager = $event_manager;
-        $this->history_dao = $history_dao;
+        $this->dao            = $dao;
+        $this->user_manager   = $user_manager;
+        $this->event_manager  = $event_manager;
+        $this->history_dao    = $history_dao;
         $this->ugroup_binding = $ugroup_binding;
     }
 

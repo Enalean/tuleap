@@ -30,7 +30,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if (! $p || ! $pluginManager->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }
@@ -92,7 +92,7 @@ if ($request->exist('filter')) {
     $filter = 'month';
 }
 
-$search_fields_builder = new SearchFieldsPresenterBuilder();
+$search_fields_builder   = new SearchFieldsPresenterBuilder();
 $search_fields_presenter = $search_fields_builder->buildSearchFieldsForFrequencies(
     $type_values,
     $filter,

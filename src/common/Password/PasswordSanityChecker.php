@@ -59,8 +59,8 @@ class PasswordSanityChecker
     public function check(ConcealedString $password): bool
     {
         $password_strategy = $this->getStrategy();
-        $valid  = $password_strategy->validate($password->getString());
-        $this->errors = $password_strategy->errors;
+        $valid             = $password_strategy->validate($password->getString());
+        $this->errors      = $password_strategy->errors;
         return $valid;
     }
 

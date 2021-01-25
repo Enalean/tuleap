@@ -68,12 +68,12 @@ function WikiLink($page_or_rev, $type = 'known', $label = false)
         if ($page_or_rev->isCurrent()) {
             $version = false;
         }
-        $page = $page_or_rev->getPage();
+        $page     = $page_or_rev->getPage();
         $pagename = $page->getName();
         $wikipage = $pagename;
-        $exists = true;
+        $exists   = true;
     } elseif (isa($page_or_rev, 'WikiDB_Page')) {
-        $page = $page_or_rev;
+        $page     = $page_or_rev;
         $pagename = $page->getName();
         $wikipage = $pagename;
     } elseif (isa($page_or_rev, 'WikiPageName')) {
@@ -94,7 +94,7 @@ function WikiLink($page_or_rev, $type = 'known', $label = false)
         if (isset($page)) {
             $exists = $page->exists();
         } else {
-            $dbi = $request->_dbi;
+            $dbi    = $request->_dbi;
             $exists = $dbi->isWikiPage($wikipage->name);
         }
     } elseif ($type == 'unknown') {
@@ -112,10 +112,10 @@ function WikiLink($page_or_rev, $type = 'known', $label = false)
         ! $label and
         strchr(substr($wikipage->shortName, 1), SUBPAGE_SEPARATOR)
     ) {
-        $parts = explode(SUBPAGE_SEPARATOR, $wikipage->shortName);
+        $parts     = explode(SUBPAGE_SEPARATOR, $wikipage->shortName);
         $last_part = array_pop($parts);
-        $sep = '';
-        $link = HTML::span();
+        $sep       = '';
+        $link      = HTML::span();
         foreach ($parts as $part) {
             $path[] = $part;
             $parent = join(SUBPAGE_SEPARATOR, $path);
@@ -198,16 +198,16 @@ function Button($action, $label = false, $page_or_rev = false)
 class PHPWikiTheme
 {
     public $HTML_DUMP_SUFFIX = '';
-    public $DUMP_MODE = false;
+    public $DUMP_MODE        = false;
     public $dumped_images;
     public $dumped_css;
 
     public function __construct($theme_name = 'default')
     {
-        $this->_name = $theme_name;
+        $this->_name       = $theme_name;
         $this->_themes_dir = NormalizeLocalFileName("themes");
-        $this->_path  = defined('PHPWIKI_DIR') ? NormalizeLocalFileName("") : "";
-        $this->_theme = "themes/$theme_name";
+        $this->_path       = defined('PHPWIKI_DIR') ? NormalizeLocalFileName("") : "";
+        $this->_theme      = "themes/$theme_name";
 
         if ($theme_name != 'default') {
             $this->_default_theme = new PHPWikiTheme();
@@ -295,7 +295,7 @@ class PHPWikiTheme
      */
     public function setDateFormat($fs, $show_mod_time = true)
     {
-        $this->_dateFormat = $fs;
+        $this->_dateFormat  = $fs;
         $this->_showModTime = $show_mod_time;
     }
 
@@ -464,9 +464,9 @@ class PHPWikiTheme
             $offset = 0;
         }
 
-        $now = time() + $offset;
+        $now   = time() + $offset;
         $today = localtime($now, true);
-        $time = localtime($time_t + $offset, true);
+        $time  = localtime($time_t + $offset, true);
 
         if ($time['tm_yday'] == $today['tm_yday'] && $time['tm_year'] == $today['tm_year']) {
             return _("today");
@@ -493,7 +493,7 @@ class PHPWikiTheme
         if (! ENABLE_PAGEPERM or ! class_exists("PagePermission")) {
             return '';
         }
-        $dbi = $GLOBALS['request']->_dbi;
+        $dbi   = $GLOBALS['request']->_dbi;
         $owner = $page->getOwner();
         if ($owner <> ADMIN_USER) {
             //display owner user_name according to the user choice: real name, or Codendi login
@@ -519,7 +519,7 @@ class PHPWikiTheme
         if (! $revision) {
             return '';
         }
-        $dbi = $GLOBALS['request']->_dbi;
+        $dbi    = $GLOBALS['request']->_dbi;
         $author = $revision->get('author_id');
         if ($author or $only_authenticated) {
             if (! $author) {
@@ -630,7 +630,7 @@ class PHPWikiTheme
         // Get rid of anchors on unknown wikiwords
         if (isa($wikiword, 'WikiPageName')) {
             $default_text = $wikiword->shortName;
-            $wikiword = $wikiword->name;
+            $wikiword     = $wikiword->name;
         } else {
             $default_text = $wikiword;
         }
@@ -651,7 +651,7 @@ class PHPWikiTheme
                 $text->setAttr('class', empty($linktext) ? 'wikiunknown' : 'named-wikiunknown');
                 return $text;
             } else {
-                $url = WikiURL($wikiword, ['action' => 'create']);
+                $url    = WikiURL($wikiword, ['action' => 'create']);
                 $button = $this->makeButton('?', $url);
                 $button->addTooltip(sprintf(_("Create: %s"), $wikiword));
             }
@@ -710,7 +710,7 @@ class PHPWikiTheme
     //
     ////////////////////////////////////////////////////////////////
     public $_imageAliases = [];
-    public $_imageAlt = [];
+    public $_imageAlt     = [];
 
     /**
      *
@@ -824,7 +824,7 @@ class PHPWikiTheme
         }
 
         $qtext = urlencode($text);
-        $url = $this->_findButton("$qtext.png");
+        $url   = $this->_findButton("$qtext.png");
         if ($url && strstr($url, '%')) {
             $url = preg_replace_callback(
                 '|([^/]+)$|',
@@ -880,7 +880,7 @@ class PHPWikiTheme
     public function _getButtonPath()
     {
         $button_dir = $this->_findFile("buttons");
-        $path_dir = $this->_path . $button_dir;
+        $path_dir   = $this->_path . $button_dir;
         if (! file_exists($path_dir) || ! is_dir($path_dir)) {
             return [];
         }
@@ -900,9 +900,9 @@ class PHPWikiTheme
         }
         $dir->close();
         // add default buttons
-        $path[] = "themes/default/buttons";
+        $path[]   = "themes/default/buttons";
         $path_dir = $this->_path . "themes/default/buttons";
-        $dir = dir($path_dir);
+        $dir      = dir($path_dir);
         while (($subdir = $dir->read()) !== false) {
             if ($subdir[0] == '.') {
                 continue;
@@ -983,7 +983,7 @@ class PHPWikiTheme
         extract($this->_get_name_and_rev($page_or_rev));
 
         if (is_array($action)) {
-            $attr = $action;
+            $attr   = $action;
             $action = isset($attr['action']) ? $attr['action'] : 'browse';
         } else {
             $attr['action'] = $action;
@@ -1048,10 +1048,10 @@ class PHPWikiTheme
         if (empty($page_or_rev)) {
             global $request;
             $pagename = $request->getArg("pagename");
-            $version = $request->getArg("version");
+            $version  = $request->getArg("version");
         } elseif (is_object($page_or_rev)) {
             if (isa($page_or_rev, 'WikiDB_PageRevision')) {
-                $rev = $page_or_rev;
+                $rev  = $page_or_rev;
                 $page = $rev->getPage();
                 if (! $rev->isCurrent()) {
                     $version = $rev->getVersion();
@@ -1228,7 +1228,7 @@ class PHPWikiTheme
      */
     public function getCSS()
     {
-        $css = [];
+        $css    = [];
         $is_alt = false;
         foreach ($this->_css as $title => $css_files) {
             ksort($css_files); // move $css_files[''] to front.
@@ -1288,7 +1288,7 @@ class PHPWikiTheme
     {
         // protect from duplicate attr (body jscript: themes, prefs, ...)
         static $_attr_cache = [];
-        $hash = md5($tag . "/" . $element);
+        $hash               = md5($tag . "/" . $element);
         if (! empty($_attr_cache[$hash])) {
             return;
         }
@@ -1451,9 +1451,9 @@ class ImageButton extends Button
         if (! is_array($img_attr)) {
             $img_attr = [];
         }
-        $img_attr['src'] = $img_url;
-        $img_attr['alt'] = $text;
-        $img_attr['class'] = 'wiki-button';
+        $img_attr['src']    = $img_url;
+        $img_attr['alt']    = $text;
+        $img_attr['class']  = 'wiki-button';
         $img_attr['border'] = 0;
         $this->pushContent(HTML::img($img_attr));
     }
@@ -1532,7 +1532,7 @@ class SidebarBox
     {
         require_once('lib/WikiPlugin.php');
         $this->title = $title;
-        $this->body = $body;
+        $this->body  = $body;
     }
     public function format()
     {
@@ -1549,7 +1549,7 @@ class PluginSidebarBox extends SidebarBox
 {
 
     public $_plugin;
-    public $_args = false;
+    public $_args     = false;
     public $_basepage = false;
 
     public function __construct($name, $args = false, $basepage = false)
@@ -1587,14 +1587,14 @@ class RelatedLinksBox extends SidebarBox
     public function __construct($title = false, $body = '', $limit = 20)
     {
         global $request;
-        $this->title = $title ? $title : _("Related Links");
-        $this->body = HTML($body);
-        $page = $request->getPage($request->getArg('pagename'));
-        $revision = $page->getCurrentRevision();
+        $this->title  = $title ? $title : _("Related Links");
+        $this->body   = HTML($body);
+        $page         = $request->getPage($request->getArg('pagename'));
+        $revision     = $page->getCurrentRevision();
         $page_content = $revision->getTransformedContent();
         //$cache = &$page->_wikidb->_cache;
         $counter = 0;
-        $sp = HTML::Raw('&middot; ');
+        $sp      = HTML::Raw('&middot; ');
         foreach ($page_content->getWikiPageLinks() as $link) {
             if (! $request->_dbi->isWikiPage($link)) {
                 continue;
@@ -1614,11 +1614,11 @@ class RelatedExternalLinksBox extends SidebarBox
     {
         global $request;
         $this->title = $title ? $title : _("External Links");
-        $this->body = HTML($body);
-        $page = $request->getPage($request->getArg('pagename'));
-        $cache = &$page->_wikidb->_cache;
-        $counter = 0;
-        $sp = HTML::Raw('&middot; ');
+        $this->body  = HTML($body);
+        $page        = $request->getPage($request->getArg('pagename'));
+        $cache       = &$page->_wikidb->_cache;
+        $counter     = 0;
+        $sp          = HTML::Raw('&middot; ');
         foreach ($cache->getWikiPageLinks() as $link) {
             if ($link) {
                 $this->body->pushContent($sp, WikiLink($link), HTML::br());
@@ -1634,7 +1634,7 @@ class RelatedExternalLinksBox extends SidebarBox
 function listAvailableThemes()
 {
     $available_themes = [];
-    $dir_root = 'themes';
+    $dir_root         = 'themes';
     if (defined('PHPWIKI_DIR')) {
         $dir_root = PHPWIKI_DIR . "/$dir_root";
     }
@@ -1657,7 +1657,7 @@ function listAvailableThemes()
 function listAvailableLanguages()
 {
     $available_languages = ['en'];
-    $dir_root = 'locale';
+    $dir_root            = 'locale';
     if (defined('PHPWIKI_DIR')) {
         $dir_root = PHPWIKI_DIR . "/$dir_root";
     }

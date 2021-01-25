@@ -65,7 +65,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager
                 $msg .= dgettext('tuleap-docman', "Added:");
                 $msg .= "\n" . $params['item']->getTitle();
 
-                $msg           .= $this->getMonitoringInformation($monitoredItem);
+                $msg .= $this->getMonitoringInformation($monitoredItem);
                 break;
             default:
                 $msg .= parent::_getMessageForUser($user, $message_type, $params);

@@ -72,8 +72,8 @@ class ImageTile extends HtmlElement
 {
     public function image_tile(/*...*/)
     {
-        $el = new HTML('img');
-        $tag = func_get_args();
+        $el     = new HTML('img');
+        $tag    = func_get_args();
         $params = "<img src='../ImageTile.php?url=" . $tag[0]['src'];
         if (! @empty($tag[0]['width'])) {
             $params .= "&width=" . $tag[0]['width'];
@@ -172,15 +172,15 @@ class WikiPlugin_PhotoAlbum extends WikiPlugin
         extract($this->getArgs($argstr, $request));
 
         $attributes = $attrib ? explode(",", $attrib) : [];
-        $photos = [];
-        $html = HTML();
-        $count = 0;
+        $photos     = [];
+        $html       = HTML();
+        $count      = 0;
         // check all parameters
         // what type do we have?
         if (! $src) {
-            $showdesc  = 'none';
-            $src   = $request->getArg('pagename');
-            $error = $this->fromLocation($src, $photos);
+            $showdesc = 'none';
+            $src      = $request->getArg('pagename');
+            $error    = $this->fromLocation($src, $photos);
         } else {
             $error = $this->fromFile($src, $photos, $url);
         }
@@ -207,7 +207,7 @@ class WikiPlugin_PhotoAlbum extends WikiPlugin
         }
 
         if ($mode == "column") {
-            $mode = "normal";
+            $mode    = "normal";
             $numcols = "1";
         }
 
@@ -218,14 +218,14 @@ class WikiPlugin_PhotoAlbum extends WikiPlugin
             $cellwidth  = 'auto'; // else cell won't nowrap
             $width      = 50;
         } elseif ($mode == 'list') {
-            $numcols    = 1;
-            $cellwidth  = "auto";
-            $width = 50;
+            $numcols   = 1;
+            $cellwidth = "auto";
+            $width     = 50;
         } elseif ($mode == 'slide') {
             $tableheight = 0;
-            $cell_width = 0;
-            $numcols = count($photos);
-            $keep = $photos;
+            $cell_width  = 0;
+            $numcols     = count($photos);
+            $keep        = $photos;
             foreach ($photos as $value) {
                 list($x,$y,$s,$t) = @getimagesize($value['src']);
                 if ($height != 'auto') {
@@ -242,11 +242,11 @@ class WikiPlugin_PhotoAlbum extends WikiPlugin
                 }
             }
             $tableheight += 50;
-            $photos = $keep;
+            $photos       = $keep;
             unset($x, $y, $s, $t, $key, $value, $keep);
         }
 
-        $row = HTML();
+        $row      = HTML();
         $duration = 1000 * $duration;
         if ($mode == 'slide') {
             $row->pushContent(JavaScript("
@@ -354,7 +354,7 @@ display_slides();"));
                 $cell = array_merge($cell, ["nowrap" => "nowrap"]);
             }
             //create url to display single larger version of image on page
-            $url     = WikiURL(
+            $url = WikiURL(
                 $request->getPage(),
                 ["p" => basename($value["name"])]
             )
@@ -367,7 +367,7 @@ display_slides();"));
             )
                 . "#"
                 . basename($value["name"]);
-            $url_text   = $link
+            $url_text = $link
                 ? HTML::a(["href" => "$url"], basename($value["desc"]))
                 : basename($value["name"]);
             if (! $p) {
@@ -393,7 +393,7 @@ display_slides();"));
                             ImageTile::image_tile($params)
                         )
                     ) : HTML::img($params);
-                    $params = $keep;
+                    $params    = $keep;
                     unset($keep);
                 }
             } else {
@@ -665,7 +665,7 @@ display_slides();"));
             return $this->error(_("Bad url in src: remove all of <, >, \""));
         }
         if (preg_match('/^(http|ftp|https):\/\//i', $src)) {
-            $contents = url_get_contents($src);
+            $contents     = url_get_contents($src);
             $web_location = 1;
         } else {
             $web_location = 0;
@@ -679,7 +679,7 @@ display_slides();"));
             $list = [];
             foreach (['jpeg', 'jpg', 'png', 'gif'] as $ext) {
                 $fileset = new fileSet($src, "*.$ext");
-                $list = array_merge($list, $fileset->getFiles());
+                $list    = array_merge($list, $fileset->getFiles());
             }
             // convert dirname($src) (local fs path) to web path
             natcasesort($list);

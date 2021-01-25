@@ -35,19 +35,19 @@ class DataExportPresenterBuilder
     ) {
         if (! $services_usage_start_date) {
             $services_usage_start_date_time = new DateTime();
-            $services_usage_start_date = $services_usage_start_date_time->sub(new DateInterval('P1M'))->format('Y-m-d');
+            $services_usage_start_date      = $services_usage_start_date_time->sub(new DateInterval('P1M'))->format('Y-m-d');
         }
         if (! $services_usage_end_date) {
             $services_usage_end_date_time = new DateTime();
-            $services_usage_end_date = $services_usage_end_date_time->format('Y-m-d');
+            $services_usage_end_date      = $services_usage_end_date_time->format('Y-m-d');
         }
         if (! $scm_statistics_start_date) {
             $scm_statistics_start_date_time = new DateTime();
-            $scm_statistics_start_date = $scm_statistics_start_date_time->sub(new DateInterval('P1Y'))->format('Y-m-d');
+            $scm_statistics_start_date      = $scm_statistics_start_date_time->sub(new DateInterval('P1Y'))->format('Y-m-d');
         }
         if (! $scm_statistics_end_date) {
             $scm_statistics_end_date_time = new DateTime();
-            $scm_statistics_end_date = $scm_statistics_end_date_time->format('Y-m-d');
+            $scm_statistics_end_date      = $scm_statistics_end_date_time->format('Y-m-d');
         }
 
         if ($scm_statistics_start_date > $scm_statistics_end_date || $services_usage_start_date > $scm_statistics_end_date) {

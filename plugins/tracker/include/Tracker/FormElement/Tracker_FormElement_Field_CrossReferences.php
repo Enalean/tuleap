@@ -65,7 +65,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
             //Only filter query if criteria is valuated
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
                 $criteria_value = CodendiDataAccess::instance()->quoteSmart($criteria_value);
-                $a = 'A_' . $this->id;
+                $a              = 'A_' . $this->id;
                 return " INNER JOIN cross_references AS $a
                          ON (artifact.id = $a.source_id AND $a.source_type = '" . Artifact::REFERENCE_NATURE . "' AND $a.target_id = $criteria_value
                              OR
@@ -96,7 +96,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
 
     private function getCrossReferenceListForREST(Tracker_Artifact_Changeset $changeset)
     {
-        $crf  = new CrossReferenceFactory(
+        $crf = new CrossReferenceFactory(
             $changeset->getArtifact()->getId(),
             Artifact::REFERENCE_NATURE,
             $this->getTracker()->getGroupId()
@@ -173,7 +173,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
 
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report = null)
     {
-        $html = '';
+        $html          = '';
         $crossref_fact = $this->getCrossReferencesFactory($artifact_id);
 
         if ($crossref_fact->getNbReferences()) {
@@ -436,7 +436,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     ) {
         $output = '';
 
-        $crf  = new CrossReferenceFactory($artifact->getId(), Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $crf = new CrossReferenceFactory($artifact->getId(), Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crf->fetchDatas();
 
         switch ($format) {
@@ -448,10 +448,10 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 }
                 break;
             default:
-                $refs = $crf->getFormattedCrossReferences();
-                $src  = '';
-                $tgt  = '';
-                $both = '';
+                $refs   = $crf->getFormattedCrossReferences();
+                $src    = '';
+                $tgt    = '';
+                $both   = '';
                 $output = PHP_EOL;
                 if (! empty($refs['target'])) {
                     foreach ($refs['target'] as $refTgt) {
@@ -494,7 +494,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      */
     protected function fetchAdminFormElement()
     {
-        $html = '';
+        $html  = '';
         $html .= '<div>' . dgettext('tuleap-tracker', 'Display in & out references') . '</div>';
         return $html;
     }
@@ -527,7 +527,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      */
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $html = '';
+        $html          = '';
         $crossref_fact = new CrossReferenceFactory($artifact->getId(), Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_fact->fetchDatas();
         if ($crossref_fact->getNbReferences()) {

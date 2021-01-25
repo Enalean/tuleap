@@ -30,18 +30,18 @@ class Tracker_FormElement_SeparatorTest extends TestCase
     public function testFetchDescription()
     {
         $expected_message = '';
-        $id = 2;
-        $tracker_id = 254;
-        $parent_id = 0;
-        $name = 'separator2';
-        $label = 'Separator Label';
-        $description = 'Separator Description that should not be kept';
-        $use_it = true;
-        $scope = 'S';
-        $required = false;
-        $notifications = false;
-        $rank = 25;
-        $original_field = null;
+        $id               = 2;
+        $tracker_id       = 254;
+        $parent_id        = 0;
+        $name             = 'separator2';
+        $label            = 'Separator Label';
+        $description      = 'Separator Description that should not be kept';
+        $use_it           = true;
+        $scope            = 'S';
+        $required         = false;
+        $notifications    = false;
+        $rank             = 25;
+        $original_field   = null;
 
         $separator = new Tracker_FormElement_StaticField_Separator($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field);
 

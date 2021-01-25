@@ -38,8 +38,8 @@ class MailAccountSuspensionPresenter extends MailOutlinePresenter
     public function __construct(string $logo_url, string $color_logo, DateTimeImmutable $last_access_date, BaseLanguage $language)
     {
         parent::__construct($logo_url, '', '', '', $color_logo);
-        $this->last_access_date = DateHelper::formatForLanguage($language, $last_access_date->getTimestamp(), true);
-        $this->organization_name = ForgeConfig::get('sys_org_name');
+        $this->last_access_date   = DateHelper::formatForLanguage($language, $last_access_date->getTimestamp(), true);
+        $this->organization_name  = ForgeConfig::get('sys_org_name');
         $this->tuleap_server_name = ForgeConfig::get('sys_name');
         $this->notification_delay = (int) ForgeConfig::get(UserSuspensionManager::CONFIG_NOTIFICATION_DELAY);
     }

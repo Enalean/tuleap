@@ -71,12 +71,12 @@ final class PlanningProgramAdapter implements BuildPlanningConfiguration
         ProgramStore $program_store,
         TeamStore $team_store
     ) {
-        $this->plan_store         = $plan_store;
-        $this->tracker_factory    = $tracker_factory;
-        $this->project_manager    = $project_manager;
-        $this->program_store      = $program_store;
-        $this->url_verification   = $url_verification;
-        $this->team_store         = $team_store;
+        $this->plan_store       = $plan_store;
+        $this->tracker_factory  = $tracker_factory;
+        $this->project_manager  = $project_manager;
+        $this->program_store    = $program_store;
+        $this->url_verification = $url_verification;
+        $this->team_store       = $team_store;
     }
 
     /**
@@ -90,7 +90,7 @@ final class PlanningProgramAdapter implements BuildPlanningConfiguration
         if (! $program_increment_tracker_id) {
             throw new ProgramTrackerNotFoundException($project_id);
         }
-        $program_increment_tracker    = $this->getValidTracker(
+        $program_increment_tracker = $this->getValidTracker(
             $program_increment_tracker_id
         );
 
@@ -132,7 +132,7 @@ final class PlanningProgramAdapter implements BuildPlanningConfiguration
             return null;
         }
 
-        $program              = $this->project_manager->getProject($program_increment_id);
+        $program = $this->project_manager->getProject($program_increment_id);
 
         if (! $this->program_store->isProjectAProgramProject((int) $program->getId())) {
             throw new ProjectIsNotAProgramException((int) $program->getId());

@@ -34,7 +34,7 @@ class DynamicUserCreatorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $language = \Mockery::mock(\BaseLanguage::class);
+        $language            = \Mockery::mock(\BaseLanguage::class);
         $GLOBALS['Language'] = $language;
     }
 

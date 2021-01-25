@@ -25,9 +25,9 @@ class Docman_ItemActionMove extends \Docman_ItemAction
     public function __construct(&$item)
     {
         parent::__construct($item);
-        $this->action = 'move';
-        $this->classes = 'docman_item_option_move';
-        $this->title = \dgettext('tuleap-docman', 'Move');
+        $this->action        = 'move';
+        $this->classes       = 'docman_item_option_move';
+        $this->title         = \dgettext('tuleap-docman', 'Move');
         $this->other_icons[] = 'move-up';
         $this->other_icons[] = 'move-down';
         $this->other_icons[] = 'move-beginning';

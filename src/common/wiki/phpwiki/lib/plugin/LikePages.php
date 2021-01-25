@@ -72,7 +72,7 @@ class WikiPlugin_LikePages extends WikiPlugin
         }
 
         if ($prefix) {
-            $suffix = false;
+            $suffix  = false;
             $descrip = fmt("Page names with prefix '%s'", $prefix);
         } elseif ($suffix) {
             $descrip = fmt("Page names with suffix '%s'", $suffix);

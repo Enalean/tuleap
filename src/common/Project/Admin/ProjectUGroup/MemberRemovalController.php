@@ -91,7 +91,7 @@ class MemberRemovalController implements DispatchableWithRequest
         CSRFSynchronizerToken $csrf_synchronizer
     ) {
         $this->project_retriever      = $project_retriever;
-        $this->administrator_checker = $administrator_checker;
+        $this->administrator_checker  = $administrator_checker;
         $this->ugroup_manager         = $ugroup_manager;
         $this->user_manager           = $user_manager;
         $this->member_remover         = $member_remover;

@@ -39,8 +39,8 @@ class ProjectCreationTemplatePresenter
 
     public function __construct(Project $project, $selected_template_id)
     {
-        $this->project       = $project;
-        $this->text_purifier = Codendi_HTMLPurifier::instance();
+        $this->project              = $project;
+        $this->text_purifier        = Codendi_HTMLPurifier::instance();
         $this->selected_template_id = $selected_template_id;
     }
 

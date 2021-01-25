@@ -28,11 +28,11 @@ class MediawikiFusionForgeProjectNameRetriever
         }
         if (! $fusionforgeprojectname) {
             $administration_project = new Group(1);
-            $fusionforgeprojectname     = $administration_project->getUnixName();
+            $fusionforgeprojectname = $administration_project->getUnixName();
         }
 
-        $wiki_url = substr($_SERVER['REQUEST_URI'], strlen('/plugins/mediawiki/wiki') + 1);
-        $wiki_url_array = explode('/', $wiki_url);
+        $wiki_url               = substr($_SERVER['REQUEST_URI'], strlen('/plugins/mediawiki/wiki') + 1);
+        $wiki_url_array         = explode('/', $wiki_url);
         $fusionforgeprojectname = $wiki_url_array[0];
         return $fusionforgeprojectname;
     }

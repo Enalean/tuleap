@@ -62,17 +62,17 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     protected $deleted_tracker_id;
     protected $kanban_tracker_id;
 
-    protected $project_ids = [];
-    protected $tracker_ids = [];
+    protected $project_ids     = [];
+    protected $tracker_ids     = [];
     protected $user_groups_ids = [];
-    protected $user_ids = [];
+    protected $user_ids        = [];
 
     protected $tracker_representations = [];
 
     protected $release_artifact_ids = [];
-    protected $epic_artifact_ids = [];
-    protected $story_artifact_ids = [];
-    protected $sprint_artifact_ids = [];
+    protected $epic_artifact_ids    = [];
+    protected $story_artifact_ids   = [];
+    protected $sprint_artifact_ids  = [];
 
     /**
      * @var Cache
@@ -191,9 +191,9 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
     private function initProjectIds()
     {
-        $offset = 0;
-        $limit  = 50;
-        $query_for_active_projects  = http_build_query([
+        $offset                    = 0;
+        $limit                     = 50;
+        $query_for_active_projects = http_build_query([
             'limit' => $limit, 'offset' => $offset
         ]);
 
@@ -302,7 +302,7 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         // Since the tracker is deleted it can not be retrieved through the REST route, it is however expected to be created right after
         // the user story tracker so hopefully it takes the next available ID. This is a weak assumption, a clean way to achieve the test
         // would be to introduce a DELETE trackers/:id route. See tests/rest/_fixtures/01-private-member/project.xml.
-        $this->deleted_tracker_id      = $this->user_stories_tracker_id + 1;
+        $this->deleted_tracker_id = $this->user_stories_tracker_id + 1;
 
         $this->kanban_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::KANBAN_TRACKER_SHORTNAME];
     }

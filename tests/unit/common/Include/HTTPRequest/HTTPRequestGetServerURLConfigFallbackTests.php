@@ -35,7 +35,7 @@ class HTTPRequestGetServerURLConfigFallbackTests extends HTTPRequestGetServerURL
     public function testItReturnsHostNameOfProxyWhenBehindAProxy()
     {
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
-        $_SERVER['HTTP_HOST'] = 'meow.test';
+        $_SERVER['HTTP_HOST']              = 'meow.test';
 
         $this->assertEquals('https://meow.test', $this->request->getServerUrl());
     }

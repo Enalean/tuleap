@@ -64,7 +64,7 @@ class ApprovalTableRetrieverTest extends TestCase
         $version_id = 1;
         $version->shouldReceive('getNumber')->andReturn($version_id);
 
-        $item = Mockery::mock(\Docman_Item::class);
+        $item          = Mockery::mock(\Docman_Item::class);
         $table_factory = Mockery::mock(\Docman_ApprovalTableFileFactory::class);
         $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
         $this->approval_table_factory->shouldReceive('isAVersionedApprovalTableFactory')->andReturn(true);
@@ -82,7 +82,7 @@ class ApprovalTableRetrieverTest extends TestCase
         $version_id = 1;
         $version->shouldReceive('getNumber')->andReturn($version_id);
 
-        $item = Mockery::mock(\Docman_Item::class);
+        $item          = Mockery::mock(\Docman_Item::class);
         $table_factory = Mockery::mock(\Docman_ApprovalTableFileFactory::class);
         $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
 
@@ -101,7 +101,7 @@ class ApprovalTableRetrieverTest extends TestCase
         $version_id = 1;
         $version->shouldReceive('getNumber')->andReturn($version_id);
 
-        $item = Mockery::mock(\Docman_Item::class);
+        $item          = Mockery::mock(\Docman_Item::class);
         $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
         $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
 
@@ -120,7 +120,7 @@ class ApprovalTableRetrieverTest extends TestCase
         $version_id = 1;
         $version->shouldReceive('getNumber')->andReturn($version_id);
 
-        $item = Mockery::mock(\Docman_Item::class);
+        $item          = Mockery::mock(\Docman_Item::class);
         $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
         $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
 
@@ -141,7 +141,7 @@ class ApprovalTableRetrieverTest extends TestCase
         $version_id = 1;
         $version->shouldReceive('getNumber')->andReturn($version_id);
 
-        $item = Mockery::mock(\Docman_Item::class);
+        $item          = Mockery::mock(\Docman_Item::class);
         $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
         $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
 
@@ -164,7 +164,7 @@ class ApprovalTableRetrieverTest extends TestCase
         $version_id = 1;
         $version->shouldReceive('getNumber')->andReturn($version_id);
 
-        $item = Mockery::mock(\Docman_Item::class);
+        $item          = Mockery::mock(\Docman_Item::class);
         $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
         $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
 
@@ -187,7 +187,7 @@ class ApprovalTableRetrieverTest extends TestCase
         $version_id = 1;
         $version->shouldReceive('getNumber')->andReturn($version_id);
 
-        $item = Mockery::mock(\Docman_Item::class);
+        $item          = Mockery::mock(\Docman_Item::class);
         $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
         $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
 
@@ -211,7 +211,7 @@ class ApprovalTableRetrieverTest extends TestCase
         $version_id = 1;
         $version->shouldReceive('getNumber')->andReturn($version_id);
 
-        $item = Mockery::mock(\Docman_Item::class);
+        $item          = Mockery::mock(\Docman_Item::class);
         $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
         $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
 
@@ -234,7 +234,7 @@ class ApprovalTableRetrieverTest extends TestCase
         $version_id = 1;
         $version->shouldReceive('getNumber')->andReturn($version_id);
 
-        $item = Mockery::mock(\Docman_Item::class);
+        $item          = Mockery::mock(\Docman_Item::class);
         $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
         $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
 

@@ -53,7 +53,7 @@ class MinimalHudsonJobFactory // @codingStandardsIgnoreLine
 
     private function getJobsByGroup($group_id)
     {
-        $dar = $this->getDao()->searchByGroupID($group_id);
+        $dar  = $this->getDao()->searchByGroupID($group_id);
         $jobs = [];
         foreach ($dar as $row) {
             try {
@@ -71,7 +71,7 @@ class MinimalHudsonJobFactory // @codingStandardsIgnoreLine
      */
     private function getJobsByUser($user_id)
     {
-        $dar = $this->getDao()->searchByUserID($user_id);
+        $dar  = $this->getDao()->searchByUserID($user_id);
         $jobs = [];
         foreach ($dar as $row) {
             try {

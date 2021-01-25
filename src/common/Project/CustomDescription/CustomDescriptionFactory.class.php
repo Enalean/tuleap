@@ -41,7 +41,7 @@ class Project_CustomDescription_CustomDescriptionFactory
     public function getRequiredCustomDescriptions()
     {
         $required_custom_descriptions = [];
-        $res = $this->dao->getRequiredCustomDescriptions();
+        $res                          = $this->dao->getRequiredCustomDescriptions();
         while ($row = $res->getRow()) {
             $required_custom_descriptions[$row['group_desc_id']] = $this->getInstanceFromRow($row);
         }
@@ -65,7 +65,7 @@ class Project_CustomDescription_CustomDescriptionFactory
     public function getCustomDescriptions()
     {
         $custom_descriptions = [];
-        $res = $this->dao->getCustomDescriptions();
+        $res                 = $this->dao->getCustomDescriptions();
         while ($row = $res->getRow()) {
             $custom_descriptions[$row['group_desc_id']] = $this->getInstanceFromRow($row);
         }

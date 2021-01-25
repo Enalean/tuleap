@@ -51,19 +51,19 @@ final class LogToGraylog2
      *
      * @tlp-config-key
      */
-    public const CONFIG_GRAYLOG2_PORT   = 'graylog2_port';
+    public const CONFIG_GRAYLOG2_PORT = 'graylog2_port';
     /**
      * Toggle usage of TLS to communicate with Graylog2 server
      *
      * @tlp-config-key
      */
-    public const CONFIG_GRAYLOG2_SSL    = 'graylog2_ssl';
+    public const CONFIG_GRAYLOG2_SSL = 'graylog2_ssl';
     /**
      * Toggle debug mode of communication between Tuleap and Graylog2 server
      *
      * @tlp-config-key
      */
-    public const CONFIG_GRAYLOG2_DEBUG  = 'graylog2_debug';
+    public const CONFIG_GRAYLOG2_DEBUG = 'graylog2_debug';
 
     public function configure(Logger $logger, int $level): LoggerInterface
     {

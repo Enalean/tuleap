@@ -58,7 +58,7 @@ final class JiraTrackersListControllerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $user = Mockery::mock(\PFUser::class);
+        $user    = Mockery::mock(\PFUser::class);
         $project = Mockery::mock(\Project::class);
 
         $project_manager = Mockery::mock(ProjectManager::instance());

@@ -36,8 +36,8 @@ final class DefaultProjectVisibilityRetriever
 
     public function getDefaultProjectVisibility(): string
     {
-        $are_restricted_users_allowed          = ForgeConfig::areRestrictedUsersAllowed();
-        $default_project_visibility_setting    = ForgeConfig::get(self::CONFIG_SETTING_NAME);
+        $are_restricted_users_allowed       = ForgeConfig::areRestrictedUsersAllowed();
+        $default_project_visibility_setting = ForgeConfig::get(self::CONFIG_SETTING_NAME);
 
         if ($are_restricted_users_allowed && $default_project_visibility_setting === Project::ACCESS_PUBLIC_UNRESTRICTED) {
             return $default_project_visibility_setting;

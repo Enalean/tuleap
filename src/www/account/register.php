@@ -30,8 +30,8 @@ require_once __DIR__ . '/../include/account.php';
 require_once __DIR__ . '/../include/timezones.php';
 
 $GLOBALS['HTML']->includeCalendarScripts();
-$request = HTTPRequest::instance();
-$page = $request->get('page');
+$request               = HTTPRequest::instance();
+$page                  = $request->get('page');
 $confirmation_register = false;
 // ###### function register_valid()
 // ###### checks for valid register from form post
@@ -122,9 +122,9 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
     $vDate = new Valid_String();
     $vDate->required();
     if ($request->exist('form_expiry') && $vDate->validate($request->get('form_expiry'))) {
-        $date_list = preg_split("/-/D", $request->get('form_expiry'), 3);
+        $date_list        = preg_split("/-/D", $request->get('form_expiry'), 3);
         $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
-        $expiry_date = $unix_expiry_time;
+        $expiry_date      = $unix_expiry_time;
     }
 
     $status = 'P';
@@ -172,32 +172,32 @@ function getFieldError($field_key, array $errors)
 
 function display_account_form(bool $is_password_needed, $register_error, array $errors): void
 {
-    $request  = HTTPRequest::instance();
+    $request = HTTPRequest::instance();
 
     $page = $request->get('page');
     if ($register_error) {
         print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
     }
-    $form_loginname         = $request->exist('form_loginname') ? $request->get('form_loginname') : '';
-    $form_loginname_error   = getFieldError('form_loginname', $errors);
+    $form_loginname       = $request->exist('form_loginname') ? $request->get('form_loginname') : '';
+    $form_loginname_error = getFieldError('form_loginname', $errors);
 
-    $form_realname          = $request->exist('form_realname') ? $request->get('form_realname') : '';
-    $form_realname_error    = getFieldError('form_realname', $errors);
+    $form_realname       = $request->exist('form_realname') ? $request->get('form_realname') : '';
+    $form_realname_error = getFieldError('form_realname', $errors);
 
-    $form_email             = $request->exist('form_email') ? $request->get('form_email') : '';
-    $form_email_error       = getFieldError('form_email', $errors);
+    $form_email       = $request->exist('form_email') ? $request->get('form_email') : '';
+    $form_email_error = getFieldError('form_email', $errors);
 
-    $form_pw                = '';
-    $form_pw_error          = getFieldError('form_pw', $errors);
+    $form_pw       = '';
+    $form_pw_error = getFieldError('form_pw', $errors);
 
-    $form_mail_site         = ! $request->exist('form_mail_site') || $request->get('form_mail_site') == 1;
-    $form_mail_site_error   = getFieldError('form_mail_site', $errors);
+    $form_mail_site       = ! $request->exist('form_mail_site') || $request->get('form_mail_site') == 1;
+    $form_mail_site_error = getFieldError('form_mail_site', $errors);
 
-    $form_restricted        = ForgeConfig::areRestrictedUsersAllowed() && (! $request->exist('form_restricted') || $request->get('form_restricted') == 1);
-    $form_restricted_error  = getFieldError('form_restricted', $errors);
+    $form_restricted       = ForgeConfig::areRestrictedUsersAllowed() && (! $request->exist('form_restricted') || $request->get('form_restricted') == 1);
+    $form_restricted_error = getFieldError('form_restricted', $errors);
 
-    $form_send_email        = $request->get('form_send_email') == 1;
-    $form_send_email_error  = getFieldError('form_send_email', $errors);
+    $form_send_email       = $request->get('form_send_email') == 1;
+    $form_send_email_error = getFieldError('form_send_email', $errors);
 
     if ($request->exist('timezone') && is_valid_timezone($request->get('timezone'))) {
         $timezone = $request->get('timezone');
@@ -206,8 +206,8 @@ function display_account_form(bool $is_password_needed, $register_error, array $
     }
     $timezone_error = getFieldError('timezone', $errors);
 
-    $form_register_purpose          = $request->exist('form_register_purpose') ? $request->get('form_register_purpose') : '';
-    $form_register_purpose_error    = getFieldError('form_register_purpose', $errors);
+    $form_register_purpose       = $request->exist('form_register_purpose') ? $request->get('form_register_purpose') : '';
+    $form_register_purpose_error = getFieldError('form_register_purpose', $errors);
 
     $extra_plugin_field = '';
     EventManager::instance()->processEvent(
@@ -219,7 +219,7 @@ function display_account_form(bool $is_password_needed, $register_error, array $
     );
 
     if ($page == "admin_creation") {
-        $prefill = new Account_RegisterAdminPrefillValuesPresenter(
+        $prefill   = new Account_RegisterAdminPrefillValuesPresenter(
             new Account_RegisterField($form_loginname, $form_loginname_error),
             new Account_RegisterField($form_email, $form_email_error),
             new Account_RegisterField($form_pw, $form_pw_error),
@@ -232,14 +232,14 @@ function display_account_form(bool $is_password_needed, $register_error, array $
             $form_restricted
         );
         $presenter = new Account_RegisterByAdminPresenter($prefill, $extra_plugin_field);
-        $template = 'register-admin';
+        $template  = 'register-admin';
     } else {
         $password_field = null;
         if ($is_password_needed) {
             $password_field = new Account_RegisterField($form_pw, $form_pw_error);
         }
 
-        $prefill = new Account_RegisterPrefillValuesPresenter(
+        $prefill   = new Account_RegisterPrefillValuesPresenter(
             new Account_RegisterField($form_loginname, $form_loginname_error),
             new Account_RegisterField($form_email, $form_email_error),
             $password_field,
@@ -249,7 +249,7 @@ function display_account_form(bool $is_password_needed, $register_error, array $
             new Account_RegisterField($timezone, $timezone_error)
         );
         $presenter = new Account_RegisterByUserPresenter($prefill, $extra_plugin_field);
-        $template = 'register-user';
+        $template  = 'register-user';
     }
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
     $renderer->renderToPage($template, $presenter);
@@ -269,8 +269,8 @@ if ($page !== 'admin_creation') {
 
 // ###### first check for valid login, if so, congratulate
 $request = HTTPRequest::instance();
-$hp = Codendi_HTMLPurifier::instance();
-$errors = [];
+$hp      = Codendi_HTMLPurifier::instance();
+$errors  = [];
 if ($request->isPost() && $request->exist('Register')) {
     $is_registration_valid = true;
     EventManager::instance()->processEvent(
@@ -299,16 +299,16 @@ if ($request->isPost() && $request->exist('Register')) {
             ]
         );
 
-        $confirmation_register   = true;
-        $user_name               = user_getname($new_userid);
-        $content                 = '';
-        $admin_creation          = false;
+        $confirmation_register = true;
+        $user_name             = user_getname($new_userid);
+        $content               = '';
+        $admin_creation        = false;
 
         if ($page == 'admin_creation') {
             $admin_creation = true;
             if ($request->get('form_send_email')) {
                 //send an email to the user with th login and password
-                $from      = ForgeConfig::get('sys_noreply');
+                $from    = ForgeConfig::get('sys_noreply');
                 $is_sent = send_admin_new_user_email(
                     $request->get('form_email'),
                     $request->get('form_loginname')
@@ -322,7 +322,7 @@ if ($request->isPost() && $request->exist('Register')) {
                 }
             }
         }
-        $thanks = $Language->getText('account_register', 'msg_thanks');
+        $thanks    = $Language->getText('account_register', 'msg_thanks');
         $is_thanks = true;
 
         if (ForgeConfig::get('sys_user_approval') == 0 || $admin_creation) {
@@ -333,15 +333,15 @@ if ($request->isPost() && $request->exist('Register')) {
                         $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')])
                     );
                 }
-                $presenter = new MailPresenterFactory();
+                $presenter       = new MailPresenterFactory();
                 $email_presenter = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
             }
 
-            $title  = $Language->getText('account_register', 'title_confirm');
+            $title = $Language->getText('account_register', 'title_confirm');
 
             if ($admin_creation) {
-                $title  = $Language->getText('account_register', 'title_confirm_admin');
-                $content = $Language->getText(
+                $title            = $Language->getText('account_register', 'title_confirm_admin');
+                $content          = $Language->getText(
                     'account_register',
                     'msg_confirm_admin',
                     [
@@ -351,26 +351,26 @@ if ($request->isPost() && $request->exist('Register')) {
                         $hp->purify($request->get('form_pw'))
                     ]
                 );
-                $thanks             = '';
-                $is_thanks           = false;
-                $redirect_url       = '/admin';
-                $redirect_content   = $Language->getText('account_register', 'msg_redirect_admin');
-                $displayed_image    = false;
+                $thanks           = '';
+                $is_thanks        = false;
+                $redirect_url     = '/admin';
+                $redirect_content = $Language->getText('account_register', 'msg_redirect_admin');
+                $displayed_image  = false;
             } else {
-                $content            = $Language->getText('account_register', 'msg_confirm', [ForgeConfig::get('sys_name'), $user_name]);
-                $redirect_url       = '/';
-                $redirect_content   = $Language->getText('account_register', 'msg_redirect');
+                $content          = $Language->getText('account_register', 'msg_confirm', [ForgeConfig::get('sys_name'), $user_name]);
+                $redirect_url     = '/';
+                $redirect_content = $Language->getText('account_register', 'msg_redirect');
             }
         } else {
             // Registration requires approval
             // inform the user that approval is required
-            $href_approval      = HTTPRequest::instance()->getServerUrl() . '/admin/approve_pending_users.php?page=pending';
-            $title              = $Language->getText('account_register', 'title_approval');
-            $content            = $Language->getText('account_register', 'msg_approval', [ForgeConfig::get('sys_name'), $user_name, $href_approval]);
-            $redirect_url       = '/';
-            $redirect_content   = $Language->getText('account_register', 'msg_redirect');
-            $presenter          = new MailPresenterFactory();
-            $email_presenter    = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
+            $href_approval    = HTTPRequest::instance()->getServerUrl() . '/admin/approve_pending_users.php?page=pending';
+            $title            = $Language->getText('account_register', 'title_approval');
+            $content          = $Language->getText('account_register', 'msg_approval', [ForgeConfig::get('sys_name'), $user_name, $href_approval]);
+            $redirect_url     = '/';
+            $redirect_content = $Language->getText('account_register', 'msg_redirect');
+            $presenter        = new MailPresenterFactory();
+            $email_presenter  = $presenter->createMailAccountPresenter($user_name, $mail_confirm_code, "user", (string) $logo_retriever->getLegacyUrl());
         }
         $presenter = new Account_ConfirmationPresenter(
             $title,
@@ -383,7 +383,7 @@ if ($request->isPost() && $request->exist('Register')) {
             $image_url,
             $email_presenter
         );
-        $template = 'confirmation';
+        $template  = 'confirmation';
     }
 }
 

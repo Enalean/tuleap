@@ -29,7 +29,7 @@ final class RevokerTest extends \PHPUnit\Framework\TestCase
     public function testRemovesUserLostPasswordTokens(): void
     {
         $user = UserTestBuilder::aUser()->withId(101)->build();
-        $dao = \Mockery::mock(LostPasswordDAO::class);
+        $dao  = \Mockery::mock(LostPasswordDAO::class);
         $dao->shouldReceive('deleteTokensByUserId')->with(101)->once();
 
         $token_revoker = new Revoker($dao);

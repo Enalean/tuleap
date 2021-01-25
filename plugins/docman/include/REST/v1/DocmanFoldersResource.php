@@ -168,11 +168,11 @@ class DocmanFoldersResource extends AuthenticatedResource
             $docman_item_creator = DocmanItemCreatorBuilder::build($project);
 
             try {
-                $metadata_factory = new Docman_MetadataFactory($project->getGroupId());
+                $metadata_factory    = new Docman_MetadataFactory($project->getGroupId());
                 $list_values_builder = new MetadataListOfValuesElementListBuilder(
                     new Docman_MetadataListOfValuesElementDao()
                 );
-                $custom_retriever = new CustomMetadataRepresentationRetriever(
+                $custom_retriever    = new CustomMetadataRepresentationRetriever(
                     $metadata_factory,
                     $list_values_builder,
                     new CustomMetadataCollectionBuilder($metadata_factory, $list_values_builder)
@@ -663,11 +663,11 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setHeaders();
 
-        $item_request        = $this->request_builder->buildFromItemId($id);
-        $item_to_delete      = $item_request->getItem();
-        $current_user        = $this->user_manager->getCurrentUser();
-        $project             = $item_request->getProject();
-        $validator_visitor   = $this->getValidator($project, $current_user, $item_to_delete);
+        $item_request      = $this->request_builder->buildFromItemId($id);
+        $item_to_delete    = $item_request->getItem();
+        $current_user      = $this->user_manager->getCurrentUser();
+        $project           = $item_request->getProject();
+        $validator_visitor = $this->getValidator($project, $current_user, $item_to_delete);
 
         $item_to_delete->accept($validator_visitor);
 
@@ -866,8 +866,8 @@ class DocmanFoldersResource extends AuthenticatedResource
     {
         $docman_plugin = PluginManager::instance()->getPluginByName('docman');
         assert($docman_plugin instanceof DocmanPlugin);
-        $docman_plugin_info  = $docman_plugin->getPluginInfo();
-        $item_factory        = new Docman_ItemFactory();
+        $docman_plugin_info = $docman_plugin->getPluginInfo();
+        $item_factory       = new Docman_ItemFactory();
         return new DocmanItemCopier(
             $item_factory,
             new BeforeCopyVisitor(

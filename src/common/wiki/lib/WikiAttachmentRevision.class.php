@@ -66,7 +66,7 @@ class WikiAttachmentRevision
     public function __construct($gid = null)
     {
         if (is_numeric($gid)) {
-            $this->gid = (int) $gid;
+            $this->gid     = (int) $gid;
             $this->basedir = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->gid;
         }
     }
@@ -112,7 +112,7 @@ class WikiAttachmentRevision
 
         /** @todo: add lock */
 
-        $waIter = $this->getRevisionIterator();
+        $waIter         = $this->getRevisionIterator();
         $this->revision = $waIter->count();
 
         if (! move_uploaded_file($userfile_tmpname, $file_dir . '/' . $this->revision)) {
@@ -230,7 +230,7 @@ class WikiAttachmentRevision
     public function setGid($gid)
     {
         if (is_numeric($gid)) {
-            $this->gid = (int) $gid;
+            $this->gid     = (int) $gid;
             $this->basedir = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->gid;
         }
     }
@@ -298,7 +298,7 @@ class WikiAttachmentRevision
             $wa->initWithId($this->attachmentId);
             // @todo: catch error when given attchId do not exist
             $this->displayFilename = $wa->getFilename();
-            $this->filename       = $wa->getFilesystemName();
+            $this->filename        = $wa->getFilesystemName();
         }
         return $this->filename;
     }

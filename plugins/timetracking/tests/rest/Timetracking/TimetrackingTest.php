@@ -30,17 +30,17 @@ class TimetrackingTest extends TimetrackingBase
 {
     public function testGetTimesForUserWithDates(): void
     {
-        $query = urlencode(
+        $query               = urlencode(
             json_encode([
                 "start_date" => "2018-04-01T00:00:00+01",
                 "end_date"   => "2018-04-10T00:00:00+01"
             ])
         );
-        $response = $this->getResponseByName(
+        $response            = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
             $this->client->get("users/" . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
         );
-        $times_by_artifact = $response->json();
+        $times_by_artifact   = $response->json();
         $current_artifact_id = key($times_by_artifact);
         $times               = $times_by_artifact[$current_artifact_id];
 
@@ -54,7 +54,7 @@ class TimetrackingTest extends TimetrackingBase
 
     public function testGetTimesForUserWithDatesWithReadOnlySiteAdmin(): void
     {
-        $query = urlencode(
+        $query    = urlencode(
             json_encode([
                 "start_date" => "2018-04-01T00:00:00+01",
                 "end_date"   => "2018-04-10T00:00:00+01"
@@ -77,11 +77,11 @@ class TimetrackingTest extends TimetrackingBase
             ])
         );
 
-        $response = $this->getResponseByName(
+        $response            = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
             $this->client->get("users/" . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
         );
-        $times_by_artifact = $response->json();
+        $times_by_artifact   = $response->json();
         $current_artifact_id = key($times_by_artifact);
         $times               = $times_by_artifact[$current_artifact_id];
 
@@ -232,7 +232,7 @@ class TimetrackingTest extends TimetrackingBase
     }
     public function testAddTimeSuccess()
     {
-        $query = json_encode([
+        $query    = json_encode([
             "date_time"   => "2018-04-01",
             "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
             "time_value"  => "11:11",
@@ -247,7 +247,7 @@ class TimetrackingTest extends TimetrackingBase
      */
     public function testGetTimeOnArtifact()
     {
-        $query = urlencode(json_encode([
+        $query    = urlencode(json_encode([
             "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
         ], JSON_FORCE_OBJECT));
         $response = $this->getResponse($this->client->get('/api/v1/timetracking?query=' . $query), TimetrackingDataBuilder::USER_TESTER_NAME);
@@ -261,7 +261,7 @@ class TimetrackingTest extends TimetrackingBase
 
     public function testAddTimeReturnBadTimeFormatExceptionWrongSeparator()
     {
-        $query = json_encode([
+        $query    = json_encode([
              "date_time"   => "2018-04-01",
              "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
              "time_value"  => "11/11",
@@ -341,7 +341,7 @@ class TimetrackingTest extends TimetrackingBase
 
     public function testAddTimeReturnBadDateFormatException()
     {
-        $query = json_encode([
+        $query    = json_encode([
              "date_time"   => "oui",
              "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
              "time_value"  => "11:11",
@@ -357,7 +357,7 @@ class TimetrackingTest extends TimetrackingBase
 
     public function testEditTimeSuccess()
     {
-        $query = json_encode([
+        $query    = json_encode([
             "date_time"   => "2018-04-01",
             "time_value"  => "11:11",
             "step"        => "etape"
@@ -369,7 +369,7 @@ class TimetrackingTest extends TimetrackingBase
 
     public function testEditTimeReturnBadTimeFormatException()
     {
-        $query = json_encode([
+        $query    = json_encode([
             "date_time"   => "2018-04-01",
             "time_value"  => "11/11",
             "step"        => "etape"
@@ -384,7 +384,7 @@ class TimetrackingTest extends TimetrackingBase
 
     public function testEditTimeReturnBadDateFormatException()
     {
-        $query = json_encode([
+        $query    = json_encode([
             "date_time"   => "201804-01",
             "time_value"  => "11:11",
             "step"        => "etape"
@@ -399,7 +399,7 @@ class TimetrackingTest extends TimetrackingBase
 
     public function testEditTimeReturnNoTimeException()
     {
-        $query = json_encode([
+        $query    = json_encode([
             "date_time"   => "2018-04-01",
             "time_value"  => "11:11",
             "step"        => "etape"

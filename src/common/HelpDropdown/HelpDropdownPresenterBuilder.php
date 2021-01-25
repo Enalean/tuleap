@@ -121,7 +121,7 @@ class HelpDropdownPresenterBuilder
          * @psalm-var mixed
          */
         $additional_tabs = [];
-        $filename = $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
+        $filename        = $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
         if (! $filename || ! is_file($filename)) {
             return [];
         }

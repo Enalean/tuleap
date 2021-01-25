@@ -33,7 +33,7 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if (! $p || ! $pluginManager->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }
@@ -43,7 +43,7 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
     $GLOBALS['Response']->redirect('/');
 }
 
-$error = false;
+$error    = false;
 $feedback = [];
 
 $disk_usage_dao  = new Statistics_DiskUsageDao();
@@ -102,7 +102,7 @@ switch ($graphType) {
 
 
 $groupByDate = ['day', 'week', 'month', 'year'];
-$vGroupBy = new Valid_WhiteList('group_by', $groupByDate);
+$vGroupBy    = new Valid_WhiteList('group_by', $groupByDate);
 $vGroupBy->required();
 if ($request->valid($vGroupBy)) {
     $selectedGroupByDate = $request->get('group_by');

@@ -58,7 +58,7 @@ class Git extends PluginController
     public const PERM_WRITE = 'PLUGIN_GIT_WRITE';
     public const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
 
-    public const READ_PERM  = 'R';
+    public const READ_PERM = 'R';
 
     public const DEFAULT_PERM_READ  = 'PLUGIN_GIT_DEFAULT_READ';
     public const DEFAULT_PERM_WRITE = 'PLUGIN_GIT_DEFAULT_WRITE';
@@ -600,7 +600,7 @@ class Git extends PluginController
                     $this->addView('view');
                 } elseif ($this->isAPermittedAction('save') && $this->request->get('save')) {
                     $repoAccess = null;
-                    $valid_url = new Valid_String('repo_access');
+                    $valid_url  = new Valid_String('repo_access');
                     $valid_url->required();
                     if ($this->request->valid($valid_url) || is_array($this->request->get('repo_access'))) {
                         $repoAccess = $this->request->get('repo_access');
@@ -712,7 +712,7 @@ class Git extends PluginController
             case 'admin-git-admins':
                 if ($this->request->get('submit')) {
                     $valid_url = new Valid_Numeric(GitPresenters_AdminGitAdminsPresenter::GIT_ADMIN_SELECTBOX_NAME);
-                    $project = $this->projectManager->getProject($this->groupId);
+                    $project   = $this->projectManager->getProject($this->groupId);
 
                     if ($this->request->validArray($valid_url)) {
                         $select_project_ids = $this->request->get(GitPresenters_AdminGitAdminsPresenter::GIT_ADMIN_SELECTBOX_NAME);
@@ -816,13 +816,13 @@ class Git extends PluginController
                 $this->addAction('fetchGitConfig', [$repository->getId(), $user, $project]);
                 break;
             case 'fetch_git_template':
-                $project = $this->projectManager->getProject($this->groupId);
+                $project     = $this->projectManager->getProject($this->groupId);
                 $template_id = $this->request->getValidated('template_id', 'uint');
                 $this->setDefaultPageRendering(false);
                 $this->addAction('fetchGitTemplate', [$template_id, $user, $project]);
                 break;
             case 'fork_repositories_permissions':
-                $scope = self::SCOPE_PERSONAL;
+                $scope     = self::SCOPE_PERSONAL;
                 $valid_url = new Valid_UInt('repos');
                 $valid_url->required();
                 if ($this->request->validArray($valid_url)) {
@@ -891,8 +891,8 @@ class Git extends PluginController
                     break;
                 }
 
-                $remote_server_id      = $this->request->getValidated('remote_server_id', 'uint');
-                $gerrit_template_id    = $this->getValidatedGerritTemplateId($repository);
+                $remote_server_id   = $this->request->getValidated('remote_server_id', 'uint');
+                $gerrit_template_id = $this->getValidatedGerritTemplateId($repository);
 
                 if (empty($repository) || empty($remote_server_id) || empty($gerrit_template_id)) {
                     $this->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
@@ -1074,7 +1074,7 @@ class Git extends PluginController
 
     private function addRedirectToDefaultSettingsAction()
     {
-        $pane = \Tuleap\Git\DefaultSettings\Pane\AccessControl::NAME;
+        $pane           = \Tuleap\Git\DefaultSettings\Pane\AccessControl::NAME;
         $requested_pane = $this->request->get('pane');
         if ($requested_pane) {
             $pane = $requested_pane;
@@ -1186,7 +1186,7 @@ class Git extends PluginController
         $sem = SystemEventManager::instance();
         $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, ['GIT_REPO_CREATE', 'GIT_REPO_DELETE'], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING]);
         foreach ($dar as $row) {
-            $p = explode(SystemEvent::PARAMETER_SEPARATOR, $row['parameters']);
+            $p                  = explode(SystemEvent::PARAMETER_SEPARATOR, $row['parameters']);
             $deleted_repository = $this->factory->getDeletedRepository($p[1]);
             switch ($row['type']) {
                 case 'GIT_REPO_CREATE':
@@ -1275,7 +1275,7 @@ class Git extends PluginController
                 return;
             }
         }
-        $to_project_id   = $request->get('to_project');
+        $to_project_id = $request->get('to_project');
         if ($this->permissions_manager->userIsGitAdmin($user, $this->projectManager->getProject($to_project_id))) {
             $to_project      = $this->projectManager->getProject($to_project_id);
             $repos_ids       = explode(',', $request->get('repos'));
@@ -1317,12 +1317,12 @@ class Git extends PluginController
         if ($request->valid($valid)) {
             $path = trim($request->get('path'));
         }
-        $path = PathJoinUtil::userRepoPath($user->getUserName(), $path);
+        $path            = PathJoinUtil::userRepoPath($user->getUserName(), $path);
         $forkPermissions = $this->getForkPermissionsFromRequest($request);
 
         $valid = new Valid_String('repos');
         $valid->required();
-        $repos_ids = explode(',', $request->get('repos'));
+        $repos_ids    = explode(',', $request->get('repos'));
         $to_project   = $this->projectManager->getProject($this->groupId);
         $repos        = $this->getRepositoriesFromIds($repos_ids);
         $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;
@@ -1372,7 +1372,7 @@ class Git extends PluginController
      */
     public function logsDaily($params)
     {
-        $logger  = new GitLog();
+        $logger = new GitLog();
         $logger->logsDaily($params);
     }
 

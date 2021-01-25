@@ -106,7 +106,7 @@ class CSVExportController implements DispatchableWithRequest
         $report_id = $variables['report_id'];
         try {
             list($limit, $offset) = $this->getPaginationParameters($request);
-            $representations = $this->buildRepresentations($current_user, $report_id, $limit, $offset);
+            $representations      = $this->buildRepresentations($current_user, $report_id, $limit, $offset);
             Header::sendPaginationHeaders($limit, $offset, $representations->getTotalSize(), self::MAX_LIMIT);
             header('Content-Type: text/csv');
             echo $representations;

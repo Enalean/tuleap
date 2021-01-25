@@ -22,7 +22,7 @@
 
 class FRSRelease
 {
-    public const PERM_READ        = 'RELEASE_READ';
+    public const PERM_READ = 'RELEASE_READ';
 
     public const STATUS_ACTIVE  = 1;
     public const STATUS_DELETED = 2;
@@ -81,15 +81,15 @@ class FRSRelease
 
     public function __construct($data_array = null)
     {
-        $this->release_id       = null;
-        $this->package_id       = null;
-        $this->name             = null;
-        $this->notes            = null;
-        $this->changes          = null;
-        $this->status_id        = null;
-        $this->preformatted     = null;
-        $this->release_date     = null;
-        $this->released_by      = null;
+        $this->release_id   = null;
+        $this->package_id   = null;
+        $this->name         = null;
+        $this->notes        = null;
+        $this->changes      = null;
+        $this->status_id    = null;
+        $this->preformatted = null;
+        $this->release_date = null;
+        $this->released_by  = null;
 
         if ($data_array) {
             $this->initFromArray($data_array);
@@ -261,7 +261,7 @@ class FRSRelease
             if (isset($this->project)) {
                 $this->group_id = $this->project->getID();
             } else {
-                $package = $this->_getFRSPackageFactory()->getFRSPackageFromDb($this->getPackageID(), null, FRSPackageDao::INCLUDE_DELETED);
+                $package        = $this->_getFRSPackageFactory()->getFRSPackageFromDb($this->getPackageID(), null, FRSPackageDao::INCLUDE_DELETED);
                 $this->group_id = $package->getGroupID();
             }
         }
@@ -309,7 +309,7 @@ class FRSRelease
 
     public function toArray()
     {
-        $array = [];
+        $array                 = [];
         $array['release_id']   = $this->getReleaseID();
         $array['package_id']   = $this->getPackageID();
         $array['name']         = $this->getName();
@@ -318,7 +318,7 @@ class FRSRelease
         $array['status_id']    = $this->getStatusID();
         $array['preformatted'] = $this->getPreformatted();
         $array['release_date'] = $this->getReleaseDate();
-        $array['released_by'] = $this->getReleasedBy();
+        $array['released_by']  = $this->getReleasedBy();
         return $array;
     }
 
@@ -339,7 +339,7 @@ class FRSRelease
     {
         if (! is_array($this->release_files) || count($this->release_files) < 1) {
             $this->release_files = [];
-            $frsff = new FRSFileFactory();
+            $frsff               = new FRSFileFactory();
             $this->release_files = $frsff->getFRSFilesFromDb($this->getReleaseID());
         }
         return $this->release_files;
@@ -359,24 +359,24 @@ class FRSRelease
     public function getReferenceTooltip()
     {
         $html_purifier = Codendi_HTMLPurifier::instance();
-        $tooltip = '';
-        $package_id = $this->getPackageID();
-        $pf = new FRSPackageFactory();
-        $package = $pf->getFRSPackageFromDb($package_id);
-        $tooltip .= '<table>';
-        $tooltip .= ' <tr>';
-        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'release_name') . ':</strong></td>';
-        $tooltip .= '  <td>' . $html_purifier->purify($this->getName()) . '</td>';
-        $tooltip .= ' </tr>';
-        $tooltip .= ' <tr>';
-        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name') . ':</strong></td>';
-        $tooltip .= '  <td>' . $html_purifier->purify($package->getName()) . '</td>';
-        $tooltip .= ' </tr>';
-        $tooltip .= ' <tr>';
-        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
-        $tooltip .= '  <td>' . $html_purifier->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $this->getReleaseDate())) . '</td>';
-        $tooltip .= ' </tr>';
-        $tooltip .= '</table>';
+        $tooltip       = '';
+        $package_id    = $this->getPackageID();
+        $pf            = new FRSPackageFactory();
+        $package       = $pf->getFRSPackageFromDb($package_id);
+        $tooltip      .= '<table>';
+        $tooltip      .= ' <tr>';
+        $tooltip      .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'release_name') . ':</strong></td>';
+        $tooltip      .= '  <td>' . $html_purifier->purify($this->getName()) . '</td>';
+        $tooltip      .= ' </tr>';
+        $tooltip      .= ' <tr>';
+        $tooltip      .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name') . ':</strong></td>';
+        $tooltip      .= '  <td>' . $html_purifier->purify($package->getName()) . '</td>';
+        $tooltip      .= ' </tr>';
+        $tooltip      .= ' <tr>';
+        $tooltip      .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
+        $tooltip      .= '  <td>' . $html_purifier->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $this->getReleaseDate())) . '</td>';
+        $tooltip      .= ' </tr>';
+        $tooltip      .= '</table>';
         return $tooltip;
     }
 

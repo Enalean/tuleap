@@ -31,7 +31,7 @@
 header('Content-type: text/html');
 
 $reference_manager = ReferenceManager::instance();
-$request = HTTPRequest::instance();
+$request           = HTTPRequest::instance();
 
 
 if (! $request->getValidated('group_id', 'GroupId')) {
@@ -57,7 +57,7 @@ if ($request->get('help')) {
     echo $GLOBALS['Language']->getText('project_reference', 'insert_syntax');
     exit;
 }
-$text = $request->get('text');
+$text     = $request->get('text');
 $purifier = Codendi_HTMLPurifier::instance();
 echo $purifier->purify($text . "\n", CODENDI_PURIFIER_BASIC, $group_id);
 exit;

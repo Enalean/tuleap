@@ -52,7 +52,7 @@ abstract class ComparisonChecker implements ValueWrapperVisitor
         DateFormatValidator $date_validator,
         ListValueValidator $list_value_validator
     ) {
-        $this->date_validator = $date_validator;
+        $this->date_validator       = $date_validator;
         $this->list_value_validator = $list_value_validator;
     }
 

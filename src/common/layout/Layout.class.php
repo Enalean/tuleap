@@ -90,7 +90,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
         $this->imgroot = $root . '/images/';
 
-        $this->javascript  = [];
+        $this->javascript = [];
 
         /*
             Set up the priority color array one time only
@@ -123,17 +123,17 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     public function selectRank($id, $rank, $items, $html_options)
     {
-        $html = '';
+        $html  = '';
         $html .= '<select ';
         foreach ($html_options as $key => $value) {
             $html .= $key . '="' . $value . '"';
         }
-        $html .= '>';
-        $html .= '<option value="beginning">' . $GLOBALS['Language']->getText('global', 'at_the_beginning') . '</option>';
-        $html .= '<option value="end">' . $GLOBALS['Language']->getText('global', 'at_the_end') . '</option>';
+        $html                 .= '>';
+        $html                 .= '<option value="beginning">' . $GLOBALS['Language']->getText('global', 'at_the_beginning') . '</option>';
+        $html                 .= '<option value="end">' . $GLOBALS['Language']->getText('global', 'at_the_end') . '</option>';
         [$options, $optgroups] = $this->selectRank_optgroup($id, $items);
-        $html .= $options . $optgroups;
-        $html .= '</select>';
+        $html                 .= $options . $optgroups;
+        $html                 .= '</select>';
         return $html;
     }
 
@@ -164,7 +164,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
                     ) . ':' . 'beginning' . '" ' . $selected . '>' . 'At the beginning of ' . $purifier->purify(
                         $prefix . $item['name']
                     ) . '</option>';
-                    [$o, $g] = $this->selectRank_optgroup(
+                    [$o, $g]    = $this->selectRank_optgroup(
                         $id,
                         $item['subitems'],
                         $prefix . $item['name'] . '::',
@@ -245,7 +245,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     public function addUserAutocompleteOn($element_id, $multiple = false)
     {
         $jsbool = $multiple ? "true" : "false";
-        $js = "new UserAutoCompleter('" . $element_id . "', '" . util_get_dir_image_theme() . "', " . $jsbool . ");";
+        $js     = "new UserAutoCompleter('" . $element_id . "', '" . util_get_dir_image_theme() . "', " . $jsbool . ");";
         $this->includeFooterJavascriptSnippet($js);
     }
 
@@ -284,7 +284,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     public function getDropdownPanel($id, $content)
     {
-        $html = '';
+        $html  = '';
         $html .= '<table id="' . $id . '" class="dropdown_panel"><tr><td>';
         $html .= $content;
         $html .= '</td></tr></table>';
@@ -361,7 +361,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
                 $this->warning_for_services_which_configuration_is_not_inherited($GLOBALS['group_id'], $params['toptab']);
             }
         }
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $title = ($params['title'] ? $params['title'] . ' - ' : '') . ForgeConfig::get('sys_name');
         echo '<!DOCTYPE html>' . "\n";
         echo '<html lang="' . $GLOBALS['Language']->getText('conf', 'language_code') . '">
@@ -625,7 +625,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         array $classes,
         $is_time_displayed
     ) {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= '<div class="input-prepend dropdown input-append date ' . implode(' ', $classes) . '">';
 
@@ -638,11 +638,11 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
             $html .= '</select>';
         }
 
-        $format = "yyyy-MM-dd";
+        $format     = "yyyy-MM-dd";
         $span_class = 'tuleap_field_date';
 
         if ($is_time_displayed) {
-            $format = "yyyy-MM-dd hh:mm";
+            $format     = "yyyy-MM-dd hh:mm";
             $span_class = 'tuleap_field_datetime';
         }
 
@@ -665,7 +665,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     public function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $pm = ProjectManager::instance();
+        $pm      = ProjectManager::instance();
         $project = $pm->getProject($group_id);
         if ($project->isTemplate()) {
             switch ($service_top_tab) {
@@ -709,7 +709,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 ';
         if (isset($params['pv']) && $params['pv'] < 2) {
             if (isset($params['title']) && $params['title']) {
-                $hp = Codendi_HTMLPurifier::instance();
+                $hp    = Codendi_HTMLPurifier::instance();
                 $title = $params['title'] . ' - ' . format_date(
                     $GLOBALS['Language']->getText('system', 'datefmt'),
                     time()
@@ -745,9 +745,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
      */
     public function overlay_header() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $current_user    = UserManager::instance()->getCurrentUser();
-        $theme_variant   = new ThemeVariant();
-        $color           = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
+        $current_user        = UserManager::instance()->getCurrentUser();
+        $theme_variant       = new ThemeVariant();
+        $color               = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
         $theme_color_variant = $color->getVariant();
 
         $this->includeCalendarScripts();

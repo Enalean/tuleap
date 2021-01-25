@@ -47,7 +47,7 @@ class LDAPBackendSVNTest extends TestCase
 
     private function givenAFullApacheConf(): string
     {
-        $backend  = \Mockery::mock(\LDAP_BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $backend = \Mockery::mock(\LDAP_BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $project_array_01 = [
             'unix_group_name' => 'gpig',

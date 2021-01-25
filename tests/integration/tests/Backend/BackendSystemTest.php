@@ -51,9 +51,9 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->initial_codendi_shell_skel     = ForgeConfig::get('codendi_shell_skel');
+        $this->initial_codendi_shell_skel = ForgeConfig::get('codendi_shell_skel');
         ForgeConfig::set('codendi_shell_skel', __DIR__ . '/_fixtures/etc/skel_codendi');
-        $this->initial_tmp_dir                = $this->getTmpDir() . '/var/tmp';
+        $this->initial_tmp_dir = $this->getTmpDir() . '/var/tmp';
         ForgeConfig::set('tmp_dir', $this->getTmpDir() . '/var/tmp');
         $this->initial_sys_file_deletion_delay = ForgeConfig::get('sys_file_deletion_delay');
         ForgeConfig::set('sys_file_deletion_delay', 5);
@@ -135,8 +135,8 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $backend->shouldReceive('chgrp')->with(Mockery::any(), 'TestPrj');
 
         $projdir = ForgeConfig::get('grpdir_prefix') . "/TestPrj";
-        $ftpdir = ForgeConfig::get('ftp_anon_dir_prefix') . "/TestPrj";
-        $frsdir = ForgeConfig::get('ftp_frs_dir_prefix') . "/TestPrj";
+        $ftpdir  = ForgeConfig::get('ftp_anon_dir_prefix') . "/TestPrj";
+        $frsdir  = ForgeConfig::get('ftp_frs_dir_prefix') . "/TestPrj";
 
         $this->assertTrue($backend->createProjectHome($project));
         $this->assertDirectoryExists($projdir, "Project Home should be created");
@@ -180,7 +180,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $backend = \Mockery::mock(\BackendSystem::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $backend->shouldReceive('getProjectManager')->andReturns($pm);
 
-        $projdir = ForgeConfig::get('grpdir_prefix') . "/TestProj";
+        $projdir   = ForgeConfig::get('grpdir_prefix') . "/TestProj";
         $lcprojlnk = ForgeConfig::get('grpdir_prefix') . "/testproj";
 
         // Setup test data

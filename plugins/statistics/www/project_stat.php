@@ -31,7 +31,7 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
-$p = $pluginManager->getPluginByName('statistics');
+$p             = $pluginManager->getPluginByName('statistics');
 if (! $p || ! $pluginManager->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }
@@ -90,18 +90,18 @@ if ($request->validArray($vServices)) {
 
 if ($project && ! $project->isError()) {
     // Prepare params
-    $serviceParam    = '';
-    $first    = true;
+    $serviceParam = '';
+    $first        = true;
     foreach ($selectedServices as $serv) {
         if ($first != true) {
             $serviceParam .= '&';
         }
         $serviceParam .= 'services[]=' . $serv;
-        $first     = false;
+        $first         = false;
     }
 
     //Get dates for start and end period to watch statistics
-    $info = $p->getPluginInfo();
+    $info       = $p->getPluginInfo();
     $statPeriod = $info->getPropertyValueForName('statistics_period');
     if (! $statPeriod) {
         $statPeriod = 3;
@@ -109,13 +109,13 @@ if ($project && ! $project->isError()) {
 
     if ($period == 'year') {
         $statDuration = 12;
-        $link = '?' . $serviceParam . '&group_id=' . $groupId . '&period=months';
+        $link         = '?' . $serviceParam . '&group_id=' . $groupId . '&period=months';
     } else {
         $statDuration = $statPeriod;
-        $link = '?' . $serviceParam . '&group_id=' . $groupId . '&period=year';
+        $link         = '?' . $serviceParam . '&group_id=' . $groupId . '&period=year';
     }
 
-    $endDate = date('Y-m-d');
+    $endDate   = date('Y-m-d');
     $startDate = date('Y-m-d', mktime(0, 0, 0, date('m') - $statDuration, date('d'), date('y')));
 
     $params['group'] = $groupId;
@@ -149,10 +149,10 @@ if ($project && ! $project->isError()) {
         echo $duHtml->sizeReadable($usedProportion);
     }
 
-    $title = dgettext('tuleap-statistics', 'Disk usage for the last year');
+    $title      = dgettext('tuleap-statistics', 'Disk usage for the last year');
     $link_label = sprintf(dgettext('tuleap-statistics', 'View statistics for the last %1$s months'), $statPeriod);
     if ($period === 'months') {
-        $title = sprintf(dgettext('tuleap-statistics', 'Disk usage for the %1$s last months'), $statDuration);
+        $title      = sprintf(dgettext('tuleap-statistics', 'Disk usage for the %1$s last months'), $statDuration);
         $link_label = dgettext('tuleap-statistics', 'View statistics for the last year');
     }
     //Display tooltip for start and end date.

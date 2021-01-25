@@ -100,16 +100,16 @@ final class CreateProgramIncrementsTaskTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->changeset_values_adapter = \Mockery::mock(BuildFieldValues::class);
-        $this->program_store            = \Mockery::mock(ProgramStore::class);
-        $this->project_manager          = Mockery::mock(\ProjectManager::class);
-        $project_data_adapter           = new ProjectAdapter($this->project_manager);
-        $projects_collection_builder    = new TeamProjectsCollectionBuilder(
+        $this->changeset_values_adapter        = \Mockery::mock(BuildFieldValues::class);
+        $this->program_store                   = \Mockery::mock(ProgramStore::class);
+        $this->project_manager                 = Mockery::mock(\ProjectManager::class);
+        $project_data_adapter                  = new ProjectAdapter($this->project_manager);
+        $projects_collection_builder           = new TeamProjectsCollectionBuilder(
             $this->program_store,
             $project_data_adapter
         );
-        $this->planning_factory         = Mockery::mock(\PlanningFactory::class);
-        $milestone_trackers_factory     = new TrackerCollectionFactory(
+        $this->planning_factory                = Mockery::mock(\PlanningFactory::class);
+        $milestone_trackers_factory            = new TrackerCollectionFactory(
             new PlanningAdapter($this->planning_factory)
         );
         $this->mirror_creator                  = \Mockery::mock(ProgramIncrementsCreator::class);

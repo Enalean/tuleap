@@ -50,7 +50,7 @@ final class SystemEventPROJECTISPRIVATETest extends TestCase
 
     public function testRestrictedUsersAreRemovedFromAllUserGroupsWhenProjectBecomesPrivateWithoutRestricted(): void
     {
-        $project_id = 102;
+        $project_id   = 102;
         $system_event = new SystemEvent_PROJECT_IS_PRIVATE(
             1,
             SystemEvent_PROJECT_IS_PRIVATE::TYPE_PROJECT_IS_PRIVATE,
@@ -64,7 +64,7 @@ final class SystemEventPROJECTISPRIVATETest extends TestCase
             ''
         );
 
-        $user_remover = Mockery::mock(UserRemover::class);
+        $user_remover   = Mockery::mock(UserRemover::class);
         $ugroup_manager = Mockery::mock(\UGroupManager::class);
         $system_event->injectDependencies(
             $user_remover,

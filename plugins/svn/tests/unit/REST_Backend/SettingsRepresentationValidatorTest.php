@@ -38,17 +38,17 @@ class SettingsRepresentationValidatorTest extends TestCase
 
     public function testItThrowAnExceptionWHenPathAreNotUnique(): void
     {
-        $notification_representation_01         = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/tags'
         );
 
-        $notification_representation_02         = new NotificationRepresentation(
+        $notification_representation_02 = new NotificationRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/tags'
         );
 
-        $settings = new class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
+        $settings                      = new class ($notification_representation_01, $notification_representation_02) extends SettingsPOSTRepresentation {
             public function __construct(NotificationRepresentation ...$emails_notifications)
             {
                 $this->email_notifications = $emails_notifications;
@@ -62,12 +62,12 @@ class SettingsRepresentationValidatorTest extends TestCase
 
     public function testItDontThrowExceptionWhenPathAreUnique(): void
     {
-        $notification_representation_01         = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/tags'
         );
 
-        $notification_representation_02         = new NotificationRepresentation(
+        $notification_representation_02 = new NotificationRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/trunks'
         );
@@ -119,7 +119,7 @@ class SettingsRepresentationValidatorTest extends TestCase
 
     public function testItThrowsAnExceptionWhenUsersAndEmailAreBothEmpty(): void
     {
-        $notification_representation_01         = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationRepresentation(
             ['emails' =>  [], 'users' => [], 'ugroups' => []],
             '/tags'
         );
@@ -200,12 +200,12 @@ class SettingsRepresentationValidatorTest extends TestCase
 
     public function testItDontThrowExceptionWhenSameMailIsUsedForTwoDifferentPathOnPUT(): void
     {
-        $notification_representation_01         = new NotificationRepresentation(
+        $notification_representation_01 = new NotificationRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/tags'
         );
 
-        $notification_representation_02         = new NotificationRepresentation(
+        $notification_representation_02 = new NotificationRepresentation(
             ['emails' =>  ['test@example.com'], 'users' => [], 'ugroups' => []],
             '/trunks'
         );

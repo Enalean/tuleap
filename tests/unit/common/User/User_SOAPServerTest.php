@@ -39,7 +39,7 @@ final class User_SOAPServerTest extends \PHPUnit\Framework\TestCase
     public function testLoginAsReturnsASessionHash(): void
     {
         $admin_session_hash = 'admin_session_hash';
-        $um = $this->GivenAUserManagerWithValidAdmin($admin_session_hash);
+        $um                 = $this->GivenAUserManagerWithValidAdmin($admin_session_hash);
 
         $user_soap_server      = new User_SOAPServer($um);
         $user_name             = 'toto';

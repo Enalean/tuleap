@@ -123,7 +123,7 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
         );
 
         $this->package_id = 1;
-        $this->package = new FRSPackage(
+        $this->package    = new FRSPackage(
             [
                 'package_id' => $this->package_id,
                 'group_id'   => 101,
@@ -209,7 +209,7 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
             'Release 2',
             [$this->project_member_representation]
         );
-        $expected_packages = [
+        $expected_packages        = [
             new PackagePermissionPerGroupRepresentation(
                 '/file/admin/package.php?func=edit&group_id=101&id=1',
                 'Package 1',

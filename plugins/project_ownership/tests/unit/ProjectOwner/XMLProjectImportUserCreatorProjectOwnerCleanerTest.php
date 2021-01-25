@@ -45,7 +45,7 @@ final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends TestCase
         $other_admin_1->shouldReceive('getId')->andReturn(102);
         $other_admin_2 = Mockery::mock(PFUser::class);
 
-        $ugroup = $this->createUGroupAdmin();
+        $ugroup  = $this->createUGroupAdmin();
         $project = Mockery::mock(Project::class);
         $ugroup->shouldReceive('getProject')->andReturn($project);
         $ugroup->shouldReceive('getMembers')->andReturn([$creator, $other_admin_1, $other_admin_2]);

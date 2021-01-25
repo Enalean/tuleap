@@ -35,7 +35,7 @@ class TrackerLinksInNewDropdownCollectorTest extends TestCase
 
     public function testItCollectsLinksForTrackers(): void
     {
-        $bug_tracker = Mockery::mock(\Tracker::class)
+        $bug_tracker   = Mockery::mock(\Tracker::class)
             ->shouldReceive([
                 'getId' => 102,
                 'getItemName' => 'bug',
@@ -66,7 +66,7 @@ class TrackerLinksInNewDropdownCollectorTest extends TestCase
 
     public function testItOmitsTrackersThatAreAlreadyInTheCurrentContextSection(): void
     {
-        $bug_tracker = Mockery::mock(\Tracker::class)
+        $bug_tracker   = Mockery::mock(\Tracker::class)
             ->shouldReceive([
                 'getId' => 102,
                 'getItemName' => 'bug',

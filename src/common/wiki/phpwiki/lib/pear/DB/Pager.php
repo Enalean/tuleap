@@ -79,9 +79,9 @@ class DB_Pager extends PEAR
     */
     public function __construct(&$res, $from, $limit, $numrows = null)
     {
-        $this->res = $res;
-        $this->from = $from;
-        $this->limit = $limit;
+        $this->res     = $res;
+        $this->from    = $from;
+        $this->limit   = $limit;
         $this->numrows = $numrows;
     }
 
@@ -107,7 +107,7 @@ class DB_Pager extends PEAR
             return $data;
         }
         $this->current = $this->from - 1;
-        $this->top = $data['to'];
+        $this->top     = $data['to'];
         return $data;
     }
 
@@ -186,7 +186,7 @@ class DB_Pager extends PEAR
         }
 
         // Total number of pages
-        $pages = ceil($numrows / $limit);
+        $pages            = ceil($numrows / $limit);
         $data['numpages'] = $pages;
 
         // first & last page
@@ -196,7 +196,7 @@ class DB_Pager extends PEAR
         // Build pages array
         $data['pages'] = [];
         for ($i = 1; $i <= $pages; $i++) {
-            $offset = $limit * ($i - 1);
+            $offset            = $limit * ($i - 1);
             $data['pages'][$i] = $offset;
             // $from must point to one page
             if ($from == $offset) {
@@ -218,7 +218,7 @@ class DB_Pager extends PEAR
 
         // Limit number of pages (goole algoritm)
         if ($maxpages) {
-            $radio = floor($maxpages / 2);
+            $radio   = floor($maxpages / 2);
             $minpage = $data['current'] - $radio;
             if ($minpage < 1) {
                 $minpage = 1;
@@ -230,24 +230,24 @@ class DB_Pager extends PEAR
             foreach (range($minpage, $maxpage) as $page) {
                 $tmp[$page] = $data['pages'][$page];
             }
-            $data['pages'] = $tmp;
+            $data['pages']    = $tmp;
             $data['maxpages'] = $maxpages;
         } else {
             $data['maxpages'] = null;
         }
 
         // Prev link
-        $prev = $from - $limit;
+        $prev         = $from - $limit;
         $data['prev'] = ($prev >= 0) ? $prev : null;
 
         // Next link
-        $next = $from + $limit;
+        $next         = $from + $limit;
         $data['next'] = ($next < $numrows) ? $next : null;
 
         // Results remaining in next page & Last row to fetch
         if ($data['current'] == $pages) {
             $data['remain'] = 0;
-            $data['to'] = $numrows;
+            $data['to']     = $numrows;
         } else {
             if ($data['current'] == ($pages - 1)) {
                 $data['remain'] = $numrows - ($limit * ($pages - 1));

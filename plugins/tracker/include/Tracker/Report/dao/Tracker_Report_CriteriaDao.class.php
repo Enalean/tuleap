@@ -37,8 +37,8 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
 
     public function searchByReportId($report_id)
     {
-        $report_id  = $this->da->escapeInt($report_id);
-        $sql = "SELECT *
+        $report_id = $this->da->escapeInt($report_id);
+        $sql       = "SELECT *
                 FROM $this->table_name
                 WHERE report_id = $report_id
                 ORDER BY rank";
@@ -49,24 +49,24 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
     {
         $report_id = $this->da->escapeInt($report_id);
         $field_id  = $this->da->escapeInt($field_id);
-        $sql = "DELETE FROM $this->table_name WHERE report_id = $report_id AND field_id = $field_id";
+        $sql       = "DELETE FROM $this->table_name WHERE report_id = $report_id AND field_id = $field_id";
         return $this->update($sql);
     }
 
     public function deleteAll($report_id)
     {
         $report_id = $this->da->escapeInt($report_id);
-        $sql = "DELETE FROM $this->table_name WHERE report_id = $report_id";
+        $sql       = "DELETE FROM $this->table_name WHERE report_id = $report_id";
         return $this->update($sql);
     }
 
     public function create($report_id, $field_id, $is_advanced = 0)
     {
-        $report_id    = $this->da->escapeInt($report_id);
-        $field_id     = $this->da->escapeInt($field_id);
-        $rank         = (int) $this->prepareRanking('tracker_report_criteria', 0, $report_id, 'end', 'id', 'report_id');
-        $is_advanced  = $this->da->escapeInt($is_advanced);
-        $sql = "INSERT INTO $this->table_name
+        $report_id   = $this->da->escapeInt($report_id);
+        $field_id    = $this->da->escapeInt($field_id);
+        $rank        = (int) $this->prepareRanking('tracker_report_criteria', 0, $report_id, 'end', 'id', 'report_id');
+        $is_advanced = $this->da->escapeInt($is_advanced);
+        $sql         = "INSERT INTO $this->table_name
                        (report_id, field_id, rank, is_advanced)
                 VALUES ($report_id, $field_id, $rank, $is_advanced)";
         return $this->updateAndGetLastId($sql);
@@ -76,7 +76,7 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
     {
         $report_id = $this->da->escapeInt($report_id);
         $field_id  = $this->da->escapeInt($field_id);
-        $sql = "UPDATE $this->table_name
+        $sql       = "UPDATE $this->table_name
                 SET is_advanced = 1 - is_advanced
                 WHERE report_id = $report_id AND field_id = $field_id";
         return $this->retrieve($sql);
@@ -86,16 +86,16 @@ class Tracker_Report_CriteriaDao extends DataAccessObject
     {
         $from_report_id = $this->da->escapeInt($from_report_id);
         $to_report_id   = $this->da->escapeInt($to_report_id);
-        $sql = "INSERT INTO $this->table_name (report_id, field_id, rank, is_advanced)
+        $sql            = "INSERT INTO $this->table_name (report_id, field_id, rank, is_advanced)
                 SELECT $to_report_id, field_id, rank, is_advanced
                 FROM $this->table_name
                 WHERE report_id = $from_report_id";
         $this->update($sql);
 
         foreach ($field_mapping as $mapping) {
-            $from  = $this->da->escapeInt($mapping['from']);
-            $to    = $this->da->escapeInt($mapping['to']);
-            $sql = "UPDATE $this->table_name
+            $from = $this->da->escapeInt($mapping['from']);
+            $to   = $this->da->escapeInt($mapping['to']);
+            $sql  = "UPDATE $this->table_name
                     SET field_id = $to
                     WHERE report_id = $to_report_id
                       AND field_id = $from";

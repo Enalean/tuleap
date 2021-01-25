@@ -54,13 +54,13 @@ class HooksConfigurationPresenter extends BaseAdminPresenter
     ) {
         parent::__construct();
 
-        $this->project_id                 = $project->getID();
-        $this->repository_id              = $repository->getId();
-        $this->csrf_input                 = $token->fetchHTMLInput();
-        $this->title                      = $title;
-        $this->repository_name            = $repository->getName();
-        $this->repository_full_name       = $repository->getFullName();
-        $this->commit_rule_active         = true;
+        $this->project_id                        = $project->getID();
+        $this->repository_id                     = $repository->getId();
+        $this->csrf_input                        = $token->fetchHTMLInput();
+        $this->title                             = $title;
+        $this->repository_name                   = $repository->getName();
+        $this->repository_full_name              = $repository->getFullName();
+        $this->commit_rule_active                = true;
         $this->pre_commit_must_contain_reference = $pre_commit_must_contain_reference;
         $this->allow_commit_message_changes      = $allow_commit_message_changes;
 

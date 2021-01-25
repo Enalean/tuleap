@@ -42,7 +42,7 @@ class Tracker_CannedResponseFactory
     public static function instance()
     {
         if (! isset(self::$instance)) {
-            $c = self::class;
+            $c              = self::class;
             self::$instance = new $c();
         }
         return self::$instance;
@@ -88,7 +88,7 @@ class Tracker_CannedResponseFactory
     {
         $responses = [];
         foreach ($this->getDao()->searchByTrackerId($tracker->id) as $row) {
-            $row['tracker'] = $tracker;
+            $row['tracker']        = $tracker;
             $responses[$row['id']] = $this->getInstanceFromRow($row);
         }
         return $responses;
@@ -107,7 +107,7 @@ class Tracker_CannedResponseFactory
         $response = null;
         if ($row = $this->getDao()->searchById($tracker->id, $id)->getRow()) {
             $row['tracker'] = $tracker;
-            $response = $this->getInstanceFromRow($row);
+            $response       = $this->getInstanceFromRow($row);
         }
         return $response;
     }
@@ -143,7 +143,7 @@ class Tracker_CannedResponseFactory
             if (trim($title) && trim($body)) {
                 $canned->title = trim($title);
                 $canned->body  = $body;
-                $ok = $this->getDao()->save($canned);
+                $ok            = $this->getDao()->save($canned);
             }
         }
         return $ok;
@@ -171,12 +171,12 @@ class Tracker_CannedResponseFactory
      */
     public function duplicate($from_tracker_id, $to_tracker_id)
     {
-        $tf = $this->getTrackerFactory();
+        $tf           = $this->getTrackerFactory();
         $from_tracker = $tf->getTrackerById($from_tracker_id);
         if ($from_tracker === null) {
             throw new RuntimeException('Tracker does not exist');
         }
-        $to_tracker = $tf->getTrackerById($to_tracker_id);
+        $to_tracker            = $tf->getTrackerById($to_tracker_id);
         $from_canned_responses = $this->getCannedResponses($from_tracker);
         foreach ($from_canned_responses as $from_canned_response) {
             if ($to_tracker === null) {

@@ -28,7 +28,7 @@ final class AcceptableTenantForAuthenticationConfigurationTest extends TestCase
 {
     public function testValueUsedByTheAuthenticationFlowIsTheIdentifierWhenUsersOutsideOfTheSpecificTenantCanAuthenticate(): void
     {
-        $common_setup  = AzureADTenantSetup::common();
+        $common_setup = AzureADTenantSetup::common();
 
         $configuration = AcceptableTenantForAuthenticationConfiguration::fromTenantSetupAndTenantID(
             $common_setup,

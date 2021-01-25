@@ -40,7 +40,7 @@ class NotificationLevelExtractorTest extends TestCase
         $request->shouldReceive('get')->with('notifications_level')->once()->andReturn('900');
 
         $notification_level_extractor = new NotificationLevelExtractor();
-        $notification = $notification_level_extractor->extractNotificationLevel($request);
+        $notification                 = $notification_level_extractor->extractNotificationLevel($request);
 
         $this->assertEquals(Tracker::NOTIFICATIONS_LEVEL_DEFAULT, $notification);
     }
@@ -53,7 +53,7 @@ class NotificationLevelExtractorTest extends TestCase
         $request->shouldReceive('get')->with('notifications_level')->once()->andReturn(Tracker::NOTIFICATIONS_LEVEL_DEFAULT);
 
         $notification_level_extractor = new NotificationLevelExtractor();
-        $notification = $notification_level_extractor->extractNotificationLevel($request);
+        $notification                 = $notification_level_extractor->extractNotificationLevel($request);
 
         $this->assertEquals(Tracker::NOTIFICATIONS_LEVEL_DEFAULT, $notification);
     }
@@ -66,7 +66,7 @@ class NotificationLevelExtractorTest extends TestCase
         $request->shouldReceive('get')->with('notifications_level')->once()->andReturn(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
 
         $notification_level_extractor = new NotificationLevelExtractor();
-        $notification = $notification_level_extractor->extractNotificationLevel($request);
+        $notification                 = $notification_level_extractor->extractNotificationLevel($request);
 
         $this->assertEquals(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE, $notification);
     }
@@ -79,7 +79,7 @@ class NotificationLevelExtractorTest extends TestCase
         $request->shouldReceive('get')->with('notifications_level')->never();
 
         $notification_level_extractor = new NotificationLevelExtractor();
-        $notification = $notification_level_extractor->extractNotificationLevel($request);
+        $notification                 = $notification_level_extractor->extractNotificationLevel($request);
 
         $this->assertEquals(Tracker::NOTIFICATIONS_LEVEL_DISABLED, $notification);
     }
@@ -92,7 +92,7 @@ class NotificationLevelExtractorTest extends TestCase
         $request->shouldReceive('get')->with('notifications_level')->never();
 
         $notification_level_extractor = new NotificationLevelExtractor();
-        $notification = $notification_level_extractor->extractNotificationLevel($request);
+        $notification                 = $notification_level_extractor->extractNotificationLevel($request);
 
         $this->assertEquals(Tracker::NOTIFICATIONS_LEVEL_DEFAULT, $notification);
     }

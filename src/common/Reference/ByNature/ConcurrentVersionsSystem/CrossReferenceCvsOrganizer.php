@@ -112,7 +112,7 @@ class CrossReferenceCvsOrganizer
             ->withAdditionalBadges($additional_badges);
 
         $description = trim($commit_row['description']);
-        [$title] = explode("\n", $description);
+        [$title]     = explode("\n", $description);
         if (trim($title)) {
             $cvs_cross_reference_presenter = $cvs_cross_reference_presenter->withTitle(trim($title), null);
         }

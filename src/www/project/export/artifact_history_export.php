@@ -22,7 +22,7 @@
 require_once __DIR__ . '/project_export_utils.php';
 
 //    get the Group object
-$pm = ProjectManager::instance();
+$pm    = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (! $group || ! is_object($group) || $group->isError()) {
     exit_no_group();
@@ -102,7 +102,7 @@ $dsc_list = ['artifact_id' => $GLOBALS['Language']->getText('project_export_arti
 $eol = "\n";
 
 $result = extract_history($atid);
-$rows = db_numrows($result);
+$rows   = db_numrows($result);
 
 $export = isset($export) ? (string) $export : '';
 if ($export == 'artifact_history') {

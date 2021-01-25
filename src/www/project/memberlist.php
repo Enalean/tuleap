@@ -21,7 +21,7 @@
 
 require_once __DIR__ . '/../include/pre.php';
 
-$hp = Codendi_HTMLPurifier::instance();
+$hp       = Codendi_HTMLPurifier::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if ($request->valid($vGroupId)) {
@@ -51,12 +51,12 @@ $query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
     . "ORDER BY user.user_name";
 
 
-$title_arr = [];
+$title_arr   = [];
 $title_arr[] = $Language->getText('project_memberlist', 'developer');
 $title_arr[] = $Language->getText('project_export_artifact_history_export', 'email');
 
 $user_helper = new UserHelper();
-$hp = Codendi_HTMLPurifier::instance();
+$hp          = Codendi_HTMLPurifier::instance();
 
 echo html_build_list_table_top($title_arr);
 

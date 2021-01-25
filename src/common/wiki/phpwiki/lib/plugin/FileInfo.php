@@ -86,7 +86,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
         } else {
             $isuploaded = 1;
         }
-        $s = [];
+        $s     = [];
         $modes = explode(",", $display);
         foreach ($modes as $mode) {
             switch ($mode) {
@@ -156,7 +156,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
             // Valid finfo_open (i.e. libmagic) options:
             // FILEINFO_NONE | FILEINFO_SYMLINK | FILEINFO_MIME | FILEINFO_COMPRESS | FILEINFO_DEVICES |
             // FILEINFO_CONTINUE | FILEINFO_PRESERVE_ATIME | FILEINFO_RAW
-            $f = finfo_open(/*FILEINFO_MIME*/);
+            $f      = finfo_open(/*FILEINFO_MIME*/);
             $result = finfo_file(realpath($file));
             finfo_close($res);
             return $result;
@@ -172,7 +172,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
     public function _formatsize($n, $factor, $suffix = '')
     {
         if ($n > $factor) {
-            $b = $n / $factor;
+            $b  = $n / $factor;
             $n -= floor($factor * $b);
             return number_format($b, $n ? 3 : 0) . $suffix;
         }
@@ -213,7 +213,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
     // http://www.codeproject.com/dll/showver.asp
     public function exeversion_showver($file)
     {
-        $path = realpath($file);
+        $path   = realpath($file);
         $result = `showver $path`;
         return "?";
     }

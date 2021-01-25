@@ -97,9 +97,9 @@ class Controller
                 dgettext('tuleap-openidconnectclient', 'Request seems invalid, please retry')
             );
         }
-        $return_to               = $request->get('return_to');
-        $link_to_register_page   = $this->generateLinkToRegisterPage($request);
-        $registration_guard = $this->event_dispatcher->dispatch(new RegistrationGuardEvent());
+        $return_to             = $request->get('return_to');
+        $link_to_register_page = $this->generateLinkToRegisterPage($request);
+        $registration_guard    = $this->event_dispatcher->dispatch(new RegistrationGuardEvent());
         assert($registration_guard instanceof RegistrationGuardEvent);
         $authentication_mean_name = $this->event_dispatcher->dispatch(new AuthenticationMeanName());
         assert($authentication_mean_name instanceof AuthenticationMeanName);
@@ -113,7 +113,7 @@ class Controller
             ),
             $authentication_mean_name,
         );
-        $renderer                = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
+        $renderer  = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
 
         $GLOBALS['HTML']->header(
             [

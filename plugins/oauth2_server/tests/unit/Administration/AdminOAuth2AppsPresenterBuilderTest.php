@@ -50,9 +50,9 @@ final class AdminOAuth2AppsPresenterBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->app_factory = M::mock(AppFactory::class);
+        $this->app_factory         = M::mock(AppFactory::class);
         $this->client_secret_store = M::mock(LastGeneratedClientSecretStore::class);
-        $this->presenter_builder = new AdminOAuth2AppsPresenterBuilder($this->app_factory, $this->client_secret_store);
+        $this->presenter_builder   = new AdminOAuth2AppsPresenterBuilder($this->app_factory, $this->client_secret_store);
     }
 
     /**

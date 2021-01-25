@@ -106,9 +106,9 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
 
             if ($valid_data == 1) {
                 if ($add_desc) {
-                    $sql = "INSERT INTO group_desc (desc_name, desc_description, desc_rank, desc_type, desc_required) ";
-                    $sql .= "VALUES ('" . db_escape_string($desc_name) . "','" . db_escape_string($desc_description) . "','";
-                    $sql .= db_escape_string($desc_rank) . "','" . db_es($desc_type) . "','" . db_ei($desc_required) . "')";
+                    $sql    = "INSERT INTO group_desc (desc_name, desc_description, desc_rank, desc_type, desc_required) ";
+                    $sql   .= "VALUES ('" . db_escape_string($desc_name) . "','" . db_escape_string($desc_description) . "','";
+                    $sql   .= db_escape_string($desc_rank) . "','" . db_es($desc_type) . "','" . db_ei($desc_required) . "')";
                     $result = db_query($sql);
 
                     if (! $result) {
@@ -118,7 +118,7 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
                         $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_desc_fields', 'add_success'));
                     }
                 } else {
-                    $sql = "UPDATE group_desc SET ";
+                    $sql  = "UPDATE group_desc SET ";
                     $sql .= "desc_name='" . db_escape_string($desc_name) . "',";
                     $sql .= "desc_description='" . db_escape_string($desc_description) . "',";
                     $sql .= "desc_rank='" . db_escape_string($desc_rank) . "',";

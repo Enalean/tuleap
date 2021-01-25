@@ -74,14 +74,14 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
         }
         $parent = (empty($args['user']) ? '' : $args['user'] . SUBPAGE_SEPARATOR);
 
-        $sp = HTML::Raw('&middot; ');
+        $sp     = HTML::Raw('&middot; ');
         $prefix = $parent . $this->_blogPrefix('wikiblog');
         if ($args['month']) {
             $prefix .= (SUBPAGE_SEPARATOR . $args['month']);
         }
         $pages = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
-        $html = HTML();
-        $i = 0;
+        $html  = HTML();
+        $i     = 0;
         while (($page = $pages->next()) and $i < $args['count']) {
             $rev = $page->getCurrentRevision(false);
             if ($rev->get('pagetype') != 'wikiblog') {

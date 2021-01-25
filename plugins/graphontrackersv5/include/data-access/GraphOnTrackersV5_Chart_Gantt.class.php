@@ -36,7 +36,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
     public function loadFromSession()
     {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
-        $chart_in_session = $this->report_session->get($this->id);
+        $chart_in_session     = $this->report_session->get($this->id);
         if (isset($chart_in_session['field_start']) && $chart_in_session['field_start'] !== '') {
                 $this->field_start      = $chart_in_session['field_start'];
                 $this->field_due        = $chart_in_session['field_due'];
@@ -54,7 +54,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
 
     public function loadFromDb()
     {
-        $arr = $this->getDao()->searchById($this->id)->getRow();
+        $arr                    = $this->getDao()->searchById($this->id)->getRow();
         $this->field_start      = $arr['field_start'];
         $this->field_due        = $arr['field_due'];
         $this->field_finish     = $arr['field_finish'];
@@ -63,9 +63,9 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         $this->scale            = $arr['scale'];
         $this->as_of_date       = 0;
         if ($arr['as_of_date'] != 0) {
-            $this->as_of_date       = date('Y-m-d', $arr['as_of_date']);
+            $this->as_of_date = date('Y-m-d', $arr['as_of_date']);
         }
-        $this->summary          = $arr['summary'];
+        $this->summary = $arr['summary'];
     }
 
     public function registerInSession()
@@ -307,11 +307,11 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
 
     public function userCanVisualize()
     {
-        $ff = Tracker_FormElementFactory::instance();
-        $artifact_field_start = $ff->getFormElementById($this->field_start);
+        $ff                    = Tracker_FormElementFactory::instance();
+        $artifact_field_start  = $ff->getFormElementById($this->field_start);
         $artifact_field_finish = $ff->getFormElementById($this->field_finish);
-        $artifact_summary = $ff->getFormElementById($this->summary);
-        $artifact_scale = $ff->getFormElementById($this->scale);
+        $artifact_summary      = $ff->getFormElementById($this->summary);
+        $artifact_scale        = $ff->getFormElementById($this->scale);
 
         if (
             ($artifact_field_start && $artifact_field_start->userCanRead()) ||

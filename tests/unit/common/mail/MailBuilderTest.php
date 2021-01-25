@@ -61,14 +61,14 @@ final class MailBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->builder = \Mockery::mock(\MailBuilder::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->builder->__construct($template_factory, $this->mail_filter);
-        $this->codendi_mail  = \Mockery::spy(\Codendi_Mail::class);
+        $this->codendi_mail = \Mockery::spy(\Codendi_Mail::class);
 
-        $emails            = ['a@example.com', 'b@example.com'];
-        $subject           = 'This is an awesome subject';
-        $full_body_html    = 'Body in <b> HTML </b>';
-        $full_body_text    = 'Body in plain/text';
-        $goto_link         = 'https://tuleap.example.com/goto?key=release&value=116&group_id=116';
-        $service_name      = 'Files';
+        $emails         = ['a@example.com', 'b@example.com'];
+        $subject        = 'This is an awesome subject';
+        $full_body_html = 'Body in <b> HTML </b>';
+        $full_body_text = 'Body in plain/text';
+        $goto_link      = 'https://tuleap.example.com/goto?key=release&value=116&group_id=116';
+        $service_name   = 'Files';
 
         $this->notification = new Notification(
             $emails,

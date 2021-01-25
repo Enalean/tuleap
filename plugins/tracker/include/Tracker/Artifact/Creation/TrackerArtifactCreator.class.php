@@ -80,12 +80,12 @@ class TrackerArtifactCreator
         \Psr\Log\LoggerInterface $logger,
         DBTransactionExecutor $db_transaction_executor
     ) {
-        $this->artifact_dao      = $artifact_factory->getDao();
-        $this->artifact_factory  = $artifact_factory;
-        $this->fields_validator  = $fields_validator;
-        $this->changeset_creator = $changeset_creator;
-        $this->visit_recorder    = $visit_recorder;
-        $this->logger            = $logger;
+        $this->artifact_dao            = $artifact_factory->getDao();
+        $this->artifact_factory        = $artifact_factory;
+        $this->fields_validator        = $fields_validator;
+        $this->changeset_creator       = $changeset_creator;
+        $this->visit_recorder          = $visit_recorder;
+        $this->logger                  = $logger;
         $this->db_transaction_executor = $db_transaction_executor;
     }
 
@@ -111,7 +111,7 @@ class TrackerArtifactCreator
     public function createBare(Tracker $tracker, PFUser $user, int $submitted_on): ?Artifact
     {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
-        $success = $this->insertArtifact($tracker, $user, $artifact, $submitted_on);
+        $success  = $this->insertArtifact($tracker, $user, $artifact, $submitted_on);
         if (! $success) {
             return null;
         }
@@ -131,7 +131,7 @@ class TrackerArtifactCreator
         TrackerImportConfig $tracker_import_config
     ): ?Tracker_Artifact_Changeset {
         $validation_context = new NullChangesetValidationContext();
-        $are_fields_valid = $this->fields_validator->validate(
+        $are_fields_valid   = $this->fields_validator->validate(
             $artifact,
             $user,
             $fields_data,
@@ -272,7 +272,7 @@ class TrackerArtifactCreator
         int $submitted_on
     ): bool {
         $use_artifact_permissions = 0;
-        $id = $this->artifact_dao->create($tracker->getId(), $user->getId(), $submitted_on, $use_artifact_permissions);
+        $id                       = $this->artifact_dao->create($tracker->getId(), $user->getId(), $submitted_on, $use_artifact_permissions);
         if (! $id) {
             $this->logger->error(
                 sprintf('Insert of an artifact in tracker #%d failed', $tracker->getId())

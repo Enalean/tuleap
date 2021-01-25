@@ -96,7 +96,7 @@ class BackendMailingList extends Backend
         if ($row = $dar->getRow()) {
             $list = new MailingList($row);
 
-            $list_admin = UserManager::instance()->getUserById($list->getListAdmin());
+            $list_admin       = UserManager::instance()->getUserById($list->getListAdmin());
             $list_admin_email = $list_admin->getEmail();
 
             $list_dir = ForgeConfig::get('mailman_list_dir') . "/" . $list->getListName();
@@ -124,12 +124,12 @@ class BackendMailingList extends Backend
         $dar = $this->_getMailingListDao()->searchByGroupListId($group_list_id);
 
         if ($row = $dar->getRow()) {
-            $list = new MailingList($row);
+            $list     = new MailingList($row);
             $list_dir = ForgeConfig::get('mailman_list_dir') . "/" . $list->getListName();
             if ((is_dir($list_dir)) && ($list->getIsPublic() == 9)) {
                 // Archive first
                 $list_archive_dir = ForgeConfig::get('mailman_list_dir') . "/../archives/private/" . $list->getListName(); // Does it work? TODO
-                $backupfile = ForgeConfig::get('sys_project_backup_path') . "/" . $list->getListName() . "-mailman.tgz";
+                $backupfile       = ForgeConfig::get('sys_project_backup_path') . "/" . $list->getListName() . "-mailman.tgz";
                 system('tar cfz ' . escapeshellarg($backupfile) . ' ' . escapeshellarg($list_dir) . ' ' . escapeshellarg($list_archive_dir));
                 chmod($backupfile, 0600);
 
@@ -165,7 +165,7 @@ class BackendMailingList extends Backend
     public function deleteProjectMailingLists($projectId)
     {
         $deleteStatus = true;
-        $res = $this->_getMailingListDao()->searchByProject($projectId);
+        $res          = $this->_getMailingListDao()->searchByProject($projectId);
         if ($res && ! $res->isError()) {
             while ($row = $res->getRow()) {
                 if ($this->_getMailingListDao()->deleteList($row['group_list_id'])) {

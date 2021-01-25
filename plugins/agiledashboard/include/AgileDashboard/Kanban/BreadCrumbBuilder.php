@@ -64,7 +64,7 @@ class BreadCrumbBuilder
 
     public function addKanbanCrumb(TrackerCrumbInContext $tracker_crumb)
     {
-        $tracker = $tracker_crumb->getTracker();
+        $tracker   = $tracker_crumb->getTracker();
         $kanban_id = $this->kanban_factory->getKanbanIdByTrackerId($tracker_crumb->getTracker()->getId());
         if ($kanban_id) {
             try {

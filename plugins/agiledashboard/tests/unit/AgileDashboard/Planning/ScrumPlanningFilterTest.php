@@ -61,7 +61,7 @@ class ScrumPlanningFilterTest extends TestCase
         $this->planning               = \Mockery::spy(\Planning::class);
         $this->user                   = \Mockery::spy(\PFUser::class);
 
-        $this->scrum_planning_filter  = new ScrumPlanningFilter(
+        $this->scrum_planning_filter = new ScrumPlanningFilter(
             $this->mono_milestone_checker,
             $this->planning_factory
         );

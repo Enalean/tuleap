@@ -31,7 +31,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
     public function searchByArtifactId($artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $sql = "SELECT * FROM $this->table_name
+        $sql         = "SELECT * FROM $this->table_name
                 WHERE artifact_id = $artifact_id
                 ORDER BY id";
         return $this->retrieve($sql);
@@ -39,9 +39,9 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
 
     public function searchByArtifactIdAndChangesetId($artifact_id, $changeset_id)
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
+        $artifact_id  = $this->da->escapeInt($artifact_id);
         $changeset_id = $this->da->escapeInt($changeset_id);
-        $sql = "SELECT * FROM $this->table_name
+        $sql          = "SELECT * FROM $this->table_name
                 WHERE artifact_id = $artifact_id
                   AND id = $changeset_id";
         return $this->retrieve($sql);
@@ -50,7 +50,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
     public function searchLastChangesetByArtifactId($artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $sql = "SELECT c.* FROM tracker_changeset c
+        $sql         = "SELECT c.* FROM tracker_changeset c
                 JOIN tracker_artifact AS a on (a.last_changeset_id = c.id)
                 WHERE a.id = $artifact_id";
 
@@ -60,8 +60,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
     public function searchLastChangesetAndValueForArtifactField($artifact_id, $field_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $field_id = $this->da->escapeInt($field_id);
-        $sql = "SELECT cs.id AS id, cs.submitted_by, cs.submitted_on, cs.email, cv.id AS value_id, cv.has_changed
+        $field_id    = $this->da->escapeInt($field_id);
+        $sql         = "SELECT cs.id AS id, cs.submitted_by, cs.submitted_on, cs.email, cv.id AS value_id, cv.has_changed
                 FROM tracker_artifact        AS a
                 JOIN tracker_changeset       AS cs ON (cs.id = a.last_changeset_id)
                 JOIN tracker_changeset_value AS cv ON (cv.changeset_id = a.last_changeset_id)
@@ -101,7 +101,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
         }
         $submitted_on = $this->da->escapeInt($submitted_on);
         $email        = $email ? $this->da->quoteSmart($email) : 'NULL';
-        $sql = "INSERT INTO tracker_changeset (artifact_id, submitted_by, submitted_on, email)
+        $sql          = "INSERT INTO tracker_changeset (artifact_id, submitted_by, submitted_on, email)
                 VALUES ($artifact_id, $submitted_by, $submitted_on, $email)";
 
         return $this->updateAndGetLastId($sql);
@@ -110,7 +110,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
     public function delete($changeset_id)
     {
         $changeset_id = $this->da->escapeInt($changeset_id);
-        $sql = "DELETE
+        $sql          = "DELETE
                 FROM $this->table_name
                 WHERE id = $changeset_id";
         return $this->update($sql);
@@ -126,12 +126,12 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
      */
     public function getArtifactsByFieldAndLastUpdateDate($trackerId, $date)
     {
-        $trackerId  = $this->da->escapeInt($trackerId);
-        $date       = $this->da->escapeInt($date);
-        $halfDay    = 60 * 60 * 12;
-        $minDate    = $date - $halfDay;
-        $maxDate    = $date + $halfDay;
-        $sql        = "SELECT MAX(c.id) AS id, c.artifact_id FROM
+        $trackerId = $this->da->escapeInt($trackerId);
+        $date      = $this->da->escapeInt($date);
+        $halfDay   = 60 * 60 * 12;
+        $minDate   = $date - $halfDay;
+        $maxDate   = $date + $halfDay;
+        $sql       = "SELECT MAX(c.id) AS id, c.artifact_id FROM
                          tracker_changeset c
                          JOIN tracker_artifact a ON c.artifact_id = a.id
                          WHERE DATE(FROM_UNIXTIME(c.submitted_on)) BETWEEN DATE(FROM_UNIXTIME(" . $minDate . ")) AND DATE(FROM_UNIXTIME(" . $maxDate . "))
@@ -168,8 +168,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
      */
     public function searchChangesetByTimestamp($artifact_id, $timestamp)
     {
-        $artifact_id  = $this->da->escapeInt($artifact_id);
-        $timestamp    = $this->da->escapeInt($timestamp);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $timestamp   = $this->da->escapeInt($timestamp);
 
         $sql = "SELECT changeset1.*
                     FROM tracker_changeset       AS changeset1

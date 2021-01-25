@@ -125,7 +125,7 @@ class Tracker_DateReminderManager
     private function checkReminderMatchTracker(?Tracker_DateReminder $reminder = null)
     {
         if ($reminder === null || $reminder->getTrackerId() !== $this->getTracker()->getId()) {
-            $reminder_id  = $reminder === null ? '' : $reminder->getId();
+            $reminder_id = $reminder === null ? '' : $reminder->getId();
             throw new Tracker_DateReminderException(
                 $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_reminder', [$reminder_id])
             );
@@ -152,13 +152,13 @@ class Tracker_DateReminderManager
      */
     protected function sendReminderNotification(Tracker_DateReminder $reminder, Artifact $artifact)
     {
-        $tracker    = $this->getTracker();
+        $tracker = $this->getTracker();
 
         // 1. Get the recipients list
         $recipients = $reminder->getRecipients($artifact);
 
         // 2. Compute the body of the message + headers
-        $messages   = [];
+        $messages = [];
         foreach ($recipients as $recipient) {
             if ($recipient && $artifact->userCanView($recipient) && $reminder->getField()->userCanRead($recipient)) {
                 $this->buildMessage($reminder, $artifact, $messages, $recipient);
@@ -191,15 +191,15 @@ class Tracker_DateReminderManager
         $format    = $mailManager->getMailPreferencesByUser($user);
 
         //We send multipart mail: html & text body in case of preferences set to html
-        $htmlBody  = '';
+        $htmlBody = '';
         if ($format == Codendi_Mail_Interface::FORMAT_HTML) {
-            $htmlBody  .= $this->getBodyHtml($reminder, $artifact, $user, $lang);
+            $htmlBody .= $this->getBodyHtml($reminder, $artifact, $user, $lang);
         }
-        $txtBody   = $this->getBodyText($reminder, $artifact, $user, $lang);
+        $txtBody = $this->getBodyText($reminder, $artifact, $user, $lang);
 
-        $subject   = $this->getSubject($reminder, $artifact, $user);
-        $headers   = [];
-        $hash      = md5($htmlBody . $txtBody . serialize($headers) . serialize($subject));
+        $subject = $this->getSubject($reminder, $artifact, $user);
+        $headers = [];
+        $hash    = md5($htmlBody . $txtBody . serialize($headers) . serialize($subject));
         if (isset($messages[$hash])) {
             $messages[$hash]['recipients'][] = $recipient;
         } else {
@@ -226,12 +226,12 @@ class Tracker_DateReminderManager
      */
     protected function sendReminder(Artifact $artifact, $recipients, $headers, $subject, $htmlBody, $txtBody)
     {
-        $hp             = Codendi_HTMLPurifier::instance();
-        $breadcrumbs    = [];
-        $project        = $this->getTracker()->getProject();
-        $trackerId      = $this->getTracker()->getID();
-        $artifactId     = $artifact->getID();
-        $mail_enhancer  = new MailEnhancer();
+        $hp            = Codendi_HTMLPurifier::instance();
+        $breadcrumbs   = [];
+        $project       = $this->getTracker()->getProject();
+        $trackerId     = $this->getTracker()->getID();
+        $artifactId    = $artifact->getID();
+        $mail_enhancer = new MailEnhancer();
 
         $server_url = HTTPRequest::instance()->getServerUrl();
 
@@ -302,13 +302,13 @@ class Tracker_DateReminderManager
         $protocol = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
         $link     = ' <' . $protocol . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?aid=' . $artifact->getId() . '>';
 
-        $output   = '+============== ' . '[' . $this->getTracker()->getItemName() . ' #' . $artifact->getId() . '] ' . $artifact->fetchMailTitle($recipient) . ' ==============+';
-        $output   .= PHP_EOL;
+        $output  = '+============== ' . '[' . $this->getTracker()->getItemName() . ' #' . $artifact->getId() . '] ' . $artifact->fetchMailTitle($recipient) . ' ==============+';
+        $output .= PHP_EOL;
 
-        $output   .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), ForgeConfig::get('sys_name'), $reminder->getField()->getLabel(), (string) $reminder->getFieldValue($artifact));
-        $output   .= PHP_EOL;
-        $output   .= sprintf(dgettext('tuleap-tracker', 'You can access the artifact here: %1$s'), $link);
-        $output   .= PHP_EOL;
+        $output .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), ForgeConfig::get('sys_name'), $reminder->getField()->getLabel(), (string) $reminder->getFieldValue($artifact));
+        $output .= PHP_EOL;
+        $output .= sprintf(dgettext('tuleap-tracker', 'You can access the artifact here: %1$s'), $link);
+        $output .= PHP_EOL;
         return $output;
     }
 
@@ -328,11 +328,11 @@ class Tracker_DateReminderManager
         $protocol = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
         $link     = $protocol . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?aid=' . $artifact->getId();
 
-        $output   = '<h1>' . $hp->purify($artifact->fetchMailTitle($recipient, $format, false)) . '</h1>' . PHP_EOL;
-        $output   .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), $hp->purify(ForgeConfig::get('sys_name')), $hp->purify($reminder->getField()->getLabel()), (string) $reminder->getFieldValue($artifact));
-        $output   .= '<br>';
-        $output   .= sprintf(dgettext('tuleap-tracker', 'You can access the artifact <a href="%1$s">here</a>.'), $link);
-        $output   .= '<br>';
+        $output  = '<h1>' . $hp->purify($artifact->fetchMailTitle($recipient, $format, false)) . '</h1>' . PHP_EOL;
+        $output .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), $hp->purify(ForgeConfig::get('sys_name')), $hp->purify($reminder->getField()->getLabel()), (string) $reminder->getFieldValue($artifact));
+        $output .= '<br>';
+        $output .= sprintf(dgettext('tuleap-tracker', 'You can access the artifact <a href="%1$s">here</a>.'), $link);
+        $output .= '<br>';
         return $output;
     }
 
@@ -350,8 +350,8 @@ class Tracker_DateReminderManager
             $time_string = '+';
         }
         $time_string .= $reminder->getDistance() . ' days';
-        $date  = DateHelper::getTimestampAtMidnight($time_string);
-        $field = $reminder->getField();
+        $date         = DateHelper::getTimestampAtMidnight($time_string);
+        $field        = $reminder->getField();
         return $field->getArtifactsByCriterias($date, $this->getTracker()->getId());
     }
 }

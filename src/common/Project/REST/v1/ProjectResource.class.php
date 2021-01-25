@@ -144,24 +144,24 @@ class ProjectResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->user_manager      = UserManager::instance();
-        $this->project_manager   = ProjectManager::instance();
-        $this->ugroup_manager    = new UGroupManager();
-        $this->json_decoder      = new JsonDecoder();
-        $this->event_manager     = EventManager::instance();
+        $this->user_manager    = UserManager::instance();
+        $this->project_manager = ProjectManager::instance();
+        $this->ugroup_manager  = new UGroupManager();
+        $this->json_decoder    = new JsonDecoder();
+        $this->event_manager   = EventManager::instance();
 
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );
 
-        $label_dao               = new LabelDao();
+        $label_dao = new LabelDao();
 
         $this->labels_retriever = new LabelsCurlyCoatedRetriever(
             new PaginatedCollectionsOfLabelsBuilder(),
             $label_dao
         );
 
-        $banner_dao = new BannerDao();
+        $banner_dao                       = new BannerDao();
         $this->banner_permissions_checker = new BannerPermissionsChecker();
         $this->banner_creator             = new BannerCreator($banner_dao);
         $this->banner_retriever           = new BannerRetriever($banner_dao);
@@ -717,7 +717,7 @@ class ProjectResource extends AuthenticatedResource
 
         foreach ($ugroups as $ugroup) {
             $representation = new MinimalUserGroupRepresentation((int) $project_id, $ugroup);
-            $user_groups[] = $representation;
+            $user_groups[]  = $representation;
         }
 
         return $user_groups;

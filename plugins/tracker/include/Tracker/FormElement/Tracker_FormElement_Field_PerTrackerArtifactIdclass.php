@@ -117,7 +117,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      */
     protected function fetchAdminFormElement()
     {
-        $html = '';
+        $html  = '';
         $html .= '<a href="#' . TRACKER_BASE_URL . '/?aid=123" onclick="return false;">3</a>';
         return $html;
     }
@@ -151,7 +151,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      */
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        $html = '';
+        $html  = '';
         $html .= $artifact->getPerTrackerArtifactId();
         return $html;
     }

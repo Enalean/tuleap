@@ -98,13 +98,13 @@ abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->cwd           = getcwd();
+        $this->cwd                = getcwd();
         $this->fixtures_dir       = __DIR__ . '/_fixtures';
-        $tmpDir              = $this->getTmpDir();
-        $this->gitolite_admin_ref  = $tmpDir . '/gitolite-admin-ref';
-        $this->sys_data_dir  = $tmpDir;
-        $this->gitolite_admin_dir     = $tmpDir . '/gitolite/admin';
-        $this->repo_dir       = $tmpDir . '/repositories';
+        $tmpDir                   = $this->getTmpDir();
+        $this->gitolite_admin_ref = $tmpDir . '/gitolite-admin-ref';
+        $this->sys_data_dir       = $tmpDir;
+        $this->gitolite_admin_dir = $tmpDir . '/gitolite/admin';
+        $this->repo_dir           = $tmpDir . '/repositories';
 
         // Copy the reference to save time & create symlink because
         // git is very sensitive to path you are using. Just symlinking
@@ -122,7 +122,7 @@ abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
         $this->git_exec->setLocalCommiter('TestName', 'test@example.com');
 
         $this->user_manager = \Mockery::spy(\UserManager::class);
-        $this->dumper = new Git_Gitolite_SSHKeyDumper($this->gitolite_admin_dir, $this->git_exec);
+        $this->dumper       = new Git_Gitolite_SSHKeyDumper($this->gitolite_admin_dir, $this->git_exec);
 
         $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
 

@@ -54,7 +54,7 @@ class HierarchyOfFolderBuilder
     public function getHierarchyOfFolderForArtifact(Artifact $artifact)
     {
         $hierarchy = [];
-        $row = $this->folder_dao->searchFoldersTheArtifactBelongsTo($artifact->getId())->getRow();
+        $row       = $this->folder_dao->searchFoldersTheArtifactBelongsTo($artifact->getId())->getRow();
         if ($row) {
             $folder    = $this->artifact_factory->getInstanceFromRow($row);
             $hierarchy = $this->getHierarchyOfFolder($folder);

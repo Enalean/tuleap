@@ -127,7 +127,7 @@ final class PlanningControllerTest extends TestCase
         $this->root_planning_update_checker = Mockery::mock(UpdateIsAllowedChecker::class);
         $this->update_request_validator     = Mockery::mock(UpdateRequestValidator::class);
 
-        $this->planning_controller          = new Planning_Controller(
+        $this->planning_controller = new Planning_Controller(
             $this->request,
             $this->planning_factory,
             Mockery::mock(Planning_MilestoneFactory::class),

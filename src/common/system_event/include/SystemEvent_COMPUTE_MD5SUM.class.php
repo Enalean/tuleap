@@ -54,7 +54,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
      */
     public function verbalizeParameters($with_link)
     {
-        $txt = '';
+        $txt  = '';
         $txt .= 'File ID: #' . $this->getIdFromParam($this->parameters);
         return $txt;
     }

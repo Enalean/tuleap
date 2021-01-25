@@ -53,7 +53,7 @@ class AdministratorPresenterBuilder
     public function build(Project $project)
     {
         $administrators = [];
-        $rows       = $this->dao->searchUserByDynamicUGroupId(\ProjectUGroup::PROJECT_ADMIN, $project->getID());
+        $rows           = $this->dao->searchUserByDynamicUGroupId(\ProjectUGroup::PROJECT_ADMIN, $project->getID());
         foreach ($rows as $row) {
             $administrator = $this->user_manager->getUserById($row['user_id']);
             if ($administrator) {
@@ -65,7 +65,7 @@ class AdministratorPresenterBuilder
         $this->event_manager->processEvent($collector);
 
         $badged_administrator = $collector->getUserWithStarBadge();
-        $presenters = [];
+        $presenters           = [];
         foreach ($administrators as $user) {
             $administrator_presenter = new AdministratorPresenter($this->user_helper);
             $administrator_presenter->build($user, $badged_administrator);

@@ -47,8 +47,8 @@ final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Class
 
     protected function setUp(): void
     {
-        $milestone_factory       = Mockery::spy(\Planning_MilestoneFactory::class);
-        $backlog_factory         = Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $milestone_factory             = Mockery::spy(\Planning_MilestoneFactory::class);
+        $backlog_factory               = Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
         $this->milestone_parent_linker = new MilestoneParentLinker(
             $milestone_factory,
             $backlog_factory
@@ -79,7 +79,7 @@ final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Class
 
     public function testItDoesNothingIfTheArtifactTrackerIsNotInParentMilestoneBacklogTrackers(): void
     {
-        $artifact_added            = Mockery::mock(Artifact::class);
+        $artifact_added = Mockery::mock(Artifact::class);
         $artifact_added->shouldReceive('getTRackerId')->andReturn(201);
         $parent_milestone_artifact = Mockery::spy(Artifact::class);
         $parent_milestone          = Mockery::spy(\Planning_Milestone::class)->shouldReceive('getArtifact')->andReturns($parent_milestone_artifact)->getMock();

@@ -44,7 +44,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
     {
         parent::setUp();
         $this->user_manager = \Mockery::spy(\UserManager::class);
-        $this->builder = new UsersToBeImportedCollectionBuilder(
+        $this->builder      = new UsersToBeImportedCollectionBuilder(
             $this->user_manager,
             \Mockery::spy(\XML_RNGValidator::class)
         );
@@ -457,7 +457,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
 
         $collection = $this->builder->buildWithoutEmail($xml);
 
-        $expected   = [
+        $expected = [
             'cstevens' => new AlreadyExistingUser($this->cat_steven, 110, 'cs3456')
         ];
 
@@ -483,7 +483,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
 
         $collection = $this->builder->buildWithoutEmail($xml);
 
-        $expected   = [
+        $expected = [
             'ci_bot_manathan' => new ToBeCreatedUser(
                 'ci_bot_manathan',
                 'Continuous Integration Bot',

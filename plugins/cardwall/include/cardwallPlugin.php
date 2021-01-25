@@ -56,8 +56,8 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function getConfigFactory()
     {
         if (! $this->config_factory) {
-            $tracker_factory  = TrackerFactory::instance();
-            $element_factory  = Tracker_FormElementFactory::instance();
+            $tracker_factory      = TrackerFactory::instance();
+            $element_factory      = Tracker_FormElementFactory::instance();
             $this->config_factory = new Cardwall_OnTop_ConfigFactory($tracker_factory, $element_factory);
         }
         return $this->config_factory;
@@ -210,7 +210,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             }
         }
         if (! $field_id) {
-            $dao = new Cardwall_RendererDao();
+            $dao          = new Cardwall_RendererDao();
             $cardwall_row = $dao->searchByRendererId($params['row']['id'])->getRow();
             if ($cardwall_row) {
                 $field_id = $cardwall_row['field_id'];
@@ -414,7 +414,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     private function getPaneInfo($milestone)
     {
-        $tracker  = $milestone->getArtifact()->getTracker();
+        $tracker = $milestone->getArtifact()->getTracker();
 
         if (! $this->getOnTopDao()->isEnabled($tracker->getId())) {
             return;
@@ -427,7 +427,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         // Only display a cardwall if there is something to display
         if ($params['milestone'] && $params['milestone']->getPlannedArtifacts() && count($params['milestone']->getPlannedArtifacts()->getChildren()) > 0) {
-            $pane_info = new CardwallPaneInfo($params['milestone']);
+            $pane_info      = new CardwallPaneInfo($params['milestone']);
             $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
         }
     }
@@ -450,7 +450,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function agiledashboard_event_milestone_selector_redirect($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['milestone']->getArtifact()) {
-            $tracker  = $params['milestone']->getArtifact()->getTracker();
+            $tracker = $params['milestone']->getArtifact()->getTracker();
             if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
                 $params['redirect_parameters']['pane'] = 'cardwall';
             }
@@ -498,10 +498,10 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     private function redirectToRenderer(Tracker_Artifact_Redirect $redirect, array $redirect_params)
     {
-        $report_id                   = key($redirect_params);
-        $renderer_id                 = current($redirect_params);
-        $redirect->base_url          = TRACKER_BASE_URL;
-        $redirect->query_parameters  = [
+        $report_id                  = key($redirect_params);
+        $renderer_id                = current($redirect_params);
+        $redirect->base_url         = TRACKER_BASE_URL;
+        $redirect->query_parameters = [
             'report'   => $report_id,
             'renderer' => $renderer_id,
         ];
@@ -517,7 +517,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     private function appendCardwallParameter(Tracker_Artifact_Redirect $redirect, $cardwall)
     {
-        [$key, $value] = explode('=', urldecode(http_build_query(['cardwall' => $cardwall])));
+        [$key, $value]                    = explode('=', urldecode(http_build_query(['cardwall' => $cardwall])));
         $redirect->query_parameters[$key] = $value;
     }
 
@@ -610,7 +610,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $tracker = $params['tracker'];
         $config  = $this->getConfigFactory()->getOnTopConfig($tracker);
 
-        $admin_view = new Cardwall_OnTop_Config_View_Admin();
+        $admin_view     = new Cardwall_OnTop_Config_View_Admin();
         $params['view'] = $admin_view->displayAdminOnTop($config);
     }
 

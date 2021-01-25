@@ -94,7 +94,7 @@ class TransitionRetriever
             return null;
         }
 
-        $to         = (int) $default_value;
+        $to = (int) $default_value;
         return $workflow->getTransition($from, $to);
     }
 

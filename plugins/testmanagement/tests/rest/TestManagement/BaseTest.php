@@ -65,10 +65,10 @@ abstract class BaseTest extends RestBase
     {
         $all_campaigns_request  = $this->client->get("projects/$this->project_id/testmanagement_campaigns");
         $all_campaigns_response = $this->getResponse($all_campaigns_request);
-        $campaigns = $all_campaigns_response->json();
+        $campaigns              = $all_campaigns_response->json();
 
         $index_of_valid73_when_sorted_by_id = 0;
-        $campaign = $campaigns[$index_of_valid73_when_sorted_by_id];
+        $campaign                           = $campaigns[$index_of_valid73_when_sorted_by_id];
         $this->assertEquals($campaign['label'], 'Tuleap 7.3');
 
         return $campaign;

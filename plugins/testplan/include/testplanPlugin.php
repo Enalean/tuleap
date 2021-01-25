@@ -158,7 +158,7 @@ final class testplanPlugin extends Plugin
         $testmanagement_config = new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), $tracker_factory);
 
         $tracker_new_dropdown_link_presenter_builder = new TrackerNewDropdownLinkPresenterBuilder();
-        $event_manager = EventManager::instance();
+        $event_manager                               = EventManager::instance();
 
         $tracker_dao                  = new TrackerDao();
         $planning_dao                 = new PlanningDao($tracker_dao);

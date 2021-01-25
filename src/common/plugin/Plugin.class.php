@@ -69,8 +69,8 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function __construct($id = -1)
     {
-        $this->id            = $id;
-        $this->hooks         = new Map();
+        $this->id    = $id;
+        $this->hooks = new Map();
 
         $this->scope = self::SCOPE_SYSTEM;
     }
@@ -155,7 +155,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         if ($this->hooks->containsKey($hook)) {
             throw new RuntimeException('A plugin cannot listen to the same hook several time. Please check ' . $hook);
         }
-        $value = [];
+        $value               = [];
         $value['hook']       = $hook;
         $value['callback']   = $callback ?: $this->deduceCallbackFromHook($hook);
         $value['recallHook'] = $recallHook;
@@ -173,7 +173,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 )
             )
         );
-        $current_plugin = static::class;
+        $current_plugin     = static::class;
 
         if (method_exists($this, $hook_in_camel_case)) {
             if ($hook_in_camel_case !== $hook && method_exists($this, $hook)) {

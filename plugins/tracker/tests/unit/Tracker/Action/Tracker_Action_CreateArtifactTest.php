@@ -65,8 +65,8 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
         $event_manager = \Mockery::spy(\EventManager::class);
         EventManager::setInstance($event_manager);
 
-        $this->tracker         = \Mockery::spy(\Tracker::class);
-        $artifact_factory      = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->tracker             = \Mockery::spy(\Tracker::class);
+        $artifact_factory          = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         $this->request             = \Mockery::spy(\Codendi_Request::class);
 
@@ -135,8 +135,8 @@ final class Tracker_Action_CreateArtifactTest extends \PHPUnit\Framework\TestCas
     public function testItRedirectsToNewArtifactCreationWhenSubmitAndContinueIsSpecified(): void
     {
         $request_data = ['submit_and_continue' => true];
-        $tracker_id  = 73;
-        $artifact_id = 66;
+        $tracker_id   = 73;
+        $artifact_id  = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
         $this->assertStringStartsWith(TRACKER_BASE_URL, $redirect_uri->toUrl());
         $this->assertUriHasArgument($redirect_uri->toUrl(), 'func', 'new-artifact');

@@ -59,13 +59,13 @@ class StatusValuesCollection
     public function __construct(ClientWrapper $wrapper, LoggerInterface $logger)
     {
         $this->wrapper = $wrapper;
-        $this->logger = $logger;
+        $this->logger  = $logger;
     }
 
     public function initCollectionForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_name, IDGenerator $id_generator): void
     {
         $this->logger->debug("Build status collection ...");
-        $statuses_url     = "project/" . urlencode($jira_project_key) . "/statuses";
+        $statuses_url = "project/" . urlencode($jira_project_key) . "/statuses";
 
         $this->logger->debug("  GET " . $statuses_url);
         $statuses_content = $this->wrapper->getUrl($statuses_url);

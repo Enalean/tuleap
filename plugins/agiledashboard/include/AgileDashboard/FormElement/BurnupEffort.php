@@ -27,7 +27,7 @@ class BurnupEffort
 
     public function __construct($team_effort, $total_effort)
     {
-        $this->team_effort = $team_effort;
+        $this->team_effort  = $team_effort;
         $this->total_effort = $total_effort;
     }
 

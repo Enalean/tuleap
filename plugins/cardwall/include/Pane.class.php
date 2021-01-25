@@ -119,9 +119,9 @@ class Cardwall_Pane extends AgileDashboard_Pane
 
     private function getPaneContent($template)
     {
-        $columns = $this->config->getDashboardColumns();
-        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../templates');
-        $html = $renderer->renderToString($template, $this->getPresenterUsingMappedFields($columns));
+        $columns  = $this->config->getDashboardColumns();
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../templates');
+        $html     = $renderer->renderToString($template, $this->getPresenterUsingMappedFields($columns));
         // TODO what if no semantic status and no mapping????
 
         return $html;
@@ -132,7 +132,7 @@ class Cardwall_Pane extends AgileDashboard_Pane
      */
     private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns)
     {
-        $planning            = $this->milestone->getPlanning();
+        $planning = $this->milestone->getPlanning();
 
         $raw_board_builder   = new Cardwall_RawBoardBuilder();
         $display_preferences = $raw_board_builder->getDisplayPreferences($this->milestone, $this->user);
@@ -140,10 +140,10 @@ class Cardwall_Pane extends AgileDashboard_Pane
         $column_autostack    = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
         $column_autostack->setAutostack($columns, $column_preferences);
 
-        $redirect_parameter  = 'cardwall[agile][' . $planning->getId() . ']=' . $this->milestone->getArtifactId();
+        $redirect_parameter = 'cardwall[agile][' . $planning->getId() . ']=' . $this->milestone->getArtifactId();
 
         $this->milestone = $this->milestone_factory->updateMilestoneContextualInfo($this->user, $this->milestone);
-        $board = $raw_board_builder->buildBoardUsingMappedFields($this->user, $this->artifact_factory, $this->milestone, $this->config, $columns);
+        $board           = $raw_board_builder->buildBoardUsingMappedFields($this->user, $this->artifact_factory, $this->milestone, $this->config, $columns);
 
         return new Cardwall_PaneContentPresenter(
             $board,
@@ -263,7 +263,7 @@ class Cardwall_Pane extends AgileDashboard_Pane
         $tracker_id  = $this->milestone->getTrackerId();
         $artifact_id = $this->milestone->getArtifactId();
 
-        $action      = 'toggle_user_display_avatar';
+        $action = 'toggle_user_display_avatar';
 
         $switch_display_username_url =
             CARDWALL_BASE_URL

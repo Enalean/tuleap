@@ -123,7 +123,7 @@ class Tracker_Chart_Data_Burndown
     public function getIdealEffort()
     {
         $start_effort = $this->getFirstEffort();
-        $x_axis = 0;
+        $x_axis       = 0;
 
         foreach ($this->time_period->getDayOffsets() as $day_offset) {
             $this->ideal_effort[$x_axis] = $this->getIdealEffortAtDay($x_axis, $start_effort);

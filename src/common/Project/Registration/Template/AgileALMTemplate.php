@@ -32,8 +32,8 @@ class AgileALMTemplate implements TuleapTemplate
 {
     public const NAME = 'agile_alm';
 
-    private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/agile_alm/project.xml';
-    private const AGILE_ALM_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/agile_alm/agile_alm_template.xml';
+    private const PROJECT_XML         = __DIR__ . '/../../../../../tools/utils/setup_templates/agile_alm/project.xml';
+    private const AGILE_ALM_XML       = __DIR__ . '/../../../../../tools/utils/setup_templates/agile_alm/agile_alm_template.xml';
     private const TEST_MANAGEMENT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/agile_alm/testmanagement.xml';
 
     /**
@@ -69,8 +69,8 @@ class AgileALMTemplate implements TuleapTemplate
     {
         $this->title               = _('Agile Enterprise Planning - Full ALM');
         $this->description         = _('The most complete project workspace to plan, build and ship quality products. Include Tuleap Test Management, Time Tracking and Cross-Tracker Search. Reach end-to-end traceability.');
-        $this->glyph_finder       = $glyph_finder;
-        $this->project_xml_merger = $project_xml_merger;
+        $this->glyph_finder        = $glyph_finder;
+        $this->project_xml_merger  = $project_xml_merger;
         $this->consistency_checker = $consistency_checker;
     }
 

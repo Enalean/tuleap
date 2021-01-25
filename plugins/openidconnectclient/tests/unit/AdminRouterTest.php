@@ -40,7 +40,7 @@ class AdminRouterTest extends TestCase
         $csrf_token = \Mockery::spy(\CSRFSynchronizerToken::class);
         $user       = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isSuperUser')->andReturns(false);
-        $request    = \Mockery::spy(\HTTPRequest::class);
+        $request = \Mockery::spy(\HTTPRequest::class);
         $request->shouldReceive('getCurrentUser')->andReturns($user);
 
         $response = Mockery::mock(\Tuleap\Layout\BaseLayout::class);

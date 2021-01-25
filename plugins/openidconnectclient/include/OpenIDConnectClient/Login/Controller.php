@@ -105,8 +105,8 @@ class Controller
             );
         }
 
-        $provider          = $flow_response->getProvider();
-        $user_identifier   = $flow_response->getUserIdentifier();
+        $provider        = $flow_response->getProvider();
+        $user_identifier = $flow_response->getUserIdentifier();
 
         try {
             $user_mapping = $this->user_mapping_manager->getByProviderAndIdentifier(
@@ -206,10 +206,10 @@ class Controller
 
     private function redirectToLinkAnUnknowAccount(FlowResponse $flow_response)
     {
-        $provider          = $flow_response->getProvider();
-        $user_identifier   = $flow_response->getUserIdentifier();
+        $provider        = $flow_response->getProvider();
+        $user_identifier = $flow_response->getUserIdentifier();
         try {
-            $unlinked_account  = $this->unlinked_account_manager->create($provider->getId(), $user_identifier);
+            $unlinked_account = $this->unlinked_account_manager->create($provider->getId(), $user_identifier);
         } catch (UnlinkedAccountDataAccessException $ex) {
             $this->redirectAfterFailure(
                 dgettext('tuleap-openidconnectclient', 'An error occurred, please retry')
@@ -217,11 +217,11 @@ class Controller
         }
 
         $this->session_storage[\openidconnectclientPlugin::SESSION_LINK_ID_KEY] = $unlinked_account->getId();
-        $query_parameters = [
+        $query_parameters                                                       = [
             'action'    => 'link',
             'return_to' => $flow_response->getReturnTo(),
         ];
-        $user_informations = $flow_response->getUserInformations();
+        $user_informations                                                      = $flow_response->getUserInformations();
         foreach (['name', 'nickname', 'email', 'zoneinfo'] as $query_parameter) {
             if (isset($user_informations[$query_parameter])) {
                 $query_parameters[$query_parameter] = $user_informations[$query_parameter];

@@ -75,7 +75,7 @@ class ErrorPlot extends Plot
                 continue;
             }
 
-            $xt = $xscale->Translate($x);
+            $xt  = $xscale->Translate($x);
             $yt1 = $yscale->Translate($this->coords[0][$i * 2]);
             $yt2 = $yscale->Translate($this->coords[0][$i * 2 + 1]);
             $img->Line($xt, $yt1, $xt, $yt2);
@@ -141,7 +141,7 @@ class LineErrorPlot extends ErrorPlot
     {
         $ly = [];
         $ey = [];
-        $n = count($datay);
+        $n  = count($datay);
         if ($n % 3 != 0) {
             JpGraphError::RaiseL(4002);
             //('Error in input data to LineErrorPlot. Number of data points must be a multiple of 3');

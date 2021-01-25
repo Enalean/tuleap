@@ -101,7 +101,7 @@ class Theme_Sidebar extends PHPWikiTheme
 
             // Get existing date entries for the current user
             require_once("lib/TextSearchQuery.php");
-            $iter = $dbi->titleSearch(new TextSearchQuery("^" . $this->calendarBase() . SUBPAGE_SEPARATOR, true, "auto"));
+            $iter     = $dbi->titleSearch(new TextSearchQuery("^" . $this->calendarBase() . SUBPAGE_SEPARATOR, true, "auto"));
             $existing = [];
             while ($page = $iter->next()) {
                 if ($page->exists()) {

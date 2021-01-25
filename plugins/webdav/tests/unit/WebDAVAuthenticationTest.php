@@ -71,9 +71,9 @@ final class WebDAVAuthenticationTest extends TestCase
      */
     public function testAuthenticateFailureWithOnlyUsername(): void
     {
-        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVAuthentication     = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
         $_SERVER['PHP_AUTH_USER'] = 'username';
-        $user = \Mockery::spy(\PFUser::class);
+        $user                     = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
@@ -89,9 +89,9 @@ final class WebDAVAuthenticationTest extends TestCase
      */
     public function testAuthenticateFailureWithOnlyPassword(): void
     {
-        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVAuthentication   = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
         $_SERVER['PHP_AUTH_PW'] = 'password';
-        $user = \Mockery::spy(\PFUser::class);
+        $user                   = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
@@ -108,10 +108,10 @@ final class WebDAVAuthenticationTest extends TestCase
      */
     public function testAuthenticateFailureWithWrongUsernameAndPassword(): void
     {
-        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVAuthentication     = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
         $_SERVER['PHP_AUTH_USER'] = 'username';
         $_SERVER['PHP_AUTH_PW']   = 'password';
-        $user = \Mockery::spy(\PFUser::class);
+        $user                     = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
@@ -130,10 +130,10 @@ final class WebDAVAuthenticationTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
-        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVAuthentication     = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
         $_SERVER['PHP_AUTH_USER'] = 'username';
         $_SERVER['PHP_AUTH_PW']   = 'password';
-        $user = \Mockery::spy(\PFUser::class);
+        $user                     = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
@@ -153,7 +153,7 @@ final class WebDAVAuthenticationTest extends TestCase
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
         $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
-        $user = \Mockery::spy(\PFUser::class);
+        $user                 = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
@@ -170,10 +170,10 @@ final class WebDAVAuthenticationTest extends TestCase
      */
     public function testAuthenticateSuccessWithNotAnonymousUser(): void
     {
-        $webDAVAuthentication = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVAuthentication     = \Mockery::mock(\WebDAVAuthentication::class, [$this->user_manager, $this->headers_sender, $this->access_key_authenticator])->makePartial()->shouldAllowMockingProtectedMethods();
         $_SERVER['PHP_AUTH_USER'] = 'username';
         $_SERVER['PHP_AUTH_PW']   = 'password';
-        $user = \Mockery::spy(\PFUser::class);
+        $user                     = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturns(false);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 

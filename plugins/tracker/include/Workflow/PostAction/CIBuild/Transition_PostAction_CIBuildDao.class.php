@@ -52,7 +52,7 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject
     public function searchByWorkflow(Workflow $workflow)
     {
         $workflow_id = $this->da->escapeInt($workflow->getId());
-        $sql = "SELECT pa.*
+        $sql         = "SELECT pa.*
                 FROM tracker_workflow_transition_postactions_cibuild pa
                     JOIN tracker_workflow_transition USING (transition_id)
                 WHERE workflow_id = $workflow_id";
@@ -81,8 +81,8 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject
      */
     public function updatePostAction($id, $job_url)
     {
-        $id       = $this->da->escapeInt($id);
-        $job_url    = $this->da->quoteSmart($job_url);
+        $id      = $this->da->escapeInt($id);
+        $job_url = $this->da->quoteSmart($job_url);
 
         $sql = "UPDATE tracker_workflow_transition_postactions_cibuild
                 SET job_url = $job_url

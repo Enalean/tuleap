@@ -50,7 +50,7 @@ class ComputedFieldsDefaultValueTest extends TrackerBase
 
     public function testProjectMembersCanCreateAnArtifactAndComputedDefaultValueIsCorrectlySet()
     {
-        $string_field_id = null;
+        $string_field_id        = null;
         $tracker_representation = $this->tracker_representations[$this->computed_value_tracker_id];
         foreach ($tracker_representation['fields'] as $field) {
             if ($field['type'] === 'string') {
@@ -83,7 +83,7 @@ class ComputedFieldsDefaultValueTest extends TrackerBase
         );
 
         $computed_field_found = false;
-        $artifact = $get_response->json();
+        $artifact             = $get_response->json();
         foreach ($artifact['values'] as $field_value) {
             if ($field_value['type'] === 'computed') {
                 $computed_field_found = true;

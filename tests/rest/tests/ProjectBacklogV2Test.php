@@ -29,7 +29,7 @@ use RestBase;
  */
 class ProjectBacklogV2Test extends RestBase
 {
-    protected $base_url  = 'https://localhost/api/v2';
+    protected $base_url = 'https://localhost/api/v2';
 
     public function __construct()
     {

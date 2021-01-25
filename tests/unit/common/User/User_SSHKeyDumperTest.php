@@ -50,8 +50,8 @@ final class User_SSHKeyDumperTest extends \PHPUnit\Framework\TestCase
 
         $this->backend = \Mockery::mock(\Backend::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $this->key  = 'bla';
-        $this->user = new PFUser([
+        $this->key           = 'bla';
+        $this->user          = new PFUser([
             'user_name'       => $this->toto_name,
             'authorized_keys' => $this->key,
             'unix_status'     => 'A',

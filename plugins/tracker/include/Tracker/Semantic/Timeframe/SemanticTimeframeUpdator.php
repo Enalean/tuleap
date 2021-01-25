@@ -40,7 +40,7 @@ class SemanticTimeframeUpdator
 
     public function __construct(SemanticTimeframeDao $dao, \Tracker_FormElementFactory $form_factory)
     {
-        $this->dao = $dao;
+        $this->dao          = $dao;
         $this->form_factory = $form_factory;
     }
 

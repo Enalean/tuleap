@@ -44,7 +44,7 @@ final class RootPlanningEditionHandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->team_dao = M::mock(TeamStore::class);
-        $this->handler         = new RootPlanningEditionHandler($this->team_dao);
+        $this->handler  = new RootPlanningEditionHandler($this->team_dao);
     }
 
     public function testHandleProhibitsMilestoneTrackerUpdateForTeamProjects(): void

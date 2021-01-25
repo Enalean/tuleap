@@ -54,7 +54,7 @@ class AdminDelegation_UserServiceManager
 
     public function removeUser(PFUser $user, $time)
     {
-        $ret   = true;
+        $ret             = true;
         $darUserServices = $this->user_service_dao->searchUser($user->getId());
         $this->user_service_dao->removeUser($user->getId());
 

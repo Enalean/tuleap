@@ -44,16 +44,16 @@ class Docman_XMLExportVisitor implements ItemVisitor
         $this->doc = $doc;
 
         $this->fileCounter = 0;
-        $this->userCache = [];
-        $this->logger = $logger;
+        $this->userCache   = [];
+        $this->logger      = $logger;
 
-        $this->statistics['nb_items']   = 0;
-        $this->statistics['nb_folder']  = 0;
-        $this->statistics['nb_empty']   = 0;
-        $this->statistics['nb_link']    = 0;
-        $this->statistics['nb_wiki']    = 0;
-        $this->statistics['nb_file']    = 0;
-        $this->statistics['nb_version'] = 0;
+        $this->statistics['nb_items']    = 0;
+        $this->statistics['nb_folder']   = 0;
+        $this->statistics['nb_empty']    = 0;
+        $this->statistics['nb_link']     = 0;
+        $this->statistics['nb_wiki']     = 0;
+        $this->statistics['nb_file']     = 0;
+        $this->statistics['nb_version']  = 0;
         $this->statistics['nb_embedded'] = 0;
     }
 
@@ -141,7 +141,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
         $this->statistics['nb_folder']++;
-        $n = $this->visitItem($item);
+        $n     = $this->visitItem($item);
         $items = $item->getAllItems();
         if ($items->size()) {
             $it = $items->iterator();
@@ -182,7 +182,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
 
         // Dump all versions
         $versionFactory = new Docman_VersionFactory();
-        $versions = array_reverse($versionFactory->getAllVersionForItem($item));
+        $versions       = array_reverse($versionFactory->getAllVersionForItem($item));
         if (count($versions) > 0) {
             $vNode = $this->doc->createElement('versions');
             foreach ($versions as $version) {
@@ -232,7 +232,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
     protected function getNormalizedLogin($userId)
     {
         if (! isset($this->userCache[$userId])) {
-            $um = UserManager::instance();
+            $um   = UserManager::instance();
             $user = $um->getUserById($userId);
             if ($user !== null) {
                 $this->userCache[$userId] = $user->getName();

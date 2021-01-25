@@ -70,7 +70,7 @@ class FieldUpdator
         $description_fields = $this->fields_factory->getAllDescriptionFields();
 
         foreach ($description_fields as $field) {
-            $field_id        = $field["group_desc_id"];
+            $field_id = $field["group_desc_id"];
             if (isset($submitted_fields[$field_id])) {
                 $submitted_value = $submitted_fields[$field_id];
                 $this->storeFieldValue((int) $project->getID(), $submitted_value, (int) $field_id);

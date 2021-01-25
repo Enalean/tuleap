@@ -81,8 +81,8 @@ final class OAuth2RefreshTokenCreatorTest extends TestCase
 
     public function testCanIssueANewRefreshTokenFromAuthorizationCode(): void
     {
-        $current_time  = new \DateTimeImmutable('@10');
-        $auth_code     = $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]);
+        $current_time = new \DateTimeImmutable('@10');
+        $auth_code    = $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]);
 
         $this->refresh_token_dao->shouldReceive('create')->once()
             ->with($auth_code->getID(), \Mockery::type('string'), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS)
@@ -130,10 +130,10 @@ final class OAuth2RefreshTokenCreatorTest extends TestCase
 
     public function testDoesNotIssueRefreshTokenWhenAuthorizationCodeDoesNotHaveOfflineScope(): void
     {
-        $current_time  = new \DateTimeImmutable('@10');
-        $scope         = \Mockery::mock(AuthenticationScope::class);
+        $current_time = new \DateTimeImmutable('@10');
+        $scope        = \Mockery::mock(AuthenticationScope::class);
         $scope->shouldReceive('getIdentifier')->andReturn(OAuth2ScopeIdentifier::fromIdentifierKey('notoffline'));
-        $auth_code     = $this->getAuthorizationCode([$scope]);
+        $auth_code = $this->getAuthorizationCode([$scope]);
 
         $refresh_token = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode(
             $current_time,

@@ -78,7 +78,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
             $totalStartSize = 0;
             $totalEndSize   = 0;
             $totalEvolution = 0;
-            $i = 0;
+            $i              = 0;
             foreach ($res as $row) {
                 echo '<tr class="' . util_get_alt_row_color($i++) . '">';
                 echo '<td>';
@@ -88,9 +88,9 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
                     echo '<span class="plugin_statistics_table_legend" style="background-color:' . $color . ';">&nbsp;</span>';
                 }
                 echo $services[$row['service']] . '</td>';
-                $totalStartSize  += $row['start_size'];
-                $totalEndSize    += $row['end_size'];
-                $totalEvolution  += $row['evolution'];
+                $totalStartSize += $row['start_size'];
+                $totalEndSize   += $row['end_size'];
+                $totalEvolution += $row['evolution'];
                 $this->_displayEvolutionData($row);
                 echo '</tr>';
             }
@@ -133,14 +133,14 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
             $html .= $this->sizeReadable($totalSize);
         }
 
-        $html .= '<div style="text-align:center"><p>';
-        $graph = '<img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=progress&group_id=' . $groupId . '" title="Project total disk usage graph" />';
-        $user  = UserManager::instance()->getCurrentUser();
+        $html   .= '<div style="text-align:center"><p>';
+        $graph   = '<img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=progress&group_id=' . $groupId . '" title="Project total disk usage graph" />';
+        $user    = UserManager::instance()->getCurrentUser();
         $project = ProjectManager::instance()->getProject($groupId);
         if ($project->userIsAdmin($user)) {
             $pluginManager = PluginManager::instance();
-            $p     = $pluginManager->getPluginByName('statistics');
-            $html .= '<a href="' . $p->getPluginPath() . '/project_stat.php?group_id=' . $groupId . '">' . $graph . '</a>';
+            $p             = $pluginManager->getPluginByName('statistics');
+            $html         .= '<a href="' . $p->getPluginPath() . '/project_stat.php?group_id=' . $groupId . '">' . $graph . '</a>';
         } else {
             $html .= $graph;
         }

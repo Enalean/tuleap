@@ -361,7 +361,7 @@ class Commit extends GitObject
     public function GetAuthorLocalEpoch() // @codingStandardsIgnoreLine
     {
         $epoch = $this->GetAuthorEpoch();
-        $tz = $this->GetAuthorTimezone();
+        $tz    = $this->GetAuthorTimezone();
         if (preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $tz, $regs)) {
             $local = $epoch + ((((int) $regs[1]) + ($regs[2] / 60)) * 3600);
             return $local;
@@ -458,7 +458,7 @@ class Commit extends GitObject
     public function GetCommitterLocalEpoch() // @codingStandardsIgnoreLine
     {
         $epoch = $this->GetCommitterEpoch();
-        $tz = $this->GetCommitterTimezone();
+        $tz    = $this->GetCommitterTimezone();
         if (preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $tz, $regs)) {
             $local = $epoch + ((((int) $regs[1]) + ($regs[2] / 60)) * 3600);
             return $local;
@@ -644,7 +644,7 @@ class Commit extends GitObject
 
         $lines = explode("\n", $data);
 
-        $header = true;
+        $header                   = true;
         $is_parsing_pgp_signature = false;
 
         foreach ($lines as $i => $line) {
@@ -674,20 +674,20 @@ class Commit extends GitObject
                 }
             } elseif ($header && preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
                 /* author data */
-                $this->author = $regs[1];
-                $this->authorEpoch = $regs[2];
+                $this->author         = $regs[1];
+                $this->authorEpoch    = $regs[2];
                 $this->authorTimezone = $regs[3];
             } elseif ($header && preg_match('/^committer (.*) ([0-9]+) (.*)$/', $line, $regs)) {
                 /* committer data */
-                $this->committer = $regs[1];
-                $this->committerEpoch = $regs[2];
+                $this->committer         = $regs[1];
+                $this->committerEpoch    = $regs[2];
                 $this->committerTimezone = $regs[3];
             } elseif ($header && strpos($line, self::HEADER_PGP . ' ') === 0) {
                 $this->pgp_signature      = substr($line, strlen(self::HEADER_PGP . ' ')) . "\n";
                 $is_parsing_pgp_signature = true;
             } else {
                 /* commit comment */
-                $header = false;
+                $header  = false;
                 $trimmed = trim($line);
                 if (empty($this->title) && (strlen($trimmed) > 0)) {
                     $this->title = $trimmed;
@@ -777,8 +777,8 @@ class Commit extends GitObject
     {
         $this->containingTagRead = true;
 
-        $exe = new GitExe($this->GetProject());
-        $args = [];
+        $exe    = new GitExe($this->GetProject());
+        $args   = [];
         $args[] = '--tags';
         $args[] = escapeshellarg($this->hash);
         $revs   = explode("\n", $exe->Execute(GitExe::NAME_REV, $args));
@@ -870,17 +870,17 @@ class Commit extends GitObject
 
         foreach ($contents as $obj) {
             if ($obj instanceof Blob) {
-                $hash = $obj->GetHash();
-                $path = $obj->GetPath();
+                $hash                         = $obj->GetHash();
+                $path                         = $obj->GetPath();
                 $this->blobPaths[trim($path)] = $hash;
             } elseif ($obj instanceof Tree) {
-                $hash = $obj->GetHash();
-                $path = $obj->GetPath();
+                $hash                         = $obj->GetHash();
+                $path                         = $obj->GetPath();
                 $this->treePaths[trim($path)] = $hash;
                 $this->ReadHashPathsRaw($obj);
             } elseif ($obj instanceof Submodule) {
-                $hash = $obj->GetHash();
-                $path = $obj->getPath();
+                $hash                            = $obj->GetHash();
+                $path                            = $obj->getPath();
                 $this->commit_paths[trim($path)] = $hash;
             }
         }
@@ -945,7 +945,7 @@ class Commit extends GitObject
 
         $exe = new GitExe($this->GetProject());
 
-        $args = [];
+        $args   = [];
         $args[] = '-I';
         $args[] = '--full-name';
         $args[] = '--ignore-case';

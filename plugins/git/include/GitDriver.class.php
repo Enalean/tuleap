@@ -185,7 +185,7 @@ class GitDriver
         if (empty($path) || ! is_writable($path)) {
             throw new GitDriverErrorException('Empty path or permission denied ' . $path);
         }
-        $rcode = 0;
+        $rcode  = 0;
         $output = system('rm -fr ' . escapeshellarg($path), $rcode);
         if ($rcode != 0) {
             throw new GitDriverErrorException('Unable to delete path ' . $path);
@@ -266,9 +266,9 @@ class GitDriver
             $value = escapeshellarg($value);
         }
         $configFile = $repoPath . '/config';
-        $cmd = 'git config --file ' . $configFile . ' --replace-all ' . escapeshellarg($key) . ' ' . $value . ' 2>&1';
-        $ret = -1;
-        $out = [];
+        $cmd        = 'git config --file ' . $configFile . ' --replace-all ' . escapeshellarg($key) . ' ' . $value . ' 2>&1';
+        $ret        = -1;
+        $out        = [];
         exec($cmd, $out, $ret);
         if ($ret !== 0) {
             throw new GitDriverErrorException('Unable to set config for repository ' . $repoPath . ':' . PHP_EOL . implode(PHP_EOL, $out));

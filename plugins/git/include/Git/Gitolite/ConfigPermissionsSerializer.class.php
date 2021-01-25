@@ -139,8 +139,8 @@ class Git_Gitolite_ConfigPermissionsSerializer
 
     public function getForRepository(GitRepository $repository)
     {
-        $project = $repository->getProject();
-        $repo_config = '';
+        $project      = $repository->getProject();
+        $repo_config  = '';
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
         $repo_config .= $this->formatPermission(Git::PERM_READ, $this->getMirrorUserNames($repository));
         $repo_config .= $this->getExternalProtectedReferencesFormattedPermissions($repository);

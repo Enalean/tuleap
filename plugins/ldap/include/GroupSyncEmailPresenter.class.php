@@ -44,7 +44,7 @@ class GroupSyncEmailPresenter
         array $users_added,
         array $users_removed
     ) {
-        $this->users_added = $users_added;
+        $this->users_added   = $users_added;
         $this->users_removed = $users_removed;
     }
 }

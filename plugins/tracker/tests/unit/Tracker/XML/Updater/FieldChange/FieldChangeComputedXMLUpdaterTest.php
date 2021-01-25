@@ -41,7 +41,7 @@ final class FieldChangeComputedXMLUpdaterTest extends \PHPUnit\Framework\TestCas
         $this->field_change = new \SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="capacity" type="computed">
                   </field_change>');
-        $this->updater = new FieldChangeComputedXMLUpdater();
+        $this->updater      = new FieldChangeComputedXMLUpdater();
     }
 
     public function testItUpdatesWhenOnlyIsAutocomputedIsSet(): void

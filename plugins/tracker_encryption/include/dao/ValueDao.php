@@ -49,7 +49,7 @@ class ValueDao extends FieldValueDao
         }
 
         $changeset_value_ids = $this->da->escapeIntImplode($changeset_value_ids);
-        $sql = " INSERT INTO tracker_changeset_value_encrypted (changeset_value_id, value)
+        $sql                 = " INSERT INTO tracker_changeset_value_encrypted (changeset_value_id, value)
                  VALUES ( '$changeset_value_ids', '')";
 
         return $this->update($sql);
@@ -58,7 +58,7 @@ class ValueDao extends FieldValueDao
     public function resetEncryptedFieldValues($tracker_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "UPDATE tracker_changeset_value_encrypted
+        $sql        = "UPDATE tracker_changeset_value_encrypted
                  SET value = ''
                  WHERE changeset_value_id IN (
                       SELECT tracker_changeset_value.id
@@ -74,7 +74,7 @@ class ValueDao extends FieldValueDao
     {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
-        $sql = "INSERT INTO tracker_changeset_value_encrypted(changeset_value_id, value)
+        $sql  = "INSERT INTO tracker_changeset_value_encrypted(changeset_value_id, value)
                 SELECT $to, value
                 FROM tracker_changeset_value_encrypted
                 WHERE changeset_value_id = $from";

@@ -66,7 +66,7 @@ class Git_Mirror_ManifestManager
     public function checkManifestFiles()
     {
         $gitolite_admin_repository = new GitRepositoryGitoliteAdmin();
-        $all_mirrors = $this->data_mapper->fetchAll();
+        $all_mirrors               = $this->data_mapper->fetchAll();
         foreach ($all_mirrors as $mirror) {
             $repositories = $this->data_mapper->fetchRepositoriesForMirror($mirror);
             array_splice($repositories, 0, 0, [$gitolite_admin_repository]);

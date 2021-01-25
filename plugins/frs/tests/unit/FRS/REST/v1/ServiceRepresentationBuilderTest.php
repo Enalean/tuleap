@@ -68,16 +68,16 @@ final class ServiceRepresentationBuilderTest extends TestCase
     protected function setUp(): void
     {
         $this->project_id = 120;
-        $this->project = M::mock(Project::class, ['getID' => (string) $this->project_id]);
+        $this->project    = M::mock(Project::class, ['getID' => (string) $this->project_id]);
         $this->project->shouldReceive('usesFile')->andReturnTrue()->byDefault();
-        $this->frs_admin_user = M::mock(\PFUser::class);
+        $this->frs_admin_user          = M::mock(\PFUser::class);
         $this->frs_permissions_manager = M::mock(FRSPermissionManager::class);
         $this->frs_permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->frs_admin_user)->andReturnTrue();
         $this->frs_permissions_factory = M::mock(FRSPermissionFactory::class);
         $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_READER)->andReturn([])->byDefault();
         $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturn([])->byDefault();
         $this->ugroup_manager = M::mock(\UGroupManager::class);
-        $this->builder = new ServiceRepresentationBuilder($this->frs_permissions_manager, $this->frs_permissions_factory, $this->ugroup_manager);
+        $this->builder        = new ServiceRepresentationBuilder($this->frs_permissions_manager, $this->frs_permissions_factory, $this->ugroup_manager);
     }
 
     public function testItReturnsEmptyPermissionsForGroupsForNonFRSAdmins(): void
@@ -105,7 +105,7 @@ final class ServiceRepresentationBuilderTest extends TestCase
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
 
         $static_ugroup_id = 345;
-        $static_ugroup = new ProjectUGroup([
+        $static_ugroup    = new ProjectUGroup([
             'ugroup_id' => (string) $static_ugroup_id,
             'name' => 'Developers',
             'group_id' => (string) $this->project_id,
@@ -126,7 +126,7 @@ final class ServiceRepresentationBuilderTest extends TestCase
     public function testItReturnsGroupsWithCanAdminPermissions(): void
     {
         $static_ugroup_id = 345;
-        $static_ugroup = new ProjectUGroup([
+        $static_ugroup    = new ProjectUGroup([
             'ugroup_id' => (string) $static_ugroup_id,
             'name' => 'Developers',
             'group_id' => (string) $this->project_id,
@@ -152,7 +152,7 @@ final class ServiceRepresentationBuilderTest extends TestCase
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
 
         $static_ugroup_id = 345;
-        $static_ugroup = new ProjectUGroup([
+        $static_ugroup    = new ProjectUGroup([
             'ugroup_id' => (string) $static_ugroup_id,
             'name' => 'Developers',
             'group_id' => (string) $this->project_id,

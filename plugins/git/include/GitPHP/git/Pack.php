@@ -30,10 +30,10 @@ namespace Tuleap\Git\GitPHP;
 class Pack
 {
 
-    public const OBJ_COMMIT = 1;
-    public const OBJ_TREE = 2;
-    public const OBJ_BLOB = 3;
-    public const OBJ_TAG = 4;
+    public const OBJ_COMMIT    = 1;
+    public const OBJ_TREE      = 2;
+    public const OBJ_BLOB      = 3;
+    public const OBJ_TAG       = 4;
     public const OBJ_OFS_DELTA = 6;
     public const OBJ_REF_DELTA = 7;
 
@@ -80,7 +80,7 @@ class Pack
         if (! (preg_match('/[0-9A-Fa-f]{40}/', $hash))) {
             throw new \Exception(sprintf(dgettext("gitphp", 'Invalid hash %1$s'), $hash));
         }
-        $this->hash = $hash;
+        $this->hash    = $hash;
         $this->project = $project;
 
         if (! file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.idx')) {
@@ -138,9 +138,9 @@ class Pack
         }
 
         $indexFile = $this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
-        $mTime = filemtime($indexFile);
+        $mTime     = filemtime($indexFile);
         if ($mTime > $this->indexModified) {
-            $this->offsetCache = [];
+            $this->offsetCache   = [];
             $this->indexModified = $mTime;
         }
 
@@ -208,9 +208,9 @@ class Pack
             $mid = ($low + $high) >> 1;
             fseek($index, 4 * 256 + 24 * $mid);
 
-            $off = self::fuint32($index);
+            $off     = self::fuint32($index);
             $binName = fread($index, 20);
-            $name = bin2hex($binName);
+            $name    = bin2hex($binName);
 
             $this->offsetCache[$name] = $off;
 
@@ -278,7 +278,7 @@ class Pack
             fseek($index, 8 + 4 * 256 + 20 * $mid);
 
             $binName = fread($index, 20);
-            $name = bin2hex($binName);
+            $name    = bin2hex($binName);
 
             $cmp = strcmp($hash, $name);
 
@@ -336,7 +336,7 @@ class Pack
             $high = self::fuint32($index);
         } else {
             fseek($index, $offset + (ord($binaryHash[0]) - 1) * 4);
-            $low = self::fuint32($index);
+            $low  = self::fuint32($index);
             $high = self::fuint32($index);
         }
         return [$low, $high];
@@ -362,7 +362,7 @@ class Pack
         $pack = fopen($this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.pack', 'rb');
         flock($pack, LOCK_SH);
 
-        $magic = fread($pack, 4);
+        $magic   = fread($pack, 4);
         $version = self::fuint32($pack);
         if ($magic != 'PACK' || $version != 2) {
             flock($pack, LOCK_UN);
@@ -401,11 +401,11 @@ class Pack
          * should be read as part of the size.  1 means continue reading the size,
          * 0 means the data is starting
          */
-        $c = ord(fgetc($pack));
+        $c    = ord(fgetc($pack));
         $type = ($c >> 4) & 0x07;
         $size = $c & 0x0F;
         for ($i = 4; $c & 0x80; $i += 7) {
-            $c = ord(fgetc($pack));
+            $c     = ord(fgetc($pack));
             $size |= (($c & 0x7f) << $i);
         }
 
@@ -432,7 +432,7 @@ class Pack
             $off = -1;
             do {
                 $off++;
-                $c = ord($buf[$pos++]);
+                $c   = ord($buf[$pos++]);
                 $off = ($off << 7) + ($c & 0x7f);
             } while ($c & 0x80);
 
@@ -448,7 +448,7 @@ class Pack
                  * read base object at offset and apply delta to it
                  */
                 list($type, $base) = $this->UnpackObject($pack, $baseOffset);
-                $data = self::ApplyDelta($delta, $base);
+                $data              = self::ApplyDelta($delta, $base);
                 return [$type, $data];
             }
         } elseif ($type == self::OBJ_REF_DELTA) {
@@ -493,11 +493,11 @@ class Pack
         /*
          * algorithm from patch-delta.c
          */
-        $pos = 0;
-        $baseSize = self::ParseVarInt($delta, $pos);
+        $pos        = 0;
+        $baseSize   = self::ParseVarInt($delta, $pos);
         $resultSize = self::ParseVarInt($delta, $pos);
 
-        $data = '';
+        $data     = '';
         $deltalen = strlen($delta);
         while ($pos < $deltalen) {
             $opcode = ord($delta[$pos++]);
@@ -531,7 +531,7 @@ class Pack
                 $data .= substr($base, $off, $len);
             } elseif ($opcode > 0) {
                 $data .= substr($delta, $pos, $opcode);
-                $pos += $opcode;
+                $pos  += $opcode;
             }
         }
         return $data;
@@ -554,7 +554,7 @@ class Pack
      */
     private static function ParseVarInt($str, &$pos = 0) // @codingStandardsIgnoreLine
     {
-        $ret = 0;
+        $ret  = 0;
         $byte = 0x80;
         for ($shift = 0; $byte & 0x80; $shift += 7) {
             $byte = ord($str[$pos++]);

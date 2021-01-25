@@ -48,7 +48,7 @@ class DynamicCredentialsTest extends \RestBase
     public function testPOSTInvalidSignatureRejected()
     {
         $expiration_date = new \DateTimeImmutable('+30 minutes');
-        $expiration = $expiration_date->format(\DateTime::ATOM);
+        $expiration      = $expiration_date->format(\DateTime::ATOM);
 
         $response = $this->getResponseWithoutAuth($this->client->post(
             'dynamic_credentials',
@@ -71,7 +71,7 @@ class DynamicCredentialsTest extends \RestBase
      */
     public function testDELETEAccount()
     {
-        $uri = 'dynamic_credentials/' . urlencode(self::USERNAME) . '?' . http_build_query([
+        $uri      = 'dynamic_credentials/' . urlencode(self::USERNAME) . '?' . http_build_query([
                 'signature'  => $this->getSignatureForDeleteAction(self::USERNAME)
             ]);
         $response = $this->getResponseWithoutAuth($this->client->delete($uri));
@@ -80,7 +80,7 @@ class DynamicCredentialsTest extends \RestBase
 
     public function testDELETEInvalidSignatureRejected()
     {
-        $uri = 'dynamic_credentials/' . urlencode(self::USERNAME . 'reject_me') . '?'  . http_build_query([
+        $uri      = 'dynamic_credentials/' . urlencode(self::USERNAME . 'reject_me') . '?'  . http_build_query([
                 'signature' => $this->getSignatureForDeleteAction('wrong_username')
             ]);
         $response = $this->getResponseWithoutAuth($this->client->delete($uri));
@@ -90,7 +90,7 @@ class DynamicCredentialsTest extends \RestBase
 
     public function testDELETENonExistingAccount()
     {
-        $uri = 'dynamic_credentials/' . urlencode(self::USERNAME . 'donotexist') . '?' . http_build_query([
+        $uri      = 'dynamic_credentials/' . urlencode(self::USERNAME . 'donotexist') . '?' . http_build_query([
                 'signature'  => $this->getSignatureForDeleteAction(self::USERNAME . 'donotexist')
             ]);
         $response = $this->getResponseWithoutAuth($this->client->delete($uri));

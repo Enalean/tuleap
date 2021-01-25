@@ -187,7 +187,7 @@ final class Tracker_HierarchyFactoryTest extends \PHPUnit\Framework\TestCase //p
      */
     private function givenADaoThatContainsFullHierarchy()
     {
-        $dao     = Mockery::mock(HierarchyDAO::class);
+        $dao  = Mockery::mock(HierarchyDAO::class);
         $dar1 = [
             ['parent_id' => 111, 'child_id' => 112],
             ['parent_id' => 113, 'child_id' => 114]

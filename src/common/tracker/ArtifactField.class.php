@@ -81,11 +81,11 @@ class ArtifactField
 
 
     // Constants for data_type
-    public $DATATYPE_TEXT = 1;
-    public $DATATYPE_INT = 2;
+    public $DATATYPE_TEXT  = 1;
+    public $DATATYPE_INT   = 2;
     public $DATATYPE_FLOAT = 3;
-    public $DATATYPE_DATE = 4;
-    public $DATATYPE_USER = 5;
+    public $DATATYPE_DATE  = 4;
+    public $DATATYPE_USER  = 5;
     /**
      * @var string
      */
@@ -140,28 +140,28 @@ class ArtifactField
     public function setFromArray($field_array)
     {
      //echo "setFromArray";
-        $this->field_id = $field_array['field_id'];
-        $this->field_name = $field_array['field_name'];
-        $this->data_type = $field_array['data_type'];
+        $this->field_id     = $field_array['field_id'];
+        $this->field_name   = $field_array['field_name'];
+        $this->data_type    = $field_array['data_type'];
         $this->display_type = $field_array['display_type'];
         $this->display_size = $field_array['display_size'];
-        $this->label = $field_array['label'];
-        $this->description = $field_array['description'];
-        $this->scope = $field_array['scope'];
-        $this->required = $field_array['required'];    // don't use it : value always equal to 0
-        $this->empty_ok = $field_array['empty_ok'];
+        $this->label        = $field_array['label'];
+        $this->description  = $field_array['description'];
+        $this->scope        = $field_array['scope'];
+        $this->required     = $field_array['required'];    // don't use it : value always equal to 0
+        $this->empty_ok     = $field_array['empty_ok'];
         $this->keep_history = $field_array['keep_history'];
-        $this->special = $field_array['special'];
+        $this->special      = $field_array['special'];
      // if value_function == "", the result of explode will be: array([0] => "") and that's not what we want.
         if ($field_array['value_function'] != "") {
             $this->value_function = explode(",", $field_array['value_function']);
         } else {
             $this->value_function = [];
         }
-        $this->use_it = $field_array['use_it'];
-        $this->place = $field_array['place'];
+        $this->use_it        = $field_array['use_it'];
+        $this->place         = $field_array['place'];
         $this->default_value = $field_array['default_value'];
-        $this->field_set_id = $field_array['field_set_id'];
+        $this->field_set_id  = $field_array['field_set_id'];
 
      //echo $this->field_name."-".$this->data_type."<br>";
     }
@@ -583,7 +583,7 @@ class ArtifactField
         global $art_field_fact;
         if ($by_field_id) {
             $field = $art_field_fact->getFieldFromId($by_field_id);
-            $val = $field->getValueFunction();
+            $val   = $field->getValueFunction();
         } else {
             $val = $this->getValueFunction();
         }
@@ -600,7 +600,7 @@ class ArtifactField
         global $art_field_fact;
         if ($by_field_id) {
             $field = $art_field_fact->getFieldFromId($by_field_id);
-            $val = $field->getKeepHistory();
+            $val   = $field->getKeepHistory();
         } else {
             $val = $this->getKeepHistory();
         }
@@ -618,7 +618,7 @@ class ArtifactField
 
         if ($by_field_id) {
             $field = $art_field_fact->getFieldFromId($by_field_id);
-            $val = $field->getDisplaySize();
+            $val   = $field->getDisplaySize();
         } else {
             $val = $this->getDisplaySize();
         }
@@ -661,7 +661,7 @@ class ArtifactField
         }
 
         // Look for project specific values first...
-        $sql = "SELECT * FROM artifact_field_value_list " .
+        $sql    = "SELECT * FROM artifact_field_value_list " .
         "WHERE  field_id='" . db_ei($this->field_id) . "' AND group_artifact_id='" . db_ei($group_artifact_id) . "' " .
         "AND value_id='" . db_ei($value_id) . "'";
         $result = db_query($sql);
@@ -764,7 +764,7 @@ class ArtifactField
                 if (isset($RES_CACHE[$sql])) {
                     $res_value = $RES_CACHE[$sql];
                 } else {
-                    $res_value = db_query($sql);
+                    $res_value       = db_query($sql);
                     $RES_CACHE[$sql] = $res_value;
                 }
             } else {
@@ -809,13 +809,13 @@ class ArtifactField
     public function getFieldValues($group_artifact_id, $status)
     {
         $res_value = false;
-        $gvf = $this->getGlobalValueFunction();
+        $gvf       = $this->getGlobalValueFunction();
         if (! isset($gvf[0]) || ! $gvf[0]) {
             $status_in = [];
             foreach ($status as $s) {
                 $status_in[] = "'" . db_es($s) . "'";
             }
-            $sql = "SELECT value_id,value,field_id,group_artifact_id,description,order_id,status " .
+            $sql       = "SELECT value_id,value,field_id,group_artifact_id,description,order_id,status " .
             "FROM artifact_field_value_list " .
             "WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND field_id= " . db_ei($this->field_id) . " " .
             "AND status IN (" . implode(',', $status_in) . ") " .
@@ -839,12 +839,12 @@ class ArtifactField
         $res = null;
         $gvf = $this->getGlobalValueFunction();
         if (! isset($gvf[0]) || ! $gvf[0]) {
-            $sql = "SELECT value_id,value,field_id,group_artifact_id,description,order_id,status " .
+            $sql       = "SELECT value_id,value,field_id,group_artifact_id,description,order_id,status " .
             "FROM artifact_field_value_list " .
             "WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND field_id= " . db_ei($this->field_id) . " " .
             "AND value_id ='" . db_ei($value_id) . "'";
             $res_value = db_query($sql);
-            $res = db_fetch_array($res_value);
+            $res       = db_fetch_array($res_value);
         }
 
         return $res;
@@ -985,11 +985,11 @@ class ArtifactField
      */
     private function insertFieldValue($artifact_id, $value)
     {
-        $sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
+        $sql    = "INSERT INTO artifact_field_value (field_id,artifact_id,";
         $values =  db_ei($this->getID()) . "," . db_ei($artifact_id) . ",";
         switch ($this->getDataType()) {
             case $this->DATATYPE_TEXT:
-                $name = "valueText";
+                $name    = "valueText";
                 $values .= "'" . db_es($value) . "'";
                 break;
 
@@ -1008,12 +1008,12 @@ class ArtifactField
                 break;
 
             case $this->DATATYPE_FLOAT:
-                $name = "valueFloat";
+                $name    = "valueFloat";
                 $values .= ($value ? db_es($value) : "0.0");
                 break;
 
             case $this->DATATYPE_DATE:
-                $name = "valueDate";
+                $name    = "valueDate";
                 $values .= ($value ? db_ei($value) : "0");
                 break;
         }
@@ -1093,22 +1093,22 @@ class ArtifactField
                     if (preg_match("/\s*(<|>|>=|<=)\s*($int_reg)/", $to_match, $matches)) {
                 // It's < or >,  = and a number then use as is
                         $matches[2] = (string) ((int) $matches[2]);
-                        $expr = $field_name . " " . $matches[1] . " '" . $matches[2] . "' ";
-                        $to_match = $matches[1] . ' ' . $matches[2];
+                        $expr       = $field_name . " " . $matches[1] . " '" . $matches[2] . "' ";
+                        $to_match   = $matches[1] . ' ' . $matches[2];
                     } elseif (preg_match("/\s*($int_reg)\s*-\s*($int_reg)/", $to_match, $matches)) {
                // it's a range number1-number2
                         $matches[1] = (string) ((int) $matches[1]);
                         $matches[2] = (string) ((int) $matches[2]);
-                        $expr = $field_name . " >= '" . $matches[1] . "' AND " . $field_name . " <= '" . $matches[2] . "' ";
-                        $to_match = $matches[1] . '-' . $matches[2];
+                        $expr       = $field_name . " >= '" . $matches[1] . "' AND " . $field_name . " <= '" . $matches[2] . "' ";
+                        $to_match   = $matches[1] . '-' . $matches[2];
                     } elseif (preg_match("/\s*($int_reg)/", $to_match, $matches)) {
                // It's a number so use  equality
                         $matches[1] = (string) ((int) $matches[1]);
-                        $expr = $field_name . " = '" . $matches[1] . "'";
-                        $to_match = $matches[1];
+                        $expr       = $field_name . " = '" . $matches[1] . "'";
+                        $to_match   = $matches[1];
                     } else {
      // Invalid syntax - no condition
-                        $expr = '1';
+                        $expr     = '1';
                         $to_match = '';
                     }
                 }
@@ -1125,22 +1125,22 @@ class ArtifactField
                     if (preg_match("/\s*(<|>|>=|<=)\s*($flt_reg)/", $to_match, $matches)) {
                 // It's < or >,  = and a number then use as is
                         $matches[2] = (string) ((float) $matches[2]);
-                        $expr = $field_name . " " . $matches[1] . " '" . $matches[2] . "' ";
-                        $to_match = $matches[1] . ' ' . $matches[2];
+                        $expr       = $field_name . " " . $matches[1] . " '" . $matches[2] . "' ";
+                        $to_match   = $matches[1] . ' ' . $matches[2];
                     } elseif (preg_match("/\s*($flt_reg)\s*-\s*($flt_reg)/", $to_match, $matches)) {
                // it's a range number1-number2
                         $matches[1] = (string) ((float) $matches[1]);
                         $matches[2] = (string) ((float) $matches[2]);
-                        $expr = $field_name . " >= '" . $matches[1] . "' AND " . $field_name . " <= '" . $matches[2] . "' ";
-                        $to_match = $matches[1] . '-' . $matches[2];
+                        $expr       = $field_name . " >= '" . $matches[1] . "' AND " . $field_name . " <= '" . $matches[2] . "' ";
+                        $to_match   = $matches[1] . '-' . $matches[2];
                     } elseif (preg_match("/\s*($flt_reg)/", $to_match, $matches)) {
                // It's a number so use  equality
                         $matches[1] = (string) ((float) $matches[1]);
-                        $expr = $field_name . " = '" . $matches[1] . "'";
-                        $to_match = $matches[1];
+                        $expr       = $field_name . " = '" . $matches[1] . "'";
+                        $to_match   = $matches[1];
                     } else {
      // Invalid syntax - no condition
-                        $expr = '1';
+                        $expr     = '1';
                         $to_match = '';
                     }
                 }
@@ -1184,7 +1184,7 @@ class ArtifactField
                 break;
         } // switch
 
-        $sql = "SELECT " . $name . " FROM artifact_field_value WHERE artifact_id=" . db_ei($artifact_id) . " AND field_id=" . db_ei($this->field_id);
+        $sql    = "SELECT " . $name . " FROM artifact_field_value WHERE artifact_id=" . db_ei($artifact_id) . " AND field_id=" . db_ei($this->field_id);
         $result = db_query($sql);
 
         return util_result_column_to_array($result);
@@ -1238,7 +1238,7 @@ class ArtifactField
      */
     public function getUsersList($values)
     {
-        $sql = "SELECT user_id,user_name " .
+        $sql       = "SELECT user_id,user_name " .
          "FROM user " .
          "WHERE user_id IN (" . db_es(join(",", $values)) . ")";
         $res_value = db_query($sql);
@@ -1288,10 +1288,10 @@ class ArtifactField
         }
 
      // Default values
-        $empty_ok = ($empty_ok ? $empty_ok : 0);
-        $keep_history = ($keep_history ? $keep_history : 0);
-        $use_it = ($use_it ? $use_it : 0);
-        $special = ($special ? $special : 0);
+        $empty_ok       = ($empty_ok ? $empty_ok : 0);
+        $keep_history   = ($keep_history ? $keep_history : 0);
+        $use_it         = ($use_it ? $use_it : 0);
+        $special        = ($special ? $special : 0);
         $rank_on_screen = ($rank_on_screen ? $rank_on_screen : "''");
 
      // First update the artifact_field
@@ -1339,13 +1339,13 @@ class ArtifactField
                 $id = $artifacts_array["artifact_id"];
 
           // Check if there is an existing record
-                $sql = "SELECT * FROM artifact_field_value WHERE " .
+                $sql          = "SELECT * FROM artifact_field_value WHERE " .
                 "artifact_id = " . db_ei($id) . " AND field_id = " . db_ei($this->getID());
                 $res_artifact = db_query($sql);
 
                 if (db_numrows($res_artifact) <= 0) {
                     // Insert artifact_field_value record
-                    $sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
+                    $sql    = "INSERT INTO artifact_field_value (field_id,artifact_id,";
                     $values =  db_ei($this->getID()) . "," . db_ei($id) . ",'" . db_es($this->getDefaultValue()) . "'";
 
                     switch ($this->getDataType()) {
@@ -1832,7 +1832,7 @@ class ArtifactField
      */
     public function setError($string)
     {
-        $this->error_state = true;
+        $this->error_state   = true;
         $this->error_message = $string;
     }
 

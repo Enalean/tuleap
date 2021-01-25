@@ -24,7 +24,7 @@ class FRSFileTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore PSR1.Clas
 
     public function testGetContentWholeFile()
     {
-        $file = new FRSFile();
+        $file                = new FRSFile();
         $file->file_location = dirname(__FILE__) . '/_fixtures/file_sample';
         $file->file_size     = filesize(dirname(__FILE__) . '/_fixtures/file_sample');
 
@@ -33,7 +33,7 @@ class FRSFileTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore PSR1.Clas
 
     public function testGetContentWithStartOffset()
     {
-        $file = new FRSFile();
+        $file                = new FRSFile();
         $file->file_location = dirname(__FILE__) . '/_fixtures/file_sample';
 
         $this->assertSame('"The quick', $file->getContent(0, 10));
@@ -41,7 +41,7 @@ class FRSFileTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore PSR1.Clas
 
     public function testGetContentWithOffsetAndSize()
     {
-        $file = new FRSFile();
+        $file                = new FRSFile();
         $file->file_location = dirname(__FILE__) . '/_fixtures/file_sample';
 
         $this->assertSame(' brown fox', $file->getContent(10, 10));
@@ -49,7 +49,7 @@ class FRSFileTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore PSR1.Clas
 
     public function testGetContentWithOffsetAndEof()
     {
-        $file = new FRSFile();
+        $file                = new FRSFile();
         $file->file_location = dirname(__FILE__) . '/_fixtures/file_sample';
 
         $this->assertSame("arts.\n", $file->getContent(380, 10));
@@ -57,7 +57,7 @@ class FRSFileTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore PSR1.Clas
 
     public function testGetContentWholeByOffset()
     {
-        $file = new FRSFile();
+        $file                = new FRSFile();
         $file->file_location = dirname(__FILE__) . '/_fixtures/file_sample';
 
         $content  = $file->getContent(0, 100);
@@ -69,7 +69,7 @@ class FRSFileTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore PSR1.Clas
 
     public function testGetfilePath()
     {
-        $file = new FRSFile();
+        $file     = new FRSFile();
         $filepath = 'path';
         $file->setFilePath($filepath);
         $filename = 'name';

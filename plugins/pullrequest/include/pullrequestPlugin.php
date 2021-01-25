@@ -267,7 +267,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     public function gitAdditionalAction(GitAdditionalActionEvent $event)
     {
         if ($event->getRequest()->get('action') === 'pull-requests') {
-            $layout          = $this->getThemeManager()->getBurningParrot($event->getRequest()->getCurrentUser());
+            $layout = $this->getThemeManager()->getBurningParrot($event->getRequest()->getCurrentUser());
             if ($layout === null) {
                 throw new \Exception("Could not load BurningParrot theme");
             }
@@ -328,7 +328,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
         foreach ($prs as $pr) {
             $repository = $git_repository_factory->getRepositoryById($pr->getRepoDestId());
-            $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
+            $git_exec   = new GitExec($repository->getFullPath(), $repository->getFullPath());
             if ($git_exec->isAncestor($new_rev, $pr->getSha1Src())) {
                 $closer->closeManuallyMergedPullRequest($pr, $user);
             }
@@ -337,8 +337,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
     private function abandonFromSourceBranch(PFUser $user, GitRepository $repository, $branch_name)
     {
-        $pull_request_factory   = $this->getPullRequestFactory();
-        $closer                 = $this->getPullRequestCloser();
+        $pull_request_factory = $this->getPullRequestFactory();
+        $closer               = $this->getPullRequestCloser();
 
         $prs = $pull_request_factory->getOpenedBySourceBranch($repository, $branch_name);
         foreach ($prs as $pr) {

@@ -107,7 +107,7 @@ class WikiPlugin
         }
         //Fixme: on POST argstr is empty
         list ($argstr_args, $argstr_defaults) = $this->parseArgStr($argstr);
-        $args = [];
+        $args                                 = [];
         if (! empty($defaults)) {
             foreach ($defaults as $arg => $default_val) {
                 if (isset($argstr_args[$arg])) {
@@ -184,32 +184,32 @@ class WikiPlugin
 
     public function parseArgStr($argstr)
     {
-        $args = [];
+        $args     = [];
         $defaults = [];
         if (empty($argstr)) {
             return [$args, $defaults];
         }
 
-        $arg_p = '\w+';
-        $op_p = '(?:\|\|)?=';
+        $arg_p  = '\w+';
+        $op_p   = '(?:\|\|)?=';
         $word_p = '\S+';
         $opt_ws = '\s*';
-        $qq_p = '" ( (?:[^"\\\\]|\\\\.)* ) "';
+        $qq_p   = '" ( (?:[^"\\\\]|\\\\.)* ) "';
         //"<--kludge for brain-dead syntax coloring
-        $q_p  = "' ( (?:[^'\\\\]|\\\\.)* ) '";
-        $gt_p = "_\\( $opt_ws $qq_p $opt_ws \\)";
+        $q_p       = "' ( (?:[^'\\\\]|\\\\.)* ) '";
+        $gt_p      = "_\\( $opt_ws $qq_p $opt_ws \\)";
         $argspec_p = "($arg_p) $opt_ws ($op_p) $opt_ws (?: $qq_p|$q_p|$gt_p|($word_p))";
 
         // handle plugin-list arguments seperately
         $plugin_p = '<!plugin-list\s+\w+.*?!>';
         while (preg_match("/^($arg_p) $opt_ws ($op_p) $opt_ws ($plugin_p) $opt_ws/x", $argstr, $m)) {
             @ list(,$arg, $op, $plugin_val) = $m;
-            $argstr = substr($argstr, strlen($m[0]));
-            $loader = new WikiPluginLoader();
-            $markup = null;
-            $basepage = null;
-            $plugin_val = preg_replace(["/^<!/", "/!>$/"], ["<?", "?>"], $plugin_val);
-            $val = $loader->expandPI($plugin_val, $GLOBALS['request'], $markup, $basepage);
+            $argstr                         = substr($argstr, strlen($m[0]));
+            $loader                         = new WikiPluginLoader();
+            $markup                         = null;
+            $basepage                       = null;
+            $plugin_val                     = preg_replace(["/^<!/", "/!>$/"], ["<?", "?>"], $plugin_val);
+            $val                            = $loader->expandPI($plugin_val, $GLOBALS['request'], $markup, $basepage);
             if ($op == '=') {
                 $args[$arg] = $val; // comma delimited pagenames or array()?
             } else {
@@ -219,7 +219,7 @@ class WikiPlugin
         }
         while (preg_match("/^$opt_ws $argspec_p $opt_ws/x", $argstr, $m)) {
             @ list(,$arg,$op,$qq_val,$q_val,$gt_val,$word_val) = $m;
-            $argstr = substr($argstr, strlen($m[0]));
+            $argstr                                            = substr($argstr, strlen($m[0]));
 
             // Remove quotes from string values.
             if ($qq_val) {
@@ -265,9 +265,9 @@ class WikiPlugin
     /* handle plugin-list argument: use run(). */
     public function makeList($plugin_args, $request, $basepage)
     {
-        $dbi = $request->getDbh();
+        $dbi      = $request->getDbh();
         $pagelist = $this->run($dbi, $plugin_args, $request, $basepage);
-        $list = [];
+        $list     = [];
         if (is_object($pagelist) and isa($pagelist, 'PageList')) {
             // table or list?
             foreach ($pagelist->_pages as $page) {
@@ -287,11 +287,11 @@ class WikiPlugin
 
     public function makeLink($argstr, $request)
     {
-        $defaults = $this->getDefaultArguments();
+        $defaults      = $this->getDefaultArguments();
         $link_defaults = $this->getDefaultLinkArguments();
-        $defaults = array_merge($defaults, $link_defaults);
+        $defaults      = array_merge($defaults, $link_defaults);
 
-        $args = $this->getArgs($argstr, $request, $defaults);
+        $args   = $this->getArgs($argstr, $request, $defaults);
         $plugin = $this->getName();
 
         $query_args = [];
@@ -326,14 +326,14 @@ class WikiPlugin
     public function makeForm($argstr, $request)
     {
         $form_defaults = $this->getDefaultFormArguments();
-        $defaults = array_merge(
+        $defaults      = array_merge(
             $form_defaults,
             ['start_debug' => $request->getArg('start_debug')],
             $this->getDefaultArguments()
         );
 
-        $args = $this->getArgs($argstr, $request, $defaults);
-        $plugin = $this->getName();
+        $args      = $this->getArgs($argstr, $request, $defaults);
+        $plugin    = $this->getName();
         $textinput = $args['textinput'];
         assert(! empty($textinput) && isset($args['textinput']));
 
@@ -463,7 +463,7 @@ class WikiPlugin
     // provide a sample usage text for automatic edit-toolbar insertion
     public function getUsage()
     {
-        $args = $this->getDefaultArguments();
+        $args   = $this->getDefaultArguments();
         $string = '<' . '?plugin ' . $this->getName() . ' ';
         if ($args) {
             foreach ($args as $key => $value) {
@@ -568,7 +568,7 @@ class WikiPluginLoader
         }
 
         list(, $pi_name, $plugin_name, $plugin_args) = $m;
-        $plugin = $this->getPlugin($plugin_name, $pi);
+        $plugin                                      = $this->getPlugin($plugin_name, $pi);
 
         return [$pi_name, $plugin, $plugin_args];
     }

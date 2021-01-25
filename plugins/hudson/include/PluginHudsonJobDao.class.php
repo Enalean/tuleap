@@ -157,7 +157,7 @@ class PluginHudsonJobDao extends DataAccessObject
 
     public function deleteHudsonJob($job_id)
     {
-        $sql = sprintf(
+        $sql     = sprintf(
             "DELETE FROM plugin_hudson_job WHERE job_id = %s",
             $this->da->quoteSmart($job_id)
         );
@@ -167,7 +167,7 @@ class PluginHudsonJobDao extends DataAccessObject
 
     public function deleteHudsonJobsByGroupID($group_id)
     {
-        $sql = sprintf(
+        $sql     = sprintf(
             "DELETE FROM plugin_hudson_job WHERE group_id = %s",
             $this->da->quoteSmart($group_id)
         );

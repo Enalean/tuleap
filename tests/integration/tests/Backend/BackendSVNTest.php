@@ -140,13 +140,13 @@ final class BackendSVNTest extends TestCase
 
     public function testCreateProjectSVN(): void
     {
-        $user1   = \Mockery::spy(\PFUser::class);
+        $user1 = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getUserName')->andReturns('user1');
-        $user2   = \Mockery::spy(\PFUser::class);
+        $user2 = \Mockery::spy(\PFUser::class);
         $user2->shouldReceive('getUserName')->andReturns('user2');
-        $user3   = \Mockery::spy(\PFUser::class);
+        $user3 = \Mockery::spy(\PFUser::class);
         $user3->shouldReceive('getUserName')->andReturns('user3');
-        $user4   = \Mockery::spy(\PFUser::class);
+        $user4 = \Mockery::spy(\PFUser::class);
         $user4->shouldReceive('getUserName')->andReturns('user4');
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
@@ -178,7 +178,7 @@ final class BackendSVNTest extends TestCase
                           [
                                 "name" => "Customers",
                                 "ugroup_id"  => "102"]];
-        $ugdao = \Mockery::spy(\UGroupDao::class);
+        $ugdao   = \Mockery::spy(\UGroupDao::class);
         $ugdao->shouldReceive('searchByGroupId')->andReturns($ugroups);
 
         $ugroup = \Mockery::spy(\ProjectUGroup::class);
@@ -209,15 +209,15 @@ final class BackendSVNTest extends TestCase
 
     public function testUpdateSVNAccess(): void
     {
-        $user1   = \Mockery::spy(\PFUser::class);
+        $user1 = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getUserName')->andReturns('user1');
-        $user2   = \Mockery::spy(\PFUser::class);
+        $user2 = \Mockery::spy(\PFUser::class);
         $user2->shouldReceive('getUserName')->andReturns('user2');
-        $user3   = \Mockery::spy(\PFUser::class);
+        $user3 = \Mockery::spy(\PFUser::class);
         $user3->shouldReceive('getUserName')->andReturns('user3');
-        $user4   = \Mockery::spy(\PFUser::class);
+        $user4 = \Mockery::spy(\PFUser::class);
         $user4->shouldReceive('getUserName')->andReturns('user4');
-        $user5   = \Mockery::spy(\PFUser::class);
+        $user5 = \Mockery::spy(\PFUser::class);
         $user5->shouldReceive('getUserName')->andReturns('user5');
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
@@ -249,7 +249,7 @@ final class BackendSVNTest extends TestCase
                           [
                                 "name" => "Customers",
                                 "ugroup_id"  => "102"]];
-        $ugdao = \Mockery::spy(\UGroupDao::class);
+        $ugdao   = \Mockery::spy(\UGroupDao::class);
         $ugdao->shouldReceive('searchByGroupId')->andReturns($ugroups);
 
         $ugroup = \Mockery::spy(\ProjectUGroup::class);

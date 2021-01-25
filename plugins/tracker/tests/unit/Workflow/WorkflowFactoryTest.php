@@ -102,9 +102,9 @@ final class WorkflowFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ign
     public function testItReturnsSameObjectWhenUsingSameTrackerId(): void
     {
         $tracker_rules_manager = Mockery::mock(Tracker_RulesManager::class);
-        $dao = \Mockery::spy(\Workflow_Dao::class);
-        $tracker_factory = Mockery::mock(TrackerFactory::class);
-        $workflow_factory = \Mockery::mock(
+        $dao                   = \Mockery::spy(\Workflow_Dao::class);
+        $tracker_factory       = Mockery::mock(TrackerFactory::class);
+        $workflow_factory      = \Mockery::mock(
             \WorkflowFactory::class . '[getDao,getGlobalRulesManager]',
             [
                 Mockery::mock(TransitionFactory::class),

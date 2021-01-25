@@ -30,7 +30,7 @@ class PasswordStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
 {
 
     public $validators = [];
-    public $errors = [];
+    public $errors     = [];
 
     public function __construct(PasswordConfiguration $password_configuration)
     {
@@ -56,7 +56,7 @@ class PasswordStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
         $valid = true;
         foreach ($this->validators as $key => $nop) {
             if (! $this->validators[$key]->validate($pwd)) {
-                $valid = false;
+                $valid              = false;
                 $this->errors[$key] = $this->validators[$key]->description();
             }
         }

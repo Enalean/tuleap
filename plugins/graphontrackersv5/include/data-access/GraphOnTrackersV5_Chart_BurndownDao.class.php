@@ -31,14 +31,14 @@ class GraphOnTrackersV5_Chart_BurndownDao extends DataAccessObject
 
     public function searchById($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "SELECT * FROM $this->table_name WHERE id = $id";
         return $this->retrieve($sql);
     }
 
     public function delete($id)
     {
-        $id = $this->da->escapeInt($id);
+        $id  = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name WHERE id = $id";
         return $this->update($sql);
     }
@@ -49,7 +49,7 @@ class GraphOnTrackersV5_Chart_BurndownDao extends DataAccessObject
         $field_id   = $this->da->escapeInt($field_id);
         $start_date = $this->da->escapeInt($start_date);
         $duration   = $this->da->escapeInt($duration);
-        $sql = "REPLACE INTO $this->table_name (id, field_id, start_date, duration)
+        $sql        = "REPLACE INTO $this->table_name (id, field_id, start_date, duration)
                 VALUES ($id, $field_id, $start_date, $duration)";
         return $this->update($sql);
     }
@@ -58,16 +58,16 @@ class GraphOnTrackersV5_Chart_BurndownDao extends DataAccessObject
     {
         $from_chart_id = $this->da->escapeInt($from_chart_id);
         $to_chart_id   = $this->da->escapeInt($to_chart_id);
-        $sql = "INSERT INTO $this->table_name (id, field_id, start_date, duration)
+        $sql           = "INSERT INTO $this->table_name (id, field_id, start_date, duration)
                 SELECT $to_chart_id, field_id, start_date, duration
                 FROM $this->table_name
                 WHERE id = $from_chart_id";
 
         $this->update($sql);
         foreach ($field_mapping as $mapping) {
-            $from  = $this->da->escapeInt($mapping['from']);
-            $to    = $this->da->escapeInt($mapping['to']);
-            $sql = "UPDATE $this->table_name 
+            $from = $this->da->escapeInt($mapping['from']);
+            $to   = $this->da->escapeInt($mapping['to']);
+            $sql  = "UPDATE $this->table_name 
                     SET field_id = $to
                     WHERE id = $to_chart_id
                       AND field_id = $from";

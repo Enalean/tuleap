@@ -45,7 +45,7 @@ if ($request->existAndNonEmpty('group_id')) {
 } else {
     $group_name = $request->getValidated('group_name', 'string', false);
     if ($group_name != false) {
-        $project  = ProjectManager::instance()->getProjectByUnixName(trim($group_name));
+        $project = ProjectManager::instance()->getProjectByUnixName(trim($group_name));
         if ($project) {
             $group_id = $project->getID();
         }
@@ -59,14 +59,14 @@ if (! $request->get('text') || ! $request->get('login') || ! $request->get('type
 }
 
 $user_id = 100;
-$login = $request->getValidated('login', 'string', 'None');
-$user = UserManager::instance()->getUserByUserName(trim($login));
+$login   = $request->getValidated('login', 'string', 'None');
+$user    = UserManager::instance()->getUserByUserName(trim($login));
 if ($user !== null) {
     $user_id = $user->getId();
 }
 
-$text = trim($request->get('text'));
-$source_id = trim($request->get('rev_id'));
+$text        = trim($request->get('text'));
+$source_id   = trim($request->get('rev_id'));
 $source_type = trim($request->get('type'));
 
 $reference_manager = ReferenceManager::instance();

@@ -87,7 +87,7 @@ class GateKeeper
     private function getUrlBase($url)
     {
         $parsed_url = parse_url($url);
-        $scheme = '';
+        $scheme     = '';
         if (! ForgeConfig::get('sys_rest_api_over_http')) {
             $scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
         }

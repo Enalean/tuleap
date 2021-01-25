@@ -51,11 +51,11 @@ class ManifestManagerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repository = $this->buildMockedRepository('linux/kernel.git', 'Linux4ever');
+        $this->repository         = $this->buildMockedRepository('linux/kernel.git', 'Linux4ever');
         $this->another_repository = $this->buildMockedRepository('mozilla/firefox.git', 'free and open-source web browser');
 
         $this->singapour_mirror = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->singapour_mirror_id, 'singapour.io', 'singapour', 'PLP');
-        $this->noida_mirror = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->noida_mirror_id, 'noida.org', 'noida', 'test');
+        $this->noida_mirror     = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->noida_mirror_id, 'noida.org', 'noida', 'test');
 
         $this->generator   = \Mockery::spy(\Git_Mirror_ManifestFileGenerator::class);
         $this->data_mapper = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);

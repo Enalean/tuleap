@@ -45,7 +45,7 @@ class FileUploadCancelerTest extends TestCase
 
         $item_id          = 12;
         $file_information = new FileBeingUploadedInformation($item_id, 'Filename', 123, 0);
-        $item_path = $path_allocator->getPathForItemBeingUploaded($file_information);
+        $item_path        = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($item_path), 0777, true);
         touch($path_allocator->getPathForItemBeingUploaded($file_information));
 
@@ -65,7 +65,7 @@ class FileUploadCancelerTest extends TestCase
 
         $item_id          = 12;
         $file_information = new FileBeingUploadedInformation($item_id, 'Filename', 123, 0);
-        $item_path = $path_allocator->getPathForItemBeingUploaded($file_information);
+        $item_path        = $path_allocator->getPathForItemBeingUploaded($file_information);
 
         $dao->shouldReceive('deleteByItemID')->once();
 

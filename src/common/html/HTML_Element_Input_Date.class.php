@@ -32,6 +32,6 @@ class HTML_Element_Input_Date extends HTML_Element_Input_Text
 
         parent::__construct($label, $name, $value, 10, $desc);
         $this->params['maxlength'] = 10;
-        $this->params['class'] = 'highlight-days-67 format-y-m-d divider-dash no-transparency';
+        $this->params['class']     = 'highlight-days-67 format-y-m-d divider-dash no-transparency';
     }
 }

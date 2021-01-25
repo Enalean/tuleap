@@ -39,7 +39,7 @@ class ChangesetFromXmlDataRepresentation
 
     public function __construct(int $user_id, int $timestamp)
     {
-        $this->user_id = $user_id;
+        $this->user_id   = $user_id;
         $this->timestamp = $timestamp;
     }
 

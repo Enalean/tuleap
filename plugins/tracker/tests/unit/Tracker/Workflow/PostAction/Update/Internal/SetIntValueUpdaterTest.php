@@ -64,7 +64,7 @@ class SetIntValueUpdaterTest extends TestCase
         $this->set_int_value_repository
             ->shouldReceive('update')
             ->byDefault();
-        $this->tracker = Mockery::mock(\Tracker::class);
+        $this->tracker   = Mockery::mock(\Tracker::class);
         $this->validator = Mockery::mock(SetIntValueValidator::class);
 
         $this->updater = new SetIntValueUpdater($this->set_int_value_repository, $this->validator);

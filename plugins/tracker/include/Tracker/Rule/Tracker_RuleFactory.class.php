@@ -64,7 +64,7 @@ class Tracker_RuleFactory
     public function __construct(Tracker_RuleDao $rules_dao)
     {
         $this->rules_dao = $rules_dao;
-        $this->rules = [];
+        $this->rules     = [];
     }
 
     /**
@@ -74,7 +74,7 @@ class Tracker_RuleFactory
     {
         static $_artifactrulefactory_instance;
         if (! $_artifactrulefactory_instance) {
-            $rules_dao         = new Tracker_RuleDao();
+            $rules_dao                     = new Tracker_RuleDao();
             $_artifactrulefactory_instance = new Tracker_RuleFactory($rules_dao);
         }
         return $_artifactrulefactory_instance;
@@ -85,11 +85,11 @@ class Tracker_RuleFactory
      */
     public function getAllListRulesByTrackerWithOrder($tracker_id)
     {
-        $dar = $this->rules_dao->searchByTrackerIdWithOrder($tracker_id);
+        $dar   = $this->rules_dao->searchByTrackerIdWithOrder($tracker_id);
         $rules = [];
         while ($rule_row = $dar->getRow()) {
             if (! isset($this->rules[$rule_row['id']])) {
-                $rule_row['tracker_id'] = $tracker_id;
+                $rule_row['tracker_id']       = $tracker_id;
                 $this->rules[$rule_row['id']] =& $this->_buildRuleInstance($rule_row);
             }
             $rules[] =& $this->rules[$rule_row['id']];
@@ -186,12 +186,12 @@ class Tracker_RuleFactory
         $rules = [];
         //test this better
         if (property_exists($xml, 'list_rules')) {
-            $list_rules = $xml->list_rules;
+            $list_rules          = $xml->list_rules;
             $rules['list_rules'] = $this->generateListRulesArrayFromXml($list_rules, $xmlMapping, $tracker);
         }
 
         if (property_exists($xml, 'date_rules')) {
-            $date_rules = $xml->date_rules;
+            $date_rules          = $xml->date_rules;
             $rules['date_rules'] = $this->generateDateRulesArrayFromXml($date_rules, $xmlMapping, $tracker);
         }
 
@@ -241,7 +241,7 @@ class Tracker_RuleFactory
     public function getListFactory()
     {
         if (! $this->list_factory) {
-            $listDao = $this->getListDao();
+            $listDao            = $this->getListDao();
             $this->list_factory =  new Tracker_Rule_List_Factory($listDao);
         }
 
@@ -265,9 +265,9 @@ class Tracker_RuleFactory
     public function getDateFactory()
     {
         if (! $this->date_factory) {
-            $dateDao = $this->getDateDao();
+            $dateDao              = $this->getDateDao();
             $form_element_factory = Tracker_FormElementFactory::instance();
-            $this->date_factory =  new Tracker_Rule_Date_Factory($dateDao, $form_element_factory);
+            $this->date_factory   =  new Tracker_Rule_Date_Factory($dateDao, $form_element_factory);
         }
 
         return $this->date_factory;
@@ -343,13 +343,13 @@ class Tracker_RuleFactory
 
         foreach ($date_rules->rule as $xml_rule) {
             $xml_source_field_attributes = $xml_rule->source_field->attributes();
-            $source_field = $xmlMapping[(string) $xml_source_field_attributes['REF']];
+            $source_field                = $xmlMapping[(string) $xml_source_field_attributes['REF']];
 
             $xml_target_field_attributes = $xml_rule->target_field->attributes();
-            $target_field = $xmlMapping[(string) $xml_target_field_attributes['REF']];
+            $target_field                = $xmlMapping[(string) $xml_target_field_attributes['REF']];
 
             $xml_comparator_attributes = $xml_rule->comparator->attributes();
-            $comparator = $xml_comparator_attributes['type'];
+            $comparator                = $xml_comparator_attributes['type'];
 
             $rule_list = new Tracker_Rule_Date();
             $rule_list->setComparator($comparator)

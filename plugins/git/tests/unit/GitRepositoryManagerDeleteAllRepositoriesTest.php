@@ -38,14 +38,14 @@ class GitRepositoryManagerDeleteAllRepositoriesTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->project_id           = 42;
-        $this->project              = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns($this->project_id)->getMock();
-        $this->repository_factory   = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->project_id               = 42;
+        $this->project                  = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns($this->project_id)->getMock();
+        $this->repository_factory       = \Mockery::spy(\GitRepositoryFactory::class);
         $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
-        $this->dao                  = Mockery::mock(GitDao::class);
-        $this->backup_directory     = vfsStream::setup()->url();
-        $this->mirror_updater       = \Mockery::spy(\GitRepositoryMirrorUpdater::class);
-        $this->mirror_data_mapper   = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
+        $this->dao                      = Mockery::mock(GitDao::class);
+        $this->backup_directory         = vfsStream::setup()->url();
+        $this->mirror_updater           = \Mockery::spy(\GitRepositoryMirrorUpdater::class);
+        $this->mirror_data_mapper       = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
 
         $this->git_repository_manager = new GitRepositoryManager(
             $this->repository_factory,

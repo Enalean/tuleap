@@ -49,7 +49,7 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase
     {
         parent::setUp();
 
-        $first_value  = new Tracker_FormElement_Field_List_Bind_StaticValue(
+        $first_value = new Tracker_FormElement_Field_List_Bind_StaticValue(
             431,
             '10',
             'int value',
@@ -57,7 +57,7 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase
             0
         );
 
-        $second_value  = new Tracker_FormElement_Field_List_Bind_StaticValue(
+        $second_value = new Tracker_FormElement_Field_List_Bind_StaticValue(
             432,
             '123abc',
             'string value',
@@ -65,9 +65,9 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase
             0
         );
 
-        $field          = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $is_rank_alpha  = 0;
-        $values         = [
+        $field         = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
+        $is_rank_alpha = 0;
+        $values        = [
             431 => $first_value,
             432 => $second_value
         ];

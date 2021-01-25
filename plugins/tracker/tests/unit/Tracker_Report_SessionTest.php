@@ -42,7 +42,7 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
 
     public function testRemovesCriterion(): void
     {
-        $session = &$this->tracker_report_session->getSessionNamespace();
+        $session                  = &$this->tracker_report_session->getSessionNamespace();
         $session['criteria']['1'] = ['tintinlachipo'];
         $this->tracker_report_session->removeCriterion('1');
         $this->assertEquals(1, $session['criteria']['1']['is_removed']);
@@ -50,7 +50,7 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
 
     public function testRemovesCriterionNotFound(): void
     {
-        $session = &$this->tracker_report_session->getSessionNamespace();
+        $session                  = &$this->tracker_report_session->getSessionNamespace();
         $session['criteria']['1'] = 'tintinlachipo';
         $this->tracker_report_session->removeCriterion('0');
         $this->assertSame('tintinlachipo', $session['criteria']['1']);
@@ -78,7 +78,7 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
 
     public function testItStoresAdditionalCriterion(): void
     {
-        $session = &$this->tracker_report_session->getSessionNamespace();
+        $session              = &$this->tracker_report_session->getSessionNamespace();
         $additional_criterion = new Tracker_Report_AdditionalCriterion('agiledashboard_milestone', ['tintin' => 'lachipo', 'kiki' => 'labrouette']);
         $this->tracker_report_session->storeAdditionalCriterion($additional_criterion);
         $this->assertEquals(
@@ -89,15 +89,15 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
 
     public function testGetCriterion(): void
     {
-         $session = &$this->tracker_report_session->getSessionNamespace();
+         $session                  = &$this->tracker_report_session->getSessionNamespace();
          $session['criteria']['1'] = 'tintinlachipo';
-         $criterion = $this->tracker_report_session->getCriterion(1);
+         $criterion                = $this->tracker_report_session->getCriterion(1);
          $this->assertEquals('tintinlachipo', $criterion);
     }
 
     public function testUpdatesCriterionEmptyValueEmptyOpts(): void
     {
-        $session = &$this->tracker_report_session->getSessionNamespace();
+        $session                   = &$this->tracker_report_session->getSessionNamespace();
         $session[1]['value']       = 'tutu';
         $session[1]['is_advanced'] = 1;
         $this->tracker_report_session->updateCriterion(1, '');
@@ -107,8 +107,8 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateCriterionEmptyValueWithOpts(): void
     {
-        $session = &$this->tracker_report_session->getSessionNamespace();
-        $session[1]['value']       = 'tutu';
+        $session                               = &$this->tracker_report_session->getSessionNamespace();
+        $session[1]['value']                   = 'tutu';
         $session['criteria'][1]['is_advanced'] = 1;
         $this->tracker_report_session->updateCriterion(1, '', ['is_advanced' => 0]);
         $this->assertEquals('tutu', $session[1]['value']);
@@ -127,8 +127,8 @@ final class Tracker_Report_SessionTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateCriterionWithValueWithOpts(): void
     {
-        $session = &$this->tracker_report_session->getSessionNamespace();
-        $session['criteria'][1]['value'] = 'tutu';
+        $session                               = &$this->tracker_report_session->getSessionNamespace();
+        $session['criteria'][1]['value']       = 'tutu';
         $session['criteria'][1]['is_advanced'] = 1;
         $this->tracker_report_session->updateCriterion(1, 'toto', ['is_advanced' => 0]);
         $this->assertEquals('toto', $session['criteria'][1]['value']);

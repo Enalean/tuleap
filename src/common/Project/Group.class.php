@@ -76,10 +76,10 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             // - a row from the groups table -> use it
             // - a group_id -> retrieve row from table
         if (is_array($param)) {
-            $this->group_id = $param['group_id'];
+            $this->group_id   = $param['group_id'];
             $this->data_array = $param;
         } elseif (intval($param) > 0) {
-            $this->group_id = (int) $param; // TODO db_es()?
+            $this->group_id  = (int) $param; // TODO db_es()?
             $this->db_result = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($this->group_id));
             if (db_numrows($this->db_result) < 1) {
              //function in class we extended
@@ -367,7 +367,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         } else {
             if (user_isloggedin()) {
                     $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-                    $res = db_query("SELECT * FROM user_group WHERE user_id='" . $db_escaped_user_id . "' and group_id='" . db_ei($this->getGroupId()) . "'");
+                    $res                = db_query("SELECT * FROM user_group WHERE user_id='" . $db_escaped_user_id . "' and group_id='" . db_ei($this->getGroupId()) . "'");
                 if ($res && db_numrows($res) > 0) {
                     $this->perm_data_array = db_fetch_array($res);
                 } else {
@@ -422,7 +422,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function setError($string)
     {
-        $this->error_state = true;
+        $this->error_state   = true;
         $this->error_message = $string;
     }
 

@@ -53,7 +53,7 @@ class Docman_Wiki extends Docman_Document
     }
     public function toRow()
     {
-        $row = parent::toRow();
+        $row              = parent::toRow();
         $row['wiki_page'] = $this->getPagename();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_WIKI;
         return $row;

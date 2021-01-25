@@ -43,12 +43,12 @@ final class DocmanValidateUploadTest extends TestCase
 
     public function testValidFileIsAccepted(): void
     {
-        $request   = Mockery::mock(Codendi_Request::class);
+        $request = Mockery::mock(Codendi_Request::class);
         $request->shouldReceive('exist')->with('upload_content')->andReturn(false);
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '10000');
 
-        $_FILES = [];
+        $_FILES         = [];
         $_FILES['file'] = ['name' => 'my_file', 'size' => 100, 'error' => UPLOAD_ERR_OK];
 
         $validator = new Docman_ValidateUpload($request);
@@ -57,12 +57,12 @@ final class DocmanValidateUploadTest extends TestCase
 
     public function testTooLargeFileIsRejected(): void
     {
-        $request   = Mockery::mock(Codendi_Request::class);
+        $request = Mockery::mock(Codendi_Request::class);
         $request->shouldReceive('exist')->with('upload_content')->andReturn(false);
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '10');
 
-        $_FILES = [];
+        $_FILES         = [];
         $_FILES['file'] = ['name' => 'my_file', 'size' => 100, 'error' => UPLOAD_ERR_OK];
 
         $validator = new Docman_ValidateUpload($request);

@@ -25,10 +25,10 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 final class PromptParameterValuesExtractor
 {
     // See https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
-    public const PROMPT_NONE            = 'none';
-    public const PROMPT_LOGIN           = 'login';
-    public const PROMPT_CONSENT         = 'consent';
-    public const PROMPT_SELECT_ACCOUNT  = 'select_account';
+    public const PROMPT_NONE           = 'none';
+    public const PROMPT_LOGIN          = 'login';
+    public const PROMPT_CONSENT        = 'consent';
+    public const PROMPT_SELECT_ACCOUNT = 'select_account';
 
     private const SUPPORTED_PROMPT_VALUES = [self::PROMPT_NONE, self::PROMPT_LOGIN, self::PROMPT_CONSENT, self::PROMPT_SELECT_ACCOUNT];
 

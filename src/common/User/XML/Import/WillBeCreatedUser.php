@@ -60,11 +60,11 @@ class WillBeCreatedUser implements ReadyToBeImportedUser
         $ldap_id,
         $use_lame_password = false
     ) {
-        $this->username = $username;
-        $this->realname = $realname;
-        $this->email    = $email;
-        $this->status   = $status;
-        $this->ldap_id  = $ldap_id;
+        $this->username          = $username;
+        $this->realname          = $realname;
+        $this->email             = $email;
+        $this->status            = $status;
+        $this->ldap_id           = $ldap_id;
         $this->use_lame_password = $use_lame_password;
     }
 

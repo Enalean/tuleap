@@ -140,7 +140,7 @@ class SemanticTimeframeBuilderTest extends TestCase
             ]);
 
         $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $duration_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $duration_field   = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
 
         $factory = Mockery::mock(Tracker_FormElementFactory::class);
         $factory->shouldReceive('getUsedDateFieldById')

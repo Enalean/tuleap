@@ -34,11 +34,11 @@ class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormE
      */
     public function __construct()
     {
-        $id = self::VALUE_ID;
-        $label = $GLOBALS['Language']->getText('global', 'none');
+        $id          = self::VALUE_ID;
+        $label       = $GLOBALS['Language']->getText('global', 'none');
         $description = '';
-        $rank = 0;
-        $is_hidden = false;
+        $rank        = 0;
+        $is_hidden   = false;
 
         parent::__construct($id, $label, $description, $rank, $is_hidden);
     }

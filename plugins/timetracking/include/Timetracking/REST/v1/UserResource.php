@@ -69,7 +69,7 @@ class UserResource extends AuthenticatedResource
     public function getUserTimes($id, $query, $limit, $offset)
     {
         $query_parameter_parser = new QueryParameterParser(new JsonDecoder());
-        $query_checker = new TimetrackingQueryChecker();
+        $query_checker          = new TimetrackingQueryChecker();
 
         try {
             $start_date = $query_parameter_parser->getString($query, 'start_date');

@@ -38,7 +38,7 @@ final class Tracker_Hierarchy_HierarchicalTrackerTest extends \PHPUnit\Framework
     protected function setUp(): void
     {
         $project_id = 110;
-        $project          = Mockery::mock(Project::class);
+        $project    = Mockery::mock(Project::class);
         $project->shouldReceive('getId')->andReturns($project_id);
         $this->tracker = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(1);

@@ -66,9 +66,9 @@ final class RedirectParameterInjectorTest extends TestCase
 
         $this->backlog_item = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->backlog_item->shouldReceive('getId')->andReturn(123);
-        $this->user         = Mockery::mock(\PFUser::class);
+        $this->user = Mockery::mock(\PFUser::class);
 
-        $template_cache            = \Mockery::mock(TemplateCache::class);
+        $template_cache = \Mockery::mock(TemplateCache::class);
         $template_cache->shouldReceive('getPath')->andReturnNull();
         $template_renderer_factory = new TemplateRendererFactory($template_cache);
 
@@ -106,7 +106,7 @@ final class RedirectParameterInjectorTest extends TestCase
 
     public function testItDoesNotInjectAnythingIfTheBacklogItemIsNotReadableByUser(): void
     {
-        $request  = new \Codendi_Request(
+        $request = new \Codendi_Request(
             [
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",
@@ -135,7 +135,7 @@ final class RedirectParameterInjectorTest extends TestCase
 
     public function testItDoesNotInjectAnythingIfTheMilestoneIsNotReadableByUser(): void
     {
-        $request  = new \Codendi_Request(
+        $request = new \Codendi_Request(
             [
                 'ttm_backlog_item_id' => "123",
                 'ttm_milestone_id'    => "42",

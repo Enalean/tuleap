@@ -163,24 +163,24 @@ class Widget_MyArtifacts extends Widget
             $hide_artifact = null;
         }
 
-        $j = $print_box_begin;
+        $j                 = $print_box_begin;
         $html_my_artifacts = "";
-        $html = "";
-        $html_hdr = "";
+        $html              = "";
+        $html_hdr          = "";
 
-        $aid_old  = 0;
-        $atid_old = 0;
+        $aid_old      = 0;
+        $atid_old     = 0;
         $group_id_old = 0;
-        $count_aids = 0;
-        $group_name = "";
+        $count_aids   = 0;
+        $group_name   = "";
         $tracker_name = "";
 
         $artifact_types = [];
 
-        $pm = ProjectManager::instance();
+        $pm       = ProjectManager::instance();
         $purifier = Codendi_HTMLPurifier::instance();
         while ($trackers_array = db_fetch_array($list_trackers)) {
-            $atid = $trackers_array['group_artifact_id'];
+            $atid     = $trackers_array['group_artifact_id'];
             $group_id = $trackers_array['group_id'];
 
             // {{{ check permissions
@@ -194,8 +194,8 @@ class Widget_MyArtifacts extends Widget
                 $artifact_types[$group_id] = [];
             }
             if (! isset($artifact_types[$group_id][$atid])) {
-                $artifact_types[$group_id][$atid] = [];
-                $artifact_types[$group_id][$atid]['at'] = new ArtifactType($group, $atid);
+                $artifact_types[$group_id][$atid]                                 = [];
+                $artifact_types[$group_id][$atid]['at']                           = new ArtifactType($group, $atid);
                 $artifact_types[$group_id][$atid]['user_can_view_at']             = $artifact_types[$group_id][$atid]['at']->userCanView();
                 $artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'] = null;
             }
@@ -219,7 +219,7 @@ class Widget_MyArtifacts extends Widget
                     //Retriebe summary field
                     $field = $aff->getFieldFromName('summary');
                     //Check if user can read it
-                    $user_can_view_summary = $field->userCanRead($group_id, $atid);
+                    $user_can_view_summary                                            = $field->userCanRead($group_id, $atid);
                     $artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'] = $user_can_view_aid || $user_can_view_summary;
                 }
                 if ($artifact_types[$group_id][$atid]['user_can_view_summary_or_aid']) {
@@ -227,16 +227,16 @@ class Widget_MyArtifacts extends Widget
                     if ($atid != $atid_old && $count_aids != 0) {
                         list($hide_now,$count_diff,$hide_url) =
                             my_hide_url('artifact', $atid_old, $hide_item_id, $count_aids, $hide_artifact, $request->get('dashboard_id'));
-                        $html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '') .
+                        $html_hdr                             = ($j ? '<tr class="boxitem"><td colspan="3">' : '') .
                         $hide_url . '<A HREF="/tracker/?group_id=' . $group_id_old . '&atid=' . $atid_old . '">' .
                         $group_name . " - " . $tracker_name . '</A>&nbsp;&nbsp;&nbsp;&nbsp;';
-                        $count_new = max(0, $count_diff);
+                        $count_new                            = max(0, $count_diff);
 
-                        $html_hdr .= my_item_count($count_aids, $count_new) . '</td></tr>';
+                        $html_hdr          .= my_item_count($count_aids, $count_new) . '</td></tr>';
                         $html_my_artifacts .= $html_hdr . $html;
 
                         $count_aids = 0;
-                        $html = '';
+                        $html       = '';
                         $j++;
                     }
 
@@ -297,12 +297,12 @@ class Widget_MyArtifacts extends Widget
         //work on the tracker of the last round if there was one
         if ($atid_old != 0 && $count_aids != 0) {
             list($hide_now,$count_diff,$hide_url) = my_hide_url('artifact', $atid_old, $hide_item_id, $count_aids, $hide_artifact, $request->get('dashboard_id'));
-            $html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '') .
+            $html_hdr                             = ($j ? '<tr class="boxitem"><td colspan="3">' : '') .
               $hide_url . '<A HREF="/tracker/?group_id=' . $group_id_old . '&atid=' . $atid_old . '">' .
               $purifier->purify($group_name) . " - " . $tracker_name . '</A>&nbsp;&nbsp;&nbsp;&nbsp;';
-            $count_new = max(0, $count_diff);
+            $count_new                            = max(0, $count_diff);
 
-            $html_hdr .= my_item_count($count_aids, $count_new) . '</td></tr>';
+            $html_hdr          .= my_item_count($count_aids, $count_new) . '</td></tr>';
             $html_my_artifacts .= $html_hdr . $html;
         }
 

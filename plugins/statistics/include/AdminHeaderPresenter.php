@@ -52,11 +52,11 @@ class AdminHeaderPresenter
     ) {
         $this->title = $title;
 
-        $this->frequencies_tab_active    = ($active_tab === 'frequencies');
-        $this->disk_usage_tab_active     = ($active_tab === 'disk_usage');
-        $this->project_quota_tab_active  = ($active_tab === 'project_quota');
-        $this->service_usage_tab_active  = ($active_tab === 'service_usage');
-        $this->data_export_tab_active    = ($active_tab === 'data_export');
+        $this->frequencies_tab_active   = ($active_tab === 'frequencies');
+        $this->disk_usage_tab_active    = ($active_tab === 'disk_usage');
+        $this->project_quota_tab_active = ($active_tab === 'project_quota');
+        $this->service_usage_tab_active = ($active_tab === 'service_usage');
+        $this->data_export_tab_active   = ($active_tab === 'data_export');
 
         $this->frequencies_tab_label        = dgettext('tuleap-statistics', 'Frequencies');
         $this->disk_usage_tab_label         = dgettext('tuleap-statistics', 'Disk usage');

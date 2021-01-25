@@ -71,9 +71,9 @@ class Docman_BuildItemMappingVisitor
 
     public function __construct($groupId)
     {
-        $this->groupId = $groupId;
+        $this->groupId     = $groupId;
         $this->itemMapping = [];
-        $this->dao = null;
+        $this->dao         = null;
     }
 
     /**
@@ -144,13 +144,13 @@ class Docman_BuildItemMappingVisitor
     {
         if (isset($this->itemMapping[$item->getId()])) {
             $parentId = $this->itemMapping[$item->getId()];
-            $dar = $this->searchMatchingChildren($item, $parentId);
+            $dar      = $this->searchMatchingChildren($item, $parentId);
             if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
                 // When there are several items that match, we need to build a fake node
                 $node = new Docman_Folder();
                 while ($row = $dar->getRow()) {
                     $itemFactory = $this->getItemFactory();
-                    $i = $itemFactory->getItemFromRow($row);
+                    $i           = $itemFactory->getItemFromRow($row);
                     if ($i !== null && $this->checkItemPermissions($row['item_id'])) {
                         $node->addItem($i);
                     }
@@ -173,8 +173,8 @@ class Docman_BuildItemMappingVisitor
     public function compareFolderChildren($srcItem, $dstItem)
     {
         $nodesToInspect = [];
-        $srcList = $srcItem->getAllItems();
-        $dstList = $dstItem->getAllItems();
+        $srcList        = $srcItem->getAllItems();
+        $dstList        = $dstItem->getAllItems();
         if (
             $srcList && $srcList->size() &&
             $dstList && $dstList->size()
@@ -189,7 +189,7 @@ class Docman_BuildItemMappingVisitor
                 $dstChild = $dstIter->current();
                 if ($this->compareItem($srcChild, $dstChild)) {
                     $this->itemMapping[$srcChild->getId()] = $dstChild->getId();
-                    $nodesToInspect[$srcChild->getId()] = true;
+                    $nodesToInspect[$srcChild->getId()]    = true;
                 } else {
                     $identical = false;
                 }
@@ -223,9 +223,9 @@ class Docman_BuildItemMappingVisitor
      */
     public function searchMatchingItem($item, $parentId)
     {
-        $dao = $this->getItemDao();
+        $dao        = $this->getItemDao();
         $itemTitles = $this->getTitleStrings($item);
-        $dar = $dao->searchByTitle($itemTitles, $this->groupId, $parentId);
+        $dar        = $dao->searchByTitle($itemTitles, $this->groupId, $parentId);
         return $dar;
     }
 
@@ -235,9 +235,9 @@ class Docman_BuildItemMappingVisitor
      */
     public function searchMatchingChildren($item, $parentId)
     {
-        $dao = $this->getItemDao();
+        $dao        = $this->getItemDao();
         $itemTitles = $this->getChildrenTitles($item);
-        $dar = $dao->searchByTitle($itemTitles, $this->groupId, $parentId);
+        $dar        = $dao->searchByTitle($itemTitles, $this->groupId, $parentId);
         return $dar;
     }
 
@@ -246,13 +246,13 @@ class Docman_BuildItemMappingVisitor
      */
     public function getChildrenTitles($item)
     {
-        $title = [];
+        $title     = [];
         $childList = $item->getAllItems();
         if ($childList && $childList->size()) {
             $childIter = $childList->iterator();
             $childIter->rewind();
             while ($childIter->valid()) {
-                $i = $childIter->current();
+                $i     = $childIter->current();
                 $title = array_merge($title, $this->getTitleStrings($i));
                 $childIter->next();
             }

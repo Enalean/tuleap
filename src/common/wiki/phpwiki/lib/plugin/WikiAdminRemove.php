@@ -92,17 +92,17 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         $allPages = $dbi->getAllPages('include_empty', $sortby, $limit);
         while ($pagehandle = $allPages->next()) {
             $pagename = $pagehandle->getName();
-            $current = $pagehandle->getCurrentRevision();
+            $current  = $pagehandle->getCurrentRevision();
             if ($current->getVersion() < 1) {
                 continue;       // No versions in database
             }
 
             $empty = $current->hasDefaultContents();
             if ($empty) {
-                $age = ($now - $current->get('mtime')) / (24 * 3600.0);
+                $age     = ($now - $current->get('mtime')) / (24 * 3600.0);
                 $checked = $age >= $max_age;
             } else {
-                $age = 0;
+                $age     = 0;
                 $checked = false;
             }
 
@@ -117,8 +117,8 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
 
     public function removePages(&$request, $pages)
     {
-        $ul = HTML::ul();
-        $dbi = $request->getDbh();
+        $ul    = HTML::ul();
+        $dbi   = $request->getDbh();
         $count = 0;
         foreach ($pages as $name) {
             $name = str_replace(['%5B', '%5D'], ['[', ']'], $name);
@@ -165,7 +165,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         $post_args = $request->getArg('admin_remove');
 
         $next_action = 'select';
-        $pages = [];
+        $pages       = [];
         if (
             $p && $request->isPost() &&
             ! empty($post_args['remove']) && empty($post_args['cancel'])
@@ -183,14 +183,14 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
             if ($post_args['action'] == 'select') {
                 $next_action = 'verify';
                 foreach ($p as $name => $c) {
-                    $name = str_replace(['%5B', '%5D'], ['[', ']'], $name);
+                    $name         = str_replace(['%5B', '%5D'], ['[', ']'], $name);
                     $pages[$name] = $c;
                 }
             }
         } elseif ($p && is_array($p) && ! $request->isPost()) { // from WikiAdminSelect
             $next_action = 'verify';
             foreach ($p as $name => $c) {
-                $name = str_replace(['%5B', '%5D'], ['[', ']'], $name);
+                $name         = str_replace(['%5B', '%5D'], ['[', ']'], $name);
                 $pages[$name] = $c;
             }
             $request->setArg('p', false);

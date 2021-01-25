@@ -54,8 +54,8 @@ final class DisplayAccountInformationControllerTest extends TestCase
     {
         $this->event_manager = new class implements EventDispatcherInterface {
             public $disable_real_name_change = false;
-            public $disable_email_change = false;
-            public $add_ldap_extra_info = false;
+            public $disable_email_change     = false;
+            public $add_ldap_extra_info      = false;
 
             public function dispatch(object $event)
             {

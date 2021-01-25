@@ -99,7 +99,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
     public function _generateColheadings(&$info, &$table)
     {
         // table headings
-        $tr = HTML::tr();
+        $tr       = HTML::tr();
         $headings = [_("Plugin"), _("Version"), _("Description")];
         if ($info == 'args') {
             $headings[] = _("Arguments");
@@ -116,21 +116,21 @@ class WikiPlugin_PluginManager extends WikiPlugin
         if (defined('PHPWIKI_DIR')) {
             $plugin_dir = PHPWIKI_DIR . "/$plugin_dir";
         }
-        $pd = new fileSet($plugin_dir, '*.php');
+        $pd      = new fileSet($plugin_dir, '*.php');
         $plugins = $pd->getFiles();
         unset($pd);
         sort($plugins);
 
         // table body
-        $tbody = HTML::tbody();
+        $tbody  = HTML::tbody();
         $row_no = 0;
 
         $w = new WikiPluginLoader();
         foreach ($plugins as $pluginName) {
             // instantiate a plugin
-            $pluginName = str_replace(".php", "", $pluginName);
+            $pluginName      = str_replace(".php", "", $pluginName);
             $temppluginclass = "<? plugin $pluginName ?>"; // hackish
-            $p = $w->getPlugin($pluginName, false); // second arg?
+            $p               = $w->getPlugin($pluginName, false); // second arg?
             // trap php files which aren't WikiPlugin~s
             if (! strtolower(substr(get_parent_class($p), 0, 10)) == 'wikiplugin') {
                 // Security: Hide names of extraneous files within
@@ -143,18 +143,18 @@ class WikiPlugin_PluginManager extends WikiPlugin
                 }
                 continue; // skip this non WikiPlugin file
             }
-            $desc = $p->getDescription();
-            $ver = $p->getVersion();
+            $desc      = $p->getDescription();
+            $ver       = $p->getVersion();
             $arguments = $p->getArgumentsDescription();
             unset($p); //done querying plugin object, release from memory
 
             // This section was largely improved by Pierrick Meignen:
             // make a link if an actionpage exists
-            $pluginNamelink = $pluginName;
+            $pluginNamelink    = $pluginName;
             $pluginDocPageName = $pluginName . "Plugin";
 
-            $pluginDocPageNamelink = false;
-            $localizedPluginName = '';
+            $pluginDocPageNamelink      = false;
+            $localizedPluginName        = '';
             $localizedPluginDocPageName = '';
 
             if ($GLOBALS['LANG'] != "en") {

@@ -36,8 +36,8 @@ require_once __DIR__ . '/constants.php';
 
 class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const ICONS_PATH = '/plugins/hudson/themes/default/images/ic/';
-    public const HUDSON_JOB_NATURE = 'hudson_job';
+    public const ICONS_PATH          = '/plugins/hudson/themes/default/images/ic/';
+    public const HUDSON_JOB_NATURE   = 'hudson_job';
     public const HUDSON_BUILD_NATURE = 'hudson_build';
 
     public function __construct($id)
@@ -129,8 +129,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
     public function projectIsDeleted($params)
     {
         $group_id = $params['group_id'];
-        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->deleteHudsonJobsByGroupID($group_id);
+        $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
+        $dar      = $job_dao->deleteHudsonJobsByGroupID($group_id);
     }
 
 
@@ -273,24 +273,24 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
 
         switch ($event->getReference()->getNature()) {
             case self::HUDSON_BUILD_NATURE:
-                $val = $event->getValue();
+                $val      = $event->getValue();
                 $group_id = $event->getProject()->getID();
-                $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+                $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
                 if (strpos($val, "/") !== false) {
-                    $arr = explode("/", $val);
+                    $arr      = explode("/", $val);
                     $job_name = $arr[0];
                     $build_id = $arr[1];
-                    $dar = $job_dao->searchByJobName($job_name, $group_id);
+                    $dar      = $job_dao->searchByJobName($job_name, $group_id);
                 } else {
                     $build_id = $val;
-                    $dar = $job_dao->searchByGroupID($group_id);
+                    $dar      = $job_dao->searchByGroupID($group_id);
                     if ($dar->rowCount() != 1) {
                         $dar = null;
                     }
                 }
                 if ($dar && $dar->valid()) {
-                    $row         = $dar->current();
-                    $build       = new HudsonBuild(
+                    $row   = $dar->current();
+                    $build = new HudsonBuild(
                         $row['job_url'] . '/' . $build_id . '/',
                         HttpClientFactory::createClient(),
                         HTTPFactoryBuilder::requestFactory()
@@ -304,10 +304,10 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                 }
                 break;
             case self::HUDSON_JOB_NATURE:
-                $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+                $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
                 $job_name = $event->getValue();
                 $group_id = $event->getProject()->getID();
-                $dar = $job_dao->searchByJobName($job_name, $group_id);
+                $dar      = $job_dao->searchByJobName($job_name, $group_id);
                 if ($dar->valid()) {
                     $row = $dar->current();
                     try {
@@ -316,7 +316,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                         $job                 = $job_builder->getHudsonJob(
                             $minimal_job_factory->getMinimalHudsonJob($row['job_url'], '')
                         );
-                        $job_id      = $row['job_id'];
+                        $job_id              = $row['job_id'];
 
                         $html  = '';
                         $html .= '<table>';
@@ -361,17 +361,17 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         $ref = $params['reference'];
         switch ($ref->getNature()) {
             case 'hudson_build':
-                $val = $params['val'];
+                $val      = $params['val'];
                 $group_id = $params['group_id'];
-                $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+                $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
                 if (strpos($val, "/") !== false) {
-                    $arr = explode("/", $val);
+                    $arr      = explode("/", $val);
                     $job_name = $arr[0];
                     $build_id = $arr[1];
-                    $dar = $job_dao->searchByJobName($job_name, $group_id);
+                    $dar      = $job_dao->searchByJobName($job_name, $group_id);
                 } else {
                     $build_id = $val;
-                    $dar = $job_dao->searchByGroupID($group_id);
+                    $dar      = $job_dao->searchByGroupID($group_id);
                     if ($dar->rowCount() != 1) {
                         $dar = null;
                     }
@@ -390,10 +390,10 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                 }
                 break;
             case 'hudson_job':
-                $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+                $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
                 $job_name = $params['val'];
                 $group_id = $params['group_id'];
-                $dar = $job_dao->searchByJobName($job_name, $group_id);
+                $dar      = $job_dao->searchByJobName($job_name, $group_id);
                 if ($dar->valid()) {
                     $row = $dar->current();
                     try {
@@ -428,9 +428,9 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
     {
         if (! empty($params['formatter'])) {
             $formatter = $params['formatter'];
-            $jobDao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-            $dar = $jobDao->countJobs($formatter->groupId);
-            $count = 0;
+            $jobDao    = new PluginHudsonJobDao(CodendiDataAccess::instance());
+            $dar       = $jobDao->countJobs($formatter->groupId);
+            $count     = 0;
             if ($dar && ! $dar->isError()) {
                     $row = $dar->getRow();
                 if ($row) {

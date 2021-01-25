@@ -30,7 +30,7 @@ class ZipStreamMailNotificationSender
     public function sendNotificationAboutErrorsInArchive(\PFUser $user, \Docman_Folder $folder, \Project $project): void
     {
         $mail_title = dgettext('tuleap-document', 'Files missing in your latest archive download');
-        $body_text =
+        $body_text  =
             sprintf(
                 dgettext(
                     'tuleap-document',

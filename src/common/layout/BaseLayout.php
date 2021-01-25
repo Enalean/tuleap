@@ -108,8 +108,8 @@ abstract class BaseLayout extends Response
         $this->breadcrumbs = new BreadCrumbCollection();
         $this->toolbar     = [];
 
-        $this->include_asset  = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
-        $this->uri_sanitizer  = new URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
+        $this->include_asset    = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        $this->uri_sanitizer    = new URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
         $this->url_verification = new \URLVerification();
 
         $this->css_assets = new CssAssetCollection([]);
@@ -213,7 +213,7 @@ abstract class BaseLayout extends Response
          */
         $url = $this->url_verification->isInternal($url) ? $url : '/';
 
-        $is_anon = UserManager::instance()->getCurrentUser()->isAnonymous();
+        $is_anon      = UserManager::instance()->getCurrentUser()->isAnonymous();
         $has_feedback = $GLOBALS['feedback'] || count($this->_feedback->logs);
         if (($is_anon && (headers_sent() || $has_feedback)) || (! $is_anon && headers_sent())) {
             $this->header(['title' => 'Redirection']);
@@ -369,7 +369,7 @@ abstract class BaseLayout extends Response
     final protected function getPlatformBanner(PFUser $current_user): ?\Tuleap\Platform\Banner\BannerDisplay
     {
         $banner_retriever = new \Tuleap\Platform\Banner\BannerRetriever(new \Tuleap\Platform\Banner\BannerDao());
-        $banner = $banner_retriever->getBannerForDisplayPurpose($current_user);
+        $banner           = $banner_retriever->getBannerForDisplayPurpose($current_user);
         if ($banner === null) {
             return null;
         }

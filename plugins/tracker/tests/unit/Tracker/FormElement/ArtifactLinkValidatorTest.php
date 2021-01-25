@@ -106,8 +106,8 @@ final class ArtifactLinkValidatorTest extends TestCase
         $this->linked_artifact->shouldReceive('getId')->andReturn(105);
         $this->linked_artifact->shouldReceive('getTracker')->andReturn($this->tracker);
 
-        $this->field   = \Mockery::spy(Tracker_FormElement_Field_ArtifactLink::class);
-        $this->dao     = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
+        $this->field = \Mockery::spy(Tracker_FormElement_Field_ArtifactLink::class);
+        $this->dao   = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
 
         $this->tracker->shouldReceive('getProject')->andReturn($this->project);
 

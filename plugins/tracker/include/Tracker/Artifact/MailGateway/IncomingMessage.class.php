@@ -45,10 +45,10 @@ class Tracker_Artifact_MailGateway_IncomingMessage
         Tracker $tracker,
         ?Artifact $artifact = null
     ) {
-        $this->subject = $subject;
-        $this->body = $body;
-        $this->user = $user;
-        $this->tracker = $tracker;
+        $this->subject  = $subject;
+        $this->body     = $body;
+        $this->user     = $user;
+        $this->tracker  = $tracker;
         $this->artifact = $artifact;
     }
 

@@ -134,7 +134,7 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject
     private function updateGraphChartsWithFirstReport($tv5_id)
     {
         $tv5_id = $this->da->escapeInt($tv5_id);
-        $sql = "INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, old_id, rank, chart_type, title,description, width, height)
+        $sql    = "INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, old_id, rank, chart_type, title,description, width, height)
                 SELECT Re.id, C.id, C.rank, C.chart_type, C.title, C.description, C.width, C.height
                 FROM (SELECT tracker_id, MIN(id) AS min_report_id FROM tracker_report WHERE tracker_id = $tv5_id GROUP BY tracker_id) AS M
                     INNER JOIN tracker_report AS R ON (M.tracker_id = R.tracker_id AND R.tracker_id = $tv5_id)
@@ -147,7 +147,7 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject
     private function createPieCharts($tv5_id)
     {
         $tv5_id = $this->da->escapeInt($tv5_id);
-        $sql = "INSERT INTO plugin_graphontrackersv5_pie_chart(id, field_base)
+        $sql    = "INSERT INTO plugin_graphontrackersv5_pie_chart(id, field_base)
                 SELECT C.id, P.field_base
                 FROM plugin_graphontrackers_pie_chart AS P
                     INNER JOIN plugin_graphontrackersv5_chart AS C
@@ -160,7 +160,7 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject
     private function createBarCharts($tv5_id)
     {
         $tv5_id = $this->da->escapeInt($tv5_id);
-        $sql = "INSERT INTO plugin_graphontrackersv5_bar_chart(id, field_base, field_group)
+        $sql    = "INSERT INTO plugin_graphontrackersv5_bar_chart(id, field_base, field_group)
                 SELECT C.id, B.field_base, B.field_group
                 FROM plugin_graphontrackers_bar_chart AS B
                     INNER JOIN plugin_graphontrackersv5_chart AS C
@@ -173,7 +173,7 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject
     private function createGanttCharts($tv5_id)
     {
         $tv5_id = $this->da->escapeInt($tv5_id);
-        $sql = "INSERT INTO plugin_graphontrackersv5_gantt_chart(id, field_start, field_due, field_finish, field_percentage, field_righttext, scale, as_of_date, summary)
+        $sql    = "INSERT INTO plugin_graphontrackersv5_gantt_chart(id, field_start, field_due, field_finish, field_percentage, field_righttext, scale, as_of_date, summary)
                 SELECT C.id, G.field_start, G.field_due, G.field_finish, G.field_percentage, G.field_righttext, G.scale, G.as_of_date, G.summary
                 FROM plugin_graphontrackers_gantt_chart AS G
                     INNER JOIN plugin_graphontrackersv5_chart AS C

@@ -66,13 +66,13 @@ class PackageResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->package_factory         = FRSPackageFactory::instance();
-        $this->release_factory         = FRSReleaseFactory::instance();
-        $this->project_manager         = ProjectManager::instance();
-        $this->retriever               = new Retriever(new Dao());
-        $this->user_manager            = UserManager::instance();
-        $this->uploaded_link_retriever = new UploadedLinksRetriever(new UploadedLinksDao(), $this->user_manager);
-        $this->package_representation_builder = new PackageRepresentationBuilder(
+        $this->package_factory                        = FRSPackageFactory::instance();
+        $this->release_factory                        = FRSReleaseFactory::instance();
+        $this->project_manager                        = ProjectManager::instance();
+        $this->retriever                              = new Retriever(new Dao());
+        $this->user_manager                           = UserManager::instance();
+        $this->uploaded_link_retriever                = new UploadedLinksRetriever(new UploadedLinksDao(), $this->user_manager);
+        $this->package_representation_builder         = new PackageRepresentationBuilder(
             \PermissionsManager::instance(),
             new \UGroupManager(),
             FRSPermissionManager::build()

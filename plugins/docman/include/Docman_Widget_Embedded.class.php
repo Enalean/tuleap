@@ -81,7 +81,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      */
     public function getContent()
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp      = Codendi_HTMLPurifier::instance();
         $content = '';
         if ($this->plugin_docman_widget_embedded_item_id) {
             if ($item = $this->getItem($this->plugin_docman_widget_embedded_item_id)) {
@@ -188,10 +188,10 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         $sql = "SELECT * FROM plugin_docman_widget_embedded WHERE owner_id = " . db_ei($this->owner_id) . " AND owner_type = '" . db_es($this->owner_type) . "' AND id = " . db_ei($id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
-            $data = db_fetch_array($res);
+            $data                                        = db_fetch_array($res);
             $this->plugin_docman_widget_embedded_title   = $data['title'];
             $this->plugin_docman_widget_embedded_item_id = (int) $data['item_id'];
-            $this->content_id = $id;
+            $this->content_id                            = $id;
         }
     }
 
@@ -202,20 +202,20 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
     public function create(Codendi_Request $request)
     {
         $content_id = false;
-        $vItem_id = new Valid_String('item_id');
+        $vItem_id   = new Valid_String('item_id');
         $vItem_id->setErrorMessage("Unable to add the widget. Please give an item id.");
         $vItem_id->required();
         if ($request->validInArray('plugin_docman_widget_embedded', $vItem_id)) {
             $plugin_docman_widget_embedded = $request->get('plugin_docman_widget_embedded');
-            $vTitle = new Valid_String('title');
+            $vTitle                        = new Valid_String('title');
             $vTitle->required();
             if (! $request->validInArray('plugin_docman_widget_embedded', $vTitle)) {
                 if ($item = $this->getItem($plugin_docman_widget_embedded['item_id'])) {
                     $plugin_docman_widget_embedded['title'] = $item->getTitle();
                 }
             }
-            $sql = 'INSERT INTO plugin_docman_widget_embedded (owner_id, owner_type, title, item_id) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($plugin_docman_widget_embedded['title']) . "', '" . db_escape_string($plugin_docman_widget_embedded['item_id']) . "')";
-            $res = db_query($sql);
+            $sql        = 'INSERT INTO plugin_docman_widget_embedded (owner_id, owner_type, title, item_id) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($plugin_docman_widget_embedded['title']) . "', '" . db_escape_string($plugin_docman_widget_embedded['item_id']) . "')";
+            $res        = db_query($sql);
             $content_id = db_insertid($res);
         }
         return $content_id;
@@ -227,7 +227,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
      */
     public function updatePreferences(Codendi_Request $request)
     {
-        $done = false;
+        $done       = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();
         if (($plugin_docman_widget_embedded = $request->get('plugin_docman_widget_embedded')) && $request->valid($vContentId)) {
@@ -245,12 +245,12 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
                 $title = ' title = title ';
             }
 
-            $sql = "UPDATE plugin_docman_widget_embedded 
+            $sql  = "UPDATE plugin_docman_widget_embedded 
                     SET " . $title . ", " . $item_id . " 
                     WHERE owner_id   = " . db_ei($this->owner_id) . "
                       AND owner_type = '" . db_es($this->owner_type) . "'
                       AND id         = " . db_ei((int) $request->get('content_id'));
-            $res = db_query($sql);
+            $res  = db_query($sql);
             $done = true;
         }
         return $done;
@@ -295,7 +295,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
     protected function getItem($item_id)
     {
         $item = null;
-        $dao = new Docman_ItemDao(CodendiDataAccess::instance());
+        $dao  = new Docman_ItemDao(CodendiDataAccess::instance());
         if ($row = $dao->searchByid($item_id)->getRow()) {
             $item = Docman_ItemFactory::instance($row['group_id'])->getItemFromRow($row);
             $dPm  = Docman_PermissionsManager::instance($row['group_id']);
@@ -337,8 +337,8 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp      = Codendi_HTMLPurifier::instance();
+        $html    = '';
         $version = $item->getCurrentVersion();
         if (file_exists($version->getPath())) {
             $em = EventManager::instance();

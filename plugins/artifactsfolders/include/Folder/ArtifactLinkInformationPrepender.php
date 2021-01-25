@@ -77,12 +77,12 @@ class ArtifactLinkInformationPrepender
     private function fetchLinkToFolder(array $folder_hierarchy)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $folders = [];
+        $folders  = [];
         foreach ($folder_hierarchy as $folder) {
             \assert($folder instanceof Artifact);
             $uri = $folder->getUri() . '&view=artifactsfolders';
 
-            $link = '<a href="' . $purifier->purify($uri) . '" class="direct-link-to-artifact">';
+            $link  = '<a href="' . $purifier->purify($uri) . '" class="direct-link-to-artifact">';
             $link .= $purifier->purify($folder->getTitle());
             $link .= '</a>';
 

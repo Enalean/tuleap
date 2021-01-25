@@ -16,23 +16,23 @@ class Template
     {
         global $WikiTheme;
 
-        $this->_request = $request;
+        $this->_request  = $request;
         $this->_basepage = $request->getArg('pagename');
 
         if (strstr($name, "/")) {
-            $oldname = $WikiTheme->_name;
-            $oldtheme = $WikiTheme->_theme;
+            $oldname                = $WikiTheme->_name;
+            $oldtheme               = $WikiTheme->_theme;
             list($themename, $name) = explode("/", $name);
-            $WikiTheme->_theme = "themes/$themename";
+            $WikiTheme->_theme      = "themes/$themename";
         }
         $this->_name = $name;
-        $file = $WikiTheme->findTemplate($name);
+        $file        = $WikiTheme->findTemplate($name);
         if (! $file) {
             trigger_error("no template for $name found.", E_USER_WARNING);
             return;
         }
         if (isset($oldname)) {
-            $WikiTheme->_name = $oldname;
+            $WikiTheme->_name  = $oldname;
             $WikiTheme->_theme = $oldtheme;
         }
         $fp = fopen($file, "rb");
@@ -41,7 +41,7 @@ class Template
             return;
         }
         $request->_TemplatesProcessed[$name] = 1;
-        $this->_tmpl = fread($fp, filesize($file));
+        $this->_tmpl                         = fread($fp, filesize($file));
         fclose($fp);
         //$userid = $request->_user->_userid;
         if (is_array($args)) {
@@ -180,8 +180,8 @@ class Template
     public function _dump_template()
     {
         $lines = explode("\n", $this->_munge_input($this->_tmpl));
-        $pre = HTML::pre();
-        $n = 1;
+        $pre   = HTML::pre();
+        $n     = 1;
         foreach ($lines as $line) {
             $pre->pushContent(fmt("%4d  %s\n", $n++, $line));
         }
@@ -258,8 +258,8 @@ function GeneratePage($content, $title, $page_revision = false, $args = false)
         $args = [];
     }
 
-    $args['CONTENT'] = $content;
-    $args['TITLE'] = $title;
+    $args['CONTENT']  = $content;
+    $args['TITLE']    = $title;
     $args['revision'] = $page_revision;
 
     if (! isset($args['HEADER'])) {
@@ -282,9 +282,9 @@ function GeneratePageasXML($content, $title, $page_revision = false, $args = fal
     }
 
     $content->_basepage = $title;
-    $args['CONTENT'] = $content;
-    $args['TITLE'] = SplitPagename($title);
-    $args['revision'] = $page_revision;
+    $args['CONTENT']    = $content;
+    $args['TITLE']      = SplitPagename($title);
+    $args['revision']   = $page_revision;
 
     if (! isset($args['HEADER'])) {
         $args['HEADER'] = SplitPagename($title);
@@ -292,12 +292,12 @@ function GeneratePageasXML($content, $title, $page_revision = false, $args = fal
 
     global $HIDE_TOOLBARS, $NO_BASEHREF, $HTML_DUMP;
     $HIDE_TOOLBARS = true;
-    $HTML_DUMP = true;
+    $HTML_DUMP     = true;
 
     $html = asXML(new Template('htmldump', $request, $args));
 
     $HIDE_TOOLBARS = false;
-    $HTML_DUMP = false;
+    $HTML_DUMP     = false;
     return $html;
 }
 

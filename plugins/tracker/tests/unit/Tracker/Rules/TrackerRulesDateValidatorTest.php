@@ -44,9 +44,9 @@ class TrackerRulesDateValidatorTest extends TestCase
 
     public function setUp(): void
     {
-        $GLOBALS['Response']       = Mockery::mock(BaseLayout::class);
+        $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
 
-        $this->formelement_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->formelement_factory          = \Mockery::mock(\Tracker_FormElementFactory::class);
         $this->tracker_rules_date_validator = new TrackerRulesDateValidator($this->formelement_factory);
     }
 
@@ -85,7 +85,7 @@ class TrackerRulesDateValidatorTest extends TestCase
         $target_field->shouldReceive('getID')->andReturns(789);
         $target_field->shouldReceive('getLabel')->andReturns('bbbbb');
 
-        $comparator =  Tracker_Rule_Date::COMPARATOR_GREATER_THAN;
+        $comparator         =  Tracker_Rule_Date::COMPARATOR_GREATER_THAN;
         $tracker_rule_date  = Mockery::mock(\Tracker_Rule_Date::class);
         $tracker_rule_date2 = Mockery::mock(\Tracker_Rule_Date::class);
 

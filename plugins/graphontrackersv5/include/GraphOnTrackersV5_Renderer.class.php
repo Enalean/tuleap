@@ -40,11 +40,11 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     public function __construct($id, $report, $name, $description, $rank, $plugin, UserManager $user_manager, Tracker_FormElementFactory $form_element_factory)
     {
         parent::__construct($id, $report, $name, $description, $rank);
-        $this->charts        = null;
-        $this->chart_to_edit = null;
-        $this->plugin        = $plugin;
-        $this->user_manager  = $user_manager;
-        $this->form_element_factory  = $form_element_factory;
+        $this->charts               = null;
+        $this->chart_to_edit        = null;
+        $this->plugin               = $plugin;
+        $this->user_manager         = $user_manager;
+        $this->form_element_factory = $form_element_factory;
     }
 
     public function initiateSession()
@@ -92,7 +92,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         if (! $readonly && $this->chart_to_edit) {
             $html .= $this->getAssets()->getHTMLSnippet('dependencies.js');
 
-            $url = '?' . http_build_query([
+            $url   = '?' . http_build_query([
                                                'report'   => $this->report->id,
                                                'renderer' => $this->id]);
             $html .= '<p><a href="' . $url . '">&laquo; ' . dgettext('tuleap-graphontrackersv5', 'Go back to charts') . '</a></p>';
@@ -123,7 +123,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             $html .= '</form>';
         } else {
             $in_dashboard = false;
-            $html .= $this->fetchCharts($user, $in_dashboard, $readonly);
+            $html        .= $this->fetchCharts($user, $in_dashboard, $readonly);
         }
         return $html;
     }
@@ -133,8 +133,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
      */
     public function fetchWidget(PFUser $user)
     {
-        $html = '';
-        $in_dashboard = $readonly = true;
+        $html             = '';
+        $in_dashboard     = $readonly = true;
         $store_in_session = false;
         if ($in_dashboard) {
             $html .= $this->fetchAdditionalButton($this->report->getTracker());
@@ -153,15 +153,15 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         $html = '';
 
         if (! $readonly) {
-            $html .= '<div id="tracker_report_renderer_view_controls">';
-            $html .= '<div class="btn-group">';
-            $html .= '<a href="#" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">';
-            $html .= '<i class="fa fa-plus"></i> ';
-            $html .= dgettext('tuleap-graphontrackersv5', 'Add a Chart');
-            $html .= ' <span class="caret"></span>';
-            $html .= '</a>';
-            $html .= '<ul class="dropdown-menu pull-right"> ';
-            $url = '?' . http_build_query([
+            $html   .= '<div id="tracker_report_renderer_view_controls">';
+            $html   .= '<div class="btn-group">';
+            $html   .= '<a href="#" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">';
+            $html   .= '<i class="fa fa-plus"></i> ';
+            $html   .= dgettext('tuleap-graphontrackersv5', 'Add a Chart');
+            $html   .= ' <span class="caret"></span>';
+            $html   .= '</a>';
+            $html   .= '<ul class="dropdown-menu pull-right"> ';
+            $url     = '?' . http_build_query([
                                                'report'   => $this->report->id,
                                                'renderer' => $this->id,
                                                'func'     => 'renderer',
@@ -187,7 +187,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         assert(is_array($matching_ids));
 
         if ($this->widgetMustDisplayEmptyState($in_dashboard, $report_charts, $matching_ids)) {
-            $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../src/templates/dashboard');
+            $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../src/templates/dashboard');
 
             $html .= $renderer->renderToString("widget-empty-content-svg", null);
             return $html;
@@ -425,7 +425,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     public function create()
     {
         $success = true;
-        $rrf = Tracker_Report_RendererFactory::instance();
+        $rrf     = Tracker_Report_RendererFactory::instance();
 
         if ($renderer_id = $rrf->saveRenderer($this->report, $this->name, $this->description, $this->getType())) {
             //Save charts

@@ -49,7 +49,7 @@ final class FieldXmlExporterTest extends TestCase
     public function testItExportAField(): void
     {
         $parent_node = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><fieldset><formElements/></fieldset>');
-        $collection = new FieldMappingCollection(new FieldAndValueIDGenerator());
+        $collection  = new FieldMappingCollection(new FieldAndValueIDGenerator());
 
         $this->exporter->exportField(
             $parent_node,

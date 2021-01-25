@@ -58,9 +58,9 @@ class ProjectCategoriesUpdaterTest extends TestCase
     /** @before */
     public function instantiateMocks(): void
     {
-        $this->project     = Mockery::mock(Project::class);
-        $this->factory     = Mockery::mock(TroveCatFactory::class);
-        $this->history_dao = Mockery::mock(ProjectHistoryDao::class);
+        $this->project         = Mockery::mock(Project::class);
+        $this->factory         = Mockery::mock(TroveCatFactory::class);
+        $this->history_dao     = Mockery::mock(ProjectHistoryDao::class);
         $this->set_node_facade = Mockery::mock(TroveSetNodeFacade::class);
 
         $this->project->shouldReceive('getID')->andReturn(42);

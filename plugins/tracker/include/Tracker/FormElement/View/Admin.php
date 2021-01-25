@@ -45,7 +45,7 @@ class Tracker_FormElement_View_Admin
 
     public function fetchTypeNotModifiable()
     {
-        $html = '';
+        $html  = '';
         $html .= '<p><label for="formElement_type">' . dgettext('tuleap-tracker', 'Type') . ': </label>';
         $html .= '<img width="16" height="16" alt="" src="' . $this->formElement->getFactoryIconUseIt() . '" style="vertical-align:middle"/> ' . $this->formElement->getFactoryLabel();
         $html .= '</p>';
@@ -55,7 +55,7 @@ class Tracker_FormElement_View_Admin
 
     public function fetchTypeForUpdate()
     {
-        $html = '';
+        $html  = '';
         $html .= '<p><label for="formElement_type">' . dgettext('tuleap-tracker', 'Type') . ': </label>';
         $html .= '<img width="16" height="16" alt="" src="' . $this->formElement->getFactoryIconUseIt() . '" style="vertical-align:middle"/> ' . $this->formElement->getFactoryLabel();
         $html .= '<p>' . $this->formElement->getFactoryDescription() . '</p>';
@@ -65,8 +65,8 @@ class Tracker_FormElement_View_Admin
 
     public function fetchNameForUpdate()
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp    = Codendi_HTMLPurifier::instance();
+        $html  = '';
         $html .= '<p>';
         $html .= '<label for="formElement_name">' . dgettext('tuleap-tracker', 'Name') . ': </label>';
         $html .= '<input type="text" id="formElement_name" name="formElement_data[name]" value="' . $hp->purify($this->formElement->getName(), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
@@ -99,8 +99,8 @@ class Tracker_FormElement_View_Admin
      */
     public function fetchDescriptionForUpdate()
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp    = Codendi_HTMLPurifier::instance();
+        $html  = '';
         $html .= '<p>';
 
         $html .= '<label for="formElement_description">' . dgettext('tuleap-tracker', 'Description') . ':</label>';
@@ -112,8 +112,8 @@ class Tracker_FormElement_View_Admin
 
     public function fetchNameForShared()
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp    = Codendi_HTMLPurifier::instance();
+        $html  = '';
         $html .= '<p>';
         $html .= '<label>' . dgettext('tuleap-tracker', 'Name') . '</label>';
         $html .= $hp->purify($this->formElement->getName(), CODENDI_PURIFIER_CONVERT_HTML);
@@ -146,8 +146,8 @@ class Tracker_FormElement_View_Admin
      */
     public function fetchDescriptionForShared()
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp    = Codendi_HTMLPurifier::instance();
+        $html  = '';
         $html .= '<p>';
         $html .= '<label>' . dgettext('tuleap-tracker', 'Description') . '</label>';
         $html .= $hp->purify($this->formElement->description, CODENDI_PURIFIER_CONVERT_HTML);
@@ -162,12 +162,12 @@ class Tracker_FormElement_View_Admin
 
     public function fetchCustomHelpForShared(): string
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp                  = Codendi_HTMLPurifier::instance();
         $originalTrackerName = $this->formElement->getOriginalTracker()->getName();
         $originalProjectName = $this->formElement->getOriginalProject()->getPublicName();
         $originalEditUrl     = $this->formElement->getOriginalField()->getAdminEditUrl();
 
-        $html = '';
+        $html  = '';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= sprintf(
             dgettext(
@@ -184,7 +184,7 @@ class Tracker_FormElement_View_Admin
 
     public function fetchRanking()
     {
-        $html = '';
+        $html  = '';
         $html .= '<p>';
         $html .= '<label for="formElement_rank">' . dgettext('tuleap-tracker', 'Rank') . ': <font color="red">*</font></label>';
         $items = [];
@@ -291,7 +291,7 @@ class Tracker_FormElement_View_Admin
                 break;
             case 'checkbox':
                 $checked = $property['value'] ? 'checked="checked"' : '';
-                $html .= '<label class="checkbox">
+                $html   .= '<label class="checkbox">
                         <input  type="hidden"
                                 name="formElement_data[specific_properties][' . $purifier->purify($key) . ']"
                                 value="0"/>
@@ -336,10 +336,10 @@ class Tracker_FormElement_View_Admin
     public function fetchAdminButton($name)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $html  = '';
-        $html .= '<p>';
-        $html .= '<input type="submit" name="' . $purifier->purify($name) . '" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
-        $html .= '</p>';
+        $html     = '';
+        $html    .= '<p>';
+        $html    .= '<input type="submit" name="' . $purifier->purify($name) . '" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+        $html    .= '</p>';
         return $html;
     }
 
@@ -354,7 +354,7 @@ class Tracker_FormElement_View_Admin
         if (! $tracker) {
             throw new LogicException('FormElement without tracker');
         }
-        $html = '';
+        $html  = '';
         $html .= '<p>';
         $html .= '<a href="' . ByFieldController::getUrl($tracker) . '?selected_id=' . $this->formElement->id . '">';
         $html .= $GLOBALS['HTML']->getImage('ic/lock-small.png', [
@@ -368,13 +368,13 @@ class Tracker_FormElement_View_Admin
 
     public function fetchSharedUsage(): string
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $hp     = Codendi_HTMLPurifier::instance();
+        $html   = '';
         $fields = $this->formElement->getSharedTargets();
         if ($fields) {
             $trackers = [];
             foreach ($fields as $field) {
-                $t = $field->getTracker();
+                $t                     = $field->getTracker();
                 $trackers[$t->getId()] = '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $hp->purify(urlencode((string) $t->getId())) . '&func=admin-formElements">' . $hp->purify($t->getName()) . ' (' . $hp->purify($t->getProject()->getPublicName()) . ')</a>';
             }
             $html .= dgettext('tuleap-tracker', 'This field is used by the following trackers:');

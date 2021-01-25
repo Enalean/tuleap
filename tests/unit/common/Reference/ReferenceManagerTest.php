@@ -201,8 +201,8 @@ final class ReferenceManagerTest extends TestCase
         $this->rm->shouldReceive('_getCrossReferenceDao')->andReturn($cross_dao);
 
         $group_id = 101;
-        $from = 'bug';
-        $to = 'task';
+        $from     = 'bug';
+        $to       = 'task';
         $ref_dao->shouldReceive('updateProjectReferenceShortName')->with($group_id, $from, $to)->once();
         $cross_dao->shouldReceive('updateTargetKeyword')->with($from, $to, $group_id)->once();
         $cross_dao->shouldReceive('updateSourceKeyword')->with($from, $to, $group_id)->once();
@@ -212,7 +212,7 @@ final class ReferenceManagerTest extends TestCase
 
     public function testInsertReferencesConvertsToUTF8(): void
     {
-        $html = 'g&=+}éàùœ';
+        $html    = 'g&=+}éàùœ';
         $encoded = htmlentities($html, ENT_IGNORE, 'UTF-8');
         $decoded = html_entity_decode($encoded, ENT_IGNORE, 'ISO-8859-15');
 

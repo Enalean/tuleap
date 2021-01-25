@@ -50,9 +50,9 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent
      */
     public function verbalizeParameters($with_link)
     {
-        $txt = '';
+        $txt                                     = '';
         list($project_path, $file_id, $old_path) = $this->getParametersAsArray();
-        $txt .= 'project_path: ' . $project_path . ' -file ID: ' . $file_id . ' -old file path: ' . $old_path;
+        $txt                                    .= 'project_path: ' . $project_path . ' -file ID: ' . $file_id . ' -old file path: ' . $old_path;
         return $txt;
     }
 

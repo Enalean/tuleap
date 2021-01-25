@@ -70,7 +70,7 @@ final class StartDateValueAdapterTest extends TestCase
             true,
             1
         );
-        $this->start_date = new Field($this->field_start_date);
+        $this->start_date       = new Field($this->field_start_date);
 
         $this->user          = UserTestBuilder::aUser()->withId(101)->build();
         $submitted_on        = 123456789;
@@ -110,7 +110,7 @@ final class StartDateValueAdapterTest extends TestCase
         $expected_data = new StartDateValue("2020-10-01");
 
         $replication_data = ReplicationDataAdapter::build($this->artifact_data, $this->user, $source_changeset);
-        $data = $adapter->build($this->start_date, $replication_data);
+        $data             = $adapter->build($this->start_date, $replication_data);
 
         $this->assertEquals($expected_data, $data);
     }

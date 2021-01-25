@@ -50,10 +50,10 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget
         $request = HTTPRequest::instance();
         if ($owner_type == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $this->widget_id = 'plugin_hudson_my_jobtesttrend';
-            $this->group_id = $owner_id;
+            $this->group_id  = $owner_id;
         } else {
             $this->widget_id = 'plugin_hudson_project_jobtesttrend';
-            $this->group_id = $request->get('group_id');
+            $this->group_id  = $request->get('group_id');
         }
         parent::__construct($this->widget_id, $factory);
 
@@ -103,7 +103,7 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget
                     $this->test_result = null;
                 }
             } else {
-                $this->job = null;
+                $this->job         = null;
                 $this->test_result = null;
             }
         }

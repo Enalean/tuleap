@@ -58,18 +58,18 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
     {
         parent::buildProperties($engine);
 
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $this->observed_field = $form_element_factory->getFormElementById($this->chart->getFieldId());
-        $type                 = $form_element_factory->getType($this->observed_field);
+        $form_element_factory    = Tracker_FormElementFactory::instance();
+        $this->observed_field    = $form_element_factory->getFormElementById($this->chart->getFieldId());
+        $type                    = $form_element_factory->getType($this->observed_field);
         $this->observed_field_id = $this->observed_field->getId();
-        $this->timeFiller = [GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => 3600 * 24,
+        $this->timeFiller        = [GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => 3600 * 24,
             GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => 3600 * 24 * 7,
             GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => 3600 * 24 * 30.45
         ];
-        $this->startDate = $this->chart->getStartDate();
-        $this->stopDate = $this->chart->getStopDate() ? $this->chart->getStopDate() : time();
-        $this->scale = $this->chart->getScale();
-        $this->nbSteps = (int) ceil(($this->stopDate - $this->startDate) / $this->timeFiller[$this->scale]);
+        $this->startDate         = $this->chart->getStartDate();
+        $this->stopDate          = $this->chart->getStopDate() ? $this->chart->getStopDate() : time();
+        $this->scale             = $this->chart->getScale();
+        $this->nbSteps           = (int) ceil(($this->stopDate - $this->startDate) / $this->timeFiller[$this->scale]);
 
         if ($this->isValidObservedField($this->observed_field, $type) && $this->isValidType($type)) {
             $engine->data = $this->getCumulativeFlowData($engine);
@@ -105,7 +105,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
         );
 
         for ($i = 0; $i <= $this->nbSteps; $i++) {
-            $timestamp = $this->startDate + ($i * $this->timeFiller[$this->scale]);
+            $timestamp  = $this->startDate + ($i * $this->timeFiller[$this->scale]);
             $changesets = $this->getLastChangesetsBefore($timestamp);
 
             // Count the number of occurence of each label of the source field at the given date.
@@ -143,7 +143,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
 
             if (! $this->isColumnEmpty($values)) {
                 $column['values'] = $values;
-                $columns[] = $column;
+                $columns[]        = $column;
             }
         }
 

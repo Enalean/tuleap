@@ -46,7 +46,7 @@ class BindToValueVisitor implements BindVisitor
     {
         try {
             $bind_value_id = $this->getSelectedBindValueId($parameters);
-            $list_value = $bind->getValue($bind_value_id);
+            $list_value    = $bind->getValue($bind_value_id);
             if ($list_value === null) {
                 return new EmptyValue();
             }
@@ -60,7 +60,7 @@ class BindToValueVisitor implements BindVisitor
     {
         try {
             $bind_value_id = $this->getSelectedBindValueId($parameters);
-            $list_value = $bind->getValue($bind_value_id);
+            $list_value    = $bind->getValue($bind_value_id);
             if ($list_value === null) {
                 return new EmptyValue();
             }

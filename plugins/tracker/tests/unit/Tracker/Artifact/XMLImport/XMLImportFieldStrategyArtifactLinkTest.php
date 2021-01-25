@@ -82,7 +82,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
-        $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
+        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
         $expected_res =  ["new_values" => '2,1', 'removed_values' => [], 'natures' => ['1' => '', '2' => '']];
         $this->assertEquals($expected_res, $res);
     }
@@ -109,7 +109,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
         $this->artlink_strategy->shouldReceive('getLastChangeset')->with($xml_change)->andReturns(null);
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
-        $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
+        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
         $expected_res =  ["new_values" => '2,1', 'removed_values' => [], 'natures' => ['1' => '_in_folder', '2' => '_is_child']];
 
         $this->assertEquals($expected_res, $res);
@@ -122,7 +122,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
         $mapping->add(101, 2);
         $mapping->add(102, 3);
 
-        $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
+        $strategy   = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
             $mapping,
             $this->logger,
             $this->artifact_factory,
@@ -139,15 +139,15 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
         $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar(['titi']));
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
-        $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
+        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
         $expected_res =  ["new_values" => '2,1,3', 'removed_values' => [], 'natures' => ['1' => 'titi', '2' => 'toto', '3' => '']];
         $this->assertEquals($expected_res, $res);
     }
 
     public function testItShouldLogWhenArtifactLinkReferenceIsBroken(): void
     {
-        $mapping          = new Tracker_XML_Importer_ArtifactImportedMapping();
-        $strategy         = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
+        $mapping    = new Tracker_XML_Importer_ArtifactImportedMapping();
+        $strategy   = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
             $mapping,
             $this->logger,
             $this->artifact_factory,
@@ -173,7 +173,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
         $mapping->add(101, 2);
         $mapping->add(102, 3);
 
-        $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
+        $strategy   = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink(
             $mapping,
             $this->logger,
             $this->artifact_factory,
@@ -192,7 +192,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturns($this->artifact);
 
         $this->nature_dao->shouldReceive('getNatureByShortname')->andReturns(\TestHelper::arrayToDar(['toto']));
-        $res = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
+        $res          = $strategy->getFieldData($this->field, $xml_change, $this->submitted_by, $this->artifact);
         $expected_res =  ["new_values" => '1', 'removed_values' => [2 => 2, 3 => 3], 'natures' => ['1' => 'toto']];
 
         $this->assertEquals($expected_res, $res);

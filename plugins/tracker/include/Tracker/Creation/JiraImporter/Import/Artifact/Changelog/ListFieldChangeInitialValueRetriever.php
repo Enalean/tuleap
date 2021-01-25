@@ -44,7 +44,7 @@ class ListFieldChangeInitialValueRetriever
         JiraAuthorRetriever $jira_author_retriever
     ) {
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
-        $this->jira_author_retriever = $jira_author_retriever;
+        $this->jira_author_retriever               = $jira_author_retriever;
     }
 
     /**
@@ -62,13 +62,13 @@ class ListFieldChangeInitialValueRetriever
         }
 
         if ($field_mapping->getType() === \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE) {
-            $user  = $this->jira_author_retriever->getAssignedTuleapUser($changed_field_from);
+            $user = $this->jira_author_retriever->getAssignedTuleapUser($changed_field_from);
             return $this->creation_state_list_value_formatter->formatListValue(
                 (string) $user->getId(),
             );
         }
 
-        $account_ids = explode(',', $changed_field_from);
+        $account_ids        = explode(',', $changed_field_from);
         $selected_users_ids = [];
 
         foreach ($account_ids as $account_id) {

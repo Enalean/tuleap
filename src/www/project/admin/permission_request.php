@@ -35,7 +35,7 @@ $group_id = $request->get('group_id');
 session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
 //  get the Project
-$pm    = ProjectManager::instance();
+$pm      = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 if (! $project || ! is_object($project) || $project->isError()) {
     exit_no_group();
@@ -59,7 +59,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
             if ($request->validArray($vUGroups)) {
                 $ugroups = $request->get('ugroups');
                 // Remove ugroups that are empty or contain no project admins
-                $result = ugroup_filter_ugroups_by_project_admin($group_id, $ugroups);
+                $result       = ugroup_filter_ugroups_by_project_admin($group_id, $ugroups);
                 $nonAdmins    = $result['non_admins'];
                 $validUgroups = $result['ugroups'];
                 if (empty($validUgroups)) {
@@ -118,7 +118,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
             $vMessage = new Valid_Text('text');
             $vMessage->required();
             $message = trim($request->get('text'));
-            $dar = $pm->getMessageToRequesterForAccessProject($group_id);
+            $dar     = $pm->getMessageToRequesterForAccessProject($group_id);
             if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 if (! strcmp($row['msg_to_requester'], $message)) {
@@ -209,7 +209,7 @@ echo $Language->getText('project_admin_index', 'member_request_delegation_msg_de
 echo '</p></td></tr>';
 
 $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
-$dar = $pm->getMessageToRequesterForAccessProject($group_id);
+$dar     = $pm->getMessageToRequesterForAccessProject($group_id);
 if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
     $row = $dar->current();
     if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {

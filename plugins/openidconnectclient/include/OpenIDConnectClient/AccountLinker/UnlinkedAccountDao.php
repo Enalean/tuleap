@@ -45,7 +45,7 @@ class UnlinkedAccountDao extends DataAccessObject
 
     public function deleteById($id)
     {
-        $id = $this->getDa()->quoteSmart($id);
+        $id  = $this->getDa()->quoteSmart($id);
         $sql = "DELETE FROM plugin_openidconnectclient_unlinked_account WHERE id = $id";
         return $this->update($sql);
     }

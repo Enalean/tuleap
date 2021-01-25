@@ -36,7 +36,7 @@ class Codendi_BlockDiffFormatter extends \Codendi_DiffFormatter // phpcs:ignore 
 {
     public function __construct($context_lines = 4)
     {
-        $this->leading_context_lines = $context_lines;
+        $this->leading_context_lines  = $context_lines;
         $this->trailing_context_lines = $context_lines;
     }
     public function _lines($lines, $prefix = '')

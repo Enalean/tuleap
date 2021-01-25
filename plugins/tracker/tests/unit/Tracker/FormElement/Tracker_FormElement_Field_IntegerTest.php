@@ -113,7 +113,7 @@ class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase 
 
     public function testBuildMatchExpression(): void
     {
-        $field = $this->getIntegerField();
+        $field      = $this->getIntegerField();
         $reflection = new \ReflectionClass(get_class($field));
         $method     = $reflection->getMethod('buildMatchExpression');
         $method->setAccessible(true);

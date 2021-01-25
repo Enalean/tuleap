@@ -31,7 +31,7 @@ final class OAuth2ScopeIdentifierTest extends TestCase
      */
     public function testIdentifierKeyIsNotModified(string $identifier_key): void
     {
-        $identifier     = OAuth2ScopeIdentifier::fromIdentifierKey($identifier_key);
+        $identifier = OAuth2ScopeIdentifier::fromIdentifierKey($identifier_key);
 
         $this->assertEquals($identifier_key, $identifier->toString());
     }

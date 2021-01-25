@@ -227,7 +227,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         $ugroups = [];
         foreach ($this->getDao()->searchDynamicAndStaticByGroupId($project->getId()) as $row) {
-            $ug = $this->instanciateGroupForProject($project, $row);
+            $ug                    = $this->instanciateGroupForProject($project, $row);
             $ugroups[$ug->getId()] = $ug;
         }
         return $ugroups;
@@ -376,7 +376,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         if ($ugroupId > 100) {
             return [];
         }
-        $um = UserManager::instance();
+        $um      = UserManager::instance();
         $users   = [];
         $dao     = $this->getUGroupUserDao();
         $members = $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);

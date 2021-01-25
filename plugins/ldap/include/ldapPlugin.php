@@ -242,9 +242,9 @@ class LdapPlugin extends Plugin
     private function getLDAPParams()
     {
         $ldap_params = [];
-        $keys = $this->getPluginInfo()->propertyDescriptors->getKeys()->iterator();
+        $keys        = $this->getPluginInfo()->propertyDescriptors->getKeys()->iterator();
         foreach ($keys as $k) {
-            $nk = str_replace('sys_ldap_', '', $k);
+            $nk               = str_replace('sys_ldap_', '', $k);
             $ldap_params[$nk] = $this->getPluginInfo()->getPropertyValueForName($k);
         }
         return $ldap_params;
@@ -329,7 +329,7 @@ class LdapPlugin extends Plugin
         $result = $params['results'];
 
         if ($this->isLdapAuthType() && $query->getTypeOfSearch() == Search_SearchPeople::NAME) {
-            $search = new LDAP_SearchPeople(UserManager::instance(), $this->getLdap());
+            $search    = new LDAP_SearchPeople(UserManager::instance(), $this->getLdap());
             $presenter = $search->search($query, $result);
             $result->setResultsHtml($this->getSearchTemplateRenderer()->renderToString($presenter->getTemplate(), $presenter));
         }
@@ -418,14 +418,14 @@ class LdapPlugin extends Plugin
             $matches = [];
             if (preg_match('/^(.*) \((.*)\)$/', $params['ident'], $matches)) {
                 if (trim($matches[2]) != '') {
-                    $lri  = $ldap->searchLogin($matches[2]);
+                    $lri = $ldap->searchLogin($matches[2]);
                 } else {
-                    $lri  = $ldap->searchCommonName($matches[1]);
+                    $lri = $ldap->searchCommonName($matches[1]);
                 }
             } else {
                 // Otherwise, search as defined in config most of the time
                 // (uid, email, common name)
-                $lri  = $ldap->searchUser($params['ident']);
+                $lri = $ldap->searchUser($params['ident']);
             }
             if ($lri !== false) {
                 $params['user'] = $this->getLdapUserManager()->getUserFromLdapIterator($lri);
@@ -454,7 +454,7 @@ class LdapPlugin extends Plugin
     public function getUserByLoginName(UserRetrieverByLoginNameEvent $event)
     {
         if ($this->isLdapAuthType() && $this->isLDAPUserManagementEnabled()) {
-            $lri  = $this->getLdap()->searchLogin($event->getLoginName());
+            $lri = $this->getLdap()->searchLogin($event->getLoginName());
             if ($lri === false) {
                 return;
             }
@@ -586,7 +586,7 @@ class LdapPlugin extends Plugin
         global $Language;
         if ($this->isLdapAuthType()) {
             $request = HTTPRequest::instance();
-            $ldapId = $request->getValidated('ldap_id', 'string', false);
+            $ldapId  = $request->getValidated('ldap_id', 'string', false);
             if ($ldapId !== false) {
                 $result = db_query("UPDATE user SET ldap_id='" . db_es($ldapId) . "' WHERE user_id=" . db_ei($params['user_id']));
             }
@@ -628,7 +628,7 @@ class LdapPlugin extends Plugin
      */
     public function forbidIfLdapAuthAndUserLdap($params)
     {
-        $um = UserManager::instance();
+        $um   = UserManager::instance();
         $user = $um->getCurrentUser();
         if ($this->isLdapAuthType() && $user->getLdapId() != '') {
             if (! $this->hasLDAPWrite()) {
@@ -739,13 +739,13 @@ class LdapPlugin extends Plugin
             $ldap_group              = $project_members_manager->getLdapGroupByGroupId($project_id);
 
             if ($ldap_group) {
-                $group_name = $ldap_group->getGroupCommonName();
+                $group_name   = $ldap_group->getGroupCommonName();
                 $display_name = $ldap_group->getGroupDisplayName();
-                $is_linked  = true;
+                $is_linked    = true;
             } else {
-                $group_name = '';
+                $group_name   = '';
                 $display_name = '';
-                $is_linked  = false;
+                $is_linked    = false;
             }
 
             $synchro_checked = $project_members_manager->isProjectBindingSynchronized($project_id);
@@ -1014,7 +1014,7 @@ class LdapPlugin extends Plugin
         switch ($params['type']) {
             case 'PLUGIN_LDAP_UPDATE_LOGIN':
                 include_once dirname(__FILE__) . '/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
-                $params['class'] = 'SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN';
+                $params['class']        = 'SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN';
                 $params['dependencies'] = [
                     UserManager::instance(),
                     Backend::instance(Backend::SVN),
@@ -1214,7 +1214,7 @@ class LdapPlugin extends Plugin
     {
         $user_manager    = UserManager::instance();
         $project_manager = ProjectManager::instance();
-        $manager = new LDAP_ProjectGroupManager(
+        $manager         = new LDAP_ProjectGroupManager(
             $this->getLdap(),
             $this->getLdapUserManager(),
             $this->getLdapProjectGroupDao(),

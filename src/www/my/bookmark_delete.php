@@ -15,7 +15,7 @@ $vId = new Valid_UInt('bookmark_id');
 $vId->required();
 if ($request->valid($vId)) {
     $bookmark_id = (int) $request->get('bookmark_id');
-    $csrf_token = new CSRFSynchronizerToken('bookmark_delete');
+    $csrf_token  = new CSRFSynchronizerToken('bookmark_delete');
 
     if ($request->isPost()) {
         $csrf_token->check('/my/bookmark_delete.php?bookmark_id=' . $bookmark_id);

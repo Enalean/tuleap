@@ -41,9 +41,9 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      */
     public function __construct($info, $ldapParams)
     {
-        $this->list  = $info;
-        $this->key   = 0;
-        $this->valid = ($this->count() > 0);
+        $this->list       = $info;
+        $this->key        = 0;
+        $this->valid      = ($this->count() > 0);
         $this->ldapParams = $ldapParams;
     }
 
@@ -81,7 +81,7 @@ class LDAPResultIterator implements SeekableIterator, Countable // phpcs:ignore 
      */
     public function seek($pos)
     {
-        $this->key = $pos;
+        $this->key   = $pos;
         $this->valid = true;
         if ($this->key >= $this->count()) {
             $this->valid = false;

@@ -77,7 +77,7 @@ use UserManager;
  */
 class ProjectBacklogResource
 {
-    public const MAX_LIMIT = 100;
+    public const MAX_LIMIT              = 100;
     public const TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
 
     /** @var Planning_MilestoneFactory */
@@ -178,8 +178,8 @@ class ProjectBacklogResource
             $tracker_artifact_factory
         );
 
-        $this->artifactlink_updater      = new ArtifactLinkUpdater($priority_manager);
-        $this->resources_patcher         = new ResourcesPatcher(
+        $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager);
+        $this->resources_patcher    = new ResourcesPatcher(
             $this->artifactlink_updater,
             $tracker_artifact_factory,
             $priority_manager

@@ -34,7 +34,7 @@ class Codendi_Session extends PHP_Session
             $this->session =& $session_storage;
         }
         $this->session_namespace_path = '.';
-        $this->session_namespace =& $this->session;
+        $this->session_namespace      =& $this->session;
     }
 
     public function __isset($key)
@@ -123,7 +123,7 @@ class Codendi_Session extends PHP_Session
         }
         $pathway = explode('.', $namespace);
         $count   = count($pathway);
-        $i = 0;
+        $i       = 0;
         foreach ($pathway as $path) {
                 $i = $i + 1;
                 //last path element not reached yet <=> wrong path
@@ -183,8 +183,8 @@ class Codendi_Session extends PHP_Session
         if (strpos($namespace, '.') === 0) {
             //absolute path
             $this->session_namespace_path = $namespace;
-            $this->session_namespace = &$this->session;
-            $namespace = substr($namespace, 1);
+            $this->session_namespace      = &$this->session;
+            $namespace                    = substr($namespace, 1);
         } else {
             //relative path (down the tree)
             if ($this->session_name_path != '.') {

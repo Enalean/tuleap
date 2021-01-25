@@ -55,7 +55,7 @@ function getSortHeaderVerifiedParameter(HTTPRequest $request, string $parameter_
 */
 function get_sort_values($previous_sort_header, $current_sort_header, $sort_order, $offset)
 {
-    $sort_order_hash = [
+    $sort_order_hash                                 = [
         'sort_header'    => $current_sort_header,
         'user_name_icon' => '',
         'realname_icon'  => '',
@@ -68,19 +68,19 @@ function get_sort_values($previous_sort_header, $current_sort_header, $sort_orde
         if ($previous_sort_header === $current_sort_header) {
             if ($sort_order === "ASC") {
                 $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-down";
-                $sort_order_hash["order"] = "DESC";
+                $sort_order_hash["order"]                        = "DESC";
             } else {
                 $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-up";
-                $sort_order_hash["order"] = "ASC";
+                $sort_order_hash["order"]                        = "ASC";
             }
         }
     } else {
         if ($sort_order === "ASC") {
             $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-down";
-            $sort_order_hash["order"] = "DESC";
+            $sort_order_hash["order"]                        = "DESC";
         } else {
             $sort_order_hash[$current_sort_header . "_icon"] = "fa fa-caret-up";
-            $sort_order_hash["order"] = "ASC";
+            $sort_order_hash["order"]                        = "ASC";
         }
     }
     return $sort_order_hash;
@@ -127,7 +127,7 @@ if ($request->exist('export')) {
     exit;
 }
 
-$dao = new UserDao(CodendiDataAccess::instance());
+$dao    = new UserDao(CodendiDataAccess::instance());
 $offset = $request->getValidated('offset', 'uint', 0);
 if (! $offset || $offset < 0) {
     $offset = 0;
@@ -164,7 +164,7 @@ if ($request->valid($vGroupId)) {
     }
 }
 
-$sort_params = get_sort_values($previous_sort_header, $current_sort_header, $sort_order, $offset);
+$sort_params   = get_sort_values($previous_sort_header, $current_sort_header, $sort_order, $offset);
 $status_values = [];
 $anySelect     = "selected";
 if ($request->exist('status_values')) {
