@@ -30,8 +30,6 @@ use Tuleap\Gitlab\Reference\TuleapReferenceRetriever;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
-use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferenceCollection;
-use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReferencesParser;
 
 class PostMergeRequestWebhookActionProcessor
 {
@@ -43,10 +41,6 @@ class PostMergeRequestWebhookActionProcessor
      * @var TuleapReferenceRetriever
      */
     private $tuleap_reference_retriever;
-    /**
-     * @var WebhookTuleapReferencesParser
-     */
-    private $reference_parser;
     /**
      * @var \ReferenceManager
      */
@@ -63,9 +57,13 @@ class PostMergeRequestWebhookActionProcessor
      * @var PostMergeRequestBotCommenter
      */
     private $commenter;
+    /**
+     * @var TuleapReferencesFromMergeRequestDataExtractor
+     */
+    private $references_from_merge_request_data_extractor;
 
     public function __construct(
-        WebhookTuleapReferencesParser $reference_parser,
+        TuleapReferencesFromMergeRequestDataExtractor $references_from_merge_request_data_extractor,
         TuleapReferenceRetriever $tuleap_reference_retriever,
         \ReferenceManager $reference_manager,
         MergeRequestTuleapReferenceDao $merge_request_reference_dao,
@@ -73,13 +71,13 @@ class PostMergeRequestWebhookActionProcessor
         LoggerInterface $logger,
         PostMergeRequestBotCommenter $commenter
     ) {
-        $this->reference_parser                    = $reference_parser;
-        $this->tuleap_reference_retriever          = $tuleap_reference_retriever;
-        $this->reference_manager                   = $reference_manager;
-        $this->merge_request_reference_dao         = $merge_request_reference_dao;
-        $this->gitlab_repository_project_retriever = $gitlab_repository_project_retriever;
-        $this->logger                              = $logger;
-        $this->commenter                           = $commenter;
+        $this->references_from_merge_request_data_extractor = $references_from_merge_request_data_extractor;
+        $this->tuleap_reference_retriever                   = $tuleap_reference_retriever;
+        $this->reference_manager                            = $reference_manager;
+        $this->merge_request_reference_dao                  = $merge_request_reference_dao;
+        $this->gitlab_repository_project_retriever          = $gitlab_repository_project_retriever;
+        $this->logger                                       = $logger;
+        $this->commenter                                    = $commenter;
     }
 
     public function process(GitlabRepository $gitlab_repository, PostMergeRequestWebhookData $webhook_data): void
@@ -183,7 +181,7 @@ class PostMergeRequestWebhookActionProcessor
         GitlabRepository $gitlab_repository,
         array $projects
     ): array {
-        $references_collection = $this->extractCollectionOfTuleapReferencesFromMergeRequestData(
+        $references_collection = $this->references_from_merge_request_data_extractor->extract(
             $webhook_data->getTitle(),
             $webhook_data->getDescription(),
         );
@@ -246,7 +244,7 @@ class PostMergeRequestWebhookActionProcessor
             return [];
         }
 
-        $references_collection = $this->extractCollectionOfTuleapReferencesFromMergeRequestData(
+        $references_collection = $this->references_from_merge_request_data_extractor->extract(
             $previously_saved_merge_request_row['title'],
             $previously_saved_merge_request_row['description']
         );
@@ -291,14 +289,5 @@ class PostMergeRequestWebhookActionProcessor
         }
 
         return $are_references_added;
-    }
-
-    private function extractCollectionOfTuleapReferencesFromMergeRequestData(
-        string $title,
-        string $description
-    ): WebhookTuleapReferenceCollection {
-        return $this->reference_parser->extractCollectionOfTuleapReferences(
-            $title . " " . $description
-        );
     }
 }
