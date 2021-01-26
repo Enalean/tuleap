@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ToBePlanned;
+namespace Tuleap\ScaledAgile\Program\Backlog\Feature;
 
-use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementCollectionRepresentation;
+use Tuleap\ScaledAgile\Program\Program;
 
-interface RetrieveToBePlannedElements
+interface FeaturesStore
 {
-    public function retrieveElements(int $id, \PFUser $user): ToBePlannedElementCollectionRepresentation;
+    public function searchPlannableFeatures(Program $program): array;
 }

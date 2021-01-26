@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ScaledAgile\REST\v1;
 
-use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\BackgroundColor;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\BackgroundColor;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 /**
  * @psalm-immutable
  */
-final class ToBePlannedElementRepresentation
+final class FeatureRepresentation
 {
     /**
      * @var int

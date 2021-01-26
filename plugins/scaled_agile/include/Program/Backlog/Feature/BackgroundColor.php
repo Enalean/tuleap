@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Program\Backlog\ToBePlanned;
+namespace Tuleap\ScaledAgile\Program\Backlog\Feature;
 
 final class BackgroundColor
 {

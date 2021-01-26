@@ -20,21 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ScaledAgile\Adapter\Program\ToBePlaned;
+namespace Tuleap\ScaledAgile\Adapter\Program\Feature;
 
-use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\RetrieveToBePlannedElements;
-use Tuleap\ScaledAgile\Program\Backlog\ToBePlanned\ToBePlannedElementsStore;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\RetrieveFeatures;
+use Tuleap\ScaledAgile\Program\Backlog\Feature\FeaturesStore;
 use Tuleap\ScaledAgile\Program\Plan\BuildProgram;
-use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementCollectionRepresentation;
-use Tuleap\ScaledAgile\REST\v1\ToBePlannedElementRepresentation;
+use Tuleap\ScaledAgile\REST\v1\FeatureRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
-final class ToBePlannedElementsRetriever implements RetrieveToBePlannedElements
+final class FeatureElementsRetriever implements RetrieveFeatures
 {
     /**
-     * @var ToBePlannedElementsStore
+     * @var FeaturesStore
      */
-    private $to_be_planned_element_dao;
+    private $features_store;
     /**
      * @var BuildProgram
      */
@@ -54,12 +53,12 @@ final class ToBePlannedElementsRetriever implements RetrieveToBePlannedElements
 
     public function __construct(
         BuildProgram $build_program,
-        ToBePlannedElementsStore $to_be_planned_element_dao,
+        FeaturesStore $features_store,
         \Tracker_ArtifactFactory $artifact_factory,
         \Tracker_FormElementFactory $form_element_factory,
         BackgroundColorRetriever $retrieve_background_color
     ) {
-        $this->to_be_planned_element_dao = $to_be_planned_element_dao;
+        $this->features_store            = $features_store;
         $this->build_program             = $build_program;
         $this->artifact_factory          = $artifact_factory;
         $this->form_element_factory      = $form_element_factory;
@@ -67,14 +66,16 @@ final class ToBePlannedElementsRetriever implements RetrieveToBePlannedElements
     }
 
     /**
+     * @return FeatureRepresentation[]
+     *
      * @throws \Tuleap\ScaledAgile\Adapter\Program\Plan\ProgramAccessException
      * @throws \Tuleap\ScaledAgile\Adapter\Program\Plan\ProjectIsNotAProgramException
      */
-    public function retrieveElements(int $id, \PFUser $user): ToBePlannedElementCollectionRepresentation
+    public function retrieveFeaturesToBePlanned(int $id, \PFUser $user): array
     {
         $program = $this->build_program->buildExistingProgramProject($id, $user);
 
-        $to_be_planned_artifacts = $this->to_be_planned_element_dao->searchPlannableElements($program);
+        $to_be_planned_artifacts = $this->features_store->searchPlannableFeatures($program);
 
         $elements = [];
         foreach ($to_be_planned_artifacts as $artifact) {
@@ -89,7 +90,7 @@ final class ToBePlannedElementsRetriever implements RetrieveToBePlannedElements
                 continue;
             }
 
-            $elements[] = new ToBePlannedElementRepresentation(
+            $elements[] = new FeatureRepresentation(
                 (int) $artifact['artifact_id'],
                 $artifact['artifact_title'],
                 $full_artifact->getXRef(),
@@ -98,6 +99,6 @@ final class ToBePlannedElementsRetriever implements RetrieveToBePlannedElements
             );
         }
 
-        return new ToBePlannedElementCollectionRepresentation($elements);
+        return $elements;
     }
 }
