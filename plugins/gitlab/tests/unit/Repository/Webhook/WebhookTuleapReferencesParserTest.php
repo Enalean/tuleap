@@ -49,6 +49,17 @@ final class WebhookTuleapReferencesParserTest extends TestCase
         $this->assertSame(345, $references[2]->getId());
     }
 
+    public function testItReturnsReferencesSortedById(): void
+    {
+        $references_collection = $this->parser->extractCollectionOfTuleapReferences('TULEAP-2, TULEAP-66, TULEAP-10');
+        $references            = $references_collection->getTuleapReferences();
+
+        $this->assertCount(3, $references);
+        $this->assertSame(2, $references[0]->getId());
+        $this->assertSame(10, $references[1]->getId());
+        $this->assertSame(66, $references[2]->getId());
+    }
+
     public function testItRetrievesTuleapReferencesWithMixedCharsInSingleLineMessage(): void
     {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences('artifact TULEAP-12a3 01');
