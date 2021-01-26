@@ -26,12 +26,12 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
+use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 
 class WebhookDeletorTest extends TestCase
 {
@@ -65,7 +65,7 @@ class WebhookDeletorTest extends TestCase
         $this->logger                = Mockery::mock(LoggerInterface::class);
         $this->credentials_retriever = Mockery::mock(CredentialsRetriever::class);
 
-        $this->credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My Secret'));
+        $this->credentials = CredentialsTestBuilder::get()->build();
 
         $this->deletor = new WebhookDeletor(
             $this->dao,

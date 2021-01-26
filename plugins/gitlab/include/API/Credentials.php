@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Gitlab\API;
 
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 
 class Credentials
 {
@@ -31,11 +31,11 @@ class Credentials
     private $gitlab_server_url;
 
     /**
-     * @var ConcealedString
+     * @var GitlabBotApiToken
      */
     private $bot_api_token;
 
-    public function __construct(string $gitlab_server_url, ConcealedString $bot_api_token)
+    public function __construct(string $gitlab_server_url, GitlabBotApiToken $bot_api_token)
     {
         $this->gitlab_server_url = $gitlab_server_url;
         $this->bot_api_token     = $bot_api_token;
@@ -46,7 +46,7 @@ class Credentials
         return $this->gitlab_server_url;
     }
 
-    public function getBotApiToken(): ConcealedString
+    public function getBotApiToken(): GitlabBotApiToken
     {
         return $this->bot_api_token;
     }

@@ -95,6 +95,7 @@ class PostPushCommitBotCommenter
         try {
             $url = "/projects/{$gitlab_repository->getGitlabRepositoryId()}/repository/commits/{$commit->getSha1()}/comments";
             $this->comment_sender->sendComment(
+                $gitlab_repository,
                 $credentials,
                 $url,
                 ["note" => $comment]

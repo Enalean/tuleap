@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS plugin_gitlab_commit_info (
 
 CREATE TABLE IF NOT EXISTS plugin_gitlab_bot_api_token (
     repository_id INT(11) NOT NULL PRIMARY KEY,
-    token BLOB NOT NULL
+    token BLOB NOT NULL,
+    is_email_already_send_for_invalid_token BOOL NOT NULL DEFAULT FALSE
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS plugin_gitlab_merge_request_info (

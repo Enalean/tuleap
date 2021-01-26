@@ -26,13 +26,13 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
-use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
-use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\Gitlab\API\Credentials;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
+use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
+use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class GitlabRepositoryCreatorTest extends TestCase
 {
@@ -90,7 +90,8 @@ class GitlabRepositoryCreatorTest extends TestCase
         $this->gitlab_repository_project_dao = Mockery::mock(GitlabRepositoryProjectDao::class);
         $this->webhook_creator               = Mockery::mock(WebhookCreator::class);
         $this->token_inserter                = Mockery::mock(GitlabBotApiTokenInserter::class);
-        $this->credentials                   = new Credentials("https://example.com", new ConcealedString("azert123"));
+
+        $this->credentials = CredentialsTestBuilder::get()->build();
 
         $this->creator = new GitlabRepositoryCreator(
             new DBTransactionExecutorPassthrough(),
@@ -234,7 +235,7 @@ class GitlabRepositoryCreatorTest extends TestCase
 
         $this->token_inserter
             ->shouldReceive('insertToken')
-            ->with($gitlab_repository, $this->credentials->getBotApiToken())
+            ->with($gitlab_repository, $this->credentials->getBotApiToken()->getToken())
             ->once();
 
         $result = $this->creator->integrateGitlabRepositoryInProject(

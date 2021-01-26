@@ -43,6 +43,7 @@ use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CommentSender;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
+use Tuleap\Gitlab\Repository\Webhook\Bot\InvalidCredentialsNotifier;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\CrossReferenceFromMergeRequestCreator;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestBotCommenter;
@@ -66,9 +67,13 @@ use Tuleap\Gitlab\REST\ResourcesInjector;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\Mail\MailFilter;
+use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresenter;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresentersCollector;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\GetReferenceEvent;
 use Tuleap\Reference\Nature;
@@ -183,6 +188,33 @@ class gitlabPlugin extends Plugin
             new WebhookTuleapReferencesParser(),
         );
 
+        $gitlab_repository_project_retriever = new GitlabRepositoryProjectRetriever(
+            new GitlabRepositoryProjectDao(),
+            ProjectManager::instance()
+        );
+
+        $comment_sender = new CommentSender(
+            $gitlab_api_client,
+            new InvalidCredentialsNotifier(
+                $gitlab_repository_project_retriever,
+                new MailBuilder(
+                    TemplateRendererFactory::build(),
+                    new MailFilter(
+                        UserManager::instance(),
+                        new ProjectAccessChecker(
+                            PermissionsOverrider_PermissionsOverriderManager::instance(),
+                            new RestrictedUserCanAccessProjectVerifier(),
+                            EventManager::instance()
+                        ),
+                        new MailLogger()
+                    ),
+                ),
+                new InstanceBaseURLBuilder(),
+                new GitlabBotApiTokenDao(),
+                $logger,
+            ),
+        );
+
         return new GitlabRepositoryWebhookController(
             new WebhookDataExtractor(
                 new PostPushWebhookDataBuilder(
@@ -206,16 +238,13 @@ class gitlabPlugin extends Plugin
                 new GitlabRepositoryDao(),
                 new PostPushWebhookActionProcessor(
                     new WebhookTuleapReferencesParser(),
-                    new GitlabRepositoryProjectRetriever(
-                        new GitlabRepositoryProjectDao(),
-                        ProjectManager::instance()
-                    ),
+                    $gitlab_repository_project_retriever,
                     new CommitTuleapReferenceDao(),
                     $reference_manager,
                     $tuleap_reference_retriever,
                     $logger,
                     new PostPushCommitBotCommenter(
-                        new CommentSender($gitlab_api_client),
+                        $comment_sender,
                         new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
                         $logger,
                         new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
@@ -224,13 +253,10 @@ class gitlabPlugin extends Plugin
                 ),
                 new PostMergeRequestWebhookActionProcessor(
                     $merge_request_reference_dao,
-                    new GitlabRepositoryProjectRetriever(
-                        new GitlabRepositoryProjectDao(),
-                        ProjectManager::instance()
-                    ),
+                    $gitlab_repository_project_retriever,
                     $logger,
                     new PostMergeRequestBotCommenter(
-                        new CommentSender($gitlab_api_client),
+                        $comment_sender,
                         new CredentialsRetriever(new GitlabBotApiTokenRetriever(new GitlabBotApiTokenDao(), new KeyFactory())),
                         $logger,
                         new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),

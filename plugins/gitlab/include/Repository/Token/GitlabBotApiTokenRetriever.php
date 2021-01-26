@@ -20,7 +20,6 @@
 
 namespace Tuleap\Gitlab\Repository\Token;
 
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
@@ -42,7 +41,7 @@ class GitlabBotApiTokenRetriever
         $this->key_factory = $key_factory;
     }
 
-    public function getBotAPIToken(GitlabRepository $gitlab_repository): ?ConcealedString
+    public function getBotAPIToken(GitlabRepository $gitlab_repository): ?GitlabBotApiToken
     {
         $row = $this->dao->getBotAPIToken($gitlab_repository->getId());
 
@@ -50,9 +49,12 @@ class GitlabBotApiTokenRetriever
             return null;
         }
 
-        return SymmetricCrypto::decrypt(
-            $row['token'],
-            $this->key_factory->getEncryptionKey()
+        return GitlabBotApiToken::buildAlreadyKnownToken(
+            SymmetricCrypto::decrypt(
+                $row['token'],
+                $this->key_factory->getEncryptionKey()
+            ),
+            $row['is_email_already_send_for_invalid_token'],
         );
     }
 }

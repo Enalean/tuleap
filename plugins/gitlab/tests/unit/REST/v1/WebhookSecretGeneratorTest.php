@@ -28,8 +28,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\API\GitlabResponseAPIException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
@@ -37,6 +35,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryFactory;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
+use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\REST\I18NRestException;
 
 class WebhookSecretGeneratorTest extends TestCase
@@ -249,7 +248,7 @@ class WebhookSecretGeneratorTest extends TestCase
             ->with($user, $project_b)
             ->andReturnTrue();
 
-        $credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My secret'));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
             ->shouldReceive('getCredentials')
@@ -312,7 +311,7 @@ class WebhookSecretGeneratorTest extends TestCase
             ->with($user, $project_b)
             ->andReturnTrue();
 
-        $credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My secret'));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
             ->shouldReceive('getCredentials')
@@ -376,7 +375,7 @@ class WebhookSecretGeneratorTest extends TestCase
             ->with($user, $project_b)
             ->andReturnTrue();
 
-        $credentials = new Credentials('https://gitlab.example.com', new ConcealedString('My secret'));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
             ->shouldReceive('getCredentials')

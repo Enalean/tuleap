@@ -216,7 +216,7 @@ class BotApiTokenUpdaterTest extends TestCase
             ->with(
                 Mockery::on(
                     function (Credentials $credentials) use ($token) {
-                        return $credentials->getBotApiToken()->isIdenticalTo($token)
+                        return $credentials->getBotApiToken()->getToken()->isIdenticalTo($token)
                             && $credentials->getGitlabServerUrl() === 'https://gitlab.example.com';
                     }
                 ),
@@ -284,7 +284,7 @@ class BotApiTokenUpdaterTest extends TestCase
             ->with(
                 Mockery::on(
                     function (Credentials $credentials) use ($token) {
-                        return $credentials->getBotApiToken()->isIdenticalTo($token)
+                        return $credentials->getBotApiToken()->getToken()->isIdenticalTo($token)
                             && $credentials->getGitlabServerUrl() === 'https://gitlab.example.com';
                     }
                 ),
@@ -349,7 +349,7 @@ class BotApiTokenUpdaterTest extends TestCase
 
         $expected_credentials = Mockery::on(
             function (Credentials $credentials) use ($token) {
-                return $credentials->getBotApiToken()->isIdenticalTo($token)
+                return $credentials->getBotApiToken()->getToken()->isIdenticalTo($token)
                     && $credentials->getGitlabServerUrl() === 'https://gitlab.example.com';
             }
         );
@@ -426,7 +426,7 @@ class BotApiTokenUpdaterTest extends TestCase
 
         $expected_credentials = Mockery::on(
             function (Credentials $credentials) use ($token) {
-                return $credentials->getBotApiToken()->isIdenticalTo($token)
+                return $credentials->getBotApiToken()->getToken()->isIdenticalTo($token)
                     && $credentials->getGitlabServerUrl() === 'https://gitlab.example.com';
             }
         );

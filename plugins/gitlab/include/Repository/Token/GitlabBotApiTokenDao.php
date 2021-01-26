@@ -30,15 +30,33 @@ class GitlabBotApiTokenDao extends DataAccessObject
         $this->getDB()->insertOnDuplicateKeyUpdate(
             'plugin_gitlab_bot_api_token',
             [
-                'repository_id' => $repository_id,
-                'token'         => $encrypted_token
+                'repository_id'                           => $repository_id,
+                'token'                                   => $encrypted_token,
+                'is_email_already_send_for_invalid_token' => false,
             ],
             [
-                'token'
+                'token',
+                'is_email_already_send_for_invalid_token'
             ]
         );
     }
 
+    public function storeTheFactWeAlreadySendEmailForInvalidToken(int $repository_id): void
+    {
+        $this->getDB()->update(
+            'plugin_gitlab_bot_api_token',
+            [
+                'is_email_already_send_for_invalid_token' => true,
+            ],
+            [
+                'repository_id' => $repository_id,
+            ]
+        );
+    }
+
+    /**
+     * @return array{token: string, is_email_already_send_for_invalid_token: bool}|null
+     */
     public function getBotAPIToken(int $repository_id): ?array
     {
         $sql = 'SELECT *

@@ -54,6 +54,7 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryNotIntegratedInAnyProjectException;
 use Tuleap\Gitlab\Repository\GitlabRepositoryWithSameNameAlreadyIntegratedInProjectException;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectRetriever;
+use Tuleap\Gitlab\Repository\Token\GitlabBotApiToken;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenInserter;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenRetriever;
@@ -118,7 +119,7 @@ final class GitlabRepositoryResource
         $this->options();
 
         $gitlab_server_url    = $gitlab_repository->gitlab_server_url;
-        $bot_api_token        = new ConcealedString($gitlab_repository->gitlab_bot_api_token);
+        $bot_api_token        = GitlabBotApiToken::buildBrandNewToken(new ConcealedString($gitlab_repository->gitlab_bot_api_token));
         $project_id           = $gitlab_repository->project_id;
         $gitlab_repository_id = $gitlab_repository->gitlab_repository_id;
 

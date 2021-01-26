@@ -96,6 +96,7 @@ class PostMergeRequestBotCommenter
         try {
             $url = "/projects/{$gitlab_repository->getGitlabRepositoryId()}/merge_requests/$merge_request_id/notes";
             $this->comment_sender->sendComment(
+                $gitlab_repository,
                 $credentials,
                 $url,
                 ["body" => $comment]

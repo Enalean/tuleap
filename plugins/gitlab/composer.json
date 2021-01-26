@@ -5,6 +5,11 @@
       "Tuleap\\Gitlab\\": "include/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\Gitlab\\Test\\": ["./tests/unit/Test"]
+    }
+  },
   "config": {
     "sort-packages": true
   }

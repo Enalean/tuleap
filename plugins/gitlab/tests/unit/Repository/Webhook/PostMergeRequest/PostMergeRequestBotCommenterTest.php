@@ -25,17 +25,17 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use TemplateRendererFactory;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\API\ClientWrapper;
-use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenter;
 use Tuleap\Gitlab\Repository\Webhook\Bot\BotCommentReferencePresenterBuilder;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CommentSender;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
+use Tuleap\Gitlab\Repository\Webhook\Bot\InvalidCredentialsNotifier;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\Gitlab\Test\Builder\CredentialsTestBuilder;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Templating\TemplateCache;
 
@@ -93,7 +93,7 @@ class PostMergeRequestBotCommenterTest extends TestCase
         $this->template_factory = new TemplateRendererFactory($template_cache);
 
         $this->commenter = new PostMergeRequestBotCommenter(
-            new CommentSender($this->client_wrapper),
+            new CommentSender($this->client_wrapper, Mockery::mock(InvalidCredentialsNotifier::class)),
             $this->credentials_retriever,
             $this->logger,
             $this->bot_comment_reference_presenter_builder,
@@ -143,7 +143,7 @@ class PostMergeRequestBotCommenterTest extends TestCase
             ->andReturn(4)
             ->once();
 
-        $credentials = new Credentials("https://example.fr", new ConcealedString("My_Token"));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
             ->shouldReceive('getCredentials')
@@ -211,7 +211,7 @@ class PostMergeRequestBotCommenterTest extends TestCase
             ->andReturn(4)
             ->once();
 
-        $credentials = new Credentials("https://example.fr", new ConcealedString("My_Token"));
+        $credentials = CredentialsTestBuilder::get()->build();
 
         $this->credentials_retriever
             ->shouldReceive('getCredentials')

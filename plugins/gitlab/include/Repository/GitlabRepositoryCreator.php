@@ -172,7 +172,7 @@ class GitlabRepositoryCreator
 
         $this->webhook_creator->generateWebhookInGitlabProject($credentials, $gitlab_repository);
 
-        $this->token_inserter->insertToken($gitlab_repository, $credentials->getBotApiToken());
+        $this->token_inserter->insertToken($gitlab_repository, $credentials->getBotApiToken()->getToken());
 
         return $gitlab_repository;
     }
