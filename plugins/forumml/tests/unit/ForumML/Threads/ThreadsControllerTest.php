@@ -389,7 +389,7 @@ class ThreadsControllerTest extends TestCase
 
         $this->presenter_builder
             ->shouldReceive('getThreadsPresenter')
-            ->andReturn(new ThreadsPresenter('foobar-devel', 0, [], '/url', Mockery::spy(PaginationPresenter::class)));
+            ->andReturn(new ThreadsPresenter('foobar-devel', 0, [], '/url', '', Mockery::spy(PaginationPresenter::class)));
 
         $this->include_assets
             ->shouldReceive('getPath')
@@ -457,7 +457,7 @@ class ThreadsControllerTest extends TestCase
 
         $this->presenter_builder
             ->shouldReceive('getThreadsPresenter')
-            ->andReturn(new ThreadsPresenter('foobar-devel', 0, [], '/url', Mockery::spy(PaginationPresenter::class)));
+            ->andReturn(new ThreadsPresenter('foobar-devel', 0, [], '/url', '', Mockery::spy(PaginationPresenter::class)));
 
         $this->include_assets
             ->shouldReceive('getPath')
@@ -482,6 +482,22 @@ class ThreadsControllerTest extends TestCase
             HTTPRequestBuilder::get()->withUser($user)->build(),
             LayoutBuilder::build(),
             ['id' => '123']
+        );
+    }
+
+    public function testItBuildsUrl(): void
+    {
+        self::assertEquals(
+            '/plugins/forumml/list/123/threads',
+            ThreadsController::getUrl(123),
+        );
+    }
+
+    public function testItBuildsSearchUrl(): void
+    {
+        self::assertEquals(
+            '/plugins/forumml/list/123/threads?search=hello+world',
+            ThreadsController::getSearchUrl(123, 'hello world'),
         );
     }
 }

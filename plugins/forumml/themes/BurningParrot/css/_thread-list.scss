@@ -49,3 +49,13 @@
 .forumml-thread-list-entry-metadata-avatar {
     margin: 0 6px 0 0;
 }
+
+.forumml-thread-list-no-match {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    background: $tlp-table-row-background-empty;
+    color: transparentize($tlp-theme-color, .7);
+    font-style: italic;
+}

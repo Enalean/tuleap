@@ -3,18 +3,28 @@
 </h1>
 
 <div class="tlp-framed">
-    {{^ nb_threads }}
+    {{# is_empty_state }}
         {{> threads-empty-state }}
-    {{/ nb_threads }}
+    {{/ is_empty_state }}
 
-    {{# nb_threads }}
+    {{^ is_empty_state }}
         <div class="forumml-thread-list">
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
                     <div class="tlp-pane-header">
                         <h1 class="tlp-pane-title">
-                            <i class="fas fa-comments tlp-pane-title-icon" aria-hidden="true"></i>
-                            {{# dgettext }}tuleap-forumml | Threads{{/dgettext}}
+                            {{# search }}
+                                <i class="fas fa-search tlp-pane-title-icon" aria-hidden="true"></i>
+                                {{# dgettext }}
+                                    tuleap-forumml |
+                                    Search results for '%1$s' |
+                                    {{ search }}
+                                {{/dgettext}}
+                            {{/ search }}
+                            {{^ search }}
+                                <i class="fas fa-comments tlp-pane-title-icon" aria-hidden="true"></i>
+                                {{# dgettext }}tuleap-forumml | Threads{{/dgettext}}
+                            {{/ search }}
                         </h1>
                     </div>
                     <section class="tlp-pane-section">
@@ -23,39 +33,46 @@
                             {{# dgettext }}tuleap-forumml | Post a new thread{{/ dgettext }}
                         </a>
                     </section>
-                    <section class="tlp-pane-section-for-cards">
-                        {{# threads }}
-                            <a class="tlp-card tlp-card-selectable" href="{{ url }}">
-                                <div class="forumml-thread-list-entry-main">
-                                    <span class="forumml-thread-list-entry-title">
-                                        {{ subject }}
-                                    </span>
-                                    <span class="tlp-badge-primary tlp-badge-outline forumml-thread-list-entry-nb-replies"
-                                          title="{{# dgettext }}tuleap-forumml | %s replies | {{ nb_replies }}{{/dgettext}}"
-                                    >{{ nb_replies }}</span>
-                                </div>
-                                <div class="forumml-thread-list-entry-metadata">
-                                    <span class="tlp-avatar-mini forumml-thread-list-entry-metadata-avatar">
-                                        {{# has_avatar }}
-                                            <img src="{{ avatar_url }}" alt="{{# gettext }}User avatar{{/ gettext }}">
-                                        {{/ has_avatar }}
-                                    </span>
-                                    <span>
-                                        {{ sender }},
-                                        {{# created_on }}
-                                            <tlp-relative-date
-                                                date="{{ date }}"
-                                                absolute-date="{{ absolute_date }}"
-                                                placement="{{ placement }}"
-                                                preference="{{ preference }}"
-                                                locale="{{ locale }}"
-                                            ></tlp-relative-date>
-                                        {{/ created_on }}
-                                    </span>
-                                </div>
-                            </a>
-                        {{/ threads }}
-                    </section>
+                    {{^ nb_threads }}
+                        <section class="forumml-thread-list-no-match">
+                            {{# dgettext }}tuleap-forumml | There aren't any threads matching your query.{{/ dgettext }}
+                        </section>
+                    {{/ nb_threads }}
+                    {{# nb_threads }}
+                        <section class="tlp-pane-section-for-cards">
+                            {{# threads }}
+                                <a class="tlp-card tlp-card-selectable" href="{{ url }}">
+                                    <div class="forumml-thread-list-entry-main">
+                                        <span class="forumml-thread-list-entry-title">
+                                            {{ subject }}
+                                        </span>
+                                        <span class="tlp-badge-primary tlp-badge-outline forumml-thread-list-entry-nb-replies"
+                                              title="{{# dgettext }}tuleap-forumml | %s replies | {{ nb_replies }}{{/dgettext}}"
+                                        >{{ nb_replies }}</span>
+                                    </div>
+                                    <div class="forumml-thread-list-entry-metadata">
+                                        <span class="tlp-avatar-mini forumml-thread-list-entry-metadata-avatar">
+                                            {{# has_avatar }}
+                                                <img src="{{ avatar_url }}" alt="{{# gettext }}User avatar{{/ gettext }}">
+                                            {{/ has_avatar }}
+                                        </span>
+                                        <span>
+                                            {{ sender }},
+                                            {{# created_on }}
+                                                <tlp-relative-date
+                                                    date="{{ date }}"
+                                                    absolute-date="{{ absolute_date }}"
+                                                    placement="{{ placement }}"
+                                                    preference="{{ preference }}"
+                                                    locale="{{ locale }}"
+                                                ></tlp-relative-date>
+                                            {{/ created_on }}
+                                        </span>
+                                    </div>
+                                </a>
+                            {{/ threads }}
+                        </section>
+                    {{/ nb_threads }}
                 </div>
             </section>
 
@@ -63,5 +80,5 @@
                 {{> pagination }}
             {{/ pagination }}
         </div>
-    {{/ nb_threads }}
+    {{/ is_empty_state }}
 </div>
