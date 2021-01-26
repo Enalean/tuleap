@@ -80,7 +80,9 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
         $this->bot_commenter                       = Mockery::mock(PostMergeRequestBotCommenter::class);
 
         $this->processor = new PostMergeRequestWebhookActionProcessor(
-            new WebhookTuleapReferencesParser(),
+            new TuleapReferencesFromMergeRequestDataExtractor(
+                new WebhookTuleapReferencesParser()
+            ),
             $this->tuleap_reference_retriever,
             $this->reference_manager,
             $this->merge_request_reference_dao,

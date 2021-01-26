@@ -47,6 +47,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenc
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\TuleapReferencesFromMergeRequestDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitWebhookDataExtractor;
@@ -212,7 +213,9 @@ class gitlabPlugin extends Plugin
                     )
                 ),
                 new PostMergeRequestWebhookActionProcessor(
-                    new WebhookTuleapReferencesParser(),
+                    new TuleapReferencesFromMergeRequestDataExtractor(
+                        new WebhookTuleapReferencesParser(),
+                    ),
                     new TuleapReferenceRetriever(
                         EventManager::instance(),
                         $reference_manager
