@@ -37,8 +37,10 @@ class WebhookTuleapReferencesParser
             }
         }
 
+        sort($parsed_tuleap_references);
+
         return new WebhookTuleapReferenceCollection(
-            array_unique($parsed_tuleap_references, SORT_REGULAR)
+            array_values(array_unique($parsed_tuleap_references))
         );
     }
 }
