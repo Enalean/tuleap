@@ -62,6 +62,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenc
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\WebhookCreator;
 use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
+use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\InstanceBaseURLBuilder;
@@ -152,6 +153,17 @@ final class GitlabRepositoryResource
                 new WebhookCreator(
                     new KeyFactory(),
                     new WebhookDao(),
+                    new WebhookDeletor(
+                        new WebhookDao(),
+                        $gitlab_api_client,
+                        new CredentialsRetriever(
+                            new GitlabBotApiTokenRetriever(
+                                new GitlabBotApiTokenDao(),
+                                new KeyFactory()
+                            ),
+                        ),
+                        BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
+                    ),
                     $gitlab_api_client,
                     new InstanceBaseURLBuilder(),
                     BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER),
@@ -257,6 +269,17 @@ final class GitlabRepositoryResource
                 new WebhookCreator(
                     new KeyFactory(),
                     new WebhookDao(),
+                    new WebhookDeletor(
+                        new WebhookDao(),
+                        $gitlab_api_client,
+                        new CredentialsRetriever(
+                            new GitlabBotApiTokenRetriever(
+                                new GitlabBotApiTokenDao(),
+                                new KeyFactory()
+                            ),
+                        ),
+                        BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
+                    ),
                     $gitlab_api_client,
                     new InstanceBaseURLBuilder(),
                     $logger,
@@ -293,6 +316,17 @@ final class GitlabRepositoryResource
                 new WebhookCreator(
                     new KeyFactory(),
                     new WebhookDao(),
+                    new WebhookDeletor(
+                        new WebhookDao(),
+                        $gitlab_api_client,
+                        new CredentialsRetriever(
+                            new GitlabBotApiTokenRetriever(
+                                new GitlabBotApiTokenDao(),
+                                new KeyFactory()
+                            ),
+                        ),
+                        BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
+                    ),
                     $gitlab_api_client,
                     new InstanceBaseURLBuilder(),
                     $logger,
@@ -350,13 +384,28 @@ final class GitlabRepositoryResource
 
         $current_user = UserManager::instance()->getCurrentUser();
 
+        $request_factory       = HTTPFactoryBuilder::requestFactory();
+        $stream_factory        = HTTPFactoryBuilder::streamFactory();
+        $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
+        $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
+
         $deletor = new GitlabRepositoryDeletor(
             $this->getGitPermissionsManager(),
             new DBTransactionExecutorWithConnection(
                 DBFactory::getMainTuleapDBConnection()
             ),
             new GitlabRepositoryProjectDao(),
-            new WebhookDao(),
+            new WebhookDeletor(
+                new WebhookDao(),
+                $gitlab_api_client,
+                new CredentialsRetriever(
+                    new GitlabBotApiTokenRetriever(
+                        new GitlabBotApiTokenDao(),
+                        new KeyFactory()
+                    ),
+                ),
+                BackendLogger::getDefaultLogger(\gitlabPlugin::LOG_IDENTIFIER)
+            ),
             new GitlabRepositoryDao(),
             new GitlabBotApiTokenDao(),
             new CommitTuleapReferenceDao(),

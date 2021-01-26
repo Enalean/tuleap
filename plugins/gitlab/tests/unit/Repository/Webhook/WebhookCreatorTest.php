@@ -33,6 +33,7 @@ use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabRequestException;
 use Tuleap\Gitlab\Repository\GitlabRepository;
+use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\InstanceBaseURLBuilder;
 
 class WebhookCreatorTest extends TestCase
@@ -59,19 +60,35 @@ class WebhookCreatorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
      */
     private $logger;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WebhookDeletor
+     */
+    private $webhook_deletor;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CredentialsRetriever
+     */
+    private $credentials_retriever;
 
     protected function setUp(): void
     {
-        $this->key_factory       = Mockery::mock(KeyFactory::class);
-        $this->dao               = Mockery::mock(WebhookDao::class);
-        $this->gitlab_api_client = Mockery::mock(ClientWrapper::class);
-        $this->logger            = Mockery::mock(LoggerInterface::class);
+        $this->key_factory           = Mockery::mock(KeyFactory::class);
+        $this->dao                   = Mockery::mock(WebhookDao::class);
+        $this->gitlab_api_client     = Mockery::mock(ClientWrapper::class);
+        $this->logger                = Mockery::mock(LoggerInterface::class);
+        $this->credentials_retriever = Mockery::mock(CredentialsRetriever::class);
+        $this->webhook_deletor       = new WebhookDeletor(
+            $this->dao,
+            $this->gitlab_api_client,
+            $this->credentials_retriever,
+            $this->logger
+        );
 
         $instance_base_url = Mockery::mock(InstanceBaseURLBuilder::class, ['build' => 'https://tuleap.example.com']);
 
         $this->creator = new WebhookCreator(
             $this->key_factory,
             $this->dao,
+            $this->webhook_deletor,
             $this->gitlab_api_client,
             $instance_base_url,
             $this->logger,
@@ -171,6 +188,11 @@ class WebhookCreatorTest extends TestCase
             ->shouldReceive('deleteGitlabRepositoryWebhook')
             ->with(1)
             ->once();
+
+        $this->credentials_retriever
+            ->shouldReceive('getCredentials')
+            ->once()
+            ->andReturn($credentials);
 
         $encryption_key = \Mockery::mock(EncryptionKey::class);
         $encryption_key

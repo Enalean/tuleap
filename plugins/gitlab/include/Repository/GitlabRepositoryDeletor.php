@@ -30,7 +30,7 @@ use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Token\GitlabBotApiTokenDao;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
-use Tuleap\Gitlab\Repository\Webhook\WebhookDao;
+use Tuleap\Gitlab\Repository\Webhook\WebhookDeletor;
 
 class GitlabRepositoryDeletor
 {
@@ -48,10 +48,6 @@ class GitlabRepositoryDeletor
      */
     private $db_transaction_executor;
     /**
-     * @var WebhookDao
-     */
-    private $webhook_dao;
-    /**
      * @var GitlabRepositoryDao
      */
     private $gitlab_repository_dao;
@@ -67,12 +63,16 @@ class GitlabRepositoryDeletor
      * @var MergeRequestTuleapReferenceDao
      */
     private $merge_request_dao;
+    /**
+     * @var WebhookDeletor
+     */
+    private $webhook_deletor;
 
     public function __construct(
         GitPermissionsManager $git_permissions_manager,
         DBTransactionExecutor $db_transaction_executor,
         GitlabRepositoryProjectDao $gitlab_repository_project_dao,
-        WebhookDao $webhook_dao,
+        WebhookDeletor $webhook_deletor,
         GitlabRepositoryDao $gitlab_repository_dao,
         GitlabBotApiTokenDao $gitlab_bot_api_token_dao,
         CommitTuleapReferenceDao $commit_tuleap_reference_dao,
@@ -81,7 +81,7 @@ class GitlabRepositoryDeletor
         $this->git_permissions_manager       = $git_permissions_manager;
         $this->db_transaction_executor       = $db_transaction_executor;
         $this->gitlab_repository_project_dao = $gitlab_repository_project_dao;
-        $this->webhook_dao                   = $webhook_dao;
+        $this->webhook_deletor               = $webhook_deletor;
         $this->gitlab_repository_dao         = $gitlab_repository_dao;
         $this->gitlab_bot_api_token_dao      = $gitlab_bot_api_token_dao;
         $this->commit_tuleap_reference_dao   = $commit_tuleap_reference_dao;
@@ -121,7 +121,7 @@ class GitlabRepositoryDeletor
                     $project_id
                 );
             } else {
-                $this->webhook_dao->deleteGitlabRepositoryWebhook($repository_id);
+                $this->webhook_deletor->deleteGitlabWebhookFromGitlabRepository($gitlab_repository);
                 $this->gitlab_repository_project_dao->removeGitlabRepositoryIntegrationInProject(
                     $repository_id,
                     $project_id
