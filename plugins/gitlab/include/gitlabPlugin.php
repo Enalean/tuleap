@@ -47,6 +47,7 @@ use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\MergeRequestTuleapReferenc
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestBotCommenter;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookActionProcessor;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PostMergeRequestWebhookDataBuilder;
+use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\PreviouslySavedReferencesRetriever;
 use Tuleap\Gitlab\Repository\Webhook\PostMergeRequest\TuleapReferencesFromMergeRequestDataExtractor;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\Commits\CommitTuleapReferenceDao;
 use Tuleap\Gitlab\Repository\Webhook\PostPush\PostPushCommitBotCommenter;
@@ -170,6 +171,17 @@ class gitlabPlugin extends Plugin
         $gitlab_client_factory = new GitlabHTTPClientFactory(HttpClientFactory::createClient());
         $gitlab_api_client     = new ClientWrapper($request_factory, $stream_factory, $gitlab_client_factory);
 
+        $tuleap_reference_retriever = new TuleapReferenceRetriever(
+            EventManager::instance(),
+            $reference_manager
+        );
+
+        $merge_request_reference_dao = new MergeRequestTuleapReferenceDao();
+
+        $references_from_merge_request_data_extractor = new TuleapReferencesFromMergeRequestDataExtractor(
+            new WebhookTuleapReferencesParser(),
+        );
+
         return new GitlabRepositoryWebhookController(
             new WebhookDataExtractor(
                 new PostPushWebhookDataBuilder(
@@ -199,10 +211,7 @@ class gitlabPlugin extends Plugin
                     ),
                     new CommitTuleapReferenceDao(),
                     $reference_manager,
-                    new TuleapReferenceRetriever(
-                        EventManager::instance(),
-                        $reference_manager
-                    ),
+                    $tuleap_reference_retriever,
                     $logger,
                     new PostPushCommitBotCommenter(
                         new CommentSender($gitlab_api_client),
@@ -213,15 +222,10 @@ class gitlabPlugin extends Plugin
                     )
                 ),
                 new PostMergeRequestWebhookActionProcessor(
-                    new TuleapReferencesFromMergeRequestDataExtractor(
-                        new WebhookTuleapReferencesParser(),
-                    ),
-                    new TuleapReferenceRetriever(
-                        EventManager::instance(),
-                        $reference_manager
-                    ),
+                    $references_from_merge_request_data_extractor,
+                    $tuleap_reference_retriever,
                     ReferenceManager::instance(),
-                    new MergeRequestTuleapReferenceDao(),
+                    $merge_request_reference_dao,
                     new GitlabRepositoryProjectRetriever(
                         new GitlabRepositoryProjectDao(),
                         ProjectManager::instance()
@@ -234,6 +238,11 @@ class gitlabPlugin extends Plugin
                         new BotCommentReferencePresenterBuilder(new InstanceBaseURLBuilder()),
                         TemplateRendererFactory::build()
                     ),
+                    new PreviouslySavedReferencesRetriever(
+                        $references_from_merge_request_data_extractor,
+                        $tuleap_reference_retriever,
+                        $merge_request_reference_dao,
+                    )
                 ),
                 $logger,
             ),

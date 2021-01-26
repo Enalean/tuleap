@@ -79,16 +79,23 @@ class PostMergeRequestWebhookActionProcessorTest extends TestCase
         $this->gitlab_repository_project_retriever = Mockery::mock(GitlabRepositoryProjectRetriever::class);
         $this->bot_commenter                       = Mockery::mock(PostMergeRequestBotCommenter::class);
 
+        $references_from_merge_request_data_extractor = new TuleapReferencesFromMergeRequestDataExtractor(
+            new WebhookTuleapReferencesParser()
+        );
+
         $this->processor = new PostMergeRequestWebhookActionProcessor(
-            new TuleapReferencesFromMergeRequestDataExtractor(
-                new WebhookTuleapReferencesParser()
-            ),
+            $references_from_merge_request_data_extractor,
             $this->tuleap_reference_retriever,
             $this->reference_manager,
             $this->merge_request_reference_dao,
             $this->gitlab_repository_project_retriever,
             $this->logger,
             $this->bot_commenter,
+            new PreviouslySavedReferencesRetriever(
+                $references_from_merge_request_data_extractor,
+                $this->tuleap_reference_retriever,
+                $this->merge_request_reference_dao,
+            )
         );
     }
 
